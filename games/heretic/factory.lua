@@ -4960,13 +4960,24 @@ HERETIC.FACTORY.HC_THINGS =
   env_wind   = { id=42, kind="other", r=20,h=16, pass=true },
 }
 
-HERETIC.FACTORY.HC_LINE_TYPES =  -- NOTE: only includes differences to DOOM
+HERETIC.FACTORY.HC_LINE_TYPES =
 {
+  A1_scroll_left = { kind=48 },
   A1_scroll_right = { kind=99 },
-  W1_secret_exit  = { kind=105 }, -- FIXME: correct?
-
+  S1_exit = { kind=11 },
+  W1_exit = { kind=52 },
+  W1_secret_exit  = { kind=105 },
+  S1_secret_exit = { kind=51  },
   P1_green_door = { kind=33 },
   PR_green_door = { kind=28 },
+  P1_blue_door   = { kind=32 },
+  PR_blue_door   = { kind=26 },
+  P1_yellow_door = { kind=34 },
+  PR_yellow_door = { kind=27 },
+  SR_lift = { kind=62 },
+  WR_lift = { kind=88 },
+  SR_blaze_lift = { kind=123 },
+  WR_blaze_lift = { kind=120 },
 }
 
 HERETIC.FACTORY.HC_SECTOR_TYPES =
@@ -5157,6 +5168,30 @@ HERETIC.FACTORY.HC_EXITS =
 
         switch_h=32, x_offset=16, y_offset=48,
         kind=11, tag=0,
+      }
+    },
+  },
+
+  METAL_SECRET =
+  {
+    secret_exit = true,
+    mat_pri = 9,
+
+    wall  = "METL2",
+    floor = "FLOOR03",
+    ceil  = "FLOOR19",
+
+    switch =
+    {
+      prefab="SWITCH_NICHE_TINY_DEEP",
+      add_mode="wall",
+      skin =
+      {
+        switch_w="SW2OFF", wall="METL2",
+--      switch_f="FLOOR28",
+
+        switch_h=32, x_offset=16, y_offset=48,
+        kind=51, tag=0,
       }
     },
   },
@@ -5770,7 +5805,6 @@ HERETIC.FACTORY.HC_EPISODE_THEMES =
   { CITY=5 },
   { CITY=5 },
   { CITY=5 },
-
   { CITY=5 },
   { CITY=5 },
 }
@@ -5780,7 +5814,6 @@ HERETIC.FACTORY.HC_SECRET_EXITS =
   E1M6 = true,
   E2M4 = true,
   E3M4 = true,
-
   E4M4 = true,
   E5M3 = true,
 }
@@ -5790,7 +5823,6 @@ HERETIC.FACTORY.HC_EPISODE_BOSSES =
   "ironlich",
   "maulotaur",
   "d_sparil",
-
   "ironlich",
   "maulotaur",
 }
@@ -5800,7 +5832,6 @@ HERETIC.FACTORY.HC_SKY_INFO =
   { color="gray",  light=176 },
   { color="red",   light=192 },
   { color="blue",  light=176 },
-
   { color="gray",  light=176 },
   { color="blue",  light=176 },
 }

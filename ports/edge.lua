@@ -130,7 +130,7 @@ end
 function EDGE.all_done()
   EDGE.create_language();
 
-  EDGE.remap_music()
+  --EDGE.remap_music()
 end
 
 

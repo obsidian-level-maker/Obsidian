@@ -64,7 +64,6 @@ function show_path()
         else kind = "p"
         end
       elseif c.quest.kind == "exit" then kind = "E"
-      elseif c.quest.kind == "boss" then kind = "B"
       elseif c.quest.kind == "item" or
              c.quest.kind == "weapon" then kind = "W"
       elseif c.quest.kind == "switch" or
@@ -483,8 +482,8 @@ function std_decide_quests(Level, QUEST_TAB, LEN_PROBS)
   end
 
   if Level.boss_kind then
-    local Q = add_quest("exit", Level.boss_kind)
-    Q.kind = "boss" -- hackish
+    local Q = add_quest("exit", "normal")
+    Q.needs_boss = true
   else
     add_quest("exit", "normal")
   end
@@ -1894,10 +1893,6 @@ gui.printf("\nCHANGED QUEST ROOM @ (%d,%d)\n", Q.last.x,Q.last.y)
 
       for zzz,Q in ipairs(qlist) do
         Q.main_pri = non_nil(MODE_PRI[Q.mode]) + gui.random()/2
-
-        if Q.kind == "boss" and Q.mode == "end" then
-          Q,main_pri = Q.main_pri - 1
-        end
       end
 
       table.sort(qlist,
@@ -1994,8 +1989,6 @@ gui.debugf("qlist now:\n%s\n\n", table.tostr(qlist,2))
     for zzz,Q in ipairs(PLAN.quests) do
       if not Q.mode then
         if Q.kind == "exit" and Q.item ~= "secret" then
-          Q.mode = "end"
-        elseif Q.kind == "boss" then
           Q.mode = "end"
         elseif Q.kind == "key" or Q.kind == "switch" then
           Q.mode = "main"
@@ -2095,6 +2088,8 @@ Q.theme.name, Q.combo.name)
       if not GAME.FACTORY.caps.elevator_exits then
         if c.quest.is_secret and GAME.FACTORY.exits["BLOODY"] then
           c.combo = GAME.FACTORY.exits["BLOODY"] --FIXME
+        elseif c.quest.is_secret then
+          c.combo = get_rand_secret_exit_combo()
         else
           c.combo = get_rand_exit_combo()
         end
