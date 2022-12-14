@@ -1810,9 +1810,6 @@ function MODDED_GAME_EXTRAS.create_hn_info(self, LEVEL)
 
         local offset = ((chunk.sh * SEED_SIZE) / 2) - 64
 
-        gui.printf(table.tostr(chunk).."\n")
-        gui.printf(offset .. "\n")
-
         hn_add_entity(info, x, y - offset + 24, z + 1)
         hn_add_entity(info, x, y + offset - 24, z + 1)
         hn_add_entity(info, x - offset + 24, y, z + 1)
