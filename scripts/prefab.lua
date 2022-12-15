@@ -2388,8 +2388,8 @@ function Fab_replacements(LEVEL, fab)
             C.arg1 = current_tag
           elseif C.special == 70 then
             if fab.out_tag1 then -- Handle monster depots
-              local tag_table
-              if fab.out_tag1 then table.insert(tag_table, fab.out_tag1) end
+              local tag_table = {}
+              table.insert(tag_table, fab.out_tag1)
               if fab.out_tag2 then table.insert(tag_table, fab.out_tag2) end
               if fab.out_tag3 then table.insert(tag_table, fab.out_tag3) end
               if fab.out_tag4 then table.insert(tag_table, fab.out_tag4) end
