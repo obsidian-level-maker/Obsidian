@@ -720,9 +720,7 @@ function Layout_place_all_importants(LEVEL, SEEDS)
   Layout_place_hub_gates(LEVEL, SEEDS)
 
   for _,R in pairs(LEVEL.rooms) do
-    if not R.is_sub_room then
-      Layout_place_importants(LEVEL, R, 1, SEEDS)
-    end
+    Layout_place_importants(LEVEL, R, 1, SEEDS)
   end
 
   for _,R in pairs(LEVEL.rooms) do

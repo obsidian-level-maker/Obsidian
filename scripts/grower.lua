@@ -2734,11 +2734,13 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
     if not R.has_consistent_stairs_rolled then
       -- should probably put this in a function for cleanliness
       for _,P in pairs(PREFABS) do
-        if P.kind == "stairs" and P.original_rank and P.original_rank ~= 0 then
-          P.rank = P.original_rank
-          P.original_rank = nil
-        else
-          P.rank = nil
+        if P.kind == "stairs" then
+          if P.original_rank and P.original_rank ~= 0 then
+            P.rank = P.original_rank
+            P.original_rank = nil
+          else
+            P.rank = nil
+          end
         end
       end
     end
@@ -2775,12 +2777,12 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
     if R.has_consistent_stairs then
       if def then
         if def.rank then
-          def.original_rank = def.rank
+          PREFABS[def.name].original_rank = def.rank
         else
-          def.original_rank = 0
+          PREFABS[def.name].original_rank = 0
         end
       end
-      def.rank = 1
+      PREFABS[def.name].rank = 1
     end
 
     return def
