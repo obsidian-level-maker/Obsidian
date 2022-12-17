@@ -864,7 +864,8 @@ function Quest_add_major_quests(LEVEL)
     local unused = 0
 
     for id, R in pairs(quest.rooms) do
-      if R:is_unused_leaf() then
+      if R:is_unused_leaf() 
+      and not R.is_sub_room then -- don't count sub_rooms for the division of quests
         unused = unused + 1
       end
     end
