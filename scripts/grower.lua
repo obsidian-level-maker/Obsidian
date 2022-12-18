@@ -4021,8 +4021,10 @@ function Grower_grow_room(SEEDS, LEVEL, R)
       and R.small_room then
         return 
       end
-      Grower_kill_room(SEEDS, LEVEL, R)
-      return
+      if R.prelim_conn_num == 1 then
+        Grower_kill_room(SEEDS, LEVEL, R)
+        return
+      end
     end
   end
 
@@ -4030,9 +4032,11 @@ function Grower_grow_room(SEEDS, LEVEL, R)
   if LEVEL.is_linear then
     if R.grow_parent then
       if R.grow_parent:prelim_conn_num(LEVEL) > 2 then
-        gui.debugf("Linear mode: ROOM_" .. R.id .. " culled.\n")
-        Grower_kill_room(SEEDS, LEVEL, R)
-        return
+        if R.prelim_conn_num == 1 then
+          gui.debugf("Linear mode: ROOM_" .. R.id .. " culled.\n")
+          Grower_kill_room(SEEDS, LEVEL, R)
+          return
+        end
       end
     end
   end
@@ -4040,8 +4044,10 @@ function Grower_grow_room(SEEDS, LEVEL, R)
   if LEVEL.is_linear or LEVEL.is_procedural_gotcha then
     if R.grow_parent and R.grow_parent.is_start then
       if R.grow_parent:prelim_conn_num(LEVEL) > 1 then
-        gui.debugf("Linear mode: ROOM " .. R.id .. " culled.\n")
-        Grower_kill_room(SEEDS, LEVEL, R)
+        if R.prelim_conn_num == 1 then
+          gui.debugf("Linear mode: ROOM " .. R.id .. " culled.\n")
+          Grower_kill_room(SEEDS, LEVEL, R)
+        end
       end
     end
   end
@@ -4049,7 +4055,9 @@ function Grower_grow_room(SEEDS, LEVEL, R)
   if LEVEL.has_linear_start and #LEVEL.rooms == 4 then
     for _,R2 in pairs(LEVEL.rooms) do
       if #R2.conns == 1 and R2.grow_parent.is_start then
-        Grower_kill_room(SEEDS, LEVEL, R2)
+        if R.prelim_conn_num == 1 then
+          Grower_kill_room(SEEDS, LEVEL, R2)
+        end
       end
     end
   end
