@@ -156,8 +156,7 @@ bool random_string_seeds = false;
 bool password_mode = false;
 bool did_specify_seed = false;
 int zip_output = 0;
-int log_size = 1;  // Without debugging info on, this should handle a full size
-                   // 75 megawad with some room to spare
+int log_size = 7;
 int log_limit = 5;
 bool mid_batch = false;
 int builds_per_run = 1;

@@ -46,7 +46,7 @@ bool LogInit(const std::filesystem::path &filename) {
 
         log_file = spdlog::rotating_logger_mt(
             "ob_logger", log_filename.generic_string().c_str(),
-            1048576 * log_size, log_limit);
+            1048576 * log_size, log_limit, true);
 
         if (log_file == nullptr) {
             return false;
