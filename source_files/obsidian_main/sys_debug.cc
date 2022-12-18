@@ -109,6 +109,8 @@ void LogClose(void) {
     spdlog::shutdown();
 
     log_filename.clear();
+
+    log_file.reset();
 }
 
 void RefClose(void) {
