@@ -207,7 +207,7 @@ function EXPORT_MAP.begin_level(self, LEVEL)
   -- pre-built levels cannot be exported
   if LEVEL.prebuilt then return end
 
-  local filename = gui.get_save_path() .. "/" .. LEVEL.name .. ".map"
+  local filename = gui.get_save_path() .. "/" .. gui.get_filename_base() .. "-" .. LEVEL.name .. ".map"
 
   local file, error_msg = io.open(filename, "w")
 
@@ -221,7 +221,7 @@ function EXPORT_MAP.begin_level(self, LEVEL)
   EXPORT_MAP.file = file
   EXPORT_MAP.ent_data = {}
 
-  fprintf(file, "// this MAP file was created by OBLIGE.\n")
+  fprintf(file, "// this MAP file was created by OBSIDIAN.\n")
   fprintf(file, "// it is only for the purpose of debugging.\n")
 
   -- write the worldspawn entity
@@ -266,7 +266,7 @@ OB_MODULES["export_map"] =
 
   side = "left",
   priority = -75,
-  engine = "idtech_2",
+  engine = "!idtech_0",
 
   tables =
   {

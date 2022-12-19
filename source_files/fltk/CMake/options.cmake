@@ -267,6 +267,13 @@ if (UNIX)
 
     option (OPTION_ALLOW_GTK_PLUGIN "Allow to use libdecor's GTK plugin" ON)
 
+    if (${CMAKE_HOST_SYSTEM_NAME} STREQUAL "FreeBSD")
+      CHECK_INCLUDE_FILE (linux/input.h LINUX_INPUT_H)
+      if (NOT LINUX_INPUT_H)
+        message (FATAL_ERROR "Required include file 'linux/input.h' is missing. Please install package 'evdev-proto'")
+      endif (NOT LINUX_INPUT_H)
+    endif (${CMAKE_HOST_SYSTEM_NAME} STREQUAL "FreeBSD")
+
   endif (OPTION_USE_WAYLAND)
 endif (UNIX)
 
@@ -333,11 +340,11 @@ option (OPTION_BUILD_SHARED_LIBS
 )
 
 #######################################################################
-option (OPTION_PRINT_SUPPORT "allow print support" ON)
+option (OPTION_PRINT_SUPPORT "allow print support" OFF)
 option (OPTION_FILESYSTEM_SUPPORT "allow file system support" ON)
 
-option (FLTK_BUILD_FLUID    "Build FLUID"              ON)
-option (FLTK_BUILD_TEST     "Build test/demo programs" ON)
+option (FLTK_BUILD_FLUID    "Build FLUID"              OFF)
+option (FLTK_BUILD_TEST     "Build test/demo programs" OFF)
 option (FLTK_BUILD_EXAMPLES "Build example programs"   OFF)
 
 if (DEFINED OPTION_BUILD_EXAMPLES)
@@ -809,10 +816,10 @@ else(OPTION_USE_XRENDER)
 endif (OPTION_USE_XRENDER)
 
 #######################################################################
-set (FL_NO_PRINT_SUPPORT FALSE)
-if (X11_FOUND AND NOT OPTION_PRINT_SUPPORT)
-  set (FL_NO_PRINT_SUPPORT TRUE)
-endif (X11_FOUND AND NOT OPTION_PRINT_SUPPORT)
+set (FL_NO_PRINT_SUPPORT TRUE)
+#if (X11_FOUND AND NOT OPTION_PRINT_SUPPORT)
+  #set (FL_NO_PRINT_SUPPORT TRUE)
+#endif (X11_FOUND AND NOT OPTION_PRINT_SUPPORT)
 #######################################################################
 
 #######################################################################
