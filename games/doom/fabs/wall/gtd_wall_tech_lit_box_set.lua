@@ -100,3 +100,57 @@ PREFABS.Wall_tech_lit_box_yellow_diagonal =
 
   where  = "diagonal"
 }
+
+--
+
+PREFABS.Wall_tech_horizontal_window_tall_grey =
+{
+  file   = "wall/gtd_wall_tech_lit_box_set.wad",
+  map    = "MAP09",
+
+  prob   = 50,
+
+  group = "gtd_wall_lit_h_window_tall_gray",
+
+  where  = "edge",
+  deep   = 16,
+  height = 96,
+
+  bound_z1 = 0,
+  bound_z2 = 96,
+
+  z_fit  = { 40-16,40 , 52,52+4 }
+}
+
+PREFABS.Wall_tech_horizontal_window_tall_grey_diag =
+{
+  template = "Wall_tech_horizontal_window_tall_grey",
+  map = "MAP10",
+
+  where = "diagonal"
+}
+
+--
+
+PREFABS.Wall_tech_horizontal_window_tall_brown =
+{
+  template = "Wall_tech_horizontal_window_tall_grey",
+  map = "MAP09",
+
+  group = "gtd_wall_lit_h_window_tall_brown",
+
+  tex_SHAWN2 = "TANROCK2",
+  tex_BIGBRIK2 = "BIGBRIK1"
+}
+
+PREFABS.Wall_tech_horizontal_window_tall_grey_diag =
+{
+  template = "Wall_tech_horizontal_window_tall_grey",
+  map = "MAP10",
+
+  group = "gtd_wall_lit_h_window_tall_brown",
+  where = "diagonal",
+
+  tex_SHAWN2 = "TANROCK2",
+  tex_BIGBRIK2 = "BIGBRIK1"
+}
