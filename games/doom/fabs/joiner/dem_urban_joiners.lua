@@ -111,6 +111,8 @@ PREFABS.Joiner_bedroom2 =
   env      = "outdoor",
   neighbor = "outdoor",
 
+  jump_crouch = true,
+
   style = "secrets",
 
   seed_w = 3,
