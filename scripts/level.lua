@@ -2687,6 +2687,8 @@ function Level_make_level(LEV)
     end
   end
 
+  LEVEL.PREFABS = table.copy(PREFABS)
+
   local res = Level_build_it(LEVEL, SEEDS)
   if res ~= "ok" then
     for _,k in pairs (LEVEL) do

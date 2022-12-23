@@ -274,7 +274,9 @@ function Fab_load_all_definitions()
     
       def.use_prob = calc_prob(def)
 
-      count = count + 1
+      if def.use_prob > 0 then
+        count = count + 1
+      end
     end
 
     gui.printf(count .. " prefabs loaded and usable!\n\n")
@@ -2823,10 +2825,12 @@ function Fab_find_matches(LEVEL, reqs, match_state)
     local kind = assert(def.kind)
 
     if def.jump_crouch and def.jump_crouch == true then
-      if not PARAM.bool_jump_crouch then 
+      if not PARAM.bool_jump_crouch then
+        def.use_prob = 0 
         return 0 
       end
       if PARAM.bool_jump_crouch == 0 then
+        def.use_prob = 0
         return 0
       end
     end
@@ -2871,7 +2875,10 @@ function Fab_find_matches(LEVEL, reqs, match_state)
 
     -- liquid check
     if def.liquid then
-      if not LEVEL.liquid then return 0 end
+      if not LEVEL.liquid then
+        def.use_prob = 0 
+        return 0 
+      end
       if def.liquid == "harmless" and     LEVEL.liquid.damage then return 0 end
       if def.liquid == "harmful"  and not LEVEL.liquid.damage then return 0 end
     end
@@ -2886,7 +2893,10 @@ function Fab_find_matches(LEVEL, reqs, match_state)
     if reqs.is_sink == "sky" and def.sink_mode == "never_sky" then return 0 end
 
     -- darkness check
-    if def.dark_map and not LEVEL.is_dark then return 0 end
+    if def.dark_map and not LEVEL.is_dark then
+      def.use_prob = 0 
+      return 0 
+    end
 
     -- for fabs to spawn on roads (and not sidewalks)
     if reqs.is_road and not def.can_be_on_roads then return 0 end
@@ -2988,15 +2998,19 @@ function Fab_find_matches(LEVEL, reqs, match_state)
 
     if prob <= 0 then return 0 end
 
+    local factor = style_factor(def)
+
     if not ob_match_level_theme(LEVEL, def, theme_override) then return 0 end
     if not ob_match_feature(def) then return 0 end
-    if not ob_match_game(def) then return 0 end
-    if not ob_match_port(def) then return 0 end
+    if factor <= 0 then
+      def.use_prob = 0
+      return 0
+    end
 
     if (def.rank or 0) < match_state.rank then return 0 end
 
     prob = prob * match_requirements(def)
-    prob = prob * style_factor(def)
+    prob = prob * factor
 
     return prob
   end
@@ -3008,7 +3022,7 @@ function Fab_find_matches(LEVEL, reqs, match_state)
 
   local tab = {}
 
-  for name,def in pairs(PREFABS) do
+  for name,def in pairs(LEVEL.PREFABS) do
     local prob = prob_for_match(def, match_state, reqs.theme_override)
 
     if prob > 0 then
