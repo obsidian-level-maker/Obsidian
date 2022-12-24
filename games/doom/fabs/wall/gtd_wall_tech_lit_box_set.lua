@@ -154,3 +154,77 @@ PREFABS.Wall_tech_horizontal_window_tall_grey_diag =
   tex_SHAWN2 = "TANROCK2",
   tex_BIGBRIK2 = "BIGBRIK1"
 }
+
+--
+
+PREFABS.Wall_tech_horizontal_window_tall_COLLITE_BLUE_EPIC =
+{
+  template = "Wall_tech_horizontal_window_tall_grey",
+  map = "MAP09",
+
+  texture_pack = "armaetus",
+
+  group = "gtd_wall_lit_h_window_tall_collite_blue",
+
+  tex_SHAWN2 = "COLLITE3",
+  tex_SUPPORT3 = "SHAWN2",
+  tex_BROWN144 = "SHAWN2",
+  flat_CEIL5_2 = "FLAT23",
+
+  tex_BIGBRIK2 = "BIGSTONE"
+}
+
+PREFABS.Wall_tech_horizontal_window_tall_COLLITE_BLUE_EPIC_diag =
+{
+  template = "Wall_tech_horizontal_window_tall_grey",
+  map = "MAP10",
+
+  texture_pack = "armaetus",
+
+  group = "gtd_wall_lit_h_window_tall_collite_blue",
+  where = "diagonal",
+
+  tex_SHAWN2 = "COLLITE3",
+  tex_SUPPORT3 = "SHAWN2",
+  tex_BROWN144 = "SHAWN2",
+  flat_CEIL5_2 = "FLAT23",
+
+  tex_BIGBRIK2 = "BIGSTONE"
+}
+
+--
+
+PREFABS.Wall_tech_horizontal_window_tall_COLLITE_ORANGE_EPIC =
+{
+  template = "Wall_tech_horizontal_window_tall_grey",
+  map = "MAP09",
+
+  texture_pack = "armaetus",
+
+  group = "gtd_wall_lit_h_window_tall_collite_orange",
+
+  tex_SHAWN2 = "COLLITE3",
+  tex_SUPPORT3 = "SHAWN2",
+  tex_BROWN144 = "SHAWN2",
+  flat_CEIL5_2 = "FLAT23",
+
+  tex_BIGBRIK2 = "BIGSTONE"
+}
+
+PREFABS.Wall_tech_horizontal_window_tall_COLLITE_ORANGE_EPIC_diag =
+{
+  template = "Wall_tech_horizontal_window_tall_grey",
+  map = "MAP10",
+
+  texture_pack = "armaetus",
+
+  group = "gtd_wall_lit_h_window_tall_collite_orange",
+  where = "diagonal",
+
+  tex_SHAWN2 = "COLLITE3",
+  tex_SUPPORT3 = "SHAWN2",
+  tex_BROWN144 = "SHAWN2",
+  flat_CEIL5_2 = "FLAT23",
+
+  tex_BIGBRIK2 = "BIGSTONE"
+}
