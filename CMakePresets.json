@@ -57,6 +57,16 @@
       }
     },
     {
+      "name": "profile",
+      "description": "Profiling preset",
+      "binaryDir": "build/profile",
+      "generator": "Ninja",
+      "installDir": "${sourceDir}/install",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      }
+    },
+    {
       "name": "cross32",
       "description": "Cross-compile to Windows",
       "binaryDir": "build/cross32",
