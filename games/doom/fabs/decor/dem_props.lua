@@ -158,7 +158,7 @@ PREFABS.Decor_guardhouse_secret =
 
   z_fit = "top",
 
-  sink_mode = "never_liquids",
+  sink_mode = "never"
 }
 
 PREFABS.Decor_urban_newsstand_secret =
@@ -187,7 +187,7 @@ PREFABS.Decor_urban_newsstand_secret =
 
   z_fit = "top",
 
-  sink_mode = "never_liquids",
+  sink_mode = "never"
 }
 
 -- advert board
