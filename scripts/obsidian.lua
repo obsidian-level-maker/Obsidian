@@ -2545,7 +2545,14 @@ function ob_print_reference_json()
   gui.console_print("}\n")
 end
 
+local PROFILING = false
+
 function ob_build_cool_shit()
+  if PROFILING then
+    package.path = package.path .. ";./scripts/?.lua"
+    local profiler = require("profiler")
+    profiler.start()
+  end
 
   assert(OB_CONFIG)
   assert(OB_CONFIG.game)
@@ -2614,6 +2621,11 @@ function ob_build_cool_shit()
 
   gui.printf("\n")
   gui.printf(gui.gettext("~~~~~~ Finished Making Levels ~~~~~~\n\n"))
+
+  if PROFILING then
+    profiler.stop()
+    profiler.report("profile.log")
+  end
 
   return "ok"
 end
