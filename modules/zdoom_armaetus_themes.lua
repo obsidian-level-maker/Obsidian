@@ -5443,7 +5443,10 @@ ARMAETUS_THEMES =
       gtd_comp_graymet_orange = 13,
       gtd_comp_graymet_purple = 13,
       --
-      gtd_comp_grntek_blue = 26
+      gtd_comp_grntek_blue = 26,
+      --
+      gtd_wall_lit_h_window_tall_collite_blue = 35,
+      gtd_wall_lit_h_window_tall_collite_orange = 15
     },
 
     window_groups =
@@ -5896,7 +5899,10 @@ ARMAETUS_THEMES =
       gtd_wall_hell_engraving_dark = 25,
       gtd_wall_hell_engraving_arch = 25,
       --
-      gtd_comp_grntek_blue = 20
+      gtd_comp_grntek_blue = 20,
+      --
+      gtd_wall_lit_h_window_tall_collite_blue = 15,
+      gtd_wall_lit_h_window_tall_collite_orange = 35
     },
 
     window_groups =
@@ -6338,6 +6344,9 @@ ARMAETUS_THEMES =
       gtd_wall_hell_engraving_3 = 20,
       --
       gtd_wall_candles = 50,
+      --
+      gtd_wall_lit_h_window_tall_collite_blue = 10,
+      gtd_wall_lit_h_window_tall_collite_orange = 10
     },
 
     window_groups =
