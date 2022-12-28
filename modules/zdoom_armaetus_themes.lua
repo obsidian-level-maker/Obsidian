@@ -277,7 +277,7 @@ ARMAETUS_ROOM_THEMES =
 
       TEKWALL2 = 15,
       TEKWALL7 = 15,
-    
+
       PIPEWAL2 = 10,
       PIPES = 10,
       BROWNPIP = 10,
@@ -718,7 +718,7 @@ ARMAETUS_ROOM_THEMES =
       TEK7    = 30,
       QFLAT09 = 5,
       GRATE3  = 5,
-      
+
       OBTBSFL3 = 10
     },
 
@@ -1190,7 +1190,7 @@ ARMAETUS_ROOM_THEMES =
 
       BROWN2 = 8,
       BROWN3 = 8,
-      
+
       COMPBLAK = 1,
       COMPTIL3 = 1,
 
@@ -1234,7 +1234,7 @@ ARMAETUS_ROOM_THEMES =
     {
       MFLR8_1 = 5,
       FLOOR4_8 = 5,
-      
+
       DARKF03 = 8,
       DARKM01 = 8,
       G06 = 5,
@@ -2325,7 +2325,7 @@ ARMAETUS_ROOM_THEMES =
       TILES4 = 5,
       TILES5 = 5,
       TILES6 = 5,
-      
+
       OBTSVBF1 = 5,
       OBTSVBF2 = 5,
       OBTSVBF3 = 5,
@@ -2619,7 +2619,7 @@ ARMAETUS_ROOM_THEMES =
 
       FLOOR46D = 10,
       FLOOR46E = 10,
-      
+
       G01 = 10,
       G02 = 10,
       G03 = 10,
@@ -2719,7 +2719,7 @@ ARMAETUS_ROOM_THEMES =
       CRFSHWLL = 5,
       CRGRSWLL = 5,
       CRHRTWLL = 5,
-  
+
       ROKGRN = 20,
       GREEN02 = 15,
       GREEN03 = 15,
@@ -2754,7 +2754,7 @@ ARMAETUS_ROOM_THEMES =
 
       FLOOR46D = 10,
       FLOOR46E = 10,
-      
+
       G01 = 10,
       G02 = 10,
       G03 = 10,
@@ -3106,7 +3106,7 @@ ARMAETUS_ROOM_THEMES =
 
       DARKF03 = 5,
       GSTN02 = 5,
-      
+
       FLAT1 = 2,
       MFLR8_1 = 2,
 
@@ -3137,7 +3137,7 @@ ARMAETUS_ROOM_THEMES =
 
       DARKF03 = 5,
       GSTN02 = 5,
-      
+
       FLAT1 = 2,
       MFLR8_1 = 2,
 
@@ -3233,7 +3233,7 @@ ARMAETUS_ROOM_THEMES =
 
       OBTSVBF1 = 50,
       OBTSVBF2 = 50,
-      OBTSVBF3 = 50 
+      OBTSVBF3 = 50
     },
 
     ceilings =
@@ -4126,7 +4126,7 @@ ARMAETUS_ROOM_THEMES =
       GRAYBIG = 15,
       SHAWN2 = 15,
       STARGR1 = 15,
-      
+
       BIGSTONE = 25,
       BRIKS32 = 25,
       BRIKS34 = 50,
@@ -4205,7 +4205,7 @@ ARMAETUS_LIQUIDS =
       bsludge  = 20,
       gwater  = 25,
       ice     = 40,
-      ice2    = 40  
+      ice2    = 40
     }
   },
 
@@ -5295,7 +5295,7 @@ ARMAETUS_THEMES =
       OBTBCEM3 = 25
     },
 
-    fences = 
+    fences =
     {
       BRIKS31 = 30,
       BRIKS32 = 30,
@@ -5810,9 +5810,9 @@ ARMAETUS_THEMES =
       URBAN2 = 30,
       URBAN3 = 30,
       URBAN4 = 30,
-      URBAN5 = 30, 
+      URBAN5 = 30,
       URBAN6 = 30,
-      URBAN7 = 30, 
+      URBAN7 = 30,
       URBAN8 = 30,
 
       WD01 = 15,
