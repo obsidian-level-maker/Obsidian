@@ -7,13 +7,13 @@ PREFABS.Wall_Dem_tags_reg =
   file   = "wall/Dem_wall_tags.wad",
   map    = "MAP01",
 
-  prob   = 20,
+  prob   = 5,
 
   theme = "urban",
 
   where  = "edge",
   height = 128,
-  deep   = 16,
+  deep   = 20,
 
   bound_z1 = 0,
   bound_z2 = 128,
@@ -53,7 +53,7 @@ PREFABS.Dem_wall_tagswide =
   template = "Wall_Dem_tags_reg",
   map    = "MAP02",
 
-  prob   = 10,
+  prob   = 3,
 
   x_fit = "stretch",
 
@@ -68,7 +68,6 @@ PREFABS.Dem_wall_tagswide =
    TAGCR8 = 50,
    TAGCR13 = 50,
    TAGCR14 = 50,
-
   },
 }
 
@@ -82,5 +81,4 @@ PREFABS.Dem_wall_tagslogs =
   on_liquids = "never",
 
   deep   = 64,
-
 }
