@@ -44,7 +44,7 @@ if(WIN32
     set(CMAKE_EXE_LINKER_FLAGS "/SUBSYSTEM:WINDOWS")
   endif()
 endif()
-if(MSYS)
+if(MSYS OR MINGW)
   if(NOT CONSOLE_ONLY)
     set(CMAKE_EXE_LINKER_FLAGS "-static -mwindows")
   else()
