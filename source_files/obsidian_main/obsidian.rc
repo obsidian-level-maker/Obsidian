@@ -33,12 +33,12 @@ BEGIN
     BEGIN
       VALUE "CompanyName",      "The OBSIDIAN Team\0"
       VALUE "FileDescription",  "OBSIDIAN Level Maker\0"
-      VALUE "FileVersion",      "Beta\0"
+      VALUE "FileVersion",      "20\0"
       VALUE "InternalName",     "OBSIDIAN\0"
       VALUE "LegalCopyright",   "\251 Andrew Apted et al, GNU General Public License\0"
       VALUE "OriginalFilename", "OBSIDIAN.EXE\0"
       VALUE "ProductName",      "OBSIDIAN\0"
-      VALUE "ProductVersion",   "Beta\0"
+      VALUE "ProductVersion",   "20\0"
     END
   END
   BLOCK "VarFileInfo"

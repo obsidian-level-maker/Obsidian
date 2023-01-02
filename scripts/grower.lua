@@ -829,7 +829,7 @@ function Grower_calc_rule_probs(LEVEL)
     -- check against current game, engine, theme (etc).
     -- [ I doubt these are useful, but do it for completeness ]
     if not ob_match_game(rule)     then return 0 end
-    if not ob_match_engine(rule)   then return 0 end
+    if not ob_match_port(rule)   then return 0 end
 
     -- liquid check
     if not LEVEL.liquid and rule.styles and
@@ -879,6 +879,18 @@ function Grower_calc_rule_probs(LEVEL)
       and rule.new_room.env
       and rule.new_room.env == "hallway" then
         rule.use_prob = 0
+        PARAM.skipped_rules = PARAM.skipped_rules + 1
+      end
+    end
+  end
+
+  -- outdoor openness pass
+  if LEVEL.outdoor_openness then
+    for _,rule in pairs(SHAPE_GRAMMAR) do
+      if string.match(rule.name, "COLONNADE") or
+      string.match(rule.name, "PILLAR") then
+        rule.env = "building"
+        rule.outdoor_openness = "low"
       end
     end
   end
@@ -957,7 +969,7 @@ function Grower_calc_rule_probs(LEVEL)
 
       -- diversify environments
       local new_env
-      if rand.odds(50) and qty > 1 then
+      if rand.odds(50) and qty > 1 and not rule.outdoor_openness == "low" then
         if rand.odds(style_sel("outdoors", 0, 30, 60, 100)) then
           new_env = "outdoor"
         else
@@ -1764,7 +1776,7 @@ function Grower_grammatical_pass(SEEDS, LEVEL, R, pass, apply_num, stop_prob,
     end
 
     -- don't exceed trunk quota
-    if rule.teleporter and #LEVEL.trunks >= LEVEL.max_trunks then
+    if not is_emergency and rule.teleporter and #LEVEL.trunks >= LEVEL.max_trunks then
       return 0
     end
 
@@ -2719,6 +2731,27 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
     local A = chunk.area
     local R = A.room
 
+    if not R.has_consistent_stairs_rolled then
+      -- should probably put this in a function for cleanliness
+      for _,P in pairs(PREFABS) do
+        if P.kind == "stairs" then
+          if P.original_rank and P.original_rank ~= 0 then
+            P.rank = P.original_rank
+            P.original_rank = nil
+          else
+            P.rank = nil
+          end
+        end
+      end
+    end
+
+    if rand.odds(R.trunk.consistent_stairs) 
+    and not R.has_consistent_stairs_rolled then
+      R.has_consistent_stairs = true
+    end
+
+    R.has_consistent_stairs_rolled = true
+
     local reqs = chunk:base_reqs(chunk.from_dir)
 
     reqs.kind  = "stairs"
@@ -2740,6 +2773,17 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
     end
 
     local def = Fab_pick(LEVEL, reqs)
+    
+    if R.has_consistent_stairs then
+      if def then
+        if def.rank then
+          PREFABS[def.name].original_rank = def.rank
+        else
+          PREFABS[def.name].original_rank = 0
+        end
+      end
+      PREFABS[def.name].rank = 1
+    end
 
     return def
   end
@@ -3372,7 +3416,7 @@ end
       end
 
       if not ob_match_game(rule)     then return 0 end
-      if not ob_match_engine(rule)   then return 0 end
+      if not ob_match_port(rule)   then return 0 end
 
       if not LEVEL.liquid and rule.styles and
          table.has_elem(rule.styles, "liquids")
@@ -3977,8 +4021,10 @@ function Grower_grow_room(SEEDS, LEVEL, R)
       and R.small_room then
         return 
       end
-      Grower_kill_room(SEEDS, LEVEL, R)
-      return
+      if R.prelim_conn_num == 1 then
+        Grower_kill_room(SEEDS, LEVEL, R)
+        return
+      end
     end
   end
 
@@ -3986,9 +4032,11 @@ function Grower_grow_room(SEEDS, LEVEL, R)
   if LEVEL.is_linear then
     if R.grow_parent then
       if R.grow_parent:prelim_conn_num(LEVEL) > 2 then
-        gui.debugf("Linear mode: ROOM_" .. R.id .. " culled.\n")
-        Grower_kill_room(SEEDS, LEVEL, R)
-        return
+        if R.prelim_conn_num == 1 then
+          gui.debugf("Linear mode: ROOM_" .. R.id .. " culled.\n")
+          Grower_kill_room(SEEDS, LEVEL, R)
+          return
+        end
       end
     end
   end
@@ -3996,8 +4044,10 @@ function Grower_grow_room(SEEDS, LEVEL, R)
   if LEVEL.is_linear or LEVEL.is_procedural_gotcha then
     if R.grow_parent and R.grow_parent.is_start then
       if R.grow_parent:prelim_conn_num(LEVEL) > 1 then
-        gui.debugf("Linear mode: ROOM " .. R.id .. " culled.\n")
-        Grower_kill_room(SEEDS, LEVEL, R)
+        if R.prelim_conn_num == 1 then
+          gui.debugf("Linear mode: ROOM " .. R.id .. " culled.\n")
+          Grower_kill_room(SEEDS, LEVEL, R)
+        end
       end
     end
   end
@@ -4005,7 +4055,9 @@ function Grower_grow_room(SEEDS, LEVEL, R)
   if LEVEL.has_linear_start and #LEVEL.rooms == 4 then
     for _,R2 in pairs(LEVEL.rooms) do
       if #R2.conns == 1 and R2.grow_parent.is_start then
-        Grower_kill_room(SEEDS, LEVEL, R2)
+        if R.prelim_conn_num == 1 then
+          Grower_kill_room(SEEDS, LEVEL, R2)
+        end
       end
     end
   end
@@ -4159,6 +4211,7 @@ function Grower_add_a_trunk(LEVEL)
 
   trunk.stair_z_dir = rand.sel(50, 1, -1)
   trunk.stair_z_dir_fudge_prob = rand.pick({0,13,25,33,50})
+  trunk.consistent_stairs = 100 - trunk.stair_z_dir_fudge_prob
 
   table.insert(LEVEL.trunks, trunk)
 
@@ -4239,8 +4292,9 @@ function Grower_begin_trunks(LEVEL, SEEDS)
   -- Last ditch to save the level
   if R.is_dead then
     LEVEL.max_trunks = 9
-    trunk = Grower_add_a_trunk(LEVEL)
-    R = Grower_create_and_grow_room(SEEDS, LEVEL, trunk, nil, info)
+    Grower_kill_a_trunk(LEVEL, trunk)
+    local new_trunk = Grower_add_a_trunk(LEVEL)
+    R = Grower_create_and_grow_room(SEEDS, LEVEL, new_trunk, nil, info)
   end
 
   assert(not R.is_dead)  
@@ -4395,7 +4449,7 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
       if not R.is_grown then
         if R.is_hallway then
           Grower_kill_room(SEEDS, LEVEL, R)
-        elseif not R.is_hallway and rand.odds(style_sel("sub_rooms", 100, 66, 33, 0)) then
+        elseif R.prelim_conn_num == 1 and rand.odds(style_sel("sub_rooms", 100, 66, 33, 0)) then
           Grower_kill_room(SEEDS, LEVEL, R)
         else
           R.is_sub_room = true

@@ -62,21 +62,5 @@ OB_MODULES["alt_shape_grammars"] =
       randomize_group = "architecture",
     },
 
-    {
-      name = "float_grammar_oblige_v5",
-      label = _("Oblige v5"),
-      valuator = "slider",
-      units = _("% of Levels"),
-      min = 0,
-      max = 100,
-      increment = 1,
-      default = 0,
-      tooltip = _("Sets chance of levels using the Oblige v5 shape grammar."),
-      longtip = _("Gives levels a chance of being generated using the Oblige v5 shape grammar. With this grammar, indoor rooms are usually square or diamond-shaped. Parks are larger than the indoor areas, but still more or less rectangular in nature. Caves retain their organic layouts. Hallways and joiners are still used as normal. Room sizes are fairly consistent."),
-      priority = 101,
-      randomize_group = "architecture",
-      gap = 1
-    },
-
   },
 }

@@ -1372,11 +1372,31 @@ ARMAETUS_MATERIALS = {
   TAG9 = { t="TAG9", f="CEIL4_3"},
   TAG10 = { t="TAG10", f="CEIL4_3"},
   TAG11 = { t="TAG11", f="CEIL4_3"},
-  TAG12 = { t="TAG12", f="CEIL4_3"},
   TAGS1 = { t="TAGS1", f="CEIL4_3"},
   TAGS2 = { t="TAGS2", f="CEIL4_3"},
   TAGS3 = { t="TAGS3", f="CEIL4_3"},
   TAGS4 = { t="TAGS4", f="CEIL4_3"},
+
+  ----------------------------------------------
+  -- Craneo decorative tags/bloody writings --
+  ----------------------------------------------
+
+  TAGCR1 = { t="TAGCR1", f="CEIL4_3"},
+  TAGCR2 = { t="TAGCR2", f="CEIL4_3"},
+  TAGCR3 = { t="TAGCR3", f="CEIL4_3"},
+  TAGCR4 = { t="TAGCR4", f="CEIL4_3"},
+  TAGCR5 = { t="TAGCR5", f="CEIL4_3"},
+  TAGCR6 = { t="TAGCR6", f="CEIL4_3"},
+  TAGCR7 = { t="TAGCR7", f="CEIL4_3"},
+  TAGCR8 = { t="TAGCR8", f="CEIL4_3"},
+  TAGCR9 = { t="TAGCR9", f="CEIL4_3"},
+  TAGCR10 = { t="TAGCR10", f="CEIL4_3"},
+  TAGCR11 = { t="TAGCR11", f="CEIL4_3"},
+  TAGCR12 = { t="TAGCR12", f="CEIL4_3"},
+  TAGCR13 = { t="TAGCR13", f="CEIL4_3"},
+  TAGCR14 = { t="TAGCR14", f="CEIL4_3"},
+  TAGCR15 = { t="TAGCR15", f="CEIL4_3"},
+  TAGCR16 = { t="TAGCR16", f="CEIL4_3"},
 
 
   ------------------------

@@ -77,7 +77,7 @@ UI_MONS.BOSSREGULARS =
 }
 
 function UI_MONS.setup(self)
-  
+
   module_param_up(self)
 
 end
@@ -114,7 +114,6 @@ OB_MODULES["ui_mons"] =
       longtip=_("For reference: Obsidian's default for normal is 1.0.\n\nMix It Up: Selects quantities specified between Upper and Lower Bound choices on a chosen by the user.\n\nProgressive: creates a curve of increasing monster population also based on the Fine Tune options below.\n\nIt does not matter if your Upper/Lower Bound selections are reversed. Progressive will pick the min VS max quantities selected.\n\nNone: No monsters. Why would you choose this option? \nTrivial: Very, very few monsters. Almost nothing to kill.\nSporadic: Very few monsters. Not many things to kill.\nMeager: Fewer monsters. Not challenging for the average player.\nEasy: Obsidian default quantity. Not too bad for casual players.\nModest: Slightly above default. Still pretty easy for most. \nBearable: Above average opposition. Getting warmer! \nRough: Slightly difficult. Equivalent to late 90s megawads. \nStrenuous: Baby steps into big boy difficulty. Lots to kill! \nFormidable/Harsh: 'Easy' level of difficult. Considerable opposition. \nPainful/Ferocious: Getting into slaughterwad territory. Difficult! \nUnforgiving/Punishing: Slaughterwad level difficulty. Skill needed. \nMurderous/Grueling: Extremely high monster count. \nUnrelenting/Arduous: An uphill battle. Expect to reload saves often! \nBarbaric/Savage: Up into the hardest slaughterwads out there. \nBrutal/Draconian: Legions of demons await you on this setting. \nMerciless: Hell will throw everything at you at this setting, you masochist."),
       randomize_group="monsters",
     },
-
     {
       name="float_mix_it_up_upper_range",
       label=_("Upper Bound"),
@@ -127,7 +126,6 @@ OB_MODULES["ui_mons"] =
       tooltip=_("If you have Mix It Up or Progressive selected, you can define the upper bound here. Otherwise, this option is simply ignored."),
       longtip=_("For reference: Obsidian's default for normal is 1.0.\n\nMix It Up: Selects quantities specified between Upper and Lower Bound choices on a chosen by the user.\n\nProgressive: creates a curve of increasing monster population also based on the Fine Tune options below.\n\nIt does not matter if your Upper/Lower Bound selections are reversed. Progressive will pick the min VS max quantities selected.\n\nNone: No monsters. Why would you choose this option? \nTrivial: Very, very few monsters. Almost nothing to kill.\nSporadic: Very few monsters. Not many things to kill.\nMeager: Fewer monsters. Not challenging for the average player.\nEasy: Obsidian default quantity. Not too bad for casual players.\nModest: Slightly above default. Still pretty easy for most. \nBearable: Above average opposition. Getting warmer! \nRough: Slightly difficult. Equivalent to late 90s megawads. \nStrenuous: Baby steps into big boy difficulty. Lots to kill! \nFormidable/Harsh: 'Easy' level of difficult. Considerable opposition. \nPainful/Ferocious: Getting into slaughterwad territory. Difficult! \nUnforgiving/Punishing: Slaughterwad level difficulty. Skill needed. \nMurderous/Grueling: Extremely high monster count. \nUnrelenting/Arduous: An uphill battle. Expect to reload saves often! \nBarbaric/Savage: Up into the hardest slaughterwads out there. \nBrutal/Draconian: Legions of demons await you on this setting. \nMerciless: Hell will throw everything at you at this setting, you masochist."),
     },
-
     {
       name="float_mix_it_up_lower_range",
       label=_("Lower Bound"),
@@ -154,7 +152,6 @@ OB_MODULES["ui_mons"] =
       presets = _("0.55:0.55 (Weak),0.75:0.75 (Easier),1:1 (Average),1.3:1.3 (Harder),1.7:1.7 (Tough),2.5:2.5 (Fierce),12:12 (CRAZY)"),
       randomize_group="monsters",
     },
-
     {
       name="float_ramp_up",
       label=_("Ramp Up"),
@@ -177,7 +174,6 @@ OB_MODULES["ui_mons"] =
       default = 1,
       tooltip=_("Ensure every map can be completed with only the default weapon (ignore weapons obtained from earlier maps)"),
     },
-
     {
       name="bool_quiet_start",
       label=_("Quiet Start"),
@@ -185,14 +181,14 @@ OB_MODULES["ui_mons"] =
       default = 0,
       tooltip=_("Makes start rooms mostly safe - no enemies and all outlooking windows are removed. (windows are retained on Procedural Gotchas) Default Obsidian behavior is 'no'."),
     },
-
-    { name="mon_variety", 
-    label=_("Monster Variety"),
-    choices=STYLE_CHOICES,
-    tooltip= _("Affects how many different monster types can appear in each room.\nSetting this to NONE will make each level use a single monster type"),
+    {
+      name="mon_variety",
+      label=_("Monster Variety"),
+      choices=STYLE_CHOICES,
+      tooltip= _("Affects how many different monster types can appear in each room.\nSetting this to NONE will make each level use a single monster type"),
     },
     {
-      name="mon_variety_jumpstart", 
+      name="mon_variety_jumpstart",
       label=_("Monster Variety Jumpstart"),
       choices=UI_MONS.MONSTER_KIND_JUMPSTART_CHOICES,
       default = "default",
@@ -200,10 +196,11 @@ OB_MODULES["ui_mons"] =
       gap = 1
     },
 
-    { name="bosses",    
-    label=_("Bosses"), 
-    tooltip=_("Affects likelihood and difficulty of boss encounters."), 
-    choices=UI_MONS.BOSSES,  randomize_group="monsters", },
+    {
+      name="bosses",
+      label=_("Bosses"),
+      tooltip=_("Affects likelihood and difficulty of boss encounters."),
+      choices=UI_MONS.BOSSES,  randomize_group="monsters", },
     {
       name="bossesnormal",
       label=_("Bosses As Regulars"),
@@ -213,10 +210,12 @@ OB_MODULES["ui_mons"] =
       gap = 1,
       randomize_group="monsters",
     },
-    { name="traps",     
-    label=_("Traps"), 
-    tooltip = _("Control the amount of traps."),
-    choices=STYLE_CHOICES, randomize_group="monsters", },
+
+    {
+      name="traps",
+      label=_("Traps"),
+      tooltip = _("Control the amount of traps."),
+      choices=STYLE_CHOICES, randomize_group="monsters", },
     {
       name="trap_style",
       label=_("Trap Style"),
@@ -235,11 +234,10 @@ OB_MODULES["ui_mons"] =
       randomize_group="monsters",
     },
 
-    { name="cages",     
-    label=_("Cages"), 
-    tooltip = _("Control the amount of cages."), 
-    choices=STYLE_CHOICES, randomize_group="monsters", },
-
+    { name="cages",
+      label=_("Cages"),
+      tooltip = _("Control the amount of cages."),
+      choices=STYLE_CHOICES, randomize_group="monsters", },
     {
       name="cage_qty",
       label=_("Cage Monsters"),
@@ -267,7 +265,7 @@ OB_MODULES["ui_mons"] =
 UI_MONS_WOLF_3D = { }
 
 function UI_MONS_WOLF_3D.setup(self)
-  
+
   module_param_up(self)
 
 end

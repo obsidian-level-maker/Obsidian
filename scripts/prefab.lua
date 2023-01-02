@@ -123,7 +123,6 @@ WADFAB_FX_DELTAS =
   [3]  =  48,  -- blink slow
   [13] =  48,  -- blink slow, sync
   [17] =  48,  -- flickers
-
   [8]  = 128  -- oscillates
 }
 
@@ -133,7 +132,6 @@ WADFAB_MOVER       = 995
 WADFAB_DOOR        = 996
 WADFAB_DELTA_12    = 997
 WADFAB_LIGHT_BRUSH = 987
-WADFAB_SKIP_LIGHT_BRUSH = 988
 
 
 function load_from_subdir(top_level, sub, extension)
@@ -276,7 +274,9 @@ function Fab_load_all_definitions()
     
       def.use_prob = calc_prob(def)
 
-      count = count + 1
+      if def.use_prob > 0 then
+        count = count + 1
+      end
     end
 
     gui.printf(count .. " prefabs loaded and usable!\n\n")
@@ -1413,6 +1413,7 @@ function Fab_load_wad(def)
 
 
   local function decode_lighting(S, C)
+
     if S.light == 0 then 
       C.shadow = 10000
     elseif S.light < 80 then
@@ -1431,8 +1432,8 @@ function Fab_load_wad(def)
     if delta then
       C.fx_delta = delta
     end
-  end
 
+  end
 
   local function create_light_brush(S, coords)
     -- clear the special (but allow light effects)
@@ -1504,7 +1505,7 @@ function Fab_load_wad(def)
       end
 
       -- give floor brush lighting ONLY when ceiling brush is absent
-      if S.ceil_tex == "_NOTHING" and S.floor_h < S.ceil_h and S.special ~= WADFAB_SKIP_LIGHT_BRUSH then
+      if S.ceil_tex == "_NOTHING" and S.floor_h < S.ceil_h then
         decode_lighting(S, C)
       end
 
@@ -1525,7 +1526,7 @@ function Fab_load_wad(def)
       end
 
       -- closed sectors never specify a light
-      if S.floor_h < S.ceil_h and S.special ~= WADFAB_SKIP_LIGHT_BRUSH then
+      if S.floor_h < S.ceil_h then
         decode_lighting(S, C)
       end
 
@@ -2389,8 +2390,8 @@ function Fab_replacements(LEVEL, fab)
             C.arg1 = current_tag
           elseif C.special == 70 then
             if fab.out_tag1 then -- Handle monster depots
-              local tag_table
-              if fab.out_tag1 then table.insert(tag_table, fab.out_tag1) end
+              local tag_table = {}
+              table.insert(tag_table, fab.out_tag1)
               if fab.out_tag2 then table.insert(tag_table, fab.out_tag2) end
               if fab.out_tag3 then table.insert(tag_table, fab.out_tag3) end
               if fab.out_tag4 then table.insert(tag_table, fab.out_tag4) end
@@ -2824,10 +2825,12 @@ function Fab_find_matches(LEVEL, reqs, match_state)
     local kind = assert(def.kind)
 
     if def.jump_crouch and def.jump_crouch == true then
-      if not PARAM.bool_jump_crouch then 
+      if not PARAM.bool_jump_crouch then
+        def.use_prob = 0 
         return 0 
       end
       if PARAM.bool_jump_crouch == 0 then
+        def.use_prob = 0
         return 0
       end
     end
@@ -2872,7 +2875,10 @@ function Fab_find_matches(LEVEL, reqs, match_state)
 
     -- liquid check
     if def.liquid then
-      if not LEVEL.liquid then return 0 end
+      if not LEVEL.liquid then
+        def.use_prob = 0 
+        return 0 
+      end
       if def.liquid == "harmless" and     LEVEL.liquid.damage then return 0 end
       if def.liquid == "harmful"  and not LEVEL.liquid.damage then return 0 end
     end
@@ -2887,7 +2893,10 @@ function Fab_find_matches(LEVEL, reqs, match_state)
     if reqs.is_sink == "sky" and def.sink_mode == "never_sky" then return 0 end
 
     -- darkness check
-    if def.dark_map and not LEVEL.is_dark then return 0 end
+    if def.dark_map and not LEVEL.is_dark then
+      def.use_prob = 0 
+      return 0 
+    end
 
     -- for fabs to spawn on roads (and not sidewalks)
     if reqs.is_road and not def.can_be_on_roads then return 0 end
@@ -2989,15 +2998,19 @@ function Fab_find_matches(LEVEL, reqs, match_state)
 
     if prob <= 0 then return 0 end
 
+    local factor = style_factor(def)
+
     if not ob_match_level_theme(LEVEL, def, theme_override) then return 0 end
     if not ob_match_feature(def) then return 0 end
-    if not ob_match_game(def) then return 0 end
-    if not ob_match_port(def) then return 0 end
+    if factor <= 0 then
+      def.use_prob = 0
+      return 0
+    end
 
     if (def.rank or 0) < match_state.rank then return 0 end
 
     prob = prob * match_requirements(def)
-    prob = prob * style_factor(def)
+    prob = prob * factor
 
     return prob
   end
@@ -3009,7 +3022,7 @@ function Fab_find_matches(LEVEL, reqs, match_state)
 
   local tab = {}
 
-  for name,def in pairs(PREFABS) do
+  for name,def in pairs(LEVEL.PREFABS) do
     local prob = prob_for_match(def, match_state, reqs.theme_override)
 
     if prob > 0 then

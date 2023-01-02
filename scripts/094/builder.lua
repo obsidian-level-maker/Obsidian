@@ -7177,6 +7177,10 @@ gui.debugf("add_scenery : %s\n", item)
       add_exit_elevator(c)
     elseif (c.quest.kind == "switch") or (c.quest.kind == "exit") then
       add_switch(c, true)
+      if c.quest.needs_boss then
+        c.quest.item = PLAN.level.boss_kind
+        add_boss(c)
+      end
     end
   end
 
@@ -7219,6 +7223,10 @@ gui.debugf("add_scenery : %s\n", item)
   if not PLAN.deathmatch and c == c.quest.last then
     if (c.quest.kind == "switch") or (c.quest.kind == "exit" and not GAME.FACTORY.caps.elevator_exits) then
       add_switch(c, false)
+      if c.quest.needs_boss then
+        c.quest.item = PLAN.level.boss_kind
+        add_boss(c)
+      end
     end
   end
 
@@ -7235,10 +7243,6 @@ gui.debugf("add_scenery : %s\n", item)
       else
         add_quest_object(c, c.quest.item, "pedestal_ITEM", "must", "special")
       end
-    end
-
-    if c.quest.kind == "boss" then
-      add_boss(c)
     end
 
   elseif PLAN.deathmatch and (c.require_weapon or 

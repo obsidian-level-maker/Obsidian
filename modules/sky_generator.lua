@@ -413,6 +413,7 @@ function SKY_GEN.setup(self)
   module_param_up(self)
 
   PARAM.episode_sky_color = {}
+  PARAM.sky_generator_active = true
 end
 
 function SKY_GEN.generate_skies()

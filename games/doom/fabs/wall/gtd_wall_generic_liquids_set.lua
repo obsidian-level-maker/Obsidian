@@ -4,7 +4,7 @@ PREFABS.Wall_gtd_generic_sunderfall =
   map    = "MAP01",
 
   rank = 2,
-  liquids = "there_is",
+  liquid = "there_is",
 
   prob = 50,
   group = "gtd_sunderfall",

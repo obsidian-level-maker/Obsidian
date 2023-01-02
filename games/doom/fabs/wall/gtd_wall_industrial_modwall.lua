@@ -39,6 +39,10 @@ PREFABS.Wall_industrial_modwall_1_hell =
 
   theme = "hell",
   rank = 1,
+
+  prob = 50,
+
+  height = 128
 }
 
 PREFABS.Wall_industrial_modwall_1a_hell =
@@ -60,7 +64,9 @@ PREFABS.Wall_industrial_modwall_1a_hell_diag =
   theme = "hell",
   rank = 1,
 
-  where = "diagonal"
+  where = "diagonal",
+
+  prob = 120
 }
 
 --

@@ -19,8 +19,8 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __OBLIGE_MAIN_H__
-#define __OBLIGE_MAIN_H__
+#ifndef __OBSIDIAN_MAIN_H__
+#define __OBSIDIAN_MAIN_H__
 
 #include <hedley.h>
 #include <cstddef>
@@ -49,7 +49,7 @@ constexpr const char *OBSIDIAN_SHORT_VERSION = "20";
 extern std::string OBSIDIAN_CODE_NAME;
 
 constexpr const char *OBSIDIAN_WEBSITE =
-    "https://github.com/dashodanger/Obsidian/wiki";
+    "https://obsidian-level-maker.github.io";
 
 constexpr const char *CONFIG_FILENAME = "CONFIG.txt";
 constexpr const char *OPTIONS_FILENAME = "OPTIONS.txt";
@@ -363,7 +363,7 @@ game_interface_c *Quake2_GameObject();
 game_interface_c *Quake3_GameObject();
 game_interface_c *Wolf_GameObject();
 
-#endif /* __OBLIGE_MAIN_H__ */
+#endif /* __OBSIDIAN_MAIN_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

@@ -1364,7 +1364,10 @@ DOOM.THEMES =
       --
       gtd_DMV_set = 35,
       --
-      gtd_door_storage = 25
+      gtd_door_storage = 25,
+      --
+      gtd_wall_lit_h_window_tall_gray = 50,
+      gtd_wall_lit_h_window_tall_brown = 25
     },
 
     outdoor_wall_groups =
@@ -1855,7 +1858,10 @@ DOOM.THEMES =
       --
       cran_bloodtubes_set = 50,
       --
-      gtd_door_storage = 30
+      gtd_door_storage = 30,
+      --
+      gtd_wall_lit_h_window_tall_gray = 25,
+      gtd_wall_lit_h_window_tall_brown = 50      
     },
 
     window_groups =

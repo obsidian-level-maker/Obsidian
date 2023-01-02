@@ -87,7 +87,7 @@ function EDGE.remap_music()
 
   for i = 1,10 do
     local track = string.format(
-      "[%2d] MUSICINFO = MUS:LUMP:D_%s;\n", i, mus_list[i])
+      "[%02d] MUSICINFO = MUS:LUMP:\"D_%s\";\n", i, mus_list[i])
 
     table.insert(data, track)
   end
@@ -130,7 +130,7 @@ end
 function EDGE.all_done()
   EDGE.create_language();
 
-  -- Edge_remap_music()
+  --EDGE.remap_music()
 end
 
 

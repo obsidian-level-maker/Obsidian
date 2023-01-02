@@ -74,7 +74,7 @@ struct UpdateKv {
 UpdateKv update_kv;
 
 std::string OBSIDIAN_TITLE = "OBSIDIAN Level Maker";
-std::string OBSIDIAN_CODE_NAME = "Unstable";
+std::string OBSIDIAN_CODE_NAME = "Gates of Tartarus";
 
 int screen_w;
 int screen_h;
@@ -156,8 +156,7 @@ bool random_string_seeds = false;
 bool password_mode = false;
 bool did_specify_seed = false;
 int zip_output = 0;
-int log_size = 1;  // Without debugging info on, this should handle a full size
-                   // 75 megawad with some room to spare
+int log_size = 7;
 int log_limit = 5;
 bool mid_batch = false;
 int builds_per_run = 1;
@@ -569,7 +568,7 @@ bool Main::BackupFile(const std::filesystem::path &filename) {
 
     return true;
 }
-
+#ifndef CONSOLE_ONLY
 int Main::DetermineScaling() {
     /* computation of the Kromulent factor */
 
@@ -608,7 +607,7 @@ int Main::DetermineScaling() {
 
     return 0;
 }
-
+#endif
 #if !defined(CONSOLE_ONLY) && !defined(__APPLE__)
 bool Main::LoadInternalFont(const char *fontpath, const int fontnum,
                             const char *fontname) {
@@ -1542,7 +1541,7 @@ hardrestart:;
 #endif
         Trans_SetLanguage();
         OBSIDIAN_TITLE = _("OBSIDIAN Level Maker");
-        OBSIDIAN_CODE_NAME = _("Unstable");
+        OBSIDIAN_CODE_NAME = _("Gates of Tartarus");
 #ifndef CONSOLE_ONLY
         Main::SetupFLTK();
 #endif
@@ -1770,35 +1769,35 @@ softrestart:;
         // Have to add these after reading existing settings - Dasho
         if (main_win) {
             main_win->menu_bar->add(
-                _("Surprise Me/Preserve Old Config"), NULL,
-                main_win_surprise_config_CB, 0,
+                _("Surprise Me/Preserve Old Config"), nullptr,
+                main_win_surprise_config_CB, nullptr,
                 FL_MENU_TOGGLE | (preserve_old_config ? FL_MENU_VALUE : 0));
             main_win->menu_bar->add(
-                _("Surprise Me/Randomize Architecture"), NULL,
-                main_win_architecture_config_CB, 0,
+                _("Surprise Me/Randomize Architecture"), nullptr,
+                main_win_architecture_config_CB, nullptr,
                 FL_MENU_TOGGLE | (randomize_architecture ? FL_MENU_VALUE : 0));
             main_win->menu_bar->add(
-                _("Surprise Me/Randomize Combat"), NULL,
-                main_win_monsters_config_CB, 0,
+                _("Surprise Me/Randomize Combat"), nullptr,
+                main_win_monsters_config_CB, nullptr,
                 FL_MENU_TOGGLE | (randomize_monsters ? FL_MENU_VALUE : 0));
             main_win->menu_bar->add(
-                _("Surprise Me/Randomize Pickups"), NULL,
-                main_win_pickups_config_CB, 0,
+                _("Surprise Me/Randomize Pickups"), nullptr,
+                main_win_pickups_config_CB, nullptr,
                 FL_MENU_TOGGLE | (randomize_pickups ? FL_MENU_VALUE : 0));
             main_win->menu_bar->add(
-                _("Surprise Me/Randomize Other"), NULL, main_win_misc_config_CB,
-                0, FL_MENU_TOGGLE | (randomize_misc ? FL_MENU_VALUE : 0));
+                _("Surprise Me/Randomize Other"), nullptr, main_win_misc_config_CB,
+                nullptr, FL_MENU_TOGGLE | (randomize_misc ? FL_MENU_VALUE : 0));
             if (all_addons.size() == 0) {
-                main_win->menu_bar->add(_("Addons/No Addons Detected"), 0, 0, 0,
+                main_win->menu_bar->add(_("Addons/No Addons Detected"), nullptr, nullptr, nullptr,
                                         FL_MENU_INACTIVE);
             } else {
                 main_win->menu_bar->add(_("Addons/Restart and Apply Changes"),
-                                        0, main_win_apply_addon_CB, 0, 0);
+                                        nullptr, main_win_apply_addon_CB, nullptr, 0);
                 for (int i = 0; i < all_addons.size(); i++) {
                     std::string addon_entry = _("Addons/");
                     addon_entry.append(all_addons[i].name.filename().string());
                     main_win->menu_bar->add(
-                        addon_entry.c_str(), 0, main_win_addon_CB,
+                        addon_entry.c_str(), nullptr, main_win_addon_CB,
                         (void *)&all_addons[i],
                         FL_MENU_TOGGLE |
                             (all_addons[i].enabled ? FL_MENU_VALUE : 0));
@@ -2023,8 +2022,9 @@ softrestart:;
                     old_seed.clear();
                     old_name.clear();
                 }
-
+#ifndef CONSOLE_ONLY
                 main_win->build_box->alt_disp->label("");
+#endif
                 // regardless of success or fail, compute a new seed
                 Main_CalcNewSeed();
 

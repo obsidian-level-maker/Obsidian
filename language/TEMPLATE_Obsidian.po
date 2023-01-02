@@ -229,15 +229,15 @@ msgstr ""
 msgid "Episodic"
 msgstr ""
 
-#: scripts/level.lua:2739
+#: scripts/level.lua:2733
 msgid "\nWarning: The game that you have selected is in an experimental state. WADs may not build successfully and certain gameplay features may not be implemented yet! To ignore this warning and continue generation for these games, check the \"Experimental Games\" checkbox located in the Debug Control Module.\n\nThis message will change should development scope expand."
 msgstr ""
 
-#: scripts/level.lua:2746
+#: scripts/level.lua:2740
 msgid "\nWarning: Limit-Removing uses a very basic set of prefabs, and should only be used if your source port isn't compatible with any other choice!\nClick the help link next to the Engine setting for an explanation of the other choices. To disable this warning, check the \"Suppress NoLimit Warning\" checkbox located in the Debug Control Module."
 msgstr ""
 
-#: scripts/level.lua:2844
+#: scripts/level.lua:2838
 msgid "Oblige V2"
 msgstr ""
 
@@ -257,12 +257,200 @@ msgstr ""
 msgid "Progressive"
 msgstr ""
 
-#: scripts/obsidian.lua:2579
+#: scripts/obsidian.lua:2359
+msgid "option: "
+msgstr ""
+
+#: scripts/obsidian.lua:2360
+msgid "option: "
+msgstr ""
+
+#: scripts/obsidian.lua:2361
+msgid "comment: "
+msgstr ""
+
+#: scripts/obsidian.lua:2362
+msgid "comment: "
+msgstr ""
+
+#: scripts/obsidian.lua:2363
+msgid "engine: "
+msgstr ""
+
+#: scripts/obsidian.lua:2364
+msgid "engine: "
+msgstr ""
+
+#: scripts/obsidian.lua:2371
+msgid "game: "
+msgstr ""
+
+#: scripts/obsidian.lua:2372
+msgid "game: "
+msgstr ""
+
+#: scripts/obsidian.lua:2379
+msgid "port: "
+msgstr ""
+
+#: scripts/obsidian.lua:2380
+msgid "port: "
+msgstr ""
+
+#: scripts/obsidian.lua:2386
+msgid "values: "
+msgstr ""
+
+#: scripts/obsidian.lua:2387
+msgid "values: "
+msgstr ""
+
+#: scripts/obsidian.lua:2392
+msgid "default: "
+msgstr ""
+
+#: scripts/obsidian.lua:2393
+msgid "default: "
+msgstr ""
+
+#: scripts/obsidian.lua:2395
+msgid "values: "
+msgstr ""
+
+#: scripts/obsidian.lua:2396
+msgid "default: "
+msgstr ""
+
+#: scripts/obsidian.lua:2397
+msgid "values: "
+msgstr ""
+
+#: scripts/obsidian.lua:2398
+msgid "default: "
+msgstr ""
+
+#: scripts/obsidian.lua:2400
+msgid "values: "
+msgstr ""
+
+#: scripts/obsidian.lua:2401
+msgid "values: "
+msgstr ""
+
+#: scripts/obsidian.lua:2413
+msgid "randomize_group: "
+msgstr ""
+
+#: scripts/obsidian.lua:2414
+msgid "randomize_group: "
+msgstr ""
+
+#: scripts/obsidian.lua:2447
+msgid "tooltip"
+msgstr ""
+
+#: scripts/obsidian.lua:2448
+msgid "engine"
+msgstr ""
+
+#: scripts/obsidian.lua:2450
+msgid "ALL"
+msgstr ""
+
+#: scripts/obsidian.lua:2462
+msgid "game"
+msgstr ""
+
+#: scripts/obsidian.lua:2463
+msgid "ALL"
+msgstr ""
+
+#: scripts/obsidian.lua:2464
+msgid "ALL"
+msgstr ""
+
+#: scripts/obsidian.lua:2476
+msgid "port"
+msgstr ""
+
+#: scripts/obsidian.lua:2477
+msgid "ALL"
+msgstr ""
+
+#: scripts/obsidian.lua:2478
+msgid "ALL"
+msgstr ""
+
+#: scripts/obsidian.lua:2491
+msgid "type"
+msgstr ""
+
+#: scripts/obsidian.lua:2492
+msgid "slider"
+msgstr ""
+
+#: scripts/obsidian.lua:2493
+msgid "values"
+msgstr ""
+
+#: scripts/obsidian.lua:2494
+msgid "min"
+msgstr ""
+
+#: scripts/obsidian.lua:2495
+msgid "max"
+msgstr ""
+
+#: scripts/obsidian.lua:2500
+msgid "default"
+msgstr ""
+
+#: scripts/obsidian.lua:2516
+msgid "type"
+msgstr ""
+
+#: scripts/obsidian.lua:2517
+msgid "boolean"
+msgstr ""
+
+#: scripts/obsidian.lua:2518
+msgid "default"
+msgstr ""
+
+#: scripts/obsidian.lua:2520
+msgid "type"
+msgstr ""
+
+#: scripts/obsidian.lua:2521
+msgid "choice"
+msgstr ""
+
+#: scripts/obsidian.lua:2522
+msgid "values"
+msgstr ""
+
+#: scripts/obsidian.lua:2533
+msgid "randomize_group"
+msgstr ""
+
+#: scripts/obsidian.lua:2554
+msgid "~~~~~~~ Making Levels ~~~~~~~\n\n"
+msgstr ""
+
+#: scripts/obsidian.lua:2571
 msgid "SLUMP"
 msgstr ""
 
-#: scripts/obsidian.lua:2590
+#: scripts/obsidian.lua:2582
 msgid "id Tech 0"
+msgstr ""
+
+#: scripts/obsidian.lua:2611
+msgid "~~~~~~~ Build Aborted! ~~~~~~~\n\n"
+msgstr ""
+
+#: scripts/obsidian.lua:2616
+msgid "~~~~~~ Finished Making Levels ~~~~~~\n\n"
 msgstr ""
 
 #: engines/build.lua:28
@@ -467,22 +655,6 @@ msgstr ""
 
 #: modules/alt_shape_grammars.lua:60
 msgid "Gives levels a chance of being generated using Boxes of Death shape grammar. With this grammar, rooms are square shaped, with the occasional chunk taken out of one of the corners or sides. Room sizes are very consistent."
-msgstr ""
-
-#: modules/alt_shape_grammars.lua:67
-msgid "Oblige v5"
-msgstr ""
-
-#: modules/alt_shape_grammars.lua:69
-msgid "% of Levels"
-msgstr ""
-
-#: modules/alt_shape_grammars.lua:74
-msgid "Sets chance of levels using the Oblige v5 shape grammar."
-msgstr ""
-
-#: modules/alt_shape_grammars.lua:75
-msgid "Gives levels a chance of being generated using the Oblige v5 shape grammar. With this grammar, indoor rooms are usually square or diamond-shaped. Parks are larger than the indoor areas, but still more or less rectangular in nature. Caves retain their organic layouts. Hallways and joiners are still used as normal. Room sizes are fairly consistent."
 msgstr ""
 
 #: modules/chex3/ctl_chex.lua:60
@@ -5070,99 +5242,99 @@ msgid "DEFAULT"
 msgstr ""
 
 #: modules/miscellaneous.lua:99
-msgid "x0.25"
+msgid "Tech and Urban"
 msgstr ""
 
 #: modules/miscellaneous.lua:100
-msgid "x0.5"
+msgid "Urban"
 msgstr ""
 
 #: modules/miscellaneous.lua:101
-msgid "x0.75"
+msgid "Always"
 msgstr ""
 
 #: modules/miscellaneous.lua:102
-msgid "x1"
-msgstr ""
-
-#: modules/miscellaneous.lua:103
-msgid "x1.25"
-msgstr ""
-
-#: modules/miscellaneous.lua:104
-msgid "x1.5"
-msgstr ""
-
-#: modules/miscellaneous.lua:105
-msgid "x2"
-msgstr ""
-
-#: modules/miscellaneous.lua:106
-msgid "x4"
+msgid "DEFAULT"
 msgstr ""
 
 #: modules/miscellaneous.lua:107
-msgid "x6"
+msgid "x0.25"
 msgstr ""
 
 #: modules/miscellaneous.lua:108
-msgid "x8"
-msgstr ""
-
-#: modules/miscellaneous.lua:109
-msgid "Vanilla"
-msgstr ""
-
-#: modules/miscellaneous.lua:110
-msgid "Mix It Up"
-msgstr ""
-
-#: modules/miscellaneous.lua:115
-msgid "x0.15"
-msgstr ""
-
-#: modules/miscellaneous.lua:116
 msgid "x0.5"
 msgstr ""
 
-#: modules/miscellaneous.lua:117
+#: modules/miscellaneous.lua:109
 msgid "x0.75"
 msgstr ""
 
-#: modules/miscellaneous.lua:118
+#: modules/miscellaneous.lua:110
 msgid "x1"
 msgstr ""
 
-#: modules/miscellaneous.lua:119
+#: modules/miscellaneous.lua:111
+msgid "x1.25"
+msgstr ""
+
+#: modules/miscellaneous.lua:112
 msgid "x1.5"
 msgstr ""
 
-#: modules/miscellaneous.lua:120
+#: modules/miscellaneous.lua:113
 msgid "x2"
 msgstr ""
 
-#: modules/miscellaneous.lua:121
+#: modules/miscellaneous.lua:114
 msgid "x4"
 msgstr ""
 
-#: modules/miscellaneous.lua:122
+#: modules/miscellaneous.lua:115
+msgid "x6"
+msgstr ""
+
+#: modules/miscellaneous.lua:116
+msgid "x8"
+msgstr ""
+
+#: modules/miscellaneous.lua:117
 msgid "Vanilla"
 msgstr ""
 
-#: modules/miscellaneous.lua:123
+#: modules/miscellaneous.lua:118
 msgid "Mix It Up"
 msgstr ""
 
+#: modules/miscellaneous.lua:123
+msgid "x0.15"
+msgstr ""
+
+#: modules/miscellaneous.lua:124
+msgid "x0.5"
+msgstr ""
+
+#: modules/miscellaneous.lua:125
+msgid "x0.75"
+msgstr ""
+
+#: modules/miscellaneous.lua:126
+msgid "x1"
+msgstr ""
+
+#: modules/miscellaneous.lua:127
+msgid "x1.5"
+msgstr ""
+
 #: modules/miscellaneous.lua:128
-msgid "Vanilla"
+msgid "x2"
 msgstr ""
 
 #: modules/miscellaneous.lua:129
-msgid "Bounded"
+msgid "x4"
 msgstr ""
 
 #: modules/miscellaneous.lua:130
-msgid "Strict"
+msgid "Vanilla"
 msgstr ""
 
 #: modules/miscellaneous.lua:131
@@ -5170,462 +5342,486 @@ msgid "Mix It Up"
 msgstr ""
 
 #: modules/miscellaneous.lua:136
-msgid "Small-ish"
+msgid "Vanilla"
 msgstr ""
 
 #: modules/miscellaneous.lua:137
-msgid "Small"
+msgid "Bounded"
 msgstr ""
 
 #: modules/miscellaneous.lua:138
-msgid "Large"
+msgid "Strict"
 msgstr ""
 
 #: modules/miscellaneous.lua:139
+msgid "Mix It Up"
+msgstr ""
+
+#: modules/miscellaneous.lua:144
+msgid "Small-ish"
+msgstr ""
+
+#: modules/miscellaneous.lua:145
+msgid "Small"
+msgstr ""
+
+#: modules/miscellaneous.lua:146
+msgid "Large"
+msgstr ""
+
+#: modules/miscellaneous.lua:147
 msgid "Large-ish"
 msgstr ""
 
-#: modules/miscellaneous.lua:140
-msgid "Normal"
-msgstr ""
-
-#: modules/miscellaneous.lua:141
-msgid "Conservative"
-msgstr ""
-
-#: modules/miscellaneous.lua:142
-msgid "Very Conservative"
-msgstr ""
-
-#: modules/miscellaneous.lua:143
-msgid "Random"
-msgstr ""
-
 #: modules/miscellaneous.lua:148
-msgid "Less-ish"
+msgid "Normal"
 msgstr ""
 
 #: modules/miscellaneous.lua:149
-msgid "Less"
-msgstr ""
-
-#: modules/miscellaneous.lua:150
-msgid "More"
-msgstr ""
-
-#: modules/miscellaneous.lua:151
-msgid "More-ish"
-msgstr ""
-
-#: modules/miscellaneous.lua:152
-msgid "Normal"
-msgstr ""
-
-#: modules/miscellaneous.lua:153
 msgid "Conservative"
 msgstr ""
 
-#: modules/miscellaneous.lua:154
+#: modules/miscellaneous.lua:150
 msgid "Very Conservative"
 msgstr ""
 
-#: modules/miscellaneous.lua:155
+#: modules/miscellaneous.lua:151
 msgid "Random"
 msgstr ""
 
-#: modules/miscellaneous.lua:199
-msgid "Advanced Architecture"
+#: modules/miscellaneous.lua:156
+msgid "Less-ish"
 msgstr ""
 
-#: modules/miscellaneous.lua:218
-msgid "Layout Consistency"
+#: modules/miscellaneous.lua:157
+msgid "Less"
+msgstr ""
+
+#: modules/miscellaneous.lua:158
+msgid "More"
+msgstr ""
+
+#: modules/miscellaneous.lua:159
+msgid "More-ish"
+msgstr ""
+
+#: modules/miscellaneous.lua:160
+msgid "Normal"
+msgstr ""
+
+#: modules/miscellaneous.lua:161
+msgid "Conservative"
+msgstr ""
+
+#: modules/miscellaneous.lua:162
+msgid "Very Conservative"
+msgstr ""
+
+#: modules/miscellaneous.lua:163
+msgid "Random"
 msgstr ""
 
 #: modules/miscellaneous.lua:220
-msgid "% of Levels"
+msgid "Advanced Architecture"
 msgstr ""
 
-#: modules/miscellaneous.lua:225
-msgid "Chance that a level will be built with a layout from random set of prefered shape rules."
-msgstr ""
-
-#: modules/miscellaneous.lua:226
-msgid "Layout consistency attempts to cause levels to overprefer specific shape rules from the ruleset in order to create odd but more consistent combinations of pieces to build the general layout. The effect will be more prominent in certain combinations and levels than others."
-msgstr ""
-
-#: modules/miscellaneous.lua:234
-msgid "Linear Mode"
-msgstr ""
-
-#: modules/miscellaneous.lua:236
-msgid "% of Levels"
+#: modules/miscellaneous.lua:239
+msgid "Layout Consistency"
 msgstr ""
 
 #: modules/miscellaneous.lua:241
+msgid "% of Levels"
+msgstr ""
+
+#: modules/miscellaneous.lua:246
+msgid "Chance that a level will be built with a layout from random set of prefered shape rules."
+msgstr ""
+
+#: modules/miscellaneous.lua:247
+msgid "Layout consistency attempts to cause levels to overprefer specific shape rules from the ruleset in order to create odd but more consistent combinations of pieces to build the general layout. The effect will be more prominent in certain combinations and levels than others."
+msgstr ""
+
+#: modules/miscellaneous.lua:255
+msgid "Linear Mode"
+msgstr ""
+
+#: modules/miscellaneous.lua:257
+msgid "% of Levels"
+msgstr ""
+
+#: modules/miscellaneous.lua:262
 msgid "Creates linear levels, where rooms are connected along a linear layout from start to exit."
 msgstr ""
 
-#: modules/miscellaneous.lua:242
+#: modules/miscellaneous.lua:263
 msgid "Due to the nature of linear levels, you may encounter teleports even if you have teleports off. This is necessary in order for linear levels not to prematuraly terminate and therefore become stunted i.e. only have 2-5 rooms."
 msgstr ""
 
-#: modules/miscellaneous.lua:249
+#: modules/miscellaneous.lua:270
 msgid "Nature Mode"
 msgstr ""
 
-#: modules/miscellaneous.lua:251
+#: modules/miscellaneous.lua:272
 msgid "% of Levels"
-msgstr ""
-
-#: modules/miscellaneous.lua:256
-msgid "Forces most of the map to be composed of naturalistic areas (parks and caves). The ratio is decided by Outdoors style setting while competing styles are ignored."
-msgstr ""
-
-#: modules/miscellaneous.lua:263
-msgid "Streets Mode"
-msgstr ""
-
-#: modules/miscellaneous.lua:265
-msgid "% of Levels"
-msgstr ""
-
-#: modules/miscellaneous.lua:270
-msgid "Allows Oblige to create large street-like outdoor rooms."
 msgstr ""
 
 #: modules/miscellaneous.lua:277
-msgid "Streets-Friendly Themes Only"
+msgid "Forces most of the map to be composed of naturalistic areas (parks and caves). The ratio is decided by Outdoors style setting while competing styles are ignored."
 msgstr ""
 
-#: modules/miscellaneous.lua:280
-msgid "Only allow Streets Mode slider to affect levels with the following themes:\n\nChex Quest 3 - Chextropolis\nDoom 2 - Urban\nHeretic - City\nStrife - Town"
+#: modules/miscellaneous.lua:284
+msgid "Streets Mode"
 msgstr ""
 
-#: modules/miscellaneous.lua:287
-msgid "Room Size Multiplier"
+#: modules/miscellaneous.lua:286
+msgid "% of Levels"
 msgstr ""
 
-#: modules/miscellaneous.lua:290
-msgid "Alters the general size and ground coverage of rooms.\n\nVanilla: No room size multipliers.\n\nMix It Up: All multiplier ranges are randomly used with highest and lowest multipliers being rarest."
-msgstr ""
-
-#: modules/miscellaneous.lua:295
-msgid "Area Count Multiplier"
+#: modules/miscellaneous.lua:291
+msgid "Allows Obsidian to create large street-like outdoor rooms."
 msgstr ""
 
 #: modules/miscellaneous.lua:298
-msgid "Alters the amount of areas in a room. Influences the amount rooms are divided into different elevations or simply different ceilings if a level has no steepness.\n\nVanilla: No area quantity multipliers.\n\nMix It Up: All multiplier ranges are randomly used with highest and lowest multipliers being rarest."
+msgid "Streets-Friendly Themes Only"
 msgstr ""
 
-#: modules/miscellaneous.lua:304
-msgid "Size Consistency"
+#: modules/miscellaneous.lua:301
+msgid "Only allow Streets Mode slider to affect levels with the following themes:\n\nChex Quest 3 - Chextropolis\nDoom 2 - Urban\nHeretic - City\nStrife - Town"
 msgstr ""
 
-#: modules/miscellaneous.lua:307
-msgid "Changes whether rooms follow a strict single size or not. Can be paired with above choices for more enforced results.\n\nVanilla: Original behavior. Rooms in a level have vary in size from each other. Big Rooms options are respected.\n\nBounded: Rooms vary in size but not radically from each other.\n\nStrict: All rooms in the level have a single set size/coverage.\n\nMix It Up: A mixture of 75% Vanilla, 25% Strict."
+#: modules/miscellaneous.lua:308
+msgid "Room Size Multiplier"
 msgstr ""
 
-#: modules/miscellaneous.lua:313
-msgid "Room Size Mix Fine Tune"
+#: modules/miscellaneous.lua:311
+msgid "Alters the general size and ground coverage of rooms.\n\nVanilla: No room size multipliers.\n\nMix It Up: All multiplier ranges are randomly used with highest and lowest multipliers being rarest."
 msgstr ""
 
 #: modules/miscellaneous.lua:316
-msgid "Alters the behavior of Mix It Up for Room Size Multiplier options.\n\nNormal: Mix it up uses a normal curve distribution. Traditional-sized rooms are common and smaller or larger sizes are slightly less so.\n\nSmall-ish: Only smaller room sizes, but biased towards normal sizes.\n\nSmall: Biased towards smaller room sizes with no larger room sizes.\n\nLarge: Biased towards large rooms sizes with no smaller room sizes..\n\nLarge-ish: Only larger room sizes, but biased towards normal sizes.\n\nConservative: Probability is biased more towards regular room sizes, making much smaller or much larger rooms significantly rarer.\n\nVery Conservative: Bias is even stronger towards regular and smaller rooms sizes, while larger rooms are very rare.\n\nRandom: No curve distribution - room sizes and room area counts are picked completely randomly."
+msgid "Area Count Multiplier"
 msgstr ""
 
-#: modules/miscellaneous.lua:322
-msgid "Room Area Mix Fine Tune"
+#: modules/miscellaneous.lua:319
+msgid "Alters the amount of areas in a room. Influences the amount rooms are divided into different elevations or simply different ceilings if a level has no steepness.\n\nVanilla: No area quantity multipliers.\n\nMix It Up: All multiplier ranges are randomly used with highest and lowest multipliers being rarest."
 msgstr ""
 
 #: modules/miscellaneous.lua:325
-msgid "Alters the behavior of Mix It Up for Room Area Multiplier options.\n\nNormal: Mix it up uses a normal curve distribution.\n\nLess-ish: Only rooms with less floors and simple ceilings, but biased towards normal counts.\n\nLess: Biased towards rooms with less floors and simple ceilings.\n\nMore: Biased towards rooms with more floors and complex ceilings.\n\nMore-ish: Only rooms with more floors and complex ceilings, but biased towards normal counts.\n\nConservative: Biased towards normal area counts.\n\nVery Conservative: Further biased towards normal area counts.\n\nRandom: No curve distribution - room area counts are picked completely randomly."
+msgid "Size Consistency"
 msgstr ""
 
-#: modules/miscellaneous.lua:332
-msgid "Big Rooms"
+#: modules/miscellaneous.lua:328
+msgid "Changes whether rooms follow a strict single size or not. Can be paired with above choices for more enforced results.\n\nVanilla: Original behavior. Rooms in a level have vary in size from each other. Big Rooms options are respected.\n\nBounded: Rooms vary in size but not radically from each other.\n\nStrict: All rooms in the level have a single set size/coverage.\n\nMix It Up: A mixture of 75% Vanilla, 25% Strict."
 msgstr ""
 
-#: modules/miscellaneous.lua:333
-msgid "Raises upper limits on individual room growth"
+#: modules/miscellaneous.lua:334
+msgid "Room Size Mix Fine Tune"
 msgstr ""
 
 #: modules/miscellaneous.lua:337
-msgid "Big Outdoors"
-msgstr ""
-
-#: modules/miscellaneous.lua:338
-msgid "Raises upper limits on outdoor area growth"
-msgstr ""
-
-#: modules/miscellaneous.lua:342
-msgid "Sub Rooms"
+msgid "Alters the behavior of Mix It Up for Room Size Multiplier options.\n\nNormal: Mix it up uses a normal curve distribution. Traditional-sized rooms are common and smaller or larger sizes are slightly less so.\n\nSmall-ish: Only smaller room sizes, but biased towards normal sizes.\n\nSmall: Biased towards smaller room sizes with no larger room sizes.\n\nLarge: Biased towards large rooms sizes with no smaller room sizes..\n\nLarge-ish: Only larger room sizes, but biased towards normal sizes.\n\nConservative: Probability is biased more towards regular room sizes, making much smaller or much larger rooms significantly rarer.\n\nVery Conservative: Bias is even stronger towards regular and smaller rooms sizes, while larger rooms are very rare.\n\nRandom: No curve distribution - room sizes and room area counts are picked completely randomly."
 msgstr ""
 
 #: modules/miscellaneous.lua:343
-msgid "Controls amount of small sub rooms. Actually controls the degree at which ungrown rooms are left instead of culled."
+msgid "Room Area Mix Fine Tune"
 msgstr ""
 
-#: modules/miscellaneous.lua:348
-msgid "Room Heights"
+#: modules/miscellaneous.lua:346
+msgid "Alters the behavior of Mix It Up for Room Area Multiplier options.\n\nNormal: Mix it up uses a normal curve distribution.\n\nLess-ish: Only rooms with less floors and simple ceilings, but biased towards normal counts.\n\nLess: Biased towards rooms with less floors and simple ceilings.\n\nMore: Biased towards rooms with more floors and complex ceilings.\n\nMore-ish: Only rooms with more floors and complex ceilings, but biased towards normal counts.\n\nConservative: Biased towards normal area counts.\n\nVery Conservative: Further biased towards normal area counts.\n\nRandom: No curve distribution - room area counts are picked completely randomly."
 msgstr ""
 
-#: modules/miscellaneous.lua:350
-msgid "Determines if rooms should have a height limit or should exaggerate their height. Short means room areas strictly have at most 128 units of height, tall means rooms immediately have doubled heights. Normal is the default Oblige behavior."
+#: modules/miscellaneous.lua:353
+msgid "Big Rooms"
+msgstr ""
+
+#: modules/miscellaneous.lua:354
+msgid "Raises upper limits on individual room growth"
+msgstr ""
+
+#: modules/miscellaneous.lua:358
+msgid "Big Outdoors"
 msgstr ""
 
 #: modules/miscellaneous.lua:359
-msgid "Parks"
+msgid "Raises upper limits on outdoor area growth"
 msgstr ""
 
-#: modules/miscellaneous.lua:360
-msgid "Control the amount of parks."
+#: modules/miscellaneous.lua:363
+msgid "Sub Rooms"
 msgstr ""
 
 #: modules/miscellaneous.lua:364
-msgid "Natural Cliffs"
+msgid "Controls amount of small sub rooms. Actually controls the degree at which ungrown rooms are left instead of culled."
 msgstr ""
 
-#: modules/miscellaneous.lua:365
-msgid "Percentage of parks that use completely naturalistic walls."
+#: modules/miscellaneous.lua:369
+msgid "Room Heights"
 msgstr ""
 
-#: modules/miscellaneous.lua:372
-msgid "Park Detail"
+#: modules/miscellaneous.lua:371
+msgid "Determines if rooms should have a height limit or should exaggerate their height. Short means room areas strictly have at most 128 units of height, tall means rooms immediately have doubled heights. Normal is the default Oblige behavior."
 msgstr ""
 
-#: modules/miscellaneous.lua:373
-msgid "Reduces or increases the probability of park decorations such as trees on park rooms."
+#: modules/miscellaneous.lua:380
+msgid "Parks"
 msgstr ""
 
 #: modules/miscellaneous.lua:381
-msgid "Windows"
+msgid "Control the amount of parks."
 msgstr ""
 
-#: modules/miscellaneous.lua:382
-msgid "Control the amount of windows."
+#: modules/miscellaneous.lua:385
+msgid "Natural Cliffs"
 msgstr ""
 
 #: modules/miscellaneous.lua:386
-msgid "Passable Windows"
+msgid "Percentage of parks that use completely naturalistic walls."
 msgstr ""
 
-#: modules/miscellaneous.lua:388
-msgid "Sets the preferences for passability on certain windows. On Vistas Only means only windows that look out to vistas/map border scenics have a blocking line."
+#: modules/miscellaneous.lua:393
+msgid "Park Detail"
 msgstr ""
 
 #: modules/miscellaneous.lua:394
-msgid "Passable Railings"
+msgid "Reduces or increases the probability of park decorations such as trees on park rooms."
 msgstr ""
 
-#: modules/miscellaneous.lua:396
-msgid "Sets the passability of railing junctions between full impassability or the 3D midtex flag. Occasional means 3D midtex is only used on railings between areas the player is supposed to circumvent. Always means the inclusion of cages and scenic rails, allowing flying monsters to potentially escape.\n\nNote: 3D midtex lines currently *block* projectiles as well."
+#: modules/miscellaneous.lua:402
+msgid "Windows"
 msgstr ""
 
 #: modules/miscellaneous.lua:403
-msgid "Symmetry"
-msgstr ""
-
-#: modules/miscellaneous.lua:404
-msgid "Affects amount of symmetry when growing levels."
+msgid "Control the amount of windows."
 msgstr ""
 
 #: modules/miscellaneous.lua:407
-msgid "Beams"
+msgid "Passable Windows"
 msgstr ""
 
 #: modules/miscellaneous.lua:409
-msgid "Allows the appearance of thin pillars to appear between the borders of different elevations."
+msgid "Sets the preferences for passability on certain windows. On Vistas Only means only windows that look out to vistas/map border scenics have a blocking line."
 msgstr ""
 
-#: modules/miscellaneous.lua:414
-msgid "Fences"
+#: modules/miscellaneous.lua:415
+msgid "Passable Railings"
 msgstr ""
 
-#: modules/miscellaneous.lua:416
-msgid "Creates thick solid fences and fence posts between areas of varying height for outdoor rooms."
+#: modules/miscellaneous.lua:417
+msgid "Sets the passability of railing junctions between full impassability or the 3D midtex flag. Occasional means 3D midtex is only used on railings between areas the player is supposed to circumvent. Always means the inclusion of cages and scenic rails, allowing flying monsters to potentially escape.\n\nNote: 3D midtex lines currently *block* projectiles as well."
 msgstr ""
 
-#: modules/miscellaneous.lua:421
-msgid "Porches\\Gazebos"
+#: modules/miscellaneous.lua:424
+msgid "Symmetry"
 msgstr ""
 
-#: modules/miscellaneous.lua:423
-msgid "Occasional outdoor areas with a lowered indoor-ish ceiling."
+#: modules/miscellaneous.lua:425
+msgid "Affects amount of symmetry when growing levels."
 msgstr ""
 
 #: modules/miscellaneous.lua:428
-msgid "Pictures"
+msgid "Beams"
 msgstr ""
 
 #: modules/miscellaneous.lua:430
-msgid "Controls the large wall setpieces in a map. Works on a chance per room basis."
+msgid "Allows the appearance of thin pillars to appear between the borders of different elevations."
 msgstr ""
 
 #: modules/miscellaneous.lua:435
-msgid "Scenics"
+msgid "Fences"
 msgstr ""
 
 #: modules/miscellaneous.lua:437
-msgid "Controls the amount of fancy scenics visible at room bordering the maps."
+msgid "Creates thick solid fences and fence posts between areas of varying height for outdoor rooms."
+msgstr ""
+
+#: modules/miscellaneous.lua:442
+msgid "Porches\\Gazebos"
 msgstr ""
 
 #: modules/miscellaneous.lua:444
-msgid "Sink Style"
+msgid "Occasional outdoor areas with a lowered indoor-ish ceiling."
 msgstr ""
 
-#: modules/miscellaneous.lua:446
-msgid "Determines the style for corners with sunken ceilings and floors. Curved makes sink corners soft, while Sharp leaves the corners angular. Per Theme means choice is controlled by theme profile instead. Tech-ish maps favor sharp corners while hell-ish favor curved."
-msgstr ""
-
-#: modules/miscellaneous.lua:453
-msgid "Liquid Sinks"
-msgstr ""
-
-#: modules/miscellaneous.lua:455
-msgid "Enables or disables liquid sinks. Liquid sinks are walkable floors that are often converted into depressions with the level's liquid. May greatly inconvenience the player but default Oblige behavior is 'Yes'."
-msgstr ""
-
-#: modules/miscellaneous.lua:462
-msgid "Dark Outdoors"
-msgstr ""
-
-#: modules/miscellaneous.lua:463
-msgid "Affects the chance of a level having darker skies."
-msgstr ""
-
-#: modules/miscellaneous.lua:468
-msgid "Outdoor Shadows"
-msgstr ""
-
-#: modules/miscellaneous.lua:471
-msgid "Adds shadows to outdoor structures."
-msgstr ""
-
-#: modules/miscellaneous.lua:477
-msgid "Minimum Brightness"
-msgstr ""
-
-#: modules/miscellaneous.lua:483
-msgid "Sets the minimum brightness for the map."
-msgstr ""
-
-#: modules/miscellaneous.lua:489
-msgid "Maximum Brightness"
-msgstr ""
-
-#: modules/miscellaneous.lua:495
-msgid "Sets the maximum brightness for the map."
-msgstr ""
-
-#: modules/miscellaneous.lua:500
-msgid "Explosive Decor"
-msgstr ""
-
-#: modules/miscellaneous.lua:502
-msgid "Controls the presence of barrels, pods, canisters, etc."
-msgstr ""
-
-#: modules/miscellaneous.lua:508
-msgid "Doors"
-msgstr ""
-
-#: modules/miscellaneous.lua:509
-msgid "Control the amount of doors."
-msgstr ""
-
-#: modules/miscellaneous.lua:512
-msgid "Keyed Doors"
-msgstr ""
-
-#: modules/miscellaneous.lua:513
-msgid "Control the amount of keyed doors."
-msgstr ""
-
-#: modules/miscellaneous.lua:516
-msgid "Triple-Keyed Doors"
-msgstr ""
-
-#: modules/miscellaneous.lua:518
-msgid "Controls the chance to get three key door whenever three keys are present."
-msgstr ""
-
-#: modules/miscellaneous.lua:522
-msgid "Switch Goals"
-msgstr ""
-
-#: modules/miscellaneous.lua:523
-msgid "Controls the chance for long-distance switch and lock quests."
-msgstr ""
-
-#: modules/miscellaneous.lua:527
-msgid "Switch Rooms"
-msgstr ""
-
-#: modules/miscellaneous.lua:528
-msgid "Controls the chance same-room switches and locks."
-msgstr ""
-
-#: modules/miscellaneous.lua:536
-msgid "Road Markings"
-msgstr ""
-
-#: modules/miscellaneous.lua:539
-msgid "Adds street markings to roads."
-msgstr ""
-
-#: modules/miscellaneous.lua:544
-msgid "Street Traffic"
-msgstr ""
-
-#: modules/miscellaneous.lua:546
-msgid "If Street Mode is enabled, changes the density of prefabs such as cars, barriers, crates, and relevant items on the roads."
-msgstr ""
-
-#: modules/miscellaneous.lua:554
-msgid "Exit Signs"
-msgstr ""
-
-#: modules/miscellaneous.lua:557
-msgid "Places exit signs by exiting room"
-msgstr ""
-
-#: modules/miscellaneous.lua:564
-msgid "Linear Start"
-msgstr ""
-
-#: modules/miscellaneous.lua:566
-msgid "Stops start rooms from having more than one external room connection. Can help reduce being overwhelmed by attacks from multiple directions when multiple neighboring rooms connect into the start room. Default means no control, and levels can have linear starts at random based on shape grammars as per original Oblige 7.7 behavior."
-msgstr ""
-
-#: modules/miscellaneous.lua:572
-msgid "Dead Ends"
-msgstr ""
-
-#: modules/miscellaneous.lua:574
-msgid "Cleans up and removes areas with staircases that lead to nowhere.\nNONE means all dead ends are removed.\nHeaps means all dead ends are preserved (Oblige default)."
-msgstr ""
-
-#: modules/miscellaneous.lua:584
-msgid "Lighting"
-msgstr ""
-
-#: modules/miscellaneous.lua:585
-msgid "Detail"
-msgstr ""
-
-#: modules/miscellaneous.lua:587
+#: modules/miscellaneous.lua:449
 msgid "Pictures"
 msgstr ""
 
-#: modules/miscellaneous.lua:588
+#: modules/miscellaneous.lua:451
+msgid "Controls the large wall setpieces in a map. Works on a chance per room basis."
+msgstr ""
+
+#: modules/miscellaneous.lua:456
+msgid "Scenics"
+msgstr ""
+
+#: modules/miscellaneous.lua:458
+msgid "Controls the amount of fancy scenics visible at room bordering the maps."
+msgstr ""
+
+#: modules/miscellaneous.lua:465
+msgid "Sink Style"
+msgstr ""
+
+#: modules/miscellaneous.lua:467
+msgid "Determines the style for corners with sunken ceilings and floors. Curved makes sink corners soft, while Sharp leaves the corners angular. Per Theme means choice is controlled by theme profile instead. Tech-ish maps favor sharp corners while hell-ish favor curved."
+msgstr ""
+
+#: modules/miscellaneous.lua:474
+msgid "Liquid Sinks"
+msgstr ""
+
+#: modules/miscellaneous.lua:476
+msgid "Enables or disables liquid sinks. Liquid sinks are walkable floors that are often converted into depressions with the level's liquid. May greatly inconvenience the player but default Oblige behavior is 'Yes'."
+msgstr ""
+
+#: modules/miscellaneous.lua:483
+msgid "Dark Outdoors"
+msgstr ""
+
+#: modules/miscellaneous.lua:484
+msgid "Affects the chance of a level having darker skies."
+msgstr ""
+
+#: modules/miscellaneous.lua:489
+msgid "Outdoor Shadows"
+msgstr ""
+
+#: modules/miscellaneous.lua:492
+msgid "Adds shadows to outdoor structures."
+msgstr ""
+
+#: modules/miscellaneous.lua:498
+msgid "Minimum Brightness"
+msgstr ""
+
+#: modules/miscellaneous.lua:504
+msgid "Sets the minimum brightness for the map."
+msgstr ""
+
+#: modules/miscellaneous.lua:510
+msgid "Maximum Brightness"
+msgstr ""
+
+#: modules/miscellaneous.lua:516
+msgid "Sets the maximum brightness for the map."
+msgstr ""
+
+#: modules/miscellaneous.lua:521
+msgid "Explosive Decor"
+msgstr ""
+
+#: modules/miscellaneous.lua:523
+msgid "Controls the presence of barrels, pods, canisters, etc."
+msgstr ""
+
+#: modules/miscellaneous.lua:529
+msgid "Doors"
+msgstr ""
+
+#: modules/miscellaneous.lua:530
+msgid "Control the amount of doors."
+msgstr ""
+
+#: modules/miscellaneous.lua:533
+msgid "Keyed Doors"
+msgstr ""
+
+#: modules/miscellaneous.lua:534
+msgid "Control the amount of keyed doors."
+msgstr ""
+
+#: modules/miscellaneous.lua:537
+msgid "Triple-Keyed Doors"
+msgstr ""
+
+#: modules/miscellaneous.lua:539
+msgid "Controls the chance to get three key door whenever three keys are present."
+msgstr ""
+
+#: modules/miscellaneous.lua:543
+msgid "Switch Goals"
+msgstr ""
+
+#: modules/miscellaneous.lua:544
+msgid "Controls the chance for long-distance switch and lock quests."
+msgstr ""
+
+#: modules/miscellaneous.lua:548
+msgid "Switch Rooms"
+msgstr ""
+
+#: modules/miscellaneous.lua:549
+msgid "Controls the chance same-room switches and locks."
+msgstr ""
+
+#: modules/miscellaneous.lua:557
+msgid "Road Markings"
+msgstr ""
+
+#: modules/miscellaneous.lua:560
+msgid "Adds street markings to roads."
+msgstr ""
+
+#: modules/miscellaneous.lua:565
+msgid "Street Traffic"
+msgstr ""
+
+#: modules/miscellaneous.lua:567
+msgid "If Street Mode is enabled, changes the density of prefabs such as cars, barriers, crates, and relevant items on the roads."
+msgstr ""
+
+#: modules/miscellaneous.lua:575
+msgid "Exit Signs"
+msgstr ""
+
+#: modules/miscellaneous.lua:578
+msgid "Places exit signs by exiting room"
+msgstr ""
+
+#: modules/miscellaneous.lua:585
+msgid "Linear Start"
+msgstr ""
+
+#: modules/miscellaneous.lua:587
+msgid "Stops start rooms from having more than one external room connection. Can help reduce being overwhelmed by attacks from multiple directions when multiple neighboring rooms connect into the start room. Default means no control, and levels can have linear starts at random based on shape grammars as per original Oblige 7.7 behavior."
+msgstr ""
+
+#: modules/miscellaneous.lua:593
+msgid "Open Outdoors"
+msgstr ""
+
+#: modules/miscellaneous.lua:595
+msgid "Disables shape rules that involve obstructive geometry such as pillars for outdoors based on theme."
+msgstr ""
+
+#: modules/miscellaneous.lua:601
+msgid "Dead Ends"
+msgstr ""
+
+#: modules/miscellaneous.lua:603
+msgid "Cleans up and removes areas with staircases that lead to nowhere.\nNONE means all dead ends are removed.\nHeaps means all dead ends are preserved (Oblige default)."
+msgstr ""
+
+#: modules/miscellaneous.lua:613
+msgid "Lighting"
+msgstr ""
+
+#: modules/miscellaneous.lua:614
+msgid "Detail"
+msgstr ""
+
+#: modules/miscellaneous.lua:616
+msgid "Pictures"
+msgstr ""
+
+#: modules/miscellaneous.lua:617
 msgid "Multiple Paths"
 msgstr ""
 
-#: modules/miscellaneous.lua:589
+#: modules/miscellaneous.lua:618
 msgid "3D Floors"
 msgstr ""
 
-#: modules/miscellaneous.lua:591
+#: modules/miscellaneous.lua:620
 msgid "Lakes"
 msgstr ""
 
@@ -5637,67 +5833,67 @@ msgstr ""
 msgid "Debug Info"
 msgstr ""
 
-#: modules/modded_game_extras.lua:2454
+#: modules/modded_game_extras.lua:2468
 msgid "Modded Game Extras"
 msgstr ""
 
-#: modules/modded_game_extras.lua:2469
+#: modules/modded_game_extras.lua:2483
 msgid "Offers extra features and expanded support for various mods."
 msgstr ""
 
-#: modules/modded_game_extras.lua:2476
+#: modules/modded_game_extras.lua:2490
 msgid "HN Markers"
 msgstr ""
 
-#: modules/modded_game_extras.lua:2479
+#: modules/modded_game_extras.lua:2493
 msgid "Adds support for m8f's Hellscape Navigator by generating name markers in the map per room."
 msgstr ""
 
-#: modules/modded_game_extras.lua:2484
+#: modules/modded_game_extras.lua:2498
 msgid "HN Info Type"
 msgstr ""
 
-#: modules/modded_game_extras.lua:2486
+#: modules/modded_game_extras.lua:2500
 msgid "Pick which information type to place into Hellscape Navigator markers.\n\nQuest Info - (DEFAULT) Places traversal progress per room and key quest info into the markers.\nDebug Info - Prints verbose information about shape grammar growth status per room and prefabs. Reveals secret prefabs - which is obviously cheating."
 msgstr ""
 
-#: modules/modded_game_extras.lua:2495
+#: modules/modded_game_extras.lua:2509
 msgid "Custom Actor Names"
 msgstr ""
 
-#: modules/modded_game_extras.lua:2498
+#: modules/modded_game_extras.lua:2512
 msgid "Renames tags of monsters with generated names. Humans recieve human names, demons recieve exotic names.\nBest used with TargetSpy or other healthbar mods to see the name.\nUses class inheritance and string comparisons to determine monster species (human or demon). Use compatibility options only when necessary, preferably use Universal option instead."
 msgstr ""
 
-#: modules/modded_game_extras.lua:2505
+#: modules/modded_game_extras.lua:2519
 msgid "QC:DE Lootboxes"
 msgstr ""
 
-#: modules/modded_game_extras.lua:2508
+#: modules/modded_game_extras.lua:2522
 msgid "Adds Quake Champions: Doom Edition Lootboxes as nice item pickups."
 msgstr ""
 
-#: modules/modded_game_extras.lua:2515
+#: modules/modded_game_extras.lua:2529
 msgid "D4T Entities"
 msgstr ""
 
-#: modules/modded_game_extras.lua:2518
+#: modules/modded_game_extras.lua:2532
 msgid "Adds Death Foretold field drones into items table and gore nests as potential minor boss monsters."
 msgstr ""
 
-#: modules/modded_game_extras.lua:2525
+#: modules/modded_game_extras.lua:2539
 msgid "Trailblazer Upgrades"
 msgstr ""
 
-#: modules/modded_game_extras.lua:2528
+#: modules/modded_game_extras.lua:2542
 msgid "Adds Trailblazer's upgrade blueprints as separate pickups that can be found in the map."
 msgstr ""
 
-#: modules/modded_game_extras.lua:2535
+#: modules/modded_game_extras.lua:2549
 msgid "Complex Doom Modifications"
 msgstr ""
 
-#: modules/modded_game_extras.lua:2538
+#: modules/modded_game_extras.lua:2552
 msgid "Modifies general gameplay settings to balance generated maps more for use with Complex Doom due to its difficulty spike."
 msgstr ""
 
@@ -7041,63 +7237,63 @@ msgstr ""
 msgid "Green"
 msgstr ""
 
-#: modules/sky_generator.lua:637
+#: modules/sky_generator.lua:638
 msgid "Sky Generator"
 msgstr ""
 
-#: modules/sky_generator.lua:656
+#: modules/sky_generator.lua:657
 msgid "Time of Day"
 msgstr ""
 
-#: modules/sky_generator.lua:659
+#: modules/sky_generator.lua:660
 msgid "This forces the sky background (behind the hills and clouds) to either be night or day. Default means vanilla Oblige behavior of picking one episode to be night. Random means 50% chance of night or day to be picked per episode."
 msgstr ""
 
-#: modules/sky_generator.lua:666
+#: modules/sky_generator.lua:667
 msgid "Terrain Foreground"
 msgstr ""
 
-#: modules/sky_generator.lua:669
+#: modules/sky_generator.lua:670
 msgid "Influences whether the sky generator should generate terrain in the skybox."
 msgstr ""
 
-#: modules/sky_generator.lua:677
+#: modules/sky_generator.lua:678
 msgid "Terrain Parameters"
 msgstr ""
 
-#: modules/sky_generator.lua:680
+#: modules/sky_generator.lua:681
 msgid "Changes the parameters of generated hills, if there are any. 'Cavernous' causes the terrain to nearly fill up most of the sky, making an impression of being inside a cave or crater."
 msgstr ""
 
-#: modules/sky_generator.lua:689
+#: modules/sky_generator.lua:690
 msgid "Day Sky Color"
 msgstr ""
 
-#: modules/sky_generator.lua:692
+#: modules/sky_generator.lua:693
 msgid "Picks the color of the sky if day. Default means random and theme-ish."
 msgstr ""
 
-#: modules/sky_generator.lua:700
+#: modules/sky_generator.lua:701
 msgid "Terrain Color"
 msgstr ""
 
-#: modules/sky_generator.lua:703
+#: modules/sky_generator.lua:704
 msgid "Picks the color of the terrain in the sky if available. Default means random and theme-ish."
 msgstr ""
 
-#: modules/sky_generator.lua:711
+#: modules/sky_generator.lua:712
 msgid "Nebula Color"
 msgstr ""
 
-#: modules/sky_generator.lua:714
+#: modules/sky_generator.lua:715
 msgid "Picks the color of nebula if sky is night. 'None' means just a plain starry night sky. Default means random and theme-ish."
 msgstr ""
 
-#: modules/sky_generator.lua:723
+#: modules/sky_generator.lua:724
 msgid "Sky Gen Lighting"
 msgstr ""
 
-#: modules/sky_generator.lua:727
+#: modules/sky_generator.lua:728
 msgid "Overrides (and ignores) Dark Outdoors setting in Miscellaneous tab. If the sky generator creates night skies for an episode, episode's map outdoors is also dark but bright if day-ish."
 msgstr ""
 
@@ -9097,107 +9293,107 @@ msgstr ""
 msgid "Doom 1 Vanilla"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1166
+#: modules/zdoom_specials.lua:1176
 msgid "ZDoom Special Addons"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1183
+#: modules/zdoom_specials.lua:1193
 msgid "This module adds new ZDoom-exclusive features such as fog. More ZDoom-specific features will be included soon."
 msgstr ""
 
-#: modules/zdoom_specials.lua:1189
+#: modules/zdoom_specials.lua:1199
 msgid "Fog Generator"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1193
+#: modules/zdoom_specials.lua:1203
 msgid "Generates fog colors based on the Sky Generator or generate completely randomly."
 msgstr ""
 
-#: modules/zdoom_specials.lua:1199
+#: modules/zdoom_specials.lua:1209
 msgid "Fog Environment"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1203
+#: modules/zdoom_specials.lua:1213
 msgid "Limits fog to outdoors (sectors with exposed sky ceilings) or allows for all."
 msgstr ""
 
-#: modules/zdoom_specials.lua:1209
+#: modules/zdoom_specials.lua:1219
 msgid "Fog Intensity"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1213
+#: modules/zdoom_specials.lua:1223
 msgid "Determines thickness and intensity of fog, if the Fog Generator is enabled. Subtle or Misty is recommended."
 msgstr ""
 
-#: modules/zdoom_specials.lua:1219
+#: modules/zdoom_specials.lua:1229
 msgid "Sky Fog"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1223
+#: modules/zdoom_specials.lua:1233
 msgid "Tints the sky texture with the fog color, intensity is based on the Fog Intensity selection."
 msgstr ""
 
-#: modules/zdoom_specials.lua:1230
+#: modules/zdoom_specials.lua:1240
 msgid "Dynamic Lights"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1234
+#: modules/zdoom_specials.lua:1244
 msgid "Generates dynamic point lights on prefabs if available."
 msgstr ""
 
-#: modules/zdoom_specials.lua:1239
+#: modules/zdoom_specials.lua:1249
 msgid "Glowing Flats"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1243
+#: modules/zdoom_specials.lua:1253
 msgid "Adds Doom-64 style lighting/glowing flats via GLDEFS lump. Visible on Zandronum ports as well."
 msgstr ""
 
-#: modules/zdoom_specials.lua:1249
+#: modules/zdoom_specials.lua:1259
 msgid "Shuffle Music"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1253
+#: modules/zdoom_specials.lua:1263
 msgid "Shuffles music in the MAPINFO lump. Oblige's vanilla music shuffler uses a BEX lump and is therefore ignored when the ZDoom Addons module is active.\n\nWarning: the 'Merge Doom 1 and 2' option is for music packs that contain both Doom 1 and 2 direct patch replacements. Do not use unless you have such a pack."
 msgstr ""
 
-#: modules/zdoom_specials.lua:1258
+#: modules/zdoom_specials.lua:1268
 msgid "Story Generator"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1262
+#: modules/zdoom_specials.lua:1272
 msgid "Adds cluster information with generic or randomized story text into the MAPINFO structure!"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1267
+#: modules/zdoom_specials.lua:1277
 msgid "Quit Messages"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1271
+#: modules/zdoom_specials.lua:1281
 msgid "Adds custom quit messages into the MAPINFO game definition."
 msgstr ""
 
-#: modules/zdoom_specials.lua:1276
+#: modules/zdoom_specials.lua:1286
 msgid "Intermission Music"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1280
+#: modules/zdoom_specials.lua:1290
 msgid "Changes the music playing during intermission screens."
 msgstr ""
 
-#: modules/zdoom_specials.lua:1285
+#: modules/zdoom_specials.lua:1295
 msgid "Episode Selection"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1289
+#: modules/zdoom_specials.lua:1299
 msgid "Creates a classic Doom/Ultimate Doom style episode selection."
 msgstr ""
 
-#: modules/zdoom_specials.lua:1295
+#: modules/zdoom_specials.lua:1305
 msgid "Disable Intermissions"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1299
+#: modules/zdoom_specials.lua:1309
 msgid "Removes end-level Intermission Screens (containing map completion data) but retains Text Screens with story."
 msgstr ""
 
@@ -9303,6 +9499,86 @@ msgstr ""
 
 #: scripts/defs.lua:543
 msgid "Mix It Up"
+msgstr ""
+
+#: scripts/obsidian.lua:2249
+msgid "Choose which engine to build maps for:\n  id Tech 0: Wolfenstein 3D and similar games\n  id Tech 1: Doom and similar games\n"
+msgstr ""
+
+#: scripts/obsidian.lua:2250
+msgid "ALL"
+msgstr ""
+
+#: scripts/obsidian.lua:2251
+msgid "ALL"
+msgstr ""
+
+#: scripts/obsidian.lua:2252
+msgid "ALL"
+msgstr ""
+
+#: scripts/obsidian.lua:2260
+msgid "Choose which game to build maps for."
+msgstr ""
+
+#: scripts/obsidian.lua:2261
+msgid "ALL"
+msgstr ""
+
+#: scripts/obsidian.lua:2262
+msgid "ALL"
+msgstr ""
+
+#: scripts/obsidian.lua:2263
+msgid "ALL"
+msgstr ""
+
+#: scripts/obsidian.lua:2283
+msgid "Choose which port to build maps for.\n  Vanilla is the only option for id Tech 0; the remaining options are for id Tech 1.\n"
+msgstr ""
+
+#: scripts/obsidian.lua:2284
+msgid "ALL"
+msgstr ""
+
+#: scripts/obsidian.lua:2285
+msgid "ALL"
+msgstr ""
+
+#: scripts/obsidian.lua:2286
+msgid "ALL"
+msgstr ""
+
+#: scripts/obsidian.lua:2300
+msgid "Choose how many levels to create."
+msgstr ""
+
+#: scripts/obsidian.lua:2301
+msgid "ALL"
+msgstr ""
+
+#: scripts/obsidian.lua:2302
+msgid "ALL"
+msgstr ""
+
+#: scripts/obsidian.lua:2303
+msgid "ALL"
+msgstr ""
+
+#: scripts/obsidian.lua:2313
+msgid "The following values are game-specific:\n  Chex Quest 3: bazoik,spaceport,villa\n  Ultimate Doom/Doom 1: deimos,flesh\n  Ultimate Doom/Doom 1/Doom 2/TNT/Plutonia: tech,urban,hell\n  TNT: egypt\n  HacX: hacx_urban\n  Harmony: ndf_base\n  Heretic: city,maw,dome,ossuary,demense\n  Hexen: forest,ice_caves,fire_steel,swamp,dungeon,town\n  Strife: town\n\n  Note: This setting currently does nothing for id Tech 0 games!\n"
+msgstr ""
+
+#: scripts/obsidian.lua:2314
+msgid "ALL"
+msgstr ""
+
+#: scripts/obsidian.lua:2315
+msgid "ALL"
+msgstr ""
+
+#: scripts/obsidian.lua:2316
+msgid "ALL"
 msgstr ""
 
 #: source_files/obsidian_main/g_doom.cc:232
@@ -10126,7 +10402,7 @@ msgid "Back"
 msgstr ""
 
 #: source_files/obsidian_main/m_tutorial.cc:140
-msgid "<center>Game Settings, in the upper left area of the program window, contains all you need to build your very first WAD. Select the Game you would like to build a WAD for, the Engine that it will be played on, the Length (number of maps) of the WAD, and the Theme that you would like it to have. Once you press 'Build', you will be prompted to choose a location and filename for your WAD. After that, your WAD will be generated and saved to the location that you specified.\n\nNOTE: If you select 'Vanilla Doom' for the engine, an alternate map generator will be used to create your WAD. Although this WAD will be compatible with all engines, it is much simpler in nature than the maps made by Obsidian's main generator.</center>"
+msgid "<center>Game Settings, in the upper left area of the program window, contains all you need to build your very first mapset. Select the Engine to filter available games, the Game you would like to build maps for, the Port that it will be played on, the Length (number of maps) of the mapset, and the Theme that you would like it to have. Once you press 'Build', you will be prompted to choose a location and filename for your mapset. After that, it will be generated and saved to the location that you specified.\n\nNOTE: If you select 'Vanilla Doom' for the port, an alternate map generator will be used to create your WAD. Although this WAD will be compatible with all ports, it is much simpler in nature than the maps made by Obsidian's main generator.</center>"
 msgstr ""
 
 #: source_files/obsidian_main/m_tutorial.cc:148
@@ -10138,7 +10414,7 @@ msgid "Back"
 msgstr ""
 
 #: source_files/obsidian_main/m_tutorial.cc:171
-msgid "<center>At some point, you will want to have more control over the contents of the WADs that you generate. This is where modules come into play. Modules are groups of options that can be changed to fine-tune your experience. Most modules are optional, and will need to be enabled or disabled accordingly.</center>"
+msgid "<center>At some point, you will want to have more control over the contents of the maps that you generate. This is where modules come into play. Modules are groups of options that can be changed to fine-tune your experience. Most modules are optional, and will need to be enabled or disabled accordingly.</center>"
 msgstr ""
 
 #: source_files/obsidian_main/m_tutorial.cc:179
@@ -10234,7 +10510,7 @@ msgid "Back"
 msgstr ""
 
 #: source_files/obsidian_main/m_tutorial.cc:413
-msgid "<center>If, for whatever reason, you receive an error while building, you can view Obsidian's logs by pressing F6 or selecting Help->View Logs from the program menu. From here, you can view and save the log contents to a file of your choosing. In addition, there is a LOGS.txt file with the same information that is stored in the same folder as obsidian.exe (or ~/.config/obsidian on *nix). This file is overwritten each time you start the program, so be sure to save this information elsewhere or use the log preservation options from the File->Options menu if you need to refer to it later! These logs are extremely important when seeking help or filing bug reports!</center>"
+msgid "<center>If, for whatever reason, you receive an error while building, you can view Obsidian's logs by pressing F6 or selecting Help->View Logs from the program menu. From here, you can view and save the log contents to a file of your choosing. In addition, there will be LOGS*.txt files with the same information that are stored in the same folder as obsidian.exe (or ~/.config/obsidian on *nix). These are rolling logs that will eventually be overwritten, so be sure to save this information elsewhere if you need to refer to it later! These logs are extremely important when seeking help or filing bug reports!</center>"
 msgstr ""
 
 #: source_files/obsidian_main/m_tutorial.cc:420
@@ -10246,7 +10522,7 @@ msgid "Back"
 msgstr ""
 
 #: source_files/obsidian_main/m_tutorial.cc:439
-msgid "<center>There are more options to explore within Obsidian, but this should be enough to get you started. The tutorial can be viewed again at any time by choosing Help->Tutorial from the program menu.\n\nIf you need more help, please ask in our Discord (invite link <A HREF='https://discord.gg/dfqCt9v'>https://discord.gg/dfqCt9v</A>) or check our wiki at <A HREF='https://github.com/dashodanger/Obsidian/wiki'>https://github.com/dashodanger/Obsidian/wiki</A>.\n\nGood luck in the infinite Hells!</center>"
+msgid "<center>There are more options to explore within Obsidian, but this should be enough to get you started. The tutorial can be viewed again at any time by choosing Help->Tutorial from the program menu.\n\nIf you need more help, please ask in our Discord (invite link <A HREF='https://discord.gg/dfqCt9v'>https://discord.gg/dfqCt9v</A>) or check our wiki at <A HREF='https://github.com/obsidian-level-maker/Obsidian/wiki'>https://github.com/obsidian-level-maker/Obsidian/wiki</A>.\n\nGood luck in the infinite Hells!</center>"
 msgstr ""
 
 #: source_files/obsidian_main/m_tutorial.cc:453

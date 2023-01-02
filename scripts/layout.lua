@@ -1325,11 +1325,15 @@ gui.debugf("MonRelease in %s : kind --> %s\n",
   if STYLE.traps == "none" then return end
 
   for _,R in pairs(LEVEL.rooms) do
-    trap_up_goal(R)
+    if not R.is_sub_room then
+      trap_up_goal(R)
+    end
   end
 
   for _,R in pairs(LEVEL.rooms) do
-    trap_up_item(R)
+    if not R.is_sub_room then
+      trap_up_item(R)
+    end
   end
 end
 

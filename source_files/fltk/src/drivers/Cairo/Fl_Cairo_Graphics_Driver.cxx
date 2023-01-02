@@ -332,6 +332,7 @@ void Fl_Cairo_Graphics_Driver::line_style(int style, int width, char* dashes) {
     }
   }
   cairo_set_dash(cairo_, ddashes, l, 0);
+  cairo_set_antialias(cairo_, l ? CAIRO_ANTIALIAS_NONE : CAIRO_ANTIALIAS_DEFAULT);
   delete[] ddashes;
   check_status();
 }
@@ -376,12 +377,12 @@ Fl_Color Fl_Cairo_Graphics_Driver::color() { return Fl_Graphics_Driver::color();
 
 
 void Fl_Cairo_Graphics_Driver::concat(){
-  cairo_matrix_t mat = {fl_matrix->a , fl_matrix->b , fl_matrix->c , fl_matrix->d , fl_matrix->x , fl_matrix->y};
+  cairo_matrix_t mat = {m.a , m.b , m.c , m.d , m.x , m.y};
   cairo_transform(cairo_, &mat);
 }
 
 void Fl_Cairo_Graphics_Driver::reconcat(){
-  cairo_matrix_t mat = {fl_matrix->a , fl_matrix->b , fl_matrix->c , fl_matrix->d , fl_matrix->x , fl_matrix->y};
+  cairo_matrix_t mat = {m.a , m.b , m.c , m.d , m.x , m.y};
   cairo_status_t stat = cairo_matrix_invert(&mat);
   if (stat != CAIRO_STATUS_SUCCESS) {
     fputs("error in cairo_matrix_invert\n", stderr);
@@ -761,20 +762,25 @@ void Fl_Cairo_Graphics_Driver::draw_cached_pattern_(Fl_Image *img, cairo_pattern
   int Hs = Fl_Scalable_Graphics_Driver::floor(Y - cy + img->h(), s) - Ys;
   if (Ws == 0 || Hs == 0) return;
   cairo_save(cairo_);
-  cairo_rectangle(cairo_, X - 0.5, Y - 0.5, W + 0.5, H + 0.5);
-  cairo_clip(cairo_);
+  bool need_extend = (img->data_w() != Ws || img->data_h() != Hs || (W >= 2 && H >= 2));
+  if (need_extend || cx || cy || W < img->w() || H < img->h()) { // clip when necessary
+    cairo_rectangle(cairo_, X - 0.5, Y - 0.5, W + 0.5, H + 0.5);
+    cairo_clip(cairo_);
+  }
   // remove any scaling and the current "0.5" translation useful for lines but bad for images
   matrix.xx = matrix.yy = 1;
   matrix.x0 -= 0.5 * s; matrix.y0 -= 0.5 * s;
   cairo_set_matrix(cairo_, &matrix);
   if (img->d() >= 1) cairo_set_source(cairo_, pat);
-  cairo_pattern_set_filter(pat, Fl_RGB_Image::scaling_algorithm() == FL_RGB_SCALING_BILINEAR ?
+  if (need_extend) {
+    cairo_pattern_set_filter(pat, Fl_RGB_Image::scaling_algorithm() == FL_RGB_SCALING_BILINEAR ?
                            CAIRO_FILTER_GOOD : CAIRO_FILTER_FAST);
-  cairo_pattern_set_extend(pat, CAIRO_EXTEND_PAD);
+    cairo_pattern_set_extend(pat, CAIRO_EXTEND_PAD);
+  }
   cairo_matrix_init_scale(&matrix, double(img->data_w())/Ws, double(img->data_h())/Hs);
   cairo_matrix_translate(&matrix, -Xs , -Ys );
   cairo_pattern_set_matrix(pat, &matrix);
-  if (img->d() >= 1) cairo_paint(cairo_);
+  if (img->d() > 1) cairo_paint(cairo_);
   else cairo_mask(cairo_, pat);
   cairo_restore(cairo_);
   surface_needs_commit();
@@ -1119,9 +1125,7 @@ Fl_Cairo_Font_Descriptor::Fl_Cairo_Font_Descriptor(const char* name, Fl_Fontsize
                                                       Fl_Font_Descriptor(name, size) {
   char *string = new char[strlen(name) + 10];
   strcpy(string, name);
-  // The factor of 0.75 below gives cairo-produced text the same size as
-  // Xft-produced text for the same FLTK font size.
-  snprintf(string + strlen(string), 10, " %d", int(size * 0.75 + 0.5) );
+  snprintf(string + strlen(string), 10, " %dpx", size);
   //A PangoFontDescription describes a font in an implementation-independent manner.
   fontref = pango_font_description_from_string(string);
   delete[] string;
@@ -1131,7 +1135,15 @@ Fl_Cairo_Font_Descriptor::Fl_Cairo_Font_Descriptor(const char* name, Fl_Fontsize
   PangoFontMetrics *metrics = pango_fontset_get_metrics(fontset);
   ascent = pango_font_metrics_get_ascent(metrics);
   descent = pango_font_metrics_get_descent(metrics);
-#if PANGO_VERSION_CHECK(1,44,0)
+/* Function pango_font_metrics_get_height() giving the line height of a pango font
+ appears with pango version 1.44. However, with pango version 1.48.10 and below,
+ this function gives values that make the underscore invisible on lowdpi display
+ and at 100% scaling (the underscore becomes visible starting at 120% scaling).
+ With pango version 1.50.6 (Ubuntu 22.04) this problem disappears.
+ Consequently, function pango_font_metrics_get_height() is not used until version 1.50.6
+*/
+//#if PANGO_VERSION_CHECK(1,44,0)
+#if PANGO_VERSION_CHECK(1,50,6)
   line_height = pango_font_metrics_get_height(metrics); // 1.44
 #else
   line_height = (pango_font_metrics_get_ascent(metrics) + pango_font_metrics_get_descent(metrics)) * 1.025 + 0.5;
@@ -1199,8 +1211,8 @@ void Fl_Cairo_Graphics_Driver::font(Fl_Font fnum, Fl_Fontsize s) {
 void Fl_Cairo_Graphics_Driver::draw(const char* str, int n, float x, float y) {
   if (!n) return;
   cairo_save(cairo_);
-  // The -0.5 below makes underscores visible in Fl_Text_Display at scale = 1
-  cairo_translate(cairo_, x, y - height() + descent() -0.5);
+  Fl_Cairo_Font_Descriptor *fd = (Fl_Cairo_Font_Descriptor*)font_descriptor();
+  cairo_translate(cairo_, x - 1, y - (fd->line_height - fd->descent) / float(PANGO_SCALE) - 1);
   pango_layout_set_text(pango_layout_, str, n);
   pango_cairo_show_layout(cairo_, pango_layout_); // 1.1O
   cairo_restore(cairo_);
@@ -1278,8 +1290,8 @@ void Fl_Cairo_Graphics_Driver::text_extents(const char* txt, int n, int& dx, int
   pango_layout_get_extents(pango_layout_, &ink_rect, NULL);
   double f = PANGO_SCALE;
   Fl_Cairo_Font_Descriptor *fd = (Fl_Cairo_Font_Descriptor*)font_descriptor();
-  dx = ink_rect.x / f;
-  dy = (ink_rect.y - fd->line_height + fd->descent) / f;
+  dx = ink_rect.x / f - 1;
+  dy = (ink_rect.y - fd->line_height + fd->descent) / f - 1;
   w = ceil(ink_rect.width / f);
   h = ceil(ink_rect.height / f);
 }
@@ -1328,6 +1340,8 @@ void Fl_Cairo_Graphics_Driver::XDestroyRegion(Fl_Region r_) {
   }
 }
 
+#define fl_max(a,b) ((a) > (b) ? (a) : (b))
+#define fl_min(a,b) ((a) < (b) ? (a) : (b))
 
 void Fl_Cairo_Graphics_Driver::restore_clip() {
   if (cairo_) {
@@ -1335,10 +1349,28 @@ void Fl_Cairo_Graphics_Driver::restore_clip() {
     // apply what's in rstack
     struct flCairoRegion *r = (struct flCairoRegion*)rstack[rstackptr];
     if (r) {
+      if (!clip_) {
+        clip_ = new Clip();
+        clip_->prev = NULL;
+      }
       for (int i = 0; i < r->count; i++) {
         cairo_rectangle(cairo_, r->rects[i].x - 0.5, r->rects[i].y - 0.5, r->rects[i].width, r->rects[i].height);
+        // put in clip_ the bounding rect of region r
+        if (i == 0) {
+          clip_->x = r->rects[0].x; clip_->y = r->rects[0].y;
+          clip_->w = r->rects[0].width; clip_->h = r->rects[0].height;
+        } else {
+          int R = fl_max(r->rects[i].x + r->rects[i].width, clip_->x + clip_->w);
+          int B = fl_max(r->rects[i].y + r->rects[i].height, clip_->y + clip_->h);
+          clip_->x = fl_min(r->rects[i].x, clip_->x) ;
+          clip_->y = fl_min(r->rects[i].y, clip_->y);
+          clip_->w = R - clip_->x;
+          clip_->h = B - clip_->y;
+        }
       }
       cairo_clip(cairo_);
+    } else if (clip_) {
+      clip_->w = -1;
     }
   }
 }

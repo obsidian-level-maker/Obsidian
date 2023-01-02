@@ -621,12 +621,22 @@ function ZDOOM_SPECIALS.do_special_stuff()
     end
 
     -- resolve proper episodic sky texture assignments
-    if map_num <= 11 then
-      sky_tex = "RSKY1"
-    elseif map_num > 11 and map_num <= 20 then
-      sky_tex = "RSKY2"
-    elseif map_num > 20 then
-      sky_tex = "RSKY3"
+    if PARAM.sky_generator_active then
+      if map_num <= 11 then
+        sky_tex = "RSKY1"
+      elseif map_num > 11 and map_num <= 20 then
+        sky_tex = "RSKY2"
+      elseif map_num > 20 then
+        sky_tex = "RSKY3"
+      end
+    else
+      if map_num <= 11 then
+        sky_tex = "Sky1"
+      elseif map_num > 11 and map_num <= 20 then
+        sky_tex = "Sky2"
+      elseif map_num > 20 then
+        sky_tex = "Sky3"
+      end
     end
 
     if PARAM.fireblu_mode == "enable" then
@@ -867,8 +877,8 @@ function ZDOOM_SPECIALS.do_special_stuff()
 
 
       clusterdef =
-        'cluster 5\n', -- MAP01-05
-        '{\n',
+        'cluster 5\n' .. -- MAP01-05
+        '{\n' ..
         '' .. cluster_music_line .. '' ..
         '  pic = "' .. interpic .. '"\n' ..
         '  exittext =\n' ..

@@ -240,7 +240,7 @@ function Level_determine_map_size(LEV)
 
   -- Try to prevent grower failures with Micro levels
   if LEV.is_nature then
-    W = math.clamp(16, W, PARAM.float_level_upper_bound or 75)
+    W = math.max(W, 16)
   end
 
   gui.printf("Initial size for " .. LEV.name .. ": " .. W .. "\n")
@@ -2215,12 +2215,6 @@ function Level_do_styles(LEVEL)
     end
   end
 
-  -- if level needs a secret exit, make lots of secrets
-  -- (this is not strictly necessary, more an aesthetic choice)
-  if LEVEL.secret_exit then
-    STYLE.secrets = "heaps"
-  end
-
   if LEVEL.psychedelic then
     Mat_prepare_trip(LEVEL)
   end
@@ -2692,6 +2686,8 @@ function Level_make_level(LEV)
       gui.property("description", LEVEL.description)
     end
   end
+
+  LEVEL.PREFABS = table.copy(PREFABS)
 
   local res = Level_build_it(LEVEL, SEEDS)
   if res ~= "ok" then

@@ -162,7 +162,7 @@ protected:
   matrix m; ///< current transformation matrix
   int n; ///< For internal use by FLTK
   int gap_; ///< For internal use by FLTK
-  enum SHAPE {NONE=0, LINE, LOOP, POLYGON, POINTS} what;
+  enum SHAPE {NONE=0, LINE, LOOP, POLYGON, POINTS, COMPLEX_POLYGON} what;
   int rstackptr; ///< For internal use by FLTK
   static const int region_stack_max = FL_REGION_STACK_SIZE - 1; ///< For internal use by FLTK
   Fl_Region rstack[FL_REGION_STACK_SIZE]; ///< For internal use by FLTK
@@ -170,11 +170,6 @@ protected:
   int p_size;
   typedef struct { float x; float y; } XPOINT;
   XPOINT *xpoint;
-#ifndef FL_DOXYGEN
-  inline int vertex_no() { return n; }
-  inline int vertex_kind() {return what;}
-#endif
-  matrix *fl_matrix; /**< Points to the current coordinate transformation matrix */
   virtual void global_gc();
   virtual void cache(Fl_Pixmap *img);
   virtual void cache(Fl_Bitmap *img);
@@ -239,6 +234,8 @@ public:
   // support of "complex shapes"
   void push_matrix();
   void pop_matrix();
+  void load_identity();
+  void load_matrix(double a, double b, double c, double d, double x, double y);
   void mult_matrix(double a, double b, double c, double d, double x, double y);
   void rotate(double d);
   void translate(double x,double y);

@@ -322,24 +322,6 @@ void Fl_Wayland_Window_Driver::capture_titlebar_and_borders(Fl_RGB_Image*& top, 
   top->scale(pWindow->w(), htop);
 }
 
-// used only to support progressive drawing
-static void surface_frame_done(void *data, struct wl_callback *cb, uint32_t time);
-
-static const struct wl_callback_listener surface_frame_listener = {
-  .done = surface_frame_done,
-};
-
-static void surface_frame_done(void *data, struct wl_callback *cb, uint32_t time) {
-  struct wld_window *window = (struct wld_window *)data;
-//fprintf(stderr,"surface_frame_done:  destroy cb=%p draw_buffer_needs_commit=%d\n", cb, window->buffer->draw_buffer_needs_commit);
-  wl_callback_destroy(cb);
-  window->buffer->cb = NULL;
-  if (window->buffer->draw_buffer_needs_commit) {
-//fprintf(stderr,"surface_frame_done: new cb=%p \n", window->buffer->cb);
-    Fl_Wayland_Graphics_Driver::buffer_commit(window, &surface_frame_listener);
-  }
-}
-
 
 // make drawing go into this window (called by subclass flush() impl.)
 void Fl_Wayland_Window_Driver::make_current() {
@@ -358,7 +340,7 @@ void Fl_Wayland_Window_Driver::make_current() {
   // to support progressive drawing
   if ( (!Fl_Wayland_Window_Driver::in_flush) && window->buffer && (!window->buffer->cb)) {
     //fprintf(stderr, "direct make_current: new cb=%p\n", window->buffer->cb);
-    Fl_Wayland_Graphics_Driver::buffer_commit(window, &surface_frame_listener);
+    Fl_Wayland_Graphics_Driver::buffer_commit(window);
   }
 
   Fl_Wayland_Window_Driver::wld_window = window;
@@ -385,18 +367,6 @@ void Fl_Wayland_Window_Driver::make_current() {
   if (Fl::cairo_autolink_context()) Fl::cairo_make_current(pWindow);
 #endif
 }
-
-
-// used to support regular drawing
-static void surface_frame_one_shot(void *data, struct wl_callback *cb, uint32_t time) {
-  wl_callback_destroy(cb);
-  struct wld_window *window = (struct wld_window *)data;
-  window->buffer->cb = NULL;
-}
-
-static const struct wl_callback_listener surface_frame_listener_one_shot = {
-  .done = surface_frame_one_shot,
-};
 
 
 void Fl_Wayland_Window_Driver::flush() {
@@ -437,7 +407,7 @@ void Fl_Wayland_Window_Driver::flush() {
   Fl_Window_Driver::flush();
   Fl_Wayland_Window_Driver::in_flush = false;
   if (window->buffer->cb) wl_callback_destroy(window->buffer->cb);
-  Fl_Wayland_Graphics_Driver::buffer_commit(window, &surface_frame_listener_one_shot, false);
+  Fl_Wayland_Graphics_Driver::buffer_commit(window, false);
 }
 
 
@@ -1600,6 +1570,12 @@ Fl_Window *fl_wl_find(struct wld_window *xid) {
 
 struct wld_window *fl_wl_xid(const Fl_Window *win) {
   return (struct wld_window *)Fl_Window_Driver::xid(win);
+}
+
+
+struct wl_compositor *fl_wl_compositor() {
+  Fl_Wayland_Screen_Driver *screen_driver = (Fl_Wayland_Screen_Driver*)Fl::screen_driver();
+  return screen_driver->wl_compositor;
 }
 
 

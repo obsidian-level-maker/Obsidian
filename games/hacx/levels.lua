@@ -223,37 +223,39 @@ function HACX.get_levels()
       end
     end
 
-    -- handling for street mode
-    -- actual handling for urban percentages are done
-    if PARAM.float_streets_mode then
-      if not LEV.is_procedural_gotcha or not LEV.prebuilt then
-        if rand.odds(PARAM.float_streets_mode) then
-          LEV.has_streets = true
-        end
-      end
+    local special_mode = {}
+
+    if PARAM.float_streets_mode and rand.odds(PARAM.float_streets_mode) then
+      table.add_unique(special_mode, "streets")
+    end
+ 
+    if PARAM.float_linear_mode and rand.odds(PARAM.float_linear_mode) then
+      table.add_unique(special_mode, "linear")
     end
 
-    if not LEV.prebuilt then
-      if PARAM.float_linear_mode then
-        if rand.odds(PARAM.float_linear_mode) then
-          LEV.is_linear = true
-        end
-      end
+    if PARAM.float_nature_mode and rand.odds(PARAM.float_nature_mode) then
+      table.add_unique(special_mode, "nature")
+    end
 
-      -- nature mode
-      if PARAM.float_nature_mode then
-        if rand.odds(PARAM.float_nature_mode) then
-          if LEV.has_streets then
-            if rand.odds(50) then
-              LEV.has_streets = false
-              LEV.is_nature = true
-            end
-          else
-            LEV.is_nature = true
-          end
-        end
+    if not table.empty(special_mode) and not LEV.prebuilt then
+      local selected_mode = rand.pick(special_mode)
+      if selected_mode == "streets" then
+        LEV.has_streets = true
+        LEV.is_linear = false
+        LEV.is_nature = false
+      elseif selected_mode == "linear" then
+        LEV.has_streets = false
+        LEV.is_linear = true
+        LEV.is_nature = false
+      else
+        LEV.has_streets = false
+        LEV.is_linear = false
+        LEV.is_nature = true
       end
-
+    else
+      LEV.has_streets = false
+      LEV.is_linear = false
+      LEV.is_nature = false
     end
 
     if MAP_NUM == 1 or (map % 10) == 3 then

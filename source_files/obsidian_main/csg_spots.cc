@@ -142,7 +142,7 @@ void SPOT_DumpGrid(const char *info) {
             }
         }
 
-        buffer[grid_W] = 0;
+        buffer[width] = 0;
 
         DebugPrintf(" {: 3} {}\n", y, buffer);
     }
@@ -909,7 +909,9 @@ static void store_mon_or_item(lua_State *L, int stack_pos, unsigned int index,
 int SPOT_dump(lua_State *L) {
     const char *text = luaL_checkstring(L, 1);
 
-    SPOT_DumpGrid(text);
+    if (text) {
+        SPOT_DumpGrid(text);
+    }
 
     return 0;
 }

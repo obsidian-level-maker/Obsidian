@@ -85,6 +85,14 @@ function get_rand_exit_combo()
   return info
 end
 
+function get_rand_secret_exit_combo()
+  local name,info
+  repeat
+    name,info = rand.table_pair(GAME.FACTORY.exits)
+  until info.secret_exit
+  return info
+end
+
 function get_rand_hallway(theme)
 
   -- FIXME: duplicate code with get_rand_combo --> MERGE!
