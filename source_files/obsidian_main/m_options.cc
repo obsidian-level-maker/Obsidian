@@ -544,10 +544,12 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     int cx = x() + kf_w(24);
     int cy = y() + (y_step * 3);
 
+    int listwidth = kf_w(160);
+
     Fl_Box *heading;
 
     opt_language =
-        new UI_CustomMenu(100 + KF * 40, cy, kf_w(166), kf_h(24), "");
+        new UI_CustomMenu(cx + W * .38, cy, listwidth, kf_h(24), "");
     opt_language->copy_label(_("Language: "));
     opt_language->align(FL_ALIGN_LEFT);
     opt_language->callback(callback_Language, this);
@@ -561,7 +563,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     cy += opt_language->h() + y_step;
 
     opt_zip_output =
-        new UI_CustomMenu(100 + KF * 40, cy, kf_w(166), kf_h(24), "");
+        new UI_CustomMenu(cx + W * .38, cy, listwidth, kf_h(24), "");
     opt_zip_output->copy_label(_("Compress Output: "));
     opt_zip_output->align(FL_ALIGN_LEFT);
     opt_zip_output->callback(callback_ZipOutput, this);
@@ -575,7 +577,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     cy += opt_zip_output->h() + y_step;
 
     opt_filename_prefix =
-        new UI_CustomMenu(100 + KF * 40, cy, kf_w(166), kf_h(24), "");
+        new UI_CustomMenu(cx + W * .38, cy, listwidth, kf_h(24), "");
     opt_filename_prefix->copy_label(_("Filename Prefix: "));
     opt_filename_prefix->align(FL_ALIGN_LEFT);
     opt_filename_prefix->callback(callback_FilenamePrefix, this);
@@ -591,7 +593,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     cy += opt_filename_prefix->h() + y_step;
 
-    opt_custom_prefix = new Fl_Button(100 + KF * 40, cy, kf_w(166), kf_h(24),
+    opt_custom_prefix = new Fl_Button(cx + W * .38, cy, listwidth, kf_h(24),
                                       _("Set Custom Prefix..."));
     opt_custom_prefix->box(button_style);
     opt_custom_prefix->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
@@ -602,14 +604,14 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_custom_prefix->labelcolor(FONT2_COLOR);
 
     custom_prefix_help = new UI_HelpLink(
-        136 + KF * 40 + this->opt_custom_prefix->w(), cy, W * 0.10, kf_h(24));
+        cx + W * .38 + this->opt_custom_prefix->w(), cy, W * 0.10, kf_h(24));
     custom_prefix_help->labelfont(font_style);
     custom_prefix_help->callback(callback_PrefixHelp, this);
 
     cy += opt_custom_prefix->h() + y_step;
 
     opt_default_output_path = new Fl_Button(
-        100 + KF * 40, cy, kf_w(166), kf_h(24), _("Set Default Output Path"));
+        cx + W * .38, cy, listwidth, kf_h(24), _("Set Default Output Path"));
     opt_default_output_path->box(button_style);
     opt_default_output_path->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
     opt_default_output_path->visible_focus(0);
@@ -634,7 +636,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     cy += opt_current_output_path->h() + y_step * .5;
 
     opt_random_string_seeds =
-        new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
+        new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24), "");
     opt_random_string_seeds->copy_label(_(" Random String Seeds"));
     opt_random_string_seeds->value(random_string_seeds ? 1 : 0);
     opt_random_string_seeds->callback(callback_Random_String_Seeds, this);
@@ -643,14 +645,14 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_random_string_seeds->down_box(button_style);
 
     random_string_seeds_help = new UI_HelpLink(
-        136 + KF * 40 + this->opt_custom_prefix->w(), cy, W * 0.10, kf_h(24));
+        cx + W * .38 + this->opt_custom_prefix->w(), cy, W * 0.10, kf_h(24));
     random_string_seeds_help->labelfont(font_style);
     random_string_seeds_help->callback(callback_RandomStringSeedsHelp, this);
 
     cy += opt_random_string_seeds->h() + y_step * .5;
 
     opt_password_mode =
-        new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
+        new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24), "");
     opt_password_mode->copy_label(_(" Password Mode"));
     opt_password_mode->value(password_mode ? 1 : 0);
     opt_password_mode->callback(callback_Password_Mode, this);
@@ -662,13 +664,13 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     }
 
     password_mode_help = new UI_HelpLink(
-        136 + KF * 40 + this->opt_custom_prefix->w(), cy, W * 0.10, kf_h(24));
+        cx + W * .38 + this->opt_custom_prefix->w(), cy, W * 0.10, kf_h(24));
     password_mode_help->labelfont(font_style);
     password_mode_help->callback(callback_PasswordModeHelp, this);
 
     cy += opt_password_mode->h() + y_step * .5;
 
-    opt_backups = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
+    opt_backups = new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24), "");
     opt_backups->copy_label(_(" Create Backups"));
     opt_backups->value(create_backups ? 1 : 0);
     opt_backups->callback(callback_Backups, this);
@@ -678,7 +680,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     cy += opt_backups->h() + y_step * .5;
 
-    opt_overwrite = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
+    opt_overwrite = new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24), "");
     opt_overwrite->copy_label(_(" Overwrite File Warning"));
     opt_overwrite->value(overwrite_warning ? 1 : 0);
     opt_overwrite->callback(callback_Overwrite, this);
@@ -688,7 +690,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     cy += opt_overwrite->h() + y_step * .5;
 
-    opt_debug = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
+    opt_debug = new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24), "");
     opt_debug->copy_label(_(" Debugging Messages"));
     opt_debug->value(debug_messages ? 1 : 0);
     opt_debug->callback(callback_Debug, this);
@@ -698,7 +700,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     cy += opt_debug->h() + y_step * .5;
 
-    opt_limit_break = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
+    opt_limit_break = new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24), "");
     opt_limit_break->copy_label(_(" Ignore Slider Limits"));
     opt_limit_break->value(limit_break ? 1 : 0);
     opt_limit_break->callback(callback_LimitBreak, this);
@@ -709,7 +711,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     cy += opt_limit_break->h() + y_step * .5;
 
     opt_builds_per_run =
-        new Fl_Simple_Counter(100 + KF * 40, cy, kf_w(166), kf_h(24), "");
+        new Fl_Simple_Counter(cx + W * .38, cy, listwidth, kf_h(24), "");
     opt_builds_per_run->copy_label(_("Builds Per Run "));
     opt_builds_per_run->align(FL_ALIGN_LEFT);
     opt_builds_per_run->step(1);
@@ -726,7 +728,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     cy += opt_builds_per_run->h() + y_step * .5;
 
     /*opt_preserve_failures =
-        new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
+        new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24),, "");
     opt_preserve_failures->copy_label(_(" Preserve Failed Builds"));
     opt_preserve_failures->value(preserve_failures ? 1 : 0);
     opt_preserve_failures->callback(callback_PreserveFailures, this);
@@ -737,7 +739,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     cy += opt_preserve_failures->h() + y_step * .5;*/
 
     opt_log_size =
-        new Fl_Simple_Counter(100 + KF * 40, cy, kf_w(166), kf_h(24), "");
+        new Fl_Simple_Counter(cx + W * .38, cy, listwidth, kf_h(24), "");
     opt_log_size->copy_label(_("Max Log Size (MB) "));
     opt_log_size->align(FL_ALIGN_LEFT);
     opt_log_size->step(1);
@@ -754,7 +756,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     cy += opt_log_size->h() + y_step * .5;
 
     opt_log_limit =
-        new Fl_Simple_Counter(100 + KF * 40, cy, kf_w(166), kf_h(24), "");
+        new Fl_Simple_Counter(cx + W * .38, cy, listwidth, kf_h(24), "");
     opt_log_limit->copy_label(_("# of Logs Preserved "));
     opt_log_limit->align(FL_ALIGN_LEFT);
     opt_log_limit->step(1);
@@ -820,7 +822,7 @@ int UI_OptionsWin::handle(int event) {
 }
 
 void DLG_OptionsEditor(void) {
-    int opt_w = kf_w(350);
+    int opt_w = kf_w(500);
     int opt_h = kf_h(525);
 
     UI_OptionsWin *option_window =
