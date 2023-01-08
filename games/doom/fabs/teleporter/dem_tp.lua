@@ -5,7 +5,10 @@
 PREFABS.Dem_teleports1 =
 {
   file = "teleporter/dem_tp.wad",
-  map = "MAP02",
+  map = "MAP01",
+
+  seed_w = 2,
+  seed_h = 2,
 
   texture_pack = "armaetus",
 
