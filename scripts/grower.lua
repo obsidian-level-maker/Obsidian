@@ -1165,7 +1165,7 @@ function Grower_decide_extents(LEVEL)
 
   -- calculate the coverage target
 
-  LEVEL.min_coverage = int(LEVEL.map_W * LEVEL.map_H * 0.85)
+  LEVEL.min_coverage = int(LEVEL.map_W * LEVEL.map_H * 0.65)
 
   if LEVEL.has_streets then
     gui.printf("--==| Streets Mode activated! |==--\n\n")
@@ -4470,8 +4470,31 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
   end
 
 
-  local function emergency_teleport_break()
+  local function emergency_teleport_break(LEVEL, R)
     local final_R = LEVEL.rooms[#LEVEL.rooms]
+
+    if R then final_R = R end
+  
+    Seed_draw_minimap(SEEDS, LEVEL)
+
+    gui.printf(table.tostr(final_R, 3))
+    if final_R.is_hallway or final_R.is_grown then
+      local found_room
+      local cur_id = #LEVEL.rooms
+
+      while(cur_id >= 1 and not found_room) do
+        if LEVEL.rooms[id] then
+          local cur_R = LEVEL.rooms[id]
+
+          if not cur_R.is_hallway and not cur_R.is_grown then
+            final_r = cur_R
+            found_room = true
+          end
+        end
+
+        cur_id = cur_id - 1
+      end
+    end
 
     gui.printf("ROOM_" .. final_R.id .. " in critical condition! " ..
     "GET THE TELEPORNEPHERINE!\n")
@@ -4548,7 +4571,11 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
     if LEVEL.is_linear and not LEVEL.is_procedural_gotcha
     and (#LEVEL.rooms < ((LEVEL.min_rooms + LEVEL.max_rooms) / 2)) then
       if emergency_linear_sprouts() == "oof" then
-        emergency_teleport_break()
+        emergency_teleport_break(LEVEL)
+      end
+    elseif #LEVEL.rooms <= 3 and not LEVEL.is_procedural_gotcha then
+      if emergency_linear_sprouts() == "oof" then
+        emergency_teleport_break(LEVEL)
       end
     end
   end
