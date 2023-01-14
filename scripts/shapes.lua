@@ -3599,13 +3599,19 @@ GROW_COLONNADE_VAULT_NEW_AREA_CROSS =
     "xxx......xxx","xxxA1111Axxx",
     "xxx......xxx","xxxA#11#Axxx",
     "............","AAAA1111AAAA",
-    "............","AA#A#11#A#AA",
-    "............","AAAA1111AAAA",
-    "............","AA#A#11#A#AA",
+    "............","AA#/1111%#AA",
+    "............","AAA111111AAA",
+    "............","AA#%1111/#AA",
     "............","AAAA1111AAAA",
     "xxx......xxx","xxxA#11#Axxx",
     "xxx......xxx","xxxA1111Axxx",
     "xxxxx11xxxxx","xxxxx11xxxxx",
+  },
+
+  diagonals =
+  {
+    "A1","1A",
+    "A1","1A"
   }
 },
 
@@ -5952,14 +5958,14 @@ GROW_SIDE_ON_RAMP_TALL_TO_JUNCTION_LIQUID =
 
   structure =
   {
-    "......","A%/%/A",
-    "......","AA~~AA",
-    "x....x","x^~~^x",
-    "x....x","x^~~^x",
-    "x....x","x1%/1x",
-    "x....x","x1111x",
-    "1....x","11111x",
-    "1....x","1111/x",
+    "........","AA%/%/AA",
+    "........","AAA~~AAA",
+    "xx....xx","xx^~~^xx",
+    "xx....xx","xx^~~^xx",
+    "xx....xx","xx1%/1xx",
+    "xx....xx","xx1111xx",
+    "1.....xx","111111xx",
+    "1.....xx","11111/xx",
   },
 
   diagonals =
