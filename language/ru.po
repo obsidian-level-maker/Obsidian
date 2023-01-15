@@ -1231,8 +1231,8 @@ msgid "Enables building of levels for experimental games."
 msgstr "Позволяет создавать уровни для игр, с которыми пока не была проведена детальная отладка."
 
 #: modules/debugger.lua:220
-msgid "The following games are in an experimental status, meaning that they may have errors when building levels, or support for certain gameplay features has not been implemented yet:\n\nStrife"
-msgstr "Сейчас в списке:\n\nStrife"
+msgid "The following games are in an experimental status, meaning that they may have errors when building levels, or support for certain gameplay features has not been implemented yet:\n\nDuke Nukem 3D (currently disabled)\n\nQuake (currently disabled)"
+msgstr "Экспериментальные игры могут и, скорее всего, и будут иметь ошибки в генерации и скриптах создания.\nСейчас в списке экспериментальных игр:\n\nDuke Nukem 3D (в данный момент отключён);\nQuake (в данный момент отключён)."
 
 #: modules/debugger.lua:228
 msgid "Custom Error Texture"
@@ -3524,7 +3524,7 @@ msgstr "Шанс того, что каждый конкретный уровен
 
 #: modules/miscellaneous.lua:256
 msgid "Layout consistency attempts to cause levels to overprefer specific shape rules from the ruleset in order to create odd but more consistent combinations of pieces to build the general layout. The effect will be more prominent in certain combinations and levels than others."
-msgstr "Единообразие общего макета геометрии — попытка предпочитать определённый набор правил геометрических форм всем другим. Это приводит к созданию чуть более странного, но и более цельного по структуре уровня. Эффект будет заметен не во всех комбинациях и картах."
+msgstr "Единообразие общего макета геометрии — попытка предпочитать определённый набор правил геометрических форм всем другим. Это приводит к созданию чуть более странного, но вместе с тем и более цельного по структуре уровня. Эффект будет заметен не на всех картах."
 
 #: modules/miscellaneous.lua:264
 msgid "Linear Mode"
@@ -3551,7 +3551,7 @@ msgid "Streets Mode"
 msgstr "Процент карт с улицами"
 
 #: modules/miscellaneous.lua:300
-msgid "Allows Oblige to create large street-like outdoor rooms."
+msgid "Allows Obsidian to create large street-like outdoor rooms."
 msgstr "Позволяет создавать обширные комнаты, похожие на улицы."
 
 #: modules/miscellaneous.lua:307
@@ -3861,6 +3861,14 @@ msgstr "Линейные старты"
 #: modules/miscellaneous.lua:592
 msgid "Stops start rooms from having more than one external room connection. Can help reduce being overwhelmed by attacks from multiple directions when multiple neighboring rooms connect into the start room. Default means no control, and levels can have linear starts at random based on shape grammars as per original Oblige 7.7 behavior."
 msgstr "Не позволяет генератору создавать стартовые комнаты с более чем одним проходом в соседние локации, что может уменьшить в начале уровня количество атак с разных направлений. \"По умолчанию\" означает отсутствие подобных проверок, однако уровни всё равно могут случайно сгенерироваться с линейным началом — в соответствии с исходным поведением Oblige 7.7."
+
+#: modules/miscellaneous.lua:593
+msgid "Open Outdoors"
+msgstr "Свободные улицы"
+
+#: modules/miscellaneous.lua:595
+msgid "Disables shape rules that involve obstructive geometry such as pillars for outdoors based on theme."
+msgstr "Отключает или уменьшает генерацию блокирующих препятствий для улиц (к примеру, фонарей) в зависимости от темы."
 
 #: modules/miscellaneous.lua:598
 msgid "Dead Ends"
@@ -4730,6 +4738,22 @@ msgstr "Крутизна рельефа арены"
 msgid "Influences steepness settings for boss arenas. Boss arena steepness is capped to be less intrusive to boss movement."
 msgstr "Влияет на общую крутину арен. Диапазон возможных значений уменьшен ради того, чтобы рельеф не мешал передвижению босса."
 
+#: modules/procedural_gotcha_zdoom.lua:2044
+msgid "Boss Tier"
+msgstr "Уровень базового монстра"
+
+#: modules/procedural_gotcha_zdoom.lua:2047
+msgid "Increases or reduces chances of boss being based off of a more powerful monster."
+msgstr "Управляет шансом появления босса на основе более сильного монстра."
+
+#: modules/procedural_gotcha_zdoom.lua:2054
+msgid "Boss Trait Strength"
+msgstr "Сила спецдействий босса"
+
+#: modules/procedural_gotcha_zdoom.lua:2057
+msgid "Increases or reduces chances of boss getting more powerful traits."
+msgstr "Управляет мощью специальных действий (в частности, сложностью атак, эффективностью защит и уровнем улучшенного искусственного интеллекта) генерируемых боссов."
+
 #: modules/procedural_gotcha_zdoom.lua:1786
 msgid "Boss Difficulty"
 msgstr "Сложность босса"
@@ -4800,7 +4824,7 @@ msgstr "Ограничение вида монстров"
 
 #: modules/procedural_gotcha_zdoom.lua:1877
 msgid "Influences how boss difficulty and megawad progression affects the monster type of boss.\n\nHard Limit: Doesn't allow monster types outside of range to ever spawn.\n\nSoft Limit: Reduces the probability of spawning of monster types outside of range.\n\nNo Limit: Difficulty doesn't have effect on monster type selection."
-msgstr "Влияет на то, как прогресс мегавада и сложность босса влияют на его тип.\n\nЖёсткое ограничение: не позволяет появляться монстрам, которые пока что не должны были появляться в последовательности уровней.\n\nМягкое ограничение: снижает вероятность появления таких монстров.\n\nБез ограждений: сложность не влияет на выбор типа монстра."
+msgstr "Влияет на то, как текущий уровень продвижения по мегаваду и сложность босса влияют на его тип.\n\nЖёсткое ограничение: не позволяет появляться монстрам, которые пока что не должны были появляться в последовательности уровней.\n\nМягкое ограничение: снижает вероятность появления таких монстров.\n\nБез ограждений: сложность не влияет на выбор типа монстра."
 
 #: modules/procedural_gotcha_zdoom.lua:1885
 msgid "Weapon placement"
@@ -6790,7 +6814,7 @@ msgstr ""
 
 #: modules/zdoom_marines.lua:424
 msgid "Plasma Marine"
-msgstr "Плазмомётчик"
+msgstr "Плазмомётчики"
 
 #: modules/zdoom_marines.lua:431
 msgid "Control the amount of Plasma Rifle-wielding ZDoom Marines."
@@ -7419,6 +7443,22 @@ msgstr "Введите формат префикса:"
 #: source_files/obsidian_main/m_options.cc:509
 msgid "Custom prefix cannot be blank!"
 msgstr "Префикс пуст."
+
+#: source_files/obsidian_main/m_options.cc:488
+msgid "Select default save directory"
+msgstr "Выберите путь по умолчанию для сохранения..."
+
+#: source_files/obsidian_main/m_options.cc:498
+msgid "Error choosing directory:\n"
+msgstr "Ошибка выбора:\n"
+
+#: source_files/obsidian_main/m_options.cc:513
+msgid "Empty default directory provided???:\n"
+msgstr "Э-э... Кажется, путь до каталога по умолчанию отсутствует?\n"
+
+#: source_files/obsidian_main/m_options.cc:524
+msgid "Current Path"
+msgstr "Текущий путь"
 
 #: source_files/obsidian_main/m_options.cc:463
 msgid "Custom Prefix"
