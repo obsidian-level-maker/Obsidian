@@ -410,6 +410,8 @@ function Layout_place_importants(LEVEL, R, imp_pass, SEEDS)
     local chunk = Layout_spot_for_wotsit(LEVEL, R, goal.kind, "required", SEEDS)
 
     if not chunk then
+      gui.printf(R.id .. ": " ..
+      table.tostr(R) .. "\n")
       error("No spot in room for " .. goal.kind .. " in "
       .. "ROOM_" .. R.id)
     end

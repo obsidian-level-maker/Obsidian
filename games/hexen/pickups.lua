@@ -252,8 +252,8 @@ h_ultimate_piece_one =
 {
   id = 7002,
   kind = "other",
-  add_prob = 5,
-  secret_prob = 10,
+  add_prob = 1,
+  secret_prob = 1,
   once_only = true,
   weapon_piece_ids = 
   {
@@ -267,8 +267,8 @@ h_ultimate_piece_two =
 {
   id = 7003,
   kind = "other",
-  add_prob = 5,
-  secret_prob = 10,
+  add_prob = 1,
+  secret_prob = 1,
   once_only = true,
   weapon_piece_ids = 
   {
@@ -282,8 +282,8 @@ h_ultimate_piece_three =
 {
   id = 7004,
   kind = "other",
-  add_prob = 5,
-  secret_prob = 10,
+  add_prob = 1,
+  secret_prob = 1,
   once_only = true,
   weapon_piece_ids = 
   {

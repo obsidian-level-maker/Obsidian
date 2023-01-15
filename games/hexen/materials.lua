@@ -294,8 +294,8 @@ HEXEN.MATERIALS =
   TOMB10   = { t="TOMB10",   f="F_042" },
   TOMB11   = { t="TOMB11",   f="F_044" },
   TOMB12   = { t="TOMB12",   f="F_059" },
-  VALVE1   = { t="VALVE1",   f="F_047" },
-  VALVE2   = { t="VALVE2",   f="F_047" },
+  --VALVE1   = { t="VALVE1",   f="F_047" },
+  --VALVE2   = { t="VALVE2",   f="F_047" },
   VILL01   = { t="VILL01",   f="F_030" },
   VILL04   = { t="VILL04",   f="F_055" },
   VILL05   = { t="VILL05",   f="F_055" },
@@ -469,8 +469,8 @@ HEXEN.MATERIALS =
 
   R_TPORT1  = { t="TPORT1",  rail_h=128 },
   R_TPORTX  = { t="TPORTX",  rail_h=128 },
-  R_VALVE01 = { t="VALVE01", rail_h=32 },
-  R_VALVE02 = { t="VALVE02", rail_h=32 },
+  --R_VALVE01 = { t="VALVE01", rail_h=32 },
+  --R_VALVE02 = { t="VALVE02", rail_h=32 },
 
   SEWER_BAR3 = { t="SEWER03", rail_h=64, line_flags=1 },
   SEWER_BAR4 = { t="SEWER04", rail_h=32, line_flags=1 },
