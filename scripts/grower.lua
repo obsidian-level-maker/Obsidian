@@ -4413,6 +4413,7 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
 
   local function handle_next_room()
     coverage, cov_rooms = Grower_determine_coverage(SEEDS, LEVEL)
+    LEVEL.cur_coverage = coverage
 
     if reached_coverage() then return "reached" end
 
@@ -4573,7 +4574,8 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
       if emergency_linear_sprouts() == "oof" then
         emergency_teleport_break(LEVEL)
       end
-    elseif #LEVEL.rooms <= 3 and not LEVEL.is_procedural_gotcha then
+    elseif #LEVEL.rooms <= 3 and not LEVEL.is_procedural_gotcha
+    and LEVEL.cur_coverage <= LEVEL.min_coverage then
       if emergency_linear_sprouts() == "oof" then
         emergency_teleport_break(LEVEL)
       end
