@@ -45,14 +45,14 @@ PREFABS.Item_dem_gamble_closet1 =
 
   thing_2015 =
   {
-    backpack = 1,
-    stimpack = 5,
+    backpack = 5,
+    cell_pack = 2,
   },
 
   thing_2014 =
   {
-    cell_pack = 2,
-    medikit = 5,
+    stimpack = 5,
+    medikit = 2,
   },
 
   thing_2011  =
@@ -125,5 +125,36 @@ PREFABS.Item_dem_gamble_closet2_tech =
    backpack = 1,
    stimpack = 5,
    medikit = 5,
+  }
+}
+
+---Dasho's shooting gallery for hell's mass 2023---
+
+PREFABS.Item_dem_gamble_closet3 =
+{
+  template = "Item_dem_gamble_closet1",
+  map = "MAP04",
+
+  texture_pack = "armaetus",
+
+  thing_2007 =
+  {
+   soul = 5,
+   backpack = 5,
+   allmap = 5,
+  },
+
+  thing_2008 =
+  {
+   cell_pack = 5,
+   berserk = 5,
+   green_armor = 5,
+  },
+
+  thing_2010 =
+  {
+   medikit = 5,
+   bullet_box = 5,
+   shell_box = 5,
   }
 }
