@@ -128,8 +128,6 @@ PREFABS.Item_dem_gamble_closet2_tech =
   }
 }
 
----Dasho's shooting gallery for hell's mass 2023---
-
 PREFABS.Item_dem_gamble_closet3 =
 {
   template = "Item_dem_gamble_closet1",

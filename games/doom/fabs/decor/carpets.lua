@@ -17,6 +17,8 @@ PREFABS.Decor_techfloor1 =
   bound_z1 = 0,
   bound_z2 = 32,
 
+  delta = 16,
+
   sink_mode = "never",
 }
 
@@ -35,6 +37,8 @@ PREFABS.Decor_sunkgrate =
 
   bound_z1 = 0,
   bound_z2 = 32,
+
+  delta = 16,
 
   sink_mode = "never",
 }
