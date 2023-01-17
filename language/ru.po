@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Obsidian Level Maker\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-05-09 23:41+1000\n"
-"PO-Revision-Date: 2022-09-23 14:03+0300\n"
+"PO-Revision-Date: 2023-01-05 17:58+0300\n"
 "Last-Translator:  Morthimer McMare\n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -252,6 +252,10 @@ msgstr "Варианты альтернативных способов опре�
 #: modules/alt_shape_grammars.lua:52
 msgid "Boxes of Death"
 msgstr "\"Коробки смерти\""
+
+#: modules/alt_shape_grammars.lua:54
+msgid "% of Levels"
+msgstr "% уровней"
 
 #: modules/alt_shape_grammars.lua:59
 msgid "Sets chance of levels using the Boxes of Death shape grammar."
@@ -1227,8 +1231,8 @@ msgid "Enables building of levels for experimental games."
 msgstr "Позволяет создавать уровни для игр, с которыми пока не была проведена детальная отладка."
 
 #: modules/debugger.lua:220
-msgid "The following games are in an experimental status, meaning that they may have errors when building levels, or support for certain gameplay features has not been implemented yet:\n\nStrife"
-msgstr "Сейчас в списке:\n\nStrife"
+msgid "The following games are in an experimental status, meaning that they may have errors when building levels, or support for certain gameplay features has not been implemented yet:\n\nDuke Nukem 3D (currently disabled)\n\nQuake (currently disabled)"
+msgstr "Экспериментальные игры могут и, скорее всего, и будут иметь ошибки в генерации и скриптах создания.\nСейчас в списке экспериментальных игр:\n\nDuke Nukem 3D (в данный момент отключён);\nQuake (в данный момент отключён)."
 
 #: modules/debugger.lua:228
 msgid "Custom Error Texture"
@@ -2623,6 +2627,10 @@ msgid "Random"
 msgstr "Случайно"
 
 #: modules/heretic/zdoom_specials.lua:34
+msgid "Natural"
+msgstr "Естественный"
+
+#: modules/heretic/zdoom_specials.lua:34
 msgid "No"
 msgstr "Да"
 
@@ -2684,11 +2692,11 @@ msgstr "Этот модуль добавляет некоторые функци
 
 #: modules/heretic/zdoom_specials.lua:1161
 msgid "Fog Generator"
-msgstr "Генератор тумана"
+msgstr "Генерировать туман"
 
 #: modules/heretic/zdoom_specials.lua:1165
 msgid "Generates fog colors based on the Sky Generator or generate completely randomly."
-msgstr "Если создавать туман — то определять ли его цвет на основе сгенерированного неба или же не зависеть от него и, как следствие, выбирать окрас случайным образом."
+msgstr "Если создавать туман — то определять ли его цвет на основе сгенерированного неба или же не зависеть от него и, как следствие, выбирать окрас случайным образом. \"Естественный\" туман будет всегда белого или серого цвета."
 
 #: modules/heretic/zdoom_specials.lua:1171
 msgid "Fog Environment"
@@ -3124,7 +3132,7 @@ msgstr "Устанавливает шанс создания уровня с п�
 
 #: modules/historical_versions.lua:60
 msgid "Gives levels a chance of being generated using an internal version of Oblige version 2.x. NOTE: Not all module settings will affect levels generated in this manner."
-msgstr "Даёт шанс каждому конкретному уровню быть сгенерированным с использованием логики генератора карт Oblige v2.x. Обратите внимание, что далеко не все другие опции смогут повлиять на такое создание."
+msgstr "Даёт шанс каждому конкретному уровню быть сгенерированным с использованием логики генератора карт Oblige v2.x. Обратите внимание, что далеко не все остальные параметры смогут повлиять на уровни, созданные подобным образом."
 
 #: modules/iwad_mode.lua:1170
 msgid "IWAD Style Mode"
@@ -3516,7 +3524,7 @@ msgstr "Шанс того, что каждый конкретный уровен
 
 #: modules/miscellaneous.lua:256
 msgid "Layout consistency attempts to cause levels to overprefer specific shape rules from the ruleset in order to create odd but more consistent combinations of pieces to build the general layout. The effect will be more prominent in certain combinations and levels than others."
-msgstr "Единообразие общего макета геометрии — попытка предпочитать определённый набор правил геометрических форм всем другим. Это приводит к созданию чуть более странного, но и более цельного по структуре уровня. Эффект будет заметен не во всех комбинациях и картах."
+msgstr "Единообразие общего макета геометрии — попытка предпочитать определённый набор правил геометрических форм всем другим. Это приводит к созданию чуть более странного, но вместе с тем и более цельного по структуре уровня. Эффект будет заметен не на всех картах."
 
 #: modules/miscellaneous.lua:264
 msgid "Linear Mode"
@@ -3543,7 +3551,7 @@ msgid "Streets Mode"
 msgstr "Процент карт с улицами"
 
 #: modules/miscellaneous.lua:300
-msgid "Allows Oblige to create large street-like outdoor rooms."
+msgid "Allows Obsidian to create large street-like outdoor rooms."
 msgstr "Позволяет создавать обширные комнаты, похожие на улицы."
 
 #: modules/miscellaneous.lua:307
@@ -3601,6 +3609,14 @@ msgstr "Обширные комнаты"
 #: modules/miscellaneous.lua:366
 msgid "Raises upper limits on individual room growth"
 msgstr "Повышает шанс того, что каждая конкретная комнаты будет увеличена в размерах."
+
+#: modules/miscellaneous.lua:342
+msgid "Sub Rooms"
+msgstr "Деление на подкомнаты"
+
+#: modules/miscellaneous.lua:343
+msgid "Controls amount of small sub rooms. Actually controls the degree at which ungrown rooms are left instead of culled."
+msgstr "Управляет количеством маленьких \"комнат\" внутри обычных. На самом деле задаёт шанс сохранения на карте комнат, которые не смогли увеличиться в размерах."
 
 #: modules/miscellaneous.lua:369
 msgid "Big Outdoors"
@@ -3708,7 +3724,7 @@ msgstr "Картины и панно"
 
 #: modules/miscellaneous.lua:456
 msgid "Controls the large wall setpieces in a map. Works on a chance per room basis."
-msgstr "Управляет большими стенами на карте. Метод вычисления — шанс на комнату."
+msgstr "Управляет декорациями на длинных стенах. Метод вычисления — шанс на комнату."
 
 #: modules/miscellaneous.lua:461
 msgid "Scenics"
@@ -3845,6 +3861,14 @@ msgstr "Линейные старты"
 #: modules/miscellaneous.lua:592
 msgid "Stops start rooms from having more than one external room connection. Can help reduce being overwhelmed by attacks from multiple directions when multiple neighboring rooms connect into the start room. Default means no control, and levels can have linear starts at random based on shape grammars as per original Oblige 7.7 behavior."
 msgstr "Не позволяет генератору создавать стартовые комнаты с более чем одним проходом в соседние локации, что может уменьшить в начале уровня количество атак с разных направлений. \"По умолчанию\" означает отсутствие подобных проверок, однако уровни всё равно могут случайно сгенерироваться с линейным началом — в соответствии с исходным поведением Oblige 7.7."
+
+#: modules/miscellaneous.lua:593
+msgid "Open Outdoors"
+msgstr "Свободные улицы"
+
+#: modules/miscellaneous.lua:595
+msgid "Disables shape rules that involve obstructive geometry such as pillars for outdoors based on theme."
+msgstr "Отключает или уменьшает генерацию блокирующих препятствий для улиц (к примеру, фонарей) в зависимости от темы."
 
 #: modules/miscellaneous.lua:598
 msgid "Dead Ends"
@@ -4714,6 +4738,22 @@ msgstr "Крутизна рельефа арены"
 msgid "Influences steepness settings for boss arenas. Boss arena steepness is capped to be less intrusive to boss movement."
 msgstr "Влияет на общую крутину арен. Диапазон возможных значений уменьшен ради того, чтобы рельеф не мешал передвижению босса."
 
+#: modules/procedural_gotcha_zdoom.lua:2044
+msgid "Boss Tier"
+msgstr "Уровень базового монстра"
+
+#: modules/procedural_gotcha_zdoom.lua:2047
+msgid "Increases or reduces chances of boss being based off of a more powerful monster."
+msgstr "Управляет шансом появления босса на основе более сильного монстра."
+
+#: modules/procedural_gotcha_zdoom.lua:2054
+msgid "Boss Trait Strength"
+msgstr "Сила спецдействий босса"
+
+#: modules/procedural_gotcha_zdoom.lua:2057
+msgid "Increases or reduces chances of boss getting more powerful traits."
+msgstr "Управляет мощью специальных действий (в частности, сложностью атак, эффективностью защит и уровнем улучшенного искусственного интеллекта) генерируемых боссов."
+
 #: modules/procedural_gotcha_zdoom.lua:1786
 msgid "Boss Difficulty"
 msgstr "Сложность босса"
@@ -4784,7 +4824,7 @@ msgstr "Ограничение вида монстров"
 
 #: modules/procedural_gotcha_zdoom.lua:1877
 msgid "Influences how boss difficulty and megawad progression affects the monster type of boss.\n\nHard Limit: Doesn't allow monster types outside of range to ever spawn.\n\nSoft Limit: Reduces the probability of spawning of monster types outside of range.\n\nNo Limit: Difficulty doesn't have effect on monster type selection."
-msgstr "Влияет на то, как прогресс мегавада и сложность босса влияют на его тип.\n\nЖёсткое ограничение: не позволяет появляться монстрам, которые пока что не должны были появляться в последовательности уровней.\n\nМягкое ограничение: снижает вероятность появления таких монстров.\n\nБез ограждений: сложность не влияет на выбор типа монстра."
+msgstr "Влияет на то, как текущий уровень продвижения по мегаваду и сложность босса влияют на его тип.\n\nЖёсткое ограничение: не позволяет появляться монстрам, которые пока что не должны были появляться в последовательности уровней.\n\nМягкое ограничение: снижает вероятность появления таких монстров.\n\nБез ограждений: сложность не влияет на выбор типа монстра."
 
 #: modules/procedural_gotcha_zdoom.lua:1885
 msgid "Weapon placement"
@@ -6774,7 +6814,7 @@ msgstr ""
 
 #: modules/zdoom_marines.lua:424
 msgid "Plasma Marine"
-msgstr "Плазмомётчик"
+msgstr "Плазмомётчики"
 
 #: modules/zdoom_marines.lua:431
 msgid "Control the amount of Plasma Rifle-wielding ZDoom Marines."
@@ -7288,8 +7328,8 @@ msgstr "Невозможно сохранить файл:\n\n%s"
 msgid "OBSIDIAN Log Viewer"
 msgstr "Файл журналирования OBSIDIAN"
 
-#: source_files/obsidian_main/m_dialog.cc:730
-msgid "OBSIDIAN Glossary"
+#: source_files/obsidian_main/m_dialog.cc:802
+msgid "OBSIDIAN Glossary Viewer"
 msgstr "От переводчиков"
 
 #: source_files/obsidian_main/m_lua.cc:1419
@@ -7404,13 +7444,29 @@ msgstr "Введите формат префикса:"
 msgid "Custom prefix cannot be blank!"
 msgstr "Префикс пуст."
 
+#: source_files/obsidian_main/m_options.cc:488
+msgid "Select default save directory"
+msgstr "Выберите путь по умолчанию для сохранения..."
+
+#: source_files/obsidian_main/m_options.cc:498
+msgid "Error choosing directory:\n"
+msgstr "Ошибка выбора:\n"
+
+#: source_files/obsidian_main/m_options.cc:513
+msgid "Empty default directory provided???:\n"
+msgstr "Э-э... Кажется, путь до каталога по умолчанию отсутствует?\n"
+
+#: source_files/obsidian_main/m_options.cc:524
+msgid "Current Path"
+msgstr "Текущий путь"
+
 #: source_files/obsidian_main/m_options.cc:463
 msgid "Custom Prefix"
 msgstr "Собственный префикс файла"
 
 #: source_files/obsidian_main/m_options.cc:472
-msgid "Custom prefixes can use any of the special format strings listed below. Anything else is used as-is.\n\n%year or %Y: The current year.\n\n%month or %M: The current month.\n\n%day or %D: The current day.\n\n%hour or %h: The current hour.\n\n%minute or %m: The current minute.\n\n%second or %s: The current second.\n\n%version or %v: The current Obsidian version.\n\n%game or %g: Which game the WAD is for.\n\n%engine or %e: Which engine the WAD is for.\n\n%theme or %t: Which theme was selected from the game's choices.\n\n%count or %c: The number of levels in the generated WAD."
-msgstr "Большинство символов для собственного формата переносятся без изменений. Но также могут быть использованы следующие автозаменяющиеся значения:\n\n%year или %Y: текущий год.\n\n%month или %M: текущий месяц.\n\n%day или %D: текущий день.\n\n%hour или %h: текущий час.\n\n%minute или %m: текущая минута.\n\n%second или %s: текущая секунда.\n\n%version или %v: используемая версия OBSIDIAN.\n\n%game или %g: целевая игра (Doom, Heretic, ...).\n\n%engine или %e: целевой игровой движок.\n\n%theme или %t: выбранная тема.\n\n%count или %c: количество уровней в сгенерированном WAD."
+msgid "Custom prefixes can use any of the special format strings listed below. Anything else is used as-is.\n\n%year or %Y: The current year.\n\n%month or %M: The current month.\n\n%day or %D: The current day.\n\n%hour or %h: The current hour.\n\n%minute or %m: The current minute.\n\n%second or %s: The current second.\n\n%version or %v: The current Obsidian version.\n\n%game or %g: Which game the WAD is for.\n\n%port or %p: Which port the WAD is for.\n\n%theme or %t: Which theme was selected from the game's choices.\n\n%count or %c: The number of levels in the generated WAD."
+msgstr "Большинство символов для собственного формата переносятся без изменений. Но также могут быть использованы следующие автозаменяющиеся значения:\n\n%year или %Y: текущий год.\n\n%month или %M: текущий месяц.\n\n%day или %D: текущий день.\n\n%hour или %h: текущий час.\n\n%minute или %m: текущая минута.\n\n%second или %s: текущая секунда.\n\n%version или %v: используемая версия OBSIDIAN.\n\n%game или %g: целевая игра (Doom, Heretic, ...).\n\n%port или %p: целевой игровой порт.\n\n%theme или %t: выбранная тема.\n\n%count или %c: количество уровней в сгенерированном WAD."
 
 #: source_files/obsidian_main/m_options.cc:538
 msgid "Language: "
@@ -7429,8 +7485,8 @@ msgid "Filename Prefix: "
 msgstr "Префикс файла: "
 
 #: source_files/obsidian_main/m_options.cc:570
-msgid "Date and Time|Number of Levels|Game|Engine|Theme|Version|Custom|Nothing"
-msgstr "Дата и время|Количество уровней|Игра|Игровой движок|Тема|Версия OBSIDIAN|(Пользовательский)|(Отсутствует)"
+msgid "Date and Time|Number of Levels|Game|Port|Theme|Version|Custom|Nothing"
+msgstr "Дата и время|Количество уровней|Игра|Порт игры|Тема|Версия OBSIDIAN|(Пользовательский)|(Отсутствует)"
 
 #: source_files/obsidian_main/m_options.cc:580
 msgid "Set Custom Prefix..."
@@ -7492,9 +7548,17 @@ msgstr "Сообщения отладки"
 msgid " Ignore Slider Limits"
 msgstr "Игнорировать ограничения слайдеров"
 
+#: source_files/obsidian_main/m_options.cc:690
+msgid "Builds Per Run "
+msgstr "Сборок за запуск "
+
 #: source_files/obsidian_main/m_options.cc:673
 msgid " Preserve Failed Builds"
 msgstr "Оставлять прерванные сборки"
+
+#: source_files/obsidian_main/m_options.cc:718
+msgid "Max Log Size (MB) "
+msgstr "Размер логов (МБ) "
 
 #: source_files/obsidian_main/m_options.cc:683
 msgid " Zip Logs When Saving"
@@ -7732,12 +7796,12 @@ msgstr "Назад"
 msgid "Finish"
 msgstr "Закрыть"
 
-#: source_files/obsidian_main/m_tutorial.cc:137
-msgid "<center>Game Settings, in the upper left area of the program window, contains all you need to build your very first WAD. Select the Game you would like to build a WAD for, the Engine that it will be played on, the Length (number of maps) of the WAD, and the Theme that you would like it to have. Once you press 'Build', you will be prompted to choose a location and filename for your WAD. After that, your WAD will be generated and saved to the location that you specified.\n\nNOTE: If you select 'Vanilla Doom' for the engine, an alternate map generator will be used to create your WAD. Although this WAD will be compatible with all engines, it is much simpler in nature than the maps made by Obsidian's main generator.</center>"
-msgstr "<center>Общие настройки в левой-верхней части окна программы содержат всё, что нужно для быстрого создания файла уровней (*.WAD). Выберите игру, для которой вы хотите создать WAD, игровой движок, длину (количество карт) сборника, а также его общую тему. По нажатию на кнопку «Старт», появится диалоговое окно места сохранения Вашего WAD; кнопка «Сохранить» запустит генерацию. ПРИМЕЧАНИЕ. Альтернативный генератор карт будет использоваться, если в качестве движка Вы выберете «Ванильный Doom». Подобный WAD будет совместим абсолютно со всеми движками, однако структура уровней в нём будет намного проще по сравнению с картами, созданными основным генератором Obsidian.</center>"
+#: source_files/obsidian_main/m_tutorial.cc:140
+msgid "<center>Game Settings, in the upper left area of the program window, contains all you need to build your very first mapset. Select the Engine to filter available games, the Game you would like to build maps for, the Port that it will be played on, the Length (number of maps) of the mapset, and the Theme that you would like it to have. Once you press 'Build', you will be prompted to choose a location and filename for your mapset. After that, it will be generated and saved to the location that you specified.\n\nNOTE: If you select 'Vanilla Doom' for the port, an alternate map generator will be used to create your WAD. Although this WAD will be compatible with all ports, it is much simpler in nature than the maps made by Obsidian's main generator.</center>"
+msgstr "<center>Общие настройки в левой-верхней части окна программы содержат всё, что нужно для быстрого создания файла уровней. Выберите игру, для которой вы хотите создать WAD, игровой движок, длину (количество карт) сборника, а также его общую тему. По нажатию на кнопку «Старт», появится диалоговое окно места сохранения Вашего WAD; кнопка «Сохранить» запустит генерацию. ПРИМЕЧАНИЕ. Альтернативный генератор карт будет использоваться, если в качестве движка Вы выберете «Ванильный Doom». Подобный WAD будет совместим абсолютно со всеми движками, однако структура уровней в нём будет намного проще по сравнению с картами, созданными основным генератором Obsidian.</center>"
 
 #: source_files/obsidian_main/m_tutorial.cc:166
-msgid "<center>At some point, you will want to have more control over the contents of the WADs that you generate. This is where modules come into play. Modules are groups of options that can be changed to fine-tune your experience. Most modules are optional, and will need to be enabled or disabled accordingly.</center>"
+msgid "<center>At some point, you will want to have more control over the contents of the maps that you generate. This is where modules come into play. Modules are groups of options that can be changed to fine-tune your experience. Most modules are optional, and will need to be enabled or disabled accordingly.</center>"
 msgstr "<center>В какой-то момент Вы, вероятно, пожелаете управлять всем содержимым создаваемых Вами уровней. В этом случае Вам понадобятся разделы (модули) тонкого контроля; параметры для точной настройки, используемые в них, сгруппированы по смыслу. Большинство разделов являются необязательными и могут быть отключены (свёрнуты), и в этом случае настройки из них не будут применяться к генерации.</center>"
 
 #: source_files/obsidian_main/m_tutorial.cc:195
@@ -7765,16 +7829,16 @@ msgid "<center>At first, the amount of settings in Obsidian can seem daunting. T
 msgstr "<center>Поначалу количество настроек в Obsidian может выглядеть пугающим. Однако у каждой опции есть несколько облегчающих восприятие и работу функций. Во-первых, всплывающая подсказка при наведении курсора мыши на заглавие параметра. Во-вторых, сброс любого параметра до значения по умолчанию по нажатию на стрелочку справа от опции. В-третих, также справа от каждой настройки есть значок вопросительного знака, по которому можно щёлкнуть, чтобы открыть окно с (зачастую) более подробным объяснением.</center>"
 
 #: source_files/obsidian_main/m_tutorial.cc:364
-msgid "<center>Addons are a way to enhance the Obsidian experience further by adding new content, modules, and options. They come in the form of *.pk3 files that must be placed in the /addons folder of your Obsidian install before starting the program. Once there, they can be viewed, enabled, or disabled by clicking the \"Addons\" menu located in the top bar of the program. Good sources for new addons are either<br /><A HREF='https://github.com/GTD-Carthage/Obsidian-Addons'>the public Obsidian-Addons repo</A> or the #addon-files channel of our Discord.</center>"
-msgstr "<center>Аддоны — это способ ещё больше улучшить возможности Obsidian путём добавления нового контента, разделов и параметров. Они поставляются в виде файлов *.pk3, для подключения которых необходимо перед запуском программы поместить их в папку \"/addons\" внутри установочной директории Obsidian. После этого их можно просматривать, включать или отключать, нажав на пункт «Дополнения», расположенное в верхнем горизонтальном меню программы. Хорошие источники новых дополнений — <A HREF='https://github.com/GTD-Carthage/Obsidian-Addons'>общедоступный репозиторий Obsidian-Addons</A>, а также канал #addon-files нашего Discord-сервера.</center>"
+msgid "<center>Addons are a way to enhance the Obsidian experience further by adding new content, modules, and options. They come in the form of *.pk3 files that must be placed in the /addons folder of your Obsidian install before starting the program. Once there, they can be viewed, enabled, or disabled by clicking the \"Addons\" menu located in the top bar of the program. Good sources for new addons are either<br /><A HREF='https://obsidian-level-maker.github.io/addons.html'>the public Addons page</A> or the #addon-files channel of our Discord.</center>"
+msgstr "<center>Аддоны — это способ ещё больше улучшить возможности Obsidian путём добавления нового контента, разделов и параметров. Они поставляются в виде файлов *.pk3, для подключения которых необходимо перед запуском программы поместить их в папку \"/addons\" внутри установочной директории Obsidian. После этого их можно просматривать, включать или отключать, нажав на пункт «Дополнения», расположенное в верхнем горизонтальном меню программы. Хорошие источники новых дополнений — <A HREF='https://obsidian-level-maker.github.io/addons.html'>общедоступная страница Аддонов</A>, а также канал #addon-files нашего Discord-сервера.</center>"
 
 #: source_files/obsidian_main/m_tutorial.cc:392
-msgid "<center>If, for whatever reason, you receive an error while building, you can view Obsidian's logs by pressing F6 or selecting Help->View Logs from the program menu. From here, you can view and save the log contents to a file of your choosing. In addition, there is a LOGS.txt file with the same information that is stored in the same folder as obsidian.exe (or ~/.config/obsidian on *nix). This file is overwritten each time you start the program, so be sure to save this information elsewhere or use the log preservation options from the File->Options menu if you need to refer to it later! These logs are extremely important when seeking help or filing bug reports!</center>"
-msgstr "<center>Если Вы получите сообщение об ошибке во время сборки, можно просмотреть журнал Obsidian, нажав F6 или выбрав \"Помощь\"->\"Просмотр лога\" в меню программы. Там же можно сохранить содержимое журнала в отдельный файл. Кроме того, в каталоге с исполняемым файлом Obsidian (или по пути \"~/.config/obsidian\" на *nix-системах) существует файл LOGS.txt с аналогичной информацией. Этот файл перезаписывается при каждом запуске программы, поэтому обязательно сохраните информацию об ошибке в другом месте или используйте параметры сохранения журнала из меню \"Файл\"->\"Опции\"! Журналирование чрезвычайно важно при поиске ошибок!</center>"
+msgid "<center>If, for whatever reason, you receive an error while building, you can view Obsidian's logs by pressing F6 or selecting Help->View Logs from the program menu. From here, you can view and save the log contents to a file of your choosing. In addition, there will be LOGS*.txt files with the same information that are stored in the same folder as obsidian.exe (or ~/.config/obsidian on *nix). These are rolling logs that will eventually be overwritten, so be sure to save this information elsewhere if you need to refer to it later! These logs are extremely important when seeking help or filing bug reports!</center>"
+msgstr "<center>Если Вы получите сообщение об ошибке во время сборки, можно просмотреть журнал Obsidian, нажав F6 или выбрав \"Помощь\"->\"Просмотр лога\" в меню программы. Там же можно сохранить содержимое журнала в отдельный файл. Кроме того, в каталоге с исполняемым файлом Obsidian (или по пути \"~/.config/obsidian\" на *nix-системах) существует файл LOGS*.txt с аналогичной информацией. Эти файлы циклично перезаписывается при каждом запуске программы, поэтому обязательно сохраняйте информацию об ошибке в другом месте или используйте параметры сохранения журнала из меню \"Файл\"->\"Опции\"! Журналирование чрезвычайно важно при поиске ошибок!</center>"
 
 #: source_files/obsidian_main/m_tutorial.cc:416
-msgid "<center>There are more options to explore within Obsidian, but this should be enough to get you started. The tutorial can be viewed again at any time by choosing Help->Tutorial from the program menu.\n\nIf you need more help, please ask in our Discord (invite link <A HREF='https://discord.gg/dfqCt9v'>https://discord.gg/dfqCt9v</A>) or check our wiki at <A HREF='https://github.com/dashodanger/Obsidian/wiki'>https://github.com/dashodanger/Obsidian/wiki</A>.\n\nGood luck in the infinite Hells!</center>"
-msgstr "<center>Obsidian можно изучать гораздо дольше, но этой информации для начала должно быть более чем достаточно. Руководство можно снова просмотреть в любое время, выбрав пункт меню \"Помощь\"->\"Руководство\". Если нужна дополнительная помощь, Вы можете спросить в нашем Discord-сервере (ссылка-приглашение: <A HREF='https://discord.gg/dfqCt9v'>https://discord.gg/dfqCt9v</A>) или посетить Википедию Obsidian по адресу <A HREF='https://github.com/dashodanger/Obsidian/wiki'>https://github.com/dashodanger/Obsidian/wiki</A>. Удачи в бесконечных проявлениях Ада!</center>"
+msgid "<center>There are more options to explore within Obsidian, but this should be enough to get you started. The tutorial can be viewed again at any time by choosing Help->Tutorial from the program menu.\n\nIf you need more help, please ask in our Discord (invite link <A HREF='https://discord.gg/dfqCt9v'>https://discord.gg/dfqCt9v</A>) or check our wiki at <A HREF='https://github.com/obsidian-level-maker/Obsidian/wiki'>https://github.com/obsidian-level-maker/Obsidian/wiki</A>.\n\nGood luck in the infinite Hells!</center>"
+msgstr "<center>Obsidian можно изучать гораздо дольше, но этой информации для начала должно быть более чем достаточно. Руководство можно снова просмотреть в любое время, выбрав пункт меню \"Помощь\"->\"Руководство\". Если нужна дополнительная помощь, Вы можете спросить в нашем Discord-сервере (ссылка-приглашение: <A HREF='https://discord.gg/dfqCt9v'>https://discord.gg/dfqCt9v</A>) или посетить Википедию Obsidian по адресу <A HREF='https://github.com/obsidian-level-maker/Obsidian/wiki'>https://github.com/obsidian-level-maker/Obsidian/wiki</A>. Удачи в бесконечных проявлениях Ада!</center>"
 
 #: source_files/obsidian_main/ui_build.cc:32
 msgid "Progress and minimap display.\nMinimap Legend:\nWhite - Regular rooms\nBrown - Caves\nBlue - Outdoors\nGreen - Parks"
@@ -7939,6 +8003,3 @@ msgstr "Помощь/Руководство"
 #: source_files/obsidian_main/ui_window.cc:87
 msgid "Surprise Me/Go"
 msgstr "Удивить/Перегенерировать выбранное"
-
-msgid "This glossary's main purpose is for translators to have a space to provide longer definitions for terms that may not have a direct equivalent to their English counterparts.\n\nIf there is a need for an English version, this will be populated in the future."
-msgstr "══ От переводчиков ══\n\nЧасть слов, в основном укоренившиеся в широких кругах (с позволения сказать, имена собственные — имп, ревенант, ...) просто транслитерированы, с дословным переводом только в некоторых подсказках.\n\nВо время исследования настроек Вы можете наткнуться на непереведённые части. Скорее всего, это значит, что с последней итерации нашего перевода добавилась какая-либо опиця. О подобном можно сообщать в основной репозиторий перевода: https://github.com/LLDM-Doom-Modding/Obsidian.\n\nНекоторые термины, хорошо звучащие в оригинале, при локализации перестали вмещаться в лимит символов. Поэтому часть слов пришлось заменить на укороченные варианты; к таким можно отнести слово \"Префаб\" — заготовка/составляющая уровня/примитив/кубик конструктора, происходящее от английского \"Pre-fabricated\" (дословно \"Предсобранный\").\n\nВ HaxC и Harmony никто из переводчиков не играл и в русскоязычном сегменте Интернета эти игры неизвестны, поэтому названия предметов и противников из них пока что не переведены; если Вы разбираетесь в этой теме, есть прекрасная возможность дополнить файл русского языка.               \nПримерно та же ситуация с Chex Quest, но для него хотя бы существует частичный перевод в GZDoom от Kostov (Undead)."
