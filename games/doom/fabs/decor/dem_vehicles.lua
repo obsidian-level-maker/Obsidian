@@ -49,7 +49,7 @@ PREFABS.Decor_forklift1T =
   bound_z1 = 0,
   bound_z2 = 128,
 
-  sink_mode = "never_liquids",
+  sink_mode = "never",
 }
 
 PREFABS.Decor_forklift2T =
@@ -73,7 +73,7 @@ PREFABS.Decor_forklift2T =
   bound_z1 = 0,
   bound_z2 = 128,
 
-  sink_mode = "never_liquids",
+  sink_mode = "never",
 }
 
 PREFABS.Decor_forklift3T =
@@ -97,7 +97,7 @@ PREFABS.Decor_forklift3T =
   bound_z1 = 0,
   bound_z2 = 128,
 
-  sink_mode = "never_liquids",
+  sink_mode = "never",
 }
 
 PREFABS.Decor_forklift4T =
@@ -121,7 +121,7 @@ PREFABS.Decor_forklift4T =
   bound_z1 = 0,
   bound_z2 = 128,
 
-  sink_mode = "never_liquids",
+  sink_mode = "never",
 }
 
 PREFABS.Decor_forklift5T =
@@ -145,7 +145,7 @@ PREFABS.Decor_forklift5T =
   bound_z1 = 0,
   bound_z2 = 128,
 
-  sink_mode = "never_liquids",
+  sink_mode = "never",
 
   thing_22 =
   {
@@ -180,7 +180,7 @@ PREFABS.Decor_forklift1U =
   bound_z1 = 0,
   bound_z2 = 128,
 
-  sink_mode = "never_liquids",
+  sink_mode = "never",
 }
 
 PREFABS.Decor_forklift2U =
@@ -204,7 +204,7 @@ PREFABS.Decor_forklift2U =
   bound_z1 = 0,
   bound_z2 = 128,
 
-  sink_mode = "never_liquids",
+  sink_mode = "never",
 }
 
 PREFABS.Decor_forklift3U =
@@ -228,7 +228,7 @@ PREFABS.Decor_forklift3U =
   bound_z1 = 0,
   bound_z2 = 128,
 
-  sink_mode = "never_liquids",
+  sink_mode = "never",
 }
 
 PREFABS.Decor_forklift4U =
@@ -252,7 +252,7 @@ PREFABS.Decor_forklift4U =
   bound_z1 = 0,
   bound_z2 = 128,
 
-  sink_mode = "never_liquids",
+  sink_mode = "never",
 }
 
 PREFABS.Decor_forklift5U =
@@ -276,7 +276,7 @@ PREFABS.Decor_forklift5U =
   bound_z1 = 0,
   bound_z2 = 128,
 
-  sink_mode = "never_liquids",
+  sink_mode = "never",
 
   thing_22 =
   {
