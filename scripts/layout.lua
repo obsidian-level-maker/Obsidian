@@ -722,11 +722,15 @@ function Layout_place_all_importants(LEVEL, SEEDS)
   Layout_place_hub_gates(LEVEL, SEEDS)
 
   for _,R in pairs(LEVEL.rooms) do
+    if R.is_hallway then goto continue end
     Layout_place_importants(LEVEL, R, 1, SEEDS)
+    ::continue::
   end
 
   for _,R in pairs(LEVEL.rooms) do
+    if R.is_hallway then goto continue end
     Layout_place_importants(LEVEL, R, 2, SEEDS)
+    ::continue::
   end
 
   -- warn about weapons that could not be placed anywhere

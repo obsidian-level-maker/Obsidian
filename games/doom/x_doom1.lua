@@ -58,7 +58,7 @@ ULTDOOM.MATERIALS =
   
   _SMLDOOR = { t="DOOR1", f="FLAT23" },
   _BIGDOOR = { t="BIGDOOR2", f="FLAT20" },
-  _TALDOOR = { t="SPCDOOR3", f="FLAT19" },
+  _TALDOOR = { t="BIGDOOR2", f="FLAT1" },
   _DORRAIL = { t="DOORTRAK", f="FLAT23" }, -- Inner door slider thingys
   
   _NPIC    = { t="COMPBLUE", f="FLAT14" }, -- Narrow (non-tiling) pic box insert, 64 pixels wide x 128 high
@@ -453,7 +453,7 @@ ULTDOOM.PREFAB_FIELDS =
   -- These are used for converting generic fab things --
   thing_11000 = 2035, -- Barrel
   thing_11001 = 0, -- Ceiling light
-  thing_11002 = 86, -- Standalone light
+  thing_11002 = 2028, -- Standalone light
   thing_11003 = 0, -- Wall light (torch)
   thing_11004 = 34, -- Short standalone light
   thing_11005 = 70, -- Small pillar
@@ -466,6 +466,19 @@ ULTDOOM.PREFAB_FIELDS =
   thing_11012 = 4, -- P4 Start
   thing_11013 = 14, -- Teleport destination
   thing_11014 = 0, -- Passable ceiling decor
+
+  -- Doom 2 -> Doom 1 converstions
+  thing_73 = 59,
+  thing_74 = 60,
+  thing_75 = 61,
+  thing_76 = 62,
+  thing_77 = 63,
+  thing_78 = 60,
+  thing_79 = 24,
+  thing_80 = 24,
+  thing_81 = 24,
+  thing_85 = 2028,
+  thing_86 = 2028,
 }
 
 --------------------------------------------------------------------
