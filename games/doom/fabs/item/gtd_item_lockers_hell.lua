@@ -14,7 +14,7 @@ PREFABS.Item_locker_cross_lowering =
 }
 
 PREFABS.Item_locker_cross_lowering_keyed =
-{
+{qd
   template = "Item_locker_cross_lowering",
 
   item_kind = "key",
@@ -25,6 +25,8 @@ PREFABS.Item_locker_gut_crusher =
   template = "Item_locker_cross_lowering",
   map = "MAP02",
 
+  env = "!cave",
+
   height = { 128,384 }
 }
 
@@ -32,6 +34,8 @@ PREFABS.Item_locker_gut_crusher_keyed =
 {
   template = "Item_locker_cross_lowering",
   map = "MAP02",
+
+  env = "!cave",
 
   item_kind = "key",
 
