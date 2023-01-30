@@ -300,10 +300,9 @@ PREFABS.Item_secret_vent_closet =
   map      = "MAP07",
 
 
-rank = 1,
-
-
   jump_crouch = false,
+
+  open_to_sky = true.
 
   prob  = 50,
 
