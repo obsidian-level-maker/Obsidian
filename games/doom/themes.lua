@@ -1775,8 +1775,10 @@ DOOM.THEMES =
       gtd_generic_half_floor_no_trim = 16,
       gtd_generic_half_floor_inverted_braced = 16,
       --
-      gtd_woodframe = 25,
-      gtd_woodframe_green = 25,
+      gtd_woodframe = 15,
+      gtd_woodframe_green = 15,
+      gtd_woodframe_alt = 15,
+      gtd_woodframe_alt_green = 15,
       --
       gtd_round_inset = 15,
       gtd_wall_urban_cement_frame = 25,
@@ -2295,8 +2297,10 @@ DOOM.THEMES =
       gtd_generic_half_floor_no_trim = 20,
       gtd_generic_half_floor_inverted_braced = 20,
       --
-      gtd_woodframe = 25,
-      gtd_woodframe_green = 25,
+      gtd_woodframe = 15,
+      gtd_woodframe_green = 15,
+      gtd_woodframe_alt = 15,
+      gtd_woodframe_alt_green = 15,
       --
       gtd_round_inset = 50,
       --
@@ -3893,7 +3897,6 @@ DOOM.ROOM_THEMES =
     walls =
     {
       ROCKRED1 = 50,
-      FIRELAVA = 15,
       FIREBLU1 = 15,
       CRACKLE2 =  5,
       CRACKLE4 =  5
