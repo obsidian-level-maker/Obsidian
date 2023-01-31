@@ -43,6 +43,8 @@
 #include <iso646.h>
 #endif
 
+#include "bsp.h"
+
 // SLUMP for Vanilla Doom
 #include "slump_main.h"
 
@@ -122,6 +124,69 @@ std::array<byte, 128> empty_korax_behavior = {
     0x00, 0x00, 0x00, 0x00, 0xFE, 0x00, 0x00, 0x00, 0x1C, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0xFF, 0x00, 0x00, 0x00, 0x20, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+
+// AJBSP Build Info Class
+class obbuildinfo_t : public buildinfo_t
+{
+public:
+	void Print(int level, const char *fmt, ...)
+	{
+		if (level > verbosity)
+			return;
+
+		va_list arg_ptr;
+
+		static char buffer[MSG_BUF_LEN];
+
+		va_start(arg_ptr, fmt);
+		vsnprintf(buffer, MSG_BUF_LEN-1, fmt, arg_ptr);
+		va_end(arg_ptr);
+
+		buffer[MSG_BUF_LEN-1] = 0;
+
+		LogPrintf("{}\n", buffer);
+	}
+
+	void Debug(const char *fmt, ...)
+	{
+		static char buffer[MSG_BUF_LEN];
+
+		va_list args;
+
+		va_start(args, fmt);
+		vsnprintf(buffer, sizeof(buffer), fmt, args);
+		va_end(args);
+
+		DebugPrintf("{}\n", buffer);
+	}
+
+	//
+	//  show an error message and terminate the program
+	//
+	void FatalError(const char *fmt, ...)
+	{
+		va_list arg_ptr;
+
+		static char buffer[MSG_BUF_LEN];
+
+		va_start(arg_ptr, fmt);
+		vsnprintf(buffer, MSG_BUF_LEN-1, fmt, arg_ptr);
+		va_end(arg_ptr);
+
+		buffer[MSG_BUF_LEN-1] = 0;
+
+        ajbsp::CloseWad();
+
+		Main::FatalError("'{}'\n", buffer);
+	}
+
+    // Update status bar with nodebuilding progress
+    void ProgressUpdate(int current, int total)
+    {
+        Doom::Send_Prog_Nodes(current, total);
+    }
+};
 
 //------------------------------------------------------------------------
 //  WAD OUTPUT
@@ -893,8 +958,6 @@ int Doom::NumThings() {
 //  AJBSP NODE BUILDING
 //----------------------------------------------------------------------------
 
-#include "bsp.h"
-
 namespace Doom {
 
 void Send_Prog_Nodes(int progress, int num_maps) {
@@ -920,58 +983,37 @@ static bool BuildNodes(std::filesystem::path filename) {
         return true;
     }
 
-    // Replace this with a Lua call at some point, maybe ob_get_param - Dasho
-    int map_nums;
-    std::string wadlength = ob_get_param("length");
-    std::string current_game = ob_get_param("game");
-    if (StringCaseCmp(wadlength, "single") == 0) {
-        map_nums = 1;
-    } else if (StringCaseCmp(wadlength, "few") == 0) {
-        map_nums = 4;
-    } else if (StringCaseCmp(wadlength, "episode") == 0) {
-        if (StringCaseCmp(current_game, "doom2") == 0 ||
-            StringCaseCmp(current_game, "plutonia") == 0 ||
-            StringCaseCmp(current_game, "tnt") == 0 ||
-            StringCaseCmp(current_game, "hacx") == 0 ||
-            StringCaseCmp(current_game, "harmony") == 0 ||
-            StringCaseCmp(current_game, "strife") == 0) {
-            map_nums = 11;
-        } else if (StringCaseCmp(current_game, "hexen") == 0) {
-            map_nums = 6;
-        } else if (StringCaseCmp(current_game, "chex3") == 0) {
-            map_nums = 5;
-        } else {
-            map_nums = 9;
-        }
-    } else {
-        if (StringCaseCmp(current_game, "doom2") == 0 ||
-            StringCaseCmp(current_game, "plutonia") == 0 ||
-            StringCaseCmp(current_game, "tnt") == 0 ||
-            StringCaseCmp(current_game, "hacx") == 0 ||
-            StringCaseCmp(current_game, "harmony") == 0) {
-            map_nums = 32;
-        } else if (StringCaseCmp(current_game, "doom1") == 0) {
-            map_nums = 27;
-        } else if (StringCaseCmp(current_game, "ultdoom") == 0) {
-            map_nums = 36;
-        } else if (StringCaseCmp(current_game, "hexen") == 0) {
-            map_nums = 30;
-        } else if (StringCaseCmp(current_game, "chex3") == 0) {
-            map_nums = 15;
-        } else if (StringCaseCmp(current_game, "strife") == 0) {
-            map_nums = 33;
-        } else {
-            map_nums = 45;
-        }
+    // Prep AJBSP parameters
+    obbuildinfo_t *build_info = new obbuildinfo_t;
+    build_info->fast = true;
+    if (StringCaseCmp(current_port, "limit_enforcing") == 0 || StringCaseCmp(current_port, "limit_removing") == 0 ||
+        StringCaseCmp(current_port, "boom") == 0) {
+        build_info->gl_nodes = false;
+        build_info->force_v5 = false;
+        build_info->force_xnod = false;
+        build_info->do_blockmap = true;
+        build_info->do_reject = build_reject;
+    } else if (StringCaseCmp(current_port, "prboom") == 0) {
+        build_info->gl_nodes = false;
+        build_info->do_reject = build_reject;
+        build_info->do_blockmap = true;
+        build_info->force_xnod = true;
+    } else if (StringCaseCmp(current_port, "eternity") == 0) {
+        build_info->gl_nodes = UDMF_mode;
+        build_info->do_reject = false;
+        build_info->force_xnod = true;
+    } else { // ZDoom
+        build_info->gl_nodes = true;
+        build_info->do_reject = false;
     }
-    // Build AJBSP build_info here
-    
-    if (AJBSP_BuildNodes(filename, current_port, UDMF_mode, build_reject, map_nums, nullptr) !=
-        0) {
+
+    if (AJBSP_BuildNodes(filename, build_info) != 0) {
         Main::ProgStatus(_("AJBSP Error!"));
+        delete build_info;
         return false;
     }
 
+    delete build_info;
     return true;
 }
 

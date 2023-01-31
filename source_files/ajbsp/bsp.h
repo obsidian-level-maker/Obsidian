@@ -90,8 +90,8 @@ public:
 public:
 	virtual void Print(int level, const char *msg, ...) = 0;
 	virtual void Debug(const char *msg, ...) = 0;
-	virtual void ShowMap(const char *name) = 0;
 	virtual void FatalError(const char *fmt, ...) = 0;
+	virtual void ProgressUpdate(int current, int total) = 0;
 };
 
 
@@ -108,7 +108,7 @@ typedef enum
 }
 build_result_e;
 
-int AJBSP_BuildNodes(std::filesystem::path filename, std::string current_port, bool UDMF_mode, bool build_reject, int num_maps, buildinfo_t *build_info);
+int AJBSP_BuildNodes(std::filesystem::path filename, buildinfo_t *build_info);
 
 namespace ajbsp
 {

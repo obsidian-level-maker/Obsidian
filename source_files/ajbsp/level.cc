@@ -2430,8 +2430,6 @@ void LoadLevel()
 	lev_long_name = false;
 	lev_overflows = false;
 
-	cur_info->ShowMap(lev_current_name);
-
 	num_new_vert   = 0;
 	num_real_lines = 0;
 

@@ -58,95 +58,7 @@ void StopHanging()
 	}
 }
 
-
-class mybuildinfo_t : public buildinfo_t
-{
-public:
-	void Print(int level, const char *fmt, ...)
-	{
-		if (level > verbosity)
-			return;
-
-		va_list arg_ptr;
-
-		static char buffer[MSG_BUF_LEN];
-
-		va_start(arg_ptr, fmt);
-		vsnprintf(buffer, MSG_BUF_LEN-1, fmt, arg_ptr);
-		va_end(arg_ptr);
-
-		buffer[MSG_BUF_LEN-1] = 0;
-
-		StopHanging();
-
-		printf("%s", buffer);
-		fflush(stdout);
-	}
-
-	void Debug(const char *fmt, ...)
-	{
-		static char buffer[MSG_BUF_LEN];
-
-		va_list args;
-
-		va_start(args, fmt);
-		vsnprintf(buffer, sizeof(buffer), fmt, args);
-		va_end(args);
-
-		fprintf(stderr, "%s", buffer);
-	}
-
-	void ShowMap(const char *name)
-	{
-		if (verbosity >= 1)
-		{
-			Print(0, "  %s\n", name);
-			return;
-		}
-
-		// display the map names across the terminal
-
-		if (hanging_pos >= 68)
-			StopHanging();
-
-		printf("  %s", name);
-		fflush(stdout);
-
-		hanging_pos += strlen(name) + 2;
-	}
-
-	//
-	//  show an error message and terminate the program
-	//
-	void FatalError(const char *fmt, ...)
-	{
-		va_list arg_ptr;
-
-		static char buffer[MSG_BUF_LEN];
-
-		va_start(arg_ptr, fmt);
-		vsnprintf(buffer, MSG_BUF_LEN-1, fmt, arg_ptr);
-		va_end(arg_ptr);
-
-		buffer[MSG_BUF_LEN-1] = 0;
-
-		ajbsp::CloseWad();
-
-		StopHanging();
-
-		fprintf(stderr, "\nFATAL ERROR: %s", buffer);
-
-		exit(3);
-	}
-};
-
-
-class mybuildinfo_t config;
-
-
-
 //------------------------------------------------------------------------
-
 
 bool CheckMapInRange(const map_range_t *range, const char *name)
 {
@@ -179,16 +91,16 @@ bool CheckMapInMaplist(int lev_idx)
 }
 
 
-build_result_e BuildFile()
+build_result_e BuildFile(buildinfo_t *build_info)
 {
-	config.total_warnings = 0;
-	config.total_minor_issues = 0;
+	build_info->total_warnings = 0;
+	build_info->total_minor_issues = 0;
 
 	int num_levels = ajbsp::LevelsInWad();
 
 	if (num_levels == 0)
 	{
-		config.Print(0, "  No levels in wad\n");
+		build_info->Print(0, "  No levels in wad\n");
 		total_empty_files += 1;
 		return BUILD_OK;
 	}
@@ -206,8 +118,10 @@ build_result_e BuildFile()
 
 		visited += 1;
 
-		if (n > 0 && config.verbosity >= 2)
-			config.Print(0, "\n");
+		build_info->ProgressUpdate(visited, num_levels);
+
+		if (n > 0 && build_info->verbosity >= 2)
+			build_info->Print(0, "\n");
 
 		res = ajbsp::BuildLevel(n);
 
@@ -232,18 +146,18 @@ build_result_e BuildFile()
 
 	if (visited == 0)
 	{
-		config.Print(0, "  No matching levels\n");
+		build_info->Print(0, "  No matching levels\n");
 		total_empty_files += 1;
 		return BUILD_OK;
 	}
 
-	config.Print(0, "\n");
+	build_info->Print(0, "\n");
 
 	total_failed_maps += failures;
 
 	if (failures > 0)
 	{
-		config.Print(0, "  Failed maps: %d (out of %d)\n", failures, visited);
+		build_info->Print(0, "  Failed maps: %d (out of %d)\n", failures, visited);
 
 		// allow building other files
 		total_failed_files += 1;
@@ -251,31 +165,31 @@ build_result_e BuildFile()
 
 	if (true)
 	{
-		config.Print(0, "  Serious warnings: %d\n", config.total_warnings);
+		build_info->Print(0, "  Serious warnings: %d\n", build_info->total_warnings);
 	}
 
-	if (config.verbosity >= 1)
+	if (build_info->verbosity >= 1)
 	{
-		config.Print(0, "  Minor issues: %d\n", config.total_minor_issues);
+		build_info->Print(0, "  Minor issues: %d\n", build_info->total_minor_issues);
 	}
 
 	return BUILD_OK;
 }
 
-void VisitFile(std::filesystem::path filename)
+void VisitFile(std::filesystem::path filename, buildinfo_t *build_info)
 {
-	config.Print(0, "\n");
-	config.Print(0, "Building %s\n", filename);
+	build_info->Print(0, "\n");
+	build_info->Print(0, "Building %s\n", filename.string().c_str());
 
 	// this will fatal error if it fails
 	ajbsp::OpenWad(filename);
 
-	build_result_e res = BuildFile();
+	build_result_e res = BuildFile(build_info);
 
 	ajbsp::CloseWad();
 
 	if (res == BUILD_Cancelled)
-		config.FatalError("CANCELLED\n");
+		build_info->FatalError("CANCELLED\n");
 }
 
 
@@ -315,7 +229,7 @@ bool ValidateMapName(char *name)
 }
 
 
-void ParseMapRange(char *tok)
+void ParseMapRange(char *tok, buildinfo_t *build_info)
 {
 	char *low  = tok;
 	char *high = tok;
@@ -331,22 +245,22 @@ void ParseMapRange(char *tok)
 	}
 
 	if (! ValidateMapName(low))
-		config.FatalError("illegal map name: '%s'\n", low);
+		build_info->FatalError("illegal map name: '%s'\n", low);
 
 	if (! ValidateMapName(high))
-		config.FatalError("illegal map name: '%s'\n", high);
+		build_info->FatalError("illegal map name: '%s'\n", high);
 
 	if (strlen(low) < strlen(high))
-		config.FatalError("bad map range (%s shorter than %s)\n", low, high);
+		build_info->FatalError("bad map range (%s shorter than %s)\n", low, high);
 
 	if (strlen(low) > strlen(high))
-		config.FatalError("bad map range (%s longer than %s)\n", low, high);
+		build_info->FatalError("bad map range (%s longer than %s)\n", low, high);
 
 	if (low[0] != high[0])
-		config.FatalError("bad map range (%s and %s start with different letters)\n", low, high);
+		build_info->FatalError("bad map range (%s and %s start with different letters)\n", low, high);
 
 	if (strcmp(low, high) > 0)
-		config.FatalError("bad map range (wrong order, %s > %s)\n", low, high);
+		build_info->FatalError("bad map range (wrong order, %s > %s)\n", low, high);
 
 	// Ok
 
@@ -359,7 +273,7 @@ void ParseMapRange(char *tok)
 }
 
 
-void ParseMapList(const char *from_arg)
+void ParseMapList(const char *from_arg, buildinfo_t *build_info)
 {
 	// create a mutable copy of the string
 	// [ we will keep long-term pointers into this buffer ]
@@ -370,7 +284,7 @@ void ParseMapList(const char *from_arg)
 	while (*arg)
 	{
 		if (*arg == ',')
-			config.FatalError("bad map list (empty element)\n");
+			build_info->FatalError("bad map list (empty element)\n");
 
 		// find next comma
 		char *tok = arg;
@@ -384,7 +298,7 @@ void ParseMapList(const char *from_arg)
 			*arg++ = 0;
 		}
 
-		ParseMapRange(tok);
+		ParseMapRange(tok, build_info);
 	}
 }
 
@@ -395,10 +309,10 @@ void ParseMapList(const char *from_arg)
 #define assert_size(type,size)  \
     do {  \
         if (sizeof (type) != size)  \
-            config.FatalError("sizeof " #type " is %d (should be " #size ")\n", (int)sizeof(type));  \
+            build_info->FatalError("sizeof " #type " is %d (should be " #size ")\n", (int)sizeof(type));  \
     } while (0)
 
-void CheckTypeSizes()
+void CheckTypeSizes(buildinfo_t *build_info)
 {
 	assert_size(u8_t,  1);
 	assert_size(s8_t,  1);
@@ -415,17 +329,17 @@ void CheckTypeSizes()
 }
 
 
-int AJBSP_BuildNodes(std::filesystem::path filename, std::string current_port, bool UDMF_mode, bool build_reject, int num_maps, buildinfo_t *build_info)
+int AJBSP_BuildNodes(std::filesystem::path filename, buildinfo_t *build_info)
 {
 	// need this early, especially for fatal errors in utility/wad code
-	ajbsp::SetInfo(&config);
+	ajbsp::SetInfo(build_info);
 
 	// sanity check on type sizes (useful when porting)
-	CheckTypeSizes();
+	CheckTypeSizes(build_info);
 
 	if (filename.empty())
 	{
-		config.FatalError("no files to process\n");
+		build_info->FatalError("no files to process\n");
 		return 0;
 	}
 
@@ -433,39 +347,39 @@ int AJBSP_BuildNodes(std::filesystem::path filename, std::string current_port, b
 
 	// validate file before processing it
 	if (! ajbsp::FileExists(filename))
-		config.FatalError("no such file: %s\n", filename.string().c_str());
+		build_info->FatalError("no such file: %s\n", filename.string().c_str());
 
-	VisitFile(filename);
+	VisitFile(filename, build_info);
 
-	config.Print(0, "\n");
+	build_info->Print(0, "\n");
 
 	if (total_failed_files > 0)
 	{
-		config.Print(0, "FAILURES occurred on %d map%s in %d file%s.\n",
+		build_info->Print(0, "FAILURES occurred on %d map%s in %d file%s.\n",
 				total_failed_maps,  total_failed_maps  == 1 ? "" : "s",
 				total_failed_files, total_failed_files == 1 ? "" : "s");
 
-		if (config.verbosity == 0)
-			config.Print(0, "Rerun with --verbose to see more details.\n");
+		if (build_info->verbosity == 0)
+			build_info->Print(0, "Rerun with --verbose to see more details.\n");
 
 		return 2;
 	}
 	else if (total_built_maps == 0)
 	{
-		config.Print(0, "NOTHING was built!\n");
+		build_info->Print(0, "NOTHING was built!\n");
 
 		return 1;
 	}
 	else if (total_empty_files == 0)
 	{
-		config.Print(0, "Ok, built all files.\n");
+		build_info->Print(0, "Ok, built all files.\n");
 	}
 	else
 	{
 		int built = 1 - total_empty_files;
 		int empty = total_empty_files;
 
-		config.Print(0, "Ok, built %d file%s, %d file%s empty.\n",
+		build_info->Print(0, "Ok, built %d file%s, %d file%s empty.\n",
 				built, (built == 1 ? "" : "s"),
 				empty, (empty == 1 ? " was" : "s were"));
 	}
