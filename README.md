@@ -75,7 +75,7 @@ GUI Customization and Theming added
 
 Modified SLUMP level builder included for Vanilla Doom usage.
 
-ZDBSP as the internal nodebuilder, replacing GLBSP.
+AJBSP as the internal nodebuilder, replacing GLBSP.
 
 UDMF map output for compatible engines.
 

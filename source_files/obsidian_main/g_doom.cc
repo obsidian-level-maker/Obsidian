@@ -890,10 +890,10 @@ int Doom::NumThings() {
 }
 
 //----------------------------------------------------------------------------
-//  ZDBSP NODE BUILDING
+//  AJBSP NODE BUILDING
 //----------------------------------------------------------------------------
 
-#include "zdmain.h"
+#include "bsp.h"
 
 namespace Doom {
 
@@ -964,9 +964,11 @@ static bool BuildNodes(std::filesystem::path filename) {
             map_nums = 45;
         }
     }
-    if (zdmain(filename, current_port, UDMF_mode, build_reject, map_nums) !=
+    // Build AJBSP build_info here
+    
+    if (AJBSP_BuildNodes(filename, current_port, UDMF_mode, build_reject, map_nums, nullptr) !=
         0) {
-        Main::ProgStatus(_("ZDBSP Error!"));
+        Main::ProgStatus(_("AJBSP Error!"));
         return false;
     }
 
