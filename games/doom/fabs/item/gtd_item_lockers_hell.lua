@@ -14,7 +14,7 @@ PREFABS.Item_locker_cross_lowering =
 }
 
 PREFABS.Item_locker_cross_lowering_keyed =
-{qd
+{
   template = "Item_locker_cross_lowering",
 
   item_kind = "key",
