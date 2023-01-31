@@ -302,7 +302,7 @@ PREFABS.Item_secret_vent_closet =
 
   jump_crouch = false,
 
-  open_to_sky = true.
+  open_to_sky = true,
 
   prob  = 50,
 
