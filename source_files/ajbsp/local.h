@@ -21,7 +21,7 @@
 #ifndef __AJBSP_LOCAL_H__
 #define __AJBSP_LOCAL_H__
 
-#include "bsp.h"
+#include "aj_bsp.h"
 
 namespace ajbsp
 {

@@ -18,7 +18,7 @@
 //------------------------------------------------------------------------
 
 #include "system.h"
-#include "bsp.h"
+#include "aj_bsp.h"
 #include "utility.h"
 #include "wad.h"
 

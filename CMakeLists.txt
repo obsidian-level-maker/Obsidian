@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.12..3.20)
 include(cmake/CPM.cmake)
 
 add_subdirectory(source_files/ajbsp EXCLUDE_FROM_ALL)
+add_subdirectory(source_files/ajparse EXCLUDE_FROM_ALL)
 add_subdirectory(source_files/filename_formatter EXCLUDE_FROM_ALL)
 if(NOT CONSOLE_ONLY AND NOT HAIKU)
   add_subdirectory(source_files/fltk EXCLUDE_FROM_ALL)
@@ -194,6 +195,7 @@ else()
 endif()
 
 target_include_directories(obsidian SYSTEM PRIVATE source_files/ajbsp)
+target_include_directories(obsidian SYSTEM PRIVATE source_files/ajparse)
 target_include_directories(
   obsidian SYSTEM PRIVATE source_files/filename_formatter
 )
@@ -265,6 +267,7 @@ if(UNIX)
       target_link_libraries(
         obsidian
         PRIVATE ajbsp
+                ajparse
                 filename_formatter
                 fltk
                 fltk_images
@@ -277,6 +280,7 @@ if(UNIX)
       target_link_libraries(
         obsidian
         PRIVATE ajbsp
+                ajparse
                 filename_formatter
                 miniz
                 libluajit
@@ -288,6 +292,7 @@ if(UNIX)
     target_link_libraries(
       obsidian
       PRIVATE ajbsp
+              ajparse
               filename_formatter
               miniz
               libluajit
@@ -302,6 +307,7 @@ if(UNIX)
       target_link_libraries(
         obsidian
         PRIVATE ajbsp
+                ajparse
                 filename_formatter
                 fltk
                 fltk_images
@@ -316,6 +322,7 @@ if(UNIX)
       target_link_libraries(
         obsidian
         PRIVATE ajbsp
+                ajparse
                 filename_formatter
                 miniz
                 libluajit
@@ -330,6 +337,7 @@ else()
     target_link_libraries(
       obsidian
       PRIVATE ajbsp
+              ajparse
               filename_formatter
               fltk
               fltk_images
@@ -342,6 +350,7 @@ else()
     target_link_libraries(
       obsidian
       PRIVATE ajbsp
+              ajparse
               filename_formatter
               miniz
               libluajit

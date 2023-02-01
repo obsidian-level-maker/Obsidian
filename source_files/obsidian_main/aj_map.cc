@@ -17,6 +17,8 @@
 //------------------------------------------------------------------------
 
 #include "aj_local.h"
+#include "aj_parse.h"
+#include "main.h"
 
 #define DEBUG_LOAD 0
 
@@ -62,6 +64,501 @@ int num_wall_tips;
 // EDGE line specials for 3D floors
 #define SOLID_EXTRA_FLOOR 400
 #define LIQUID_EXTRA_FLOOR 405
+
+/* ----- UDMF reading routines ------------------------- */
+
+static vertex_c *SafeLookupVertex(int num)
+{
+	if (num >= num_vertices)
+		Main::FatalError("illegal vertex number #%d\n", num);
+
+	return all_vertices[num];
+}
+
+static sector_c *SafeLookupSector(u16_t num)
+{
+	if (num == 0xFFFF)
+		return NULL;
+
+	if (num >= num_sectors)
+		Main::FatalError("illegal sector number #%d\n", (int)num);
+
+	return all_sectors[num];
+}
+
+static inline sidedef_c *SafeLookupSidedef(u16_t num)
+{
+	if (num == 0xFFFF)
+		return NULL;
+
+	// silently ignore illegal sidedef numbers
+	if (num >= (unsigned int)num_sidedefs)
+		return NULL;
+
+	return all_sidedefs[num];
+}
+
+#define UDMF_THING    1
+#define UDMF_VERTEX   2
+#define UDMF_SECTOR   3
+#define UDMF_SIDEDEF  4
+#define UDMF_LINEDEF  5
+
+void ParseThingField(thing_c *thing, const std::string& key, ajparse::token_kind_e kind, const std::string& value)
+{
+	if (key == "x") 
+    {
+		thing->x = ajparse::LEX_Double(value);
+    }
+	else if (key == "y") 
+    {
+		thing->y = ajparse::LEX_Double(value);
+    }
+    else if (key == "height") 
+    {
+		thing->height = ajparse::LEX_Double(value);
+    }
+    else if (key == "angle") 
+    {
+		thing->angle = ajparse::LEX_Double(value);
+    }
+	else if (key == "type") 
+    {
+		thing->type = ajparse::LEX_Double(value);
+    }
+    else if (key == "skill1")
+    {
+        if (ajparse::LEX_Boolean(value))
+        {
+            thing->options |= 1;
+        }
+    }
+    else if (key == "skill2")
+    {
+        if (ajparse::LEX_Boolean(value))
+        {
+            thing->options |= 1;
+        }
+    }
+    else if (key == "skill3")
+    {
+        if (ajparse::LEX_Boolean(value))
+        {
+            thing->options |= 2;
+        }
+    }
+    else if (key == "skill4")
+    {
+        if (ajparse::LEX_Boolean(value))
+        {
+            thing->options |= 4;
+        }
+    }
+    else if (key == "skill5")
+    {
+        if (ajparse::LEX_Boolean(value))
+        {
+            thing->options |= 4;
+        }
+    }
+    else if (key == "ambush")
+    {
+        if (ajparse::LEX_Boolean(value))
+        {
+            thing->options |= 8;
+        }
+    }
+    else if (key == "single")
+    {
+        if (ajparse::LEX_Boolean(value))
+        {
+            thing->options &= ~16;
+        }
+    }
+    else if (key == "dm")
+    {
+        if (ajparse::LEX_Boolean(value))
+        {
+            thing->options &= ~32;
+        }
+    }
+    else if (key == "coop")
+    {
+        if (ajparse::LEX_Boolean(value))
+        {
+            thing->options &= ~64;
+        }
+    }
+    else if (key == "friend")
+    {
+        if (ajparse::LEX_Boolean(value))
+        {
+            thing->options |= 128;
+        }
+    }
+    else // Non-vanilla spec values? - Dasho
+    {
+        thing->misc_vals.try_emplace({key.c_str(), value.c_str()});
+    }
+}
+
+
+void ParseVertexField(vertex_c *vertex, const std::string& key, ajparse::token_kind_e kind, const std::string& value)
+{
+	if (key == "x")
+    {
+		vertex->x = ajparse::LEX_Double(value);
+    }
+    else if (key == "y")
+    {
+		vertex->y = ajparse::LEX_Double(value);
+    }
+}
+
+
+void ParseSectorField(sector_c *sector, const std::string& key, ajparse::token_kind_e kind, const std::string& value)
+{
+    if (key == "heightfloor") 
+    {
+		sector->floor_h = ajparse::LEX_Double(value);
+    }
+	else if (key == "heightceiling") 
+    {
+		sector->ceil_h = ajparse::LEX_Double(value);
+    }
+    else if (key == "texturefloor") 
+    {
+        std::copy(value.data(), value.data() + MIN(8, value.size()),
+                  sector->floor_tex.data());
+    }
+    else if (key == "textureceiling") 
+    {
+		std::copy(value.data(), value.data() + MIN(8, value.size()),
+                  sector->ceil_tex.data());
+    }
+	else if (key == "lightlevel") 
+    {
+		sector->light = ajparse::LEX_Double(value);
+    }
+    else if (key == "special")
+    {
+        sector->special = ajparse::LEX_Double(value);
+    }
+    else if (key == "id")
+    {
+        sector->tag = ajparse::LEX_Double(value);
+    }
+    else // Non-vanilla spec values? - Dasho
+    {
+        sector->misc_vals.try_emplace({key.c_str(), value.c_str()});
+    }
+}
+
+
+void ParseSidedefField(sidedef_c *side, const std::string& key, ajparse::token_kind_e kind, const std::string& value)
+{
+    if (key == "offsetx")
+    {
+        side->x_offset = ajparse::LEX_Double(value);
+    }
+    else if (key == "offsety")
+    {
+        side->y_offset = ajparse::LEX_Double(value);
+    }
+    else if (key == "texturetop")
+    {
+        std::copy(value.data(), value.data() + MIN(8, value.size()),
+                  side->upper_tex.data());
+    }
+    else if (key == "texturebottom")
+    {
+        std::copy(value.data(), value.data() + MIN(8, value.size()),
+                  side->lower_tex.data());
+    }
+    else if (key == "texturemiddle")
+    {
+        std::copy(value.data(), value.data() + MIN(8, value.size()),
+                  side->mid_tex.data());
+    }
+	else if (key == "sector")
+	{
+		int num = ajparse::LEX_Double(value);
+
+		if (num < 0 || num >= num_sectors)
+			Main::FatalError("AJ_Poly: illegal sector number #%d\n", (int)num);
+
+		side->sector = all_sectors[num];
+	}
+    else
+    {
+        side->misc_vals.try_emplace({key.c_str(), value.c_str()});
+    }
+}
+
+
+void ParseLinedefField(linedef_c *line, const std::string& key, ajparse::token_kind_e kind, const std::string& value)
+{
+	if (key == "v1")
+    {
+		line->start = SafeLookupVertex(ajparse::LEX_Double(value));
+    }
+	else if (key == "v2")
+    {
+		line->end = SafeLookupVertex(ajparse::LEX_Double(value));
+    }
+    else if (key == "special")
+    {
+		line->special = ajparse::LEX_Double(value);
+    }
+    else if (key == "blocking")
+    {
+        if (ajparse::LEX_Boolean(value))
+        {
+            line->flags |= 0x0001;
+        }
+    }
+    else if (key == "blockmonsters")
+    {
+        if (ajparse::LEX_Boolean(value))
+        {
+            line->flags |= 0x0002;
+        }
+    }
+    else if (key == "twosided")
+    {
+        if (ajparse::LEX_Boolean(value))
+        {
+            line->flags |= 0x0004;
+        }
+    }
+    else if (key == "dontpegtop")
+    {
+        if (ajparse::LEX_Boolean(value))
+        {
+            line->flags |= 0x0008;
+        }
+    }
+    else if (key == "dontpegbottom")
+    {
+        if (ajparse::LEX_Boolean(value))
+        {
+            line->flags |= 0x0010;
+        }
+    }
+    else if (key == "secret")
+    {
+        if (ajparse::LEX_Boolean(value))
+        {
+            line->flags |= 0x0020;
+        }
+    }
+    else if (key == "blocksound")
+    {
+        if (ajparse::LEX_Boolean(value))
+        {
+            line->flags |= 0x0040;
+        }
+    }
+    else if (key == "dontdraw")
+    {
+        if (ajparse::LEX_Boolean(value))
+        {
+            line->flags |= 0x0080;
+        }
+    }
+    else if (key == "mapped")
+    {
+        if (ajparse::LEX_Boolean(value))
+        {
+            line->flags |= 0x0100;
+        }
+    }
+    else if (key == "passuse")
+    {
+        if (ajparse::LEX_Boolean(value))
+        {
+            line->flags |= 0x0200;
+        }
+    }
+    else if (key == "sidefront")
+	{
+		int num = ajparse::LEX_Double(value);
+
+		if (num < 0 || num >= (int)num_sidedefs)
+			line->right = NULL;
+		else
+			line->right = all_sidedefs[num];
+	}
+    else if (key == "sideback")
+	{
+		int num = ajparse::LEX_Double(value);
+
+		if (num < 0 || num >= (int)num_sidedefs)
+			line->left = NULL;
+		else
+			line->left = all_sidedefs[num];
+	}
+    else
+    {
+        line->misc_vals.try_emplace({key.c_str(), value.c_str()});
+    }
+}
+
+
+void ParseUDMF_Block(ajparse::lexer_c& lex, int cur_type)
+{
+	vertex_c  * vertex = NULL;
+	thing_c   * thing  = NULL;
+	sector_c  * sector = NULL;
+	sidedef_c * side   = NULL;
+	linedef_c * line   = NULL;
+
+	switch (cur_type)
+	{
+		case UDMF_VERTEX:  vertex = NewVertex();  break;
+		case UDMF_THING:   thing  = NewThing();   break;
+		case UDMF_SECTOR:  sector = NewSector();  break;
+		case UDMF_SIDEDEF: side   = NewSidedef(); break;
+		case UDMF_LINEDEF: line   = NewLinedef(); break;
+		default: break;
+	}
+
+	for (;;)
+	{
+		if (lex.Match("}"))
+			break;
+
+		std::string key;
+		std::string value;
+
+		ajparse::token_kind_e tok = lex.Next(key);
+
+		if (tok == ajparse::TOK_EOF)
+			Main::FatalError("Malformed TEXTMAP lump: unclosed block\n");
+
+		if (tok != ajparse::TOK_Ident)
+			Main::FatalError("Malformed TEXTMAP lump: missing key\n");
+
+		if (! lex.Match("="))
+			Main::FatalError("Malformed TEXTMAP lump: missing '='\n");
+
+		tok = lex.Next(value);
+
+		if (tok == ajparse::TOK_EOF || tok == ajparse::TOK_ERROR || value == "}")
+			Main::FatalError("Malformed TEXTMAP lump: missing value\n");
+
+		if (! lex.Match(";"))
+			Main::FatalError("Malformed TEXTMAP lump: missing ';'\n");
+
+		switch (cur_type)
+		{
+			case UDMF_VERTEX:  ParseVertexField (vertex, key, tok, value); break;
+			case UDMF_THING:   ParseThingField  (thing,  key, tok, value); break;
+			case UDMF_SECTOR:  ParseSectorField (sector, key, tok, value); break;
+			case UDMF_SIDEDEF: ParseSidedefField(side,   key, tok, value); break;
+			case UDMF_LINEDEF: ParseLinedefField(line,   key, tok, value); break;
+
+			default: /* just skip it */ break;
+		}
+	}
+
+	// validate stuff
+
+	if (line != NULL)
+	{
+		if (line->start == NULL || line->end == NULL)
+			Main::FatalError("Linedef #%d is missing a vertex!\n", line->index);
+	}
+}
+
+
+void ParseUDMF_Pass(const std::string& data, int pass)
+{
+	// pass = 1 : vertices, sectors, things
+	// pass = 2 : sidedefs
+	// pass = 3 : linedefs
+
+	ajparse::lexer_c lex(data);
+
+	for (;;)
+	{
+		std::string section;
+		ajparse::token_kind_e tok = lex.Next(section);
+
+		if (tok == ajparse::TOK_EOF)
+			return;
+
+		if (tok != ajparse::TOK_Ident)
+		{
+			Main::FatalError("Malformed TEXTMAP lump.\n");
+			return;
+		}
+
+		// ignore top-level assignments
+		if (lex.Match("="))
+		{
+			lex.Next(section);
+			if (! lex.Match(";"))
+				Main::FatalError("Malformed TEXTMAP lump: missing ;\n");
+			continue;
+		}
+
+		if (! lex.Match("{"))
+			Main::FatalError("Malformed TEXTMAP lump: missing opening bracket, instead {}\n", section);
+
+		int cur_type = 0;
+
+		if (section == "thing")
+		{
+			if (pass == 1)
+				cur_type = UDMF_THING;
+		}
+		else if (section == "vertex")
+		{
+			if (pass == 1)
+				cur_type = UDMF_VERTEX;
+		}
+		else if (section == "sector")
+		{
+			if (pass == 1)
+				cur_type = UDMF_SECTOR;
+		}
+		else if (section == "sidedef")
+		{
+			if (pass == 2)
+				cur_type = UDMF_SIDEDEF;
+		}
+		else if (section == "linedef")
+		{
+			if (pass == 3)
+				cur_type = UDMF_LINEDEF;
+		}
+
+		// process the block
+		ParseUDMF_Block(lex, cur_type);
+	}
+}
+
+
+void ParseUDMF(byte *lump, int length)
+{
+	if (!lump || length <= 0)
+		Main::FatalError("Error parsing TEXTMAP lump.\n");
+
+	// load the lump into this string
+	std::string data;
+    data.append((const char *)lump, length);
+
+	// now parse it...
+
+	// the UDMF spec does not require objects to be in a dependency order.
+	// for example: sidedefs may occur *after* the linedefs which refer to
+	// them.  hence we perform multiple passes over the TEXTMAP data.
+
+	ParseUDMF_Pass(data, 1);
+	ParseUDMF_Pass(data, 2);
+	ParseUDMF_Pass(data, 3);
+}
 
 /* ------- access functions --------- */
 
@@ -1130,29 +1627,37 @@ bool OpenMap(const char *level_name) {
         doing_hexen = true;
     }
 
-    if (!LoadVertices()) {
-        return false;
-    }
-    if (!LoadSectors()) {
-        return false;
-    }
-    if (!LoadSidedefs()) {
-        return false;
-    }
+    // identify UDMF mode by presence of BEHAVIOR lump
+    int textmap_length = 0;
+    byte *textmap_lump = the_wad->ReadLump("TEXTMAP", &textmap_length, load_level);
 
-    if (doing_hexen) {
-        if (!LoadLinedefsHexen()) {
-            return false;
-        }
-        if (!LoadThingsHexen()) {
-            return false;
-        }
+    if (textmap_lump) {
+        ParseUDMF(textmap_lump, textmap_length);
     } else {
-        if (!LoadLinedefs()) {
+        if (!LoadVertices()) {
             return false;
         }
-        if (!LoadThings()) {
+        if (!LoadSectors()) {
             return false;
+        }
+        if (!LoadSidedefs()) {
+            return false;
+        }
+
+        if (doing_hexen) {
+            if (!LoadLinedefsHexen()) {
+                return false;
+            }
+            if (!LoadThingsHexen()) {
+                return false;
+            }
+        } else {
+            if (!LoadLinedefs()) {
+                return false;
+            }
+            if (!LoadThings()) {
+                return false;
+            }
         }
     }
 
@@ -1236,61 +1741,61 @@ void CloseMap() {
 
 void FreeMap() {
     int i;
-    for (int i = 0; i < doomed_vertices.size(); i++) {
+    for (i = 0; i < doomed_vertices.size(); i++) {
         if (doomed_vertices[i]) {
             delete doomed_vertices[i];
         }
     }
     doomed_vertices.clear();
-    for (int i = 0; i < doomed_linedefs.size(); i++) {
+    for (i = 0; i < doomed_linedefs.size(); i++) {
         if (doomed_linedefs[i]) {
             delete doomed_linedefs[i];
         }
     }
     doomed_linedefs.clear();
-    for (int i = 0; i < doomed_sidedefs.size(); i++) {
+    for (i = 0; i < doomed_sidedefs.size(); i++) {
         if (doomed_sidedefs[i]) {
             delete doomed_sidedefs[i];
         }
     }
     doomed_sidedefs.clear();
-    for (int i = 0; i < doomed_sectors.size(); i++) {
+    for (i = 0; i < doomed_sectors.size(); i++) {
         if (doomed_sectors[i]) {
             delete doomed_sectors[i];
         }
     }
     doomed_sectors.clear();
-    for (int i = 0; i < doomed_things.size(); i++) {
+    for (i = 0; i < doomed_things.size(); i++) {
         if (doomed_things[i]) {
             delete doomed_things[i];
         }
     }
     doomed_things.clear();
-    for (int i = 0; i < doomed_splits.size(); i++) {
+    for (i = 0; i < doomed_splits.size(); i++) {
         if (doomed_splits[i]) {
             delete doomed_splits[i];
         }
     }
     doomed_splits.clear();
-    for (int i = 0; i < doomed_edges.size(); i++) {
+    for (i = 0; i < doomed_edges.size(); i++) {
         if (doomed_edges[i]) {
             delete doomed_edges[i];
         }
     }
     doomed_edges.clear();
-    for (int i = 0; i < doomed_polygons.size(); i++) {
+    for (i = 0; i < doomed_polygons.size(); i++) {
         if (doomed_polygons[i]) {
             delete doomed_polygons[i];
         }
     }
     doomed_polygons.clear();
-    for (int i = 0; i < doomed_wall_tips.size(); i++) {
+    for (i = 0; i < doomed_wall_tips.size(); i++) {
         if (doomed_wall_tips[i]) {
             delete doomed_wall_tips[i];
         }
     }
     doomed_wall_tips.clear();
-    for (int i = 0; i < doomed_ex_floors.size(); i++) {
+    for (i = 0; i < doomed_ex_floors.size(); i++) {
         if (doomed_ex_floors[i]) {
             delete doomed_ex_floors[i];
         }

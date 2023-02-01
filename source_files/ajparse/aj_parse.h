@@ -16,12 +16,12 @@
 //
 //----------------------------------------------------------------------------
 
-#ifndef __AJBSP_PARSE_H__
-#define __AJBSP_PARSE_H__
+#ifndef __AJ_PARSE_H__
+#define __AJ_PARSE_H__
 
 #include <string>
 
-namespace ajbsp
+namespace ajparse
 {
 
 enum token_kind_e
@@ -84,9 +84,9 @@ int    LEX_Int    (const std::string& s);
 double LEX_Double (const std::string& s);
 bool   LEX_Boolean(const std::string& s);
 
-} // namespace ajbsp
+} // namespace ajparse
 
-#endif /* __AJBSP_PARSE_H__ */
+#endif /* __AJ_PARSE_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

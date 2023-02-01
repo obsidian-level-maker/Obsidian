@@ -11,7 +11,8 @@ add_library(ajbsp
 	level.cc
 	node.cc
 	misc.cc
-	parse.cc
 	utility.cc
 	wad.cc
 )
+
+target_include_directories(ajbsp PRIVATE ../ajparse)

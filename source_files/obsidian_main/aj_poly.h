@@ -25,6 +25,7 @@
 #include <string>
 #include <array>
 #include "sys_type.h"
+#include <unordered_map>
 void Appl_FatalError(const char *str, ...);
 void Appl_Printf(const char *str, ...);
 
@@ -86,6 +87,9 @@ class sector_c {
 
     char is_dummy;  // private
 
+    // UDMF support
+    std::unordered_map<std::string, std::string> misc_vals;
+
    public:
     sector_c()
         : index(-1),
@@ -121,6 +125,9 @@ class sidedef_c {
     std::array<char, 10> lower_tex;
     std::array<char, 10> mid_tex;
 
+    // UDMF support
+    std::unordered_map<std::string, std::string> misc_vals;
+
    public:
     sidedef_c()
         : index(-1),
@@ -151,6 +158,9 @@ class linedef_c {
     // Hexen support
     std::array<u8_t, 5> args;
 
+    // UDMF support
+    std::unordered_map<std::string, std::string> misc_vals;
+
    public:
     linedef_c()
         : index(-1),
@@ -179,6 +189,9 @@ class thing_c {
     int height;
     int special;
     std::array<u8_t, 5> args;
+
+    // UDMF support
+    std::unordered_map<std::string, std::string> misc_vals;
 
    public:
     thing_c()

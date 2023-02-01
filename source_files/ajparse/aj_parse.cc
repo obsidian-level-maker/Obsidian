@@ -16,14 +16,13 @@
 //
 //----------------------------------------------------------------------------
 
-#include "system.h"
-#include "parse.h"
+#include "aj_parse.h"
 
 #include <cstdlib>
 #include <cctype>
 #include <cassert>
 
-namespace ajbsp
+namespace ajparse
 {
 
 token_kind_e lexer_c::Next(std::string& s)
@@ -365,7 +364,7 @@ void lexer_c::ParseEscape(std::string& s)
 }
 
 
-} // namespace ajbsp
+} // namespace ajparse
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab
