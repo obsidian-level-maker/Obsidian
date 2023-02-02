@@ -67,14 +67,6 @@ HARMONY.ENTITIES =
   depot_ref = { id="oblige_depot", r=1, h=1, pass=true },
 }
 
-HARMONY.GENERIC_REQS =
-{
-  -- These are used for fulfilling fab pick requirements in prefab.lua
-  Generic_Key_One = { kind = "k_one", rkind = "kc_green" },
-  Generic_Key_Two = { kind = "k_two", rkind = "kc_yellow" },
-  Generic_Key_Three = { kind = "k_three", rkind = "kc_purple" }
-}
-
 HARMONY.PLAYER_MODEL =
 {
   harmony =

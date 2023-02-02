@@ -32,49 +32,6 @@ HERETIC.MATERIALS =
   _SKY     = { t="CHAINSD", f="F_SKY1"  },
   XEMPTY = { t="-", f="-" },
   
-  -- materials for generic prefab set --
-  _LIFT = { t="SKULLSB1", f="FLOOR30" },
-  _RUNIC = { t="REDWALL", f="FLOOR09" },
-  _STAIRS = { t="WOODWL", f="FLOOR10" },
-  _VOID = { t="STNGLS3", f="XX" }, -- Only works with small areas and exact offsets, but it's the only thing I could find with solid black areas
-  _WALLLIT = { t="STNGLS1", f="XX" }, -- Same as above, but for "wall lights"
-  _SBARS = { t="GATMETL3", f="FLOOR30" }, -- Short bars, i.e. railings
-  _MBARS = { t="GATMETL4", f="FLOOR30" }, -- Medium bars, i.e. barred windows
-  _TBARS = { t="GATMETL5", f="FLOOR30" }, -- Tall bars, i.e. cage/jail bars
-  
-  _CRATE   = { t="DOORWOOD",  f="FLAT507" }, -- Crate/box
-  _CRATE2  = { t="CTYSTCI4", f="FLOOR10" },
-  _CRATWID = { t="DOORWOOD",  f="FLAT507" }, -- Wide crates
-    
-  _SMLDOOR  = { t="DOORWOOD", f="FLAT507" }, -- Open says me
-  _BIGDOOR = { t="DOORSTON", f="FLOOR30" },
-  _TALDOOR = { t="DOORWOOD", f="FLAT507" },
-  _DORRAIL = { t="METL2", f="FLOOR28"}, -- Inner door slider thingys
-  
-  _NPIC    = { t="CELTIC", f="FLOOR06"}, -- Narrow (non-tiling) pic box insert, 64 pixels wide
-  
-  _MPIC    = { t="CELTIC", f="FLOOR06"}, -- Medium (or tiling) pic box insert, 128 pixels wide
-  
-  _WPIC    = { t="CHAINMAN", f="FLAT520"}, -- Wide (or tiling) pic box insert, 256 pixels wide
-  
-  _KEYTRM1 = { t="SPINE1", f="FLOOR25" }, -- Trim for locked door, Key 1
-  _KEYTRM2 = { t="GRNBLOK1", f="FLOOR19" }, -- Trim for locked door, Key 2
-  _KEYTRM3 = { t="BLUEFRAG", f="FLOOR16" }, -- Trim for locked door, Key 3
-  
-  _EXITDR = { t="DOOREXIT", f="FLAT520" }, -- Exit door
-  _EXITSW  = { t="SW2OFF", f="FLOOR28" }, -- Exit switch
-  _EXITTR  = { t="METL2", f="FLOOR28" }, -- Exit switch trim
-  _EXITRM  = { t="METL2", f="FLOOR28" }, -- Exit room
-  _EXITSGN = { t="HER_EXIT", f="FLOOR04"},
-  
-  _STRUCT = {t="METL2", f="FLOOR30"}, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
-
-  _SW  = { t="SW1OFF", f="FLOOR30" }, -- General purpose swtich, full size
-  _SWTRIM = { t="METL2", f="FLOOR30" }, -- Trim for switch
-  
-  _TELE = { t="CHAINSD", f="FLTTELE1" }, -- Teleporter
-  
-
   -- general purpose --
 
   METAL    = { t="METL1",    f="FLOOR29" },
@@ -257,42 +214,6 @@ HERETIC.MATERIALS =
 
 HERETIC.PREFAB_FIELDS =
 {
-  -- These are used for converting generic locked linedefs --
-
-  line_700 = 27, -- Yellow key door
-  line_701 = 28, -- Green key door
-  line_702 = 26, -- Blue key door
-  line_703 = 1,  -- Regular door open
-  line_704 = 11, -- Switch, exit
-  line_705 = 51, -- Switch, secret exit
-  line_706 = 52, -- Walk-over line, exit
-  line_707 = 105, -- Walk-over line, secret exit
-  line_708 = 97, -- Walk-over line, teleport
-  --line_709 = 888, -- Switch (don't think I need this one)
-  line_710 = 62, -- Switched, lower lift, wait, raise
-  line_711 = 31, -- Door open stay
-  line_712 = 2,  -- Walk-over, door open stay
-  line_713 = 23, -- Switched, floor lower to nearest floor
-  line_714 = 103, -- Switched, door open stay
-  line_715 = 97, -- Walk-over line, teleport (monsters only) (not in Heretic, use normal teleport)
-
-  -- These are used for converting generic fab things --
-  thing_11000 = 2035, -- Barrel
-  thing_11001 = 28, -- Ceiling light
-  thing_11002 = 76, -- Standalone light
-  thing_11003 = 50, -- Wall light (torch)
-  thing_11004 = 27, -- Short standalone light (Heretic's serpent torch is a little tall, but still)
-  thing_11005 = 29, -- Small pillar
-  thing_11006 = 80, -- Key one
-  thing_11007 = 73, -- Key two
-  thing_11008 = 79, -- Key three
-  thing_11009 = 1, -- P1 Start
-  thing_11010 = 2, -- P2 Start
-  thing_11011 = 3, -- P3 Start
-  thing_11012 = 4, -- P4 Start
-  thing_11013 = 14, -- Teleport destination
-  thing_11014 = 49, -- Passable ceiling decor
-
 }
 
 

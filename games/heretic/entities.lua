@@ -87,14 +87,6 @@ HERETIC.ENTITIES =
   depot_ref = { id="oblige_depot", r=1, h=1, pass=true },
 }
 
-HERETIC.GENERIC_REQS =
-{
-  -- These are used for fulfilling fab pick requirements in prefab.lua
-  Generic_Key_One = { kind = "k_one", rkind = "k_yellow" },
-  Generic_Key_Two = { kind = "k_two", rkind = "k_green" },
-  Generic_Key_Three = { kind = "k_three", rkind = "k_blue" }
-}
-
 HERETIC.PLAYER_MODEL =
 {
   corvus =

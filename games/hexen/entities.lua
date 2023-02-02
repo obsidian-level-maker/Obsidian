@@ -175,14 +175,6 @@ HEXEN.ENTITIES =
   depot_ref = { id="oblige_depot", r=1, h=1, pass=true },
 }
 
-HEXEN.GENERIC_REQS =
-{
-  -- These are used for fulfilling fab pick requirements in prefab.lua
-  Generic_Key_One = { kind = "k_one", rkind = "k_steel" },
-  Generic_Key_Two = { kind = "k_two", rkind = "k_cave" },
-  Generic_Key_Three = { kind = "k_three", rkind = "k_axe" }
-}
-
 --------------------------------------------------
 
 HEXEN.PLAYER_MODEL =
