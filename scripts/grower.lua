@@ -4478,7 +4478,6 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
   
     Seed_draw_minimap(SEEDS, LEVEL)
 
-    gui.printf(table.tostr(final_R, 3))
     if final_R.is_hallway or final_R.is_grown then
       local found_room
       local cur_id = #LEVEL.rooms
@@ -4497,7 +4496,11 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
       end
     end
 
-    gui.printf("ROOM_" .. final_R.id .. " in critical condition! " ..
+    if final_R.is_hallway or final_R.is_grown then return end
+
+    final_R.has_teleporter_break = true
+
+    gui.printf(final_R.name .. " in critical condition! " ..
     "GET THE TELEPORNEPHERINE!\n")
     Grower_add_teleporter_trunk(SEEDS, LEVEL, final_R, true)
   end
