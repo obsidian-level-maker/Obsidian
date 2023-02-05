@@ -1041,8 +1041,10 @@ ULTDOOM.THEMES =
       gtd_generic_half_floor_no_trim = 20,
       gtd_generic_half_floor_inverted_braced = 20,
       --
-      gtd_woodframe = 25,
-      gtd_woodframe_green = 25,
+      gtd_woodframe = 15,
+      gtd_woodframe_green = 15,
+      gtd_woodframe_alt = 15,
+      gtd_woodframe_alt_green = 15,
       --
       gtd_round_inset = 50,
       --
@@ -1481,8 +1483,10 @@ ULTDOOM.THEMES =
       gtd_generic_half_floor_no_trim = 20,
       gtd_generic_half_floor_inverted_braced = 20,
       --
-      gtd_woodframe = 25,
-      gtd_woodframe_green = 25,
+      gtd_woodframe = 15,
+      gtd_woodframe_green = 15,
+      gtd_woodframe_alt = 15,
+      gtd_woodframe_alt_green = 15,
       --
       gtd_round_inset = 50,
       --
@@ -1916,8 +1920,10 @@ ULTDOOM.THEMES =
       gtd_generic_half_floor_no_trim = 20,
       gtd_generic_half_floor_inverted_braced = 20,
       --
-      gtd_woodframe = 25,
-      gtd_woodframe_green = 25,
+      gtd_woodframe = 15,
+      gtd_woodframe_green = 15,
+      gtd_woodframe_alt = 15,
+      gtd_woodframe_alt_green = 15,
       --
       gtd_round_inset = 50,
       --
