@@ -2184,7 +2184,8 @@ function Room_choose_size(LEVEL, R, not_big)
     end
 
     if LEVEL.size_consistency == "bounded" then
-      if not R.grow_parent then
+      if not R.grow_parent 
+      or (R.grow_parent and R.grow_parent.is_start) then
         R.size_bounded_sum = sum
       else
         R.size_bounded_sum = sum * rand.range(0.75, 1.5)

@@ -1742,6 +1742,8 @@ function MODDED_GAME_EXTRAS.create_hn_info(self, LEVEL)
         for idx,shape in ipairs(R.absurd_shapes) do
           shapes_string = shapes_string .. shape .. " " 
         end
+      else
+        shapes_string = shapes_string .. "NONE"
       end
       shapes_string = shapes_string .. ") "
 
@@ -1758,6 +1760,12 @@ function MODDED_GAME_EXTRAS.create_hn_info(self, LEVEL)
 
     if R.sprout_rule then
       shapes_string = shapes_string .. "(SPR: " .. R.sprout_rule .. ") "
+    end
+
+    if R.is_grown then
+      shapes_string = shapes_string .. "(GROWN) "
+    else
+      shapes_string = shapes_string .. "(UNGROWN) "
     end
 
     return shapes_string
