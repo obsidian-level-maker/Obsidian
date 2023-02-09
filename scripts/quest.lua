@@ -209,6 +209,14 @@ function Quest_create_initial_quest(LEVEL)
   --
 
   local function eval_exit_room(R, secret_mode)
+    local function recurse_to_start(R, mult)
+      mult = mult * 1.15
+      if R.grow_parent then
+        recurse_to_start(R.grow_parent, mult)
+      end
+      return mult
+    end
+
     if R.is_exit    then return -1 end
     if R.is_hallway then return -1 end
     if R.is_start and #LEVEL.rooms > 1 then return -1 end
@@ -250,8 +258,13 @@ function Quest_create_initial_quest(LEVEL)
 
     local score = R.svolume
 
-    -- HACKY AF - give a bigger score to rooms grown much later 
-    score = score + (R.id)
+    -- give a bigger score to rooms further into the map
+    local score_mult
+    if R.grow_parent then
+      local init_mult = 1
+      score_mult = recurse_to_start(R.grow_parent, init_mult)
+    end
+    score = score * score_mult
 
     -- caves are not ideal
     if R.is_cave then score = score / 4 end
