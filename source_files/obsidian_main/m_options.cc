@@ -69,6 +69,8 @@ void Parse_Option(const std::string &name, const std::string &value) {
         random_string_seeds = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "password_mode") == 0) {
         password_mode = StringToInt(value) ? true : false;
+    } else if (StringCaseCmp(name, "mature_word_lists") == 0) {
+        mature_word_lists = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "filename_prefix") == 0) {
         filename_prefix = StringToInt(value);
     } else if (StringCaseCmp(name, "custom_prefix") == 0) {
@@ -182,6 +184,7 @@ bool Options_Save(std::filesystem::path filename) {
     option_fp << "random_string_seeds = " << (random_string_seeds ? 1 : 0)
               << "\n";
     option_fp << "password_mode = " << (password_mode ? 1 : 0) << "\n";
+    option_fp << "mature_word_lists = " << (mature_word_lists ? 1 : 0) << "\n";
     option_fp << "filename_prefix = " << filename_prefix << "\n";
     option_fp << "custom_prefix = " << custom_prefix << "\n";
     option_fp << "zip_output = " << zip_output << "\n";
@@ -225,6 +228,8 @@ class UI_OptionsWin : public Fl_Window {
     UI_HelpLink *random_string_seeds_help;
     UI_CustomCheckBox *opt_password_mode;
     UI_HelpLink *password_mode_help;
+    UI_CustomCheckBox *opt_mature_words;
+    UI_HelpLink *mature_words_help;
     UI_CustomCheckBox *opt_backups;
     UI_CustomCheckBox *opt_overwrite;
     UI_CustomCheckBox *opt_debug;
@@ -341,8 +346,10 @@ class UI_OptionsWin : public Fl_Window {
 
         if (!random_string_seeds) {
             that->opt_password_mode->deactivate();
+            that->opt_mature_words->deactivate();
         } else {
             that->opt_password_mode->activate();
+            that->opt_mature_words->activate();
         }
     }
 
@@ -381,6 +388,34 @@ class UI_OptionsWin : public Fl_Window {
         win->show();
         // clang-format off
         buff->text(_("Will produce a pseudo-random sequence of characters as input for the map generation seed. Random String Seeds must be enabled to use this option."));
+        // clang-format on
+    }
+
+    static void callback_MatureWords(Fl_Widget *w, void *data) {
+        UI_OptionsWin *that = (UI_OptionsWin *)data;
+
+        mature_word_lists = that->opt_mature_words->value() ? true : false;
+
+        if (mature_word_lists) {
+            ob_set_config("mature_words", "yes");
+        } else {
+            ob_set_config("mature_words", "no");
+        }
+    }
+
+    static void callback_MatureWordsHelp(Fl_Widget *w, void *data) {
+        fl_cursor(FL_CURSOR_DEFAULT);
+        Fl_Window *win = new Fl_Window(640, 480, _("Mature Wordlists"));
+        Fl_Text_Buffer *buff = new Fl_Text_Buffer();
+        Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
+        disp->buffer(buff);
+        disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
+        win->resizable(*disp);
+        win->hotspot(0, 0, 0);
+        win->set_modal();
+        win->show();
+        // clang-format off
+        buff->text(_("When enabled, will use a random wordlist that can result in obscene or otherwise offensive language being used for seed, map and WAD title elements."));
         // clang-format on
     }
 
@@ -670,6 +705,22 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     cy += opt_password_mode->h() + y_step * .5;
 
+    opt_mature_words =
+        new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24), "");
+    opt_mature_words->copy_label(_(" Use Mature Wordlists"));
+    opt_mature_words->value(mature_word_lists ? 1 : 0);
+    opt_mature_words->callback(callback_MatureWords, this);
+    opt_mature_words->labelfont(font_style);
+    opt_mature_words->selection_color(SELECTION);
+    opt_mature_words->down_box(button_style);
+
+    mature_words_help = new UI_HelpLink(
+        cx + W * .38 + this->opt_custom_prefix->w(), cy, W * 0.10, kf_h(24));
+    mature_words_help->labelfont(font_style);
+    mature_words_help->callback(callback_MatureWordsHelp, this);
+
+    cy += opt_mature_words->h() + y_step * .5;
+
     opt_backups = new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24), "");
     opt_backups->copy_label(_(" Create Backups"));
     opt_backups->value(create_backups ? 1 : 0);
@@ -823,7 +874,7 @@ int UI_OptionsWin::handle(int event) {
 
 void DLG_OptionsEditor(void) {
     int opt_w = kf_w(500);
-    int opt_h = kf_h(525);
+    int opt_h = kf_h(550);
 
     UI_OptionsWin *option_window =
         new UI_OptionsWin(opt_w, opt_h, _("OBSIDIAN Misc Options"));

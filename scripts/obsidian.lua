@@ -48,7 +48,7 @@ gui.import("level")
 gui.import("script_manager")
 
 gui.import("random_words_en.lua")
-gui.import("random_words_ru.lua")
+gui.import("random_words_en_m.lua")
 
 gui.import("094/oblige_v094.lua")
 
@@ -1746,10 +1746,10 @@ function ob_get_random_words()
   
   RANDOM_WORDS = {}
 
-  if OB_CONFIG.locale == "ru" then
-    RANDOM_WORDS = RANDOM_WORDS_RU
+  if OB_CONFIG.mature_words == "yes" then
+    RANDOM_WORDS = RANDOM_WORDS_EN_M
   else 
-    RANDOM_WORDS = RANDOM_WORDS_EN -- As other translations happen, there will be more elses here - Dasho
+    RANDOM_WORDS = RANDOM_WORDS_EN
   end
 
   local function case_randomizer(random_word)
