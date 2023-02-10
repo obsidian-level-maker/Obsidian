@@ -154,6 +154,7 @@ bool randomize_pickups = false;
 bool randomize_misc = false;
 bool random_string_seeds = false;
 bool password_mode = false;
+bool mature_word_lists = false;
 bool did_specify_seed = false;
 int zip_output = 0;
 int log_size = 7;
@@ -1617,6 +1618,12 @@ softrestart:;
         // inform Lua code about batch mode (the value doesn't matter)
         ob_set_config("batch", "yes");
 
+        if (mature_word_lists) {
+            ob_set_config("mature_words", "yes");
+        } else {
+            ob_set_config("mature_words", "no");
+        }
+
         Module_Defaults();
 
         if (argv::Find('p', "printref") >= 0) {
@@ -1735,6 +1742,12 @@ softrestart:;
     Script_Open();
 
     ob_set_config("locale", selected_lang.c_str());
+
+    if (mature_word_lists) {
+        ob_set_config("mature_words", "yes");
+    } else {
+        ob_set_config("mature_words", "no");
+    }
 
     // enable certain modules by default
     Module_Defaults();
