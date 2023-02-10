@@ -79,7 +79,7 @@ PREFABS.Pic_EPIC_box_skeletons =
     DEATH2 = 50,
     DEATH3 = 50,
     GUY1   = 25,
-    PENTA1 = 5
+    OBPENTA1 = 5
   }
 }
 
