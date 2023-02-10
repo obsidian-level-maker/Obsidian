@@ -346,10 +346,8 @@ class UI_OptionsWin : public Fl_Window {
 
         if (!random_string_seeds) {
             that->opt_password_mode->deactivate();
-            that->opt_mature_words->deactivate();
         } else {
             that->opt_password_mode->activate();
-            that->opt_mature_words->activate();
         }
     }
 
