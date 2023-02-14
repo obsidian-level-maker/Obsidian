@@ -32,10 +32,8 @@ cmake-build-*
 build/
 
 # User dirs
-addons/*.pk3
-addons/*.pk7
-addons/*.wad
-addons/*.zip
+addons/*
+!addons/.gitkeep
 
 # Quake files (not redistributable)
 quake_tex.wd2

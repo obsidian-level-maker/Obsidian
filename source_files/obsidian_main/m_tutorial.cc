@@ -380,7 +380,7 @@ UI_Tutorial_Window::UI_Tutorial_Window(int W, int H, const char *label)
         out->textfont(font_style);
         out->textsize(FL_NORMAL_SIZE + 2);
         // clang-format off
-        out->value(_("<center>Addons are a way to enhance the Obsidian experience further by adding new content, modules, and options. They come in the form of *.pk3 files that must be placed in the /addons folder of your Obsidian install before starting the program. Once there, they can be viewed, enabled, or disabled by clicking the \"Addons\" menu located in the top bar of the program. Good sources for new addons are either<br /><A HREF='https://obsidian-level-maker.github.io/addons.html'>the public Addons page</A> or the #addon-files channel of our Discord.</center>"));
+        out->value(_("<center>Addons are a way to enhance the Obsidian experience further by adding new content, modules, and options. They come in the form of folders or ZIP/7Z archives that must be placed in the /addons folder of your Obsidian install before starting the program. Once there, they can be viewed, enabled, or disabled by clicking the \"Addons\" menu located in the top bar of the program. Good sources for new addons are either<br /><A HREF='https://obsidian-level-maker.github.io/addons.html'>the public Addons page</A> or the #addon-files channel of our Discord.</center>"));
         // clang-format on
         g->end();
     }
@@ -410,7 +410,7 @@ UI_Tutorial_Window::UI_Tutorial_Window(int W, int H, const char *label)
         out->textfont(font_style);
         out->textsize(FL_NORMAL_SIZE + 2);
         // clang-format off
-        out->value(_("<center>If, for whatever reason, you receive an error while building, you can view Obsidian's logs by pressing F6 or selecting Help->View Logs from the program menu. From here, you can view and save the log contents to a file of your choosing. In addition, there will be LOGS*.txt files with the same information that are stored in the same folder as obsidian.exe (or ~/.config/obsidian on *nix). These are rolling logs that will eventually be overwritten, so be sure to save this information elsewhere if you need to refer to it later! These logs are extremely important when seeking help or filing bug reports!</center>"));
+        out->value(_("<center>If, for whatever reason, you are encountering unexpected behavior, you can view Obsidian's logs by pressing F6 or selecting Help->View Logs from the program menu. From here, you can view and save the log contents to a file of your choosing. In addition, there will be LOGS*.txt files with the same information that are stored in the same folder as obsidian.exe (or ~/.config/obsidian on *nix). These are rolling logs that will eventually be overwritten, so be sure to save this information elsewhere if you need to refer to it later! These logs are extremely important when seeking help or filing bug reports!</center>"));
         // clang-format on
         g->end();
     }
