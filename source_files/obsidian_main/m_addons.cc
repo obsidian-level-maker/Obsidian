@@ -174,12 +174,13 @@ void VFS_ScanForAddons() {
             result1 += 1;
             list.push_back(file.path());
         }
-        else
+        else {
             LogPrintf(
                 fmt::format("Failed to mount '{}' archive in PhysFS:\n{}\n",
                             file.path().string(),
                             PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()))
                     .c_str());
+        }
     }
 
     if (StringCaseCmp(home_dir.generic_string(),
@@ -198,12 +199,13 @@ void VFS_ScanForAddons() {
                 result2 += 1;
                 list2.push_back(file.path());
             }
-            else
+            else {
                 LogPrintf(
                 fmt::format("Failed to mount '{}' archive in PhysFS:\n{}\n",
                             file.path().string(),
                             PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()))
                     .c_str());
+            }
         }
         // std::vector<std::filesystem::path>().swap(list2);
         for (auto x : list2) {
