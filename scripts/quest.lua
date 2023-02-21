@@ -210,7 +210,7 @@ function Quest_create_initial_quest(LEVEL)
 
   local function eval_exit_room(R, secret_mode)
     local function recurse_to_start(R, mult)
-      mult = mult * 1.15
+      mult = mult * 1.15 * (1 + R.svolume / 128) 
       if R.grow_parent then
         recurse_to_start(R.grow_parent, mult)
       end
