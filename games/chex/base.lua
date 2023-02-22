@@ -42,7 +42,7 @@ function CHEX3.all_done()
 	gui.wad_insert_file("data/endoom/ENDOOM.bin", "ENDOOM")
 end
 
-OB_GAMES["chex3"] =
+UNFINISHED["chex3"] =
 {
 	label = _("Chex Quest 3"),
 	priority = 93,

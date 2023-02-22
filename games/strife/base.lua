@@ -46,7 +46,7 @@ function STRIFE.all_done()
 end
 
 
-OB_GAMES["strife"] =
+UNFINISHED["strife"] =
 {
   label = _("Strife"),
   priority = 89,

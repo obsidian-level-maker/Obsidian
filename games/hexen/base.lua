@@ -38,7 +38,7 @@ gui.import("vanilla_mats")
 
 ------------------------------------------------------------
 
-OB_GAMES["hexen"] =
+UNFINISHED["hexen"] =
 {
   label = _("Hexen"),
   
