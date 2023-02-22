@@ -888,6 +888,8 @@ SPROUT_CASTLE_2 =
   {
     "xx!!!!xx", "xxRRRRxx",
     "xx!!!!xx", "xxRRRRxx",
+    "xx!!!!xx", "xxRRRRxx",
+    "xx!!!!xx", "xxRRRRxx",
     "!!!!!!!!", "11%RR/11",
     "!!!!!!!!", "11111111",
     "xxx11xxx", "xxx11xxx",
