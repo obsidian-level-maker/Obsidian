@@ -210,7 +210,7 @@ function Quest_create_initial_quest(LEVEL)
 
   local function eval_exit_room(R, secret_mode)
     local function recurse_to_start(R, mult)
-      mult = mult * 1.15
+      mult = mult * math.clamp(1, R.svolume / 128, 9001) 
       if R.grow_parent then
         recurse_to_start(R.grow_parent, mult)
       end
@@ -270,7 +270,7 @@ function Quest_create_initial_quest(LEVEL)
     if R.is_cave then score = score / 4 end
     -- sub rooms that are too small
     if R.is_sub_room and R.svolume < 16 and not secret_mode then 
-      score = score / 20
+      score = score / 48
     end
 
     return score + gui.random() * 10
