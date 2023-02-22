@@ -594,7 +594,7 @@ class UI_ThemeWin : public Fl_Window {
         for (int x = 0; x < main_win->game_box->children(); x++) {
             main_win->game_box->child(x)->redraw();
         }
-        main_win->game_box->game->copy_label("Engine: ");
+        main_win->game_box->engine->copy_label("Engine: ");
         main_win->game_box->game->copy_label("Game: ");
         main_win->game_box->port->copy_label("Port: ");
         main_win->game_box->length->copy_label("Length: ");
