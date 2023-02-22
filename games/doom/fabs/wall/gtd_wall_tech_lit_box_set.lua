@@ -203,7 +203,7 @@ PREFABS.Wall_tech_horizontal_window_tall_COLLITE_ORANGE_EPIC =
 
   group = "gtd_wall_lit_h_window_tall_collite_orange",
 
-  tex_SHAWN2 = "COLLITE3",
+  tex_SHAWN2 = "COLLITE2",
   tex_SUPPORT3 = "SHAWN2",
   tex_BROWN144 = "SHAWN2",
   flat_CEIL5_2 = "FLAT23",
@@ -221,7 +221,7 @@ PREFABS.Wall_tech_horizontal_window_tall_COLLITE_ORANGE_EPIC_diag =
   group = "gtd_wall_lit_h_window_tall_collite_orange",
   where = "diagonal",
 
-  tex_SHAWN2 = "COLLITE3",
+  tex_SHAWN2 = "COLLITE2",
   tex_SUPPORT3 = "SHAWN2",
   tex_BROWN144 = "SHAWN2",
   flat_CEIL5_2 = "FLAT23",
