@@ -2788,6 +2788,13 @@ function Fab_find_matches(LEVEL, reqs, match_state)
     -- type check
     local kind = assert(def.kind)
 
+    -- limit-removing hard req for Doom
+    if OB_CONFIG.port == "limit_removing" and ob_match_game({ game = "doomish" }) then
+      if not def.port or def.port ~= "limit_removing" then
+        return 0
+      end
+    end
+
     if def.jump_crouch and def.jump_crouch == true then
       if not PARAM.bool_jump_crouch then
         def.use_prob = 0 

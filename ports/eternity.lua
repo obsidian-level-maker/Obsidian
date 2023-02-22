@@ -22,7 +22,7 @@ ETERNITY = { }
 
 OB_PORTS["eternity"] =
 {
-  label = _("Eternity (Experimental)"),
+  label = _("Eternity"),
 
   extends = "advanced",
 
