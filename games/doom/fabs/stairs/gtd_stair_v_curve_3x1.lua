@@ -25,23 +25,6 @@ PREFABS.Stair_wide_v_curve_3x1 =
   },
 }
 
-PREFABS.Stair_wide_v_curve_3x1_hell =
-{
-  template = "Stair_wide_v_curve_3x1",
-
-  theme = "hell",
-
-  thing_2028 =
-  {
-    [35] = 1,
-    [44] = 1,
-    [45] = 1,
-    [46] = 1,
-  },
-}
-
---
-
 PREFABS.Stair_wide_v_curve_3x1_old_doom =
 {
   template = "Stair_wide_v_curve_3x1",

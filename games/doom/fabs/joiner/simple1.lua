@@ -29,22 +29,6 @@ PREFABS.Joiner_simple1 =
 
 }
 
-
-PREFABS.Joiner_simple1_urban =
-{
-  template   = "Joiner_simple1",
-  map    = "MAP01",
-  prob   = 100,
-
-  theme  = "urban",
-
-  tex_GRAY2 = { WOOD1=50, WOOD4=50 },
-  tex_METAL = "METAL2",
-
-  sector_1  = { [0]=55, [1]=35, [2]=10, [3]=10, [8]=10, [17]=5 },
-
-}
-
 PREFABS.Joiner_simple1_hell =
 {
   template   = "Joiner_simple1",
@@ -77,27 +61,6 @@ PREFABS.Joiner_simple1_trappy =
 
   x_fit    = "frame",
   tex_GRAY2 = { GRAY2=50, TEKWALL1=50, TEKWALL4=50, CEMENT9=50, CEMENT8=50, METAL1=50 },
-
-  sector_1  = { [0]=55, [1]=35, [2]=10, [3]=10, [8]=10, [17]=5 },
-
-}
-
-PREFABS.Joiner_simple1_trappy_urban =
-{
-  template = "Joiner_simple1",
-  map      = "MAP02",
-  theme    = "urban",
-
-  prob     = 140,
-  style    = "traps",
-
-  seed_w   = 3,
-  seed_h   = 1,
-
-  x_fit    = "frame",
-
-  tex_GRAY2 = { WOOD1=50, WOOD3=50, WOOD4=50 },
-  tex_METAL = "METAL2",
 
   sector_1  = { [0]=55, [1]=35, [2]=10, [3]=10, [8]=10, [17]=5 },
 
@@ -146,27 +109,6 @@ PREFABS.Joiner_simple1_wide =
   sector_1  = { [0]=55, [1]=35, [2]=10, [3]=10, [8]=10, [17]=5 },
 
 }
-
-PREFABS.Joiner_simple1_wide_urban =
-{
-  template = "Joiner_simple1",
-  map      = "MAP03",
-  theme    = "urban",
-
-  prob     = 250,
-
-  seed_w   = 3,
-  seed_h   = 1,
-
-  x_fit    = { 176,224 },
-
-  tex_GRAY2 = { WOOD1=50, WOOD3=50, WOOD4=50 },
-  tex_METAL = "METAL2",
-
-  sector_1  = { [0]=55, [1]=35, [2]=10, [3]=10, [8]=10, [17]=5 },
-
-}
-
 
 PREFABS.Joiner_simple1_wide_hell =
 {

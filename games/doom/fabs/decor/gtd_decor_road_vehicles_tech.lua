@@ -33,34 +33,3 @@ PREFABS.Decor_road_vehicle_dozer =
   template = "Decor_road_vehicle_tractor_thing",
   map = "MAP03",
 }
-
--- urban versions, lower priority
-
-PREFABS.Decor_road_vehicle_tractor_thing_urban =
-{
-  template = "Decor_road_vehicle_tractor_thing",
-
-  theme = "urban",
-
-  prob = 1000,
-}
-
-PREFABS.Decor_road_vehicle_dump_truck_urban =
-{
-  template = "Decor_road_vehicle_tractor_thing",
-  map = "MAP02",
-
-  prob = 1000,
-  theme = "urban",
-
-  height = 96,
-}
-
-PREFABS.Decor_road_vehicle_dozer_urban =
-{
-  template = "Decor_road_vehicle_tractor_thing",
-  map = "MAP03",
-
-  prob = 1000,
-  theme = "urban",
-}

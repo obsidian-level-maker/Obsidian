@@ -25,14 +25,6 @@ PREFABS.Joiner_scionox_simple_lights_door =
   flat_FLOOR4_6 = { FLOOR4_6=50, FLAT14=50, FLOOR0_3=50, FLAT5=50, SLIME14=50, SLIME16=50 },
 }
 
-PREFABS.Joiner_scionox_simple_lights_door_2 =
-{
-  template = "Joiner_scionox_simple_lights_door",
-  theme  = "urban",
-  thing_2028 = "mercury_small",
-  flat_FLOOR4_6 = { FLAT5_1=50, FLAT19=50, FLAT5_5=50, FLOOR7_1=50, SLIME13=50, RROCK15=50 },
-}
-
 PREFABS.Joiner_scionox_simple_lights_door_3 =
 {
   template = "Joiner_scionox_simple_lights_door",
@@ -45,18 +37,6 @@ PREFABS.Joiner_scionox_simple_lights_door_4 =
 {
   template = "Joiner_scionox_simple_lights_door",
   map    = "MAP02",
-  key = "sw_metal",
-  tag_1  = "?door_tag",
-  door_action = "S1_OpenDoor",
-}
-
-PREFABS.Joiner_scionox_simple_lights_door_5 =
-{
-  template = "Joiner_scionox_simple_lights_door",
-  theme  = "urban",
-  map    = "MAP02",
-  thing_2028 = "mercury_small",
-  flat_FLOOR4_6 = { FLAT5_1=50, FLAT19=50, FLAT5_5=50, FLOOR7_1=50, SLIME13=50, RROCK15=50 },
   key = "sw_metal",
   tag_1  = "?door_tag",
   door_action = "S1_OpenDoor",
@@ -96,40 +76,6 @@ PREFABS.Joiner_scionox_simple_lights_door_9 =
   key = "k_yellow",
   tex_DOORRED = "DOORYEL",
   line_33     = 34,
-}
-
-PREFABS.Joiner_scionox_simple_lights_door_10 =
-{
-  template = "Joiner_scionox_simple_lights_door",
-  map    = "MAP05",
-  key = "k_red",
-  theme  = "urban",
-  thing_2028 = "mercury_small",
-  flat_FLOOR4_6 = { FLAT5_1=50, FLAT19=50, FLAT5_5=50, FLOOR7_1=50, SLIME13=50, RROCK15=50 },
-}
-
-PREFABS.Joiner_scionox_simple_lights_door_11 =
-{
-  template = "Joiner_scionox_simple_lights_door",
-  map    = "MAP05",
-  key = "k_blue",
-  tex_DOORRED = "DOORBLU",
-  line_33     = 32,
-  theme  = "urban",
-  thing_2028 = "mercury_small",
-  flat_FLOOR4_6 = { FLAT5_1=50, FLAT19=50, FLAT5_5=50, FLOOR7_1=50, SLIME13=50, RROCK15=50 },
-}
-
-PREFABS.Joiner_scionox_simple_lights_door_12 =
-{
-  template = "Joiner_scionox_simple_lights_door",
-  map    = "MAP05",
-  key = "k_yellow",
-  tex_DOORRED = "DOORYEL",
-  line_33     = 34,
-  theme  = "urban",
-  thing_2028 = "mercury_small",
-  flat_FLOOR4_6 = { FLAT5_1=50, FLAT19=50, FLAT5_5=50, FLOOR7_1=50, SLIME13=50, RROCK15=50 },
 }
 
 PREFABS.Joiner_scionox_simple_lights_door_13 =
@@ -174,19 +120,6 @@ PREFABS.Joiner_scionox_simple_lights_door_16 =
   key    = "k_ALL",
 }
 
-PREFABS.Joiner_scionox_simple_lights_door_17 =
-{
-  template = "Joiner_scionox_simple_lights_door",
-  map    = "MAP07",
-
-  key    = "k_ALL",
-
-  theme  = "urban",
-
-  thing_2028 = "mercury_small",
-  flat_FLOOR4_6 = { FLAT5_1=50, FLAT19=50, FLAT5_5=50, FLOOR7_1=50, SLIME13=50, RROCK15=50 },
-}
-
 PREFABS.Joiner_scionox_simple_lights_door_18 =
 {
   template = "Joiner_scionox_simple_lights_door",
@@ -225,15 +158,6 @@ PREFABS.Joiner_scionox_simple_lights_door_19 =
   flat_FLOOR4_6 = { FLOOR4_6=50, FLAT14=50, FLOOR0_3=50, FLAT5=50, SLIME14=50, SLIME16=50 },
 }
 
-PREFABS.Joiner_scionox_simple_lights_door_20 =
-{
-  template = "Joiner_scionox_simple_lights_door_19",
-  theme  = "urban",
-  thing_2028 = "mercury_small",
-  tex_SUPPORT2 = "SUPPORT3",
-  flat_FLOOR4_6 = { FLAT5_1=50, FLAT19=50, FLAT5_5=50, FLOOR7_1=50, SLIME13=50, RROCK15=50 },
-}
-
 PREFABS.Joiner_scionox_simple_lights_door_21 =
 {
   template = "Joiner_scionox_simple_lights_door_19",
@@ -251,18 +175,6 @@ PREFABS.Joiner_scionox_simple_lights_door_22 =
   key = "sw_metal",
   tag_1  = "?door_tag",
   door_action = "S1_OpenDoor",
-}
-
-PREFABS.Joiner_scionox_simple_lights_door_23 =
-{
-  template = "Joiner_scionox_simple_lights_door_19",
-  theme  = "urban",
-  map    = "MAP10",
-  key = "sw_metal",
-  tag_1  = "?door_tag",
-  door_action = "S1_OpenDoor",
-  thing_2028 = "mercury_small",
-  flat_FLOOR4_6 = { FLAT5_1=50, FLAT19=50, FLAT5_5=50, FLOOR7_1=50, SLIME13=50, RROCK15=50 },
 }
 
 PREFABS.Joiner_scionox_simple_lights_door_24 =
@@ -300,40 +212,6 @@ PREFABS.Joiner_scionox_simple_lights_door_27 =
   template = "Joiner_scionox_simple_lights_door_19",
   map    = "MAP11",
   key = "k_yellow",
-  tex_DOORRED = "DOORYEL",
-  line_33     = 34,
-}
-
-PREFABS.Joiner_scionox_simple_lights_door_28 =
-{
-  template = "Joiner_scionox_simple_lights_door_19",
-  map    = "MAP11",
-  key = "k_red",
-  theme  = "urban",
-  thing_2028 = "mercury_small",
-  flat_FLOOR4_6 = { FLAT5_1=50, FLAT19=50, FLAT5_5=50, FLOOR7_1=50, SLIME13=50, RROCK15=50 },
-}
-
-PREFABS.Joiner_scionox_simple_lights_door_29 =
-{
-  template = "Joiner_scionox_simple_lights_door_19",
-  map    = "MAP11",
-  key = "k_blue",
-  theme  = "urban",
-  thing_2028 = "mercury_small",
-  flat_FLOOR4_6 = { FLAT5_1=50, FLAT19=50, FLAT5_5=50, FLOOR7_1=50, SLIME13=50, RROCK15=50 },
-  tex_DOORRED = "DOORBLU",
-  line_33     = 32,
-}
-
-PREFABS.Joiner_scionox_simple_lights_door_30 =
-{
-  template = "Joiner_scionox_simple_lights_door_19",
-  map    = "MAP11",
-  key = "k_yellow",
-  theme  = "urban",
-  thing_2028 = "mercury_small",
-  flat_FLOOR4_6 = { FLAT5_1=50, FLAT19=50, FLAT5_5=50, FLOOR7_1=50, SLIME13=50, RROCK15=50 },
   tex_DOORRED = "DOORYEL",
   line_33     = 34,
 }
@@ -382,19 +260,6 @@ PREFABS.Joiner_scionox_simple_lights_door_34 =
   map    = "MAP12",
 
   key    = "k_ALL",
-}
-
-PREFABS.Joiner_scionox_simple_lights_door_35 =
-{
-  template = "Joiner_scionox_simple_lights_door_19",
-  map    = "MAP12",
-
-  key    = "k_ALL",
-
-  theme  = "urban",
-
-  thing_2028 = "mercury_small",
-  flat_FLOOR4_6 = { FLAT5_1=50, FLAT19=50, FLAT5_5=50, FLOOR7_1=50, SLIME13=50, RROCK15=50 },
 }
 
 PREFABS.Joiner_scionox_simple_lights_door_36 =
@@ -494,17 +359,6 @@ PREFABS.Joiner_scionox_simple_lights_door_41 =
   tex_SPCDOOR1 = { SPCDOOR1=50, SPCDOOR2=50, SPCDOOR3=50, SPCDOOR4=50 },
 }
 
-PREFABS.Joiner_scionox_simple_lights_door_42 =
-{
-  template = "Joiner_scionox_simple_lights_door_41",
-  theme  = "urban",
-  thing_48 =
-  {
-    mercury_lamp = 50,
-    burning_barrel = 25,
-  },
-}
-
 PREFABS.Joiner_scionox_simple_lights_door_43 =
 {
   template = "Joiner_scionox_simple_lights_door_41",
@@ -527,21 +381,6 @@ PREFABS.Joiner_scionox_simple_lights_door_44 =
   key = "sw_metal",
   tag_1  = "?door_tag",
   door_action = "S1_OpenDoor",
-}
-
-PREFABS.Joiner_scionox_simple_lights_door_45 =
-{
-  template = "Joiner_scionox_simple_lights_door_41",
-  map    = "MAP16",
-  theme  = "urban",
-  key = "sw_metal",
-  tag_1  = "?door_tag",
-  door_action = "S1_OpenDoor",
-  thing_48 =
-  {
-    mercury_lamp = 50,
-    burning_barrel = 25,
-  },
 }
 
 PREFABS.Joiner_scionox_simple_lights_door_46 =
@@ -584,49 +423,6 @@ PREFABS.Joiner_scionox_simple_lights_door_49 =
   template = "Joiner_scionox_simple_lights_door_41",
   map    = "MAP17",
   key = "k_yellow",
-  tex_DOORRED = "DOORYEL",
-  line_33     = 34,
-}
-
-PREFABS.Joiner_scionox_simple_lights_door_50 =
-{
-  template = "Joiner_scionox_simple_lights_door_41",
-  map    = "MAP17",
-  key = "k_red",
-  theme  = "urban",
-  thing_48 =
-  {
-    mercury_lamp = 50,
-    burning_barrel = 25,
-  },
-}
-
-PREFABS.Joiner_scionox_simple_lights_door_51 =
-{
-  template = "Joiner_scionox_simple_lights_door_41",
-  map    = "MAP17",
-  key = "k_blue",
-  theme  = "urban",
-  thing_48 =
-  {
-    mercury_lamp = 50,
-    burning_barrel = 25,
-  },
-  tex_DOORRED = "DOORBLU",
-  line_33     = 32,
-}
-
-PREFABS.Joiner_scionox_simple_lights_door_52 =
-{
-  template = "Joiner_scionox_simple_lights_door_41",
-  map    = "MAP17",
-  key = "k_yellow",
-  theme  = "urban",
-  thing_48 =
-  {
-    mercury_lamp = 50,
-    burning_barrel = 25,
-  },
   tex_DOORRED = "DOORYEL",
   line_33     = 34,
 }
@@ -690,21 +486,6 @@ PREFABS.Joiner_scionox_simple_lights_door_56 =
   map    = "MAP18",
 
   key    = "k_ALL",
-}
-
-PREFABS.Joiner_scionox_simple_lights_door_57 =
-{
-  template = "Joiner_scionox_simple_lights_door_41",
-  map    = "MAP18",
-
-  theme  = "urban",
-  key    = "k_ALL",
-
-  thing_48 =
-  {
-    mercury_lamp = 50,
-    burning_barrel = 25,
-  },
 }
 
 PREFABS.Joiner_scionox_simple_lights_door_58 =

@@ -44,13 +44,3 @@ PREFABS.Joiner_lift3_hell =
   flat_TLITE6_5 = "TLITE6_6",
 
 }
-
-PREFABS.Joiner_lift3_urban =
-{
-  template   = "Joiner_lift3",
-  theme      = "urban",
-
-  tex_PLAT1    = { PLAT1=50, SUPPORT2=50, SUPPORT3=50 },
-  flat_TLITE6_5 = { TLITE6_6=50, TLITE6_5=50 },
-
-}

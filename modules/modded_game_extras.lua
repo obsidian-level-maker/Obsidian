@@ -2421,7 +2421,7 @@ end
 
 
 function MODDED_GAME_EXTRAS.add_complex_doom_things()
-  if not PARAM.doom2_weapons then
+  if not ob_match_game({game = {doom2=1, tnt=1, plutonia=1}}) then
     GAME.MONSTERS["gunner"] = nil
     GAME.MONSTERS["knight"] = nil
     GAME.MONSTERS["revenant"] = nil

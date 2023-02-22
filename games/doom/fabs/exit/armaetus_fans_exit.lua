@@ -26,19 +26,6 @@ PREFABS.Exit_armaetus_fans_exit =
   tex_SW1BLUE = "SW1METAL"
 }
 
-PREFABS.Exit_armaetus_fans_exit_urban =
-{
-  template = "Exit_armaetus_fans_exit",
-
-  theme = "urban",
-
-  start_fab_peer = "Start_armaetus_fans_urban",
-
-  flat_CEIL4_2 = "FLAT5_1",
-  tex_COMPBLUE = "STEP2",
-  tex_SW1BLUE = "SW1BLUE"
-}
-
 PREFABS.Exit_armaetus_fans_exit_hell =
 {
   template = "Exit_armaetus_fans_exit",

@@ -53,15 +53,3 @@ PREFABS.Pillar3_hell2 =
   tex_COMPSPAN = "SP_HOT1",
   flat_CEIL5_1 = "FLAT5_3",
 }
-
-PREFABS.Pillar3_urban1 =
-{
-  template  = "Pillar_tech3",
-
-  theme  = "urban",
-  skip_prob = 55,
-
-  tex_SILVER2 = "MODWALL1",
-  tex_COMPSPAN = "BRICK4",
-  flat_CEIL5_1 = "CEIL3_2",
-}

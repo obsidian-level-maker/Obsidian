@@ -301,19 +301,6 @@ DOOM.NICE_ITEMS =
     time_limit = 60,
   },
 
-  -- Doom II only --
-
-  mega =
-  {
-    id = 83,
-    kind = "health",
-    level = 3,
-    add_prob = 1,
-    start_prob = 0,
-    secret_prob = 20,
-    give = { {health=200} },
-  },
-
   --
   -- NOTES:
   --

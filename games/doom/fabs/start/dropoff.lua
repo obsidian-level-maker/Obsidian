@@ -49,22 +49,3 @@ PREFABS.Start_Dropoff_hell =
  tex_METAL4 = "SUPPORT3",
 
 }
-
-PREFABS.Start_Dropoff_urban =
-{
-  template = "Start_Dropoff",
-
-  prob   = 100,
-  theme  = "urban",
-
-  thing_45 =
- {
-  blue_torch = 50,
-  green_torch = 50,
-  red_torch = 50,
- },
-
- tex_METAL4 = "WOOD4",
- flat_CEIL5_2 = "FLAT5_2",
-
-}

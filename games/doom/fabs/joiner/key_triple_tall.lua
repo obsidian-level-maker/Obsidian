@@ -124,26 +124,6 @@ PREFABS.Locked_joiner_triple_boom_hell2_tall =
 
 }
 
-PREFABS.Locked_joiner_triple_boom_urban1_tall =
-{
-  template = "Locked_joiner_triple_tall",
-
-  map = "MAP02",
-  theme = "urban",
-
-  port = "boom",
-
-  tex_BIGDOOR4 = { BIGDOOR5=50, BIGDOOR7=50, WOODMET2=50 },
-  tex_GRAY5 = "WOOD1",
-  flat_FLOOR7_1 = "CEIL5_2",
-  flat_SLIME14 = { FLAT5_1=50, FLAT5_2=25 },
-
-  sector_1  = { [0]=70, [1]=15, [2]=5, [3]=5, [8]=10, [12]=7, [13]=7, [17]=10 },
-
-}
-
---
-
 PREFABS.Locked_joiner_triple_stretchy_tall_tech =
 {
   template = "Locked_joiner_triple_tall",

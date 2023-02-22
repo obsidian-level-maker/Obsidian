@@ -53,47 +53,6 @@ PREFABS.Joiner_simple_one_pillar =
   tex_SUPPORT3 = "DOORSTOP",
 }
 
-PREFABS.Joiner_simple_one_pillar_urban =
-{
-  template = "Joiner_simple_one_pillar",
-  theme = "urban",
-
-  tex_CEMENT8 =
-  {
-    BIGBRIK1 = 50,
-    BIGBRIK2 = 50,
-    BIGBRIK3 = 50,
-    BRICK12 = 50,
-    BRICK7 = 50,
-    BSTONE3 = 50,
-    CEMENT8 = 50,
-    CEMENT7 = 50,
-    CEMENT9 = 50,
-    GRAY1 = 50,
-    GRAY4 = 50,
-    GRAY5 = 50,
-    MODWALL1 = 50,
-    PIPES = 50,
-    PANCASE1 = 50,
-    PANEL1 = 50,
-    PANEL2 = 50,
-    PANEL3 = 50,
-    PANBLACK = 50,
-    PANBLUE = 50,
-    PANRED = 50,
-    STONE4 = 50,
-    STONE6 = 50,
-    STUCCO1 = 50,
-    WOOD6 = 50,
-    WOOD7 = 50,
-    WOOD9 = 50,
-    WOODGARG = 50,
-    WOODMET1 = 50,
-    WOODVERT = 50,
-    WOOD4 = 50,
-  },
-}
-
 PREFABS.Joiner_simple_one_pillar_hell =
 {
   template = "Joiner_simple_one_pillar",

@@ -206,7 +206,7 @@ function ZDOOM_MARINE.setup(self)
     end
   end
 
-  if not PARAM.doom2_weapons then
+  if not ob_match_game({game = {doom2=1, tnt=1, plutonia=1}}) then
     GAME.MONSTERS["marine_ssg"] = nil
   end
 

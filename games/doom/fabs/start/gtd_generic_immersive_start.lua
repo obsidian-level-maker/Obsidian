@@ -17,12 +17,3 @@ PREFABS.Start_generic_immersive_start =
   x_fit = "frame",
   y_fit = "top",
 }
-
-PREFABS.Start_generic_immersive_start_urban =
-{
-  template = "Start_generic_immersive_start",
-
-  map = "MAP02",
-
-  theme = "urban",
-}

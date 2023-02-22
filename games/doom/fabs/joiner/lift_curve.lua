@@ -28,17 +28,6 @@ PREFABS.Joiner_lift_curve =
 
 }
 
-
-PREFABS.Joiner_lift_curve_urban =
-{
-  template = "Joiner_lift_curve",
-
-  map    = "MAP02",
-
-  theme  = "urban",
-}
-
-
 PREFABS.Joiner_lift_curve_deimos =
 {
   template = "Joiner_lift_curve",

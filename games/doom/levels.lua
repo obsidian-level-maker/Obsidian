@@ -15,9 +15,6 @@
 
 DOOM.SECRET_EXITS =
 {
-  MAP15 = true,
-  MAP31 = true,
-
   E1M3 = true,
   E2M5 = true,
   E3M6 = true,
@@ -32,20 +29,25 @@ DOOM.EPISODES =
     ep_index = 1,
 
     theme = "tech",
-    sky_patch = "RSKY1",
+    sky_patch = "SKY1",
     dark_prob = 10,
-    bex_mid_name = "C1TEXT",
-    bex_end_name = "C2TEXT"
+
+    name_patch = "M_EPI1",
+    description = "Knee-Deep in the Dead",
+    bex_end_name = "E1TEXT",
   },
 
   episode2 =
   {
     ep_index = 2,
 
-    theme = "urban",
-    sky_patch = "RSKY2",
+    theme = "deimos",
+    sky_patch = "SKY2",
     dark_prob = 40,
-    bex_end_name = "C3TEXT"
+
+    name_patch = "M_EPI2",
+    description = "The Shores of Hell",
+    bex_end_name = "E2TEXT",
   },
 
   episode3 =
@@ -53,72 +55,81 @@ DOOM.EPISODES =
     ep_index = 3,
 
     theme = "hell",
-    sky_patch = "RSKY3",
+    sky_patch = "SKY3",
     dark_prob = 10,
-    bex_end_name = "C4TEXT"
-  }
-}
 
+    name_patch = "M_EPI3",
+    description = "Inferno",
+    bex_end_name = "E3TEXT",
+  },
+
+  episode4 =
+  {
+    ep_index = 4,
+
+    theme = "flesh",
+    sky_patch = "SKY4",
+    dark_prob = 10,
+
+    name_patch = "M_EPI4",
+    description  = "Thy Flesh Consumed",
+    bex_end_name = "E4TEXT",
+  },
+}
 
 DOOM.PREBUILT_LEVELS =
 {
-  MAP30 =
+  E1M8 =
   {
-    { prob=50, file="games/doom/data/boss2/icon1.wad", map="MAP30" },
-    { prob=50, file="games/doom/data/boss2/icon2.wad", map="MAP30" },
-    { prob=50, file="games/doom/data/boss2/icon3.wad", map="MAP01" },
-    { prob=50, file="games/doom/data/boss2/icon3.wad", map="MAP02" },
-    { prob=50, file="games/doom/data/boss2/icon3.wad", map="MAP03" }
-  }
+    { prob=50,  file="games/doom/data/boss1/anomaly1.wad", map="E1M8" },
+    { prob=50,  file="games/doom/data/boss1/anomaly2.wad", map="E1M8" },
+    { prob=100, file="games/doom/data/boss1/anomaly3.wad", map="E1M8" },
+    { prob=50,  file="games/doom/data/boss1/ult_anomaly.wad",  map="E1M8" },
+    { prob=100, file="games/doom/data/boss1/ult_anomaly2.wad", map="E1M8" },
+  },
+
+  E2M8 =
+  {
+    { prob=40,  file="games/doom/data/boss1/tower1.wad", map="E2M8" },
+    { prob=60,  file="games/doom/data/boss1/tower2.wad", map="E2M8" },
+    { prob=100, file="games/doom/data/boss1/ult_tower.wad", map="E2M8" },
+  },
+
+  E3M8 =
+  {
+    { prob=50,  file="games/doom/data/boss1/dis1.wad", map="E3M8" },
+    { prob=100, file="games/doom/data/boss1/ult_dis.wad", map="E3M8" },
+  },
+
+  E4M6 =
+  {
+    { prob=50, file="games/doom/data/boss1/tower1.wad", map="E2M8" },
+  },
+
+  E4M8 =
+  {
+    { prob=50, file="games/doom/data/boss1/dis1.wad", map="E3M8" },
+  },
 }
 
 
 --------------------------------------------------------------------
 
-function DOOM.themes_alts()
-  
-  if OB_CONFIG.port == "zdoom" or OB_CONFIG.port == "gzdoom" then
-    
-    local tab =
-    {
-      tech =
-      {
-        wide_halls = 
-        {
-          subway = 10
-        }
-      },
-
-      urban =
-      {
-        wide_halls =
-        {
-          subway = 50
-        },
-
-        window_groups =
-        {
-          gtd_window_dem = 40
-        }
-      }
-    }
-
-    table.deep_merge(GAME.THEMES, tab, 4)
-  end
-end
-
 function DOOM.get_levels()
-  local MAP_LEN_TAB = { few=4, episode=11, game=32 }
+  local EP_MAX  = sel(OB_CONFIG.game   == "ultdoom", 4, 3)
+  local EP_NUM  = sel(OB_CONFIG.length == "game", EP_MAX, 1)
 
-  local MAP_NUM = MAP_LEN_TAB[OB_CONFIG.length] or 1
+  local MAP_LEN_TAB = { single=1, few=4 }
 
-  local EP_NUM = 1
-  if MAP_NUM > 11 then EP_NUM = 2 end
-  if MAP_NUM > 30 then EP_NUM = 3 end
+  local MAP_NUM = MAP_LEN_TAB[OB_CONFIG.length] or 9
+
+  -- this accounts for last two levels are BOSS and SECRET level
+  local LEV_MAX = MAP_NUM
+  if LEV_MAX == 9 then LEV_MAX = 7 end
 
   -- create episode info...
 
-  for ep_index = 1,3 do
+  for ep_index = 1,4 do
     local ep_info = GAME.EPISODES["episode" .. ep_index]
     assert(ep_info)
 
@@ -131,204 +142,156 @@ function DOOM.get_levels()
 
   -- create level info...
 
-  for map = 1,MAP_NUM do
-    -- determine episode from map number
-    local ep_index
-    local ep_along
+  current_map = 1
 
-    local game_along = map / MAP_NUM
-
-    if map > 30 then
-      ep_index = 3 ; ep_along = 0.5 ; game_along = 0.5
-    elseif map > 20 then
-      ep_index = 3 ; ep_along = (map - 20) / 10
-    elseif map > 11 then
-      ep_index = 2 ; ep_along = (map - 11) / 9
-    else
-      ep_index = 1 ; ep_along = map / 11
-    end
-
-    if OB_CONFIG.length == "single" then
-      game_along = 0.57
-      ep_along   = 0.75
-
-    elseif OB_CONFIG.length == "few" then
-      ep_along = game_along
-    end
-
-    assert(ep_along <= 1.0)
-    assert(game_along <= 1.0)
-
+  for ep_index = 1,EP_NUM do
     local EPI = GAME.episodes[ep_index]
-    assert(EPI)
 
-    local LEV =
-    {
-      episode = EPI,
+    for map = 1,MAP_NUM do
+      local ep_along = map / MAP_NUM
 
-      name  = string.format("MAP%02d", map),
-      patch = string.format("CWILV%02d", map-1),
+      local LEV =
+      {
+        episode = EPI,
 
-      ep_along = ep_along,
-      game_along = game_along
-    }
+        name  = string.format("E%dM%d",   ep_index,   map),
+        patch = string.format("WILV%d%d", ep_index-1, map-1),
 
-    table.insert( EPI.levels, LEV)
-    table.insert(GAME.levels, LEV)
+        ep_along = ep_along,
+        game_along = (ep_index - 1 + ep_along) / EP_NUM
+      }
 
-    LEV.secret_exit = GAME.SECRET_EXITS[LEV.name]
+      table.insert( EPI.levels, LEV)
+      table.insert(GAME.levels, LEV)
 
-    -- secret levels
-    if map == 31 or map == 32 then
-      LEV.is_secret = true
+      LEV.secret_exit = GAME.SECRET_EXITS[LEV.name]
 
-      -- TODO : a more generic mechanism
-      if OB_CONFIG.game == "tnt" and
-        (OB_CONFIG.theme == "original" or OB_CONFIG.theme == "mostly_original")
-      then
-        LEV.theme_name = "egypt"
+      if map == 9 then
+        LEV.is_secret = true
       end
-    end
 
-    if map == 23 then
-      LEV.style_list = { barrels = { heaps=100 } }
-    end
+      -- prebuilt levels
+      if PARAM.bool_prebuilt_levels == 1 then
+        LEV.prebuilt = GAME.PREBUILT_LEVELS[LEV.name]
+      end
 
-    --Not called "The Chasm" for nothing, right?
-    if map == 24 then
-      LEV.style_list = { steepness = { heaps=100 } }
-    end
-    -- the 'dist_to_end' value is used for Boss monster decisions
-    if map >= 26 and map <= 29 then
-      LEV.dist_to_end = 30 - map
-    elseif map == 11 or map == 20 then
-      LEV.dist_to_end = 1
-    elseif map == 16 or map == 23 then
-      LEV.dist_to_end = 2
-    end
+      if LEV.prebuilt then
+        LEV.name_class = LEV.prebuilt.name_class or "BOSS"
+      end
 
-    -- prebuilt levels
-    local pb_name = LEV.name
+      -- procedural gotcha management code
 
-    if PARAM.bool_prebuilt_levels == 1 then
-      LEV.prebuilt = GAME.PREBUILT_LEVELS[LEV.name]
-    end
+      -- Prebuilts are to exist over procedural gotchas
+      -- this means procedural gotchas will not override
+      -- Icon of Sin for example if prebuilts are still on
+      if not LEV.prebuilt then
 
-    if LEV.prebuilt then
-      LEV.name_class = LEV.prebuilt.name_class or "BOSS"
-    end
-
-    -- procedural gotcha management code
-
-    -- Prebuilts are to exist over procedural gotchas
-    -- this means procedural gotchas will not override
-    -- Icon of Sin for example if prebuilts are still on
-    if not LEV.prebuilt then
-
-      --handling for the Final Only option
-      if PARAM.gotcha_frequency == "final" then
-        if OB_CONFIG.length == "single" then
-          if map == 1 then LEV.is_procedural_gotcha = true end
-        elseif OB_CONFIG.length == "few" then
-          if map == 4 then LEV.is_procedural_gotcha = true end
-        elseif OB_CONFIG.length == "episode" then
-          if map == 11 then LEV.is_procedural_gotcha = true end
-        elseif OB_CONFIG.length == "game" then
-          if map == 30 then LEV.is_procedural_gotcha = true end
+        --handling for the Final Only option
+        if PARAM.gotcha_frequency == "final" then
+          if OB_CONFIG.length == "single" then
+            if current_map == 1 then LEV.is_procedural_gotcha = true end
+          elseif OB_CONFIG.length == "few" then
+            if current_map == 4 then LEV.is_procedural_gotcha = true end
+          elseif OB_CONFIG.length == "episode" then
+            if current_map == 8 then LEV.is_procedural_gotcha = true end
+          elseif OB_CONFIG.length == "game" then
+            if current_map == 35 then LEV.is_procedural_gotcha = true end
+          end
         end
-      end
-
-      --every 10 maps
-      if PARAM.gotcha_frequency == "epi" then
-        if map == 11 or map == 20 or map == 30 then
+  
+        if PARAM.gotcha_frequency == "epi" then
+          if current_map == ep_index * 9 - 1 then
+            LEV.is_procedural_gotcha = true
+          end
+        end
+        if PARAM.gotcha_frequency == "2epi" then
+          if current_map == ep_index * 9 - 1 or current_map == ep_index * 9 - 5 then
+            LEV.is_procedural_gotcha = true
+          end
+        end
+        if PARAM.gotcha_frequency == "3epi" then
+          if current_map == ep_index * 9 - 1 or current_map == ep_index * 9 - 4 or current_map == ep_index * 9 - 7 then
+            LEV.is_procedural_gotcha = true
+          end
+        end
+        if PARAM.gotcha_frequency == "4epi" then
+          if current_map == ep_index * 9 - 1 or current_map == ep_index * 9 - 3 or current_map == ep_index * 9 - 5 or current_map == ep_index * 9 - 7 then
+            LEV.is_procedural_gotcha = true
+          end
+        end
+  
+        --5% of maps after map 4,
+        if PARAM.gotcha_frequency == "5p" then
+          if current_map > 4 and current_map % 9 ~= 0 then
+            if rand.odds(5) then LEV.is_procedural_gotcha = true end
+          end
+        end
+  
+        -- 10% of maps after map 4,
+        if PARAM.gotcha_frequency == "10p" then
+          if current_map > 4 and current_map % 9 ~= 0 then
+            if rand.odds(10) then LEV.is_procedural_gotcha = true end
+          end
+        end
+  
+        -- for masochists... or debug testing
+        if PARAM.gotcha_frequency == "all" then
           LEV.is_procedural_gotcha = true
         end
       end
-      if PARAM.gotcha_frequency == "2epi" then
-        if map == 5 or map == 11 or map == 16 or map == 20 or map == 25 or map == 30 then
-          LEV.is_procedural_gotcha = true
+  
+      -- handling for street mode
+      -- actual handling for urban percentages are done
+      if PARAM.float_streets_mode then
+        if not LEV.is_procedural_gotcha or not LEV.prebuilt then
+          if rand.odds(PARAM.float_streets_mode) then
+            LEV.has_streets = true
+          end
         end
       end
-      if PARAM.gotcha_frequency == "3epi" then
-        if map == 3 or map == 7 or map == 11 or map == 14 or map == 17 or map == 20 or map == 23 or map == 27 or map == 30 then
-          LEV.is_procedural_gotcha = true
+  
+      if not LEV.prebuilt then
+        if PARAM.float_linear_mode then
+          if rand.odds(PARAM.float_linear_mode) then
+            LEV.is_linear = true
+          end
         end
-      end
-      if PARAM.gotcha_frequency == "4epi" then
-        if map == 3 or map == 6 or map == 9 or map == 11 or map == 14 or map == 16 or map == 18 or map == 20 or map == 23 or map == 26 or map == 28 or map == 30 then
-          LEV.is_procedural_gotcha = true
+  
+        -- nature mode
+        if PARAM.float_nature_mode then
+          if rand.odds(PARAM.float_nature_mode) then
+            if LEV.has_streets then
+              if rand.odds(50) then
+                LEV.has_streets = false
+                LEV.is_nature = true
+              end
+            else
+              LEV.is_nature = true
+            end
+          end
         end
+  
       end
 
-      --5% of maps after map 4,
-      if PARAM.gotcha_frequency == "5p" then
-        if map > 4 and map ~= 15 and map ~= 31 then
-          if rand.odds(5) then LEV.is_procedural_gotcha = true end
-        end
+      if MAP_NUM == 1 or map == 3 then
+        LEV.demo_lump = string.format("DEMO%d", ep_index)
       end
 
-      -- 10% of maps after map 4,
-      if PARAM.gotcha_frequency == "10p" then
-        if map > 4 and map ~= 15 and map ~= 31 then
-          if rand.odds(10) then LEV.is_procedural_gotcha = true end
-        end
-      end
+      current_map = current_map + 1
 
-      -- for masochists... or debug testing
-      if PARAM.gotcha_frequency == "all" then
-        LEV.is_procedural_gotcha = true
-      end
+    end -- for map
+
+    -- set "dist_to_end" value
+    if MAP_NUM >= 9 then
+      EPI.levels[7].dist_to_end = 1
+      EPI.levels[6].dist_to_end = 2
+      EPI.levels[5].dist_to_end = 3
+
+    elseif MAP_NUM == 4 then
+      EPI.levels[4].dist_to_end = 1
+      EPI.levels[3].dist_to_end = 3
     end
 
-    local special_mode = {}
+  end -- for episode
 
-    if PARAM.float_streets_mode and rand.odds(PARAM.float_streets_mode) then
-      table.add_unique(special_mode, "streets")
-    end
- 
-    if PARAM.float_linear_mode and rand.odds(PARAM.float_linear_mode) then
-      table.add_unique(special_mode, "linear")
-    end
-
-    if PARAM.float_nature_mode and rand.odds(PARAM.float_nature_mode) then
-      table.add_unique(special_mode, "nature")
-    end
-
-    if not table.empty(special_mode) and not LEV.prebuilt then
-      local selected_mode = rand.pick(special_mode)
-      if selected_mode == "streets" then
-        LEV.has_streets = true
-        LEV.is_linear = false
-        LEV.is_nature = false
-      elseif selected_mode == "linear" then
-        LEV.has_streets = false
-        LEV.is_linear = true
-        LEV.is_nature = false
-      else
-        LEV.has_streets = false
-        LEV.is_linear = false
-        LEV.is_nature = true
-      end
-    else
-      LEV.has_streets = false
-      LEV.is_linear = false
-      LEV.is_nature = false
-    end
-
-    if MAP_NUM == 1 or (map % 10) == 3 then
-      LEV.demo_lump = string.format("DEMO%d", ep_index)
-    end
-  end
-
-  -- handle "dist_to_end" for FEW and EPISODE lengths
-  if OB_CONFIG.length ~= "single" and OB_CONFIG.length ~= "game" then
-    GAME.levels[#GAME.levels].dist_to_end = 1
-
-    if OB_CONFIG.length == "episode" then
-      GAME.levels[#GAME.levels - 1].dist_to_end = 2
-      GAME.levels[#GAME.levels - 2].dist_to_end = 3
-    end
-  end
-
-  DOOM.themes_alts()
 end

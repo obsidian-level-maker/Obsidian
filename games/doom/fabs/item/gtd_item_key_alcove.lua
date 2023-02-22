@@ -32,21 +32,6 @@ PREFABS.Item_gtd_alcove2 =
   bound_z1 = -32,
 }
 
-PREFABS.Item_gtd_alcove2_urban =
-{
-  template = "Item_gtd_alcove2",
-
-  theme = "urban",
-
-  tex_COMPTALL =
-  {
-    CEMENT9 = 4, BRICK11 = 1, BRICK12 = 1, BRICK7,
-    REDWALL = 1, SLADWALL = 1, WOODGARG = 1,
-  },
-  tex_METAL5 = "BRICKLIT",
-  flat_CEIL4_3 = "FLAT5_2",
-}
-
 PREFABS.Item_gtd_alcove2_hell =
 {
   template = "Item_gtd_alcove2",

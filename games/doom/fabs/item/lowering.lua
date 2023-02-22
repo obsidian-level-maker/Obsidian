@@ -91,36 +91,6 @@ PREFABS.Item_lowering_remote8a =
   height = 144,
 }
 
-
--- Urban ones here --
-
-PREFABS.Item_lowering_remote2 =
-{
-  file   = "item/lowering.wad",
-  map    = "MAP03",
-  theme  = "urban",
-
-  prob   = 1,
-  key    = "barred",
-  item_kind = "key",
-
-  where  = "point",
-
-  tag_1  = "?door_tag",
-  door_action = "S1_LowerFloor",
-}
-
-PREFABS.Item_lowering_remote2a =
-{
-  template = "Item_lowering_remote2",
-  map      = "MAP04",
-  theme  = "urban",
-
-  prob   = 80,
-
-  height = 144,
-}
-
 -- Hell ones here --
 
 PREFABS.Item_lowering_remote3 =

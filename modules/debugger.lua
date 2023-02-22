@@ -73,7 +73,7 @@ function DEBUG_CONTROL.all_done()
   end]]
 
   if PARAM.custom_error_texture and PARAM.bool_custom_error_texture == 1 then
-    gui.wad_merge_sections("games/doom/data/error_wall.wad")
+    gui.wad_merge_sections("games/doom2/data/error_wall.wad")
   end
 end
 

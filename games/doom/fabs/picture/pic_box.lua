@@ -42,20 +42,6 @@ PREFABS.Pic_box_liteblu1 =
   tex_PIPES = "LITEBLU1",
 }
 
-
-PREFABS.Pic_box_tekgren3 =
-{
-  template = "Pic_box_template",
-  map  = "MAP13",
-  prob = 10,
-
-  theme = "tech",
-  game  = "doom2",
-
-  tex_PIPES = "TEKGREN3",
-}
-
-
 PREFABS.Pic_box_shawn3 =
 {
   template = "Pic_box_template",

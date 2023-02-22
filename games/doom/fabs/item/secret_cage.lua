@@ -34,19 +34,6 @@ PREFABS.Item_secret_cage =
 
 }
 
-PREFABS.Item_secret_cage2 =
-{
-  template  = "Item_secret_cage",
-  theme     = "urban",
-
-  tex_COMPBLUE = { BIGBRIK1=50, BIGBRIK2=50, BRICK5=50, BRICK12=50, BRICK10=50, WOODMET1=50, ASHWALL6=50, ASHWALL7=50, WOOD5=50 },
-  tex_METAL1 = { BIGBRIK1=50, BIGBRIK2=50, BRICK5=50, BRICK12=50, BRICK10=50, WOODMET1=50, ASHWALL6=50, ASHWALL7=50, WOOD5=50 },
-  tex_TEKWALL1 = { TEKWALL1=50, TEKWALL4=50, METAL5=50 },
-  flat_CEIL4_3 = { FLOOR7_1=50, FLOOR6_2=50 }
-
-}
-
-
 PREFABS.Item_secret_cage3 =
 {
   template  = "Item_secret_cage",

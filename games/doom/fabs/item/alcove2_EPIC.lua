@@ -54,19 +54,3 @@ PREFABS.Item_alcove_hell_epic =
    sector_12 = { [0]=20, [17]=60 }
 
 }
-
-PREFABS.Item_alcove_urban_epic =
-{
-  template = "Item_alcove_techy_epic",
-  theme = "urban",
-  map = "MAP03",
-
-  replaces = "Item_alcove_urban",
-
-  tex_BRIKS16 = { BRIKS16=50, BRIKS24=50 },
-  tex_EVILFAC2 = { EVILFAC2=50, EVILFAC4=50, EVILFAC5=50, EVILFAC6=50, EVILFAC7=20, EVILFAC8=20, EVILFAC9=20, EVILFACA=20 },
-  flat_GSTN05 = { GSTN05=50, WOODTIL=50, WOODTI2=50, TILES2=50, TILES3=50 },
-
-   sector_12 = { [0]=40, [8]=15, [17]=25 }
-
-}

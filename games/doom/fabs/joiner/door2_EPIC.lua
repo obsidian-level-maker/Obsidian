@@ -36,34 +36,6 @@ PREFABS.Joiner_EPIC_door2_tech =
   sector_1  = { [0]=70, [1]=15, [2]=5, [3]=5, [8]=10, [12]=7, [13]=7 },
 }
 
-PREFABS.Joiner_EPIC_door2_urban =
-{
-  template = "Joiner_EPIC_door2_tech",
-
-  map = "MAP01",
-
-  theme = "urban",
-
-  tex_BIGDOOR4 =
-  {
-    BIGDOOR8 = 50,
-    BIGDOOR9 = 50,
-    BIGDOOR0 = 50,
-    BIGDOORA = 50,
-    BIGDOORB = 50,
-    BIGDOORC = 50,
-    BIGDOORD = 50,
-    BIGDOORE = 50,
-    BIGDOORF = 50,
-    BIGDOORG = 50,
-    BIGDOORH = 50,
-    BIGDOORI = 50,
-    BIGDOORJ = 50,
-    BIGDOORK = 50,
-    BIGDOORL = 50,
-  },
-}
-
 PREFABS.Joiner_EPIC_door2_hell =
 {
   template = "Joiner_EPIC_door2_tech",

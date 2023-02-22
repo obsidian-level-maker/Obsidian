@@ -57,30 +57,6 @@ PREFABS.Item_tech_balcony2 =
 
 }
 
-PREFABS.Item_urban_balcony =
-{
-  template = "Item_gothic_balcony",
-  theme  = "urban",
-
-  env    = "indoor",
-  tex_MARBGRAY = "BIGBRIK2",
-  flat_DEM1_5 = "FLAT5_4",
-  tex_STEP5 = "STEP6",
-
-}
-
-PREFABS.Item_urban_balcony2 =
-{
-  template = "Item_gothic_balcony",
-  theme  = "urban",
-
-  env    = "indoor",
-  tex_MARBGRAY = "BSTONE2",
-  flat_DEM1_5 = "RROCK12",
-  tex_STEP5 = "STEP4",
-
-}
-
 PREFABS.Item_general_balcony =
 {
   template = "Item_gothic_balcony",

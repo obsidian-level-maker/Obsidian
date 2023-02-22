@@ -22,18 +22,6 @@ PREFABS.Teleporter_scionox_dual_pad =
   face_open = true,
 }
 
-PREFABS.Teleporter_scionox_dual_pad_2 =
-{
-  template = "Teleporter_scionox_dual_pad",
-  theme  = "urban",
-
-  tex_COMPSTA1 = { SPACEW3=50, COMPWERD=50 },
-  flat_FLOOR4_6 = { FLAT3=50, FLAT5_1=50, FLAT5_5=50, FLOOR5_4=50 },
-  flat_FLAT22 = "GATE4",
-  flat_FLAT23 = "CEIL1_2",
-  tex_SILVER1 = "SUPPORT3",
-}
-
 PREFABS.Teleporter_scionox_dual_pad_3 =
 {
   template = "Teleporter_scionox_dual_pad",
@@ -68,17 +56,6 @@ PREFABS.Teleporter_scionox_dual_pad_4 =
   face_open = true,
 }
 
-PREFABS.Teleporter_scionox_dual_pad_5 =
-{
-  template = "Teleporter_scionox_dual_pad_4",
-  theme  = "urban",
-
-  tex_COMPSTA1 = { SPACEW3=50, COMPWERD=50 },
-  flat_FLOOR4_6 = { FLAT3=50, FLAT5_1=50, FLAT5_5=50, FLOOR5_4=50 },
-  flat_FLAT22 = "GATE4",
-  flat_FLAT23 = "CEIL1_2",
-  tex_SILVER1 = "SUPPORT3",
-}
 PREFABS.Teleporter_scionox_dual_pad_6 =
 {
   template = "Teleporter_scionox_dual_pad_4",

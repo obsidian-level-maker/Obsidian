@@ -31,26 +31,10 @@ PREFABS.Joiner_scionox_locked_lift_barred =
   y_fit = { 56,232 },
 }
 
-PREFABS.Joiner_scionox_locked_lift_barred_urban =
-{
-  template = "Joiner_scionox_locked_lift_barred",
-  theme  = "urban",
-  tex_COMPBLUE = { BIGBRIK1=50, BRICK10=50, BRICK11=50, WOOD12=50, WOOD1=60, PANEL4=50 },
-}
-
 PREFABS.Joiner_scionox_locked_lift_barred_2 =
 {
   template = "Joiner_scionox_locked_lift_barred",
   map    = "MAP02",
-  delta_h  = 72,
-}
-
-PREFABS.Joiner_scionox_locked_lift_barred_urban_2 =
-{
-  template = "Joiner_scionox_locked_lift_barred",
-  map    = "MAP02",
-  theme  = "urban",
-  tex_COMPBLUE = { BIGBRIK1=50, BRICK10=50, BRICK11=50, WOOD12=50, WOOD1=60, PANEL4=50 },
   delta_h  = 72,
 }
 
@@ -123,33 +107,6 @@ PREFABS.Joiner_scionox_locked_lift_keyed_bars_tech_yellow =
   line_135     = 137,
 }
 
-PREFABS.Joiner_scionox_locked_lift_keyed_bars_urban_red =
-{
-  template = "Joiner_scionox_locked_lift_keyed_bars_tech_red",
-  theme  = "urban",
-  tex_COMPBLUE = { BIGBRIK1=50, BRICK10=50, BRICK11=50, WOOD12=50, WOOD1=60, PANEL4=50 },
-}
-
-PREFABS.Joiner_scionox_locked_lift_keyed_bars_urban_blue =
-{
-  template = "Joiner_scionox_locked_lift_keyed_bars_tech_red",
-  theme  = "urban",
-  key    = "k_blue",
-  tex_DOORRED = "DOORBLU",
-  line_135     = 133,
-  tex_COMPBLUE = { BIGBRIK1=50, BRICK10=50, BRICK11=50, WOOD12=50, WOOD1=60, PANEL4=50 },
-}
-
-PREFABS.Joiner_scionox_locked_lift_keyed_bars_urban_yellow =
-{
-  template = "Joiner_scionox_locked_lift_keyed_bars_tech_red",
-  theme  = "urban",
-  key    = "k_yellow",
-  tex_DOORRED = "DOORYEL",
-  line_135     = 137,
-  tex_COMPBLUE = { BIGBRIK1=50, BRICK10=50, BRICK11=50, WOOD12=50, WOOD1=60, PANEL4=50 },
-}
-
 PREFABS.Joiner_scionox_locked_lift_keyed_bars_hell_red =
 {
   template = "Joiner_scionox_locked_lift_keyed_bars_tech_red",
@@ -220,14 +177,6 @@ PREFABS.Joiner_scionox_locked_lift_gated_switch =
   tex_COMPBLUE = { COMPBLUE=50, METAL1=50, SHAWN2=50, SILVER1=50, SPACEW4=60, TEKLITE=50 },
 }
 
-PREFABS.Joiner_scionox_locked_lift_gated_switch_urban =
-{
-  template = "Joiner_scionox_locked_lift_gated_switch",
-  theme  = "urban",
-  tex_COMPBLUE = { BIGBRIK1=50, BRICK10=50, BRICK11=50, WOOD12=50, WOOD1=60, PANEL4=50 },
-  thing_2028 = "mercury_small",
-}
-
 PREFABS.Joiner_scionox_locked_lift_gated_switch_hell =
 {
   template = "Joiner_scionox_locked_lift_gated_switch",
@@ -288,36 +237,6 @@ PREFABS.Joiner_scionox_locked_lift_lockgate_switch_yellow =
   line_135     = 137,
 }
 
-PREFABS.Joiner_scionox_locked_lift_lockgate_switch_red_urban =
-{
-  template = "Joiner_scionox_locked_lift_lockgate_switch",
-  theme  = "urban",
-  tex_COMPBLUE = { BIGBRIK1=50, BRICK10=50, BRICK11=50, WOOD12=50, WOOD1=60, PANEL4=50 },
-  thing_2028 = "mercury_small",
-}
-
-PREFABS.Joiner_scionox_locked_lift_lockgate_switch_blue_urban =
-{
-  template = "Joiner_scionox_locked_lift_lockgate_switch",
-  theme  = "urban",
-  key    = "k_blue",
-  tex_DOORRED = "DOORBLU",
-  line_135     = 133,
-  tex_COMPBLUE = { BIGBRIK1=50, BRICK10=50, BRICK11=50, WOOD12=50, WOOD1=60, PANEL4=50 },
-  thing_2028 = "mercury_small",
-}
-
-PREFABS.Joiner_scionox_locked_lift_lockgate_switch_yellow_urban =
-{
-  template = "Joiner_scionox_locked_lift_lockgate_switch",
-  theme  = "urban",
-  key    = "k_yellow",
-  tex_DOORRED = "DOORYEL",
-  line_135     = 137,
-  tex_COMPBLUE = { BIGBRIK1=50, BRICK10=50, BRICK11=50, WOOD12=50, WOOD1=60, PANEL4=50 },
-  thing_2028 = "mercury_small",
-}
-
 PREFABS.Joiner_scionox_locked_lift_lockgate_switch_hell_red =
 {
   template = "Joiner_scionox_locked_lift_lockgate_switch",
@@ -368,20 +287,6 @@ PREFABS.Joiner_scionox_locked_lift_trikey_lockgate_switch =
 
   map    = "MAP09",
   key    = "k_ALL",
-}
-
-PREFABS.Joiner_scionox_locked_lift_trikey_lockgate_switch_urban =
-{
-  template = "Joiner_scionox_locked_lift_lockgate_switch",
-
-  map    = "MAP09",
-
-  key    = "k_ALL",
-  theme  = "urban",
-
-  tex_COMPBLUE = { BIGBRIK1=50, BRICK10=50, BRICK11=50, WOOD12=50, WOOD1=60, PANEL4=50 },
-
-  thing_2028 = "mercury_small",
 }
 
 PREFABS.Joiner_scionox_locked_lift_trikey_lockgate_switch_urban =

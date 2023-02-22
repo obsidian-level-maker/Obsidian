@@ -64,48 +64,6 @@ PREFABS.Item_alcove_small_tech3 =
 
 }
 
-PREFABS.Item_alcove_small_urban1 =
-{
-  template  = "Item_alcove_small",
-
-  theme     = "urban",
-  map       = "MAP02",
-
-  tex_GRAY5 = "BIGBRIK2",
-  tex_STEP5 = "STEP2",
-  flat_FLAT19 = "FLAT5_4",
-  flat_CEIL3_3 = { CEIL3_1=50, CEIL3_2=50, CEIL3_3=50 },
-
-}
-
-PREFABS.Item_alcove_small_urban2 =
-{
-  template  = "Item_alcove_small",
-
-  theme     = "urban",
-  map       = "MAP02",
-
-  tex_GRAY5 = "BRICK10",
-  tex_STEP5 = "STEP6",
-  flat_FLAT19 = "SLIME13",
-  flat_CEIL3_3 = { FLOOR5_2=50, FLOOR5_3=50, FLOOR5_4=50 }
-
-}
-
-PREFABS.Item_alcove_small_urban3 =
-{
-  template  = "Item_alcove_small",
-
-  theme     = "urban",
-  map       = "MAP02",
-
-  tex_GRAY5 = { BLAKWAL1=50, BLAKWAL2=50 },
-  tex_STEP5 = "STEP4",
-  flat_FLAT19 = "CEIL5_1",
-  flat_CEIL3_3 = "FLAT5_4",
-
-}
-
 PREFABS.Item_alcove_small_hell1 =
 {
   template  = "Item_alcove_small",

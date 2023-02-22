@@ -56,38 +56,3 @@ PREFABS.Joiner_y3b =
   flat_FLOOR0_1 = { DEM1_6=50, DEM1_5=50 },
   flat_CEIL3_5 = { FLOOR7_2=50, DEM1_5=50 },
 }
-
-PREFABS.Joiner_y3c =
-{
-  template = "Joiner_y3",
-
-  theme = "urban",
-
-  thing_35 = "evil_eye",
-
-  tex_WOODMET1 = { WOOD1=50, WOOD3=50, WOOD5=50, WOODVERT=50, WOOD12=50 },
-  tex_REDWALL = "SUPPORT3",
-  tex_BROWN1 = "STONE",
-  tex_STEP5 = "STEP4",
-  tex_SW2SKIN = { PANEL2=50, PANEL3=50, PANRED=50, PANBLUE=50, PANBLACK=50 },
-  flat_FLOOR0_1 = "FLAT5_4",
-  flat_CEIL3_5 = "FLAT18",
-}
-
-PREFABS.Joiner_y3c1 =
-{
-  template = "Joiner_y3",
-
-  theme = "urban",
-
-  thing_35 = "evil_eye",
-  thing_46 = "blue_torch",
-
-  tex_WOODMET1 = { WOOD1=50, WOOD3=50, WOOD5=50, WOODVERT=50, WOOD12=50 },
-  tex_REDWALL = "SUPPORT3",
-  tex_BROWN1 = "STONE",
-  tex_STEP5 = "STEP4",
-  tex_SW2SKIN = { PANEL2=50, PANEL3=50, PANRED=50, PANBLUE=50, PANBLACK=50 },
-  flat_FLOOR0_1 = "FLAT5_4",
-  flat_CEIL3_5 = "FLAT18",
-}

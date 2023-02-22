@@ -15,17 +15,6 @@ PREFABS.Decor_armaetus_2x2_terminal =
   bound_z2 = 72,
 }
 
-PREFABS.Decor_armaetus_2x2_terminal_smaller =
-{
-  template = "Decor_armaetus_2x2_terminal",
-  map  = "MAP02",
-  game = "doom2",
-
-  prob = 5000,
-
-  size = 176,
-}
-
 PREFABS.Decor_armaetus_2x2_terminal_doom1_tech =
 {
   template = "Decor_armaetus_2x2_terminal",

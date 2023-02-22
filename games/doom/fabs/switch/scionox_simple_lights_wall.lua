@@ -21,13 +21,6 @@ PREFABS.Switch_scionox_simple_lights_wall =
   tex_SW1BRN2 = { SW1BRN2=50, SW1BRNGN=50, SW1COMP=50, SW1GRAY=50, SW1GRAY1=50, SW1METAL=50, SW1STRTN=50, SW1TEK=50 },
 }
 
-PREFABS.Switch_scionox_simple_lights_wall_2 =
-{
-  template = "Switch_scionox_simple_lights_wall",
-  theme  = "urban",
-  tex_SW1BRN2 = { SW1BRIK=50, SW1CMT=50, SW1MOD1=50, SW1GRAY=50, SW1GRAY1=50, SW1SLAD=50, SW1STON1=50, SW1STON6=50, SW1VINE=50 },
-}
-
 PREFABS.Switch_scionox_simple_lights_wall_3 =
 {
   template = "Switch_scionox_simple_lights_wall",
@@ -41,20 +34,6 @@ PREFABS.Switch_scionox_simple_lights_wall_4 =
 {
   template = "Switch_scionox_simple_lights_wall",
   map = "MAP02",
-}
-
-PREFABS.Switch_scionox_simple_lights_wall_5 =
-{
-  template = "Switch_scionox_simple_lights_wall",
-  map = "MAP02",
-  theme  = "urban",
-  tex_SW1BRN2 = { SW1BRIK=50, SW1CMT=50, SW1MOD1=50, SW1GRAY=50, SW1GRAY1=50, SW1SLAD=50, SW1STON1=50, SW1STON6=50, SW1VINE=50 },
-  thing_2028 =
-  {
-    mercury_lamp = 50,
-    mercury_small = 50,
-    burning_barrel = 25,
-  },
 }
 
 PREFABS.Switch_scionox_simple_lights_wall_6 =
@@ -86,20 +65,6 @@ PREFABS.Switch_scionox_simple_lights_wall_7 =
   },
 }
 
-PREFABS.Switch_scionox_simple_lights_wall_8 =
-{
-  template = "Switch_scionox_simple_lights_wall",
-  map = "MAP03",
-  theme  = "urban",
-  tex_SW1BRN2 = { SW1BRIK=50, SW1CMT=50, SW1MOD1=50, SW1GRAY=50, SW1GRAY1=50, SW1SLAD=50, SW1STON1=50, SW1STON6=50, SW1VINE=50 },
-  thing_2028 =
-  {
-    mercury_lamp = 50,
-    mercury_small = 50,
-    burning_barrel = 25,
-  },
-}
-
 PREFABS.Switch_scionox_simple_lights_wall_9 =
 {
   template = "Switch_scionox_simple_lights_wall",
@@ -119,22 +84,6 @@ PREFABS.Switch_scionox_simple_lights_wall_10 =
   template = "Switch_scionox_simple_lights_wall",
   map = "MAP04",
   theme  = "!tech",
-}
-
-PREFABS.Switch_scionox_simple_lights_wall_11 =
-{
-  template = "Switch_scionox_simple_lights_wall",
-  map = "MAP05",
-  theme  = "urban",
-  tex_SW1BRN2 = { SW1BRIK=50, SW1CMT=50, SW1MOD1=50, SW1GRAY=50, SW1GRAY1=50, SW1SLAD=50, SW1STON1=50, SW1STON6=50, SW1VINE=50 },
-  thing_2028 =
-  {
-    mercury_lamp = 50,
-    burning_barrel = 50,
-    blue_torch   = 25,
-    green_torch = 25,
-    red_torch = 25,
-  },
 }
 
 PREFABS.Switch_scionox_simple_lights_wall_12 =

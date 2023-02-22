@@ -13,14 +13,6 @@ PREFABS.Item_gtd_key_pedestal_tech =
   size = 32,
 }
 
-PREFABS.Item_gtd_key_pedestal_urban =
-{
-  template = "Item_gtd_key_pedestal_tech",
-  map = "MAP02",
-
-  theme = "urban",
-}
-
 PREFABS.Item_gtd_key_pedestal_hell =
 {
   template = "Item_gtd_key_pedestal_tech",

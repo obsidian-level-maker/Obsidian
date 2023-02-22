@@ -60,22 +60,6 @@ PREFABS.Teleporter_scionox_quakeish_portal_5 =
   flat_TEK3 = "TEK7",
 }
 
-PREFABS.Teleporter_scionox_quakeish_portal_6 =
-{
-  template = "Teleporter_scionox_quakeish_portal",
-  prob   = 50,
-  theme  = "urban",
-
-  tex_CGCANI00 = { BLIT01=50, BLIT02=50, PANBOOK2=50, PANBOOK3=50, PANBOOK=50, PANBLACK=50, PANBLUE=50, PANRED=50, PANEL5=50, SPDUDE7=50, SPDUDE8=50, WOOD4=50, WOODGARG=50 },
-  tex_TEKWALLA = "GOTH27",
-  tex_PURFAL1 = "MFALL1",
-  tex_SHAWN01E = "METL03",
-  tex_WARNSTEP = "CRATINY",
-  flat_TEK3 = "GRATE8",
-  flat_SHINY01 = "GRATE8",
-  flat_WARN1 = "CRATOP1",
-}
-
 PREFABS.Teleporter_scionox_quakeish_portal_7 =
 {
   template = "Teleporter_scionox_quakeish_portal",

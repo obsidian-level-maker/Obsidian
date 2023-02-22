@@ -41,15 +41,6 @@ PREFABS.Cage_scionox_fake_teleport_3 =
   theme  = "tech",
 }
 
-PREFABS.Cage_scionox_fake_teleport_4 =
-{
-  template = "Cage_scionox_fake_teleport",
-  map    = "MAP04",
-
-  theme  = "urban",
-  sector_8 = { [8]=50, [1]=15, [2]=10, [3]=10, [0]=3 }
-}
-
 PREFABS.Cage_scionox_fake_teleport_5 =
 {
   template = "Cage_scionox_fake_teleport",

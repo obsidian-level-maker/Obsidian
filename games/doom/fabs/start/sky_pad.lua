@@ -57,29 +57,3 @@ PREFABS.Start_sky_pad_hell =
 
   flat_FLOOR4_1 = "FLAT1",
 }
-
-PREFABS.Start_sky_pad_urban =
-{
-  template = "Start_sky_pad",
-
-  theme  = "urban",
-
-  thing_2028 =
-  {
-  lamp = 50,
-  mercury_lamp = 50,
-  mercury_small = 50,
-  red_torch = 50,
-  blue_torch = 50,
-  green_torch = 50,
-  candelabra = 50,
-  burning_barrel = 50,
-  },
-
-  -- texture replacements
-  tex_STEP1   = "STEP4",
-  tex_STARBR2 = { GSTONE1=50, GSTVINE1=50, GSTVINE2=50, SP_HOT1=50 },
-  tex_BROWN1  = { STONE2=50, STONE3=50, STONE4=50, STONE5=50 },
-
-  flat_FLOOR4_1 = "FLAT1",
-}

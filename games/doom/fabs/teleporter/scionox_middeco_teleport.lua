@@ -52,30 +52,6 @@ PREFABS.Teleporter_scionox_middeco_teleport_3 =
   flat_FLOOR1_6 = "CEIL5_1",
 }
 
-PREFABS.Teleporter_scionox_middeco_teleport_4 =
-{
-  template = "Teleporter_scionox_middeco_teleport",
-  theme  = "urban",
-
-  tex_MIDGRATE = "MIDBRONZ",
-  tex_SP_FACE2 = "BRONZE2",
-  flat_GATE2 = "GATE4",
-  flat_RROCK09 = "FLAT5_5",
-  flat_FLOOR1_6 = "FLOOR7_1",
-}
-
-PREFABS.Teleporter_scionox_middeco_teleport_5 =
-{
-  template = "Teleporter_scionox_middeco_teleport",
-  theme  = "urban",
-
-  tex_MIDGRATE = "MIDBRONZ",
-  tex_SP_FACE2 = "WOODGARG",
-  flat_GATE2 = "GATE3",
-  flat_RROCK09 = "FLAT5_1",
-  flat_FLOOR1_6 = "FLAT5_2",
-}
-
 PREFABS.Teleporter_scionox_middeco_teleport_6 =
 {
   template = "Teleporter_scionox_middeco_teleport",

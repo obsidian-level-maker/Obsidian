@@ -408,7 +408,7 @@ end
 function JOKEWAD_MODULE.all_done()
 
   if PARAM.bool_pandemic_mode == 1 then
-    local dir = "games/doom/data/"
+    local dir = "games/doom2/data/"
     gui.wad_merge_sections(dir .. "events.wad")
 
     SCRIPTS.decorate = ScriptMan_combine_script(SCRIPTS.decorate, JOKEWAD_MODULE.SUPER_DEC)

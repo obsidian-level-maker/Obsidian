@@ -56,18 +56,6 @@ PREFABS.Joiner_remote_door_actual_door3 =
   flat_FLAT1 = { FLAT1=50, FLOOR0_1=50, FLAT19=50 },
 }
 
-PREFABS.Joiner_remote_door_actual_door_urban =
-{
-  template  = "Joiner_remote_door",
-  map    = "MAP02",
-  theme  = "urban",
-  prob   = 40,
-  tex_BIGDOOR2 = { BIGDOOR5=50, BIGDOOR6=50, BIGDOOR7=50 },
-  tex_GRAY5 = "WOOD1",
-  flat_FLAT20 = "CEIL5_2",
-  flat_FLAT1 = { FLAT5_1=50, FLAT5_2=50 },
-}
-
 PREFABS.Joiner_remote_door_actual_door_hell =
 {
   template  = "Joiner_remote_door",

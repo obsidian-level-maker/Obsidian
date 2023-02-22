@@ -110,13 +110,4 @@ PREFABS.Joiner_stair10 =
 
   tex_ICKWALL3 = { ASHWALL3=50, ASHWALL4=50, BROWNHUG=10 },
   flat_FLAT1 = "FLAT10",
- }
-
-PREFABS.Joiner_stair11 =
-{
-  template   = "Joiner_stair1",
-  theme      = "urban",
-
-  tex_ICKWALL3 = { BLAKWAL1=50, BLAKWAL2=50 },
-  flat_FLAT1 = "CEIL5_1",
- }
+}

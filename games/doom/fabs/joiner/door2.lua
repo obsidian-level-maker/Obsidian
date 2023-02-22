@@ -26,45 +26,6 @@ PREFABS.Joiner_door2 =
 
 }
 
-PREFABS.Joiner_door2_urban2 =
-{
-  template = "Joiner_door2",
-  map      = "MAP01",
-  prob     = 100,
-
-  theme  = "urban",
-
-tex_BIGDOOR4 = "BIGDOOR3",
-flat_FLOOR0_1 = "BIGDOOR3",
-
-}
-
-PREFABS.Joiner_door2_urban3 =
-{
-  template = "Joiner_door2",
-  map      = "MAP01",
-  prob     = 75,
-
-  theme  = "urban",
-
-tex_BIGDOOR4 = "BIGDOOR2",
-flat_FLOOR0_1 = "FLAT20",
-
-}
-
-PREFABS.Joiner_door2_urban4 =
-{
-  template = "Joiner_door2",
-  map      = "MAP01",
-
-  theme  = "urban",
-
-tex_BIGDOOR4 = { BIGDOOR5=50, BIGDOOR6=50, BIGDOOR7=50, WOODMET2=50 },
-flat_FLOOR0_1 = "CEIL5_2",
-
-}
-
-
 PREFABS.Joiner_door2_tech1 =
 {
   template = "Joiner_door2",

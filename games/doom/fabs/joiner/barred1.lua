@@ -62,27 +62,3 @@ PREFABS.Joiner_barred1_hell2 =
   flat_CEIL5_2 = "BLOOD1",
 
 }
-
-PREFABS.Joiner_barred1_urban =
-{
-  template   = "Joiner_barred1",
-  theme      = "urban",
-
-  tex_TEKLITE2 = { WOOD3=50, WOOD4=50, WOOD1=50, WOODVERT=50 },
-  tex_METAL = "METAL",
-  tex_METAL2   = "PANBORD1",
-  flat_CEIL5_2 = "RROCK09",
-
-}
-
-PREFABS.Joiner_barred1_urban2 =
-{
-  template   = "Joiner_barred1",
-  theme      = "urban",
-
-  tex_TEKLITE2 = { BLAKWAL1=50, BLAKWAL2=50 },
-  tex_METAL = "METAL",
-  tex_METAL2   = "PANBORD1",
-  flat_CEIL5_2 = "CEIL5_1",
-
-}

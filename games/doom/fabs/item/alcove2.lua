@@ -73,20 +73,3 @@ PREFABS.Item_alcove_hell2 =
   sector_12 = { [0]=20, [17]=60 }
 
 }
-
-PREFABS.Item_alcove_urban =
-{
-  template = "Item_alcove_techy",
-  theme = "urban",
-
-  tex_SHAWN2 = { ASHWALL3=50, ASHWALL4=50 },
-  tex_COMPTALL = "TEKWALL4",
-  tex_STEP1 = "STEP2",
-  flat_FLOOR0_2 = { FLOOR5_3=50, FLOOR5_4=50, FLAT5=50 },
-  flat_TLITE6_5 = "TLITE6_6",
-  flat_CEIL4_3 = { CEIL3_5=50, MFLR8_4=50, RROCK14=50, FLAT5_4=50 },
-  flat_FLAT23 = "RROCK03",
-
-  sector_12 = 0,
-
-}

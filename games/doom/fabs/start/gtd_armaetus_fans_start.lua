@@ -24,17 +24,6 @@ PREFABS.Start_armaetus_fans_tech =
   tex_SW1BLUE = "SW1METAL"
 }
 
-PREFABS.Start_armaetus_fans_urban =
-{
-  template = "Start_armaetus_fans_tech",
-
-  theme = "urban",
-
-  flat_CEIL4_2 = "FLAT5_1",
-  tex_COMPBLUE = "STEP2",
-  tex_SW1BLUE = "SW1BLUE"
-}
-
 PREFABS.Start_armaetus_fans_hell =
 {
   template = "Start_armaetus_fans_tech",

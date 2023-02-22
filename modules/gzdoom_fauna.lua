@@ -473,7 +473,7 @@ function FAUNA_MODULE.all_done()
     SCRIPTS.zscript = ScriptMan_combine_script(SCRIPTS.zscript, FAUNA_MODULE.ZSC)
     SCRIPTS.doomednums = ScriptMan_combine_script(SCRIPTS.doomednums, FAUNA_MODULE.DOOMEDNUMS)
 
-    local dir = "games/doom/data/"
+    local dir = "games/doom2/data/"
     gui.wad_merge_sections(dir .. "Fly.wad")
     gui.wad_insert_file("data/sounds/FLYBUZZ.ogg", "FLYBUZZ")
   end
@@ -481,7 +481,7 @@ function FAUNA_MODULE.all_done()
   if PARAM.bool_rats == 1 then
     SCRIPTS.decorate = ScriptMan_combine_script(SCRIPTS.decorate, FAUNA_MODULE.DEC)
 
-    local dir = "games/doom/data/"
+    local dir = "games/doom2/data/"
     gui.wad_merge_sections(dir .. "Rats.wad")
     gui.wad_insert_file("data/sounds/DSRAT.ogg", "DSRAT")
     gui.wad_insert_file("data/sounds/DSRATIDL.ogg", "DSRATIDL")

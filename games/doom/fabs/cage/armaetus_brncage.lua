@@ -29,16 +29,6 @@ PREFABS.Cage_wall_brncage_tech =
   }
 }
 
-PREFABS.Cage_wall_brncage_urban =
-{
-  template = "Cage_wall_brncage_tech",
-
-  theme = "urban",
-
-  tex_LITEBLU4 = "LITE5",
-  tex_COMPBLUE = "BRICKLIT",
-}
-
 PREFABS.Cage_wall_brncage_hell =
 {
   template = "Cage_wall_brncage_tech",

@@ -20,7 +20,6 @@ PREFABS.Stair_wide_3x1 =
   delta_h = 32,
 }
 
-
 PREFABS.Stair_wide_3x1_torch =
 {
   file   = "stairs/wide_3x1.wad",

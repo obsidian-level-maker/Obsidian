@@ -22,18 +22,6 @@ PREFABS.Exit_pillar2_hell =
   tex_SW1STRTN = "SW2GARG",
 }
 
-
-PREFABS.Exit_pillar2_urban =
-{
-  template = "Exit_pillar2",
-
-  theme = "urban",
-
-  tex_SW1STRTN = "SW1CMT",
-  flat_CEIL5_2 = "FLAT8",
-}
-
-
 PREFABS.Exit_pillar2_secret =
 {
   template = "Exit_pillar2",

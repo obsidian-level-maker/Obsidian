@@ -126,66 +126,6 @@ PREFABS.Joiner_y1c1a1 =
 
 }
 
-PREFABS.Joiner_y1d =
-{
-  template = "Joiner_y1",
-  prob   = 100,
-  theme = "urban",
-
-  tex_PIPEWAL2 = "PANCASE2",
-  tex_STONE = "STEP6",
-  flat_FLAT1 = "FLAT5_5",
-
-}
-
-PREFABS.Joiner_y1e =
-{
-  template = "Joiner_y1",
-  prob   = 65,
-  theme = "urban",
-
-  tex_PIPEWAL2 = "WOODVERT",
-  tex_STONE = "STEPTOP",
-  flat_FLAT1 = "FLAT5_1",
-
-}
-
-PREFABS.Joiner_y1e1a =
-{
-  template = "Joiner_y1",
-  prob   = 100,
-  theme = "urban",
-
-  tex_PIPEWAL2 = "WOOD1",
-  tex_STONE = "STEP6",
-  flat_FLAT1 = "FLAT5_2",
-
-}
-
-PREFABS.Joiner_y1e2 =
-{
-  template = "Joiner_y1",
-  prob   = 65,
-  theme = "urban",
-
-  tex_PIPEWAL2 = "BSTONE2",
-  tex_STONE = "STEP6",
-  flat_FLAT1 = "FLAT5_2",
-
-}
-
-PREFABS.Joiner_y1f =
-{
-  template = "Joiner_y1",
-  prob   = 65,
-  theme = "urban",
-
-  tex_PIPEWAL2 = { PANEL6=50, PANEL8=50, PANEL9=50 },
-  tex_STONE = "STEP6",
-  flat_FLAT1 = "FLAT5_5",
-
-}
-
 PREFABS.Joiner_y1g =
 {
   template = "Joiner_y1",

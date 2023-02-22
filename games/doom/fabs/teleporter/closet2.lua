@@ -53,31 +53,6 @@ PREFABS.Teleporter_Closet_tech =
 
 }
 
-PREFABS.Teleporter_Closet_urban =
-{
-  file   = "teleporter/closet2.wad",
-
-  prob   = 50,
-  map    = "MAP03",
-  theme  = "urban",
-
-  where  = "seeds",
-  seed_w = 1,
-  seed_h = 1,
-
-  deep  =  16,
-  over  = -16,
-
-  x_fit = "frame",
-  y_fit = "top",
-
-  tag_1 = "?out_tag",
-  tag_2 = "?in_tag",
-
-  sector_8 = { [8]=50, [1]=15, [2]=10, [3]=10, [0]=3 },
-
-}
-
 PREFABS.Teleporter_Closet_hell =
 {
   file   = "teleporter/closet2.wad",

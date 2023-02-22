@@ -55,15 +55,6 @@ PREFABS.Hallway_vent_door_tech =
 
 }
 
-PREFABS.Hallway_vent_secret =
-{
-  template = "Hallway_vent_plain",
-
-  map    = "MAP05",
-  key    = "secret",
-  theme  = "urban",
-}
-
 PREFABS.Hallway_vent_secret_tech =
 {
   template = "Hallway_vent_plain",

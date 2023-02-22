@@ -35,13 +35,6 @@ PREFABS.Joiner_stairs_swurve_tech =
   },
 }
 
-PREFABS.Joiner_stairs_swurve_urban =
-{
-  template = "Joiner_stairs_swurve_tech",
-
-  theme = "urban",
-}
-
 PREFABS.Joiner_stairs_swurve_deimos =
 {
   template = "Joiner_stairs_swurve_tech",
@@ -158,17 +151,6 @@ PREFABS.Joiner_stairs_swurve_deimos_mirrored =
     LITE5=1,
     LITEBLU4=1,
   },
-}
-
-PREFABS.Joiner_stairs_swurve_urban_mirrored =
-{
-  template = "Joiner_stairs_swurve_tech",
-
-  theme = "urban",
-
-  map = "MAP02",
-
-  x_fit = { 104,120 },
 }
 
 PREFABS.Joiner_stairs_swurve_hell_mirrored =

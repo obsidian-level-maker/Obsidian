@@ -22,14 +22,6 @@ PREFABS.Stairs_standing_64_tech =
   delta_h = 64
 }
 
-PREFABS.Stairs_standing_64_urban =
-{
-  template = "Stairs_standing_32_tech",
-  map = "MAP02",
-
-  theme = "urban"
-}
-
 PREFABS.Stairs_standing_64_hell =
 {
   template = "Stairs_standing_32_tech",

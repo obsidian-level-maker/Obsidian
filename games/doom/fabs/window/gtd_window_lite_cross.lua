@@ -46,56 +46,6 @@ PREFABS.Window_gtd_lite_cross_4 =
 
 --
 
-PREFABS.Window_gtd_lite_cross_1_urban =
-{
-  template = "Window_gtd_lite_cross",
-  map = "MAP01",
-
-  rank = 3,
-  theme = "urban",
-  seed_w = 1,
-
-  tex_LITE5 = "SHAWN2"
-}
-
-PREFABS.Window_gtd_lite_cross_2_urban =
-{
-  template = "Window_gtd_lite_cross",
-  map = "MAP02",
-
-  rank = 3,
-  theme = "urban",
-  seed_w = 2,
-
-  tex_LITE5 = "SHAWN2"
-}
-
-PREFABS.Window_gtd_lite_cross_3_urban =
-{
-  template = "Window_gtd_lite_cross",
-  map = "MAP03",
-
-  rank = 3,
-  theme = "urban",
-  seed_w = 3,
-
-  tex_LITE5 = "SHAWN2"
-}
-
-PREFABS.Window_gtd_lite_cross_4_urban =
-{
-  template = "Window_gtd_lite_cross",
-  map = "MAP04",
-
-  rank = 3,
-  theme = "urban",
-  seed_w = 4,
-
-  tex_LITE5 = "SHAWN2"
-}
-
---
-
 PREFABS.Window_gtd_lite_cross_1_hell =
 {
   template = "Window_gtd_lite_cross",

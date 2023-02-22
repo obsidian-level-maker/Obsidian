@@ -31,13 +31,6 @@ PREFABS.Joiner_scionox_secret_lift =
   tex_PIPES = { PIPES=50, BLAKWAL1=50, COMPBLUE=50, GRAY5=50, PIPEWAL2=50, SILVER3=50, TEKLITE2=50 },
 }
 
-PREFABS.Joiner_scionox_secret_lift_2 =
-{
-  template = "Joiner_scionox_secret_lift",
-  theme  = "urban",
-  tex_PIPES = { PIPES=50, BLAKWAL1=50, CEMENT9=50, GRAY5=50, PIPEWAL2=50, MODWALL1=50, MODWALL3=50 },
-}
-
 PREFABS.Joiner_scionox_secret_lift_3 =
 {
   template = "Joiner_scionox_secret_lift",
@@ -85,13 +78,6 @@ PREFABS.Joiner_scionox_secret_lift_4 =
   tex_PIPES = { PIPES=50, BLAKWAL1=50, COMPBLUE=50, GRAY5=50, PIPEWAL2=50, SILVER3=50, TEKLITE2=50 },
 }
 
-PREFABS.Joiner_scionox_secret_lift_5 =
-{
-  template = "Joiner_scionox_secret_lift_4",
-  theme  = "urban",
-  tex_PIPES = { PIPES=50, BLAKWAL1=50, CEMENT9=50, GRAY5=50, PIPEWAL2=50, MODWALL1=50, MODWALL3=50 },
-}
-
 PREFABS.Joiner_scionox_secret_lift_6 =
 {
   template = "Joiner_scionox_secret_lift_4",
@@ -130,13 +116,6 @@ PREFABS.Joiner_scionox_secret_lift_down =
   y_fit  = {88,156},
 
   tex_PIPES = { PIPES=50, BLAKWAL1=50, COMPBLUE=50, GRAY5=50, PIPEWAL2=50, SILVER3=50, TEKLITE2=50 },
-}
-
-PREFABS.Joiner_scionox_secret_lift_down_2 =
-{
-  template = "Joiner_scionox_secret_lift_down",
-  theme  = "urban",
-  tex_PIPES = { PIPES=50, BLAKWAL1=50, CEMENT9=50, GRAY5=50, PIPEWAL2=50, MODWALL1=50, MODWALL3=50 },
 }
 
 PREFABS.Joiner_scionox_secret_lift_down_3 =
@@ -185,13 +164,6 @@ PREFABS.Joiner_scionox_secret_lift_down_corpse_hint =
   },
 
   tex_PIPES = { PIPES=50, BLAKWAL1=50, COMPBLUE=50, GRAY5=50, PIPEWAL2=50, SILVER3=50, TEKLITE2=50 },
-}
-
-PREFABS.Joiner_scionox_secret_lift_down_corpse_hint_2 =
-{
-  template = "Joiner_scionox_secret_lift_down_corpse_hint",
-  theme  = "urban",
-  tex_PIPES = { PIPES=50, BLAKWAL1=50, CEMENT9=50, GRAY5=50, PIPEWAL2=50, MODWALL1=50, MODWALL3=50 },
 }
 
 PREFABS.Joiner_scionox_secret_lift_down_corpse_hint_3 =

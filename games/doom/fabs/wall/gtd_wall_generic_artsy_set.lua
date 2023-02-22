@@ -363,41 +363,6 @@ PREFABS.Wall_generic_small_lite_tech_diag =
   bound_z2 = 96
 }
 
-PREFABS.Wall_generic_small_lite_urban =
-{
-  template = "Wall_generic_artsy_bedazzled",
-  map = "MAP33",
-
-  theme = "urban",
-
-  group = "gtd_generic_small_lite",
-
-  height = 96,
-
-  bound_z2 = 96,
-
-  tex_LITEBLU4 = "LITE3",
-  flat_CEIL4_3 = "TLITE6_4"
-}
-
-PREFABS.Wall_generic_small_lite_urban_diag =
-{
-  template = "Wall_generic_artsy_bedazzled",
-  map = "MAP34",
-
-  theme = "urban",
-
-  group = "gtd_generic_small_lite",
-
-  height = 96,
-  where = "diagonal",
-
-  bound_z2 = 96,
-
-  tex_LITEBLU4 = "LITE3",
-  flat_CEIL4_3 = "TLITE6_4"
-}
-
 PREFABS.Wall_generic_small_lite_hell =
 {
   template = "Wall_generic_artsy_bedazzled",

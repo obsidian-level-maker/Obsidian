@@ -31,30 +31,6 @@ PREFABS.Joiner_armaetus_v5_curve1 =
 
 }
 
-PREFABS.Joiner_armaetus_v5_curve1_urban =
-{
-  template   = "Joiner_armaetus_v5_curve1",
-
-  theme = "urban",
-
-  prob = 120,
-
-  thing_2028 =
-  {
-    lamp = 50,
-    mercury_lamp = 50,
-    mercury_small = 50,
-    blue_torch = 50,
-    green_torch = 50,
-    red_torch = 50,
-    candelabra = 20,
-    burning_barrel = 25,
-  },
-
-  tex_STEP5 = "STEP6",
-
-}
-
 PREFABS.Joiner_armaetus_v5_curve1_hell_torches =
 {
   template   = "Joiner_armaetus_v5_curve1",

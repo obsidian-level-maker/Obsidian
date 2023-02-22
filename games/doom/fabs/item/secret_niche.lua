@@ -25,16 +25,6 @@ PREFABS.Item_secret_niche1 =
   tex_TEKWALL4 = { TEKWALL4=50, METAL2=50, COMPBLUE=50, COMPSPAN=50, BRONZE1=50, METAL1=50, SHAWN2=50, SPACEW4=50, STARG1=50, STARGR1=50, STONE2=50, STONE3=50, STONE4=50 }
 }
 
-PREFABS.Item_secret_niche1_urban =
-{
-  template  = "Item_secret_niche1",
-  map      = "MAP01",
-
-  theme = "urban",
-
-  tex_TEKWALL4 = { BROWNHUG=50, BIGBRIK1=50, BIGBRIK2=50, BLAKWAL2=50, BRICK4=50, BRICK5=50, CEMENT9=50, METAL1=50, METAL2=50, MODWALL1=50, MODWALL3=50, STONE2=50, STONE3=50 }
-}
-
 PREFABS.Item_secret_niche1_hell =
 {
   template  = "Item_secret_niche1",
@@ -68,25 +58,6 @@ PREFABS.Item_secret_niche2 =
 
   -- prevent monsters stuck in a barrel
   solid_ents = true,
-}
-
-PREFABS.Item_secret_niche2_urban =
-{
-  template  = "Item_secret_niche2",
-
-  map      = "MAP02",
-  theme = "urban",
-
-  thing_34 =
-  {
-    pool_blood_1 = 30,
-    pool_blood_2 = 30,
-    pool_brains = 10,
-    gibbed_player = 10,
-    dead_player = 10,
-  },
-
-  tex_TEKWALL4 = { BROWNHUG=50, BIGBRIK1=50, BIGBRIK2=50, BLAKWAL2=50, BRICK4=50, BRICK5=50, CEMENT9=50, METAL1=50, METAL2=50, MODWALL1=50, MODWALL3=50, STONE2=50, STONE3=50 }
 }
 
 PREFABS.Item_secret_niche2_hell =

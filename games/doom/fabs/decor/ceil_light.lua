@@ -25,64 +25,7 @@ PREFABS.Light_basic =
 
 }
 
-
------------ URBAN THEME ------------------------
-
-
-PREFABS.Light_urban1 =
-{
-  template = "Light_basic",
-  -- use outie style
-
-  prob   = 50,
-  theme  = "urban",
-
-  flat_TLITE6_4 = "CEIL1_3",
-   tex_METAL    = "WOOD10",
-
-  light_color = "white",
-
-  -- use the occasional-blink FX (fairly rarely)
-  sector_1  = { [0]=90, [1]=15 }
-}
-
-
-PREFABS.Light_urban2 =
-{
-  template = "Light_basic",
-  map    = "MAP02",
-
-  prob   = 25,
-  theme  = "urban",
-
-  light_color = "beige",
-
-  -- use the occasional-blink FX (fairly rarely)
-  sector_1  = { [0]=90, [1]=15 }
-
-}
-
-
-PREFABS.Light_urban3 =
-{
-  template = "Light_basic",
-  map      = "MAP02",
-
-  prob   = 50,
-  theme  = "urban",
-
-  flat_TLITE6_1 = "FLAT2",
-
-  light_color = "white",
-
-  -- use the occasional-blink FX (fairly rarely)
-  sector_1  = { [0]=90, [1]=15 }
-
-}
-
-
 ----------- TECH THEME ------------------------
-
 
 PREFABS.Light_tech1 =
 {

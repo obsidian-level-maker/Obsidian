@@ -38,20 +38,6 @@ PREFABS.Stair_64_red =
   delta_h = 64,
 }
 
-PREFABS.Stair_64_red2 =
-{
-  template   = "Stair_64_red",
-
-  map   = "MAP02",
-  prob  = 20,
-  theme = "urban",
-
-  tex_MARBGRAY = "REDWALL",
-  flat_DEM1_6 = "FLAT5_3",
-
-}
-
-
 PREFABS.Stair_64_hell =
 {
   template   = "Stair_64_red",

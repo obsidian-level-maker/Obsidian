@@ -177,26 +177,6 @@ PREFABS.Hallway_deuce_i_light_box_tech =
 
 --
 
-PREFABS.Hallway_deuce_i_fake_door_and_window =
-{
-  template = "Hallway_deuce_i1",
-  map = "MAP07",
-  theme = "urban",
-
-  prob = 50,
-
-  tex_DOOR3 =
-  {
-    DOOR1=1,
-    DOOR3=1,
-    SPCDOOR3=1,
-  },
-
-  can_flip = true,
-}
-
---
-
 PREFABS.Hallway_deuce_i_fake_door_tech =
 {
   template = "Hallway_deuce_i1",
@@ -218,23 +198,6 @@ PREFABS.Hallway_deuce_i_fake_door_tech =
   can_flip = true,
 }
 
-PREFABS.Hallway_deuce_i_fake_door_urban =
-{
-  template = "Hallway_deuce_i1",
-  map = "MAP08",
-  theme = "urban",
-
-  prob = 50,
-
-  tex_DOOR3 =
-  {
-    DOOR1=1,
-    DOOR3=1,
-    SPCDOOR3=1,
-  },
-
-  can_flip = true,
-}
 
 --
 
@@ -256,25 +219,6 @@ PREFABS.Hallway_deuce_i_shutter_tech =
   tex_METAL = "SHAWN2",
   flat_CEIL1_3 = "FLAT17",
   flat_CEIL5_2 = "FLAT23",
-
-  can_flip = true,
-}
-
-PREFABS.Hallway_deuce_i_shutter_urban =
-{
-  template = "Hallway_deuce_i1",
-  map = "MAP09",
-  theme = "urban",
-
-  prob = 50,
-
-  tex_STEP4 =
-  {
-    STEP4=2,
-    STEP1=1,
-    STEP2=1,
-    STEP5=1,
-  },
 
   can_flip = true,
 }

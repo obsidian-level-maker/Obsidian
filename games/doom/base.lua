@@ -36,24 +36,18 @@ gui.import("levels")
 gui.import("resources")
 gui.import("vanilla_mats")
 
--- pull in the other Doom games...
-
-gui.import("x_doom1")
-gui.import("x_tnt")
-gui.import("x_plutonia")
-
 ------------------------------------------------------------------------
 
-OB_GAMES["doom2"] =
+OB_GAMES["doom1"] =
 {
-  label = _("Doom 2"),
+  label = _("Doom 1"),
 
-  priority = 99,  -- keep at top
+  priority = 98,  -- keep at second spot
 
   engine = "idtech_1",
   format = "doom",
   game_dir = "doom",
-  iwad_name = "doom2.wad",
+  iwad_name = "doom.wad",
 
   tables =
   {
@@ -62,9 +56,24 @@ OB_GAMES["doom2"] =
 
   hooks =
   {
-    factory_setup = DOOM.factory_setup,
     get_levels = DOOM.get_levels,
+    factory_setup = DOOM.factory_setup,
     end_level  = DOOM.end_level,
     all_done   = DOOM.all_done
   },
+}
+
+
+OB_GAMES["ultdoom"] =
+{
+  label = _("Ultimate Doom"),
+
+  engine = "idtech_1",
+  extends = "doom1",
+
+  priority = 97  -- keep at third spot
+
+  -- no additional tables
+
+  -- no additional hooks
 }

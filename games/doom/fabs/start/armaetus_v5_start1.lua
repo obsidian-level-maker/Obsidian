@@ -25,23 +25,6 @@ PREFABS.Start_armaetus_v5_start1 =
   },
 }
 
-PREFABS.Start_armaetus_v5_start1_urban =
-{
-  template = "Start_armaetus_v5_start1",
-  map = "MAP01",
-
-  theme = "urban",
-
-  thing_55 =
-  {
-    lamp = 50,
-    mercury_lamp = 50,
-    mercury_small = 50,
-    candelabra = 50,
-    burning_barrel = 50,
-  },
-}
-
 PREFABS.Start_armaetus_v5_start1_hell =
 {
   template = "Start_armaetus_v5_start1",

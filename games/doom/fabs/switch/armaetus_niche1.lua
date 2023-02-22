@@ -53,66 +53,6 @@ PREFABS.Switch_armaetus_niche1 =
   },
 }
 
-PREFABS.Switch_armaetus_niche1_urban =
-{
-  template = "Switch_armaetus_niche1",
-
-  theme = "urban",
-
-  tex_SW1GARG =
-  {
-    SW1BLUE = 50,
-    SW1BRIK = 50,
-    SW1BRN2 = 50,
-    SW1BRNGN = 50,
-    SW1CMT = 50,
-    SW1GRAY = 50,
-    SW1GRAY1 = 50,
-    SW1METAL = 50,
-    SW1SLAD = 50,
-    SW1STRTN = 50,
-    SW1TEK = 50,
-    SW1GARG = 50,
-    SW1GSTON = 50,
-    SW1HOT = 50,
-    SW1LION = 50,
-    SW1MARB = 50,
-    SW1PANEL = 50,
-    SW1ROCK = 50,
-    SW1SATYR = 50,
-    SW1WDMET = 50,
-    SW1WOOD = 50,
-    SW1ZIM = 50,
-  },
-
-  tex_BROWNGRN =
-  {
-    BROWNGRN = 50,
-    BROWNHUG = 50,
-    METAL1   = 50,
-    METAL2   = 50,
-    MODWALL1 = 50,
-    PANCASE2 = 50,
-    PANEL7   = 50,
-    PANEL8   = 50,
-    PANEL9   = 50,
-    PANEL2   = 50,
-    PANEL3   = 50,
-    STONE4   = 50,
-    STONE6   = 50,
-    METAL    = 50,
-    STUCCO1  = 50,
-    STUCCO3  = 50,
-    WOODVERT = 50,
-    WOOD12   = 50,
-    BIGBRIK1 = 50,
-    BIGBRIK2 = 50,
-    BLAKWAL1 = 50,
-    BLAKWAL2 = 50,
-  },
-
-}
-
 PREFABS.Switch_armaetus_niche1_hell =
 {
   template = "Switch_armaetus_niche1",
@@ -272,41 +212,6 @@ PREFABS.Switch_armaetus_niche1_up_tech =
     SW1SLAD = 50,
     SW1STRTN = 50,
     SW1TEK = 50,
-  },
-}
-
-PREFABS.Switch_armaetus_niche1_up_urban =
-{
-  template = "Switch_armaetus_niche1",
-
-  map = "MAP02",
-
-  theme = "urban",
-
-  tex_SW1GARG =
-  {
-    SW1BLUE = 50,
-    SW1BRIK = 50,
-    SW1BRN2 = 50,
-    SW1BRNGN = 50,
-    SW1CMT = 50,
-    SW1GRAY = 50,
-    SW1GRAY1 = 50,
-    SW1METAL = 50,
-    SW1SLAD = 50,
-    SW1STRTN = 50,
-    SW1TEK = 50,
-    SW1GARG = 50,
-    SW1GSTON = 50,
-    SW1HOT = 50,
-    SW1LION = 50,
-    SW1MARB = 50,
-    SW1PANEL = 50,
-    SW1ROCK = 50,
-    SW1SATYR = 50,
-    SW1WDMET = 50,
-    SW1WOOD = 50,
-    SW1ZIM = 50,
   },
 }
 

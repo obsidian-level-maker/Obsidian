@@ -43,30 +43,6 @@ PREFABS.Joiner_simple2_urban1_epic =
 
 }
 
-PREFABS.Joiner_simple2_urban2_epic =
-{
-  template   = "Joiner_simple2_epic",
-  theme      = "urban",
-
-  tex_WOODMET4 = { BIGBRIK1=50, BIGBRIK2=50, BIGBRIK3=50, STONGARG=50, STONE2=50, STONE3=50 },
-
-  tex_SHAWN2 = "STONE",
-  flat_FLAT20 = "FLAT5_4",
-
-}
-
-PREFABS.Joiner_simple2_urban3_epic =
-{
-  template   = "Joiner_simple2_epic",
-  theme      = "urban",
-
-  tex_WOODMET4 = { BLAKWAL1=50, BLAKWAL2=50, MODWALL1=50, MODWALL3=50 },
-  tex_SHAWN2 = "STONE6",
-  flat_FLAT20 = { FLAT8=50, FLOOR0_2=50 },
-
-
-}
-
 PREFABS.Joiner_simple2_urban4_epic =
 {
   template   = "Joiner_simple2_epic",
@@ -76,16 +52,6 @@ PREFABS.Joiner_simple2_urban4_epic =
   tex_SHAWN2 = "CEMENT9",
   flat_FLAT20 = { FLAT5_4=50, FLAT19=50 },
 
-}
-
-PREFABS.Joiner_simple2_urban5_epic =
-{
-  template   = "Joiner_simple2_epic",
-  theme      = "urban",
-
-  tex_WOODMET4 = { STONE6=50, STUCCO1=50, STUCCO2=50, STUCCO3=50 },
-  tex_SHAWN2 = "STUCCO",
-  flat_FLAT20 = { FLAT5_5=50, FLAT5=50, FLOOR0_1=50 },
 }
 
 PREFABS.Joiner_simple2_tech1_epic =
