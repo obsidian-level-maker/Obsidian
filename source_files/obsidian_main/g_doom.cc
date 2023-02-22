@@ -993,18 +993,24 @@ static bool BuildNodes(std::filesystem::path filename) {
         build_info->force_xnod = false;
         build_info->do_blockmap = true;
         build_info->do_reject = build_reject;
-    } else if (StringCaseCmp(current_port, "prboom") == 0) {
-        build_info->gl_nodes = false;
-        build_info->do_reject = build_reject;
-        build_info->do_blockmap = true;
+    } else if (StringCaseCmp(current_port, "dsda") == 0) {
+        build_info->gl_nodes = UDMF_mode;
+        build_info->do_reject = !UDMF_mode;
+        build_info->do_blockmap = !UDMF_mode;
         build_info->force_xnod = true;
+        build_info->force_compress = true;
     } else if (StringCaseCmp(current_port, "eternity") == 0) {
         build_info->gl_nodes = UDMF_mode;
-        build_info->do_reject = false;
+        build_info->do_reject = !UDMF_mode;
+        build_info->do_blockmap = !UDMF_mode;
         build_info->force_xnod = true;
+        build_info->force_compress = false;
     } else { // ZDoom
         build_info->gl_nodes = true;
         build_info->do_reject = false;
+        build_info->do_blockmap = false;
+        build_info->force_xnod = true;
+        build_info->force_compress = true;
     }
 
     if (AJBSP_BuildNodes(filename, build_info) != 0) {

@@ -2289,7 +2289,7 @@ local function ob_get_module_refs()
         "limit_enforcing",
         "limit_removing",
         "boom",
-        "prboom",
+        "dsda",
         "zdoom",
         "edge",
         "eternity",

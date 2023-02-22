@@ -16,3 +16,4 @@ add_library(ajbsp
 )
 
 target_include_directories(ajbsp PRIVATE ../ajparse)
+target_include_directories(ajbsp PRIVATE ../miniz)

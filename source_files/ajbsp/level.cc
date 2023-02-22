@@ -25,9 +25,7 @@
 #include "utility.h"
 #include "wad.h"
 
-#ifdef HAVE_ZLIB
-#include <zlib.h>
-#endif
+#include "miniz.h"
 
 #define DEBUG_BLOCKMAP  0
 #define DEBUG_REJECT    0
@@ -2129,6 +2127,7 @@ void SortSegs()
 
 static const u8_t *lev_XNOD_magic = (u8_t *) "XNOD";
 static const u8_t *lev_XGL3_magic = (u8_t *) "XGL3";
+static const u8_t *lev_ZGL3_magic = (u8_t *) "ZGL3";
 static const u8_t *lev_ZNOD_magic = (u8_t *) "ZNOD";
 
 void PutZVertices()
@@ -2401,11 +2400,11 @@ void SaveXGL3Format(Lump_c *lump, node_t *root_node)
 {
 	// WISH : compute a max_size
 
-	lump->Write(lev_XGL3_magic, 4);
-
-	// disable compression
-	bool force_compress = cur_info->force_compress;
-	cur_info->force_compress = false;
+	if (cur_info->force_compress) {
+		lump->Write(lev_ZGL3_magic, 4);
+	} else {
+		lump->Write(lev_XGL3_magic, 4);
+	}
 
 	ZLibBeginLump(lump);
 
@@ -2415,8 +2414,6 @@ void SaveXGL3Format(Lump_c *lump, node_t *root_node)
 	PutZNodes(root_node, true /* do_xgl3 */);
 
 	ZLibFinishLump();
-
-	cur_info->force_compress = force_compress;
 }
 
 
@@ -2734,10 +2731,8 @@ build_result_e SaveXWA(node_t *root_node)
 
 static Lump_c  *zout_lump;
 
-#ifdef HAVE_ZLIB
 static z_stream zout_stream;
 static Bytef    zout_buffer[1024];
-#endif
 
 
 void ZLibBeginLump(Lump_c *lump)
@@ -2747,9 +2742,6 @@ void ZLibBeginLump(Lump_c *lump)
 	if (! cur_info->force_compress)
 		return;
 
-#ifndef HAVE_ZLIB
-	cur_info->FatalError("No zlib!\n");
-#else
 	zout_stream.zalloc = (alloc_func)0;
 	zout_stream.zfree  = (free_func)0;
 	zout_stream.opaque = (voidpf)0;
@@ -2759,7 +2751,6 @@ void ZLibBeginLump(Lump_c *lump)
 
 	zout_stream.next_out  = zout_buffer;
 	zout_stream.avail_out = sizeof(zout_buffer);
-#endif
 }
 
 
@@ -2774,9 +2765,6 @@ void ZLibAppendLump(const void *data, int length)
 		return;
 	}
 
-#ifndef HAVE_ZLIB
-	cur_info->FatalError("No zlib!\n");
-#else
 	zout_stream.next_in  = (Bytef*)data;   // const override
 	zout_stream.avail_in = length;
 
@@ -2795,7 +2783,6 @@ void ZLibAppendLump(const void *data, int length)
 			zout_stream.avail_out = sizeof(zout_buffer);
 		}
 	}
-#endif
 }
 
 
@@ -2808,9 +2795,6 @@ void ZLibFinishLump(void)
 		return;
 	}
 
-#ifndef HAVE_ZLIB
-	cur_info->FatalError("No zlib!\n");
-#else
 	int left_over;
 
 	// ASSERT(zout_stream.avail_out > 0)
@@ -2846,7 +2830,6 @@ void ZLibFinishLump(void)
 
 	zout_lump->Finish();
 	zout_lump = NULL;
-#endif
 }
 
 
