@@ -6692,28 +6692,6 @@ gui.debugf("add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
     return true
   end
 
-  local function add_deathmatch_exit(c)
-
-    if not GAME.FACTORY.dm_exits then return end
-
-    local K = c.q_spot
-
-    local def = get_rand_fab(GAME.FACTORY.dm_exits)
-    assert(def)
-
-    local fab = GAME.FACTORY.PREFABS[def.prefab]
-    assert(fab)
-
-    assert(def.skin)
-    assert(def.skin.wall)
-
-    assert(fab.long <= K.w and fab.deep <= K.h)
-
-    B_prefab(c, fab, def.skin, {}, K.rmodel, c.combo, K.x1, K.y1, 2)
-
-    gap_fill(c, K.x1,K.y1, K.x2,K.y2, { solid=def.skin.wall })
-  end
-
   local function add_hexen_gate(c)
     assert(GAME.FACTORY.misc_fabs)
 
@@ -7051,7 +7029,7 @@ gui.debugf("add_prefab: %s  dir:%d\n", def.name, dir)
     local def = GAME.FACTORY.misc_fabs["image_" .. tostring(what)]
     assert(def)
 
-    if OB_CONFIG.mode == "dm" then
+    if PARAM.bool_historical_oblige_v2_dm_mode == 1 then
       -- for DM maps put an image in each corner and middle
       if c.has_image then return end
       if what==2 and rand.odds(20) then return end
@@ -7152,10 +7130,6 @@ gui.debugf("add_scenery : %s\n", item)
 
   -- the order here is important, earlier items may cause
   -- later items to no longer fit.
-
-  if c.q_spot and c.q_spot.kind == "exit" then
-    add_deathmatch_exit(c)
-  end
 
   if c.q_spot and c == c.quest.last and
      (c.quest.kind == "gate" or c.quest.kind == "back")
