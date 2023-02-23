@@ -36,19 +36,19 @@ function v094_create_LEVEL(level, index, total)
 
   gui.printf("\n======| %s |======\n\n", level.name)
 
-  --if SETTINGS.mode == "dm" then
-    --plan_dm_arena(level)
-  --else
+  if PARAM.bool_historical_oblige_v2_dm_mode == 1 then
+    plan_dm_arena(level)
+  else
     plan_sp_level(level, OB_CONFIG.mode == "coop")
-  --end
+  end
 
   if gui.abort() then return "abort" end
 
-  --if SETTINGS.mode == "dm" then
-    --show_dm_links()
-  --else
+  if PARAM.bool_historical_oblige_v2_dm_mode == 1 then
+    show_dm_links()
+  else
     show_path()
-  --end
+  end
   gui.printf("\n")
 
   build_level()

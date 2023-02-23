@@ -40,16 +40,16 @@ function show_dm_links()
     end
 
     for kx = 1,3 do
-      con.printf("%s", chk(kx))
+      gui.printf("%s", chk(kx))
     end
-    con.printf("|")
+    gui.printf("|")
   end
 
   local function divider(len)
     for i = len,1,-1 do
-      con.printf("---+")
+      gui.printf("---+")
     end
-    con.printf("\n")
+    gui.printf("\n")
   end
 
   -- BEGIN show_dm_links --
@@ -62,7 +62,7 @@ function show_dm_links()
       for x = 1,PLAN.w do
         show_cell(PLAN.cells[x][y], row)
       end
-      con.printf("\n")
+      gui.printf("\n")
     end
     divider(PLAN.w)
   end
@@ -80,7 +80,7 @@ function choose_dm_thing(LIST, adjusted)
     table.insert(wp_probs, prob / (1.4 + sel(adjusted,used_count,0)))
   end
 
-  local idx = rand_index_by_probs(wp_probs)
+  local idx = rand.index_by_probs(wp_probs)
   local name = wp_names[idx]
 
   -- increase usage count
@@ -88,28 +88,9 @@ function choose_dm_thing(LIST, adjusted)
   return name
 end
 
-function choose_dm_exit_combo()
-
-  -- FIXME: have a 'dm_prob' field in each exit combo
-  local combo
-
-  repeat
-    local r = con.random() * 100
-        if r < 30 then combo = GAME.factory.exits["TECH"]
-    elseif r < 50 then combo = GAME.factory.exits["STONE"]
-    elseif r < 70 then combo = GAME.factory.exits["METAL"]
-    else
-      combo = get_rand_exit_combo()
-    end
-  until combo and combo.void ~= "SLOPPY1"
-
-  return combo
-end
-
-
 function plan_dm_arena(level)
 
-  PLAN = get_base_plan(level, GAME.factory.plan_size, GAME.factory.cell_size)
+  PLAN = get_base_plan(level, GAME.FACTORY.plan_size, GAME.FACTORY.cell_size)
 
   PLAN.deathmatch = true
 
@@ -133,7 +114,7 @@ function plan_dm_arena(level)
   end
 
   local function test_coverage(sx, sy)
-    local visited = array_2D(PLAN.w, PLAN.h)
+    local visited = table.array_2D(PLAN.w, PLAN.h)
     local count
 
     visited[sx][sy] = true  -- seed point
@@ -157,7 +138,7 @@ function plan_dm_arena(level)
       end end
     end
     
-    con.printf("COVERAGE = %d (want %d)\n", count, PLAN.w * PLAN.h)
+    gui.printf("COVERAGE = %d (want %d)\n", count, PLAN.w * PLAN.h)
 
     return count == (PLAN.w * PLAN.h)
   end
@@ -167,7 +148,7 @@ function plan_dm_arena(level)
     local coords = {}
     local index = 1
 
-    rand_shuffle(coords, PLAN.w * PLAN.h * 2)
+    rand.shuffle(coords, PLAN.w * PLAN.h * 2)
 
     local x, y, dir
 
@@ -213,9 +194,9 @@ function plan_dm_arena(level)
   end
 
   local function liquid_for_seed(combo)
-    if not GAME.factory.caps.liquids then return nil end
+    if not GAME.FACTORY.caps.liquids then return nil end
 
-    if rand_odds(64) then return nil end
+    if rand.odds(64) then return nil end
 
     if combo.bad_liquid == p.liquid.name then
       if combo.good_liquid then
@@ -224,7 +205,7 @@ function plan_dm_arena(level)
       return choose_liquid()
     end
 
-    if combo.good_liquid and rand_odds(40) then
+    if combo.good_liquid and rand.odds(40) then
       return find_liquid(combo.good_liquid)
     end
 
@@ -232,17 +213,13 @@ function plan_dm_arena(level)
   end
 
   local function grow_dm_themes()
-    local x_order = {}
-    local y_order = {}
     local dir_order = { 2,4,6,8 }
 
-    rand_shuffle(x_order, PLAN.w)
-    rand_shuffle(y_order, PLAN.h)
-    rand_shuffle(dir_order)
+    rand.shuffle(dir_order)
 
-    for zz1,cx in ipairs(x_order) do
-      for zz2,cy in ipairs(y_order) do
-        for zz3,dir in ipairs(dir_order) do
+    for cx = 1,PLAN.w do
+      for cy = 1,PLAN.h do
+        for _,dir in ipairs(dir_order) do
           local dx, dy = dir_to_delta(dir)
           local c = PLAN.cells[cx][cy]
           assert(c)
@@ -254,15 +231,14 @@ function plan_dm_arena(level)
               other.combo  = c.combo
               other.liquid = c.liquid
 
-              if rand_odds(25) then
+              if rand.odds(25) then
                 other.combo = get_rand_combo(other.quest.theme)
               end
             end
           end
         end
-        rand_shuffle(dir_order)
+        rand.shuffle(dir_order)
       end
-      rand_shuffle(y_order)
     end
   end
 
@@ -272,7 +248,7 @@ function plan_dm_arena(level)
     -- then "grow" them until all cells are combod.
 
     for cy = 1,PLAN.h do
-      cx = rand_irange(1,PLAN.w)
+      cx = rand.irange(1,PLAN.w)
 
       local c = PLAN.cells[cx][cy]
 
@@ -293,7 +269,7 @@ function plan_dm_arena(level)
       grow_dm_themes()
     end
 
-    con.ticker();
+    gui.ticker();
   end
 
   local function assign_dm_roomtypes()
@@ -303,15 +279,15 @@ function plan_dm_arena(level)
         local c = PLAN.cells[cx][cy]
 
         -- use PLAIN rooms more often in DM since they flow better
-        if rand_odds(35) then
-          c.room_type = non_nil(GAME.factory.rooms["PLAIN"])
+        if rand.odds(35) then
+          c.room_type = non_nil(GAME.FACTORY.rooms["PLAIN"])
         else
           c.room_type = get_rand_roomtype(c.quest.theme)
         end
       end
     end
 
-    con.ticker();
+    gui.ticker();
   end
 
   local function create_dm_links(min_links, max_links)
@@ -323,10 +299,10 @@ function plan_dm_arena(level)
     end
 
     for tries = 1,50 do
-      local num_links = rand_irange(min_links, max_links)
+      local num_links = rand.irange(min_links, max_links)
 
       for tries = 1,5 do
-        con.printf("TRYING: %d <= %d <= %d\n", min_links, num_links, max_links)
+        gui.printf("TRYING: %d <= %d <= %d\n", min_links, num_links, max_links)
 
         initial_links()
 
@@ -336,13 +312,13 @@ function plan_dm_arena(level)
       end
     end
 
-    con.printf("FAILED TRYING TO CREATING LINKS\n")
+    gui.printf("FAILED TRYING TO CREATING LINKS\n")
   end
 
   local function select_heights()
     -- FIXME: TEMP JUNK
     for zzz,c in ipairs(PLAN.all_cells) do
-      c.floor_h = rand_index_by_probs{ 1,2,4,2,1 } * 32 - 32
+      c.floor_h = rand.index_by_probs{ 1,2,4,2,1 } * 32 - 32
       c.ceil_h  = 256
       c.sky_h   = 256
     end
@@ -359,7 +335,7 @@ function plan_dm_arena(level)
       elseif c.combo ~= d.combo then door_chance = 30
       end
 
-      if rand_odds(door_chance) then link.kind = "door" end
+      if rand.odds(door_chance) then link.kind = "door" end
     end
   end
 
@@ -417,14 +393,14 @@ function plan_dm_arena(level)
           local other = link_other(c.link[dir], c)
 
           if can_make_falloff(c, other) then
-            con.debugf("FALL-OFF POSSIBLE AT (%d,%d) dir:%d\n", c.x, c.y, dir)
+            gui.printf("FALL-OFF POSSIBLE AT (%d,%d) dir:%d\n", c.x, c.y, dir)
             table.insert(locs, {c=c, dir=dir, other=other })
           end
         end
       end
     end
 
-    rand_shuffle(locs)
+    rand.shuffle(locs)
 
     local num_f = int((PLAN.w + PLAN.h) / 4)
 
@@ -441,10 +417,10 @@ function plan_dm_arena(level)
       L.kind = "falloff"
 
       if verify_falloff(L) then
-        con.printf("FALL-OFF @ (%d,%d) dir:%d\n", c.x, c.y, cur.dir)
+        gui.printf("FALL-OFF @ (%d,%d) dir:%d\n", c.x, c.y, cur.dir)
         num_f = num_f - 1
       else
-        con.printf("IMPOSSIBLE FALL-OFF @ (%d,%d) dir:%d\n", c.x, c.y, cur.dir)
+        gui.printf("IMPOSSIBLE FALL-OFF @ (%d,%d) dir:%d\n", c.x, c.y, cur.dir)
         L.kind = old_kind
       end
     end
@@ -471,7 +447,7 @@ function plan_dm_arena(level)
         local dx, dy = dir_to_delta(dir)
         local other = valid_cell(c.x+dx, c.y+dy) and PLAN.cells[c.x+dx][c.y+dy]
 
-        if other and rand_odds(64) and
+        if other and rand.odds(64) and
            can_make_window(c, other)
         then
           c.border[dir].window = true
@@ -483,22 +459,79 @@ function plan_dm_arena(level)
 
   ---===| plan_dm_arena |===---
 
-  local SIZE_PROBS =
-  {
-    ----------  1   2   3   4   5   6   7  ------
-    small   = { 0, 60, 90, 20,  2,  0,  0 },
-    regular = { 0, 14, 70, 70, 20,  2,  0 },
-    large   = { 0,  0, 20, 50, 75, 20,  4 },
-  }
+  local ob_size = PARAM.float_size
 
-  local W = rand_index_by_probs(SIZE_PROBS[SETTINGS.size]) 
-  local H = rand_index_by_probs(SIZE_PROBS[SETTINGS.size]) 
+  if OB_CONFIG.length == "single" then
+    if ob_size == gui.gettext("Episodic") or 
+    ob_size == gui.gettext("Progressive") then
+      ob_size = 36
+      goto foundsize
+    end
+  end
+
+  if ob_size == gui.gettext("Mix It Up") then
+
+    local result_skew = 1.0
+    local low = PARAM.float_level_lower_bound or 10
+    local high = PARAM.float_level_upper_bound or 75
+
+    if OB_CONFIG.level_size_bias then
+      if OB_CONFIG.level_size_bias == "small" then
+        result_skew = .80
+      elseif OB_CONFIG.level_size_bias == "large" then
+        result_skew = 1.20
+      end
+    end
+    
+    ob_size = math.clamp(low, int(rand.irange(low, high) * result_skew), high)
+    goto foundsize
+  end
+
+  if ob_size == gui.gettext("Episodic") or 
+  ob_size == gui.gettext("Progressive") then
+
+    -- Progressive --
+
+    local ramp_factor = 0.66
+
+    if OB_CONFIG.level_size_ramp_factor then
+      ramp_factor = tonumber(OB_CONFIG.level_size_ramp_factor)
+    end
+
+    local along
+
+    if OB_CONFIG.length == "few" then
+      along = Level.ep_along / 4
+    elseif OB_CONFIG.length == "episode" then
+      along = Level.ep_along / Level.ep_length
+    else
+      along = ((Level.ep_length * (GAME.FACTORY.episodes - 1)) + Level.ep_along) / (Level.ep_length * GAME.FACTORY.episodes)
+    end
+
+    along = along ^ ramp_factor
+
+    if ob_size == gui.gettext("Episodic") then along = Level.ep_along / Level.ep_length end
+
+    along = math.clamp(0, along, 1)
+
+    -- Level Control fine tune for Prog/Epi
+
+    -- default when Level Control is off: ramp from "small" --> "large",
+    local def_small = PARAM.float_level_lower_bound or 30
+    local def_large = PARAM.float_level_upper_bound - def_small or 42
+
+    -- this basically ramps up
+    ob_size = int(def_small + along * def_large)
+  end
+
+  ::foundsize::
+
+  local W = math.max(2, math.round(ob_size / 7.5))
+  local H = W
 
 ---#  if W < H then W,H = H,W end
 
-  con.debugf("ARENA SIZE %dx%d\n", W, H)
-
-  assert(W <= PLAN.w and H <= PLAN.h)
+  print("ARENA SIZE: " .. W .. " x " .. H)
 
   PLAN.w = W
   PLAN.h = H
@@ -514,14 +547,11 @@ function plan_dm_arena(level)
 
   PLAN.cells[1][PLAN.h].no_shrink = true
 
-  if GAME.factory.caps.liquids then
+  if GAME.FACTORY.caps.liquids then
     p.liquid = choose_liquid()
   end
 
-  p.exit_combo = choose_dm_exit_combo()
-
-  con.debugf("DM LIQUID: %s\n", (p.liquid and p.liquid.name) or "NONE")
-  con.debugf("DM EXIT COMBO: %s\n", p.exit_combo.wall)
+  gui.printf("DM LIQUID: %s\n", (p.liquid and p.liquid.name) or "NONE")
 
   assign_dm_themes()
   assign_dm_roomtypes()
@@ -543,7 +573,7 @@ function plan_dm_arena(level)
 
   add_windows()
 
-  con.ticker();
+  gui.ticker();
 
   -- guarantee at least 4 players (each corner)
   local pw = PLAN.w
