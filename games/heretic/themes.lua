@@ -2807,7 +2807,7 @@ OB_THEMES["city"] =
 {
   label = _("City"),
   game = "heretic",
-  name_class = "CASTLE",
+  name_class = "GOTHIC",
   mixed_prob = 50,
 }
 
@@ -2815,7 +2815,7 @@ OB_THEMES["maw"] =
 {
   label = _("Maw"),
   game = "heretic",
-  name_class = "CASTLE",
+  name_class = "GOTHIC",
   mixed_prob = 50,
 }
 
@@ -2823,7 +2823,7 @@ OB_THEMES["dome"] =
 {
   label = _("Dome"),
   game = "heretic",
-  name_class = "CASTLE",
+  name_class = "GOTHIC",
   mixed_prob = 50,
 }
 
@@ -2831,7 +2831,7 @@ OB_THEMES["ossuary"] =
 {
   label = _("Ossuary"),
   game = "heretic",
-  name_class = "CASTLE",
+  name_class = "GOTHIC",
   mixed_prob = 50,
 }
 
@@ -2839,7 +2839,7 @@ OB_THEMES["demense"] =
 {
   label = _("Demense"),
   game = "heretic",
-  name_class = "CASTLE",
+  name_class = "GOTHIC",
   mixed_prob = 50,
 }
 
