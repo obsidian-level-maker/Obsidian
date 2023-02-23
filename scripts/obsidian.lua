@@ -1803,7 +1803,31 @@ function ob_default_filename()
   assert(OB_CONFIG)
   assert(OB_CONFIG.game)
   
-  Naming_init()
+  -- I don't like doing this, but I'd rather not try to reorder
+  -- the normal GAME table merge stuff - Dasho
+  if ob_match_game({game = {wolf=1, spear=1, noah=1}}) then
+    return "unused.filename"
+  else
+    local name_tab = {}
+    if OB_CONFIG.game == "chex3" then
+      name_tab = CHEX.NAMES
+    elseif ob_match_game({game = {doom1=1,ultdoom=1}}) then
+      name_tab = DOOM.NAMES
+    elseif ob_match_game({game = {doom2=1,tnt=1,plutonia=1}}) then
+      name_tab = DOOM2.NAMES
+    elseif OB_CONFIG.game == "hacx" then
+      name_tab = HACX.NAMES
+    elseif OB_CONFIG.game == "harmony" then
+      name_tab = HARMONY.NAMES
+    elseif OB_CONFIG.game == "heretic" then
+      name_tab = HERETIC.NAMES
+    elseif OB_CONFIG.game == "hexen" then
+      name_tab = HEXEN.NAMES
+    elseif OB_CONFIG.game == "strife" then
+      name_tab = STRIFE.NAMES
+    end
+    Naming_init(name_tab)
+  end
 
   OB_CONFIG.title = Naming_grab_one("TITLE")
   GAME.title = OB_CONFIG.title
@@ -1828,7 +1852,7 @@ function ob_default_filename()
     elseif OB_CONFIG.length == "few" then
       levelcount = "4"
     elseif OB_CONFIG.length == "episode" then
-      if OB_CONFIG.game == "doom2" or OB_CONFIG.game == "tnt" or OB_CONFIG.game == "plutonia" or OB_CONFIG.game == "hacx" or OB_CONFIG.game == "harmony" or OB_CONFIG.game == "strife" then
+      if ob_match_game({game = {doom2=1,tnt=1,plutonia=1,hacx=1,harmony=1,strife=1}}) then
         levelcount = "11"
       elseif OB_CONFIG.game == "hexen" then
         levelcount = "6"
@@ -2067,8 +2091,6 @@ end
 function ob_build_setup()
   ob_clean_up()
 
-  Naming_init()
-
   if OB_CONFIG.title then
     GAME.title = OB_CONFIG.title
   end
@@ -2099,6 +2121,10 @@ function ob_build_setup()
   -- load all the prefab definitions
   if OB_CONFIG.batch == "yes" then
     RANDOMIZE_GROUPS = gui.get_batch_randomize_groups()
+  end
+
+  if not ob_match_game({game = {wolf=1,spear=1,noah=1}}) then
+    Naming_init(GAME.NAMES)
   end
 
   ob_invoke_hook("setup")
