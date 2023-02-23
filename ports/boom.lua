@@ -219,7 +219,7 @@ OB_PORTS["dsda"] =
 
   extends = "advanced",
 
-  game = { doom1=1, doom2=1, hacx=1 },
+  game = { doom1=1, doom2=1, hacx=1, heretic=1, hexen=1 },
 
   tables =
   {

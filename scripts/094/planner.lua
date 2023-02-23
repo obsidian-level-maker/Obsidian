@@ -1455,10 +1455,12 @@ c.along, Q.level, Q.sub_level, c.room_type.name)
 
     -- adjust wanted length based on size adjustment
     local want_len = Q.want_len
-    if want_len >= 4 and Q.ob_size < 25 then
-      want_len = int(want_len * 0.85 - gui.random())
-    elseif Q.ob_size > 50 then
-      want_len = int(want_len * 1.35 + gui.random())
+    if OB_CONFIG.game ~= "hexen" then
+      if want_len >= 4 and Q.ob_size < 25 then
+        want_len = int(want_len * 0.85 - gui.random())
+      elseif Q.ob_size > 50 then
+        want_len = int(want_len * 1.35 + gui.random())
+      end
     end
 
     -- secrets don't work well going outdoor-->outdoor

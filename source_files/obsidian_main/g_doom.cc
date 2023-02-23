@@ -701,7 +701,6 @@ void Doom::AddLinedef(int vert1, int vert2, int side1, int side2, int type,
 }
 
 int v094_grab_args(lua_State *L, byte *args, int stack_pos) {
-    memset(args, 0, 5);
 
     int what = lua_type(L, stack_pos);
 
@@ -735,9 +734,10 @@ int Doom::v094_add_linedef(lua_State *L) {
     int type = luaL_checkinteger(L, 5);
     int flags = luaL_checkinteger(L, 6);
     int tag = luaL_checkinteger(L, 7);
-    // byte *args = NULL;
-    // v094_grab_args(L, args, 8);
-    AddLinedef(vert1, vert2, side1, side2, type, flags, tag, NULL);
+    byte *args = new byte[5];
+    v094_grab_args(L, args, 8);
+    AddLinedef(vert1, vert2, side1, side2, type, flags, tag, args);
+    delete args;
     return 0;
 }
 
@@ -905,9 +905,10 @@ int Doom::v094_add_thing(lua_State *L) {
     int options = luaL_checkinteger(L, 6);
     int tid = luaL_checkinteger(L, 7);
     byte special = luaL_checkinteger(L, 8);
-    // byte *args = NULL;
-    // v094_grab_args(L, args, 9);
-    AddThing(x, y, h, type, angle, options, tid, special, NULL);
+    byte *args = new byte[5];
+    v094_grab_args(L, args, 9);
+    AddThing(x, y, h, type, angle, options, tid, special, args);
+    delete args;
     return 0;
 }
 

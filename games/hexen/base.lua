@@ -35,6 +35,7 @@ gui.import("themes")
 gui.import("levels")
 gui.import("resources")
 gui.import("vanilla_mats")
+gui.import("names")
 
 ------------------------------------------------------------
 
@@ -59,6 +60,7 @@ UNFINISHED["hexen"] =
 
   hooks =
   {
+    factory_setup = HEXEN.factory_setup,
     get_levels = HEXEN.get_levels,
     all_done   = HEXEN.all_done
   },
