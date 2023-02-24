@@ -2616,6 +2616,12 @@ function ob_build_cool_shit()
     return result
   end
 
+  if PARAM.float_historical_oblige_v2 then
+    if OB_CONFIG.game == "hexen" and PARAM.float_historical_oblige_v2 < 100 then
+      error(gui.gettext("Hexen's level linking in Oblige v2 is incompatible with Obsidian's level progression. Please set the slider to 100% to generate the full WAD with Oblige v2."))
+    end
+  end
+
   if PARAM["bool_save_gif"] == 1 then
     -- Set frame delay based on how detailed the live minimap is - Dasho
     if PARAM["live_minimap"] == "step" then
