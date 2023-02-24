@@ -162,7 +162,7 @@ TNT.MATERIALS =
   WEBL = { t="WEBL", rail_h=128 }, --Not really useful
   WEBR = { t="WEBR", rail_h=128 }, --Not really useful
 
-  -- Overrides for existing DOOM2 materials --
+  -- Overrides for existing DOOM materials --
 
   SUPPORT3 = { t="EGSUPRT3", f="CEIL5_2" },
   ASHWALL2 = { t="ASPHALT",  f="MFLR8_4" },

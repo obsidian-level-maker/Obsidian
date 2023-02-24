@@ -183,7 +183,7 @@ function DOOM.all_done()
   DOOM.make_cool_gfx()
   DOOM.make_episode_gfx()
 
-  local dir = "games/doom2/data/"
+  local dir = "games/doom/data/"
 
   gui.wad_merge_sections(dir .. "doom_falls.wad")
   gui.wad_merge_sections(dir .. "lift_flat.wad")
@@ -191,7 +191,10 @@ function DOOM.all_done()
   gui.wad_merge_sections(dir .. "vine_dude.wad")
   gui.wad_merge_sections(dir .. "logos.wad")
   gui.wad_merge_sections(dir .. "invisible_wall.wad")
-  gui.wad_merge_sections(dir .. "short_bars.wad")
+
+  if OB_CONFIG.game == "doom1" or OB_CONFIG.game == "ultdoom" then
+    gui.wad_merge_sections(dir .. "short_bars.wad")
+  end
 
   gui.wad_insert_file("data/endoom/ENDOOM.bin", "ENDOOM")
 

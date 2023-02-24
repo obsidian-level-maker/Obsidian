@@ -101,7 +101,7 @@ PLUTONIA.MATERIALS =
   A_VINE1 = { t="A-VINE1", rail_h=128 },
   A_VINE2 = { t="A-VINE2", rail_h=128 },
 
-  -- Overrides for existing DOOM2 materials --
+  -- Overrides for existing DOOM materials --
 
   WOOD1    = { t="A-MYWOOD", f="FLAT5_2" },
   CEIL1_1  = { f="CEIL1_1", t="A-WOOD1" },

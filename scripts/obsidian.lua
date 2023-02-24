@@ -1811,10 +1811,8 @@ function ob_default_filename()
     local name_tab = {}
     if OB_CONFIG.game == "chex3" then
       name_tab = CHEX.NAMES
-    elseif ob_match_game({game = {doom1=1,ultdoom=1}}) then
+    elseif ob_match_game({game = "doomish"}) then
       name_tab = DOOM.NAMES
-    elseif ob_match_game({game = {doom2=1,tnt=1,plutonia=1}}) then
-      name_tab = DOOM2.NAMES
     elseif OB_CONFIG.game == "hacx" then
       name_tab = HACX.NAMES
     elseif OB_CONFIG.game == "harmony" then
@@ -1914,7 +1912,7 @@ end
 
 
 function ob_merge_table_list(tab_list)
-  for _,GT in pairs(tab_list) do
+  for _,GT in ipairs(tab_list) do
     assert(GT)
     for name,tab in pairs(GT) do
       -- upper-case names should always be tables to copy

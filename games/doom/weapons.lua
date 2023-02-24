@@ -94,6 +94,26 @@ DOOM.WEAPONS =
     bonus_ammo = 50,
   },
 
+  -- the super shotgun is Doom II only
+  super =
+  {
+    id = 82,
+    level = 2.7,
+    pref = 40,
+    upgrades = "shotty",
+    add_prob = 70,
+    attack = "hitscan",
+    rate = 0.6,
+    accuracy = 65,
+    damage = 150,
+    -- use splash to simulate hitting a second monster (etc)
+    splash = { 40,20,10 },
+    ammo = "shell",
+    per = 2,
+    give = { {ammo="shell",count=8} },
+    bonus_ammo = 12,
+  },
+
   launch =
   {
     id = 2003,

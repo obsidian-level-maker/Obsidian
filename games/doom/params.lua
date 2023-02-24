@@ -32,7 +32,7 @@ DOOM.PARAMETERS =
   interpic_lump   = "INTERPIC",
   interpic_format = "patch",
 
-  skip_monsters = { 15,25,35 },
+  skip_monsters = { 20,30,45 },
 
   monster_factor = 1.25,
   health_factor  = 1.0,
@@ -46,8 +46,10 @@ DOOM.PARAMETERS =
   bex_secret_name  = "C5TEXT",
   bex_secret2_name = "C6TEXT",
 
-  episodic_monsters = true,
-  episode_length = 9
+  -- meh, get rid of these (find a better way)
+  doom2_monsters = true,
+  doom2_weapons  = true,
+  doom2_skies    = true,  -- RSKY# patches
 }
 
 

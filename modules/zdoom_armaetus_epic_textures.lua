@@ -1016,9 +1016,9 @@ function ARMAETUS_EPIC_TEXTURES.put_new_materials()
 end
 
 function ARMAETUS_EPIC_TEXTURES.put_the_texture_wad_in()
-  local wad_file = "games/doom2/data/ObAddon_Textures.wad"
-  local wad_file_2 = "games/doom2/data/ObAddon_Textures_2.wad"
-  local wad_file_3 = "games/doom2/data/ObAddon_Textures_3.wad"
+  local wad_file = "games/doom/data/ObAddon_Textures.wad"
+  local wad_file_2 = "games/doom/data/ObAddon_Textures_2.wad"
+  local wad_file_3 = "games/doom/data/ObAddon_Textures_3.wad"
 
   if PARAM.bool_include_package == 1 then
     SCRIPTS.animdefs = ScriptMan_combine_script(SCRIPTS.animdefs, ARMAETUS_ANIMDEFS)
@@ -1028,7 +1028,7 @@ function ARMAETUS_EPIC_TEXTURES.put_the_texture_wad_in()
     gui.wad_merge_sections(wad_file_2)
     gui.wad_merge_sections(wad_file_3)
 
-    local dir = "games/doom2/data/"
+    local dir = "games/doom/data/"
     gui.wad_add_binary_lump("HI_START",{})
     gui.wad_insert_file(dir .. "ARCD2.png", "ARCD2")
     gui.wad_insert_file(dir .. "ARCD3.png", "ARCD3")
@@ -1097,18 +1097,18 @@ function ARMAETUS_EPIC_TEXTURES.put_the_texture_wad_in()
   end
 
   if PARAM.bool_include_brightmaps == 1 then
-    wad_file = "games/doom2/data/ObAddon_Textures_Brightmaps.wad"
+    wad_file = "games/doom/data/ObAddon_Textures_Brightmaps.wad"
     gui.wad_merge_sections(wad_file)
   end
 
   -- TO-DO: Create UI switch for this
   if PARAM.bool_include_custom_actors == 1 then
     SCRIPTS.decorate = ScriptMan_combine_script(SCRIPTS.decorate, ORP_ENTITIES.DECORATE)
-    wad_file = "games/doom2/data/blood_pack.wad"
+    wad_file = "games/doom/data/blood_pack.wad"
     gui.wad_merge_sections(wad_file)
-    wad_file = "games/doom2/data/burning_top.wad"
+    wad_file = "games/doom/data/burning_top.wad"
     gui.wad_merge_sections(wad_file)
-    wad_file = "games/doom2/data/burning_debris.wad"
+    wad_file = "games/doom/data/burning_debris.wad"
     gui.wad_merge_sections(wad_file)
     SCRIPTS.gldefs = ScriptMan_combine_script(SCRIPTS.gldefs, ORP_ENTITIES.GLDEFS)
   end
