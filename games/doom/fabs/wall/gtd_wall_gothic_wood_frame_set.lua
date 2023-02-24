@@ -56,6 +56,8 @@ PREFABS.Wall_gtd_wood_frame_alt =
 
   group = "gtd_woodframe_alt",
 
+  texture_pack = "armaetus",
+
   height = 112,
   z_fit = { 61,63 , 65,66 }
 }
@@ -66,6 +68,8 @@ PREFABS.Wall_gtd_wood_frame_alt_diag =
   map = "MAP04",
 
   group = "gtd_woodframe_alt",
+
+  texture_pack = "armaetus",
 
   where  = "diagonal",
 
@@ -82,6 +86,8 @@ PREFABS.Wall_gtd_wood_frame_alt_green =
 
   group = "gtd_woodframe_alt_green",
 
+  texture_pack = "armaetus",
+
   height = 112,
   z_fit = { 61,63 , 65,66 },
 
@@ -94,6 +100,8 @@ PREFABS.Wall_gtd_wood_frame_alt_green_diag =
   map = "MAP04",
 
   group = "gtd_woodframe_alt_green",
+
+  texture_pack = "armaetus",
 
   where  = "diagonal",
 

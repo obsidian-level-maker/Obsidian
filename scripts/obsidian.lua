@@ -1890,7 +1890,7 @@ end
 
 
 function ob_merge_table_list(tab_list)
-  for _,GT in pairs(tab_list) do
+  for _,GT in ipairs(tab_list) do
     assert(GT)
     for name,tab in pairs(GT) do
       -- upper-case names should always be tables to copy
