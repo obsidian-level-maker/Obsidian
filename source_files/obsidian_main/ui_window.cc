@@ -94,16 +94,8 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title)
 
     build_box = new UI_Build(0, TOP_H + kf_h(4), LEFT_W, BOT_H);
 
-    if (single_pane) {
-        left_mods = new UI_CustomMods(LEFT_W + kf_h(4), kf_h(22), MOD_W * 2,
-                                      H - kf_h(22));
-    } else {
-        right_mods =
-            new UI_CustomMods(W - MOD_W, kf_h(22), MOD_W, H - kf_h(22));
-
-        left_mods =
-            new UI_CustomMods(LEFT_W + kf_h(4), kf_h(22), MOD_W, H - kf_h(22));
-    }
+    left_mods = new UI_CustomMods(LEFT_W + kf_h(4), kf_h(22), MOD_W * 2,
+                                  H - kf_h(22));
 
     end();
 
@@ -139,9 +131,6 @@ void UI_MainWin::Locked(bool value) {
     }
     game_box->Locked(value);
     left_mods->Locked(value);
-    if (!single_pane) {
-        right_mods->Locked(value);
-    }
 }
 
 void UI_MainWin::menu_do_about(Fl_Widget *w, void *data) { DLG_AboutText(); }

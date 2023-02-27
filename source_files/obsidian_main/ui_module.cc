@@ -93,16 +93,13 @@ void UI_Module::AddHeader(std::string opt, std::string label, int gap) {
     int nx = x() + kf_w(6);
     int ny = y() + cur_opt_y - kf_h(15);
 
-    UI_RHeader *rhead = new UI_RHeader(nx, ny + kf_h(15), nw * .95,
-                                       (!single_pane ? kf_h(48) : kf_h(24)));
+    UI_RHeader *rhead = new UI_RHeader(nx, ny + kf_h(15), nw * .95, kf_h(24));
 
     rhead->mod_label = new Fl_Box(
         rhead->x(), rhead->y(),
-        (!single_pane ? rhead->w() * .95 : rhead->w() * .40), kf_h(24), "");
+        rhead->w() * .40, kf_h(24), "");
     rhead->mod_label->copy_label(label.c_str());
-    rhead->mod_label->align(
-        (!single_pane ? (FL_ALIGN_CENTER | FL_ALIGN_INSIDE)
-                      : (FL_ALIGN_CENTER | FL_ALIGN_INSIDE | FL_ALIGN_CLIP)));
+    rhead->mod_label->align((FL_ALIGN_CENTER | FL_ALIGN_INSIDE | FL_ALIGN_CLIP));
     rhead->mod_label->labelfont(font_style + 1);
     rhead->mod_label->labelsize(header_font_size - 2);
 
@@ -112,8 +109,7 @@ void UI_Module::AddHeader(std::string opt, std::string label, int gap) {
 
     add(rhead);
 
-    cur_opt_y += (!single_pane ? (gap ? kf_h(44) : kf_h(30))
-                               : (gap ? kf_h(39) : kf_h(25)));
+    cur_opt_y += (gap ? kf_h(39) : kf_h(25));
 
     resize(x(), y(), w(), CalcHeight());
     redraw();
@@ -135,35 +131,31 @@ void UI_Module::AddOption(std::string opt, std::string label, std::string tip,
         longtip = tip;
     }
 
-    UI_RChoice *rch = new UI_RChoice(nx, ny + kf_h(15), nw * .95,
-                                     (!single_pane ? kf_h(48) : kf_h(24)));
+    UI_RChoice *rch = new UI_RChoice(nx, ny + kf_h(15), nw * .95, kf_h(24));
 
     rch->mod_label = new Fl_Box(
-        rch->x(), rch->y(), (!single_pane ? rch->w() * .90 : rch->w() * .40),
+        rch->x(), rch->y(), rch->w() * .40,
         kf_h(24), "");
     rch->mod_label->copy_label(fmt::format("{}: ", label).c_str());
-    rch->mod_label->align(
-        (!single_pane ? (FL_ALIGN_LEFT | FL_ALIGN_INSIDE)
-                      : (FL_ALIGN_LEFT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP)));
+    rch->mod_label->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
     rch->mod_label->labelfont(font_style);
     rch->mod_label->copy_tooltip(tip.c_str());
 
     rch->mod_menu = new UI_RChoiceMenu(
-        (!single_pane ? rch->x() : rch->x() + (rch->w() * .40)),
-        (!single_pane ? rch->y() + rch->mod_label->h() : rch->y()),
-        (single_pane ? rch->w() * .50 : rch->w()), kf_h(24));
+        rch->x() + (rch->w() * .40),
+        rch->y(), rch->w() * .50, kf_h(24));
     rch->mod_menu->textcolor(FONT2_COLOR);
     rch->mod_menu->selection_color(SELECTION);
 
     rch->mod_reset = new UI_ResetOption(
-        rch->x() + (!single_pane ? (rch->w() * .8) : (rch->w() * .90)),
+        rch->x() + (rch->w() * .90),
         rch->y(), rch->w() * .075, kf_h(24));
     rch->mod_reset->box(FL_NO_BOX);
     rch->mod_reset->labelcolor(FONT_COLOR);
     rch->mod_reset->visible_focus(0);
 
     rch->mod_help = new UI_HelpLink(
-        rch->x() + (!single_pane ? (rch->w() * .9) : (rch->w() * .95)),
+        rch->x() + (rch->w() * .95),
         rch->y(), rch->w() * .075, kf_h(24));
     rch->mod_help->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
     rch->mod_help->labelfont(font_style);
@@ -189,8 +181,7 @@ void UI_Module::AddOption(std::string opt, std::string label, std::string tip,
 
     add(rch);
 
-    cur_opt_y += (!single_pane ? (gap ? kf_h(64) : kf_h(50))
-                               : (gap ? kf_h(59) : kf_h(45)));
+    cur_opt_y += (gap ? kf_h(59) : kf_h(45));
 
     resize(x(), y(), w(), CalcHeight());
     redraw();
@@ -216,8 +207,7 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
 
     label = fmt::format("{}: ", label);
 
-    UI_RSlide *rsl = new UI_RSlide(nx, ny + kf_h(15), nw * .95,
-                                   (!single_pane ? kf_h(48) : kf_h(24)));
+    UI_RSlide *rsl = new UI_RSlide(nx, ny + kf_h(15), nw * .95, kf_h(24));
 
     // Populate the nan_options vector
     std::string::size_type oldpos = 0;
@@ -236,8 +226,7 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
 
     rsl->mod_label = new Fl_Box(
         rsl->x(), rsl->y(),
-        (!single_pane ? rsl->w() * (rsl->nan_choices.size() > 0 ? .6 : .7)
-                      : rsl->w() * .40),
+        rsl->w() * .40,
         kf_h(24), "");
     rsl->mod_label->copy_label(label.c_str());
     rsl->mod_label->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
@@ -245,9 +234,8 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
     rsl->mod_label->copy_tooltip(tip.c_str());
 
     rsl->prev_button = new UI_CustomArrowButton(
-        (!single_pane ? rsl->x() : rsl->x() + (rsl->w() * .40)),
-        (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()),
-        (single_pane ? rsl->w() * .05 : rsl->w() * .10), kf_h(24));
+        rsl->x() + (rsl->w() * .40),
+        rsl->y(), rsl->w() * .05, kf_h(24));
     rsl->prev_button->copy_label("@<");
     rsl->prev_button->visible_focus(0);
     rsl->prev_button->box(button_style);
@@ -258,10 +246,9 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
     rsl->prev_button->callback(callback_SliderPrevious, NULL);
 
     rsl->mod_slider = new Fl_Hor_Slider(
-        (!single_pane ? rsl->x() + rsl->w() * .10 : rsl->x() + rsl->w() * .45),
-        (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()),
-        (!single_pane ? rsl->w() * .80
-                      : rsl->w() * (rsl->nan_choices.size() > 0 ? .30 : .35)),
+        rsl->x() + (rsl->w() * .45),
+        rsl->y(),
+        rsl->w() * (rsl->nan_choices.size() > 0 ? .30 : .35),
         kf_h(24), NULL);
     rsl->mod_slider->box(button_style);
     rsl->mod_slider->visible_focus(0);
@@ -273,11 +260,9 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
     rsl->mod_slider->callback(callback_PresetCheck, NULL);
 
     rsl->next_button = new UI_CustomArrowButton(
-        (!single_pane
-             ? rsl->x() + rsl->w() * .90
-             : rsl->x() + rsl->w() * (rsl->nan_choices.size() > 0 ? .75 : .80)),
-        (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()),
-        (single_pane ? rsl->w() * .05 : rsl->w() * .10), kf_h(24));
+        rsl->x() + rsl->w() * (rsl->nan_choices.size() > 0 ? .75 : .80),
+        rsl->y(),
+        rsl->w() * .05, kf_h(24));
     rsl->next_button->copy_label("@>");
     rsl->next_button->box(button_style);
     rsl->next_button->color(BUTTON_COLOR);
@@ -289,7 +274,7 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
 
     if (rsl->nan_choices.size() > 0) {
         rsl->nan_options = new UI_CustomMenuButton(
-            rsl->x() + (!single_pane ? (rsl->w() * .6) : (rsl->w() * .80)),
+            rsl->x() + (rsl->w() * .80),
             rsl->y(), rsl->w() * .075, kf_h(24));
         rsl->nan_options->box(FL_FLAT_BOX);
         rsl->nan_options->color(this->color());
@@ -302,7 +287,7 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
     }
 
     rsl->mod_entry = new UI_ManualEntry(
-        rsl->x() + (!single_pane ? (rsl->w() * .7) : (rsl->w() * .85)),
+        rsl->x() + (rsl->w() * .85),
         rsl->y(), rsl->w() * .075, kf_h(24));
     rsl->mod_entry->box(FL_NO_BOX);
     rsl->mod_entry->labelcolor(FONT_COLOR);
@@ -310,14 +295,14 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
     rsl->mod_entry->callback(callback_ManualEntry, NULL);
 
     rsl->mod_reset = new UI_ResetOption(
-        rsl->x() + (!single_pane ? (rsl->w() * .8) : (rsl->w() * .90)),
+        rsl->x() + (rsl->w() * .90),
         rsl->y(), rsl->w() * .075, kf_h(24));
     rsl->mod_reset->box(FL_NO_BOX);
     rsl->mod_reset->labelcolor(FONT_COLOR);
     rsl->mod_reset->visible_focus(0);
 
     rsl->mod_help = new UI_HelpLink(
-        rsl->x() + (!single_pane ? (rsl->w() * .9) : (rsl->w() * .95)),
+        rsl->x() + (rsl->w() * .95),
         rsl->y(), rsl->w() * .075, kf_h(24));
     rsl->mod_help->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
     rsl->mod_help->labelfont(font_style);
@@ -401,8 +386,7 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
 
     add(rsl);
 
-    cur_opt_y += (!single_pane ? (gap ? kf_h(64) : kf_h(50))
-                               : (gap ? kf_h(59) : kf_h(45)));
+    cur_opt_y += (gap ? kf_h(59) : kf_h(45));
 
     resize(x(), y(), w(), CalcHeight());
     redraw();
@@ -427,28 +411,27 @@ void UI_Module::AddButtonOption(std::string opt, std::string label,
     UI_RButton *rbt = new UI_RButton(nx, ny + kf_h(15), nw * .95, kf_h(24));
 
     rbt->mod_label =
-        new Fl_Box(rbt->x() + (single_pane ? 0 : (rbt->w() * .075)), rbt->y(),
+        new Fl_Box(rbt->x(), rbt->y(),
                    rbt->w() * .70, kf_h(24), "");
-    rbt->mod_label->copy_label(single_pane ? fmt::format("{}: ", label).c_str()
-                                           : label.c_str());
+    rbt->mod_label->copy_label(fmt::format("{}: ", label).c_str());
     rbt->mod_label->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
     rbt->mod_label->labelfont(font_style);
     rbt->mod_label->copy_tooltip(tip.c_str());
 
     rbt->mod_check =
-        new UI_CustomCheckBox(rbt->x() + (!single_pane ? 0 : (rbt->w() * .40)),
+        new UI_CustomCheckBox(rbt->x() + (rbt->w() * .40),
                               rbt->y(), rbt->w() * .10, kf_h(24), "");
     rbt->mod_check->selection_color(SELECTION);
 
     rbt->mod_reset = new UI_ResetOption(
-        rbt->x() + (!single_pane ? (rbt->w() * .8) : (rbt->w() * .90)),
+        rbt->x() + (rbt->w() * .90),
         rbt->y(), rbt->w() * .075, kf_h(24));
     rbt->mod_reset->box(FL_NO_BOX);
     rbt->mod_reset->labelcolor(FONT_COLOR);
     rbt->mod_reset->visible_focus(0);
 
     rbt->mod_help = new UI_HelpLink(
-        rbt->x() + (!single_pane ? (rbt->w() * .9) : (rbt->w() * .95)),
+        rbt->x() + (rbt->w() * .95),
         rbt->y(), rbt->w() * .075, kf_h(24));
     rbt->mod_help->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
     rbt->mod_help->labelfont(font_style);
@@ -1397,18 +1380,10 @@ void UI_Module::resize(int X, int Y, int W, int H) {
         }
     }
 
-    if (!single_pane) {
-        for (int i = 0; i < this->children(); i++) {
-            this->child(i)->resize(this->child(i)->x(), this->child(i)->y(),
-                                   w() * .95, this->child(i)->h());
-            this->child(i)->redraw();
-        }
-    } else {
-        for (int i = 0; i < this->children(); i++) {
-            this->child(i)->resize(this->child(i)->x(), this->child(i)->y(),
-                                   w() * .95, this->child(i)->h());
-            this->child(i)->redraw();
-        }
+    for (int i = 0; i < this->children(); i++) {
+        this->child(i)->resize(this->child(i)->x(), this->child(i)->y(),
+                               w() * .95, this->child(i)->h());
+        this->child(i)->redraw();
     }
 }
 

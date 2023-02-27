@@ -131,7 +131,6 @@ int font_theme = 0;
 int box_theme = 0;
 int button_theme = 0;
 int widget_theme = 0;
-bool single_pane = false;
 bool use_system_fonts = false;
 int window_scaling = 0;
 int font_scaling = 18;

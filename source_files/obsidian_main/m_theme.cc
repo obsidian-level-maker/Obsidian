@@ -146,8 +146,6 @@ static void Parse_Theme_Option(std::string name, std::string value) {
         box_theme = StringToInt(value);
     } else if (StringCaseCmp(name, "button_theme") == 0) {
         button_theme = StringToInt(value);
-    } else if (StringCaseCmp(name, "single_pane") == 0) {
-        single_pane = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "use_system_fonts") == 0) {
         use_system_fonts = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "color_scheme") == 0) {
@@ -291,7 +289,6 @@ bool Theme_Options_Save(std::filesystem::path filename) {
     option_fp << "widget_theme      = " << NumToString(widget_theme) << "\n";
     option_fp << "box_theme      = " << NumToString(box_theme) << "\n";
     option_fp << "button_theme      = " << NumToString(button_theme) << "\n";
-    option_fp << "single_pane = " << NumToString((single_pane ? 1 : 0)) << "\n";
     option_fp << "use_system_fonts = "
               << NumToString((use_system_fonts ? 1 : 0)) << "\n";
     option_fp << "color_scheme      = " << NumToString(color_scheme) << "\n";
@@ -345,7 +342,6 @@ class UI_ThemeWin : public Fl_Window {
     UI_CustomMenu *opt_box_theme;
     UI_CustomMenu *opt_button_theme;
 
-    UI_CustomCheckBox *opt_single_pane;
     UI_CustomCheckBox *opt_system_fonts;
     UI_CustomMenu *opt_color_scheme;
     Fl_Button *opt_text_color;
@@ -503,42 +499,6 @@ class UI_ThemeWin : public Fl_Window {
                 rbt->mod_label->redraw();
             }
         }
-        if (!single_pane) {
-            for (int x = 0; x < main_win->right_mods->mod_pack->children();
-                 x++) {
-                UI_Module *M =
-                    (UI_Module *)main_win->right_mods->mod_pack->child(x);
-                SYS_ASSERT(M);
-                M->heading->labelsize(header_font_size);
-                M->redraw();
-                std::map<std::string, UI_RChoice *>::const_iterator IT;
-                std::map<std::string, UI_RSlide *>::const_iterator IT2;
-                std::map<std::string, UI_RButton *>::const_iterator IT3;
-                for (IT = M->choice_map.begin(); IT != M->choice_map.end();
-                     IT++) {
-                    UI_RChoice *rch = IT->second;
-                    rch->mod_label->labelsize(FL_NORMAL_SIZE);
-                    rch->mod_menu->textsize(FL_NORMAL_SIZE);
-                    rch->mod_help->labelsize(FL_NORMAL_SIZE);
-                    rch->mod_label->redraw();
-                }
-                for (IT2 = M->choice_map_slider.begin();
-                     IT2 != M->choice_map_slider.end(); IT2++) {
-                    UI_RSlide *rsl = IT2->second;
-                    rsl->mod_label->labelsize(FL_NORMAL_SIZE);
-                    rsl->mod_entry->labelsize(FL_NORMAL_SIZE);
-                    rsl->mod_help->labelsize(FL_NORMAL_SIZE);
-                    rsl->mod_label->redraw();
-                }
-                for (IT3 = M->choice_map_button.begin();
-                     IT3 != M->choice_map_button.end(); IT3++) {
-                    UI_RButton *rbt = IT3->second;
-                    rbt->mod_label->labelsize(FL_NORMAL_SIZE);
-                    rbt->mod_help->labelsize(FL_NORMAL_SIZE);
-                    rbt->mod_label->redraw();
-                }
-            }
-        }
     }
 
     static void callback_FontTheme(Fl_Widget *w, void *data) {
@@ -640,43 +600,6 @@ class UI_ThemeWin : public Fl_Window {
                 rbt->mod_label->labelfont(font_style);
                 rbt->mod_help->labelfont(font_style);
                 rbt->mod_label->redraw();
-            }
-        }
-        if (!single_pane) {
-            for (int x = 0; x < main_win->right_mods->mod_pack->children();
-                 x++) {
-                UI_Module *M =
-                    (UI_Module *)main_win->right_mods->mod_pack->child(x);
-                SYS_ASSERT(M);
-                M->heading->labelfont(use_system_fonts ? font_style
-                                                       : font_style | FL_BOLD);
-                M->redraw();
-                std::map<std::string, UI_RChoice *>::const_iterator IT;
-                std::map<std::string, UI_RSlide *>::const_iterator IT2;
-                std::map<std::string, UI_RButton *>::const_iterator IT3;
-                for (IT = M->choice_map.begin(); IT != M->choice_map.end();
-                     IT++) {
-                    UI_RChoice *rch = IT->second;
-                    rch->mod_label->labelfont(font_style);
-                    rch->mod_menu->textfont(font_style);
-                    rch->mod_help->labelfont(font_style);
-                    rch->mod_label->redraw();
-                }
-                for (IT2 = M->choice_map_slider.begin();
-                     IT2 != M->choice_map_slider.end(); IT2++) {
-                    UI_RSlide *rsl = IT2->second;
-                    rsl->mod_label->labelfont(font_style);
-                    rsl->mod_entry->labelfont(font_style);
-                    rsl->mod_help->labelfont(font_style);
-                    rsl->mod_label->redraw();
-                }
-                for (IT3 = M->choice_map_button.begin();
-                     IT3 != M->choice_map_button.end(); IT3++) {
-                    UI_RButton *rbt = IT3->second;
-                    rbt->mod_label->labelfont(font_style);
-                    rbt->mod_help->labelfont(font_style);
-                    rbt->mod_label->redraw();
-                }
             }
         }
     }
@@ -850,16 +773,6 @@ class UI_ThemeWin : public Fl_Window {
                 M->box(box_style);
                 M->redraw();
             }
-            if (!single_pane) {
-                for (int x = 0; x < main_win->right_mods->mod_pack->children();
-                    x++) {
-                    UI_Module *M =
-                        (UI_Module *)main_win->right_mods->mod_pack->child(x);
-                    SYS_ASSERT(M);
-                    M->box(box_style);
-                    M->redraw();
-                }
-            }
             main_win->game_box->build->box(button_style);
             main_win->game_box->quit->box(button_style);
             for (int x = 0; x < main_win->game_box->children(); x++) {
@@ -889,36 +802,7 @@ class UI_ThemeWin : public Fl_Window {
                     rbt->redraw();
                 }
             }
-            if (!single_pane) {
-                main_win->right_mods->sbar->slider(button_style);
-                main_win->right_mods->redraw();
-                for (int x = 0; x < main_win->right_mods->mod_pack->children();
-                    x++) {
-                    UI_Module *M =
-                        (UI_Module *)main_win->right_mods->mod_pack->child(x);
-                    SYS_ASSERT(M);
-                    M->mod_button->down_box(button_style);
-                    M->redraw();
-                    std::map<std::string, UI_RSlide *>::const_iterator IT;
-                    std::map<std::string, UI_RButton *>::const_iterator IT2;
-                    for (IT = M->choice_map_slider.begin();
-                        IT != M->choice_map_slider.end(); IT++) {
-                        UI_RSlide *rsl = IT->second;
-                        rsl->prev_button->box(button_style);
-                        rsl->mod_slider->box(button_style);
-                        rsl->next_button->box(button_style);
-                        rsl->redraw();
-                    }
-                    for (IT2 = M->choice_map_button.begin();
-                        IT2 != M->choice_map_button.end(); IT2++) {
-                        UI_RButton *rbt = IT2->second;
-                        rbt->mod_check->down_box(button_style);
-                        rbt->redraw();
-                    }
-                }
-            }
             that->opt_system_fonts->down_box(button_style);
-            that->opt_single_pane->down_box(button_style);
             that->load_defaults->box(button_style);
             that->load_theme->box(button_style);
             that->save_theme->box(button_style);
@@ -1006,16 +890,6 @@ class UI_ThemeWin : public Fl_Window {
             SYS_ASSERT(M);
             M->box(box_style);
             M->redraw();
-        }
-        if (!single_pane) {
-            for (int x = 0; x < main_win->right_mods->mod_pack->children();
-                 x++) {
-                UI_Module *M =
-                    (UI_Module *)main_win->right_mods->mod_pack->child(x);
-                SYS_ASSERT(M);
-                M->box(box_style);
-                M->redraw();
-            }
         }
     }
 
@@ -1112,55 +986,13 @@ class UI_ThemeWin : public Fl_Window {
                 rbt->redraw();
             }
         }
-        if (!single_pane) {
-            main_win->right_mods->sbar->slider(button_style);
-            main_win->right_mods->redraw();
-            for (int x = 0; x < main_win->right_mods->mod_pack->children();
-                 x++) {
-                UI_Module *M =
-                    (UI_Module *)main_win->right_mods->mod_pack->child(x);
-                SYS_ASSERT(M);
-                M->mod_button->down_box(button_style);
-                M->redraw();
-                std::map<std::string, UI_RSlide *>::const_iterator IT;
-                std::map<std::string, UI_RButton *>::const_iterator IT2;
-                for (IT = M->choice_map_slider.begin();
-                     IT != M->choice_map_slider.end(); IT++) {
-                    UI_RSlide *rsl = IT->second;
-                    rsl->prev_button->box(button_style);
-                    rsl->mod_slider->box(button_style);
-                    rsl->next_button->box(button_style);
-                    rsl->redraw();
-                }
-                for (IT2 = M->choice_map_button.begin();
-                     IT2 != M->choice_map_button.end(); IT2++) {
-                    UI_RButton *rbt = IT2->second;
-                    rbt->mod_check->down_box(button_style);
-                    rbt->redraw();
-                }
-            }
-        }
         that->opt_system_fonts->down_box(button_style);
-        that->opt_single_pane->down_box(button_style);
         that->load_defaults->box(button_style);
         that->load_theme->box(button_style);
         that->save_theme->box(button_style);
         for (int x = 0; x < that->children(); x++) {
             that->child(x)->redraw();
         }
-    }
-
-    static void callback_SinglePane(Fl_Widget *w, void *data) {
-        UI_ThemeWin *that = (UI_ThemeWin *)data;
-
-        single_pane = that->opt_single_pane->value() ? true : false;
-        // clang-format off
-        fl_alert("%s", _("Switching pane modes requires a restart.\nOBSIDIAN will now restart."));
-        // clang-format on
-
-        main_action = MAIN_HARD_RESTART;
-
-        that->want_quit = true;
     }
 
     static void callback_SystemFonts(Fl_Widget *w, void *data) {
@@ -1301,46 +1133,6 @@ class UI_ThemeWin : public Fl_Window {
                 rbt->mod_label->redraw();
             }
         }
-        if (!single_pane) {
-            for (int x = 0; x < main_win->right_mods->mod_pack->children();
-                 x++) {
-                UI_Module *M =
-                    (UI_Module *)main_win->right_mods->mod_pack->child(x);
-                SYS_ASSERT(M);
-                M->heading->labelcolor(FONT_COLOR);
-                M->redraw();
-                std::map<std::string, UI_RChoice *>::const_iterator IT;
-                std::map<std::string, UI_RSlide *>::const_iterator IT2;
-                std::map<std::string, UI_RButton *>::const_iterator IT3;
-                for (IT = M->choice_map.begin(); IT != M->choice_map.end();
-                     IT++) {
-                    UI_RChoice *rch = IT->second;
-                    rch->mod_label->labelcolor(FONT_COLOR);
-                    rch->mod_help->labelcolor(FONT_COLOR);
-                    rch->mod_label->redraw();
-                }
-                for (IT2 = M->choice_map_slider.begin();
-                     IT2 != M->choice_map_slider.end(); IT2++) {
-                    UI_RSlide *rsl = IT2->second;
-                    rsl->mod_label->labelcolor(FONT_COLOR);
-                    rsl->mod_entry->labelcolor(FONT_COLOR);
-                    rsl->mod_help->labelcolor(FONT_COLOR);
-                    if (rsl->nan_choices.size() > 0) {
-                        rsl->nan_options->textcolor(FONT_COLOR);
-                        rsl->nan_options->labelcolor(FONT_COLOR);
-                        rsl->nan_options->redraw();
-                    }
-                    rsl->mod_label->redraw();
-                }
-                for (IT3 = M->choice_map_button.begin();
-                     IT3 != M->choice_map_button.end(); IT3++) {
-                    UI_RButton *rbt = IT3->second;
-                    rbt->mod_label->labelcolor(FONT_COLOR);
-                    rbt->mod_help->labelcolor(FONT_COLOR);
-                    rbt->mod_label->redraw();
-                }
-            }
-        }
     }
 
     static void callback_Text2Color(Fl_Widget *w, void *data) {
@@ -1390,23 +1182,6 @@ class UI_ThemeWin : public Fl_Window {
                 rch->mod_label->redraw();
             }
         }
-        if (!single_pane) {
-            for (int x = 0; x < main_win->right_mods->mod_pack->children();
-                 x++) {
-                UI_Module *M =
-                    (UI_Module *)main_win->right_mods->mod_pack->child(x);
-                SYS_ASSERT(M);
-                M->heading->labelcolor(FONT_COLOR);
-                M->redraw();
-                std::map<std::string, UI_RChoice *>::const_iterator IT;
-                for (IT = M->choice_map.begin(); IT != M->choice_map.end();
-                     IT++) {
-                    UI_RChoice *rch = IT->second;
-                    rch->mod_menu->textcolor(FONT2_COLOR);
-                    rch->mod_label->redraw();
-                }
-            }
-        }
     }
 
     static void callback_BgColor(Fl_Widget *w, void *data) {
@@ -1449,25 +1224,6 @@ class UI_ThemeWin : public Fl_Window {
                     rsl->nan_options->color(WINDOW_BG);
                 }
                 rsl->redraw();
-            }
-        }
-        if (!single_pane) {
-            for (int x = 0; x < main_win->right_mods->mod_pack->children();
-                 x++) {
-                UI_Module *M =
-                    (UI_Module *)main_win->right_mods->mod_pack->child(x);
-                SYS_ASSERT(M);
-                M->color(WINDOW_BG);
-                M->redraw();
-                std::map<std::string, UI_RSlide *>::const_iterator IT;
-                for (IT = M->choice_map_slider.begin();
-                     IT != M->choice_map_slider.end(); IT++) {
-                    UI_RSlide *rsl = IT->second;
-                    if (rsl->nan_choices.size() > 0) {
-                        rsl->nan_options->color(WINDOW_BG);
-                    }
-                    rsl->redraw();
-                }
             }
         }
     }
@@ -1527,37 +1283,6 @@ class UI_ThemeWin : public Fl_Window {
                 rbt->redraw();
             }
         }
-        if (!single_pane) {
-            main_win->right_mods->sbar->labelcolor(SELECTION);
-            main_win->right_mods->redraw();
-            for (int x = 0; x < main_win->right_mods->mod_pack->children();
-                 x++) {
-                UI_Module *M =
-                    (UI_Module *)main_win->right_mods->mod_pack->child(x);
-                SYS_ASSERT(M);
-                M->mod_button->selection_color(SELECTION);
-                M->redraw();
-                std::map<std::string, UI_RSlide *>::const_iterator IT;
-                std::map<std::string, UI_RButton *>::const_iterator IT2;
-                for (IT = M->choice_map_slider.begin();
-                     IT != M->choice_map_slider.end(); IT++) {
-                    UI_RSlide *rsl = IT->second;
-                    rsl->prev_button->labelcolor(SELECTION);
-                    rsl->mod_slider->selection_color(SELECTION);
-                    rsl->next_button->labelcolor(SELECTION);
-                    if (rsl->nan_choices.size() > 0) {
-                        rsl->nan_options->selection_color(SELECTION);
-                    }
-                    rsl->redraw();
-                }
-                for (IT2 = M->choice_map_button.begin();
-                     IT2 != M->choice_map_button.end(); IT2++) {
-                    UI_RButton *rbt = IT2->second;
-                    rbt->mod_check->selection_color(SELECTION);
-                    rbt->redraw();
-                }
-            }
-        }
     }
 
     static void callback_ButtonColor(Fl_Widget *w, void *data) {
@@ -1583,10 +1308,6 @@ class UI_ThemeWin : public Fl_Window {
             main_win->game_box->child(x)->redraw();
         }
         main_win->left_mods->sbar->color(GAP_COLOR, BUTTON_COLOR);
-        if (!single_pane) {
-            main_win->right_mods->sbar->color(GAP_COLOR, BUTTON_COLOR);
-            main_win->right_mods->redraw();
-        }
         for (int x = 0; x < main_win->left_mods->mod_pack->children(); x++) {
             UI_Module *M = (UI_Module *)main_win->left_mods->mod_pack->child(x);
             SYS_ASSERT(M);
@@ -1600,25 +1321,6 @@ class UI_ThemeWin : public Fl_Window {
                 rsl->prev_button->redraw();
                 rsl->mod_slider->redraw();
                 rsl->prev_button->redraw();
-            }
-        }
-        if (!single_pane) {
-            for (int x = 0; x < main_win->right_mods->mod_pack->children();
-                 x++) {
-                UI_Module *M =
-                    (UI_Module *)main_win->right_mods->mod_pack->child(x);
-                SYS_ASSERT(M);
-                std::map<std::string, UI_RSlide *>::const_iterator IT;
-                for (IT = M->choice_map_slider.begin();
-                     IT != M->choice_map_slider.end(); IT++) {
-                    UI_RSlide *rsl = IT->second;
-                    rsl->prev_button->color(BUTTON_COLOR);
-                    rsl->mod_slider->color(BUTTON_COLOR);
-                    rsl->next_button->color(BUTTON_COLOR);
-                    rsl->prev_button->redraw();
-                    rsl->mod_slider->redraw();
-                    rsl->prev_button->redraw();
-                }
             }
         }
     }
@@ -1650,15 +1352,6 @@ class UI_ThemeWin : public Fl_Window {
             SYS_ASSERT(M);
             M->redraw();
         }
-        if (!single_pane) {
-            for (int x = 0; x < main_win->right_mods->mod_pack->children();
-                 x++) {
-                UI_Module *M =
-                    (UI_Module *)main_win->right_mods->mod_pack->child(x);
-                SYS_ASSERT(M);
-                M->redraw();
-            }
-        }
     }
 
     static void callback_BorderColor(Fl_Widget *w, void *data) {
@@ -1685,15 +1378,6 @@ class UI_ThemeWin : public Fl_Window {
             UI_Module *M = (UI_Module *)main_win->left_mods->mod_pack->child(x);
             SYS_ASSERT(M);
             M->redraw();
-        }
-        if (!single_pane) {
-            for (int x = 0; x < main_win->right_mods->mod_pack->children();
-                 x++) {
-                UI_Module *M =
-                    (UI_Module *)main_win->right_mods->mod_pack->child(x);
-                SYS_ASSERT(M);
-                M->redraw();
-            }
         }
     }
 
@@ -1722,12 +1406,6 @@ class UI_ThemeWin : public Fl_Window {
         main_win->left_mods->sbar->color(GAP_COLOR, BUTTON_COLOR);
         main_win->left_mods->mod_pack->color(GAP_COLOR);
         main_win->left_mods->redraw();
-        if (!single_pane) {
-            main_win->right_mods->color(GAP_COLOR, GAP_COLOR);
-            main_win->right_mods->sbar->color(GAP_COLOR, BUTTON_COLOR);
-            main_win->right_mods->mod_pack->color(GAP_COLOR);
-            main_win->right_mods->redraw();
-        }
     }
 
     static void callback_LoadDefaults(Fl_Widget *w, void *data) {
@@ -1739,7 +1417,6 @@ class UI_ThemeWin : public Fl_Window {
         widget_theme = 0;
         box_theme = 0;
         button_theme = 0;
-        single_pane = 0;
         use_system_fonts = 0;
         color_scheme = 0;
         text_red = 225;
@@ -2017,17 +1694,6 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
     opt_system_fonts->down_box(button_style);
 
     cy += opt_system_fonts->h() + y_step;
-
-    opt_single_pane =
-        new UI_CustomCheckBox(cx + W * .05, cy, W - cx - pad, kf_h(24), "");
-    opt_single_pane->copy_label(_(" Single Pane Mode"));
-    opt_single_pane->value(single_pane ? 1 : 0);
-    opt_single_pane->callback(callback_SinglePane, this);
-    opt_single_pane->labelfont(font_style);
-    opt_single_pane->selection_color(SELECTION);
-    opt_single_pane->down_box(button_style);
-
-    cy += opt_single_pane->h() + y_step;
 
     load_defaults =
         new Fl_Button(cx + W * .05, cy, W * .25, kf_h(24), _("Load Defaults"));

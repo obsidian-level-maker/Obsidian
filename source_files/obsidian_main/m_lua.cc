@@ -513,25 +513,9 @@ int gui_add_module(lua_State *L) {
         Main::FatalError("Script problem: gui.add_module called late.\n");
     }
 
-    if (single_pane) {
-        if (!main_win->left_mods->FindID(id)) {
-            main_win->left_mods->AddModule(id, label, tip, red, green, blue,
-                                           suboptions);
-        }
-    } else {
-        if (!main_win->left_mods->FindID(id) &&
-            !main_win->right_mods->FindID(id)) {
-            if (!StringCaseCmp(where, "left")) {
-                main_win->left_mods->AddModule(id, label, tip, red, green, blue,
-                                               suboptions);
-            } else if (!StringCaseCmp(where, "right")) {
-                main_win->right_mods->AddModule(id, label, tip, red, green,
-                                                blue, suboptions);
-            } else {
-                return luaL_error(L, "add_module: unknown where value '%s'\n",
-                                  where.c_str());
-            }
-        }
+    if (!main_win->left_mods->FindID(id)) {
+        main_win->left_mods->AddModule(id, label, tip, red, green, blue,
+                                       suboptions);
     }
 
 #endif
@@ -555,11 +539,7 @@ int gui_set_module(lua_State *L) {
 
     // FIXME : error if module is unknown
 
-    // try both columns
     main_win->left_mods->EnableMod(module, opt_val);
-    if (!single_pane) {
-        main_win->right_mods->EnableMod(module, opt_val);
-    }
 #endif
     return 0;
 }
@@ -584,9 +564,6 @@ int gui_show_module(lua_State *L) {
     // FIXME : error if module is unknown
 
     main_win->left_mods->ShowModule(module, shown);
-    if (!single_pane) {
-        main_win->right_mods->ShowModule(module, shown);
-    }
 #endif
     return 0;
 }
@@ -614,11 +591,6 @@ int gui_add_module_header(lua_State *L) {
     }
 
     UI_Module *mod = main_win->left_mods->FindID(module);
-    if (!mod) {
-        if (!single_pane) {
-            mod = main_win->right_mods->FindID(module);
-        }
-    }
 
     if (!mod) {
         Main::FatalError(
@@ -628,10 +600,6 @@ int gui_add_module_header(lua_State *L) {
 
     if (!mod->FindHeaderOpt(option)) {
         main_win->left_mods->AddHeader(module, option, label, gap);
-
-        if (!single_pane) {
-            main_win->right_mods->AddHeader(module, option, label, gap);
-        }
     }
 #endif
     return 0;
@@ -666,11 +634,6 @@ int gui_add_module_option(lua_State *L) {
     }
 
     UI_Module *mod = main_win->left_mods->FindID(module);
-    if (!mod) {
-        if (!single_pane) {
-            mod = main_win->right_mods->FindID(module);
-        }
-    }
 
     if (!mod) {
         Main::FatalError(
@@ -681,11 +644,6 @@ int gui_add_module_option(lua_State *L) {
     if (!mod->FindOpt(option)) {
         main_win->left_mods->AddOption(module, option, label, tip, longtip, gap,
                                        randomize_group, default_value);
-        if (!single_pane) {
-            main_win->right_mods->AddOption(module, option, label, tip, longtip,
-                                            gap, randomize_group,
-                                            default_value);
-        }
     }
 #endif
     return 0;
@@ -728,11 +686,6 @@ int gui_add_module_slider_option(lua_State *L) {
     }
 
     UI_Module *mod = main_win->left_mods->FindID(module);
-    if (!mod) {
-        if (!single_pane) {
-            mod = main_win->right_mods->FindID(module);
-        }
-    }
 
     if (!mod) {
         Main::FatalError(
@@ -744,11 +697,6 @@ int gui_add_module_slider_option(lua_State *L) {
         main_win->left_mods->AddSliderOption(
             module, option, label, tip, longtip, gap, min, max, inc, units,
             presets, nan, randomize_group, default_value);
-        if (!single_pane) {
-            main_win->right_mods->AddSliderOption(
-                module, option, label, tip, longtip, gap, min, max, inc, units,
-                presets, nan, randomize_group, default_value);
-        }
     }
 #endif
     return 0;
@@ -783,11 +731,6 @@ int gui_add_module_button_option(lua_State *L) {
     }
 
     UI_Module *mod = main_win->left_mods->FindID(module);
-    if (!mod) {
-        if (!single_pane) {
-            mod = main_win->right_mods->FindID(module);
-        }
-    }
 
     if (!mod) {
         Main::FatalError(
@@ -799,11 +742,6 @@ int gui_add_module_button_option(lua_State *L) {
         main_win->left_mods->AddButtonOption(module, option, label, tip,
                                              longtip, gap, randomize_group,
                                              default_value);
-        if (!single_pane) {
-            main_win->right_mods->AddButtonOption(module, option, label, tip,
-                                                  longtip, gap, randomize_group,
-                                                  default_value);
-        }
     }
 #endif
     return 0;
@@ -835,9 +773,6 @@ int gui_add_option_choice(lua_State *L) {
     // FIXME : error if module or option is unknown
 
     main_win->left_mods->AddOptionChoice(module, option, id, label);
-    if (!single_pane) {
-        main_win->right_mods->AddOptionChoice(module, option, id, label);
-    }
 #endif
     return 0;
 }
@@ -863,17 +798,9 @@ int gui_set_module_option(lua_State *L) {
                           option.c_str());
     }
 
-    if (!single_pane) {
-        if (!(main_win->left_mods->SetOption(module, option, value) ||
-              main_win->right_mods->SetOption(module, option, value))) {
-            return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
-                              module.c_str(), option.c_str());
-        }
-    } else {
-        if (!main_win->left_mods->SetOption(module, option, value)) {
-            return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
-                              module.c_str(), option.c_str());
-        }
+    if (!main_win->left_mods->SetOption(module, option, value)) {
+        return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
+                          module.c_str(), option.c_str());
     }
 #endif
     return 0;
@@ -897,17 +824,9 @@ int gui_set_module_slider_option(lua_State *L) {
                           option.c_str());
     }
 
-    if (!single_pane) {
-        if (!(main_win->left_mods->SetSliderOption(module, option, value) ||
-              main_win->right_mods->SetSliderOption(module, option, value))) {
-            return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
-                              module.c_str(), option.c_str());
-        }
-    } else {
-        if (!main_win->left_mods->SetSliderOption(module, option, value)) {
-            return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
-                              module.c_str(), option.c_str());
-        }
+    if (!main_win->left_mods->SetSliderOption(module, option, value)) {
+        return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
+                          module.c_str(), option.c_str());
     }
 #endif
     return 0;
@@ -931,17 +850,9 @@ int gui_set_module_button_option(lua_State *L) {
                           option.c_str());
     }
 
-    if (!single_pane) {
-        if (!(main_win->left_mods->SetButtonOption(module, option, value) ||
-              main_win->right_mods->SetButtonOption(module, option, value))) {
-            return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
-                              module.c_str(), option.c_str());
-        }
-    } else {
-        if (!main_win->left_mods->SetButtonOption(module, option, value)) {
-            return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
-                              module.c_str(), option.c_str());
-        }
+    if (!main_win->left_mods->SetButtonOption(module, option, value)) {
+        return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
+                          module.c_str(), option.c_str());
     }
 #endif
     return 0;
