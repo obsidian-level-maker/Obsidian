@@ -903,36 +903,6 @@ int gui_get_module_slider_value(lua_State *L) {
                 lua_pushnumber(L, value);
             }
         }
-    } else if (main_win->right_mods) {
-        if (main_win->right_mods->FindID(module)) {
-            if (main_win->right_mods->FindID(module)->FindSliderOpt(option)) {
-                if (main_win->right_mods->FindID(module)
-                        ->FindSliderOpt(option)
-                        ->nan_choices.size() > 0) {
-                    if (main_win->right_mods->FindID(module)
-                            ->FindSliderOpt(option)
-                            ->nan_options->value() > 0) {
-                        nan_value = main_win->right_mods->FindID(module)
-                                        ->FindSliderOpt(option)
-                                        ->nan_options->text(
-                                            main_win->right_mods->FindID(module)
-                                                ->FindSliderOpt(option)
-                                                ->nan_options->value());
-                        lua_pushstring(L, nan_value.c_str());
-                    } else {
-                        value = main_win->right_mods->FindID(module)
-                                    ->FindSliderOpt(option)
-                                    ->mod_slider->value();
-                        lua_pushnumber(L, value);
-                    }
-                } else {
-                    value = main_win->right_mods->FindID(module)
-                                ->FindSliderOpt(option)
-                                ->mod_slider->value();
-                    lua_pushnumber(L, value);
-                }
-            }
-        }
     } else {
         return luaL_error(L,
                           "get_module_slider_value: unknown option '%s.%s'\n",
@@ -967,15 +937,6 @@ int gui_get_module_button_value(lua_State *L) {
                         ->FindButtonOpt(option)
                         ->mod_check->value();
             lua_pushnumber(L, value);
-        }
-    } else if (main_win->right_mods) {
-        if (main_win->right_mods->FindID(module)) {
-            if (main_win->right_mods->FindID(module)->FindButtonOpt(option)) {
-                value = main_win->right_mods->FindID(module)
-                            ->FindButtonOpt(option)
-                            ->mod_check->value();
-                lua_pushnumber(L, value);
-            }
         }
     } else {
         return luaL_error(L,

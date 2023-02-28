@@ -48,9 +48,6 @@ static void main_win_close_CB(Fl_Widget *w, void *data) {
 
 static void main_win_surprise_go_CB(Fl_Widget *w, void *data) {
     main_win->left_mods->SurpriseMe();
-    if (main_win->right_mods) {
-        main_win->right_mods->SurpriseMe();
-    }
     did_randomize = true;
 }
 
@@ -71,7 +68,7 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title)
     int TOP_H = kf_h(240);
     int BOT_H = H - TOP_H - kf_h(4);
 
-    menu_bar = new Fl_Menu_Bar(0, 0, W, kf_h(20));
+    menu_bar = new Fl_Menu_Bar(0, 0, LEFT_W, kf_h(20));
     menu_bar->box(box_style);
     menu_bar->textfont(font_style);
     menu_bar->textsize(menu_bar->textsize() * .90);
