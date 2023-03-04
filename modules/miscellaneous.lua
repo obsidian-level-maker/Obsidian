@@ -222,7 +222,7 @@ OB_MODULES["misc"] =
   engine = "!idtech_0",
   port = "!limit_enforcing",
 
-  side = "left",
+  where = "arch",
   priority = 101,
 
   hooks =

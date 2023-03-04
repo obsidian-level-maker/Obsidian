@@ -285,6 +285,8 @@ OB_MODULES["stealth_mons"] =
 
   port = {zdoom=1, edge=1},
 
+  where = "combat",
+
   tables =
   {
     STEALTH
@@ -357,6 +359,8 @@ OB_MODULES["stealth_mon_control"] =
   game = "doomish",
 
   port = {zdoom=1, edge=1},
+
+  where = "combat",
 	  
   hooks =
   {

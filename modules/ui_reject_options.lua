@@ -34,7 +34,7 @@ OB_MODULES["ui_reject_options"] =
   engine = "!idtech_0",
   port = "!advanced",
 
-  side = "left",
+  where = "other",
   priority = 105,
 
   hooks = 
@@ -79,7 +79,7 @@ OB_MODULES["ui_udmf_map_options"] =
   port = "advanced",
   port2 = "!zdoom",
 
-  side = "left",
+  where = "other",
   priority = 105,
 
   hooks = 
@@ -122,7 +122,7 @@ OB_MODULES["ui_zdoom_map_options"] =
   
   port = "zdoom",
 
-  side = "left",
+  where = "other",
   priority = 105,
 
   hooks = 

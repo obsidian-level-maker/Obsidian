@@ -264,7 +264,7 @@ OB_MODULES["export_map"] =
 {
   label = _("Export .MAP files"),
 
-  side = "left",
+  where = "other",
   priority = -75,
   engine = "!idtech_0",
 

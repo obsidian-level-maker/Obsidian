@@ -61,6 +61,7 @@ OB_MODULES["heretic_mon_control"] =
   game = "heretic",
   engine = "idtech_1",
   port = "!limit_enforcing",
+  where = "combat",
 
   hooks =
   {
@@ -315,6 +316,7 @@ OB_MODULES["heretic_weapon_control"] =
   game = "heretic",
   engine = "idtech_1",
   port = "!limit_enforcing",
+  where = "pickup",
 
   hooks =
   {

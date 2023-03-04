@@ -1183,6 +1183,8 @@ OB_MODULES["zdoom_specials"] =
 
   port = "zdoom",
 
+  where = "other",
+
   hooks =
   {
     setup = ZDOOM_SPECIALS.setup,

@@ -468,7 +468,7 @@ class UI_ThemeWin : public Fl_Window {
         for (int x = 0; x < main_win->build_box->children(); x++) {
             main_win->build_box->child(x)->redraw();
         }
-        for (int x = 0; x < main_win->left_mods->mod_pack->children(); x++) {
+        /*for (int x = 0; x < main_win->left_mods->mod_pack->children(); x++) {
             UI_Module *M = (UI_Module *)main_win->left_mods->mod_pack->child(x);
             SYS_ASSERT(M);
             M->heading->labelsize(header_font_size);
@@ -498,7 +498,7 @@ class UI_ThemeWin : public Fl_Window {
                 rbt->mod_help->labelsize(FL_NORMAL_SIZE);
                 rbt->mod_label->redraw();
             }
-        }
+        }*/
     }
 
     static void callback_FontTheme(Fl_Widget *w, void *data) {
@@ -570,7 +570,7 @@ class UI_ThemeWin : public Fl_Window {
         for (int x = 0; x < main_win->build_box->children(); x++) {
             main_win->build_box->child(x)->redraw();
         }
-        for (int x = 0; x < main_win->left_mods->mod_pack->children(); x++) {
+        /*for (int x = 0; x < main_win->left_mods->mod_pack->children(); x++) {
             UI_Module *M = (UI_Module *)main_win->left_mods->mod_pack->child(x);
             SYS_ASSERT(M);
             M->heading->labelfont(use_system_fonts ? font_style
@@ -601,7 +601,7 @@ class UI_ThemeWin : public Fl_Window {
                 rbt->mod_help->labelfont(font_style);
                 rbt->mod_label->redraw();
             }
-        }
+        }*/
     }
 
     static void callback_WidgetTheme(Fl_Widget *w, void *data) {
@@ -767,18 +767,18 @@ class UI_ThemeWin : public Fl_Window {
             main_win->game_box->redraw();
             main_win->build_box->box(box_style);
             main_win->build_box->redraw();
-            for (int x = 0; x < main_win->left_mods->mod_pack->children(); x++) {
+            /*for (int x = 0; x < main_win->left_mods->mod_pack->children(); x++) {
                 UI_Module *M = (UI_Module *)main_win->left_mods->mod_pack->child(x);
                 SYS_ASSERT(M);
                 M->box(box_style);
                 M->redraw();
-            }
+            }*/
             main_win->game_box->build->box(button_style);
             main_win->game_box->quit->box(button_style);
             for (int x = 0; x < main_win->game_box->children(); x++) {
                 main_win->game_box->child(x)->redraw();
             }
-            main_win->left_mods->sbar->slider(button_style);
+            /*main_win->left_mods->sbar->slider(button_style);
             main_win->left_mods->redraw();
             for (int x = 0; x < main_win->left_mods->mod_pack->children(); x++) {
                 UI_Module *M = (UI_Module *)main_win->left_mods->mod_pack->child(x);
@@ -801,7 +801,7 @@ class UI_ThemeWin : public Fl_Window {
                     rbt->mod_check->down_box(button_style);
                     rbt->redraw();
                 }
-            }
+            }*/
             that->opt_system_fonts->down_box(button_style);
             that->load_defaults->box(button_style);
             that->load_theme->box(button_style);
@@ -885,12 +885,12 @@ class UI_ThemeWin : public Fl_Window {
         main_win->game_box->redraw();
         main_win->build_box->box(box_style);
         main_win->build_box->redraw();
-        for (int x = 0; x < main_win->left_mods->mod_pack->children(); x++) {
+        /*for (int x = 0; x < main_win->left_mods->mod_pack->children(); x++) {
             UI_Module *M = (UI_Module *)main_win->left_mods->mod_pack->child(x);
             SYS_ASSERT(M);
             M->box(box_style);
             M->redraw();
-        }
+        }*/
     }
 
     static void callback_ButtonTheme(Fl_Widget *w, void *data) {
@@ -962,7 +962,7 @@ class UI_ThemeWin : public Fl_Window {
         for (int x = 0; x < main_win->game_box->children(); x++) {
             main_win->game_box->child(x)->redraw();
         }
-        main_win->left_mods->sbar->slider(button_style);
+        /*main_win->left_mods->sbar->slider(button_style);
         main_win->left_mods->redraw();
         for (int x = 0; x < main_win->left_mods->mod_pack->children(); x++) {
             UI_Module *M = (UI_Module *)main_win->left_mods->mod_pack->child(x);
@@ -985,7 +985,7 @@ class UI_ThemeWin : public Fl_Window {
                 rbt->mod_check->down_box(button_style);
                 rbt->redraw();
             }
-        }
+        }*/
         that->opt_system_fonts->down_box(button_style);
         that->load_defaults->box(button_style);
         that->load_theme->box(button_style);
@@ -1098,7 +1098,7 @@ class UI_ThemeWin : public Fl_Window {
         for (int x = 0; x < main_win->build_box->children(); x++) {
             main_win->build_box->child(x)->redraw();
         }
-        for (int x = 0; x < main_win->left_mods->mod_pack->children(); x++) {
+        /*for (int x = 0; x < main_win->left_mods->mod_pack->children(); x++) {
             UI_Module *M = (UI_Module *)main_win->left_mods->mod_pack->child(x);
             SYS_ASSERT(M);
             M->heading->labelcolor(FONT_COLOR);
@@ -1132,7 +1132,7 @@ class UI_ThemeWin : public Fl_Window {
                 rbt->mod_help->labelcolor(FONT_COLOR);
                 rbt->mod_label->redraw();
             }
-        }
+        }*/
     }
 
     static void callback_Text2Color(Fl_Widget *w, void *data) {
@@ -1170,7 +1170,7 @@ class UI_ThemeWin : public Fl_Window {
         for (int x = 0; x < main_win->build_box->children(); x++) {
             main_win->build_box->child(x)->redraw();
         }
-        for (int x = 0; x < main_win->left_mods->mod_pack->children(); x++) {
+        /*for (int x = 0; x < main_win->left_mods->mod_pack->children(); x++) {
             UI_Module *M = (UI_Module *)main_win->left_mods->mod_pack->child(x);
             SYS_ASSERT(M);
             M->heading->labelcolor(FONT_COLOR);
@@ -1181,7 +1181,7 @@ class UI_ThemeWin : public Fl_Window {
                 rch->mod_menu->textcolor(FONT2_COLOR);
                 rch->mod_label->redraw();
             }
-        }
+        }*/
     }
 
     static void callback_BgColor(Fl_Widget *w, void *data) {
@@ -1211,7 +1211,7 @@ class UI_ThemeWin : public Fl_Window {
         main_win->game_box->redraw();
         main_win->build_box->color(WINDOW_BG);
         main_win->build_box->redraw();
-        for (int x = 0; x < main_win->left_mods->mod_pack->children(); x++) {
+        /*for (int x = 0; x < main_win->left_mods->mod_pack->children(); x++) {
             UI_Module *M = (UI_Module *)main_win->left_mods->mod_pack->child(x);
             SYS_ASSERT(M);
             M->color(WINDOW_BG);
@@ -1225,7 +1225,7 @@ class UI_ThemeWin : public Fl_Window {
                 }
                 rsl->redraw();
             }
-        }
+        }*/
     }
 
     static void callback_Bg2Color(Fl_Widget *w, void *data) {
@@ -1256,7 +1256,7 @@ class UI_ThemeWin : public Fl_Window {
         for (int x = 0; x < main_win->game_box->children(); x++) {
             main_win->game_box->child(x)->redraw();
         }
-        main_win->left_mods->sbar->labelcolor(SELECTION);
+        /*main_win->left_mods->sbar->labelcolor(SELECTION);
         main_win->left_mods->redraw();
         for (int x = 0; x < main_win->left_mods->mod_pack->children(); x++) {
             UI_Module *M = (UI_Module *)main_win->left_mods->mod_pack->child(x);
@@ -1282,7 +1282,7 @@ class UI_ThemeWin : public Fl_Window {
                 rbt->mod_check->selection_color(SELECTION);
                 rbt->redraw();
             }
-        }
+        }*/
     }
 
     static void callback_ButtonColor(Fl_Widget *w, void *data) {
@@ -1307,7 +1307,7 @@ class UI_ThemeWin : public Fl_Window {
         for (int x = 0; x < main_win->game_box->children(); x++) {
             main_win->game_box->child(x)->redraw();
         }
-        main_win->left_mods->sbar->color(GAP_COLOR, BUTTON_COLOR);
+        /*main_win->left_mods->sbar->color(GAP_COLOR, BUTTON_COLOR);
         for (int x = 0; x < main_win->left_mods->mod_pack->children(); x++) {
             UI_Module *M = (UI_Module *)main_win->left_mods->mod_pack->child(x);
             SYS_ASSERT(M);
@@ -1322,7 +1322,7 @@ class UI_ThemeWin : public Fl_Window {
                 rsl->mod_slider->redraw();
                 rsl->prev_button->redraw();
             }
-        }
+        }*/
     }
 
     static void callback_GradientColor(Fl_Widget *w, void *data) {
@@ -1347,11 +1347,11 @@ class UI_ThemeWin : public Fl_Window {
         main_win->redraw();
         main_win->game_box->redraw();
         main_win->build_box->redraw();
-        for (int x = 0; x < main_win->left_mods->mod_pack->children(); x++) {
+        /*for (int x = 0; x < main_win->left_mods->mod_pack->children(); x++) {
             UI_Module *M = (UI_Module *)main_win->left_mods->mod_pack->child(x);
             SYS_ASSERT(M);
             M->redraw();
-        }
+        }*/
     }
 
     static void callback_BorderColor(Fl_Widget *w, void *data) {
@@ -1374,11 +1374,11 @@ class UI_ThemeWin : public Fl_Window {
         main_win->redraw();
         main_win->game_box->redraw();
         main_win->build_box->redraw();
-        for (int x = 0; x < main_win->left_mods->mod_pack->children(); x++) {
+        /*for (int x = 0; x < main_win->left_mods->mod_pack->children(); x++) {
             UI_Module *M = (UI_Module *)main_win->left_mods->mod_pack->child(x);
             SYS_ASSERT(M);
             M->redraw();
-        }
+        }*/
     }
 
     static void callback_GapColor(Fl_Widget *w, void *data) {
@@ -1402,10 +1402,10 @@ class UI_ThemeWin : public Fl_Window {
         main_win->redraw();
         main_win->build_box->progress->color(GAP_COLOR, GAP_COLOR);
         main_win->build_box->redraw();
-        main_win->left_mods->color(GAP_COLOR, GAP_COLOR);
-        main_win->left_mods->sbar->color(GAP_COLOR, BUTTON_COLOR);
-        main_win->left_mods->mod_pack->color(GAP_COLOR);
-        main_win->left_mods->redraw();
+        //main_win->left_mods->color(GAP_COLOR, GAP_COLOR);
+        //main_win->left_mods->sbar->color(GAP_COLOR, BUTTON_COLOR);
+        //main_win->left_mods->mod_pack->color(GAP_COLOR);
+        //main_win->left_mods->redraw();
     }
 
     static void callback_LoadDefaults(Fl_Widget *w, void *data) {

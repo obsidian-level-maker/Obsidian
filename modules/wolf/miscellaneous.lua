@@ -45,7 +45,7 @@ OB_MODULES["misc_wolf_3d"] =
 
   engine = "idtech_0",
 
-  side = "left",
+  where = "arch",
   priority = 101,
 
   hooks =

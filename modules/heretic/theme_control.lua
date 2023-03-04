@@ -100,6 +100,7 @@ OB_MODULES["theme_ctl_heretic"] =
   game = "heretic",
   engine = "idtech_1",
   port = "!limit_enforcing",
+  where = "other",
 
   hooks =
   {

@@ -83,6 +83,7 @@ OB_MODULES["quake_mon_control"] =
   label = _("Quake Monster Control"),
 
   game = "quake",
+  where = "combat",
 
   hooks =
   {
@@ -212,6 +213,7 @@ OB_MODULES["quake_weapon_control"] =
 
   game = "quake",
   engine = "idtech_2",
+  where = "pickup",
 
   hooks =
   {

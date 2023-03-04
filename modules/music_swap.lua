@@ -114,7 +114,7 @@ OB_MODULES["music_swapper"] =
 {
   label = _("Music Swapper"),
 
-  side = "left",
+  where = "other",
   priority = 6,
 
   game = "doomish",

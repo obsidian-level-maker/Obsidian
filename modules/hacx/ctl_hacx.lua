@@ -63,6 +63,7 @@ OB_MODULES["hacx_mon_control"] =
   game = "hacx",
   engine = "idtech_1",
   port = "!limit_enforcing",
+  where = "combat",
 
   hooks =
   {
@@ -327,6 +328,7 @@ OB_MODULES["hacx_weapon_control"] =
   game = "hacx",
   engine = "idtech_1",
   port = "!limit_enforcing",
+  where = "pickup",
 
   hooks =
   {

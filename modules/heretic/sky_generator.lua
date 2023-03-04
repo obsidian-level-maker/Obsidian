@@ -733,6 +733,7 @@ OB_MODULES["sky_generator_heretic"] =
 
   game = "heretic",
   engine = "idtech_1",
+  where = "other",
 
   hooks =
   {

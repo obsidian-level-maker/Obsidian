@@ -1150,12 +1150,11 @@ OB_MODULES["zdoom_specials_heretic"] =
 
   game = "heretic",
 
-  side = "left",
-
   priority = 68,
 
   engine = "idtech_1",
   port = "zdoom",
+  where = "other",
 
   hooks =
   {

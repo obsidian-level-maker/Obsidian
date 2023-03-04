@@ -62,6 +62,8 @@ OB_MODULES["chex3_mon_control"] =
   game = "chex3",
   engine = "idtech_1",
   port = "!limit_enforcing",
+  where = "combat",
+
 
   hooks =
   {
@@ -254,6 +256,7 @@ OB_MODULES["chex3_weapon_control"] =
   game = "chex3",
   engine = "idtech_1",
   port = "!limit_enforcing",
+  where = "pickup",
 
   hooks =
   {

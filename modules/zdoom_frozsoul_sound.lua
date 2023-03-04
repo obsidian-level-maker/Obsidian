@@ -239,7 +239,7 @@ OB_MODULES["zdoom_ambient_sound"] =
 
   game = "doomish",
 
-  side = "left",
+  where = "other",
 
   priority = 69,
 

@@ -1122,7 +1122,7 @@ OB_MODULES["armaetus_epic_textures"] =
 
   label = _("Obsidian Epic Resource Pack"), --Shortened name to prevent some text overrun issues in Dual Pane mode (Dasho)
 
-  side = "left",
+  where = "other",
   priority = 75,
 
   port = "zdoom",

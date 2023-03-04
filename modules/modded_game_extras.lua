@@ -2472,7 +2472,7 @@ OB_MODULES["modded_game_extras"] =
 
   label = _("Modded Game Extras"),
 
-  side = "left",
+  where = "other",
   priority = 70,
 
   game = "doomish",

@@ -1539,7 +1539,7 @@ OB_MODULES["gzdoom_marine_closets"] =
   game = "doomish",
   port = "zdoom",
 
-  side = "right",
+  where = "combat",
   priority = 93,
 
   hooks =

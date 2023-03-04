@@ -1096,15 +1096,17 @@ bool UI_CustomMods::AddButtonOption(std::string module, std::string option,
     return true;
 }
 
-void UI_CustomMods::AddOptionChoice(std::string module, std::string option,
+bool UI_CustomMods::AddOptionChoice(std::string module, std::string option,
                                     std::string id, std::string label) {
     UI_Module *M = FindID(module);
 
     if (!M) {
-        return;
+        return false;
     }
 
     M->AddOptionChoice(option, id, label);
+
+    return true;
 }
 
 bool UI_CustomMods::ShowModule(std::string id, bool new_shown) {
@@ -1623,6 +1625,27 @@ void UI_CustomMods::SurpriseMe() {
         M->randomize_Values(selected_randomize_groups);
     }
 }
+
+UI_CustomTabs::UI_CustomTabs(int X, int Y, int W, int H)
+    : Fl_Tabs(X, Y, W, H) {
+
+    box(box_style);
+    
+    arch_mods = new UI_CustomMods(X, Y, W, H);
+    arch_mods->end();
+    combat_mods = new UI_CustomMods(X, Y, W, H);
+    combat_mods->end();
+    pickup_mods = new UI_CustomMods(X, Y, W, H);
+    pickup_mods->end();
+    other_mods = new UI_CustomMods(X, Y, W, H);
+    other_mods->end();
+
+    end();
+
+    resizable(arch_mods);
+}
+
+UI_CustomTabs::~UI_CustomTabs() {}
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

@@ -86,7 +86,7 @@ OB_MODULES["debugger"] =
 
   label = _("Miscellaneous Options"),
 
-  side = "left",
+  where = "other",
   engine = "!idtech_0",
   port = "!limit_enforcing",
   priority = 5,

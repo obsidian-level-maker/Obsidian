@@ -1258,7 +1258,7 @@ function ob_restart()
 
     for _,def in pairs(list) do
       if what == "module" then
-        local where = def.side or "right"
+        local where = def.where or "other"
         local suboptions
         if def.options then
           suboptions = 0
@@ -1514,7 +1514,7 @@ function ob_init()
 
     for _,def in pairs(list) do
       if what == "module" then
-        local where = def.side or "right"
+        local where = def.where or "other"
         local suboptions
         if def.options then
           suboptions = 0

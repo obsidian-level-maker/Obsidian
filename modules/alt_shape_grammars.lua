@@ -32,7 +32,7 @@ OB_MODULES["alt_shape_grammars"] =
 
   label = _("Alternate Shape Grammars"),
     
-  side = "left",
+  where = "arch",
   priority = 102,
   engine = "!idtech_0",
   port = "!limit_enforcing",
