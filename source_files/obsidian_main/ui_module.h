@@ -142,7 +142,7 @@ class UI_CustomMods : public Fl_Group {
     int total_h;
 
    public:
-    UI_CustomMods(int X, int Y, int W, int H);
+    UI_CustomMods(int X, int Y, int W, int H, std::string label);
     virtual ~UI_CustomMods();
 
    public:

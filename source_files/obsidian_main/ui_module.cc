@@ -951,9 +951,11 @@ void UI_Module::callback_NanOptions(Fl_Widget *w, void *data) {
 
 //----------------------------------------------------------------
 
-UI_CustomMods::UI_CustomMods(int X, int Y, int W, int H)
+UI_CustomMods::UI_CustomMods(int X, int Y, int W, int H, std::string label)
     : Fl_Group(X, Y, W, H) {
     box(FL_FLAT_BOX);
+
+    copy_label(label.c_str());
 
     color(GAP_COLOR, GAP_COLOR);
 
@@ -1631,13 +1633,15 @@ UI_CustomTabs::UI_CustomTabs(int X, int Y, int W, int H)
 
     box(box_style);
     
-    arch_mods = new UI_CustomMods(X, Y, W, H);
+    visible_focus(0);
+
+    arch_mods = new UI_CustomMods(X, Y+20, W, H, "Architecture");
     arch_mods->end();
-    combat_mods = new UI_CustomMods(X, Y, W, H);
+    combat_mods = new UI_CustomMods(X, Y+20, W, H, "Combat");
     combat_mods->end();
-    pickup_mods = new UI_CustomMods(X, Y, W, H);
+    pickup_mods = new UI_CustomMods(X, Y+20, W, H, "Pickups");
     pickup_mods->end();
-    other_mods = new UI_CustomMods(X, Y, W, H);
+    other_mods = new UI_CustomMods(X, Y+20, W, H, "Other");
     other_mods->end();
 
     end();
