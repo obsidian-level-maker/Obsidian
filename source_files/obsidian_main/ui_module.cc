@@ -1635,13 +1635,13 @@ UI_CustomTabs::UI_CustomTabs(int X, int Y, int W, int H)
     
     visible_focus(0);
 
-    arch_mods = new UI_CustomMods(X, Y+20, W, H, "Architecture");
+    arch_mods = new UI_CustomMods(X, Y+kf_h(22), W, H, "Architecture");
     arch_mods->end();
-    combat_mods = new UI_CustomMods(X, Y+20, W, H, "Combat");
+    combat_mods = new UI_CustomMods(X, Y+kf_h(22), W, H, "Combat");
     combat_mods->end();
-    pickup_mods = new UI_CustomMods(X, Y+20, W, H, "Pickups");
+    pickup_mods = new UI_CustomMods(X, Y+kf_h(22), W, H, "Pickups");
     pickup_mods->end();
-    other_mods = new UI_CustomMods(X, Y+20, W, H, "Other");
+    other_mods = new UI_CustomMods(X, Y+kf_h(22), W, H, "Other");
     other_mods->end();
 
     end();

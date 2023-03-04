@@ -87,14 +87,14 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title)
     menu_bar->add(_("Surprise Me/Go"), FL_F + 8, main_win_surprise_go_CB);
     menu_bar->selection_color(SELECTION);
 
-    sizing_group = new Fl_Group(0, kf_h(22), W, H - kf_h(22));
+    sizing_group = new Fl_Group(0, 0, W, H - kf_h(22));
     sizing_group->box(FL_NO_BOX);
 
     game_box = new UI_Game(0, kf_h(22), LEFT_W, TOP_H - kf_h(22));
 
     build_box = new UI_Build(0, TOP_H + kf_h(4), LEFT_W, BOT_H);
 
-    mod_tabs = new UI_CustomTabs(LEFT_W + kf_h(4), kf_h(22), MOD_W * 2,
+    mod_tabs = new UI_CustomTabs(LEFT_W + kf_h(4), 0, MOD_W * 2,
                                   H - kf_h(22));
 
     end();
