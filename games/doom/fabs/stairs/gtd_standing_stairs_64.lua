@@ -5,7 +5,7 @@ PREFABS.Stairs_standing_64_tech =
 
   theme = "tech",
 
-  prob = 24,
+  prob = 80,
   style = "steepness",
 
   where = "seeds",
