@@ -59,12 +59,40 @@ OB_MODULES["ui_slump_arch"] =
       max = 75,
       increment = 1,
       default = 22,
-      nan = _("Mix It Up,Episodic,Progressive"),
+      nan = _("Mix It Up"),
       presets = _("10:10 (Microscopic),16:16 (Miniature),22:22 (Tiny),30:30 (Small),36:36 (Average),42:42 (Large),48:48 (Huge),58:58 (Colossal),66:66 (Gargantuan),75:75 (Transcendent)"),
       tooltip = _("Determines size of map in rooms."),
       priority = 100,
       randomize_group="architecture"
-    }
+    },
+    { 
+      name="float_minrooms_slump_ub",
+      label=_("Upper Bound"),
+      valuator = "slider",
+      min = 10,
+      max = 75,
+      increment = 1,
+      default = 36,
+      nan = _("Mix It Up"),
+      presets = _("10:10 (Microscopic),16:16 (Miniature),22:22 (Tiny),30:30 (Small),36:36 (Average),42:42 (Large),48:48 (Huge),58:58 (Colossal),66:66 (Gargantuan),75:75 (Transcendent)"),
+      tooltip = _("Determines maximum map size when using Mix It Up."),
+      priority = 99,
+      randomize_group="architecture"
+    },
+    { 
+      name="float_minrooms_slump_lb",
+      label=_("Lower Bound"),
+      valuator = "slider",
+      min = 10,
+      max = 75,
+      increment = 1,
+      default = 2,
+      nan = _("Mix It Up"),
+      presets = _("10:10 (Microscopic),16:16 (Miniature),22:22 (Tiny),30:30 (Small),36:36 (Average),42:42 (Large),48:48 (Huge),58:58 (Colossal),66:66 (Gargantuan),75:75 (Transcendent)"),
+      tooltip = _("Determines minimum room size when using Mix It Up."),
+      priority = 98,
+      randomize_group="architecture"
+    },
   }
 }
 

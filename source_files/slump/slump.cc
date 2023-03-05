@@ -1083,7 +1083,9 @@ config *get_config(std::filesystem::path filename) {
     }
     std::string levelsize = ob_get_param("float_minrooms_slump");
     if (StringCaseCmp(levelsize, "Mix It Up") == 0) {
-        answer->minrooms = xoshiro_Between(2, 37);
+        int low = StringToInt(ob_get_param("float_minrooms_slump_lb"));
+        int high = StringToInt(ob_get_param("float_minrooms_slump_ub"));
+        answer->minrooms = xoshiro_Between(std::min(low,high), std::max(low,high));
     } else {
         answer->minrooms = StringToInt(levelsize);
     }
