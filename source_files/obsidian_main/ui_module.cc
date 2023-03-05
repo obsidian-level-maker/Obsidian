@@ -957,6 +957,8 @@ UI_CustomMods::UI_CustomMods(int X, int Y, int W, int H, std::string label)
 
     copy_label(label.c_str());
 
+    labelfont(use_system_fonts ? font_style : font_style | FL_BOLD);
+
     color(GAP_COLOR, GAP_COLOR);
 
     int cy = Y;
