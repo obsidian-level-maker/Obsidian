@@ -837,6 +837,37 @@ ULTDOOM.MATERIALS =
   ["473618"] = { t="473618", f="473618" },
 }
 
+ULTDOOM.MUSIC_LUMPS = 
+{
+  "D_E1M1",
+  "D_E1M2",
+  "D_E1M3",
+  "D_E1M4",
+  "D_E1M5",
+  "D_E1M6",
+  "D_E1M7",
+  "D_E1M8",
+  "D_E1M9",
+  "D_E2M1",
+  "D_E2M2",
+  "D_E2M3",
+  "D_E2M4",
+  "D_E2M5",
+  "D_E2M6",
+  "D_E2M7",
+  "D_E2M8",
+  "D_E2M9",
+  "D_E3M1",
+  "D_E3M2",
+  "D_E3M3",
+  "D_E3M4",
+  "D_E3M5",
+  "D_E3M6",
+  "D_E3M7",
+  "D_E3M8",
+  "D_E3M9",
+}
+
 ULTDOOM.PREFAB_FIELDS =
 {
   -- Generic locked door conversion --

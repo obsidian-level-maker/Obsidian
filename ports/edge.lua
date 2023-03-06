@@ -66,33 +66,39 @@ EDGE.PARAMETERS =
 
 function EDGE.remap_music()
 
-  -- FIXME: DOOM2 specific!!!
-  local mus_list =
-  {
-    "RUNNIN", "STALKS", "COUNTD", "BETWEE", "DOOM",
-    "THE_DA", "SHAWN", "DDTBLU", "IN_CIT", "DEAD",
-  }
-
-  local old_list = table.copy(mus_list)
-
-  rand.shuffle(mus_list)
-
+  local music_list = table.copy(GAME.MUSIC_LUMPS)
+  
   local data =
   {
     "//\n",
-    "// Playlist.ddf created by OBLIGE\n",
+    "// Playlist.ddf created by OBSIDIAN\n",
     "//\n\n",
     "<PLAYLISTS>\n\n"
   }
 
-  for i = 1,10 do
+  for i = 1,#GAME.levels do
+    local song_pick = rand.pick(music_list)
+
+    local track_num = i
+
+    -- Account for EC's playlist numbering
+    if OB_CONFIG.game == "doom" or OB_CONFIG.game == "ultdoom" then
+      track_num = track_num + 32
+    end
+
     local track = string.format(
-      "[%02d] MUSICINFO = MUS:LUMP:\"D_%s\";\n", i, mus_list[i])
+      "[%02d] MUSICINFO=LUMP:\"%s\";\n", track_num, song_pick)
 
     table.insert(data, track)
+
+    table.kill_elem(music_list, song_pick)
+
+    if table.empty(music_list) then
+      music_list = table.copy(GAME.MUSIC_LUMPS)
+    end
   end
 
-  gui.wad_add_text_lump("DDFPLAY", data);
+  SCRIPTS.ddfplay = ScriptMan_combine_script(SCRIPTS.ddfplay, data)
 end
 
 
@@ -101,7 +107,7 @@ function EDGE.create_language()
   local data =
   {
     "//\n",
-    "// Language.ldf created by OBLIGE\n",
+    "// Language.ldf created by OBSIDIAN\n",
     "//\n\n",
     "<LANGUAGES>\n\n",
     "[ENGLISH]\n"
@@ -110,13 +116,12 @@ function EDGE.create_language()
   for _,L in pairs(GAME.levels) do
     if L.description then
       local id = string.format("%sDesc", L.name)
-      local text = L.name .. ": " .. L.description;
-
+      local text = L.name .. ": " .. L.description
       table.insert(data, string.format("%s = \"%s\";\n", id, text))
     end
   end
 
-  gui.wad_add_text_lump("DDFLANG", data);
+  SCRIPTS.ddflang = ScriptMan_combine_script(SCRIPTS.ddflang, data)
 end
 
 
@@ -129,8 +134,7 @@ end
 
 function EDGE.all_done()
   EDGE.create_language();
-
-  --EDGE.remap_music()
+  EDGE.remap_music()
 end
 
 

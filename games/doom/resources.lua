@@ -74,6 +74,41 @@ DOOM.PALETTES =
 
 --------------------------------------------------------------------
 
+-- Left out the non-level and wolfenstein level music - Dasho
+DOOM.MUSIC_LUMPS = 
+{
+  "D_RUNNIN",
+  "D_STALKS",
+  "D_COUNTD",
+  "D_BETWEE",
+  "D_DOOM",
+  "D_THE_DA",
+  "D_SHAWN",
+  "D_DDTBLU",
+  "D_IN_CIT",
+  "D_DEAD",
+  "D_STLKS2",
+  "D_THEDA2",
+  "D_DOOM2",
+  "D_DDTBL2",
+  "D_RUNNI2",
+  "D_DEAD2",
+  "D_STLKS3",
+  "D_ROMERO",
+  "D_SHAWN2",
+  "D_MESSAG",
+  "D_COUNT2",
+  "D_DDTBL3",
+  "D_AMPIE",
+  "D_THEDA3",
+  "D_ADRIAN",
+  "D_MESSG2",
+  "D_ROMER2",
+  "D_TENSE",
+  "D_SHAWN3",
+  "D_OPENIN",
+}
+
 DOOM.LEVEL_GFX_COLORS =
 {
   gold   = { 0,47,44, 167,166,165,164,163,162,161,160, 225 },
