@@ -45,7 +45,7 @@ constexpr const char *OBSIDIAN_VERSION = OBSIDIAN_TIMESTAMP;
 constexpr const char *OBSIDIAN_VERSION = __DATE__;
 #endif
 
-constexpr const char *OBSIDIAN_SHORT_VERSION = "20";
+constexpr const char *OBSIDIAN_SHORT_VERSION = "21";
 extern std::string OBSIDIAN_CODE_NAME;
 
 constexpr const char *OBSIDIAN_WEBSITE =

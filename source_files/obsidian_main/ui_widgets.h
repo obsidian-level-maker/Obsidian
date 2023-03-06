@@ -265,13 +265,26 @@ class UI_CustomMenuButton : public Fl_Menu_Button {
     void checkLink();
 };
 
+class UI_CustomSlider: public Fl_Hor_Slider {
+   private:
+   public:
+    UI_CustomSlider(int x, int y, int w, int h);
+    virtual ~UI_CustomSlider();
+
+   private:
+    int handle(int event);
+};
+
 class UI_RSlide : public Fl_Group {
    private:
+
    public:
     UI_RSlide(int x, int y, int w, int h);
     virtual ~UI_RSlide();
 
     Fl_Box *mod_label;
+
+    Fl_Box *unit_label;
 
     UI_ResetOption *mod_reset;
 
@@ -279,15 +292,13 @@ class UI_RSlide : public Fl_Group {
 
     UI_ManualEntry *mod_entry;
 
-    Fl_Hor_Slider *mod_slider;
+    UI_CustomSlider *mod_slider;
 
     UI_CustomArrowButton *prev_button;
 
     UI_CustomArrowButton *next_button;
 
     UI_CustomMenuButton *nan_options;
-
-    std::string original_label;
 
     std::string units;
 

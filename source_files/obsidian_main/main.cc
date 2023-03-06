@@ -1541,7 +1541,7 @@ hardrestart:;
 #endif
         Trans_SetLanguage();
         OBSIDIAN_TITLE = _("OBSIDIAN Level Maker");
-        OBSIDIAN_CODE_NAME = _("Gates of Tartarus");
+        OBSIDIAN_CODE_NAME = _("Unstable");
 #ifndef CONSOLE_ONLY
         Main::SetupFLTK();
 #endif

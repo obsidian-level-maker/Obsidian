@@ -246,11 +246,11 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
     rsl->prev_button->labelsize(rsl->prev_button->labelsize() * .80);
     rsl->prev_button->callback(callback_SliderPrevious, NULL);
 
-    rsl->mod_slider = new Fl_Hor_Slider(
+    rsl->mod_slider = new UI_CustomSlider(
         rsl->x() + (rsl->w() * .45),
         rsl->y(),
         rsl->w() * (rsl->nan_choices.size() > 0 ? .30 : .35),
-        kf_h(24), NULL);
+        kf_h(24));
     rsl->mod_slider->box(button_style);
     rsl->mod_slider->visible_focus(0);
     rsl->mod_slider->color(BUTTON_COLOR);
@@ -259,6 +259,14 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
     rsl->mod_slider->maximum(max);
     rsl->mod_slider->step(inc);
     rsl->mod_slider->callback(callback_PresetCheck, NULL);
+
+    rsl->unit_label = new Fl_Box(
+        rsl->x() + (rsl->w() * .45),
+        rsl->y(),
+        rsl->w() * (rsl->nan_choices.size() > 0 ? .30 : .35),
+        kf_h(24), "");
+    rsl->unit_label->align(FL_ALIGN_CENTER | FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
+    rsl->unit_label->labelfont(font_style);
 
     rsl->next_button = new UI_CustomArrowButton(
         rsl->x() + rsl->w() * (rsl->nan_choices.size() > 0 ? .75 : .80),
@@ -312,7 +320,6 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
     rsl->mod_help->help_title = label;
     rsl->mod_help->callback(callback_ShowHelp, NULL);
 
-    rsl->original_label = label;
     rsl->units = units;
 
     // Populate the preset_choices map
@@ -746,25 +753,20 @@ void UI_Module::callback_PresetCheck(Fl_Widget *w, void *data) {
             0;  // Silly, but keeps "negative zero" from being show on the label
     }
 
-    std::string new_label = current_slider->original_label;
+    std::string new_label;
 
-    current_slider->mod_label->copy_label(
+    current_slider->unit_label->copy_label(
         new_label.append(50, ' ').c_str());  // To prevent visual errors with
                                              // labels of different lengths
-
-    new_label = current_slider->original_label;
-
     // Check against the preset_choices map
 
     if (current_slider->preset_choices.count(value) == 1) {
-        current_slider->mod_label->copy_label(
-            new_label.append(current_slider->preset_choices[value].c_str())
-                .append(" ").c_str());
+        new_label = current_slider->preset_choices[value];
+        current_slider->unit_label->copy_label(
+            new_label.c_str());
     } else {
-        std::string value_string = fmt::format("{}", value);
-        current_slider->mod_label->copy_label(new_label.append(value_string)
-                                                  .append(current_slider->units)
-                                                  .append(" ")
+        new_label = fmt::format("{}", value);
+        current_slider->unit_label->copy_label(new_label.append(current_slider->units)
                                                   .c_str());
     }
 }
@@ -930,13 +932,14 @@ void UI_Module::callback_NanOptions(Fl_Widget *w, void *data) {
     int temp_value = nan_options->value();
 
     if (temp_value > 0) {
-        std::string new_label = current_slider->original_label;
+        std::string current_val = current_slider->unit_label->label();
+        std::string new_label;
         current_slider->mod_label->copy_label(
             new_label.append(50, ' ')
                 .c_str());  // To prevent visual errors with labels of different
                             // lengths
-        new_label = current_slider->original_label;
-        current_slider->mod_label->copy_label(
+        new_label = current_val;
+        current_slider->unit_label->copy_label(
             new_label.append(nan_options->text(temp_value)).c_str());
         current_slider->prev_button->deactivate();
         current_slider->mod_slider->deactivate();
