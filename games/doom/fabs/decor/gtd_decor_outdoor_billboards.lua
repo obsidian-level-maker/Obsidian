@@ -36,4 +36,18 @@ PREFABS.Decor_outdoor_billboard_UAC_sheet =
 
   bound_z1 = 0,
   bound_z2 = 160,
+
+  tex_T_SHAWCR =
+  {
+
+    CRGNRCK2 = 50,
+    ADVCR1 = 50,
+    ADVCR2 = 50,
+    ADVCR4 = 50,
+    ADVDE1 = 50,
+    ADVDE2 = 50,
+    ADVDE3 = 50,
+    ADVDE5 = 50,
+    ADVDE7 = 50
+  }
 }

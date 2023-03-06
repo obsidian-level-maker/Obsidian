@@ -6,7 +6,6 @@ PREFABS.Item_gothic_balcony =
 {
   file   = "item/gothic1.wad",
 
-  rank   = 3,
   prob   = 200,
   theme  = "!tech",
   env    = "!cave",

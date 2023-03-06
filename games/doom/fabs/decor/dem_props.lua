@@ -213,7 +213,8 @@ PREFABS.Decor_advert_board1 =
     ADVDE1 = 50,
     ADVDE2 = 50,
     ADVDE3 = 50,
-    ADVDE5 = 50
+    ADVDE5 = 50,
+    ADVDE7 = 50
   }
 
 }
@@ -241,7 +242,8 @@ PREFABS.Decor_advert_board2 =
     ADVDE1 = 50,
     ADVDE2 = 50,
     ADVDE3 = 50,
-    ADVDE5 = 50
+    ADVDE5 = 50,
+    ADVDE7 = 50
   }
 
 }
@@ -265,7 +267,8 @@ PREFABS.Decor_advert_board3 =
     CRGNRCK2 = 50,
     ADVCR3 = 50,
     ADVCR5 = 50,
-    ADVDE4 = 50
+    ADVDE4 = 50,
+    ADVDE6 = 50,
   }
 
 }
@@ -291,7 +294,8 @@ PREFABS.Decor_advert_board4 =
     COMPSC1 = 50,
     ADVCR3 = 50,
     ADVCR5 = 50,
-    ADVDE4 = 50
+    ADVDE4 = 50,
+    ADVDE6 = 50,
   }
 
 }

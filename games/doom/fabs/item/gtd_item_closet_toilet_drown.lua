@@ -9,7 +9,6 @@ PREFABS.Item_closet_toilet_drown =
 
   port = "zdoom",
 
-  rank = 2,
   prob = 100,
 
   where  = "seeds",

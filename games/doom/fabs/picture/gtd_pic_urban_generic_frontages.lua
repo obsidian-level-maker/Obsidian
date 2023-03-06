@@ -6,7 +6,7 @@ PREFABS.Pic_storefront_3x =
   prob   = 80, --35,
   theme = "urban",
 
-  env   = "!cave",
+  env   = "outdoor",
 
   where  = "seeds",
   height = 128,
@@ -59,7 +59,7 @@ PREFABS.Pic_apartment_row_3x =
   prob   = 120, --35,
   theme = "urban",
 
-  env   = "!cave",
+  env   = "outdoor",
 
   where  = "seeds",
   height = 128,
