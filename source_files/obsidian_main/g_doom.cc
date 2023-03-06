@@ -361,7 +361,7 @@ void Doom::BeginLevel() {
             textmap_lump->Printf("namespace = \"Hexen\";\n\n");
         } else {
             textmap_lump->Printf("namespace = \"ZDoomTranslated\";\n\n");
-            if (current_port == "eternity") {
+            if (StringCaseCmp(current_port, "eternity") == 0) {
                 textmap_lump->Printf("ee_compat = true;\n\n");
             }
         }
@@ -993,20 +993,20 @@ static bool BuildNodes(std::filesystem::path filename) {
         build_info->force_v5 = false;
         build_info->force_xnod = false;
         build_info->do_blockmap = true;
-        build_info->do_reject = build_reject;
+        build_info->do_reject = true;
     } else if (StringCaseCmp(current_port, "dsda") == 0) {
-        build_info->gl_nodes = UDMF_mode;
-        build_info->do_reject = !UDMF_mode;
-        build_info->do_blockmap = !UDMF_mode;
-        build_info->force_xnod = true;
+        build_info->gl_nodes = true;
+        build_info->do_reject = false;
+        build_info->do_blockmap = false;
+        build_info->force_xnod = false;
         build_info->force_compress = true;
     } else if (StringCaseCmp(current_port, "eternity") == 0) {
-        build_info->gl_nodes = UDMF_mode;
-        build_info->do_reject = !UDMF_mode;
-        build_info->do_blockmap = !UDMF_mode;
+        build_info->gl_nodes = true;
+        build_info->do_reject = false;
+        build_info->do_blockmap = false;
         build_info->force_xnod = true;
         build_info->force_compress = false;
-    } else { // ZDoom
+    } else { // ZDoom; EDGE-Classic always builds its own nodes
         build_info->gl_nodes = true;
         build_info->do_reject = false;
         build_info->do_blockmap = false;
@@ -1179,6 +1179,11 @@ bool Doom::game_interface_c::Finish(bool build_ok) {
     }
 
     if (build_ok) {
+        int old_zip_output = zip_output;
+        // This should be set for all UDMF ports, but I gotta get off my ass and finish EC pk3 support - Dasho
+        if ((StringCaseCmp(current_port, "eternity") == 0) || (StringCaseCmp(current_port, "zdoom") == 0)) {
+            zip_output = 2;
+        }
         if (zip_output > 0) {
             std::filesystem::path zip_filename = filename;
             zip_filename.replace_extension(zip_output == 1 ? "zip" : "pk3");
@@ -1206,17 +1211,20 @@ bool Doom::game_interface_c::Finish(bool build_ok) {
                     std::filesystem::remove(filename);
                     delete[] zip_buf;
                 } else {
+                    zip_output = old_zip_output;
                     LogPrintf(
                         "Zipping output WAD to {} failed! Retaining original "
                         "WAD.\n",
                         zip_filename.generic_string());
                 }
             } else {
+                zip_output = old_zip_output;
                 LogPrintf(
                     "Zipping output WAD to {} failed! Retaining original "
                     "WAD.\n",
                     zip_filename.generic_string());
             }
+            zip_output = old_zip_output;
         }
     }
 

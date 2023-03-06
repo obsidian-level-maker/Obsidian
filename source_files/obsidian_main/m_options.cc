@@ -217,6 +217,7 @@ class UI_OptionsWin : public Fl_Window {
    private:
     UI_CustomMenu *opt_language;
     UI_CustomMenu *opt_zip_output;
+    UI_HelpLink *zip_output_help;
     UI_CustomMenu *opt_filename_prefix;
 
     Fl_Button *opt_custom_prefix;
@@ -336,6 +337,22 @@ class UI_OptionsWin : public Fl_Window {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
 
         zip_output = that->opt_zip_output->value();
+    }
+
+    static void callback_ZipOutputHelp(Fl_Widget *w, void *data) {
+        fl_cursor(FL_CURSOR_DEFAULT);
+        Fl_Window *win = new Fl_Window(640, 480, _("Compress Output"));
+        Fl_Text_Buffer *buff = new Fl_Text_Buffer();
+        Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
+        disp->buffer(buff);
+        disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
+        win->resizable(*disp);
+        win->hotspot(0, 0, 0);
+        win->set_modal();
+        win->show();
+        // clang-format off
+        buff->text(_("Choose to compress the generated WAD as a zip file, which can have the extension ZIP or PK3. PK3 is simply a renamed ZIP that is usually recognized by Doom source ports and editors. Ports that support UDMF will override this setting and produce PK3 files."));
+        // clang-format on
     }
 
     static void callback_Random_String_Seeds(Fl_Widget *w, void *data) {
@@ -606,6 +623,11 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_zip_output->textcolor(FONT2_COLOR);
     opt_zip_output->selection_color(SELECTION);
     opt_zip_output->value(zip_output);
+
+    zip_output_help = new UI_HelpLink(
+        cx + W * .38 + this->opt_zip_output->w(), cy, W * 0.10, kf_h(24));
+    zip_output_help->labelfont(font_style);
+    zip_output_help->callback(callback_ZipOutputHelp, this);
 
     cy += opt_zip_output->h() + y_step;
 

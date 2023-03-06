@@ -212,7 +212,7 @@ DSDA.PARAMETERS =
 
 }
 
-OB_PORTS["dsda"] =
+UNFINISHED["dsda"] = -- Waiting on UDMF and zip archive support to be implemented; until then no advantage over BOOM-Compat - Dasho
 {
   label = _("DSDA-Doom"),
   priority = 97,
