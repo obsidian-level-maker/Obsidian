@@ -903,7 +903,9 @@ SPROUT_CASTLE_2 =
 
     conn = { x=4, y=2, w=2, dir=8 },
 
-    symmetry = { kind="mirror", x=2, y=4, w=4, dir=8}
+    symmetry = { kind="mirror", x=4, y=5, w=4, dir=4 },
+    symmetry = { kind="mirror", x=4, y=5, w=4, dir=6 },
+    symmetry = { kind="rotate", x=3, y=4, x2=6, y2=7 }
   }
 },
 
@@ -4312,7 +4314,7 @@ GROW_357_ROUND_HOLLOW_HALF_LIQUID =
   diagonals =
   {
          "A~","~A",
-    ".1",".A","A.","1.",
+    "1.",".A","A.",".1",
          "1.",".1",
          ".1","1.",
          ".1","1.",
@@ -4531,6 +4533,23 @@ GROW_LIQUID_POOL_1X1 =
   },
 },
 
+GROW_LIQUID_POOL_1X1_2 =
+{
+  prob = 5,
+  prob_skew = 2,
+  skip_prob = 35,
+
+  structure =
+  {
+    "x...x","x111x",
+    ".....","11111",
+    ".....","1~#~1",
+    ".....","11111",
+    "11x..","11x11",
+  },
+},
+
+
 GROW_LIQUID_POOL_2X2 =
 {
   prob = 15,
@@ -4548,6 +4567,23 @@ GROW_LIQUID_POOL_2X2 =
   },
 },
 
+GROW_LIQUID_POOL_2X2_2 =
+{
+  prob = 15,
+  prob_skew = 2,
+  skip_prob = 35,
+
+  structure =
+  {
+    "..xxxx..","11xxxx11",
+    "........","11111111",
+    "........","1~~11~~1",
+    "........","1~~11~~1",
+    "........","11111111",
+    "11xxxx..","11xxxx11",
+  },
+},
+
 GROW_LIQUID_POOL_2X2_NEW_AREA =
 {
   prob = 10,
@@ -4561,6 +4597,22 @@ GROW_LIQUID_POOL_2X2_NEW_AREA =
     "......","AA~~AA",
     "x....x","x1111x",
     "xxx11x","xxx11x",
+  },
+},
+
+GROW_LIQUID_POOL_2X2_NEW_AREA_2 =
+{
+  prob = 10,
+  skip_prob = 35,
+
+  structure =
+  {
+    "x..xxxx..x","x11xxxx11x",
+    "x........x","x11111111x",
+    "..........","AA~~AA~~AA",
+    "..........","AA~~AA~~AA",
+    "x........x","x11111111x",
+    "x11xxxx..x","x11xxxx11x",
   },
 },
 

@@ -5,7 +5,7 @@ PREFABS.Stairs_standing_64_tech =
 
   theme = "tech",
 
-  prob = 24,
+  prob = 80,
   style = "steepness",
 
   where = "seeds",
@@ -17,7 +17,7 @@ PREFABS.Stairs_standing_64_tech =
   bound_z1 = 0,
 
   x_fit = {60,68},
-  y_fit = {28,36 , 92,100 , 156,64 , 220,228},
+  y_fit = {28,36 , 92,100 , 156,164 , 220,228},
 
   delta_h = 64
 }
