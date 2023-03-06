@@ -61,6 +61,13 @@ HARMONY.PALETTES = -- Update with correct colors - Dasho
   }
 }
 
+-- These are the only tracks used in the base Harmony IWAD (this does include the title music)
+HARMONY.MUSIC_LUMPS = 
+{
+  "D_RUNNIN",
+  "D_STALKS",
+  "D_DM2TTL",
+}
 
 function HARMONY.make_cool_gfx()
   local GREEN =

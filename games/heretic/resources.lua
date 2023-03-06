@@ -71,6 +71,28 @@ HERETIC.PALETTES =
   },
 }
 
+HERETIC.MUSIC_LUMPS = 
+{
+  "MUS_E1M1", 
+  "MUS_E1M2",
+  "MUS_E1M3",
+  "MUS_E1M4",
+  "MUS_E1M5",
+  "MUS_E1M6",
+  "MUS_E1M7",
+  "MUS_E1M8",
+  "MUS_E1M9", 
+  "MUS_E2M1",
+  "MUS_E2M2",
+  "MUS_E2M3",
+  "MUS_E2M4",
+  "MUS_E2M6",
+  "MUS_E2M7",
+  "MUS_E2M8",
+  "MUS_E2M9",
+  "MUS_E3M2",
+  "MUS_E3M3",
+}
 
 ------------------------------------------------------------------------
 

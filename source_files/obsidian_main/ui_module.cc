@@ -57,22 +57,23 @@ UI_Module::UI_Module(int X, int Y, int W, int H, std::string id,
 
     int tx = Is_UI() ? 8 : 28;
 
-    heading = new Fl_Box(FL_NO_BOX, X + kf_w(tx), Y + kf_h(4), W - kf_w(tx + 4),
-                         kf_h(24), "");
-    heading->copy_label(label.c_str());
-    heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
-    heading->labelfont(use_system_fonts ? font_style : font_style | FL_BOLD);
-
-    if (Is_UI()) {
-        heading->labelsize(header_font_size);
+    if (!Is_UI()) {
+        heading = new Fl_Box(FL_NO_BOX, X + kf_w(tx), Y + kf_h(4), W - kf_w(tx + 4),
+                            kf_h(24), "");
+        heading->copy_label(label.c_str());
+        heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
+        heading->labelfont(use_system_fonts ? font_style : font_style | FL_BOLD);
     }
 
     if (!tip.empty()) {
         mod_button->copy_tooltip(tip.c_str());
-        heading->copy_tooltip(tip.c_str());
+        if (!Is_UI()) {
+            heading->copy_tooltip(tip.c_str());
+        }
     }
 
-    cur_opt_y += kf_h(32);
+    cur_opt_y += Is_UI() ? kf_h(8) :kf_h(32);
+
 
     end();
 
@@ -109,7 +110,7 @@ void UI_Module::AddHeader(std::string opt, std::string label, int gap) {
 
     add(rhead);
 
-    cur_opt_y += (gap ? kf_h(39) : kf_h(25));
+    cur_opt_y += (gap ? kf_h(36) : kf_h(26));
 
     resize(x(), y(), w(), CalcHeight());
     redraw();
@@ -137,7 +138,7 @@ void UI_Module::AddOption(std::string opt, std::string label, std::string tip,
         rch->x(), rch->y(), rch->w() * .40,
         kf_h(24), "");
     rch->mod_label->copy_label(fmt::format("{}: ", label).c_str());
-    rch->mod_label->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
+    rch->mod_label->align(FL_ALIGN_RIGHT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
     rch->mod_label->labelfont(font_style);
     rch->mod_label->copy_tooltip(tip.c_str());
 
@@ -181,7 +182,7 @@ void UI_Module::AddOption(std::string opt, std::string label, std::string tip,
 
     add(rch);
 
-    cur_opt_y += (gap ? kf_h(59) : kf_h(45));
+    cur_opt_y += (gap ? kf_h(36) : kf_h(26));
 
     resize(x(), y(), w(), CalcHeight());
     redraw();
@@ -229,7 +230,7 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
         rsl->w() * .40,
         kf_h(24), "");
     rsl->mod_label->copy_label(label.c_str());
-    rsl->mod_label->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
+    rsl->mod_label->align(FL_ALIGN_RIGHT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
     rsl->mod_label->labelfont(font_style);
     rsl->mod_label->copy_tooltip(tip.c_str());
 
@@ -386,7 +387,7 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
 
     add(rsl);
 
-    cur_opt_y += (gap ? kf_h(59) : kf_h(45));
+    cur_opt_y += (gap ? kf_h(36) : kf_h(26));
 
     resize(x(), y(), w(), CalcHeight());
     redraw();
@@ -412,9 +413,9 @@ void UI_Module::AddButtonOption(std::string opt, std::string label,
 
     rbt->mod_label =
         new Fl_Box(rbt->x(), rbt->y(),
-                   rbt->w() * .70, kf_h(24), "");
+                   rbt->w() * .40, kf_h(24), "");
     rbt->mod_label->copy_label(fmt::format("{}: ", label).c_str());
-    rbt->mod_label->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
+    rbt->mod_label->align(FL_ALIGN_RIGHT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
     rbt->mod_label->labelfont(font_style);
     rbt->mod_label->copy_tooltip(tip.c_str());
 
@@ -456,7 +457,7 @@ void UI_Module::AddButtonOption(std::string opt, std::string label,
 
     add(rbt);
 
-    cur_opt_y += gap ? kf_h(45) : kf_h(30);
+    cur_opt_y += (gap ? kf_h(36) : kf_h(26));
 
     resize(x(), y(), w(), CalcHeight());
     redraw();
@@ -758,11 +759,12 @@ void UI_Module::callback_PresetCheck(Fl_Widget *w, void *data) {
     if (current_slider->preset_choices.count(value) == 1) {
         current_slider->mod_label->copy_label(
             new_label.append(current_slider->preset_choices[value].c_str())
-                .c_str());
+                .append(" ").c_str());
     } else {
         std::string value_string = fmt::format("{}", value);
         current_slider->mod_label->copy_label(new_label.append(value_string)
                                                   .append(current_slider->units)
+                                                  .append(" ")
                                                   .c_str());
     }
 }
