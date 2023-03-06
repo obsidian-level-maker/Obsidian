@@ -814,9 +814,8 @@ PREFABS.Joiner_yard_joiner3 =
   template = "Joiner_living_room",
   map    = "MAP19",
 
-
-rank = 1,
-
+  height = { 256,386 },
+  nearby_h = 256,
   prob   = 3500,
 
   neighbor = "outdoor",
@@ -851,6 +850,7 @@ rank = 1,
     CITY14 = 25,
   },
 
+  z_fit = { 254,256 }
 }
 
 --destroyed yard and house joiner 4
