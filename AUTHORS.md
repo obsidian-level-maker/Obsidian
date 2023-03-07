@@ -139,6 +139,9 @@ DasCake
 Baysha
   - Hot Dog theme
 
+Arcterezion
+  - Arcterezion Purple theme
+
 # OBLIGE
 
 ## DEVELOPER:

@@ -61,6 +61,31 @@ HACX.PALETTES =
   }
 }
 
+HACX.MUSIC_LUMPS = 
+{
+  "D_HACX01",
+  "D_HACX02",
+  "D_HACX03",
+  "D_HACX04",
+  "D_HACX05",
+  "D_HACX06",
+  "D_HACX07",
+  "D_HACX08",
+  "D_HACX09",
+  "D_HACX10",
+  "D_HACX11",
+  "D_HACX12",
+  "D_HACX13",
+  "D_HACX14",
+  "D_HACX15",
+  "D_HACX16",
+  "D_HACX17",
+  "D_HACX18",
+  "D_HACX19",
+  "D_HACX20",
+  "D_HACX21",
+}
+
 function HACX.make_cool_gfx()
   local GREEN =
   {

@@ -49,7 +49,7 @@ PREFABS.Pic_hell_alcove_furnace =
 
    thing_59 = {
    hang_arm_pair = 50,
-   hang_arm_gone = 50,
+   hang_leg_gone = 50,
    hang_twitching = 50,
    gutted_victim1 = 50,
    gutted_victim2 = 50,
@@ -57,7 +57,7 @@ PREFABS.Pic_hell_alcove_furnace =
 
    thing_73 = {
    hang_arm_pair = 50,
-   hang_arm_gone = 50,
+   hang_leg_gone = 50,
    hang_twitching = 50,
    gutted_victim1 = 50,
    gutted_victim2 = 50,

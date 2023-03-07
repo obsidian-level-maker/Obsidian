@@ -61,6 +61,16 @@ OB_MODULES["historical_versions"] =
       priority = 102,
       randomize_group = "architecture",
     },
+
+    {
+      name = "bool_historical_oblige_v2_dm_mode",
+      label = _("Oblige v2 Deathmatch Mode"),
+      valuator = "button",
+      default = 0,
+      tooltip = _("v2 levels will be created for Deathmatch use"),
+      longtip = _("Levels using Oblige v2 will be made using its Deathmatch mode. There will be no monsters or exits, so this is usually used in conjunction with the v2 slider being set to 100% to create a DM-only WAD"),
+      priority = 101,
+    },
     
   },
 }

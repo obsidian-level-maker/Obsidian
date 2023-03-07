@@ -49,6 +49,67 @@ function ScriptMan_assemble_acs_lump()
 -- MSSP-TODO
 end
 
+function ScriptMan_assemble_ddf_lumps()
+
+  if SCRIPTS.coalhuds then
+    gui.wad_add_text_lump("COALHUDS", SCRIPTS.coalhuds)
+  end
+  if SCRIPTS.ddfanim then
+    gui.wad_add_text_lump("DDFANIM", SCRIPTS.ddfanim)
+  end
+  if SCRIPTS.ddfatk then
+    gui.wad_add_text_lump("DDFATK", SCRIPTS.ddfatk)
+  end
+  if SCRIPTS.ddfcolm then
+    gui.wad_add_text_lump("DDFCOLM", SCRIPTS.ddfcolm)
+  end
+  if SCRIPTS.ddfflat then
+    gui.wad_add_text_lump("DDFFLAT", SCRIPTS.ddfflat)
+  end
+  if SCRIPTS.ddffont then
+    gui.wad_add_text_lump("DDFFONT", SCRIPTS.ddffont)
+  end
+  if SCRIPTS.ddfgame then
+    gui.wad_add_text_lump("DDFGAME", SCRIPTS.ddfgame)
+  end
+  if SCRIPTS.ddfimage then
+    gui.wad_add_text_lump("DDFIMAGE", SCRIPTS.ddfimage)
+  end
+  if SCRIPTS.ddflang then
+    gui.wad_add_text_lump("DDFLANG", SCRIPTS.ddflang)
+  end
+  if SCRIPTS.ddflevl then
+    gui.wad_add_text_lump("DDFLEVL", SCRIPTS.ddflevl)
+  end
+  if SCRIPTS.ddfline then
+    gui.wad_add_text_lump("DDFLINE", SCRIPTS.ddfline)
+  end
+  if SCRIPTS.ddfplay then
+    gui.wad_add_text_lump("DDFPLAY", SCRIPTS.ddfplay)
+  end
+  if SCRIPTS.ddfsect then
+    gui.wad_add_text_lump("DDFSECT", SCRIPTS.ddfsect)
+  end
+  if SCRIPTS.ddfsfx then
+    gui.wad_add_text_lump("DDFSFX", SCRIPTS.ddfsfx)
+  end
+  if SCRIPTS.ddfstyle then
+    gui.wad_add_text_lump("DDFSTYLE", SCRIPTS.ddfstyle)
+  end
+  if SCRIPTS.ddfswth then
+    gui.wad_add_text_lump("DDFSWTH", SCRIPTS.ddfswth)
+  end
+  if SCRIPTS.ddfthing then
+    gui.wad_add_text_lump("DDFTHING", SCRIPTS.ddfthing)
+  end
+  if SCRIPTS.ddfweap then
+    gui.wad_add_text_lump("DDFWEAP", SCRIPTS.ddfweap)
+  end
+  if SCRIPTS.rscript then
+    gui.wad_add_text_lump("RSCRIPT", SCRIPTS.rscript)
+  end
+
+end
 
 function ScriptMan_assemble_mapinfo_lump()
 
@@ -417,15 +478,19 @@ end
 
 function ScriptMan_init()
   gui.printf("\n--==| Script Manager |==--\n\n")
-  ScriptMan_assemble_zscript_lump()
-  ScriptMan_assemble_decorate_lump()
-  ScriptMan_assemble_gldefs_lump()
-  ScriptMan_assemble_sndinfo_lump()
-  ScriptMan_assemble_mapinfo_lump()
-  ScriptMan_assemble_trnslate_lump()
-  ScriptMan_assemble_language_lump()
-  ScriptMan_assemble_acs_loader_lump()
-  ScriptMan_assemble_textures_lump()
-  ScriptMan_assemble_terrain_lump()
-  ScriptMan_merge_acs_lumps()
+  if OB_CONFIG.port == "edge" then
+    ScriptMan_assemble_ddf_lumps()
+  else
+    ScriptMan_assemble_zscript_lump()
+    ScriptMan_assemble_decorate_lump()
+    ScriptMan_assemble_gldefs_lump()
+    ScriptMan_assemble_sndinfo_lump()
+    ScriptMan_assemble_mapinfo_lump()
+    ScriptMan_assemble_trnslate_lump()
+    ScriptMan_assemble_language_lump()
+    ScriptMan_assemble_acs_loader_lump()
+    ScriptMan_assemble_textures_lump()
+    ScriptMan_assemble_terrain_lump()
+    ScriptMan_merge_acs_lumps()
+  end
 end

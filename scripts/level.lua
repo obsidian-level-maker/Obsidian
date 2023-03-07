@@ -2732,14 +2732,14 @@ function Level_make_all()
   -- semi-supported games warning
   if ob_match_game({ game = { nukem=1, quake=1 } }) then
     if not PARAM.bool_experimental_games or PARAM.bool_experimental_games == 0 then
-      error(gui.gettext("\nWarning: The game that you have selected is in an experimental state. WADs may not build successfully and certain gameplay features may not be implemented yet! To ignore this warning and continue generation for these games, check the \"Experimental Games\" checkbox located in the Debug Control Module.\n\nThis message will change should development scope expand."))
+      error(gui.gettext("\nWarning: The game that you have selected is in an experimental state. WADs may not build successfully and certain gameplay features may not be implemented yet! To ignore this warning and continue generation for these games, check the \"Experimental Games\" checkbox located in the Miscellaneous Options Module.\n\nThis message will change should development scope expand."))
     end
   end
 
   -- limit-removing engine warning
   if OB_CONFIG.port == "limit_removing" and ob_match_game({ game = "doomish" }) then
     if not PARAM.bool_suppress_nolimit_warning or PARAM.bool_suppress_nolimit_warning == 0 then
-      error(gui.gettext("\nWarning: Limit-Removing uses a very basic set of prefabs, and should only be used if your source port isn't compatible with any other choice!\nClick the help link next to the Engine setting for an explanation of the other choices. To disable this warning, check the \"Suppress NoLimit Warning\" checkbox located in the Debug Control Module."))
+      error(gui.gettext("\nWarning: Limit-Removing uses a very basic set of prefabs, and should only be used if your source port isn't compatible with any other choice!\nClick the help link next to the Engine setting for an explanation of the other choices. To disable this warning, check the \"Suppress NoLimit Warning\" checkbox located in the Miscellaneous Options Module."))
     end
   end
 
