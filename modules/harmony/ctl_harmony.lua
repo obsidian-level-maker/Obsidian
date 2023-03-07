@@ -63,6 +63,7 @@ OB_MODULES["harmony_mon_control"] =
   game = "harmony",
   engine = "idtech_1",
   port = "!limit_enforcing",
+  where = "combat",
 
   hooks =
   {
@@ -238,6 +239,7 @@ OB_MODULES["harmony_weapon_control"] =
   game = "harmony",
   engine = "idtech_1",
   port = "!limit_enforcing",
+  where = "pickup",
 
   hooks =
   {

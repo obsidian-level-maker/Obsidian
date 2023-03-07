@@ -17,7 +17,7 @@ function HARMONY.all_done()
 	gui.wad_insert_file("data/endoom/ENDOOM.bin", "ENDOOM")
 end
 
-OB_GAMES["harmony"] =
+UNFINISHED["harmony"] =
 {
 	label = _("Harmony"),
 	priority = 91,
@@ -29,8 +29,6 @@ OB_GAMES["harmony"] =
 	game_dir = "harmony",
 	iwad_name = "harm1.wad",
 
-	use_generics = true,
-	
 	tables =
 	{
 		HARMONY

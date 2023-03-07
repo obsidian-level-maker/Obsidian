@@ -289,14 +289,7 @@ function Fab_load_all_definitions()
 
   assert(GAME.game_dir)
 
-  if GAME.use_generics and GAME.use_generics == true then
-    if not ob_match_game({game = "doomish"}) or OB_CONFIG.port == "limit_removing" then
-      visit_dir("games/generic/fabs", "*.lua")
-    end
-  end
-  if not ob_match_game({game = "doomish"}) or OB_CONFIG.port ~= "limit_removing" then
-    visit_dir("games/" .. GAME.game_dir .. "/fabs", "*.lua")
-  end
+  visit_dir("games/" .. GAME.game_dir .. "/fabs", "*.lua")
   ob_invoke_hook("addon_fabs")
   preprocess_all()
 end
@@ -1615,11 +1608,7 @@ function Fab_load_wad(def)
     local spot_info
 
     if OB_CONFIG.game == "hexen" then
-      if fab.native_hexen then
-        spot_info = WADFAB_ENTITIES_HEXEN[E.id]
-      else
-        spot_info = WADFAB_ENTITIES[E.id]
-      end
+      spot_info = WADFAB_ENTITIES_HEXEN[E.id]
     else
       spot_info = WADFAB_ENTITIES[E.id]
     end
@@ -1820,11 +1809,8 @@ function Fab_load_wad(def)
     local E
 
     for thing_idx = 0,9999 do
-      if OB_CONFIG.game == "hexen" and def.native_hexen then
+      if OB_CONFIG.game == "hexen" then
         E = gui.wadfab_get_thing_hexen(thing_idx)
-        if E then 
-          E["native_hexen"] = 1
-        end
       else
         E = gui.wadfab_get_thing(thing_idx)
       end
@@ -1987,7 +1973,6 @@ function Fab_collect_fields(fab)
     if string.match(name, "^offset_") then return true end
     if string.match(name, "^delta") then return true end
     if string.match(name, "^forced_offsets") then return true end
-    if string.match(name, "^doom_line_to_hexen_") then return true end
 
     return false
   end
@@ -2042,7 +2027,7 @@ function Fab_substitutions(fab, SKIN)
     for _,name in pairs(keys) do
       local value = fab.fields[name]
 
-      if type(value) ~= "table" or string.match(name, "^forced_offsets") or string.match(name, "^doom_line_to_hexen") then goto continue end
+      if type(value) ~= "table" or string.match(name, "^forced_offsets") then goto continue end
 
       if table.size(value) == 0 then
         error("Fab_substitutions: random table is empty: " .. tostring(name))
@@ -2186,8 +2171,6 @@ function Fab_replacements(LEVEL, fab)
     end
 
 
-    --if LEVEL.liquid and val == "_LIQUID" then gui.printf(table.tostr(LEVEL.liquid).."troof\n") end
-
     -- give liquid brushes lighting and/or special type
     if val == "_LIQUID" and LEVEL.liquid then
       C.special   = C.special or LEVEL.liquid.special
@@ -2327,22 +2310,7 @@ function Fab_replacements(LEVEL, fab)
   for _,B in pairs(fab.brushes) do
     for _,C in pairs(B) do
       if C.special and C.x then
-        if OB_CONFIG.game ~= "hexen" then 
-          C.special = check("line", C.special)
-        else
-          local info = check("doom_line_to_hexen", C.special) -- In the future there might be a need for hexen->hexen subs, but this should work for now - Dasho
-          if type(info) == "table" then
-            C.special = info.special
-            if info.arg1 then C.arg1 = info.arg1 end
-            if info.arg2 then C.arg2 = info.arg2 end
-            if info.arg3 then C.arg3 = info.arg3 end
-            if info.arg4 then C.arg4 = info.arg4 end
-            if info.arg5 then C.arg5 = info.arg5 end
-            if info.flags then C.flags = info.flags end
-          else
-            C.special = check("line", C.special)
-          end
-        end
+        C.special = check("line", C.special)
       end
       if C.special and not C.x then C.special = check("sector", C.special) end
 
@@ -2537,13 +2505,8 @@ function Fab_replacements(LEVEL, fab)
     -- (which prevents sending it to the CSG)
     E.id = check_thing(E.id)
     if OB_CONFIG.game == "hexen" then
-      if not fab.native_hexen then 
-        E.tid = 0
-        E.special = 0
-      else
-        if E.tid ~= 0 then
-          E.tid = check_tag(E.tid)
-        end
+      if E.tid ~= 0 then
+        E.tid = check_tag(E.tid)
       end
       if E.id == 14 then -- Teleporter destination fix
         E.tid = fab.in_tag
@@ -2658,7 +2621,6 @@ function Fabricate(LEVEL, room, def, T, skins)
     if SKIN.out_tag2 then fab.out_tag2 = SKIN.out_tag2 end
     if SKIN.out_tag3 then fab.out_tag3 = SKIN.out_tag3 end
     if SKIN.out_tag4 then fab.out_tag4 = SKIN.out_tag4 end
-    if def.native_hexen then fab.native_hexen = true end
   end
 
   Fab_replacements (LEVEL, fab)
@@ -2823,6 +2785,13 @@ function Fab_find_matches(LEVEL, reqs, match_state)
   local function match_requirements(def)
     -- type check
     local kind = assert(def.kind)
+
+    -- limit-removing hard req for Doom
+    if OB_CONFIG.port == "limit_removing" and ob_match_game({ game = "doomish" }) then
+      if not def.port or def.port ~= "limit_removing" then
+        return 0
+      end
+    end
 
     if def.jump_crouch and def.jump_crouch == true then
       if not PARAM.bool_jump_crouch then
@@ -3053,24 +3022,9 @@ function Fab_pick(LEVEL, reqs, allow_none)
   cur_req.game = OB_CONFIG.game
 
   while cur_req do
-
       -- keep the earliest matches (they override later matches)
     table.merge_missing(tab, Fab_find_matches(LEVEL, cur_req, match_state))
-  
-    if cur_req.key then
-      if GAME.GENERIC_REQS then
-      -- Also add generic locked prefabs to matches
-        for _,v in pairs (GAME.GENERIC_REQS) do
-            if cur_req.key == v.rkind then
-              cur_req.key = v.kind
-            goto continue
-          end      
-        end  
-        ::continue::
-        table.merge_missing(tab, Fab_find_matches(LEVEL, cur_req, match_state))      
-      end
-    end
-  
+   
     cur_req = cur_req.alt_req
   end
 

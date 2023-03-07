@@ -47,10 +47,10 @@ static void main_win_close_CB(Fl_Widget *w, void *data) {
 }
 
 static void main_win_surprise_go_CB(Fl_Widget *w, void *data) {
-    main_win->left_mods->SurpriseMe();
-    if (main_win->right_mods) {
-        main_win->right_mods->SurpriseMe();
-    }
+    main_win->mod_tabs->arch_mods->SurpriseMe();
+    main_win->mod_tabs->combat_mods->SurpriseMe();
+    main_win->mod_tabs->pickup_mods->SurpriseMe();
+    main_win->mod_tabs->other_mods->SurpriseMe();
     did_randomize = true;
 }
 
@@ -71,7 +71,7 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title)
     int TOP_H = kf_h(240);
     int BOT_H = H - TOP_H - kf_h(4);
 
-    menu_bar = new Fl_Menu_Bar(0, 0, W, kf_h(20));
+    menu_bar = new Fl_Menu_Bar(0, 0, LEFT_W, kf_h(20));
     menu_bar->box(box_style);
     menu_bar->textfont(font_style);
     menu_bar->textsize(menu_bar->textsize() * .90);
@@ -87,23 +87,15 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title)
     menu_bar->add(_("Surprise Me/Go"), FL_F + 8, main_win_surprise_go_CB);
     menu_bar->selection_color(SELECTION);
 
-    sizing_group = new Fl_Group(0, kf_h(22), W, H - kf_h(22));
+    sizing_group = new Fl_Group(0, 0, W, H - kf_h(22));
     sizing_group->box(FL_NO_BOX);
 
     game_box = new UI_Game(0, kf_h(22), LEFT_W, TOP_H - kf_h(22));
 
     build_box = new UI_Build(0, TOP_H + kf_h(4), LEFT_W, BOT_H);
 
-    if (single_pane) {
-        left_mods = new UI_CustomMods(LEFT_W + kf_h(4), kf_h(22), MOD_W * 2,
-                                      H - kf_h(22));
-    } else {
-        right_mods =
-            new UI_CustomMods(W - MOD_W, kf_h(22), MOD_W, H - kf_h(22));
-
-        left_mods =
-            new UI_CustomMods(LEFT_W + kf_h(4), kf_h(22), MOD_W, H - kf_h(22));
-    }
+    mod_tabs = new UI_CustomTabs(LEFT_W + kf_h(4), 0, MOD_W * 2,
+                                  H - kf_h(22));
 
     end();
 
@@ -138,10 +130,10 @@ void UI_MainWin::Locked(bool value) {
         main_win->menu_bar->activate();
     }
     game_box->Locked(value);
-    left_mods->Locked(value);
-    if (!single_pane) {
-        right_mods->Locked(value);
-    }
+    mod_tabs->arch_mods->Locked(value);
+    mod_tabs->combat_mods->Locked(value);
+    mod_tabs->pickup_mods->Locked(value);
+    mod_tabs->other_mods->Locked(value);
 }
 
 void UI_MainWin::menu_do_about(Fl_Widget *w, void *data) { DLG_AboutText(); }

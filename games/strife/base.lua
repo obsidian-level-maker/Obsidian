@@ -46,7 +46,7 @@ function STRIFE.all_done()
 end
 
 
-OB_GAMES["strife"] =
+UNFINISHED["strife"] =
 {
   label = _("Strife"),
   priority = 89,
@@ -57,8 +57,6 @@ OB_GAMES["strife"] =
 
   game_dir = "strife",
   iwad_name = "strife1.wad",
-
-  use_generics = true,
 
   tables =
   {

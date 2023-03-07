@@ -13,39 +13,6 @@ NUKEM.MATERIALS =
   _DEFAULT = { t=437, f=437 },
   _LIQUID = { f=336, t=336 },
 
-  -- materials for generic prefab set --
-  _SBARS = { t=437, f=437 }, -- Short bars, i.e. railings
-  _MBARS = { t=437, f=437 }, -- Medium bars, i.e. barred windows
-  _TBARS = { t=437, f=437 }, -- Tall bars, i.e. cage/jail bars
-  
-  _CRATE   = { t=437, f=437 }, -- Crate/box
-  _CRATE2  = { t=437, f=437 },
-  _CRATWID = { t=437, f=437 },
-  
-  _DOOR  = { t=437, f=437 }, -- Open says me
-  _DORRAIL = { t=437, f=437 }, -- Inner door slider thingys
-  
-  _NPIC    = { t=437, f=437 }, -- Narrow (non-tiling) pic box insert, 64 pixels wide x 128 high
-  
-  _MPIC    = { t=437, f=437 }, -- Medium (or tiling) pic box insert, 128 pixels wide x 128 high
-  
-  _WPIC    = { t=437, f=437 }, -- Wide (or tiling) pic box insert, 256 pixels wide x 128 high
-  
-  _KEYTRM1 = { t=437, f=437 }, -- Trim for locked door, Key 1
-  _KEYTRM2 = { t=437, f=437 }, -- Trim for locked door, Key 2
-  _KEYTRM3 = { t=437, f=437 }, -- Trim for locked door, Key 3
-  
-  _EXITDR = { t=437, f=437 }, -- Exit door
-  _EXITSW  = { t=437, f=437 }, -- Exit switch
-  _EXITRM  = { t=437, f=437 }, -- Exit switch room
-  
-  _STRUCT = { t=437, f=437 }, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
-
-  _SW  = { t=437, f=437 }, -- General purpose swtich, full size
-  _SWTRIM = { t=437, f=437 }, -- Trim for switch
-  
-  _TELE = { t=437, f=437 }, -- Teleporter
-
   NUKEBUTTON = { t=142 },
 
   WATER  = { t=336 },

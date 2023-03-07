@@ -1,1 +1,0 @@
-kzip %1 zdbsp.exe zdbsp.html *.png

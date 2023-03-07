@@ -240,6 +240,23 @@ UI_RChoice::~UI_RChoice() {
 
 //----------------------------------------------------------------
 
+UI_CustomSlider::UI_CustomSlider(int x, int y, int w, int h)
+    : Fl_Hor_Slider(x, y, w, h, NULL) { }
+
+// Skips normal FL_PUSH handling which hides the value if you click and hold
+// the slider handle without moving it - Dasho
+int UI_CustomSlider::handle(int event) {
+    return Fl_Slider::handle(event,
+                    x()+Fl::box_dx(box()),
+                    y()+Fl::box_dy(box()),
+                    w()-Fl::box_dw(box()),
+                    h()-Fl::box_dh(box()));
+    }
+
+UI_CustomSlider::~UI_CustomSlider() { }
+
+//----------------------------------------------------------------
+
 UI_RSlide::UI_RSlide(int x, int y, int w, int h) : Fl_Group(x, y, w, h) {
     visible_focus(0);
     labelfont(font_style);

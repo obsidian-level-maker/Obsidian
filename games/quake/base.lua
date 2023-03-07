@@ -45,8 +45,6 @@ UNFINISHED["quake"] =
   format = "quake",
   game_dir = "quake",
 
-  use_generics = true,
-
   tables =
   {
     QUAKE

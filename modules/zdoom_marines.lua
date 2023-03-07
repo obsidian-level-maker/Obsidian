@@ -206,7 +206,7 @@ function ZDOOM_MARINE.setup(self)
     end
   end
 
-  if not PARAM.doom2_weapons then
+  if not ob_match_game({game = {doom2=1, tnt=1, plutonia=1}}) then
     GAME.MONSTERS["marine_ssg"] = nil
   end
 
@@ -219,11 +219,13 @@ OB_MODULES["zdoom_marines"] =
 {
   name = "zdoom_marines",
 
-  label = _("ZDoom Marines"),
+  label = _("Hostile Marines"),
 
   game = "doomish",
 
   port = "zdoom",
+
+  where = "combat",
 
   tables =
   {
@@ -289,11 +291,13 @@ OB_MODULES["zdoom_marine_control"] =
 {
   name = "zdoom_marine_control",
 
-  label = _("ZDoom Marines : Control"),
+  label = _("Hostile Marines : Control"),
 
   game = "doomish",
 
   port = "zdoom",
+
+  where = "combat",
 
   tables =
   {

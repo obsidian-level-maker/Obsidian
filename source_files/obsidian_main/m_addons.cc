@@ -36,7 +36,7 @@
 #include "physfs.h"
 
 // need this because the OPTIONS file is loaded *before* the addons
-// folder is scanned for PK3 packages, so remember enabled ones here.
+// folder is scanned for valid archives, so remember enabled ones here.
 std::map<std::filesystem::path, int> initial_enabled_addons;
 
 std::vector<addon_info_t> all_addons;
@@ -62,11 +62,7 @@ void VFS_AddFolder(std::string name) {
 bool VFS_AddArchive(std::filesystem::path filename, bool options_file) {
     LogPrintf("  using: {}\n", filename.string());
 
-    if (!filename.has_extension()) {
-        filename.replace_extension("pk3");
-    }
-
-    // when handling "bare" filenames from the command line (i.e. ones
+   // when handling "bare" filenames from the command line (i.e. ones
     // containing no paths or drive spec) and the file does not exist in
     // the current dir, look for it in the standard addons/ folder.
     if ((!std::filesystem::exists(filename) && !filename.has_parent_path())) {
@@ -173,11 +169,17 @@ void VFS_ScanForAddons() {
     int result2 = 0;
 
     for (auto &file : std::filesystem::directory_iterator(dir_name)) {
-        if (file.path().has_extension() &&
-            StringCaseCmp(file.path().extension().generic_string(), ".pk3") ==
-                0) {
+        if (PHYSFS_mount(file.path().string().c_str(), nullptr, 0)) {
+            PHYSFS_unmount(file.path().string().c_str());
             result1 += 1;
             list.push_back(file.path());
+        }
+        else {
+            LogPrintf(
+                fmt::format("Failed to mount '{}' archive in PhysFS:\n{}\n",
+                            file.path().string(),
+                            PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()))
+                    .c_str());
         }
     }
 
@@ -192,11 +194,17 @@ void VFS_ScanForAddons() {
         std::vector<std::filesystem::path> list2;
 
         for (auto &file : std::filesystem::directory_iterator(dir_name)) {
-            if (file.path().has_extension() &&
-                StringCaseCmp(file.path().extension().generic_string(),
-                              ".pk3") == 0) {
+            if (PHYSFS_mount(file.path().string().c_str(), nullptr, 0)) {
+                PHYSFS_unmount(file.path().string().c_str());
                 result2 += 1;
                 list2.push_back(file.path());
+            }
+            else {
+                LogPrintf(
+                fmt::format("Failed to mount '{}' archive in PhysFS:\n{}\n",
+                            file.path().string(),
+                            PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()))
+                    .c_str());
             }
         }
         // std::vector<std::filesystem::path>().swap(list2);

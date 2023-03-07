@@ -15,51 +15,6 @@ CHEX3.MATERIALS =
   _LIQUID = { t="GSTFONT1", f="FWATER1" },
   XEMPTY = { t="-", f="-" },
 
-  -- materials for generic prefab set --
-
-  -- The idea is to have one singular default material for these; variants should be specified in theme-specific PREFAB_FIELDS tables as replacements - Dasho
-  _RUNIC = { t="GRAYDANG", f="CJFSHIP3" },
-  _STAIRS = { t="STEP2", f="FLAT5_6" },
-  _VOID = { t="REDWALL", f="XX"}, -- Need to be creative with offsets - Dasho
-  _FLATLIT = { t="COMPSPAN", f="LABFLAT" },
-  _WALLLIT = { t="FIREWALL", f="XX"},
-  _LIFT  = { t="COMPSTA1", f="CJFCOMM3" },
-  _SBARS = { t="LITEMET", f="XX" }, -- Short bars, i.e. railings
-  _MBARS = { t="BARS", f="XX" }, -- Medium bars, i.e. barred windows
-  _TBARS = { t="LITE4", f = "XX" }, -- Tall bars, i.e. cage/jail bars
-  
-  _CRATE   = { t="CRATE1",   f="CRATOP2" }, -- Crate/box
-  _CRATE2  = { t="CRATE2",   f="CRATOP1" },
-  _CRATWID = { t="CRATWIDE", f="CRATOP1"}, -- Wide crate
-    
-  _SMLDOOR = { t="SP_DUDE4", f="STEP1" }, -- 64 units wide, around 64 high (Chex Quest will probably require a lot of offset trickery)
-  _BIGDOOR = { t="BIGDOOR1", f="FLAT5_6" }, -- 128x128
-  _TALDOOR = { t="SP_DUDE4", f="STEP1" },
-  _DORRAIL = { t="COMPSTA1", f="STEP1"}, -- Inner door slider thingys
-  
-  _NPIC    = { t="FIREWALL", f="XX"}, -- Narrow (non-tiling) pic box insert, 64 pixels wide
-  
-  _MPIC    = { t="ART1", f="XX"}, -- Medium (or tiling) pic box insert, 128 pixels wide
-  
-  _WPIC    = { t="CHEXAD1", f="XX"}, -- Wide (or tiling) pic box insert, 256 pixels wide
-
-  _KEYTRM1 = { t="DOORRED", f="XX" }, -- Trim for locked door, Key 1
-  _KEYTRM2 = { t="DOORYEL", f="XX" }, -- Trim for locked door, Key 2
-  _KEYTRM3 = { t="DOORBLU", f="XX" }, -- Trim for locked door, Key 3
-  
-  _EXITDR = { t="BIGDOOR7", f="FLAT5_6" }, -- Exit door
-  _EXITSW = { t="SW1SLAD", f="STEEL32" }, -- Exit switch
-  _EXITTR = { t="CEMENT1", f="STEEL32" },
-  _EXITRM = { t="CEMENT1", f="STEEL32" }, -- Exit room walls (to match switch)
-  _EXITSGN = { t="CQ3_EXIT", f="CJFCOMM3"},
-  
-  _SW  = { t="SW1COMP",  f="CEIL5_1" }, -- Switch is roughly 32x32 in size, rest of the texture is 'hidden' (Chex needs its own fabs for this because of its switch dimensions)
-  _SWTRIM = { t="COMPSPAN",  f="CEIL5_1" }, -- Trim for switch
-
-  _STRUCT = {t="COMPSPAN", f="CEIL5_1"}, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
-  
-  _TELE = { f="GATE1", t="SP_DUDE4" }, -- Teleporter
-
   -- general purpose --
 
   COMPBLUE  = { t="COMPBLUE", f="STEP1" },
@@ -551,40 +506,7 @@ CHEX3.MATERIALS =
 
 CHEX3.PREFAB_FIELDS = 
 {
-  -- These are used for converting generic linedefs --
-  line_700 = 28, -- Key one
-  line_701 = 27, -- Key two
-  line_702 = 26, -- Key three
-  line_703 = 1,  -- Regular door open
-  line_704 = 11, -- Switch, exit
-  line_705 = 51, -- Switch, secret exit
-  line_706 = 52, -- Walk-over line, exit
-  line_707 = 124, -- Walk-over line, secret exit
-  line_708 = 97, -- Walk-over line, teleport
-  --line_709 = 888, -- Switch (don't think I need this one)
-  line_710 = 123, -- Switched, lower lift, wait, raise (fast) -- Is this too specific? - Dasho
-  line_711 = 31, -- Door open stay
-  line_712 = 109, -- Walk-over, door open stay (fast)
-  line_713 = 23, -- Switched, floor lower to nearest floor
-  line_714 = 103, -- Switched, door open stay
-  line_715 = 126, -- Walk-over line, teleport (monsters only)
-  
-  -- These are used for converting generic fab things --
-  thing_11000 = 2035, -- Barrel
-  thing_11001 = 46, -- Ceiling light
-  thing_11002 = 2028, -- Standalone light 
-  thing_11003 = 0, -- Wall light (torch)
-  thing_11004 = 34, -- Short standalone light
-  thing_11005 = 32, -- Small pillar
-  thing_11006 = 13, -- Key one
-  thing_11007 = 6, -- Key two
-  thing_11008 = 5, -- Key three
-  thing_11009 = 1, -- P1 Start
-  thing_11010 = 2, -- P2 Start
-  thing_11011 = 3, -- P3 Start
-  thing_11012 = 4, -- P4 Start
-  thing_11013 = 14, -- Teleport destination
-  thing_11014 = 60, -- Passable ceiling decor
+
 }
 
 CHEX3.SKIN_DEFAULTS =

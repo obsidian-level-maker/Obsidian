@@ -48,8 +48,7 @@ class UI_MainWin : public Fl_Double_Window {
 
     UI_Build *build_box;
 
-    UI_CustomMods *left_mods;
-    UI_CustomMods *right_mods;
+    UI_CustomTabs *mod_tabs;
 
    public:
     UI_MainWin(int W, int H, const char *title);

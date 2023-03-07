@@ -43,6 +43,8 @@
 #include <iso646.h>
 #endif
 
+#include "aj_bsp.h"
+
 // SLUMP for Vanilla Doom
 #include "slump_main.h"
 
@@ -122,6 +124,69 @@ std::array<byte, 128> empty_korax_behavior = {
     0x00, 0x00, 0x00, 0x00, 0xFE, 0x00, 0x00, 0x00, 0x1C, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0xFF, 0x00, 0x00, 0x00, 0x20, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+
+// AJBSP Build Info Class
+class obbuildinfo_t : public buildinfo_t
+{
+public:
+	void Print(int level, const char *fmt, ...)
+	{
+		if (level > verbosity)
+			return;
+
+		va_list arg_ptr;
+
+		static char buffer[MSG_BUF_LEN];
+
+		va_start(arg_ptr, fmt);
+		vsnprintf(buffer, MSG_BUF_LEN-1, fmt, arg_ptr);
+		va_end(arg_ptr);
+
+		buffer[MSG_BUF_LEN-1] = 0;
+
+		LogPrintf("{}\n", buffer);
+	}
+
+	void Debug(const char *fmt, ...)
+	{
+		static char buffer[MSG_BUF_LEN];
+
+		va_list args;
+
+		va_start(args, fmt);
+		vsnprintf(buffer, sizeof(buffer), fmt, args);
+		va_end(args);
+
+		DebugPrintf("{}\n", buffer);
+	}
+
+	//
+	//  show an error message and terminate the program
+	//
+	void FatalError(const char *fmt, ...)
+	{
+		va_list arg_ptr;
+
+		static char buffer[MSG_BUF_LEN];
+
+		va_start(arg_ptr, fmt);
+		vsnprintf(buffer, MSG_BUF_LEN-1, fmt, arg_ptr);
+		va_end(arg_ptr);
+
+		buffer[MSG_BUF_LEN-1] = 0;
+
+        ajbsp::CloseWad();
+
+		Main::FatalError("'{}'\n", buffer);
+	}
+
+    // Update status bar with nodebuilding progress
+    void ProgressUpdate(int current, int total)
+    {
+        Doom::Send_Prog_Nodes(current, total);
+    }
+};
 
 //------------------------------------------------------------------------
 //  WAD OUTPUT
@@ -296,7 +361,7 @@ void Doom::BeginLevel() {
             textmap_lump->Printf("namespace = \"Hexen\";\n\n");
         } else {
             textmap_lump->Printf("namespace = \"ZDoomTranslated\";\n\n");
-            if (current_port == "eternity") {
+            if (StringCaseCmp(current_port, "eternity") == 0) {
                 textmap_lump->Printf("ee_compat = true;\n\n");
             }
         }
@@ -636,7 +701,6 @@ void Doom::AddLinedef(int vert1, int vert2, int side1, int side2, int type,
 }
 
 int v094_grab_args(lua_State *L, byte *args, int stack_pos) {
-    memset(args, 0, 5);
 
     int what = lua_type(L, stack_pos);
 
@@ -670,9 +734,10 @@ int Doom::v094_add_linedef(lua_State *L) {
     int type = luaL_checkinteger(L, 5);
     int flags = luaL_checkinteger(L, 6);
     int tag = luaL_checkinteger(L, 7);
-    // byte *args = NULL;
-    // v094_grab_args(L, args, 8);
-    AddLinedef(vert1, vert2, side1, side2, type, flags, tag, NULL);
+    byte *args = new byte[5];
+    v094_grab_args(L, args, 8);
+    AddLinedef(vert1, vert2, side1, side2, type, flags, tag, args);
+    delete args;
     return 0;
 }
 
@@ -840,9 +905,10 @@ int Doom::v094_add_thing(lua_State *L) {
     int options = luaL_checkinteger(L, 6);
     int tid = luaL_checkinteger(L, 7);
     byte special = luaL_checkinteger(L, 8);
-    // byte *args = NULL;
-    // v094_grab_args(L, args, 9);
-    AddThing(x, y, h, type, angle, options, tid, special, NULL);
+    byte *args = new byte[5];
+    v094_grab_args(L, args, 9);
+    AddThing(x, y, h, type, angle, options, tid, special, args);
+    delete args;
     return 0;
 }
 
@@ -890,10 +956,8 @@ int Doom::NumThings() {
 }
 
 //----------------------------------------------------------------------------
-//  ZDBSP NODE BUILDING
+//  AJBSP NODE BUILDING
 //----------------------------------------------------------------------------
-
-#include "zdmain.h"
 
 namespace Doom {
 
@@ -920,56 +984,43 @@ static bool BuildNodes(std::filesystem::path filename) {
         return true;
     }
 
-    // Replace this with a Lua call at some point, maybe ob_get_param - Dasho
-    int map_nums;
-    std::string wadlength = ob_get_param("length");
-    std::string current_game = ob_get_param("game");
-    if (StringCaseCmp(wadlength, "single") == 0) {
-        map_nums = 1;
-    } else if (StringCaseCmp(wadlength, "few") == 0) {
-        map_nums = 4;
-    } else if (StringCaseCmp(wadlength, "episode") == 0) {
-        if (StringCaseCmp(current_game, "doom2") == 0 ||
-            StringCaseCmp(current_game, "plutonia") == 0 ||
-            StringCaseCmp(current_game, "tnt") == 0 ||
-            StringCaseCmp(current_game, "hacx") == 0 ||
-            StringCaseCmp(current_game, "harmony") == 0 ||
-            StringCaseCmp(current_game, "strife") == 0) {
-            map_nums = 11;
-        } else if (StringCaseCmp(current_game, "hexen") == 0) {
-            map_nums = 6;
-        } else if (StringCaseCmp(current_game, "chex3") == 0) {
-            map_nums = 5;
-        } else {
-            map_nums = 9;
-        }
-    } else {
-        if (StringCaseCmp(current_game, "doom2") == 0 ||
-            StringCaseCmp(current_game, "plutonia") == 0 ||
-            StringCaseCmp(current_game, "tnt") == 0 ||
-            StringCaseCmp(current_game, "hacx") == 0 ||
-            StringCaseCmp(current_game, "harmony") == 0) {
-            map_nums = 32;
-        } else if (StringCaseCmp(current_game, "doom1") == 0) {
-            map_nums = 27;
-        } else if (StringCaseCmp(current_game, "ultdoom") == 0) {
-            map_nums = 36;
-        } else if (StringCaseCmp(current_game, "hexen") == 0) {
-            map_nums = 30;
-        } else if (StringCaseCmp(current_game, "chex3") == 0) {
-            map_nums = 15;
-        } else if (StringCaseCmp(current_game, "strife") == 0) {
-            map_nums = 33;
-        } else {
-            map_nums = 45;
-        }
+    // Prep AJBSP parameters
+    obbuildinfo_t *build_info = new obbuildinfo_t;
+    build_info->fast = true;
+    if (StringCaseCmp(current_port, "limit_enforcing") == 0 || StringCaseCmp(current_port, "limit_removing") == 0 ||
+        StringCaseCmp(current_port, "boom") == 0) {
+        build_info->gl_nodes = false;
+        build_info->force_v5 = false;
+        build_info->force_xnod = false;
+        build_info->do_blockmap = true;
+        build_info->do_reject = true;
+    } else if (StringCaseCmp(current_port, "dsda") == 0) {
+        build_info->gl_nodes = true;
+        build_info->do_reject = false;
+        build_info->do_blockmap = false;
+        build_info->force_xnod = false;
+        build_info->force_compress = true;
+    } else if (StringCaseCmp(current_port, "eternity") == 0) {
+        build_info->gl_nodes = true;
+        build_info->do_reject = false;
+        build_info->do_blockmap = false;
+        build_info->force_xnod = true;
+        build_info->force_compress = false;
+    } else { // ZDoom; EDGE-Classic always builds its own nodes
+        build_info->gl_nodes = true;
+        build_info->do_reject = false;
+        build_info->do_blockmap = false;
+        build_info->force_xnod = true;
+        build_info->force_compress = true;
     }
-    if (zdmain(filename, current_port, UDMF_mode, build_reject, map_nums) !=
-        0) {
-        Main::ProgStatus(_("ZDBSP Error!"));
+
+    if (AJBSP_BuildNodes(filename, build_info) != 0) {
+        Main::ProgStatus(_("AJBSP Error!"));
+        delete build_info;
         return false;
     }
 
+    delete build_info;
     return true;
 }
 
@@ -1128,6 +1179,11 @@ bool Doom::game_interface_c::Finish(bool build_ok) {
     }
 
     if (build_ok) {
+        int old_zip_output = zip_output;
+        // This should be set for all UDMF ports, but I gotta get off my ass and finish EC pk3 support - Dasho
+        if ((StringCaseCmp(current_port, "eternity") == 0) || (StringCaseCmp(current_port, "zdoom") == 0)) {
+            zip_output = 2;
+        }
         if (zip_output > 0) {
             std::filesystem::path zip_filename = filename;
             zip_filename.replace_extension(zip_output == 1 ? "zip" : "pk3");
@@ -1155,17 +1211,20 @@ bool Doom::game_interface_c::Finish(bool build_ok) {
                     std::filesystem::remove(filename);
                     delete[] zip_buf;
                 } else {
+                    zip_output = old_zip_output;
                     LogPrintf(
                         "Zipping output WAD to {} failed! Retaining original "
                         "WAD.\n",
                         zip_filename.generic_string());
                 }
             } else {
+                zip_output = old_zip_output;
                 LogPrintf(
                     "Zipping output WAD to {} failed! Retaining original "
                     "WAD.\n",
                     zip_filename.generic_string());
             }
+            zip_output = old_zip_output;
         }
     }
 

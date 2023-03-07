@@ -37,14 +37,6 @@ HACX.ENTITIES =
   -- TODO: all other scenery!!
 }
 
-HACX.GENERIC_REQS =
-{
-  -- These are used for fulfilling fab pick requirements in prefab.lua
-  Generic_Key_One = { kind = "k_one", rkind = "kz_red" },
-  Generic_Key_Two = { kind = "k_two", rkind = "kz_yellow" },
-  Generic_Key_Three = { kind = "k_three", rkind = "kz_blue" }
-}
-
 HACX.PLAYER_MODEL =
 {
   danny =

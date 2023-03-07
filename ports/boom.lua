@@ -160,43 +160,6 @@ OB_PORTS["boom"] =
 
 ----------------------------------------------------------------
 
-PRBOOM = {}
-
-
-PRBOOM.ENTITIES =
-{
-
-}
-
-
-PRBOOM.PARAMETERS =
-{
-
-}
-
-OB_PORTS["prboom"] =
-{
-  label = _("PrBoom Compat"),
-  priority = 97,
-
-  extends = "boom",
-
-  game = { doom1=1, doom2=1, hacx=1 },
-
-  tables =
-  {
-    PRBOOM
-  },
-
-  hooks =
-  {
-
-  }
-
-}
-
-----------------------------------------------------------------
-
 -- This should not be visible in the Engine selection list; it's a shim to separate UDMF/advanced engines
 
 ADVANCED = {}
@@ -233,3 +196,39 @@ OB_PORTS["advanced"] =
 
 }
 
+----------------------------------------------------------------
+
+DSDA = {}
+
+
+DSDA.ENTITIES =
+{
+
+}
+
+
+DSDA.PARAMETERS =
+{
+
+}
+
+UNFINISHED["dsda"] = -- Waiting on UDMF and zip archive support to be implemented; until then no advantage over BOOM-Compat - Dasho
+{
+  label = _("DSDA-Doom"),
+  priority = 97,
+
+  extends = "advanced",
+
+  game = { doom1=1, doom2=1, hacx=1, heretic=1, hexen=1 },
+
+  tables =
+  {
+    DSDA
+  },
+
+  hooks =
+  {
+
+  }
+
+}

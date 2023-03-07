@@ -94,7 +94,7 @@ OB_MODULES["ui_mons"] =
     setup = UI_MONS.setup,
   },
 
-  side = "right",
+  where = "combat",
   priority = 103,
   engine = "!idtech_0",
   port = "!limit_enforcing",
@@ -282,7 +282,7 @@ OB_MODULES["ui_mons_wolf_3d"] =
     setup = UI_MONS_WOLF_3D.setup,
   },
 
-  side = "right",
+  where = "combat",
   priority = 103,
   engine = "idtech_0",
   options =

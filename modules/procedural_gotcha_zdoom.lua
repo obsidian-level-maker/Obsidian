@@ -1931,7 +1931,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
   label = _("Procedural Gotchas"),
 
   port = "zdoom",
-  side = "right",
+  where = "combat",
   priority = 92,
 
   hooks =

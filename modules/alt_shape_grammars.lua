@@ -32,7 +32,7 @@ OB_MODULES["alt_shape_grammars"] =
 
   label = _("Alternate Shape Grammars"),
     
-  side = "left",
+  where = "arch",
   priority = 102,
   engine = "!idtech_0",
   port = "!limit_enforcing",
@@ -51,7 +51,7 @@ OB_MODULES["alt_shape_grammars"] =
       name = "float_grammar_boxes_of_death",
       label = _("Boxes of Death"),
       valuator = "slider",
-      units = _("% of Levels"),
+      units = _("% Chance Per Level"),
       min = 0,
       max = 100,
       increment = 1,

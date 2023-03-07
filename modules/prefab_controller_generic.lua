@@ -76,7 +76,7 @@ OB_MODULES["prefab_control_generic"] =
 
   label = _("Advanced Level Control"),
 
-  side = "left",
+  where = "arch",
   priority = 93,
 
   game = { doom1=0, doom2=0, chex3=1, hacx=1, heretic=0, harmony=1, hexen=1, strife=1 },

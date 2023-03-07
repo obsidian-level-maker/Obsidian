@@ -125,14 +125,6 @@ CHEX3.ENTITIES =
   depot_ref = { id="oblige_depot", r=1, h=1, pass=true },
 }
 
-CHEX3.GENERIC_REQS =
-{
-  -- These are used for fulfilling fab pick requirements in prefab.lua
-  Generic_Key_One = { kind = "k_one", rkind = "k_red" },
-  Generic_Key_Two = { kind = "k_two", rkind = "k_yellow" },
-  Generic_Key_Three = { kind = "k_three", rkind = "k_blue" }
-}
-
 CHEX3.PLAYER_MODEL =
 {
   chexguy =

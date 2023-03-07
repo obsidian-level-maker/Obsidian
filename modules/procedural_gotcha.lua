@@ -55,7 +55,7 @@ OB_MODULES["procedural_gotcha"] =
   engine = "!idtech_0",
   port = "!limit_enforcing",
   port2 = "!zdoom",
-  side = "right",
+  where = "combat",
   priority = 92,
 
   hooks =

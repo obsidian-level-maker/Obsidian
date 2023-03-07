@@ -53,14 +53,6 @@ STRIFE.ENTITIES =
 
 }
 
-STRIFE.GENERIC_REQS =
-{
-  -- These are used for fulfilling fab pick requirements in prefab.lua
-  Generic_Key_One = { kind = "k_one", rkind = "k_id" },
-  Generic_Key_Two = { kind = "k_two", rkind = "k_badge" },
-  Generic_Key_Three = { kind = "k_three", rkind = "k_passcard" }
-}
-
 STRIFE.PLAYER_MODEL =
 {
   strifeguy =

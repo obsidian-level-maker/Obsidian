@@ -24,7 +24,7 @@ namespace ajpoly {
 
 const char *level_lumps[] = {
     "THINGS", "LINEDEFS", "SIDEDEFS", "VERTEXES", "SEGS",     "SSECTORS",
-    "NODES",  "SECTORS",  "REJECT",   "BLOCKMAP", "BEHAVIOR",
+    "NODES",  "SECTORS",  "REJECT",   "BLOCKMAP", "BEHAVIOR", "TEXTMAP", "ZNODES",
 
     NULL  // end of list
 };

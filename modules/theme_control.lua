@@ -128,6 +128,7 @@ OB_MODULES["theme_ctl_doom2"] =
 
   game = "doom2",
   port = "!limit_enforcing",
+  where = "other",
 
   hooks =
   {
@@ -181,6 +182,7 @@ OB_MODULES["theme_ctl_doom1"] =
 
   game = "doom1",
   port = "!limit_enforcing",
+  where = "other",
 
   hooks =
   {

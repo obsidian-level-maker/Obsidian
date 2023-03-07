@@ -425,7 +425,7 @@ OB_MODULES["jokewad_module"] =
   game = "doomish",
   port = "!limit_enforcing",
 
-  side = "left",
+  where = "other",
   priority = 60,
 
   hooks =

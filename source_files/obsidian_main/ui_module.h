@@ -29,6 +29,7 @@
 #include "FL/Fl_Check_Button.H"
 #include "FL/Fl_Group.H"
 #include "FL/Fl_Scrollbar.H"
+#include "FL/Fl_Tabs.H"
 #include "ui_widgets.h"
 
 class UI_Module : public Fl_Group {
@@ -141,7 +142,7 @@ class UI_CustomMods : public Fl_Group {
     int total_h;
 
    public:
-    UI_CustomMods(int X, int Y, int W, int H);
+    UI_CustomMods(int X, int Y, int W, int H, std::string label);
     virtual ~UI_CustomMods();
 
    public:
@@ -172,7 +173,7 @@ class UI_CustomMods : public Fl_Group {
                          std::string randomize_group,
                          std::string default_value);
 
-    void AddOptionChoice(std::string module, std::string option, std::string id,
+    bool AddOptionChoice(std::string module, std::string option, std::string id,
                          std::string label);
 
     bool SetOption(std::string module, std::string option, std::string value);
@@ -195,6 +196,24 @@ class UI_CustomMods : public Fl_Group {
 
     static void callback_Scroll(Fl_Widget *w, void *data);
     static void callback_ModEnable(Fl_Widget *w, void *data);
+};
+
+class UI_CustomTabs : public Fl_Tabs {
+   public:
+
+    UI_CustomMods *arch_mods;
+    UI_CustomMods *combat_mods;
+    UI_CustomMods *pickup_mods;
+    UI_CustomMods *other_mods;
+
+   private:
+
+   public:
+    UI_CustomTabs(int X, int Y, int W, int H);
+    virtual ~UI_CustomTabs();
+
+   public:
+ 
 };
 
 #endif /* __UI_MODS_H__ */

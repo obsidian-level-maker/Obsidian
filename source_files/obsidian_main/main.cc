@@ -131,7 +131,6 @@ int font_theme = 0;
 int box_theme = 0;
 int button_theme = 0;
 int widget_theme = 0;
-bool single_pane = false;
 bool use_system_fonts = false;
 int window_scaling = 0;
 int font_scaling = 18;
@@ -1542,7 +1541,7 @@ hardrestart:;
 #endif
         Trans_SetLanguage();
         OBSIDIAN_TITLE = _("OBSIDIAN Level Maker");
-        OBSIDIAN_CODE_NAME = _("Gates of Tartarus");
+        OBSIDIAN_CODE_NAME = _("Unstable");
 #ifndef CONSOLE_ONLY
         Main::SetupFLTK();
 #endif

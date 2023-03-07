@@ -86,7 +86,7 @@ OB_MODULES["debugger"] =
 
   label = _("Miscellaneous Options"),
 
-  side = "left",
+  where = "other",
   engine = "!idtech_0",
   port = "!limit_enforcing",
   priority = 5,
@@ -200,16 +200,6 @@ OB_MODULES["debugger"] =
       tooltip = _("Save an animated GIF of the building process. Recommended in combination with the Live Growth Minimap."),
       priority=94,
       gap = 1,
-    },
-
-    {
-      name = "bool_suppress_nolimit_warning",
-      label = _("Suppress NoLimit Warning"),
-      valuator = "button",
-      default = 0,
-      tooltip = _("Suppress warning dialog when using Limit-Removing with the Doom family of games."),
-      longtip = _("This warning only applies to the Doom series of games, as other supported games may only have Limit-Removing as a feasible choice."),
-      priority = 61,
     },
 
     {

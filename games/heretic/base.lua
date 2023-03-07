@@ -34,6 +34,7 @@ gui.import("themes")
 gui.import("levels")
 gui.import("resources")
 gui.import("vanilla_mats")
+gui.import("names")
 
 ------------------------------------------------------------
 
@@ -55,8 +56,6 @@ OB_GAMES["heretic"] =
   format = "doom",
   game_dir = "heretic",
   iwad_name = "heretic.wad",
-
-  use_generics = true,
 
   tables =
   {

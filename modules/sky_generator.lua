@@ -637,7 +637,7 @@ OB_MODULES["sky_generator"] =
 {
   label = _("Sky Generator"),
 
-  side = "left",
+  where = "other",
   priority = 93,
 
   game = "doomish",

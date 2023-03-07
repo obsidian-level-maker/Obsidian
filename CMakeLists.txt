@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.12..3.20)
 
 include(cmake/CPM.cmake)
 
+add_subdirectory(source_files/ajbsp EXCLUDE_FROM_ALL)
+add_subdirectory(source_files/ajparse EXCLUDE_FROM_ALL)
 add_subdirectory(source_files/filename_formatter EXCLUDE_FROM_ALL)
 if(NOT CONSOLE_ONLY AND NOT HAIKU)
   add_subdirectory(source_files/fltk EXCLUDE_FROM_ALL)
@@ -14,7 +16,6 @@ add_subdirectory(source_files/physfs EXCLUDE_FROM_ALL)
 add_subdirectory(source_files/qsavetex EXCLUDE_FROM_ALL)
 add_subdirectory(source_files/slump EXCLUDE_FROM_ALL)
 add_subdirectory(source_files/spdlog EXCLUDE_FROM_ALL)
-add_subdirectory(source_files/zdbsp EXCLUDE_FROM_ALL)
 
 project(
   obsidian
@@ -193,6 +194,8 @@ else()
   )
 endif()
 
+target_include_directories(obsidian SYSTEM PRIVATE source_files/ajbsp)
+target_include_directories(obsidian SYSTEM PRIVATE source_files/ajparse)
 target_include_directories(
   obsidian SYSTEM PRIVATE source_files/filename_formatter
 )
@@ -210,7 +213,6 @@ target_include_directories(obsidian SYSTEM PRIVATE source_files/slump)
 target_include_directories(
   obsidian SYSTEM PRIVATE source_files/spdlog/include/spdlog
 )
-target_include_directories(obsidian SYSTEM PRIVATE source_files/zdbsp)
 
 if(MINGW
    OR WIN32
@@ -264,34 +266,37 @@ if(UNIX)
     if(NOT CONSOLE_ONLY)
       target_link_libraries(
         obsidian
-        PRIVATE filename_formatter
+        PRIVATE ajbsp
+                ajparse
+                filename_formatter
                 fltk
                 fltk_images
                 miniz
                 libluajit
                 physfs-static
-                obsidian_zdbsp
                 obsidian_slump
       )
     else()
       target_link_libraries(
         obsidian
-        PRIVATE filename_formatter
+        PRIVATE ajbsp
+                ajparse
+                filename_formatter
                 miniz
                 libluajit
                 physfs-static
-                obsidian_zdbsp
                 obsidian_slump
       )
     endif()
   elseif(HAIKU)
     target_link_libraries(
       obsidian
-      PRIVATE filename_formatter
+      PRIVATE ajbsp
+              ajparse
+              filename_formatter
               miniz
               libluajit
               physfs-static
-              obsidian_zdbsp
               obsidian_slump
               pthread
               be
@@ -301,13 +306,14 @@ if(UNIX)
     if(NOT CONSOLE_ONLY)
       target_link_libraries(
         obsidian
-        PRIVATE filename_formatter
+        PRIVATE ajbsp
+                ajparse
+                filename_formatter
                 fltk
                 fltk_images
                 miniz
                 libluajit
                 physfs-static
-                obsidian_zdbsp
                 obsidian_slump
                 fontconfig
                 pthread
@@ -315,11 +321,12 @@ if(UNIX)
     else()
       target_link_libraries(
         obsidian
-        PRIVATE filename_formatter
+        PRIVATE ajbsp
+                ajparse
+                filename_formatter
                 miniz
                 libluajit
                 physfs-static
-                obsidian_zdbsp
                 obsidian_slump
                 pthread
       )
@@ -329,23 +336,25 @@ else()
   if(NOT CONSOLE_ONLY)
     target_link_libraries(
       obsidian
-      PRIVATE filename_formatter
+      PRIVATE ajbsp
+              ajparse
+              filename_formatter
               fltk
               fltk_images
               miniz
               libluajit
               physfs-static
-              obsidian_zdbsp
               obsidian_slump
     )
   else()
     target_link_libraries(
       obsidian
-      PRIVATE filename_formatter
+      PRIVATE ajbsp
+              ajparse
+              filename_formatter
               miniz
               libluajit
               physfs-static
-              obsidian_zdbsp
               obsidian_slump
     )
   endif()

@@ -6585,7 +6585,7 @@ function HEXEN.get_factory_levels(episode)
   assert(#source_levels == 6)
 
   local theme_mapping = { 1,2,3,4,5 }
-  rand_shuffle(theme_mapping)
+  rand.shuffle(theme_mapping)
 
   local key_A = HEXEN.FACTORY.XN_KEY_PAIRS[episode].key_A
   local key_B = HEXEN.FACTORY.XN_KEY_PAIRS[episode].key_B
@@ -6625,8 +6625,8 @@ function HEXEN.get_factory_levels(episode)
 
   level_list[5].secret_kind = "plain"
 
-  local b_src = rand_sel(50, 1, 3)
-  local w_src = rand_sel(50, 1, 2)
+  local b_src = rand.sel(50, 1, 3)
+  local w_src = rand.sel(50, 1, 2)
 
   local gate_idx = 2
 
@@ -6656,7 +6656,7 @@ function HEXEN.get_factory_levels(episode)
       item = item,
       mode = mode,
       force_key = force_key,
-      want_len = 1 + rand_index_by_probs(len_probs)
+      want_len = 1 + rand.index_by_probs(len_probs)
     }
 
     if mode ~= "sub" then
@@ -6688,8 +6688,6 @@ function HEXEN.get_factory_levels(episode)
 
     gate_idx = gate_idx + 2
 
---  con.debugf("Connect %d -> %d\n", src, dest)
-
     local fwd_mode  = "sub"
     local back_mode = "end"
     
@@ -6717,7 +6715,7 @@ function HEXEN.get_factory_levels(episode)
 
   local function dump_levels()
     for idx,L in ipairs(level_list) do
-      con.printf("Hexen episode [%d] map [%d] : %s\n", episode, idx, L.name)
+      gui.printf("Hexen episode [%d] map [%d] : %s\n", episode, idx, L.name)
       show_quests(L.quests)
     end
   end
@@ -6727,7 +6725,7 @@ function HEXEN.get_factory_levels(episode)
   join_map(b_src, 6, key_A)
   join_map(w_src, 4, key_B)
 
-  local r = rand_irange(1,5)
+  local r = rand.irange(1,5)
 
   join_map(sel(r==2, 2, 1), 3)
   join_map(sel(r==3, 3, 1), 2)
@@ -6742,7 +6740,7 @@ function HEXEN.get_factory_levels(episode)
     end
   end
 
-  join_map(rand_index_by_probs { 0,6,6, 4,0,2 }, 5)
+  join_map(rand.index_by_probs { 0,6,6, 4,0,2 }, 5)
 
   if episode == 5 then
     add_quest(6, "key", "k_axe", "main")
@@ -6756,8 +6754,8 @@ function HEXEN.get_factory_levels(episode)
     local weap_2 = non_nil(HEXEN.FACTORY.XN_WEAPON_NAMES[CL][2])
     local weap_3 = non_nil(HEXEN.FACTORY.XN_WEAPON_NAMES[CL][3])
 
-    add_quest(rand_index_by_probs { 7, 1, 1 }, "weapon", weap_2, "sub")
-    add_quest(rand_index_by_probs { 2, 7, 7 }, "weapon", weap_3, "sub")
+    add_quest(rand.index_by_probs { 7, 1, 1 }, "weapon", weap_2, "sub")
+    add_quest(rand.index_by_probs { 2, 7, 7 }, "weapon", weap_3, "sub")
   end
 
   -- item quests
@@ -6771,7 +6769,7 @@ function HEXEN.get_factory_levels(episode)
 
   assert(#item_list == #item_where)
 
-  rand_shuffle(item_where)
+  rand.shuffle(item_where)
 
   for i = 1,#item_list do
     local item  = item_list[i]
@@ -6779,14 +6777,14 @@ function HEXEN.get_factory_levels(episode)
 
     local Q = add_quest(where, "item", item, "sub")
 
-    if rand_odds(25) then
+    if rand.odds(25) then
       Q.is_secret = true
     end
 
     if i <= 4 and OB_CONFIG.size ~= "small" then
       local where2
       repeat
-        where2 = rand_element(item_where)
+        where2 = rand.pick(item_where)
       until where2 ~= where
 
       add_quest(where2, "item", item, "sub")
@@ -6798,7 +6796,7 @@ function HEXEN.get_factory_levels(episode)
   local switch_list = { "sw_demon", "sw_ball", "sw_cow",
                         "sw_sheep", "sw_moon" }
 
-  rand_shuffle(switch_list)
+  rand.shuffle(switch_list)
 
   local QN_SWITCH_PROBS = { 700, 200, 40, 15, 5, 1 }
   
@@ -6814,7 +6812,7 @@ function HEXEN.get_factory_levels(episode)
       lev_probs[map] = QN_SWITCH_PROBS[qn]
     end
 
-    local map = rand_index_by_probs(lev_probs)
+    local map = rand.index_by_probs(lev_probs)
 
     add_quest(map, "switch", switch_list[sw], "main")
   end

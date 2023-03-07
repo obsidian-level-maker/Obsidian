@@ -71,7 +71,7 @@ OB_MODULES["ui_pickups"] =
 {
   label = _("Pickups"),
 
-  side = "right",
+  where = "pickup",
   priority = 102,
   engine = "!idtech_0",
   port = "!limit_enforcing",

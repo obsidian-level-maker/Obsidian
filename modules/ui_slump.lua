@@ -40,7 +40,7 @@ OB_MODULES["ui_slump_arch"] =
 
   label = _("Architecture"),
 
-  side = "left",
+  where = "arch",
   priority = 104,
   port = "limit_enforcing",
 
@@ -104,7 +104,7 @@ OB_MODULES["misc_slump"] =
 
   port = "limit_enforcing",
 
-  side = "left",
+  where = "arch",
   priority = 101,
 
   hooks =
@@ -171,7 +171,7 @@ OB_MODULES["ui_slump_mons"] =
 
   label = _("Combat"),
 
-  side = "right",
+  where = "combat",
   priority = 103,
   port = "limit_enforcing",
 
@@ -211,7 +211,7 @@ OB_MODULES["slump_all_nazis"] =
 
   label = _("Oops! All Nazis!"),
 
-  side = "right",
+  where = "combat",
   priority = 102,
   port = "limit_enforcing",
   game = "doom2",

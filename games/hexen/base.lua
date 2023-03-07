@@ -35,6 +35,7 @@ gui.import("themes")
 gui.import("levels")
 gui.import("resources")
 gui.import("vanilla_mats")
+gui.import("names")
 
 ------------------------------------------------------------
 
@@ -43,7 +44,6 @@ OB_GAMES["hexen"] =
   label = _("Hexen"),
   
   priority = 90,
-  use_generics = true,
 
   engine = "idtech_1",
   -- Hexen map format is a minor variation on the DOOM format
@@ -60,6 +60,7 @@ OB_GAMES["hexen"] =
 
   hooks =
   {
+    factory_setup = HEXEN.factory_setup,
     get_levels = HEXEN.get_levels,
     all_done   = HEXEN.all_done
   },

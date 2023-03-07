@@ -803,7 +803,7 @@ function write_level(lev_name)
         if type(L.kind) == "table" then
           local flags = non_nil(L.flags)
 
-          local args = copy_table(L.kind.args)
+          local args = table.copy(L.kind.args)
 
           if args[1] == "tag" then args[1] = L.tag or 0 end
           if args[2] == "tag" then args[2] = L.tag or 0 end

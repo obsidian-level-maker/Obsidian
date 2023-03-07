@@ -43,8 +43,6 @@ UNFINISHED["nukem"] =
 	
 	game_dir = "nukem",
 
-	use_generics = true,
-	
 	tables =
 	{
 		NUKEM

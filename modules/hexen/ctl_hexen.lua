@@ -63,6 +63,7 @@ OB_MODULES["hexen_mon_control"] =
   game = "hexen",
   engine = "idtech_1",
   port = "!limit_enforcing",
+  where = "combat",
 
   hooks =
   {
@@ -376,6 +377,7 @@ OB_MODULES["hexen_item_control"] =
   game = "hexen",
   engine = "idtech_1",
   port = "!limit_enforcing",
+  where = "pickup",
 
   hooks =
   {

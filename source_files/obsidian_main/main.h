@@ -45,7 +45,7 @@ constexpr const char *OBSIDIAN_VERSION = OBSIDIAN_TIMESTAMP;
 constexpr const char *OBSIDIAN_VERSION = __DATE__;
 #endif
 
-constexpr const char *OBSIDIAN_SHORT_VERSION = "20";
+constexpr const char *OBSIDIAN_SHORT_VERSION = "21";
 extern std::string OBSIDIAN_CODE_NAME;
 
 constexpr const char *OBSIDIAN_WEBSITE =
@@ -165,7 +165,6 @@ extern int font_scaling;
 extern int num_fonts;
 extern int filename_prefix;
 extern std::string custom_prefix;
-extern bool single_pane;
 extern bool use_system_fonts;
 extern std::vector<std::map<std::string, int>> font_menu_items;
 

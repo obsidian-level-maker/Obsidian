@@ -498,7 +498,7 @@ OB_MODULES["fauna_module"] =
 
   label = _("GZDoom: Fauna"),
 
-  side = "left",
+  where = "other",
   priority = 68,
 
   port = "zdoom",
