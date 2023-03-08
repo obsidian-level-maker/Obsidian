@@ -932,15 +932,14 @@ void UI_Module::callback_NanOptions(Fl_Widget *w, void *data) {
     int temp_value = nan_options->value();
 
     if (temp_value > 0) {
-        std::string current_val = current_slider->unit_label->label();
         std::string new_label;
-        current_slider->mod_label->copy_label(
+        current_slider->unit_label->copy_label(
             new_label.append(50, ' ')
                 .c_str());  // To prevent visual errors with labels of different
                             // lengths
-        new_label = current_val;
+        new_label = nan_options->text(temp_value);
         current_slider->unit_label->copy_label(
-            new_label.append(nan_options->text(temp_value)).c_str());
+            new_label.c_str());
         current_slider->prev_button->deactivate();
         current_slider->mod_slider->deactivate();
         current_slider->next_button->deactivate();
