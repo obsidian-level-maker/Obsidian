@@ -49,65 +49,259 @@ function ScriptMan_assemble_acs_lump()
 -- MSSP-TODO
 end
 
-function ScriptMan_assemble_ddf_lumps()
+
+function ScriptMan_assemble_coalhuds_lump()
+  local coalhuds_lines = ""
 
   if SCRIPTS.coalhuds then
-    gui.wad_add_text_lump("COALHUDS", SCRIPTS.coalhuds)
+    coalhuds_lines = coalhuds_lines .. "// Obsidian COALHUDS" .. "\n\n" .. SCRIPTS.coalhuds .. "\n\n"
   end
-  if SCRIPTS.ddfanim then
-    gui.wad_add_text_lump("DDFANIM", SCRIPTS.ddfanim)
+
+  if coalhuds_lines ~= "" then
+	add_script_lump("COALHUDS", coalhuds_lines)
   end
-  if SCRIPTS.ddfatk then
-    gui.wad_add_text_lump("DDFATK", SCRIPTS.ddfatk)
-  end
-  if SCRIPTS.ddfcolm then
-    gui.wad_add_text_lump("DDFCOLM", SCRIPTS.ddfcolm)
-  end
-  if SCRIPTS.ddfflat then
-    gui.wad_add_text_lump("DDFFLAT", SCRIPTS.ddfflat)
-  end
-  if SCRIPTS.ddffont then
-    gui.wad_add_text_lump("DDFFONT", SCRIPTS.ddffont)
-  end
-  if SCRIPTS.ddfgame then
-    gui.wad_add_text_lump("DDFGAME", SCRIPTS.ddfgame)
-  end
-  if SCRIPTS.ddfimage then
-    gui.wad_add_text_lump("DDFIMAGE", SCRIPTS.ddfimage)
-  end
-  if SCRIPTS.ddflang then
-    gui.wad_add_text_lump("DDFLANG", SCRIPTS.ddflang)
-  end
-  if SCRIPTS.ddflevl then
-    gui.wad_add_text_lump("DDFLEVL", SCRIPTS.ddflevl)
-  end
-  if SCRIPTS.ddfline then
-    gui.wad_add_text_lump("DDFLINE", SCRIPTS.ddfline)
-  end
-  if SCRIPTS.ddfplay then
-    gui.wad_add_text_lump("DDFPLAY", SCRIPTS.ddfplay)
-  end
-  if SCRIPTS.ddfsect then
-    gui.wad_add_text_lump("DDFSECT", SCRIPTS.ddfsect)
-  end
-  if SCRIPTS.ddfsfx then
-    gui.wad_add_text_lump("DDFSFX", SCRIPTS.ddfsfx)
-  end
-  if SCRIPTS.ddfstyle then
-    gui.wad_add_text_lump("DDFSTYLE", SCRIPTS.ddfstyle)
-  end
-  if SCRIPTS.ddfswth then
-    gui.wad_add_text_lump("DDFSWTH", SCRIPTS.ddfswth)
-  end
+end
+
+function ScriptMan_assemble_ddfthing_lump()
+  local ddfthing_lines = ""
+
   if SCRIPTS.ddfthing then
-    gui.wad_add_text_lump("DDFTHING", SCRIPTS.ddfthing)
+    ddfthing_lines = ddfthing_lines .. "<THINGS>" .. "\n" .. SCRIPTS.ddfthing .. "\n\n"
   end
+
+  if ddfthing_lines ~= "" then
+	add_script_lump("DDFTHING", ddfthing_lines)
+  end
+end
+
+function ScriptMan_assemble_ddfanim_lump()
+  local ddfanim_lines = ""
+
+  if SCRIPTS.ddfanim then
+    ddfanim_lines = ddfanim_lines .. "<ANIMATIONS>" .. "\n" .. SCRIPTS.ddfanim .. "\n\n"
+  end
+
+  if ddfanim_lines ~= "" then
+	add_script_lump("DDFANIM", ddfanim_lines)
+  end
+end
+
+function ScriptMan_assemble_ddfatk_lump()
+  local ddfatk_lines = ""
+
+  if SCRIPTS.ddfatk then
+    ddfatk_lines = ddfatk_lines .. "<ATTACKS>" .. "\n" .. SCRIPTS.ddfatk .. "\n\n"
+  end
+
+  if ddfatk_lines ~= "" then
+	add_script_lump("DDFATK", ddfatk_lines)
+  end
+end
+
+function ScriptMan_assemble_ddfcolm_lump()
+  local ddfcolm_lines = ""
+
+  if SCRIPTS.ddfcolm then
+    ddfcolm_lines = ddfcolm_lines .. "<COLOURMAPS>" .. "\n" .. SCRIPTS.ddfcolm .. "\n\n"
+  end
+
+  if ddfcolm_lines ~= "" then
+	add_script_lump("DDFCOLM", ddfcolm_lines)
+  end
+end
+
+function ScriptMan_assemble_ddfflat_lump()
+  local ddfflat_lines = ""
+
+  if SCRIPTS.ddfflat then
+    ddfflat_lines = ddfflat_lines .. "<FLATS>" .. "\n" .. SCRIPTS.ddfflat .. "\n\n"
+  end
+
+  if ddfflat_lines ~= "" then
+	add_script_lump("DDFFLAT", ddfflat_lines)
+  end
+end
+
+function ScriptMan_assemble_ddffont_lump()
+  local ddffont_lines = ""
+
+  if SCRIPTS.ddffont then
+    ddffont_lines = ddffont_lines .. "<FONTS>" .. "\n" .. SCRIPTS.ddffont .. "\n\n"
+  end
+
+  if ddffont_lines ~= "" then
+	add_script_lump("DDFFONT", ddffont_lines)
+  end
+end
+
+function ScriptMan_assemble_ddfgame_lump()
+  local ddfgame_lines = ""
+
+  if SCRIPTS.ddfgame then
+    ddfgame_lines = ddfgame_lines .. "<GAMES>" .. "\n" .. SCRIPTS.ddfgame .. "\n\n"
+  end
+
+  if ddfgame_lines ~= "" then
+	add_script_lump("DDFGAME", ddfgame_lines)
+  end
+end
+
+function ScriptMan_assemble_ddfimage_lump()
+  local ddfimage_lines = ""
+
+  if SCRIPTS.ddfimage then
+    ddfimage_lines = ddfimage_lines .. "<IMAGES>" .. "\n" .. SCRIPTS.ddfimage .. "\n\n"
+  end
+
+  if ddfimage_lines ~= "" then
+	add_script_lump("DDFIMAGE", ddfimage_lines)
+  end
+end
+
+function ScriptMan_assemble_ddflang_lump()
+  local ddflang_lines = ""
+
+  if SCRIPTS.ddflang then
+    ddflang_lines = ddflang_lines .. "<LANGUAGES>" .. "\n" .. "\n\n"
+	ddflang_lines = ddflang_lines .. "[ENGLISH]" .. "\n" .. SCRIPTS.ddflang .. "\n\n"
+  end
+
+  if ddflang_lines ~= "" then
+	add_script_lump("DDFLANG", ddflang_lines)
+  end
+end
+
+function ScriptMan_assemble_ddfplay_lump()
+  local ddfplay_lines = ""
+
+  if SCRIPTS.ddfplay then
+    ddfplay_lines = ddfplay_lines .. "<PLAYLISTS>" .. "\n" .. SCRIPTS.ddfplay .. "\n\n"
+  end
+
+  if ddfplay_lines ~= "" then
+	add_script_lump("DDFPLAY", ddfplay_lines)
+  end
+end
+
+function ScriptMan_assemble_ddflevl_lump()
+  local ddflevl_lines = ""
+
+  if SCRIPTS.ddflevl then
+    ddflevl_lines = ddflevl_lines .. "<LEVELS>" .. "\n" .. SCRIPTS.ddflevl .. "\n\n"
+  end
+
+  if ddflevl_lines ~= "" then
+	add_script_lump("DDFLEVL", ddflevl_lines)
+  end
+end
+
+function ScriptMan_assemble_ddfline_lump()
+  local ddfline_lines = ""
+
+  if SCRIPTS.ddfline then
+    ddfline_lines = ddfline_lines .. "<LINES>" .. "\n" .. SCRIPTS.ddfline .. "\n\n"
+  end
+
+  if ddfline_lines ~= "" then
+	add_script_lump("DDFLINE", ddfline_lines)
+  end
+end
+
+
+
+function ScriptMan_assemble_ddfsect_lump()
+  local ddfsect_lines = ""
+
+  if SCRIPTS.ddfsect then
+    ddfsect_lines = ddfsect_lines .. "<SECTORS>" .. "\n" .. SCRIPTS.ddfsect .. "\n\n"
+  end
+
+  if ddfsect_lines ~= "" then
+	add_script_lump("DDFSECT", ddfsect_lines)
+  end
+end
+
+function ScriptMan_assemble_ddfsfx_lump()
+  local ddfsfx_lines = ""
+
+  if SCRIPTS.ddfsfx then
+    ddfsfx_lines = ddfsfx_lines .. "<SOUNDS>" .. "\n" .. SCRIPTS.ddfsfx .. "\n\n"
+  end
+
+  if ddfsfx_lines ~= "" then
+	add_script_lump("DDFSFX", ddfsfx_lines)
+  end
+end
+
+function ScriptMan_assemble_ddfstyle_lump()
+  local ddfstyle_lines = ""
+
+  if SCRIPTS.ddfstyle then
+    ddfstyle_lines = ddfstyle_lines .. "<STYLES>" .. "\n" .. SCRIPTS.ddfstyle .. "\n\n"
+  end
+
+  if ddfstyle_lines ~= "" then
+	add_script_lump("DDFSTYLE", ddfstyle_lines)
+  end
+end
+
+function ScriptMan_assemble_ddfswth_lump()
+  local ddfswth_lines = ""
+
+  if SCRIPTS.ddfswth then
+    ddfswth_lines = ddfswth_lines .. "<SWITCHES>" .. "\n" .. SCRIPTS.ddfswth .. "\n\n"
+  end
+
+  if ddfswth_lines ~= "" then
+	add_script_lump("DDFSWTH", ddfswth_lines)
+  end
+end
+
+function ScriptMan_assemble_ddfweap_lump()
+  local ddfweap_lines = ""
+
   if SCRIPTS.ddfweap then
-    gui.wad_add_text_lump("DDFWEAP", SCRIPTS.ddfweap)
+    ddfweap_lines = ddfweap_lines .. "<WEAPONS>" .. "\n" .. SCRIPTS.ddfweap .. "\n\n"
   end
+
+  if ddfweap_lines ~= "" then
+	add_script_lump("DDFWEAP", ddfweap_lines)
+  end
+end
+
+function ScriptMan_assemble_rscript_lump()
+  local rscript_lines = ""
+
   if SCRIPTS.rscript then
-    gui.wad_add_text_lump("RSCRIPT", SCRIPTS.rscript)
+    rscript_lines = rscript_lines .. "//  Obsidian Radius Triggers" .. "\n" .. SCRIPTS.rscript .. "\n\n"
   end
+
+  if rscript_lines ~= "" then
+	add_script_lump("RSCRIPT", rscript_lines)
+  end
+end
+
+function ScriptMan_assemble_ddf_lumps()
+
+  ScriptMan_assemble_coalhuds_lump()
+  ScriptMan_assemble_ddfthing_lump()
+  ScriptMan_assemble_ddfanim_lump()
+  ScriptMan_assemble_ddfatk_lump()
+  ScriptMan_assemble_ddfcolm_lump()
+  ScriptMan_assemble_ddfflat_lump()
+  ScriptMan_assemble_ddffont_lump()
+  ScriptMan_assemble_ddfgame_lump()
+  ScriptMan_assemble_ddfimage_lump()
+  ScriptMan_assemble_ddflang_lump()
+  ScriptMan_assemble_ddflevl_lump()
+  ScriptMan_assemble_ddfline_lump()
+  ScriptMan_assemble_ddfplay_lump()
+  ScriptMan_assemble_ddfsect_lump()
+  ScriptMan_assemble_ddfsfx_lump()
+  ScriptMan_assemble_ddfstyle_lump()
+  ScriptMan_assemble_ddfswth_lump()
+  ScriptMan_assemble_ddfweap_lump()
+  ScriptMan_assemble_rscript_lump()
 
 end
 

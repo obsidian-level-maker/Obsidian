@@ -69,12 +69,12 @@ function EDGE.remap_music()
   local music_list = table.copy(GAME.MUSIC_LUMPS)
   
   local data =
-  {
-    "//\n",
-    "// Playlist.ddf created by OBSIDIAN\n",
-    "//\n\n",
-    "<PLAYLISTS>\n\n"
-  }
+  [[
+    //
+    // Playlist.ddf created by OBSIDIAN
+    //
+	// 
+  ]]
 
   for i = 1,#GAME.levels do
     local song_pick = rand.pick(music_list)
@@ -89,7 +89,7 @@ function EDGE.remap_music()
     local track = string.format(
       "[%02d] MUSICINFO=LUMP:\"%s\";\n", track_num, song_pick)
 
-    table.insert(data, track)
+    data = data .. track
 
     table.kill_elem(music_list, song_pick)
 
@@ -104,20 +104,21 @@ end
 
 function EDGE.create_language()
 
+  
   local data =
-  {
-    "//\n",
-    "// Language.ldf created by OBSIDIAN\n",
-    "//\n\n",
-    "<LANGUAGES>\n\n",
-    "[ENGLISH]\n"
-  }
+[[
+//
+// Language.ldf created by OBSIDIAN\n
+//
+
+]]
 
   for _,L in pairs(GAME.levels) do
     if L.description then
       local id = string.format("%sDesc", L.name)
       local text = L.name .. ": " .. L.description
-      table.insert(data, string.format("%s = \"%s\";\n", id, text))
+	  
+      data = data .. string.format("%s = \"%s\";\n", id, text)
     end
   end
 
