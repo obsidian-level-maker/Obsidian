@@ -19,7 +19,7 @@ PREFABS.Stairs_glow_1x =
 
   delta_h = 64,
 
-  y_fit = { 56,72 }
+  x_fit = { 56,72 }
 }
 
 PREFABS.Stairs_glow_2x =
