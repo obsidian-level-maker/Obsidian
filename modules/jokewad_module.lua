@@ -359,7 +359,7 @@ function JOKEWAD_MODULE.populate_level(stuff, LEVEL)
 
           while i_x <= WC.chunk.sx2 do
           while i_y <= WC.chunk.sy2 do
-            local S = SEEDS[i_x][i_y]
+            local S = LEVEL.SEEDS[i_x][i_y]
 
             if not S.wall_depth then
               place_items(WC.chunk.floor_h + 2, S.mid_x, S.mid_y, 0)

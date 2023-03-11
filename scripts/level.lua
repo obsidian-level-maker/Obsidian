@@ -2647,6 +2647,7 @@ function Level_make_level(LEV)
       collectgarbage("collect")
       return res
     end
+    LEVEL.SEEDS = table.copy(SEEDS)
     ob_invoke_hook_with_table("end_level", LEVEL)
     for _,k in pairs (LEVEL) do
       LEVEL[k] = nil
@@ -2703,7 +2704,7 @@ function Level_make_level(LEV)
     collectgarbage("collect")
     return res
   end
-
+  LEVEL.SEEDS = table.copy(SEEDS)
   ob_invoke_hook_with_table("end_level", LEVEL)
 
   gui.end_level()
