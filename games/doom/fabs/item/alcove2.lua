@@ -6,7 +6,6 @@ PREFABS.Item_alcove_techy =
 {
   file   = "item/alcove2.wad",
 
-  rank = 2,
   prob   = 200,
   theme  = "tech",
   env    = "!cave",

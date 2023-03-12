@@ -858,6 +858,10 @@ function Monster_fill_room(LEVEL, R, SEEDS)
     -- slightly more at end of a game
     factor = factor * (0.8 + LEVEL.game_along * 0.4)
 
+    if R.is_sub_room then
+      factor = factor * 16
+    end
+
     -- apply the room "pressure" type
     if R.pressure == "none" then factor = -EXTREME_H end
     if R.pressure == "low"  then factor = factor / 2.1 end

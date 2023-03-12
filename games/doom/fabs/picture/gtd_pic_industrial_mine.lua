@@ -44,3 +44,49 @@ PREFABS.Pic_mining_dirt_fenced_driller =
   y_fit = "top",
   x_fit = { 20,72 , 168,220 }
 }
+
+PREFABS.Pic_mining_dirt_fenced_radium =
+{
+  template = "Pic_mining_dirt_fenced",
+  map = "MAP01",
+
+
+  texture_pack = "armaetus",
+
+  tex_STONE7 =
+  {
+    GRNSTON1 = 1
+  },
+
+  tex_RROCK18 =
+  {
+    GRNRKF = 1
+  }
+}
+
+PREFABS.Pic_mining_dirt_fenced_driller_radium =
+{
+  template = "Pic_mining_dirt_fenced",
+  map = "MAP02",
+
+  line_85 =
+  {
+    [85] = 4,
+    [0] = 1,
+  },
+
+  y_fit = "top",
+  x_fit = { 20,72 , 168,220 },
+
+  texture_pack = "armaetus",
+
+  tex_STONE7 =
+  {
+    GRNSTON1 = 1
+  },
+
+  tex_RROCK18 =
+  {
+    GRNRKF = 1
+  }
+}

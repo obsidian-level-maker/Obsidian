@@ -388,3 +388,23 @@ PREFABS.Item_secret_dem_rift_closet =
     burnt_tree = 50,
   }
 }
+
+PREFABS.Item_infestation_evil_shrine_eye_secret =
+{
+  template  = "Item_dem_garrett_fountain1",
+  map    = "MAP09",
+
+  theme = "hell",
+
+  seed_w = 1,
+
+  deep = 64,
+  over = -16,
+
+  thing_2014 =
+  {
+    potion = 50,
+    helmet = 50,
+  }
+
+}

@@ -5,7 +5,6 @@ PREFABS.Item_craneo_gravesite =
   map   = "MAP01",
   port = "zdoom",
 
-  rank  = 2,
   prob  = 400,
   theme = "!tech",
   env   = "outdoor",

@@ -56,6 +56,7 @@ PREFABS.Hallway_conveyor_i5 =
   template  = "Hallway_conveyor_i1",
   map    = "MAP05",
 
+  jump_crouch = true
 }
 
 PREFABS.Hallway_conveyor_i6 =

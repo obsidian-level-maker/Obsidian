@@ -7,7 +7,6 @@ PREFABS.Item_alcove_techy_epic =
   file   = "item/alcove2_EPIC.wad",
   map    = "MAP01",
 
-  rank   = 2,
   prob   = 200,
   theme  = "tech",
   env    = "!cave",

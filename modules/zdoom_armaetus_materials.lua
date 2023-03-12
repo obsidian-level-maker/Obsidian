@@ -636,7 +636,7 @@ ARMAETUS_MATERIALS = {
   HELWAL1 = { t="HELWAL1", f="RROCK03" }, --Memento Mori 2,
   HELLROK1 = { t="HELLROK1", f="FLOOR6_1" },
   HELWAL2 = { t="HELWAL2", f="FLOOR6_1" }, --Plutonia 2,
-  OBPENTA1 = { t="OBPENTA1", f="RROCK03" },
+  PENTA1 = { t="PENTA1", f="RROCK03" },
   SKIN3 = { t="SKIN3", f="SFLR6_4" },
   SKIN4 = { t="SKIN4", f="SKINFLT1" },
   SKINHEAD = { t="SKINHEAD", f="SFLR6_4" },
@@ -1355,6 +1355,8 @@ ARMAETUS_MATERIALS = {
   ADVDE3 = { t="ADVDE3", f="CEIL4_3"},
   ADVDE4 = { t="ADVDE4", f="CEIL4_3"},
   ADVDE5 = { t="ADVDE5", f="CEIL4_3"},
+  ADVDE6 = { t="ADVDE6", f="CEIL4_3"},
+  ADVDE7 = { t="ADVDE7", f="CEIL4_3"},
 
 
   ----------------------------------------------

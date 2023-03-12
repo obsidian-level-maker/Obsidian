@@ -5,7 +5,7 @@ PREFABS.Item_closet_urban_fake_shutter =
 
   prob   = 100,
   theme  = "urban",
-  env    = "!cave",
+  env    = "outdoor",
 
   where  = "seeds",
   seed_w = 2,

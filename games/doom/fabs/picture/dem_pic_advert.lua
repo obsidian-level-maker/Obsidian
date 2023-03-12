@@ -36,7 +36,8 @@ PREFABS.Pic_dem_advert =
     ADVDE1 = 50,
     ADVDE2 = 50,
     ADVDE3 = 50,
-    ADVDE5 = 50
+    ADVDE5 = 50,
+    ADVDE7 = 50
   }
 
 }
@@ -58,7 +59,8 @@ PREFABS.Pic_dem_advert_small =
     COMPSC1 = 50,
     ADVCR3 = 50,
     ADVCR5 = 50,
-    ADVDE4 = 50
+    ADVDE4 = 50,
+    ADVDE6 = 50
   }
 
 }

@@ -3,7 +3,6 @@ PREFABS.Item_gtd_alcove2 =
   file = "item/gtd_item_key_alcove.wad",
   map = "MAP01",
 
-  rank = 2,
   prob = 200,
   theme = "tech",
   env = "!cave",

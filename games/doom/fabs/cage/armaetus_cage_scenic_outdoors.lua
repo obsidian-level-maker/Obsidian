@@ -1,10 +1,10 @@
--- MSSP-TODO: These need a bit of a redesign - the platforms are too small for the monsters
--- and consequently get stuck.
 
---[[PREFABS.Cage_armaetus_scenic_outdoors1 =
+PREFABS.Cage_armaetus_scenic_outdoors1 =
 {
   file   = "cage/armaetus_cage_scenic_outdoors.wad",
   map = "MAP01",
+
+  theme = "hell",
 
   prob  = 250,
 
@@ -21,6 +21,13 @@
 
   x_fit = "stretch",
   y_fit = "top",
+
+  tex_SP_ROCK1 = {
+    SP_ROCK1=50, ROCKRED1=50, ROCK5=50,
+    ZIMMER1=50, ZIMMER2=50,
+    ZIMMER3=50, ZIMMER4=50, ZIMMER5=50,
+    ZIMMER6=50, ZIMMER7=50, ZIMMER8=50,
+    },
 }
 
 PREFABS.Cage_armaetus_scenic_outdoors2 =
@@ -34,4 +41,3 @@ PREFABS.Cage_armaetus_scenic_outdoors3 =
   template = "Cage_armaetus_scenic_outdoors1",
   map = "MAP03",
 }
-]]

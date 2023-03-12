@@ -638,6 +638,7 @@ PREFABS.Pic_urban_downtown_facade_advert =
     ADVDE1 = 50,
     ADVDE2 = 50,
     ADVDE3 = 50,
-    ADVDE5 = 50
+    ADVDE5 = 50,
+    ADVDE7 = 50
   }
 }

@@ -11,7 +11,7 @@ PREFABS.Item_secret_garage_closet =
   port = "zdoom",
 
   theme = "urban",
-  env   = "outdoor",
+  env = "outdoor",
   prob  = 100,
 
   key   = "secret",
@@ -51,7 +51,7 @@ PREFABS.Item_secret_store_closet =
   port = "zdoom",
 
   theme = "urban",
-  env   = "outdoor",
+  env = "outdoor",
   prob  = 100,
 
   key   = "secret",
@@ -119,7 +119,7 @@ PREFABS.Item_secret_store_closet_vanilla =
   port = "zdoom",
 
   theme = "urban",
-  env   = "outdoor",
+  env = "outdoor",
   prob  = 100,
 
   key   = "secret",
@@ -191,7 +191,7 @@ PREFABS.Item_secret_yard_closet1 =
   texture_pack = "armaetus",
 
   theme = "urban",
-  env   = "outdoor",
+  env = "outdoor",
 
   deep   = 16,
   over   = -16,
@@ -298,7 +298,6 @@ PREFABS.Item_secret_vent_closet =
 {
   template = "Item_secret_yard_closet1",
   map      = "MAP07",
-
 
   jump_crouch = false,
 

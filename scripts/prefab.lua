@@ -2753,6 +2753,11 @@ function Fab_find_matches(LEVEL, reqs, match_state)
       if match_environment(req_k, "courtyard") then return true end
     end
 
+    if def_k == "artificial_outdoors" then
+      if match_environment(req_k, "park") then return false end
+      if match_environment(req_k, "outdoor") then return true end
+    end
+
     -- negated check?
     if string.sub(def_k, 1, 1) == '!' then
       def_k = string.sub(def_k, 2)

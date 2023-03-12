@@ -3,7 +3,6 @@ PREFABS.Item_gtd_key_dispenser =
   file   = "item/gtd_item_key_dispenser.wad",
   map = "MAP01",
 
-  rank = 2,
   prob = 30,
   skip_prob = 50,
 
