@@ -3009,10 +3009,11 @@ function Quest_room_themes(LEVEL)
 
 
   local function choose_building_themes()
+    
     local building_tab = collect_usable_themes("building")
 
     local max_room_theme = int(PARAM.float_max_room_themes or 2)
-    local limit_wall_group_prob = int(PARAM.float_limit_wall_groups or 50)
+    local max_wall_groups = int(PARAM.float_max_wall_groups or 2)
 
     while table.size(building_tab) > max_room_theme do
       local theme, odds = rand.table_pair(building_tab)
@@ -3023,26 +3024,12 @@ function Quest_room_themes(LEVEL)
 
     visit_room(LEVEL.start_room, nil, nil, building_tab)
 
-    local the_one_wall_group_tab = {}
+    local the_wall_group_tab = {}
 
-    -- sometimes prefer particular wall groups over others
-    if rand.odds(limit_wall_group_prob) then
-      local x = rand.irange(1,3)
-
-      while x >= 1 do
-        local wg_pick = rand.key_by_probs(LEVEL.theme.wall_groups)
-        the_one_wall_group_tab[wg_pick] = 50 / x
-        x = x - 1
-      end
-    end
-
-    if not table.empty(the_one_wall_group_tab) then
-      for _,R in pairs(LEVEL.rooms) do
-        if R:get_env() == "building" then
-          if not R.is_exit then
-            R.forced_wall_groups = the_one_wall_group_tab
-          end
-        end
+    while table.size(LEVEL.theme.wall_groups) > max_wall_groups do
+      local theme, odds = rand.table_pair(LEVEL.theme.wall_groups)
+      if rand.odds(100 - math.min(odds, 100)) then
+        LEVEL.theme.wall_groups[theme] = nil
       end
     end
 

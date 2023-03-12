@@ -38,9 +38,10 @@ UI_ARCH.ZDOOM_SKYBOX_CHOICES =
 
 UI_ARCH.MIXIN_CHOICES =
 {
-  "mostly", _("Mostly"),
-  "normal", _("Normal"),
-  "less",   _("Less"),
+
+  "none",   _("None"),
+  "mostly", _("Mostly Selected Theme"),
+  "less",   _("Mostly Other Themes"),
 }
 
 
@@ -190,10 +191,10 @@ OB_MODULES["ui_arch"] =
     {
       name = "mixin_type",
       label = _("Theme Mix-in Type"),
-      tooltip = _("Override behavior of the -ish theme choices."),
-      longtip = _("This replaces the -ish theme choices. By selecting Mostly, this means your selected theme is occasionally littered by other themes while setting it to Less means the original selected theme is what's littered in instead. Default behavior is Normal."),
+      tooltip = _("Occasionally mix-in themes other than the selected one."),
+      longtip = _("This replaces the legacy \"-ish\" theme choices. By selecting Mostly Selected Theme, this means your selected theme is occasionally littered by other themes while setting it to Mostly Other Themes means the original selected theme is what's littered in instead. Default behavior is None."),
       choices = UI_ARCH.MIXIN_CHOICES,
-      default = "normal",
+      default = "none",
       priority = 88,
       gap = 1,
       randomize_group="architecture"
@@ -265,11 +266,11 @@ OB_MODULES["ui_arch"] =
 
     {
       name = "zdoom_skybox",
-      label = _("ZDoom 3D Skybox"),
+      label = _("3D Skyboxes"),
       choices=UI_ARCH.ZDOOM_SKYBOX_CHOICES,
       default="disable",
       tooltip = _("Choose if 3D Skyboxes are rendered into levels and their style."),
-      longtip = _("This is highly recommended when Bottomless Vistas are enabled in combination with a ZDoom Family engine."),
+      longtip = _("This is highly recommended when Bottomless Vistas are enabled."),
       priority = 49
     }
   },

@@ -2070,10 +2070,6 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
       tab = GAME.THEMES[ob_resolve_theme_keyword(R.theme.theme_override)].wall_groups
     end
 
-    if R.forced_wall_groups then
-      tab = R.forced_wall_groups
-    end
-
     if not tab then return end
 
     local prob = THEME.wall_group_prob or 35
@@ -2082,11 +2078,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     end
 
     if PARAM.group_wall_prob and PARAM.group_wall_prob ~= "fab_default" then
-      if not ob_match_game({game = "doomish"}) then
-        prob = prob * (PREFAB_CONTROL_GENERIC.WALL_GROUP_ODDS[PARAM.group_wall_prob] or 1)
-      else
         prob = prob * (PREFAB_CONTROL.WALL_GROUP_ODDS[PARAM.group_wall_prob] or 1)
-      end
     end
 
     prob = math.clamp(0, prob, 100)
