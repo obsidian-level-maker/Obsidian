@@ -18,7 +18,7 @@ PREFABS.Item_closet_toilet_point_key_carrier =
 {
   template = "Item_closet_toilet_point",
 
-  rank = 2,
+
   prob = 75,
 
   item_kind = "key",

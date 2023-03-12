@@ -13,7 +13,7 @@ PREFABS.Window_tall_1 =
 
   passable = true,
 
-  rank   = 2,
+
   height = 176,
 
   where  = "edge",
@@ -82,7 +82,7 @@ PREFABS.Window_tallish_1 =
   theme  = "!tech",
   map      = "MAP11",
 
-  rank     = 1,
+
   height   = 128,
 }
 
@@ -92,7 +92,7 @@ PREFABS.Window_tallish_1_tech =
   theme  = "tech",
   map      = "MAP07",
 
-  rank     = 1,
+
   height   = 128,
   tex_METAL5 = "DOORSTOP",
   flat_CEIL5_2 = "FLAT20",
@@ -105,7 +105,7 @@ PREFABS.Window_tallish_2 =
   map      = "MAP12",
   seed_w   = 2,
 
-  rank     = 1,
+
   height   = 128,
 }
 
@@ -116,7 +116,7 @@ PREFABS.Window_tallish_2_tech =
   map      = "MAP08",
   seed_w   = 2,
 
-  rank     = 1,
+
   height   = 128,
   tex_METAL5 = "DOORSTOP",
   flat_CEIL5_2 = "FLAT20",
@@ -129,7 +129,7 @@ PREFABS.Window_tallish_3 =
   map      = "MAP13",
   seed_w   = 3,
 
-  rank     = 1,
+
   height   = 128,
 }
 
@@ -140,7 +140,7 @@ PREFABS.Window_tallish_3_tech =
   map      = "MAP09",
   seed_w   = 3,
 
-  rank     = 1,
+
   height   = 128,
   tex_METAL5 = "DOORSTOP",
   flat_CEIL5_2 = "FLAT20",

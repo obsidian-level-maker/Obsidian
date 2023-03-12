@@ -6,7 +6,7 @@ PREFABS.Item_craneo_marble_key_trap =
 
   style = "traps",
 
-  rank  = 2,
+
   prob  = 400,
   theme = "!tech",
   env   = "outdoor",

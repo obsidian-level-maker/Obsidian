@@ -9,7 +9,7 @@ PREFABS.Item_closet_toilet_room_gz =
 
   port = "zdoom",
 
-  rank   = 2,
+
   prob   = 100,
   theme  = "!hell",
   env    = "!cave",

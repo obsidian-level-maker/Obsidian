@@ -4,7 +4,7 @@ PREFABS.Item_darklord_key_hut =
 
   map   = "MAP01",
 
-  rank  = 2,
+
   prob  = 350,
   env   = "outdoor",
 

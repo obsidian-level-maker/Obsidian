@@ -24,7 +24,7 @@ PREFABS.Wall_tech_collite_flat_green_tall =
   map = "MAP02",
 
   height = 128,
-  rank = 1,
+
 
   bound_z2 = 128,
 
@@ -61,7 +61,7 @@ PREFABS.Wall_tech_collite_flat_blue_tall =
   group = "wall_collite_flat_blue",
 
   height = 128,
-  rank = 1,
+
 
   bound_z2 = 128,
 

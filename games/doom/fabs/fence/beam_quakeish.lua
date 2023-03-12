@@ -9,7 +9,7 @@ PREFABS.Beam_quakeish =
 
   kind   = "beam",
 
-  rank   = 2,
+
   prob   = 50,
 
   where  = "edge",
@@ -34,7 +34,7 @@ PREFABS.Beam_quakeish_diagonal =
 
   kind   = "beam",
 
-  rank   = 2,
+
   prob   = 50,
 
   where  = "diagonal",

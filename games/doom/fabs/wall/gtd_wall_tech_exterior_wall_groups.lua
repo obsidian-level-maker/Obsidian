@@ -144,7 +144,7 @@ PREFABS.Wall_tech_outdoor_overhanging_braced_vent = --#
   template = "Wall_tech_outdoor_caution_strip",
   map = "MAP08",
 
-  rank = 2,
+
   group = "tech_o_overhanging_braced_vent",
 
   height = 192,
@@ -161,7 +161,7 @@ PREFABS.Wall_tech_outdoor_overhanging_lite_platform = --#
 
   map = "MAP09",
 
-  rank = 2,
+
   group = "tech_o_overhanging_lite_platform",
 
   deep = 64,
@@ -194,7 +194,7 @@ PREFABS.Wall_tech_hadleys_hope_sort_of_wall = --#
   template = "Wall_tech_outdoor_caution_strip",
   map = "MAP11",
 
-  rank = 2,
+
   group = "tech_o_hadleys_hope",
 
   height = 192,
@@ -213,7 +213,7 @@ PREFABS.Wall_tech_overhanging_lights = --#
   template = "Wall_tech_outdoor_caution_strip",
   map = "MAP12",
 
-  rank = 2,
+
   group = "tech_o_overhanging_lights",
 
   deep = 64,
@@ -228,7 +228,7 @@ PREFABS.Wall_outdoor_shiny_silver_overhang = --#
   template = "Wall_tech_outdoor_caution_strip",
   map = "MAP13",
 
-  rank = 2,
+
 
   group = "tech_o_shiny_silver_overhang",
 
@@ -251,7 +251,7 @@ PREFABS.Wall_outdoor_shiny_silver_overhang_EPIC =
   template = "Wall_tech_outdoor_caution_strip",
   map = "MAP13",
 
-  rank = 2,
+
 
   texture_pack = "armaetus",
   replaces = "Wall_outdoor_shiny_silver_overhang",
@@ -385,7 +385,7 @@ PREFABS.Wall_tech_outdoor_black_mesa_overlook = -- #
   template = "Wall_tech_outdoor_caution_strip",
   map = "MAP18",
 
-  rank = 2,
+
   port = "zdoom",
 
   height = 192,
@@ -404,7 +404,7 @@ PREFABS.Wall_tech_outdoor_black_mesa_overlook_EPIC =
   template = "Wall_tech_outdoor_caution_strip",
   map = "MAP18",
 
-  rank = 2,
+
   port = "zdoom",
   texture_pack = "armaetus",
   replaces = "Wall_tech_outdoor_black_mesa_overlook",

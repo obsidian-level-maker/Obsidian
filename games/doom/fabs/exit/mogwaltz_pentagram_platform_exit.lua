@@ -3,7 +3,7 @@ PREFABS.Exit_mogwaltz_pentagram_platform =
   file   = "exit/mogwaltz_pentagram_platform_exit.wad",
   map    = "MAP01",
 
-  rank   = 2,
+
   prob   = 100,
 
   where  = "seeds",

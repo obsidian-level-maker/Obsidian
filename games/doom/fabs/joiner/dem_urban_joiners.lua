@@ -600,7 +600,7 @@ PREFABS.Joiner_commmercial_joiner =
 
   port = "zdoom",
 
-rank = 1,
+
 
   prob   = 1000,
 
@@ -630,7 +630,7 @@ PREFABS.Joiner_hospital_joiner =
   port = "zdoom",
 
 
-rank = 1,
+
 
   prob   = 1000,
 
@@ -661,7 +661,7 @@ PREFABS.Joiner_hospital_room_joiner =
 
   port = "zdoom",
 
-rank = 1,
+
 
   prob   = 1000,
 
@@ -704,7 +704,7 @@ PREFABS.Joiner_hospital_joiner2 =
   port = "zdoom",
 
 
-rank = 1,
+
 
   prob   = 1000,
 

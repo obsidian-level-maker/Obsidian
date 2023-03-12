@@ -3,7 +3,7 @@ PREFABS.Decor_dem_commercial_display1  =
   file   = "decor/dem_decor_commercial_set.wad",
   map    = "MAP01",
 
-rank = 1,
+
 
   prob   = 5000,
   theme  = "urban",

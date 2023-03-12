@@ -3,7 +3,7 @@ PREFABS.Item_closet_hellish_loo =
   file   = "item/gtd_item_closet_toilet_hell.wad",
   map    = "MAP01",
 
-  rank   = 2,
+
   prob   = 125,
   theme  = "hell",
   env    = "outdoor",

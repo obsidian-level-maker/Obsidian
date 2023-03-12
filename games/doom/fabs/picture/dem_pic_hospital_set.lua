@@ -4,7 +4,7 @@ PREFABS.Pic_dem_hospital_set1 =
   file   = "picture/dem_pic_hospital_set.wad",
   map    = "MAP01",
 
-rank = 1,
+
 
   prob   = 25000,
   theme = "!hell",

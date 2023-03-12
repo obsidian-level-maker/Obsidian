@@ -4,7 +4,7 @@ PREFABS.Window_gtd_industrial_lite_archs_1 =
   map = "MAP01",
 
   theme = "!hell",
-  rank = 2,
+
 
   group = "gtd_window_industrial_lite_archs",
   prob = 50,
@@ -52,7 +52,7 @@ PREFABS.Window_gtd_industrial_lite_archs_hell_1 =
   map = "MAP01",
 
   theme = "hell",
-  rank = 1,
+
 
   group = "gtd_window_industrial_lite_archs",
   prob = 50,

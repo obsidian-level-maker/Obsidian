@@ -8,7 +8,7 @@ PREFABS.Item_dem_item_hospital_closet1 =
   file  = "item/dem_item_hospital_closets.wad",
   map   = "MAP01",
 
- rank = 1,
+
 
   prob   = 5000,
   theme  = "!hell",

@@ -8,7 +8,7 @@ PREFABS.Exit_plutonia =
   map    = "MAP01",
 
   game   = "plutonia",
-  rank   = 2,
+
   prob   = 50,
 
   where  = "point",

@@ -88,7 +88,7 @@ PREFABS.Pic_metal_warning_bottom_comp_hell =
   template = "Pic_metal_warning_gate",
   map = "MAP05",
 
-  rank = 1,
+
   theme = "hell",
 
   group = "gtd_wall_metal_warning_bottom"
