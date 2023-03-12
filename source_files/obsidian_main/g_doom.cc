@@ -75,11 +75,7 @@ static qLump_c *endmap_lump;
 static int errors_seen;
 
 std::string current_port;
-std::string map_format;
 bool build_nodes;
-bool build_reject;
-
-static bool UDMF_mode;
 
 int udmf_vertexes;
 int udmf_sectors;
@@ -96,6 +92,14 @@ enum wad_section_e {
 
     NUM_SECTIONS
 };
+
+enum map_format_e {
+    FORMAT_BINARY = 0,
+    FORMAT_UDMF
+};
+
+map_format_e map_format;
+static bool UDMF_mode;
 
 typedef std::vector<qLump_c *> lump_bag_t;
 
@@ -1053,6 +1057,8 @@ bool Doom::game_interface_c::Start(const char *preset) {
     ef_liquid_type = 0;
     ef_thing_mode = 0;
 
+    current_port = ob_get_param("port");
+
     ob_invoke_hook("pre_setup");
 
     if (batch_mode) {
@@ -1064,7 +1070,13 @@ bool Doom::game_interface_c::Start(const char *preset) {
     } else {
 #ifndef CONSOLE_ONLY
         if (!mid_batch) {
-            filename = DLG_OutputFilename("wad", preset);
+            if (StringCaseCmp(current_port, "zdoom") == 0 ||
+                StringCaseCmp(current_port, "eternity") == 0) {
+                filename = DLG_OutputFilename("pk3", 
+                    std::filesystem::path{preset}.replace_extension("pk3").string().c_str());
+            } else {
+                filename = DLG_OutputFilename("wad", preset);
+            }
         } else {
             filename = BestDirectory() / preset;
         }
@@ -1076,6 +1088,8 @@ bool Doom::game_interface_c::Start(const char *preset) {
         return false;
     }
 
+    filename.replace_extension("wad");
+
     gif_filename = filename;
 
     gif_filename.replace_extension("gif");
@@ -1084,12 +1098,10 @@ bool Doom::game_interface_c::Start(const char *preset) {
         Main::BackupFile(filename);
     }
 
-    current_port = ob_get_param("port");
-
     // Need to preempt the rest of this process for now if we are using Vanilla
     // Doom
     if (StringCaseCmp(current_port, "limit_enforcing") == 0) {
-        build_reject = StringToInt(ob_get_param("bool_build_reject"));
+        map_format = FORMAT_BINARY;
         build_nodes = true;
         return true;
     }
@@ -1106,24 +1118,19 @@ bool Doom::game_interface_c::Start(const char *preset) {
 #endif
 
     if (StringCaseCmp(current_port, "zdoom") == 0) {
-        build_reject = false;
-        map_format = ob_get_param("map_format_zdoom");
-        build_nodes = StringToInt(ob_get_param("bool_build_nodes_zdoom"));
+        map_format = FORMAT_UDMF;
+        build_nodes = true;
     } else if (StringCaseCmp(current_port, "eternity") == 0) {
-        build_reject = false;
-        map_format = ob_get_param("map_format");
+        map_format = FORMAT_UDMF;
         build_nodes = true;
     } else if (StringCaseCmp(current_port, "edge") == 0) {
-        build_reject = false;
-        map_format = ob_get_param("map_format");
-        build_nodes = false;  // EDGE-Classic has its own internal nodebuilder
-                              // which is preferred
+        map_format = FORMAT_UDMF;
+        build_nodes = false;
     } else {
-        build_reject = StringToInt(ob_get_param("bool_build_reject"));
-        map_format = "binary";
+        map_format = FORMAT_BINARY;
         build_nodes = true;
     }
-    if (StringCaseCmp(map_format, "udmf") == 0) {
+    if (map_format == FORMAT_UDMF) {
         UDMF_mode = true;
 #ifdef __APPLE__
         setlocale(LC_NUMERIC, "C");

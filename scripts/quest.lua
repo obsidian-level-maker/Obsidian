@@ -2969,7 +2969,7 @@ function Quest_room_themes(LEVEL)
       assert(conn)
 
       -- IDEA : make this depend on combined size of both rooms
-      local keep_prob = 65
+      local keep_prob = 100
       if last_theme.keep_prob then keep_prob = last_theme.keep_prob end
 
       -- force theme change over zone boundaries or teleporters
@@ -3011,39 +3011,38 @@ function Quest_room_themes(LEVEL)
   local function choose_building_themes()
     local building_tab = collect_usable_themes("building")
 
-    local single_room_theme_prob = int(PARAM.float_single_room_theme or 50)
+    local max_room_theme = int(PARAM.float_max_room_themes or 2)
     local limit_wall_group_prob = int(PARAM.float_limit_wall_groups or 50)
 
-    if not rand.odds(single_room_theme_prob) then
-      -- distribute room themes (vanilla Oblige behavior)
-      -- recursively flow through the level
-      visit_room(LEVEL.start_room, nil, nil, building_tab)
-    else
-      -- use a single theme for all indoors
-      local the_one_room_theme = GAME.ROOM_THEMES[rand.key_by_probs(building_tab)]
-      local the_one_wall_group_tab = {}
-
-      -- sometimes prefer particular wall groups over others
-      if rand.odds(limit_wall_group_prob) then
-        local x = rand.irange(1,3)
-
-        while x >= 1 do
-          local wg_pick = rand.key_by_probs(LEVEL.theme.wall_groups)
-          the_one_wall_group_tab[wg_pick] = 50 / x
-          x = x - 1
-        end
+    while table.size(building_tab) > max_room_theme do
+      local theme, odds = rand.table_pair(building_tab)
+      if rand.odds(100 - math.min(odds, 100)) then
+        building_tab[theme] = nil
       end
+    end
 
+    visit_room(LEVEL.start_room, nil, nil, building_tab)
+
+    local the_one_wall_group_tab = {}
+
+    -- sometimes prefer particular wall groups over others
+    if rand.odds(limit_wall_group_prob) then
+      local x = rand.irange(1,3)
+
+      while x >= 1 do
+        local wg_pick = rand.key_by_probs(LEVEL.theme.wall_groups)
+        the_one_wall_group_tab[wg_pick] = 50 / x
+        x = x - 1
+      end
+    end
+
+    if not table.empty(the_one_wall_group_tab) then
       for _,R in pairs(LEVEL.rooms) do
         if R:get_env() == "building" then
-          R.theme = the_one_room_theme
-
-          if not table.empty(the_one_wall_group_tab) and not R.is_exit then
+          if not R.is_exit then
             R.forced_wall_groups = the_one_wall_group_tab
           end
         end
-
-        ::continue::
       end
     end
 

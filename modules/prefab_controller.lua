@@ -178,7 +178,7 @@ OB_MODULES["prefab_control"] =
   where = "arch",
   priority = 95,
 
-  game = { doom1=1, doom2=1, chex3=0, hacx=0, heretic=1, harmony=0, hexen=0, strife=0 },
+  engine = "idtech_1",
   port = "!limit_enforcing",
 
   hooks =
@@ -252,15 +252,15 @@ OB_MODULES["prefab_control"] =
 
 
     {
-      name = "float_single_room_theme",
-      label = _("Single Room Themes"),
+      name = "float_max_room_themes",
+      label = _("Max Room Themes Per Level"),
       valuator = "slider",
-      units = _("%"),
-      min = 0,
-      max = 100,
+      units = "",
+      min = 1,
+      max = 8,
       increment = 1,
-      default = 50,
-      tooltip = _("Determines the odds at which a level would use a universal, single room theme for all indoors (buildings). Default is 50%."),
+      default = 2,
+      tooltip = _("Determines the maximum number of distinct indoor room themes used per level. Default is 2."),
       priority = 100,
       randomize_group="architecture",
     },
