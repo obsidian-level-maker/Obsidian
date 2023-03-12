@@ -7,7 +7,7 @@ PREFABS.Exit_gazebo1 =
   file   = "exit/gazebo1.wad",
   map    = "MAP01",
 
-  rank   = 2,
+
   prob   = 100, --100,
 
   where  = "seeds",

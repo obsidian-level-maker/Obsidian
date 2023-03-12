@@ -251,7 +251,7 @@ PREFABS.Pic_box_mural2 =
   template = "Pic_box_template",
   map      = "MAP06",
 
-  rank   = 2,
+
   theme  = "egypt",
 
   seed_w = 2,
@@ -266,7 +266,7 @@ PREFABS.Pic_box_huge_mural =
   template = "Pic_box_template",
   map      = "MAP08",
 
-  rank  = 3,
+
   theme = "egypt",
 
   seed_w = 3,

@@ -31,7 +31,7 @@ PREFABS.Item_sealed_armory_room_keyed =
   theme = "zdoom",
   item_kind = "key",
 
-  rank   = 2,
+
   prob   = 100,
 
   sound = "Toilet_Running",
@@ -45,7 +45,7 @@ PREFABS.Item_sealed_armory_room_keyed_limit =
   theme = "!zdoom",
   item_kind = "key",
 
-  rank   = 2,
+
   prob   = 100,
 
   sound = "Toilet_Running",

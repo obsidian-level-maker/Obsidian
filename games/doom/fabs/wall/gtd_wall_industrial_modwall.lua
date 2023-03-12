@@ -38,7 +38,7 @@ PREFABS.Wall_industrial_modwall_1_hell =
   map = "MAP51",
 
   theme = "hell",
-  rank = 1,
+
 
   prob = 50,
 
@@ -51,7 +51,7 @@ PREFABS.Wall_industrial_modwall_1a_hell =
   map = "MAP52",
 
   theme = "hell",
-  rank = 1,
+
 
   prob = 120
 }
@@ -62,7 +62,7 @@ PREFABS.Wall_industrial_modwall_1a_hell_diag =
   map = "MAP53",
 
   theme = "hell",
-  rank = 1,
+
 
   where = "diagonal",
 

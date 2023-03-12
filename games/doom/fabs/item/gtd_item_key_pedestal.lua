@@ -3,7 +3,7 @@ PREFABS.Item_gtd_key_pedestal_tech =
   file  = "item/gtd_item_key_pedestal.wad",
   map = "MAP01",
 
-  rank = 2,
+
   prob = 300,
   theme = "tech",
 

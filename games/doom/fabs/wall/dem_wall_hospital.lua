@@ -3,7 +3,7 @@ PREFABS.Wall_hospital1 =
   file   = "wall/dem_wall_hospital.wad",
   map    = "MAP01",
 
-  rank = 1,
+
 
   prob   = 200,
   theme = "!hell",

@@ -3,7 +3,7 @@ PREFABS.Item_cage_balcony =
   file = "item/gtd_item_cage_balcony.wad",
   map = "MAP01",
 
-  rank = 2,
+
   prob = 180,
 
   item_kind = "key",

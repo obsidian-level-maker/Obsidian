@@ -6,7 +6,7 @@ PREFABS.Door_EPIC_plain_tech =
   texture_pack = "armaetus",
 
   prob   = 20,
-  rank   = 1,
+
 
   style  = "doors",
 

@@ -6,7 +6,7 @@ PREFABS.Window_quakeish_1 =
   group  = "gtd_window_quakeish",
   port = "zdoom",
 
-  rank   = 2,
+
   prob   = 50,
 
   passable = true,
@@ -47,7 +47,7 @@ PREFABS.Window_not_quakeish =
 
   group  = "gtd_window_quakeish",
 
-  rank   = 1,
+
   prob   = 1,
 
   passable = true,

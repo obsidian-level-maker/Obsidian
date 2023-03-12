@@ -6,7 +6,7 @@ PREFABS.Item_podium =
 {
   file  = "item/podium.wad",
 
-  rank  = 2,
+
   prob  = 100,
   theme = "!tech",
 
@@ -34,7 +34,7 @@ PREFABS.Item_podium_lite3 =
   map = "MAP02",
   prob = 75,
 
-  rank  = 2,
+
   theme = "tech",
 
   tex_TEKLITE  = "COMPSPAN",

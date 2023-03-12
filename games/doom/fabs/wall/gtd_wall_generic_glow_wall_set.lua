@@ -7,7 +7,7 @@ PREFABS.Wall_generic_glow_wall =
 
   prob = 50,
 
-  rank = 3,
+
 
   group = "gtd_generic_glow_wall",
 
@@ -38,7 +38,7 @@ PREFABS.Wall_generic_glow_wall_tech_no_liq =
 
   prob = 50,
 
-  rank = 1,
+
 
   group = "gtd_generic_glow_wall",
 
@@ -59,7 +59,7 @@ PREFABS.Wall_generic_glow_wall_tech_no_liq_diag =
   template = "Wall_generic_glow_wall_tech_no_liq",
   map    = "MAP02",
 
-  rank = 1,
+
 
   theme = "!hell",
   where  = "diagonal",
@@ -73,7 +73,7 @@ PREFABS.Wall_generic_glow_wall_hell_no_liq =
 {
   template = "Wall_generic_glow_wall_tech_no_liq",
 
-  rank = 2,
+
 
   theme = "hell",
 
@@ -85,7 +85,7 @@ PREFABS.Wall_generic_glow_wall_hell_no_liq_diag =
   template = "Wall_generic_glow_wall_tech_no_liq",
   map    = "MAP02",
 
-  rank = 2,
+
 
   theme = "hell",
   where  = "diagonal",

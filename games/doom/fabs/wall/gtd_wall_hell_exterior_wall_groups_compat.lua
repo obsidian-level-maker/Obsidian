@@ -5,7 +5,7 @@ PREFABS.Wall_hell_outdoor_huge_overhang_thin = --#
 
   group = "hell_o_huge_overhang",
 
-  rank = 1,
+
   prob = 15,
 
   where = "edge",
@@ -44,7 +44,7 @@ PREFABS.Wall_gothic_flying_alcoves_thin = --#
   template = "Wall_hell_outdoor_huge_overhang_thin",
   map = "MAP12",
 
-  rank = 1,
+
   group = "hell_o_flying_alcoves",
 
   z_fit = "top",
@@ -55,7 +55,7 @@ PREFABS.Wall_gothic_flying_alcoves_EPIC_thin =
   template = "Wall_hell_outdoor_huge_overhang_thin",
   map = "MAP12",
 
-  rank = 1,
+
   group = "hell_o_flying_alcoves",
 
   replaces = "Wall_gothic_flying_alcoves_thin",
@@ -71,7 +71,7 @@ PREFABS.Wall_hell_outdoor_dark_banners_thin = --#
   template = "Wall_hell_outdoor_huge_overhang_thin",
   map = "MAP14",
 
-  rank = 1,
+
   height = 160,
 
   group = "hell_o_dark_banners",
@@ -94,7 +94,7 @@ PREFABS.Wall_hell_outdoor_dark_banners_EPIC_thin =
   template = "Wall_hell_outdoor_huge_overhang_thin",
   map = "MAP14",
 
-  rank = 1,
+
   replaces = "Wall_hell_outdoor_dark_banners_thin",
   texture_pack = "armaetus",
 

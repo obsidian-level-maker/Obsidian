@@ -13,7 +13,7 @@ PREFABS.Wall_modquake_set_industrial =
   group = "gtd_modquake_set",
 
   prob   = 50,
-  rank   = 4,
+
 
   where  = "edge",
   height = 128,
@@ -31,7 +31,7 @@ PREFABS.Wall_modquake_set_hell =
 
   theme = "hell",
 
-  rank = 3,
+
 
   tex_LITEBLU1 = "METAL",
   tex_COMPBLUE = "CRACKLE2"
@@ -45,7 +45,7 @@ PREFABS.Wall_modquake_set_industrial_boom =
 
   port = "limit_removing",
 
-  rank = 2,
+
 
   line_342 = 0
 }
@@ -57,7 +57,7 @@ PREFABS.Wall_modquake_set_hell_boom =
   theme = "hell",
 
   port = "limit_removing",
-  rank = 1,
+
 
   line_342 = 0,
 
@@ -74,7 +74,7 @@ PREFABS.Wall_modquake_set_jawlike =
   map = "MAP02",
 
   theme = "any",
-  rank = 2,
+
 
   group = "gtd_modquake_jawlike"
 }
@@ -89,7 +89,7 @@ PREFABS.Wall_modquake_set_jawlike_boom =
   port = "limit_removing",
 
   theme = "any",
-  rank = 1,
+
 
   group = "gtd_modquake_jawlike",
 
@@ -105,7 +105,7 @@ PREFABS.Wall_modquake_top_heavy_brace_set =
   template = "Wall_modquake_set_industrial",
   map = "MAP03",
 
-  rank = 2,
+
 
   group = "gtd_modquake_top_heavy_brace",
 
@@ -121,7 +121,7 @@ PREFABS.Wall_modquake_top_heavy_brace_set_limit =
 
   port = "limit_removing",
 
-  rank = 1,
+
 
   group = "gtd_modquake_top_heavy_brace",
 
@@ -138,7 +138,7 @@ PREFABS.Wall_modquake_tek_slope_brace =
   template = "Wall_modquake_set_industrial",
   map = "MAP04",
 
-  rank = 2,
+
 
   deep = 32,
 
@@ -154,7 +154,7 @@ PREFABS.Wall_modquake_tek_slope_brace_limit =
 
   port = "limit_removing",
 
-  rank = 1,
+
 
   deep = 32,
 
@@ -171,7 +171,7 @@ PREFABS.Wall_modquake_ex_light_slope_brace =
   template = "Wall_modquake_set_industrial",
   map = "MAP05",
 
-  rank = 2,
+
 
   deep = 20,
 
@@ -187,7 +187,7 @@ PREFABS.Wall_modquake_ex_light_slope_brace_limit =
 
   port = "limit_removing",
 
-  rank = 1,
+
 
   deep = 20,
 
@@ -206,7 +206,7 @@ PREFABS.Wall_modquake_round_braced_lit_pillar_industrial =
 
   theme = "!hell",
 
-  rank = 2,
+
 
   deep = 20,
 
@@ -224,7 +224,7 @@ PREFABS.Wall_modquake_round_braced_lit_pillar_hell =
 
   theme = "hell",
 
-  rank = 3,
+
 
   deep = 20,
 
@@ -243,7 +243,7 @@ PREFABS.Wall_modquake_round_braced_lit_pillar_limit =
 
   theme = "any",
 
-  rank = 1,
+
 
   deep = 20,
 
@@ -262,7 +262,7 @@ PREFABS.Wall_modquake_hexagon_inset_braced_industrial =
 
   theme = "!hell",
 
-  rank = 4,
+
 
   group = "gtd_modquake_hexagon_inset_braced",
 }
@@ -274,7 +274,7 @@ PREFABS.Wall_modquake_hexagon_inset_braced_hell =
 
   theme = "hell",
 
-  rank = 3,
+
 
   group = "gtd_modquake_hexagon_inset_braced",
 
@@ -294,7 +294,7 @@ PREFABS.Wall_modquake_hexagon_inset_braced_industrial_limit =
 
   port = "!zdoom",
 
-  rank = 2,
+
 
   group = "gtd_modquake_hexagon_inset_braced",
 
@@ -311,7 +311,7 @@ PREFABS.Wall_modquake_hexagon_inset_braced_hell_limit =
 
   port = "!zdoom",
 
-  rank = 1,
+
 
   group = "gtd_modquake_hexagon_inset_braced",
 

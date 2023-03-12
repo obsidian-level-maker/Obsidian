@@ -196,7 +196,7 @@ PREFABS.Wall_generic_artsy_slope_y_inset =
   map = "MAP09",
 
   port = "zdoom",
-  rank = 2,
+
 
   group = "gtd_generic_artsy_slope_y_inset"
 }
@@ -207,7 +207,7 @@ PREFABS.Wall_generic_artsy_slope_y_inset_diag =
   map = "MAP19",
 
   port = "zdoom",
-  rank = 2,
+
 
   group = "gtd_generic_artsy_slope_y_inset",
 

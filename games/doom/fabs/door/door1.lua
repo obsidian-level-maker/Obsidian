@@ -107,7 +107,7 @@ PREFABS.Door_plain2_diag_hell =
 {
   template   = "Door_plain_diag",
   map    = "MAP03",
-  rank   = 2,
+
   theme  = "hell",
   prob   = 250,
 
@@ -124,7 +124,7 @@ PREFABS.Door_plain3_diag_hell =
 {
   template   = "Door_plain_diag",
   map    = "MAP03",
-  rank   = 2,
+
   theme  = "hell",
   prob   = 250,
 
