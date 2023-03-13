@@ -42,6 +42,9 @@ RANDOMIZE_GROUPS = {}
 -- a place for unfinished stuff
 UNFINISHED = {}
 
+-- Dasho's experiments
+SEEN_ROOM_THEMES = {}
+SEEN_WALL_GROUPS = {}
 
 -- tables which interface with GUI code
 OB_CONFIG = {}

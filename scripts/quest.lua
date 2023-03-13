@@ -2990,6 +2990,9 @@ function Quest_room_themes(LEVEL)
 
     R.theme = GAME.ROOM_THEMES[name]
     assert(R.theme)
+    if not PARAM.bool_avoid_room_theme_reuse or (PARAM.bool_avoid_room_theme_reuse and PARAM.bool_avoid_room_theme_reuse == 1) then
+      table.add_unique(SEEN_ROOM_THEMES, R.theme.name)
+    end
   end
 
 
@@ -3012,8 +3015,22 @@ function Quest_room_themes(LEVEL)
     
     local building_tab = collect_usable_themes("building")
 
-    local max_room_theme = int(PARAM.float_max_room_themes or 2)
-    local max_wall_groups = int(PARAM.float_max_wall_groups or 2)
+    local max_room_theme = int(PARAM.float_max_room_themes or 1)
+
+    if not PARAM.bool_avoid_room_theme_reuse or (PARAM.bool_avoid_room_theme_reuse and PARAM.bool_avoid_room_theme_reuse == 1) then
+      for theme,odds in pairs(building_tab) do
+        if table.has_elem(SEEN_ROOM_THEMES, theme) then
+          building_tab[theme] = nil
+        end
+      end
+
+      -- Empty seen room themes if all options exhausted
+      if table.empty(building_tab) then
+        SEEN_ROOM_THEMES = nil
+        SEEN_ROOM_THEMES = {}
+        building_tab = collect_usable_themes("building")
+      end
+    end
 
     while table.size(building_tab) > max_room_theme do
       local theme, odds = rand.table_pair(building_tab)
@@ -3024,12 +3041,37 @@ function Quest_room_themes(LEVEL)
 
     visit_room(LEVEL.start_room, nil, nil, building_tab)
 
-    local the_wall_group_tab = {}
+    local max_wall_groups = int(PARAM.float_max_indoor_wall_groups or 2)
 
-    while table.size(LEVEL.theme.wall_groups) > max_wall_groups do
-      local theme, odds = rand.table_pair(LEVEL.theme.wall_groups)
+    local the_wall_group_tab = table.copy(LEVEL.theme.wall_groups)
+
+    if not PARAM.bool_avoid_wall_group_reuse or (PARAM.bool_avoid_wall_group_reuse and PARAM.bool_avoid_wall_group_reuse == 1) then
+      for group,odds in pairs(the_wall_group_tab) do
+        if table.has_elem(SEEN_WALL_GROUPS, group) then
+          the_wall_group_tab[group] = nil
+        end
+      end
+
+      -- Empty seen wall groups if all options exhausted
+      if table.empty(building_tab) then
+        SEEN_WALL_GROUPS = nil
+        SEEN_WALL_GROUPS = {}
+        the_wall_group_tab = table.copy(LEVEL.theme.wall_groups)
+      end
+    end
+
+    while table.size(the_wall_group_tab) > max_wall_groups do
+      local group, odds = rand.table_pair(the_wall_group_tab)
       if rand.odds(100 - math.min(odds, 100)) then
-        LEVEL.theme.wall_groups[theme] = nil
+        the_wall_group_tab[group] = nil
+      end
+    end
+
+    for _,R in pairs(LEVEL.rooms) do
+      if R:get_env() == "building" then
+        if not R.is_exit then
+          R.forced_wall_groups = the_one_wall_group_tab
+        end
       end
     end
 

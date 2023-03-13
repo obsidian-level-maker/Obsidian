@@ -2171,6 +2171,8 @@ function ob_clean_up()
   SCRIPTS = nil
   EPISODE = nil
   PREFABS = nil
+  SEEN_ROOM_THEMES = nil
+  SEEN_WALL_GROUPS = nil
 
   if OB_CONFIG.string_seed then
     table.remove(OB_CONFIG, string_seed)
@@ -2183,6 +2185,8 @@ function ob_clean_up()
   PARAM  = {}
   STYLE  = {}
   SCRIPTS = {}
+  SEEN_ROOM_THEMES = {}
+  SEEN_WALL_GROUPS = {}
   if OB_MODULES["sky_generator"].enabled and OB_MODULES["sky_generator"].visible then
     gui.fsky_free()
   end

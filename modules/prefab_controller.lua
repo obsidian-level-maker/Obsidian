@@ -259,12 +259,21 @@ OB_MODULES["prefab_control"] =
       min = 1,
       max = 8,
       increment = 1,
-      default = 2,
-      tooltip = _("Determines the maximum number of distinct indoor room themes used per level. Default is 2."),
+      default = 1,
+      tooltip = _("Determines the maximum number of distinct indoor room themes used per level. Default is 1."),
       priority = 100,
       randomize_group="architecture",
     },
 
+    {
+      name = "bool_avoid_room_theme_reuse",
+      label = _("Avoid Room Theme Re-Use"),
+      valuator = "button",
+      default = 1,
+      priority = 48,
+      tooltip = _("Attempt to use unique room themes for each generated level, unless the pool of available themes is exhausted."),
+      randomize_group="architecture",
+    },
 
     {
       name = "float_max_indoor_wall_groups",
@@ -277,10 +286,19 @@ OB_MODULES["prefab_control"] =
       default = 2,
       tooltip = _("Determines the maximum number of distinct indoor wall groups used per level. Default is 2."),
       priority = 50,
-      gap = 1,
       randomize_group="architecture",
     },
 
+    {
+      name = "bool_avoid_wall_group_reuse",
+      label = _("Avoid Wall Group Re-Use"),
+      valuator = "button",
+      default = 1,
+      priority = 48,
+      tooltip = _("Attempt to use unique indoor wall groups for each generated level, unless the pool of available groups is exhausted."),
+      gap = 1,
+      randomize_group="architecture",
+    },
     --
 
 

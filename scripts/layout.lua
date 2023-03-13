@@ -2070,6 +2070,10 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
       tab = GAME.THEMES[ob_resolve_theme_keyword(R.theme.theme_override)].wall_groups
     end
 
+    if R.forced_wall_groups then
+      tab = R.forced_wall_groups
+    end
+
     if not tab then return end
 
     local prob = THEME.wall_group_prob or 35
@@ -2086,6 +2090,9 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     for _,fg in pairs(R.floor_groups) do
       if rand.odds(prob) then
         fg.wall_group = rand.key_by_probs(tab)
+        if not PARAM.bool_avoid_wall_group_reuse or (PARAM.bool_avoid_wall_group_reuse and PARAM.bool_avoid_wall_group_reuse == 1) then
+          table.add_unique(SEEN_WALL_GROUPS, fg.wall_group.name)
+        end
       end
     end
 
