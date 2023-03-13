@@ -3067,10 +3067,17 @@ function Quest_room_themes(LEVEL)
       end
     end
 
+    -- add prob bias for picked wall groups
+    local prob_modifier = 2
+    for set,prob in pairs(the_wall_group_tab) do
+      prob_modifier = prob_modifier / 2
+      the_wall_group_tab[set] = prob_modifier
+    end
+
     for _,R in pairs(LEVEL.rooms) do
       if R:get_env() == "building" then
         if not R.is_exit then
-          R.forced_wall_groups = the_one_wall_group_tab
+          R.forced_wall_groups = the_wall_group_tab
         end
       end
     end
