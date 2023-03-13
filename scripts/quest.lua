@@ -3034,7 +3034,7 @@ function Quest_room_themes(LEVEL)
 
     while table.size(building_tab) > max_room_theme do
       local theme, odds = rand.table_pair(building_tab)
-      if rand.odds(100 - math.min(odds, 100)) then
+      if rand.odds(math.max(5, 100 - odds)) then -- Always give at least some chance to prevent infinite loop in case odds are all 100+
         building_tab[theme] = nil
       end
     end
@@ -3062,7 +3062,7 @@ function Quest_room_themes(LEVEL)
 
     while table.size(the_wall_group_tab) > max_wall_groups do
       local group, odds = rand.table_pair(the_wall_group_tab)
-      if rand.odds(100 - math.min(odds, 100)) then
+      if rand.odds(math.max(5, 100 - odds)) then -- Always give at least some chance to prevent infinite loop in case odds are all 100+
         the_wall_group_tab[group] = nil
       end
     end
