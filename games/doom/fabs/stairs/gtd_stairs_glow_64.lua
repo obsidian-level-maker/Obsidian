@@ -6,7 +6,7 @@ PREFABS.Stairs_glow_1x =
   theme = "!tech",
 
   prob   = 100,
-  prob_skew = 2,
+  prob_skew = 3,
 
   style  = "liquids",
 
