@@ -663,6 +663,20 @@ end
 
 function ARMAETUS_EPIC_TEXTURES.get_levels_after_themes()
   ARMAETUS_EPIC_TEXTURES.decide_environment_themes()
+
+  table.deep_merge(GAME.ENTITIES, ORP_ENTITIES.ENTITIES)
+
+  if PARAM.bool_include_custom_actors ~= 1 then
+    if not THEME.entity_remap then
+      THEME.entity_remap = {}
+    end
+    THEME.entity_remap[27000] = 0
+    THEME.entity_remap[27001] = 0
+    THEME.entity_remap[27002] = 0
+    THEME.entity_remap["orp_blood_pack"] = 0
+    THEME.entity_remap["orp_burning_top"] = 0
+    THEME.entity_remap["orp_burning_debris"] = 0
+  end
 end
 
 function ARMAETUS_EPIC_TEXTURES.decide_night_replacement_textures(LEVEL)

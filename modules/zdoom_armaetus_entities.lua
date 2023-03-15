@@ -19,6 +19,13 @@
 
 ORP_ENTITIES = {}
 
+ORP_ENTITIES.ENTITIES =
+{
+  orp_blood_pack = {id = 27000},
+  orp_burning_top = {id = 27001},
+  orp_burning_debris = {id = 27002}
+}
+
 ORP_ENTITIES.DECORATE =
 [[Actor blood_pack 27000
 {
