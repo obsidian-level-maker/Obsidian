@@ -6,7 +6,7 @@ PREFABS.Window_octo_glass_1 =
   group  = "gtd_window_octo_glass",
   prob   = 50,
 
-
+  rank = 2,
 
   port = "zdoom",
 
@@ -48,7 +48,7 @@ PREFABS.Window_octo_glass_alt_1 =
   port = "!zdoom",
   group = "gtd_window_octo_glass",
 
-
+  rank = 1,
 }
 
 PREFABS.Window_octo_glass_alt_2 =
@@ -61,7 +61,7 @@ PREFABS.Window_octo_glass_alt_2 =
   port = "!zdoom",
   group = "gtd_window_octo_glass",
 
-
+  rank = 1,
 }
 
 PREFABS.Window_octo_glass_alt_3 =
@@ -74,5 +74,5 @@ PREFABS.Window_octo_glass_alt_3 =
   port = "!zdoom",
   group = "gtd_window_octo_glass",
 
-
+  rank = 1,
 }

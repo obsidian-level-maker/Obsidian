@@ -1499,7 +1499,7 @@ function MODDED_GAME_EXTRAS.create_hn_info(self, LEVEL)
   -- skip Hellscape Navigator stuff on prebuilt levels (no info to draw from)
   -- and procedural gotchas (what the heck are you gonna navigate in two rooms?)
   if not LEVEL then return end
-  if LEVEL.is_procedural_gotcha then return end
+  if LEVEL.is_procedural_gotcha and PARAM.hn_info_type ~= "hn_info_debug" then return end
   if LEVEL.prebuilt then return end
 
   if PARAM.bool_hn_markers == 0 then
@@ -1766,6 +1766,10 @@ function MODDED_GAME_EXTRAS.create_hn_info(self, LEVEL)
       shapes_string = shapes_string .. "(GROWN) "
     else
       shapes_string = shapes_string .. "(UNGROWN) "
+    end
+
+    if R.exit_score then
+      shapes_string = shapes_string .. "(Exit Score: " .. R.exit_score .. ")"
     end
 
     return shapes_string

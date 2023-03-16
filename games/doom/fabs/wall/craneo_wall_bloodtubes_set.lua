@@ -3,7 +3,7 @@ PREFABS.Wall_cran_testtubes_industrial =
   file = "wall/craneo_wall_bloodtubes_set.wad",
   map = "MAP01",
 
-
+  rank = 2,
   prob = 50,
   theme = "!hell",
   port = "zdoom",
@@ -26,7 +26,7 @@ PREFABS.Wall_cran_bloodtubes_hell =
 {
   template = "Wall_cran_testtubes_industrial",
   
-
+  rank = 1,
   theme = "hell",
 
   tex_TEKGREN1 = "MARBLE3",

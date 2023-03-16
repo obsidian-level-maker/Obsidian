@@ -14,7 +14,7 @@ PREFABS.Window_supertall_1 =
 
   passable = true,
 
-
+  rank   = 2,
   height = 128,
 
   where  = "edge",

@@ -154,7 +154,7 @@ PREFABS.Wall_hell_outdoor_huge_overhang = --#
   template = "Wall_hell_stone_brace",
   map = "MAP07",
 
-
+  rank = 2,
   group = "hell_o_huge_overhang",
 
   deep = 48,
@@ -167,7 +167,7 @@ PREFABS.Wall_hell_outdoor_spiny_overhang = --#
   template = "Wall_hell_stone_brace",
   map = "MAP08",
 
-
+  rank = 2,
   group = "hell_o_spiny_overhang",
 
   deep = 64,
@@ -284,7 +284,7 @@ PREFABS.Wall_gothic_flying_alcoves = --#
   template = "Wall_hell_stone_brace",
   map = "MAP12",
 
-
+  rank = 2,
   group = "hell_o_flying_alcoves",
 
   deep = 64,
@@ -298,7 +298,7 @@ PREFABS.Wall_gothic_flying_alcoves_EPIC =
   template = "Wall_hell_stone_brace",
   map = "MAP12",
 
-
+  rank = 2,
   group = "hell_o_flying_alcoves",
 
   replaces = "Wall_gothic_flying_alcoves",
@@ -345,7 +345,7 @@ PREFABS.Wall_hell_outdoor_dark_banners = --#
   template = "Wall_hell_stone_brace",
   map = "MAP14",
 
-
+  rank = 2,
   height = 160,
   deep = 56,
 
@@ -369,7 +369,7 @@ PREFABS.Wall_hell_outdoor_dark_banners_EPIC =
   template = "Wall_hell_stone_brace",
   map = "MAP14",
 
-
+  rank = 2,
   replaces = "Wall_hell_outdoor_dark_banners",
   texture_pack = "armaetus",
 
@@ -571,7 +571,7 @@ PREFABS.Wall_hell_orange_arch_window_EPIC = --#
   template = "Wall_hell_stone_brace",
   map = "MAP23",
 
-
+  rank = 1,
 
   texture_pack = "armaetus",
 

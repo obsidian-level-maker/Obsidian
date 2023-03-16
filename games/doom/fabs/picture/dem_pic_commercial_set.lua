@@ -4,7 +4,7 @@ PREFABS.Pic_dem_commercial_set1 =
   file   = "picture/dem_pic_commercial_set.wad",
   map    = "MAP01",
 
-
+  rank = 1,
 
   prob   = 250,
   theme = "urban",

@@ -5,7 +5,7 @@ PREFABS.Decor_dem_hospital_decor1  =
   file   = "decor/dem_decor_hospital_set.wad",
   map    = "MAP01",
 
-
+rank = 1,
 
   prob   = 5000,
   theme  = "!hell",

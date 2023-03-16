@@ -82,7 +82,7 @@ PREFABS.Wall_generic_doom64_1x_blue =
   template = "Wall_generic_doom64_1x",
   map = "MAP01",
 
-
+  rank = 2,
   texture_pack = "armaetus",
 
   group  = "gtd_generic_d64_1x_blue",
@@ -95,7 +95,7 @@ PREFABS.Wall_generic_doom64_1x_diag_blue =
   template = "Wall_generic_doom64_1x",
   map    = "MAP02",
 
-
+  rank = 2,
   texture_pack = "armaetus",
 
   where  = "diagonal",
@@ -183,7 +183,7 @@ PREFABS.Wall_generic_doom64_2x_blue =
   template = "Wall_generic_doom64_1x",
   map = "MAP03",
 
-
+  rank = 2,
   texture_pack = "armaetus",
 
   group = "gtd_generic_d64_2x_blue",
@@ -196,7 +196,7 @@ PREFABS.Wall_generic_doom64_2x_diag_blue =
   template = "Wall_generic_doom64_1x",
   map    = "MAP04",
 
-
+  rank = 2,
   texture_pack = "armaetus",
 
   where  = "diagonal",

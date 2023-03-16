@@ -6,7 +6,7 @@ PREFABS.Wall_generic_ceilwall =
   prob   = 50,
   theme  = "tech",
 
-
+  rank = 2,
 
   group  = "gtd_generic_ceilwall",
 
@@ -36,7 +36,7 @@ PREFABS.Wall_generic_ceilwall_urban =
 
   theme = "urban",
 
-
+  rank = 1,
 
   tex_COMPBLUE = "LITE3",
   tex_BRNSMALC = "MIDBARS3",
@@ -50,7 +50,7 @@ PREFABS.Wall_generic_ceilwall_diag_urban =
   where = "diagonal",
   theme = "urban",
 
-
+  rank = 1,
 
   tex_COMPBLUE = "LITE3",
   tex_BRNSMALC = "MIDBARS3",
@@ -64,7 +64,7 @@ PREFABS.Wall_generic_ceilwall_hell =
 
   theme = "hell",
 
-
+  rank = 3,
 
   tex_COMPBLUE = "ROCKRED1",
   tex_BRNSMALC = "MIDGRATE",
@@ -79,7 +79,7 @@ PREFABS.Wall_generic_ceilwall_diag_hell =
 
   theme = "hell",
 
-
+  rank = 3,
 
   tex_COMPBLUE = "ROCKRED1",
   tex_BRNSMALC = "MIDGRATE",
@@ -132,7 +132,7 @@ PREFABS.Wall_generic_ceilwall_2_gothic =
   template = "Wall_generic_ceilwall",
   map = "MAP03",
 
-
+  rank = 1,
 
   theme = "hell",
   height = 104,
@@ -152,7 +152,7 @@ PREFABS.Wall_generic_ceilwall_2_gothic_diag =
   template = "Wall_generic_ceilwall",
   map = "MAP04",
 
-
+  rank = 1,
 
   theme = "hell",
   height = 104,
@@ -178,7 +178,7 @@ PREFABS.Wall_generic_ceilwall_3 =
   template = "Wall_generic_ceilwall",
   map = "MAP05",
 
-
+  rank = 1,
 
   height = 88,
   where = "edge",
@@ -196,7 +196,7 @@ PREFABS.Wall_generic_ceilwall_3_diag =
   template = "Wall_generic_ceilwall",
   map = "MAP06",
 
-
+  rank = 1,
 
   height = 88,
   where = "diagonal",
@@ -287,7 +287,7 @@ PREFABS.Wall_generic_ceilwall_silver_frame_hell =
 
   height = 96,
   theme = "hell",
-
+  rank = 1,
 
   group = "gtd_generic_ceilwall_silver_frame",
 
@@ -306,7 +306,7 @@ PREFABS.Wall_generic_ceilwall_silver_frame_diag_hell =
   height = 96,
   where = "diagonal",
   theme = "hell",
-
+  rank = 1,
 
   group = "gtd_generic_ceilwall_silver_frame",
 
@@ -357,7 +357,7 @@ PREFABS.Wall_generic_ceilwall_double_silver_frame_hell =
 
   height = 96,
   theme = "hell",
-
+  rank = 1,
 
   group = "gtd_generic_ceilwall_double_silver_frame",
 
@@ -376,7 +376,7 @@ PREFABS.Wall_generic_ceilwall_double_silver_frame_diag_hell =
   height = 96,
   where = "diagonal",
   theme = "hell",
-
+  rank = 1,
 
   group = "gtd_generic_ceilwall_double_silver_frame",
 

@@ -8,7 +8,7 @@ PREFABS.Pic_craneo_testtube_industrial =
 
   theme = "!hell",
 
-
+  rank = 2,
   prob = 50,
 
   group = "cran_bloodtubes_set",
@@ -52,7 +52,7 @@ PREFABS.Pic_craneo_bloodtube_hell =
   template = "Pic_craneo_testtube_industrial",
 
   theme = "hell",
-
+  rank = 1,
 
   tex_TEKGREN1 = "MARBLE3",
   tex_TEKGREN2 = "SKSNAKE2",

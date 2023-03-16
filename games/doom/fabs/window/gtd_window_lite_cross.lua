@@ -3,7 +3,7 @@ PREFABS.Window_gtd_lite_cross =
   file = "window/gtd_window_lite_cross.wad",
   map = "MAP01",
 
-
+  rank = 2,
   theme = "tech",
 
   group = "gtd_window_lite_cross",
@@ -51,7 +51,7 @@ PREFABS.Window_gtd_lite_cross_1_urban =
   template = "Window_gtd_lite_cross",
   map = "MAP01",
 
-
+  rank = 3,
   theme = "urban",
   seed_w = 1,
 
@@ -63,7 +63,7 @@ PREFABS.Window_gtd_lite_cross_2_urban =
   template = "Window_gtd_lite_cross",
   map = "MAP02",
 
-
+  rank = 3,
   theme = "urban",
   seed_w = 2,
 
@@ -75,7 +75,7 @@ PREFABS.Window_gtd_lite_cross_3_urban =
   template = "Window_gtd_lite_cross",
   map = "MAP03",
 
-
+  rank = 3,
   theme = "urban",
   seed_w = 3,
 
@@ -87,7 +87,7 @@ PREFABS.Window_gtd_lite_cross_4_urban =
   template = "Window_gtd_lite_cross",
   map = "MAP04",
 
-
+  rank = 3,
   theme = "urban",
   seed_w = 4,
 
@@ -101,7 +101,7 @@ PREFABS.Window_gtd_lite_cross_1_hell =
   template = "Window_gtd_lite_cross",
   map = "MAP01",
 
-
+  rank = 1,
   theme = "hell",
   seed_w = 1,
 
@@ -115,7 +115,7 @@ PREFABS.Window_gtd_lite_cross_2_hell =
   template = "Window_gtd_lite_cross",
   map = "MAP01",
 
-
+  rank = 1,
   theme = "hell",
   seed_w = 2,
 
@@ -129,7 +129,7 @@ PREFABS.Window_gtd_lite_cross_3_hell =
   template = "Window_gtd_lite_cross",
   map = "MAP01",
 
-
+  rank = 1,
   theme = "hell",
   seed_w = 3,
 
@@ -143,7 +143,7 @@ PREFABS.Window_gtd_lite_cross_4_hell =
   template = "Window_gtd_lite_cross",
   map = "MAP01",
 
-
+  rank = 1,
   theme = "hell",
   seed_w = 4,
 
