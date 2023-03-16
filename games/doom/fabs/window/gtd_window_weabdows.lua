@@ -6,7 +6,7 @@ PREFABS.Window_weabdows_1 =
   group  = "gtd_window_weabdows",
   port = "zdoom",
 
-
+  rank   = 2,
   prob   = 50,
 
   where  = "edge",
@@ -47,7 +47,7 @@ PREFABS.Window_not_weabdows =
 
   group  = "gtd_window_weabdows",
 
-
+  rank   = 1,
   prob   = 1,
 
   passable = true,

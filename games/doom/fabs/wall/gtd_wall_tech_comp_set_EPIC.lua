@@ -564,7 +564,7 @@ PREFABS.Wall_epic_graymet_blue =
   map = "MAP54",
 
   prob = 50,
-
+  rank = 2,
 
   group = "gtd_comp_graymet_blue",
 
@@ -588,7 +588,7 @@ PREFABS.Wall_epic_graymet_blue_short =
   height = 96,
   bound_z2 = 96,
 
-
+  rank = 1
 }
 
 --
@@ -608,7 +608,7 @@ PREFABS.Wall_epic_graymet_green_short =
   template = "Wall_epic_graymet_blue",
   map = "MAP55",
 
-
+  rank = 1,
   prob = 1,
 
   height = 96,
@@ -636,7 +636,7 @@ PREFABS.Wall_epic_graymet_red_short =
   template = "Wall_epic_graymet_blue",
   map = "MAP55",
 
-
+  rank = 1,
   prob = 1,
 
   height = 96,
@@ -664,7 +664,7 @@ PREFABS.Wall_epic_graymet_orange_short =
   template = "Wall_epic_graymet_blue",
   map = "MAP55",
 
-
+  rank = 1,
   prob = 1,
 
   height = 96,
@@ -692,7 +692,7 @@ PREFABS.Wall_epic_graymet_purple_short =
   template = "Wall_epic_graymet_blue",
   map = "MAP55",
 
-
+  rank = 1,
   prob = 1,
 
   height = 96,

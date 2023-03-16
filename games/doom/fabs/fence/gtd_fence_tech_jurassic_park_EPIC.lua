@@ -6,7 +6,7 @@ PREFABS.Fence_jurassic_park_straight =
   prob = 50,
   port = "zdoom",
 
-
+  rank = 2,
 
   texture_pack = "armaetus",
 

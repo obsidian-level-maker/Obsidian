@@ -42,7 +42,7 @@ PREFABS.Window_plut_litebox_1_offset_lite =
   template = "Window_plut_litebox_1",
 
   texture_pack = "armaetus",
-
+  rank = 1,
 
   flat_FLOOR7_2 = "TLIT65OF"
 }
@@ -53,7 +53,7 @@ PREFABS.Window_plut_litebox_2_offset_lite =
   map = "MAP02",
 
   texture_pack = "armaetus",
-
+  rank = 1,
 
   seed_w = 2,
 
@@ -66,7 +66,7 @@ PREFABS.Window_plut_litebox_3_offset_lite =
   map = "MAP03",
 
   texture_pack = "armaetus",
-
+  rank = 1,
 
   seed_w = 3,
 

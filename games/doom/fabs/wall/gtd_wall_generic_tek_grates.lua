@@ -64,7 +64,7 @@ PREFABS.Wall_generic_tek_grate_bottom_slope_tech =
 
   port = "zdoom",
 
-
+  rank = 2,
   group = "gtd_generic_tek_grate_bottom_slope",
 
   deep = 32
@@ -78,7 +78,7 @@ PREFABS.Wall_generic_tek_grate_bottom_slope_hell =
   port = "zdoom",
   theme = "hell",
 
-
+  rank = 2,
   deep = 32,
 
   group = "gtd_generic_tek_grate_bottom_slope",
@@ -96,7 +96,7 @@ PREFABS.Wall_generic_tek_grate_bottom_slope_tech_limit =
 
   port = "!zdoom",
 
-
+  rank = 1,
   group = "gtd_generic_tek_grate_bottom_slope",
 
   deep = 32,
@@ -111,7 +111,7 @@ PREFABS.Wall_generic_tek_grate_bottom_slope_hell_limit =
 
   port = "!zdoom",
 
-
+  rank = 1,
   group = "gtd_generic_tek_grate_bottom_slope",
 
   deep = 32,
