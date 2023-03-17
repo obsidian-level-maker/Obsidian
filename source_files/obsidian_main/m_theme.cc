@@ -471,8 +471,10 @@ class UI_ThemeWin : public Fl_Window {
         for (int x = 0; x < main_win->mod_tabs->arch_mods->mod_pack->children(); x++) {
             UI_Module *M = (UI_Module *)main_win->mod_tabs->arch_mods->mod_pack->child(x);
             SYS_ASSERT(M);
-            M->heading->labelsize(header_font_size);
-            M->redraw();
+            if (!M->Is_UI()) {
+                M->heading->labelsize(header_font_size);
+                M->redraw();
+            }
             std::map<std::string, UI_RChoice *>::const_iterator IT;
             std::map<std::string, UI_RSlide *>::const_iterator IT2;
             std::map<std::string, UI_RButton *>::const_iterator IT3;
@@ -502,8 +504,10 @@ class UI_ThemeWin : public Fl_Window {
         for (int x = 0; x < main_win->mod_tabs->combat_mods->mod_pack->children(); x++) {
             UI_Module *M = (UI_Module *)main_win->mod_tabs->combat_mods->mod_pack->child(x);
             SYS_ASSERT(M);
-            M->heading->labelsize(header_font_size);
-            M->redraw();
+            if (!M->Is_UI()) {
+                M->heading->labelsize(header_font_size);
+                M->redraw();
+            }
             std::map<std::string, UI_RChoice *>::const_iterator IT;
             std::map<std::string, UI_RSlide *>::const_iterator IT2;
             std::map<std::string, UI_RButton *>::const_iterator IT3;
@@ -533,8 +537,10 @@ class UI_ThemeWin : public Fl_Window {
         for (int x = 0; x < main_win->mod_tabs->pickup_mods->mod_pack->children(); x++) {
             UI_Module *M = (UI_Module *)main_win->mod_tabs->pickup_mods->mod_pack->child(x);
             SYS_ASSERT(M);
-            M->heading->labelsize(header_font_size);
-            M->redraw();
+            if (!M->Is_UI()) {
+                M->heading->labelsize(header_font_size);
+                M->redraw();
+            }
             std::map<std::string, UI_RChoice *>::const_iterator IT;
             std::map<std::string, UI_RSlide *>::const_iterator IT2;
             std::map<std::string, UI_RButton *>::const_iterator IT3;
@@ -564,8 +570,10 @@ class UI_ThemeWin : public Fl_Window {
         for (int x = 0; x < main_win->mod_tabs->other_mods->mod_pack->children(); x++) {
             UI_Module *M = (UI_Module *)main_win->mod_tabs->other_mods->mod_pack->child(x);
             SYS_ASSERT(M);
-            M->heading->labelsize(header_font_size);
-            M->redraw();
+            if (!M->Is_UI()) {
+                M->heading->labelsize(header_font_size);
+                M->redraw();
+            }
             std::map<std::string, UI_RChoice *>::const_iterator IT;
             std::map<std::string, UI_RSlide *>::const_iterator IT2;
             std::map<std::string, UI_RButton *>::const_iterator IT3;
@@ -666,9 +674,11 @@ class UI_ThemeWin : public Fl_Window {
         for (int x = 0; x < main_win->mod_tabs->arch_mods->mod_pack->children(); x++) {
             UI_Module *M = (UI_Module *)main_win->mod_tabs->arch_mods->mod_pack->child(x);
             SYS_ASSERT(M);
-            M->heading->labelfont(use_system_fonts ? font_style
-                                                   : font_style | FL_BOLD);
-            M->redraw();
+            if (!M->Is_UI()) {
+                M->heading->labelfont(use_system_fonts ? font_style
+                                                    : font_style | FL_BOLD);
+                M->redraw();
+            }
             std::map<std::string, UI_RChoice *>::const_iterator IT;
             std::map<std::string, UI_RSlide *>::const_iterator IT2;
             std::map<std::string, UI_RButton *>::const_iterator IT3;
@@ -698,9 +708,11 @@ class UI_ThemeWin : public Fl_Window {
         for (int x = 0; x < main_win->mod_tabs->combat_mods->mod_pack->children(); x++) {
             UI_Module *M = (UI_Module *)main_win->mod_tabs->combat_mods->mod_pack->child(x);
             SYS_ASSERT(M);
-            M->heading->labelfont(use_system_fonts ? font_style
-                                                   : font_style | FL_BOLD);
-            M->redraw();
+            if (!M->Is_UI()) {
+                M->heading->labelfont(use_system_fonts ? font_style
+                                                    : font_style | FL_BOLD);
+                M->redraw();
+            }
             std::map<std::string, UI_RChoice *>::const_iterator IT;
             std::map<std::string, UI_RSlide *>::const_iterator IT2;
             std::map<std::string, UI_RButton *>::const_iterator IT3;
@@ -730,9 +742,11 @@ class UI_ThemeWin : public Fl_Window {
         for (int x = 0; x < main_win->mod_tabs->pickup_mods->mod_pack->children(); x++) {
             UI_Module *M = (UI_Module *)main_win->mod_tabs->pickup_mods->mod_pack->child(x);
             SYS_ASSERT(M);
-            M->heading->labelfont(use_system_fonts ? font_style
-                                                   : font_style | FL_BOLD);
-            M->redraw();
+            if (!M->Is_UI()) {
+                M->heading->labelfont(use_system_fonts ? font_style
+                                                    : font_style | FL_BOLD);
+                M->redraw();
+            }
             std::map<std::string, UI_RChoice *>::const_iterator IT;
             std::map<std::string, UI_RSlide *>::const_iterator IT2;
             std::map<std::string, UI_RButton *>::const_iterator IT3;
@@ -762,9 +776,11 @@ class UI_ThemeWin : public Fl_Window {
         for (int x = 0; x < main_win->mod_tabs->other_mods->mod_pack->children(); x++) {
             UI_Module *M = (UI_Module *)main_win->mod_tabs->other_mods->mod_pack->child(x);
             SYS_ASSERT(M);
-            M->heading->labelfont(use_system_fonts ? font_style
-                                                   : font_style | FL_BOLD);
-            M->redraw();
+            if (!M->Is_UI()) {
+                M->heading->labelfont(use_system_fonts ? font_style
+                                                    : font_style | FL_BOLD);
+                M->redraw();
+            }
             std::map<std::string, UI_RChoice *>::const_iterator IT;
             std::map<std::string, UI_RSlide *>::const_iterator IT2;
             std::map<std::string, UI_RButton *>::const_iterator IT3;
@@ -1470,8 +1486,10 @@ class UI_ThemeWin : public Fl_Window {
         for (int x = 0; x < main_win->mod_tabs->arch_mods->mod_pack->children(); x++) {
             UI_Module *M = (UI_Module *)main_win->mod_tabs->arch_mods->mod_pack->child(x);
             SYS_ASSERT(M);
-            M->heading->labelcolor(FONT_COLOR);
-            M->redraw();
+            if (!M->Is_UI()) {
+                M->heading->labelcolor(FONT_COLOR);
+                M->redraw();
+            }
             std::map<std::string, UI_RChoice *>::const_iterator IT;
             std::map<std::string, UI_RSlide *>::const_iterator IT2;
             std::map<std::string, UI_RButton *>::const_iterator IT3;
@@ -1505,8 +1523,10 @@ class UI_ThemeWin : public Fl_Window {
         for (int x = 0; x < main_win->mod_tabs->combat_mods->mod_pack->children(); x++) {
             UI_Module *M = (UI_Module *)main_win->mod_tabs->combat_mods->mod_pack->child(x);
             SYS_ASSERT(M);
-            M->heading->labelcolor(FONT_COLOR);
-            M->redraw();
+            if (!M->Is_UI()) {
+                M->heading->labelcolor(FONT_COLOR);
+                M->redraw();
+            }
             std::map<std::string, UI_RChoice *>::const_iterator IT;
             std::map<std::string, UI_RSlide *>::const_iterator IT2;
             std::map<std::string, UI_RButton *>::const_iterator IT3;
@@ -1540,8 +1560,10 @@ class UI_ThemeWin : public Fl_Window {
         for (int x = 0; x < main_win->mod_tabs->pickup_mods->mod_pack->children(); x++) {
             UI_Module *M = (UI_Module *)main_win->mod_tabs->pickup_mods->mod_pack->child(x);
             SYS_ASSERT(M);
-            M->heading->labelcolor(FONT_COLOR);
-            M->redraw();
+            if (!M->Is_UI()) {
+                M->heading->labelcolor(FONT_COLOR);
+                M->redraw();
+            }
             std::map<std::string, UI_RChoice *>::const_iterator IT;
             std::map<std::string, UI_RSlide *>::const_iterator IT2;
             std::map<std::string, UI_RButton *>::const_iterator IT3;
@@ -1575,8 +1597,10 @@ class UI_ThemeWin : public Fl_Window {
         for (int x = 0; x < main_win->mod_tabs->other_mods->mod_pack->children(); x++) {
             UI_Module *M = (UI_Module *)main_win->mod_tabs->other_mods->mod_pack->child(x);
             SYS_ASSERT(M);
-            M->heading->labelcolor(FONT_COLOR);
-            M->redraw();
+            if (!M->Is_UI()) {
+                M->heading->labelcolor(FONT_COLOR);
+                M->redraw();
+            }
             std::map<std::string, UI_RChoice *>::const_iterator IT;
             std::map<std::string, UI_RSlide *>::const_iterator IT2;
             std::map<std::string, UI_RButton *>::const_iterator IT3;
@@ -1647,8 +1671,10 @@ class UI_ThemeWin : public Fl_Window {
         for (int x = 0; x < main_win->mod_tabs->arch_mods->mod_pack->children(); x++) {
             UI_Module *M = (UI_Module *)main_win->mod_tabs->arch_mods->mod_pack->child(x);
             SYS_ASSERT(M);
-            M->heading->labelcolor(FONT_COLOR);
-            M->redraw();
+            if (!M->Is_UI()) {
+                M->heading->labelcolor(FONT_COLOR);
+                M->redraw();
+            }
             std::map<std::string, UI_RChoice *>::const_iterator IT;
             for (IT = M->choice_map.begin(); IT != M->choice_map.end(); IT++) {
                 UI_RChoice *rch = IT->second;
@@ -1659,8 +1685,10 @@ class UI_ThemeWin : public Fl_Window {
         for (int x = 0; x < main_win->mod_tabs->combat_mods->mod_pack->children(); x++) {
             UI_Module *M = (UI_Module *)main_win->mod_tabs->combat_mods->mod_pack->child(x);
             SYS_ASSERT(M);
-            M->heading->labelcolor(FONT_COLOR);
-            M->redraw();
+            if (!M->Is_UI()) {
+                M->heading->labelcolor(FONT_COLOR);
+                M->redraw();
+            }
             std::map<std::string, UI_RChoice *>::const_iterator IT;
             for (IT = M->choice_map.begin(); IT != M->choice_map.end(); IT++) {
                 UI_RChoice *rch = IT->second;
@@ -1671,8 +1699,10 @@ class UI_ThemeWin : public Fl_Window {
         for (int x = 0; x < main_win->mod_tabs->pickup_mods->mod_pack->children(); x++) {
             UI_Module *M = (UI_Module *)main_win->mod_tabs->pickup_mods->mod_pack->child(x);
             SYS_ASSERT(M);
-            M->heading->labelcolor(FONT_COLOR);
-            M->redraw();
+            if (!M->Is_UI()) {
+                M->heading->labelcolor(FONT_COLOR);
+                M->redraw();
+            }
             std::map<std::string, UI_RChoice *>::const_iterator IT;
             for (IT = M->choice_map.begin(); IT != M->choice_map.end(); IT++) {
                 UI_RChoice *rch = IT->second;
@@ -1683,8 +1713,10 @@ class UI_ThemeWin : public Fl_Window {
         for (int x = 0; x < main_win->mod_tabs->other_mods->mod_pack->children(); x++) {
             UI_Module *M = (UI_Module *)main_win->mod_tabs->other_mods->mod_pack->child(x);
             SYS_ASSERT(M);
-            M->heading->labelcolor(FONT_COLOR);
-            M->redraw();
+            if (!M->Is_UI()) {
+                M->heading->labelcolor(FONT_COLOR);
+                M->redraw();
+            }
             std::map<std::string, UI_RChoice *>::const_iterator IT;
             for (IT = M->choice_map.begin(); IT != M->choice_map.end(); IT++) {
                 UI_RChoice *rch = IT->second;
