@@ -75,8 +75,6 @@ void Parse_Option(const std::string &name, const std::string &value) {
         filename_prefix = StringToInt(value);
     } else if (StringCaseCmp(name, "custom_prefix") == 0) {
         custom_prefix = value;
-    } else if (StringCaseCmp(name, "zip_output") == 0) {
-        zip_output = StringToInt(value);
     } else if (StringCaseCmp(name, "log_size") == 0) {
         log_size = StringToInt(value);
     } else if (StringCaseCmp(name, "log_limit") == 0) {
@@ -187,7 +185,6 @@ bool Options_Save(std::filesystem::path filename) {
     option_fp << "mature_word_lists = " << (mature_word_lists ? 1 : 0) << "\n";
     option_fp << "filename_prefix = " << filename_prefix << "\n";
     option_fp << "custom_prefix = " << custom_prefix << "\n";
-    option_fp << "zip_output = " << zip_output << "\n";
     option_fp << "log_size = " << log_size << "\n";
     option_fp << "log_limit = " << log_limit << "\n";
     option_fp << "default_output_path = " << default_output_path << "\n";
@@ -216,8 +213,6 @@ class UI_OptionsWin : public Fl_Window {
 
    private:
     UI_CustomMenu *opt_language;
-    UI_CustomMenu *opt_zip_output;
-    UI_HelpLink *zip_output_help;
     UI_CustomMenu *opt_filename_prefix;
 
     Fl_Button *opt_custom_prefix;
@@ -331,28 +326,6 @@ class UI_OptionsWin : public Fl_Window {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
 
         log_limit = that->opt_log_limit->value();
-    }
-
-    static void callback_ZipOutput(Fl_Widget *w, void *data) {
-        UI_OptionsWin *that = (UI_OptionsWin *)data;
-
-        zip_output = that->opt_zip_output->value();
-    }
-
-    static void callback_ZipOutputHelp(Fl_Widget *w, void *data) {
-        fl_cursor(FL_CURSOR_DEFAULT);
-        Fl_Window *win = new Fl_Window(640, 480, _("Compress Output"));
-        Fl_Text_Buffer *buff = new Fl_Text_Buffer();
-        Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
-        disp->buffer(buff);
-        disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
-        win->resizable(*disp);
-        win->hotspot(0, 0, 0);
-        win->set_modal();
-        win->show();
-        // clang-format off
-        buff->text(_("Choose to compress the generated WAD as a zip file, which can have the extension ZIP or PK3. PK3 is simply a renamed ZIP that is usually recognized by Doom source ports and editors. Ports that support UDMF will override this setting and produce PK3 files."));
-        // clang-format on
     }
 
     static void callback_Random_String_Seeds(Fl_Widget *w, void *data) {
@@ -611,25 +584,6 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     PopulateLanguages();
 
     cy += opt_language->h() + y_step;
-
-    opt_zip_output =
-        new UI_CustomMenu(cx + W * .38, cy, listwidth, kf_h(24), "");
-    opt_zip_output->copy_label(_("Compress Output: "));
-    opt_zip_output->align(FL_ALIGN_LEFT);
-    opt_zip_output->callback(callback_ZipOutput, this);
-    opt_zip_output->add(_("OFF|ZIP|PK3"));
-    opt_zip_output->labelfont(font_style);
-    opt_zip_output->textfont(font_style);
-    opt_zip_output->textcolor(FONT2_COLOR);
-    opt_zip_output->selection_color(SELECTION);
-    opt_zip_output->value(zip_output);
-
-    zip_output_help = new UI_HelpLink(
-        cx + W * .38 + this->opt_zip_output->w(), cy, W * 0.10, kf_h(24));
-    zip_output_help->labelfont(font_style);
-    zip_output_help->callback(callback_ZipOutputHelp, this);
-
-    cy += opt_zip_output->h() + y_step;
 
     opt_filename_prefix =
         new UI_CustomMenu(cx + W * .38, cy, listwidth, kf_h(24), "");
