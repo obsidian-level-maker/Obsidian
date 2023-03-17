@@ -542,7 +542,9 @@ class UI_OptionsWin : public Fl_Window {
         dir_name = ucs4_path(dir_name.generic_string().c_str());
 #endif
         UI_OptionsWin *that = (UI_OptionsWin *)data;
-        that->opt_current_output_path->copy_label("                                                                                ");
+        std::string blanker;
+        blanker.append(250,' ');
+        that->opt_current_output_path->copy_label(blanker.c_str());
         that->opt_current_output_path->redraw_label();
         that->opt_current_output_path->copy_label(fmt::format("{}: {}", _("Current Path"), BestDirectory().generic_string()).c_str());
         that->opt_current_output_path->redraw_label();
@@ -629,11 +631,11 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_default_output_path->labelfont(font_style);
     opt_default_output_path->labelcolor(FONT2_COLOR);
 
-    cy += opt_default_output_path->h() + y_step * .5;
+    cy += opt_default_output_path->h() + y_step;
 
     opt_current_output_path = new Fl_Box(
         cx, cy, W - cx - pad, kf_h(24), "");
-    opt_current_output_path->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
+    opt_current_output_path->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER | FL_ALIGN_WRAP);
     opt_current_output_path->visible_focus(0);
     opt_current_output_path->color(BUTTON_COLOR);
     opt_current_output_path->labelfont(font_style);
@@ -642,7 +644,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_current_output_path->copy_label(fmt::format("{}: {}", _("Current Path"), BestDirectory().generic_string()).c_str());
     // clang-format on
 
-    cy += opt_current_output_path->h() + y_step * .5;
+    cy += opt_current_output_path->h() * 1.5 + y_step;
 
     opt_random_string_seeds =
         new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24), "");
