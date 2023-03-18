@@ -491,6 +491,7 @@ class UI_ThemeWin : public Fl_Window {
                 rsl->mod_label->labelsize(FL_NORMAL_SIZE);
                 rsl->mod_entry->labelsize(FL_NORMAL_SIZE);
                 rsl->mod_help->labelsize(FL_NORMAL_SIZE);
+                rsl->unit_label->labelsize(FL_NORMAL_SIZE);
                 rsl->mod_label->redraw();
             }
             for (IT3 = M->choice_map_button.begin();
@@ -524,6 +525,7 @@ class UI_ThemeWin : public Fl_Window {
                 rsl->mod_label->labelsize(FL_NORMAL_SIZE);
                 rsl->mod_entry->labelsize(FL_NORMAL_SIZE);
                 rsl->mod_help->labelsize(FL_NORMAL_SIZE);
+                rsl->unit_label->labelsize(FL_NORMAL_SIZE);
                 rsl->mod_label->redraw();
             }
             for (IT3 = M->choice_map_button.begin();
@@ -557,6 +559,7 @@ class UI_ThemeWin : public Fl_Window {
                 rsl->mod_label->labelsize(FL_NORMAL_SIZE);
                 rsl->mod_entry->labelsize(FL_NORMAL_SIZE);
                 rsl->mod_help->labelsize(FL_NORMAL_SIZE);
+                rsl->unit_label->labelsize(FL_NORMAL_SIZE);
                 rsl->mod_label->redraw();
             }
             for (IT3 = M->choice_map_button.begin();
@@ -590,6 +593,7 @@ class UI_ThemeWin : public Fl_Window {
                 rsl->mod_label->labelsize(FL_NORMAL_SIZE);
                 rsl->mod_entry->labelsize(FL_NORMAL_SIZE);
                 rsl->mod_help->labelsize(FL_NORMAL_SIZE);
+                rsl->unit_label->labelsize(FL_NORMAL_SIZE);
                 rsl->mod_label->redraw();
             }
             for (IT3 = M->choice_map_button.begin();
@@ -600,6 +604,11 @@ class UI_ThemeWin : public Fl_Window {
                 rbt->mod_label->redraw();
             }
         }
+        for (int x = 0; x < main_win->mod_tabs->children(); x++) {
+            UI_CustomMods *M = (UI_CustomMods *)main_win->mod_tabs->child(x);
+            M->labelsize(FL_NORMAL_SIZE);
+        }
+        main_win->redraw();
     }
 
     static void callback_FontTheme(Fl_Widget *w, void *data) {
@@ -695,6 +704,7 @@ class UI_ThemeWin : public Fl_Window {
                 rsl->mod_label->labelfont(font_style);
                 rsl->mod_entry->labelfont(font_style);
                 rsl->mod_help->labelfont(font_style);
+                rsl->unit_label->labelfont(font_style);
                 rsl->mod_label->redraw();
             }
             for (IT3 = M->choice_map_button.begin();
@@ -729,6 +739,7 @@ class UI_ThemeWin : public Fl_Window {
                 rsl->mod_label->labelfont(font_style);
                 rsl->mod_entry->labelfont(font_style);
                 rsl->mod_help->labelfont(font_style);
+                rsl->unit_label->labelfont(font_style);
                 rsl->mod_label->redraw();
             }
             for (IT3 = M->choice_map_button.begin();
@@ -763,6 +774,7 @@ class UI_ThemeWin : public Fl_Window {
                 rsl->mod_label->labelfont(font_style);
                 rsl->mod_entry->labelfont(font_style);
                 rsl->mod_help->labelfont(font_style);
+                rsl->unit_label->labelfont(font_style);
                 rsl->mod_label->redraw();
             }
             for (IT3 = M->choice_map_button.begin();
@@ -797,6 +809,7 @@ class UI_ThemeWin : public Fl_Window {
                 rsl->mod_label->labelfont(font_style);
                 rsl->mod_entry->labelfont(font_style);
                 rsl->mod_help->labelfont(font_style);
+                rsl->unit_label->labelfont(font_style);
                 rsl->mod_label->redraw();
             }
             for (IT3 = M->choice_map_button.begin();
@@ -807,6 +820,11 @@ class UI_ThemeWin : public Fl_Window {
                 rbt->mod_label->redraw();
             }
         }
+        for (int x = 0; x < main_win->mod_tabs->children(); x++) {
+            UI_CustomMods *M = (UI_CustomMods *)main_win->mod_tabs->child(x);
+            M->labelfont(font_style);
+        }
+        main_win->redraw();
     }
 
     static void callback_WidgetTheme(Fl_Widget *w, void *data) {
@@ -1483,6 +1501,8 @@ class UI_ThemeWin : public Fl_Window {
         for (int x = 0; x < main_win->build_box->children(); x++) {
             main_win->build_box->child(x)->redraw();
         }
+        main_win->mod_tabs->labelcolor(FONT_COLOR);
+        main_win->mod_tabs->redraw();
         for (int x = 0; x < main_win->mod_tabs->arch_mods->mod_pack->children(); x++) {
             UI_Module *M = (UI_Module *)main_win->mod_tabs->arch_mods->mod_pack->child(x);
             SYS_ASSERT(M);
@@ -1631,6 +1651,11 @@ class UI_ThemeWin : public Fl_Window {
                 rbt->mod_label->redraw();
             }
         }
+        for (int x = 0; x < main_win->mod_tabs->children(); x++) {
+            UI_CustomMods *M = (UI_CustomMods *)main_win->mod_tabs->child(x);
+            M->labelcolor(FONT_COLOR);
+        }
+        main_win->redraw();
     }
 
     static void callback_Text2Color(Fl_Widget *w, void *data) {
@@ -1648,7 +1673,7 @@ class UI_ThemeWin : public Fl_Window {
             that->opt_text2_color->color(FONT2_COLOR);
             that->opt_text2_color->redraw();
         } else {
-            FONT2_COLOR = fl_rgb_color(text_red, text_green, text_blue);
+            FONT2_COLOR = fl_rgb_color(text2_red, text2_green, text2_blue);
         }
         main_win->game_box->engine->textcolor(FONT2_COLOR);
         main_win->game_box->game->textcolor(FONT2_COLOR);
@@ -1661,67 +1686,76 @@ class UI_ThemeWin : public Fl_Window {
             main_win->game_box->child(x)->redraw();
             main_win->game_box->child(x)->redraw_label();
         }
-        main_win->build_box->seed_disp->labelcolor(FONT_COLOR);
-        main_win->build_box->name_disp->labelcolor(FONT_COLOR);
-        main_win->build_box->status->labelcolor(FONT_COLOR);
-        main_win->build_box->progress->labelcolor(FONT_COLOR);
-        for (int x = 0; x < main_win->build_box->children(); x++) {
-            main_win->build_box->child(x)->redraw();
-        }
         for (int x = 0; x < main_win->mod_tabs->arch_mods->mod_pack->children(); x++) {
             UI_Module *M = (UI_Module *)main_win->mod_tabs->arch_mods->mod_pack->child(x);
             SYS_ASSERT(M);
-            if (!M->Is_UI()) {
-                M->heading->labelcolor(FONT_COLOR);
-                M->redraw();
-            }
             std::map<std::string, UI_RChoice *>::const_iterator IT;
             for (IT = M->choice_map.begin(); IT != M->choice_map.end(); IT++) {
                 UI_RChoice *rch = IT->second;
                 rch->mod_menu->textcolor(FONT2_COLOR);
                 rch->mod_label->redraw();
+                rch->mod_label->redraw_label();
+            }
+            std::map<std::string, UI_RSlide *>::const_iterator IT2;
+            for (IT2 = M->choice_map_slider.begin(); IT2 != M->choice_map_slider.end(); IT2++) {
+                UI_RSlide *rsl = IT2->second;
+                rsl->unit_label->labelcolor(FONT2_COLOR);
+                rsl->unit_label->redraw();
+                rsl->unit_label->redraw_label();
             }
         }
         for (int x = 0; x < main_win->mod_tabs->combat_mods->mod_pack->children(); x++) {
             UI_Module *M = (UI_Module *)main_win->mod_tabs->combat_mods->mod_pack->child(x);
             SYS_ASSERT(M);
-            if (!M->Is_UI()) {
-                M->heading->labelcolor(FONT_COLOR);
-                M->redraw();
-            }
             std::map<std::string, UI_RChoice *>::const_iterator IT;
             for (IT = M->choice_map.begin(); IT != M->choice_map.end(); IT++) {
                 UI_RChoice *rch = IT->second;
                 rch->mod_menu->textcolor(FONT2_COLOR);
                 rch->mod_label->redraw();
+                rch->mod_label->redraw_label();
+            }
+            std::map<std::string, UI_RSlide *>::const_iterator IT2;
+            for (IT2 = M->choice_map_slider.begin(); IT2 != M->choice_map_slider.end(); IT2++) {
+                UI_RSlide *rsl = IT2->second;
+                rsl->unit_label->labelcolor(FONT2_COLOR);
+                rsl->unit_label->redraw();
+                rsl->unit_label->redraw_label();
             }
         }
         for (int x = 0; x < main_win->mod_tabs->pickup_mods->mod_pack->children(); x++) {
             UI_Module *M = (UI_Module *)main_win->mod_tabs->pickup_mods->mod_pack->child(x);
             SYS_ASSERT(M);
-            if (!M->Is_UI()) {
-                M->heading->labelcolor(FONT_COLOR);
-                M->redraw();
-            }
             std::map<std::string, UI_RChoice *>::const_iterator IT;
             for (IT = M->choice_map.begin(); IT != M->choice_map.end(); IT++) {
                 UI_RChoice *rch = IT->second;
                 rch->mod_menu->textcolor(FONT2_COLOR);
                 rch->mod_label->redraw();
+                rch->mod_label->redraw_label();
+            }
+            std::map<std::string, UI_RSlide *>::const_iterator IT2;
+            for (IT2 = M->choice_map_slider.begin(); IT2 != M->choice_map_slider.end(); IT2++) {
+                UI_RSlide *rsl = IT2->second;
+                rsl->unit_label->labelcolor(FONT2_COLOR);
+                rsl->unit_label->redraw();
+                rsl->unit_label->redraw_label();
             }
         }
         for (int x = 0; x < main_win->mod_tabs->other_mods->mod_pack->children(); x++) {
             UI_Module *M = (UI_Module *)main_win->mod_tabs->other_mods->mod_pack->child(x);
             SYS_ASSERT(M);
-            if (!M->Is_UI()) {
-                M->heading->labelcolor(FONT_COLOR);
-                M->redraw();
-            }
             std::map<std::string, UI_RChoice *>::const_iterator IT;
             for (IT = M->choice_map.begin(); IT != M->choice_map.end(); IT++) {
                 UI_RChoice *rch = IT->second;
                 rch->mod_menu->textcolor(FONT2_COLOR);
                 rch->mod_label->redraw();
+                rch->mod_label->redraw_label();
+            }
+            std::map<std::string, UI_RSlide *>::const_iterator IT2;
+            for (IT2 = M->choice_map_slider.begin(); IT2 != M->choice_map_slider.end(); IT2++) {
+                UI_RSlide *rsl = IT2->second;
+                rsl->unit_label->labelcolor(FONT2_COLOR);
+                rsl->unit_label->redraw();
+                rsl->unit_label->redraw_label();
             }
         }
     }
@@ -2148,6 +2182,8 @@ class UI_ThemeWin : public Fl_Window {
         main_win->redraw();
         main_win->build_box->progress->color(GAP_COLOR, GAP_COLOR);
         main_win->build_box->redraw();
+        main_win->mod_tabs->color(GAP_COLOR, GAP_COLOR);
+        main_win->mod_tabs->redraw();
         main_win->mod_tabs->arch_mods->color(GAP_COLOR, GAP_COLOR);
         main_win->mod_tabs->combat_mods->color(GAP_COLOR, GAP_COLOR);
         main_win->mod_tabs->pickup_mods->color(GAP_COLOR, GAP_COLOR);
@@ -2511,7 +2547,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
     // restart needed warning
     heading = new Fl_Box(FL_NO_BOX, x() + pad - kf_w(5), H - dh - kf_h(3),
                          W - pad * 2, kf_h(16),
-                         _("Note: Some options require a restart."));
+                         _("Note: Most settings will only affect tabs after a restart."));
     heading->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
     heading->labelsize(small_font_size);
     heading->labelfont(font_style);

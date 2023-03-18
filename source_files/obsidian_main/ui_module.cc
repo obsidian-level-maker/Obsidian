@@ -267,6 +267,7 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
         kf_h(24), "");
     rsl->unit_label->align(FL_ALIGN_CENTER | FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
     rsl->unit_label->labelfont(font_style);
+    rsl->unit_label->labelcolor(FONT2_COLOR);
 
     rsl->next_button = new UI_CustomArrowButton(
         rsl->x() + rsl->w() * (rsl->nan_choices.size() > 0 ? .75 : .80),
@@ -957,6 +958,7 @@ void UI_Module::callback_NanOptions(Fl_Widget *w, void *data) {
 
 UI_CustomMods::UI_CustomMods(int X, int Y, int W, int H, std::string label)
     : Fl_Group(X, Y, W, H) {
+
     box(FL_FLAT_BOX);
 
     copy_label(label.c_str());
@@ -1641,13 +1643,13 @@ UI_CustomTabs::UI_CustomTabs(int X, int Y, int W, int H)
     
     visible_focus(0);
 
-    arch_mods = new UI_CustomMods(X, Y+kf_h(22), W, H, "Architecture");
+    arch_mods = new UI_CustomMods(X, Y+kf_h(22), W, H, _("Architecture"));
     arch_mods->end();
-    combat_mods = new UI_CustomMods(X, Y+kf_h(22), W, H, "Combat");
+    combat_mods = new UI_CustomMods(X, Y+kf_h(22), W, H, _("Combat"));
     combat_mods->end();
-    pickup_mods = new UI_CustomMods(X, Y+kf_h(22), W, H, "Pickups");
+    pickup_mods = new UI_CustomMods(X, Y+kf_h(22), W, H, _("Pickups"));
     pickup_mods->end();
-    other_mods = new UI_CustomMods(X, Y+kf_h(22), W, H, "Other");
+    other_mods = new UI_CustomMods(X, Y+kf_h(22), W, H, _("Other"));
     other_mods->end();
 
     end();
