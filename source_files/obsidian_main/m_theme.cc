@@ -483,6 +483,7 @@ class UI_ThemeWin : public Fl_Window {
                 rch->mod_label->labelsize(FL_NORMAL_SIZE);
                 rch->mod_menu->textsize(FL_NORMAL_SIZE);
                 rch->mod_help->labelsize(FL_NORMAL_SIZE);
+                rch->mod_reset->labelsize(FL_NORMAL_SIZE);
                 rch->mod_label->redraw();
             }
             for (IT2 = M->choice_map_slider.begin();
@@ -491,7 +492,13 @@ class UI_ThemeWin : public Fl_Window {
                 rsl->mod_label->labelsize(FL_NORMAL_SIZE);
                 rsl->mod_entry->labelsize(FL_NORMAL_SIZE);
                 rsl->mod_help->labelsize(FL_NORMAL_SIZE);
+                rsl->mod_reset->labelsize(FL_NORMAL_SIZE);
                 rsl->unit_label->labelsize(FL_NORMAL_SIZE);
+                if (rsl->nan_choices.size() > 0) {
+                    rsl->nan_options->labelsize(FL_NORMAL_SIZE);
+                    rsl->nan_options->textsize(FL_NORMAL_SIZE);
+                    rsl->nan_options->redraw();
+                }
                 rsl->mod_label->redraw();
             }
             for (IT3 = M->choice_map_button.begin();
@@ -499,6 +506,7 @@ class UI_ThemeWin : public Fl_Window {
                 UI_RButton *rbt = IT3->second;
                 rbt->mod_label->labelsize(FL_NORMAL_SIZE);
                 rbt->mod_help->labelsize(FL_NORMAL_SIZE);
+                rbt->mod_reset->labelsize(FL_NORMAL_SIZE);
                 rbt->mod_label->redraw();
             }
         }
@@ -517,6 +525,7 @@ class UI_ThemeWin : public Fl_Window {
                 rch->mod_label->labelsize(FL_NORMAL_SIZE);
                 rch->mod_menu->textsize(FL_NORMAL_SIZE);
                 rch->mod_help->labelsize(FL_NORMAL_SIZE);
+                rch->mod_reset->labelsize(FL_NORMAL_SIZE);
                 rch->mod_label->redraw();
             }
             for (IT2 = M->choice_map_slider.begin();
@@ -525,7 +534,13 @@ class UI_ThemeWin : public Fl_Window {
                 rsl->mod_label->labelsize(FL_NORMAL_SIZE);
                 rsl->mod_entry->labelsize(FL_NORMAL_SIZE);
                 rsl->mod_help->labelsize(FL_NORMAL_SIZE);
+                rsl->mod_reset->labelsize(FL_NORMAL_SIZE);
                 rsl->unit_label->labelsize(FL_NORMAL_SIZE);
+                if (rsl->nan_choices.size() > 0) {
+                    rsl->nan_options->labelsize(FL_NORMAL_SIZE);
+                    rsl->nan_options->textsize(FL_NORMAL_SIZE);
+                    rsl->nan_options->redraw();
+                }
                 rsl->mod_label->redraw();
             }
             for (IT3 = M->choice_map_button.begin();
@@ -533,6 +548,7 @@ class UI_ThemeWin : public Fl_Window {
                 UI_RButton *rbt = IT3->second;
                 rbt->mod_label->labelsize(FL_NORMAL_SIZE);
                 rbt->mod_help->labelsize(FL_NORMAL_SIZE);
+                rbt->mod_reset->labelsize(FL_NORMAL_SIZE);
                 rbt->mod_label->redraw();
             }
         }
@@ -551,6 +567,7 @@ class UI_ThemeWin : public Fl_Window {
                 rch->mod_label->labelsize(FL_NORMAL_SIZE);
                 rch->mod_menu->textsize(FL_NORMAL_SIZE);
                 rch->mod_help->labelsize(FL_NORMAL_SIZE);
+                rch->mod_reset->labelsize(FL_NORMAL_SIZE);
                 rch->mod_label->redraw();
             }
             for (IT2 = M->choice_map_slider.begin();
@@ -559,7 +576,13 @@ class UI_ThemeWin : public Fl_Window {
                 rsl->mod_label->labelsize(FL_NORMAL_SIZE);
                 rsl->mod_entry->labelsize(FL_NORMAL_SIZE);
                 rsl->mod_help->labelsize(FL_NORMAL_SIZE);
+                rsl->mod_reset->labelsize(FL_NORMAL_SIZE);
                 rsl->unit_label->labelsize(FL_NORMAL_SIZE);
+                if (rsl->nan_choices.size() > 0) {
+                    rsl->nan_options->labelsize(FL_NORMAL_SIZE);
+                    rsl->nan_options->textsize(FL_NORMAL_SIZE);
+                    rsl->nan_options->redraw();
+                }
                 rsl->mod_label->redraw();
             }
             for (IT3 = M->choice_map_button.begin();
@@ -567,6 +590,7 @@ class UI_ThemeWin : public Fl_Window {
                 UI_RButton *rbt = IT3->second;
                 rbt->mod_label->labelsize(FL_NORMAL_SIZE);
                 rbt->mod_help->labelsize(FL_NORMAL_SIZE);
+                rbt->mod_reset->labelsize(FL_NORMAL_SIZE);
                 rbt->mod_label->redraw();
             }
         }
@@ -585,6 +609,7 @@ class UI_ThemeWin : public Fl_Window {
                 rch->mod_label->labelsize(FL_NORMAL_SIZE);
                 rch->mod_menu->textsize(FL_NORMAL_SIZE);
                 rch->mod_help->labelsize(FL_NORMAL_SIZE);
+                rch->mod_reset->labelsize(FL_NORMAL_SIZE);
                 rch->mod_label->redraw();
             }
             for (IT2 = M->choice_map_slider.begin();
@@ -593,7 +618,13 @@ class UI_ThemeWin : public Fl_Window {
                 rsl->mod_label->labelsize(FL_NORMAL_SIZE);
                 rsl->mod_entry->labelsize(FL_NORMAL_SIZE);
                 rsl->mod_help->labelsize(FL_NORMAL_SIZE);
+                rsl->mod_reset->labelsize(FL_NORMAL_SIZE);
                 rsl->unit_label->labelsize(FL_NORMAL_SIZE);
+                if (rsl->nan_choices.size() > 0) {
+                    rsl->nan_options->labelsize(FL_NORMAL_SIZE);
+                    rsl->nan_options->textsize(FL_NORMAL_SIZE);
+                    rsl->nan_options->redraw();
+                }
                 rsl->mod_label->redraw();
             }
             for (IT3 = M->choice_map_button.begin();
@@ -601,6 +632,7 @@ class UI_ThemeWin : public Fl_Window {
                 UI_RButton *rbt = IT3->second;
                 rbt->mod_label->labelsize(FL_NORMAL_SIZE);
                 rbt->mod_help->labelsize(FL_NORMAL_SIZE);
+                rbt->mod_reset->labelsize(FL_NORMAL_SIZE);
                 rbt->mod_label->redraw();
             }
         }
@@ -1517,6 +1549,7 @@ class UI_ThemeWin : public Fl_Window {
                 UI_RChoice *rch = IT->second;
                 rch->mod_label->labelcolor(FONT_COLOR);
                 rch->mod_help->labelcolor(FONT_COLOR);
+                rch->mod_reset->labelcolor(FONT_COLOR);
                 rch->mod_label->redraw();
             }
             for (IT2 = M->choice_map_slider.begin();
@@ -1525,6 +1558,7 @@ class UI_ThemeWin : public Fl_Window {
                 rsl->mod_label->labelcolor(FONT_COLOR);
                 rsl->mod_entry->labelcolor(FONT_COLOR);
                 rsl->mod_help->labelcolor(FONT_COLOR);
+                rsl->mod_reset->labelcolor(FONT_COLOR);
                 if (rsl->nan_choices.size() > 0) {
                     rsl->nan_options->textcolor(FONT_COLOR);
                     rsl->nan_options->labelcolor(FONT_COLOR);
@@ -1537,6 +1571,7 @@ class UI_ThemeWin : public Fl_Window {
                 UI_RButton *rbt = IT3->second;
                 rbt->mod_label->labelcolor(FONT_COLOR);
                 rbt->mod_help->labelcolor(FONT_COLOR);
+                rbt->mod_reset->labelcolor(FONT_COLOR);
                 rbt->mod_label->redraw();
             }
         }
@@ -1554,6 +1589,7 @@ class UI_ThemeWin : public Fl_Window {
                 UI_RChoice *rch = IT->second;
                 rch->mod_label->labelcolor(FONT_COLOR);
                 rch->mod_help->labelcolor(FONT_COLOR);
+                rch->mod_reset->labelcolor(FONT_COLOR);
                 rch->mod_label->redraw();
             }
             for (IT2 = M->choice_map_slider.begin();
@@ -1562,6 +1598,7 @@ class UI_ThemeWin : public Fl_Window {
                 rsl->mod_label->labelcolor(FONT_COLOR);
                 rsl->mod_entry->labelcolor(FONT_COLOR);
                 rsl->mod_help->labelcolor(FONT_COLOR);
+                rsl->mod_reset->labelcolor(FONT_COLOR);
                 if (rsl->nan_choices.size() > 0) {
                     rsl->nan_options->textcolor(FONT_COLOR);
                     rsl->nan_options->labelcolor(FONT_COLOR);
@@ -1574,6 +1611,7 @@ class UI_ThemeWin : public Fl_Window {
                 UI_RButton *rbt = IT3->second;
                 rbt->mod_label->labelcolor(FONT_COLOR);
                 rbt->mod_help->labelcolor(FONT_COLOR);
+                rbt->mod_reset->labelcolor(FONT_COLOR);
                 rbt->mod_label->redraw();
             }
         }
@@ -1591,6 +1629,7 @@ class UI_ThemeWin : public Fl_Window {
                 UI_RChoice *rch = IT->second;
                 rch->mod_label->labelcolor(FONT_COLOR);
                 rch->mod_help->labelcolor(FONT_COLOR);
+                rch->mod_reset->labelcolor(FONT_COLOR);
                 rch->mod_label->redraw();
             }
             for (IT2 = M->choice_map_slider.begin();
@@ -1599,6 +1638,7 @@ class UI_ThemeWin : public Fl_Window {
                 rsl->mod_label->labelcolor(FONT_COLOR);
                 rsl->mod_entry->labelcolor(FONT_COLOR);
                 rsl->mod_help->labelcolor(FONT_COLOR);
+                rsl->mod_reset->labelcolor(FONT_COLOR);
                 if (rsl->nan_choices.size() > 0) {
                     rsl->nan_options->textcolor(FONT_COLOR);
                     rsl->nan_options->labelcolor(FONT_COLOR);
@@ -1611,6 +1651,7 @@ class UI_ThemeWin : public Fl_Window {
                 UI_RButton *rbt = IT3->second;
                 rbt->mod_label->labelcolor(FONT_COLOR);
                 rbt->mod_help->labelcolor(FONT_COLOR);
+                rbt->mod_reset->labelcolor(FONT_COLOR);
                 rbt->mod_label->redraw();
             }
         }
@@ -1628,6 +1669,7 @@ class UI_ThemeWin : public Fl_Window {
                 UI_RChoice *rch = IT->second;
                 rch->mod_label->labelcolor(FONT_COLOR);
                 rch->mod_help->labelcolor(FONT_COLOR);
+                rch->mod_reset->labelcolor(FONT_COLOR);
                 rch->mod_label->redraw();
             }
             for (IT2 = M->choice_map_slider.begin();
@@ -1636,6 +1678,7 @@ class UI_ThemeWin : public Fl_Window {
                 rsl->mod_label->labelcolor(FONT_COLOR);
                 rsl->mod_entry->labelcolor(FONT_COLOR);
                 rsl->mod_help->labelcolor(FONT_COLOR);
+                rsl->mod_reset->labelcolor(FONT_COLOR);
                 if (rsl->nan_choices.size() > 0) {
                     rsl->nan_options->textcolor(FONT_COLOR);
                     rsl->nan_options->labelcolor(FONT_COLOR);
@@ -1648,6 +1691,7 @@ class UI_ThemeWin : public Fl_Window {
                 UI_RButton *rbt = IT3->second;
                 rbt->mod_label->labelcolor(FONT_COLOR);
                 rbt->mod_help->labelcolor(FONT_COLOR);
+                rbt->mod_reset->labelcolor(FONT_COLOR);
                 rbt->mod_label->redraw();
             }
         }
