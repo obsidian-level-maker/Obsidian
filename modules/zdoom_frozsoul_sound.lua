@@ -233,6 +233,16 @@ function ZDOOM_SOUND.setup(self)
   ZDOOM_SOUND.build_lumps()
 end
 
+function ZDOOM_SOUND.merge_frozsoul_sounds(self)
+
+  local dir = "data/sounds/"
+
+  for _,sound in pairs(ZDOOM_SOUND_DEFS) do
+    gui.wad_insert_file(dir .. sound.lump .. ".ogg", sound.lump)
+  end
+
+end
+
 OB_MODULES["zdoom_ambient_sound"] =
 {
   label = _("ZDoom: Ambient Sounds"),
@@ -248,7 +258,8 @@ OB_MODULES["zdoom_ambient_sound"] =
   hooks =
   {
     setup = ZDOOM_SOUND.setup,
-    end_level = ZDOOM_SOUND.populate_level_ambience
+    end_level = ZDOOM_SOUND.populate_level_ambience,
+    all_done = ZDOOM_SOUND.merge_frozsoul_sounds
   },
 
   options =
