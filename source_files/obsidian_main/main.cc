@@ -156,7 +156,6 @@ bool random_string_seeds = false;
 bool password_mode = false;
 bool mature_word_lists = false;
 bool did_specify_seed = false;
-int zip_output = 0;
 int log_size = 7;
 int log_limit = 5;
 bool mid_batch = false;
@@ -289,9 +288,6 @@ static void ShowInfo() {
         "     --randomize-combat     Randomize combat-related settings\n"
         "     --randomize-pickups    Randomize item/weapon settings\n"
         "     --randomize-other      Randomize other settings\n"
-        "\n"
-        "  -3 --pk3                  Compress output file to PK3\n"
-        "  -z --zip                  Compress output file to ZIP\n"
         "\n"
         "  -d --debug                Enable debugging\n"
         "  -v --verbose              Print log messages to stdout\n"
@@ -1325,13 +1321,6 @@ bool Build_Cool_Shit() {
 }
 
 void Options_ParseArguments() {
-    if (argv::Find('z', "zip") >= 0) {
-        zip_output = 1;
-    }
-
-    if (argv::Find('3', "pk3") >= 0) {
-        zip_output = 2;
-    }
 
     if (argv::Find(0, "randomize-all") >= 0) {
         if (batch_mode) {

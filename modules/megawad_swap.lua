@@ -97,7 +97,8 @@ OB_MODULES["megawad_swapper"] =
   game = "doomish",
 
   port = "!zdoom",
-  port2 = "!limit_enforcing",
+  port2 = "!edge",
+  port3 = "!limit_enforcing",
   tooltip=_("Ideal if you have a music WAD replacing all tracks in the game. A note if you are using the ZDoom Specials Shuffle Music option, there is no need to use this module. This is ideal for non-ZDoom ports only."),
 
   hooks =

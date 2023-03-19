@@ -485,6 +485,7 @@ class UI_ThemeWin : public Fl_Window {
                 rch->mod_label->labelsize(FL_NORMAL_SIZE);
                 rch->mod_menu->textsize(FL_NORMAL_SIZE);
                 rch->mod_help->labelsize(FL_NORMAL_SIZE);
+                rch->mod_reset->labelsize(FL_NORMAL_SIZE);
                 rch->mod_label->redraw();
             }
             for (IT2 = M->choice_map_slider.begin();
@@ -493,6 +494,11 @@ class UI_ThemeWin : public Fl_Window {
                 rsl->mod_label->labelsize(FL_NORMAL_SIZE);
                 rsl->mod_entry->labelsize(FL_NORMAL_SIZE);
                 rsl->mod_help->labelsize(FL_NORMAL_SIZE);
+                rsl->mod_reset->labelsize(FL_NORMAL_SIZE);
+                if (rsl->nan_choices.size() > 0) {
+                    rsl->nan_options->labelsize(FL_NORMAL_SIZE);
+                    rsl->nan_options->redraw();
+                }
                 rsl->mod_label->redraw();
             }
             for (IT3 = M->choice_map_button.begin();
@@ -500,6 +506,7 @@ class UI_ThemeWin : public Fl_Window {
                 UI_RButton *rbt = IT3->second;
                 rbt->mod_label->labelsize(FL_NORMAL_SIZE);
                 rbt->mod_help->labelsize(FL_NORMAL_SIZE);
+                rbt->mod_reset->labelsize(FL_NORMAL_SIZE);
                 rbt->mod_label->redraw();
             }
         }
@@ -514,27 +521,33 @@ class UI_ThemeWin : public Fl_Window {
                 std::map<std::string, UI_RChoice *>::const_iterator IT;
                 std::map<std::string, UI_RSlide *>::const_iterator IT2;
                 std::map<std::string, UI_RButton *>::const_iterator IT3;
-                for (IT = M->choice_map.begin(); IT != M->choice_map.end();
-                     IT++) {
+                for (IT = M->choice_map.begin(); IT != M->choice_map.end(); IT++) {
                     UI_RChoice *rch = IT->second;
                     rch->mod_label->labelsize(FL_NORMAL_SIZE);
                     rch->mod_menu->textsize(FL_NORMAL_SIZE);
                     rch->mod_help->labelsize(FL_NORMAL_SIZE);
+                    rch->mod_reset->labelsize(FL_NORMAL_SIZE);
                     rch->mod_label->redraw();
                 }
                 for (IT2 = M->choice_map_slider.begin();
-                     IT2 != M->choice_map_slider.end(); IT2++) {
+                    IT2 != M->choice_map_slider.end(); IT2++) {
                     UI_RSlide *rsl = IT2->second;
                     rsl->mod_label->labelsize(FL_NORMAL_SIZE);
                     rsl->mod_entry->labelsize(FL_NORMAL_SIZE);
                     rsl->mod_help->labelsize(FL_NORMAL_SIZE);
+                    rsl->mod_reset->labelsize(FL_NORMAL_SIZE);
+                    if (rsl->nan_choices.size() > 0) {
+                        rsl->nan_options->labelsize(FL_NORMAL_SIZE);
+                        rsl->nan_options->redraw();
+                    }
                     rsl->mod_label->redraw();
                 }
                 for (IT3 = M->choice_map_button.begin();
-                     IT3 != M->choice_map_button.end(); IT3++) {
+                    IT3 != M->choice_map_button.end(); IT3++) {
                     UI_RButton *rbt = IT3->second;
                     rbt->mod_label->labelsize(FL_NORMAL_SIZE);
                     rbt->mod_help->labelsize(FL_NORMAL_SIZE);
+                    rbt->mod_reset->labelsize(FL_NORMAL_SIZE);
                     rbt->mod_label->redraw();
                 }
             }
@@ -1278,6 +1291,7 @@ class UI_ThemeWin : public Fl_Window {
                 UI_RChoice *rch = IT->second;
                 rch->mod_label->labelcolor(FONT_COLOR);
                 rch->mod_help->labelcolor(FONT_COLOR);
+                rch->mod_reset->labelcolor(FONT_COLOR);
                 rch->mod_label->redraw();
             }
             for (IT2 = M->choice_map_slider.begin();
@@ -1286,6 +1300,7 @@ class UI_ThemeWin : public Fl_Window {
                 rsl->mod_label->labelcolor(FONT_COLOR);
                 rsl->mod_entry->labelcolor(FONT_COLOR);
                 rsl->mod_help->labelcolor(FONT_COLOR);
+                rsl->mod_reset->labelcolor(FONT_COLOR);
                 if (rsl->nan_choices.size() > 0) {
                     rsl->nan_options->textcolor(FONT_COLOR);
                     rsl->nan_options->labelcolor(FONT_COLOR);
@@ -1298,6 +1313,7 @@ class UI_ThemeWin : public Fl_Window {
                 UI_RButton *rbt = IT3->second;
                 rbt->mod_label->labelcolor(FONT_COLOR);
                 rbt->mod_help->labelcolor(FONT_COLOR);
+                rbt->mod_reset->labelcolor(FONT_COLOR);
                 rbt->mod_label->redraw();
             }
         }
@@ -1317,6 +1333,7 @@ class UI_ThemeWin : public Fl_Window {
                     UI_RChoice *rch = IT->second;
                     rch->mod_label->labelcolor(FONT_COLOR);
                     rch->mod_help->labelcolor(FONT_COLOR);
+                    rch->mod_reset->labelcolor(FONT_COLOR);
                     rch->mod_label->redraw();
                 }
                 for (IT2 = M->choice_map_slider.begin();
@@ -1325,6 +1342,7 @@ class UI_ThemeWin : public Fl_Window {
                     rsl->mod_label->labelcolor(FONT_COLOR);
                     rsl->mod_entry->labelcolor(FONT_COLOR);
                     rsl->mod_help->labelcolor(FONT_COLOR);
+                    rsl->mod_reset->labelcolor(FONT_COLOR);
                     if (rsl->nan_choices.size() > 0) {
                         rsl->nan_options->textcolor(FONT_COLOR);
                         rsl->nan_options->labelcolor(FONT_COLOR);
@@ -1337,6 +1355,7 @@ class UI_ThemeWin : public Fl_Window {
                     UI_RButton *rbt = IT3->second;
                     rbt->mod_label->labelcolor(FONT_COLOR);
                     rbt->mod_help->labelcolor(FONT_COLOR);
+                    rbt->mod_reset->labelcolor(FONT_COLOR);
                     rbt->mod_label->redraw();
                 }
             }
@@ -1358,7 +1377,7 @@ class UI_ThemeWin : public Fl_Window {
             that->opt_text2_color->color(FONT2_COLOR);
             that->opt_text2_color->redraw();
         } else {
-            FONT2_COLOR = fl_rgb_color(text_red, text_green, text_blue);
+            FONT2_COLOR = fl_rgb_color(text2_red, text2_green, text2_blue);
         }
         main_win->game_box->engine->textcolor(FONT2_COLOR);
         main_win->game_box->game->textcolor(FONT2_COLOR);
@@ -1370,13 +1389,6 @@ class UI_ThemeWin : public Fl_Window {
         for (int x = 0; x < main_win->game_box->children(); x++) {
             main_win->game_box->child(x)->redraw();
             main_win->game_box->child(x)->redraw_label();
-        }
-        main_win->build_box->seed_disp->labelcolor(FONT_COLOR);
-        main_win->build_box->name_disp->labelcolor(FONT_COLOR);
-        main_win->build_box->status->labelcolor(FONT_COLOR);
-        main_win->build_box->progress->labelcolor(FONT_COLOR);
-        for (int x = 0; x < main_win->build_box->children(); x++) {
-            main_win->build_box->child(x)->redraw();
         }
         for (int x = 0; x < main_win->left_mods->mod_pack->children(); x++) {
             UI_Module *M = (UI_Module *)main_win->left_mods->mod_pack->child(x);

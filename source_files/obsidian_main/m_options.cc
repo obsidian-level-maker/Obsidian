@@ -75,8 +75,6 @@ void Parse_Option(const std::string &name, const std::string &value) {
         filename_prefix = StringToInt(value);
     } else if (StringCaseCmp(name, "custom_prefix") == 0) {
         custom_prefix = value;
-    } else if (StringCaseCmp(name, "zip_output") == 0) {
-        zip_output = StringToInt(value);
     } else if (StringCaseCmp(name, "log_size") == 0) {
         log_size = StringToInt(value);
     } else if (StringCaseCmp(name, "log_limit") == 0) {
@@ -187,7 +185,6 @@ bool Options_Save(std::filesystem::path filename) {
     option_fp << "mature_word_lists = " << (mature_word_lists ? 1 : 0) << "\n";
     option_fp << "filename_prefix = " << filename_prefix << "\n";
     option_fp << "custom_prefix = " << custom_prefix << "\n";
-    option_fp << "zip_output = " << zip_output << "\n";
     option_fp << "log_size = " << log_size << "\n";
     option_fp << "log_limit = " << log_limit << "\n";
     option_fp << "default_output_path = " << default_output_path << "\n";
@@ -216,7 +213,6 @@ class UI_OptionsWin : public Fl_Window {
 
    private:
     UI_CustomMenu *opt_language;
-    UI_CustomMenu *opt_zip_output;
     UI_CustomMenu *opt_filename_prefix;
 
     Fl_Button *opt_custom_prefix;
@@ -330,12 +326,6 @@ class UI_OptionsWin : public Fl_Window {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
 
         log_limit = that->opt_log_limit->value();
-    }
-
-    static void callback_ZipOutput(Fl_Widget *w, void *data) {
-        UI_OptionsWin *that = (UI_OptionsWin *)data;
-
-        zip_output = that->opt_zip_output->value();
     }
 
     static void callback_Random_String_Seeds(Fl_Widget *w, void *data) {
@@ -552,7 +542,9 @@ class UI_OptionsWin : public Fl_Window {
         dir_name = ucs4_path(dir_name.generic_string().c_str());
 #endif
         UI_OptionsWin *that = (UI_OptionsWin *)data;
-        that->opt_current_output_path->copy_label("                                                                                ");
+        std::string blanker;
+        blanker.append(250,' ');
+        that->opt_current_output_path->copy_label(blanker.c_str());
         that->opt_current_output_path->redraw_label();
         that->opt_current_output_path->copy_label(fmt::format("{}: {}", _("Current Path"), BestDirectory().generic_string()).c_str());
         that->opt_current_output_path->redraw_label();
@@ -594,20 +586,6 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     PopulateLanguages();
 
     cy += opt_language->h() + y_step;
-
-    opt_zip_output =
-        new UI_CustomMenu(cx + W * .38, cy, listwidth, kf_h(24), "");
-    opt_zip_output->copy_label(_("Compress Output: "));
-    opt_zip_output->align(FL_ALIGN_LEFT);
-    opt_zip_output->callback(callback_ZipOutput, this);
-    opt_zip_output->add(_("OFF|ZIP|PK3"));
-    opt_zip_output->labelfont(font_style);
-    opt_zip_output->textfont(font_style);
-    opt_zip_output->textcolor(FONT2_COLOR);
-    opt_zip_output->selection_color(SELECTION);
-    opt_zip_output->value(zip_output);
-
-    cy += opt_zip_output->h() + y_step;
 
     opt_filename_prefix =
         new UI_CustomMenu(cx + W * .38, cy, listwidth, kf_h(24), "");
@@ -653,11 +631,11 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_default_output_path->labelfont(font_style);
     opt_default_output_path->labelcolor(FONT2_COLOR);
 
-    cy += opt_default_output_path->h() + y_step * .5;
+    cy += opt_default_output_path->h() + y_step;
 
     opt_current_output_path = new Fl_Box(
-        cx, cy, W - cx - pad, kf_h(24), "");
-    opt_current_output_path->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
+        cx, cy, W - cx - pad, kf_h(36), "");
+    opt_current_output_path->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER | FL_ALIGN_WRAP);
     opt_current_output_path->visible_focus(0);
     opt_current_output_path->color(BUTTON_COLOR);
     opt_current_output_path->labelfont(font_style);
@@ -666,7 +644,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_current_output_path->copy_label(fmt::format("{}: {}", _("Current Path"), BestDirectory().generic_string()).c_str());
     // clang-format on
 
-    cy += opt_current_output_path->h() + y_step * .5;
+    cy += opt_current_output_path->h() + y_step;
 
     opt_random_string_seeds =
         new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24), "");

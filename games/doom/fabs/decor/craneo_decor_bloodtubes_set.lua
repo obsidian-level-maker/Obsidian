@@ -8,7 +8,7 @@ PREFABS.Decor_craneo_testtube_industrial =
 
   theme = "!hell",
 
-
+  rank = 2,
   prob = 5000,
 
   group = "cran_bloodtubes_set",
@@ -36,7 +36,7 @@ PREFABS.Decor_craneo_bloodtubes_hell =
 {
   template = "Decor_craneo_testtube_industrial",
 
-
+  rank = 1,
   theme = "hell",
 
   tex_TEKGREN1 = "MARBLE3",

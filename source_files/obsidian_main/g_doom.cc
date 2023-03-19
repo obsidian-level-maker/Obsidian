@@ -1004,6 +1004,8 @@ bool Doom::game_interface_c::Start(const char *preset) {
 
     ob_invoke_hook("pre_setup");
 
+    current_port = ob_get_param("port");
+
     if (batch_mode) {
         if (batch_output_file.is_absolute()) {
             filename = batch_output_file;
@@ -1013,7 +1015,13 @@ bool Doom::game_interface_c::Start(const char *preset) {
     } else {
 #ifndef CONSOLE_ONLY
         if (!mid_batch) {
-            filename = DLG_OutputFilename("wad", preset);
+            if (StringCaseCmp(current_port, "zdoom") == 0 ||
+                StringCaseCmp(current_port, "eternity") == 0) {
+                filename = DLG_OutputFilename("pk3", 
+                    std::filesystem::path{preset}.replace_extension("pk3").string().c_str());
+            } else {
+                filename = DLG_OutputFilename("wad", preset);
+            }
         } else {
             filename = BestDirectory() / preset;
         }
@@ -1025,6 +1033,8 @@ bool Doom::game_interface_c::Start(const char *preset) {
         return false;
     }
 
+    filename.replace_extension("wad");
+
     gif_filename = filename;
 
     gif_filename.replace_extension("gif");
@@ -1032,8 +1042,6 @@ bool Doom::game_interface_c::Start(const char *preset) {
     if (create_backups) {
         Main::BackupFile(filename);
     }
-
-    current_port = ob_get_param("port");
 
     // Need to preempt the rest of this process for now if we are using Vanilla
     // Doom
@@ -1128,9 +1136,9 @@ bool Doom::game_interface_c::Finish(bool build_ok) {
     }
 
     if (build_ok) {
-        if (zip_output > 0) {
+        if (StringCaseCmp(current_port, "zdoom") == 0 || StringCaseCmp(current_port, "eternity") == 0) {
             std::filesystem::path zip_filename = filename;
-            zip_filename.replace_extension(zip_output == 1 ? "zip" : "pk3");
+            zip_filename.replace_extension("pk3");
             if (std::filesystem::exists(zip_filename)) {
                 if (create_backups) {
                     Main::BackupFile(zip_filename);
