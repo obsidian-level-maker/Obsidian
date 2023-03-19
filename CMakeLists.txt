@@ -242,6 +242,10 @@ if(UNIX)
   endif()
 endif()
 
+if(APPLE)
+  find_package(OpenGL REQUIRED)
+endif()
+
 target_link_libraries(obsidian PRIVATE fmt::fmt-header-only hedley::hedley spdlog::spdlog_header_only)
 
 # Copies executables to local install directory after build
@@ -257,7 +261,32 @@ add_custom_command(
 add_dependencies(obsidian qsavetex)
 
 if(UNIX)
-  if(APPLE OR ${CMAKE_SYSTEM} MATCHES "BSD")
+  if(APPLE)
+    if(NOT CONSOLE_ONLY)
+      target_link_libraries(
+        obsidian
+        PRIVATE filename_formatter
+                fltk
+                fltk_images
+                miniz
+                libluajit
+                physfs-static
+                obsidian_zdbsp
+                obsidian_slump
+                ${OPENGL_LIBRARIES}
+      )
+    else()
+      target_link_libraries(
+        obsidian
+        PRIVATE filename_formatter
+                miniz
+                libluajit
+                physfs-static
+                obsidian_zdbsp
+                obsidian_slump
+      )
+    endif()
+  elseif(${CMAKE_SYSTEM} MATCHES "BSD")
     if(NOT CONSOLE_ONLY)
       target_link_libraries(
         obsidian
