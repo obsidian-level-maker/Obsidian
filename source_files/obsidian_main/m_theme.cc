@@ -497,6 +497,7 @@ class UI_ThemeWin : public Fl_Window {
                 rsl->mod_reset->labelsize(FL_NORMAL_SIZE);
                 if (rsl->nan_choices.size() > 0) {
                     rsl->nan_options->labelsize(FL_NORMAL_SIZE);
+                    rsl->nan_options->textsize(FL_NORMAL_SIZE);
                     rsl->nan_options->redraw();
                 }
                 rsl->mod_label->redraw();
@@ -538,6 +539,7 @@ class UI_ThemeWin : public Fl_Window {
                     rsl->mod_reset->labelsize(FL_NORMAL_SIZE);
                     if (rsl->nan_choices.size() > 0) {
                         rsl->nan_options->labelsize(FL_NORMAL_SIZE);
+                        rsl->nan_options->textsize(FL_NORMAL_SIZE);
                         rsl->nan_options->redraw();
                     }
                     rsl->mod_label->redraw();
