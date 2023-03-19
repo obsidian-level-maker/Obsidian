@@ -242,10 +242,6 @@ if(UNIX)
   endif()
 endif()
 
-if(APPLE)
-  find_package(OpenGL REQUIRED)
-endif()
-
 target_link_libraries(obsidian PRIVATE fmt::fmt-header-only hedley::hedley spdlog::spdlog_header_only)
 
 # Copies executables to local install directory after build
@@ -273,7 +269,8 @@ if(UNIX)
                 physfs-static
                 obsidian_zdbsp
                 obsidian_slump
-                ${OPENGL_LIBRARIES}
+                "-framework CoreGraphics"
+                "-framework QuartzCore"
       )
     else()
       target_link_libraries(
