@@ -456,8 +456,8 @@ ULTDOOM.MATERIALS =
   _WALLLIT = { t="LITE5", f="XX"},
   _LIFT  = { t="PLAT1", f="STEP1"},
   _SBARS = { t="MIDBRN1", f="XX" }, -- Short bars, i.e. railings
-  _MBARS = { t="MIDBARS3", f="XX" }, -- Medium bars, i.e. barred windows
-  _TBARS = { t="MIDBARS1", f="XX" }, -- Tall bars, i.e. cage/jail bars
+  _MBARS = { t="MIDGRATE", f="XX" }, -- Medium bars, i.e. barred windows
+  _TBARS = { t="MIDGRATE", f="XX" }, -- Tall bars, i.e. cage/jail bars
   
   _CRATE   = { t="CRATE1",   f="CRATOP2" }, -- Crate/box
   _CRATE2  = { t="CRATE2",   f="CRATOP1" },

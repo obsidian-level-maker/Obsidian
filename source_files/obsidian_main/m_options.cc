@@ -634,7 +634,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     cy += opt_default_output_path->h() + y_step;
 
     opt_current_output_path = new Fl_Box(
-        cx, cy, W - cx - pad, kf_h(24), "");
+        cx, cy, W - cx - pad, kf_h(36), "");
     opt_current_output_path->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER | FL_ALIGN_WRAP);
     opt_current_output_path->visible_focus(0);
     opt_current_output_path->color(BUTTON_COLOR);
@@ -644,7 +644,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_current_output_path->copy_label(fmt::format("{}: {}", _("Current Path"), BestDirectory().generic_string()).c_str());
     // clang-format on
 
-    cy += opt_current_output_path->h() * 1.5 + y_step;
+    cy += opt_current_output_path->h() + y_step;
 
     opt_random_string_seeds =
         new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24), "");
