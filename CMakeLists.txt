@@ -269,7 +269,9 @@ if(UNIX)
                 physfs-static
                 obsidian_zdbsp
                 obsidian_slump
+                "-framework Cocoa"
                 "-framework CoreGraphics"
+                "-framework CoreText"
                 "-framework QuartzCore"
       )
     else()
