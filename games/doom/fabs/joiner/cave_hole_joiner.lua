@@ -11,7 +11,7 @@ PREFABS.Joiner_cave_hole1 =
   file   = "joiner/cave_hole_joiner.wad",
   map    = "MAP01",
 
-  prob   = 50,
+  prob   = 50 * 20,
 
   env      = "!cave",
   neighbor = "cave",
@@ -58,7 +58,7 @@ PREFABS.Joiner_cave_hole1_key1 =
   file   = "joiner/cave_hole_joiner.wad",
   map    = "MAP03",
 
-  prob   = 50,
+  prob   = 50 * 20,
 
   env      = "!cave",
   neighbor = "cave",
@@ -138,7 +138,7 @@ PREFABS.Joiner_cave_hole2_key1 =
   file   = "joiner/cave_hole_joiner.wad",
   map    = "MAP06",
 
-  prob   = 50,
+  prob   = 50 * 20,
 
   env      = "!cave",
   neighbor = "cave",
@@ -218,7 +218,7 @@ PREFABS.Joiner_cave_hole1_barred1 =
   file   = "joiner/cave_hole_joiner.wad",
   map    = "MAP09",
 
-  prob   = 50,
+  prob   = 50 * 20,
 
   env      = "!cave",
   neighbor = "cave",
@@ -258,7 +258,7 @@ PREFABS.Joiner_cave_hole1_barred2 =
   file   = "joiner/cave_hole_joiner.wad",
   map    = "MAP10",
 
-  prob   = 50,
+  prob   = 50 * 20,
 
   env      = "!cave",
   neighbor = "cave",
