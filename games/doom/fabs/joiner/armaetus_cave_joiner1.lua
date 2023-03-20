@@ -3,7 +3,7 @@ PREFABS.Joiner_armaetus_cave_to_cave_joiner =
   file   = "joiner/armaetus_cave_joiner1.wad",
   map    = "MAP01",
 
-  prob   = 750,
+  prob   = 750 * 20,
 
   style = "steepness",
 
