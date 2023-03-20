@@ -1879,9 +1879,11 @@ softrestart:;
             if (old_w > 0 && old_h > 0) {
                 main_win->resize(old_x, old_y, old_w, old_h);
             }
+#ifndef __OpenBSD__ // This somehow messes with FLTK stuff on the first run
             if (first_run) {
                 DLG_Tutorial();
             }
+#endif
         }
 
 #ifdef WIN32  // Populate structure for taskbar/window flash. Must be done after
