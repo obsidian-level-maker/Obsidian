@@ -373,7 +373,14 @@ void Determine_WorkingPath(const char *argv0) {
             Main::FatalError("Unable to find $HOME directory!\n");
         }
     }
-
+// FLTK is going to want a ~/.config directory as well I think - Dasho
+#ifdef __OpenBSD__
+    std::filesystem::path config_checker = std::getenv("HOME");
+    config_checker /= ".config";
+    if (!std::filesystem::exists(config_checker)) {
+        std::filesystem::create_directory(config_checker);
+    }
+#endif
     // try to create it (doesn't matter if it already exists)
     if (!std::filesystem::exists(home_dir)) {
         std::filesystem::create_directory(home_dir);
@@ -1871,9 +1878,11 @@ softrestart:;
             if (old_w > 0 && old_h > 0) {
                 main_win->resize(old_x, old_y, old_w, old_h);
             }
+#ifndef __OpenBSD__ // This somehow messes with FLTK stuff on the first run
             if (first_run) {
                 DLG_Tutorial();
             }
+#endif
         }
 
 #ifdef WIN32  // Populate structure for taskbar/window flash. Must be done after
