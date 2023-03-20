@@ -62,7 +62,7 @@ ZDOOM_SOUND.ACTOR_ID_OFFSET_CHOICES =
 
 ZDOOM_SOUND.SOUND_ACTOR_DENSITY = 5
 
-ZDOOM_SOUND.DEFAULT_A_PLAYSOUND_ARGS = "CHAN_AUTO, 1, true"
+ZDOOM_SOUND.DEFAULT_A_PLAYSOUND_ARGS = "CHAN_AUTO, 0.5, true"
 
 ZDOOM_SOUND.TEMPLATES =
 {
@@ -235,10 +235,14 @@ end
 
 function ZDOOM_SOUND.merge_frozsoul_sounds(self)
 
-  local dir = "data/sounds/"
+  if PARAM.bool_merge_frozsoul_sounds == 1 then
 
-  for _,sound in pairs(ZDOOM_SOUND_DEFS) do
-    gui.wad_insert_file(dir .. sound.lump .. ".ogg", sound.lump)
+    local dir = "data/sounds/"
+
+    for _,sound in pairs(ZDOOM_SOUND_DEFS) do
+      gui.wad_insert_file(dir .. sound.lump .. ".ogg", sound.lump)
+    end
+
   end
 
 end
@@ -270,6 +274,15 @@ OB_MODULES["zdoom_ambient_sound"] =
       choices=ZDOOM_SOUND.ACTOR_ID_OFFSET_CHOICES,
       tooltip = _("Selects the starting thing ID for generating ambient sound actors. Use only if you are playing a mod using conflicting Editor Numbers. If you don't know what this is this setting is best left as-is."),
       default = "20000",
+    },
+
+    {
+      name = "bool_merge_frozsoul_sounds",
+      label=_("Merge Frozsoul Sound Pack"),
+      valuator = "button",
+      default = 1,
+      tooltip = _("Merge Frozsoul Ambient Sound Pack sound into generated WAD/PK3"),
+      longtip = _("Merge in the sounds from the Frozsoul Ambient Sound Pack, the default set of sounds which this module is designed for. Not necessary if you plan to include the sound pack separately in your launch order."),
     },
   },
 

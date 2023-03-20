@@ -98,7 +98,7 @@ void UI_Module::AddHeader(std::string opt, std::string label, int gap) {
 
     rhead->mod_label = new Fl_Box(
         rhead->x(), rhead->y(),
-        (!single_pane ? rhead->w() * .95 : rhead->w() * .40), kf_h(24), "");
+        rhead->w() * .95, kf_h(24), "");
     rhead->mod_label->copy_label(label.c_str());
     rhead->mod_label->align(
         (!single_pane ? (FL_ALIGN_CENTER | FL_ALIGN_INSIDE)

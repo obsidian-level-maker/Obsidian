@@ -37,7 +37,7 @@
 
 #include <assert.h>
 #include <stdlib.h>
-#ifndef __APPLE__
+#if !defined __APPLE__ && !defined __OpenBSD__
 #include <malloc.h>
 #endif
 #include <new>
