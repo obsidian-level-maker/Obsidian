@@ -226,7 +226,7 @@ function hm_give_weapon(HM, weapon, ammo_mul)
          (HM["c1_shaft"] and  HM["c2_cross"] and  HM["c3_arc"])   or
          (HM["m1_stick"] and  HM["m2_stub"]  and  HM["m3_skull"])
       then
-        local name = XN_WEAPON_NAMES[HM.class][4]
+        local name = HEXEN.FACTORY.XN_WEAPON_NAMES[HM.class][4]
         assert(name)
 
         return hm_give_weapon(HM, name)

@@ -60,6 +60,7 @@ OB_GAMES["hexen"] =
 
   hooks =
   {
+    factory_setup = HEXEN.factory_setup,
     get_levels = HEXEN.get_levels,
     all_done   = HEXEN.all_done
   },
