@@ -155,7 +155,6 @@ bool random_string_seeds = false;
 bool password_mode = false;
 bool mature_word_lists = false;
 bool did_specify_seed = false;
-int zip_output = 0;
 int log_size = 7;
 int log_limit = 5;
 bool mid_batch = false;
@@ -289,9 +288,6 @@ static void ShowInfo() {
         "     --randomize-pickups    Randomize item/weapon settings\n"
         "     --randomize-other      Randomize other settings\n"
         "\n"
-        "  -3 --pk3                  Compress output file to PK3\n"
-        "  -z --zip                  Compress output file to ZIP\n"
-        "\n"
         "  -d --debug                Enable debugging\n"
         "  -v --verbose              Print log messages to stdout\n"
         "  -h --help                 Show this help message\n"
@@ -377,7 +373,14 @@ void Determine_WorkingPath(const char *argv0) {
             Main::FatalError("Unable to find $HOME directory!\n");
         }
     }
-
+// FLTK is going to want a ~/.config directory as well I think - Dasho
+#ifdef __OpenBSD__
+    std::filesystem::path config_checker = std::getenv("HOME");
+    config_checker /= ".config";
+    if (!std::filesystem::exists(config_checker)) {
+        std::filesystem::create_directory(config_checker);
+    }
+#endif
     // try to create it (doesn't matter if it already exists)
     if (!std::filesystem::exists(home_dir)) {
         std::filesystem::create_directory(home_dir);
@@ -1324,13 +1327,6 @@ bool Build_Cool_Shit() {
 }
 
 void Options_ParseArguments() {
-    if (argv::Find('z', "zip") >= 0) {
-        zip_output = 1;
-    }
-
-    if (argv::Find('3', "pk3") >= 0) {
-        zip_output = 2;
-    }
 
     if (argv::Find(0, "randomize-all") >= 0) {
         if (batch_mode) {
@@ -1882,9 +1878,11 @@ softrestart:;
             if (old_w > 0 && old_h > 0) {
                 main_win->resize(old_x, old_y, old_w, old_h);
             }
+#ifndef __OpenBSD__ // This somehow messes with FLTK stuff on the first run
             if (first_run) {
                 DLG_Tutorial();
             }
+#endif
         }
 
 #ifdef WIN32  // Populate structure for taskbar/window flash. Must be done after

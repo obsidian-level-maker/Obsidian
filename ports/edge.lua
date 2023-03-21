@@ -135,9 +135,25 @@ end
 
 function EDGE.all_done()
   EDGE.create_language();
-  EDGE.remap_music()
 end
 
+OB_MODULES["edge_music_swapper"] =
+{
+  label = _("EDGE Music Swapper"),
+
+  where = "other",
+  priority = 8,
+
+  game = {doom1=1,doom2=1,hacx=1,heretic=1,harmony=1,ultdoom=1,tnt=1,plutonia=1},
+
+  port = "edge",
+  tooltip=_("Shuffles songs using DDFPLAY."),
+
+  hooks =
+  {
+    all_done = EDGE.remap_music
+  },
+}
 
 OB_PORTS["edge"] =
 {

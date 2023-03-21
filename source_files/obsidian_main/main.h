@@ -183,7 +183,6 @@ extern bool random_string_seeds;
 extern bool password_mode;
 extern bool mature_word_lists;
 extern bool did_specify_seed;
-extern int zip_output;
 extern int log_size;
 extern int log_limit;
 extern bool first_run;

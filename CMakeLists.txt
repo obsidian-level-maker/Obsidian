@@ -55,8 +55,8 @@ endif()
 if(APPLE OR ${CMAKE_SYSTEM} MATCHES "BSD")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -I /usr/local/include")
 endif()
-if(APPLE)
-  set(CMAKE_EXE_LINKER_FLAGS "-undefined dynamic_lookup")
+if(${CMAKE_SYSTEM} MATCHES "OpenBSD")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -I /usr/X11R6/include")
 endif()
 
 if(OBSIDIAN_TIDY)
@@ -262,7 +262,37 @@ add_custom_command(
 add_dependencies(obsidian qsavetex)
 
 if(UNIX)
-  if(APPLE OR ${CMAKE_SYSTEM} MATCHES "BSD")
+  if(APPLE)
+    if(NOT CONSOLE_ONLY)
+      target_link_libraries(
+        obsidian
+        PRIVATE ajbsp
+                ajparse
+                filename_formatter
+                fltk
+                fltk_images
+                miniz
+                libluajit
+                physfs-static
+                obsidian_slump
+                "-framework Cocoa"
+                "-framework CoreGraphics"
+                "-framework CoreText"
+                "-framework QuartzCore"
+      )
+    else()
+      target_link_libraries(
+        obsidian
+        PRIVATE ajbsp
+                ajparse
+                filename_formatter
+                miniz
+                libluajit
+                physfs-static
+                obsidian_slump
+      )
+    endif()
+  elseif(${CMAKE_SYSTEM} MATCHES "BSD")
     if(NOT CONSOLE_ONLY)
       target_link_libraries(
         obsidian
