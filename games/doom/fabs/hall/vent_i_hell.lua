@@ -3,6 +3,8 @@ PREFABS.Hallway_vent_arch =
   file   = "hall/vent_i_hell.wad",
   map    = "MAP01",
 
+  nolimit_compat = true,
+
   theme  = "hell",
   group  = "vent",
   prob   = 35,

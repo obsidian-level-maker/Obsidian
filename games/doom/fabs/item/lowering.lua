@@ -8,6 +8,8 @@ PREFABS.Item_lowering_remote1 =
   file   = "item/lowering.wad",
   map    = "MAP01",
 
+  nolimit_compat = true,
+
   prob   = 1,
   key    = "barred",
   item_kind = "key",
@@ -34,6 +36,8 @@ PREFABS.Item_lowering_remote7 =
   file   = "item/lowering.wad",
   map    = "MAP07",
   theme  = "!tech",
+
+  nolimit_compat = true,
 
   prob   = 1,
   key    = "barred",
@@ -65,6 +69,8 @@ PREFABS.Item_lowering_remote8 =
 {
   file   = "item/lowering.wad",
   map    = "MAP07",
+
+  nolimit_compat = true,
 
   prob   = 1,
   key    = "barred",
@@ -100,6 +106,8 @@ PREFABS.Item_lowering_remote2 =
   map    = "MAP03",
   theme  = "urban",
 
+  nolimit_compat = true,
+
   prob   = 1,
   key    = "barred",
   item_kind = "key",
@@ -128,6 +136,8 @@ PREFABS.Item_lowering_remote3 =
   file   = "item/lowering.wad",
   map    = "MAP05",
   theme  = "hell",
+
+  nolimit_compat = true,
 
   prob   = 1,
   key    = "barred",
@@ -163,6 +173,8 @@ PREFABS.Item_lowering_remote4 =
   map    = "MAP07",
   theme  = "tech",
 
+  nolimit_compat = true,
+
   prob   = 1,
   key    = "barred",
   item_kind = "key",
@@ -193,6 +205,8 @@ PREFABS.Item_lowering_remote6 =
   file   = "item/lowering.wad",
   map    = "MAP07",
   theme  = "tech",
+
+  nolimit_compat = true,
 
   prob   = 1,
   key    = "barred",
@@ -226,6 +240,8 @@ PREFABS.Item_lowering_remote9 =
   file   = "item/lowering.wad",
   map    = "MAP07",
   theme  = "tech",
+
+  nolimit_compat = true,
 
   prob   = 1,
   key    = "barred",

@@ -10,6 +10,8 @@ PREFABS.Joiner_lift4 =
   style  = "steepness",
   theme  = "tech",
 
+  nolimit_compat = true,
+
   env      = "!cave",
   neighbor = "!cave",
 

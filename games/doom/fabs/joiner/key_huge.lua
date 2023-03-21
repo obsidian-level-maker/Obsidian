@@ -8,6 +8,8 @@ PREFABS.Locked_huge_red =
   file   = "joiner/key_huge.wad",
   map    = "MAP01",
 
+  nolimit_compat = true,
+
   prob   = 200,
 
   theme  = "!tech",

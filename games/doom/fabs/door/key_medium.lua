@@ -8,6 +8,8 @@ PREFABS.Locked_medium_red =
   map    = "MAP01",
   theme  = "!hell",
 
+  nolimit_compat = true,
+
   prob   = 50,
 
   where  = "edge",
@@ -42,6 +44,8 @@ PREFABS.Locked_medium_red_diag =
   file   = "door/key_medium.wad",
   map    = "MAP02",
   theme  = "!hell",
+
+  nolimit_compat = true,
 
   prob   = 50,
 

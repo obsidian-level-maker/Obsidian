@@ -7,6 +7,8 @@ PREFABS.Wall_lite2_blue =
   file   = "wall/lite_2.wad",
   map    = "MAP01",
 
+  nolimit_compat = true,
+
   prob   = 50,
   group  = "lite2",
 

@@ -8,6 +8,8 @@ PREFABS.Exit_closet2 =
 
   prob   = 150,
 
+  nolimit_compat = true,
+
   where  = "seeds",
   seed_w = 2,
   seed_h = 1,

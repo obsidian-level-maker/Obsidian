@@ -8,6 +8,8 @@ PREFABS.Window_barred1 =
   map    = "MAP01",
   theme  = "!tech",
 
+  nolimit_compat = true,
+
   passable = true,
 
   group  = "barred",

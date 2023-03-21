@@ -10,6 +10,8 @@ PREFABS.Window_grate_1 =
   group  = "grate",
   prob   = 50,
 
+  nolimit_compat = true,
+
   where  = "edge",
   seed_w = 1,
 

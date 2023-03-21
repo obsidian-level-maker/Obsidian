@@ -7,6 +7,8 @@ PREFABS.Switch_niche2 =
   file   = "switch/niche2.wad",
   map    = "MAP01",
 
+  nolimit_compat = true,
+
   key    = "sw_metal",
   prob   = 50,
 
@@ -29,6 +31,8 @@ PREFABS.Switch_niche3 =
   file   = "switch/niche2.wad",
   map    = "MAP02",
   theme  = "hell",
+
+  nolimit_compat = true,
 
   key    = "sw_metal",
   prob   = 50,
@@ -56,6 +60,8 @@ PREFABS.Switch_niche4 =
   map    = "MAP02",
   theme  = "hell",
 
+  nolimit_compat = true,
+
   key    = "sw_metal",
   prob   = 50,
 
@@ -81,6 +87,8 @@ PREFABS.Switch_niche5 =
   file   = "switch/niche2.wad",
   map    = "MAP02",
   theme  = "!tech",
+
+  nolimit_compat = true,
 
   key    = "sw_metal",
   prob   = 50,
@@ -108,6 +116,8 @@ PREFABS.Switch_niche6 =
   map    = "MAP02",
   theme  = "urban",
 
+  nolimit_compat = true,
+
   key    = "sw_metal",
   prob   = 50,
 
@@ -133,6 +143,8 @@ PREFABS.Switch_niche7 =
   file   = "switch/niche2.wad",
   map    = "MAP02",
   theme  = "!hell",
+
+  nolimit_compat = true,
 
   key    = "sw_metal",
   prob   = 50,
@@ -160,6 +172,8 @@ PREFABS.Switch_niche8 =
   map    = "MAP02",
   theme  = "!tech",
 
+  nolimit_compat = true,
+
   key    = "sw_metal",
   prob   = 50,
 
@@ -186,6 +200,8 @@ PREFABS.Switch_niche9 =
   map    = "MAP02",
   theme  = "!tech",
 
+  nolimit_compat = true,
+
   key    = "sw_metal",
   prob   = 50,
 
@@ -210,6 +226,8 @@ PREFABS.Switch_niche10 =
 {
   file   = "switch/niche2.wad",
   map    = "MAP02",
+
+  nolimit_compat = true,
 
   key    = "sw_metal",
   prob   = 50,
@@ -237,6 +255,8 @@ PREFABS.Switch_niche11 =
   map    = "MAP02",
   theme  = "tech",
 
+  nolimit_compat = true,
+
   key    = "sw_metal",
   prob   = 50,
 
@@ -262,6 +282,8 @@ PREFABS.Switch_niche12 =
   file   = "switch/niche2.wad",
   map    = "MAP02",
   theme  = "!hell",
+
+  nolimit_compat = true,
 
   key    = "sw_metal",
   prob   = 50,
@@ -289,6 +311,8 @@ PREFABS.Switch_niche13 =
   map    = "MAP02",
   theme  = "tech",
 
+  nolimit_compat = true,
+
   key    = "sw_metal",
   prob   = 50,
 
@@ -314,6 +338,8 @@ PREFABS.Switch_niche14 =
   file   = "switch/niche2.wad",
   map    = "MAP02",
   theme  = "urban",
+
+  nolimit_compat = true,
 
   key    = "sw_metal",
   prob   = 50,
@@ -341,6 +367,8 @@ PREFABS.Switch_niche15 =
   map    = "MAP02",
   theme  = "tech",
 
+  nolimit_compat = true,
+
   key    = "sw_metal",
   prob   = 50,
 
@@ -366,6 +394,8 @@ PREFABS.Switch_niche16 =
   file   = "switch/niche2.wad",
   map    = "MAP02",
   theme  = "!tech",
+
+  nolimit_compat = true,
 
   key    = "sw_metal",
   prob   = 50,
@@ -393,6 +423,8 @@ PREFABS.Switch_niche17 =
   map    = "MAP02",
   theme  = "!tech",
 
+  nolimit_compat = true,
+
   key    = "sw_metal",
   prob   = 50,
 
@@ -418,6 +450,8 @@ PREFABS.Switch_niche18 =
   file   = "switch/niche2.wad",
   map    = "MAP02",
   theme  = "!hell",
+
+  nolimit_compat = true,
 
   key    = "sw_metal",
   prob   = 50,
@@ -445,6 +479,8 @@ PREFABS.Switch_niche19 =
   map    = "MAP02",
   theme  = "!tech",
 
+  nolimit_compat = true,
+
   key    = "sw_metal",
   prob   = 50,
 
@@ -470,6 +506,8 @@ PREFABS.Switch_niche20 =
   file   = "switch/niche2.wad",
   map    = "MAP02",
   theme  = "tech",
+
+  nolimit_compat = true,
 
   key    = "sw_metal",
   prob   = 50,
@@ -497,6 +535,8 @@ PREFABS.Switch_niche21 =
   map    = "MAP02",
   theme  = "!tech",
 
+  nolimit_compat = true,
+
   key    = "sw_metal",
   prob   = 50,
 
@@ -523,6 +563,8 @@ PREFABS.Switch_niche22 =
   map    = "MAP02",
   theme  = "hell",
 
+  nolimit_compat = true,
+
   key    = "sw_metal",
   prob   = 50,
 
@@ -548,6 +590,8 @@ PREFABS.Switch_niche23 =
   file   = "switch/niche2.wad",
   map    = "MAP02",
   theme  = "hell",
+
+  nolimit_compat = true,
 
   key    = "sw_metal",
   prob   = 50,

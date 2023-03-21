@@ -7,6 +7,8 @@ PREFABS.Pillar_tech2_A =
   file   = "decor/pillar2.wad",
   map    = "MAP02",
 
+  nolimit_compat = true,
+
   prob   = 3500,
   theme  = "tech",
   env    = "building",
@@ -80,6 +82,8 @@ PREFABS.Pillar_tech3_A =
   file   = "decor/pillar2.wad",
   map    = "MAP02",
 
+  nolimit_compat = true,
+
   prob   = 3500,
   theme  = "tech",
   env    = "building",
@@ -116,6 +120,8 @@ PREFABS.Pillar_bodies1_A =
 {
   file   = "decor/pillar2.wad",
   map    = "MAP02",
+
+  nolimit_compat = true,
 
   prob   = 3500,
   theme  = "hell",
@@ -155,6 +161,8 @@ PREFABS.Pillar_fire1_A =
 {
   file   = "decor/pillar2.wad",
   map    = "MAP02",
+
+  nolimit_compat = true,
 
   prob   = 3500,
   theme  = "hell",

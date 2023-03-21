@@ -7,6 +7,8 @@ PREFABS.Locked_curve_red =
   file   = "joiner/key_curve.wad",
   map    = "MAP01",
 
+  nolimit_compat = true,
+
   key    = "k_red",
   prob   = 100,
 

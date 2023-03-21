@@ -10,6 +10,8 @@ PREFABS.Stair_32 =
   prob   = 90,
   prob_skew = 5,
 
+  nolimit_compat = true,
+
   theme  = "!hell",
 
   where  = "seeds",

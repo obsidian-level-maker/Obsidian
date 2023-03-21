@@ -6,6 +6,8 @@ PREFABS.Switch_small_sw_blue =
 {
   file   = "switch/small.wad",
 
+  nolimit_compat = true,
+
   key    = "sw_blue",
   prob   = 50,
 

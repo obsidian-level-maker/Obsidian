@@ -8,6 +8,8 @@ PREFABS.Window_tall_1 =
   map    = "MAP01",
   theme  = "!tech",
 
+  nolimit_compat = true,
+
   group  = "tall",
   prob   = 50,
 

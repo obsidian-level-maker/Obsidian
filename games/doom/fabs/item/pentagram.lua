@@ -6,6 +6,7 @@ PREFABS.Item_pentagram =
 {
   file  = "item/pentagram.wad",
 
+  nolimit_compat = true,
 
   prob  = 100,
   theme = "hell",
@@ -20,6 +21,7 @@ PREFABS.Item_pentagram2 =
 {
   file  = "item/pentagram.wad",
 
+  nolimit_compat = true,
 
   prob  = 100,
   theme = "hell",
@@ -38,6 +40,7 @@ PREFABS.Item_pentagram3 =
 {
   file  = "item/pentagram.wad",
 
+  nolimit_compat = true,
 
   prob  = 70,
   theme = "hell",
@@ -56,6 +59,7 @@ PREFABS.Item_pentagram4 =
 {
   file  = "item/pentagram.wad",
 
+  nolimit_compat = true,
 
   prob  = 50,
   theme = "hell",
@@ -74,6 +78,7 @@ PREFABS.Item_pentagram5 =
 {
   file  = "item/pentagram.wad",
 
+  nolimit_compat = true,
 
   prob  = 12,
   theme = "tech",

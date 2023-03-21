@@ -10,6 +10,8 @@ PREFABS.Exit_closet3 =
   prob  = 50, --20,
   theme = "!tech",
 
+  nolimit_compat = true,
+
   where  = "seeds",
   seed_w = 2,
   seed_h = 2,
@@ -30,6 +32,8 @@ PREFABS.Exit_closet3 =
 PREFABS.Exit_closet3_bodies =
 {
   file  = "exit/closet3.wad",
+
+  nolimit_compat = true,
 
   map   = "MAP02",
   prob  = 50,

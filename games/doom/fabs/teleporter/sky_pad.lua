@@ -7,6 +7,7 @@ PREFABS.Teleporter_sky_pad =
   file   = "teleporter/sky_pad.wad",
   map    = "MAP01",
 
+  nolimit_compat = true,
 
   prob   = 50,
   theme  = "!tech",

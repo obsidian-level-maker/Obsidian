@@ -7,6 +7,8 @@ PREFABS.Joiner_door2 =
   file   = "joiner/door2.wad",
   map    = "MAP01",
 
+  nolimit_compat = true,
+
   prob   = 200,
   theme  = "urban",
   style  = "doors",

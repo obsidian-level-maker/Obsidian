@@ -6,6 +6,8 @@ PREFABS.Switch_niche_bars =
 {
   file   = "switch/niche_bars.wad",
 
+  nolimit_compat = true,
+
   theme  = "tech",
   prob   = 100, --50,
   key    = "barred",

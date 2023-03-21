@@ -9,6 +9,8 @@ PREFABS.Start_Dropoff =
   prob   = 80,
   theme  = "tech",
 
+  nolimit_compat = true,
+
   where  = "seeds",
 
   seed_w = 2,

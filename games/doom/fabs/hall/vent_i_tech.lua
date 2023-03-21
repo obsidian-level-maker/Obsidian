@@ -3,6 +3,8 @@ PREFABS.Hallway_vent_tech_comp1 =
   file   = "hall/vent_i_tech.wad",
   map    = "MAP01",
 
+  nolimit_compat = true,
+
   theme  = "!hell",
   group  = "vent",
   prob   = 50,

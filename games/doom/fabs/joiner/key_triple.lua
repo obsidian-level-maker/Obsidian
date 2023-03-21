@@ -8,6 +8,8 @@ PREFABS.Locked_joiner_triple =
   where  = "seeds",
   shape  = "I",
 
+  nolimit_compat = true,
+
   key    = "k_ALL",
   prob   = 100,
 

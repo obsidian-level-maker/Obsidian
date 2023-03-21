@@ -10,6 +10,8 @@ PREFABS.Joiner_stair1 =
   theme  = "!tech",
   style  = "steepness",
 
+  nolimit_compat = true,
+
   where  = "seeds",
   shape  = "I",
 

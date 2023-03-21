@@ -7,6 +7,8 @@ PREFABS.Pillar_round1 =
   file   = "decor/pillar1.wad",
   where  = "point",
 
+  nolimit_compat = true,
+
   prob   = 5000,
   skip_prob = 25,
   theme  = "!tech",

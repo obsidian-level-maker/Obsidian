@@ -7,6 +7,8 @@ PREFABS.Item_secret_cage =
   file  = "item/secret_cage.wad",
   where = "seeds",
 
+  nolimit_compat = true,
+
   prob  = 200,
   skip_prob = 50,
 

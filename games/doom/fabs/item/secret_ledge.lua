@@ -7,6 +7,8 @@ PREFABS.Item_secret_ledge_universal =
   file  = "item/secret_ledge.wad",
   where = "seeds",
 
+  nolimit_compat = true,
+
   prob  = 500,
   env   = "building",
   theme = "!tech",

@@ -7,6 +7,8 @@ PREFABS.Bars_shiny =
   file   = "fence/bars_16.wad",
   map    = "MAP01",
 
+  nolimit_compat = true,
+
   prob   = 120,
 
   where  = "edge",
@@ -31,6 +33,8 @@ PREFABS.Bars_shiny_diag =
 {
   file   = "fence/bars.wad",
   map    = "MAP02",
+
+  nolimit_compat = true,
 
   prob   = 100,
 

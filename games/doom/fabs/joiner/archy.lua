@@ -7,6 +7,8 @@ PREFABS.Joiner_archy1 =
   file   = "joiner/archy.wad",
   map    = "MAP01",
 
+  nolimit_compat = true,
+
   prob  = 140,
   theme = "urban",
 
@@ -70,6 +72,8 @@ PREFABS.Joiner_archy1_wide =
 {
   file   = "joiner/archy.wad",
   map    = "MAP02",
+
+  nolimit_compat = true,
 
   prob  = 400,
   theme = "urban",

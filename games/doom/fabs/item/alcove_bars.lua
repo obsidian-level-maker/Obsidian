@@ -6,6 +6,8 @@ PREFABS.Item_alcove_barred =
   map   = "MAP01",
   theme = "!hell",
 
+  nolimit_compat = true,
+  
   key    = "barred",
 
   where  = "seeds",

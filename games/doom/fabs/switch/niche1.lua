@@ -7,6 +7,8 @@ PREFABS.Switch_niche1 =
   file   = "switch/niche1.wad",
   prob   = 50,
 
+  nolimit_compat = true,
+
   where  = "seeds",
 
   seed_w = 1,
