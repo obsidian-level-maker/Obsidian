@@ -496,6 +496,8 @@ function Render_edge(LEVEL, E, SEEDS)
 
   local function set_blocking_line(edge)
 
+    if OB_CONFIG.port == "limit_removing" then return end
+
     local side_props =
     {
       tex = "ZZWOLF10", -- currently patch-replaced as an invisible wall

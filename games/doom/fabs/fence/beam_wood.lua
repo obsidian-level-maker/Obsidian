@@ -7,6 +7,8 @@ PREFABS.Beam_wood =
   file   = "fence/beam_wood.wad",
   map    = "MAP01",
 
+  nolimit_compat = true,
+
   group  = "beam_wood",
 
   kind   = "beam",
@@ -25,6 +27,8 @@ PREFABS.Beam_wood_diagonal =
 {
   file   = "fence/beam_wood.wad",
   map    = "MAP02",
+
+  nolimit_compat = true,
 
   group  = "beam_wood",
 
