@@ -1017,8 +1017,7 @@ bool Doom::game_interface_c::Start(const char *preset) {
     } else {
 #ifndef CONSOLE_ONLY
         if (!mid_batch) {
-            if (StringCaseCmp(current_port, "zdoom") == 0 ||
-                StringCaseCmp(current_port, "eternity") == 0) {
+            if (ob_mod_enabled("compress_output")) {
                 filename = DLG_OutputFilename("pk3", 
                     std::filesystem::path{preset}.replace_extension("pk3").string().c_str());
             } else {
@@ -1138,7 +1137,7 @@ bool Doom::game_interface_c::Finish(bool build_ok) {
     }
 
     if (build_ok) {
-        if (StringCaseCmp(current_port, "zdoom") == 0 || StringCaseCmp(current_port, "eternity") == 0) {
+        if (ob_mod_enabled("compress_output")) {
             std::filesystem::path zip_filename = filename;
             zip_filename.replace_extension("pk3");
             if (std::filesystem::exists(zip_filename)) {
