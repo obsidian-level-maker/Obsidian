@@ -13,6 +13,8 @@ PREFABS.Pillar_square_A =
   where  = "point",
   env    = "building",
 
+  nolimit_compat = true,
+
   size   = 64,
   height = 80,
 

@@ -12,6 +12,8 @@ PREFABS.Arch_barred =
   where  = "edge",
   key    = "barred",
 
+  nolimit_compat = true,
+
   deep   = 16,
   over   = 16,
 
@@ -49,6 +51,8 @@ PREFABS.Arch_barred_diag =
   map    = "MAP02",
 
   prob   = 50,
+
+  nolimit_compat = true,
 
   where  = "diagonal",
   key    = "barred",

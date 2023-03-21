@@ -7,6 +7,8 @@ PREFABS.Trap_simple1 =
   file   = "misc/trap1.wad",
   map    = "MAP01",
 
+  nolimit_compat = true,
+
   prob   = 50,
   kind   = "trap",
   where  = "seeds",

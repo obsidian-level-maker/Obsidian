@@ -10,6 +10,8 @@ PREFABS.Hallway_vent_plain =
   kind   = "terminator",
   group  = "vent",
 
+  nolimit_compat = true,
+
   prob   = 50,
 
   where  = "seeds",

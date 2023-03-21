@@ -12,6 +12,8 @@ PREFABS.Door_wide_wood =
   kind   = "arch",
   where  = "edge",
 
+  nolimit_compat = true,
+
   seed_w = 2,
 
   deep   = 16,

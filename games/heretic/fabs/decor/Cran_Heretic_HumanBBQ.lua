@@ -11,6 +11,8 @@ PREFABS.Cran_Heretic_HumanBBQ =
   size   = 64,
   height = 136,
 
+  nolimit_compat = true,
+
   bound_z1 = 0,
   bound_z2 = 136,
   z_fit = bottom

@@ -2791,9 +2791,9 @@ function Fab_find_matches(LEVEL, reqs, match_state)
     -- type check
     local kind = assert(def.kind)
 
-    -- limit-removing hard req for Doom
-    if OB_CONFIG.port == "limit_removing" and ob_match_game({ game = "doomish" }) then
-      if not def.port or def.port ~= "limit_removing" then
+    -- limit-removing hard req
+    if OB_CONFIG.port == "limit_removing" then
+      if not def.nolimit_compat or def.nolimit_compat ~= true then
         return 0
       end
     end

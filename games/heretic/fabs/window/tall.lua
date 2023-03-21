@@ -7,6 +7,8 @@ PREFABS.Window_tall_1 =
   file   = "window/tall.wad",
   map    = "MAP01",
 
+  nolimit_compat = true,
+
   group  = "tall",
   prob   = 50,
 

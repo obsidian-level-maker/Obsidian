@@ -10,6 +10,8 @@ PREFABS.Hallway_vent_c1 =
   group  = "vent",
   prob   = 50,
 
+  nolimit_compat = true,
+
   where  = "seeds",
   shape  = "L",
 

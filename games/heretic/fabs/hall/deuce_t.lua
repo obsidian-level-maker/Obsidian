@@ -10,6 +10,8 @@ PREFABS.Hallway_deuce_t1 =
   group  = "deuce",
   prob   = 50,
 
+  nolimit_compat = true,
+
   where  = "seeds",
   shape  = "T",
 

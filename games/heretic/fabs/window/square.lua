@@ -7,6 +7,8 @@ PREFABS.Window_square1 =
   file   = "window/square.wad",
   map    = "MAP01",
 
+  nolimit_compat = true,
+
   group  = "square",
 
   prob   = 50,

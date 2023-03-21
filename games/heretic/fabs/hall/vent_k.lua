@@ -11,6 +11,8 @@ PREFABS.Hallway_vent_locked_yellow =
   group  = "vent",
   key    = "k_yellow",
 
+  nolimit_compat = true,
+
   prob   = 50,
 
   where  = "seeds",
@@ -50,6 +52,8 @@ PREFABS.Hallway_vent_barred =
 {
   file   = "hall/vent_k.wad",
   map    = "MAP03",
+
+  nolimit_compat = true,
 
   kind   = "terminator",
   group  = "vent",

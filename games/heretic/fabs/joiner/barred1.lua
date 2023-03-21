@@ -8,6 +8,8 @@ PREFABS.Joiner_barred1 =
   where  = "seeds",
   shape  = "I",
 
+  nolimit_compat = true,
+
   key    = "barred",
 
   prob   = 70, --50,

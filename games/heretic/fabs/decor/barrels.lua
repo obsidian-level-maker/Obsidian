@@ -10,6 +10,8 @@ PREFABS.Decor_barrels1 =
   prob   = 50,
   env    = "building",
 
+  nolimit_compat = true,
+
   where  = "point",
   size   = 96,
 

@@ -8,6 +8,8 @@ PREFABS.Joiner_remote1 =
   where  = "seeds",
   shape  = "I",
 
+  nolimit_compat = true,
+
   key    = "sw_metal",
 
   prob   = 20,

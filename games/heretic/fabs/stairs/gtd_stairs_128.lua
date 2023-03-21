@@ -6,6 +6,8 @@ PREFABS.Stairs_128 =
   prob   = 25,
   style  = "steepness",
 
+  nolimit_compat = true,
+
   where  = "seeds",
   shape  = "I",
 

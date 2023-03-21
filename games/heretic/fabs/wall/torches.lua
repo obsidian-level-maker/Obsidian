@@ -10,6 +10,8 @@ PREFABS.Wall_torches1_diag =
   file   = "wall/torches.wad",
   map    = "MAP02",
 
+  nolimit_compat = true,
+
   prob   = 50,
   group  = "torches1",
 

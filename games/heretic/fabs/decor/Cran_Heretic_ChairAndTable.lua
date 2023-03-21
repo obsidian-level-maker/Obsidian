@@ -11,6 +11,8 @@ PREFABS.Cran_Heretic_ChairAndTable =
   size   = 84,
   height = 128,
 
+  nolimit_compat = true,
+
   bound_z1 = 0,
   bound_z2 = 128,
 

@@ -13,6 +13,8 @@ PREFABS.Arch_viney1 =
   env      = "cave",
   neighbor = "any",
 
+  nolimit_compat = true,
+
   kind   = "arch",
   where  = "edge",
   seed_w = 2,
@@ -62,6 +64,8 @@ PREFABS.Joiner_viney1 =
   kind   = "joiner",
   where  = "seeds",
   shape  = "I",
+
+  nolimit_compat = true,
 
   seed_w = 2,
   seed_h = 1,

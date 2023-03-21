@@ -11,6 +11,8 @@ PREFABS.Pillar_round1 =
   where  = "point",
   env    = "building",
 
+  nolimit_compat = true,
+
   size   = 80,
   height = 128,
 

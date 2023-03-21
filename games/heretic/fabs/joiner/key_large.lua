@@ -9,6 +9,8 @@ PREFABS.Locked_joiner_green =
 
   prob   = 100,
 
+  nolimit_compat = true,
+
   key    = "k_green",
   where  = "seeds",
   shape  = "I",

@@ -4,6 +4,7 @@ PREFABS.Switch_wall_tight =
 
   map = "MAP01",
 
+  nolimit_compat = true,
 
   prob   = 18,
 
