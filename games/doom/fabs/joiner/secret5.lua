@@ -32,4 +32,3 @@ PREFABS.Joiner_secret5_B =
 
   prob   = 35,
 }
-
