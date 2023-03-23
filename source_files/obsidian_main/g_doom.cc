@@ -1004,18 +1004,12 @@ static bool BuildNodes(std::filesystem::path filename) {
         build_info->do_blockmap = false;
         build_info->force_xnod = false;
         build_info->force_compress = true;
-    } else if (StringCaseCmp(current_port, "eternity") == 0) {
+    } else { // Eternity
         build_info->gl_nodes = true;
         build_info->do_reject = false;
         build_info->do_blockmap = false;
         build_info->force_xnod = true;
         build_info->force_compress = false;
-    } else { // ZDoom; EDGE-Classic always builds its own nodes
-        build_info->gl_nodes = true;
-        build_info->do_reject = false;
-        build_info->do_blockmap = false;
-        build_info->force_xnod = true;
-        build_info->force_compress = true;
     }
 
     if (AJBSP_BuildNodes(filename, build_info) != 0) {
@@ -1119,7 +1113,7 @@ bool Doom::game_interface_c::Start(const char *preset) {
 
     if (StringCaseCmp(current_port, "zdoom") == 0) {
         map_format = FORMAT_UDMF;
-        build_nodes = true;
+        build_nodes = false;
     } else if (StringCaseCmp(current_port, "eternity") == 0) {
         map_format = FORMAT_UDMF;
         build_nodes = true;
@@ -1186,14 +1180,10 @@ bool Doom::game_interface_c::Finish(bool build_ok) {
     }
 
     if (build_ok) {
-        int old_zip_output = zip_output;
-        // This should be set for all UDMF ports, but I gotta get off my ass and finish EC pk3 support - Dasho
-        if ((StringCaseCmp(current_port, "eternity") == 0) || (StringCaseCmp(current_port, "zdoom") == 0)) {
-            zip_output = 2;
-        }
-        if (zip_output > 0) {
+        // This should be set for all advanced ports, but I gotta get off my ass and finish EC pk3 support - Dasho
+        if (StringCaseCmp(current_port, "eternity") == 0 || StringCaseCmp(current_port, "zdoom") == 0) {
             std::filesystem::path zip_filename = filename;
-            zip_filename.replace_extension(zip_output == 1 ? "zip" : "pk3");
+            zip_filename.replace_extension("pk3");
             if (std::filesystem::exists(zip_filename)) {
                 if (create_backups) {
                     Main::BackupFile(zip_filename);
@@ -1218,20 +1208,17 @@ bool Doom::game_interface_c::Finish(bool build_ok) {
                     std::filesystem::remove(filename);
                     delete[] zip_buf;
                 } else {
-                    zip_output = old_zip_output;
                     LogPrintf(
                         "Zipping output WAD to {} failed! Retaining original "
                         "WAD.\n",
                         zip_filename.generic_string());
                 }
             } else {
-                zip_output = old_zip_output;
                 LogPrintf(
                     "Zipping output WAD to {} failed! Retaining original "
                     "WAD.\n",
                     zip_filename.generic_string());
             }
-            zip_output = old_zip_output;
         }
     }
 
@@ -1239,7 +1226,7 @@ bool Doom::game_interface_c::Finish(bool build_ok) {
 }
 
 void Doom::game_interface_c::BeginLevel() {
-    if (UDMF_mode) {
+    if (map_format = FORMAT_UDMF) {
         udmf_vertexes = 0;
         udmf_sectors = 0;
         udmf_linedefs = 0;

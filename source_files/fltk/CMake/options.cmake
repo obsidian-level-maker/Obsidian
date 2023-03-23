@@ -81,7 +81,11 @@ set (FL_ABI_VERSION ${OPTION_ABI_VERSION})
 #  Bundled Library Options
 #######################################################################
 
+if (${CMAKE_SYSTEM} MATCHES "OpenBSD")
+option (OPTION_USE_SYSTEM_ZLIB      "use system zlib"    OFF)
+else ()
 option (OPTION_USE_SYSTEM_ZLIB      "use system zlib"    ON)
+endif()
 
 if (APPLE)
   option (OPTION_USE_SYSTEM_LIBJPEG "use system libjpeg" OFF)
