@@ -242,7 +242,7 @@ PREFABS.Joiner_rift1trap =
 
   theme  = "hell",
 
-  style  = "cages",
+  style  = "traps",
 
   where  = "seeds",
   shape  = "I",
@@ -273,7 +273,7 @@ PREFABS.Joiner_rift4trap =
 
   theme  = "hell",
 
-  style  = "cages",
+  style  = "traps",
 
   where  = "seeds",
   shape  = "I",

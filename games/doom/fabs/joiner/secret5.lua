@@ -7,7 +7,7 @@ PREFABS.Joiner_secret5_A =
   file   = "joiner/secret5.wad",
   map    = "MAP01",
 
-  prob   = 50,
+  prob   = 20,
   key    = "secret",
 
   where  = "seeds",
@@ -30,5 +30,5 @@ PREFABS.Joiner_secret5_B =
   template = "Joiner_secret5_A",
   map      = "MAP02",
 
-  prob   = 35,
+  prob   = 15,
 }
