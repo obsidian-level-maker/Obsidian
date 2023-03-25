@@ -638,3 +638,23 @@ PREFABS.Wall_hell_round_red_window = --#
 
   z_fit = { 24,25 , 56,58 }
 }
+
+PREFABS.Wall_hell_round_red_window_greened = --#
+{
+  template = "Wall_hell_round_red_window",
+
+  group = "hell_o_round_red_window_greened",
+
+  tex_REDWALL = "ZIMMER2",
+  flat_TLITE6_5 = "TLITE6_6"
+}
+
+PREFABS.Wall_hell_stone_braced_red_skull_window = --#
+{
+  template = "Wall_hell_round_red_window",
+  map = "MAP26",
+
+  group = "hell_o_stone_braced_red_skull_window",
+
+  z_fit = { 42,43 , 126,128 }
+}
