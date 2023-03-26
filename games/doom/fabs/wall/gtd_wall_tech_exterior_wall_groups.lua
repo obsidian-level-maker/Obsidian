@@ -605,3 +605,33 @@ PREFABS.Wall_tech_outdoor_modwall2 = --#
     88,90
   }
 }
+
+PREFABS.Wall_tech_outdoor_yellow_compsil = --#
+{
+  template = "Wall_tech_outdoor_caution_strip",
+  map = "MAP27",
+
+  height = 120,
+  bound_z2 = 120,
+  group = "tech_o_yellow_compsil",
+
+  texture_pack = "armaetus",
+  replaces = "Wall_tech_outdoor_yellow_compsil_vanilla",
+
+  z_fit = { 66,68 , 119,120 }
+}
+
+PREFABS.Wall_tech_outdoor_yellow_compsil_vanilla =
+{
+  template = "Wall_tech_outdoor_caution_strip",
+  map = "MAP27",
+
+  height = 120,
+  bound_z2 = 120,
+  group = "tech_o_yellow_compsil",
+
+  z_fit = { 66,68 , 119,120 },
+
+  tex_SILVER2Y = "SILVER2",
+  tex_COMPTIL5 = "COMPBLUE"
+}

@@ -1408,7 +1408,8 @@ DOOM.THEMES =
       tech_o_orange_oct_white_binding = 1,
       tech_o_g_blakwall = 1,
       tech_o_g_modwall1 = 1,
-      tech_o_g_modwall2 = 1
+      tech_o_g_modwall2 = 1,
+      tech_o_yellow_compsil = 1
     },
 
     window_groups =
