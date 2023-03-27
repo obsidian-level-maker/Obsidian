@@ -1408,7 +1408,8 @@ DOOM.THEMES =
       tech_o_orange_oct_white_binding = 1,
       tech_o_g_blakwall = 1,
       tech_o_g_modwall1 = 1,
-      tech_o_g_modwall2 = 1
+      tech_o_g_modwall2 = 1,
+      tech_o_yellow_compsil = 1
     },
 
     window_groups =
@@ -2407,7 +2408,10 @@ DOOM.THEMES =
       hell_o_catamet = 1,
       hell_o_crematorium_windows = 1,
       hell_o_orange_arch_window = 1,
-      hell_o_marble_gargle_stone_pyramid = 1
+      hell_o_marble_gargle_stone_pyramid = 1,
+      hell_o_round_red_window = 0.65,
+      hell_o_round_red_window_greened = 0.65,
+      hell_o_stone_braced_red_skull_window = 1
     },
 
     window_groups =

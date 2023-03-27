@@ -34,6 +34,8 @@ PREFABS.Hallway_pipeline_p3 =
   template = "Hallway_pipeline_p1",
   map    = "MAP03",
 
+  prob = 10,
+
   filter = "crushers",
 
   style  = "traps",
