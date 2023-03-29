@@ -2409,6 +2409,9 @@ end
 
 
 function Level_choose_skybox(LEVEL)
+
+  if OB_CONFIG.port == "limit_removing" then return end
+
   local skyfab
 
   local function Choose_episodic_skybox(LEVEL, force_pick)
