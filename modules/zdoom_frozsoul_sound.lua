@@ -125,6 +125,8 @@ function ZDOOM_SOUND.build_lumps()
     offset_count = offset_count + 1
   end
 
+  AMBIENT_SOUND_DEFS = table.deep_copy(ZDOOM_SOUND_DEFS)
+
   SCRIPTS.decorate = ScriptMan_combine_script(SCRIPTS.decorate, dec_lump)
 end
 

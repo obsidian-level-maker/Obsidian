@@ -5,7 +5,7 @@ PREFABS.Start_generic_immersive_start =
 
   prob = 500, --1500,
 
-  nolimit_compat = true,
+  
 
   theme = "tech",
 

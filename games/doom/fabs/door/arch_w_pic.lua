@@ -7,7 +7,7 @@ PREFABS.Arch_pic1 =
   file   = "door/arch_w_pic.wad",
   map    = "MAP01",
 
-  nolimit_compat = true,
+  
 
   prob   = 400,
   theme  = "tech",

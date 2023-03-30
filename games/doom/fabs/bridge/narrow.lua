@@ -7,7 +7,7 @@ PREFABS.Bridge_narrow1 =
   file   = "bridge/narrow.wad",
   map    = "MAP01",
 
-  nolimit_compat = true,
+  
 
   prob   = 90,
 

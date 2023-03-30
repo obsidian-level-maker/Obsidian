@@ -9,7 +9,7 @@ PREFABS.Joiner_curve1 =
   prob   = 200, --100,
   style  = "steepness",
 
-  nolimit_compat = true,
+  
 
   where  = "seeds",
   shape  = "L",

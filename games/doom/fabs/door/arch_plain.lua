@@ -7,7 +7,7 @@ PREFABS.Arch_plain =
   file   = "door/arch_plain.wad",
   map    = "MAP01",
 
-  nolimit_compat = true,
+  
 
   prob = 100,
 
@@ -29,7 +29,7 @@ PREFABS.Arch_plain_diag =
   file   = "door/arch_plain.wad",
   map    = "MAP02",
 
-  nolimit_compat = true,
+  
 
   prob = 100,
 

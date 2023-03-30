@@ -9,7 +9,7 @@ UNFINISHED.Decor_cave_waterfall =
   prob   = 100,
   env    = "cave",
 
-  nolimit_compat = true,
+  
 
   where  = "seeds",
   shape  = "U",

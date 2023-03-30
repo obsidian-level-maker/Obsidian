@@ -7,7 +7,7 @@ PREFABS.Exit_pillar1_secret =
   file   = "exit/pillar1.wad",
   map    = "MAP01",
 
-  nolimit_compat = true,
+  
 
   kind   = "secret_exit",
   where  = "point",

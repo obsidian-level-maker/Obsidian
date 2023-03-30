@@ -6,7 +6,7 @@ PREFABS.Trap_simple1 =
 {
   file   = "trap/trap1.wad",
 
-  nolimit_compat = true,
+  
 
   prob   = 50,
 

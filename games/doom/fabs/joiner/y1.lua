@@ -10,7 +10,7 @@ PREFABS.Joiner_y1 =
   theme  = "!tech",
   map    = "MAP01",
 
-  nolimit_compat = true,
+  
 
   where  = "seeds",
   shape  = "I",

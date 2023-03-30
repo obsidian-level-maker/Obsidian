@@ -13,7 +13,7 @@ PREFABS.Decor_stalag1 =
   prob   = 150,
   env    = "cave",
 
-  nolimit_compat = true,
+  
 
   where  = "point",
   size   = 104,  -- NOTE: a hack, it is really 128,

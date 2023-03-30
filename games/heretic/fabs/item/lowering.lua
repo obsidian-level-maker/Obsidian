@@ -7,7 +7,7 @@ PREFABS.Item_lowering_remote1 =
   file   = "item/lowering.wad",
   map    = "MAP01",
 
-  nolimit_compat = true,
+  
 
   prob   = 1,
   key    = "barred",

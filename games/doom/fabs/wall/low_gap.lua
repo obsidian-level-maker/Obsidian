@@ -10,7 +10,7 @@ PREFABS.Wall_lowgap =
   file   = "wall/low_gap.wad",
   map    = "MAP01",
 
-  nolimit_compat = true,
+  
 
   prob   = 50,
   group  = "low_gap",
@@ -32,7 +32,7 @@ PREFABS.Wall_lowgap_diag =
   file   = "wall/low_gap.wad",
   map    = "MAP02",
 
-  nolimit_compat = true,
+  
 
   prob   = 50,
   group  = "low_gap",
@@ -53,7 +53,7 @@ PREFABS.Wall_lowgap_innerdiag =
   file = "wall/low_gap.wad",
   map = "MAP04",
 
-  nolimit_compat = true,
+  
 
   prob = 50,
   group = "low_gap",

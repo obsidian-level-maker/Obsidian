@@ -11,7 +11,7 @@ PREFABS.Cage_stand1 =
 
   where  = "point",
 
-  nolimit_compat = true,
+  
 
   size   = 128,
   height = 128,
@@ -30,7 +30,7 @@ PREFABS.Cage_stand2 =
   prob   = 100,
   env    = "cave",
 
-  nolimit_compat = true,
+  
 
   where  = "point",
 

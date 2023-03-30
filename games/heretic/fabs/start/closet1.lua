@@ -7,7 +7,7 @@ PREFABS.Start_closet1 =
   file  = "start/closet1.wad",
   map   = "MAP01",
 
-  nolimit_compat = true,
+  
 
   prob  = 80,
 

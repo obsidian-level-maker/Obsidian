@@ -9,7 +9,7 @@ PREFABS.Hallway_deuce_term =
   kind   = "terminator",
   theme  = "!tech",
 
-  nolimit_compat = true,
+  
 
   group  = "deuce",
   prob   = 50,

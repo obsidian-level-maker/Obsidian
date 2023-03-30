@@ -496,8 +496,6 @@ function Render_edge(LEVEL, E, SEEDS)
 
   local function set_blocking_line(edge)
 
-    if OB_CONFIG.port == "limit_removing" then return end
-
     local side_props =
     {
       tex = "ZZWOLF10", -- currently patch-replaced as an invisible wall
@@ -3088,7 +3086,7 @@ end
 
 function Render_all_street_markings(LEVEL)
 
-  if not ob_match_game({game = "doomish"}) or OB_CONFIG.port == "limit_removing" then return end
+  if not ob_match_game({game = "doomish"}) then return end
 
   local road_fab_list =
   {

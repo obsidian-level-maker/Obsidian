@@ -7,7 +7,7 @@ PREFABS.Item_closet_w_door =
   file   = "item/closet.wad",
   map    = "MAP01",
 
-  nolimit_compat = true,
+  
 
   prob   = 20,
   env    = "!cave",
@@ -50,7 +50,7 @@ PREFABS.Item_closet_w_door_tech =
   file   = "item/closet.wad",
   map    = "MAP02",
 
-  nolimit_compat = true,
+  
 
   prob   = 25,
   env    = "!cave",

@@ -8,7 +8,7 @@ PREFABS.Item_secret_niche1 =
   file  = "item/secret_niche.wad",
   map   = "MAP01",
 
-  nolimit_compat = true,
+  
 
   theme = "tech",
   prob  = 25,
@@ -55,7 +55,7 @@ PREFABS.Item_secret_niche2 =
   map      = "MAP02",
   theme = "tech",
 
-  nolimit_compat = true,
+  
 
   prob = 100,
 

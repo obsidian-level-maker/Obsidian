@@ -9,7 +9,7 @@ PREFABS.Arch_barred =
 
   prob   = 5,
 
-  nolimit_compat = true,
+  
 
   where  = "edge",
   key    = "barred",

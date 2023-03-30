@@ -127,7 +127,7 @@ function PREFAB_CONTROL.fine_tune_filters()
 
   end
 
-  if PARAM.bool_jump_crouch == 0 and OB_CONFIG.port ~= "limit_removing" then
+  if PARAM.bool_jump_crouch == 0 then
     if PARAM.obsidian_resource_pack_active then
       if GAME.THEMES.hell and GAME.THEMES.hell.wide_halls then
         GAME.THEMES.hell.wide_halls.organs = 0

@@ -8,7 +8,7 @@ PREFABS.Window_square1 =
   map    = "MAP01",
   theme  = "!tech",
 
-  nolimit_compat = true,
+  
 
   group  = "square",
 

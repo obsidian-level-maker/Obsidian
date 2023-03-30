@@ -7,7 +7,7 @@ PREFABS.Exit_plutonia =
   file   = "exit/plut_pad.wad",
   map    = "MAP01",
 
-  nolimit_compat = true,
+  
 
   game   = "plutonia",
 

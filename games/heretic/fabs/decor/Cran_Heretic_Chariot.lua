@@ -11,7 +11,7 @@ PREFABS.Cran_Heretic_Chariot =
   size   = 80,
   height = 128,
 
-  nolimit_compat = true,
+  
 
   bound_z1 = 0,
   bound_z2 = 128,

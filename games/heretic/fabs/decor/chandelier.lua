@@ -10,7 +10,7 @@ PREFABS.Decor_chandelier =
   prob   = 100,
   env    = "building",
 
-  nolimit_compat = true,
+  
 
   kind   = "light",
   where  = "point",

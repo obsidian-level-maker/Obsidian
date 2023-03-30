@@ -9,7 +9,7 @@ PREFABS.Stair_long_1x2 =
   prob   = 100,
   prob_skew = 5,
 
-  nolimit_compat = true,
+  
 
   theme  = "!hell",
   map    = "MAP01",

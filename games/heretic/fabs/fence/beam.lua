@@ -11,7 +11,7 @@ PREFABS.Beam =
 
   kind   = "beam",
 
-  nolimit_compat = true,
+  
 
   prob   = 50,
 
@@ -31,7 +31,7 @@ PREFABS.Beam_diagonal =
 
   group  = "beam_metal",
 
-  nolimit_compat = true,
+  
 
   kind   = "beam",
 

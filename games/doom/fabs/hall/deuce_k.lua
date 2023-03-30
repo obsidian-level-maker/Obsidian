@@ -8,7 +8,7 @@ PREFABS.Hallway_deuce_locked_red =
   map    = "MAP01",
   theme  = "!tech",
 
-  nolimit_compat = true,
+  
 
   kind   = "terminator",
   group  = "deuce",
@@ -95,7 +95,7 @@ PREFABS.Hallway_deuce_barred =
   file   = "hall/deuce_k.wad",
   map    = "MAP03",
 
-  nolimit_compat = true,
+  
 
   kind   = "terminator",
   group  = "deuce",

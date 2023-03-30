@@ -10,7 +10,7 @@ PREFABS.Joiner_secret2_A =
   prob   = 150,
   key    = "secret",
 
-  nolimit_compat = true,
+  
 
   where  = "seeds",
   shape  = "I",

@@ -7,7 +7,7 @@ PREFABS.Decor_ruins1 =
   file   = "decor/ruins.wad",
   map    = "MAP01",
 
-  nolimit_compat = true,
+  
 
   prob   = 3500,
   theme  = "urban",
@@ -44,7 +44,7 @@ PREFABS.Decor_hellruins1 =
   file   = "decor/ruins.wad",
   map    = "MAP01",
 
-  nolimit_compat = true,
+  
 
   prob   = 3500,
   theme  = "hell",
@@ -80,7 +80,7 @@ PREFABS.Decor_vineruins1 =
   file   = "decor/ruins.wad",
   map    = "MAP01",
 
-  nolimit_compat = true,
+  
 
   prob   = 3500,
   theme  = "hell",

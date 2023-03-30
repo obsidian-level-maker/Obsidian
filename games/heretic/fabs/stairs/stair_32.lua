@@ -8,7 +8,7 @@ PREFABS.Stair_32 =
 
   prob   = 90,
 
-  nolimit_compat = true,
+  
 
   where  = "seeds",
   shape  = "I",

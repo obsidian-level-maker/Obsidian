@@ -26,7 +26,7 @@ PREFABS.Stair_64_red =
 
   theme = "urban",
 
-  nolimit_compat = true,
+  
 
   where  = "seeds",
   shape  = "I",

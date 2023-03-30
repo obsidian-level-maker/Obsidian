@@ -8,7 +8,7 @@ PREFABS.Joiner_gtd_basic_curve =
   env      = "!cave",
   neighbor = "!cave",
 
-  nolimit_compat = true,
+  
 
   where  = "seeds",
   shape  = "L",

@@ -8,7 +8,7 @@ PREFABS.Fence_pillar =
   kind = "pillar",
   where = "point",
 
-  nolimit_compat = true,
+  
 
   size = 16,
   height = 2,

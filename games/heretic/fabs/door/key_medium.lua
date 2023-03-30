@@ -12,7 +12,7 @@ PREFABS.Locked_medium_green =
   key    = "k_green",
   where  = "edge",
 
-  nolimit_compat = true,
+  
 
   seed_w = 2,
 
@@ -38,7 +38,7 @@ PREFABS.Locked_medium_green_diag =
   key    = "k_green",
   where  = "diagonal",
 
-  nolimit_compat = true,
+  
 
   seed_w = 2,
   seed_h = 2,

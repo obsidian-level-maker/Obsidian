@@ -10,7 +10,7 @@ TEMPLATES.Pic_box_template =
   prob  = 100,
   skip_prob = 40,
 
-  nolimit_compat = true,
+  
 
   env   = "building",
 

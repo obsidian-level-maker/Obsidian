@@ -7,7 +7,7 @@ PREFABS.Item_gazebo2 =
   file   = "item/gazebo2.wad",
   map    = "MAP01",
 
-  nolimit_compat = true,
+  
 
   prob   = 320,
   theme  = "urban",

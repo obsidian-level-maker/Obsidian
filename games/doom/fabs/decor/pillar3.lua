@@ -7,7 +7,7 @@ PREFABS.Pillar_tech3 =
   file   = "decor/pillar3.wad",
   map    = "MAP01",
 
-  nolimit_compat = true,
+  
 
   prob   = 25000,
   skip_prob = 65,

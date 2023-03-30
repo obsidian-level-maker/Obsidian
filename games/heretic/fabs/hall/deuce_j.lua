@@ -11,7 +11,7 @@ PREFABS.Hallway_deuce_term =
   group  = "deuce",
   prob   = 50,
 
-  nolimit_compat = true,
+  
 
   where  = "seeds",
   shape  = "I",

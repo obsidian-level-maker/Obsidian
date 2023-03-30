@@ -9,7 +9,7 @@ PREFABS.Cage_stand1 =
 
   prob   = 500,
 
-  nolimit_compat = true,
+  
 
   where  = "point",
 
@@ -26,7 +26,7 @@ PREFABS.Cage_stand2 =
   file   = "cage/stand_cage.wad",
   map    = "MAP02",
 
-  nolimit_compat = true,
+  
 
   prob   = 100,
   env    = "cave",

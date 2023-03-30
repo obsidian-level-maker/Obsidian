@@ -9,7 +9,7 @@ PREFABS.Joiner_y3 =
   prob   = 200,
   theme  = "!tech",
 
-  nolimit_compat = true,
+  
 
   where  = "seeds",
   shape  = "I",

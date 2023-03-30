@@ -12,7 +12,7 @@ PREFABS.Door_secret =
   where  = "edge",
   key    = "secret",
 
-  nolimit_compat = true,
+  
 
   -- we use a hanging object to mark secret, so must not be outdoor
   env    = "building",
@@ -31,7 +31,7 @@ PREFABS.Door_secret_diag =
 
   prob   = 50,
 
-  nolimit_compat = true,
+  
 
   where  = "diagonal",
   key    = "secret",

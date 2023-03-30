@@ -9,7 +9,7 @@ PREFABS.Cage_Wall =
   prob  = 100,
   theme = "!hell",
 
-  nolimit_compat = true,
+  
 
   where  = "seeds",
   shape  = "U",

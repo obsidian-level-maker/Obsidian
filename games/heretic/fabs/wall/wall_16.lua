@@ -7,7 +7,7 @@ PREFABS.Wall_plain =
   file   = "wall/wall_16.wad",
   map    = "MAP01",
 
-  nolimit_compat = true,
+  
 
   prob   = 50,
 
@@ -28,7 +28,7 @@ PREFABS.Wall_plain_diag =
   file   = "wall/wall_16.wad",
   map    = "MAP02",
 
-  nolimit_compat = true,
+  
 
   prob   = 50,
 

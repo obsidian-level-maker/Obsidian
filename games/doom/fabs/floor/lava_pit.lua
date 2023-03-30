@@ -6,7 +6,7 @@ UNFINISHED.Floor_lavapit =
 {
   file   = "floor/lava_pit.wad",
 
-  nolimit_compat = true,
+  
 
   prob   = 50,
 

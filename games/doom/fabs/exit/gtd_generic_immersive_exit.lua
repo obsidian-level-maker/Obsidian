@@ -8,7 +8,7 @@ PREFABS.Exit_tech_immersive_exit =
 
   where = "seeds",
 
-  nolimit_compat = true,
+  
 
   start_fab_peer = "Start_generic_immersive_start",
 

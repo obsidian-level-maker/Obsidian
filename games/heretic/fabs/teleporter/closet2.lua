@@ -8,7 +8,7 @@ PREFABS.Teleporter_closet =
 
   prob   = 50,
 
-  nolimit_compat = true,
+  
 
   where  = "seeds",
   seed_w = 1,

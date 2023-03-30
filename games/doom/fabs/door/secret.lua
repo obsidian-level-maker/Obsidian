@@ -7,7 +7,7 @@ PREFABS.Door_secret =
   file   = "door/secret.wad",
   map    = "MAP01",
 
-  nolimit_compat = true,
+  
 
   prob   = 200,
 

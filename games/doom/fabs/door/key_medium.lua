@@ -8,7 +8,7 @@ PREFABS.Locked_medium_red =
   map    = "MAP01",
   theme  = "!hell",
 
-  nolimit_compat = true,
+  
 
   prob   = 50,
 
@@ -45,7 +45,7 @@ PREFABS.Locked_medium_red_diag =
   map    = "MAP02",
   theme  = "!hell",
 
-  nolimit_compat = true,
+  
 
   prob   = 50,
 

@@ -7,7 +7,7 @@ PREFABS.Hallway_vent_t1 =
   file   = "hall/vent_t.wad",
   map    = "MAP01",
 
-  nolimit_compat = true,
+  
 
   group  = "vent",
   prob   = 50,

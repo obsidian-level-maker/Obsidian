@@ -11,7 +11,7 @@ PREFABS.Hallway_deuce_locked_yellow =
   group  = "deuce",
   key    = "k_yellow",
 
-  nolimit_compat = true,
+  
 
   prob   = 50,
 
@@ -53,7 +53,7 @@ PREFABS.Hallway_deuce_barred =
   file   = "hall/deuce_k.wad",
   map    = "MAP03",
 
-  nolimit_compat = true,
+  
 
   kind   = "terminator",
   group  = "deuce",

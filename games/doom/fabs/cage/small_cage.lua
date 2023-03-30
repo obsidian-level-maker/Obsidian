@@ -9,7 +9,7 @@ PREFABS.Cage_small_1 =
   prob   = 50,
   env    = "outdoor",
 
-  nolimit_compat = true,
+  
 
   where  = "point",
 

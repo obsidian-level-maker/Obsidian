@@ -5,7 +5,7 @@ PREFABS.Completely_nothing =
 
   where = "seeds",
 
-  nolimit_compat = true,
+  
 
   seed_w = 1,
   seed_h = 1,

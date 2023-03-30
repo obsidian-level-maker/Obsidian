@@ -12,7 +12,7 @@ PREFABS.Arch_curved1 =
   kind   = "arch",
   where  = "edge",
 
-  nolimit_compat = true,
+  
 
   seed_w = 2,
 

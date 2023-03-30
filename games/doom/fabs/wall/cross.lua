@@ -7,7 +7,7 @@ PREFABS.Wall_cross1 =
   file   = "wall/cross.wad",
   map    = "MAP01",
 
-  nolimit_compat = true,
+  
 
   prob   = 50,
   group  = "cross1",

@@ -8,7 +8,7 @@ PREFABS.Item_secret_niche1 =
   file  = "item/secret_niche.wad",
   map   = "MAP01",
 
-  nolimit_compat = true,
+  
 
   prob  = 100,
   key   = "secret",

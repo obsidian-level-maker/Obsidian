@@ -10,7 +10,7 @@ PREFABS.Switch_niche2 =
   key    = "sw_metal",
   prob   = 50,
 
-  nolimit_compat = true,
+  
 
   where  = "seeds",
   deep   =  16,
@@ -31,7 +31,7 @@ PREFABS.Switch_niche3 =
   file   = "switch/niche2.wad",
   map    = "MAP02",
 
-  nolimit_compat = true,
+  
 
   key    = "sw_metal",
   prob   = 50,

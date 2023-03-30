@@ -12,7 +12,7 @@ PREFABS.Decor_hellgore1 =
   theme  = "hell",
   env    = "outdoor",
 
-  nolimit_compat = true,
+  
 
   where  = "point",
   size   = 100,
@@ -31,7 +31,7 @@ PREFABS.Decor_hellgore1_inverted =
   file   = "decor/hellgore.wad",
   map    = "MAP01",
 
-  nolimit_compat = true,
+  
 
   prob   = 5000,
   theme  = "hell",
@@ -53,7 +53,7 @@ PREFABS.Decor_hellgore6 =
   file   = "decor/hellgore.wad",
   map    = "MAP06",
 
-  nolimit_compat = true,
+  
 
   prob   = 5000,
   theme  = "hell",

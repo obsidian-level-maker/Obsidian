@@ -5,7 +5,7 @@ PREFABS.Joiner_gtd_basic_keyed_curve_green =
 
   prob   = 30,
 
-  nolimit_compat = true,
+  
 
   key    = "k_green",
 

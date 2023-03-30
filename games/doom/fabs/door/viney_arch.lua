@@ -7,7 +7,7 @@ PREFABS.Arch_viney1 =
   file   = "door/viney_arch.wad",
   map    = "MAP02",
 
-  nolimit_compat = true,
+  
 
   prob = 400,
 
@@ -60,7 +60,7 @@ PREFABS.Joiner_viney1 =
   file   = "door/viney_arch.wad",
   map    = "MAP05",
 
-  nolimit_compat = true,
+  
 
   prob   = 50,
 

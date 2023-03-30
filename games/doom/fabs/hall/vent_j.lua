@@ -8,7 +8,7 @@ PREFABS.Hallway_vent_plain =
   map    = "MAP01",
   theme  = "!hell",
 
-  nolimit_compat = true,
+  
 
   kind   = "terminator",
   group  = "vent",

@@ -8,7 +8,7 @@ PREFABS.Hallway_deuce_u1 =
   map    = "MAP01",
   theme  = "urban",
 
-  nolimit_compat = true,
+  
 
   group  = "deuce",
   prob   = 50,

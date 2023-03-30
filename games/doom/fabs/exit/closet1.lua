@@ -9,7 +9,7 @@ PREFABS.Exit_closet1 =
   prob   = 100,
   theme  = "!tech",
 
-  nolimit_compat = true,
+  
 
   where  = "seeds",
   seed_w = 1,

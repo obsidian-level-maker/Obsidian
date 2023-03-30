@@ -6,7 +6,7 @@ PREFABS.Teleporter1 =
 {
   file   = "teleporter/pad1.wad",
 
-  nolimit_compat = true,
+  
 
   prob   = 50,
 
@@ -23,7 +23,7 @@ PREFABS.Teleporter2 =
 {
   file   = "teleporter/pad1.wad",
 
-  nolimit_compat = true,
+  
 
   prob   = 50,
   map    = "MAP02",
@@ -41,7 +41,7 @@ PREFABS.Teleporter3 =
 {
   file   = "teleporter/pad1.wad",
 
-  nolimit_compat = true,
+  
 
   prob   = 50,
   map    = "MAP03",
@@ -59,7 +59,7 @@ PREFABS.Teleporter4 =
 {
   file   = "teleporter/pad1.wad",
 
-  nolimit_compat = true,
+  
 
   prob   = 50,
   map    = "MAP04",

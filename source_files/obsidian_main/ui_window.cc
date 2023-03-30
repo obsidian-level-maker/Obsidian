@@ -97,6 +97,10 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title)
     mod_tabs = new UI_CustomTabs(LEFT_W + kf_h(4), 0, MOD_W * 2,
                                   H - kf_h(22));
 
+    clippy = new UI_Clippy();
+
+    visible_focus(0);
+
     end();
 
     resizable(sizing_group);

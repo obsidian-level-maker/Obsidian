@@ -6,7 +6,7 @@ PREFABS.Start_closet1 =
 {
   file  = "start/closet1.wad",
 
-  nolimit_compat = true,
+  
 
   prob  = 100,
   theme = "tech",

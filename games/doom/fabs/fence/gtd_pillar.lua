@@ -5,7 +5,7 @@ PREFABS.Fence_pillar =
   file = "fence/gtd_pillar.wad",
   map = "MAP01",
 
-  nolimit_compat = true,
+  
 
   kind = "pillar",
   where  = "point",

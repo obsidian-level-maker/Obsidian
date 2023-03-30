@@ -12,7 +12,7 @@ PREFABS.Bars_shiny =
   where  = "edge",
   key    = "barred",
 
-  nolimit_compat = true,
+  
 
   seed_w = 2,
   deep   = 16,

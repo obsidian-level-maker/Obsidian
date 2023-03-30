@@ -232,6 +232,13 @@ UI_RChoice::UI_RChoice(int x, int y, int w, int h) : Fl_Group(x, y, w, h) {
     labelfont(font_style);
 }
 
+int UI_RChoice::handle(int event) {
+    if (event == FL_ENTER) {
+        main_win->clippy->ShowAdvice("Did you know?\n\nIs it better to have too many choices, or not enough choices? Stagnation and indecision are two sides of the same coin.");
+    }
+    return Fl_Group::handle(event);
+}
+
 UI_RChoice::~UI_RChoice() {
     if (cb_data) {
         delete cb_data;
@@ -262,6 +269,13 @@ UI_RSlide::UI_RSlide(int x, int y, int w, int h) : Fl_Group(x, y, w, h) {
     labelfont(font_style);
 }
 
+int UI_RSlide::handle(int event) {
+    if (event == FL_ENTER) {
+        main_win->clippy->ShowAdvice("Did you know?\n\nBefore sliders were added to Obsidian, there had to be a drop-down menu with one entry for every possible number you wanted to select.\n\nPretty wild, huh?");
+    }
+    return Fl_Group::handle(event);
+}
+
 UI_RSlide::~UI_RSlide() {
     if (cb_data) {
         delete cb_data;
@@ -273,6 +287,13 @@ UI_RSlide::~UI_RSlide() {
 UI_RButton::UI_RButton(int x, int y, int w, int h) : Fl_Group(x, y, w, h) {
     visible_focus(0);
     box(FL_NO_BOX);
+}
+
+int UI_RButton::handle(int event) {
+    if (event == FL_ENTER) {
+        main_win->clippy->ShowAdvice("Did you know?\n\nCheckboxes were the first new widget type added to Obsidian!");
+    }
+    return Fl_Group::handle(event);
 }
 
 UI_RButton::~UI_RButton() {
@@ -500,6 +521,7 @@ int UI_ResetOption::handle(int event) {
         }
 
         case FL_ENTER: {
+            main_win->clippy->ShowAdvice("Did you know?\n\nTo err is human, to reset an option is divine.");
             checkLink();
             return 1;
         }
@@ -598,6 +620,7 @@ int UI_HelpLink::handle(int event) {
         }
 
         case FL_ENTER: {
+            main_win->clippy->ShowAdvice("Did you know?\n\nUser engagement with our help links is less than 1%.\n\nI'm not bitter, though!");
             checkLink();
             return 1;
         }
@@ -696,6 +719,7 @@ int UI_ManualEntry::handle(int event) {
         }
 
         case FL_ENTER: {
+            main_win->clippy->ShowAdvice("Did you know?\n\nYou can use the \"Ignore Slider Limits\" option from the File->Options menu to enter any value you want for a slider.\n\nNo bug reports, please!");
             checkLink();
             return 1;
         }
@@ -865,5 +889,61 @@ void UI_CustomMenu::draw() {
     // Widget's label
     draw_label();
 }
+
+//----------------------------------------------------------------
+
+UI_Clippy::UI_Clippy() : Fl_Double_Window(645, 305, NULL) {
+    shape(clippy);
+    xoff = 0;
+    yoff = 0;
+    background = new Fl_Box(0, 0, 645, 305, NULL);
+    background->image(clippy);
+    buff = new Fl_Text_Buffer();
+    disp = new Fl_Text_Display(20, 40, 400, 220, NULL);
+    disp->box(FL_FLAT_BOX);
+    disp->color(fl_rgb_color(255,255,203));
+    disp->buffer(buff);
+    disp->textcolor(FL_BLACK);
+    disp->textsize(20);
+    disp->textfont(8);
+    disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
+    enable_me = false;
+    visible_focus(0);
+    hide();
+}
+
+void UI_Clippy::ShowAdvice(std::string message) {
+    if (!enable_me)
+        return;
+    if (!shown()) {
+        hotspot(0, 0, 0);
+    }
+    show();
+    buff->text(message.c_str());
+}
+
+int UI_Clippy::handle(int event)
+{
+    int ret = Fl_Window::handle(event);
+    switch (event) {
+        case FL_PUSH:
+            xoff = x() - Fl::event_x_root();
+            yoff = y() - Fl::event_y_root();
+            ret = 1;
+
+        case FL_DRAG:
+            position(xoff + Fl::event_x_root(), yoff + Fl::event_y_root());
+            redraw();
+            ret = 1;
+
+        case FL_RELEASE:
+            show();
+            ret = 1;
+    }
+    return(ret);
+}
+
+UI_Clippy::~UI_Clippy() {}
+
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

@@ -7,7 +7,7 @@ PREFABS.Joiner_lift_curve =
   file   = "joiner/lift_curve.wad",
   map    = "MAP01",
 
-  nolimit_compat = true,
+  
 
   prob   = 30,
   style  = "steepness",

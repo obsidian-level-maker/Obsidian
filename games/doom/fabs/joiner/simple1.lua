@@ -7,7 +7,7 @@ PREFABS.Joiner_simple1 =
   file   = "joiner/simple1.wad",
   map    = "MAP01",
 
-  nolimit_compat = true,
+  
 
   prob   = 100,
   theme  = "tech",

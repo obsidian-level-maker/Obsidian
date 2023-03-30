@@ -8,7 +8,7 @@ PREFABS.Item_alcove_small =
 
   prob  = 50,
 
-  nolimit_compat = true,
+  
 
   where  = "seeds",
   seed_w = 1,

@@ -7,7 +7,7 @@ PREFABS.Hallway_vent_u1 =
   file   = "hall/vent_u.wad",
   map    = "MAP01",
 
-  nolimit_compat = true,
+  
 
   group  = "vent",
   prob   = 50,
@@ -23,7 +23,7 @@ PREFABS.Hallway_vent_cage1 =
   map    = "MAP02",
   theme  = "!hell",
 
-  nolimit_compat = true,
+  
 
   group  = "vent",
   style  = "cages",

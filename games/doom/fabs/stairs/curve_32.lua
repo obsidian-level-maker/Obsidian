@@ -8,7 +8,7 @@ PREFABS.Stair_curve_32 =
 
   prob   = 50,
 
-  nolimit_compat = true,
+  
 
   where  = "seeds",
   shape  = "L",

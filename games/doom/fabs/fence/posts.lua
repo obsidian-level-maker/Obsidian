@@ -8,7 +8,7 @@ PREFABS.Post_metal =
   map = "MAP01",
   kind = "post",
 
-  nolimit_compat = true,
+  
 
   prob = 50,
 

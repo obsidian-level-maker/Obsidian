@@ -6,7 +6,7 @@ PREFABS.Lift_64 =
 {
   file   = "stairs/lift_64.wad",
 
-  nolimit_compat = true,
+  
 
   prob   = 15,
   theme  = "!hell",

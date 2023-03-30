@@ -8,7 +8,7 @@ PREFABS.Joiner_curve2 =
   theme  = "!tech",
   map = "MAP01",
 
-  nolimit_compat = true,
+  
 
   prob   = 1200,
 

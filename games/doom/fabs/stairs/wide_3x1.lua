@@ -7,7 +7,7 @@ PREFABS.Stair_wide_3x1 =
   file   = "stairs/wide_3x1.wad",
   map    = "MAP01",
 
-  nolimit_compat = true,
+  
 
   prob   = 250,
 
@@ -28,7 +28,7 @@ PREFABS.Stair_wide_3x1_torch =
   file   = "stairs/wide_3x1.wad",
   map    = "MAP02",
 
-  nolimit_compat = true,
+  
 
   prob  = 150,
   theme = "urban",

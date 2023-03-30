@@ -7,7 +7,7 @@ PREFABS.Start_sky_pad =
   file   = "start/sky_pad.wad",
   map    = "MAP01",
 
-  nolimit_compat = true,
+  
 
   prob   = 100,
   theme  = "tech",

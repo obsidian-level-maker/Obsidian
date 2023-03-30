@@ -6,7 +6,7 @@ PREFABS.Item_alcove_techy =
 {
   file   = "item/alcove2.wad",
 
-  nolimit_compat = true,
+  
 
   prob   = 200,
   theme  = "tech",

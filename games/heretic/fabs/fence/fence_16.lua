@@ -9,7 +9,7 @@ PREFABS.Fence_plain =
 
   prob   = 50,
 
-  nolimit_compat = true,
+  
 
   group  = "PLAIN",
 
@@ -30,7 +30,7 @@ PREFABS.Fence_plain_diag =
 
   prob   = 50,
 
-  nolimit_compat = true,
+  
 
   group  = "PLAIN",
 

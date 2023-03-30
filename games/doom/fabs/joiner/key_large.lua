@@ -8,7 +8,7 @@ PREFABS.Locked_joiner_red =
   where  = "seeds",
   shape  = "I",
 
-  nolimit_compat = true,
+  
 
   key    = "k_red",
 
@@ -60,7 +60,7 @@ PREFABS.Locked_joiner_red_hell =
   shape  = "I",
   theme  = "hell",
 
-  nolimit_compat = true,
+  
 
   key    = "ks_red",
 
@@ -116,7 +116,7 @@ PREFABS.Locked_joiner_red_tech =
   shape  = "I",
   theme  = "!hell",
 
-  nolimit_compat = true,
+  
 
   key    = "ks_red",
 
@@ -171,7 +171,7 @@ PREFABS.Locked_joiner_red_tech2 =
   shape  = "I",
   theme  = "!hell",
 
-  nolimit_compat = true,
+  
 
   key    = "ks_red",
 

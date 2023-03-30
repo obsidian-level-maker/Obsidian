@@ -93,6 +93,13 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label)
 
 UI_Build::~UI_Build() {}
 
+int UI_Build::handle(int event) {
+    if (event == FL_ENTER) {
+        main_win->clippy->ShowAdvice("Did you know?\n\nThere was a live minimap in every version of Oblige since its initial release!");
+    }
+    return Fl_Group::handle(event);
+}
+
 // Same as regular Fl_Group resize with the exception of calling the minimap to
 // redraw afterwards
 void UI_Build::resize(int X, int Y, int W, int H) {

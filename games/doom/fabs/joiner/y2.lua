@@ -10,7 +10,7 @@ PREFABS.Joiner_y2 =
   theme  = "!hell",
   env    = "!cave",
 
-  nolimit_compat = true,
+  
 
   where  = "seeds",
   shape  = "I",

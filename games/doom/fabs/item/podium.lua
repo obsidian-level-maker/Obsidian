@@ -6,7 +6,7 @@ PREFABS.Item_podium =
 {
   file  = "item/podium.wad",
 
-  nolimit_compat = true,
+  
 
   prob  = 100,
   theme = "!tech",

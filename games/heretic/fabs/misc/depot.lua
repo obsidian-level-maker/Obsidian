@@ -7,7 +7,7 @@ PREFABS.Depot_raise =
   file  = "misc/depot.wad",
   map   = "MAP01",
 
-  nolimit_compat = true,
+  
 
   prob  = 50,
   where = "seeds",

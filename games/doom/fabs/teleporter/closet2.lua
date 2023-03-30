@@ -6,7 +6,7 @@ PREFABS.Teleporter_Closet2 =
 {
   file   = "teleporter/closet2.wad",
 
-  nolimit_compat = true,
+  
 
   prob   = 50,
   map    = "MAP01",
@@ -35,7 +35,7 @@ PREFABS.Teleporter_Closet_tech =
 {
   file   = "teleporter/closet2.wad",
 
-  nolimit_compat = true,
+  
 
   prob   = 50,
   theme  = "tech",
@@ -61,7 +61,7 @@ PREFABS.Teleporter_Closet_urban =
 {
   file   = "teleporter/closet2.wad",
 
-  nolimit_compat = true,
+  
 
   prob   = 50,
   map    = "MAP03",
@@ -88,7 +88,7 @@ PREFABS.Teleporter_Closet_hell =
 {
   file   = "teleporter/closet2.wad",
 
-  nolimit_compat = true,
+  
 
   prob   = 50,
   map    = "MAP04",
@@ -113,7 +113,7 @@ PREFABS.Teleporter_Closet_general =
 {
   file   = "teleporter/closet2.wad",
 
-  nolimit_compat = true,
+  
 
   prob   = 50,
   map    = "MAP05",

@@ -7,7 +7,7 @@ PREFABS.Fence_plain =
   file = "fence/fence_16.wad",
   map = "MAP01",
 
-  nolimit_compat = true,
+  
 
   prob = 50,
 

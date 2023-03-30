@@ -7,7 +7,7 @@ PREFABS.Cage_hellbox1 =
   file   = "cage/hell_box.wad",
   map    = "MAP01",
 
-  nolimit_compat = true,
+  
 
   prob   = 100,
   theme  = "hell",
