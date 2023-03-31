@@ -47,8 +47,9 @@ gui.import("level")
 
 gui.import("script_manager")
 
-gui.import("random_words_en.lua")
-gui.import("random_words_en_m.lua")
+gui.import("/data/text/random_words_en.lua")
+gui.import("/data/text/random_words_en_m.lua")
+gui.import("/data/text/dialogues.lua")
 
 gui.import("094/oblige_v094.lua")
 
@@ -1793,6 +1794,10 @@ function ob_get_random_words()
   else
     return case_randomizer(rand.pick(RANDOM_WORDS)) .. " " .. case_randomizer(rand.pick(RANDOM_WORDS)) .. " " .. case_randomizer(rand.pick(RANDOM_WORDS))
   end
+end
+
+function ob_random_advice()
+  return rand.pick(HELPFUL_ADVICE)
 end
 
 function ob_default_filename()

@@ -1297,7 +1297,7 @@ void UI_CustomMods::PositionAll(UI_Module *focus) {
 
 int UI_Module::handle(int event) {
     if (event == FL_ENTER) {
-        main_win->clippy->ShowAdvice("Did you know?\n\nClicking on a module not only expands it but also enables it. Collapse it in order to deactivate it again!");
+        main_win->clippy->ShowAdvice();
     }
     return Fl_Group::handle(event);
 }

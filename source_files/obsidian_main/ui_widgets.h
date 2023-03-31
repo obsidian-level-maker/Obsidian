@@ -317,8 +317,6 @@ class UI_RSlide : public Fl_Group {
     std::string default_value;
 
     opt_change_callback_data_t *cb_data;
-
-   public:
 };
 
 class UI_CustomCheckBox : public Fl_Check_Button {
@@ -369,7 +367,9 @@ class UI_Clippy : public Fl_Double_Window {
 
     Fl_Text_Display *disp;
 
-    void ShowAdvice(std::string message);
+    Fl_Button *showme_another;
+
+    void ShowAdvice(void);
 
     bool enable_me;
 
@@ -377,7 +377,7 @@ class UI_Clippy : public Fl_Double_Window {
 
     int handle(int event);
 
-    Fl_Button *close_me;
+    static void callback_MoreAdvice(Fl_Widget *w, void *data);
 
     int xoff; 
     

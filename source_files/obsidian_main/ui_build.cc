@@ -95,7 +95,7 @@ UI_Build::~UI_Build() {}
 
 int UI_Build::handle(int event) {
     if (event == FL_ENTER) {
-        main_win->clippy->ShowAdvice("Did you know?\n\nThere was a live minimap in every version of Oblige since its initial release!");
+        main_win->clippy->ShowAdvice();
     }
     return Fl_Group::handle(event);
 }

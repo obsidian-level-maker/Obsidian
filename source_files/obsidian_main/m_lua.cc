@@ -2206,6 +2206,19 @@ std::string ob_default_filename() {
     return res;
 }
 
+std::string ob_random_advice() {
+    if (!Script_CallFunc("ob_random_advice", 1)) {
+        return NULL;
+    }
+
+    std::string res = luaL_optlstring(LUA_ST, -1, "", NULL);
+
+    // remove result from lua stack
+    lua_pop(LUA_ST, 1);
+
+    return res;
+}
+
 void ob_print_reference() {
     if (!Script_CallFunc("ob_print_reference", 1)) {
         // clang-format off

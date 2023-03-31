@@ -411,7 +411,7 @@ void UI_Game::quit_callback(Fl_Widget *w, void *data) {
 
 int UI_Game::handle(int event) {
     if (event == FL_ENTER) {
-        main_win->clippy->ShowAdvice("Did you know?\n\nObsidian v20 was the first release of Oblige/Obsidian with support for Wolfenstein 3-D in over 15 years!\n\nMein Leben!");
+        main_win->clippy->ShowAdvice();
     }
     return Fl_Group::handle(event);
 }
