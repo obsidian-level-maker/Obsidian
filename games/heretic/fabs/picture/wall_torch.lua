@@ -7,6 +7,8 @@ PREFABS.Pic_wall_torch1 =
   file   = "picture/wall_torch.wad",
   map    = "MAP01",
 
+  
+
   prob  = 100,
   skip_prob = 35,
   env   = "building",

@@ -10,6 +10,8 @@ PREFABS.Joiner_door2 =
   prob   = 100,
   style  = "doors",
 
+  
+
   where  = "seeds",
   shape  = "I",
 

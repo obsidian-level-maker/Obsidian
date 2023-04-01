@@ -7,6 +7,8 @@ UNFINISHED.Wall_vertgap =
   file   = "wall/vert_gap.wad",
   map    = "MAP01",
 
+  
+
   prob   = 50,
   group  = "vert_gap",
 
@@ -27,6 +29,8 @@ UNFINISHED.Wall_vertgap_diag =
 {
   file   = "wall/vert_gap.wad",
   map    = "MAP02",
+
+  
 
   prob   = 50,
   group  = "vert_gap",

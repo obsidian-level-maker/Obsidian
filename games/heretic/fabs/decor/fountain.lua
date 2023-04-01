@@ -11,6 +11,8 @@ PREFABS.Decor_water_fountain =
   skip_prob = 50,
   env    = "outdoor",
 
+  
+
   where  = "point",
   size   = 128,
 

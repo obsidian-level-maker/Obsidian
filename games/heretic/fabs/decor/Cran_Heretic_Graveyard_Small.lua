@@ -11,6 +11,8 @@ PREFABS.Cran_Heretic_Graveyard_Small =
   size   = 64,
   height = 128,
 
+  
+
   bound_z1 = 0,
   bound_z2 = 128,
 }

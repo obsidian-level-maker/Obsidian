@@ -7,6 +7,8 @@ PREFABS.Fence_plain =
   file = "fence/fence_16.wad",
   map = "MAP01",
 
+  
+
   prob = 50,
 
   group = "PLAIN",

@@ -8,6 +8,8 @@ PREFABS.Post_metal =
   map = "MAP01",
   kind = "post",
 
+  
+
   prob = 50,
 
   where = "point",

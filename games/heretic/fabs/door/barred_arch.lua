@@ -12,6 +12,8 @@ PREFABS.Arch_barred =
   where  = "edge",
   key    = "barred",
 
+  
+
   deep   = 16,
   over   = 16,
 
@@ -49,6 +51,8 @@ PREFABS.Arch_barred_diag =
   map    = "MAP02",
 
   prob   = 50,
+
+  
 
   where  = "diagonal",
   key    = "barred",

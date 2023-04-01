@@ -9,6 +9,8 @@ PREFABS.Door_plain2 =
 
   prob   = 80,
 
+  
+
   kind   = "arch",
   style  = "doors",
 
@@ -178,6 +180,8 @@ PREFABS.Door_plain_tech =
 {
   file   = "door/door1.wad",
   map    = "MAP04",
+
+  
 
   prob   = 225,
   theme  = "tech",

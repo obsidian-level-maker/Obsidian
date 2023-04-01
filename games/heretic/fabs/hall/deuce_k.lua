@@ -11,6 +11,8 @@ PREFABS.Hallway_deuce_locked_yellow =
   group  = "deuce",
   key    = "k_yellow",
 
+  
+
   prob   = 50,
 
   where  = "seeds",
@@ -50,6 +52,8 @@ PREFABS.Hallway_deuce_barred =
 {
   file   = "hall/deuce_k.wad",
   map    = "MAP03",
+
+  
 
   kind   = "terminator",
   group  = "deuce",

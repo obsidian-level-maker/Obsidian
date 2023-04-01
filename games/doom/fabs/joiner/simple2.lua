@@ -8,6 +8,8 @@ PREFABS.Joiner_simple2 =
   map    = "MAP01",
   theme  = "!tech",
 
+  
+
   prob   = 150,
 
   where  = "seeds",

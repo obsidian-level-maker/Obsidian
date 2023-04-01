@@ -7,6 +7,7 @@ PREFABS.Wall_cave1 =
   file   = "wall/cavish.wad",
   map    = "MAP01",
 
+  
 
   prob   = 50,
   env    = "cave",

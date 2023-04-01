@@ -9,6 +9,8 @@ PREFABS.Arch_barred =
 
   prob   = 5,
 
+  
+
   where  = "edge",
   key    = "barred",
 

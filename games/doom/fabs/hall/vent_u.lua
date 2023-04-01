@@ -7,6 +7,8 @@ PREFABS.Hallway_vent_u1 =
   file   = "hall/vent_u.wad",
   map    = "MAP01",
 
+  
+
   group  = "vent",
   prob   = 50,
 
@@ -20,6 +22,8 @@ PREFABS.Hallway_vent_cage1 =
   file   = "hall/vent_u.wad",
   map    = "MAP02",
   theme  = "!hell",
+
+  
 
   group  = "vent",
   style  = "cages",

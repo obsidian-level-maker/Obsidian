@@ -7,6 +7,8 @@ PREFABS.Joiner_zigzag1 =
   file   = "joiner/zigzag.wad",
   map    = "MAP01",
 
+  
+
   prob   = 850,
   style  = "steepness",
 

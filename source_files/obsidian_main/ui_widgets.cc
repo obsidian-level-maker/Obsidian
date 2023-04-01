@@ -24,6 +24,12 @@
 #include "headers.h"
 #include "lib_util.h"
 #include "main.h"
+#include "m_lua.h"
+#include <ctime>
+#include <chrono>
+
+static std::tm clippy_time_begin{};
+static std::tm clippy_time_end{};
 
 choice_data_c::choice_data_c(std::string _id, std::string _label)
     : enabled(false), mapped(-1), widget(NULL) {
@@ -232,6 +238,13 @@ UI_RChoice::UI_RChoice(int x, int y, int w, int h) : Fl_Group(x, y, w, h) {
     labelfont(font_style);
 }
 
+int UI_RChoice::handle(int event) {
+    if (event == FL_ENTER) {
+        main_win->clippy->ShowAdvice();
+    }
+    return Fl_Group::handle(event);
+}
+
 UI_RChoice::~UI_RChoice() {
     if (cb_data) {
         delete cb_data;
@@ -262,6 +275,13 @@ UI_RSlide::UI_RSlide(int x, int y, int w, int h) : Fl_Group(x, y, w, h) {
     labelfont(font_style);
 }
 
+int UI_RSlide::handle(int event) {
+    if (event == FL_ENTER) {
+        main_win->clippy->ShowAdvice();
+    }
+    return Fl_Group::handle(event);
+}
+
 UI_RSlide::~UI_RSlide() {
     if (cb_data) {
         delete cb_data;
@@ -273,6 +293,13 @@ UI_RSlide::~UI_RSlide() {
 UI_RButton::UI_RButton(int x, int y, int w, int h) : Fl_Group(x, y, w, h) {
     visible_focus(0);
     box(FL_NO_BOX);
+}
+
+int UI_RButton::handle(int event) {
+    if (event == FL_ENTER) {
+        main_win->clippy->ShowAdvice();
+    }
+    return Fl_Group::handle(event);
 }
 
 UI_RButton::~UI_RButton() {
@@ -500,6 +527,7 @@ int UI_ResetOption::handle(int event) {
         }
 
         case FL_ENTER: {
+            main_win->clippy->ShowAdvice();
             checkLink();
             return 1;
         }
@@ -598,6 +626,7 @@ int UI_HelpLink::handle(int event) {
         }
 
         case FL_ENTER: {
+            main_win->clippy->ShowAdvice();
             checkLink();
             return 1;
         }
@@ -696,6 +725,7 @@ int UI_ManualEntry::handle(int event) {
         }
 
         case FL_ENTER: {
+            main_win->clippy->ShowAdvice();
             checkLink();
             return 1;
         }
@@ -865,5 +895,88 @@ void UI_CustomMenu::draw() {
     // Widget's label
     draw_label();
 }
+
+//----------------------------------------------------------------
+
+void UI_Clippy::callback_MoreAdvice(Fl_Widget *w, void *data) {
+    UI_Clippy *clip = (UI_Clippy*)data;
+    clip->buff->text(ob_random_advice().c_str());
+}
+
+UI_Clippy::UI_Clippy() : Fl_Double_Window(645, 305, NULL) {
+    shape(clippy);
+    xoff = 0;
+    yoff = 0;
+    background = new Fl_Box(0, 0, 645, 305, NULL);
+    background->image(clippy);
+    buff = new Fl_Text_Buffer();
+    disp = new Fl_Text_Display(20, 20, 400, 220, NULL);
+    disp->box(FL_FLAT_BOX);
+    disp->color(fl_rgb_color(255,255,203));
+    disp->buffer(buff);
+    disp->textcolor(FL_BLACK);
+    disp->textsize(20);
+    disp->textfont(8);
+    disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
+    showme_another = new Fl_Button(120, 245, 200, 20, "More Advice Please!");
+    showme_another->box(FL_ROUNDED_FRAME);
+    showme_another->labelcolor(FL_BLACK);
+    showme_another->labelfont(8);
+    showme_another->align(FL_ALIGN_CENTER | FL_ALIGN_INSIDE);
+    showme_another->down_box(FL_ROUNDED_FRAME);
+    showme_another->down_color(fl_rgb_color(255,255,203));
+    showme_another->callback(callback_MoreAdvice, this);
+    showme_another->visible_focus(0);
+    enable_me = false;
+    clippy_time_begin.tm_year = 2023-1900;
+    clippy_time_begin.tm_mday = 1;
+    clippy_time_begin.tm_mon = 3;
+    clippy_time_end.tm_year = 2023-1900;
+    clippy_time_end.tm_mday = 2;
+    clippy_time_end.tm_mon = 3;
+    visible_focus(0);
+    hide();
+}
+
+void UI_Clippy::ShowAdvice() {
+    if (!enable_me)
+        return;
+    std::time_t clippy_check = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+    if (!(std::mktime(&clippy_time_begin) <= clippy_check && clippy_check <= std::mktime(&clippy_time_end))) {
+        hide();
+        return;
+    }
+    if (!shown()) {
+        hotspot(0, 0, 0);
+    }
+    if (buff->length() == 0) {
+        buff->text(ob_random_advice().c_str());
+    }
+    show();
+}
+
+int UI_Clippy::handle(int event)
+{
+    int ret = Fl_Window::handle(event);
+    switch (event) {
+        case FL_PUSH:
+            xoff = x() - Fl::event_x_root();
+            yoff = y() - Fl::event_y_root();
+            ret = 1;
+
+        case FL_DRAG:
+            position(xoff + Fl::event_x_root(), yoff + Fl::event_y_root());
+            redraw();
+            ret = 1;
+
+        case FL_RELEASE:
+            show();
+            ret = 1;
+    }
+    return(ret);
+}
+
+UI_Clippy::~UI_Clippy() {}
+
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

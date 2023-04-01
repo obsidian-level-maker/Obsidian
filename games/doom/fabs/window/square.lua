@@ -8,6 +8,8 @@ PREFABS.Window_square1 =
   map    = "MAP01",
   theme  = "!tech",
 
+  
+
   group  = "square",
 
   passable = true,

@@ -81,27 +81,3 @@ OB_PORTS["limit_enforcing"] =
   game = { chex3=0,doom1=1,doom2=1,ultdoom=1,heretic=0,hexen=0,strife=0,hacx=0,harmony=0,nukem=0,quake=0,wolf=0,noah=0 },
   priority = 99
 }
-
-----------------------------------------------------------------
-
-LIMIT_REMOVING = {}
-
-
-LIMIT_REMOVING.ENTITIES =
-{
-
-}
-
-
-LIMIT_REMOVING.PARAMETERS =
-{
-
-}
-
-OB_PORTS["limit_removing"] =
-{
-  label = _("Limit Removing"),
-  engine = "idtech_1",
-  game = { chex3=1,doom1=1,doom2=1,ultdoom=1,heretic=1,hexen=1,strife=1,hacx=1,harmony=1,nukem=0,quake=0,wolf=0,noah=0 },
-  priority = 99
-}

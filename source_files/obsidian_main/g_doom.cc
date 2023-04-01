@@ -991,7 +991,7 @@ static bool BuildNodes(std::filesystem::path filename) {
     // Prep AJBSP parameters
     obbuildinfo_t *build_info = new obbuildinfo_t;
     build_info->fast = true;
-    if (StringCaseCmp(current_port, "limit_enforcing") == 0 || StringCaseCmp(current_port, "limit_removing") == 0 ||
+    if (StringCaseCmp(current_port, "limit_enforcing") == 0 ||
         StringCaseCmp(current_port, "boom") == 0) {
         build_info->gl_nodes = false;
         build_info->force_v5 = false;
@@ -1004,12 +1004,18 @@ static bool BuildNodes(std::filesystem::path filename) {
         build_info->do_blockmap = false;
         build_info->force_xnod = false;
         build_info->force_compress = true;
-    } else { // Eternity
+    } else if (StringCaseCmp(current_port, "eternity") == 0) { // Eternity
         build_info->gl_nodes = true;
         build_info->do_reject = false;
         build_info->do_blockmap = false;
         build_info->force_xnod = true;
         build_info->force_compress = false;
+    } else { // ZDoom (if enabled)
+        build_info->gl_nodes = true;
+        build_info->do_reject = false;
+        build_info->do_blockmap = false;
+        build_info->force_xnod = true;
+        build_info->force_compress = true;
     }
 
     if (AJBSP_BuildNodes(filename, build_info) != 0) {
@@ -1064,8 +1070,7 @@ bool Doom::game_interface_c::Start(const char *preset) {
     } else {
 #ifndef CONSOLE_ONLY
         if (!mid_batch) {
-            if (StringCaseCmp(current_port, "zdoom") == 0 ||
-                StringCaseCmp(current_port, "eternity") == 0) {
+            if (ob_mod_enabled("compress_output")) {
                 filename = DLG_OutputFilename("pk3", 
                     std::filesystem::path{preset}.replace_extension("pk3").string().c_str());
             } else {
@@ -1113,7 +1118,7 @@ bool Doom::game_interface_c::Start(const char *preset) {
 
     if (StringCaseCmp(current_port, "zdoom") == 0) {
         map_format = FORMAT_UDMF;
-        build_nodes = false;
+        build_nodes = ob_mod_enabled("build_nodes");
     } else if (StringCaseCmp(current_port, "eternity") == 0) {
         map_format = FORMAT_UDMF;
         build_nodes = true;
@@ -1181,7 +1186,7 @@ bool Doom::game_interface_c::Finish(bool build_ok) {
 
     if (build_ok) {
         // This should be set for all advanced ports, but I gotta get off my ass and finish EC pk3 support - Dasho
-        if (StringCaseCmp(current_port, "eternity") == 0 || StringCaseCmp(current_port, "zdoom") == 0) {
+        if (ob_mod_enabled("compress_output")) {
             std::filesystem::path zip_filename = filename;
             zip_filename.replace_extension("pk3");
             if (std::filesystem::exists(zip_filename)) {

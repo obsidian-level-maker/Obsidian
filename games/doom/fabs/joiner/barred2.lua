@@ -9,6 +9,8 @@ PREFABS.Joiner_remote_door =
   shape  = "I",
   map    = "MAP01",
 
+  
+
   key    = "barred",
 
   prob   = 15,

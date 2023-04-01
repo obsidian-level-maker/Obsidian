@@ -38,50 +38,6 @@ DOOM.MATERIALS =
   _SKY     = { t="METAL",  f="F_SKY1" },
   F_SKY1     = { t="METAL",  f="F_SKY1" }, -- To make the material checker happy - Dasho
 
-  -- materials for generic prefab set --
-  _RUNIC = { t="FIREBLU1", f="FLOOR6_1" },
-  _STAIRS = { t="STEP3",    f="CEIL5_1" },
-  _VOID = { t="O_BLACK", f="XX" },
-  _FLATLIT = { t="METAL", f="TLITE6_6" },
-  _WALLLIT = { t="LITE5", f="XX"},
-  _LIFT  = { t="PLAT1", f="STEP1"},
-  _SBARS = { t="MIDBRN1", f="XX" }, -- Short bars, i.e. railings
-  _MBARS = { t="MIDBARS3", f="XX" }, -- Medium bars, i.e. barred windows
-  _TBARS = { t="MIDBARS1", f="XX" }, -- Tall bars, i.e. cage/jail bars
-  
-  _CRATE   = { t="CRATE1",   f="CRATOP2" }, -- Crate/box
-  _CRATE2  = { t="CRATE2",   f="CRATOP1" },
-  _CRATWID = { t="CRATWIDE", f="CRATOP1" },
-  
-  _SMLDOOR = { t="DOOR1", f="FLAT23" },
-  _BIGDOOR = { t="BIGDOOR2", f="FLAT20" },
-  _TALDOOR = { t="SPCDOOR3", f="FLAT19" },
-  _DORRAIL = { t="DOORTRAK", f="FLAT23" }, -- Inner door slider thingys
-  
-  _NPIC    = { t="COMPBLUE", f="FLAT14" }, -- Narrow (non-tiling) pic box insert, 64 pixels wide x 128 high
-  
-  _MPIC    = { t="TEKWALL4",  f="CEIL5_1" }, -- Medium (or tiling) pic box insert, 128 pixels wide x 128 high
-  
-  _WPIC    = { t="COMPTALL", f="CEIL5_1" }, -- Wide (or tiling) pic box insert, 256 pixels wide x 128 high
-  
-  _KEYTRM1 = { t="DOORBLU",  f="FLAT23" }, -- Trim for locked door, Key 1
-  _KEYTRM2 = { t="DOORYEL",  f="FLAT23" }, -- Trim for locked door, Key 2
-  _KEYTRM3 = { t="DOORRED",  f="FLAT23" }, -- Trim for locked door, Key 3
-  
-  _EXITDR = { t="EXITDOOR", f="FLAT5_5" }, -- Exit door
-  _EXITSW  = { t="SW1EXIT",  f="FLAT19" }, -- Exit switch, roughly 32x32
-  _EXITTR  = { t="GRAY1",    f="FLAT19" }, -- Exit switch trim
-  _EXITRM  = { t="GRAY1",    f="FLAT19" }, -- Exit switch room
-  _EXITSGN = { t="EXITSIGN", f="CEIL5_1" }, -- Exit sign
-  
-  _STRUCT = {t="METAL", f="CEIL5_2"}, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
-
-  _SW  = { t="SW1COMM",  f="FLAT23" }, -- Switch is roughly 32x32 in size, rest of the texture is 'hidden'
-  _SWTRIM = { t="SHAWN2", f="FLAT23" }, -- Trim for switch
-  
-  _TELE = { f="GATE4", t="METAL" }, -- Teleporter
-
-
   -- general purpose --
 
   METAL = { t="METAL", f="CEIL5_2" },

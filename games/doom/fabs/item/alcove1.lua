@@ -6,6 +6,8 @@ PREFABS.Item_alcove_small =
 {
   file  = "item/alcove1.wad",
 
+  
+
   prob  = 50,
   map   = "MAP01",
   theme = "!hell",

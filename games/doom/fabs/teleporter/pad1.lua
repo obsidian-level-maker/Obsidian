@@ -6,6 +6,8 @@ PREFABS.Teleporter1 =
 {
   file   = "teleporter/pad1.wad",
 
+  
+
   prob   = 50,
 
   where  = "point",
@@ -20,6 +22,8 @@ PREFABS.Teleporter1 =
 PREFABS.Teleporter2 =
 {
   file   = "teleporter/pad1.wad",
+
+  
 
   prob   = 50,
   map    = "MAP02",
@@ -37,6 +41,8 @@ PREFABS.Teleporter3 =
 {
   file   = "teleporter/pad1.wad",
 
+  
+
   prob   = 50,
   map    = "MAP03",
 
@@ -52,6 +58,8 @@ PREFABS.Teleporter3 =
 PREFABS.Teleporter4 =
 {
   file   = "teleporter/pad1.wad",
+
+  
 
   prob   = 50,
   map    = "MAP04",

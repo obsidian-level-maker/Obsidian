@@ -6,6 +6,8 @@ PREFABS.Exit_pillar2 =
 {
   file  = "exit/pillar2.wad",
 
+  
+
   prob  = 0,
   theme = "tech",
 

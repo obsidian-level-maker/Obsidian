@@ -6,6 +6,8 @@ PREFABS.Wall_cave1 =
 {
   file   = "wall/cavish.wad",
   map    = "MAP01",
+  
+  
 
   rank   = 1,
   prob   = 50,

@@ -5,6 +5,8 @@ PREFABS.Fence_pillar =
   file = "fence/gtd_pillar.wad",
   map = "MAP01",
 
+  
+
   kind = "pillar",
   where  = "point",
   theme = "!tech",

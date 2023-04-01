@@ -181,6 +181,7 @@ std::string selected_lang =
 game_interface_c *game_object = NULL;
 
 #ifndef CONSOLE_ONLY
+Fl_Pixmap *clippy;
 // Tutorial stuff
 Fl_BMP_Image *tutorial1;
 Fl_BMP_Image *tutorial2;
@@ -1182,6 +1183,7 @@ static void Module_Defaults() {
     ob_set_mod_option("sky_generator_heretic", "self", "1");
     ob_set_mod_option("armaetus_epic_textures", "self", "1");
     ob_set_mod_option("music_swapper", "self", "1");
+    ob_set_mod_option("compress_output", "self", "1");
 }
 
 //------------------------------------------------------------------------
@@ -1725,6 +1727,56 @@ softrestart:;
 
 // create the main window
 #ifndef CONSOLE_ONLY
+        fl_register_images();  // Needed for Unix window icon and tutorial
+                               // windows
+
+        if (!clippy) {
+            clippy = new Fl_Pixmap(clippy_xpm);
+        }
+
+        // Load tutorial images
+        std::filesystem::path image_loc = install_dir;
+        image_loc.append("data").append("tutorial").append("tutorial1.bmp");
+        if (!tutorial1) {
+            tutorial1 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+        }
+        image_loc.replace_filename("tutorial2.bmp");
+        if (!tutorial2) {
+            tutorial2 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+        }
+        image_loc.replace_filename("tutorial3.bmp");
+        if (!tutorial3) {
+            tutorial3 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+        }
+        image_loc.replace_filename("tutorial4.bmp");
+        if (!tutorial4) {
+            tutorial4 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+        }
+        image_loc.replace_filename("tutorial5.bmp");
+        if (!tutorial5) {
+            tutorial5 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+        }
+        image_loc.replace_filename("tutorial6.bmp");
+        if (!tutorial6) {
+            tutorial6 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+        }
+        image_loc.replace_filename("tutorial7.bmp");
+        if (!tutorial7) {
+            tutorial7 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+        }
+        image_loc.replace_filename("tutorial8.bmp");
+        if (!tutorial8) {
+            tutorial8 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+        }
+        image_loc.replace_filename("tutorial9.bmp");
+        if (!tutorial9) {
+            tutorial9 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+        }
+        image_loc.replace_filename("tutorial10.bmp");
+        if (!tutorial10) {
+            tutorial10 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+        }
+
         int main_w, main_h;
         UI_MainWin::CalcWindowSize(&main_w, &main_h);
 
@@ -1811,52 +1863,6 @@ softrestart:;
                             (all_addons[i].enabled ? FL_MENU_VALUE : 0));
                 }
             }
-        }
-
-        fl_register_images();  // Needed for Unix window icon and tutorial
-                               // windows
-
-        // Load tutorial images
-        std::filesystem::path image_loc = install_dir;
-        image_loc.append("data").append("tutorial").append("tutorial1.bmp");
-        if (!tutorial1) {
-            tutorial1 = new Fl_BMP_Image(image_loc.generic_string().c_str());
-        }
-        image_loc.replace_filename("tutorial2.bmp");
-        if (!tutorial2) {
-            tutorial2 = new Fl_BMP_Image(image_loc.generic_string().c_str());
-        }
-        image_loc.replace_filename("tutorial3.bmp");
-        if (!tutorial3) {
-            tutorial3 = new Fl_BMP_Image(image_loc.generic_string().c_str());
-        }
-        image_loc.replace_filename("tutorial4.bmp");
-        if (!tutorial4) {
-            tutorial4 = new Fl_BMP_Image(image_loc.generic_string().c_str());
-        }
-        image_loc.replace_filename("tutorial5.bmp");
-        if (!tutorial5) {
-            tutorial5 = new Fl_BMP_Image(image_loc.generic_string().c_str());
-        }
-        image_loc.replace_filename("tutorial6.bmp");
-        if (!tutorial6) {
-            tutorial6 = new Fl_BMP_Image(image_loc.generic_string().c_str());
-        }
-        image_loc.replace_filename("tutorial7.bmp");
-        if (!tutorial7) {
-            tutorial7 = new Fl_BMP_Image(image_loc.generic_string().c_str());
-        }
-        image_loc.replace_filename("tutorial8.bmp");
-        if (!tutorial8) {
-            tutorial8 = new Fl_BMP_Image(image_loc.generic_string().c_str());
-        }
-        image_loc.replace_filename("tutorial9.bmp");
-        if (!tutorial9) {
-            tutorial9 = new Fl_BMP_Image(image_loc.generic_string().c_str());
-        }
-        image_loc.replace_filename("tutorial10.bmp");
-        if (!tutorial10) {
-            tutorial10 = new Fl_BMP_Image(image_loc.generic_string().c_str());
         }
 
 #ifdef WIN32
@@ -1971,6 +1977,8 @@ softrestart:;
             old_pixels = NULL;
             main_win->build_box->mini_map->MapFinish();
         }
+
+        main_win->clippy->enable_me = true;
 #endif
     }
 

@@ -448,49 +448,6 @@ ULTDOOM.PARAMETERS =
 
 ULTDOOM.MATERIALS =
 {
-  -- materials for generic prefab set --
-  _RUNIC = { t="FIREBLU1", f="FLOOR6_1" },
-  _STAIRS = { t="STEP3",    f="CEIL5_1" },
-  _VOID = { t="O_BLACK", f="XX" },
-  _FLATLIT = { t="METAL", f="TLITE6_6" },
-  _WALLLIT = { t="LITE5", f="XX"},
-  _LIFT  = { t="PLAT1", f="STEP1"},
-  _SBARS = { t="MIDBRN1", f="XX" }, -- Short bars, i.e. railings
-  _MBARS = { t="MIDGRATE", f="XX" }, -- Medium bars, i.e. barred windows
-  _TBARS = { t="MIDGRATE", f="XX" }, -- Tall bars, i.e. cage/jail bars
-  
-  _CRATE   = { t="CRATE1",   f="CRATOP2" }, -- Crate/box
-  _CRATE2  = { t="CRATE2",   f="CRATOP1" },
-  _CRATWID = { t="CRATWIDE", f="CRATOP1" },
-  
-  _SMLDOOR = { t="DOOR1", f="FLAT23" },
-  _BIGDOOR = { t="BIGDOOR2", f="FLAT20" },
-  _TALDOOR = { t="BIGDOOR2", f="FLAT1" },
-  _DORRAIL = { t="DOORTRAK", f="FLAT23" }, -- Inner door slider thingys
-  
-  _NPIC    = { t="COMPBLUE", f="FLAT14" }, -- Narrow (non-tiling) pic box insert, 64 pixels wide x 128 high
-  
-  _MPIC    = { t="TEKWALL4",  f="CEIL5_1" }, -- Medium (or tiling) pic box insert, 128 pixels wide x 128 high
-  
-  _WPIC    = { t="COMPTALL", f="CEIL5_1" }, -- Wide (or tiling) pic box insert, 256 pixels wide x 128 high
-  
-  _KEYTRM1 = { t="DOORBLU",  f="FLAT23" }, -- Trim for locked door, Key 1
-  _KEYTRM2 = { t="DOORYEL",  f="FLAT23" }, -- Trim for locked door, Key 2
-  _KEYTRM3 = { t="DOORRED",  f="FLAT23" }, -- Trim for locked door, Key 3
-  
-  _EXITDR = { t="EXITDOOR", f="FLAT5_5" }, -- Exit door
-  _EXITSW  = { t="SW1EXIT",  f="FLAT19" }, -- Exit switch, roughly 32x32
-  _EXITTR  = { t="GRAY1",    f="FLAT19" }, -- Exit switch trim
-  _EXITRM  = { t="GRAY1",    f="FLAT19" }, -- Exit switch room
-  _EXITSGN = { t="EXITSIGN", f="CEIL5_1" }, -- Exit sign
-  
-  _STRUCT = {t="METAL", f="CEIL5_2"}, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
-
-  _SW  = { t="SW1COMM",  f="FLAT23" }, -- Switch is roughly 32x32 in size, rest of the texture is 'hidden'
-  _SWTRIM = { t="SHAWN2", f="FLAT23" }, -- Trim for switch
-  
-  _TELE = { f="GATE4", t="METAL" }, -- Teleporter
-
   -- These materials are unique to DOOM I / Ultimate DOOM...
 
 
@@ -2693,28 +2650,6 @@ ULTDOOM.ROOM_THEMES =
   },
 
   -- For Limit-Removing/generics - Dasho
-  any_curve_Hallway =
-  {
-    env   = "hallway",
-    group = "curve",
-    prob  = 1,
-
-    walls =
-    {
-      GRAY1 = 50,
-    },
-
-    floors =
-    {
-      FLAT1 = 30,
-    },
-
-    ceilings =
-    {
-      CEIL3_5 = 30,
-    },
-  },
-
   any_deuce_Hallway =
   {
     env   = "hallway",
@@ -4312,141 +4247,6 @@ ULTDOOM.PREBUILT_LEVELS =
   },
 }
 
-function ULTDOOM.nolimit_themes()
-  if OB_CONFIG.port == "limit_removing" then
-    GAME.THEMES.DEFAULTS.narrow_halls = { vent = 50 }
-    GAME.THEMES.DEFAULTS.wide_halls = { curve = 50, deuce = 50 }
-    GAME.THEMES.tech.narrow_halls = { vent = 50 }
-    GAME.THEMES.tech.beam_groups = { beam_metal = 50 }
-    GAME.THEMES.tech.wall_groups = 
-    {
-      PLAIN = 0.01,
-      mid_band = 10,
-      lite1 = 20,
-      lite2 = 20,
-      torches1 = 12,
-      torches2 = 12,
-      high_gap = 25,
-      vert_gap = 25,
-      wallgutters = 10,
-      lamptorch = 16,
-      runic = 10,
-      croix = 10,
-    }
-    GAME.THEMES.tech.outdoor_wall_groups = { PLAIN = 50 }
-    GAME.THEMES.tech.window_groups = 
-    {
-      straddle = 70,
-      tall   = 80,
-      grate  = 45,
-      barred = 10,
-      supertall = 60,
-      slits = 20,
-      pillbox = 20,
-      slumpish = 30,
-      window_crossfire = 10,
-    }
-    GAME.THEMES.tech.fence_groups = { PLAIN = 50, crenels = 12 }
-    GAME.THEMES.tech.fence_posts = { Post = 50 }
-    GAME.THEMES.deimos.narrow_halls = { vent = 50 }
-    GAME.THEMES.deimos.beam_groups = { beam_metal = 50 }
-    GAME.THEMES.deimos.wall_groups = 
-    {
-      PLAIN = 0.01,
-      mid_band = 10,
-      lite1 = 20,
-      lite2 = 20,
-      torches1 = 12,
-      torches2 = 12,
-      high_gap = 25,
-      vert_gap = 25,
-      wallgutters = 10,
-      lamptorch = 16,
-      runic = 10,
-      croix = 10,
-    }
-    GAME.THEMES.deimos.outdoor_wall_groups = { PLAIN = 50 }
-    GAME.THEMES.deimos.window_groups =
-    {
-      straddle = 70,
-      tall   = 80,
-      grate  = 45,
-      barred = 10,
-      supertall = 60,
-      slits = 20,
-      pillbox = 20,
-      slumpish = 30,
-      window_crossfire = 10,
-    }
-    GAME.THEMES.deimos.fence_groups = { PLAIN = 50, crenels = 12 }
-    GAME.THEMES.deimos.fence_posts = { Post = 50 }
-    GAME.THEMES.hell.narrow_halls = { vent = 50 }
-    GAME.THEMES.hell.beam_groups = { beam_metal = 50 }
-    GAME.THEMES.hell.wall_groups = 
-    {
-      PLAIN = 0.01,
-      mid_band = 10,
-      lite1 = 20,
-      lite2 = 20,
-      torches1 = 12,
-      torches2 = 12,
-      high_gap = 25,
-      vert_gap = 25,
-      wallgutters = 10,
-      lamptorch = 16,
-      runic = 10,
-      croix = 10,
-    }
-    GAME.THEMES.hell.outdoor_wall_groups = { PLAIN = 50 }
-    GAME.THEMES.hell.window_groups = 
-    {
-      straddle = 70,
-      tall   = 80,
-      grate  = 45,
-      barred = 10,
-      supertall = 60,
-      slits = 20,
-      pillbox = 20,
-      slumpish = 30,
-      window_crossfire = 10,
-    }
-    GAME.THEMES.hell.fence_groups = { PLAIN = 50, crenels = 12 }
-    GAME.THEMES.hell.fence_posts = { Post = 50 }
-    GAME.THEMES.flesh.narrow_halls = { vent = 50 }
-    GAME.THEMES.flesh.beam_groups = { beam_metal = 50 }
-    GAME.THEMES.flesh.wall_groups = 
-    {
-      PLAIN = 0.01,
-      mid_band = 10,
-      lite1 = 20,
-      lite2 = 20,
-      torches1 = 12,
-      torches2 = 12,
-      high_gap = 25,
-      vert_gap = 25,
-      wallgutters = 10,
-      lamptorch = 16,
-      runic = 10,
-      croix = 10,
-    }
-    GAME.THEMES.flesh.outdoor_wall_groups = { PLAIN = 50 }
-    GAME.THEMES.flesh.window_groups = 
-    {
-      straddle = 70,
-      tall   = 80,
-      grate  = 45,
-      barred = 10,
-      supertall = 60,
-      slits = 20,
-      pillbox = 20,
-      slumpish = 30,
-      window_crossfire = 10,
-    }
-    GAME.THEMES.flesh.fence_groups = { PLAIN = 50, crenels = 12 }
-    GAME.THEMES.flesh.fence_posts = { Post = 50 }
-  end
-end
-
 function ULTDOOM.get_levels()
   local EP_MAX  = sel(OB_CONFIG.game   == "ultdoom", 4, 3)
   local EP_NUM  = sel(OB_CONFIG.length == "game", EP_MAX, 1)
@@ -4625,7 +4425,6 @@ function ULTDOOM.get_levels()
     end
 
   end -- for episode
-  ULTDOOM.nolimit_themes()
 end
 
 ULTDOOM.FACTORY = {}

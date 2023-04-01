@@ -6,6 +6,8 @@ UNFINISHED.Window_liquid_arch =
 {
   file   = "window/liq_arch.wad",
 
+  
+
   prob   = 90,
 
   where  = "edge",

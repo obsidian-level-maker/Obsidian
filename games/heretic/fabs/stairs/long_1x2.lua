@@ -8,6 +8,8 @@ PREFABS.Stair_long_1x2 =
 
   prob   = 90,
 
+  
+
   where  = "seeds",
   shape  = "I",
 

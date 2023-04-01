@@ -7,6 +7,8 @@ PREFABS.Arch_plain =
   file   = "door/arch_plain.wad",
   map    = "MAP01",
 
+  
+
   prob = 100,
 
   kind   = "arch",
@@ -26,6 +28,8 @@ PREFABS.Arch_plain_diag =
 {
   file   = "door/arch_plain.wad",
   map    = "MAP02",
+
+  
 
   prob = 100,
 

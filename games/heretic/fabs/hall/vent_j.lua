@@ -10,6 +10,8 @@ PREFABS.Hallway_vent_plain =
   kind   = "terminator",
   group  = "vent",
 
+  
+
   prob   = 50,
 
   where  = "seeds",

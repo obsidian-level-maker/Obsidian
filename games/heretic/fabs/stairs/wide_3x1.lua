@@ -9,6 +9,8 @@ PREFABS.Stair_wide_3x1 =
 
   prob   = 800,
 
+  
+
   where  = "seeds",
   shape  = "I",
 
@@ -25,6 +27,8 @@ PREFABS.Stair_wide_3x1_torch =
 {
   file   = "stairs/wide_3x1.wad",
   map    = "MAP02",
+
+  
 
   prob  = 400,
 

@@ -8,6 +8,8 @@ PREFABS.Item_secret_niche1 =
   file  = "item/secret_niche.wad",
   map   = "MAP01",
 
+  
+
   theme = "tech",
   prob  = 25,
   key   = "secret",
@@ -52,6 +54,8 @@ PREFABS.Item_secret_niche2 =
   file  = "item/secret_niche.wad",
   map      = "MAP02",
   theme = "tech",
+
+  
 
   prob = 100,
 

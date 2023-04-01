@@ -3086,7 +3086,7 @@ end
 
 function Render_all_street_markings(LEVEL)
 
-  if not ob_match_game({game = "doomish"}) or OB_CONFIG.port == "limit_removing" then return end
+  if not ob_match_game({game = "doomish"}) then return end
 
   local road_fab_list =
   {

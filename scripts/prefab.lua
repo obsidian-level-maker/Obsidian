@@ -1649,7 +1649,7 @@ function Fab_load_wad(def)
           picked_sound = fab.sound
         end
 
-        E.id = ZDOOM_SOUND_DEFS[picked_sound].id
+        E.id = AMBIENT_SOUND_DEFS[picked_sound].id
 
         E.flags = nil
         table.insert(fab.entities, E)
@@ -2790,13 +2790,6 @@ function Fab_find_matches(LEVEL, reqs, match_state)
   local function match_requirements(def)
     -- type check
     local kind = assert(def.kind)
-
-    -- limit-removing hard req for Doom
-    if OB_CONFIG.port == "limit_removing" and ob_match_game({ game = "doomish" }) then
-      if not def.port or def.port ~= "limit_removing" then
-        return 0
-      end
-    end
 
     if def.jump_crouch and def.jump_crouch == true then
       if not PARAM.bool_jump_crouch then

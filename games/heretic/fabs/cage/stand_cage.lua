@@ -11,6 +11,8 @@ PREFABS.Cage_stand1 =
 
   where  = "point",
 
+  
+
   size   = 128,
   height = 128,
 
@@ -27,6 +29,8 @@ PREFABS.Cage_stand2 =
 
   prob   = 100,
   env    = "cave",
+
+  
 
   where  = "point",
 

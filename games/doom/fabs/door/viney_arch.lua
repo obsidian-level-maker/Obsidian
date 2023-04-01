@@ -7,6 +7,8 @@ PREFABS.Arch_viney1 =
   file   = "door/viney_arch.wad",
   map    = "MAP02",
 
+  
+
   prob = 400,
 
   env      = "cave",
@@ -58,6 +60,7 @@ PREFABS.Joiner_viney1 =
   file   = "door/viney_arch.wad",
   map    = "MAP05",
 
+  
 
   prob   = 50,
 

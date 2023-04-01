@@ -8,6 +8,8 @@ PREFABS.Window_tall_1 =
   map    = "MAP01",
   theme  = "!tech",
 
+  
+
   group  = "tall",
   prob   = 50,
 

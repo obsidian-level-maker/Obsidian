@@ -11,6 +11,8 @@ PREFABS.Decor_water_fountain =
   prob   = 5000,
   env    = "outdoor",
 
+  
+
   where  = "point",
   size   = 128,
 
@@ -25,6 +27,8 @@ PREFABS.Decor_blood_fountain =
 {
   file   = "decor/fountain.wad",
   map    = "MAP02",
+
+  
 
   prob   = 5000,
   theme  = "!tech",
@@ -42,6 +46,8 @@ PREFABS.Decor_lava_fountain =
 {
   file   = "decor/fountain.wad",
   map    = "MAP03",
+
+  
 
   prob   = 5000,
   theme  = "hell",

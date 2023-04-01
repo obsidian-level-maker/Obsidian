@@ -8,6 +8,8 @@ PREFABS.Exit_secret_box1 =
 
   prob  = 100,
 
+  
+
   -- the kind means "an exit to a secret level",
   -- the key  means "a closet which is hidden in the room",
   kind  = "secret_exit",

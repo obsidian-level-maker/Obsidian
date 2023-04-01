@@ -9,6 +9,8 @@ PREFABS.Exit_closet1 =
 
   prob   = 100,
 
+  
+
   where  = "seeds",
   seed_w = 1,
   seed_h = 1,

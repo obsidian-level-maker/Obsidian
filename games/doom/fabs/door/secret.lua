@@ -7,6 +7,8 @@ PREFABS.Door_secret =
   file   = "door/secret.wad",
   map    = "MAP01",
 
+  
+
   prob   = 200,
 
   where  = "edge",

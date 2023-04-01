@@ -7,6 +7,8 @@ PREFABS.Wall_midband =
   file   = "wall/mid_band.wad",
   map    = "MAP01",
 
+  
+
   prob   = 50,
   group  = "mid_band",
 
@@ -25,6 +27,8 @@ PREFABS.Wall_midband_diag =
 {
   file   = "wall/mid_band.wad",
   map    = "MAP02",
+
+  
 
   prob   = 50,
   group  = "mid_band",

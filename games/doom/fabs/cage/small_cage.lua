@@ -9,6 +9,8 @@ PREFABS.Cage_small_1 =
   prob   = 50,
   env    = "outdoor",
 
+  
+
   where  = "point",
 
   size   = 80,

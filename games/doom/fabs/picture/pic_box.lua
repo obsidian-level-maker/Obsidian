@@ -7,6 +7,8 @@ TEMPLATES.Pic_box_template =
   file   = "picture/pic_box.wad",
   map    = "MAP01",
 
+  
+
   prob  = 100,
   env   = "building",
 

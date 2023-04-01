@@ -9,6 +9,8 @@ PREFABS.Fence_plain =
 
   prob   = 50,
 
+  
+
   group  = "PLAIN",
 
   where  = "edge",
@@ -27,6 +29,8 @@ PREFABS.Fence_plain_diag =
   map    = "MAP02",
 
   prob   = 50,
+
+  
 
   group  = "PLAIN",
 

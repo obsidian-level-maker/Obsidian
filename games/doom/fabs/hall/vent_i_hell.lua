@@ -3,6 +3,8 @@ PREFABS.Hallway_vent_arch =
   file   = "hall/vent_i_hell.wad",
   map    = "MAP01",
 
+  
+
   theme  = "hell",
   group  = "vent",
   prob   = 35,

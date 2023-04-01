@@ -8,6 +8,8 @@ PREFABS.Item_pedestal =
   where = "point",
   theme = "!tech",
 
+  
+
   prob = 50,
 }
 

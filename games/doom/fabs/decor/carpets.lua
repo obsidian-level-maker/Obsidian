@@ -11,6 +11,8 @@ PREFABS.Decor_techfloor1 =
   theme  = "tech",
   env    = "building",
 
+  
+
   where  = "point",
   size   = 80,
 
@@ -27,6 +29,8 @@ PREFABS.Decor_sunkgrate =
 {
   file   = "decor/carpets.wad",
   map    = "MAP02",
+
+  
 
   prob   = 5000,
   theme  = "urban",

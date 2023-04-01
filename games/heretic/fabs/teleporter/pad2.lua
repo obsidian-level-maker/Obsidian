@@ -7,6 +7,8 @@ PREFABS.Teleporter2 =
   file   = "teleporter/pad2.wad",
   map    = "MAP01",
 
+  
+
   prob   = 50,
 
   where  = "point",

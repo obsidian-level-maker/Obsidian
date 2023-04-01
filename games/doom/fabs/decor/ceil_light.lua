@@ -7,6 +7,8 @@ PREFABS.Light_basic =
   file   = "decor/ceil_light.wad",
   map    = "MAP01",
 
+  
+
   prob   = 1,
   env    = "building",
 

@@ -7,6 +7,8 @@ PREFABS.Wall_plain =
   file   = "wall/wall_16.wad",
   map    = "MAP01",
 
+  
+
   prob   = 50,
 
   where  = "edge",
@@ -24,6 +26,8 @@ PREFABS.Wall_plain_diag =
 {
   file   = "wall/wall_16.wad",
   map    = "MAP02",
+
+  
 
   prob   = 50,
 

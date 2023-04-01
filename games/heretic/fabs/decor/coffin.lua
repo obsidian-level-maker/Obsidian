@@ -11,6 +11,8 @@ PREFABS.Decor_coffin =
   skip_prob = 70,
   env    = "building",
 
+  
+
   where  = "point",
   size   = 216,
 }

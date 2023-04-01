@@ -11,6 +11,8 @@ PREFABS.Decor_dittohead_computer =
   theme  = "!hell",
   env    = "building",
 
+  
+
   where  = "point",
   size   = 128,
   height = 160,

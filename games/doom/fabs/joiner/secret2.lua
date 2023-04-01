@@ -7,6 +7,8 @@ PREFABS.Joiner_secret2_A =
   file   = "joiner/secret2.wad",
   map    = "MAP01",
 
+  
+
   prob   = 150,
 
   key    = "secret",

@@ -10,6 +10,8 @@ PREFABS.Wall_lowgap =
   file   = "wall/low_gap.wad",
   map    = "MAP01",
 
+  
+
   prob   = 50,
   group  = "low_gap",
   theme  = "tech",
@@ -30,6 +32,8 @@ PREFABS.Wall_lowgap_diag =
   file   = "wall/low_gap.wad",
   map    = "MAP02",
 
+  
+
   prob   = 50,
   group  = "low_gap",
   theme  = "tech",
@@ -48,6 +52,8 @@ PREFABS.Wall_lowgap_innerdiag =
 {
   file = "wall/low_gap.wad",
   map = "MAP04",
+
+  
 
   prob = 50,
   group = "low_gap",

@@ -10,6 +10,8 @@ PREFABS.Decor_stalag1 =
   file   = "decor/stalag.wad",
   map    = "MAP01",
 
+  
+
   prob   = 5000,
   env    = "cave",
 

@@ -26,6 +26,7 @@
 #include "ui_build.h"
 #include "ui_game.h"
 #include "ui_module.h"
+#include "ui_widgets.h"
 
 // support for scaling up the GUI
 extern int KF;  // Kromulent Factor : -1 .. 3
@@ -49,6 +50,8 @@ class UI_MainWin : public Fl_Double_Window {
     UI_Build *build_box;
 
     UI_CustomTabs *mod_tabs;
+
+    UI_Clippy *clippy;
 
    public:
     UI_MainWin(int W, int H, const char *title);

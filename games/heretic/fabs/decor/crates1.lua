@@ -10,6 +10,8 @@ PREFABS.Crate_sandstone =
   prob   = 40,
   env    = "outdoor",
 
+  
+
   where  = "point",
   size   = 64,
 }
@@ -22,6 +24,8 @@ PREFABS.Crate_saint1 =
 
   prob   = 10,
   env    = "outdoor",
+
+  
 
   where  = "point",
   size   = 64,

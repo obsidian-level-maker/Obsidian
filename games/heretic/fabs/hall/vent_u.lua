@@ -10,6 +10,8 @@ PREFABS.Hallway_vent_u1 =
   group  = "vent",
   prob   = 50,
 
+  
+
   where  = "seeds",
   shape  = "U",
 }

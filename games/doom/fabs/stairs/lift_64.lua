@@ -6,6 +6,8 @@ PREFABS.Lift_64 =
 {
   file   = "stairs/lift_64.wad",
 
+  
+
   prob   = 15,
   theme  = "!hell",
   style  = "steepness",

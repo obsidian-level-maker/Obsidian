@@ -7,6 +7,8 @@ PREFABS.Decor_blob_lamp =
   file   = "decor/blob_lamp.wad",
   map    = "MAP01",
 
+  
+
   prob   = 5000,
   skip_prob = 75,
 

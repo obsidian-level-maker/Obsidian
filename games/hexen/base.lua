@@ -39,7 +39,7 @@ gui.import("names")
 
 ------------------------------------------------------------
 
-OB_GAMES["hexen"] =
+UNFINISHED["hexen"] =
 {
   label = _("Hexen"),
   

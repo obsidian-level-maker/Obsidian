@@ -7,6 +7,8 @@ PREFABS.Fence_plain_secret =
   file   = "fence/secret_16.wad",
   map    = "MAP05",
 
+  
+
   where  = "edge",
   key    = "secret",
 

@@ -12,6 +12,8 @@ PREFABS.Cage_small_1 =
 
   where  = "point",
 
+  
+
   size   = 80,
   height = 128,
 

@@ -7,6 +7,8 @@ PREFABS.Item_closet_w_door =
   file   = "item/closet.wad",
   map    = "MAP01",
 
+  
+
   prob   = 20,
   env    = "!cave",
   theme  = "urban",
@@ -47,6 +49,8 @@ PREFABS.Item_closet_w_door_tech =
 {
   file   = "item/closet.wad",
   map    = "MAP02",
+
+  
 
   prob   = 25,
   env    = "!cave",

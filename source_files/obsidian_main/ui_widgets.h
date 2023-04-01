@@ -27,12 +27,16 @@
 #include <vector>
 
 #include "FL/Fl_Box.H"
+#include "FL/Fl_Button.H"
 #include "FL/Fl_Check_Button.H"
 #include "FL/Fl_Choice.H"
 #include "FL/Fl_Group.H"
 #include "FL/Fl_Hor_Slider.H"
 #include "FL/Fl_Repeat_Button.H"
 #include "FL/Fl_Menu_Button.H"
+#include "FL/Fl_Text_Buffer.H"
+#include "FL/Fl_Text_Display.H"
+#include "FL/Fl_Double_Window.H"
 
 //
 // DESCRIPTION:
@@ -230,6 +234,7 @@ class UI_RChoice : public Fl_Group {
     opt_change_callback_data_t *cb_data;
 
    private:
+    int handle(int handle);
 };
 
 class UI_CustomArrowButton : public Fl_Repeat_Button {
@@ -277,6 +282,7 @@ class UI_CustomSlider: public Fl_Hor_Slider {
 
 class UI_RSlide : public Fl_Group {
    private:
+    int handle(int event);
 
    public:
     UI_RSlide(int x, int y, int w, int h);
@@ -311,8 +317,6 @@ class UI_RSlide : public Fl_Group {
     std::string default_value;
 
     opt_change_callback_data_t *cb_data;
-
-   public:
 };
 
 class UI_CustomCheckBox : public Fl_Check_Button {
@@ -327,6 +331,7 @@ class UI_CustomCheckBox : public Fl_Check_Button {
 
 class UI_RButton : public Fl_Group {
    private:
+   
    public:
     UI_RButton(int x, int y, int w, int h);
     virtual ~UI_RButton();
@@ -346,6 +351,37 @@ class UI_RButton : public Fl_Group {
     opt_change_callback_data_t *cb_data;
 
    private:
+
+   int handle(int event);
+};
+
+class UI_Clippy : public Fl_Double_Window {
+
+   public:
+    UI_Clippy();
+    virtual ~UI_Clippy();
+
+    Fl_Box *background;
+
+    Fl_Text_Buffer *buff;
+
+    Fl_Text_Display *disp;
+
+    Fl_Button *showme_another;
+
+    void ShowAdvice(void);
+
+    bool enable_me;
+
+   private:
+
+    int handle(int event);
+
+    static void callback_MoreAdvice(Fl_Widget *w, void *data);
+
+    int xoff; 
+    
+    int yoff;
 };
 
 #endif /* __UI_WIDGETS_H__ */

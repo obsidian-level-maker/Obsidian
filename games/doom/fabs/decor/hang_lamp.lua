@@ -11,6 +11,8 @@ PREFABS.Light_hanging =
   theme  = "urban",
   env    = "building",
 
+  
+
   kind   = "light",
   where  = "point",
 

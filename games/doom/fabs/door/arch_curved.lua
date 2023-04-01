@@ -7,6 +7,8 @@ PREFABS.Arch_curved1 =
   file   = "door/arch_curved.wad",
   map    = "MAP01",
 
+  
+
   prob   = 400,
   theme  = "!tech",
 

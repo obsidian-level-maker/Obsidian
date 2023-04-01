@@ -13,6 +13,8 @@ PREFABS.Exit_secret_box1 =
   kind  = "secret_exit",
   key   = "secret",
 
+  
+
   where  = "seeds",
   seed_w = 1,
   seed_h = 1,

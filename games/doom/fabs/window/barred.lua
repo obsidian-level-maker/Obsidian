@@ -8,6 +8,8 @@ PREFABS.Window_barred1 =
   map    = "MAP01",
   theme  = "!tech",
 
+  
+
   passable = true,
 
   group  = "barred",

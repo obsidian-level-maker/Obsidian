@@ -224,6 +224,7 @@ extern Fl_BMP_Image *tutorial7;
 extern Fl_BMP_Image *tutorial8;
 extern Fl_BMP_Image *tutorial9;
 extern Fl_BMP_Image *tutorial10;
+extern Fl_Pixmap *clippy;
 
 void DLG_AboutText();
 void DLG_OptionsEditor();

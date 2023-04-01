@@ -8,6 +8,8 @@ PREFABS.Fence_pillar =
   kind = "pillar",
   where = "point",
 
+  
+
   size = 16,
   height = 2,
 

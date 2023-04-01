@@ -12,6 +12,8 @@ PREFABS.Cage_wall =
   where  = "seeds",
   shape  = "U",
 
+  
+
   seed_w = 1,
   seed_h = 1,
 

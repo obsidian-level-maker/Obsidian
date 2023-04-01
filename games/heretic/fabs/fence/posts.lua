@@ -6,6 +6,8 @@ PREFABS.Post =
 
   prob   = 50,
 
+  
+
   where  = "point",
   size   = 48,
 

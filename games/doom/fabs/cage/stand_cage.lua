@@ -9,6 +9,8 @@ PREFABS.Cage_stand1 =
 
   prob   = 500,
 
+  
+
   where  = "point",
 
   size   = 128,
@@ -24,6 +26,7 @@ PREFABS.Cage_stand2 =
   file   = "cage/stand_cage.wad",
   map    = "MAP02",
 
+  
 
   prob   = 100,
   env    = "cave",

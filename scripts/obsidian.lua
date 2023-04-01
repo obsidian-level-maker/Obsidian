@@ -47,8 +47,9 @@ gui.import("level")
 
 gui.import("script_manager")
 
-gui.import("random_words_en.lua")
-gui.import("random_words_en_m.lua")
+gui.import("/data/text/random_words_en.lua")
+gui.import("/data/text/random_words_en_m.lua")
+gui.import("/data/text/dialogues.lua")
 
 gui.import("094/oblige_v094.lua")
 
@@ -888,7 +889,7 @@ function ob_read_all_config(need_full, log_only)
   do_line("-- josh771")
   do_line("-- dashodanger")
   do_line("-- Phytolizer")
-  do_line("-- https://github.com/dashodanger/Obsidian/\n")
+  do_line("-- https://github.com/obsidian-level-maker/Obsidian/\n")
 
   if OB_CONFIG.seed and OB_CONFIG.seed ~= 0 then
     if OB_CONFIG.string_seed then
@@ -1435,7 +1436,7 @@ function ob_init()
   gui.printf("        Phytolizer\n")
   gui.printf("    And All of Our Fans!\n\n")
   gui.printf("--------------------------------------------\n")
-  gui.printf("-- https://github.com/dashodanger/Obsidian/ --\n")
+  gui.printf("-- https://github.com/obsidian-level-maker/Obsidian/ --\n")
   gui.printf("--------------------------------------------\n\n")
 
   gui.printf("~~ Obsidian Lua initialization begun ~~\n\n")
@@ -1793,6 +1794,10 @@ function ob_get_random_words()
   else
     return case_randomizer(rand.pick(RANDOM_WORDS)) .. " " .. case_randomizer(rand.pick(RANDOM_WORDS)) .. " " .. case_randomizer(rand.pick(RANDOM_WORDS))
   end
+end
+
+function ob_random_advice()
+  return rand.pick(HELPFUL_ADVICE)
 end
 
 function ob_default_filename()
@@ -2173,6 +2178,7 @@ function ob_clean_up()
   PREFABS = nil
   SEEN_ROOM_THEMES = nil
   SEEN_WALL_GROUPS = nil
+  AMBIENT_SOUND_DEFS = nil
 
   if OB_CONFIG.string_seed then
     table.remove(OB_CONFIG, string_seed)
@@ -2190,6 +2196,7 @@ function ob_clean_up()
   if OB_MODULES["sky_generator"].enabled and OB_MODULES["sky_generator"].visible then
     gui.fsky_free()
   end
+  AMBIENT_SOUND_DEFS = {}
 end
 
 local function ob_get_module_refs()
@@ -2315,7 +2322,6 @@ local function ob_get_module_refs()
       choices = {
         "vanilla",
         "limit_enforcing",
-        "limit_removing",
         "boom",
         "dsda",
         "zdoom",

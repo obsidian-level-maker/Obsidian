@@ -6,6 +6,8 @@ UNFINISHED.Floor_lavapit =
 {
   file   = "floor/lava_pit.wad",
 
+  
+
   prob   = 50,
 
   where  = "seeds",

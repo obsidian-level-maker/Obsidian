@@ -7,6 +7,8 @@ PREFABS.Joiner_secret3_cage =
   file   = "joiner/secret3.wad",
   map    = "MAP01",
 
+  
+
   prob   = 50,
   env    = "!cave",
   style  = "cages",

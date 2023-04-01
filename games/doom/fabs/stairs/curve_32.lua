@@ -8,6 +8,8 @@ PREFABS.Stair_curve_32 =
 
   prob   = 50,
 
+  
+
   where  = "seeds",
   shape  = "L",
 

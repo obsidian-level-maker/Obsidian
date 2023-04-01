@@ -11,6 +11,8 @@ PREFABS.Beam =
 
   kind   = "beam",
 
+  
+
   prob   = 50,
 
   where  = "edge",
@@ -28,6 +30,8 @@ PREFABS.Beam_diagonal =
   map    = "MAP02",
 
   group  = "beam_metal",
+
+  
 
   kind   = "beam",
 

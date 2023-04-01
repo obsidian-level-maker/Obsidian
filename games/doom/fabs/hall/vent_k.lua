@@ -7,6 +7,8 @@ PREFABS.Hallway_vent_locked_red =
   file   = "hall/vent_k.wad",
   map    = "MAP01",
 
+  
+
   kind   = "terminator",
   group  = "vent",
   key    = "k_red",
@@ -53,6 +55,8 @@ PREFABS.Hallway_vent_barred =
   file   = "hall/vent_k.wad",
   map    = "MAP03",
   theme  = "!tech",
+
+  
 
   kind   = "terminator",
   group  = "vent",

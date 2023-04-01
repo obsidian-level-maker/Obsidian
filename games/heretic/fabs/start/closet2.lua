@@ -7,6 +7,8 @@ PREFABS.Start_closet2 =
   file  = "start/closet2.wad",
   map   = "MAP01",
 
+  
+
   prob  = 240,
 
   where  = "seeds",
