@@ -28,25 +28,25 @@ Features of OBSIDIAN include:
 * Heretic  
   Moderate level of support, with some advanced modules and a handful of addons available.
   
-* Chex Quest 3 (Unstable branch only)  
+* Chex Quest 3
   Basic level of support, with a handful of unique prefabs.
   
-* HacX 1.2 (Unstable branch only)  
+* HacX 1.2 
   Basic level of support.
   
-* Harmony (Unstable branch only)  
+* Harmony  
   Basic level of support.
   
-* Hexen (Unstable branch only)  
+* Hexen 
   Basic level of support. Game progression is linear and episodic, with no hubs present. The game will end after the last level generated. The Death Wyvern is absent from the monster table due to the    infeasibility of scripting and flight pathing with randomly generated layouts.
   
-* Strife (Unstable branch only)  
+* Strife
   Basic level of support. Quests/multiple endings not yet implemented. Progression is linear and game will end after the last level generated.
   
-* Wolfenstein 3D / Spear of Destiny (Unstable branch only)  
+* Wolfenstein 3D / Spear of Destiny
   Moderate level of support.
   
-* Super Noah's Ark 3D (Unstable branch only)  
+* Super Noah's Ark 3D  
   Basic level of support. 
 
 ## QUICK START GUIDE (Windows)
