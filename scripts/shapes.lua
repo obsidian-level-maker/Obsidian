@@ -4745,7 +4745,29 @@ GROW_LIQUID_POOL_H_TRIPLE_NEW_AREA =
     ".....","~A~A~",
     ".....","1^1^1",
     ".....","11111",
-    "xxx11","xxx11",
+    "xxx11","xxx11"
+  }
+},
+
+GROW_LIQUID_POOL_H_TRIPLE_THICK_NEW_AREA =
+{
+  prob = 20,
+  skip_prob = 80,
+
+  structure =
+  {
+    "........","11111111",
+    "........","11111111",
+    "........","1vv11vv1",
+    "........","~AA~~AA~",
+    "........","~AA~~AA~",
+    "........","~AAAAAA~",
+    "........","~AAAAAA~",
+    "........","~AA~~AA~",
+    "........","~AA~~AA~",
+    "........","1^^11^^1",
+    "........","11111111",
+    "xxxxxx11","xxxxxx11"
   }
 },
 
@@ -4766,11 +4788,11 @@ GROW_LIQUID_POOL_Z_TRIPLE_NEW_AREA =
     ".....","~A~~~",
     ".....","1^111",
     ".....","11111",
-    "xxx11","xxx11",
+    "xxx11","xxx11"
   }
 },
 
-GROW_LIQUID_POOL_Z_TRIPLE_NEW_AREA_THICK =
+GROW_LIQUID_POOL_Z_TRIPLE_NEW_THICK_AREA =
 {
   prob = 15,
   skip_prob = 80,
@@ -4788,7 +4810,7 @@ GROW_LIQUID_POOL_Z_TRIPLE_NEW_AREA_THICK =
     "......","~AA~~~",
     "......","1^^111",
     "......","111111",
-    "xxxx11","xxxx11",
+    "xxxx11","xxxx11"
   },
 
   diagonals =
