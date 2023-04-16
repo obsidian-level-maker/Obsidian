@@ -94,6 +94,588 @@ HERETIC.MUSIC_LUMPS =
   "MUS_E3M3",
 }
 
+HERETIC.SKY_GEN_COLORMAPS =
+{
+  -- star colors --
+
+  STARS =
+  {
+    0, 1, 2, 3,
+    6, 9, 11, 13, 15,
+    16, 19, 21, 23, 25, 255,
+  },
+
+  RED_NEBULA =
+  {
+    0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0,
+    145,146,147,148,150,152,154,156,
+  },
+
+  BLUE_NEBULA =
+  {
+    0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0,
+    185,186,187,188,189,190,191,192,
+    193,194,195,196,197,198,199,200,
+  },
+
+  BROWN_NEBULA =
+  {
+    0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0,
+    3,3,4,4, 67,67,68,69,70,71,72,73,75,77,
+  },
+
+  GREEN_NEBULA =
+  {
+    0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0,
+    209, 210, 211, 212, 213, 214, 215,
+    216, 217, 218, 219, 221, 223, 224,
+  },
+
+  -- cloud colors --
+
+  GREY_CLOUDS =
+  {
+    11, 13, 15, 17,
+    19, 21, 23, 25, 27,
+    29, 31, 33,
+  },
+
+  DARK_CLOUDS =
+  {
+    1, 2, 3,
+    4, 5, 6, 7, 8,
+    9, 10, 11, 12, 13,
+  },
+
+  BLUE_CLOUDS =
+  {
+    185, 185, 186, 186, 187, 188, 189,
+    190, 192, 193, 194, 194, 195, 195,
+  },
+
+  HELL_CLOUDS =
+  {
+    148, 149, 150, 151, 152, 153, 154,
+    155, 156, 157, 158, 159, 160, 161,
+  },
+
+  ORANGE_CLOUDS =
+  {
+    137, 138, 139, 140, 127, 128, 130, 132,
+  },
+
+  HELLISH_CLOUDS =
+  {
+    0, 0, 0, 0, 0, 145, 146, 147, 146, 145, 0, 0,
+  },
+
+  BROWN_CLOUDS =
+  {
+     3, 4,
+     68, 69, 70, 71, 72, 73, 74,
+     75, 76, 77, 78, 80, 81, 82,
+  },
+
+  BROWNISH_CLOUDS =
+  {
+    95, 96, 97, 98, 99, 100, 101,
+    102, 103, 104, 105, 106, 107, 108,
+    109, 110,
+  },
+
+  YELLOW_CLOUDS =
+  {
+    118, 119, 121, 123, 125, 131,
+    132, 133, 144, 136,
+  },
+
+  GREEN_CLOUDS =
+  {
+    209, 210, 211, 212, 213, 214, 215,
+    216, 217, 218, 219, 221, 223, 224,
+  },
+
+  JADE_CLOUDS =
+  {
+    229, 230, 231, 232,
+    233, 234, 235, 236, 237, 238, 239, 240,
+  },
+
+  DARKRED_CLOUDS =
+  {
+     145, 146, 147, 148, 149, 150, 151, 152,
+  },
+
+  PEACH_CLOUDS =
+  {
+     80, 82, 84, 86, 88, 89,
+  },
+
+  WHITE_CLOUDS =
+  {
+     12, 13, 14, 15, 16, 17, 18,
+     19, 20, 21, 22, 23, 24, 25,
+     26, 27, 28, 30, 32,
+  },
+
+  SKY_CLOUDS =
+  {
+    200, 199, 198, 197,
+  },
+
+  PURPLE_CLOUDS =
+  {
+    171, 172, 173, 174, 175, 174, 173, 172, 171,
+  },
+
+  RAINBOW_CLOUDS =
+  {
+    145, 150, 154, 158,
+    144, 143, 140, 137,
+    187, 192, 196, 199,
+    219, 215, 213, 211,
+  },
+
+  -- hill colors --
+
+  BLACK_HILLS =
+  {
+    0, 0, 0,
+  },
+
+  BROWN_HILLS =
+  {
+    0, 3, 3, 4,
+    96,97,98,99,100,76,77,78,
+    79,80,81,82,83,84,123,122,
+  },
+
+  TAN_HILLS =
+  {
+    96, 97, 98,
+    99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110,
+  },
+
+  GREEN_HILLS =
+  {
+    0, 1,
+    210, 211, 212, 213, 214, 215, 216,
+    217, 218, 219, 220, 221, 222, 223, 224,
+  },
+
+  DARKGREEN_HILLS =
+  {
+    0, 1, 210, 211, 212, 213,
+  },
+
+  HELL_HILLS =
+  {
+    0, 2, 145, 146, 147, 148, 149, 150, 151, 152,
+    153,
+  },
+
+  DARKBROWN_HILLS =
+  {
+    1, 2, 3, 4, 95, 96, 97, 98,
+  },
+
+  GREENISH_HILLS =
+  {
+    0, 1, 225, 226, 227, 228, 96, 97, 98,
+    232, 233, 234, 235, 236, 237,
+  },
+
+  ICE_HILLS =
+  {
+    0, 185,
+    193, 194, 195, 196, 197, 198, 199,
+    200, 201, 202,
+  },
+}
+
+HERETIC.SKY_GEN_THEMES =
+{
+  psycho =
+  {
+    clouds =
+    {
+      PURPLE_CLOUDS  = 90,
+      YELLOW_CLOUDS  = 70,
+      HELLISH_CLOUDS = 20,
+      RAINBOW_CLOUDS = 10,
+
+      GREEN_CLOUDS = 70,
+      BLUE_CLOUDS  = 70,
+      WHITE_CLOUDS = 30,
+      GREY_CLOUDS  = 30,
+    },
+
+    hills =
+    {
+      BLUE_CLOUDS = 50,
+      GREEN_HILLS = 50,
+      RAINBOW_CLOUDS = 50,
+      PURPLE_CLOUDS = 30,
+      YELLOW_CLOUDS = 30,
+      ORANGE_CLOUDS = 30,
+      WHITE_CLOUDS = 30,
+      HELLISH_CLOUDS = 20,
+    },
+  },
+
+  city =
+  {
+    clouds =
+    {
+      SKY_CLOUDS = 130,
+      BLUE_CLOUDS = 80,
+      WHITE_CLOUDS = 80,
+      GREY_CLOUDS = 100,
+      DARK_CLOUDS = 100,
+
+      BROWN_CLOUDS = 60,
+      BROWNISH_CLOUDS = 40,
+      PEACH_CLOUDS = 40,
+      YELLOW_CLOUDS = 40,
+      ORANGE_CLOUDS = 40,
+      GREEN_CLOUDS = 25,
+      JADE_CLOUDS = 25,
+    },
+
+    hills =
+    {
+      TAN_HILLS = 30,
+      BROWN_HILLS = 50,
+      DARKBROWN_HILLS = 50,
+      GREENISH_HILLS = 30,
+      ICE_HILLS = 12,
+      BLACK_HILLS = 5,
+    },
+
+    dark_hills =
+    {
+      DARKGREEN_HILLS = 50,
+      DARKBROWN_HILLS = 50,
+      ICE_HILLS = 25,
+    },
+  },
+
+  maw =
+  {
+    clouds =
+    {
+      SKY_CLOUDS = 130,
+      BLUE_CLOUDS = 80,
+      WHITE_CLOUDS = 80,
+      GREY_CLOUDS = 100,
+      DARK_CLOUDS = 100,
+
+      BROWN_CLOUDS = 60,
+      BROWNISH_CLOUDS = 40,
+      PEACH_CLOUDS = 40,
+      YELLOW_CLOUDS = 40,
+      ORANGE_CLOUDS = 40,
+      GREEN_CLOUDS = 25,
+      JADE_CLOUDS = 25,
+    },
+
+    hills =
+    {
+      TAN_HILLS = 30,
+      BROWN_HILLS = 50,
+      DARKBROWN_HILLS = 50,
+      GREENISH_HILLS = 30,
+      ICE_HILLS = 12,
+      BLACK_HILLS = 5,
+    },
+
+    dark_hills =
+    {
+      DARKGREEN_HILLS = 50,
+      DARKBROWN_HILLS = 50,
+      ICE_HILLS = 25,
+    },
+  },
+
+  ossuary =
+  {
+    clouds =
+    {
+      SKY_CLOUDS = 130,
+      BLUE_CLOUDS = 80,
+      WHITE_CLOUDS = 80,
+      GREY_CLOUDS = 100,
+      DARK_CLOUDS = 100,
+
+      BROWN_CLOUDS = 60,
+      BROWNISH_CLOUDS = 40,
+      PEACH_CLOUDS = 40,
+      YELLOW_CLOUDS = 40,
+      ORANGE_CLOUDS = 40,
+      GREEN_CLOUDS = 25,
+      JADE_CLOUDS = 25,
+    },
+
+    hills =
+    {
+      TAN_HILLS = 30,
+      BROWN_HILLS = 50,
+      DARKBROWN_HILLS = 50,
+      GREENISH_HILLS = 30,
+      ICE_HILLS = 12,
+      BLACK_HILLS = 5,
+    },
+
+    dark_hills =
+    {
+      DARKGREEN_HILLS = 50,
+      DARKBROWN_HILLS = 50,
+      ICE_HILLS = 25,
+    },
+  },
+
+  dome =
+  {
+    clouds =
+    {
+      SKY_CLOUDS = 130,
+      BLUE_CLOUDS = 80,
+      WHITE_CLOUDS = 80,
+      GREY_CLOUDS = 100,
+      DARK_CLOUDS = 100,
+
+      BROWN_CLOUDS = 60,
+      BROWNISH_CLOUDS = 40,
+      PEACH_CLOUDS = 40,
+      YELLOW_CLOUDS = 40,
+      ORANGE_CLOUDS = 40,
+      GREEN_CLOUDS = 25,
+      JADE_CLOUDS = 25,
+    },
+
+    hills =
+    {
+      TAN_HILLS = 30,
+      BROWN_HILLS = 50,
+      DARKBROWN_HILLS = 50,
+      GREENISH_HILLS = 30,
+      ICE_HILLS = 12,
+      BLACK_HILLS = 5,
+    },
+
+    dark_hills =
+    {
+      DARKGREEN_HILLS = 50,
+      DARKBROWN_HILLS = 50,
+      ICE_HILLS = 25,
+    },
+  },
+
+  demense =
+  {
+    clouds =
+    {
+      SKY_CLOUDS = 130,
+      BLUE_CLOUDS = 80,
+      WHITE_CLOUDS = 80,
+      GREY_CLOUDS = 100,
+      DARK_CLOUDS = 100,
+
+      BROWN_CLOUDS = 60,
+      BROWNISH_CLOUDS = 40,
+      PEACH_CLOUDS = 40,
+      YELLOW_CLOUDS = 40,
+      ORANGE_CLOUDS = 40,
+      GREEN_CLOUDS = 25,
+      JADE_CLOUDS = 25,
+    },
+
+    hills =
+    {
+      TAN_HILLS = 30,
+      BROWN_HILLS = 50,
+      DARKBROWN_HILLS = 50,
+      GREENISH_HILLS = 30,
+      ICE_HILLS = 12,
+      BLACK_HILLS = 5,
+    },
+
+    dark_hills =
+    {
+      DARKGREEN_HILLS = 50,
+      DARKBROWN_HILLS = 50,
+      ICE_HILLS = 25,
+    },
+  },
+
+}
+
+HERETIC.RESOURCES = {}
+
+HERETIC.RESOURCES.DYNAMIC_LIGHT_DECORATE =
+[[// ObAddon dynamic light actors
+actor ObLightWhite 14999
+{
+  Scale 0 //Should really use a nice corona sprite but whatever
+  Height 16
+
+  +NOGRAVITY
+  +SPAWNCEILING
+
+  States{
+    Spawn:
+      TRCH A -1
+  }
+}
+actor ObLightRed : ObLightWhite 14998 {}
+actor ObLightOrange : ObLightWhite 14997 {}
+actor ObLightYellow : ObLightWhite 14996 {}
+actor ObLightBlue : ObLightWhite 14995 {}
+actor ObLightGreen : ObLightWhite 14994 {}
+actor ObLightBeige : ObLightWhite 14993 {}
+actor ObLightPurple : ObLightWhite 14992 {}
+]]
+
+HERETIC.RESOURCES.DYNAMIC_LIGHT_GLDEFS =
+[[
+PointLight WhiteLight
+{
+  color 0.85 0.9 1
+  size 128
+  offset 0 -48 0
+}
+
+PointLight RedLight
+{
+  color 1 0 0
+  size 128
+  offset 0 -48 0
+}
+
+PointLight YellowLight
+{
+  color 1 0.8 0
+  size 128
+  offset 0 -48 0
+}
+
+PointLight OrangeLight
+{
+  color 1 0.5 0
+  size 128
+  offset 0 -48 0
+}
+
+PointLight BlueLight
+{
+  color 0.1 0.1 1
+  size 128
+  offset 0 -48 0
+}
+
+PointLight GreenLight
+{
+  color 0 0.8 0
+  size 128
+  offset 0 -48 0
+}
+
+PointLight BeigeLight
+{
+  color 1 0.8 0.5
+  size 128
+  offset 0 -48 0
+}
+
+PointLight PurpleLight
+{
+  color 0.7 0 0.95
+  size 128
+  offset 0 -48 0
+}
+
+object ObLightWhite
+{
+  frame TRCH { light WhiteLight }
+}
+
+object ObLightRed
+{
+  frame TRCH { light RedLight }
+}
+
+object obLightOrange
+{
+  frame TRCH { light OrangeLight }
+}
+
+object obLightYellow
+{
+  frame TRCH { light YellowLight }
+}
+
+object obLightBlue
+{
+  frame TRCH { light BlueLight }
+}
+
+object obLightGreen
+{
+  frame TRCH { light GreenLight }
+}
+
+object ObLightBeige
+{
+  frame TRCH { light BeigeLight }
+}
+
+object ObLightPurple
+{
+  frame TRCH { light PurpleLight }
+}
+]]
+
+HERETIC.RESOURCES.GLOWING_FLATS_GLDEFS =
+[[
+Glow
+{
+  Flats
+  {
+
+    // vanilla liquids - I prefer that only the 'dangerous' liquids be glowing, but uncomment the first six below for all liquids
+//    FLTFLWW1
+//    FLTFLWW2
+//    FLTFLWW3
+//    FLTWAWA1
+//    FLTWAWA2
+//    FLTWAWA3
+    FLTSLUD1
+    FLTSLUD2
+    FLTSLUD3
+    FLATHUH1
+    FLATHUH2
+    FLATHUH3
+    FLATHUH4
+    FLTLAVA1
+    FLTLAVA2
+    FLTLAVA3
+    FLTLAVA4
+
+    //teleporter gate textures
+    FLTTELE1
+    FLTTELE2
+    FLTTELE3
+    FLTTELE4
+
+  }
+
+//  Texture "FLTWAWA1", 0a0ac4, 128
+//  Texture "FLTWAWA2", 0a0ac4, 128
+//  Texture "FLTWAWA3", 0a0ac4, 128
+  Texture "F_SKY1", 808080, 128
+}
+]]
+
 ------------------------------------------------------------------------
 
 function HERETIC.make_cool_gfx()

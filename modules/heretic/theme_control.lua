@@ -74,6 +74,7 @@ function HERETIC_THEME_CONTROL.get_levels(self)
     local option
 
     for _,opt in pairs(self.options) do
+      name = name .. "_heretic"
       if name == opt.name then
         option = opt
         goto foundit
@@ -109,27 +110,27 @@ OB_MODULES["theme_ctl_heretic"] =
 
   options =
   {
-    { name = "episode1", 
+    { name = "episode1_heretic", 
     label=_("Episode 1"), 
     tooltip=_("Override regular theme for Episode 1."),     
     choices=HERETIC_THEME_CONTROL.CHOICES, default = "no_change", randomize_group="architecture" },
-    { name = "episode2", 
+    { name = "episode2_heretic", 
     label=_("Episode 2"), 
     tooltip=_("Override regular theme for Episode 2."),    
     choices=HERETIC_THEME_CONTROL.CHOICES, default = "no_change", randomize_group="architecture", },
-    { name = "episode3", 
+    { name = "episode3_heretic", 
     label=_("Episode 3"), 
     tooltip=_("Override regular theme for Episode 3."),    
     choices=HERETIC_THEME_CONTROL.CHOICES, default = "no_change", randomize_group="architecture", },
-    { name = "episode4", 
+    { name = "episode4_heretic", 
     label=_("Episode 4"), 
     tooltip=_("Override regular theme for Episode 4."),    
     choices=HERETIC_THEME_CONTROL.CHOICES, default = "no_change", randomize_group="architecture", },
-    { name = "episode5", 
+    { name = "episode5_heretic", 
     label=_("Episode 5"), 
     tooltip=_("Override regular theme for Episode 5."),    
     choices=HERETIC_THEME_CONTROL.CHOICES, default = "no_change", randomize_group="architecture", },
-    { name = "secret", 
+    { name = "secret_heretic", 
     label=_("Secret Levels"), 
     tooltip=_("Override regular theme for Secret Levels."), 
     choices=HERETIC_THEME_CONTROL.CHOICES, default = "no_change", randomize_group="architecture", },
