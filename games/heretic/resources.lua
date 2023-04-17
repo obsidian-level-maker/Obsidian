@@ -12,7 +12,9 @@
 --
 ------------------------------------------------------------------------
 
-HERETIC.PALETTES =
+HERETIC.RESOURCES = {}
+
+HERETIC.RESOURCES.PALETTES =
 {
   normal =
   {
@@ -71,7 +73,7 @@ HERETIC.PALETTES =
   },
 }
 
-HERETIC.MUSIC_LUMPS = 
+HERETIC.RESOURCES.MUSIC_LUMPS = 
 {
   "MUS_E1M1", 
   "MUS_E1M2",
@@ -94,7 +96,7 @@ HERETIC.MUSIC_LUMPS =
   "MUS_E3M3",
 }
 
-HERETIC.SKY_GEN_COLORMAPS =
+HERETIC.RESOURCES.SKY_GEN_COLORMAPS =
 {
   -- star colors --
 
@@ -293,7 +295,7 @@ HERETIC.SKY_GEN_COLORMAPS =
   },
 }
 
-HERETIC.SKY_GEN_THEMES =
+HERETIC.RESOURCES.SKY_GEN_THEMES =
 {
   psycho =
   {
@@ -509,8 +511,6 @@ HERETIC.SKY_GEN_THEMES =
   },
 
 }
-
-HERETIC.RESOURCES = {}
 
 HERETIC.RESOURCES.DYNAMIC_LIGHT_DECORATE =
 [[// ObAddon dynamic light actors

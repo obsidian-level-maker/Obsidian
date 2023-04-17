@@ -12,7 +12,9 @@
 --
 --------------------------------------------------------------------
 
-DOOM.PALETTES =
+DOOM.RESOURCES = {}
+
+DOOM.RESOURCES.PALETTES =
 {
   normal =
   {
@@ -75,7 +77,7 @@ DOOM.PALETTES =
 --------------------------------------------------------------------
 
 -- Left out the non-level and wolfenstein level music - Dasho
-DOOM.MUSIC_LUMPS = 
+DOOM.RESOURCES.MUSIC_LUMPS = 
 {
   "D_RUNNIN",
   "D_STALKS",
@@ -109,7 +111,7 @@ DOOM.MUSIC_LUMPS =
   "D_OPENIN",
 }
 
-DOOM.SKY_GEN_COLORMAPS =
+DOOM.RESOURCES.SKY_GEN_COLORMAPS =
 {
   -- star colors --
 
@@ -322,7 +324,7 @@ DOOM.SKY_GEN_COLORMAPS =
 -- E4: Orange/Yellow/White/Gray/Dark skies, any hill/mountain type goes
 
 
-DOOM.SKY_GEN_THEMES =
+DOOM.RESOURCES.SKY_GEN_THEMES =
 {
   urban =
   {
@@ -563,8 +565,6 @@ DOOM.SKY_GEN_THEMES =
   }
 
 }
-
-DOOM.RESOURCES = {}
 
 DOOM.RESOURCES.DYNAMIC_LIGHT_DECORATE =
 [[// ObAddon dynamic light actors
@@ -828,7 +828,7 @@ Glow
 }
 ]]
 
-DOOM.LEVEL_GFX_COLORS =
+DOOM.RESOURCES.LEVEL_GFX_COLORS =
 {
   gold   = { 0,47,44, 167,166,165,164,163,162,161,160, 225 },
   silver = { 0,246,243,240, 205,202,200,198, 196,195,194,193,192, 4 },
@@ -864,9 +864,9 @@ function DOOM.make_cool_gfx()
   {
     BRONZE_2, GREEN, RED,
 
-    DOOM.LEVEL_GFX_COLORS.gold,
-    DOOM.LEVEL_GFX_COLORS.silver,
-    DOOM.LEVEL_GFX_COLORS.iron,
+    DOOM.RESOURCES.LEVEL_GFX_COLORS.gold,
+    DOOM.RESOURCES.LEVEL_GFX_COLORS.silver,
+    DOOM.RESOURCES.LEVEL_GFX_COLORS.iron,
   }
 
   rand.shuffle(colmaps)
@@ -874,8 +874,8 @@ function DOOM.make_cool_gfx()
   gui.set_colormap(1, colmaps[1])
   gui.set_colormap(2, colmaps[2])
   gui.set_colormap(3, colmaps[3])
-  gui.set_colormap(4, DOOM.LEVEL_GFX_COLORS.iron)
-  gui.set_colormap(5, DOOM.LEVEL_GFX_COLORS.black)
+  gui.set_colormap(4, DOOM.RESOURCES.LEVEL_GFX_COLORS.iron)
+  gui.set_colormap(5, DOOM.RESOURCES.LEVEL_GFX_COLORS.black)
 
   -- patches (CEMENT1 .. CEMENT4)
   gui.wad_logo_gfx("WALL52_1", "p", "PILL",   128,128, 1)
@@ -901,7 +901,7 @@ function DOOM.make_level_gfx(LEVEL)
       gold=12, silver=3, bronze=8, iron=10,
     })
 
-    GAME.level_gfx_colors = assert(DOOM.LEVEL_GFX_COLORS[kind])
+    GAME.level_gfx_colors = assert(DOOM.RESOURCES.LEVEL_GFX_COLORS[kind])
   end
 
   gui.set_colormap(1, GAME.level_gfx_colors)
@@ -916,7 +916,7 @@ function DOOM.make_episode_gfx()
   -- this is for Doom 1 / Ultimate Doom.
   -- does nothing for Doom 2 / Final Doom (they lack "name_patch" field).
 
-  local colors = assert(DOOM.LEVEL_GFX_COLORS["red"])
+  local colors = assert(DOOM.RESOURCES.LEVEL_GFX_COLORS["red"])
 
   gui.set_colormap(2, colors)
 

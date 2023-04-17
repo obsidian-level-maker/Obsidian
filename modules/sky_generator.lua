@@ -114,7 +114,7 @@ function SKY_GEN.generate_skies()
   end
 
   -- copy all theme tables [so we can safely modify them]
-  local all_themes = table.deep_copy(GAME.SKY_GEN_THEMES)
+  local all_themes = table.deep_copy(GAME.RESOURCES.SKY_GEN_THEMES)
 
 
   gui.printf("\nSky generator:\n");
@@ -197,7 +197,7 @@ function SKY_GEN.generate_skies()
         end
       end
 
-      local colormap = GAME.SKY_GEN_COLORMAPS[name]
+      local colormap = GAME.RESOURCES.SKY_GEN_COLORMAPS[name]
       if not colormap then
         error("SKY_GEN: unknown colormap: " .. tostring(name))
       end
@@ -220,7 +220,7 @@ function SKY_GEN.generate_skies()
 
       local name = "STARS"
 
-      local colormap = GAME.SKY_GEN_COLORMAPS[name]
+      local colormap = GAME.RESOURCES.SKY_GEN_COLORMAPS[name]
       if not colormap then
         error("SKY_GEN: unknown colormap: " .. tostring(name))
       end
@@ -255,7 +255,7 @@ function SKY_GEN.generate_skies()
         name = PARAM.terrain_color
       end
 
-      local colormap = GAME.SKY_GEN_COLORMAPS[name]
+      local colormap = GAME.RESOURCES.SKY_GEN_COLORMAPS[name]
       if not colormap then
         error("SKY_GEN: unknown colormap: " .. tostring(name))
       end

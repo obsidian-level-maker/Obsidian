@@ -256,7 +256,10 @@ function ZStoryGen_quitmessages()
     end
     local name_theme = rand.pick(name_picks)
     info.level_name = Naming_grab_one(OB_THEMES[name_theme].name_class)
-    local enemy_name = rand.key_by_probs(namelib.NAMES[OB_THEMES[name_theme].name_class].lexicon.e)
+    local enemy_name = rand.key_by_probs(namelib.NAMES["TITLE"].lexicon.e)
+    if namelib.NAMES[OB_THEMES[name_theme].name_class].lexicon.e then
+      enemy_name = rand.key_by_probs(namelib.NAMES[OB_THEMES[name_theme].name_class].lexicon.e)
+    end
     enemy_name = string.gsub(enemy_name, "NOUNGENEXOTIC", namelib.generate_unique_noun("exotic"))
     info.enemy_name = enemy_name 
     for _,line in pairs(GAME.STORIES.QUIT_MESSAGES) do

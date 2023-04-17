@@ -2593,7 +2593,7 @@ function Title_make_interpic()
   if not PARAM.interpic_lump then return end
 
   gui.title_create(320, 200, "#000")
-  gui.title_set_palette(GAME.PALETTES.normal)
+  gui.title_set_palette(GAME.RESOURCES.PALETTES.normal)
 
   local style = Title_pick_style(TITLE_INTERMISSION_STYLES, {})
 
@@ -2648,7 +2648,7 @@ function Title_make_titlepic()
   if not PARAM.titlepic_lump then return end
 
   gui.title_create(320, 200, "#000")
-  gui.title_set_palette(GAME.PALETTES.normal)
+  gui.title_set_palette(GAME.RESOURCES.PALETTES.normal)
 
   Title_add_background()
   Title_add_credit()
@@ -2667,8 +2667,8 @@ end
 
 function Title_generate()
   assert(GAME.title)
-  assert(GAME.PALETTES)
-  assert(GAME.PALETTES.normal)
+  assert(GAME.RESOURCES.PALETTES)
+  assert(GAME.RESOURCES.PALETTES.normal)
 
   Title_process_raw_fonts()
 
