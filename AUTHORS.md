@@ -142,6 +142,9 @@ Baysha
 Arcterezion
   - Arcterezion Purple theme
 
+Xenamta
+  - Code Bullet theme
+
 # OBLIGE
 
 ## DEVELOPER:

@@ -2137,7 +2137,6 @@ function ob_build_setup()
 
   table.name_up(GAME.THEMES)
   table.name_up(GAME.ROOM_THEMES)
-  table.name_up(GAME.ROOMS)
 
   for _,grammar in pairs(SHAPES) do
     Grower_preprocess_grammar(grammar)

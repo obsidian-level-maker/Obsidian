@@ -66,7 +66,7 @@ EDGE.PARAMETERS =
 
 function EDGE.remap_music()
 
-  local music_list = table.copy(GAME.MUSIC_LUMPS)
+  local music_list = table.copy(GAME.RESOURCES.MUSIC_LUMPS)
   
   local data =
   [[
@@ -94,7 +94,7 @@ function EDGE.remap_music()
     table.kill_elem(music_list, song_pick)
 
     if table.empty(music_list) then
-      music_list = table.copy(GAME.MUSIC_LUMPS)
+      music_list = table.copy(GAME.RESOURCES.MUSIC_LUMPS)
     end
   end
 
@@ -144,8 +144,6 @@ OB_MODULES["edge_music_swapper"] =
   where = "other",
   priority = 8,
 
-  game = {doom1=1,doom2=1,hacx=1,heretic=1,harmony=1,ultdoom=1,tnt=1,plutonia=1},
-
   port = "edge",
   tooltip=_("Shuffles songs using DDFPLAY."),
 
@@ -163,7 +161,7 @@ OB_PORTS["edge"] =
 
   priority = 95,
 
-  game = { doom1=1, doom2=1, hacx=1, harmony=1, heretic=1 },
+  game = { doom1=1, doom2=1, hacx=1, heretic=1, harmony=1, ultdoom=1, tnt=1, plutonia=1 },
 
   tables =
   {

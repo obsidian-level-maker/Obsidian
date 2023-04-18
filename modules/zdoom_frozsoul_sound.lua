@@ -249,7 +249,7 @@ end
 
 OB_MODULES["zdoom_ambient_sound"] =
 {
-  label = _("ZDoom: Ambient Sounds"),
+  label = _("ZDoom Ambient Sounds"),
 
   game = "doomish",
 

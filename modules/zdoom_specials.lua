@@ -908,7 +908,7 @@ OB_MODULES["zdoom_specials_lighting"] =
 
   name = "zdoom_specials_lighting",
 
-  label = _("ZDoom Special Lighting Options"),
+  label = _("ZDoom Lighting Options"),
 
   side = "left",
 

@@ -1231,7 +1231,7 @@ function Quest_create_zones(LEVEL)
       if not R.zone then goto continue end
 
       -- prefer not to cross quest boundaries
-      if C.lock and not do_locks then goto continue end
+      --if C.lock and not do_locks then goto continue end
 
       if C.is_secret or C.kind == "teleporter" or C.lock then
         assign_room(N, other_zone(R.zone))
@@ -1388,7 +1388,7 @@ function Quest_calc_exit_dists(LEVEL)
     local R2 = C.R2
 
     -- NEVER cross quest boundaries
-    if R1.quest ~= R2.quest then return false end
+    --if R1.quest ~= R2.quest then return false end
 
     if not R1.dist_to_exit then
       R1, R2 = R2, R1
