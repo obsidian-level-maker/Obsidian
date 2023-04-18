@@ -253,6 +253,11 @@ static void main_win_apply_addon_CB(Fl_Widget *w, void *data) {
 
     main_action = MAIN_HARD_RESTART;
 }
+
+static void main_win_clippy_CB(Fl_Widget *w, void *data) {
+    main_win->clippy->shape(clippy);
+    main_win->clippy->ShowAdvice();
+}
 #endif
 /* ----- user information ----------------------------- */
 
@@ -1863,6 +1868,7 @@ softrestart:;
                             (all_addons[i].enabled ? FL_MENU_VALUE : 0));
                 }
             }
+            main_win->menu_bar->add(_("Clippy!"), nullptr, main_win_clippy_CB);
         }
 
 #ifdef WIN32
@@ -1977,8 +1983,6 @@ softrestart:;
             old_pixels = NULL;
             main_win->build_box->mini_map->MapFinish();
         }
-
-        main_win->clippy->enable_me = true;
 #endif
     }
 

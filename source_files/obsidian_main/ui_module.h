@@ -109,7 +109,6 @@ class UI_Module : public Fl_Group {
 
    protected:
    private:
-    int handle(int event);   
     void resize(int X, int Y, int W, int H);
 
     static void callback_OptChange(Fl_Widget *w, void *data);

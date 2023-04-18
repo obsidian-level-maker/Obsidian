@@ -1295,13 +1295,6 @@ void UI_CustomMods::PositionAll(UI_Module *focus) {
     mod_pack->redraw();
 }
 
-int UI_Module::handle(int event) {
-    if (event == FL_ENTER) {
-        main_win->clippy->ShowAdvice();
-    }
-    return Fl_Group::handle(event);
-}
-
 // Normal FLTK resize except it will resize the module options as well
 void UI_Module::resize(int X, int Y, int W, int H) {
     int dx = X - x();

@@ -409,11 +409,5 @@ void UI_Game::quit_callback(Fl_Widget *w, void *data) {
     main_action = MAIN_QUIT;
 }
 
-int UI_Game::handle(int event) {
-    if (event == FL_ENTER) {
-        main_win->clippy->ShowAdvice();
-    }
-    return Fl_Group::handle(event);
-}
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab
