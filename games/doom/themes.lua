@@ -1066,11 +1066,6 @@ DOOM.THEMES =
   tech =
   {
 
-    wide_halls = -- Added empty table to use with themes_alt function - Dasho
-    {
-
-    },
-
     narrow_halls =
     {
       vent = 50,
@@ -1559,10 +1554,6 @@ DOOM.THEMES =
 
   urban =
   {
-    wide_halls = -- Added empty table to use with themes_alt function - Dasho
-    {
-
-    },
 
     narrow_halls =
     {
@@ -4943,87 +4934,6 @@ DOOM.ROOM_THEMES =
     }
   }
 }
-
-
---------------------------------------------------------------------
-
-DOOM.ROOMS =
-{
-  GENERIC =
-  {
-    env = "any"
-  },
-
-
-  ---- Indoors ----
-
-  COMPUTER =
-  {
-    theme = "tech",
-    prob  = 50
-  },
-
-  STORAGE =
-  {
-    prob  = 50
-  },
-
-  WASTE =
-  {
-    theme = "!hell",
-    style = "liquids",
-    prob  = 50
-  },
-
-  PRISON =
-  {
-    style = "cages",
-    prob  = 50
-  },
-
-  TORTURE =
-  {
-    theme = { hell=1, urban=0.2 },
-    prob  = 50
-  },
-
-  CHAPEL =
-  {
-    theme = "hell",
-    prob  = 15
-  },
-
-  LIBRARY =
-  {
-    theme = "urban",
-    prob  = 15
-  },
-
-
-  ---- Outdoors ----
-
-  LAUNCH =
-  {
-    env = "outdoor",
-    theme = "tech",
-    prob = 10
-  },
-
-  GARDEN =
-  {
-    env = "outdoor",
-    theme = "urban",
-    prob = 50
-  },
-
-  GRAVEYARD =
-  {
-    env = "outdoor",
-    theme = { hell=1, urban=0.4 },
-    prob = 20
-  }
-}
-
 
 --------------------------------------------------------------------
 

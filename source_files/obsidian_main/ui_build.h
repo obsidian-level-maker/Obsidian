@@ -72,8 +72,6 @@ class UI_Build : public Fl_Group {
    private:
     void resize(int X, int Y, int W, int H);
 
-    int handle(int event);
-
     int FindStep(std::string name);  // -1 if not found
 };
 

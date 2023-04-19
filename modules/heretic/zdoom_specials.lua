@@ -17,8 +17,6 @@
 --
 -------------------------------------------------------------------
 
-gui.import("zdoom_story_gen.lua")
-
 ZDOOM_SPECIALS_HERETIC = { }
 
 ZDOOM_SPECIALS_HERETIC.MUSIC_SHUFFLER_CHOICES =
@@ -163,13 +161,6 @@ ZDOOM_SPECIALS_HERETIC.MAP_NOMENCLATURE =
 -- of the regular level transition background
 ZDOOM_SPECIALS_HERETIC.INTERPICS =
 {
---  OBDNLOAD = 50,
---  OBDNLOA2 = 50,
---  OBDNLOA3 = 50,
---  OBDNLOA4 = 50,
---  OBDNLOA5 = 50,
---  OBDNLOA6 = 50,
---  OBDNLOA7 = 50,
   [1] = "HERETIC1",
   [2] = "HERETIC1",
   [3] = "HERETIC1",
@@ -186,170 +177,6 @@ ZDOOM_SPECIALS_HERETIC.INTERPIC_MUSIC =
 {
   "MUS_INTR", _("Universal Intermission")
 }
-
-ZDOOM_SPECIALS_HERETIC.DYNAMIC_LIGHT_DECORATE =
-[[// ObAddon dynamic light actors
-actor ObLightWhite 14999
-{
-  Scale 0 //Should really use a nice corona sprite but whatever
-  Height 16
-
-  +NOGRAVITY
-  +SPAWNCEILING
-
-  States{
-    Spawn:
-      TRCH A -1
-  }
-}
-actor ObLightRed : ObLightWhite 14998 {}
-actor ObLightOrange : ObLightWhite 14997 {}
-actor ObLightYellow : ObLightWhite 14996 {}
-actor ObLightBlue : ObLightWhite 14995 {}
-actor ObLightGreen : ObLightWhite 14994 {}
-actor ObLightBeige : ObLightWhite 14993 {}
-actor ObLightPurple : ObLightWhite 14992 {}
-]]
-
-ZDOOM_SPECIALS_HERETIC.DYNAMIC_LIGHT_GLDEFS =
-[[
-PointLight WhiteLight
-{
-  color 0.85 0.9 1
-  size 128
-  offset 0 -48 0
-}
-
-PointLight RedLight
-{
-  color 1 0 0
-  size 128
-  offset 0 -48 0
-}
-
-PointLight YellowLight
-{
-  color 1 0.8 0
-  size 128
-  offset 0 -48 0
-}
-
-PointLight OrangeLight
-{
-  color 1 0.5 0
-  size 128
-  offset 0 -48 0
-}
-
-PointLight BlueLight
-{
-  color 0.1 0.1 1
-  size 128
-  offset 0 -48 0
-}
-
-PointLight GreenLight
-{
-  color 0 0.8 0
-  size 128
-  offset 0 -48 0
-}
-
-PointLight BeigeLight
-{
-  color 1 0.8 0.5
-  size 128
-  offset 0 -48 0
-}
-
-PointLight PurpleLight
-{
-  color 0.7 0 0.95
-  size 128
-  offset 0 -48 0
-}
-
-object ObLightWhite
-{
-  frame TRCH { light WhiteLight }
-}
-
-object ObLightRed
-{
-  frame TRCH { light RedLight }
-}
-
-object obLightOrange
-{
-  frame TRCH { light OrangeLight }
-}
-
-object obLightYellow
-{
-  frame TRCH { light YellowLight }
-}
-
-object obLightBlue
-{
-  frame TRCH { light BlueLight }
-}
-
-object obLightGreen
-{
-  frame TRCH { light GreenLight }
-}
-
-object ObLightBeige
-{
-  frame TRCH { light BeigeLight }
-}
-
-object ObLightPurple
-{
-  frame TRCH { light PurpleLight }
-}
-]]
-
-ZDOOM_SPECIALS_HERETIC.GLOWING_FLATS_GLDEFS =
-[[
-Glow
-{
-  Flats
-  {
-
-    // vanilla liquids - I prefer that only the 'dangerous' liquids be glowing, but uncomment the first six below for all liquids
-//    FLTFLWW1
-//    FLTFLWW2
-//    FLTFLWW3
-//    FLTWAWA1
-//    FLTWAWA2
-//    FLTWAWA3
-    FLTSLUD1
-    FLTSLUD2
-    FLTSLUD3
-    FLATHUH1
-    FLATHUH2
-    FLATHUH3
-    FLATHUH4
-    FLTLAVA1
-    FLTLAVA2
-    FLTLAVA3
-    FLTLAVA4
-
-    //teleporter gate textures
-    FLTTELE1
-    FLTTELE2
-    FLTTELE3
-    FLTTELE4
-
-  }
-
-//  Texture "FLTWAWA1", 0a0ac4, 128
-//  Texture "FLTWAWA2", 0a0ac4, 128
-//  Texture "FLTWAWA3", 0a0ac4, 128
-  Texture "F_SKY1", 808080, 128
-}
-]]
 
 ZDOOM_SPECIALS_HERETIC.MUSIC_SELECTION = {}
 
@@ -384,7 +211,7 @@ function ZDOOM_SPECIALS_HERETIC.shuffle_music()
 
   local music_table = ZDOOM_SPECIALS_HERETIC.MUSIC
 
-  if PARAM.mapinfo_music_shuffler ~= "no" then
+  if PARAM.mapinfo_music_shuffler_heretic ~= "no" then
     rand.shuffle(music_table)
   end
 
@@ -429,9 +256,9 @@ function ZDOOM_SPECIALS_HERETIC.do_special_stuff()
     local x = 1
     local quit_msg_line = ""
     quit_msg_line = quit_msg_line .. "quitmessages = "
-    for _,lines in pairs(ZDOOM_STORIES_HERETIC.QUIT_MESSAGES) do
+    for _,lines in pairs(GAME.STORIES.QUIT_MESSAGES) do
       quit_msg_line = quit_msg_line .. '"$QUITMSG' .. x .. '"'
-      if x <= #ZDOOM_STORIES_HERETIC.QUIT_MESSAGES - 1 then
+      if x <= #GAME.STORIES.QUIT_MESSAGES - 1 then
         quit_msg_line = quit_msg_line .. ', '
       end
       if x%3 == 0 then
@@ -552,35 +379,35 @@ function ZDOOM_SPECIALS_HERETIC.do_special_stuff()
     local fog_intensity = "48"
 
     -- resolve fog intensity
-    if PARAM.fog_intensity == "subtle" then
+    if PARAM.fog_intensity_heretic == "subtle" then
       fog_intensity = "16"
-    elseif PARAM.fog_intensity == "misty" then
+    elseif PARAM.fog_intensity_heretic == "misty" then
       fog_intensity = "48"
-    elseif PARAM.fog_intensity == "smoky" then
+    elseif PARAM.fog_intensity_heretic == "smoky" then
       fog_intensity = "128"
-    elseif PARAM.fog_intensity == "foggy" then
+    elseif PARAM.fog_intensity_heretic == "foggy" then
       fog_intensity = "255"
-    elseif PARAM.fog_intensity == "dense" then
+    elseif PARAM.fog_intensity_heretic == "dense" then
       fog_intensity = "368"
-    elseif PARAM.fog_intensity == "mixed" then
+    elseif PARAM.fog_intensity_heretic == "mixed" then
       fog_intensity = "" .. rand.irange(16,368)
     end
 
     local fog_intensity_line = '  fogdensity = ' .. fog_intensity .. '\n'
 
     -- fog forced to outdoors only
-    if PARAM.fog_env == "outdoor" then
+    if PARAM.fog_env_heretic == "outdoor" then
       fog_color_line = '  OutsideFog  = "' .. fog_color .. '"\n'
       fog_intensity_line = '  outsidefogdensity = ' .. fog_intensity .. '\n'
     end
 
     -- if fog tints sky, based on ZDoom GL specs
-    if PARAM.bool_fog_affects_sky == 1 then
+    if PARAM.bool_fog_affects_sky_heretic == 1 then
       fog_intensity_line = fog_intensity_line .. '  skyfog = ' .. fog_intensity + 16 .. '\n'
     end
 
     -- no fog in MAPINFO at all if the fog generator is off
-    if PARAM.fog_generator == "no" then
+    if PARAM.fog_generator_heretic == "no" then
       fog_color_line = ""
       fog_intensity_line = ""
     end
@@ -668,7 +495,7 @@ function ZDOOM_SPECIALS_HERETIC.do_special_stuff()
       special_attributes = ''
     end
 
-    if PARAM.bool_no_intermission == 1 then
+    if PARAM.bool_no_intermission_heretic == 1 then
       special_attributes = special_attributes .. '  nointermission\n'
     end
 
@@ -698,9 +525,9 @@ function ZDOOM_SPECIALS_HERETIC.do_special_stuff()
   local function add_clusterdef(interpic)
     local clusterdef = {''}
 
-    local cluster_music_line = '  music = "' .. PARAM.generic_intermusic .. '"\n'
+    local cluster_music_line = '  music = "' .. PARAM.generic_intermusic_heretic .. '"\n'
 
-    if PARAM.story_generator == "generic" then
+    if PARAM.story_generator_heretic == "generic" then
 
 
       clusterdef =
@@ -869,7 +696,7 @@ function ZDOOM_SPECIALS_HERETIC.do_special_stuff()
       }
     end
 
-    if PARAM.story_generator == "proc" then
+    if PARAM.story_generator_heretic == "proc" then
       -- create cluster information
       clusterdef =
       {
@@ -1001,7 +828,7 @@ function ZDOOM_SPECIALS_HERETIC.do_special_stuff()
     for _,line in pairs(gamedef_lines) do
       table.insert(PARAM.gameinfolump,line)
     end
-    ZStoryGen_heretic_quitmessages()
+    ZStoryGen_quitmessages()
   end
 
   for i=1, #GAME.levels do
@@ -1029,7 +856,7 @@ function ZDOOM_SPECIALS_HERETIC.do_special_stuff()
       info.interpic = ZDOOM_SPECIALS_HERETIC.INTERPICS[10]
     end
 
-    if PARAM.fog_generator == "per_sky_gen" then
+    if PARAM.fog_generator_heretic == "per_sky_gen" then
       if not PARAM.episode_sky_color then
         gui.printf("WARNING: User set fog color to be set by Sky Generator " ..
         "but Sky Generator is turned off! Fog color will now match vanilla skies.\n")
@@ -1057,9 +884,9 @@ function ZDOOM_SPECIALS_HERETIC.do_special_stuff()
           info.fog_color = pick_sky_color_from_skygen_map(5)
         end
       end
-    elseif PARAM.fog_generator == "random" then
+    elseif PARAM.fog_generator_heretic == "random" then
       info.fog_color = pick_random_fog_color()
-    elseif PARAM.fog_generator == "natural" then
+    elseif PARAM.fog_generator_heretic == "natural" then
       local shades = 
       {
         "ff ff ff",
@@ -1132,9 +959,9 @@ function ZDOOM_SPECIALS_HERETIC.do_special_stuff()
   end
   SCRIPTS.mapinfolump = ScriptMan_combine_script(SCRIPTS.mapinfolump, lines_as_string)
 
-  if PARAM.story_generator == "proc" then
+  if PARAM.story_generator_heretic == "proc" then
     -- language lump is written inside the story generator
-    ZStoryGen_heretic_init()
+    ZStoryGen_init()
   end
 
   gui.wad_merge_sections("data/loading/loading_screens.wad")
@@ -1168,7 +995,7 @@ OB_MODULES["zdoom_specials_heretic"] =
   options =
   {
     {
-      name = "fog_generator",
+      name = "fog_generator_heretic",
       label = _("Fog Generator"),
       priority = 12,
       choices = ZDOOM_SPECIALS_HERETIC.FOG_GEN_CHOICES,
@@ -1178,7 +1005,7 @@ OB_MODULES["zdoom_specials_heretic"] =
     },
 
     {
-      name = "fog_env",
+      name = "fog_env_heretic",
       label = _("Fog Environment"),
       priority = 11,
       choices = ZDOOM_SPECIALS_HERETIC.FOG_ENV_CHOICES,
@@ -1188,7 +1015,7 @@ OB_MODULES["zdoom_specials_heretic"] =
     },
 
     {
-      name = "fog_intensity",
+      name = "fog_intensity_heretic",
       label = _("Fog Intensity"),
       priority = 10,
       choices = ZDOOM_SPECIALS_HERETIC.FOG_DENSITY_CHOICES,
@@ -1198,7 +1025,7 @@ OB_MODULES["zdoom_specials_heretic"] =
     },
 
     {
-      name = "bool_fog_affects_sky",
+      name = "bool_fog_affects_sky_heretic",
       label = _("Sky Fog"),
       valuator = "button",
       priority = 9,
@@ -1209,26 +1036,7 @@ OB_MODULES["zdoom_specials_heretic"] =
     },
 
     {
-      name = "bool_dynamic_lights",
-      label = _("Dynamic Lights"),
-      valuator = "button",
-      priority = 8,
-      default = 1,
-      tooltip = _("Generates dynamic point lights on ceiling light prefabs."),
-    },
-
-    {
-      name = "bool_glowing_flats",
-      label = _("Glowing Flats"),
-      valuator = "button",
-      priority = 7,
-      default = 1,
-      tooltip = _("Adds Doom-64 style lighting/glowing flats via GLDEFS lump. Visible on Zandronum ports as well."),
-      gap = 1,
-    },
-
-    {
-      name = "mapinfo_music_shuffler",
+      name = "mapinfo_music_shuffler_heretic",
       label = _("Shuffle Music"),
       priority = 6,
       choices = ZDOOM_SPECIALS_HERETIC.MUSIC_SHUFFLER_CHOICES,
@@ -1237,7 +1045,7 @@ OB_MODULES["zdoom_specials_heretic"] =
     },
 
     {
-      name = "story_generator",
+      name = "story_generator_heretic",
       label = _("Story Generator"),
       priority = 5,
       choices = ZDOOM_SPECIALS_HERETIC.STORY_CHOICES,
@@ -1255,7 +1063,7 @@ OB_MODULES["zdoom_specials_heretic"] =
     },
 
     {
-      name = "generic_intermusic",
+      name = "generic_intermusic_heretic",
       label = _("Intermission Music"),
       priority = 3,
       choices = ZDOOM_SPECIALS_HERETIC.INTERPIC_MUSIC,
@@ -1264,7 +1072,7 @@ OB_MODULES["zdoom_specials_heretic"] =
     },
 
     {
-      name = "bool_no_intermission",
+      name = "bool_no_intermission_heretic",
       label = _("Disable Intermissions"),
       valuator = "button",
       priority = 1,

@@ -61,7 +61,6 @@ class UI_Game : public Fl_Group {
     void SetAbortButton(bool abort);
 
    private:
-    int handle(int event);
 
     static void callback_Engine(Fl_Widget *, void *);
     static void callback_Game(Fl_Widget *, void *);

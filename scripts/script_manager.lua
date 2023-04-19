@@ -519,11 +519,7 @@ end
 
 function ScriptMan_assemble_decorate_lump()
   if PARAM.bool_dynamic_lights == 1 then -- TODO: Move these to respective modules.
-    if OB_CONFIG.game == "heretic" then
-        SCRIPTS.decorate = ScriptMan_combine_script(SCRIPTS.decorate, ZDOOM_SPECIALS_HERETIC.DYNAMIC_LIGHT_DECORATE)
-    else
-        SCRIPTS.decorate = ScriptMan_combine_script(SCRIPTS.decorate, ZDOOM_SPECIALS.DYNAMIC_LIGHT_DECORATE)
-    end
+    SCRIPTS.decorate = ScriptMan_combine_script(SCRIPTS.decorate, GAME.RESOURCES.DYNAMIC_LIGHT_DECORATE)
   end
 
   if SCRIPTS.decorate then
@@ -558,23 +554,13 @@ function ScriptMan_assemble_gldefs_lump()
   local gldefs_lines = ""
 
   if PARAM.bool_dynamic_lights == 1 then
-    if OB_CONFIG.game == "heretic" then
       gldefs_lines = gldefs_lines ..
-      ZDOOM_SPECIALS_HERETIC.DYNAMIC_LIGHT_GLDEFS
-    else
-      gldefs_lines = gldefs_lines ..
-      ZDOOM_SPECIALS.DYNAMIC_LIGHT_GLDEFS
-    end
+      GAME.RESOURCES.DYNAMIC_LIGHT_GLDEFS
   end
 
   if PARAM.bool_glowing_flats == 1 then
-    if OB_CONFIG.game == "heretic" then
       gldefs_lines = gldefs_lines ..
-      ZDOOM_SPECIALS_HERETIC.GLOWING_FLATS_GLDEFS
-    else
-      gldefs_lines = gldefs_lines ..
-      ZDOOM_SPECIALS.GLOWING_FLATS_GLDEFS
-    end
+      GAME.RESOURCES.GLOWING_FLATS_GLDEFS
   end
 
   if PARAM.bool_include_brightmaps == 1 then

@@ -16,10 +16,6 @@
 --
 -------------------------------------------------------------------
 
-gui.import("zdoom_stories.lua")
-
-table.name_up(ZDOOM_STORIES.STORIES)
-
 function ZStoryGen_format_story_chunk(story_strings, info, store)
 
   local line_max_length = 38
@@ -27,18 +23,18 @@ function ZStoryGen_format_story_chunk(story_strings, info, store)
   -- replace special word tags with their proper ones from the name gen
   if info then
 
-    if info.demon_name == "NOUNMEMBERS" then
-      info.demon_name = info.contributor_name
+    if info.enemy_name == "NOUNMEMBERS" then
+      info.enemy_name = info.contributor_name
     end
 
     if store and PARAM.bool_boss_gen == 1 then
       local mcevil
-      if string.find(story_strings, "_RAND_DEMON") then
-        mcevil = info.demon_name
+      if string.find(story_strings, "_RAND_ENEMY") and info.enemy_name then
+        mcevil = info.enemy_name
         if string.find(story_strings, "_EVULZ") then
-          mcevil = mcevil .. " the " .. info.demon_title
-        elseif string.find(story_strings, "_GOTHIC_LEVEL") then
-          mcevil = mcevil .. " of " .. info.gothic_level
+          mcevil = mcevil .. " the " .. info.enemy_title
+        elseif string.find(story_strings, "_LEVEL") then
+          mcevil = mcevil .. " of " .. info.level_name
         end
         if PARAM.epi_names[store] == nil then
           PARAM.epi_names[store] = mcevil
@@ -46,15 +42,24 @@ function ZStoryGen_format_story_chunk(story_strings, info, store)
       end
     end
 
-    story_strings = string.gsub(story_strings, "_RAND_DEMON", info.demon_name)
+    if info.enemy_name then
+      story_strings = string.gsub(story_strings, "_RAND_ENEMY", info.enemy_name)
+    end
     story_strings = string.gsub(story_strings, "_RAND_ENGLISH_PLACE", info.anglican_name)
-    story_strings = string.gsub(story_strings, "_EVULZ", info.demon_title)
-    story_strings = string.gsub(story_strings, "_GOTHIC_LEVEL", info.gothic_level)
+    story_strings = string.gsub(story_strings, "_EVULZ", info.enemy_title)
+    if info.level_name then
+      story_strings = string.gsub(story_strings, "_LEVEL", info.level_name)
+    end
     story_strings = string.gsub(story_strings, "_RAND_CONTRIBUTOR", info.contributor_name)
-    story_strings = string.gsub(story_strings, "_MCGUFFIN_TECH", info.tech_mcguffin)
-    story_strings = string.gsub(story_strings, "_MCGUFFIN_HELL", info.hell_mcguffin)
-    story_strings = string.gsub(story_strings, "_RAND_ENTITY_TECH", info.tech_entity)
-    story_strings = string.gsub(story_strings, "_INSTALLATION", info.installation)
+    if info.mcguffin then
+      story_strings = string.gsub(story_strings, "_MCGUFFIN", info.mcguffin)
+    end
+    if info.entity then
+      story_strings = string.gsub(story_strings, "_RAND_ENTITY", info.entity)
+    end
+    if info.installation then
+      story_strings = string.gsub(story_strings, "_INSTALLATION", info.installation)
+    end
   end
 
   -- dialogue quotes and apostrphes, man
@@ -113,7 +118,7 @@ function ZStoryGen_format_story_chunk(story_strings, info, store)
 end
 
 function ZStoryGen_fetch_story_chunk()
-  return rand.key_by_probs(ZDOOM_STORIES.LIST)
+  return rand.key_by_probs(GAME.STORIES.LIST)
 end
 
 function ZStoryGen_create_characters_and_stuff(lev_info)
@@ -126,32 +131,25 @@ function ZStoryGen_create_characters_and_stuff(lev_info)
   -- some names based on the namelib need to pass through the unique noun generator on
   -- the occasion it picks up the noun gen keywords, or the keywords will
   -- stay as they are in the string
-  local demon_name = rand.key_by_probs(namelib.NAMES.GOTHIC.lexicon.e)
-  demon_name = string.gsub(demon_name, "NOUNGENEXOTIC", namelib.generate_unique_noun("exotic"))
-  info.demon_name = demon_name
-
   info.anglican_name = namelib.generate_unique_noun("anglican")
-
-  info.demon_title = rand.key_by_probs(ZDOOM_STORIES.EVIL_TITLES)
-  info.gothic_level = Naming_grab_one("GOTHIC")
+  info.enemy_title = rand.key_by_probs(GAME.STORIES.EVIL_TITLES)
   info.contributor_name = rand.pick(namelib.COMMUNITY_MEMBERS.contributors)
-  info.hell_mcguffin = rand.key_by_probs(ZDOOM_STORIES.MCGUFFINS.hellish)
-  info.tech_mcguffin = rand.key_by_probs(ZDOOM_STORIES.MCGUFFINS.tech)
-  info.tech_entity = rand.key_by_probs(ZDOOM_STORIES.ENTITIES.tech)
-  info.installation = rand.key_by_probs(ZDOOM_STORIES.INSTALLATIONS)
+  if GAME.STORIES.INSTALLATIONS then
+    info.installation = rand.key_by_probs(GAME.STORIES.INSTALLATIONS)
+  end
 
   return info
 end
 
 function ZStoryGen_hook_me_with_a_story(story_id, info, epi)
-  local story_chunk = ZDOOM_STORIES.STORIES[story_id]
+  local story_chunk = GAME.STORIES.TEXT[story_id]
   local story_string = rand.pick(story_chunk.hooks)
   local story_table = ZStoryGen_format_story_chunk(story_string, info, epi)
   return story_table
 end
 
 function ZStoryGen_conclude_my_story(story_id, info, epi)
-  local story_chunk = ZDOOM_STORIES.STORIES[story_id]
+  local story_chunk = GAME.STORIES.TEXT[story_id]
   local story_string = rand.pick(story_chunk.conclusions)
   local story_table = ZStoryGen_format_story_chunk(story_string, info, epi)
   return story_table
@@ -169,6 +167,20 @@ function ZStoryGen_init()
   while x <= #GAME.episodes do
     local story_id = ZStoryGen_fetch_story_chunk()
     local info = ZStoryGen_create_characters_and_stuff()
+    if GAME.STORIES.TEXT[story_id].enemy_theme then
+      local enemy_name = rand.key_by_probs(namelib.NAMES[GAME.STORIES.TEXT[story_id].enemy_theme].lexicon.e)
+      enemy_name = string.gsub(enemy_name, "NOUNGENEXOTIC", namelib.generate_unique_noun("exotic"))
+      info.enemy_name = enemy_name
+    end
+    if GAME.STORIES.TEXT[story_id].level_theme then
+      info.level_name = Naming_grab_one(GAME.STORIES.TEXT[story_id].level_theme)
+    end
+    if GAME.STORIES.TEXT[story_id].mcguffin_theme then
+      info.mcguffin = rand.key_by_probs(GAME.STORIES.MCGUFFINS[GAME.STORIES.TEXT[story_id].mcguffin_theme])
+    end
+    if GAME.STORIES.TEXT[story_id].entity_theme then
+      info.entity = rand.key_by_probs(GAME.STORIES.ENTITIES[entity_theme])
+    end
     hooks[x] = ZStoryGen_hook_me_with_a_story(story_id, info, x)
     conclusions[x] = ZStoryGen_conclude_my_story(story_id, info, x)
     x = x + 1
@@ -209,9 +221,9 @@ function ZStoryGen_init()
 
 
   -- create secret messages
-  local secret_entry = ZStoryGen_format_story_chunk(rand.pick(ZDOOM_STORIES.SECRET_TEXTS.d2_secretnearby))
-  local secret1 = ZStoryGen_format_story_chunk(rand.pick(ZDOOM_STORIES.SECRET_TEXTS.d2_secret1))
-  local secret2 = ZStoryGen_format_story_chunk(rand.pick(ZDOOM_STORIES.SECRET_TEXTS.d2_secret2))
+  local secret_entry = ZStoryGen_format_story_chunk(rand.pick(GAME.STORIES.SECRET_TEXTS.secretnearby))
+  local secret1 = ZStoryGen_format_story_chunk(rand.pick(GAME.STORIES.SECRET_TEXTS.secret1))
+  local secret2 = ZStoryGen_format_story_chunk(rand.pick(GAME.STORIES.SECRET_TEXTS.secret2))
   table.insert(PARAM.language_lump, "SECRETNEARBY =\n")
   for _,line in pairs(secret_entry) do
     table.insert(PARAM.language_lump, "  " .. line .. "\n")
@@ -238,7 +250,19 @@ function ZStoryGen_quitmessages()
   if PARAM.bool_quit_messages == 1 then
     x = 1
     local info = ZStoryGen_create_characters_and_stuff()
-    for _,line in pairs(ZDOOM_STORIES.QUIT_MESSAGES) do
+    local name_picks = {}
+    for k,_ in pairs(GAME.THEMES) do
+      if k ~= "DEFAULTS" then table.add_unique(name_picks, k) end
+    end
+    local name_theme = rand.pick(name_picks)
+    info.level_name = Naming_grab_one(OB_THEMES[name_theme].name_class)
+    local enemy_name = rand.key_by_probs(namelib.NAMES["TITLE"].lexicon.e)
+    if namelib.NAMES[OB_THEMES[name_theme].name_class].lexicon.e then
+      enemy_name = rand.key_by_probs(namelib.NAMES[OB_THEMES[name_theme].name_class].lexicon.e)
+    end
+    enemy_name = string.gsub(enemy_name, "NOUNGENEXOTIC", namelib.generate_unique_noun("exotic"))
+    info.enemy_name = enemy_name 
+    for _,line in pairs(GAME.STORIES.QUIT_MESSAGES) do
       line = ZStoryGen_format_story_chunk(line, info)
       table.insert(PARAM.quit_messagelump, "\nQUITMSG" .. x .. " =\n")
       x = x + 1

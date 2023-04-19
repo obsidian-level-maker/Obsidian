@@ -213,7 +213,7 @@ class UI_RHeader : public Fl_Group {
 };
 
 class UI_RChoice : public Fl_Group {
-   private:
+
    public:
     UI_RChoice(int x, int y, int w, int h);
     virtual ~UI_RChoice();
@@ -232,9 +232,6 @@ class UI_RChoice : public Fl_Group {
     std::string default_value;
 
     opt_change_callback_data_t *cb_data;
-
-   private:
-    int handle(int handle);
 };
 
 class UI_CustomArrowButton : public Fl_Repeat_Button {
@@ -281,8 +278,6 @@ class UI_CustomSlider: public Fl_Hor_Slider {
 };
 
 class UI_RSlide : public Fl_Group {
-   private:
-    int handle(int event);
 
    public:
     UI_RSlide(int x, int y, int w, int h);
@@ -349,10 +344,6 @@ class UI_RButton : public Fl_Group {
     std::string default_value;
 
     opt_change_callback_data_t *cb_data;
-
-   private:
-
-   int handle(int event);
 };
 
 class UI_Clippy : public Fl_Double_Window {
@@ -369,15 +360,17 @@ class UI_Clippy : public Fl_Double_Window {
 
     Fl_Button *showme_another;
 
-    void ShowAdvice(void);
+    Fl_Button *closeme;
 
-    bool enable_me;
+    void ShowAdvice(void);
 
    private:
 
     int handle(int event);
 
     static void callback_MoreAdvice(Fl_Widget *w, void *data);
+
+    static void callback_CloseMe(Fl_Widget *w, void *data);
 
     int xoff; 
     

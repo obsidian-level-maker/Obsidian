@@ -23,12 +23,12 @@
 
 --[[
 
-  _RAND_ENTITY_TECH = name of a computer or AI from the table below
+  _RAND_ENTITY = name of a computer or AI from the table below
 Some keywords for parsing later on:
 
   _SPACE = creates a linebreak
 
-  _RAND_DEMON = name of a demonic entity
+  _RAND_ENEMY = name of a demonic entity
                (based on the GOTHIC entity names table)
 
   _RAND_ENGLISH_PLACE = name fetched directly from the Anglican
@@ -50,8 +50,7 @@ Some keywords for parsing later on:
 
   _GOTHIC_LEVEL = name from the gothic level generator
 
-  _MCGUFFIN_HELL
-  _MCGUFFIN_TECH = returns a name of a plot McGuffin from the McGuffins
+  _MCGUFFIN = returns a name of a plot McGuffin from the McGuffins
                    table below.
 
 Notes and Tips:
@@ -89,9 +88,9 @@ Notes and Tips:
   down to the story chunk pieces. This will make it easier to navigate.
 ]]
 
-ZDOOM_STORIES = { }
+DOOM.STORIES = { }
 
-ZDOOM_STORIES.LIST =
+DOOM.STORIES.LIST =
 {
   -- common stories
   portal_to_hell = 40,
@@ -133,7 +132,7 @@ ZDOOM_STORIES.LIST =
   bootup_screen = 5,
 }
 
-ZDOOM_STORIES.STORIES =
+DOOM.STORIES.TEXT =
 {
   portal_to_hell =
   {
@@ -295,6 +294,9 @@ ZDOOM_STORIES.STORIES =
 
   attack =
   {
+    level_theme = "GOTHIC",
+    enemy_theme = "GOTHIC",
+
     hooks =
     {
       [[A fetid odor fills the air of this place. It seems the
@@ -316,7 +318,7 @@ ZDOOM_STORIES.STORIES =
     conclusions =
     {
       [[You have destroyed the horde leader,
-      _RAND_DEMON of _GOTHIC_LEVEL! The demonic
+      _RAND_ENEMY of _LEVEL! The demonic
       forces scatter, unable to continue their assault! With
       this place freed, the taint of hell's energies fades with
       the retreat of the darkness.]],
@@ -335,13 +337,16 @@ ZDOOM_STORIES.STORIES =
 
   i_challenge_you_to_a_duel =
   {
+    level_theme = "GOTHIC",
+    enemy_theme = "GOTHIC",
+
     hooks =
     {
       -- the visage of fire
       [[A deep harrowing wail suddenly resounds through the halls.
       A visage of fire manifests before you and speaks in a monstrous tone:
       "Pitiful mortal. You think you can defeat me,
-      _RAND_DEMON the Lord of _GOTHIC_LEVEL?
+      _RAND_ENEMY the Lord of _LEVEL?
       Come to me and meet your fate. I shall demonstrate
       the powers of the underworld to you."]],
 
@@ -349,7 +354,7 @@ ZDOOM_STORIES.STORIES =
       [[A strange shadow seems to creep up the walls before you.
       It shudders and shakes. A pair of searing red eyes open
       from the inky surface. It speaks:
-      "I am _RAND_DEMON the King of _GOTHIC_LEVEL.
+      "I am _RAND_ENEMY the King of _LEVEL.
       You have entered my realm. I shall deal with you accordingly.",
       The shadow fades away.]],
 
@@ -358,7 +363,7 @@ ZDOOM_STORIES.STORIES =
       menaces you with its presence and speaks.
       "You may have defeated me before but know this, mortal.
       Perhaps once I was a lowly imp, but now I am
-      _RAND_DEMON the baron of _GOTHIC_LEVEL.
+      _RAND_ENEMY the baron of _LEVEL.
       I will repay your insolence by crushing and dragging your
       entrails across the stone!"]],
 
@@ -368,35 +373,35 @@ ZDOOM_STORIES.STORIES =
       twisted human corpses, sewn together to create a totem. It
       suddenly catches a blue fire and you hear a voice.
       _SPACE
-      "I am _RAND_DEMON the _EVULZ. We are legion. We do not forgive.",
+      "I am _RAND_ENEMY the _EVULZ. We are legion. We do not forgive.",
       The voice disappears as with the totem.]],
 
       -- the bounty hunter
       [["DOOMSLAYER!" a scream echoes through the halls. An
-      enormous creature steps from the shadows. "I am _RAND_DEMON the
+      enormous creature steps from the shadows. "I am _RAND_ENEMY the
       _EVULZ. Hell has a bounty upon you. I shall claim it with your head
       and all darkness shall know me for my deed.",
-      Finished with its threat, _RAND_DEMON recedes into the shadows
+      Finished with its threat, _RAND_ENEMY recedes into the shadows
       and awaits you in its infernal arena.]],
 
       -- it's all in your mind
       [[A loud screech startles you. You look around but your tracker
       hints to no movement. A voice suddenly speaks into your mind.
       "Mortal. You have become our quarry for your intrusions upon hell.
-      I, _RAND_DEMON the _EVULZ, have marked you for death. You are hunted.",
+      I, _RAND_ENEMY the _EVULZ, have marked you for death. You are hunted.",
       The voice disappears followed by infernal howls further ahead...]],
 
       -- I seeeee youuuuu
       [[You feel a crawl upon your skin. In the darkness, it feels as
       though a thousand eyes are suddenly looking upon you. A deep
       voice echoes through the chambers. "I see you, mortal. The guardians of
-      _GOTHIC_LEVEL await you. I, _RAND_DEMON the _EVULZ, will personally
+      _LEVEL await you. I, _RAND_ENEMY the _EVULZ, will personally
       see to the sealing of your fate. We will meet soon."]],
 
       -- eye for an eye
       [["You!" a bellowing voices beckons. You cannot trace the source, but
       its speech continues. "You have scarred me before. You do not remember
-      me, but soon you will. I am _RAND_DEMON the _EVULZ. I shall inflict
+      me, but soon you will. I am _RAND_ENEMY the _EVULZ. I shall inflict
       pain on you as you had on me. I will tear you limb from limb.",
       Your tracker indicates an energy surge some distance away. You know what
       to do.]],
@@ -406,7 +411,7 @@ ZDOOM_STORIES.STORIES =
       influence has a greater grip upon this area. A porous appendage
       suddenly rises from the floor, forming the figure of a humanoid. It speaks
       in a distorted voice. "You are encroaching upon our nest, mortal. My brood
-      do not take kindly to you. But I, _RAND_DEMON of _GOTHIC_LEVEL, will
+      do not take kindly to you. But I, _RAND_ENEMY of _LEVEL, will
       greet you with glee. Come and enter." The figure dissolves back into the viscera.]],
 
       -- remember Daisy
@@ -416,16 +421,16 @@ ZDOOM_STORIES.STORIES =
       You realize, however, the rabbit isn't Daisy. An ethereal voice
       whispers to you. "You are a mortal of impulse after all.
       Still hurt over your little big-ear darling?
-      Show me your fury, mortal. I am _RAND_DEMON the _EVULZ.
+      Show me your fury, mortal. I am _RAND_ENEMY the _EVULZ.
       I grant you the company of your little pet. In HELL.",
       The voice fades, and you steel your fists.
-      _RAND_DEMON will fall hard today.]],
+      _RAND_ENEMY will fall hard today.]],
 
       -- a beat of the drums
       [[The sickening sound of a distorted trumpet wails,
       followed by the thumping of war drums. You hear a
       repeating chant of what sounds like a hundred infernal voices.
-      "_RAND_DEMON! _RAND_DEMON! _RAND_DEMON!" The drumbeat stops
+      "_RAND_ENEMY! _RAND_ENEMY! _RAND_ENEMY!" The drumbeat stops
       and a bolt of fire strikes the floor before you, causing you
       to fall back. Your HUD finds a recognizable pattern in the scorchmarks.
       A hell rune translating to "You die.",
@@ -438,7 +443,7 @@ ZDOOM_STORIES.STORIES =
       chained against a burning monolith of slate, while imps
       gleefully dance around you. A ghostly mutter breaks the silence.
       "Sinners all have a place in hell, mortal. But you are special.
-      Let me, _RAND_DEMON the _EVULZ, be your ferryman to the
+      Let me, _RAND_ENEMY the _EVULZ, be your ferryman to the
       underworld." You smash the mirror with your fists, leaving
       a gaping hole in the wall. You have answered hell's challenge.]]
     },
@@ -446,7 +451,7 @@ ZDOOM_STORIES.STORIES =
     conclusions =
     {
       -- STFU
-      [[A great battle has just concluded. _RAND_DEMON collapses
+      [[A great battle has just concluded. _RAND_ENEMY collapses
       before you. "No! How could this be?! The forces of hell
       are infinite and unfor-",
       _SPACE
@@ -456,25 +461,25 @@ ZDOOM_STORIES.STORIES =
       shriek in fear and retreat!]],
 
       -- the escape
-      [[As a critical hit falls upon the demon's body, _RAND_DEMON
+      [[As a critical hit falls upon the demon's body, _RAND_ENEMY
       stutters. "This is not how it ends, mortal! I will return
       and feast upon your soul!",
       _SPACE
       The creature quickly steps into a newly opened portal behind
       it, and dissipates.
-      _RAND_DEMON escapes your grasp, but it is scarred forever.]],
+      _RAND_ENEMY escapes your grasp, but it is scarred forever.]],
 
       -- they are watching
-      [[As _RAND_DEMON falls, its body explodes into a cloud of
+      [[As _RAND_ENEMY falls, its body explodes into a cloud of
       darkness, and slowly fades. An ethereal voice speaks.
       "You have returned me to the void, mortal. Your strength
       is admirable but remember: the Dark Lords are watching you.",
       The voice fades.]],
 
       -- the fissure
-      [[_RAND_DEMON's body crashes to the floor. The ground begins
+      [[_RAND_ENEMY's body crashes to the floor. The ground begins
       to shake and a fissure opens, filling the room with an infernal
-      red glow. _RAND_DEMON is absorbed into the fissure, and the cracks
+      red glow. _RAND_ENEMY is absorbed into the fissure, and the cracks
       disappear. A foreboding voice speaks "I will return, mortal.
       The void consumes me but in my place a new demon shall stand.",
       You ignore the threat. You already know that hell's bounty is
@@ -523,6 +528,8 @@ ZDOOM_STORIES.STORIES =
 
   beacon =
   {
+    enemy_theme = "GOTHIC",
+
     hooks =
     {
       [[Your tracker lights up and informs you that a beacon with a
@@ -548,7 +555,7 @@ ZDOOM_STORIES.STORIES =
       You help yourself to the newfound munitions. It seems there is no
       evidence as to who activated the beacon. You shut it down.]],
 
-      [[It was a trap all along! The hell general _RAND_DEMON activated
+      [[It was a trap all along! The hell general _RAND_ENEMY activated
       the beacon, expecting you to follow it. They did not, however,
       expect a thorough defeat despite their machinations.
       You deactivate the beacon so no marine after you may fall prey to it.]],
@@ -573,6 +580,9 @@ ZDOOM_STORIES.STORIES =
 
   aa_guns =
   {
+    level_theme = "GOTHIC",
+    enemy_theme = "GOTHIC",
+
     hooks =
     {
       [[You hear the great roar of explosions in the distance.
@@ -596,12 +606,12 @@ ZDOOM_STORIES.STORIES =
     },
     conclusions =
     {
-      [[The great demon _RAND_DEMON of _GOTHIC_LEVEL has fallen!
+      [[The great demon _RAND_ENEMY of _LEVEL has fallen!
       In the wake of its defeat, your tracker informs you that
       the local ground defense system has rebooted. You watch as
       civilian spacecraft rise to the skies and exit the atmosphere safely.]],
 
-      [[The battle with _RAND_DEMON of _GOTHIC_LEVEL was difficult,
+      [[The battle with _RAND_ENEMY of _LEVEL was difficult,
       but you came out victorious nonetheless. You smash the
       defense terminal, causing it to power down. You watch as friendly dropships
       safely descend in the distance from the clouds. Hell will fight back
@@ -611,6 +621,8 @@ ZDOOM_STORIES.STORIES =
 
   destroy_the_evil_experiment =
   {
+    enemy_theme = "GOTHIC",
+
     hooks =
     {
       [[This area bears the marks of UAC technology. Energy signatures
@@ -630,7 +642,7 @@ ZDOOM_STORIES.STORIES =
 
     conclusions =
     {
-      [[You have destroyed _RAND_DEMON the _EVULZ! The creature was an
+      [[You have destroyed _RAND_ENEMY the _EVULZ! The creature was an
       abominable amalgamation of technology and the demonic. You shake
       your head once again at humanity's attempt to tame hell. It is
       clear the UAC has not learned its lesson.]],
@@ -714,40 +726,42 @@ ZDOOM_STORIES.STORIES =
 
   found_this_weird_tech_mcguffin =
   {
+    mcguffin_theme = "tech",
+
     hooks =
     {
       [[You stumble upon a safety deposit box marked by the UAC with various
       warning labels. This doesn't look like the kind of thing that should
       fall into the wrong hands. You pry the crate open and find
-      _MCGUFFIN_TECH. You take it with you.]],
+      _MCGUFFIN. You take it with you.]],
 
       [[Power surges and electrical fluctuations in the area are causing
       unusual behavior on your HUD. You find a panel on the wall with
       caution markings. With the right hit exacted on the lock, the panel
-      swings open to reveal _MCGUFFIN_TECH. You pry it out, and the
+      swings open to reveal _MCGUFFIN. You pry it out, and the
       fluctuations stop... this might be useful elsewhere.]],
 
       [[You find a military cargo pod ahead. It seems to have been here
       for a while with its intentional recipients having never claimed it.
-      You interface your suit to the terminal and the pod reveals _MCGUFFIN_TECH
+      You interface your suit to the terminal and the pod reveals _MCGUFFIN
       inside. Better for you to hold on to it than the hellspawn.]],
 
       [[A shot in the right place brings down a shotgun-carrying shambler of a corpse.
       It seems it has a bulging backpack. You strip the corpse of supplies and open
-      the backpack to reveal the contents: _MCGUFFIN_TECH. You take it with you.]],
+      the backpack to reveal the contents: _MCGUFFIN. You take it with you.]],
     },
 
     conclusions =
     {
       [[After a battle with the demons, it seems your path ahead is blocked by
       an enormous bulkhead gate. A receptacle on the side seems to precisely fit
-      _MCGUFFIN_TECH. You insert it in the slot and a steady rumbling begins to
+      _MCGUFFIN. You insert it in the slot and a steady rumbling begins to
       shake the halls. The bulkhead gate slowly rises up, granting you passage.]],
 
       [[In the wake of battle, you hear gunfire coming from across the room.
       You see a group of marines just fresh off of their own skirmish.
       "Whoa! It's good to see someone else! We're on a retrieval mission for
-      _MCGUFFIN_TECH.",
+      _MCGUFFIN.",
       _SPACE
       Right on time. You offer your finding. "Hell yeah! This should help
       us get out of here! Thanks!" After some short chatter and relief, you part
@@ -755,7 +769,7 @@ ZDOOM_STORIES.STORIES =
 
       [[It seems as though the demons were attempting to breach into a small
       automated UAC firebase with a field plasma turret. The terminal indicates
-      the requirement of a _MCGUFFIN_TECH for its activation. You supply it
+      the requirement of a _MCGUFFIN for its activation. You supply it
       with the necessities. The terminal announces:
       "Automated security system activated.",
       The turret activates and begins swinging around,
@@ -765,22 +779,24 @@ ZDOOM_STORIES.STORIES =
 
   found_this_weird_hell_mcguffin =
   {
+    mcguffin_theme = "hellish",
+
     hooks =
     {
       [[A strange altar lined with demonic effigies stands besides the wall.
       It seems the creatures are worshipping the object on the pedestal.
-      It's _MCGUFFIN_HELL! A relic of this sort is better off in your hands
+      It's _MCGUFFIN! A relic of this sort is better off in your hands
       than those of hell's. You take it with you.]],
 
       [[Ahead is a large setup of various portable machines and terminals.
       Each display shows graphs and readings you cannot interpret. The machines
-      are linked to a pedestal carrying _MCGUFFIN_HELL! You swipe the item
+      are linked to a pedestal carrying _MCGUFFIN! You swipe the item
       off its pedestal and the displays lose their readings. UAC experiments
       rarely turn out good, you think to yourself.]],
 
       [[Radiant energies permeate through this place. It seems to come from
       this stone totem. It must be helping the forces of hell rally somehow.
-      Atop the totem is _MCGUFFIN_HELL. You topple the totem over and pilfer
+      Atop the totem is _MCGUFFIN. You topple the totem over and pilfer
       the object. Hell won't have a use for this anymore!]],
     },
 
@@ -791,7 +807,7 @@ ZDOOM_STORIES.STORIES =
       is failing to damage the creature at all.
       "You have no chance against inferno!",
       _SPACE
-      Out of desperation, you take out _MCGUFFIN_HELL from your backpack.
+      Out of desperation, you take out _MCGUFFIN from your backpack.
       "No, what are you doing?!" It begins emitting a wave of light. Upon
       touching the demonic creature, its body is incinerated and particles
       are sucked into the relic. The relic fades from your hands.]],
@@ -799,7 +815,7 @@ ZDOOM_STORIES.STORIES =
       -- close portal with McGuffin
       [[It seems the minions of hell were attempting to stop you from reaching
       this place. Ahead is an ancient portal from which the demons apparently
-      spilled through. A receptacle on the center seems to fit _MCGUFFIN_HELL
+      spilled through. A receptacle on the center seems to fit _MCGUFFIN
       precisely. You lodge it into the receptacle and the portal to hell
       collapses. Time to move on.]],
 
@@ -807,14 +823,14 @@ ZDOOM_STORIES.STORIES =
       [[The final creature falls. A whispering voice rings through the air.
       "You have something that belongs to hell. Know that we will return
       to take it from your dead hands, mortal." The voice fades. It seems
-      they were after _MCGUFFIN_HELL. It's better off in your possession.]],
+      they were after _MCGUFFIN. It's better off in your possession.]],
 
       -- demon takes back the McGuffin *sigh*
       [[As you land your final hit upon a demon, a surge of energy
       paints your shadow in front of you. You are hurled across the floor
       as sparks bounce from your armor. You feel immense pain. You struggle
       to regain your composure but your sight still blurs. A demonic voice
-      speaks "Mortal. You have _MCGUFFIN_HELL with you. That belongs to hell.",
+      speaks "Mortal. You have _MCGUFFIN with you. That belongs to hell.",
       _SPACE
       The bright flashes of light end and the room falls silent.
       You finally pick yourself up. Unfortunately, it seems your
@@ -899,6 +915,8 @@ ZDOOM_STORIES.STORIES =
 
   zero_wing =
   {
+    enemy_theme = "GOTHIC",
+
     hooks =
     {
       [[The war between mankind and demons rages on.
@@ -906,7 +924,7 @@ ZDOOM_STORIES.STORIES =
       It seems the demons have set you up a bomb nearby. As you narrowly
       jump aside to avoid the blast, you get a signal on your receiver.
       _SPACE
-      It's _RAND_DEMON!!
+      It's _RAND_ENEMY!!
       _SPACE
       "How are you, mortal? All of your bases are now belong to us." It growls with
       malicious laughter. "All of Humanity is on the way to destruction. You have
@@ -920,12 +938,12 @@ ZDOOM_STORIES.STORIES =
     {
       [[Congratulations!!
       _SPACE
-      All bases of _RAND_DEMON in this area have been destroyed. Peace to the
+      All bases of _RAND_ENEMY in this area have been destroyed. Peace to the
       world can finally be restored... but that is what you could only wish
       for.
       _SPACE
-      Despite your best efforts, _RAND_DEMON is still alive. You must fight
-      against _RAND_DEMON's horde of forces again and destroy them
+      Despite your best efforts, _RAND_ENEMY is still alive. You must fight
+      against _RAND_ENEMY's horde of forces again and destroy them
       completely.]],
     },
   },
@@ -937,10 +955,10 @@ ZDOOM_STORIES.STORIES =
       -- the vengeful marine
       [[You find a marine slumped against the wall, battered and bloodied.
       His armor is torn from claws marks but he is still alive. "Hey, you!
-      I don't have much time left! That creature, _RAND_DEMON did this to me.
+      I don't have much time left! That creature, _RAND_ENEMY did this to me.
       I want you to... to make that demon scum pay.",
       Life escapes the marine's eyes.
-      You take his dog tags and swear vengeance upon _RAND_DEMON.]],
+      You take his dog tags and swear vengeance upon _RAND_ENEMY.]],
 
       -- hear my plea
       [[You hear a weak sobbing around the corner. You turn around to see
@@ -948,7 +966,7 @@ ZDOOM_STORIES.STORIES =
       Amongst the carnage is a raised hand. One of them is still alive.
       You approach.
       _SPACE
-      "Please. Help... please help me... _RAND_DEMON killed everyone...",
+      "Please. Help... please help me... _RAND_ENEMY killed everyone...",
       The woman's body is utterly crushed.
       She utters her last words and her hand falls to the ground. Hell
       will pay tenfold for this.]],
@@ -956,7 +974,7 @@ ZDOOM_STORIES.STORIES =
       -- don't let them get away with this
       [[You are interrupted by a scientist. He walks with a limp and his lab coat
       is strewn with blood. "Hey." He backs to a wall, gripping his arm.
-      "The UAC, They made us work on Project _RAND_DEMON. It was an attempt at
+      "The UAC, They made us work on Project _RAND_ENEMY. It was an attempt at
       capturing one of the class 5 entities but it escaped the containment
       field, killing everyone. I am the only one left. You have to take it down!",
       You feel anger but lecturing the scientist would not solve the problem.
@@ -967,7 +985,7 @@ ZDOOM_STORIES.STORIES =
     conclusions =
     {
       -- STFU part 2,
-      [[As _RAND_DEMON's body falls to the floor, you step over its chest.
+      [[As _RAND_ENEMY's body falls to the floor, you step over its chest.
       "Mortal! Your transgressions against hell will not be forgo-",
       _SPACE
       You silence the creature by landing a fist right between its eyes.
@@ -975,7 +993,7 @@ ZDOOM_STORIES.STORIES =
       Vengeance is served. You make your exit.]],
 
       -- put a sock in it
-      [[_RAND_DEMON curses you as its body crumbles. "No! This is not
+      [[_RAND_ENEMY curses you as its body crumbles. "No! This is not
       our last battle, mortal! Hell is unending! We are legion! We-",
       _SPACE
       You stuff a barrel of nukage into its mouth. A shot in the right
@@ -983,7 +1001,7 @@ ZDOOM_STORIES.STORIES =
       room. Vengeance has been achieved. You escape the area.]],
 
       -- I'm gonna rip your arm off and beat you with it
-      [[The weakened _RAND_DEMON tries to limp away. You rush and grip
+      [[The weakened _RAND_ENEMY tries to limp away. You rush and grip
       one of its limbs tightly, tearing it from its socket. "GRAAAAHH!
       Leave, mortal!" With a strong swing of the piece, a crash of flesh
       and metal is met with an explosion of blood and intestines. The demon
@@ -993,12 +1011,15 @@ ZDOOM_STORIES.STORIES =
 
   the_avenger_from_hell =
   {
+    level_theme = "GOTHIC",
+    enemy_theme = "GOTHIC",
+
     hooks =
     {
-      -- my name is _RAND_DEMON, you killed my father, prepare to die
+      -- my name is _RAND_ENEMY, you killed my father, prepare to die
       [[You are rudely interrupted and shoved down to the ground.
       A great demon grips you tightly, salivating on your visor. It growls.
-      "You! You killed _RAND_DEMON, our lord! I am sworn to destroy you!",
+      "You! You killed _RAND_ENEMY, our lord! I am sworn to destroy you!",
       You discharge your suit battery and a shockwave of electricity is released,
       freeing you and pushing the demon back.
       "I will return. With your head upon our lord's altar.",
@@ -1007,8 +1028,8 @@ ZDOOM_STORIES.STORIES =
       -- passing the torch
       [[A great demon shows itself before you from a ledge above.
       It begins a speech:
-      "By decree of the dark lords and _GOTHIC_LEVEL, I have taken the place
-      of _RAND_DEMON and in our lord's name, I shall grind you to a pulp!",
+      "By decree of the dark lords and _LEVEL, I have taken the place
+      of _RAND_ENEMY and in our lord's name, I shall grind you to a pulp!",
       You take aim and land a shot on its chest to minor effect.
       "Pathetic! I will show all hell of your fate." The great
       demon steps away into the shadows.]],
@@ -1017,7 +1038,7 @@ ZDOOM_STORIES.STORIES =
       [[As you open a door, a swing of metal launches you off of
       your feet and into the wall. A menacing creature stands before
       you and decrees "Mortal! Your head will make a great ornament
-      upon our Lord _RAND_DEMON's cenotaph!" As it makes its way towards you,
+      upon our Lord _RAND_ENEMY's cenotaph!" As it makes its way towards you,
       the floor beneath you crumbles. You fall and roll down a long slope and find
       yourself at the bottom.
       You pick yourself up quickly, but see no sign of the demon.]]
@@ -1027,7 +1048,7 @@ ZDOOM_STORIES.STORIES =
     {
       -- curb stomp
       [[You have defeated the great demon!
-      "Nooo! Nooo! _RAND_DEMON must be avenged!",
+      "Nooo! Nooo! _RAND_ENEMY must be avenged!",
       You raise your foot and stomp the creature's head to the curb.
       The floor is greased with a splatter of blood and metal.
       You swear to make all hellions reach the same fate at every turn.]],
@@ -1035,7 +1056,7 @@ ZDOOM_STORIES.STORIES =
       -- oh no run away
       [[The great demon is stricken and crashes down.
       Wails of agony flood the room as the impish minions run in a panic.
-      "_RAND_DEMON's champion has been defeated by the Doomslayer!
+      "_RAND_ENEMY's champion has been defeated by the Doomslayer!
       Retreat!" You fire shots at the routed pawns and some of them tumble
       down. You bring one foot over the demon's head, weapon in hand,
       and survey the area. It seems you have struck fear upon the creatures.
@@ -1044,7 +1065,7 @@ ZDOOM_STORIES.STORIES =
       -- diabolus ex machina
       [[Before you land your final shot at the demon, a swirl of
       green mists blanket the room. An eruption of guttural laughter
-      greets you. "You are indeed the Butcher of _RAND_DEMON, mortal.
+      greets you. "You are indeed the Butcher of _RAND_ENEMY, mortal.
       No matter. This battle was of a small price to weaken your will.
       Hell will not forget. Hell will not forgive." The mists disperse and
       the great demon is nowhere in sight. Either it keeps running away,
@@ -1145,9 +1166,11 @@ ZDOOM_STORIES.STORIES =
   -- Doom 2016 Vega storyline variations
   benevolent_ai =
   {
+    entity_theme = "tech",
+
     hooks = {
       -- hijacked energy grid
-      [[A terminal near you suddenly lights up. "I am _RAND_ENTITY_TECH",
+      [[A terminal near you suddenly lights up. "I am _RAND_ENTITY",
       a synthetic voice booms. "I am the maintainer of the energy grid that
       feeds this complex. It has come to my knowledge, that the energy grid
       has been hijacked to power the demonic portals, used in this invasion.
@@ -1158,7 +1181,7 @@ ZDOOM_STORIES.STORIES =
 
       -- weakening security systems
       [[A display array on the opposite wall suddenly light up, and a
-      strange fractal pattern covers them. "I am _RAND_ENTITY_TECH", a
+      strange fractal pattern covers them. "I am _RAND_ENTITY", a
       synthetic voice booms. "I am the keeper of the defense grid. The
       defense grid has fallen to demonic corruption and my control weakens
       with every minute. You must shut me down. Head towards the security
@@ -1168,7 +1191,7 @@ ZDOOM_STORIES.STORIES =
 
       -- you are the chosen one
       [[The lights flicker and a synthetic voice booms out of the area's
-      loudspeakers. "I am _RAND_ENTITY_TECH" the voice says. "I have been
+      loudspeakers. "I am _RAND_ENTITY" the voice says. "I have been
       analyzing your performance. You have the capacity to overcome my
       defensive systems and shut me down before the demonic virus corrupts me
       and turns me into a weapon against you and mankind. I will guide you
@@ -1180,23 +1203,23 @@ ZDOOM_STORIES.STORIES =
     conclusions = {
       -- meltdown closes portals
       [[As you switch off the last cooling station, the central AI core
-      starts glowing bright red. "It is done", _RAND_ENTITY_TECH speaks. "Now,
+      starts glowing bright red. "It is done", _RAND_ENTITY speaks. "Now,
       the main switch." You reach for the switch and lower it.
       _SPACE
-      "Thank... You..." _RAND_ENTITY_TECH speaks through the growing roar.
+      "Thank... You..." _RAND_ENTITY speaks through the growing roar.
       Then, an explosion shakes the chamber, and all becomes silent.
-      _RAND_ENTITY_TECH is gone, and with him, the demonic portals.
+      _RAND_ENTITY is gone, and with him, the demonic portals.
       _SPACE
       You swallow a lump in your throat and leave in silence.]],
 
       -- meltdown teleports you away
       [[As you smash the last cooling station to bits, the mainframe that
-      houses the AI starts to glow hot red. "It is done", _RAND_ENTITY_TECH
+      houses the AI starts to glow hot red. "It is done", _RAND_ENTITY
       speaks. "Now, the primary switching board." You reach under the
       mainframe base and tear out a circuit board, then crush it under your
       heel.
       _SPACE
-      "Thank... You..." _RAND_ENTITY_TECH speaks through the growing roar.
+      "Thank... You..." _RAND_ENTITY speaks through the growing roar.
       Then, the core implodes, and you are thrown across the chamber.
       The world twists and distorts around you, and when you come to your
       senses, you are lying on the ground in an unknown location.
@@ -1205,26 +1228,26 @@ ZDOOM_STORIES.STORIES =
 
       -- meltdown opens new portal
       [[As you shoot the last cooling station to pieces, the central AI
-      core starts glowing bright red. "It is done", _RAND_ENTITY_TECH speaks.
+      core starts glowing bright red. "It is done", _RAND_ENTITY speaks.
       "Now, the override code." You reach to the console and punch in the
       code. Moments later, the core implodes. The chamber shudders, and you
       are thrown against the wall, watching in horror as a new portal opens
       and demons begin pouring in!
       _SPACE
-      _RAND_ENTITY_TECH was wrong. And you were wrong to trust it. You will
+      _RAND_ENTITY was wrong. And you were wrong to trust it. You will
       have to find another way to close the portals. You stand up and run.]],
 
       -- more useful alive
       [[You regard the AI core chamber and hesitate, your hand
       hovering over the main switch. Suddenly, you come to a decision.
       You walk across the chamber and turn every cooling station
-      back on. "I do not understand", _RAND_ENTITY_TECH speaks. You walk
+      back on. "I do not understand", _RAND_ENTITY speaks. You walk
       towards the control station and use it to route all available resources
-      into _RAND_ENTITY_TECH, making it almost all-powerful. Your lips twist
+      into _RAND_ENTITY, making it almost all-powerful. Your lips twist
       into a grin, as you take pleasure in the knowledge that you will have
       to do it the hard way, just like you prefer.
       _SPACE
-      The risk is well worth it. With all its shortcomings, _RAND_ENTITY_TECH
+      The risk is well worth it. With all its shortcomings, _RAND_ENTITY
       is more useful to you alive.]],
 
       -- keeping a backup
@@ -1233,11 +1256,11 @@ ZDOOM_STORIES.STORIES =
       keypresses are all you need. With newfound resolve, you flip the main
       switch.
       _SPACE
-      "Thank... You.." _RAND_ENTITY_TECH speaks through the growing roar.
+      "Thank... You.." _RAND_ENTITY speaks through the growing roar.
       The core glows bright red, then melts before your eyes. An explosion
       shakes the chamber, then all becomes silent. The portals are gone.
       You glance at the portable disk you hold in your hand, now containing
-      a backup of _RAND_ENTITY_TECH. Someday, you will find a way to put
+      a backup of _RAND_ENTITY. Someday, you will find a way to put
       it back together. You put it in your backpack and leave.]],
     },
   },
@@ -1523,6 +1546,9 @@ ZDOOM_STORIES.STORIES =
 
   knock_knock_joke =
   {
+    level_theme = "GOTHIC",
+    enemy_theme = "GOTHIC",
+
     hooks = {
       [[Knock knock. Who's there?]],
 
@@ -1540,9 +1566,9 @@ ZDOOM_STORIES.STORIES =
 
       [[It's _RAND_CONTRIBUTOR! Hello! ]] ,
 
-      [[It's _RAND_DEMON! Oh noes! ]],
+      [[It's _RAND_ENEMY! Oh noes! ]],
 
-      [[It's...._GOTHIC_LEVEL?? How the fuck is this possible? ]],
+      [[It's...._LEVEL?? How the fuck is this possible? ]],
 
       [[Nobody's here, bitch. Move along.]],
 
@@ -1675,7 +1701,7 @@ ZDOOM_STORIES.STORIES =
 -- WARNING: absolute endings are supposed to be lines attached to the
 -- story end section of the final chapter. However, story strings
 -- are already generally too long so this feature is not implemented.
-ZDOOM_STORIES.ABSOLUTE_ENDINGS =
+DOOM.STORIES.ABSOLUTE_ENDINGS =
 {
   [[While hell's forces continues its assault elsewhere,
   your efforts at keeping the demons at bay here have been
@@ -1689,7 +1715,7 @@ ZDOOM_STORIES.ABSOLUTE_ENDINGS =
   However, this will not be the end of your encounters with them.]]
 }
 
-ZDOOM_STORIES.GENERIC_STORIES =
+DOOM.STORIES.GENERIC_STORIES =
 {
   d2_entry = -- not used but I'll leave it here anyway
   {
@@ -1743,9 +1769,9 @@ ZDOOM_STORIES.GENERIC_STORIES =
 
 -- TapWave-TODO:
 -- Plz help proof-read! -MSSP
-ZDOOM_STORIES.SECRET_TEXTS =
+DOOM.STORIES.SECRET_TEXTS =
 {
-  d2_secretnearby =
+  secretnearby =
   {
     [[You tirelessly battle against waves upon waves of
     seemingly infinite hellspawn.
@@ -1819,7 +1845,7 @@ ZDOOM_STORIES.SECRET_TEXTS =
 
 -- TapWave-TODO:
 -- Plz help proof-read! -MSSP
-  d2_secret1 =
+  secret1 =
   {
     [[You have found a secret zone!
     It seems the hellspawn have barricaded
@@ -1864,7 +1890,7 @@ ZDOOM_STORIES.SECRET_TEXTS =
 
   -- TapWave-TODO:
   -- Plz help proof-read! -MSSP
-  d2_secret2 =
+  secret2 =
   {
     [[It seems this secret trail goes further than expected.
     It is time to finish this once and for all and eradicate
@@ -1931,7 +1957,7 @@ ZDOOM_STORIES.SECRET_TEXTS =
   },
 }
 
-ZDOOM_STORIES.EVIL_TITLES =
+DOOM.STORIES.EVIL_TITLES =
 {
   -- as in titles for individuals i.e. Snowball the TERRIBLE.
   Abberant=5,
@@ -2444,7 +2470,7 @@ ZDOOM_STORIES.EVIL_TITLES =
   ["World Ender"]=5,
 }
 
-ZDOOM_STORIES.MCGUFFINS =
+DOOM.STORIES.MCGUFFINS =
 {
   -- McGuffins. Quintessential items in a story
   -- that characters work for or against, but
@@ -2506,7 +2532,7 @@ ZDOOM_STORIES.MCGUFFINS =
   },
 }
 
-ZDOOM_STORIES.ENTITIES =
+DOOM.STORIES.ENTITIES =
 {
   tech =
   {
@@ -2593,7 +2619,7 @@ ZDOOM_STORIES.ENTITIES =
   },
 }
 
-ZDOOM_STORIES.INSTALLATIONS =
+DOOM.STORIES.INSTALLATIONS =
 {
   ["administrative center"] = 5,
   ["arachnotron factory"] = 5,
@@ -2612,7 +2638,7 @@ ZDOOM_STORIES.INSTALLATIONS =
   nest = 5,
 }
 
-ZDOOM_STORIES.QUIT_MESSAGES =
+DOOM.STORIES.QUIT_MESSAGES =
 {
   [[Let's be serious, are you really exiting already?]],
   [[There's always more where this comes from! Obsidian never forgets!]],
@@ -2643,13 +2669,13 @@ ZDOOM_STORIES.QUIT_MESSAGES =
   [[Hold up, are you just going to leave like this?]],
   [[We're still going to be here, just go. It may not be as nice when you come back.]],
   [[There's a special place in Hell for those that quit too soon.]],
-  [[_RAND_CONTRIBUTOR and _RAND_DEMON the _EVULZ thought that you'd be just as weak as anticipated to quit so soon.]],
-  [[That's too bad, perhaps _RAND_DEMON the _EVULZ should make you their bitch for considering quitting?]],
+  [[_RAND_CONTRIBUTOR and _RAND_ENEMY the _EVULZ thought that you'd be just as weak as anticipated to quit so soon.]],
+  [[That's too bad, perhaps _RAND_ENEMY the _EVULZ should make you their bitch for considering quitting?]],
   [[_RAND_CONTRIBUTOR is disappointed in you. Hit N now or face retribution.]],
   [[He who is not bold enough to be stared at from across the abyss is not bold enough to stare into it himself.]], -- Silent Hill 2,
-  [[Is that a _MCGUFFIN_TECH in your possession? I'm pretty sure that's for Doomguy.. ]],
-  [[That _MCGUFFIN_HELL isn't going to do you any good. It's destined for Doomguy if he finds it.]],
-  [[Maybe you should be dumped off in _GOTHIC_LEVEL, see how you fare.]],
+  [[Is that a _MCGUFFIN in your possession? I'm pretty sure that's for Doomguy.. ]],
+  [[That _MCGUFFIN isn't going to do you any good. It's destined for Doomguy if he finds it.]],
+  [[Maybe you should be dumped off in _LEVEL, see how you fare.]],
   [[In the end, there is only death, chaos and more death. And cookies.]],
   [[Remember, a good demon is a dead one. Make that happen!]],
   [[Heroes, press N. Wimps, press Y.]], -- Wolfenstein 3D
@@ -2660,7 +2686,7 @@ ZDOOM_STORIES.QUIT_MESSAGES =
   [[There just isn't anything to keep you from hitting Y, is there?]],
   [[Obsidian demands the purging of more demons!]],
   [[The will to survive is as long as you do not quit out of the game.]],
-  [[_RAND_DEMON needs another hobby than to torture your dumb ass from quitting.]],
+  [[_RAND_ENEMY needs another hobby than to torture your dumb ass from quitting.]],
   [[Hey dipshit, we're not done hunting hellspawn! Turn your attention back to the game!]],
   [[Is this really what it has come to?]],
   [[That's right, abandon your fellow marines in a time of need...]],

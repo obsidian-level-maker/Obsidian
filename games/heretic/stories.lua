@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
---  MODULE: ZDoom Story Tables
+--  MODULE: Story Tables
 ----------------------------------------------------------------
 --
 --  Copyright (C) 2020 MsrSgtShooterPerson
@@ -29,7 +29,7 @@ Some keywords for parsing later on:
 
   _SPACE = creates a linebreak
 
-  _RAND_DEMON = name of a demonic entity
+  _RAND_ENEMY = name of a demonic entity
                (based on the CASTLE entity names table)
 
   _RAND_ENGLISH_PLACE = name fetched directly from the Anglican
@@ -49,9 +49,9 @@ Some keywords for parsing later on:
   _RAND_HUMAN = names for a mere mortals (there is no human name generator
                yet as of 2019-04-09)
 
-  _CASTLE_LEVEL = name from the castle level generator
+  _LEVEL = name from the castle level generator
 
-  _MCGUFFIN_MAGICAL = returns a name of a plot McGuffin from the McGuffins
+  _MCGUFFIN = returns a name of a plot McGuffin from the McGuffins
                    table below.
 
 
@@ -90,9 +90,9 @@ Notes and Tips:
   down to the story chunk pieces. This will make it easier to navigate.
 ]]
 
-ZDOOM_STORIES_HERETIC = { }
+HERETIC.STORIES = { }
 
-ZDOOM_STORIES_HERETIC.LIST =
+HERETIC.STORIES.LIST =
 {
   -- common stories
   i_challenge_you_to_a_duel = 100,
@@ -105,8 +105,10 @@ ZDOOM_STORIES_HERETIC.LIST =
   oblige_history = 2,
 }
 
-ZDOOM_STORIES_HERETIC.STORIES =
+HERETIC.STORIES.TEXT =
 {
+  level_theme = "GOTHIC",
+  enemy_theme = "GOTHIC",
 
   i_challenge_you_to_a_duel =
   {
@@ -116,7 +118,7 @@ ZDOOM_STORIES_HERETIC.STORIES =
       [[A deep harrowing wail suddenly resounds through the halls.
       A visage of fire manifests before you and speaks in a monstrous tone:
       "Pitiful mortal. You think you can defeat me,
-      _RAND_DEMON the Lord of _CASTLE_LEVEL?
+      _RAND_ENEMY the Lord of _LEVEL?
       Come to me and meet your fate. I shall demonstrate
       the powers of the underworld to you."]],
 
@@ -124,7 +126,7 @@ ZDOOM_STORIES_HERETIC.STORIES =
       [[A strange shadow seems to creep up the walls before you.
       It shudders and shakes. A pair of searing red eyes open
       from the inky surface. It speaks:
-      "I am _RAND_DEMON the King of _CASTLE_LEVEL.
+      "I am _RAND_ENEMY the King of _LEVEL.
       You have entered my realm. I shall deal with you accordingly.",
       The shadow fades away.]],
 
@@ -132,13 +134,13 @@ ZDOOM_STORIES_HERETIC.STORIES =
       [[You feel a crawl upon your skin. In the darkness, it feels as
       though a thousand eyes are suddenly looking upon you. A deep
       voice echoes through the chambers. "I see you, mortal. The guardians of
-      _CASTLE_LEVEL await you. I, _RAND_DEMON the _EVULZ, will personally
+      _LEVEL await you. I, _RAND_ENEMY the _EVULZ, will personally
       see to the sealing of your fate. We will meet soon."]],
 
       -- eye for an eye
       [["You!" a bellowing voice beckons. You cannot scry the source, but
       its speech continues. "You have scarred me before. You do not remember
-      me, but soon you will. I am _RAND_DEMON the _EVULZ. I shall inflict
+      me, but soon you will. I am _RAND_ENEMY the _EVULZ. I shall inflict
       pain on you as you had on me. I will tear you limb from limb.",
       You sense a powerful aura some distance away. You know what
       to do.]],
@@ -147,7 +149,7 @@ ZDOOM_STORIES_HERETIC.STORIES =
       [[Dark viscera seems to extrude from the walls and flood the room. A porous appendage
       suddenly rises from the floor, forming the figure of a humanoid. It speaks
       in a distorted voice. "You are encroaching upon our nest, mortal. My brood
-      do not take kindly to you. But I, _RAND_DEMON of _CASTLE_LEVEL, will
+      do not take kindly to you. But I, _RAND_ENEMY of _LEVEL, will
       greet you with glee. Come and enter." The figure dissolves back into the viscera.]]
 
     },
@@ -156,16 +158,16 @@ ZDOOM_STORIES_HERETIC.STORIES =
     {
 
       -- the escape
-      [[As a critical hit falls upon the demon's body, _RAND_DEMON
+      [[As a critical hit falls upon the demon's body, _RAND_ENEMY
       stutters. "This is not how it ends, mortal! I will return
       and feast upon your soul!",
       _SPACE
       The creature quickly steps into a newly opened portal behind
       it, and dissipates.
-      _RAND_DEMON escapes your grasp, but it is scarred forever.]],
+      _RAND_ENEMY escapes your grasp, but it is scarred forever.]],
 
       -- they are watching
-      [[As _RAND_DEMON falls, its body explodes into a cloud of
+      [[As _RAND_ENEMY falls, its body explodes into a cloud of
       darkness, and slowly fades. An ethereal voice speaks.
       "You have returned me to the void, mortal. Your strength
       is admirable but remember: the Dark Lords are watching you.",
@@ -215,10 +217,12 @@ ZDOOM_STORIES_HERETIC.STORIES =
 
   found_this_weird_magical_mcguffin =
   {
+    mcguffin_theme = "magical",
+
     hooks =
     {
       [[A crude altar, bloodied by countless sacrifices, stands before you.
-      _MCGUFFIN_MAGICAL has been placed in its center...it looks like the
+      _MCGUFFIN has been placed in its center...it looks like the
       creatures are using it as a catalyst to summon something far worse than
       themselves!
       Without hesitation, you take the evil relic and hope that you aren't too
@@ -227,7 +231,7 @@ ZDOOM_STORIES_HERETIC.STORIES =
       [[You enter a study filled with various tomes and scrolls.
       Strange glyphs line the walls and you seem to hear a faint chanting in
       a language that you cannot understand. In the center of the room is a
-      pedestal carrying _MCGUFFIN_MAGICAL! As you swipe the item and place it
+      pedestal carrying _MCGUFFIN! As you swipe the item and place it
       into your bag, the glpyhs fade into nothingness and the room becomes
       deathly silent. You are unsure of the relic's purpose, but decide that
       it is safer in your keeping.]]
@@ -240,7 +244,7 @@ ZDOOM_STORIES_HERETIC.STORIES =
       weapon nor spell can harm this foe...you quickly exhaust both your
       will and your reserves.
       _SPACE
-      Out of desperation, you remove _MCGUFFIN_MAGICAL from your bag of holding.
+      Out of desperation, you remove _MCGUFFIN from your bag of holding.
       "No, what are you doing?!" It begins emitting a wave of light. Upon
       touching the evil creature, its body is incinerated and what little remains
       is sucked into the relic. The relic fades from your hands.]],
@@ -248,29 +252,31 @@ ZDOOM_STORIES_HERETIC.STORIES =
       -- close portal with McGuffin
       [[It seems that all of your foes were attempting to stop you from reaching
       this place. Ahead is an ancient portal from which all manner of foul creatures
-      is splling through. A receptacle on the center seems to fit _MCGUFFIN_MAGICAL
+      is splling through. A receptacle on the center seems to fit _MCGUFFIN
       precisely. You lodge it into the receptacle and the portal collapses. Time to move on.]],
 
       -- demon threatens you for possession of McGuffin
       [[The final creature falls. A whispering voice rings through the air.
       "You have something that belongs to us....know that we will return
       to take it from your dead hands, mortal." The voice fades. It seems
-      they were after _MCGUFFIN_MAGICAL. It's better off in your possession.]]
+      they were after _MCGUFFIN. It's better off in your possession.]]
     },
   },
 
   the_avenger =
   {
+    enemy_theme = "GOTHIC",
+
     hooks =
     {
       -- the vengeful heretic
       [[You find a warrior slumped against the wall, battered and bloodied.
       His armor is torn from claws marks but he is still alive. "Hey, you!
-      I don't have much time left! That creature, _RAND_DEMON did this to me.
+      I don't have much time left! That creature, _RAND_ENEMY did this to me.
       I want you to... to make that foul scum pay.",
       Life escapes the warrior's eyes.
       You raise a cairn of stones over the poor soul and swear
-      vengeance upon _RAND_DEMON.]],
+      vengeance upon _RAND_ENEMY.]],
 
       -- hear my plea
       [[You hear a weak sobbing around the corner. You approach to see
@@ -278,15 +284,15 @@ ZDOOM_STORIES_HERETIC.STORIES =
       Amongst the carnage is a raised hand. One of them is still alive.
       You approach.
       _SPACE
-      "Please. Help... please help me... _RAND_DEMON killed everyone...",
+      "Please. Help... please help me... _RAND_ENEMY killed everyone...",
       The woman's body is utterly crushed.
-      She utters her last words and her hand falls to the ground. _RAND_DEMON will
+      She utters her last words and her hand falls to the ground. _RAND_ENEMY will
       not see another sunrise...]],
 
       -- don't let them get away with this
       [[You are interrupted by a mage. He walks with a limp and his robes
       are strewn with blood. "A moment, hero." He backs to a wall, gripping his arm.
-      "The Council, they made us summon _RAND_DEMON. It was an attempt to
+      "The Council, they made us summon _RAND_ENEMY. It was an attempt to
       subjugate a demon for their own ends, but it escaped the ritual circle,
       killing everyone! I am the only one left. You have to take it down!",
       You feel anger, but lecturing the mage would not solve anything.
@@ -297,7 +303,7 @@ ZDOOM_STORIES_HERETIC.STORIES =
     conclusions =
     {
       -- STFU part 2,
-      [[As _RAND_DEMON's body falls to the floor, you step over its chest.
+      [[As _RAND_ENEMY's body falls to the floor, you step over its chest.
       "Mortal! Your transgressions will not be forgo-",
       _SPACE
       You silence the creature by planting your staff right between its eyes.
@@ -305,7 +311,7 @@ ZDOOM_STORIES_HERETIC.STORIES =
       lie were its face used to be. Vengeance is served. You make your exit.]],
 
       -- put a sock in it
-      [[_RAND_DEMON curses you as its body crumbles. "No! This is not
+      [[_RAND_ENEMY curses you as its body crumbles. "No! This is not
       your victory, mortal! With the last of my power, I will-",
       _SPACE
       You stuff a nearby pod into its mouth. A blast from your wand
@@ -343,6 +349,9 @@ ZDOOM_STORIES_HERETIC.STORIES =
 
   knock_knock_joke =
   {
+    level_theme = "GOTHIC",
+    enemy_theme = "GOTHIC",
+
     hooks = {
       [[Knock knock. Who's there?]],
 
@@ -358,19 +367,18 @@ ZDOOM_STORIES_HERETIC.STORIES =
 
       [[It's _RAND_CONTRIBUTOR! Hello! ]] ,
 
-      [[It's _RAND_DEMON! Oh noes! ]],
+      [[It's _RAND_ENEMY! Oh noes! ]],
 
-      [[It's...._CASTLE_LEVEL?? How the fuck is this possible? ]],
+      [[It's...._LEVEL?? How the fuck is this possible? ]],
     },
   },
 }
 
 -- TapWave-TODO:
 -- Plz help proof-read! -MSSP
-ZDOOM_STORIES_HERETIC.SECRET_TEXTS =
+HERETIC.STORIES.SECRET_TEXTS =
 {
-
-  heretic_secret =
+  secretnearby =
   {
     [[You have found a secret area!
     It seems the enemy has barricaded itself
@@ -387,9 +395,18 @@ ZDOOM_STORIES_HERETIC.SECRET_TEXTS =
     You grin and ready your wand. It's time to clear this place out.]]
   },
 
+  secret1 =
+  {
+    [[Write great story here.]]
+  },
+
+  secret2 =
+  {
+    [[Write great story here.]]
+  },
 }
 
-ZDOOM_STORIES_HERETIC.EVIL_TITLES =
+HERETIC.STORIES.EVIL_TITLES =
 {
   -- as in titles for individuals i.e. Snowball the TERRIBLE.
   Abberant=5,
@@ -898,7 +915,7 @@ ZDOOM_STORIES_HERETIC.EVIL_TITLES =
   ["World Ender"]=5,
 }
 
-ZDOOM_STORIES_HERETIC.MCGUFFINS =
+HERETIC.STORIES.MCGUFFINS =
 {
   -- McGuffins. Quintessential items in a story
   -- that characters work for or against, but
@@ -1025,7 +1042,7 @@ ZDOOM_STORIES_HERETIC.INSTALLATIONS =
   nest = 5,
 }]]
 
-ZDOOM_STORIES_HERETIC.QUIT_MESSAGES =
+HERETIC.STORIES.QUIT_MESSAGES =
 {
   [[Let's be serious, are you really exiting already?]],
   [[There's always more where this comes from! Obsidian never forgets!]],

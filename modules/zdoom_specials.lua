@@ -196,268 +196,6 @@ ZDOOM_SPECIALS.INTERPIC_MUSIC =
   "$MUSIC_INTER",  _("Doom 1 Vanilla")
 }
 
-ZDOOM_SPECIALS.DYNAMIC_LIGHT_DECORATE =
-[[// ObAddon dynamic light actors
-actor ObLightWhite 14999
-{
-  Scale 0 //Should really use a nice corona sprite but whatever
-  Height 16
-
-  +NOGRAVITY
-  +SPAWNCEILING
-
-  States{
-    Spawn:
-      CAND A -1
-  }
-}
-actor ObLightRed : ObLightWhite 14998 {}
-actor ObLightOrange : ObLightWhite 14997 {}
-actor ObLightYellow : ObLightWhite 14996 {}
-actor ObLightBlue : ObLightWhite 14995 {}
-actor ObLightGreen : ObLightWhite 14994 {}
-actor ObLightBeige : ObLightWhite 14993 {}
-actor ObLightPurple : ObLightWhite 14992 {}
-]]
-
-ZDOOM_SPECIALS.DYNAMIC_LIGHT_GLDEFS =
-[[
-PointLight WhiteLight
-{
-  color 0.85 0.9 1
-  size 128
-  offset 0 -48 0
-}
-
-PointLight RedLight
-{
-  color 1 0 0
-  size 128
-  offset 0 -48 0
-}
-
-PointLight YellowLight
-{
-  color 1 0.8 0
-  size 128
-  offset 0 -48 0
-}
-
-PointLight OrangeLight
-{
-  color 1 0.5 0
-  size 128
-  offset 0 -48 0
-}
-
-PointLight BlueLight
-{
-  color 0.1 0.1 1
-  size 128
-  offset 0 -48 0
-}
-
-PointLight GreenLight
-{
-  color 0 0.8 0
-  size 128
-  offset 0 -48 0
-}
-
-PointLight BeigeLight
-{
-  color 1 0.8 0.5
-  size 128
-  offset 0 -48 0
-}
-
-PointLight PurpleLight
-{
-  color 0.7 0 0.95
-  size 128
-  offset 0 -48 0
-}
-
-object ObLightWhite
-{
-  frame CAND { light WhiteLight }
-}
-
-object ObLightRed
-{
-  frame CAND { light RedLight }
-}
-
-object obLightOrange
-{
-  frame CAND { light OrangeLight }
-}
-
-object obLightYellow
-{
-  frame CAND { light YellowLight }
-}
-
-object obLightBlue
-{
-  frame CAND { light BlueLight }
-}
-
-object obLightGreen
-{
-  frame CAND { light GreenLight }
-}
-
-object ObLightBeige
-{
-  frame CAND { light BeigeLight }
-}
-
-object ObLightPurple
-{
-  frame CAND { light PurpleLight }
-}
-]]
-
-ZDOOM_SPECIALS.GLOWING_FLATS_GLDEFS =
-[[
-Glow
-{
-  Flats
-  {
-    // vanilla ceiling lights
-    CEIL1_2
-    CEIL1_3
-    CEIL3_4
-    CEIL3_6
-    CEIL4_1
-    CEIL4_2
-    CEIL4_3
-    FLAT17
-    FLAT2
-    FLAT22
-    FLOOR1_7
-    TLITE6_1
-    TLITE6_4
-    TLITE6_5
-    TLITE6_6
-    GATE1
-    GATE2
-    GATE3
-    GATE4
-    GRNLITE1
-
-    // vanilla liquids
-    BLOOD1
-    BLOOD2
-    BLOOD3
-    LAVA1
-    LAVA2
-    LAVA3
-    LAVA4
-    NUKAGE1
-    NUKAGE2
-    NUKAGE3
-    SLIME01
-    SLIME02
-    SLIME03
-    SLIME04
-    SLIME05
-    SLIME06
-    SLIME07
-    SLIME08
-
-    // epic textures liquids
-    SLUDGE01
-    SLUDGE02
-    SLUDGE03
-    SLUDGE04
-    QLAVA1
-    QLAVA2
-    QLAVA3
-    QLAVA4
-    MAGMA1
-    MAGMA2
-    MAGMA3
-    MAGMA4
-    MAGMA5
-    PURW1
-    PURW2
-    XLAV1
-    XLAV2
-    SNOW2
-    SNOW9 // it's a liquid, trust me
-
-    // epic textures lights
-    LIGHTS1
-    LIGHTS2
-    LIGHTS3
-    LIGHTS4
-    TLITE5_1
-    TLITE5_2
-    TLITE5_3
-    TLITE65B
-    TLITE65G
-    TLITE65O
-    TLITE65W
-    TLITE65Y
-    LITE4F1
-    LITE4F2
-    LITES01
-    LITES02
-    LITES03
-    LITES04
-    LITBL3F1
-    LITBL3F2
-    GLITE01
-    GLITE02
-    GLITE03
-    GLITE04
-    GLITE05
-    GLITE06
-    GLITE07
-    GLITE08
-    GLITE09
-    PLITE1
-    RROCK01
-    RROCK02
-    GGLAS01
-    GGLAS02
-    TEK1
-    TEK2
-    TEK3
-    TEK4
-    TEK5
-    TEK6
-    TEK7
-    TLIT65OF
-
-    //teleporter gate textures
-    GATE1
-    GATE2
-    GATE3
-    GATE4
-
-    //composite flats
-    T_GHFLY
-    T_GHFLG
-    T_GHFLB
-    T_GHFLP
-
-    T_CL43R
-    T_CL43Y
-    T_CL43G
-    T_CL43P
-  }
-
-  Texture "FWATER1", 0a0ac4, 128
-  Texture "FWATER2", 0a0ac4, 128
-  Texture "FWATER3", 0a0ac4, 128
-  Texture "FWATER4", 0a0ac4, 128
-  Texture "F_SKY1", 404040, 384
-}
-]]
-
 ZDOOM_SPECIALS.MUSIC = {}
 
 ZDOOM_SPECIALS.FOG_COLORS = 
@@ -482,10 +220,7 @@ ZDOOM_SPECIALS.FOG_COLORS =
 }
 
 function ZDOOM_SPECIALS.setup(self)
-  gui.printf("\n--== ZDoom Special Addons module active ==--\n\n")
-
   module_param_up(self)
-
 end
 
 function ZDOOM_SPECIALS.shuffle_music()
@@ -570,9 +305,9 @@ function ZDOOM_SPECIALS.do_special_stuff()
     local x = 1
     local quit_msg_line = ""
     quit_msg_line = quit_msg_line .. "quitmessages = "
-    for _,lines in pairs(ZDOOM_STORIES.QUIT_MESSAGES) do
+    for _,lines in pairs(GAME.STORIES.QUIT_MESSAGES) do
       quit_msg_line = quit_msg_line .. '"$QUITMSG' .. x .. '"'
-      if x <= #ZDOOM_STORIES.QUIT_MESSAGES - 1 then
+      if x <= #GAME.STORIES.QUIT_MESSAGES - 1 then
         quit_msg_line = quit_msg_line .. ', '
       end
       if x%3 == 0 then
@@ -1168,6 +903,51 @@ function ZDOOM_SPECIALS.do_special_stuff()
   gui.wad_merge_sections("data/loading/loading_screens.wad")
 end
 
+OB_MODULES["zdoom_specials_lighting"] =
+{
+
+  name = "zdoom_specials_lighting",
+
+  label = _("ZDoom Lighting Options"),
+
+  side = "left",
+
+  priority = 68,
+
+  port = "zdoom",
+
+  where = "other",
+
+  hooks =
+  {
+    setup = ZDOOM_SPECIALS.setup,
+  },
+
+  tooltip = _("This module adds ZDoom-exclusive GL/dynamic lighting definitions."),
+
+  options =
+  {
+    {
+      name = "bool_dynamic_lights",
+      label = _("Dynamic Lights"),
+      valuator = "button",
+      priority = 8,
+      default = 1,
+      tooltip = _("Generates dynamic point lights on prefabs if available."),
+    },
+
+    {
+      name = "bool_glowing_flats",
+      label = _("Glowing Flats"),
+      valuator = "button",
+      priority = 7,
+      default = 1,
+      tooltip = _("Adds Doom-64 style lighting/glowing flats via GLDEFS lump. Visible on Zandronum ports as well."),
+      gap = 1,
+    },
+  },
+}
+
 OB_MODULES["zdoom_specials"] =
 {
 
@@ -1235,25 +1015,6 @@ OB_MODULES["zdoom_specials"] =
       tooltip = _("Tints the sky texture with the fog color, intensity is based on the Fog Intensity selection."),
       gap = 1,
       randomize_group="misc",
-    },
-
-    {
-      name = "bool_dynamic_lights",
-      label = _("Dynamic Lights"),
-      valuator = "button",
-      priority = 8,
-      default = 1,
-      tooltip = _("Generates dynamic point lights on prefabs if available."),
-    },
-
-    {
-      name = "bool_glowing_flats",
-      label = _("Glowing Flats"),
-      valuator = "button",
-      priority = 7,
-      default = 1,
-      tooltip = _("Adds Doom-64 style lighting/glowing flats via GLDEFS lump. Visible on Zandronum ports as well."),
-      gap = 1,
     },
 
     {
