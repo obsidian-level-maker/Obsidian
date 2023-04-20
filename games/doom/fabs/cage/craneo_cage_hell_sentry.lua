@@ -4,6 +4,7 @@ PREFABS.Cage_craneo_hell_sentry =
   map = "MAP01",
 
   prob  = 350,
+  deep = 16,
 
   theme = "hell",
 
