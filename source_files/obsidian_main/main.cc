@@ -171,7 +171,7 @@ u8_t *old_pixels;
 bool first_run = false;
 
 std::filesystem::path gif_filename = "gif_output.gif";
-std::string default_output_path;
+std::filesystem::path default_output_path;
 
 std::string string_seed;
 
@@ -393,16 +393,16 @@ void Determine_WorkingPath(const char *argv0) {
     }
 #endif
     if (home_dir.empty()) {
-        home_dir = ".";
+        home_dir = std::filesystem::canonical(argv0);
     }
 }
 
 std::filesystem::path Resolve_DefaultOutputPath() {
     if (default_output_path.empty()) {
-        default_output_path = install_dir.string();
+        default_output_path = install_dir;
     }
-    if (default_output_path[0] == '$') {
-        const char *var = getenv(default_output_path.c_str() + 1);
+    if (default_output_path.generic_string()[0] == '$') {
+        const char *var = getenv(default_output_path.generic_string().c_str() + 1);
         if (var != nullptr) {
             return var;
         }
@@ -443,7 +443,7 @@ void Determine_InstallDir(const char *argv0) {
 
     // if run from current directory, look there
     if (argv0[0] == '.' && Verify_InstallDir(".")) {
-        install_dir = ".";
+        install_dir = std::filesystem::canonical(".");
         return;
     }
 
@@ -468,8 +468,8 @@ void Determine_InstallDir(const char *argv0) {
     }
 
     // Last resort
-    if (Verify_InstallDir(std::filesystem::current_path().c_str())) {
-        install_dir = std::filesystem::current_path();
+    if (Verify_InstallDir(std::filesystem::canonical(argv0)) {
+        install_dir = std::filesystem::canonical(argv0);
     }
 #endif
 

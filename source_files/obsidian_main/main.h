@@ -203,7 +203,7 @@ std::filesystem::path DLG_OutputFilename(const char *ext,
                                          const char *preset = nullptr);
 #endif
 
-extern std::string default_output_path;
+extern std::filesystem::path default_output_path;
 
 extern std::filesystem::path Resolve_DefaultOutputPath();
 
