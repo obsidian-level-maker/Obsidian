@@ -77,7 +77,7 @@ static const char *obsidian_icon[] = {
 #endif
 
 /* XPM */
-static char * clippy_xpm[] = {
+static const char * clippy_xpm[] = {
 "476 225 956 2",
 "  	c None",
 ". 	c #51514F",
