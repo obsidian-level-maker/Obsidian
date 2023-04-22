@@ -23,14 +23,14 @@ comment {//
 decl {\#include "Fl_Widget_Type.h"} {private global
 }
 
-decl {\#include "Shortcut_Button.h"} {public global
+decl {\#include "custom_widgets.h"} {public global
 }
 
 Function {make_widget_panel()} {
   comment {Create a panel that can be used with all known widgets} open
 } {
   Fl_Window {} {
-    comment {Use a Double Window to avoid flickering.} open
+    comment {Use a Double Window to avoid flickering.} open selected
     xywh {566 244 420 400} type Double labelsize 11 align 80 resizable hotspot
     code0 {o->size_range(o->w(), o->h());} size_range {420 400 0 0} visible
   } {
@@ -67,15 +67,22 @@ Use Ctrl-J for newlines.} xywh {95 40 190 20} labelfont 1 labelsize 11 when 15 t
         } {
           Fl_Input {} {
             callback image_cb
-            tooltip {The active image for the widget.} xywh {95 65 220 20} labelfont 1 labelsize 11 textsize 11 resizable
+            tooltip {The active image for the widget.} xywh {95 65 200 20} labelfont 1 labelsize 11 textsize 11 resizable
           }
           Fl_Button {} {
             label {Browse...}
             callback image_browse_cb
-            tooltip {Click to choose the active image.} xywh {314 65 70 20} labelsize 11
+            tooltip {Click to choose the active image.} xywh {294 65 70 20} labelsize 11
           }
           Fl_Button {} {
-            callback bind_image_cb selected
+            callback compress_image_cb
+            tooltip {store image uncompressed as RGBA data
+or compressed in the original file format} xywh {364 65 20 20} type Toggle
+            code0 {o->image(compressed_pixmap);}
+            code3 {\#include "pixmaps.h"}
+          }
+          Fl_Button {} {
+            callback bind_image_cb
             tooltip {bind the image to the widget, so it will be deleted automatically} xywh {384 65 20 20} type Toggle
             code0 {o->image(bind_pixmap);}
             code3 {\#include "pixmaps.h"}
@@ -88,12 +95,19 @@ Use Ctrl-J for newlines.} xywh {95 40 190 20} labelfont 1 labelsize 11 when 15 t
         } {
           Fl_Input {} {
             callback inactive_cb
-            tooltip {The inactive image for the widget.} xywh {95 90 220 20} labelfont 1 labelsize 11 textsize 11 resizable
+            tooltip {The inactive image for the widget.} xywh {95 90 200 20} labelfont 1 labelsize 11 textsize 11 resizable
           }
           Fl_Button {} {
             label {Browse...}
             callback inactive_browse_cb
-            tooltip {Click to choose the inactive image.} xywh {314 90 70 20} labelsize 11
+            tooltip {Click to choose the inactive image.} xywh {294 90 70 20} labelsize 11
+          }
+          Fl_Button {} {
+            callback compress_deimage_cb
+            tooltip {store image uncompressed as RGBA data
+or compressed in the original file format} xywh {364 90 20 20} type Toggle
+            code0 {o->image(compressed_pixmap);}
+            code3 {\#include "pixmaps.h"}
           }
           Fl_Button {} {
             callback bind_deimage_cb
@@ -230,7 +244,7 @@ Use Ctrl-J for newlines.} xywh {95 40 190 20} labelfont 1 labelsize 11 when 15 t
             MenuItem {} {
               label {bottom right}
               user_data {(fl_intptr_t)FL_ALIGN_BOTTOM_RIGHT}
-              xywh {115 115 100 20} labelsize 11 divider
+              xywh {115 115 100 20} labelsize 11
             }
             MenuItem {} {
               label {   Outside Alignment   }
@@ -451,14 +465,17 @@ h, ph, sh, ch, and i} xywh {275 150 55 20} labelsize 11 align 5 textsize 11
             xywh {395 185 0 20} resizable
           }
         }
+        Fl_Group {} {
+          label {Shortcut:} open
+          xywh {95 210 0 20} labelfont 1 labelsize 11 align 4
+        } {}
         Fl_Button {} {
-          label {Shortcut:}
           callback shortcut_in_cb
           comment {This is a special button that grabs keystrokes directly}
           tooltip {The shortcut key for the widget.
-Use 'Backspace' key to clear.} xywh {95 210 310 20} box DOWN_BOX color 7 selection_color 7 labelfont 1 labelsize 11 align 4
-          code0 {\#include "Shortcut_Button.h"}
-          class Shortcut_Button
+Use 'Backspace' key to clear.} xywh {95 210 310 20} box DOWN_BOX color 7 selection_color 12 labelsize 11 when 1
+          code0 {\#include <FL/Fl_Shortcut_Button.H>}
+          class Fl_Shortcut_Button
         }
         Fl_Group {} {
           label {X Class:}
@@ -499,7 +516,7 @@ Use 'Backspace' key to clear.} xywh {95 210 310 20} box DOWN_BOX color 7 selecti
           Fl_Light_Button {} {
             label Active
             callback active_cb
-            tooltip {Activate the widget.} xywh {160 260 60 20} selection_color 1 labelsize 11
+            tooltip {Activate the widget.} xywh {160 260 60 20} shortcut 0x400061 selection_color 1 labelsize 11
           }
           Fl_Light_Button {} {
             label Resizable
@@ -522,7 +539,7 @@ Use 'Backspace' key to clear.} xywh {95 210 310 20} box DOWN_BOX color 7 selecti
 Use Ctrl-J for newlines.} xywh {95 285 310 20} labelfont 1 labelsize 11 textsize 11
         }
         Fl_Box {} {
-          xywh {95 305 300 5} labelsize 11 resizable
+          xywh {95 305 300 5} hide resizable
         }
       }
       Fl_Group {} {
@@ -767,7 +784,7 @@ wCallback->do_callback(wCallback, v);} open
         Fl_Group {} {
           label {Type:}
           callback propagate_load open
-          xywh {95 335 310 20} labelfont 1 labelsize 11 align 4
+          xywh {95 332 310 26} labelfont 1 labelsize 11 align 4
         } {
           Fl_Input_Choice {} {
             callback user_data_type_cb open
@@ -792,24 +809,29 @@ wCallback->do_callback(wCallback, v);} open
     Fl_Group {} {open
       xywh {10 370 400 20} labelsize 11
     } {
-      Fl_Box {} {
-        comment {Hidden resizable box}
-        xywh {10 370 75 20} labelsize 11 hide resizable
-      }
       Fl_Button wLiveMode {
         label {Live &Resize}
         callback live_mode_cb
-        tooltip {Create a live duplicate of the selected widgets to test resizing and menu behavior.} xywh {155 370 80 20} type Toggle labelsize 11
+        tooltip {Create a live duplicate of the selected widgets to test resizing and menu behavior.} xywh {10 370 80 20} type Toggle labelsize 11
       }
-      Fl_Button {} {
+      Fl_Button overlay_button {
         label {Hide &Overlays}
         callback overlay_cb
-        tooltip {Hide the widget overlay box.} xywh {240 370 100 20} labelsize 11 labelcolor 1
+        tooltip {Hide the widget overlay box.} xywh {94 370 80 20} labelsize 11
+      }
+      Fl_Button guides_button {
+        label {Hide &Guides}
+        callback guides_cb
+        tooltip {Hide alignment guides.} xywh {178 370 80 20} labelsize 11
+      }
+      Fl_Box {} {
+        comment {Hidden resizable box}
+        xywh {258 370 72 20} labelsize 11 hide resizable
       }
       Fl_Return_Button {} {
         label Close
         callback ok_cb
-        xywh {345 370 65 20} labelsize 11
+        xywh {330 370 80 20} labelsize 11
       }
     }
   }

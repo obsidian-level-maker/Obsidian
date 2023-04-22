@@ -1,7 +1,7 @@
 //
 // Draw-to-image code for the Fast Light Tool Kit (FLTK).
 //
-// Copyright 1998-2021 by Bill Spitzak and others.
+// Copyright 1998-2023 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
@@ -14,7 +14,6 @@
 //     https://www.fltk.org/bugs.php
 //
 
-#include <config.h>
 #include <FL/platform.H>
 #include "Fl_Wayland_Graphics_Driver.H"
 #include "Fl_Wayland_Window_Driver.H"
@@ -26,12 +25,12 @@ Fl_Wayland_Image_Surface_Driver::Fl_Wayland_Image_Surface_Driver(int w, int h, i
   if (!off) {
     fl_open_display();
     if (Fl_Wayland_Window_Driver::wld_window) {
-      d = Fl_Wayland_Window_Driver::wld_window->scale;
+      d = Fl_Wayland_Window_Driver::driver(Fl_Wayland_Window_Driver::wld_window->fl_win)->wld_scale();
     }
     d *= fl_graphics_driver->scale();
     if (d != 1 && high_res) {
-      w = int(w*d);
-      h = int(h*d);
+      w = int(w * d);
+      h = int(h * d);
     }
     struct fl_wld_buffer *off_ = (struct fl_wld_buffer*)calloc(1, sizeof(struct fl_wld_buffer));
     off_->stride = cairo_format_stride_for_width(CAIRO_FORMAT_RGB24, w);

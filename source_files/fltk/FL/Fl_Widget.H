@@ -1,7 +1,7 @@
 //
 // Widget header file for the Fast Light Tool Kit (FLTK).
 //
-// Copyright 1998-2020 by Bill Spitzak and others.
+// Copyright 1998-2023 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
@@ -14,13 +14,14 @@
 //     https://www.fltk.org/bugs.php
 //
 
-/** \file
-   Fl_Widget, Fl_Label classes . */
+/**
+  \file FL/Fl_Widget.H
+  \brief Fl_Widget and Fl_Label classes.
+*/
 
 #ifndef Fl_Widget_H
 #define Fl_Widget_H
 
-#include "Enumerations.H"
 #include "Fl.H"
 
 class Fl_Widget;
@@ -84,7 +85,6 @@ struct FL_EXPORT Fl_Label {
  */
 class FL_EXPORT Fl_Widget {
   friend class Fl_Group;
-  friend void Fl::focus(Fl_Widget*);
 
   Fl_Group* parent_;
   Fl_Callback* callback_;
@@ -157,11 +157,15 @@ protected:
         GROUP_RELATIVE  = 1<<16,  ///< Reserved, not implemented. DO NOT USE.
         COPIED_TOOLTIP  = 1<<17,  ///< the widget tooltip is internally copied, its destruction is handled by the widget
         FULLSCREEN      = 1<<18,  ///< a fullscreen window (Fl_Window)
-        MAC_USE_ACCENTS_MENU = 1<<19, ///< On the Mac OS platform, pressing and holding a key on the keyboard opens an accented-character menu window (Fl_Input_, Fl_Text_Editor)
-        NEEDS_KEYBOARD  = 1<<20,  ///< set this on touch screen devices if a widget needs a keyboard when it gets Focus. @see Fl_Screen_Driver::request_keyboard()
+        MAC_USE_ACCENTS_MENU = 1<<19, ///< On the macOS platform, pressing and holding a key on the keyboard opens an accented-character menu window (Fl_Input_, Fl_Text_Editor)
+        NEEDS_KEYBOARD  = 1<<20,  ///< set on touch screen devices if a widget needs a keyboard when it gets the focus. Reserved, not yet used in 1.4.0. \see Fl_Widget::needs_keyboard()
         IMAGE_BOUND     = 1<<21,  ///< binding the image to the widget will transfer ownership, so that the widget will delete the image when it is no longer needed
-        DEIMAGE_BOUND   = 1<<22,  ///< bind the inactive image to the widget, so the widget deletes the image when it no longer needed
-        // a tiny bit more space for new flags...
+        DEIMAGE_BOUND   = 1<<22,  ///< bind the inactive image to the widget, so the widget deletes the image when it is no longer needed
+
+        // Note to devs: add new FLTK core flags above this line (up to 1<<28).
+
+        // Three more flags, reserved for user code
+
         USERFLAG3       = 1<<29,  ///< reserved for 3rd party extensions
         USERFLAG2       = 1<<30,  ///< reserved for 3rd party extensions
         USERFLAG1       = 1<<31   ///< reserved for 3rd party extensions
@@ -253,6 +257,34 @@ public:
   */
   int is_label_copied() const {return ((flags_ & COPIED_LABEL) ? 1 : 0);}
 
+  /**
+    Sets whether this widget needs a keyboard.
+
+    Set this on touch screen devices if a widget needs a keyboard when it gets the focus.
+
+    \note This flag can be set but is not yet \b used in FLTK 1.4.0. It is intended to be
+      used in the future on real touch devices.
+
+    \param[in]  needs   Set this to true or false
+
+    \internal Needs implementations in screen driver methods:
+      \see Fl::screen_driver()->request_keyboard();
+      \see Fl::screen_driver()->release_keyboard();
+  */
+  void needs_keyboard(bool needs) {
+    if (needs) set_flag(NEEDS_KEYBOARD);
+    else clear_flag(NEEDS_KEYBOARD);
+  }
+
+  /**
+    Returns whether this widget needs a keyboard.
+    \return  true or false
+    \see needs_keyboard(bool)
+  */
+  bool needs_keyboard() const {
+    return (flags_ & NEEDS_KEYBOARD);
+  }
+
   /** Returns a pointer to the parent widget.
       Usually this is a Fl_Group or Fl_Window.
       \retval NULL if the widget has no parent
@@ -271,17 +303,14 @@ public:
   void parent(Fl_Group* p) {parent_ = p;} // for hacks only, use Fl_Group::add()
 
   /** Gets the widget type.
-      Returns the widget type value, which is used for Forms compatibility
-      and to simulate RTTI.
-
-      \todo Explain "simulate RTTI" (currently only used to decide if a widget
-      is a window, i.e. type()>=FL_WINDOW ?). Is type() really used in a way
-      that ensures "Forms compatibility" ?
+      Returns the widget type value, which gives some information about the derived widget class
+      to which the object belongs. Noticeably, the condition <tt>type() >= FL_WINDOW</tt> indicates
+      a widget is an Fl_Window or derived object.
    */
   uchar type() const {return type_;}
 
   /** Sets the widget type.
-      This is used for Forms compatibility.
+      \see type()
    */
   void type(uchar t) {type_ = t;}
 
@@ -655,7 +684,9 @@ public:
       Each widget has a single callback.
       \param[in] cb new callback
    */
-  void callback(Fl_Callback0* cb) {callback_ = (Fl_Callback*)cb;}
+  void callback(Fl_Callback0* cb) {
+    callback_ = (Fl_Callback*)(fl_intptr_t)(cb);
+  }
 
   /** Sets the current callback function for the widget.
       Each widget has a single callback.
@@ -663,7 +694,7 @@ public:
       \param[in] p user data
    */
   void callback(Fl_Callback1* cb, long p = 0) {
-    callback_ = (Fl_Callback*)cb;
+    callback_ = (Fl_Callback*)(fl_intptr_t)(cb);
     user_data_ = (void*)(fl_intptr_t)p;
   }
 
@@ -689,9 +720,6 @@ public:
           using only \p long values. You may want to use user_data() instead.
 
     \see user_data()
-
-    \todo [Internal] The user_data value must be implemented using
-          \p fl_intptr_t or similar to avoid 64-bit platform incompatibilities.
   */
   long argument() const {return (long)(fl_intptr_t)user_data_;}
 
@@ -707,7 +735,7 @@ public:
       FL_WHEN_RELEASE.
 
       \return set of flags
-      \see when(uchar)
+      \see when(uchar), Fl_When, do_callback(), Fl::callback_reason()
    */
   Fl_When when() const {return (Fl_When)when_;}
 
@@ -733,6 +761,11 @@ public:
          a newline for a Fl_Multiline_Input) - this changes the behavior.
      \li FL_WHEN_ENTER_KEY|FL_WHEN_NOT_CHANGED: The Enter key will do the
          callback even if the text has not changed. Useful for command fields.
+     \li \ref FL_WHEN_CLOSED : If the user requests that the widget is closed,
+         the callback is called with \ref FL_REASON_CLOSED. The \ref Fl_Tabs
+         widget checks this flag on its children to determine whether to display
+         a close button on the tab of that widget.
+
       Fl_Widget::when() is a set of bitflags used by subclasses of
       Fl_Widget to decide when to do the callback.
 
@@ -741,6 +774,7 @@ public:
       class so that you can scan a panel and do_callback() on all the ones
       that don't do their own callbacks in response to an "OK" button.
       \param[in] i set of flags
+      \see Fl_When, do_callback(), Fl::callback_reason()
    */
   void when(uchar i) {when_ = i;}
 
@@ -957,26 +991,28 @@ public:
 
     This is the same as calling
     \code
-      do_callback(this, user_data());
+      do_callback(this, user_data(), reason);
     \endcode
+
+    \param[in] reason give a reason to why this callback was called, defaults to \ref FL_REASON_UNKNOWN
+
     \see callback()
-    \see do_callback(Fl_Widget *widget, void *data)
+    \see do_callback(Fl_Widget *widget, void *data, Fl_Callback_Reason reason), Fl_Callback_Reason
   */
-  void do_callback() {do_callback(this, user_data_);}
+  void do_callback(Fl_Callback_Reason reason=FL_REASON_UNKNOWN) {do_callback(this, user_data_, reason);}
 
   /** Calls the widget callback function with arbitrary arguments.
     \param[in] widget call the callback with \p widget as the first argument
     \param[in] arg call the callback with \p arg as the user data (second) argument
+    \param[in] reason give a reason to why this callback was called, defaults to \ref FL_REASON_UNKNOWN
     \see callback()
-    \see do_callback(Fl_Widget *widget, void *data)
+    \see do_callback(Fl_Widget *widget, void *data), Fl_Callback_Reason
   */
-  void do_callback(Fl_Widget *widget, long arg) {
-    do_callback(widget, (void*)(fl_intptr_t)arg);
+  void do_callback(Fl_Widget *widget, long arg, Fl_Callback_Reason reason=FL_REASON_UNKNOWN) {
+    do_callback(widget, (void*)(fl_intptr_t)arg, reason);
   }
 
-  // Causes a widget to invoke its callback function with arbitrary arguments.
-  // Documentation and implementation in Fl_Widget.cxx
-  void do_callback(Fl_Widget *widget, void *arg = 0);
+  void do_callback(Fl_Widget *widget, void *arg = 0, Fl_Callback_Reason reason=FL_REASON_UNKNOWN);
 
   /* Internal use only. */
   int test_shortcut();
@@ -1089,7 +1125,8 @@ public:
       \note This method is provided to avoid dynamic_cast.
       \see Fl_Widget::as_window(), Fl_Widget::as_gl_window()
    */
-  virtual Fl_Group* as_group() {return 0;}
+  virtual Fl_Group* as_group() { return NULL; }
+  virtual Fl_Group const* as_group() const { return NULL; }
 
   /** Returns an Fl_Window pointer if this widget is an Fl_Window.
 
@@ -1103,7 +1140,8 @@ public:
       \note This method is provided to avoid dynamic_cast.
       \see Fl_Widget::as_group(), Fl_Widget::as_gl_window()
    */
-  virtual Fl_Window* as_window() {return 0;}
+  virtual Fl_Window* as_window() { return 0; }
+  virtual Fl_Window const* as_window() const { return NULL; }
 
   /** Returns an Fl_Gl_Window pointer if this widget is an Fl_Gl_Window.
 
@@ -1115,7 +1153,8 @@ public:
       \note This method is provided to avoid dynamic_cast.
       \see Fl_Widget::as_group(), Fl_Widget::as_window()
    */
-  virtual class Fl_Gl_Window* as_gl_window() {return 0;}
+  virtual class Fl_Gl_Window* as_gl_window() { return NULL; }
+  virtual class Fl_Gl_Window const* as_gl_window() const { return NULL; }
 
   /** Returns non zero if MAC_USE_ACCENTS_MENU flag is set, 0 otherwise.
    */

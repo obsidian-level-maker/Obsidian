@@ -1,7 +1,7 @@
 //
 // X11-specific code to initialize wayland support.
 //
-// Copyright 2022 by Bill Spitzak and others.
+// Copyright 2022-2023 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
@@ -18,7 +18,7 @@
 #include <FL/platform.H>
 #include "../Xlib/Fl_Xlib_Copy_Surface_Driver.H"
 #if FLTK_USE_CAIRO
-#  include "../Cairo/Fl_Display_Cairo_Graphics_Driver.H"
+#  include "../Cairo/Fl_X11_Cairo_Graphics_Driver.H"
 #else
 #  include "../Xlib/Fl_Xlib_Graphics_Driver.H"
 #endif
@@ -26,7 +26,6 @@
 #include "../Unix/Fl_Unix_System_Driver.H"
 #include "Fl_X11_Window_Driver.H"
 #include "../Xlib/Fl_Xlib_Image_Surface_Driver.H"
-#include "../Xlib/Fl_Font.H"
 
 
 Fl_Copy_Surface_Driver *Fl_Copy_Surface_Driver::newCopySurfaceDriver(int w, int h)
@@ -35,105 +34,10 @@ Fl_Copy_Surface_Driver *Fl_Copy_Surface_Driver::newCopySurfaceDriver(int w, int 
 }
 
 
-#if !USE_XFT
-
-// WARNING: if you add to this table, you must redefine FL_FREE_FONT
-// in Enumerations.H & recompile!!
-static Fl_Xlib_Fontdesc built_in_table[] = {
-{"-*-helvetica-medium-r-normal--*"},
-{"-*-helvetica-bold-r-normal--*"},
-{"-*-helvetica-medium-o-normal--*"},
-{"-*-helvetica-bold-o-normal--*"},
-{"-*-courier-medium-r-normal--*"},
-{"-*-courier-bold-r-normal--*"},
-{"-*-courier-medium-o-normal--*"},
-{"-*-courier-bold-o-normal--*"},
-{"-*-times-medium-r-normal--*"},
-{"-*-times-bold-r-normal--*"},
-{"-*-times-medium-i-normal--*"},
-{"-*-times-bold-i-normal--*"},
-{"-*-symbol-*"},
-{"-*-lucidatypewriter-medium-r-normal-sans-*"},
-{"-*-lucidatypewriter-bold-r-normal-sans-*"},
-{"-*-*zapf dingbats-*"}
-};
-
-#else // USE_XFT
-
-#if ! USE_PANGO
-
-// The predefined fonts that FLTK has:
-static Fl_Fontdesc built_in_table[] = {
-#if 1
-  {" sans"},
-  {"Bsans"},
-  {"Isans"},
-  {"Psans"},
-  {" mono"},
-  {"Bmono"},
-  {"Imono"},
-  {"Pmono"},
-  {" serif"},
-  {"Bserif"},
-  {"Iserif"},
-  {"Pserif"},
-  {" symbol"},
-  {" screen"},
-  {"Bscreen"},
-  {" zapf dingbats"},
-#else
-  {" helvetica"},
-  {"Bhelvetica"},
-  {"Ihelvetica"},
-  {"Phelvetica"},
-  {" courier"},
-  {"Bcourier"},
-  {"Icourier"},
-  {"Pcourier"},
-  {" times"},
-  {"Btimes"},
-  {"Itimes"},
-  {"Ptimes"},
-  {" symbol"},
-  {" lucidatypewriter"},
-  {"Blucidatypewriter"},
-  {" zapf dingbats"},
-#endif
-};
-
-#else
-
-// The predefined fonts that FLTK has with Pango:
-static Fl_Fontdesc built_in_table[] = {
-  {"Sans"},
-  {"Sans Bold"},
-  {"Sans Italic"},
-  {"Sans Bold Italic"},
-  {"Monospace"},
-  {"Monospace Bold"},
-  {"Monospace Italic"},
-  {"Monospace Bold Italic"},
-  {"Serif"},
-  {"Serif Bold"},
-  {"Serif Italic"},
-  {"Serif Bold Italic"},
-  {"Sans"},
-  {"Monospace"},
-  {"Monospace Bold"},
-  {"Sans"},
-};
-
-#endif // USE_PANGO
-
-#endif // USE_XFT
-
-FL_EXPORT Fl_Fontdesc* fl_fonts = (Fl_Fontdesc*)built_in_table;
-
-
 Fl_Graphics_Driver *Fl_Graphics_Driver::newMainGraphicsDriver()
 {
 #if FLTK_USE_CAIRO
-  return new Fl_Display_Cairo_Graphics_Driver();
+  return new Fl_X11_Cairo_Graphics_Driver();
 #else
   return new Fl_Xlib_Graphics_Driver();
 #endif

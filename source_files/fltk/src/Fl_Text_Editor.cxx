@@ -1,5 +1,5 @@
 //
-// Copyright 2001-2018 by Bill Spitzak and others.
+// Copyright 2001-2023 by Bill Spitzak and others.
 //
 // Original code Copyright Mark Edel.  Permission to distribute under
 // the LGPL for the FLTK library granted by Mark Edel.
@@ -132,7 +132,9 @@ static struct {
   { FL_Page_Down, FL_CTRL|FL_SHIFT,         Fl_Text_Editor::kf_c_s_move   },
 //{ FL_Clear,     0,                        Fl_Text_Editor::delete_to_eol },
   { 'z',          FL_CTRL,                  Fl_Text_Editor::kf_undo       },
-  { '/',          FL_CTRL,                  Fl_Text_Editor::kf_undo       },
+  { 'z',          FL_CTRL|FL_SHIFT,         Fl_Text_Editor::kf_redo       }, // MSWindows screen driver also defines Ctrl-Y
+  { '/',          FL_CTRL,                  Fl_Text_Editor::kf_undo       }, // Emacs
+  { '?',          FL_CTRL,                  Fl_Text_Editor::kf_redo       }, // Emacs
   { 'x',          FL_CTRL,                  Fl_Text_Editor::kf_cut        },
   { FL_Delete,    FL_SHIFT,                 Fl_Text_Editor::kf_cut        },
   { 'c',          FL_CTRL,                  Fl_Text_Editor::kf_copy       },
@@ -239,7 +241,7 @@ int Fl_Text_Editor::kf_default(int c, Fl_Text_Editor* e) {
   else e->overstrike(s);
   e->show_insert_position();
   e->set_changed();
-  if (e->when()&FL_WHEN_CHANGED) e->do_callback();
+  if (e->when()&FL_WHEN_CHANGED) e->do_callback(FL_REASON_CHANGED);
   return 1;
 }
 
@@ -268,7 +270,7 @@ int Fl_Text_Editor::kf_backspace(int, Fl_Text_Editor* e) {
   kill_selection(e);
   e->show_insert_position();
   e->set_changed();
-  if (e->when()&FL_WHEN_CHANGED) e->do_callback();
+  if (e->when()&FL_WHEN_CHANGED) e->do_callback(FL_REASON_CHANGED);
   return 1;
 }
 
@@ -280,7 +282,7 @@ int Fl_Text_Editor::kf_enter(int, Fl_Text_Editor* e) {
   e->insert("\n");
   e->show_insert_position();
   e->set_changed();
-  if (e->when()&FL_WHEN_CHANGED) e->do_callback();
+  if (e->when()&FL_WHEN_CHANGED) e->do_callback(FL_REASON_CHANGED);
   return 1;
 }
 
@@ -544,7 +546,7 @@ int Fl_Text_Editor::kf_delete(int, Fl_Text_Editor* e) {
   kill_selection(e);
   e->show_insert_position();
   e->set_changed();
-  if (e->when()&FL_WHEN_CHANGED) e->do_callback();
+  if (e->when()&FL_WHEN_CHANGED) e->do_callback(FL_REASON_CHANGED);
   return 1;
 }
 
@@ -567,7 +569,7 @@ int Fl_Text_Editor::kf_cut(int c, Fl_Text_Editor* e) {
   kf_copy(c, e);
   kill_selection(e);
   e->set_changed();
-  if (e->when()&FL_WHEN_CHANGED) e->do_callback();
+  if (e->when()&FL_WHEN_CHANGED) e->do_callback(FL_REASON_CHANGED);
   return 1;
 }
 
@@ -580,7 +582,7 @@ int Fl_Text_Editor::kf_paste(int, Fl_Text_Editor* e) {
   Fl::paste(*e, 1);
   e->show_insert_position();
   e->set_changed();
-  if (e->when()&FL_WHEN_CHANGED) e->do_callback();
+  if (e->when()&FL_WHEN_CHANGED) e->do_callback(FL_REASON_CHANGED);
   return 1;
 }
 
@@ -596,14 +598,30 @@ int Fl_Text_Editor::kf_select_all(int, Fl_Text_Editor* e) {
 }
 
 /** Undo last edit in the current buffer of editor \p 'e'.
-    Also deselects previous selection.
-    The key value \p 'c' is currently unused.
-*/
+ Also deselects previous selection.
+ The key value \p 'c' is currently unused.
+ */
 int Fl_Text_Editor::kf_undo(int , Fl_Text_Editor* e) {
   e->buffer()->unselect();
   Fl::copy("", 0, 0);
-  int crsr;
+  int crsr = e->insert_position();
   int ret = e->buffer()->undo(&crsr);
+  e->insert_position(crsr);
+  e->show_insert_position();
+  e->set_changed();
+  if (e->when()&FL_WHEN_CHANGED) e->do_callback();
+  return ret;
+}
+
+/** Redo last undo action.
+ Also deselects previous selection.
+ The key value \p 'c' is currently unused.
+ */
+int Fl_Text_Editor::kf_redo(int , Fl_Text_Editor* e) {
+  e->buffer()->unselect();
+  Fl::copy("", 0, 0);
+  int crsr = e->insert_position();
+  int ret = e->buffer()->redo(&crsr);
   e->insert_position(crsr);
   e->show_insert_position();
   e->set_changed();
@@ -636,7 +654,7 @@ int Fl_Text_Editor::handle_key() {
     }
     show_insert_position();
     set_changed();
-    if (when()&FL_WHEN_CHANGED) do_callback();
+    if (when()&FL_WHEN_CHANGED) do_callback(FL_REASON_CHANGED);
     return 1;
   }
 
@@ -651,10 +669,11 @@ int Fl_Text_Editor::handle_key() {
 }
 
 /** does or does not a callback according to changed() and when() settings */
-void Fl_Text_Editor::maybe_do_callback() {
+void Fl_Text_Editor::maybe_do_callback(Fl_Callback_Reason reason) {
 //  printf("Fl_Text_Editor::maybe_do_callback()\n");
 //  printf("changed()=%d, when()=%x\n", changed(), when());
-  if (changed() || (when()&FL_WHEN_NOT_CHANGED)) do_callback();
+  if (changed() || (when()&FL_WHEN_NOT_CHANGED))
+    do_callback(reason);
 }
 
 int Fl_Text_Editor::handle(int event) {
@@ -679,7 +698,7 @@ int Fl_Text_Editor::handle(int event) {
       if (buffer()->selected()) redraw(); // Redraw selections...
       // FALLTHROUGH
     case FL_HIDE:
-      if (when() & FL_WHEN_RELEASE) maybe_do_callback();
+      if (when() & FL_WHEN_RELEASE) maybe_do_callback(FL_REASON_LOST_FOCUS);
       return 1;
 
     case FL_KEYBOARD:
@@ -697,7 +716,7 @@ int Fl_Text_Editor::handle(int event) {
       else overstrike(Fl::event_text());
       show_insert_position();
       set_changed();
-      if (when()&FL_WHEN_CHANGED) do_callback();
+      if (when()&FL_WHEN_CHANGED) do_callback(FL_REASON_CHANGED);
       return 1;
 
     case FL_ENTER:
@@ -719,7 +738,7 @@ int Fl_Text_Editor::handle(int event) {
         Fl::paste(*this, 0);
         Fl::focus(this);
         set_changed();
-        if (when()&FL_WHEN_CHANGED) do_callback();
+        if (when()&FL_WHEN_CHANGED) do_callback(FL_REASON_CHANGED);
         return 1;
       }
       break;

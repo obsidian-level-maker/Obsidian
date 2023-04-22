@@ -1185,7 +1185,6 @@ void Main_SetSeed() {
 
 static void Module_Defaults() {
     ob_set_mod_option("sky_generator", "self", "1");
-    ob_set_mod_option("sky_generator_heretic", "self", "1");
     ob_set_mod_option("armaetus_epic_textures", "self", "1");
     ob_set_mod_option("music_swapper", "self", "1");
     ob_set_mod_option("compress_output", "self", "1");

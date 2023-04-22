@@ -5,7 +5,7 @@
 // This should have the widget pointer in it, but it is still in the
 // Fl_Type base class.
 //
-// Copyright 1998-2010 by Bill Spitzak and others.
+// Copyright 1998-2023 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
@@ -28,15 +28,24 @@ class Fl_Widget_Class_Type;
 extern Fl_Menu_Item window_type_menu[];
 extern Fl_Widget_Class_Type *current_widget_class;
 void toggle_overlays(Fl_Widget *,void *);
+void toggle_guides(Fl_Widget *,void *);
 void show_project_cb(Fl_Widget *, void *);
 void show_grid_cb(Fl_Widget *, void *);
 void show_settings_cb(Fl_Widget *, void *);
-void show_global_settings_cb(Fl_Widget *, void *);
+
+enum {
+  FD_LEFT   = 1,  // user drags the left side of the selection box
+  FD_RIGHT  = 2,
+  FD_BOTTOM = 4,
+  FD_TOP    = 8,
+  FD_DRAG   = 16, // user drags the entire selection
+  FD_BOX    = 32  // user creates a new selection box
+};
 
 class Fl_Window_Type : public Fl_Widget_Type {
 protected:
 
-  Fl_Menu_Item* subtypes() {return window_type_menu;}
+  Fl_Menu_Item* subtypes() FL_OVERRIDE {return window_type_menu;}
 
   friend class Overlay_Window;
   int mx,my;            // mouse position during dragging
@@ -46,19 +55,18 @@ protected:
   int dx,dy;
   int drag;             // which parts of bbox are being moved
   int numselected;      // number of children selected
-  enum {LEFT=1,RIGHT=2,BOTTOM=4,TOP=8,DRAG=16,BOX=32};
   void draw_overlay();
   void newdx();
   void newposition(Fl_Widget_Type *,int &x,int &y,int &w,int &h);
   int handle(int);
-  virtual void setlabel(const char *);
-  void write_code1();
-  void write_code2();
-  Fl_Widget_Type *_make() {return 0;} // we don't call this
-  Fl_Widget *widget(int,int,int,int) {return 0;}
+  void setlabel(const char *) FL_OVERRIDE;
+  void write_code1(Fd_Code_Writer& f) FL_OVERRIDE;
+  void write_code2(Fd_Code_Writer& f) FL_OVERRIDE;
+  Fl_Widget_Type *_make() FL_OVERRIDE {return 0;} // we don't call this
+  Fl_Widget *widget(int,int,int,int) FL_OVERRIDE {return 0;}
   int recalc;           // set by fix_overlay()
   void moveallchildren();
-  int pixmapID() { return 1; }
+  int pixmapID() FL_OVERRIDE { return 1; }
 
 public:
 
@@ -76,30 +84,30 @@ public:
   { }
   uchar modal, non_modal;
 
-  Fl_Type *make(Strategy strategy);
-  virtual const char *type_name() {return "Fl_Window";}
-  virtual const char *alt_type_name() {return "fltk::Window";}
+  Fl_Type *make(Strategy strategy) FL_OVERRIDE;
+  const char *type_name() FL_OVERRIDE {return "Fl_Window";}
+  const char *alt_type_name() FL_OVERRIDE {return "fltk::Window";}
 
-  void open();
+  void open() FL_OVERRIDE;
 
   void fix_overlay();                   // Update the bounding box, etc
   uchar *read_image(int &ww, int &hh);  // Read an image of the window
 
-  virtual void write_properties();
-  virtual void read_property(const char *);
-  virtual int read_fdesign(const char*, const char*);
+  void write_properties(Fd_Project_Writer &f) FL_OVERRIDE;
+  void read_property(Fd_Project_Reader &f, const char *) FL_OVERRIDE;
+  int read_fdesign(const char*, const char*) FL_OVERRIDE;
 
-  void add_child(Fl_Type*, Fl_Type*);
-  void move_child(Fl_Type*, Fl_Type*);
-  void remove_child(Fl_Type*);
+  void add_child(Fl_Type*, Fl_Type*) FL_OVERRIDE;
+  void move_child(Fl_Type*, Fl_Type*) FL_OVERRIDE;
+  void remove_child(Fl_Type*) FL_OVERRIDE;
 
-  int is_parent() const {return 1;}
-  int is_group() const {return 1;}
-  int is_window() const {return 1;}
+  int is_parent() const FL_OVERRIDE {return 1;}
+  int is_group() const FL_OVERRIDE {return 1;}
+  int is_window() const FL_OVERRIDE {return 1;}
 
-  Fl_Widget *enter_live_mode(int top=0);
-  void leave_live_mode();
-  void copy_properties();
+  Fl_Widget *enter_live_mode(int top=0) FL_OVERRIDE;
+  void leave_live_mode() FL_OVERRIDE;
+  void copy_properties() FL_OVERRIDE;
 
   int sr_min_w, sr_min_h, sr_max_w, sr_max_h;
 
@@ -108,7 +116,7 @@ public:
 
 class Fl_Widget_Class_Type : private Fl_Window_Type {
 protected:
-  Fl_Menu_Item* subtypes() {return 0;}
+  Fl_Menu_Item* subtypes() FL_OVERRIDE {return 0;}
 
 public:
   Fl_Widget_Class_Type() {
@@ -119,18 +127,18 @@ public:
   char write_public_state; // true when public: has been printed
   char wc_relative; // if 1, reposition all children, if 2, reposition and resize
 
-  virtual void write_properties();
-  virtual void read_property(const char *);
+  void write_properties(Fd_Project_Writer &f) FL_OVERRIDE;
+  void read_property(Fd_Project_Reader &f, const char *) FL_OVERRIDE;
 
-  void write_code1();
-  void write_code2();
-  Fl_Type *make(Strategy strategy);
-  virtual const char *type_name() {return "widget_class";}
-  int pixmapID() { return 48; }
-  int is_parent() const {return 1;}
-  int is_code_block() const {return 1;}
-  int is_decl_block() const {return 1;}
-  int is_class() const {return 1;}
+  void write_code1(Fd_Code_Writer& f) FL_OVERRIDE;
+  void write_code2(Fd_Code_Writer& f) FL_OVERRIDE;
+  Fl_Type *make(Strategy strategy) FL_OVERRIDE;
+  const char *type_name() FL_OVERRIDE {return "widget_class";}
+  int pixmapID() FL_OVERRIDE { return 48; }
+  int is_parent() const FL_OVERRIDE {return 1;}
+  int is_code_block() const FL_OVERRIDE {return 1;}
+  int is_decl_block() const FL_OVERRIDE {return 1;}
+  int is_class() const FL_OVERRIDE {return 1;}
 };
 
 #endif // _FLUID_FL_WINDOW_TYPE_H

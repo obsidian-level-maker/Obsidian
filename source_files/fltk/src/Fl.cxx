@@ -1,7 +1,7 @@
 //
 // Main event handling code for the Fast Light Tool Kit (FLTK).
 //
-// Copyright 1998-2022 by Bill Spitzak and others.
+// Copyright 1998-2023 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
@@ -69,10 +69,12 @@ const char      *Fl::e_clipboard_type = "";
 void            *Fl::e_clipboard_data = NULL;
 
 Fl_Event_Dispatch Fl::e_dispatch = 0;
+Fl_Callback_Reason Fl::callback_reason_ = FL_REASON_UNKNOWN;
 
 unsigned char   Fl::options_[] = { 0, 0 };
 unsigned char   Fl::options_read_ = 0;
 
+int             Fl::selection_to_clipboard_ = 0;
 
 Fl_Window       *fl_xfocus = NULL; // which window X thinks has focus
 Fl_Window       *fl_xmousewin;     // which window X thinks has FL_ENTER
@@ -256,6 +258,9 @@ int Fl::event_inside(const Fl_Widget *o) /*const*/ {
   If you need more accurate, repeated timeouts, use Fl::repeat_timeout() to
   reschedule the subsequent timeouts. Please see Fl::repeat_timeout() for
   an example.
+
+  Since version 1.4, a timeout can be started from a child thread under the
+  condition that the call to Fl::add_timeout is wrapped in Fl::lock() and Fl::unlock().
 
   \param[in]  time    delta time in seconds until the timer expires
   \param[in]  cb      callback function
@@ -667,6 +672,17 @@ int Fl::ready()
   return system_driver()->ready();
 }
 
+/** Hide all visible window to make FLTK leav Fl::run().
+ Fl:run() will run as long as there are visible windows. Call hide_all_windows()
+ will hide all windows, effectively terminating the Fl::run() loop.
+ \see Fl::run()
+ */
+void Fl::hide_all_windows() {
+  while (Fl::first_window()) {
+    Fl::first_window()->hide();
+  }
+}
+
 int Fl::program_should_quit_ = 0;
 
 ////////////////////////////////////////////////////////////////
@@ -703,7 +719,7 @@ Fl_Window* Fl::first_window() {
   \param[in] window must be shown and not NULL
 */
 Fl_Window* Fl::next_window(const Fl_Window* window) {
-  Fl_X* i = window ? Fl_X::i(window) : 0;
+  Fl_X* i = window ? Fl_X::flx(window) : 0;
   if (!i) {
     Fl::error("Fl::next_window() failed: window (%p) not shown.", window);
     return 0;
@@ -722,7 +738,7 @@ Fl_Window* Fl::next_window(const Fl_Window* window) {
  */
 void Fl::first_window(Fl_Window* window) {
   if (!window || !window->shown()) return;
-  Fl_Window_Driver::find( Fl_X::i(window)->xid );
+  Fl_Window_Driver::find( Fl_X::flx(window)->xid );
 }
 
 /**
@@ -937,6 +953,8 @@ Fl_Widget* fl_oldfocus; // kludge for Fl_Group...
     connected.
 
     \see Fl_Widget::take_focus()
+    \see Fl_Widget::needs_keyboard() const
+    \see Fl_Widget::needs_keyboard(bool)
 */
 void Fl::focus(Fl_Widget *o)
 {
@@ -944,8 +962,8 @@ void Fl::focus(Fl_Widget *o)
 
   // request an on-screen keyboard on touch screen devices if needed
   Fl_Widget *prevFocus = Fl::focus();
-  char hideKeyboard = ( prevFocus && (prevFocus->flags()&Fl_Widget::NEEDS_KEYBOARD) );
-  char showKeyboard = (o && (o->flags()&Fl_Widget::NEEDS_KEYBOARD));
+  char hideKeyboard = (prevFocus && prevFocus->needs_keyboard());
+  char showKeyboard = (o && o->needs_keyboard());
   if (hideKeyboard && !showKeyboard)
     Fl::screen_driver()->release_keyboard();
   if (showKeyboard && !hideKeyboard)
@@ -1173,6 +1191,14 @@ static int send_event(int event, Fl_Widget* to, Fl_Window* window) {
   return ret;
 }
 
+/**
+ \brief Give the reason for calling a callback.
+ \return the reason for the current callback
+ \see Fl_Widget::when(), Fl_Widget::do_callback(), Fl_Widget::callback()
+ */
+Fl_Callback_Reason Fl::callback_reason() {
+  return callback_reason_;
+}
 
 /**
  \brief Set a new event dispatch function.
@@ -1258,6 +1284,8 @@ int Fl::handle(int e, Fl_Window* window)
  another dispatch function. In that case, the user dispatch function must
  decide when to call Fl::handle_(int, Fl_Window*)
 
+ Callbacks can set \p FL_REASON_CLOSED and \p FL_REASON_CANCELLED.
+
  \param e the event type (Fl::event_number() is not yet set)
  \param window the window that caused this event
  \return 0 if the event was not handled
@@ -1275,7 +1303,7 @@ int Fl::handle_(int e, Fl_Window* window)
 
   case FL_CLOSE:
     if ( grab() || (modal() && window != modal()) ) return 0;
-    wi->do_callback();
+    wi->do_callback(FL_REASON_CLOSED);
     return 1;
 
   case FL_SHOW:
@@ -1425,7 +1453,7 @@ int Fl::handle_(int e, Fl_Window* window)
     // make Escape key close windows:
     if (event_key()==FL_Escape) {
       wi = modal(); if (!wi) wi = window;
-      wi->do_callback();
+      wi->do_callback(FL_REASON_CANCELLED);
       return 1;
     }
 
@@ -1590,7 +1618,7 @@ void Fl_Widget::damage(uchar fl) {
     damage(fl, x(), y(), w(), h());
   } else {
     // damage entire window by deleting the region:
-    Fl_X* i = Fl_X::i((Fl_Window*)this);
+    Fl_X* i = Fl_X::flx((Fl_Window*)this);
     if (!i) return; // window not mapped, so ignore it
     if (i->region) {
       fl_graphics_driver->XDestroyRegion(i->region);
@@ -1610,7 +1638,7 @@ void Fl_Widget::damage(uchar fl, int X, int Y, int W, int H) {
     if (!wi) return;
     fl = FL_DAMAGE_CHILD;
   }
-  Fl_X* i = Fl_X::i((Fl_Window*)wi);
+  Fl_X* i = Fl_X::flx((Fl_Window*)wi);
   if (!i) return; // window not mapped, so ignore it
 
   // clip the damage to the window and quit if none:
@@ -2055,9 +2083,11 @@ int Fl::clipboard_contains(const char *type)
  Fl::remove_fd() gets rid of <I>all</I> the callbacks for a given
  file descriptor.
 
- Under UNIX/Linux/MacOS <I>any</I> file descriptor can be monitored (files,
+ Under UNIX/Linux/macOS <I>any</I> file descriptor can be monitored (files,
  devices, pipes, sockets, etc.). Due to limitations in Microsoft Windows,
  Windows applications can only monitor sockets.
+
+ Under macOS, Fl::add_fd() opens the display if that's not been done before.
  */
 void Fl::add_fd(int fd, int when, Fl_FD_Handler cb, void *d)
 {
@@ -2130,7 +2160,7 @@ FL_EXPORT bool fl_disable_wayland = true;
 #endif // FL_DOXYGEN
 
 FL_EXPORT Window fl_xid_(const Fl_Window *w) {
-  Fl_X *temp = Fl_X::i(w);
+  Fl_X *temp = Fl_X::flx(w);
   return temp ? (Window)temp->xid : 0;
 }
 /** \addtogroup group_macosx

@@ -2,7 +2,7 @@
 // A base class for platform specific window handling code
 // for the Fast Light Tool Kit (FLTK).
 //
-// Copyright 2010-2022 by Bill Spitzak and others.
+// Copyright 2010-2023 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
@@ -57,7 +57,6 @@ private:
 protected:
   Fl_Window *pWindow;
   int screen_num_; // number of screen where window is mapped
-  void flush_Fl_Window(); // accessor to protected Fl_Window::flush()
 public:
   Fl_Window_Driver(Fl_Window *);
   virtual ~Fl_Window_Driver();
@@ -100,6 +99,7 @@ public:
   int aspect();
   unsigned char size_range_set();
   int is_resizable() { return pWindow->is_resizable(); }
+  void is_a_rescale(bool b) { is_a_rescale_ = b;}
   int fullscreen_screen_top();
   int fullscreen_screen_bottom();
   int fullscreen_screen_left();
@@ -111,7 +111,9 @@ public:
   void current(Fl_Window *c);
   char show_iconic() { return Fl_Window::show_iconic_; }
   void show_iconic(char c) { Fl_Window::show_iconic_ = c; }
-  void i(Fl_X *x) { pWindow->i = x; }
+  void flx(Fl_X *x) { pWindow->flx_ = x; }
+  Fl_Cursor cursor_default() { return pWindow->cursor_default; }
+  void destroy_double_buffer();
   /** for an Fl_Overlay_Window, returns the value of its overlay_ member variable */
   Fl_Window *overlay() {
     return pWindow->as_overlay_window() ? pWindow->as_overlay_window()->overlay_ : NULL;
@@ -141,9 +143,8 @@ public:
   virtual void make_current();
   virtual void label(const char *name, const char *mininame);
 
-  virtual Fl_X *makeWindow() { return 0; }
+  virtual void makeWindow() {}
   virtual void wait_for_expose();
-  virtual void destroy_double_buffer();
   virtual void show();
   virtual void resize(int /*X*/, int /*Y*/, int /*W*/, int /*H*/) {}
   virtual void hide() {}
@@ -187,10 +188,19 @@ public:
   static inline Fl_Window_Driver* driver(const Fl_Window *win) {return win->pWindowDriver;}
 
   // --- support for menu windows
-  // the default implementation of next 2 members is most probably enough
+  // The default implementation of next 2 virtual members is enough if the
+  // position of a window in a screen is known. Next static members may be useful
+  // when that's not the case, as with Wayland.
   virtual void reposition_menu_window(int x, int y);
   virtual void menu_window_area(int &X, int &Y, int &W, int &H, int nscreen = -1);
-  static Fl_Window *menu_parent();
+  static Fl_Window *menu_parent(int *display_height = NULL);
+  static Fl_Window *menu_leftorigin(Fl_Window*);
+  static Fl_Window *menu_title(Fl_Window*);
+  static int menu_itemheight(Fl_Window*);
+  static int menu_bartitle(Fl_Window*);
+  static int menu_selected(Fl_Window*);
+  static bool is_floating_title(Fl_Window *);
+  static void scroll_to_selected_item(Fl_Window *);
 
   virtual fl_uintptr_t os_id() { return 0; }
 };

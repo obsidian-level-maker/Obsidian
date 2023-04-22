@@ -18,7 +18,8 @@
 #include <stdio.h>
 #include <FL/Fl.H>
 #include <FL/Fl_Double_Window.H>
-#include <FL/Fl_Box.H>
+#include <FL/Fl_Button.H>
+#include <FL/Fl_Scheme_Choice.H>
 #include <FL/fl_draw.H>
 
 int N = 0;
@@ -52,7 +53,7 @@ static const int inactive  = 0; // deactivate boxes and use green background
 class BoxGroup : public Fl_Group {
   public:
     BoxGroup(int x, int y, int w, int h) : Fl_Group(x,y,w,h) {}
-    void draw() {
+    void draw() FL_OVERRIDE {
       draw_box();
       if (outline + box_bg) { // outline or box_bg or both
         Fl_Widget*const* a = array();
@@ -81,7 +82,8 @@ void bt(const char *name, Fl_Boxtype type, int square=0) {
   N++;
   x = x*W+10;
   y = y*H+10;
-  Fl_Box *b = new Fl_Box(type,x,y,square ? H-20 : W-20,H-20,name);
+  Fl_Button *b = new Fl_Button(x,y,square ? H-20 : W-20,H-20,name);
+  b->box(type);
   b->labelsize(11);
   if (inactive) {
     b->color(FL_GREEN);
@@ -176,6 +178,7 @@ int main(int argc, char ** argv) {
   bt("FL_GTK_ROUND_DOWN_BOX",FL_GTK_ROUND_DOWN_BOX);
   bg->end();
   window->resizable(window);
+  Fl_Scheme_Choice scheme_choice(610, 10, 150, 30, "Scheme:");
   window->end();
   window->show();
   return Fl::run();

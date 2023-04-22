@@ -1,7 +1,7 @@
 //
 // Wayland-specific code to initialize wayland support.
 //
-// Copyright 2022 by Bill Spitzak and others.
+// Copyright 2022-2023 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
@@ -14,7 +14,7 @@
 //     https://www.fltk.org/bugs.php
 //
 
-#include <config.h>
+#include <FL/fl_config.h>
 #include "Fl_Wayland_Copy_Surface_Driver.H"
 #include "Fl_Wayland_Graphics_Driver.H"
 #include "Fl_Wayland_Screen_Driver.H"
@@ -23,8 +23,7 @@
 #include "Fl_Wayland_Image_Surface_Driver.H"
 #ifdef FLTK_USE_X11
 #  include "../Xlib/Fl_Xlib_Copy_Surface_Driver.H"
-#  include <cairo-xlib.h>
-#  include "../Cairo/Fl_Display_Cairo_Graphics_Driver.H"
+#  include "../Cairo/Fl_X11_Cairo_Graphics_Driver.H"
 #  include "../X11/Fl_X11_Screen_Driver.H"
 #  include "../X11/Fl_X11_Window_Driver.H"
 #  include "../Xlib/Fl_Xlib_Image_Surface_Driver.H"
@@ -32,29 +31,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-
-
-static Fl_Fontdesc built_in_table[] = {  // Pango font names
-  {"Sans"},
-  {"Sans Bold"},
-  {"Sans Italic"},
-  {"Sans Bold Italic"},
-  {"Monospace"},
-  {"Monospace Bold"},
-  {"Monospace Italic"},
-  {"Monospace Bold Italic"},
-  {"Serif"},
-  {"Serif Bold"},
-  {"Serif Italic"},
-  {"Serif Bold Italic"},
-  {"Standard Symbols PS"}, // FL_SYMBOL
-  {"Monospace"},           // FL_SCREEN
-  {"Monospace Bold"},      // FL_SCREEN_BOLD
-  {"D050000L"},            // FL_ZAPF_DINGBATS
-};
-
-
-FL_EXPORT Fl_Fontdesc *fl_fonts = built_in_table;
 
 
 #ifdef FLTK_USE_X11
@@ -119,7 +95,7 @@ Fl_System_Driver *Fl_System_Driver::newSystemDriver() {
 
 Fl_Graphics_Driver *Fl_Graphics_Driver::newMainGraphicsDriver() {
 #ifdef FLTK_USE_X11
-  if (!attempt_wayland()) return new Fl_Display_Cairo_Graphics_Driver();
+  if (!attempt_wayland()) return new Fl_X11_Cairo_Graphics_Driver();
 #endif
   return new Fl_Wayland_Graphics_Driver();
 }

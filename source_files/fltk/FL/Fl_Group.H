@@ -14,8 +14,9 @@
 //     https://www.fltk.org/bugs.php
 //
 
-/* \file
-   Fl_Group, Fl_End classes . */
+/** \file
+  \brief Fl_Group and Fl_End classes.
+*/
 
 #ifndef Fl_Group_H
 #define Fl_Group_H
@@ -46,6 +47,11 @@ class Fl_Rect;
   \endcode
   ..and this will trigger proper scheduling of the widget's removal
   from its parent group.
+
+  If used as a child of \p Fl_Tabs, setting \p when(FL_WHEN_CLOSED) will
+  enable the Close button in the corresponding tab. If the user clicks the
+  Close button, the callback of this group will be called with the callback
+  reason \p FL_REASON_CLOSED.
 */
 class FL_EXPORT Fl_Group : public Fl_Widget {
 
@@ -67,7 +73,7 @@ class FL_EXPORT Fl_Group : public Fl_Widget {
   Fl_Group& operator=(const Fl_Group&);
 
 protected:
-  void draw();
+  void draw() FL_OVERRIDE;
   void draw_child(Fl_Widget& widget) const;
   void draw_children();
   void draw_outside_label(const Fl_Widget& widget) const ;
@@ -80,7 +86,7 @@ protected:
 
 public:
 
-  int handle(int);
+  int handle(int) FL_OVERRIDE;
   void begin();
   void end();
   static Fl_Group *current();
@@ -101,7 +107,7 @@ public:
   int find(const Fl_Widget& o) const {return find(&o);}
   Fl_Widget* const* array() const;
 
-  void resize(int,int,int,int);
+  void resize(int,int,int,int) FL_OVERRIDE;
   /**
     Creates a new Fl_Group widget using the given position, size,
     and label string. The default boxtype is FL_NO_BOX.
@@ -221,7 +227,8 @@ public:
   unsigned int clip_children() { return (flags() & CLIP_CHILDREN) != 0; }
 
   // Note: Doxygen docs in Fl_Widget.H to avoid redundancy.
-  virtual Fl_Group* as_group() { return this; }
+  Fl_Group* as_group() FL_OVERRIDE { return this; }
+  Fl_Group const* as_group() const FL_OVERRIDE { return this; }
 
   // back compatibility functions:
 

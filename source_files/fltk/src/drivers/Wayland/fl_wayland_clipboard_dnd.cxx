@@ -1,7 +1,7 @@
 //
 // Wayland-specific code for clipboard and drag-n-drop support.
 //
-// Copyright 1998-2022 by Bill Spitzak and others.
+// Copyright 1998-2023 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
@@ -16,20 +16,20 @@
 
 #if !defined(FL_DOXYGEN)
 
-#  include <config.h>
 #  include <FL/Fl.H>
 #  include <FL/platform.H>
 #  include <FL/Fl_Window.H>
 #  include <FL/Fl_Shared_Image.H>
 #  include <FL/Fl_Image_Surface.H>
-#  include <stdio.h>
-#  include <stdlib.h>
-#  include "../../flstring.h"
 #  include "Fl_Wayland_Screen_Driver.H"
 #  include "Fl_Wayland_Window_Driver.H"
 #  include "../Unix/Fl_Unix_System_Driver.H"
 #  include "Fl_Wayland_Graphics_Driver.H"
+#  include "../../flstring.h" // includes <string.h>
+
 #  include <errno.h>
+#  include <stdio.h>
+#  include <stdlib.h>
 
 
 ////////////////////////////////////////////////////////////////
@@ -76,13 +76,15 @@ void write_data_source_cb(FL_SOCKET fd, data_source_write_struct *data) {
 static void data_source_handle_send(void *data, struct wl_data_source *source, const char *mime_type, int fd) {
   fl_intptr_t rank = (fl_intptr_t)data;
 //fprintf(stderr, "data_source_handle_send: %s fd=%d l=%d\n", mime_type, fd, fl_selection_length[1]);
-  if (strcmp(mime_type, wld_plain_text_clipboard) == 0 || strcmp(mime_type, "text/plain") == 0 || strcmp(mime_type, "image/bmp") == 0) {
+  if (((!strcmp(mime_type, wld_plain_text_clipboard) || !strcmp(mime_type, "text/plain")) && fl_selection_type[rank] == Fl::clipboard_plain_text)
+      ||
+    (!strcmp(mime_type, "image/bmp") && fl_selection_type[rank] == Fl::clipboard_image) ) {
     data_source_write_struct *write_data = new data_source_write_struct;
     write_data->rest = fl_selection_length[rank];
     write_data->from = fl_selection_buffer[rank];
     Fl::add_fd(fd, FL_WRITE, (Fl_FD_Handler)write_data_source_cb, write_data);
   } else {
-    Fl::error("Destination client requested unsupported MIME type: %s\n", mime_type);
+    //Fl::error("Destination client requested unsupported MIME type: %s\n", mime_type);
     close(fd);
   }
 }
@@ -235,7 +237,7 @@ int Fl_Wayland_Screen_Driver::dnd(int use_selection) {
   if (use_selection) {
     // use the text as dragging icon
     Fl_Widget *current = Fl::pushed() ? Fl::pushed() : Fl::first_window();
-    s = fl_wl_xid(current->top_window())->scale;
+    s = Fl_Wayland_Window_Driver::driver(current->top_window())->wld_scale();
     off = (struct fl_wld_buffer *)offscreen_from_text(fl_selection_buffer[0], s);
     dnd_icon = wl_compositor_create_surface(scr_driver->wl_compositor);
   } else dnd_icon = NULL;
@@ -269,8 +271,12 @@ static void data_offer_handle_offer(void *data, struct wl_data_offer *offer, con
   } else if (strcmp(mime_type, "image/bmp") == 0 && (!fl_selection_offer_type || strcmp(fl_selection_offer_type, "image/png"))) {
     fl_selection_type[1] = Fl::clipboard_image;
     fl_selection_offer_type = "image/bmp";
+  } else if (strcmp(mime_type, "text/uri-list") == 0 && !fl_selection_type[1]) {
+    fl_selection_type[1] = Fl::clipboard_plain_text;
+    fl_selection_offer_type = "text/uri-list";
   } else if (strcmp(mime_type, wld_plain_text_clipboard) == 0 && !fl_selection_type[1]) {
     fl_selection_type[1] = Fl::clipboard_plain_text;
+    fl_selection_offer_type = wld_plain_text_clipboard;
   }
 }
 
@@ -319,28 +325,13 @@ static void data_device_handle_selection(void *data, struct wl_data_device *data
 }
 
 
-static size_t convert_crlf(char *s, size_t len)
-{ // turn \r characters into \n and "\r\n" sequences into \n:
-  char *p;
-  size_t l = len;
-  while ((p = strchr(s, '\r'))) {
-    if (*(p+1) == '\n') {
-      memmove(p, p+1, l-(p-s));
-      len--; l--;
-    } else *p = '\n';
-    l -= p-s;
-    s = p + 1;
-  }
-  return len;
-}
-
-
 // Gets from the system the clipboard or dnd text and puts it in fl_selection_buffer[1]
 // which is enlarged if necessary.
 static void get_clipboard_or_dragged_text(struct wl_data_offer *offer) {
   int fds[2];
+  char *from;
   if (pipe(fds)) return;
-  wl_data_offer_receive(offer, wld_plain_text_clipboard, fds[1]);
+  wl_data_offer_receive(offer, fl_selection_offer_type, fds[1]);
   close(fds[1]);
   wl_display_flush(Fl_Wayland_Screen_Driver::wl_display);
   // read in fl_selection_buffer
@@ -352,9 +343,9 @@ static void get_clipboard_or_dragged_text(struct wl_data_offer *offer) {
       close(fds[0]);
       fl_selection_length[1] = to - fl_selection_buffer[1];
       fl_selection_buffer[1][ fl_selection_length[1] ] = 0;
-      return;
+      goto way_out;
     }
-    n = convert_crlf(to, n);
+    n = Fl_Screen_Driver::convert_crlf(to, n);
     to += n;
     rest -= n;
   }
@@ -371,8 +362,8 @@ static void get_clipboard_or_dragged_text(struct wl_data_offer *offer) {
   }
 //fprintf(stderr, "get_clipboard_or_dragged_text: size=%ld\n", rest);
   // read full clipboard data
-  if (pipe(fds)) return;
-  wl_data_offer_receive(offer, wld_plain_text_clipboard, fds[1]);
+  if (pipe(fds)) goto way_out;
+  wl_data_offer_receive(offer, fl_selection_offer_type, fds[1]);
   close(fds[1]);
   wl_display_flush(Fl_Wayland_Screen_Driver::wl_display);
   if (rest+1 > fl_selection_buffer_length[1]) {
@@ -380,18 +371,31 @@ static void get_clipboard_or_dragged_text(struct wl_data_offer *offer) {
     fl_selection_buffer[1] = new char[rest+1000+1];
     fl_selection_buffer_length[1] = rest+1000;
   }
-  char *from = fl_selection_buffer[1];
+  from = fl_selection_buffer[1];
   while (true) {
     ssize_t n = read(fds[0], from, rest);
     if (n <= 0) {
       close(fds[0]);
       break;
     }
-    n = convert_crlf(from, n);
+    n = Fl_Screen_Driver::convert_crlf(from, n);
     from += n;
   }
-  fl_selection_length[1] = from - fl_selection_buffer[1];;
+  fl_selection_length[1] = from - fl_selection_buffer[1];
   fl_selection_buffer[1][fl_selection_length[1]] = 0;
+way_out:
+  if (strcmp(fl_selection_offer_type, "text/uri-list") == 0) {
+    fl_decode_uri(fl_selection_buffer[1]); // decode encoded bytes
+    char *p = fl_selection_buffer[1];
+    while (*p) { // remove prefixes
+      if (strncmp(p, "file://", 7) == 0) {
+        memmove(p, p+7, strlen(p+7)+1);
+      }
+      p = strchr(p, '\n');
+      if (!p) break;
+      if (*++p == 0) *(p-1) = 0; // remove last '\n'
+    }
+  }
   Fl::e_clipboard_type = Fl::clipboard_plain_text;
 }
 
@@ -401,7 +405,7 @@ static uint32_t fl_dnd_serial;
 
 static void data_device_handle_enter(void *data, struct wl_data_device *data_device, uint32_t serial,
     struct wl_surface *surface, wl_fixed_t x, wl_fixed_t y, struct wl_data_offer *offer) {
-  Fl_Window *win = Fl_Wayland_Screen_Driver::surface_to_window(surface);
+  Fl_Window *win = Fl_Wayland_Window_Driver::surface_to_window(surface);
 //printf("Drag entered our surface %p(win=%p) at %dx%d\n", surface, win, wl_fixed_to_int(x), wl_fixed_to_int(y));
   if (win) {
     fl_dnd_target_surface = surface;
@@ -432,7 +436,7 @@ static void data_device_handle_motion(void *data, struct wl_data_device *data_de
   int ret = 0;
   if (fl_dnd_target_window) {
     float f = Fl::screen_scale(fl_dnd_target_window->screen_num());
-    Fl_Window *win = Fl_Wayland_Screen_Driver::surface_to_window(fl_dnd_target_surface);
+    Fl_Window *win = Fl_Wayland_Window_Driver::surface_to_window(fl_dnd_target_surface);
     Fl::e_x = wl_fixed_to_int(x) / f;
     Fl::e_y = wl_fixed_to_int(y) / f;
     while (win->parent()) {
@@ -591,9 +595,12 @@ void Fl_Wayland_Screen_Driver::paste(Fl_Widget &receiver, int clipboard, const c
   } else if (type == Fl::clipboard_image && clipboard_contains(Fl::clipboard_image)) {
     if (get_clipboard_image()) return;
     struct wld_window * xid = fl_wl_xid(receiver.top_window());
-    if (xid && xid->scale > 1) {
-      Fl_RGB_Image *rgb = (Fl_RGB_Image*)Fl::e_clipboard_data;
-      rgb->scale(rgb->data_w() / xid->scale, rgb->data_h() / xid->scale);
+    if (xid) {
+      int s = Fl_Wayland_Window_Driver::driver(receiver.top_window())->wld_scale();
+      if ( s > 1) {
+        Fl_RGB_Image *rgb = (Fl_RGB_Image*)Fl::e_clipboard_data;
+        rgb->scale(rgb->data_w() / s, rgb->data_h() / s);
+      }
     }
     int done = receiver.handle(FL_PASTE);
     Fl::e_clipboard_type = "";

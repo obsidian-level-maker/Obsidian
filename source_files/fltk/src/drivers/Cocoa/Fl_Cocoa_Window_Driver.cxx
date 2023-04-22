@@ -58,7 +58,7 @@ void Fl_Cocoa_Window_Driver::flush_overlay()
     oWindow->clear_damage(FL_DAMAGE_ALL);
   }
   if (oWindow->damage() & ~FL_DAMAGE_EXPOSE) {
-    Fl_X *myi = Fl_X::i(pWindow);
+    Fl_X *myi = Fl_X::flx(pWindow);
     fl_clip_region(myi->region); myi->region = 0;
     fl_begin_offscreen(other_xid);
     draw();
@@ -69,13 +69,6 @@ void Fl_Cocoa_Window_Driver::flush_overlay()
     fl_copy_offscreen(0, 0, oWindow->w(), oWindow->h(), other_xid, 0, 0);
   }
   if (overlay() == oWindow) oWindow->draw_overlay();
-}
-
-
-void Fl_Cocoa_Window_Driver::destroy_double_buffer()
-{
-  if (pWindow->as_overlay_window()) fl_delete_offscreen(other_xid);
-  other_xid = 0;
 }
 
 
@@ -215,7 +208,7 @@ void Fl_Cocoa_Window_Driver::shape(const Fl_Image* img) {
 
 
 void Fl_Cocoa_Window_Driver::hide() {
-  Fl_X* ip = Fl_X::i(pWindow);
+  Fl_X* ip = Fl_X::flx(pWindow);
   // MacOS X manages a single pointer per application. Make sure that hiding
   // a toplevel window will not leave us with some random pointer shape, or
   // worst case, an invisible pointer
@@ -243,7 +236,7 @@ int Fl_Cocoa_Window_Driver::scroll(int src_x, int src_y, int src_w, int src_h, i
   // the current surface is generally the display, but is an Fl_Image_Surface when scrolling an Fl_Overlay_Window
   Fl_Quartz_Graphics_Driver *qgd = (Fl_Quartz_Graphics_Driver*)Fl_Surface_Device::surface()->driver();
   float s = qgd->scale();
-  qgd->draw_CGImage(img, dest_x, dest_y, lround(s*src_w), lround(s*src_h), 0, 0, src_w, src_h);
+  qgd->draw_CGImage(img, dest_x, dest_y, (int)lround(s*src_w), (int)lround(s*src_h), 0, 0, src_w, src_h);
   CFRelease(img);
   return 0;
 }

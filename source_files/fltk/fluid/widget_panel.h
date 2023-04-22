@@ -19,7 +19,7 @@
 #ifndef widget_panel_h
 #define widget_panel_h
 #include <FL/Fl.H>
-#include "Shortcut_Button.h"
+#include "custom_widgets.h"
 #include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Tabs.H>
 #include <FL/Fl_Group.H>
@@ -33,9 +33,11 @@ extern void image_cb(Fl_Input*, void*);
 #include <FL/Fl_Button.H>
 extern void image_browse_cb(Fl_Button*, void*);
 #include "pixmaps.h"
+extern void compress_image_cb(Fl_Button*, void*);
 extern void bind_image_cb(Fl_Button*, void*);
 extern void inactive_cb(Fl_Input*, void*);
 extern void inactive_browse_cb(Fl_Button*, void*);
+extern void compress_deimage_cb(Fl_Button*, void*);
 extern void bind_deimage_cb(Fl_Button*, void*);
 extern void align_cb(Fl_Button*, void*);
 extern void align_text_image_cb(Fl_Choice*, void*);
@@ -77,8 +79,8 @@ extern void set_min_size_cb(Fl_Button*, void*);
 extern void max_w_cb(Fl_Value_Input*, void*);
 extern void max_h_cb(Fl_Value_Input*, void*);
 extern void set_max_size_cb(Fl_Button*, void*);
-#include "Shortcut_Button.h"
-extern void shortcut_in_cb(Shortcut_Button*, void*);
+#include <FL/Fl_Shortcut_Button.H>
+extern void shortcut_in_cb(Fl_Shortcut_Button*, void*);
 extern void xclass_cb(Fl_Input*, void*);
 #include <FL/Fl_Light_Button.H>
 extern void border_cb(Fl_Light_Button*, void*);
@@ -133,6 +135,9 @@ extern Fl_Box *w_when_box;
 extern void live_mode_cb(Fl_Button*, void*);
 extern Fl_Button *wLiveMode;
 extern void overlay_cb(Fl_Button*, void*);
+extern Fl_Button *overlay_button;
+extern void guides_cb(Fl_Button*, void*);
+extern Fl_Button *guides_button;
 #include <FL/Fl_Return_Button.H>
 extern void ok_cb(Fl_Return_Button*, void*);
 Fl_Double_Window* make_widget_panel();
