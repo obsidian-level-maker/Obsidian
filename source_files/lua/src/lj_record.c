@@ -1600,6 +1600,8 @@ TRef lj_record_idx(jit_State *J, RecordIndex *ix)
 	TRef key = ix->key;
 	if (tref_isinteger(key))  /* NEWREF needs a TValue as a key. */
 	  key = emitir(IRTN(IR_CONV), key, IRCONV_NUM_INT);
+	else if (tref_isnumber(key) && tref_isk(key) && tvismzero(&ix->keyv))
+	  key = lj_ir_knum_zero(J);  /* Canonicalize -0.0 to +0.0. */
 	xref = emitir(IRT(IR_NEWREF, IRT_PGC), ix->tab, key);
 	keybarrier = 0;  /* NEWREF already takes care of the key barrier. */
 #ifdef LUAJIT_ENABLE_TABLE_BUMP
@@ -1945,6 +1947,8 @@ static void rec_varg(jit_State *J, BCReg dst, ptrdiff_t nresults)
     } else if (dst + nresults > J->maxslot) {
       J->maxslot = dst + (BCReg)nresults;
     }
+    if (J->baseslot + J->maxslot >= LJ_MAX_JSLOTS)
+      lj_trace_err(J, LJ_TRERR_STACKOV);
     for (i = 0; i < nresults; i++)
       J->base[dst+i] = i < nvararg ? getslot(J, i - nvararg - 1 - LJ_FR2) : TREF_NIL;
   } else {  /* Unknown number of varargs passed to trace. */
@@ -1964,7 +1968,7 @@ static void rec_varg(jit_State *J, BCReg dst, ptrdiff_t nresults)
 	vbase = emitir(IRT(IR_ADD, IRT_PGC), vbase, lj_ir_kint(J, frofs-8*(1+LJ_FR2)));
 	for (i = 0; i < nload; i++) {
 	  IRType t = itype2irt(&J->L->base[i-1-LJ_FR2-nvararg]);
-	  J->base[dst+i] = lj_record_vload(J, vbase, i, t);
+	  J->base[dst+i] = lj_record_vload(J, vbase, (MSize)i, t);
 	}
       } else {
 	emitir(IRTGI(IR_LE), fr, lj_ir_kint(J, frofs));
@@ -2022,8 +2026,6 @@ static void rec_varg(jit_State *J, BCReg dst, ptrdiff_t nresults)
       lj_trace_err_info(J, LJ_TRERR_NYIBC);
     }
   }
-  if (J->baseslot + J->maxslot >= LJ_MAX_JSLOTS)
-    lj_trace_err(J, LJ_TRERR_STACKOV);
 }
 
 /* -- Record allocations -------------------------------------------------- */
@@ -2572,7 +2574,8 @@ void lj_record_ins(jit_State *J)
     break;
   case BC_JLOOP:
     rec_loop_jit(J, rc, rec_loop(J, ra,
-				 !bc_isret(bc_op(traceref(J, rc)->startins))));
+				 !bc_isret(bc_op(traceref(J, rc)->startins)) &&
+				 bc_op(traceref(J, rc)->startins) != BC_ITERN));
     break;
 
   case BC_IFORL:
