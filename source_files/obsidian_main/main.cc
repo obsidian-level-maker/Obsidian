@@ -468,7 +468,7 @@ void Determine_InstallDir(const char *argv0) {
     }
 
     // Last resort
-    if (Verify_InstallDir(std::filesystem::canonical(argv0)) {
+    if (Verify_InstallDir(std::filesystem::canonical(argv0))) {
         install_dir = std::filesystem::canonical(argv0);
     }
 #endif
