@@ -38,3 +38,38 @@ PREFABS.Wall_power_plant_diag =
 
   where = "diagonal"
 }
+
+--
+
+PREFABS.Wall_power_plant_red =
+{
+  template = "Wall_power_plant_1",
+  map = "MAP04",
+  pron = 7,
+
+  group = "gtd_power_plant_red_set",
+
+  z_fit = { 68, 116 }
+}
+
+PREFABS.Wall_power_plant_red =
+{
+  template = "Wall_power_plant_1",
+  map = "MAP05",
+
+  group = "gtd_power_plant_red_set",
+
+  z_fit = { 68, 116 }
+}
+
+PREFABS.Wall_power_plant_red_diag =
+{
+  template = "Wall_power_plant_1",
+  map = "MAP06",
+
+  group = "gtd_power_plant_red_set",
+
+  z_fit = { 68, 116 },
+
+  where = "diagonal"
+}

@@ -1356,6 +1356,7 @@ DOOM.THEMES =
       --
       gtd_mining_set = 50,
       gtd_power_plant_set = 50,
+      gtd_power_plant_red_set = 50,
       --
       gtd_DMV_set = 35,
       --
@@ -1847,6 +1848,7 @@ DOOM.THEMES =
       --
       gtd_mining_set = 35,
       gtd_power_plant_set = 35,
+      gtd_power_plant_red_set = 35,
       --
       gtd_DMV_set = 50,
       --
