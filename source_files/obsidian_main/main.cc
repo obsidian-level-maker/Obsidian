@@ -393,7 +393,7 @@ void Determine_WorkingPath(const char *argv0) {
     }
 #endif
     if (home_dir.empty()) {
-        home_dir = std::filesystem::canonical(argv0);
+        home_dir = std::filesystem::canonical(".");
     }
 }
 
@@ -468,8 +468,8 @@ void Determine_InstallDir(const char *argv0) {
     }
 
     // Last resort
-    if (Verify_InstallDir(std::filesystem::canonical(argv0))) {
-        install_dir = std::filesystem::canonical(argv0);
+    if (Verify_InstallDir(std::filesystem::canonical("."))) {
+        install_dir = std::filesystem::canonical(".");
     }
 #endif
 
