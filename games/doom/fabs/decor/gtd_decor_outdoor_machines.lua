@@ -4,6 +4,7 @@ PREFABS.Decor_tech_point_HVAC_1 =
   map    = "MAP01",
 
   where  = "point",
+  env = "outdoor",
 
   prob   = 1500,
   theme  = "!hell",

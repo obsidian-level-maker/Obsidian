@@ -32,3 +32,26 @@ PREFABS.Wall_power_plant_generator_thin =
 
   size = 96
 }
+
+--
+
+PREFABS.Wall_power_plant_fuel_cells =
+{
+  template = "Decor_power_plant_generator",
+  map = "MAP03",
+
+  group = "gtd_power_plant_red_set",
+
+  size = 128,
+}
+
+PREFABS.Wall_power_plant_fuel_cells_2 =
+{
+  template = "Decor_power_plant_generator",
+  map = "MAP04",
+  prob = 2000,
+
+  group = "gtd_power_plant_red_set",
+
+  size = 128
+}

@@ -24,6 +24,8 @@ PREFABS.Decor_round_planter =
   prob   = 5000,
   theme  = "urban",
 
+  env = "!cave",
+
   where  = "point",
   size   = 64,
 

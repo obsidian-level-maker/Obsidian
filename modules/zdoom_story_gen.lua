@@ -179,7 +179,7 @@ function ZStoryGen_init()
       info.mcguffin = rand.key_by_probs(GAME.STORIES.MCGUFFINS[GAME.STORIES.TEXT[story_id].mcguffin_theme])
     end
     if GAME.STORIES.TEXT[story_id].entity_theme then
-      info.entity = rand.key_by_probs(GAME.STORIES.ENTITIES[entity_theme])
+      info.entity = rand.key_by_probs(GAME.STORIES.ENTITIES[story_id].entity_theme)
     end
     hooks[x] = ZStoryGen_hook_me_with_a_story(story_id, info, x)
     conclusions[x] = ZStoryGen_conclude_my_story(story_id, info, x)
