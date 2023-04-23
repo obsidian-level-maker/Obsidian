@@ -28,3 +28,29 @@ PREFABS.Pic_gtd_power_plant =
     [21] = 1
   }
 }
+
+--
+
+PREFABS.Pic_gtd_power_plant_red =
+{
+  template = "Pic_gtd_power_plant",
+  map = "MAP02",
+
+  group = "gtd_power_plant_red_set",
+
+  x_fit = { 20,24 , 232,236 },
+  z_fit = { 44,108 }
+}
+
+PREFABS.Pic_gtd_power_plant_red_3x =
+{
+  template = "Pic_gtd_power_plant",
+  map = "MAP03",
+
+  seed_w = 3,
+
+  group = "gtd_power_plant_red_set",
+
+  x_fit = { 20,24 , 360,364 },
+  z_fit = { 44,108 }
+}
