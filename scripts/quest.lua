@@ -3154,8 +3154,16 @@ function Quest_room_themes(LEVEL)
       if pick == "all" then goto continue end
       local color_group = LIGHT_GROUPS[pick].shades
 
+      local c_tab = LIGHT_COLORS
+      if (OB_CONFIG.game == "doom2"
+      or OB_CONFIG.game == "doom1"
+      or OB_CONFIG.game == "ultdoom")
+      and not PARAM.obsidian_resource_pack_active then
+        c_tab[hues] = c_tab[hues_compat]
+      end
+
       for _,color_set in pairs(color_group) do
-        local c_pick = rand.key_by_probs(LIGHT_COLORS[color_set])
+        local c_pick = rand.key_by_probs(c_tab[color_set])
         gui.printf("+ light_color: " .. c_pick .."\n")
         LEVEL.light_group[c_pick] = 1
       end
