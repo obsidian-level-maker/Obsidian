@@ -179,7 +179,7 @@ function ZStoryGen_init()
       info.mcguffin = rand.key_by_probs(GAME.STORIES.MCGUFFINS[GAME.STORIES.TEXT[story_id].mcguffin_theme])
     end
     if GAME.STORIES.TEXT[story_id].entity_theme then
-      info.entity = rand.key_by_probs(GAME.STORIES.ENTITIES[story_id].entity_theme)
+      info.entity = rand.key_by_probs(GAME.STORIES.ENTITIES[GAME.STORIES.TEXT[story_id].entity_theme])
     end
     hooks[x] = ZStoryGen_hook_me_with_a_story(story_id, info, x)
     conclusions[x] = ZStoryGen_conclude_my_story(story_id, info, x)
@@ -255,16 +255,15 @@ function ZStoryGen_quitmessages()
       if k ~= "DEFAULTS" then table.add_unique(name_picks, k) end
     end
 
+    -- generate a level name for quit messages that use it
     local name_theme = rand.pick(name_picks)
-    info.level_name = Naming_grab_one(OB_THEMES[name_theme].name_class)
+    info.level_name = Naming_grab_one("GOTHIC")
 
-    local enemy_name
-    if namelib.NAMES[OB_THEMES[name_theme].name_class].lexicon.e then
-      enemy_name = rand.key_by_probs(namelib.NAMES[OB_THEMES[name_theme].name_class].lexicon.e)
-    end
-
-    enemy_name = string.gsub(enemy_name, "NOUNGENEXOTIC", namelib.generate_unique_noun("exotic"))
-    info.enemy_name = enemy_name 
+    -- generate a monster name (format of "Snowball the Terrible") 
+    -- for quit messages that use it
+    enemy_name = namelib.generate_unique_noun("exotic") .. " the " ..
+                 rand.key_by_probs(namelib.NAMES["TITLE"].lexicon.a)
+    info.enemy_name = enemy_name
 
     for _,line in pairs(GAME.STORIES.QUIT_MESSAGES) do
       line = ZStoryGen_format_story_chunk(line, info)
