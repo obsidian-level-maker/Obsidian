@@ -225,6 +225,10 @@ function JOKEWAD_MODULE.get_levels(self)
     JOKEWAD_MODULE.go_fireblue()
   end
 
+  if PARAM.bool_pandemic_mode == 1 then
+    SCRIPTS.tissue_doc = 1
+  end
+
 end
 
 function JOKEWAD_MODULE.end_level(self, LEVEL)
@@ -351,6 +355,12 @@ function JOKEWAD_MODULE.populate_level(stuff, LEVEL)
         ::continue::
       end
     elseif A.mode == "nature" then
+      local seeds_table = table.array_2D(SEED_W, SEED_H)
+
+      for _,S in pairs(A.seeds) do
+        seeds_table[S.sx][S.sy] = S
+      end
+
       for _,WC in pairs(A.walk_rects) do
         if WC.chunk and WC.chunk.kind == "floor" then
 
@@ -359,7 +369,7 @@ function JOKEWAD_MODULE.populate_level(stuff, LEVEL)
 
           while i_x <= WC.chunk.sx2 do
           while i_y <= WC.chunk.sy2 do
-            local S = LEVEL.SEEDS[i_x][i_y]
+            local S = seeds_table[i_x][i_y]
 
             if not S.wall_depth then
               place_items(WC.chunk.floor_h + 2, S.mid_x, S.mid_y, 0)
