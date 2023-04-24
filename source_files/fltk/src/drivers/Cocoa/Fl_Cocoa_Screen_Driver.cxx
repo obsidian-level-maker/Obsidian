@@ -1,7 +1,7 @@
 //
 // Definition of Apple Cocoa Screen interface.
 //
-// Copyright 1998-2022 by Bill Spitzak and others.
+// Copyright 1998-2023 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
@@ -79,6 +79,7 @@ Fl_Screen_Driver::Keyname darwin_key_table[] = {
 static Fl_Text_Editor::Key_Binding extra_bindings[] =  {
   // Define CMD+key accelerators...
   { 'z',          FL_COMMAND,               Fl_Text_Editor::kf_undo       ,0},
+  { 'z',          FL_COMMAND|FL_SHIFT,      Fl_Text_Editor::kf_redo       ,0},
   { 'x',          FL_COMMAND,               Fl_Text_Editor::kf_cut        ,0},
   { 'c',          FL_COMMAND,               Fl_Text_Editor::kf_copy       ,0},
   { 'v',          FL_COMMAND,               Fl_Text_Editor::kf_paste      ,0},
@@ -180,7 +181,7 @@ void Fl_Cocoa_Screen_Driver::grab(Fl_Window* win)
 {
   if (win) {
     if (!Fl::grab_) {
-      fl_capture = (FLWindow*)(Fl_X::i(Fl::first_window())->xid);
+      fl_capture = (FLWindow*)(Fl_X::flx(Fl::first_window())->xid);
       Fl_Cocoa_Window_Driver::driver(Fl::first_window())->set_key_window();
     }
     Fl::grab_ = win;
@@ -355,8 +356,8 @@ int Fl_Cocoa_Screen_Driver::input_widget_handle_key(int key, unsigned mods, unsi
 
 void Fl_Cocoa_Screen_Driver::offscreen_size(Fl_Offscreen off, int &width, int &height)
 {
-  width = CGBitmapContextGetWidth((CGContextRef)off);
-  height = CGBitmapContextGetHeight((CGContextRef)off);
+  width = (int)CGBitmapContextGetWidth((CGContextRef)off);
+  height = (int)CGBitmapContextGetHeight((CGContextRef)off);
 }
 
 Fl_RGB_Image *Fl_Cocoa_Screen_Driver::read_win_rectangle(int X, int Y, int w, int h, Fl_Window *window,
@@ -369,11 +370,11 @@ Fl_RGB_Image *Fl_Cocoa_Screen_Driver::read_win_rectangle(int X, int Y, int w, in
     CGContextRef src = (CGContextRef)Fl_Surface_Device::surface()->driver()->gc();  // get bitmap context
     base = (uchar *)CGBitmapContextGetData(src);  // get data
     if(!base) return NULL;
-    int sw = CGBitmapContextGetWidth(src);
-    int sh = CGBitmapContextGetHeight(src);
+    int sw = (int)CGBitmapContextGetWidth(src);
+    int sh = (int)CGBitmapContextGetHeight(src);
     if( (sw - X < w) || (sh - Y < h) )  return NULL;
-    bpr = CGBitmapContextGetBytesPerRow(src);
-    bpp = CGBitmapContextGetBitsPerPixel(src)/8;
+    bpr = (int)CGBitmapContextGetBytesPerRow(src);
+    bpp = (int)CGBitmapContextGetBitsPerPixel(src)/8;
     Fl_Image_Surface *imgs = (Fl_Image_Surface*)Fl_Surface_Device::surface();
     int fltk_w, fltk_h;
     imgs->printable_rect(&fltk_w, &fltk_h);
@@ -400,16 +401,16 @@ Fl_RGB_Image *Fl_Cocoa_Screen_Driver::read_win_rectangle(int X, int Y, int w, in
     if (!cgimg) {
       return NULL;
     }
-    w = CGImageGetWidth(cgimg);
-    h = CGImageGetHeight(cgimg);
+    w = (int)CGImageGetWidth(cgimg);
+    h = (int)CGImageGetHeight(cgimg);
     Fl_Image_Surface *surf = new Fl_Image_Surface(w, h);
     Fl_Surface_Device::push_current(surf);
     ((Fl_Quartz_Graphics_Driver*)fl_graphics_driver)->draw_CGImage(cgimg, 0, 0, w, h, 0, 0, w, h);
     CGContextRef gc = (CGContextRef)fl_graphics_driver->gc();
-    w = CGBitmapContextGetWidth(gc);
-    h = CGBitmapContextGetHeight(gc);
-    bpr = CGBitmapContextGetBytesPerRow(gc);
-    bpp = CGBitmapContextGetBitsPerPixel(gc)/8;
+    w = (int)CGBitmapContextGetWidth(gc);
+    h = (int)CGBitmapContextGetHeight(gc);
+    bpr = (int)CGBitmapContextGetBytesPerRow(gc);
+    bpp = (int)CGBitmapContextGetBitsPerPixel(gc)/8;
     base = (uchar*)CGBitmapContextGetData(gc);
     p = new uchar[bpr * h];
     memcpy(p, base, bpr * h);

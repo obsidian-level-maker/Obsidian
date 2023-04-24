@@ -565,11 +565,11 @@ INPUT += @CMAKE_CURRENT_SOURCE_DIR@/src/events.dox
 INPUT += @CMAKE_CURRENT_SOURCE_DIR@/src/subclassing.dox
 INPUT += @CMAKE_CURRENT_SOURCE_DIR@/src/opengl.dox
 INPUT += @CMAKE_CURRENT_SOURCE_DIR@/src/fluid.dox
+INPUT += @CMAKE_CURRENT_SOURCE_DIR@/src/fltk-options.dox
 INPUT += @CMAKE_CURRENT_SOURCE_DIR@/src/advanced.dox
 INPUT += @CMAKE_CURRENT_SOURCE_DIR@/src/unicode.dox
 INPUT += @FLTK_SOURCE_DIR@/FL
 INPUT += @FLTK_SOURCE_DIR@/src
-INPUT += @FLTK_SOURCE_DIR@/cairo
 INPUT += @CMAKE_CURRENT_SOURCE_DIR@/src/enumerations.dox
 INPUT += @CMAKE_CURRENT_SOURCE_DIR@/src/glut.dox
 INPUT += @CMAKE_CURRENT_SOURCE_DIR@/src/forms.dox
@@ -579,6 +579,8 @@ INPUT += @CMAKE_CURRENT_SOURCE_DIR@/src/development.dox
 INPUT += @CMAKE_CURRENT_SOURCE_DIR@/src/license.dox
 INPUT += @CMAKE_CURRENT_SOURCE_DIR@/src/examples.dox
 INPUT += @CMAKE_CURRENT_SOURCE_DIR@/src/faq.dox
+INPUT += @CMAKE_CURRENT_SOURCE_DIR@/src/wayland.dox
+INPUT += @CMAKE_CURRENT_SOURCE_DIR@/src/bundled-libs.dox
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding, which is
@@ -631,9 +633,15 @@ EXCLUDE_SYMLINKS       = NO
 # against the file with absolute path, so to exclude all test directories
 # for example use the pattern */test/*
 
-EXCLUDE_PATTERNS =  */src/*_win32.cxx
-EXCLUDE_PATTERNS += */src/*_mac.cxx
-EXCLUDE_PATTERNS += */src/*_x.cxx
+EXCLUDE_PATTERNS =  @FLTK_SOURCE_DIR@/src/*_win32.cxx
+EXCLUDE_PATTERNS += @FLTK_SOURCE_DIR@/src/*_mac.cxx
+EXCLUDE_PATTERNS += @FLTK_SOURCE_DIR@/src/*_x.cxx
+
+# Exclude Wayland specific files that are generated in the source tree
+# by configure + make
+
+EXCLUDE_PATTERNS += @FLTK_SOURCE_DIR@/src/xdg*
+EXCLUDE_PATTERNS += @FLTK_SOURCE_DIR@/src/text-input*
 
 # The EXCLUDE_SYMBOLS tag can be used to specify one or more symbol names
 # (namespaces, classes, functions, etc.) that should be excluded from the
@@ -1216,13 +1224,13 @@ ENABLE_PREPROCESSING   = YES
 # compilation will be performed. Macro expansion can be done in a controlled
 # way by setting EXPAND_ONLY_PREDEF to YES.
 
-MACRO_EXPANSION        = NO
+MACRO_EXPANSION        = YES
 
 # If the EXPAND_ONLY_PREDEF and MACRO_EXPANSION tags are both set to YES
 # then the macro expansion is limited to the macros specified with the
 # PREDEFINED and EXPAND_AS_DEFINED tags.
 
-EXPAND_ONLY_PREDEF     = NO
+EXPAND_ONLY_PREDEF     = YES
 
 # If the SEARCH_INCLUDES tag is set to YES (the default) the includes files
 # in the INCLUDE_PATH (see below) will be search if a #include is found.
@@ -1256,14 +1264,14 @@ PREDEFINED             = FL_DOXYGEN \
                          HAVE_GL \
                          HAVE_GL_OVERLAY \
                          FL_EXPORT:= \
-			 __cplusplus
+                         __cplusplus
 
 # If the MACRO_EXPANSION and EXPAND_ONLY_PREDEF tags are set to YES then
 # this tag can be used to specify a list of macro names that should be expanded.
 # The macro definition that is found in the sources will be used.
 # Use the PREDEFINED tag if you want to use a different macro definition.
 
-EXPAND_AS_DEFINED      =
+EXPAND_AS_DEFINED      = FL_DEPRECATED
 
 # If the SKIP_FUNCTION_MACROS tag is set to YES (the default) then
 # doxygen's preprocessor will remove all function-like macros that are alone

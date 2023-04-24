@@ -1,7 +1,7 @@
 //
 // Main demo program for the Fast Light Tool Kit (FLTK).
 //
-// Copyright 1998-2022 by Bill Spitzak and others.
+// Copyright 1998-2023 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
@@ -69,21 +69,25 @@
 #include <stdlib.h>
 #include <errno.h>
 
-#if defined __APPLE__
-#include <ApplicationServices/ApplicationServices.h>
-#endif
-
 #include <FL/Fl.H>
 #include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Box.H>
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Menu_Button.H>      // right click popup menu
-#include <FL/Fl_Choice.H>
+#include <FL/Fl_Scheme_Choice.H>
 #include <FL/Fl_Simple_Terminal.H>  // tty
 #include <FL/filename.H>
 #include <FL/platform.H>
 #include <FL/fl_ask.H>              // fl_alert()
 #include <FL/fl_utf8.h>             // fl_getcwd()
+
+// Define USE_MAC_OS for convenience (below). We use macOS specific features (bundles
+// and paths) if USE_MAC_OS is defined, otherwise we're using X11 (XQuartz) on macOS
+
+#if defined __APPLE__ && !defined(FLTK_USE_X11)
+#define USE_MAC_OS
+#include <ApplicationServices/ApplicationServices.h>
+#endif
 
 #define FORM_W 350
 #define FORM_H 440
@@ -95,13 +99,11 @@
 void doexit(Fl_Widget *, void *);
 void doback(Fl_Widget *, void *);
 void dobut(Fl_Widget *, long);
-void doscheme(Fl_Choice *c, void *) {
-  Fl::scheme(c->text(c->value()));
-}
 
 Fl_Double_Window *form = 0;
 Fl_Group *demogrp = 0;
 Fl_Simple_Terminal *tty = 0;
+Fl_Scheme_Choice *scheme_choice = 0;
 Fl_Button *but[9];
 Fl_Button *exit_button;
 
@@ -114,16 +116,17 @@ char params[256];           // commandline arguments
 // Global path variables for all platforms and build systems
 // to avoid duplication and dynamic allocation
 
-char app_path   [FL_PATH_MAX];          // directory of all demo binaries
-char fluid_path [FL_PATH_MAX];          // binary directory of fluid
-char data_path  [FL_PATH_MAX];          // working directory of all demos
-char command    [2 * FL_PATH_MAX + 40]; // command to be executed
+char app_path     [FL_PATH_MAX];          // directory of all demo binaries
+char fluid_path   [FL_PATH_MAX];          // binary directory of fluid
+char options_path [FL_PATH_MAX];          // binary directory of fltk-options
+char data_path    [FL_PATH_MAX];          // working directory of all demos
+char command      [2 * FL_PATH_MAX + 40]; // command to be executed
 
 // platform specific suffix for executable files
 
 #ifdef _WIN32
 const char *suffix = ".exe";
-#elif defined __APPLE__
+#elif defined USE_MAC_OS
 const char *suffix = ".app";
 #else
 const char *suffix = "";
@@ -185,21 +188,8 @@ void create_the_forms() {
   obj = new Fl_Box(FL_FRAME_BOX, 10, 65, 330, 330, 0);
   obj->color(FL_GRAY-8);
 
-  Fl_Choice *choice = new Fl_Choice(90, 405, 100, 25, "Scheme:");
-  choice->labelfont(FL_HELVETICA_BOLD);
-  choice->add("none");
-  choice->add("gtk+");
-  choice->add("gleam");
-  choice->add("oxy");
-  choice->add("plastic");
-  choice->callback((Fl_Callback *)doscheme);
-  Fl::scheme(NULL);
-  if (!Fl::scheme())                         choice->value(0);
-  else if (!strcmp(Fl::scheme(), "gtk+"))    choice->value(1);
-  else if (!strcmp(Fl::scheme(), "gleam"))   choice->value(2);
-  else if (!strcmp(Fl::scheme(), "oxy"))     choice->value(3);
-  else if (!strcmp(Fl::scheme(), "plastic")) choice->value(4);
-  else choice->value(0);
+  scheme_choice = new Fl_Scheme_Choice(90, 405, 100, 25, "Scheme:");
+  scheme_choice->labelfont(FL_HELVETICA_BOLD);
 
   exit_button = new Fl_Button(280, 405, 60, 25, "Exit");
   exit_button->callback(doexit);
@@ -402,10 +392,12 @@ void dobut(Fl_Widget *, long arg) {
   const char *path = app_path;
   if (!strncmp(cmdbuf, "fluid", 5))
     path = fluid_path;
+  else if (!strncmp(cmdbuf, "fltk-options", 5))
+    path = options_path;
 
   // format commandline with optional parameters
 
-#if defined(__APPLE__) // macOS
+#if defined(USE_MAC_OS) // macOS
 
   if (params[0]) {
     // we assume that we have only one argument which is a filename in 'data_path'
@@ -443,13 +435,13 @@ void dobut(Fl_Widget *, long arg) {
     fl_alert("Error starting process, error #%lu\n'%s'", err, command);
   }
 
-#elif defined __APPLE__
+#elif defined USE_MAC_OS
 
   debug_var("Command", command);
 
   system(command);
 
-#else // other platforms (Unix, Linux)
+#else // other platforms (Unix, Linux, X11, and XQuartz on macOS)
 
   strcat(command, " &"); // run in background
 
@@ -546,7 +538,7 @@ int main(int argc, char **argv) {
   // construct app_path for all executable files
 
   fl_filename_absolute(app_path, sizeof(app_path), argv[0]);
-#ifdef __APPLE__
+#if defined(USE_MAC_OS)
     char *q = strstr(app_path, "/Contents/MacOS/");
     if (q) *q = 0;
 #endif
@@ -558,19 +550,25 @@ int main(int argc, char **argv) {
   // - "../../$CMAKE_INTDIR" for multi-config (Visual Studio or Xcode) CMake builds
 
   strcpy(fluid_path, app_path);
+  strcpy(options_path, app_path);
 
-  if (cmake_intdir)
+  if (cmake_intdir) {
     fix_path(fluid_path); // remove intermediate (build type) folder, e.g. "/Debug"
+    fix_path(options_path);
+  }
 
   fix_path(fluid_path); // remove folder name ("test")
+  fix_path(options_path);
 
 #if !defined(GENERATED_BY_CMAKE)
   strcat(fluid_path, "/fluid");
+  strcat(options_path, "/fltk-options");
 #else
   // CMake: potentially Visual Studio or Xcode (multi config)
-  if (cmake_intdir)
+  if (cmake_intdir) {
     strcat(fluid_path, cmake_intdir); // append e.g. "/Debug"
-
+    strcat(options_path, cmake_intdir);
+  }
 #endif // GENERATED_BY_CMAKE
 
   // construct data_path for the menu file and all resources (data files)
@@ -622,11 +620,12 @@ int main(int argc, char **argv) {
     fl_getcwd(cwd, sizeof(cwd));
     fix_path(cwd, 0);
 
-    debug_var("app_path",   app_path);
-    debug_var("fluid_path", fluid_path);
-    debug_var("data_path",  data_path);
-    debug_var("menu file",  menu);
-    debug_var("cwd",        cwd);
+    debug_var("app_path",     app_path);
+    debug_var("fluid_path",   fluid_path);
+    debug_var("options_path", options_path);
+    debug_var("data_path",    data_path);
+    debug_var("menu file",    menu);
+    debug_var("cwd",          cwd);
     tty->printf("\n");
   }
 
@@ -638,6 +637,17 @@ int main(int argc, char **argv) {
 
   // set size_range() after show() so the window can be resizable (Win + macOS)
   form->size_range(FORM_W, FORM_H, FORM_W, FORM_H);
+
+#if (0) // DEBUG (remove after testing)
+  {
+    const char *const *scheme_names = Fl_Scheme_Choice::scheme_names();
+    int ni = 0;
+    while (scheme_names[ni]) {
+      printf("scheme[%2d] = '%s'\n", ni, scheme_names[ni]);
+      ni++;
+    }
+  }
+#endif // End of debug and test statements
 
   Fl::run();
   return 0;

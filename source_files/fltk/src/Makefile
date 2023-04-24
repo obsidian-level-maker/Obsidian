@@ -1,7 +1,7 @@
 #
 # Library Makefile for the Fast Light Tool Kit (FLTK).
 #
-# Copyright 1998-2022 by Bill Spitzak and others.
+# Copyright 1998-2023 by Bill Spitzak and others.
 #
 # This library is free software. Distribution and use rights are outlined in
 # the file "COPYING" which should have been included with this file.  If this
@@ -26,6 +26,7 @@ CPPFILES = \
 	Fl_Browser_load.cxx \
 	Fl_Box.cxx \
 	Fl_Button.cxx \
+	Fl_Cairo.cxx \
 	Fl_Chart.cxx \
 	Fl_Check_Browser.cxx \
 	Fl_Check_Button.cxx \
@@ -76,9 +77,12 @@ CPPFILES = \
 	Fl_Roller.cxx \
 	Fl_Round_Button.cxx \
 	Fl_Screen_Driver.cxx \
+	Fl_Scheme.cxx \
+	Fl_Scheme_Choice.cxx \
 	Fl_Scroll.cxx \
 	Fl_Scrollbar.cxx \
 	Fl_Shared_Image.cxx \
+	Fl_Shortcut_Button.cxx \
 	Fl_Simple_Terminal.cxx \
 	Fl_Single_Window.cxx \
 	Fl_Slider.cxx \
@@ -135,6 +139,7 @@ CPPFILES = \
 	fl_ask.cxx \
 	fl_boxtype.cxx \
 	fl_color.cxx \
+	fl_contrast.cxx \
 	fl_cursor.cxx \
 	fl_curve.cxx \
 	fl_diamond_box.cxx \
@@ -227,6 +232,7 @@ IMGCPPFILES = \
 	Fl_BMP_Image.cxx \
 	Fl_File_Icon2.cxx \
 	Fl_GIF_Image.cxx \
+	Fl_Anim_GIF_Image.cxx \
 	Fl_Help_Dialog.cxx \
 	Fl_ICO_Image.cxx \
 	Fl_JPEG_Image.cxx \
@@ -283,7 +289,7 @@ XLIBCPPFILES = \
 # These graphics driver files are used under condition: BUILD_CAIRO
 CAIROGDFILES = \
 	drivers/Cairo/Fl_Cairo_Graphics_Driver.cxx \
-	drivers/Cairo/Fl_Display_Cairo_Graphics_Driver.cxx
+	drivers/Cairo/Fl_X11_Cairo_Graphics_Driver.cxx
 
 # These graphics driver files are used under condition: BUILD_X11 AND BUILD_XFT
 XLIBGDFILES = drivers/Xlib/Fl_Xlib_Graphics_Driver.cxx \
@@ -316,7 +322,7 @@ WLCPPFILES = \
 WLX11CPPFILES = \
 	drivers/X11/Fl_X11_Screen_Driver.cxx \
 	drivers/X11/Fl_X11_Window_Driver.cxx \
-	drivers/Cairo/Fl_Display_Cairo_Graphics_Driver.cxx \
+	drivers/Cairo/Fl_X11_Cairo_Graphics_Driver.cxx \
 	drivers/Xlib/Fl_Xlib_Copy_Surface_Driver.cxx \
 	drivers/Xlib/Fl_Xlib_Image_Surface_Driver.cxx \
 	Fl_x.cxx \
@@ -447,7 +453,7 @@ $(LIBNAME): $(OBJECTS)
 
 libfltk.so.$(FL_DSO_VERSION): $(OBJECTS)
 	echo $(DSOCOMMAND) $@ ...
-	$(DSOCOMMAND) $@ $(OBJECTS) $(LDLIBS)
+	$(DSOCOMMAND) $@ $(OBJECTS) $(LDLIBS) $(CAIROLIBS)
 	$(RM) libfltk.so
 	$(LN) libfltk.so.$(FL_DSO_VERSION) libfltk.so
 
@@ -463,7 +469,7 @@ libfltk.$(FL_DSO_VERSION).dylib: $(OBJECTS)
 		-install_name $(libdir)/$@ \
 		-current_version $(FL_VERSION) \
 		-compatibility_version $(FL_DSO_VERSION).0 \
-		$(OBJECTS) $(LDLIBS)
+		$(OBJECTS) $(LDLIBS) $(CAIROLIBS)
 	$(RM) libfltk.dylib
 	$(LN) libfltk.$(FL_DSO_VERSION).dylib libfltk.dylib
 

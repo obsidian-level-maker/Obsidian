@@ -1,7 +1,7 @@
 //
 // FLUID main entry for the Fast Light Tool Kit (FLTK).
 //
-// Copyright 1998-2022 by Bill Spitzak and others.
+// Copyright 1998-2023 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
@@ -72,16 +72,7 @@ Fl_Menu_Bar *main_menubar = NULL;
 Fl_Window *main_window;
 
 /// Fluid application preferences, allways accessible, will be flushed when app closes.
-Fl_Preferences  fluid_prefs(Fl_Preferences::USER_L, "fltk.org", "fluid");
-
-/// Align widget position and size when designing, saved in app preferences and project file.
-int gridx = 5;
-
-/// Align widget position and size when designing, saved in app preferences and project file.
-int gridy = 5;
-
-/// Activate snapping to grid, saved in app preferences and project file.
-int snap = 1;
+Fl_Preferences fluid_prefs(Fl_Preferences::USER_L, "fltk.org", "fluid");
 
 /// Show guides in the design window when positioning widgets, saved in app preferences.
 int show_guides = 1;
@@ -132,6 +123,9 @@ Fl_Menu_Item *sourceview_item = NULL;
 /// Menuitem to show or hide the editing overlay, label will change if overlay visibility changes.
 Fl_Menu_Item *overlay_item = NULL;
 
+/// Menuitem to show or hide the editing guides, label will change if overlay visibility changes.
+Fl_Menu_Item *guides_item = NULL;
+
 ////////////////////////////////////////////////////////////////
 
 /// Filename of the current .fl design file
@@ -164,31 +158,31 @@ int compile_strings = 0;        // fluic -cs
 int batch_mode = 0;             // if set (-c, -u) don't open display
 
 /// command line arguments override settings in the projectfile
-Fd_String g_code_filename_arg;
-Fd_String g_header_filename_arg;
+Fl_String g_code_filename_arg;
+Fl_String g_header_filename_arg;
 
-/** \var int Project::header_file_set
+/** \var int Fluid_Project::header_file_set
  If set, commandline overrides header file name in .fl file.
  */
 
-/** \var int Project::code_file_set
+/** \var int Fluid_Project::code_file_set
  If set, commandline overrides source code file name in .fl file.
  */
 
-/** \var int Project::header_file_name
+/** \var int Fluid_Project::header_file_name
  Hold the default extension for header files, or the entire filename if set via command line.
  */
 
-/** \var int Project::code_file_name
+/** \var int Fluid_Project::code_file_name
  Hold the default extension for source code  files, or the entire filename if set via command line.
  */
 
-/** \var int Project::i18n_type
+/** \var int Fluid_Project::i18n_type
  Saved in the .fl design file.
  \todo document me
  */
 
-/** \var int Project::i18n_include
+/** \var int Fluid_Project::i18n_include
  For either type of translation, write a #include statement into the
  source file.
 
@@ -202,12 +196,12 @@ Fd_String g_header_filename_arg;
  Saved in the .fl design file.
  */
 
-/** \var int Project::i18n_conditional
+/** \var int Fluid_Project::i18n_conditional
  Saved in the .fl design file.
  \todo document me
  */
 
-/** \var int Project::i18n_function
+/** \var int Fluid_Project::i18n_function
  For the gettext/intl.h options, this is the function that translates text
  at runtime.
 
@@ -216,7 +210,7 @@ Fd_String g_header_filename_arg;
  Saved in the .fl design file.
  */
 
-/** \var int Project::i18n_static_function
+/** \var int Fluid_Project::i18n_static_function
  For the gettext/intl.h options, this is the function that marks the
  translation of text at initialisation time.
 
@@ -228,17 +222,17 @@ Fd_String g_header_filename_arg;
  Saved in the .fl design file.
  */
 
-/** \var int Project::i18n_file
+/** \var int Fluid_Project::i18n_file
  Saved in the .fl design file.
  \todo document me
  */
 
-/** \var int Project::i18n_set
+/** \var int Fluid_Project::i18n_set
  Saved in the .fl design file.
  \todo document me
  */
 
-/** \var int Project::i18n_program
+/** \var int Fluid_Project::i18n_program
  \todo document me
  */
 
@@ -250,11 +244,10 @@ static int ipasteoffset = 0;
 
 // ---- project settings
 
-Project P;
+Fluid_Project g_project;
 
-Project::Project() :
+Fluid_Project::Fluid_Project() :
   i18n_type(0),
-  i18n_program(""),
   include_H_from_C(1),
   use_FL_COMMAND(0),
   utf8_in_src(0),
@@ -265,10 +258,10 @@ Project::Project() :
   code_file_name(".cxx")
 { }
 
-Project::~Project() {
+Fluid_Project::~Fluid_Project() {
 }
 
-void Project::reset() {
+void Fluid_Project::reset() {
   ::delete_all();
   i18n_type = 0;
   i18n_include = "";
@@ -277,7 +270,7 @@ void Project::reset() {
   i18n_static_function = "";
   i18n_file = "";
   i18n_set = "";
-  i18n_program[0] = 0;
+  i18n_program = "";
   include_H_from_C = 1;
   use_FL_COMMAND = 0;
   utf8_in_src = 0;
@@ -286,7 +279,13 @@ void Project::reset() {
   code_file_set = 0;
   header_file_name = ".h";
   code_file_name = ".cxx";
+}
 
+void Fluid_Project::update_settings_dialog() {
+  if (settings_window) {
+    w_settings_project_tab->do_callback(w_settings_project_tab, LOAD);
+    w_settings_i18n_tab->do_callback(w_settings_i18n_tab, LOAD);
+  }
 }
 
 // ---- Sourceview definition
@@ -643,6 +642,7 @@ void revert_cb(Fl_Widget *,void *) {
   if (!read_file(filename, 0)) {
     undo_resume();
     widget_browser->rebuild();
+    g_project.update_settings_dialog();
     fl_message("Can't read %s: %s", filename, strerror(errno));
     return;
   }
@@ -650,6 +650,7 @@ void revert_cb(Fl_Widget *,void *) {
   undo_resume();
   set_modflag(0, 0);
   undo_clear();
+  g_project.update_settings_dialog();
 }
 
 /**
@@ -694,12 +695,14 @@ void exit_cb(Fl_Widget *,void *) {
   if (help_dialog)
     delete help_dialog;
 
+  g_layout_list.write(fluid_prefs, FD_STORE_USER);
+
   undo_clear();
 
   // Destroy tree
   //    Doing so causes dtors to automatically close all external editors
   //    and cleans up editor tmp files. Then remove fluid tmpdir /last/.
-  P.reset();
+  g_project.reset();
   ExternalCodeEditor::tmpdir_clear();
 
   exit(0);
@@ -781,6 +784,7 @@ void open_cb(Fl_Widget *, void *v) {
   if (!read_file(c, v!=0)) {
     undo_resume();
     widget_browser->rebuild();
+    g_project.update_settings_dialog();
     fl_message("Can't read %s: %s", c, strerror(errno));
     free((void *)filename);
     filename = oldfilename;
@@ -800,6 +804,7 @@ void open_cb(Fl_Widget *, void *v) {
     undo_clear();
     if (oldfilename) free((void *)oldfilename);
   }
+  g_project.update_settings_dialog();
 }
 
 /**
@@ -832,6 +837,7 @@ void open_history_cb(Fl_Widget *, void *v) {
     free((void *)filename);
     filename = oldfilename;
     if (main_window) main_window->label(filename);
+    g_project.update_settings_dialog();
     return;
   }
   set_modflag(0, 0);
@@ -842,6 +848,7 @@ void open_history_cb(Fl_Widget *, void *v) {
     free((void *)oldfilename);
     oldfilename = 0L;
   }
+  g_project.update_settings_dialog();
 }
 
 /**
@@ -866,10 +873,11 @@ void new_cb(Fl_Widget *, void *v) {
   }
 
   // Clear the current data...
-  P.reset();
+  g_project.reset();
   set_filename(NULL);
   set_modflag(0, 0);
   widget_browser->rebuild();
+  g_project.update_settings_dialog();
 }
 
 /**
@@ -970,6 +978,7 @@ void new_from_template_cb(Fl_Widget *w, void *v) {
   }
 
   widget_browser->rebuild();
+  g_project.update_settings_dialog();
   set_modflag(0);
   undo_clear();
 }
@@ -982,11 +991,14 @@ void new_from_template_cb(Fl_Widget *w, void *v) {
  with the extension \c code_file_name which are both
  settable by the user.
 
- In batch_mode, the function will either be silent, or write an error message
- to \c stderr and exit with exit code 1.
+ If the code filename has not been set yet, a "save file as" dialog will be
+ presented to the user.
 
- In interactive mode, we will pop up an error message, or, if the user
- hasn't isabled that, pop up a confirmation message.
+ In batch_mode, the function will either be silent, or, if opening or writing
+ the files fails, write an error message to \c stderr and exit with exit code 1.
+
+ In interactive mode, it will pop up an error message, or, if the user
+ hasn't disabled that, pop up a confirmation message.
 
  \return 1 if the operation failed, 0 if it succeeded
  */
@@ -998,22 +1010,25 @@ int write_code_files() {
   }
   char cname[FL_PATH_MAX+1];
   char hname[FL_PATH_MAX+1];
-  strlcpy(P.i18n_program, fl_filename_name(filename), FL_PATH_MAX);
-  fl_filename_setext(P.i18n_program, FL_PATH_MAX, "");
-  if (P.code_file_name[0] == '.' && strchr(P.code_file_name, '/') == NULL) {
+  g_project.i18n_program = fl_filename_name(filename);
+  g_project.i18n_program.resize(FL_PATH_MAX);
+  fl_filename_setext(g_project.i18n_program.data(), FL_PATH_MAX, "");
+  g_project.i18n_program.resize(g_project.i18n_program.strlen());
+  if (g_project.code_file_name[0] == '.' && strchr(g_project.code_file_name.c_str(), '/') == NULL) {
     strlcpy(cname, fl_filename_name(filename), FL_PATH_MAX);
-    fl_filename_setext(cname, FL_PATH_MAX, P.code_file_name);
+    fl_filename_setext(cname, FL_PATH_MAX, g_project.code_file_name.c_str());
   } else {
-    strlcpy(cname, P.code_file_name, FL_PATH_MAX);
+    strlcpy(cname, g_project.code_file_name.c_str(), FL_PATH_MAX);
   }
-  if (P.header_file_name[0] == '.' && strchr(P.header_file_name, '/') == NULL) {
+  if (g_project.header_file_name[0] == '.' && strchr(g_project.header_file_name.c_str(), '/') == NULL) {
     strlcpy(hname, fl_filename_name(filename), FL_PATH_MAX);
-    fl_filename_setext(hname, FL_PATH_MAX, P.header_file_name);
+    fl_filename_setext(hname, FL_PATH_MAX, g_project.header_file_name.c_str());
   } else {
-    strlcpy(hname, P.header_file_name, FL_PATH_MAX);
+    strlcpy(hname, g_project.header_file_name.c_str(), FL_PATH_MAX);
   }
   if (!batch_mode) enter_project_dir();
-  int x = write_code(cname,hname);
+  Fd_Code_Writer f;
+  int x = f.write_code(cname, hname);
   if (!batch_mode) leave_project_dir();
   strlcat(cname, " and ", FL_PATH_MAX);
   strlcat(cname, hname, FL_PATH_MAX);
@@ -1051,7 +1066,7 @@ void write_strings_cb(Fl_Widget *, void *) {
   }
   char sname[FL_PATH_MAX];
   strlcpy(sname, fl_filename_name(filename), sizeof(sname));
-  fl_filename_setext(sname, sizeof(sname), exts[P.i18n_type]);
+  fl_filename_setext(sname, sizeof(sname), exts[g_project.i18n_type]);
   if (!batch_mode) enter_project_dir();
   int x = write_strings(sname);
   if (!batch_mode) leave_project_dir();
@@ -1139,10 +1154,6 @@ void delete_cb(Fl_Widget *, void *) {
 void paste_cb(Fl_Widget*, void*) {
   //if (ipasteoffset) force_parent = 1;
   pasteoffset = ipasteoffset;
-  // TODO: make the paste offset more predictable, if any at all.
-  // TODO: Don't use the grid if the user switched it off.
-  if (gridx>1) pasteoffset = ((pasteoffset-1)/gridx+1)*gridx;
-  if (gridy>1) pasteoffset = ((pasteoffset-1)/gridy+1)*gridy;
   undo_checkpoint();
   undo_suspend();
   Strategy strategy = kAddAfterCurrent;
@@ -1365,6 +1376,9 @@ void print_menu_cb(Fl_Widget *, void *) {
 
 // ---- Main menu bar
 
+extern void select_layout_preset_cb(Fl_Widget *, void *user_data);
+extern void layout_suite_marker(Fl_Widget *, void *user_data);
+
 /**
  This is the main Fluid menu.
 
@@ -1423,11 +1437,10 @@ Fl_Menu_Item Main_Menu[] = {
   {"&Group", FL_F+7, group_cb},
   {"Ung&roup", FL_F+8, ungroup_cb,0, FL_MENU_DIVIDER},
   {"Hide O&verlays",FL_COMMAND+FL_SHIFT+'o',toggle_overlays},
+  {"Hide Guides",FL_COMMAND+FL_SHIFT+'g',toggle_guides},
   {"Show Widget &Bin...",FL_ALT+'b',toggle_widgetbin_cb},
   {"Show Source Code...",FL_ALT+FL_SHIFT+'s', (Fl_Callback*)toggle_sourceview_cb, 0, FL_MENU_DIVIDER},
-  {"Pro&ject Settings...",FL_ALT+'p',show_project_cb},
-  {"GU&I Settings...",FL_ALT+FL_SHIFT+'p',show_settings_cb,0,FL_MENU_DIVIDER},
-  {"Global &FLTK Settings...",FL_ALT+FL_SHIFT+'g',show_global_settings_cb},
+  {"Settings...",FL_ALT+'p',show_settings_cb},
   {0},
 {"&New", 0, 0, (void *)New_Menu, FL_SUBMENU_POINTER},
 {"&Layout",0,0,0,FL_SUBMENU},
@@ -1448,19 +1461,15 @@ Fl_Menu_Item Main_Menu[] = {
     {"&Height",0,(Fl_Callback *)align_widget_cb,(void*)31},
     {"&Both",0,(Fl_Callback *)align_widget_cb,(void*)32},
     {0},
-  {"&Center In Group",0,0,0,FL_SUBMENU},
+  {"&Center In Group",0,0,0,FL_SUBMENU|FL_MENU_DIVIDER},
     {"&Horizontal",0,(Fl_Callback *)align_widget_cb,(void*)40},
     {"&Vertical",0,(Fl_Callback *)align_widget_cb,(void*)41},
     {0},
-  {"Set &Widget Size",0,0,0,FL_SUBMENU|FL_MENU_DIVIDER},
-    {"&Tiny",FL_ALT+'1',(Fl_Callback *)widget_size_cb,(void*)8,0,FL_NORMAL_LABEL,FL_HELVETICA,8},
-    {"&Small",FL_ALT+'2',(Fl_Callback *)widget_size_cb,(void*)11,0,FL_NORMAL_LABEL,FL_HELVETICA,11},
-    {"&Normal",FL_ALT+'3',(Fl_Callback *)widget_size_cb,(void*)14,0,FL_NORMAL_LABEL,FL_HELVETICA,14},
-    {"&Medium",FL_ALT+'4',(Fl_Callback *)widget_size_cb,(void*)18,0,FL_NORMAL_LABEL,FL_HELVETICA,18},
-    {"&Large",FL_ALT+'5',(Fl_Callback *)widget_size_cb,(void*)24,0,FL_NORMAL_LABEL,FL_HELVETICA,24},
-    {"&Huge",FL_ALT+'6',(Fl_Callback *)widget_size_cb,(void*)32,0,FL_NORMAL_LABEL,FL_HELVETICA,32},
-    {0},
-  {"&Grid and Size Settings...",FL_COMMAND+'g',show_grid_cb},
+  {"&Grid and Size Settings...",FL_COMMAND+'g',show_grid_cb, NULL, FL_MENU_DIVIDER},
+  {"Presets", 0, layout_suite_marker, (void*)g_layout_list.main_menu_, FL_SUBMENU_POINTER },
+  {"Application", 0, select_layout_preset_cb, (void*)0, FL_MENU_RADIO|FL_MENU_VALUE },
+  {"Dialog",      0, select_layout_preset_cb, (void*)1, FL_MENU_RADIO },
+  {"Toolbox",     0, select_layout_preset_cb, (void*)2, FL_MENU_RADIO },
   {0},
 {"&Shell",0,0,0,FL_SUBMENU},
   {"Execute &Command...",FL_ALT+'x',(Fl_Callback *)show_shell_window},
@@ -1475,34 +1484,81 @@ Fl_Menu_Item Main_Menu[] = {
 
 /**
  Change the app's and hence preview the design's scheme.
- The scheme setting is stored inthe app preferences.
+
+ The scheme setting is stored in the app preferences
+ - in key \p 'scheme_name' since 1.4.0
+ - in key \p 'scheme' (index: 0 - 4) in 1.3.x
+
+ This callback is triggered by changing the scheme in the
+ Fl_Scheme_Choice widget (\p Edit/GUI Settings).
+
+ \see init_scheme() for choice values and backwards compatibility
  */
-void scheme_cb(Fl_Choice *, void *) {
+void scheme_cb(Fl_Scheme_Choice *choice, void *) {
   if (batch_mode)
     return;
 
-  switch (scheme_choice->value()) {
-    case 0 : // Default
-      Fl::scheme(NULL);
-      break;
-    case 1 : // None
-      Fl::scheme("none");
-      break;
-    case 2 : // Plastic
-      Fl::scheme("plastic");
-      break;
-    case 3 : // GTK+
-      Fl::scheme("gtk+");
-      break;
-    case 4 : // Gleam
-      Fl::scheme("gleam");
-      break;
-    case 5 : // Oxy
-      Fl::scheme("oxy");
-      break;
-  }
+  // set the new scheme only if the scheme was changed
+  const char *new_scheme = choice->text(choice->value());
 
-  fluid_prefs.set("scheme", scheme_choice->value());
+  if (Fl::is_scheme(new_scheme))
+    return;
+
+  Fl::scheme(new_scheme);
+  fluid_prefs.set("scheme_name", new_scheme);
+
+  // Backwards compatibility: store 1.3 scheme index (1-4).
+  // We assume that index 0-3 (base, plastic, gtk+, gleam) are in the
+  // same order as in 1.3.x (index 1-4), higher values are ignored
+
+  int scheme_index = scheme_choice->value();
+  if (scheme_index <= 3)                          // max. index for 1.3.x (Gleam)
+    fluid_prefs.set("scheme", scheme_index + 1);  // compensate for different indexing
+}
+
+/**
+  Read Fluid's scheme preferences and set the app's scheme.
+
+  Since FLTK 1.4.0 the scheme \b name is stored as a character string
+  with key "scheme_name" in the preference database.
+
+  In FLTK 1.3.x the scheme preference was stored as an integer index
+  with key "scheme" in the database. The known schemes were hardcoded in
+  Fluid's sources (here for reference):
+
+    | Index | 1.3 Scheme Name | Choice | 1.4 Scheme Name |
+    |-------|-----------------|-------|-----------------|
+    | 0 | Default (same as None) | n/a | n/a |
+    | 1 | None (same as Default) | 0 | base |
+    | 2 | Plastic | 1 | plastic |
+    | 3 | GTK+ | 2 | gtk+ |
+    | 4 | Gleam | 3 | gleam |
+    | n/a | n/a | 4 | oxy |
+
+  The new Fluid tries to keep backwards compatibility and reads both
+  keys (\p scheme and \p scheme_name). If the latter is defined, it is used.
+  If not the old \p scheme (index) is used - but we need to subtract one to
+  get the new Fl_Scheme_Choice index (column "Choice" above).
+*/
+void init_scheme() {
+  int scheme_index = 0;                     // scheme index for backwards compatibility (1.3.x)
+  char *scheme_name = 0;                    // scheme name since 1.4.0
+  fluid_prefs.get("scheme_name", scheme_name, "XXX"); // XXX means: not set => fallback 1.3.x
+  if (!strcmp(scheme_name, "XXX")) {
+    fluid_prefs.get("scheme", scheme_index, 0);
+    if (scheme_index > 0) {
+      scheme_index--;
+      scheme_choice->value(scheme_index);   // set the choice value
+    }
+    if (scheme_index < 0)
+      scheme_index = 0;
+    else if (scheme_index > scheme_choice->size() - 1)
+      scheme_index = 0;
+    scheme_name = const_cast<char *>(scheme_choice->text(scheme_index));
+    fluid_prefs.set("scheme_name", scheme_name);
+  }
+  Fl::scheme(scheme_name);
+  free(scheme_name);
 }
 
 /**
@@ -1568,14 +1624,9 @@ void toggle_sourceview_b_cb(Fl_Button*, void *) {
  */
 void make_main_window() {
   if (!batch_mode) {
-    fluid_prefs.get("snap", snap, 1);
-    fluid_prefs.get("gridx", gridx, 5);
-    fluid_prefs.get("gridy", gridy, 5);
     fluid_prefs.get("show_guides", show_guides, 0);
-    fluid_prefs.get("widget_size", Fl_Widget_Type::default_size, 14);
     fluid_prefs.get("show_comments", show_comments, 1);
     shell_prefs_get();
-    make_layout_window();
     make_shell_window();
   }
 
@@ -1596,6 +1647,7 @@ void make_main_window() {
     widgetbin_item = (Fl_Menu_Item*)main_menubar->find_item(toggle_widgetbin_cb);
     sourceview_item = (Fl_Menu_Item*)main_menubar->find_item((Fl_Callback*)toggle_sourceview_cb);
     overlay_item = (Fl_Menu_Item*)main_menubar->find_item((Fl_Callback*)toggle_overlays);
+    guides_item = (Fl_Menu_Item*)main_menubar->find_item((Fl_Callback*)toggle_guides);
     main_menubar->global();
     fill_in_New_Menu();
     main_window->end();
@@ -1604,7 +1656,6 @@ void make_main_window() {
   if (!batch_mode) {
     load_history();
     make_settings_window();
-    make_global_settings_window();
   }
 }
 
@@ -1757,7 +1808,7 @@ void set_modflag(int mf, int mfc) {
 #endif // _WIN32
     else basename = filename;
 
-    code_ext = fl_filename_ext(P.code_file_name);
+    code_ext = fl_filename_ext(g_project.code_file_name.c_str());
     char mod_star = modflag ? '*' : ' ';
     char mod_c_star = modflag_c ? '*' : ' ';
     snprintf(title, sizeof(title), "%s%c  %s%c",
@@ -1775,8 +1826,8 @@ void set_modflag(int mf, int mfc) {
   }
 
   // Enable/disable the Save menu item...
-  if (modflag) save_item->activate();
-  else save_item->deactivate();
+//  if (modflag) save_item->activate();
+//  else save_item->deactivate();
 }
 
 // ---- Sourceview implementation
@@ -1872,23 +1923,25 @@ void update_sourceview_cb(Fl_Button*, void*)
     static const char *exts[] = { ".txt", ".po", ".msg" };
     char fn[FL_PATH_MAX];
     fluid_prefs.getUserdataPath(fn, FL_PATH_MAX);
-    fl_filename_setext(fn, FL_PATH_MAX, exts[P.i18n_type]);
+    fl_filename_setext(fn, FL_PATH_MAX, exts[g_project.i18n_type]);
     write_strings(fn);
     int top = sv_strings->top_line();
     sv_strings->buffer()->loadfile(fn);
     sv_strings->scroll(top, 0);
   } else if (sv_source->visible_r() || sv_header->visible_r()) {
-    strlcpy(P.i18n_program, fl_filename_name(sv_source_filename), FL_PATH_MAX);
-    fl_filename_setext(P.i18n_program, FL_PATH_MAX, "");
-    Fd_String code_file_name_bak = P.code_file_name;
-    P.code_file_name = sv_source_filename;
-    Fd_String header_file_name_bak = P.header_file_name;
-    P.header_file_name = sv_header_filename;
+    g_project.i18n_program = fl_filename_name(sv_source_filename);
+    g_project.i18n_program.resize(FL_PATH_MAX);
+    fl_filename_setext(g_project.i18n_program.data(), FL_PATH_MAX, "");
+    g_project.i18n_program.resize(g_project.i18n_program.strlen());
+    Fl_String code_file_name_bak = g_project.code_file_name;
+    g_project.code_file_name = sv_source_filename;
+    Fl_String header_file_name_bak = g_project.header_file_name;
+    g_project.header_file_name = sv_header_filename;
 
     // generate the code and load the files
-    write_sourceview = 1;
+    Fd_Code_Writer f;
     // generate files
-    if (write_code(sv_source_filename, sv_header_filename))
+    if (f.write_code(sv_source_filename, sv_header_filename, true))
     {
       // load file into source editor
       int pos = sv_source->top_line();
@@ -1901,10 +1954,9 @@ void update_sourceview_cb(Fl_Button*, void*)
       // update the source code highlighting
       update_sourceview_position();
     }
-    write_sourceview = 0;
 
-    P.code_file_name = code_file_name_bak;
-    P.header_file_name = header_file_name_bak;
+    g_project.code_file_name = code_file_name_bak;
+    g_project.header_file_name = header_file_name_bak;
   }
 }
 
@@ -2041,6 +2093,7 @@ int main(int argc,char **argv) {
     main_window->show(argc,argv);
     toggle_widgetbin_cb(0,0);
     toggle_sourceview_cb(0,0);
+    g_layout_list.read(fluid_prefs, FD_STORE_USER);
     if (!c && openlast_button->value() && absolute_history[0][0]) {
       // Open previous file when no file specified...
       open_history_cb(0, absolute_history[0]);
@@ -2058,12 +2111,12 @@ int main(int argc,char **argv) {
 
   // command line args override code and header filenams from the project file
   if (!g_code_filename_arg.empty()) {
-    P.code_file_set = 1;
-    P.code_file_name = g_code_filename_arg;
+    g_project.code_file_set = 1;
+    g_project.code_file_name = g_code_filename_arg;
   }
   if (!g_header_filename_arg.empty()) {
-    P.header_file_set = 1;
-    P.header_file_name = g_header_filename_arg;
+    g_project.header_file_set = 1;
+    g_project.header_file_name = g_header_filename_arg;
   }
 
   if (update_file) {            // fluid -u
@@ -2087,20 +2140,14 @@ int main(int argc,char **argv) {
   // Set (but do not start) timer callback for external editor updates
   ExternalCodeEditor::set_update_timer_callback(external_editor_timer);
 
-  grid_cb(horizontal_input, 0); // Makes sure that windows get snap params...
-
 #ifdef _WIN32
   Fl::run();
 #else
   while (!quit_flag) Fl::wait();
-
   if (quit_flag) exit_cb(0,0);
 #endif // _WIN32
 
   undo_clear();
-  if (g_shell_command)
-    ::free(g_shell_command);
-
   return (0);
 }
 

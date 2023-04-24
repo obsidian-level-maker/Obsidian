@@ -110,7 +110,7 @@ static NSOpenGLPixelFormat* mode_to_NSOpenGLPixelFormat(int m, const int *alistp
     }
     if ((m & FL_MULTISAMPLE) && fl_mac_os_version >= 100400) {
 #if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_4
-      attribs[n++] = NSOpenGLPFAMultisample, // 10.4
+      attribs[n++] = NSOpenGLPFAMultisample; // 10.4
 #endif
       attribs[n++] = NSOpenGLPFASampleBuffers; attribs[n++] = (NSOpenGLPixelFormatAttribute)1;
       attribs[n++] = NSOpenGLPFASamples; attribs[n++] = (NSOpenGLPixelFormatAttribute)4;
@@ -282,7 +282,7 @@ void Fl_Cocoa_Gl_Window_Driver::after_show() {
 
 float Fl_Cocoa_Gl_Window_Driver::pixels_per_unit()
 {
-  int retina = (fl_mac_os_version >= 100700 && Fl::use_high_res_GL() && Fl_X::i(pWindow) &&
+  int retina = (fl_mac_os_version >= 100700 && Fl::use_high_res_GL() && Fl_X::flx(pWindow) &&
           Fl_Cocoa_Window_Driver::driver(pWindow)->mapped_to_retina()) ? 2 : 1;
   return retina * Fl_Graphics_Driver::default_driver().scale();
 }
@@ -491,8 +491,8 @@ void Fl_Cocoa_Gl_Window_Driver::switch_back() {
 class Fl_Gl_Cocoa_Plugin : public Fl_Cocoa_Plugin {
 public:
   Fl_Gl_Cocoa_Plugin() : Fl_Cocoa_Plugin(name()) { }
-  virtual const char *name() { return "gl.cocoa.fltk.org"; }
-  virtual void resize(Fl_Gl_Window *glw, int x, int y, int w, int h) {
+  const char *name() FL_OVERRIDE { return "gl.cocoa.fltk.org"; }
+  void resize(Fl_Gl_Window *glw, int x, int y, int w, int h) FL_OVERRIDE {
     glw->Fl_Gl_Window::resize(x, y, w, h);
   }
 };

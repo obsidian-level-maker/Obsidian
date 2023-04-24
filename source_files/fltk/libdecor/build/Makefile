@@ -1,7 +1,7 @@
 #
 # Library Makefile for the Fast Light Tool Kit (FLTK).
 #
-# Copyright 2022 by Bill Spitzak and others.
+# Copyright 2022-2023 by Bill Spitzak and others.
 #
 # This library is free software. Distribution and use rights are outlined in
 # the file "COPYING" which should have been included with this file.  If this
@@ -20,12 +20,7 @@ OBJECTS =  fl_libdecor.o libdecor-cairo-blur.o fl_libdecor-plugins.o \
   ../../src/xdg-decoration-protocol.o ../../src/xdg-shell-protocol.o \
   ../../src/text-input-protocol.o cursor-settings.o os-compatibility.o
 
-
-# ${UNAME} is set to the product of `uname -s` in makeinclude
-
-Linux_PROTO  = /usr/share/wayland-protocols
-FreeBSD_PROTO =  /usr/local/share/wayland-protocols
-PROTOCOLS = ${${UNAME}_PROTO}
+PROTOCOLS = `pkg-config --variable=pkgdatadir wayland-protocols`
 
 Linux_CFLAGS =
 FreeBSD_CFLAGS = -I/usr/local/include
@@ -38,7 +33,6 @@ Linux_NOPIE = -no-pie
 FreeBSD_NOPIE =
 NOPIE = ${${UNAME}_NOPIE}
 
-# Don't build libdecor demo programs automatically: demo $(GLWLDEMO)
 all : $(OBJECTS)
 
 depend:
@@ -81,18 +75,10 @@ cursor-settings.o : ../src/cursor-settings.c
 	    $(PROTOCOLS)/unstable/text-input/text-input-unstable-v3.xml \
 	    ../../src/text-input-client-protocol.h
 
-demo : ../demo/demo.c $(OBJECTS)
-	$(CC)  -o demo ../demo/demo.c -D_GNU_SOURCE -I../.. -I../src -I. -I../../src $(EXTRA_DECOR) $(OBJECTS) $(LDLIBS) -lm -rdynamic $(NOPIE) -Wl,--defsym=fl_libdecor_using_weston=0
-
-egl : ../demo/egl.c $(OBJECTS)
-	$(CC)  -o egl ../demo/egl.c -D_GNU_SOURCE -I../.. -I../src -I. -I../../src $(EXTRA_DECOR) $(OBJECTS) $(GLDLIBS) -lm -rdynamic $(NOPIE) -Wl,--defsym=fl_libdecor_using_weston=0
-
-
 install:
 	echo "Nothing to install"
 
 uninstall:
 
 clean:
-	$(RM) *.o ../../src/xdg-*.c ../../src/xdg-*.h ../../src/xdg-*.o ../../src/text-input-* demo egl
-	rm -r -f linux
+	$(RM) *.o ../../src/xdg-*.c ../../src/xdg-*.h ../../src/xdg-*.o ../../src/text-input-*

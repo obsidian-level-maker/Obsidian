@@ -30,7 +30,8 @@ CPPUNITTEST = \
 	unittest_viewport.cxx \
 	unittest_scrollbarsize.cxx \
 	unittest_schemes.cxx \
-	unittest_simple_terminal.cxx
+	unittest_simple_terminal.cxx \
+	unittest_core.cxx
 
 OBJUNITTEST = \
 	unittests.o \
@@ -65,6 +66,7 @@ CPPFILES =\
 	clock.cxx \
 	colbrowser.cxx \
 	color_chooser.cxx \
+	contrast.cxx \
 	cube.cxx \
 	CubeMain.cxx \
 	CubeView.cxx \
@@ -159,6 +161,7 @@ ALL =	\
 	clock$(EXEEXT) \
 	colbrowser$(EXEEXT) \
 	color_chooser$(EXEEXT) \
+	contrast$(EXEEXT) \
 	cursor$(EXEEXT) \
 	curve$(EXEEXT) \
 	demo$(EXEEXT) \
@@ -394,6 +397,8 @@ colbrowser$(EXEEXT): colbrowser.o
 
 color_chooser$(EXEEXT): color_chooser.o
 
+contrast$(EXEEXT): contrast.o
+
 cursor$(EXEEXT): cursor.o
 
 curve$(EXEEXT): curve.o
@@ -508,7 +513,10 @@ overlay$(EXEEXT): overlay.o
 
 pack$(EXEEXT): pack.o
 
-pixmap$(EXEEXT): pixmap.o
+pixmap$(EXEEXT): pixmap.o $(IMGLIBNAME)
+	echo Linking $@...
+	$(CXX) $(ARCHFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@ pixmap.o $(LINKFLTKIMG) $(LDLIBS)
+	$(OSX_ONLY) ../fltk-config --post $@
 
 pixmap_browser$(EXEEXT): pixmap_browser.o $(IMGLIBNAME)
 	echo Linking $@...
@@ -674,5 +682,5 @@ shape$(EXEEXT): shape.o
 
 cairo_test$(EXEEXT): cairo_test.o
 	echo Linking $@...
-	$(CXX) $(ARCHFLAGS) $(CXXFLAGS) $(CAIROFLAGS) $(LDFLAGS) -o $@ cairo_test.o $(LINKFLTK) $(LINKFLTKCAIRO) $(GLDLIBS)
+	$(CXX) $(ARCHFLAGS) $(CXXFLAGS) $(CAIROFLAGS) $(LDFLAGS) -o $@ cairo_test.o $(LINKFLTK) $(CAIROLIBS) $(GLDLIBS)
 	$(OSX_ONLY) ../fltk-config --post $@

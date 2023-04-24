@@ -19,6 +19,7 @@ include ../makeinclude
 CPPFILES = \
 	CodeEditor.cxx \
 	StyleParse.cxx \
+	Fd_Snap_Action.cxx \
 	Fl_Function_Type.cxx \
 	Fl_Group_Type.cxx \
 	Fl_Menu_Type.cxx \
@@ -26,11 +27,11 @@ CPPFILES = \
 	Fl_Widget_Type.cxx \
 	Fl_Window_Type.cxx \
 	Fluid_Image.cxx \
-	Shortcut_Button.cxx \
 	about_panel.cxx \
 	align_widget.cxx \
 	alignment_panel.cxx \
 	code.cxx \
+	custom_widgets.cxx \
 	factory.cxx \
 	file.cxx \
 	fluid.cxx \
