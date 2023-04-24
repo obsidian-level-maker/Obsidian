@@ -225,6 +225,10 @@ function JOKEWAD_MODULE.get_levels(self)
     JOKEWAD_MODULE.go_fireblue()
   end
 
+  if PARAM.bool_pandemic_mode == 1 then
+    SCRIPTS.tissue_doc = 1
+  end
+
 end
 
 function JOKEWAD_MODULE.end_level(self, LEVEL)
