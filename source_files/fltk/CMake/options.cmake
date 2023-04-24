@@ -892,7 +892,7 @@ endif (OPTION_FILESYSTEM_SUPPORT)
 #######################################################################
 
 #######################################################################
-option (OPTION_USE_KDIALOG "Fl_Native_File_Chooser may run kdialog" ON)
+option (OPTION_USE_KDIALOG "Fl_Native_File_Chooser may run kdialog" OFF)
 if (OPTION_USE_KDIALOG)
   set (USE_KDIALOG 1)
 else ()
