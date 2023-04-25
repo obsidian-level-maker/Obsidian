@@ -45,14 +45,14 @@ PREFABS.Wall_power_plant_red =
 {
   template = "Wall_power_plant_1",
   map = "MAP04",
-  pron = 7,
+  prob = 10,
 
   group = "gtd_power_plant_red_set",
 
   z_fit = { 68, 116 }
 }
 
-PREFABS.Wall_power_plant_red =
+PREFABS.Wall_power_plant_red_plain =
 {
   template = "Wall_power_plant_1",
   map = "MAP05",
