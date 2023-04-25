@@ -2480,7 +2480,7 @@ OB_MODULES["modded_game_extras"] =
   priority = 70,
 
   game = "doomish",
-  port = "!limit_enforcing",
+  port = "zdoom",
 
   hooks =
   {

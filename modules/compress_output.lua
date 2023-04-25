@@ -26,7 +26,6 @@ OB_MODULES["compress_output"] =
   engine = "idtech_1",
 
   port = "advanced",
-  port2 = "!edge",
   tooltip= _("Automatically compress output to PK3 to save space."),
 }
 
