@@ -433,7 +433,7 @@ OB_MODULES["jokewad_module"] =
   label = _("Jokewad Module"),
 
   game = "doomish",
-  port = "!limit_enforcing",
+  port = "zdoom",
 
   side = "left",
   priority = 60,
