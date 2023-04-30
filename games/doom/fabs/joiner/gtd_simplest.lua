@@ -101,3 +101,29 @@ PREFABS.Joiner_simple_divided_grate_4x =
   x_fit = { 24,104 , 152,232 , 280,360 , 408,496 },
   y_fit = { 24,136 } 
 }
+
+--
+
+PREFABS.Joiner_simple_1lite_gtd =
+{
+  template = "Joiner_simplest",
+  map = "MAP08",
+
+  prob = 2500,
+
+  seed_w = 2,
+
+  x_fit = nil,
+  y_fit = { 16,24 , 136,144 }
+}
+
+PREFABS.Joiner_simple_2lite_gtd =
+{
+  template = "Joiner_simplest",
+  map = "MAP09",
+
+  seed_w = 3,
+
+  x_fit = { 40,48 , 184,200 , 336,344},
+  y_fit = { 16,24 , 136,144 }
+}
