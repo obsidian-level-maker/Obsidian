@@ -6,6 +6,8 @@ PREFABS.Lift_gtd_teleporter_128 =
   prob = 15,
   style = "steepness",
 
+  has_teleporter = true,
+
   where = "seeds",
   shape = "I",
 
