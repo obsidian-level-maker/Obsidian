@@ -21,3 +21,83 @@ PREFABS.Joiner_simplest =
 
   can_flip = true,
 }
+
+--
+
+PREFABS.Joiner_simple_divided_2x =
+{
+  template = "Joiner_simplest",
+  map = "MAP02",
+
+  prob = 700,
+
+  seed_w = 2,
+
+  x_fit = { 24,104 , 152,232 },
+  y_fit = { 24,136 } 
+}
+
+PREFABS.Joiner_simple_divided_3x =
+{
+  template = "Joiner_simplest",
+  map = "MAP03",
+
+  prob = 1100,
+
+  seed_w = 3,
+
+  x_fit = { 24,104 , 152,232 , 280,360 },
+  y_fit = { 24,136 } 
+}
+
+PREFABS.Joiner_simple_divided_4x =
+{
+  template = "Joiner_simplest",
+  map = "MAP04",
+
+  prob = 1500,
+
+  seed_w = 4,
+
+  x_fit = { 24,104 , 152,232 , 280,360 , 408,496 },
+  y_fit = { 24,136 } 
+}
+
+--
+
+PREFABS.Joiner_simple_divided_grate_2x =
+{
+  template = "Joiner_simplest",
+  map = "MAP05",
+
+  prob = 600,
+
+  seed_w = 2,
+
+  x_fit = { 24,104 , 152,232 },
+  y_fit = { 24,136 } 
+}
+
+PREFABS.Joiner_simple_divided_grate_3x =
+{
+  template = "Joiner_simplest",
+  map = "MAP06",
+
+  seed_w = 3,
+
+  x_fit = { 24,104 , 152,232 , 280,360 },
+  y_fit = { 24,136 } 
+}
+
+PREFABS.Joiner_simple_divided_grate_4x =
+{
+  template = "Joiner_simplest",
+  map = "MAP07",
+
+  prob = 1500,
+
+  seed_w = 4,
+
+  x_fit = { 24,104 , 152,232 , 280,360 , 408,496 },
+  y_fit = { 24,136 } 
+}
