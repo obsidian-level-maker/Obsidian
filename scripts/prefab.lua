@@ -2875,6 +2875,8 @@ function Fab_find_matches(LEVEL, reqs, match_state)
     -- stair check
     if reqs.on_stairs and def.on_stairs == "never" then return 0 end
 
+    if def.has_teleporter and PARAM.teleporters == "none" then return 0 end
+
     -- park mode check
     if reqs.group and reqs.group == "natural_park" and def.park_mode == "no_nature" then return 0 end
 

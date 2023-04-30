@@ -3022,7 +3022,7 @@ function Room_floor_ceil_heights(LEVEL, SEEDS)
       -- already visited it?
       if R2.entry_h then goto continue end
 
-      gui.debugf("Recursing though %s (%s)\n", C.name, C.kind)
+      gui.debugf("Recursing through %s (%s)\n", C.name, C.kind)
 -- if C.kind ~= "teleporter"then
 -- stderrf("  %s / %s ---> %s / %s\n", A1.name, A1.mode, A2.name, A2.mode)
 -- end
