@@ -6,7 +6,7 @@ PREFABS.Pic_dem_cavein1 =
   map    = "MAP01",
 
 
-  prob   = 100,
+  prob   = 100 * 20,
   env = "cave",
 
   where  = "seeds",
@@ -43,7 +43,7 @@ PREFABS.Pic_dem_cavein4 =
   map    = "MAP04",
 
 
-  prob   = 100,
+  prob   = 100 * 20,
   env = "cave",
 
   where  = "seeds",
@@ -79,7 +79,7 @@ PREFABS.Pic_dem_cavein7 =
   file   = "picture/dem_pic_nature.wad",
   map    = "MAP07",
 
-  prob   = 100,
+  prob   = 100 * 20,
   env = "cave",
 
   where  = "seeds",
@@ -115,7 +115,7 @@ PREFABS.Pic_dem_cavein10 =
   file   = "picture/dem_pic_nature.wad",
   map    = "MAP10",
 
-  prob   = 100,
+  prob   = 100 * 20,
   env = "cave",
 
   where  = "seeds",
@@ -153,7 +153,7 @@ PREFABS.Pic_dem_cavein13 =
   map    = "MAP13",
 
 
-  prob   = 100,
+  prob   = 100 * 20,
   env = "cave",
 
   where  = "seeds",
@@ -192,7 +192,7 @@ PREFABS.Pic_dem_caveind1 =
   file   = "picture/dem_pic_nature.wad",
   map    = "MAP16",
 
-  prob   = 100,
+  prob   = 100 * 20,
   env = "cave",
 
   where  = "seeds",
@@ -241,7 +241,7 @@ PREFABS.Pic_dem_caveind4 =
   file   = "picture/dem_pic_nature.wad",
   map    = "MAP19",
 
-  prob   = 100,
+  prob   = 100 * 20,
   env = "cave",
 
   where  = "seeds",
@@ -286,7 +286,7 @@ PREFABS.Pic_dem_caveind7 =
   file   = "picture/dem_pic_nature.wad",
   map    = "MAP22",
 
-  prob   = 100,
+  prob   = 100 * 20,
   env = "cave",
 
   where  = "seeds",
@@ -335,7 +335,7 @@ PREFABS.Pic_dem_caveind10 =
   file   = "picture/dem_pic_nature.wad",
   map    = "MAP25",
 
-  prob   = 100,
+  prob   = 100 * 20,
   env = "cave",
 
   where  = "seeds",
@@ -383,7 +383,7 @@ PREFABS.Pic_dem_nook1 =
   file   = "picture/dem_pic_nature.wad",
   map    = "MAP28",
 
-  prob   = 100,
+  prob   = 100 * 20,
   env = "nature",
 
   group = "natural_walls",
@@ -435,7 +435,7 @@ PREFABS.Pic_dem_nook4 =
   file   = "picture/dem_pic_nature.wad",
   map    = "MAP31",
 
-  prob   = 100,
+  prob   = 100 * 20,
   env = "nature",
 
   group = "natural_walls",
@@ -488,7 +488,7 @@ PREFABS.Pic_dem_nook7 =
   file   = "picture/dem_pic_nature.wad",
   map    = "MAP34",
 
-  prob   = 100,
+  prob   = 100 * 20,
   env = "nature",
 
   group = "natural_walls",
@@ -539,7 +539,7 @@ PREFABS.Pic_dem_nook10 =
   file   = "picture/dem_pic_nature.wad",
   map    = "MAP37",
 
-  prob   = 100,
+  prob   = 100 * 20,
   env = "nature",
 
   group = "natural_walls",
@@ -598,7 +598,7 @@ PREFABS.Pic_dem_nookd1 =
   file   = "picture/dem_pic_nature.wad",
   map    = "MAP40",
 
-  prob   = 100,
+  prob   = 100 * 20,
   theme = "!hell",
   env = "nature",
 
@@ -656,7 +656,7 @@ PREFABS.Pic_dem_nookd4 =
   file   = "picture/dem_pic_nature.wad",
   map    = "MAP43",
 
-  prob   = 100,
+  prob   = 100 * 20,
   env = "nature",
 
   group = "natural_walls",
@@ -710,7 +710,7 @@ PREFABS.Pic_dem_nookd7 =
   file   = "picture/dem_pic_nature.wad",
   map    = "MAP46",
 
-  prob   = 100,
+  prob   = 100 * 20,
   env = "nature",
   theme = "!hell",
 
@@ -769,7 +769,7 @@ PREFABS.Pic_dem_nookd10 =
   file   = "picture/dem_pic_nature.wad",
   map    = "MAP49",
 
-  prob   = 100,
+  prob   = 100 * 20,
   env = "nature",
 
   group = "natural_walls",
@@ -832,7 +832,7 @@ PREFABS.Pic_dem_campsiteC =
 
   theme = "!hell",
 
-  prob   = 100,
+  prob   = 100 * 20,
   env = "cave",
 
   where  = "seeds",
@@ -868,7 +868,7 @@ PREFABS.Pic_dem_campsiteP =
 
   env = "park",
 
-  prob = 100,
+  prob = 100 * 20,
 }
 
 ----Natural corner with old cabin----
@@ -882,7 +882,7 @@ PREFABS.Pic_dem_cabin =
 
   theme = "!hell",
 
-  prob   = 100,
+  prob   = 100 * 20,
   env = "nature",
 
   group = "natural_walls",
@@ -926,7 +926,7 @@ PREFABS.Pic_dem_waterfallC1 =
 
   theme = "!hell",
 
-  prob   = 100,
+  prob   = 100 * 20,
   env = "cave",
 
   where  = "seeds",
@@ -966,7 +966,7 @@ PREFABS.Pic_dem_waterfallN1 =
 
   theme = "!hell",
 
-  prob   = 100,
+  prob   = 100 * 20,
 
   env = "nature",
 
@@ -1006,7 +1006,7 @@ PREFABS.Pic_dem_waterfallC2 =
 
   theme = "!hell",
 
-  prob   = 100,
+  prob   = 100 * 20,
   env = "cave",
 
   where  = "seeds",
@@ -1045,7 +1045,7 @@ PREFABS.Pic_dem_waterfallN2 =
 
   theme = "!hell",
 
-  prob   = 100,
+  prob   = 100 * 20,
 
   env = "nature",
 
@@ -1087,7 +1087,7 @@ PREFABS.Pic_dem_waterfallC3 =
 
   theme = "hell",
 
-  prob   = 100,
+  prob   = 100 * 20,
   env = "cave",
 
   where  = "seeds",
@@ -1126,7 +1126,7 @@ PREFABS.Pic_dem_waterfallN3 =
 
   theme = "hell",
 
-  prob   = 100,
+  prob   = 100 * 20,
 
   env = "nature",
 
@@ -1168,7 +1168,7 @@ PREFABS.Pic_dem_ruinsN1 =
 
   port = "zdoom",
 
-  prob   = 100,
+  prob   = 100 * 20,
 
   env = "nature",
 
@@ -1205,7 +1205,7 @@ PREFABS.Pic_dem_ruinsC1 =
 
   port = "zdoom",
 
-  prob   = 100,
+  prob   = 100 * 20,
   env = "cave",
 
   where  = "seeds",
@@ -1238,7 +1238,7 @@ PREFABS.Pic_dem_caveirr =
   file   = "picture/dem_pic_nature.wad",
   map    = "MAP72",
 
-  prob   = 100,
+  prob   = 100 * 20,
 
   env = "cave",
 
@@ -1272,7 +1272,7 @@ PREFABS.Pic_dem_caveirr3 =
   file   = "picture/dem_pic_nature.wad",
   map    = "MAP74",
 
-  prob   = 100,
+  prob   = 100 * 20,
 
   env = "cave",
 
@@ -1308,7 +1308,7 @@ PREFABS.Pic_dem_caveirr5 =
 
   port = "zdoom",
 
-  prob   = 100,
+  prob   = 100 * 20,
   env = "cave",
 
   where  = "seeds",

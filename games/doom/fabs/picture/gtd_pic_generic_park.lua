@@ -3,7 +3,7 @@ PREFABS.Pic_park_generic_1 =
   file = "picture/gtd_pic_generic_park.wad",
   map = "MAP01",
 
-  prob = 50,
+  prob = 100 * 20,
   env = "nature",
 
   group = "natural_walls",
@@ -72,7 +72,7 @@ PREFABS.Pic_park_generic_1_liquid =
 {
   template = "Pic_park_generic_1",
 
-  prob = 15,
+  prob = 15 * 20,
 
   liquid = true,
 
@@ -87,7 +87,7 @@ PREFABS.Pic_park_generic_2_liquid =
 {
   template = "Pic_park_generic_1",
 
-  prob = 15,
+  prob = 15 * 20,
 
   liquid = true,
 
@@ -101,7 +101,7 @@ PREFABS.Pic_park_generic_3_liquid =
 {
   template = "Pic_park_generic_1",
 
-  prob = 15,
+  prob = 15 * 20,
 
   liquid = true,
 
