@@ -109,12 +109,12 @@ PREFABS.Joiner_simple_1lite_gtd =
   template = "Joiner_simplest",
   map = "MAP08",
 
-  prob = 2500,
+  prob = 1250,
 
   seed_w = 2,
 
   x_fit = nil,
-  y_fit = { 16,24 , 136,144 }
+  y_fit = { 16,24 , 96,112 }
 }
 
 PREFABS.Joiner_simple_2lite_gtd =

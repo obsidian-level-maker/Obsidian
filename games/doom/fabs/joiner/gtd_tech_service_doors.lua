@@ -1,6 +1,6 @@
 PREFABS.Joiner_service_door_1 =
 {
-  file   = "joiner/gtd_stair_swurve.wad",
+  file   = "joiner/gtd_tech_service_doors.wad",
   map    = "MAP01",
 
   theme  = "tech",
