@@ -67,7 +67,6 @@ extern int fl_send_system_handlers(void *e);
 
 // forward definition of functions in this file
 // converting cr lf converter function
-static size_t convert_crlf(char * string, size_t len);
 static void createAppleMenu(void);
 static void cocoaMouseHandler(NSEvent *theEvent);
 static void clipboard_check(void);
@@ -145,7 +144,7 @@ static unsigned short* macKeyLookUp = NULL;
  */
 static unsigned int mods_to_e_state( NSUInteger mods )
 {
-  long state = 0;
+  unsigned int state = 0;
   if ( mods & NSCommandKeyMask ) state |= FL_META;
   if ( mods & NSAlternateKeyMask ) state |= FL_ALT;
   if ( mods & NSControlKeyMask ) state |= FL_CTRL;
@@ -1179,8 +1178,8 @@ static void CocoatoFLTK(Fl_Window *win, int &x, int &y) {
   FLWindow *nsw = fl_xid(win);
   ori = [nsw convertBaseToScreen:NSMakePoint(0, [[nsw contentView] frame].size.height)];
   float s = Fl::screen_driver()->scale(0);
-  x = lround(ori.x / s);
-  y = lround((main_screen_height - ori.y) / s);
+  x = (int)lround(ori.x / s);
+  y = (int)lround((main_screen_height - ori.y) / s);
   while (win->parent()) {win = win->window(); x -= win->x(); y -= win->y();}
 }
 
@@ -1262,12 +1261,12 @@ static FLWindowDelegate *flwindowdelegate_instance = nil;
         plugin = (Fl_Cocoa_Plugin*)pm.plugin("gl.cocoa.fltk.org");
       }
       // calls Fl_Gl_Window::resize() without including Fl_Gl_Window.H
-      plugin->resize(window->as_gl_window(), X, Y, lround(r.size.width/s), lround(r.size.height/s));
+      plugin->resize(window->as_gl_window(), X, Y, (int)lround(r.size.width/s), (int)lround(r.size.height/s));
     } else {
-      Fl_Cocoa_Window_Driver::driver(window)->resize(X, Y, lround(r.size.width/s), lround(r.size.height/s));
+      Fl_Cocoa_Window_Driver::driver(window)->resize(X, Y, (int)lround(r.size.width/s), (int)lround(r.size.height/s));
     }
   } else
-    window->resize(X, Y, lround(r.size.width/s), lround(r.size.height/s));
+    window->resize(X, Y, (int)lround(r.size.width/s), (int)lround(r.size.height/s));
   Fl_Cocoa_Window_Driver::driver(window)->view_resized(0);
   update_e_xy_and_e_xy_root(nsw);
 #if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_14
@@ -1689,8 +1688,9 @@ static BOOL is_bundled() {
     NSBundle *bundle = [NSBundle mainBundle];
     if (bundle) {
       NSString *exe = [[bundle executablePath] stringByStandardizingPath];
-      NSString *bpath = [bundle bundlePath];
+      NSString *bpath = [[bundle bundlePath] stringByStandardizingPath];
       NSString *exe_dir = [exe stringByDeletingLastPathComponent];
+//NSLog(@"exe=%@ bpath=%@ exe_dir=%@",exe, bpath, exe_dir);
       if ([bpath isEqualToString:exe] || [bpath isEqualToString:exe_dir]) value = 0;
     } else value = 0;
   }
@@ -2031,7 +2031,7 @@ Fl_Window *fl_dnd_target_window = 0;
 static void  q_set_window_title(NSWindow *nsw, const char * name, const char *mininame) {
   CFStringRef title = CFStringCreateWithCString(NULL, (name ? name : ""), kCFStringEncodingUTF8);
   if(!title) { // fallback when name contains malformed UTF-8
-    int l = strlen(name);
+    int l = (int)strlen(name);
     unsigned short* utf16 = new unsigned short[l + 1];
     l = fl_utf8toUtf16(name, l, utf16, l + 1);
     title = CFStringCreateWithCharacters(NULL, utf16, l);
@@ -2274,7 +2274,7 @@ static FLTextInputContext* fltextinputcontext_instance = nil;
   FLWindow *cw = (FLWindow*)[self window];
   Fl_Window *window = [cw getFl_Window];
   if (!window) return; // may happen after closing full-screen window
-  if (!Fl_X::i(window)) return; // reported to happen with Gmsh (issue #434)
+  if (!Fl_X::flx(window)) return; // reported to happen with Gmsh (issue #434)
   fl_lock_function();
   Fl_Cocoa_Window_Driver *d = Fl_Cocoa_Window_Driver::driver(window);
   if (!through_Fl_X_flush
@@ -2289,7 +2289,7 @@ static FLTextInputContext* fltextinputcontext_instance = nil;
         window->size(window->w(), window->h()); // sends message [GLcontext update]
       }
     }
-    Fl_X *i = Fl_X::i(window);
+    Fl_X *i = Fl_X::flx(window);
     if ( i->region ) {
       Fl_Graphics_Driver::default_driver().XDestroyRegion(i->region);
       i->region = 0;
@@ -2362,7 +2362,7 @@ static FLTextInputContext* fltextinputcontext_instance = nil;
 }
 - (void)resetCursorRects {
   Fl_Window *w = [(FLWindow*)[self window] getFl_Window];
-  Fl_X *i = (w ? Fl_X::i(w) : NULL);
+  Fl_X *i = (w ? Fl_X::flx(w) : NULL);
   if (!i) return;  // fix for STR #3128
   // We have to have at least one cursor rect for invalidateCursorRectsForView
   // to work, hence the "else" clause.
@@ -2468,13 +2468,16 @@ static FLTextInputContext* fltextinputcontext_instance = nil;
   Fl::handle(FL_KEYUP,window);
   fl_unlock_function();
 }
+#if MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_10
+  typedef NSUInteger NSEventModifierFlags;
+#endif
 - (void)flagsChanged:(NSEvent *)theEvent {
   //NSLog(@"flagsChanged: ");
   fl_lock_function();
-  static UInt32 prevMods = 0;
-  NSUInteger mods = [theEvent modifierFlags];
+  static NSEventModifierFlags prevMods = 0;
+  NSEventModifierFlags mods = [theEvent modifierFlags];
   Fl_Window *window = (Fl_Window*)[(FLWindow*)[theEvent window] getFl_Window];
-  UInt32 tMods = prevMods ^ mods;
+  NSEventModifierFlags tMods = prevMods ^ mods;
   int sendEvent = 0;
   if ( tMods )
   {
@@ -2537,7 +2540,7 @@ static FLTextInputContext* fltextinputcontext_instance = nil;
   if ( [[pboard types] containsObject:NSFilenamesPboardType] ) {
     CFArrayRef files = (CFArrayRef)[pboard propertyListForType:NSFilenamesPboardType];
     CFStringRef all = CFStringCreateByCombiningStrings(NULL, files, CFSTR("\n"));
-    int l = CFStringGetMaximumSizeForEncoding(CFStringGetLength(all), kCFStringEncodingUTF8);
+    int l = (int)CFStringGetMaximumSizeForEncoding(CFStringGetLength(all), kCFStringEncodingUTF8);
     DragData = (char *)malloc(l + 1);
     CFStringGetCString(all, DragData, l + 1, kCFStringEncodingUTF8);
     CFRelease(all);
@@ -2545,9 +2548,9 @@ static FLTextInputContext* fltextinputcontext_instance = nil;
   else if ( [[pboard types] containsObject:UTF8_pasteboard_type] ) {
     NSData *data = [pboard dataForType:UTF8_pasteboard_type];
     DragData = (char *)malloc([data length] + 1);
-    [data getBytes:DragData];
+    [data getBytes:DragData length:[data length]];
     DragData[[data length]] = 0;
-    convert_crlf(DragData, strlen(DragData));
+    Fl_Screen_Driver::convert_crlf(DragData, strlen(DragData));
   }
   else {
     Fl_Cocoa_Screen_Driver::breakMacEventLoop();
@@ -2555,7 +2558,7 @@ static FLTextInputContext* fltextinputcontext_instance = nil;
     return NO;
   }
   Fl::e_text = DragData;
-  Fl::e_length = strlen(DragData);
+  Fl::e_length = (int)strlen(DragData);
   int old_event = Fl::e_number;
   Fl::belowmouse()->handle(Fl::e_number = FL_PASTE);
   Fl::e_number = old_event;
@@ -2586,7 +2589,7 @@ static FLTextInputContext* fltextinputcontext_instance = nil;
   static char *received_utf8 = NULL;
   static int lreceived = 0;
   char *p = (char*)[aString UTF8String];
-  int l = strlen(p);
+  int l = (int)strlen(p);
   if (l > 0) {
     if (lreceived == 0) {
       received_utf8 = (char*)malloc(l + 1);
@@ -2704,7 +2707,7 @@ static FLTextInputContext* fltextinputcontext_instance = nil;
   }
   if (in_key_event && Fl::e_length) [FLView concatEtext:received];
   else [FLView prepareEtext:received];
-  Fl_Cocoa_Screen_Driver::next_marked_length = strlen([received UTF8String]);
+  Fl_Cocoa_Screen_Driver::next_marked_length = (int)strlen([received UTF8String]);
   if (!in_key_event) Fl::handle( FL_KEYBOARD, target);
   else need_handle = YES;
   selectedRange = NSMakeRange(100, newSelection.length);
@@ -2854,7 +2857,7 @@ void Fl_Cocoa_Window_Driver::flush()
 /*
  * go ahead, create that (sub)window
  */
-Fl_X* Fl_Cocoa_Window_Driver::makeWindow()
+void Fl_Cocoa_Window_Driver::makeWindow()
 {
   NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
   Fl_Group::current(0);
@@ -2978,7 +2981,7 @@ Fl_X* Fl_Cocoa_Window_Driver::makeWindow()
   }
   x->xid = (fl_uintptr_t)cw;
   x->w = w;
-  i(x);
+  flx(x);
   wait_for_expose_value = 1;
   if (!w->parent()) {
     x->next = Fl_X::first;
@@ -3070,7 +3073,6 @@ Fl_X* Fl_Cocoa_Window_Driver::makeWindow()
   // if (w->modal()) { Fl::modal_ = w; fl_fix_focus(); }
   if (!w->parent()) [myview did_view_resolution_change]; // to set mapped_to_retina to its current state
   [pool release];
-  return x;
 }
 
 void Fl_Cocoa_Window_Driver::fullscreen_on() {
@@ -3155,12 +3157,14 @@ void Fl_Cocoa_Window_Driver::fullscreen_off(int X, int Y, int W, int H) {
      H is larger than the maximum value for the display.
      See "Crashing regression in MacOS code" in fltk.coredev.
      */
+    BOOL has_focus = [nswin isKeyWindow];
     [nswin orderOut:nil];
     [nswin setLevel:level];
     [nswin setStyleMask:calc_win_style(pWindow)]; //10.6
     restore_window_title_and_icon(pWindow, icon_image);
     pWindow->resize(X, Y, W, H);
-    [nswin orderFront:nil];
+    if (has_focus) [nswin makeKeyAndOrderFront:nil];
+    else [nswin orderFront:nil];
   } else
 #endif
   {
@@ -3188,7 +3192,7 @@ void Fl_Cocoa_Window_Driver::use_border() {
  * Tell the OS what window sizes we want to allow
  */
 void Fl_Cocoa_Window_Driver::size_range() {
-  Fl_X *i = Fl_X::i(pWindow);
+  Fl_X *i = Fl_X::flx(pWindow);
   if (i && i->xid) {
     float s = Fl::screen_driver()->scale(0);
     int bt = get_window_frame_sizes(pWindow);
@@ -3212,7 +3216,7 @@ void Fl_Cocoa_Window_Driver::wait_for_expose()
  * set the window title bar name
  */
 void Fl_Cocoa_Window_Driver::label(const char *name, const char *mininame) {
-  if (shown() || Fl_X::i(pWindow)) {
+  if (shown() || Fl_X::flx(pWindow)) {
     q_set_window_title(fl_xid(pWindow), name, mininame);
     if (fl_sys_menu_bar && Fl_Sys_Menu_Bar_Driver::window_menu_style())
       Fl_MacOS_Sys_Menu_Bar_Driver::driver()->rename_window(pWindow);
@@ -3225,12 +3229,12 @@ void Fl_Cocoa_Window_Driver::label(const char *name, const char *mininame) {
  */
 void Fl_Cocoa_Window_Driver::show() {
   Fl_X *top = NULL;
-  if (parent()) top = Fl_X::i(pWindow->top_window());
+  if (parent()) top = Fl_X::flx(pWindow->top_window());
   if (!shown() && (!parent() || (top && ![(FLWindow*)top->xid isMiniaturized]))) {
     makeWindow();
   } else {
     if ( !parent() ) {
-      Fl_X *i = Fl_X::i(pWindow);
+      Fl_X *i = Fl_X::flx(pWindow);
       if ([(FLWindow*)i->xid isMiniaturized]) {
         i->w->redraw();
         [(FLWindow*)i->xid deminiaturize:nil];
@@ -3318,7 +3322,7 @@ void Fl_Cocoa_Window_Driver::resize(int X, int Y, int W, int H) {
 void Fl_Cocoa_Window_Driver::make_current()
 {
   q_release_context();
-  Fl_X *i = Fl_X::i(pWindow);
+  Fl_X *i = Fl_X::flx(pWindow);
   //NSLog(@"region-count=%d damage=%u",i->region?i->region->count:0, pWindow->damage());
   fl_window = (FLWindow*)i->xid;
   ((Fl_Quartz_Graphics_Driver&)Fl_Graphics_Driver::default_driver()).high_resolution( mapped_to_retina() );
@@ -3450,22 +3454,6 @@ Fl_Quartz_Copy_Surface_Driver::~Fl_Quartz_Copy_Surface_Driver()
 // Copy & Paste fltk implementation.
 ////////////////////////////////////////////////////////////////
 
-static size_t convert_crlf(char * s, size_t len)
-{
-  // turn \r characters into \n and "\r\n" sequences into \n:
-  char *p;
-  size_t l = len;
-  while ((p = strchr(s, '\r'))) {
-    if (*(p+1) == '\n') {
-      memmove(p, p+1, l-(p-s));
-      len--; l--;
-    } else *p = '\n';
-    l -= p-s;
-    s = p + 1;
-  }
-  return len;
-}
-
 // clipboard variables definitions :
 char *fl_selection_buffer[2] = {NULL, NULL};
 int fl_selection_length[2] = {0, 0};
@@ -3537,20 +3525,20 @@ static int get_plain_text_from_clipboard(int clipboard)
         len = strlen(aux_c) + 1;
       }
       else len = [data length] + 1;
-      resize_selection_buffer(len, clipboard);
+      resize_selection_buffer((int)len, clipboard);
       if (![found isEqualToString:UTF8_pasteboard_type]) {
         strcpy(fl_selection_buffer[clipboard], aux_c);
         free(aux_c);
       }
       else {
-        [data getBytes:fl_selection_buffer[clipboard]];
+        [data getBytes:fl_selection_buffer[clipboard] length:[data length]];
       }
       fl_selection_buffer[clipboard][len - 1] = 0;
-      length = convert_crlf(fl_selection_buffer[clipboard], len - 1); // turn all \r characters into \n:
+      length = Fl_Screen_Driver::convert_crlf(fl_selection_buffer[clipboard], len - 1); // turn all \r characters into \n:
       Fl::e_clipboard_type = Fl::clipboard_plain_text;
     }
   }
-  return length;
+  return (int)length;
 }
 
 static Fl_RGB_Image* get_image_from_clipboard(Fl_Widget *receiver)
@@ -3579,10 +3567,10 @@ static Fl_RGB_Image* get_image_from_clipboard(Fl_Widget *receiver)
     bitmap = pdf_to_nsbitmapimagerep(data);
   }
   if (!bitmap) return NULL;
-  int bytesPerPixel([bitmap bitsPerPixel]/8);
-  int bpr([bitmap bytesPerRow]);
-  int hh([bitmap pixelsHigh]);
-  int ww([bitmap pixelsWide]);
+  int bytesPerPixel((int)[bitmap bitsPerPixel]/8);
+  int bpr((int)[bitmap bytesPerRow]);
+  int hh((int)[bitmap pixelsHigh]);
+  int ww((int)[bitmap pixelsWide]);
   uchar *imagedata = new uchar[bpr * hh];
   memcpy(imagedata, [bitmap bitmapData], bpr * hh);
   Fl_RGB_Image *image = new Fl_RGB_Image(imagedata, ww, hh, bytesPerPixel, (bpr == ww * bytesPerPixel ? 0 : bpr) );
@@ -3744,24 +3732,24 @@ int Fl_Cocoa_Window_Driver::set_cursor(const Fl_RGB_Image *image, int hotx, int 
 
   NSBitmapImageRep *bitmap = [[NSBitmapImageRep alloc]
                               initWithBitmapDataPlanes:NULL
-                              pixelsWide:image->w()
-                              pixelsHigh:image->h()
+                              pixelsWide:image->data_w()
+                              pixelsHigh:image->data_h()
                               bitsPerSample:8
                               samplesPerPixel:image->d()
                               hasAlpha:!(image->d() & 1)
                               isPlanar:NO
                               colorSpaceName:(image->d()<=2) ? NSDeviceWhiteColorSpace : NSDeviceRGBColorSpace
-                              bytesPerRow:(image->w() * image->d())
+                              bytesPerRow:(image->data_w() * image->d())
                               bitsPerPixel:(image->d()*8)];
 
   // Alpha needs to be premultiplied for this format
 
   const uchar *i = (const uchar*)*image->data();
-  const int extra_data = image->ld() ? (image->ld() - image->w() * image->d()) : 0;
+  const int extra_data = image->ld() ? (image->ld() - image->data_w() * image->d()) : 0;
   unsigned char *o = [bitmap bitmapData];
-  for (int y = 0;y < image->h();y++) {
+  for (int y = 0;y < image->data_h();y++) {
     if (!(image->d() & 1)) {
-      for (int x = 0;x < image->w();x++) {
+      for (int x = 0;x < image->data_w();x++) {
         unsigned int alpha;
         if (image->d() == 4) {
           alpha = i[3];
@@ -3776,7 +3764,7 @@ int Fl_Cocoa_Window_Driver::set_cursor(const Fl_RGB_Image *image, int hotx, int 
   }
     } else {
       // No alpha, so we can just copy everything directly.
-      int len = image->w() * image->d();
+      int len = image->data_w() * image->d();
       memcpy(o, i, len);
       o += len;
       i += len;
@@ -3964,13 +3952,13 @@ void Fl_Cocoa_Window_Driver::set_key_window()
 static NSImage *imageFromText(const char *text, int *pwidth, int *pheight)
 {
   const char *p, *q;
-  int width = 0, height, w2, ltext = strlen(text);
+  int width = 0, height, w2, ltext = (int)strlen(text);
   fl_font(FL_HELVETICA, 10);
   p = text;
   int nl = 0;
   while(nl < 100 && (q=strchr(p, '\n')) != NULL) {
     nl++;
-    w2 = int(fl_width(p, q - p));
+    w2 = (int)fl_width(p, (int)(q - p));
     if (w2 > width) width = w2;
     p = q + 1;
   }
@@ -3992,7 +3980,7 @@ static NSImage *imageFromText(const char *text, int *pwidth, int *pheight)
   while(TRUE) {
     q = strchr(p, '\n');
     if (q) {
-      fl_draw(p, q - p, 3, y);
+      fl_draw(p, (int)(q - p), 3, y);
     } else {
       fl_draw(p, 3, y);
       break;
@@ -4099,8 +4087,8 @@ int Fl_Cocoa_Screen_Driver::dnd(int use_selection)
 // rescales an NSBitmapImageRep (and also rewrites it with integer pixels)
 static NSBitmapImageRep *scale_nsbitmapimagerep(NSBitmapImageRep *img, float scale)
 {
-  int w = [img pixelsWide];
-  int h = [img pixelsHigh];
+  int w = (int)[img pixelsWide];
+  int h = (int)[img pixelsHigh];
   long int scaled_w = lround(scale * w);
   long int scaled_h = lround(scale * h);
   NSBitmapImageRep *scaled = [[NSBitmapImageRep alloc]  initWithBitmapDataPlanes:NULL
@@ -4151,8 +4139,9 @@ static void write_bitmap_inside(NSBitmapImageRep *to, int to_width, NSBitmapImag
 #endif
   int to_w = (int)[to pixelsWide]; // pixel width of "to"
   int from_w = (int)[from pixelsWide]; // pixel width of "from"
-  int from_h = [from pixelsHigh]; // pixel height of "from"
-  int to_depth = [to samplesPerPixel], from_depth = [from samplesPerPixel];
+  int from_h = (int)[from pixelsHigh]; // pixel height of "from"
+  int to_depth = (int)[to samplesPerPixel];
+  int from_depth = (int)[from samplesPerPixel];
   int depth = 0;
   if (to_depth > from_depth) depth = from_depth;
   else if (from_depth > to_depth) depth = to_depth;
@@ -4395,14 +4384,14 @@ void Fl_Cocoa_Window_Driver::draw_titlebar_to_context(CGContextRef gc, int w, in
  */
 int Fl_Darwin_System_Driver::calc_mac_os_version() {
   if (fl_mac_os_version) return fl_mac_os_version;
-  int M, m, b = 0;
+  int M = 0, m = 0, b = 0;
   NSAutoreleasePool *localPool = [[NSAutoreleasePool alloc] init];
 #if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_10
   if ([NSProcessInfo instancesRespondToSelector:@selector(operatingSystemVersion)]) {
     NSOperatingSystemVersion version = [[NSProcessInfo processInfo] operatingSystemVersion];
-    M = version.majorVersion;
-    m = version.minorVersion;
-    b = version.patchVersion;
+    M = (int)version.majorVersion;
+    m = (int)version.minorVersion;
+    b = (int)version.patchVersion;
   }
   else
 #endif

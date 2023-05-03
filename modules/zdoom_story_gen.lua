@@ -250,13 +250,8 @@ function ZStoryGen_quitmessages()
   if PARAM.bool_quit_messages == 1 then
     x = 1
     local info = ZStoryGen_create_characters_and_stuff()
-    local name_picks = {}
-    for k,_ in pairs(GAME.THEMES) do
-      if k ~= "DEFAULTS" then table.add_unique(name_picks, k) end
-    end
 
     -- generate a level name for quit messages that use it
-    local name_theme = rand.pick(name_picks)
     info.level_name = Naming_grab_one("GOTHIC")
 
     -- generate a monster name (format of "Snowball the Terrible") 

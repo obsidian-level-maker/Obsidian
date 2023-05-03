@@ -187,7 +187,7 @@ bool Options_Save(std::filesystem::path filename) {
     option_fp << "custom_prefix = " << custom_prefix << "\n";
     option_fp << "log_size = " << log_size << "\n";
     option_fp << "log_limit = " << log_limit << "\n";
-    option_fp << "default_output_path = " << default_output_path << "\n";
+    option_fp << "default_output_path = " << default_output_path.generic_string() << "\n";
     option_fp << "builds_per_run = " << builds_per_run << "\n";
 
     option_fp << "\n";
@@ -301,13 +301,6 @@ class UI_OptionsWin : public Fl_Window {
         main_action = MAIN_HARD_RESTART;
 
         that->want_quit = true;
-    }
-
-    static void callback_RespectDoomwadDir(Fl_Widget *w, void *data) {
-        UI_OptionsWin *that = (UI_OptionsWin *)data;
-
-        default_output_path =
-            that->opt_default_output_path->value() ? true : false;
     }
 
     static void callback_BuildsPerRun(Fl_Widget *w, void *data) {
@@ -537,7 +530,7 @@ class UI_OptionsWin : public Fl_Window {
             return;
         }
 
-        default_output_path = dir_name.generic_string();
+        default_output_path = dir_name;
 #ifdef WIN32
         dir_name = ucs4_path(dir_name.generic_string().c_str());
 #endif

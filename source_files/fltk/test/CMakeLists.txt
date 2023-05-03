@@ -72,6 +72,7 @@ CREATE_EXAMPLE (clipboard clipboard.cxx "fltk_images;fltk")
 CREATE_EXAMPLE (clock clock.cxx fltk)
 CREATE_EXAMPLE (colbrowser colbrowser.cxx fltk)
 CREATE_EXAMPLE (color_chooser color_chooser.cxx fltk)
+CREATE_EXAMPLE (contrast contrast.cxx fltk)
 CREATE_EXAMPLE (coordinates coordinates.cxx fltk)
 CREATE_EXAMPLE (cursor cursor.cxx fltk)
 CREATE_EXAMPLE (curve curve.cxx fltk)
@@ -112,7 +113,7 @@ CREATE_EXAMPLE (navigation navigation.cxx fltk)
 CREATE_EXAMPLE (output output.cxx fltk)
 CREATE_EXAMPLE (overlay overlay.cxx fltk)
 CREATE_EXAMPLE (pack pack.cxx fltk)
-CREATE_EXAMPLE (pixmap pixmap.cxx fltk)
+CREATE_EXAMPLE (pixmap pixmap.cxx "fltk_images;fltk")
 CREATE_EXAMPLE (pixmap_browser pixmap_browser.cxx "fltk_images;fltk")
 CREATE_EXAMPLE (preferences preferences.fl fltk)
 CREATE_EXAMPLE (offscreen offscreen.cxx fltk)
@@ -153,6 +154,7 @@ SET (UNITTEST_SRCS
   unittests.h
   unittest_about.cxx
   unittest_points.cxx
+  unittest_core.cxx
   unittest_complex_shapes.cxx
   unittest_fast_shapes.cxx
   unittest_circles.cxx
@@ -195,7 +197,7 @@ endif (OPENGL_FOUND)
 
 # Cairo demo - must also be built w/o Cairo (displays a message box)
 if (FLTK_HAVE_CAIRO)
-  CREATE_EXAMPLE (cairo_test cairo_test.cxx "fltk_cairo;fltk;cairo")
+  CREATE_EXAMPLE (cairo_test cairo_test.cxx "fltk;cairo")
 else ()
   CREATE_EXAMPLE (cairo_test cairo_test.cxx fltk)
 endif (FLTK_HAVE_CAIRO)
@@ -255,7 +257,7 @@ if (OPTION_BUILD_SHARED_LIBS)
     endif (OPENGL_FOUND)
 
     if (FLTK_HAVE_CAIRO)
-      CREATE_EXAMPLE (cairo_test-shared cairo_test.cxx "fltk_cairo_SHARED;fltk_SHARED;cairo")
+      CREATE_EXAMPLE (cairo_test-shared cairo_test.cxx "fltk_SHARED;cairo")
     endif ()
 
   endif (MSVC) # (not MSVC)

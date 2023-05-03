@@ -1,7 +1,7 @@
 //
 // Portable drawing function header file for the Fast Light Tool Kit (FLTK).
 //
-// Copyright 1998-2022 by Bill Spitzak and others.
+// Copyright 1998-2023 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
@@ -972,6 +972,9 @@ void fl_draw_check(Fl_Rect bb, Fl_Color col);
 // Draw one or more "arrows" (triangles)
 FL_EXPORT void fl_draw_arrow(Fl_Rect bb, Fl_Arrow_Type t, Fl_Orientation o, Fl_Color color);
 
+// Draw a potentially small, filled circle
+FL_EXPORT void fl_draw_circle(int x0, int y0, int d, Fl_Color color);
+
 // images:
 
 /**
@@ -1117,7 +1120,6 @@ FL_EXPORT const char *fl_expand_text(const char *from, char *buf, int maxbuf, do
                                      int &n, double &width, int wrap, int draw_symbols = 0);
 
 // XIM:
-/** \todo provide user documentation for fl_set_status function */
 FL_EXPORT void fl_set_status(int X, int Y, int W, int H);
 /** Inform text input methods about the current text insertion cursor.
  \param font Font currently in use in text input.

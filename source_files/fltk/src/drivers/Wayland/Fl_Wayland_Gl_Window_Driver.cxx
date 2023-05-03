@@ -1,7 +1,7 @@
 //
 // Class Fl_Wayland_Gl_Window_Driver for the Fast Light Tool Kit (FLTK).
 //
-// Copyright 2021-2022 by Bill Spitzak and others.
+// Copyright 2021-2023 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
@@ -19,7 +19,6 @@
 #include <FL/platform.H>
 #include <FL/Fl_Image_Surface.H>
 #include "../../Fl_Gl_Choice.H"
-#include "../../Fl_Screen_Driver.H"
 #include "Fl_Wayland_Window_Driver.H"
 #include "Fl_Wayland_Graphics_Driver.H"
 #include "Fl_Wayland_Gl_Window_Driver.H"
@@ -65,7 +64,6 @@ static EGLConfig wld_egl_conf = NULL;
 
 EGLDisplay Fl_Wayland_Gl_Window_Driver::egl_display = EGL_NO_DISPLAY;
 EGLint Fl_Wayland_Gl_Window_Driver::configs_count = 0;
-struct wl_event_queue *Fl_Wayland_Gl_Window_Driver::gl_event_queue = NULL;
 
 
 Fl_Wayland_Gl_Window_Driver::Fl_Wayland_Gl_Window_Driver(Fl_Gl_Window *win) : Fl_Gl_Window_Driver(win) {
@@ -102,8 +100,6 @@ void Fl_Wayland_Gl_Window_Driver::init() {
   eglGetConfigs(egl_display, NULL, 0, &configs_count);
   //printf("EGL has %d configs\n", configs_count);
   eglBindAPI(EGL_OPENGL_API);
-
-  gl_event_queue = wl_display_create_queue(fl_wl_display());
 }
 
 
@@ -119,10 +115,10 @@ char *Fl_Wayland_Gl_Window_Driver::alpha_mask_for_string(const char *str, int n,
   fl_font(f, fs);
   fl_draw(str, n, 0, fl_height() - fl_descent());
   // get the R channel only of the bitmap
-  char *alpha_buf = new char[w*h], *r = alpha_buf, *q;
+  char *alpha_buf = new char[w*h], *r = alpha_buf;
+  struct fl_wld_buffer *off = (struct fl_wld_buffer *)surf->offscreen();
   for (int i = 0; i < h; i++) {
-    struct fl_wld_buffer *off = (struct fl_wld_buffer *)surf->offscreen();
-    q = (char*)off->draw_buffer + i * off->stride;
+    uchar *q = off->draw_buffer + i * off->stride;
     for (int j = 0; j < w; j++) {
       *r++ = *q;
       q += 4;
@@ -302,12 +298,13 @@ void Fl_Wayland_Gl_Window_Driver::make_current_before() {
     Fl_Wayland_Gl_Choice *g = (Fl_Wayland_Gl_Choice*)this->g();
     egl_surface = eglCreateWindowSurface(egl_display, g->egl_conf, egl_window, NULL);
 //fprintf(stderr, "Created egl surface=%p at scale=%d\n", egl_surface, win->scale);
-    wl_surface_set_buffer_scale(surface, win->scale);
+    wl_surface_set_buffer_scale(surface,
+                                Fl_Wayland_Window_Driver::driver(pWindow)->wld_scale());
     // Tested apps: shape, glpuzzle, cube, fractals, gl_overlay, fullscreen, unittests,
     //   OpenGL3-glut-test, OpenGL3test.
     // Tested wayland compositors: mutter, kde-plasma, weston, sway on FreeBSD.
-    wl_display_roundtrip(fl_wl_display());
-    wl_display_roundtrip(fl_wl_display());
+    if (pWindow->parent()) win = fl_wl_xid(pWindow->top_window());
+    while (!win->xdg_surface) wl_display_roundtrip(fl_wl_display());
   }
 }
 
@@ -315,7 +312,8 @@ void Fl_Wayland_Gl_Window_Driver::make_current_before() {
 float Fl_Wayland_Gl_Window_Driver::pixels_per_unit()
 {
   int ns = pWindow->screen_num();
-  int wld_scale = pWindow->shown() ? fl_wl_xid(pWindow)->scale : 1;
+  int wld_scale = (pWindow->shown() ?
+    Fl_Wayland_Window_Driver::driver(pWindow)->wld_scale() : 1);
   return wld_scale * Fl::screen_driver()->scale(ns);
 }
 
@@ -359,13 +357,12 @@ void Fl_Wayland_Gl_Window_Driver::swap_buffers() {
   }
 
   if (egl_surface && !egl_swap_in_progress) {
-    egl_swap_in_progress = true;
-    //eglSwapInterval(egl_display, 0); // doesn't seem to have any effect in this context
-    while (wl_display_prepare_read(fl_wl_display()) != 0) {
-      wl_display_dispatch_pending(fl_wl_display());
+    egl_swap_in_progress = true; // prevents crash while down resizing rotating glpuzzle
+    while (wl_display_prepare_read(Fl_Wayland_Screen_Driver::wl_display) != 0) {
+      wl_display_dispatch_pending(Fl_Wayland_Screen_Driver::wl_display);
     }
-    wl_display_read_events(fl_wl_display());
-    wl_display_dispatch_queue_pending(fl_wl_display(),  gl_event_queue);
+    wl_display_flush(Fl_Wayland_Screen_Driver::wl_display);
+    wl_display_read_events(Fl_Wayland_Screen_Driver::wl_display);
     eglSwapBuffers(Fl_Wayland_Gl_Window_Driver::egl_display, egl_surface);
     egl_swap_in_progress = false;
   }
@@ -375,20 +372,20 @@ void Fl_Wayland_Gl_Window_Driver::swap_buffers() {
 class Fl_Wayland_Gl_Plugin : public Fl_Wayland_Plugin {
 public:
   Fl_Wayland_Gl_Plugin() : Fl_Wayland_Plugin(name()) { }
-  virtual const char *name() { return "gl.wayland.fltk.org"; }
-  virtual void do_swap(Fl_Window *w) {
+  const char *name() FL_OVERRIDE { return "gl.wayland.fltk.org"; }
+  void do_swap(Fl_Window *w) FL_OVERRIDE {
     Fl_Gl_Window_Driver *gldr = Fl_Gl_Window_Driver::driver(w->as_gl_window());
     if (gldr->overlay() == w) gldr->swap_buffers();
   }
-  virtual void invalidate(Fl_Window *w) {
+  void invalidate(Fl_Window *w) FL_OVERRIDE {
     w->as_gl_window()->valid(0);
   }
-  virtual void terminate() {
+  void terminate() FL_OVERRIDE {
     if (Fl_Wayland_Gl_Window_Driver::egl_display != EGL_NO_DISPLAY) {
       eglTerminate(Fl_Wayland_Gl_Window_Driver::egl_display);
     }
   }
-  virtual void destroy(struct gl_start_support *gl_start_support_) {
+  void destroy(struct gl_start_support *gl_start_support_) FL_OVERRIDE {
     eglDestroySurface(Fl_Wayland_Gl_Window_Driver::egl_display, gl_start_support_->egl_surface);
     wl_egl_window_destroy(gl_start_support_->egl_window);
     wl_subsurface_destroy(gl_start_support_->subsurface);
@@ -404,24 +401,17 @@ static void delayed_scissor(Fl_Wayland_Gl_Window_Driver *dr) {
   dr->apply_scissor();
 }*/
 
-static void delayed_flush(Fl_Gl_Window *win) {
-  win->flush();
-}
-
 void Fl_Wayland_Gl_Window_Driver::resize(int is_a_resize, int W, int H) {
   if (!egl_window) return;
-  struct wld_window *win = fl_wl_xid(pWindow);
   float f = Fl::screen_scale(pWindow->screen_num());
-  W = (W * win->scale) * f;
-  H = (H * win->scale) * f;
+  int s = Fl_Wayland_Window_Driver::driver(pWindow)->wld_scale();
+  W = (W * s) * f;
+  H = (H * s) * f;
   int W2, H2;
   wl_egl_window_get_attached_size(egl_window, &W2, &H2);
   if (W2 != W || H2 != H) {
     wl_egl_window_resize(egl_window, W, H, 0, 0);
     //fprintf(stderr, "Fl_Wayland_Gl_Window_Driver::resize to %dx%d\n", W, H);
-    if (!pWindow->parent()) {
-        Fl::add_timeout(0.01, (Fl_Timeout_Handler)delayed_flush, pWindow);
-    }
   }
   /* CONTROL_LEAKING_SUB_GL_WINDOWS
   if (Fl_Wayland_Window_Driver::driver(pWindow)->subRect()) {

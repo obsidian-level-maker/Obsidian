@@ -1,7 +1,7 @@
 #
 # CMakeLists.txt to build the FLTK library using CMake (www.cmake.org)
 #
-# Copyright 1998-2022 by Bill Spitzak and others.
+# Copyright 1998-2023 by Bill Spitzak and others.
 #
 # This library is free software. Distribution and use rights are outlined in
 # the file "COPYING" which should have been included with this file.  If this
@@ -72,10 +72,13 @@ set (CPPFILES
   Fl_Return_Button.cxx
   Fl_Roller.cxx
   Fl_Round_Button.cxx
+  Fl_Scheme.cxx
+  Fl_Scheme_Choice.cxx
   Fl_Screen_Driver.cxx
   Fl_Scroll.cxx
   Fl_Scrollbar.cxx
   Fl_Shared_Image.cxx
+  Fl_Shortcut_Button.cxx
   Fl_Simple_Terminal.cxx
   Fl_Single_Window.cxx
   Fl_Slider.cxx
@@ -132,6 +135,7 @@ set (CPPFILES
   fl_ask.cxx
   fl_boxtype.cxx
   fl_color.cxx
+  fl_contrast.cxx
   fl_cursor.cxx
   fl_curve.cxx
   fl_diamond_box.cxx
@@ -167,6 +171,10 @@ set (CPPFILES
   print_button.cxx
   screen_xywh.cxx
 )
+
+if (FLTK_HAVE_CAIRO) # OPTION_CAIRO or OPTION_CAIROEXT
+  list (APPEND CPPFILES Fl_Cairo.cxx)
+endif ()
 
 # find all header files in source directory <FL/...>
 file (GLOB
@@ -223,7 +231,7 @@ if (FLTK_USE_X11 AND NOT OPTION_USE_WAYLAND)
   if (FLTK_USE_CAIRO)
     set (DRIVER_FILES ${DRIVER_FILES}
       drivers/Cairo/Fl_Cairo_Graphics_Driver.cxx
-      drivers/Cairo/Fl_Display_Cairo_Graphics_Driver.cxx
+      drivers/Cairo/Fl_X11_Cairo_Graphics_Driver.cxx
     )
   else ()
     if (USE_XFT)
@@ -262,7 +270,7 @@ if (FLTK_USE_X11 AND NOT OPTION_USE_WAYLAND)
  if (FLTK_USE_CAIRO)
    set (DRIVER_HEADER_FILES ${DRIVER_HEADER_FILES}
      drivers/Cairo/Fl_Cairo_Graphics_Driver.H
-     drivers/Cairo/Fl_Display_Cairo_Graphics_Driver.H
+     drivers/Cairo/Fl_X11_Cairo_Graphics_Driver.H
    )
  elseif (USE_PANGO)
    set (DRIVER_HEADER_FILES ${DRIVER_HEADER_FILES}
@@ -294,7 +302,7 @@ elseif (OPTION_USE_WAYLAND)
     endif (OPTION_USE_KDIALOG)
     if (FLTK_USE_X11)
       list (APPEND DRIVER_FILES
-        drivers/Cairo/Fl_Display_Cairo_Graphics_Driver.cxx
+        drivers/Cairo/Fl_X11_Cairo_Graphics_Driver.cxx
         drivers/X11/Fl_X11_Screen_Driver.cxx
         drivers/X11/Fl_X11_Window_Driver.cxx
         drivers/Xlib/Fl_Xlib_Copy_Surface_Driver.cxx
@@ -310,7 +318,7 @@ elseif (OPTION_USE_WAYLAND)
     drivers/Wayland/Fl_Wayland_Window_Driver.H
     drivers/Wayland/Fl_Wayland_Graphics_Driver.H
     drivers/Cairo/Fl_Cairo_Graphics_Driver.H
-    drivers/Cairo/Fl_Display_Cairo_Graphics_Driver.H
+    drivers/Cairo/Fl_X11_Cairo_Graphics_Driver.H
     drivers/Wayland/Fl_Wayland_Copy_Surface_Driver.H
     drivers/Wayland/Fl_Wayland_Image_Surface_Driver.H
     drivers/Unix/Fl_Unix_System_Driver.H
@@ -468,6 +476,7 @@ set (IMGCPPFILES
   Fl_BMP_Image.cxx
   Fl_File_Icon2.cxx
   Fl_GIF_Image.cxx
+  Fl_Anim_GIF_Image.cxx
   Fl_Help_Dialog.cxx
   Fl_ICO_Image.cxx
   Fl_JPEG_Image.cxx
@@ -611,6 +620,10 @@ if (HAVE_XRENDER)
   list (APPEND OPTIONAL_LIBS ${X11_Xrender_LIB})
 endif (HAVE_XRENDER)
 
+if (FLTK_HAVE_CAIRO) # OPTION_CAIRO or OPTION_CAIROEXT
+  list (APPEND OPTIONAL_LIBS ${PKG_CAIRO_LIBRARIES})
+endif()
+
 if (USE_PANGO)
   ### FIXME ###  This needs to use the PKG_* variables directly
   list (APPEND OPTIONAL_LIBS ${HAVE_LIB_PANGO} ${HAVE_LIB_PANGOCAIRO})
@@ -631,12 +644,29 @@ if (UNIX AND OPTION_USE_WAYLAND)
   if (NOT (CMAKE_VERSION VERSION_LESS 3.4))
     pkg_get_variable(PROTOCOLS wayland-protocols pkgdatadir) # requires cmake 3.4
   else()
-    if (${CMAKE_HOST_SYSTEM_NAME} STREQUAL "FreeBSD")
-      set(PROTOCOLS /usr/local/share/wayland-protocols)
-    else ()
-      set(PROTOCOLS /usr/share/wayland-protocols)
-    endif (${CMAKE_HOST_SYSTEM_NAME} STREQUAL "FreeBSD")
+    execute_process(COMMAND pkg-config --variable=pkgdatadir wayland-protocols
+      OUTPUT_VARIABLE PROTOCOLS)
+    # strip trailing newline
+    string (REPLACE "\n" "" PROTOCOLS ${PROTOCOLS})
   endif (NOT (CMAKE_VERSION VERSION_LESS 3.4))
+  # replace "//" with "/"
+  string (REPLACE "//" "/" PROTOCOLS ${PROTOCOLS})
+  if (NOT(EXISTS ${PROTOCOLS}/stable/xdg-shell/xdg-shell.xml))
+    message(WARNING "Install necessary file ${PROTOCOLS}/stable/xdg-shell/xdg-shell.xml")
+  endif ()
+  if (NOT(EXISTS ${PROTOCOLS}/unstable/xdg-decoration/xdg-decoration-unstable-v1.xml))
+    message(WARNING
+      "Install necessary file ${PROTOCOLS}/unstable/xdg-decoration/xdg-decoration-unstable-v1.xml")
+  endif ()
+  if (NOT(EXISTS ${PROTOCOLS}/unstable/text-input/text-input-unstable-v3.xml))
+    message(WARNING
+      "Install necessary file ${PROTOCOLS}/unstable/text-input/text-input-unstable-v3.xml")
+  endif ()
+  if (NOT((EXISTS ${PROTOCOLS}/stable/xdg-shell/xdg-shell.xml) AND
+          (EXISTS ${PROTOCOLS}/unstable/xdg-decoration/xdg-decoration-unstable-v1.xml) AND
+          (EXISTS ${PROTOCOLS}/unstable/text-input/text-input-unstable-v3.xml)))
+      message(FATAL_ERROR "*** Terminating: one or more required file(s) missing.")
+  endif ()
   add_custom_command(
     OUTPUT xdg-shell-protocol.c xdg-shell-client-protocol.h
     COMMAND wayland-scanner private-code ${PROTOCOLS}/stable/xdg-shell/xdg-shell.xml xdg-shell-protocol.c
@@ -689,6 +719,10 @@ endif (UNIX AND OPTION_USE_WAYLAND)
 FL_ADD_LIBRARY (fltk STATIC "${STATIC_FILES}")
 target_link_libraries (fltk ${OPTIONAL_LIBS})
 
+if (FLTK_HAVE_CAIRO)
+  fl_target_link_directories (fltk PUBLIC "${PKG_CAIRO_LIBRARY_DIRS}")
+endif()
+
 #######################################################################
 
 FL_ADD_LIBRARY (fltk_forms STATIC "${FORMS_FILES}")
@@ -733,7 +767,8 @@ endif (OPENGL_FOUND)
 if (OPTION_BUILD_SHARED_LIBS AND NOT MSVC)
 
   FL_ADD_LIBRARY (fltk SHARED "${SHARED_FILES}")
-  target_link_libraries (fltk_SHARED ${OPTIONAL_LIBS})
+  target_link_libraries (fltk_SHARED ${OPTIONAL_LIBS} ${PKG_CAIRO_LIBRARIES})
+  fl_target_link_directories (fltk_SHARED PUBLIC "${PKG_CAIRO_LIBRARY_DIRS}")
 
   ###################################################################
 

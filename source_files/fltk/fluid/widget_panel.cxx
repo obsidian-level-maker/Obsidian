@@ -43,7 +43,7 @@ Fl_Menu_Item menu_1[] = {
  {"right", 0,  0, (void*)((fl_intptr_t)FL_ALIGN_RIGHT), 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
  {"bottom left", 0,  0, (void*)((fl_intptr_t)FL_ALIGN_BOTTOM_LEFT), 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
  {"bottom", 0,  0, (void*)((fl_intptr_t)FL_ALIGN_BOTTOM), 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
- {"bottom right", 0,  0, (void*)((fl_intptr_t)FL_ALIGN_BOTTOM_RIGHT), 128, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
+ {"bottom right", 0,  0, (void*)((fl_intptr_t)FL_ALIGN_BOTTOM_RIGHT), 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
  {"   Outside Alignment   ", 0,  0, (void*)((fl_intptr_t)0xFFFFFFFF), 1, (uchar)FL_NORMAL_LABEL, 2, 11, 0},
  {"left top", 0,  0, (void*)((fl_intptr_t)FL_ALIGN_LEFT_TOP), 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
  {"right top", 0,  0, (void*)((fl_intptr_t)FL_ALIGN_RIGHT_TOP), 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
@@ -113,6 +113,10 @@ Fl_Box *w_when_box=(Fl_Box *)0;
 
 Fl_Button *wLiveMode=(Fl_Button *)0;
 
+Fl_Button *overlay_button=(Fl_Button *)0;
+
+Fl_Button *guides_button=(Fl_Button *)0;
+
 /**
  Create a panel that can be used with all known widgets
 */
@@ -165,7 +169,7 @@ Fl_Double_Window* make_widget_panel() {
           o->labelsize(11);
           o->callback((Fl_Callback*)propagate_load);
           o->align(Fl_Align(FL_ALIGN_LEFT));
-          { Fl_Input* o = new Fl_Input(95, 65, 220, 20);
+          { Fl_Input* o = new Fl_Input(95, 65, 200, 20);
             o->tooltip("The active image for the widget.");
             o->labelfont(1);
             o->labelsize(11);
@@ -173,10 +177,17 @@ Fl_Double_Window* make_widget_panel() {
             o->callback((Fl_Callback*)image_cb);
             Fl_Group::current()->resizable(o);
           } // Fl_Input* o
-          { Fl_Button* o = new Fl_Button(314, 65, 70, 20, "Browse...");
+          { Fl_Button* o = new Fl_Button(294, 65, 70, 20, "Browse...");
             o->tooltip("Click to choose the active image.");
             o->labelsize(11);
             o->callback((Fl_Callback*)image_browse_cb);
+          } // Fl_Button* o
+          { Fl_Button* o = new Fl_Button(364, 65, 20, 20);
+            o->tooltip("store image uncompressed as RGBA data\nor compressed in the original file for\
+mat");
+            o->type(1);
+            o->callback((Fl_Callback*)compress_image_cb);
+            o->image(compressed_pixmap);
           } // Fl_Button* o
           { Fl_Button* o = new Fl_Button(384, 65, 20, 20);
             o->tooltip("bind the image to the widget, so it will be deleted automatically");
@@ -191,7 +202,7 @@ Fl_Double_Window* make_widget_panel() {
           o->labelsize(11);
           o->callback((Fl_Callback*)propagate_load);
           o->align(Fl_Align(FL_ALIGN_LEFT));
-          { Fl_Input* o = new Fl_Input(95, 90, 220, 20);
+          { Fl_Input* o = new Fl_Input(95, 90, 200, 20);
             o->tooltip("The inactive image for the widget.");
             o->labelfont(1);
             o->labelsize(11);
@@ -199,10 +210,17 @@ Fl_Double_Window* make_widget_panel() {
             o->callback((Fl_Callback*)inactive_cb);
             Fl_Group::current()->resizable(o);
           } // Fl_Input* o
-          { Fl_Button* o = new Fl_Button(314, 90, 70, 20, "Browse...");
+          { Fl_Button* o = new Fl_Button(294, 90, 70, 20, "Browse...");
             o->tooltip("Click to choose the inactive image.");
             o->labelsize(11);
             o->callback((Fl_Callback*)inactive_browse_cb);
+          } // Fl_Button* o
+          { Fl_Button* o = new Fl_Button(364, 90, 20, 20);
+            o->tooltip("store image uncompressed as RGBA data\nor compressed in the original file for\
+mat");
+            o->type(1);
+            o->callback((Fl_Callback*)compress_deimage_cb);
+            o->image(compressed_pixmap);
           } // Fl_Button* o
           { Fl_Button* o = new Fl_Button(384, 90, 20, 20);
             o->tooltip("bind the image to the widget, so it will be deleted automatically");
@@ -548,20 +566,26 @@ sized to fit the container.");
           } // Fl_Box* o
           o->end();
         } // Fl_Group* o
+        { Fl_Group* o = new Fl_Group(95, 210, 0, 20, "Shortcut:");
+          o->labelfont(1);
+          o->labelsize(11);
+          o->align(Fl_Align(FL_ALIGN_LEFT));
+          o->end();
+        } // Fl_Group* o
         { // This is a special button that grabs keystrokes directly
-          Shortcut_Button* o = new Shortcut_Button(95, 210, 310, 20, "Shortcut:");
+          Fl_Shortcut_Button* o = new Fl_Shortcut_Button(95, 210, 310, 20);
           o->tooltip("The shortcut key for the widget.\nUse \'Backspace\' key to clear.");
           o->box(FL_DOWN_BOX);
           o->color(FL_BACKGROUND2_COLOR);
-          o->selection_color(FL_BACKGROUND2_COLOR);
+          o->selection_color((Fl_Color)12);
           o->labeltype(FL_NORMAL_LABEL);
-          o->labelfont(1);
+          o->labelfont(0);
           o->labelsize(11);
           o->labelcolor(FL_FOREGROUND_COLOR);
           o->callback((Fl_Callback*)shortcut_in_cb);
-          o->align(Fl_Align(FL_ALIGN_LEFT));
-          o->when(FL_WHEN_RELEASE);
-        } // Shortcut_Button* o
+          o->align(Fl_Align(FL_ALIGN_CENTER));
+          o->when(FL_WHEN_CHANGED);
+        } // Fl_Shortcut_Button* o
         { Fl_Group* o = new Fl_Group(95, 235, 300, 20, "X Class:");
           o->labelfont(1);
           o->labelsize(11);
@@ -609,6 +633,7 @@ sized to fit the container.");
           } // Fl_Light_Button* o
           { Fl_Light_Button* o = new Fl_Light_Button(160, 260, 60, 20, "Active");
             o->tooltip("Activate the widget.");
+            o->shortcut(0x400061);
             o->selection_color((Fl_Color)1);
             o->labelsize(11);
             o->callback((Fl_Callback*)active_cb);
@@ -641,7 +666,7 @@ sized to fit the container.");
           o->callback((Fl_Callback*)tooltip_cb);
         } // Fl_Input* o
         { Fl_Box* o = new Fl_Box(95, 305, 300, 5);
-          o->labelsize(11);
+          o->hide();
           Fl_Group::current()->resizable(o);
         } // Fl_Box* o
         o->end();
@@ -948,7 +973,7 @@ access the Widget pointer and \'v\' to access the user value.");
           } // Fl_Menu_Button* o
           o->end();
         } // Fl_Group* o
-        { Fl_Group* o = new Fl_Group(95, 335, 310, 20, "Type:");
+        { Fl_Group* o = new Fl_Group(95, 332, 310, 26, "Type:");
           o->labelfont(1);
           o->labelsize(11);
           o->callback((Fl_Callback*)propagate_load);
@@ -978,26 +1003,30 @@ access the Widget pointer and \'v\' to access the user value.");
     } // Fl_Tabs* o
     { Fl_Group* o = new Fl_Group(10, 370, 400, 20);
       o->labelsize(11);
-      { // Hidden resizable box
-        Fl_Box* o = new Fl_Box(10, 370, 75, 20);
-        o->labelsize(11);
-        o->hide();
-        Fl_Group::current()->resizable(o);
-      } // Fl_Box* o
-      { wLiveMode = new Fl_Button(155, 370, 80, 20, "Live &Resize");
+      { wLiveMode = new Fl_Button(10, 370, 80, 20, "Live &Resize");
         wLiveMode->tooltip("Create a live duplicate of the selected widgets to test resizing and menu beh\
 avior.");
         wLiveMode->type(1);
         wLiveMode->labelsize(11);
         wLiveMode->callback((Fl_Callback*)live_mode_cb);
       } // Fl_Button* wLiveMode
-      { Fl_Button* o = new Fl_Button(240, 370, 100, 20, "Hide &Overlays");
-        o->tooltip("Hide the widget overlay box.");
+      { overlay_button = new Fl_Button(94, 370, 80, 20, "Hide &Overlays");
+        overlay_button->tooltip("Hide the widget overlay box.");
+        overlay_button->labelsize(11);
+        overlay_button->callback((Fl_Callback*)overlay_cb);
+      } // Fl_Button* overlay_button
+      { guides_button = new Fl_Button(178, 370, 80, 20, "Hide &Guides");
+        guides_button->tooltip("Hide alignment guides.");
+        guides_button->labelsize(11);
+        guides_button->callback((Fl_Callback*)guides_cb);
+      } // Fl_Button* guides_button
+      { // Hidden resizable box
+        Fl_Box* o = new Fl_Box(258, 370, 72, 20);
         o->labelsize(11);
-        o->labelcolor((Fl_Color)1);
-        o->callback((Fl_Callback*)overlay_cb);
-      } // Fl_Button* o
-      { Fl_Return_Button* o = new Fl_Return_Button(345, 370, 65, 20, "Close");
+        o->hide();
+        Fl_Group::current()->resizable(o);
+      } // Fl_Box* o
+      { Fl_Return_Button* o = new Fl_Return_Button(330, 370, 80, 20, "Close");
         o->labelsize(11);
         o->callback((Fl_Callback*)ok_cb);
       } // Fl_Return_Button* o

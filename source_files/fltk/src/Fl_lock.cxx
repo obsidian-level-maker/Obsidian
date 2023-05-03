@@ -180,7 +180,13 @@ int Fl::awake(Fl_Awake_Handler func, void *data) {
     it is not possible to call Fl::flush() from a subsidiary thread,
     Fl::awake() is the best (and only, really) substitute.
 
-    See also: \ref advanced_multithreading
+    It's \e not necessary to wrap calls to any form of Fl::awake() by Fl::lock() and Fl::unlock().
+    Nevertheless, the early, single call to Fl::lock() used to initialize threading support is necessary.
+
+    Function Fl::awake() in all its forms is typically called by worker threads, but it can be used safely
+    by the main thread too, as a means to break the event loop.
+
+    \see \ref advanced_multithreading
 */
 
 void Fl::awake(void *v) {

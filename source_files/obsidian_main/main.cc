@@ -171,7 +171,7 @@ u8_t *old_pixels;
 bool first_run = false;
 
 std::filesystem::path gif_filename = "gif_output.gif";
-std::string default_output_path;
+std::filesystem::path default_output_path;
 
 std::string string_seed;
 
@@ -393,16 +393,16 @@ void Determine_WorkingPath(const char *argv0) {
     }
 #endif
     if (home_dir.empty()) {
-        home_dir = ".";
+        home_dir = std::filesystem::canonical(".");
     }
 }
 
 std::filesystem::path Resolve_DefaultOutputPath() {
     if (default_output_path.empty()) {
-        default_output_path = install_dir.string();
+        default_output_path = install_dir;
     }
-    if (default_output_path[0] == '$') {
-        const char *var = getenv(default_output_path.c_str() + 1);
+    if (default_output_path.generic_string()[0] == '$') {
+        const char *var = getenv(default_output_path.generic_string().c_str() + 1);
         if (var != nullptr) {
             return var;
         }
@@ -443,7 +443,7 @@ void Determine_InstallDir(const char *argv0) {
 
     // if run from current directory, look there
     if (argv0[0] == '.' && Verify_InstallDir(".")) {
-        install_dir = ".";
+        install_dir = std::filesystem::canonical(".");
         return;
     }
 
@@ -468,8 +468,8 @@ void Determine_InstallDir(const char *argv0) {
     }
 
     // Last resort
-    if (Verify_InstallDir(std::filesystem::current_path().c_str())) {
-        install_dir = std::filesystem::current_path();
+    if (Verify_InstallDir(std::filesystem::canonical("."))) {
+        install_dir = std::filesystem::canonical(".");
     }
 #endif
 
@@ -1185,7 +1185,6 @@ void Main_SetSeed() {
 
 static void Module_Defaults() {
     ob_set_mod_option("sky_generator", "self", "1");
-    ob_set_mod_option("sky_generator_heretic", "self", "1");
     ob_set_mod_option("armaetus_epic_textures", "self", "1");
     ob_set_mod_option("music_swapper", "self", "1");
     ob_set_mod_option("compress_output", "self", "1");
@@ -1868,7 +1867,7 @@ softrestart:;
                             (all_addons[i].enabled ? FL_MENU_VALUE : 0));
                 }
             }
-            main_win->menu_bar->add(_("Clippy!"), nullptr, main_win_clippy_CB);
+            main_win->menu_bar->add("@-2menu", nullptr, main_win_clippy_CB);
         }
 
 #ifdef WIN32

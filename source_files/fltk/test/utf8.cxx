@@ -75,7 +75,7 @@ static void cb_exit(Fl_Button*, void*) {
  */
 class FontDisplay : public Fl_Widget
 {
-  void draw(void);
+  void draw(void) FL_OVERRIDE;
 
 public:
   int  font, size;
@@ -416,16 +416,13 @@ int make_font_chooser(void)
   // create the widget frame
   create_font_widget();
 
-  // Load the systems available fonts - ask for everything
-  //    font_count = Fl::set_fonts("*");
-#ifdef _WIN32
-  font_count = Fl::set_fonts("*");
-#elif defined(__APPLE__)
-  font_count = Fl::set_fonts("*");
-#else
-  // Load the systems available fonts - ask for everything that claims to be
-  // iso10646 compatible
+  // Load the system's available fonts
+#if defined(FLTK_USE_X11) && !defined(FLTK_USE_CAIRO)
+  // ask for everything that claims to be iso10646 compatible
   font_count = Fl::set_fonts("-*-*-*-*-*-*-*-*-*-*-*-*-iso10646-1");
+#else
+  // ask for everything
+  font_count = Fl::set_fonts("*");
 #endif
 
   // allocate space for the sizes and numsizes array, now we know how many
@@ -481,7 +478,7 @@ class right_left_input : public Fl_Input
 {
 public:
   right_left_input (int x, int y, int w, int h) : Fl_Input(x, y, w, h) {}
-  void draw() {
+  void draw() FL_OVERRIDE {
     if (type() == FL_HIDDEN_INPUT) return;
     Fl_Boxtype b = box();
     if (damage() & FL_DAMAGE_ALL) draw_box(b, color());
@@ -526,7 +523,7 @@ class UCharDropBox : public Fl_Output {
 public:
   UCharDropBox(int x, int y, int w, int h, const char *label=0) :
   Fl_Output(x, y, w, h, label) { }
-  int handle(int event) {
+  int handle(int event) FL_OVERRIDE {
     switch (event) {
       case FL_DND_ENTER: return 1;
       case FL_DND_DRAG: return 1;
@@ -609,7 +606,7 @@ int main(int argc, char** argv)
     end_list /= 16;
   }
   argc = 1;
-  for (long y = off; y < end_list; y++) {
+  for (int y = off; y < end_list; y++) {
     int o = 0;
     char bu[25]; // index label
     char buf[16 * 6]; // utf8 text
@@ -622,7 +619,7 @@ int main(int argc, char** argv)
       i++;
     }
     buf[o] = '\0';
-    snprintf(bu, sizeof(bu), "0x%06lX", y * 16);
+    snprintf(bu, sizeof(bu), "0x%06X", y * 16);
     Fl_Input *b = new Fl_Input(200,(y-off)*25,80,25);
     b->textfont(FL_COURIER);
     b->value(fl_strdup(bu));

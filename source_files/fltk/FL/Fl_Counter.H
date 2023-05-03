@@ -37,9 +37,7 @@
   \image html counter.png
   \image latex counter.png "Fl_Counter" width=4cm
 
-  \todo Refactor the doxygen comments for Fl_Counter type() documentation.
-
-  The type of an Fl_Counter object can be set using type(uchar t) to:
+  The type of an Fl_Counter object can be set using Fl_Widget::type(uchar) to:
   \li \c FL_NORMAL_COUNTER: Displays a counter with 4 arrow buttons.
   \li \c FL_SIMPLE_COUNTER: Displays a counter with only 2 arrow buttons.
 */
@@ -56,13 +54,13 @@ class FL_EXPORT Fl_Counter : public Fl_Valuator {
 
 protected:
 
-  void draw();
+  void draw() FL_OVERRIDE;
   // compute widths of arrow boxes
   void arrow_widths(int &w1, int &w2);
 
 public:
 
-  int handle(int);
+  int handle(int) FL_OVERRIDE;
 
   Fl_Counter(int X, int Y, int W, int H, const char* L = 0);
   ~Fl_Counter();

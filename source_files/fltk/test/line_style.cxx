@@ -28,7 +28,7 @@ Fl_Choice *choice[3];
 Fl_Check_Button *draw_line;
 
 class test_box: public Fl_Double_Window {
-  void draw();
+  void draw() FL_OVERRIDE;
 public:
   test_box(int x,int y,int w,int h,const char *l=0)
     : Fl_Double_Window(x,y,w,h,l) {}
@@ -47,10 +47,10 @@ void test_box::draw() {
   dashes[3] = char(sliders[8]->value());
   dashes[4] = 0;
   fl_line_style(
-    choice[0]->mvalue()->argument() +
+    (int)(choice[0]->mvalue()->argument() +
     choice[1]->mvalue()->argument() +
-    choice[2]->mvalue()->argument(),
-    long(sliders[3]->value()),          // width
+    choice[2]->mvalue()->argument()),
+    (int)(sliders[3]->value()),          // width
     dashes);
 
   // draw the defined fl_rect and fl_vertex first and then

@@ -74,7 +74,9 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title)
     menu_bar = new Fl_Menu_Bar(0, 0, LEFT_W, kf_h(20));
     menu_bar->box(box_style);
     menu_bar->textfont(font_style);
-    menu_bar->textsize(menu_bar->textsize() * .90);
+    menu_bar->textsize(font_scaling * .90);
+    menu_bar->labelfont(font_style);
+    menu_bar->labelsize(font_scaling * .90);
     menu_bar->add(_("File/Options"), FL_F + 4, menu_do_options);
     menu_bar->add(_("File/Theme"), FL_F + 7, menu_do_theme);
     menu_bar->add(_("File/Set Seed"), FL_F + 5, menu_do_edit_seed);
@@ -86,6 +88,7 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title)
     menu_bar->add(_("Help/Tutorial"), 0, menu_do_tutorial);
     menu_bar->add(_("Surprise Me/Go"), FL_F + 8, main_win_surprise_go_CB);
     menu_bar->selection_color(SELECTION);
+    menu_bar->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP | FL_ALIGN_LEFT);
 
     sizing_group = new Fl_Group(0, 0, W, H - kf_h(22));
     sizing_group->box(FL_NO_BOX);

@@ -392,10 +392,8 @@ class UI_ThemeWin : public Fl_Window {
 
         window_scaling = that->opt_window_scaling->value();
         // clang-format off
-        fl_alert("%s", _("Windows scaling changes require a restart.\nOBSIDIAN will now restart."));
+        fl_alert("%s", _("Windows scaling changes cannot be applied automatically, but will take effect the next time Obsidian is run.\n"));
         // clang-format on
-
-        main_action = MAIN_HARD_RESTART;
 
         that->want_quit = true;
     }
@@ -411,7 +409,8 @@ class UI_ThemeWin : public Fl_Window {
         header_font_size = FL_NORMAL_SIZE + 2;
 
         fl_message_font(font_style, FL_NORMAL_SIZE + 2);
-        main_win->menu_bar->textsize(FL_NORMAL_SIZE);
+        main_win->menu_bar->textsize(FL_NORMAL_SIZE * .90);
+        main_win->menu_bar->labelsize(FL_NORMAL_SIZE * .90);
         main_win->menu_bar->redraw();
         main_win->game_box->heading->labelsize(header_font_size);
         main_win->game_box->engine->labelsize(FL_NORMAL_SIZE);

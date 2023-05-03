@@ -1,7 +1,7 @@
 #
 # CMakeLists.txt to build fluid for the FLTK project using CMake (www.cmake.org)
 #
-# Copyright 1998-2022 by Bill Spitzak and others.
+# Copyright 1998-2023 by Bill Spitzak and others.
 #
 # This library is free software. Distribution and use rights are outlined in
 # the file "COPYING" which should have been included with this file.  If this
@@ -17,6 +17,7 @@
 set (CPPFILES
   CodeEditor.cxx
   StyleParse.cxx
+  Fd_Snap_Action.cxx
   Fl_Function_Type.cxx
   Fl_Group_Type.cxx
   Fl_Menu_Type.cxx
@@ -24,11 +25,11 @@ set (CPPFILES
   Fl_Widget_Type.cxx
   Fl_Window_Type.cxx
   Fluid_Image.cxx
-  Shortcut_Button.cxx
   about_panel.cxx
   align_widget.cxx
   alignment_panel.cxx
   code.cxx
+  custom_widgets.cxx
   factory.cxx
   file.cxx
   fluid.cxx
@@ -45,6 +46,7 @@ set (CPPFILES
 
 set (HEADERFILES
   CodeEditor.h
+  Fd_Snap_Action.h
   Fl_Function_Type.h
   Fl_Group_Type.h
   Fl_Menu_Type.h
@@ -52,13 +54,13 @@ set (HEADERFILES
   Fl_Widget_Type.h
   Fl_Window_Type.h
   Fluid_Image.h
-  Shortcut_Button.h
   StyleParse.h
   about_panel.h
   align_widget.h
   alignment_panel.h
   code.h
   comments.h
+  custom_widgets.h
   factory.h
   file.h
   fluid.h
@@ -114,13 +116,12 @@ else ()
 
 endif ()
 
-# we must link all programs with fltk_cairo if option CAIROEXT is enabled
-if (FLTK_HAVE_CAIROEXT)
-  list (APPEND FLUID_LIBS fltk_cairo cairo)
-endif (FLTK_HAVE_CAIROEXT)
-
+# we must link fluid with Cairo if OPTION_CAIRO is enabled
 if (FLTK_HAVE_CAIRO)
-  fl_target_link_directories (fluid PRIVATE "${PKG_CAIRO_LIBRARY_DIRS}")
+  target_include_directories (fluid PRIVATE ${PKG_CAIRO_INCLUDE_DIRS})
+  if (PKG_CAIRO_LIBRARY_DIRS)
+    fl_target_link_directories (fluid PRIVATE ${PKG_CAIRO_LIBRARY_DIRS})
+  endif ()
 endif (FLTK_HAVE_CAIRO)
 
 if (USE_GDIPLUS)        # can only be true on Windows
@@ -137,11 +138,27 @@ if (WIN32)
   list (APPEND FLUID_TARGETS fluid-cmd)
   add_executable (fluid-cmd ${CPPFILES} ${HEADERFILES})
   target_link_libraries (fluid-cmd ${FLUID_LIBS})
-  if (FLTK_HAVE_CAIRO)
-    fl_target_link_directories (fluid-cmd PRIVATE "${PKG_CAIRO_LIBRARY_DIRS}")
-  endif (FLTK_HAVE_CAIRO)
-endif ()
 
+  # we must link fluid-cmd with Cairo if OPTION_CAIRO is enabled (same as above)
+  if (FLTK_HAVE_CAIRO)
+    target_include_directories (fluid-cmd PRIVATE ${PKG_CAIRO_INCLUDE_DIRS})
+    if (PKG_CAIRO_LIBRARY_DIRS)
+      fl_target_link_directories (fluid-cmd PRIVATE ${PKG_CAIRO_LIBRARY_DIRS})
+    endif ()
+  endif (FLTK_HAVE_CAIRO)
+endif (WIN32)
+
+# Build fluid-shared (experimental)
+
+if (OPTION_BUILD_SHARED_LIBS)
+  list (APPEND FLUID_TARGETS fluid-shared)
+  add_executable (fluid-shared ${CPPFILES} ${HEADERFILES})
+  if (MSVC)
+    target_link_libraries (fluid-shared fltk_SHARED)
+  else ()
+    target_link_libraries (fluid-shared fltk_images_SHARED)
+  endif (MSVC)
+endif ()
 
 # install fluid GUI and commandline tool
 
@@ -158,12 +175,13 @@ if (APPLE AND (NOT OPTION_APPLE_X11))
   # create bundle
   set_target_properties (fluid PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/fluid.plist")
   set_target_properties (fluid PROPERTIES MACOSX_BUNDLE_ICON_FILE ${ICON_NAME})
+  set_target_properties (fluid PROPERTIES XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "org.fltk.fluid")
 
   # The line below would wrongly install /Applications/fluid.icns
   # ## set_target_properties (fluid PROPERTIES RESOURCE ${ICON_PATH})
 
   # install fluid GUI and commandline tools
-  #install (TARGETS fluid DESTINATION "/Applications")
+  # install (TARGETS fluid DESTINATION "/Applications")
 
   # install command line tool
   install (PROGRAMS $<TARGET_FILE:fluid> DESTINATION ${FLTK_BINDIR})
@@ -179,7 +197,7 @@ else()
     ARCHIVE DESTINATION ${FLTK_LIBDIR}
   )
 
-  endif (APPLE AND (NOT OPTION_APPLE_X11))
+endif (APPLE AND (NOT OPTION_APPLE_X11))
 
 # install desktop files
 
