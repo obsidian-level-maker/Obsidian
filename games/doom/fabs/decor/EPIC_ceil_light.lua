@@ -784,6 +784,85 @@ PREFABS.Light_hell_GLITE05 =
      flat_FLAT19 = "CEIL5_2",
 }
 
+--
+
+PREFABS.Light_hell_GLITE05_RED =
+{
+  template = "Light_EPIC_basic",
+  map    = "MAP01",
+
+  prob   = 25,
+  theme  = "hell",
+
+  light_color = "red",
+
+  flat_TLITE6_4 = "T_GLT5RD",
+      tex_GRAY7 = "METAL",
+     flat_FLAT19 = "CEIL5_2",
+}
+
+PREFABS.Light_hell_GLITE05_BLUE =
+{
+  template = "Light_EPIC_basic",
+  map    = "MAP01",
+
+  prob   = 25,
+  theme  = "hell",
+
+  light_color = "blue",
+
+  flat_TLITE6_4 = "T_GLT5BL",
+      tex_GRAY7 = "METAL",
+     flat_FLAT19 = "CEIL5_2",
+}
+
+PREFABS.Light_hell_GLITE05_WHITE =
+{
+  template = "Light_EPIC_basic",
+  map    = "MAP01",
+
+  prob   = 25,
+  theme  = "hell",
+
+  light_color = "white",
+
+  flat_TLITE6_4 = "T_GLT5WT",
+      tex_GRAY7 = "METAL",
+     flat_FLAT19 = "CEIL5_2",
+}
+
+PREFABS.Light_hell_GLITE05_GREEN =
+{
+  template = "Light_EPIC_basic",
+  map    = "MAP01",
+
+  prob   = 25,
+  theme  = "hell",
+
+  light_color = "green",
+
+  flat_TLITE6_4 = "T_GLT5GN",
+      tex_GRAY7 = "METAL",
+     flat_FLAT19 = "CEIL5_2",
+}
+
+PREFABS.Light_hell_GLITE05_YELLOW =
+{
+  template = "Light_EPIC_basic",
+  map    = "MAP01",
+
+  prob   = 25,
+  theme  = "hell",
+
+  light_color = "yellow",
+
+  flat_TLITE6_4 = "T_GLT5YL",
+      tex_GRAY7 = "METAL",
+     flat_FLAT19 = "CEIL5_2",
+}
+
+--
+
 PREFABS.Light_hell_GLITE06 =
 {
   template = "Light_EPIC_basic",

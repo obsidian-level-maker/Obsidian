@@ -4418,6 +4418,74 @@ ARMAETUS_SINK_DEFS =
     trim_light = 16,
   },
 
+  --
+  light_GLITE05_BLUE =
+  {
+    mat = "T_GLT5BL",
+    dz  = 8,
+    light = 32,
+
+    trim_mat = "METAL",
+    trim_dz  = -5,
+    trim_light = 16,
+  },
+
+  light_GLITE05_BLUE =
+  {
+    mat = "T_GLT5BL",
+    dz  = 8,
+    light = 32,
+
+    trim_mat = "METAL",
+    trim_dz  = -5,
+    trim_light = 16,
+  },
+
+  light_GLITE05_GREEN =
+  {
+    mat = "T_GLT5GN",
+    dz  = 8,
+    light = 32,
+
+    trim_mat = "METAL",
+    trim_dz  = -5,
+    trim_light = 16,
+  },
+
+  light_GLITE05_RED =
+  {
+    mat = "T_GLT5RD",
+    dz  = 8,
+    light = 32,
+
+    trim_mat = "METAL",
+    trim_dz  = -5,
+    trim_light = 16,
+  },
+
+  light_GLITE05_WHITE =
+  {
+    mat = "T_GLT5WT",
+    dz  = 8,
+    light = 32,
+
+    trim_mat = "METAL",
+    trim_dz  = -5,
+    trim_light = 16,
+  },
+
+  light_GLITE05_YELLOW =
+  {
+    mat = "T_GLT5YL",
+    dz  = 8,
+    light = 32,
+
+    trim_mat = "METAL",
+    trim_dz  = -5,
+    trim_light = 16,
+  },
+  --
+
   light_GLITE06 =
   {
     mat = "GLITE06",
@@ -6378,6 +6446,12 @@ ARMAETUS_THEMES =
       light_GLITE07 = 10,
       light_GLITE08 = 10,
       light_GLITE09 = 10,
+
+      light_GLITE05_BLUE = 8,
+      light_GLITE05_GREEN = 8,
+      light_GLITE05_RED = 8,
+      light_GLITE05_WHITE = 8,
+      light_GLITE05_YELLOW = 8,
 
       ceiling_sink_SKINLOW1 = 13,
       ceiling_sink_SKINMET3 = 13,

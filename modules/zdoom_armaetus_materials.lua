@@ -1061,6 +1061,12 @@ ARMAETUS_MATERIALS = {
   GLITE07 = { t="METL01",  f="GLITE07" }, --Green
   GLITE08 = { t="METL01",  f="GLITE08" }, --White
   GLITE09 = { t="METL01",  f="GLITE09" }, --Blue
+  ---- recolored vresions of GLITE05
+  T_GLT5BL = { t="METL01",  f="T_GLT5BL" }, --Blue
+  T_GLT5RD = { t="METL01",  f="T_GLT5RD" }, --Red
+  T_GLT5WT = { t="METL01",  f="T_GLT5WT" }, --White
+  T_GLT5YL = { t="METL01",  f="T_GLT5YL" }, --Yellow
+  T_GLT5GN = { t="METL01",  f="T_GLT5GN" }, --Green
 
   -- Metal / Rust
   DARKM01 = { t="DARKMET1",  f="DARKM01" },
