@@ -648,4 +648,44 @@ Texture "OBTBCMR3", 128, 128
 		Blend "#B52020"
 	}
 }
+
+Texture "T_GLT5GN", 64, 64
+{
+	Patch "GLITE05", 0, 0
+	{
+		Translation "76:77=122:123", "160:167=114:121"
+	}
+}
+
+Texture "T_GLT5RD", 64, 64
+{
+	Patch "GLITE05", 0, 0
+	{
+		Translation "76:78=186:191", "160:167=168:185"
+	}
+}
+
+Texture "T_GLT5WT", 64, 64
+{
+	Patch "GLITE05", 0, 0
+	{
+		Translation "160:167=80:95", "76:77=96:103"
+	}
+}
+
+Texture "T_GLT5BL", 64, 64
+{
+	Patch "GLITE05", 0, 0
+	{
+		Translation "160:167=192:203", "76:77=204:207"
+	}
+}
+
+Texture "T_GLT5YL", 64, 64
+{
+	Patch "GLITE05", 0, 0
+	{
+		Translation "160:167=160:163", "76:77=164:167"
+	}
+}
 ]]
