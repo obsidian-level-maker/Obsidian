@@ -29,7 +29,7 @@ PREFABS.Joiner_simple_divided_2x =
   template = "Joiner_simplest",
   map = "MAP02",
 
-  prob = 700,
+  prob = 650,
 
   seed_w = 2,
 
@@ -42,7 +42,7 @@ PREFABS.Joiner_simple_divided_3x =
   template = "Joiner_simplest",
   map = "MAP03",
 
-  prob = 1100,
+  prob = 800,
 
   seed_w = 3,
 
@@ -55,7 +55,7 @@ PREFABS.Joiner_simple_divided_4x =
   template = "Joiner_simplest",
   map = "MAP04",
 
-  prob = 1500,
+  prob = 1000,
 
   seed_w = 4,
 
@@ -70,7 +70,7 @@ PREFABS.Joiner_simple_divided_grate_2x =
   template = "Joiner_simplest",
   map = "MAP05",
 
-  prob = 600,
+  prob = 550,
 
   seed_w = 2,
 
@@ -83,6 +83,8 @@ PREFABS.Joiner_simple_divided_grate_3x =
   template = "Joiner_simplest",
   map = "MAP06",
 
+  prob = 700,
+
   seed_w = 3,
 
   x_fit = { 24,104 , 152,232 , 280,360 },
@@ -94,7 +96,7 @@ PREFABS.Joiner_simple_divided_grate_4x =
   template = "Joiner_simplest",
   map = "MAP07",
 
-  prob = 1500,
+  prob = 800,
 
   seed_w = 4,
 
@@ -109,18 +111,20 @@ PREFABS.Joiner_simple_1lite_gtd =
   template = "Joiner_simplest",
   map = "MAP08",
 
-  prob = 1250,
+  prob = 800,
 
   seed_w = 2,
 
   x_fit = nil,
-  y_fit = { 16,24 , 96,112 }
+  y_fit = { 16,24 , 136,144 }
 }
 
 PREFABS.Joiner_simple_2lite_gtd =
 {
   template = "Joiner_simplest",
   map = "MAP09",
+
+  prob = 900,
 
   seed_w = 3,
 
