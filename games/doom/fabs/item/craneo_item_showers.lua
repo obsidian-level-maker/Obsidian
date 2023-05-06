@@ -2,9 +2,9 @@ PREFABS.Item_public_showers =
 {
   file  = "item/craneo_item_showers.wad",
 
-  map   = "MAP01",
+  map   = "MAP02",
 
-  prob  = 40,
+  prob  = 28,
   theme = "!hell",
   env   = "!cave",
 
@@ -21,4 +21,14 @@ PREFABS.Item_public_showers =
 
   x_fit = "frame",
   y_fit = "top",
+}
+
+--
+
+PREFABS.Item_public_showers_trapped =
+{
+  template = "Item_public_showers",
+  map = "MAP01",
+
+  style = "traps",
 }
