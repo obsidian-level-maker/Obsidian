@@ -1897,6 +1897,12 @@ ARMAETUS_DOOM1_THEMES =
       light_GLITE07 = 10,
       light_GLITE08 = 10,
       light_GLITE09 = 10,
+
+      light_GLITE05_BLUE = 8,
+      light_GLITE05_GREEN = 8,
+      light_GLITE05_RED = 8,
+      light_GLITE05_WHITE = 8,
+      light_GLITE05_YELLOW = 8,
     },
 
     facades =
