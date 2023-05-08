@@ -18442,6 +18442,8 @@ STREET_BUILDING_ENTRANCE_WITH_JOINER_3X2 =
 
 }
 
+
+-- Earlier/simpler iteration of shape grammar, primarily for new game support
 SHAPES.OBLIGE_745 =
 {
 

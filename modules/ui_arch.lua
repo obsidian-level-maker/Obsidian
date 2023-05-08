@@ -247,6 +247,16 @@ OB_MODULES["ui_arch"] =
     label=_("Teleports"),  choices=STYLE_CHOICES, priority = 74, randomize_group="architecture", 
     tooltip = _("Control the amount of teleporters.") 
     },
+    {
+      name="bool_allow_teleporter_emergency_breaks",
+      label=_("Teleporter Emergency Breaks"),
+      valuator = "button",
+      default = 1,
+      tooltip = _("Allow/disallow teleporter emergency breaks."),
+      longtip = _("Teleporters are sometimes used when performing an emergency room break in order to continue level growth. With this setting disabled, teleports will never be used in an emergency break. This could result in truncated level growth or, in the worst case, a script error."),
+      priority = 81,
+      gap = 1
+    },
     { name="steepness",    
     label=_("Steepness"),  choices=STYLE_CHOICES, gap=1, priority = 73, randomize_group="architecture", 
     tooltip = _("Control the height difference of stairs, lifts, and joiners throughout levels.") 

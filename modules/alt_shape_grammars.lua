@@ -62,5 +62,20 @@ OB_MODULES["alt_shape_grammars"] =
       randomize_group = "architecture",
     },
 
+    {
+      name = "float_grammar_oblige_745",
+      label = _("Oblige 7.45"),
+      valuator = "slider",
+      units = _("% Chance Per Level"),
+      min = 0,
+      max = 100,
+      increment = 1,
+      default = 0,
+      tooltip = _("Sets chance of levels using the shape grammar from Oblige v7.45."),
+      longtip = _("Gives levels a chance of being generated using the shape grammar from Oblige v7.45. This is primarily to provide a simpler grammar for facilitating new game support, but is available for curious users as well."),
+      priority = 102,
+      randomize_group = "architecture",
+    },
+
   },
 }
