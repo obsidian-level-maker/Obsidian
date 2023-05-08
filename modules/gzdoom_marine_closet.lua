@@ -1534,7 +1534,7 @@ OB_MODULES["gzdoom_marine_closets"] =
 
   name = "gzdoom_marine_closets",
 
-  label = _("[Exp]GZDoom Marine Closets"),
+  label = _("GZDoom Marine Closets"),
 
   game = "doomish",
   port = "zdoom",
@@ -1549,7 +1549,7 @@ OB_MODULES["gzdoom_marine_closets"] =
     all_done = MARINE_CLOSET_TUNE.all_done
   },
 
-  tooltip=_("[WIP/Experimental]This module adds customizable closets to the map filled with friendly AI marines."),
+  tooltip=_("This module adds customizable closets to the map filled with friendly AI marines."),
 
   options =
   {

@@ -2894,12 +2894,12 @@ function Area_create_rooms(LEVEL, SEEDS)
 
   if not table.empty(level_grammar) then
     if LEVEL.is_procedural_gotcha and PARAM.bool_gotcha_boss_fight == 1 then
-      SHAPE_GRAMMAR = SHAPES.OBSIDIAN
+      SHAPE_GRAMMAR = SHAPES.OBLIGE_745
     else
       SHAPE_GRAMMAR = rand.pick(level_grammar)
     end
   else
-    SHAPE_GRAMMAR = SHAPES.OBSIDIAN
+    SHAPE_GRAMMAR = SHAPES.OBLIGE_745
   end
 
   Grower_create_rooms(LEVEL, SEEDS)
