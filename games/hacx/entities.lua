@@ -10,10 +10,6 @@ HACX.ENTITIES =
   teleport_spot = { id=14, r=16, h=56 },
 
   --- keys ---
-  --k_password = { id=5 }, -- "Blue" key
-  --k_ckey     = { id=6 }, -- "Yellow" key
-  --k_keycard  = { id=13 }, -- "Red" key
-
   kz_red     = { id=38 },
   kz_yellow  = { id=39 },
   kz_blue    = { id=40 },

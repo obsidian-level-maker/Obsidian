@@ -32,6 +32,8 @@ gui.import("themes")
 gui.import("levels")
 gui.import("resources")
 gui.import("vanilla_mats")
+gui.import("names")
+gui.import("stories")
 ----------------------------------------------------------------
 
 function HACX.all_done()
@@ -42,7 +44,7 @@ function HACX.all_done()
 	gui.wad_insert_file("data/endoom/ENDOOM.bin", "ENDOOM")
 end
 
-UNFINISHED["hacx"] =
+OB_GAMES["hacx"] =
 {
 	label = _("HacX 1.2"),
 	priority = 92,

@@ -2896,7 +2896,9 @@ function Area_create_rooms(LEVEL, SEEDS)
     table.add_unique(level_grammar, SHAPES.OBLIGE_745)
   end
 
-  if not table.empty(level_grammar) then
+  if ob_match_game({game = {chex3=1, hacx=1, harmony=1, hexen=1, strife=1}}) then
+    SHAPE_GRAMMAR = SHAPES.BAREBONES
+  elseif not table.empty(level_grammar) then
     if LEVEL.is_procedural_gotcha and PARAM.bool_gotcha_boss_fight == 1 then
       SHAPE_GRAMMAR = SHAPES.OBSIDIAN
     else
