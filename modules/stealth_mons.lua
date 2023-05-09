@@ -354,7 +354,7 @@ OB_MODULES["stealth_mon_control"] =
 {
   name = "stealth_mon_control",
 
-  label = _("Stealth Monsters : Control"),
+  label = _("Stealth Monsters Fine Tuning"),
 
   game = "doomish",
 

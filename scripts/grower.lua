@@ -4498,14 +4498,14 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
 
     if final_R.is_hallway or final_R.is_grown then return end
 
-    if PARAM.teleporters ~= "none" then
+    if PARAM.bool_allow_teleporter_emergency_breaks == 1 then
       final_R.has_teleporter_break = true
       print(final_R.name .. " in critical condition! " ..
       "GET THE TELEPORNEPHERINE!\n")
       Grower_add_teleporter_trunk(SEEDS, LEVEL, final_R, true)
     else
       print(final_R.name .. " needs Telepornepherine, but " ..
-      "teleporters are set to none!\n")
+      "teleporter emergency breaks are disabled!\n")
     end
   end
 

@@ -42,6 +42,8 @@ class UI_Module : public Fl_Group {
    public:
     Fl_Box *heading;
 
+    Fl_Box *disabled;
+
     std::map<std::string, UI_RChoice *> choice_map;
 
     std::map<std::string, UI_RSlide *> choice_map_slider;

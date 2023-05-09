@@ -291,7 +291,7 @@ OB_MODULES["zdoom_marine_control"] =
 {
   name = "zdoom_marine_control",
 
-  label = _("Hostile Marines : Control"),
+  label = _("Hostile Marines Fine Tuning"),
 
   game = "doomish",
 

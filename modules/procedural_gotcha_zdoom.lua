@@ -1812,7 +1812,7 @@ function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.all_done()
 
       -- sometimes add an honorific to add to the boss's evilness
       if rand.odds(50) then -- title
-        demon_name = demon_name .. " the " .. rand.key_by_probs(ZDOOM_STORIES.EVIL_TITLES)
+        demon_name = demon_name .. " the " .. rand.key_by_probs(GAME.STORIES.EVIL_TITLES)
       elseif rand.odds(25) then -- places
         demon_name = demon_name .. " of " .. Naming_grab_one("GOTHIC")
       end

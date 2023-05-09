@@ -2347,7 +2347,7 @@ function MODDED_GAME_EXTRAS.generate_custom_actor_names()
     syl_num = syl_num + 1
   end
 
-  for name,prob in pairs(ZDOOM_STORIES.EVIL_TITLES) do
+  for name,prob in pairs(GAME.STORIES.EVIL_TITLES) do
     title_list = title_list .. '    demonTitles[' .. title_num .. ']="' .. name .. '";\n'
     title_num = title_num + 1
   end
