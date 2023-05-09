@@ -90,3 +90,20 @@ PREFABS.Pic_mining_dirt_fenced_driller_radium =
     GRNRKF = 1
   }
 }
+
+--
+
+PREFABS.Pic_mining_dirt_fenced_broken =
+{
+  template = "Pic_mining_dirt_fenced",
+  map = "MAP03",
+
+  x_fit = { 20,72 , 168,220 }
+
+}PREFABS.Pic_mining_dirt_fenced_some_more_radium =
+{
+  template = "Pic_mining_dirt_fenced",
+  map = "MAP04",
+
+  x_fit = { 20,72 , 168,220 }
+}
