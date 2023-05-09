@@ -29,6 +29,8 @@ modules:
       - type: file
         path: io.github.obsidian-level-maker.desktop
       - type: file
+        path: io.github.obsidian-level-maker.metainfo.xml
+      - type: file
         path: io.github.obsidian-level-maker.64.png
       - type: file
         path: io.github.obsidian-level-maker.128.png
