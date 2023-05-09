@@ -35,6 +35,7 @@ modules:
     build-commands:
       - install -D obsidian.sh /app/bin/obsidian.sh
       - install -Dm 644 io.github.obsidian-level-maker.desktop -t /app/share/applications
+      - install -Dm 644 io.github.obsidian-level-maker.metainfo.xml -t /app/share/metainfo
       - install -Dm 644 io.github.obsidian-level-maker.64.png /app/share/icons/hicolor/64x64/apps/io.github.obsidian-level-maker.png
       - install -Dm 644 io.github.obsidian-level-maker.128.png /app/share/icons/hicolor/128x128/apps/io.github.obsidian-level-maker.png
       
