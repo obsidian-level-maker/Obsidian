@@ -6,11 +6,10 @@ command: obsidian.sh
 finish-args:
 - --socket=wayland
 - --socket=fallback-x11
-- --socket=x11
 - --filesystem=home:rw
 modules:
   - name: obsidian
-    buildsystem: cmake
+    buildsystem: cmake-ninja
     config-opts:
     - -DCMAKE_BUILD_TYPE=Release
     sources:
