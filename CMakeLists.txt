@@ -69,6 +69,8 @@ if(OBSIDIAN_TIDY)
   )
 endif()
 
+configure_file(cmake/config.h.cmake-in obsidian-include/obsidian_config.h)
+
 # cpmaddpackage( NAME Format.cmake VERSION 1.7.0 GITHUB_REPOSITORY
 # TheLartians/Format.cmake OPTIONS set to "yes" to skip CMake formatting
 # "FORMAT_SKIP_CMAKE NO" path to exclude from formatting (optional + regex)
@@ -194,7 +196,7 @@ else()
 endif()
 
 target_include_directories(
-  obsidian SYSTEM PRIVATE source_files/filename_formatter
+    obsidian SYSTEM PRIVATE source_files/filename_formatter ${CMAKE_CURRENT_BINARY_DIR}/obsidian-include
 )
 if(NOT CONSOLE_ONLY AND NOT HAIKU)
   target_include_directories(obsidian SYSTEM PRIVATE source_files/fltk)
