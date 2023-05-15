@@ -116,7 +116,13 @@ PREFABS.Joiner_simple_1lite_gtd =
   seed_w = 2,
 
   x_fit = nil,
-  y_fit = { 16,24 , 136,144 }
+  y_fit = { 16,24 , 136,144 },
+
+  flat_TLITE6_4 =
+  {
+    TLITE6_5 = 5,
+    TLITE6_6 = 5
+  }
 }
 
 PREFABS.Joiner_simple_2lite_gtd =
@@ -129,5 +135,11 @@ PREFABS.Joiner_simple_2lite_gtd =
   seed_w = 3,
 
   x_fit = { 40,48 , 184,200 , 336,344},
-  y_fit = { 16,24 , 136,144 }
+  y_fit = { 16,24 , 136,144 },
+
+  flat_TLITE6_4 =
+  {
+    TLITE6_5 = 5,
+    TLITE6_6 = 5
+  }
 }
