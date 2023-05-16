@@ -4,6 +4,7 @@ include(cmake/CPM.cmake)
 
 add_subdirectory(source_files/filename_formatter EXCLUDE_FROM_ALL)
 if(NOT CONSOLE_ONLY AND NOT HAIKU)
+  set(OPTION_USE_SYSTEM_ZLIB OFF)
   add_subdirectory(source_files/fltk EXCLUDE_FROM_ALL)
 endif()
 add_subdirectory(source_files/fmt EXCLUDE_FROM_ALL)
@@ -238,12 +239,23 @@ if(OBSIDIAN_WARNINGS)
   endif()
 endif()
 
+if(OBSIDIAN_STATIC)
+  target_link_options(obsidian PRIVATE -static)
+endif()
+
 if(UNIX)
   if(NOT CONSOLE_ONLY
      AND NOT HAIKU
      AND NOT APPLE
   )
-    find_package(Fontconfig REQUIRED)
+    if(OBSIDIAN_STATIC)
+      find_package(PkgConfig REQUIRED)
+      pkg_check_modules(FC fontconfig)
+      set(FONTCONFIG ${FC_STATIC_LIBRARIES})
+    else()
+      find_package(Fontconfig REQUIRED)
+      set(FONTCONFIG fontconfig)
+    endif()
   endif()
 endif()
 
@@ -339,7 +351,7 @@ if(UNIX)
                 physfs-static
                 obsidian_zdbsp
                 obsidian_slump
-                fontconfig
+		${FONTCONFIG}
                 pthread
       )
     else()
