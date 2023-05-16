@@ -21,6 +21,7 @@
 
 #include <array>
 #include "main.h"
+#include "obsidian_config.h"
 #include "fmt/core.h"
 #include "images.h"
 
@@ -450,21 +451,8 @@ void Determine_InstallDir(const char *argv0) {
 #ifdef WIN32
     install_dir = home_dir;
 #else
-    constexpr std::array<const char *, 4> prefixes = {
-        "/usr/local",
-        "/usr",
-        "/opt",
-        "/app",
-    };
-
-    for (const char *prefix : prefixes) {
-        install_dir = fmt::format("{}/share/obsidian", prefix);
-
-        if (Verify_InstallDir(install_dir.c_str())) {
-            return;
-        }
-
-        install_dir.clear();
+    if (Verify_InstallDir(CMAKE_INSTALL_PREFIX "/share/obsidian")) {
+        return;
     }
 
     // Last resort
@@ -1566,7 +1554,7 @@ hardrestart:;
 #endif
 #else
     numeric_locale =
-        std::setlocale(LC_NUMERIC, NULL); 
+        std::setlocale(LC_NUMERIC, NULL);
 #endif
 
     LogEnableDebug(debug_messages);

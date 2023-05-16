@@ -70,6 +70,8 @@ if(OBSIDIAN_TIDY)
   )
 endif()
 
+configure_file(cmake/config.h.cmake-in obsidian-include/obsidian_config.h)
+
 # cpmaddpackage( NAME Format.cmake VERSION 1.7.0 GITHUB_REPOSITORY
 # TheLartians/Format.cmake OPTIONS set to "yes" to skip CMake formatting
 # "FORMAT_SKIP_CMAKE NO" path to exclude from formatting (optional + regex)
