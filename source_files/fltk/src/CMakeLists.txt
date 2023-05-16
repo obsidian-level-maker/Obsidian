@@ -717,6 +717,9 @@ endif (UNIX AND OPTION_USE_WAYLAND)
 #######################################################################
 
 FL_ADD_LIBRARY (fltk STATIC "${STATIC_FILES}")
+if (OBSIDIAN_STATIC)
+  list(TRANSFORM OPTIONAL_LIBS REPLACE ".so$" ".a")
+endif()
 target_link_libraries (fltk PUBLIC ${OPTIONAL_LIBS})
 
 if (FLTK_HAVE_CAIRO)
