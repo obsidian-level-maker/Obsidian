@@ -108,15 +108,25 @@ PREFABS.Joiner_simple_divided_grate_4x =
 
 PREFABS.Joiner_simple_1lite_gtd =
 {
-  template = "Joiner_simplest",
-  map = "MAP08",
+  file   = "joiner/gtd_simplest.wad",
+  map    = "MAP08",
 
-  prob = 800,
+  prob   = 800,
+
+  where  = "seeds",
+  shape  = "I",
 
   seed_w = 2,
+  seed_h = 1,
 
-  x_fit = nil,
+  deep = 16,
+  over = 16,
+
+  bound_z1 = 0,
+
   y_fit = { 16,24 , 136,144 },
+
+  can_flip = true,
 
   flat_TLITE6_4 =
   {
@@ -127,19 +137,20 @@ PREFABS.Joiner_simple_1lite_gtd =
 
 PREFABS.Joiner_simple_2lite_gtd =
 {
-  template = "Joiner_simplest",
+  template = "Joiner_simple_1lite_gtd",
   map = "MAP09",
 
-  prob = 900,
+  prob = 1000,
+
+  seed_w = 2,
+}
+
+PREFABS.Joiner_simple_3lite_gtd =
+{
+  template = "Joiner_simple_1lite_gtd",
+  map = "MAP09",
+
+  prob = 1250,
 
   seed_w = 3,
-
-  x_fit = { 40,48 , 184,200 , 336,344},
-  y_fit = { 16,24 , 136,144 },
-
-  flat_TLITE6_4 =
-  {
-    TLITE6_5 = 5,
-    TLITE6_6 = 5
-  }
 }
