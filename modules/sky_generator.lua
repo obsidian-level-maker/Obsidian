@@ -22,10 +22,12 @@ SKY_GEN = { }
 
 SKY_GEN.SKY_CHOICES =
 {
-  "sky_default", _("Default"),
-  "50",          _("Random"),
+  "sky_default", _("Default (33% of Episodes Day)"),
   "sky_night",   _("Night"),
   "sky_day",     _("Day"),
+  "sky_25_day",  _("25% of Episodes Day"),
+  "50",          _("50% of Episodes Day"),
+  "sky_75_day",  _("75% of Episodes Day")
 }
 
 SKY_GEN.HILL_STATE =
@@ -134,6 +136,10 @@ function SKY_GEN.generate_skies()
     elseif PARAM.force_sky == "sky_night" then
       is_starry = true
     elseif PARAM.force_sky == "50" and rand.odds(50) then
+      is_starry = true
+    elseif PARAM.force_sky == "sky_25_day" and rand.odds(75) then
+      is_starry = true
+    elseif PARAM.force_sky == "sky_75_day" and rand.odds(25) then
       is_starry = true
     end
 
