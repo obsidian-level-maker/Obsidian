@@ -111,7 +111,7 @@ PREFABS.Joiner_simple_1lite_gtd =
   file   = "joiner/gtd_simplest.wad",
   map    = "MAP08",
 
-  prob   = 800,
+  prob   = 550,
 
   where  = "seeds",
   shape  = "I",
@@ -140,7 +140,7 @@ PREFABS.Joiner_simple_2lite_gtd =
   template = "Joiner_simple_1lite_gtd",
   map = "MAP09",
 
-  prob = 1000,
+  prob = 700,
 
   seed_w = 2,
 }
@@ -150,7 +150,7 @@ PREFABS.Joiner_simple_3lite_gtd =
   template = "Joiner_simple_1lite_gtd",
   map = "MAP09",
 
-  prob = 1250,
+  prob = 800,
 
   seed_w = 3,
 }

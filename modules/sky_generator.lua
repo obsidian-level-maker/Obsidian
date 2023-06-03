@@ -304,10 +304,11 @@ function SKY_GEN.generate_skies()
 
     -- hack fix for when a generated MAPINFO is available
     -- because Doom2 apparently handles sky lump names weirdly
+    
     if PARAM.zdoom_specials_active and OB_CONFIG.game == "doom2" then
-      if EPI.sky_patch then EPI.sky_patch = "O_D2SKY1" end
-      if EPI.sky_patch2 then EPI.sky_patch2 = "O_D2SKY2" end
-      if EPI.sky_patch3 then  EPI.sky_patch3 = "O_D2SKY3" end
+      if EPI.id == 1 then EPI.sky_patch = "O_D2SKY1" end
+      if EPI.id == 2 then EPI.sky_patch = "O_D2SKY2" end
+      if EPI.id == 3 then EPI.sky_patch = "O_D2SKY3" end
     end
 
     gui.fsky_write(EPI.sky_patch)
