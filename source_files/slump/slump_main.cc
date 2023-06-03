@@ -75,7 +75,6 @@ void machioize(config *c,float amount) {
 
   ThisConfig = get_config(filename);
   if (ThisConfig==NULL) {
-    Usage();
     return false;
   }
   if (ThisConfig->cwadonly) {

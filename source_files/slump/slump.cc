@@ -928,23 +928,6 @@ linedef *flip_linedef(linedef *ld)
   return ld;
 }
 
-void Usage0(void)
-{
-  printf("Usage: slige [switches] [filename.ext] [switches]\n\n");
-  printf("Produces a (nodeless) PWAD file that can be completed by a\n");
-  printf("nodebuilder such as BSP, and then played using the -file\n");
-  printf("function of DOOM (or DOOM2).  The default output file is\n");
-  printf("SLUMP.OUT.  Gets all sorts of data and options and stuff from\n");
-  printf("SLUMP.CFG (or other file given with the -config switch.)\n\n");
-}
-
-void Usage(void)
-{
-  Usage0();
-  printf("For details, say \"slige -?\".\n\n");
-  return;
-}
-
 /* Remove anything from the config that would be dangerous if left */
 /* in, and optionally remove anything that just benignly won't ever */
 /* be used and might take up valuable time and space. */
@@ -1039,7 +1022,6 @@ config *get_config(std::filesystem::path filename) {
     answer = (config *)malloc(sizeof(*answer));
 
     /* Set various defaults and stuff */
-    answer->configfile = strdup("SLUMP.CFG"); /* So's we kin free() it */
     answer->cwadonly = SLUMP_FALSE;
     answer->outfile = strdup(filename.string().c_str());
 
@@ -1209,10 +1191,7 @@ config *get_config(std::filesystem::path filename) {
         answer->big_monsters = rollpercent(35);
 
     /* Open or whatever the config file */
-    load_config(answer);
-
-    /* Read switch-defaults from the config file */
-    if (!read_switches(answer)) return NULL;
+    load_obsidian_config(answer);
 
     /* And finally read in all the hard stuff from the file */
     if (!nonswitch_config(answer)) return NULL;
@@ -1842,160 +1821,6 @@ boolean enough_quest(level *l,sector *s,quest *ThisQuest,config *c)
   return 0;
 }
 
-/* Process the switches in the given arg array, filling in the  */
-/* given config structure.  Use s in error messages.  If conly, */
-/* all we're parsing for here are -config and -seed.            */
-/* Print msg and return SLUMP_FALSE if error, else return SLUMP_TRUE.       */
-boolean do_switches(int argc,char *argv[],config *c,char *s,int conly)
-{
-  int i;
-
-  if (conly) {  /* config, seed, -v only; imperfect algorithm! Can be fooled. */
-    for (i=1;i<argc;i++) {
-      if (!slump_stricmp(argv[i],"-config")) {
-        if (i<(argc-1)) {   /* If -config is the last arg, just ignore it */
-          c->configfile = strdup(argv[++i]);
-        }  /* end if enough args */
-      } else if (!slump_stricmp(argv[i],"-v")) {
-        global_verbosity = 1;
-      }  /* end if -config arg */
-    }  /* end for args */
-  } else {  /* not conly */
-    for (i=1;i<argc;i++) {
-      if (argv[i][0]!='-') {
-        c->outfile = strdup(argv[i]);   /* Just take last if multiple */
-      } else if (!slump_stricmp(argv[i],"-?")) {
-        Usage2();
-        exit(100);
-      } else if (!slump_stricmp(argv[i],"-outfile")) {
-        if (i<(argc-1)) {   /* If this is the last arg, just ignore it */
-          c->outfile = strdup(argv[++i]);
-        }  /* end not last arg */
-      } else if (!slump_stricmp(argv[i],"-doom")) {
-        c->gamemask = DOOM1_BIT;
-        if (c->episode==0) c->episode = c->mission = 1;
-        c->map = 0;
-      } else if (!slump_stricmp(argv[i],"-doom2")) {
-        c->gamemask = DOOM2_BIT;
-        c->episode = c->mission = 0;
-        if (c->map==0) c->map = 1;
-      } else if (!slump_stricmp(argv[i],"-nogross")) {
-        c->gamemask |= DOOMC_BIT;
-      } else if (!slump_stricmp(argv[i],"-v")) {
-        global_verbosity = 1;
-      } else if (!slump_stricmp(argv[i],"-cwad")) {
-        c->cwadonly = SLUMP_TRUE;
-      } else if (!slump_stricmp(argv[i],"-nocustom")) {
-        c->gamemask |= DOOMI_BIT;
-      } else if (!slump_stricmp(argv[i],"-nulls")) {
-        c->produce_null_lmps = SLUMP_TRUE;
-      } else if (!slump_stricmp(argv[i],"-noslinfo")) {
-        c->do_slinfo = SLUMP_FALSE;
-      } else if (!slump_stricmp(argv[i],"-noseclevels")) {
-        c->do_seclevels = SLUMP_FALSE;
-      } else if (!slump_stricmp(argv[i],"-bimo!")) {
-        c->force_biggest = SLUMP_TRUE;
-      } else if (!slump_stricmp(argv[i],"-bimo")) {
-        c->big_monsters = SLUMP_TRUE;
-      } else if (!slump_stricmp(argv[i],"-biwe")) {
-        c->big_weapons = SLUMP_TRUE;
-      } else if (!slump_stricmp(argv[i],"-xsecret")) {
-        c->force_secret = SLUMP_TRUE;
-      } else if (!slump_stricmp(argv[i],"-gross")) {
-        c->gamemask &= ~DOOMC_BIT;
-      } else if (!slump_stricmp(argv[i],"-music")) {
-        c->do_music = SLUMP_TRUE;
-      } else if (!slump_stricmp(argv[i],"-nosemo")) {
-        c->secret_monsters = SLUMP_FALSE;
-      } else if (!slump_stricmp(argv[i],"-dm")) {
-        c->do_dm = SLUMP_TRUE;
-      } else if (!slump_stricmp(argv[i],"-arena")) {
-        c->force_arena = SLUMP_TRUE;
-      } else if (!slump_stricmp(argv[i],"-levels")) {
-        if (i<(argc-1)) {   /* If this is the last arg, just ignore it */
-          c->levelcount = atoi(argv[++i]);
-          if (c->levelcount==0) {
-            fprintf(stderr,"%s error: invalid -levels arg <%s>.\n",
-                                s,argv[i]);
-            return SLUMP_FALSE;
-          }
-        }  /* end if enough args */
-      } else if (!slump_stricmp(argv[i],"-minlight")) {
-        if (i<(argc-1)) {   /* If this is the last arg, just ignore it */
-          c->minlight = atoi(argv[++i]);
-          if (c->minlight==0) {
-            fprintf(stderr,"%s error: invalid -minlight arg <%s>.\n",
-                                s,argv[i]);
-            return SLUMP_FALSE;
-          }
-        }  /* end if enough args */
-      } else if (!slump_stricmp(argv[i],"-macho")) {
-        int mfac;
-        if (i<(argc-1)) {   /* If this is the last arg, just ignore it */
-          mfac = atoi(argv[++i]);
-          if ((mfac<1) || (mfac>100)) {
-            fprintf(stderr,"%s error: -macho must be in [1,100], not <%s>.\n",
-                                s,argv[i]);
-            return SLUMP_FALSE;
-          }
-          c->machoh = ((float)100 - (float)mfac/(float)4) / (float)100;
-          c->machou = ((float)100 - (float)mfac/(float)2) / (float)100;
-        }  /* end if enough args */
-      } else if (!slump_stricmp(argv[i],"-restrict")) {
-        if (i<(argc-1)) {   /* If this is the last arg, just ignore it */
-          int j;
-          i++;
-          c->gamemask = 0;
-          for (j=0;j<(int)strlen(argv[i]);j++) {
-            if (argv[i][j]=='C') c->gamemask |= DOOMC_BIT;
-              else if (argv[i][j]=='I') c->gamemask |= DOOMI_BIT;
-              else if (argv[i][j]=='0') c->gamemask |= DOOM0_BIT | DOOM1_BIT;
-              else if (argv[i][j]=='1') c->gamemask |= DOOM1_BIT;
-              else if (argv[i][j]=='2') c->gamemask |= DOOM2_BIT;
-              else {
-                fprintf(stderr,"%s error: invalid -restrict arg <%s>.\n",
-                                    s,argv[i]);
-                return SLUMP_FALSE;
-              }
-          }  /* end for bits of next arg */
-        }  /* end if enough args */
-      } else if ((strlen(argv[i])==5) &&
-                 ( (argv[i][1]=='E') || (argv[i][1]=='e') ) &&
-                 ( (argv[i][3]=='M') || (argv[i][3]=='m') ) ) {
-        if (2!=sscanf(argv[i],"-%*c%d%*c%d",&(c->episode),&(c->mission))) {
-          fprintf(stderr,"%s error: Invalid -ExMx switch <%s>.\n",s,argv[i]);
-          return SLUMP_FALSE;
-        }
-        c->map = 0;
-      } else if (!slump_strnicmp(argv[i],"-map",4)) {
-        c->map = atoi(argv[i]+4);
-        if (c->map==0) {
-          fprintf(stderr,"%s error: Invalid -MAPxx switch <%s>.\n",s,argv[i]);
-          return SLUMP_FALSE;
-        }
-        c->episode = c->mission = 0;
-      } else if (!slump_stricmp(argv[i],"-rooms")) {
-        if (i<(argc-1)) {   /* If this is the last arg, just ignore it */
-          c->minrooms = atoi(argv[++i]);
-	  if(c->minrooms < 2) 
-		  c->minrooms = 2;
-	  if(c->minrooms > 37)
-		  c->minrooms = 37;
-        }  /* end if enough args */
-      } else if (!slump_stricmp(argv[i],"-config")) {
-        if (i<(argc-1)) i++;   /* Ignored in this stage */
-      } else if (!slump_stricmp(argv[i],"-seed")) {
-        if (i<(argc-1)) i++;   /* Ignored in this stage */
-      } else {  /* Unknown switch */
-        fprintf(stderr,"%s error: unknown switch <%s>.\n\n",s,argv[i]);
-        return SLUMP_FALSE;
-      }
-    }  /* end for args */
-  }  /* end not conly */
-
-  return SLUMP_TRUE;
-}
-
 /* Put this object in this sector.  It's a non-obstable object */
 thing *place_required_pickable(level *l,sector *s,config *c,short id)
 {
@@ -2473,22 +2298,6 @@ quest *pop_quest(quest *current)
 }
 
 /******* Many routines from here on need more work ****************/
-
-void Usage2(void)
-{
-  Usage0();
-  printf("Switches that do something at the moment:\n");
-  printf("  -rooms [n]   -seed [nnnnnn]  -outfile [filename.ext]\n");
-  printf("  -restrict [012C] -ExMx -MAPxx -doom1 -doom2 -levels <x> \n");
-  printf("  -minlight <x>  -music  -macho <nn> -noslinfo -nocustom -cwad \n");
-  printf("  -arena  -nulls -nosemo -biwe -bimo -bimo! \n");
-#ifdef SWITCHES_IN_CONFIG_FILES
-  printf("(-outfile being most useful in the config file; on the\n");
-  printf("command line you don't need the switch.)\n");
-#endif
-  printf("\nM O R E   D E T A I L S   T O   F O L L O W\n\n");
-  return;
-}
 
 /*
    Anything that calls this routine is probably too simple to
@@ -7961,437 +7770,50 @@ boolean isAdequate(level *l,linedef *ld,style *ThisStyle,config *c)
   }
 }
 
-/* Fill in the default config-file data contents stuff */
-void load_default_config(config *c)
-{
-  char *p;
-  
-  /* Legend In Progress - Dasho
-  T = Theme, followed by the name or first letter of theme name
-  ? = Secret, add after the theme name
-  t = texture
-  0 = noDoom0 (not in DOOM 1.2)
-  1 = noDoom1 (not in Doom 1, period)
-  2 = noDoom2 (not in DOOM 2)
-  u = only intrinsic textures (need to clarify)
-  G = for clean mode (no Gross things)
-  c (first occurrence) = core <theme> (Should occur often in a theme)
-  c (second occurrence) = comp <theme> (Compatible, but less common)
-  i = isswitch , followed by comp <theme>
-  w = wall
-  S = subtle <texture> (identifies as a variant of <texture> for secret hints)
-  f = flat
-  G = gate (must be after a flat)
-  d = door
-  F = lift texture
-  I = support
-  j = jamb
-  e = step
-  E = exit switch
-  L = locked
-  o = outside
-  U = ceiling
-  n = nukage
-  p = plaque
-  v = vtiles
-  H = half plaque
-  l = light
-  r = red
-  b = blue
-  y = yellow
-  ! = error texture
-  X = exit sign texture
-  Y = y bias
-  @ = y_hint ?
-  K = sky flat
-  = = real texture name, followed by the real texture name
-  W = water flat  */
-  
-  c->configdata = strdup(    // So we can free() it
-    "[THEMES] T M T B T W T R ? "
-    "t PANEL5 0 1 "
-    "t PANCASE2 0 1 "
-    "t PANCASE1 0 1 "
-    "t PANBORD2 0 1 "
-    "t PANBORD1 0 1 "
-    "t METAL7 0 1 "
-    "t METAL6 0 1 "
-    "t METAL2 0 1 "
-    "t COMP2 2 "
-    "t SILVER2 0 1 "
-    "t SILVER1 0 1 "
-    "t EXITSIGN X "
-    "t ZZWOLF1 o 0 1 "
-    "t ZIMMER3 o 0 1 "
-    "t ZIMMER5 o 0 1 "
-    "t TANROCK5 o 0 1 "
-    "t TANROCK4 o 0 1 "
-    "t TANROCK2 o 0 1 "
-    "t STUCCO o 0 1 "
-    "t STONE6 o 0 1 "
-    "t ROCK1 o 0 1 "
-    "t MODWALL1 o 0 1 "
-    "t BSTONE1 o 0 1 "
-    "t BRICK5 o 0 1 "
-    "t BRICK4 o 0 1 "
-    "t ASHWALL7 o 0 1 "
-    "t ASHWALL6 o 0 1 "
-    "t ASHWALL4 o 0 1 "
-    "t ASHWALL2 o 0 1 "
-    "t STONE3 o "
-    "t SP_ROCK1 o "
-    "t GRAYVINE o "
-    "t GRAYBIG o "
-    "t SLDOOR1 z 64 128 d L c M c B = SP_DUDE5 u "
-    "t DOORSKUL z 64 72 d L c M c B 0 1 u "
-    "t TEKBRON2 z 64 128 d c M c B 0 1 "
-    "t SPCDOOR4 z 64 128 d c M 0 1 "
-    "t SPCDOOR3 z 64 128 d c M 0 1 "
-    "t SPCDOOR2 z 64 128 d c M 0 1 "
-    "t SPCDOOR1 z 64 128 d c M 0 1 "
-    "t DOORHI z 64 128 d c M 2 "
-    "t DOOR3 z 64 72 d c M "
-    "t DOOR1 z 64 72 d c M "
-    "t WOODSKUL z 64 128 d c W c B c R 2 "
-    "t WOODMET2 z 64 128 d c W c B c R 0 1 "
-    "t WOODGARG z 64 128 d c W c B c R "
-    "t BIGDOOR4 z 128 128 d c M "
-    "t BIGDOOR3 z 128 128 d c M "
-    "t BIGDOOR2 z 128 128 d c M "
-    "t BIGDOOR1 z 128 96 d c M "
-    "t BIGDOOR7 z 128 128 d c W c B c R "
-    "t BIGDOOR6 z 128 112 d c W c B c R "
-    "t BIGDOOR5 z 128 128 d c W c B c R "
-    "t EXITSWIR E c R 0 1 u "
-    "t EXITSWIW E c W c B 0 1 u "
-    "t EXITSWIT E c M 0 1 u "
-    "t BFALL1 z 8 128 l c R 0 1 "
-    "t LITEREDL z 8 128 l c R = LITERED 2 "
-    "t TEKLITE l c M 0 1 "
-    "t LITE4 l c M c B 2 "
-    "t LITE5 l c M c B "
-    "t LITE3 l c M c B "
-    "t SILVER3 p v c M 0 1 "
-    "t SPACEW3 p v c M 0 1 "
-    "t COMPSTA2 p v H c M "
-    "t COMPSTA1 p v H c M "
-    "t COMPTALL p v c M "
-    "t COMPUTE1 p v H c M 2 "
-    "t PLANET1 p v H c M 2 "
-    "t PANBOOK p c W 0 1 "
-    "t SKIN2 p v c R "
-    "t GSTFONT1 p c R "
-    "t SKY1 p c W c B "
-    "t SKY3 p c B c R "
-    "t MARBFAC3 p v c W c B "
-    "t MARBFAC2 p v c W c B "
-    "t MARBFACE p v c W c B "
-    "t BRNBIGC g c M 2 "
-    "t MIDSPACE g c M 0 1 "
-    "t MIDVINE1 g c W c M c B c R 2 "
-    "t MIDBARS1 g c W c M c B c R 0 1 "
-    "t MIDGRATE g c W c M c B c R "
-    "t LITERED z 8 128 r c M c B 2 "
-    "t DOORYEL z 8 128 y c M c B "
-    "t DOORRED z 8 128 r c M c B "
-    "t LITEBLU4 z 16 128 b c M c B "
-    "t LITEBLU1 z 8 128 b c M c B "
-    "t DOORBLU z 8 128 b c M c B "
-    "t DOORYEL2 z 16 128 y c W c R "
-    "t DOORBLU2 z 16 128 b c W c R "
-    "t DOORRED2 z 16 128 r c W c R "
-    "t STEP6 z 256 16 e c W c M c B "
-    "t STEP5 z 256 16 e c W c M c B "
-    "t STEP4 z 256 16 e c W c M c B "
-    "t STEP3 z 256 8 e c W c M c B "
-    "t STEP2 z 256 8 e c W c M c B "
-    "t STEP1 z 256 8 e c W c M c B "
-    "t FIRELAVA j c R "
-    "t DOORTRAK j c W c M c B "
-    "t DOORSTOP j c W c M c B "
-    "t SKSNAKE2 I c R "
-    "t ROCKRED1 I c R "
-    "t ZIMMER7 I c B 0 1 "
-    "t BRICK10 I o c B 0 1 "
-    "t COMPSPAN I c M "
-    "t SUPPORT2 I c M c B "
-    "t SHAWN2 I c M c B "
-    "t ASHWALL3 I o c W 0 1 "
-    "t ASHWALL I o c W 2 "
-    "t BROWNHUG I o c W c M c B "
-    "t SUPPORT3 I c W c B "
-    "t METAL z 64 128 I d c W c B c R "
-    "t SW1HOT i c R "
-    "t SKY3_W w c R = SKY3 "
-    "t SP_HOT1 w C R "
-    "t REDWALL w ! C R "
-    "t FIREMAG1 p c B "
-    "t FIREBLU1 w C R S FIREMAG1 @ 0 "
-    "t SW1MARB i c B 0 1 "
-    "t SW1GSTON i c B "
-    "t GSTVINE1 w o c B S GSTVINE2 "
-    "t MARBGRAY w c B S GRAY5 0 1 "
-    "t GSTONE1 w o c B S GSTGARG "
-    "t MARBGARG w c B S MARBLE1 0 1 u "
-    "t MARBLE2 w C B S MARBLE3 "
-    "t MARBLE3 w C B S MARBLE1 "
-    "t MARBLE1 w C B S MARBLE3 @ 0 "
-    "t PLAT1 z 128 128 F c M "
-    "t GRAYALT w C M s SW1GRAY 0 1 u "
-    "t TEKVINE w c M S TEKGREN3 s SW1TEK @ 0 0 1 u "
-    "t SPACEW4 w c M s SW1TEK 0 1 "
-    "t SW1MET2 Y 64 "
-    "t METAL3 0 1 "
-    "t METAL5 w c M S METAL3 s SW1MET2 0 1 "
-    "t COMPUTE3 w c M s SW1STRTN 2 "
-    "t TEKWALL4 w c M S COMPWERD s SW1COMP @ 0 "
-    "t TEKWALL1 w c M S COMPWERD s SW1COMP @ 0 "
-    "t ICKWALL3 o "
-    "t GRAY1 w c M S ICKWALL3 s SW1GRAY "
-    "t BROVINE2 w c M s SW1SLAD @ 24 "
-    "t BRONZE4 w C M S BRONZE3 s SW1TEK 0 1 "
-    "t STARTAN1 w C M S STARTAN2 s SW1STRTN 2 "
-    "t STARTAN3 w C M S STARG3 s SW1STRTN "
-    "t LITEMET 2 "
-    "t METAL1 w c M S LITEMET s SW1METAL "
-    "t STARBR2 w c M S STARTAN2 s SW1STRTN "
-    "t STARTAN2 w C M S STARBR2 s SW1STRTN "
-    "t STARG3 w C M S STARGR1 s SW1STRTN "
-    "t STARG2 w C M S STARG1 s SW1STRTN "
-    "t STARG1 w C M S STARG2 s SW1STRTN "
-    "t SW1DIRT Y 72 "
-    "t BROWN144 o "
-    "t BROWN96 w C M S BROWN144 s SW1DIRT "
-    "t BROWN1 w C M s SW1BRN2 "
-    "t BROWNGRN w C M S SLADWALL s SW1BRNGN "
-    "t SLADWALL w C M S BROWNGRN s SW1SLAD "
-    "t SW1WOOD i c W c B "
-    "t SW1SATYR i c W "
-    "t SW1LION i c W "
-    "t SW1GARG i c W "
-    "t WOOD12 w c W @ 3 0 1 "
-    "t SLOPPY2 w c W S SLOPPY1 @ 0 0 1 Q "
-    "t SKULWALL w c W S SKULWAL3 @ 0 2 Q "
-    "t SKINSYMB w c W S SKINMET1 "
-    "t SKINMET2 w c W S SKINMET1 "
-    "t SKINMET1 w c W S SKINMET2 "
-    "t PIPE2 w j c W c M S PIPE4 s SW1WOOD @ 0 "
-    "t WOODVINE w c W S WOOD9 @ 0 0 1 u "
-    "t WOOD4 w c W @ 64 "
-    "t WOOD9 w C W S WOOD7 @ 0 0 1 "
-    "t WOOD5 w C W S WOOD1 "
-    "t WOOD3 w C W S WOOD1 @ 3 "
-    "t WOOD1 w C W S WOOD3 "
-    "f FWATER1 W "
-    "f F_SKY1 K "
-    "f SLGATE1 G c W c M c B c R u "
-    "f GATE4 G c W c M c B c R "
-    "f GATE3 G c W c M c B c R "
-    "f GATE2 G c W c M c B c R "
-    "f GATE1 G c W c M c B c R "
-    "f SLGRASS1 o u "
-    "f SLIME13 o 0 1 "
-    "f RROCK19 o 0 1 "
-    "f RROCK16 o 0 1 "
-    "f RROCK11 o 0 1 "
-    "f GRNROCK o 0 1 "
-    "f GRASS2 o 0 1 "
-    "f GRASS1 o 0 1 "
-    "f MFLR8_4 o "
-    "f MFLR8_3 o "
-    "f MFLR8_2 o "
-    "f FLAT5_7 o "
-    "f FLAT10 o "
-    "f GRNLITE1 U l c B 0 1 "
-    "f FLOOR7_2 U c B "
-    "f SLLITE1 U l c M u "
-    "f TLITE6_6 U l c M "
-    "f FLOOR7_1 U o c M "
-    "f FLOOR5_2 U c M "
-    "f FLOOR5_1 U c M "
-    "f CEIL3_1 U c M "
-    "f FLOOR5_4 U o c W "
-    "f FLOOR4_6 U c W "
-    "f CEIL3_3 U c W "
-    "f CEIL1_1 U c W "
-    "f LAVA1 n c R "
-    "f SLSPARKS D c R u "
-    "f SFLR6_4 D U c R "
-    "f TLITE6_5 U l c R "
-    "f FLOOR6_1 D U r c R "
-    "f FLOOR1_7 U l c R "
-    "f FLOOR1_6 D U r c R "
-    "f FLAT5_3 D U r c R "
-    "f SLFLAT01 D c B u "
-    "f FLAT1 D c B "
-    "f DEM1_6 D c B "
-    "f DEM1_5 D U c B "
-    "f NUKAGE1 n c M c B "
-    "f FLOOR4_1 D c M "
-    "f FLOOR3_3 D U c M c B "
-    "f FLOOR0_2 D c M "
-    "f FLOOR0_1 D o c M "
-    "f FLAT1_2 D o c M "
-    "f FLAT5 D c M "
-    "f SLIME09 n c W 0 1 "
-    "f BLOOD1 n r c W c B c R "
-    "f FLAT8 D c W "
-    "f FLAT5_2 D c W "
-    "f FLAT5_1 D U c W c B "
-    "f FLAT1_1 D o c W "
-    "f CEIL5_2 D o c W "
-    "f MFLR8_1 D c W "
-    "x m 4 h 128 c W c B 0 1 "
-    "O FLAT5_1 O CRATOP2 O CEIL5_2 O CEIL3_3 O CEIL1_1 "
-    "B PANEL5 ~ 64 "
-    "B PANCASE2 ~ 64 "
-    "B PANCASE1 ~ 64 "
-    "B PANBORD2 ~ 16 "
-    "B PANBORD1 ~ 32 "
-    "A PANBOOK ~ 64 "
-    "x m 3 h 64 c W c M "
-    "O CRATOP2 "
-    "A CRATWIDE ] 64 64 "
-    "A CRATE1 ~ 64 "
-    "x m 3 h 64 c W c M "
-    "O CRATOP1 "
-    "A CRATWIDE "
-    "A CRATE2 ~ 64 "
-    "x m 3 h 64 c W c M "
-    "O CRATOP1 "
-    "A CRATELIT ~ 32 "
-    "x m 3 h 32 c W c M "
-    "O CRATOP1 "
-    "A CRATELIT ~ 32 "
-    "x m 3 h 16 c W c M "
-    "O CRATOP1 "
-    "A CRATINY ~ 16 "
-    "x m 2 h 128 c M "
-    "O CEIL5_1 O FLAT4 O TLITE6_1 "
-    "B METAL7 ] 0 64 ~ 64 "
-    "B METAL6 ] 0 64 ~ 64 "
-    "B METAL5 ] 0 64 ~ 64 "
-    "B METAL3 ] 0 64 ~ 64 "
-    "B METAL2 ] 0 64 ~ 64 "
-    "B COMPWERD ~ 64 "
-    "B COMPSPAN ~ 16 "
-    "A SPACEW3 ~ 64 "
-    "A COMPTALL ~ 256 "
-    "A COMP2 ~ 256 "
-    "x m 2 h 64 c M "
-    "O CEIL5_1 O FLAT4 O TLITE6_1 "
-    "B METAL7 ] 0 64 ~ 64 "
-    "B METAL6 ] 0 64 ~ 64 "
-    "B METAL5 ] 0 64 ~ 64 "
-    "B METAL3 ] 0 64 ~ 64 "
-    "B METAL2 ] 0 64 ~ 64 "
-    "B COMPWERD ~ 64 "
-    "B COMPSPAN ~ 16 "
-    "A SPACEW3 ] 0 64 ~ 64 "
-    "A COMPTALL ] 0 64 ~ 256 "
-    "A COMP2 ] 0 64 ~ 256 "
-    "x m 1 h 128 c M c B "
-    "O FLAT9 O FLAT4 O FLAT23 O FLAT19 O FLAT18 O CRATOP1 O COMP01 "
-    "B SILVER2 ~ 64 "
-    "B SILVER1 ~ 64 "
-    "B SUPPORT2 ~ 16 "
-    "B SHAWN2 ~ 16 "
-    "A SILVER3 "
-    "A COMPUTE1 ] 0 64 "
-    "x m 1 h 64 c M c B "
-    "O FLAT9 O FLAT4 O FLAT23 O FLAT19 O FLAT18 O CRATOP1 O COMP01 "
-    "B SUPPORT2 ~ 16 "
-    "B SHAWN2 ~ 16 "
-    "A COMPUTE1 ] 0 64 "
-    "A COMPSTA2 "
-    "A COMPSTA1 "
-    ". 2035 c M "
-    ". 34 c W c M c B "
-    ". 44 c W c B "
-    ". 45 c W c B "
-    ". 46 c W c B c R "
-    ". 55 c W c B "
-    ". 56 c W c B "
-    ". 57 c W c B c R "
-    ". 48 c M "
-    ". 2028 c M "
-    ". 85 c M "
-    ". 86 c M "
-    ". 70 c M c W "
-    ". 35 c W "
-    "# ");
-  for (p=c->configdata;*p;p++)
-    if (*p==' ') *p = '\0';
-  return;
-}
-
 /* Make the config-file data accessible */
-void load_config(config *c)
+void load_obsidian_config(config *c)
 {
-  FILE *f;
+  std::string obsidian_theme = ob_get_param("slump_config");
   char thisline[200];
-  char *inc, *outc;
-  long flen;
+  char *inc;
+  const char *ot_charpointer = obsidian_theme.c_str();
+  const char **f = (const char **)&ot_charpointer;
   boolean blankmode = SLUMP_TRUE;   /* Strip leading blanks */
 
-  f = fopen(c->configfile,"rb");
-  if (f==NULL) {
-    //fprintf(stderr,"Could not open %s; using default configuration.\n",
-      //c->configfile);
-    load_default_config(c);
+  if (obsidian_theme.empty()) {
+    exit(110); // Should really hook into Obsidian's error stuff - Dasho
   } else {
-    fseek(f,0,SEEK_END);
-    flen = ftell(f);
-    fseek(f,0,SEEK_SET);
-    c->configdata = (char *)malloc(5+flen);
-    outc = c->configdata;
-    printf("Loading %s...\n",c->configfile);
+    c->configdata = new std::vector<char>;
     for (;;) {
-      fgets(thisline,190,f);
-      if (feof(f)) break;
+      memset(thisline, 0, 200);
+      mem_gets(thisline,190,f);
+      if (!thisline[0]) 
+        break;
       if (strlen(thisline)>180) {
-        fprintf(stderr,"Line too long in %s: %s\n",c->configfile,thisline);
         exit(110);
       }
       for (inc=thisline;*inc;inc++) {
         if (*inc==';') break;
         if (strchr(" \t\n\r",*inc)) {
-          if (!blankmode) *(outc++) = '\0';
+          if (!blankmode) c->configdata->push_back('\0');
           blankmode = SLUMP_TRUE;
         } else {
-          *(outc++) = *inc;
+          c->configdata->push_back(*inc);
           blankmode = SLUMP_FALSE;
         }
       }  /* Done with line */
     }  /* Done reading file */
-    if (!blankmode) *(outc++) = '\0';
-    *(outc++) = '\0';
-    printf("Loaded.\n");
-    c->configdata = (char *)realloc(c->configdata,1+(outc-c->configdata));
-    fclose(f);
+    if (!blankmode) c->configdata->push_back('\0');
+    c->configdata->push_back('\0');
   }
-#if 0
-  for (inc=c->configdata;*inc;inc+=1+strlen(inc))
-    printf("%s ",inc);
-#endif
-  return;
 }
 
 /* Free up config-file resources */
 void unload_config(config *c)
 {
-  if (c->configdata) free(c->configdata);
-  c->configdata = NULL;
+  c->configdata->clear();
+  delete c->configdata;
   return;
-}
-
-/* Look through the config's config file, and fill in values for */
-/* the switch lines therein.  Return SLUMP_FALSE if error.  These are  */
-/* of course overridable by command-line switches.               */
-boolean read_switches(config *c)
-{
-  /* Dis here is a STUB */
-  return SLUMP_TRUE;
 }
 
 /* Allocate and return a new, empty construct */
@@ -9363,13 +8785,10 @@ char *absorb_construct(char *p, config *c)
 /* all the non-switch lines therein.  Return SLUMP_FALSE if error.     */
 boolean nonswitch_config(config *c)
 {
-
-#ifndef USE_OLD_HARDWIRED_STUFF
-
   char *p;
 
   /* Skip to the "[THEMES]" section */
-  for (p=c->configdata;*p;p+=1+strlen(p))
+  for (p=c->configdata->data();*p;p+=1+strlen(p))
     if (!slump_stricmp("[themes]",p)) break;
   if (!*p) {
     fprintf(stderr,"No [THEMES] section in config file.\n");
@@ -9395,17 +8814,6 @@ boolean nonswitch_config(config *c)
        exit(174);
     }
   }
-
-#else
-
-  /* Read from the config file here! */
-  hardwired_nonswitch_config(c);
-
-#endif
-
-#ifdef CONFIG_DUMP
-  dump_foo(c);
-#endif
 
   return SLUMP_TRUE;
 }

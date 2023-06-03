@@ -158,8 +158,7 @@ void UI_Game::callback_Engine(Fl_Widget *w, void *data) {
 
     ob_set_config("engine", that->engine->GetID());
 
-    if (StringCaseCmp(that->engine->GetID(), "idtech_0") == 0 ||
-        StringCaseCmp(that->port->GetID(), "limit_enforcing") == 0) {
+    if (StringCaseCmp(that->engine->GetID(), "idtech_0") == 0) {
         that->theme->deactivate();
     } else {
         that->theme->activate();
@@ -177,8 +176,7 @@ void UI_Game::callback_Port(Fl_Widget *w, void *data) {
 
     ob_set_config("port", that->port->GetID());
 
-    if (StringCaseCmp(that->engine->GetID(), "idtech_0") == 0 ||
-        StringCaseCmp(that->port->GetID(), "limit_enforcing") == 0) {
+    if (StringCaseCmp(that->engine->GetID(), "idtech_0") == 0) {
         that->theme->deactivate();
     } else {
         that->theme->activate();

@@ -31,6 +31,7 @@
 
 #include <cstdio>
 #include <filesystem>
+#include <vector>
 
 /* Slump 0.003.02 */
 #define SOURCE_VERSION (0)
@@ -42,7 +43,6 @@
 /* Some Microsoft-specific defines which we will probably get rid of in
  * a later release */
 #ifdef _MSC_VER
-#define RAND_SUCKS
 #define strncasecmp _strnicmp
 #define strcasecmp _stricmp
 #endif
@@ -734,8 +734,7 @@ typedef struct s_level {
 /* The config is the static architectural knowledge and stuff. */
 /* It's read from a config file (parts of it, anyway!).        */
 typedef struct s_config {
-  char *configfile;    /* Name of the configuration file */
-  char *configdata;    /* Contents of the configuration file */
+  std::vector<char> *configdata;    /* Contents of the configuration */
   char *outfile;       /* Name of the output file */
   boolean cwadonly;    /* Do we want just the customization lumps? */
   unsigned char themecount;   /* How many (non-secret) themes there are */
@@ -886,13 +885,8 @@ linedef *split_linedef(level *l, linedef *ld, int len, config *c);
 boolean link_fitsq(link *ThisLink,quest *ThisQuest);
 boolean link_fitsh(linedef *ldf,link *ThisLink,config *c);
 boolean link_fitsv(level *l,linedef *ldf1,linedef *ldf2,link *ThisLink);
-void Usage0(void);
-void Usage(void);
-void Usage2(void);
-boolean do_switches(int argc,char *argv[],config *c,char *s,int conly);
-boolean read_switches(config *c);
 boolean nonswitch_config(config *c);
-void load_config(config *c);
+void load_obsidian_config(config *c);
 void unload_config(config *c);
 texture *new_texture(config *c, const char *name);
 texture *find_texture(config *c, const char *name);

@@ -44,7 +44,7 @@ function HACX.all_done()
 	gui.wad_insert_file("data/endoom/ENDOOM.bin", "ENDOOM")
 end
 
-OB_GAMES["hacx"] =
+UNFINISHED["hacx"] =
 {
 	label = _("HacX 1.2"),
 	priority = 92,

@@ -2607,6 +2607,7 @@ function ob_build_cool_shit()
         ob_merge_table_list(mod.tables)
       end
     end
+    ob_invoke_hook("slump_setup")
     ob_invoke_hook("setup")
     gui.minimap_disable(gui.gettext("SLUMP"))
     return "ok" 

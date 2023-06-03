@@ -1807,8 +1807,7 @@ softrestart:;
 
 #ifndef CONSOLE_ONLY
     if (main_win) {
-        if (StringCaseCmp(main_win->game_box->engine->GetID(), "idtech_0") == 0 ||
-            StringCaseCmp(main_win->game_box->port->GetID(), "limit_enforcing") == 0) {
+        if (StringCaseCmp(main_win->game_box->engine->GetID(), "idtech_0") == 0) {
             main_win->game_box->theme->deactivate();
         } else {
             main_win->game_box->theme->activate();
