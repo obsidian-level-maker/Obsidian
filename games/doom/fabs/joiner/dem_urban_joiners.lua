@@ -773,7 +773,9 @@ PREFABS.Joiner_yard_joiner2 =
   template = "Joiner_living_room",
   map    = "MAP18",
 
-  prob   = 3500,
+  height = 256,
+
+  prob   = 5000,
 
   neighbor = "outdoor",
 
@@ -784,11 +786,7 @@ PREFABS.Joiner_yard_joiner2 =
 
   texture_pack = "armaetus",
 
-  deep = 16,
-  over = 16,
-
   jump_crouch = true,
-
 
   tex_CITY01 =
   {
@@ -806,6 +804,8 @@ PREFABS.Joiner_yard_joiner2 =
     CITY14 = 25,
   },
 
+  bound_z1 = 0,
+  bound_z2 = 256
 }
 
 --a yard and house joiner 3
@@ -850,7 +850,9 @@ PREFABS.Joiner_yard_joiner3 =
     CITY14 = 25,
   },
 
-  z_fit = { 254,256 }
+  z_fit = { 254,256 },
+  bound_z1 = 0,
+  bound_z2 = 256
 }
 
 --destroyed yard and house joiner 4
@@ -890,5 +892,3 @@ PREFABS.Joiner_yard_joiner4 =
   },
 
 }
-
-

@@ -220,6 +220,7 @@ ZDOOM_SPECIALS.FOG_COLORS =
 }
 
 function ZDOOM_SPECIALS.setup(self)
+  PARAM.zdoom_specials_active = true
   module_param_up(self)
 end
 
@@ -358,11 +359,11 @@ function ZDOOM_SPECIALS.do_special_stuff()
     -- resolve proper episodic sky texture assignments
     if PARAM.sky_generator_active then
       if map_num <= 11 then
-        sky_tex = "RSKY1"
+        sky_tex = "O_D2SKY1"
       elseif map_num > 11 and map_num <= 20 then
-        sky_tex = "RSKY2"
+        sky_tex = "O_D2SKY2"
       elseif map_num > 20 then
-        sky_tex = "RSKY3"
+        sky_tex = "O_D2SKY3"
       end
     else
       if map_num <= 11 then

@@ -22,10 +22,12 @@ SKY_GEN = { }
 
 SKY_GEN.SKY_CHOICES =
 {
-  "sky_default", _("Default"),
-  "50",          _("Random"),
+  "sky_default", _("Default (33% of Episodes Day)"),
   "sky_night",   _("Night"),
   "sky_day",     _("Day"),
+  "sky_25_day",  _("25% of Episodes Day"),
+  "50",          _("50% of Episodes Day"),
+  "sky_75_day",  _("75% of Episodes Day")
 }
 
 SKY_GEN.HILL_STATE =
@@ -134,6 +136,10 @@ function SKY_GEN.generate_skies()
     elseif PARAM.force_sky == "sky_night" then
       is_starry = true
     elseif PARAM.force_sky == "50" and rand.odds(50) then
+      is_starry = true
+    elseif PARAM.force_sky == "sky_25_day" and rand.odds(75) then
+      is_starry = true
+    elseif PARAM.force_sky == "sky_75_day" and rand.odds(25) then
       is_starry = true
     end
 
@@ -294,6 +300,14 @@ function SKY_GEN.generate_skies()
 
       gui.set_colormap(2, colormap)
       gui.fsky_add_hills(info)
+    end
+
+    -- hack fix for when a generated MAPINFO is available
+    -- because Doom2 apparently handles sky lump names weirdly
+    if PARAM.zdoom_specials_active and OB_CONFIG.game == "doom2" then
+      if EPI.sky_patch then EPI.sky_patch = "O_D2SKY1" end
+      if EPI.sky_patch2 then EPI.sky_patch2 = "O_D2SKY2" end
+      if EPI.sky_patch3 then  EPI.sky_patch3 = "O_D2SKY3" end
     end
 
     gui.fsky_write(EPI.sky_patch)

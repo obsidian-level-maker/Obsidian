@@ -459,3 +459,34 @@ PREFABS.Wall_generic_artsy_lite_box_diag =
 
   bound_z2 = 96
 }
+
+--
+
+PREFABS.Wall_generic_artsy_chequered =
+{
+  template = "Wall_generic_artsy_bedazzled",
+  map = "MAP37",
+
+  group = "gtd_generic_artsy_chequered",
+
+  height = 96,
+
+  bound_z2 = 96,
+
+  z_fit = "stretch"
+}
+
+PREFABS.Wall_generic_artsy_chequered_diag =
+{
+  template = "Wall_generic_artsy_bedazzled",
+  map = "MAP38",
+
+  group = "gtd_generic_artsy_chequered",
+
+  height = 96,
+  where = "diagonal",
+
+  bound_z2 = 96,
+
+  z_fit = "stretch"
+}

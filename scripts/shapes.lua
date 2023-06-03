@@ -6502,6 +6502,106 @@ GROW_CAUSEWAY_SINGLE_WATERBOUND_BEND =
   }
 },
 
+GROW_PILLAR_HALF_BIB =
+{
+  prob = 20,
+  skip_prob = 80,
+
+  structure =
+  {
+    "11xxxxx","11xxxxx",
+    ".......","1111111",
+    ".......","1111111",
+    ".......","vv#AA11",
+    ".......","AAAAA11",
+    ".......","AAAAAAA",
+  }
+},
+
+GROW_PILLAR_HALF_BIB_ALT_APPROACH =
+{
+  prob = 20,
+  skip_prob = 80,
+
+  structure =
+  {
+    ".......x","1111111x",
+    ".......x","1111111x",
+    ".......1","vv#AA111",
+    ".......1","AAAAA111",
+    ".......x","AAAAAAAx",
+  }
+},
+
+GROW_PILLAR_BIB_DIAG =
+{
+  prob = 18,
+  skip_prob = 80,
+
+  structure =
+  {
+    "11xxxx","11xxxx",
+    "......","111111",
+    "......","111111",
+    "......","11/%11",
+    "......","vv%/AA",
+    "......","AAAAAA",
+    "......","AAAAAA",
+  },
+
+  diagonals =
+  {
+    "1.",".1",
+    "A.",".A"
+  }
+},
+
+GROW_PILLAR_BIB_DIAG_DOUBLED =
+{
+  prob = 22,
+  skip_prob = 82,
+
+  structure =
+  {
+    "xxxx11xxxx","xxxx11xxxx",
+    "..........","1111111111",
+    "..........","1111111111",
+    "..........","11/%11/%11",
+    "..........","AA%/vv%/AA",
+    "..........","AAAAAAAAAA",
+    "..........","AAAAAAAAAA",
+  },
+
+  diagonals =
+  {
+    "1.",".1","1.",".1",
+    "A.",".A","A.",".A"
+  }
+},
+
+GROW_PILLAR_BIB_DIAG_TRIPLED =
+{
+  prob = 25,
+  skip_prob = 82,
+
+  structure =
+  {
+    "xxxxxx11xxxxxx","xxxxxx11xxxxxx",
+    "..............","11111111111111",
+    "..............","11111111111111",
+    "..............","11/%11/%11/%11",
+    "..............","AA%/vv%/vv%/AA",
+    "..............","AAAAAAAAAAAAAA",
+    "..............","AAAAAAAAAAAAAA",
+  },
+
+  diagonals =
+  {
+    "1.",".1","1.",".1","1.",".1",
+    "A.",".A","A.",".A","A.",".A"
+  }
+},
+
 GROW_CAUSEWAY_SINGLE_SOLID_PILLAR =
 {
   prob = 15,
