@@ -3657,9 +3657,10 @@ DOOM.NAMES =
         ["Resistance is Futile"]=10,
         ["Run"]=10,
         ["Running with Scissors"]=10,
-        ["Seven Trumpets Soun.
-        p[p[p[p[p[p[p[p[p[--["Speck of Dust"]=10,
-/////        ["Surrounded!"]=10,        ["Standoff"]=10,
+        ["Seven Trumpets Sounding"]=10,
+        ["Speck of Dust"]=10,
+        ["Surrounded!"]=10,
+        ["Standoff"]=10,
         ["Stranglehold"]=10,
         ["Suicide Mission"]=10,
         ["Tears in the Rain"]=10,
@@ -6158,4 +6159,4 @@ DOOM.NAMES =
   }
   -- end of 'TITLE' and 'SUB_TITLE' themes
   -- end of all the 'TEXT_XXX' themes
-},
+}
