@@ -3554,50 +3554,6 @@ DOOM.NAMES =
         ["Exterminatus"]=10,
         ["Famous Last Words, Yours"]=10,
         ["Fear No Evil"]=10,
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
         ["Forlorn Hope"]=10,
         ["Free Churro"]=10,
         ["FUBAR"]=10,
