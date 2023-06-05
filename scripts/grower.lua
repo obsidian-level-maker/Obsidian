@@ -903,10 +903,10 @@ function Grower_calc_rule_probs(LEVEL)
   PARAM.cur_shape_group = ""
   PARAM.cur_shape_group_apply_count = 0
 
-  -- Layout Absurdifier
+  -- Layout Absurdifier (AKA Layout Consistency)
 
   if OB_CONFIG.float_layout_absurdity then
-    gui.printf("\n--== Layout Absurdity Module ==--\n\n")
+    gui.printf("\n--== Layout Consistency Module ==--\n\n")
   end
 
   if not LEVEL.is_procedural_gotcha and not LEVEL.is_nature and not LEVEL.has_streets then
@@ -954,6 +954,8 @@ function Grower_calc_rule_probs(LEVEL)
       if rule.pass and rule.pass ~= "grow" then return end
       if table.has_elem(rule.styles, "liquids") 
         and not LEVEL.liquid then return end
+      if table.has_elem(rule.styles, "cages") 
+        and not rand.odds(style_sel("cages", 0, 40, 70, 90)) then return end
 
       --if rand.odds(75) then
       new_factor = rand.range( 100,1000000 ) * rand.range( 0.75,1.25 )
