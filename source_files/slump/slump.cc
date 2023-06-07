@@ -1073,12 +1073,17 @@ config *get_config(std::filesystem::path filename) {
     }
     std::string current_game = ob_get_param("game");
     if (StringCaseCmp(current_game, "doom1") == 0 || StringCaseCmp(current_game, "ultdoom") == 0) {
-        answer->gamemask = DOOM1_BIT;
+        answer->gamemask = (DOOM1_BIT|DOOMI_BIT);
+        answer->map = 0;
+        answer->episode = 1;
+        answer->mission = 1;
+    } else if (StringCaseCmp(current_game, "heretic") == 0) {
+        answer->gamemask = HERETIC_BIT;
         answer->map = 0;
         answer->episode = 1;
         answer->mission = 1;
     } else {
-        answer->gamemask = DOOM2_BIT;
+        answer->gamemask = (DOOM2_BIT|DOOMI_BIT);
         answer->map = 1;
         answer->episode = 0;
         answer->mission = 0;
@@ -8168,6 +8173,13 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
   m->bits |= PICKABLE;
   m->bits |= LIGHT;
   m->width = 16;
+  // Heretic decor
+  m = find_genus(c,ID_POD);
+  m->bits &= ~PICKABLE;
+  m->bits |= EXPLODES;
+  m->width = 33;
+  
+
   /* and register the weapons and ammos and healths */
   /* at least the ones that we need for arenas! */
   m = find_genus(c,ID_ROCKBOX);
@@ -8203,150 +8215,152 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
    * 11) Head 
    */
   /* Description of monsters */
-  m = find_monster(c,ID_TROOPER);
-  m->width = 42;
-  m->ammo_provides = (float)100;
-  m->ammo_to_kill[ITYTD] = (float)55;
-  m->ammo_to_kill[HMP] = (float)35;
-  m->ammo_to_kill[UV] = (float)30;
-  m->damage[ITYTD] = (float)15;
-  m->damage[HMP] = (float)3;
-  m->damage[UV] = (float)1;
-  m->altdamage[ITYTD] = (float)10;
-  m->altdamage[HMP] = (float)1;
-  m->altdamage[UV] = (float)1;
-  m->bits |= SHOOTS;
-  m->min_level = 1;
-  /* Tropper with gun */
-  m = find_monster(c,ID_SERGEANT);
-  m->width = 42;
-  m->ammo_provides = (float)280;
-  m->ammo_to_kill[ITYTD] = (float)80;
-  m->ammo_to_kill[HMP] = (float)50;
-  m->ammo_to_kill[UV] = (float)40;
-  m->damage[ITYTD] = (float)25;
-  m->damage[HMP] = (float)6;
-  m->damage[UV] = (float)2;
-  m->altdamage[ITYTD] = (float)20;
-  m->altdamage[HMP] = (float)2;
-  m->altdamage[UV] = (float)1;
-  m->bits |= SHOOTS;
-  m->min_level = 2;
-  /* Imp */
-  m = find_monster(c,ID_IMP);
-  m->width = 42;
-  m->ammo_provides = (float)0;
-  m->ammo_to_kill[ITYTD] = (float)160;
-  m->ammo_to_kill[HMP] = (float)95;
-  m->ammo_to_kill[UV] = (float)80;
-  m->damage[ITYTD] = (float)20;
-  m->damage[HMP] = (float)6;
-  m->damage[UV] = (float)3;
-  m->altdamage[ITYTD] = (float)20;
-  m->altdamage[HMP] = (float)5;
-  m->altdamage[UV] = (float)2;
-  m->bits |= SHOOTS;
-  m->min_level = 1;
-  /* Pinky */
-  m = find_monster(c,ID_PINK);
-  m->width = 62;
-  m->ammo_provides = (float)0;
-  m->ammo_to_kill[ITYTD] = (float)385;
-  m->ammo_to_kill[HMP] = (float)236;
-  m->ammo_to_kill[UV] = (float)195;
-  m->damage[ITYTD] = (float)25;
-  m->damage[HMP] = (float)10;
-  m->damage[UV] = (float)8;
-  m->altdamage[ITYTD] = (float)20;
-  m->altdamage[HMP] = (float)8;
-  m->altdamage[UV] = (float)4;
-  m->min_level = 3;
-  /* Invisible pinky */
-  m = find_monster(c,ID_SPECTRE);
-  m->width = 62;
-  m->ammo_provides = (float)0;
-  m->ammo_to_kill[ITYTD] = (float)410;
-  m->ammo_to_kill[HMP] = (float)260;
-  m->ammo_to_kill[UV] = (float)220;
-  m->damage[ITYTD] = (float)25;
-  m->damage[HMP] = (float)10;
-  m->damage[UV] = (float)8;
-  m->altdamage[ITYTD] = (float)25;
-  m->altdamage[HMP] = (float)8;
-  m->altdamage[UV] = (float) 6;
-  m->min_level = 7;
-  /* Floating head */
-  m = find_monster(c,ID_SKULL);
-  m->width = 34;
-  m->bits |= BIG;  /* Well, sort of! */
-  m->ammo_provides = (float)0;
-  m->ammo_to_kill[ITYTD] = (float)260;
-  m->ammo_to_kill[HMP] = (float)165;
-  m->ammo_to_kill[UV] = (float)130;
-  m->damage[ITYTD] = (float)22;
-  m->damage[HMP] = (float)8;
-  m->damage[UV] = (float)5;
-  m->altdamage[ITYTD] = (float)18;
-  m->altdamage[HMP] = (float)5;
-  m->altdamage[UV] = (float)2;
-  m->bits |= FLIES;
-  m->min_level = 6;
-  /* Spider thing (I think) */
-  m = find_monster(c,ID_HEAD);
-  m->width = 63;                 /* Or 62 or maybe 64 */
-  m->bits |= BIG;
-  m->ammo_provides = (float)0;
-  m->ammo_to_kill[ITYTD] = (float)1050;
-  m->ammo_to_kill[HMP] = (float)630;
-  m->ammo_to_kill[UV] = (float)590;
-  m->damage[ITYTD] = (float)60;
-  m->damage[HMP] = (float)35;
-  m->damage[UV] = (float)18;
-  m->altdamage[ITYTD] = (float)50;
-  m->altdamage[HMP] = (float)20;
-  m->altdamage[UV] = (float)10;
-  m->bits |= SHOOTS;
-  m->bits |= FLIES;
-  m->min_level = 11;
-  /* Baron of Hell */
-  m = find_monster(c,ID_BARON);
-  m->width = 50;                 /* Roughly */
-  m->height = 64;
-  m->bits |= BIG | BOSS;         /* Not placed randomly */
-  m->ammo_provides = (float)0;
-  m->ammo_to_kill[ITYTD] = (float)1900;   /* Numbers are all guesses; fix */
-  m->ammo_to_kill[HMP] = (float)1600;
-  m->ammo_to_kill[UV] = (float)1500;
-  m->damage[ITYTD] = (float)80;
-  m->damage[HMP] = (float)40;
-  m->damage[UV] = (float)25;
-  m->altdamage[ITYTD] = (float)70;
-  m->altdamage[HMP] = (float)25;
-  m->altdamage[UV] = (float)18;
-  m->bits |= SHOOTS;
-  m->min_level = 12;
+  if (!(c->gamemask&(HERETIC_BIT))) {
+    m = find_monster(c,ID_TROOPER);
+    m->width = 42;
+    m->ammo_provides = (float)100;
+    m->ammo_to_kill[ITYTD] = (float)55;
+    m->ammo_to_kill[HMP] = (float)35;
+    m->ammo_to_kill[UV] = (float)30;
+    m->damage[ITYTD] = (float)15;
+    m->damage[HMP] = (float)3;
+    m->damage[UV] = (float)1;
+    m->altdamage[ITYTD] = (float)10;
+    m->altdamage[HMP] = (float)1;
+    m->altdamage[UV] = (float)1;
+    m->bits |= SHOOTS;
+    m->min_level = 1;
+    /* Tropper with gun */
+    m = find_monster(c,ID_SERGEANT);
+    m->width = 42;
+    m->ammo_provides = (float)280;
+    m->ammo_to_kill[ITYTD] = (float)80;
+    m->ammo_to_kill[HMP] = (float)50;
+    m->ammo_to_kill[UV] = (float)40;
+    m->damage[ITYTD] = (float)25;
+    m->damage[HMP] = (float)6;
+    m->damage[UV] = (float)2;
+    m->altdamage[ITYTD] = (float)20;
+    m->altdamage[HMP] = (float)2;
+    m->altdamage[UV] = (float)1;
+    m->bits |= SHOOTS;
+    m->min_level = 2;
+    /* Imp */
+    m = find_monster(c,ID_IMP);
+    m->width = 42;
+    m->ammo_provides = (float)0;
+    m->ammo_to_kill[ITYTD] = (float)160;
+    m->ammo_to_kill[HMP] = (float)95;
+    m->ammo_to_kill[UV] = (float)80;
+    m->damage[ITYTD] = (float)20;
+    m->damage[HMP] = (float)6;
+    m->damage[UV] = (float)3;
+    m->altdamage[ITYTD] = (float)20;
+    m->altdamage[HMP] = (float)5;
+    m->altdamage[UV] = (float)2;
+    m->bits |= SHOOTS;
+    m->min_level = 1;
+    /* Pinky */
+    m = find_monster(c,ID_PINK);
+    m->width = 62;
+    m->ammo_provides = (float)0;
+    m->ammo_to_kill[ITYTD] = (float)385;
+    m->ammo_to_kill[HMP] = (float)236;
+    m->ammo_to_kill[UV] = (float)195;
+    m->damage[ITYTD] = (float)25;
+    m->damage[HMP] = (float)10;
+    m->damage[UV] = (float)8;
+    m->altdamage[ITYTD] = (float)20;
+    m->altdamage[HMP] = (float)8;
+    m->altdamage[UV] = (float)4;
+    m->min_level = 3;
+    /* Invisible pinky */
+    m = find_monster(c,ID_SPECTRE);
+    m->width = 62;
+    m->ammo_provides = (float)0;
+    m->ammo_to_kill[ITYTD] = (float)410;
+    m->ammo_to_kill[HMP] = (float)260;
+    m->ammo_to_kill[UV] = (float)220;
+    m->damage[ITYTD] = (float)25;
+    m->damage[HMP] = (float)10;
+    m->damage[UV] = (float)8;
+    m->altdamage[ITYTD] = (float)25;
+    m->altdamage[HMP] = (float)8;
+    m->altdamage[UV] = (float) 6;
+    m->min_level = 7;
+    /* Floating head */
+    m = find_monster(c,ID_SKULL);
+    m->width = 34;
+    m->bits |= BIG;  /* Well, sort of! */
+    m->ammo_provides = (float)0;
+    m->ammo_to_kill[ITYTD] = (float)260;
+    m->ammo_to_kill[HMP] = (float)165;
+    m->ammo_to_kill[UV] = (float)130;
+    m->damage[ITYTD] = (float)22;
+    m->damage[HMP] = (float)8;
+    m->damage[UV] = (float)5;
+    m->altdamage[ITYTD] = (float)18;
+    m->altdamage[HMP] = (float)5;
+    m->altdamage[UV] = (float)2;
+    m->bits |= FLIES;
+    m->min_level = 6;
+    /* Spider thing (I think) */
+    m = find_monster(c,ID_HEAD);
+    m->width = 63;                 /* Or 62 or maybe 64 */
+    m->bits |= BIG;
+    m->ammo_provides = (float)0;
+    m->ammo_to_kill[ITYTD] = (float)1050;
+    m->ammo_to_kill[HMP] = (float)630;
+    m->ammo_to_kill[UV] = (float)590;
+    m->damage[ITYTD] = (float)60;
+    m->damage[HMP] = (float)35;
+    m->damage[UV] = (float)18;
+    m->altdamage[ITYTD] = (float)50;
+    m->altdamage[HMP] = (float)20;
+    m->altdamage[UV] = (float)10;
+    m->bits |= SHOOTS;
+    m->bits |= FLIES;
+    m->min_level = 11;
+    /* Baron of Hell */
+    m = find_monster(c,ID_BARON);
+    m->width = 50;                 /* Roughly */
+    m->height = 64;
+    m->bits |= BIG | BOSS;         /* Not placed randomly */
+    m->ammo_provides = (float)0;
+    m->ammo_to_kill[ITYTD] = (float)1900;   /* Numbers are all guesses; fix */
+    m->ammo_to_kill[HMP] = (float)1600;
+    m->ammo_to_kill[UV] = (float)1500;
+    m->damage[ITYTD] = (float)80;
+    m->damage[HMP] = (float)40;
+    m->damage[UV] = (float)25;
+    m->altdamage[ITYTD] = (float)70;
+    m->altdamage[HMP] = (float)25;
+    m->altdamage[UV] = (float)18;
+    m->bits |= SHOOTS;
+    m->min_level = 12;
 
-  /* Other bosses; need to fill in data! */
-  m = find_monster(c,ID_CYBER);
-  m->width = 84;
-  m->height = 110;
-  m->bits |= BIG | BOSS;
-  m->ammo_provides = (float)0;
-  m->ammo_to_kill[ITYTD] = (float)8000;   /* Numbers are all guesses; fix */
-  m->ammo_to_kill[HMP] = (float)6500;
-  m->ammo_to_kill[UV] = (float)6200;
-  m = find_monster(c,ID_SPIDERBOSS);
-  m->width = 260;
-  m->height = 100;
-  m->bits |= BIG | BOSS;
-  m->ammo_provides = (float)0;
-  m->ammo_to_kill[ITYTD] = (float)6000;   /* Numbers are all guesses; fix */
-  m->ammo_to_kill[HMP] = (float)5000;
-  m->ammo_to_kill[UV] = (float)4500;
-  m->min_level=17;
+    /* Other bosses; need to fill in data! */
+    m = find_monster(c,ID_CYBER);
+    m->width = 84;
+    m->height = 110;
+    m->bits |= BIG | BOSS;
+    m->ammo_provides = (float)0;
+    m->ammo_to_kill[ITYTD] = (float)8000;   /* Numbers are all guesses; fix */
+    m->ammo_to_kill[HMP] = (float)6500;
+    m->ammo_to_kill[UV] = (float)6200;
+    m = find_monster(c,ID_SPIDERBOSS);
+    m->width = 260;
+    m->height = 100;
+    m->bits |= BIG | BOSS;
+    m->ammo_provides = (float)0;
+    m->ammo_to_kill[ITYTD] = (float)6000;   /* Numbers are all guesses; fix */
+    m->ammo_to_kill[HMP] = (float)5000;
+    m->ammo_to_kill[UV] = (float)4500;
+    m->min_level=17;
+  }
 
   /* DOOM2 monsters */
-  if (!(c->gamemask&(DOOM0_BIT|DOOM1_BIT))) {
+  if (!(c->gamemask&(DOOM0_BIT|DOOM1_BIT|HERETIC_BIT))) {
     m = find_monster(c,ID_NAZI);
     m->gamemask = DOOM2_BIT;
     m->width = 42;
@@ -8447,6 +8461,204 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->ammo_to_kill[HMP] = (float)50;
     m->ammo_to_kill[UV] = (float)30;
     m->min_level = 23;
+  }
+
+  /* this should be the rough range of where the new monsters are:
+  m->width = radius * 2 + 2
+  m->ammo_to_kill[ITYTD] = 2.5 x health
+  m->ammo_to_kill[HMP] = 1.5 x health
+  m->ammo_to_kill[UV] = 1.3 x health
+  m->damage[ITYTD] = max damage value for attack
+  m->damage[HMP] = 1/2 max damage
+  m->damage[UV] = 1/4 max damage
+  m->altdamage (all cases) = 2/3 of above values
+  m->ammo_provides = ammo dropped * avg damage for weapon/ammo
+  m->bits = appropriate per-monster values
+  m->minlevel = first level they appear in from their IWAD
+  */
+
+  /* Heretic monsters */
+  if (c->gamemask&(HERETIC_BIT)) {
+    m = find_monster(c,ID_GARGOYLE);
+    m->gamemask = HERETIC_BIT;
+    m->width = 34;
+    m->ammo_to_kill[ITYTD] = (float)100;
+    m->ammo_to_kill[HMP] = (float)60;
+    m->ammo_to_kill[UV] = (float)50;
+    m->damage[ITYTD] = (float)12;
+    m->damage[HMP] = (float)6;
+    m->damage[UV] = (float)3;
+    m->altdamage[ITYTD] = (float)8;
+    m->altdamage[HMP] = (float)4;
+    m->altdamage[UV] = (float)2;
+    m->bits |= FLIES;
+    m->min_level = 1;
+    m = find_monster(c,ID_FIREGARGOYLE);
+    m->gamemask = HERETIC_BIT;
+    m->width = 34;
+    m->ammo_to_kill[ITYTD] = (float)200;
+    m->ammo_to_kill[HMP] = (float)120;
+    m->ammo_to_kill[UV] = (float)100;
+    m->damage[ITYTD] = (float)12;
+    m->damage[HMP] = (float)6;
+    m->damage[UV] = (float)3;
+    m->altdamage[ITYTD] = (float)8;
+    m->altdamage[HMP] = (float)4;
+    m->altdamage[UV] = (float)2;
+    m->bits |= FLIES;
+    m->bits |= SHOOTS;
+    m->min_level = 3;   
+    m = find_monster(c,ID_GOLEM);
+    m->gamemask = HERETIC_BIT;
+    m->width = 46;
+    m->ammo_to_kill[ITYTD] = (float)200;
+    m->ammo_to_kill[HMP] = (float)120;
+    m->ammo_to_kill[UV] = (float)100;
+    m->ammo_provides = (float)10;
+    m->damage[ITYTD] = (float)16;
+    m->damage[HMP] = (float)8;
+    m->damage[UV] = (float)4;
+    m->altdamage[ITYTD] = (float)12;
+    m->altdamage[HMP] = (float)6;
+    m->altdamage[UV] = (float)3;
+    m->min_level = 1;
+    m = find_monster(c,ID_NITROGOLEM);
+    m->gamemask = HERETIC_BIT;
+    m->width = 46;
+    m->ammo_to_kill[ITYTD] = (float)250;
+    m->ammo_to_kill[HMP] = (float)150;
+    m->ammo_to_kill[UV] = (float)130;
+    m->damage[ITYTD] = (float)32;
+    m->damage[HMP] = (float)16;
+    m->damage[UV] = (float)8;
+    m->altdamage[ITYTD] = (float)20;
+    m->altdamage[HMP] = (float)10;
+    m->altdamage[UV] = (float)6;
+    m->bits |= SHOOTS;
+    m->min_level = 4;
+    m = find_monster(c,ID_OPHIDIAN);
+    m->gamemask = HERETIC_BIT;
+    m->width = 46;
+    m->ammo_to_kill[ITYTD] = (float)700;
+    m->ammo_to_kill[HMP] = (float)420;
+    m->ammo_to_kill[UV] = (float)360;
+    m->ammo_provides = (float)90;
+    m->damage[ITYTD] = (float)24;
+    m->damage[HMP] = (float)12;
+    m->damage[UV] = (float)6;
+    m->altdamage[ITYTD] = (float)16;
+    m->altdamage[HMP] = (float)8;
+    m->altdamage[UV] = (float)4;
+    m->bits |= SHOOTS;
+    m->min_level = 17;
+    m = find_monster(c,ID_SABRECLAW);
+    m->gamemask = HERETIC_BIT;
+    m->width = 42;
+    m->ammo_to_kill[ITYTD] = (float)375;
+    m->ammo_to_kill[HMP] = (float)225;
+    m->ammo_to_kill[UV] = (float)195;
+    m->ammo_provides = (float)14;
+    m->damage[ITYTD] = (float)9;
+    m->damage[HMP] = (float)5;
+    m->damage[UV] = (float)3;
+    m->altdamage[ITYTD] = (float)8;
+    m->altdamage[HMP] = (float)4;
+    m->altdamage[UV] = (float)2;
+    m->min_level = 10;
+    m = find_monster(c,ID_UNDEADWARRIOR);
+    m->gamemask = HERETIC_BIT;
+    m->width = 50;
+    m->ammo_to_kill[ITYTD] = (float)500;
+    m->ammo_to_kill[HMP] = (float)300;
+    m->ammo_to_kill[UV] = (float)275;
+    m->damage[ITYTD] = (float)16;
+    m->damage[HMP] = (float)8;
+    m->damage[UV] = (float)4;
+    m->altdamage[ITYTD] = (float)10;
+    m->altdamage[HMP] = (float)6;
+    m->altdamage[UV] = (float)3;
+    m->min_level = 1;
+    m->bits |= SHOOTS;
+    m = find_monster(c,ID_DISCIPLE);
+    m->gamemask = HERETIC_BIT;
+    m->width = 34;
+    m->ammo_to_kill[ITYTD] = (float)450;
+    m->ammo_to_kill[HMP] = (float)270;
+    m->ammo_to_kill[UV] = (float)240;
+    m->ammo_provides = (float)18;
+    m->damage[ITYTD] = (float)24;
+    m->damage[HMP] = (float)12;
+    m->damage[UV] = (float)6;
+    m->altdamage[ITYTD] = (float)16;
+    m->altdamage[HMP] = (float)8;
+    m->altdamage[UV] = (float)4;
+    m->min_level = 4;
+    m->bits |= SHOOTS;
+    m = find_monster(c,ID_WEREDRAGON);
+    m->gamemask = HERETIC_BIT;
+    m->width = 66;
+    m->ammo_to_kill[ITYTD] = (float)550;
+    m->ammo_to_kill[HMP] = (float)330;
+    m->ammo_to_kill[UV] = (float)290;
+    m->ammo_provides = (float)45;
+    m->damage[ITYTD] = (float)32;
+    m->damage[HMP] = (float)16;
+    m->damage[UV] = (float)8;
+    m->altdamage[ITYTD] = (float)20;
+    m->altdamage[HMP] = (float)12;
+    m->altdamage[UV] = (float)6;
+    m->min_level = 9;
+    m->bits |= SHOOTS;
+    m = find_monster(c,ID_MAULOTAUR);
+    m->gamemask = HERETIC_BIT;
+    m->width = 58;
+    m->ammo_to_kill[ITYTD] = (float)7500;
+    m->ammo_to_kill[HMP] = (float)4500;
+    m->ammo_to_kill[UV] = (float)4000;
+    m->ammo_provides = (float)90;
+    m->damage[ITYTD] = (float)56;
+    m->damage[HMP] = (float)28;
+    m->damage[UV] = (float)14;
+    m->altdamage[ITYTD] = (float)38;
+    m->altdamage[HMP] = (float)18;
+    m->altdamage[UV] = (float)10;
+    m->min_level = 16;
+    m->bits |= SHOOTS;
+    m->bits |= BOSS;
+    m->bits |= BIG;
+    m = find_monster(c,ID_IRONLICH);
+    m->gamemask = HERETIC_BIT;
+    m->width = 82;
+    m->ammo_to_kill[ITYTD] = (float)1750;
+    m->ammo_to_kill[HMP] = (float)1050;
+    m->ammo_to_kill[UV] = (float)925;
+    m->ammo_provides = (float)18;
+    m->damage[ITYTD] = (float)48;
+    m->damage[HMP] = (float)24;
+    m->damage[UV] = (float)12;
+    m->altdamage[ITYTD] = (float)32;
+    m->altdamage[HMP] = (float)16;
+    m->altdamage[UV] = (float)8;
+    m->min_level = 8;
+    m->bits |= SHOOTS;
+    m->bits |= BOSS;
+    m->bits |= BIG;
+    m = find_monster(c,ID_DSPARIL);
+    m->gamemask = HERETIC_BIT;
+    m->width = 58;
+    m->ammo_to_kill[ITYTD] = (float)13500;
+    m->ammo_to_kill[HMP] = (float)8000;
+    m->ammo_to_kill[UV] = (float)6500;
+    m->damage[ITYTD] = (float)80;
+    m->damage[HMP] = (float)40;
+    m->damage[UV] = (float)20;
+    m->altdamage[ITYTD] = (float)60;
+    m->altdamage[HMP] = (float)30;
+    m->altdamage[UV] = (float)15;
+    m->min_level = 24;
+    m->bits |= SHOOTS;
+    m->bits |= BOSS;
+    m->bits |= BIG;
   }
 
   return SLUMP_TRUE;
@@ -11634,7 +11846,11 @@ void place_start_things(level *l,sector *s,config *c)
   find_rec(l,s,&minx,&miny,&maxx,&maxy);
 
   /* Let's make sure they always have a single-barrel shotgun */
-  new_thing(l,(minx+maxx)/2,(miny+maxy)/2,90,ID_SHOTGUN,7,c);  
+  if (c->gamemask == HERETIC_BIT) {
+    new_thing(l,(minx+maxx)/2,(miny+maxy)/2,90,ID_CROSSBOW,7,c);  
+  } else {
+    new_thing(l,(minx+maxx)/2,(miny+maxy)/2,90,ID_SHOTGUN,7,c);  
+  }
 
   /* Now the start positions */
   if (rational_angles) angle = 0; else angle = 90*roll(4);

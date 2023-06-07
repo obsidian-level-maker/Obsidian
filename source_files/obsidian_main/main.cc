@@ -21,7 +21,9 @@
 
 #include <array>
 #include "main.h"
+#ifndef _WIN32
 #include "obsidian_config.h"
+#endif
 #include "fmt/core.h"
 #include "images.h"
 
