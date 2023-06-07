@@ -6,7 +6,7 @@ PREFABS.Window_low_gap_closed_1 =
   group  = "gtd_window_low_gap_closed",
   prob   = 50,
   theme = "!hell",
-  rank = 1
+  rank = 1,
 
   where  = "edge",
   seed_w = 1,
