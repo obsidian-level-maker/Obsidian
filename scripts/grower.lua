@@ -3614,7 +3614,7 @@ end
               R.base_set_increase = 1
             end
             for _,rule in pairs(LEVEL.base_set_rules) do
-              grammar[rule.name].use_prob = grammar[rule.name].use_prob * 10
+              grammar[rule.name].use_prob = grammar[rule.name].use_prob * 30
             end
           end
         end
