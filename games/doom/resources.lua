@@ -332,12 +332,14 @@ DOOM.RESOURCES.SKY_GEN_THEMES =
     {
       SKY_CLOUDS = 130,
       BLUE_CLOUDS = 80,
-      WHITE_CLOUDS = 80,
-      GREY_CLOUDS = 100,
-      DARK_CLOUDS = 100,
 
-      BROWN_CLOUDS = 60,
-      BROWNISH_CLOUDS = 40,
+      WHITE_CLOUDS = 40, --80
+      GREY_CLOUDS = 50, --100
+      DARK_CLOUDS = 50, -- 100
+
+      BROWN_CLOUDS = 30, --60
+      BROWNISH_CLOUDS = 30, --40
+
       PEACH_CLOUDS = 40,
       YELLOW_CLOUDS = 40,
       ORANGE_CLOUDS = 40,
@@ -370,12 +372,14 @@ DOOM.RESOURCES.SKY_GEN_THEMES =
     {
       SKY_CLOUDS = 130,
       BLUE_CLOUDS = 80,
-      WHITE_CLOUDS = 80,
-      GREY_CLOUDS = 100,
-      DARK_CLOUDS = 100,
 
-      BROWN_CLOUDS = 60,
-      BROWNISH_CLOUDS = 40,
+      WHITE_CLOUDS = 40, --80
+      GREY_CLOUDS = 50, --100
+      DARK_CLOUDS = 50, --100
+
+      BROWN_CLOUDS = 30, --60
+      BROWNISH_CLOUDS = 30, --40
+
       PEACH_CLOUDS = 40,
       YELLOW_CLOUDS = 40,
       ORANGE_CLOUDS = 40,
@@ -406,16 +410,17 @@ DOOM.RESOURCES.SKY_GEN_THEMES =
   {
     clouds =
     {
-      HELL_CLOUDS = 100,
-      DARKRED_CLOUDS = 70,
-      HELLISH_CLOUDS = 55,
+      HELL_CLOUDS = 45, --100
+      DARKRED_CLOUDS = 40, --70
+      HELLISH_CLOUDS = 35, --55
+
       YELLOW_CLOUDS = 40,
       ORANGE_CLOUDS = 40,
       JADE_CLOUDS = 35,
       GREEN_CLOUDS = 30,
+      PEACH_CLOUDS = 20,
       WHITE_CLOUDS = 30,
       GREY_CLOUDS = 30,
-      PEACH_CLOUDS = 20,
       DARK_CLOUDS = 40
     },
 
