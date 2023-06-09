@@ -31,8 +31,6 @@ function UI_SLUMP.setup(self)
   
   module_param_up(self)
 
-  assert(PARAM.slump_config)
-
 end
 
 OB_MODULES["ui_slump_arch"] =

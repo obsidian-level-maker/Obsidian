@@ -998,19 +998,13 @@ static bool BuildNodes(std::filesystem::path filename) {
         build_info->force_xnod = false;
         build_info->do_blockmap = true;
         build_info->do_reject = true;
-    } else if (StringCaseCmp(current_port, "dsda") == 0) {
-        build_info->gl_nodes = true;
-        build_info->do_reject = false;
-        build_info->do_blockmap = false;
-        build_info->force_xnod = false;
-        build_info->force_compress = true;
     } else if (StringCaseCmp(current_port, "eternity") == 0) { // Eternity
         build_info->gl_nodes = true;
         build_info->do_reject = false;
         build_info->do_blockmap = false;
         build_info->force_xnod = true;
         build_info->force_compress = false;
-    } else { // ZDoom (if enabled)
+    } else { // DSDA/ZDoom
         build_info->gl_nodes = true;
         build_info->do_reject = false;
         build_info->do_blockmap = false;
@@ -1071,8 +1065,13 @@ bool Doom::game_interface_c::Start(const char *preset) {
 #ifndef CONSOLE_ONLY
         if (!mid_batch) {
             if (ob_mod_enabled("compress_output")) {
-                filename = DLG_OutputFilename("pk3", 
-                    std::filesystem::path{preset}.replace_extension("pk3").string().c_str());
+                if ((StringCaseCmp(current_port, "dsda") == 0)) {
+                    filename = DLG_OutputFilename("zip", 
+                        std::filesystem::path{preset}.replace_extension("zip").string().c_str());
+                } else {
+                    filename = DLG_OutputFilename("pk3", 
+                        std::filesystem::path{preset}.replace_extension("pk3").string().c_str());
+                }
             } else {
                 filename = DLG_OutputFilename("wad", preset);
             }
@@ -1185,10 +1184,13 @@ bool Doom::game_interface_c::Finish(bool build_ok) {
     }
 
     if (build_ok) {
-        // This should be set for all advanced ports, but I gotta get off my ass and finish EC pk3 support - Dasho
         if (ob_mod_enabled("compress_output")) {
             std::filesystem::path zip_filename = filename;
-            zip_filename.replace_extension("pk3");
+            if (StringCaseCmp(current_port, "dsda") == 0) {
+                zip_filename.replace_extension("zip");
+            } else {
+                zip_filename.replace_extension("pk3");
+            }
             if (std::filesystem::exists(zip_filename)) {
                 if (create_backups) {
                     Main::BackupFile(zip_filename);
