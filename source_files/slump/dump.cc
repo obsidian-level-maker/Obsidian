@@ -549,7 +549,7 @@ void record_custom_textures(dumphandle dh, config *c)
   custom_texture *ct;
 
   /* Return if TEXTURE2 not available */
-  if (c->gamemask&(DOOM0_BIT|DOOM1_BIT|DOOMI_BIT)) return;
+  if (c->gamemask&(DOOM0_BIT|DOOM1_BIT|DOOMI_BIT|HERETIC_BIT)) return;
 
   tl = new_texture_lmp("TEXTURE2");
 

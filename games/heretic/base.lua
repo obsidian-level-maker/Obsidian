@@ -66,6 +66,7 @@ OB_GAMES["heretic"] =
   hooks =
   {
     factory_setup = HERETIC.factory_setup,
+    slump_setup = HERETIC.slump_setup,
     get_levels = HERETIC.get_levels,
     all_done   = HERETIC.all_done
   },

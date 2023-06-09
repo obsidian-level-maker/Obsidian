@@ -367,6 +367,10 @@ typedef struct s_genus {
 
 // Heretic decor
 #define ID_POD (0x7F3)
+#define ID_SERPENTTORCH (0x1B)
+#define ID_FIREBRAZIER (0x4C)
+#define ID_SMSTALAGMITE (0x25)
+#define ID_LGSTALAGMITE (0x26)
 
 
 /* The style is the dynamic architectural knowledge and stuff. */
@@ -562,7 +566,6 @@ struct s_linedef {
 #define LINEDEF_NORMAL_S1_DOOR (31)
 #define LINEDEF_BLUE_S1_DOOR (32)
 #define LINEDEF_RED_S1_DOOR (33)
-#define LINEDEF_HERETIC_GREEN_S1_DOOR (33)
 #define LINEDEF_YELLOW_S1_DOOR (34)
 #define LINEDEF_S1_OPEN_DOOR (103)
 #define LINEDEF_S1_RAISE_STAIRS (7)
@@ -606,6 +609,7 @@ struct s_linedef {
 #define SECRET_SECTOR (0x09)
 #define NUKAGE1_SPECIAL (5)
 #define DEATH_SECTOR (0x0b) // This is a no-op for Heretic
+#define HERETIC_LAVA (0x10) // Use this instead
 
 /* Stuff related to an open PWAD we're generating */
 
@@ -790,6 +794,7 @@ typedef struct s_level {
   boolean raise_gates; /* Teleport flats raised a bit? */
   boolean all_wide_links;
   boolean no_doors;
+  boolean heretic_level;
   short outside_light_level;  /* I don't know if it's cloudy or bright */
   short bright_light_level;  /* How bright a bright room is */
   short lit_light_level;     /* How bright a working lamp/light is */
