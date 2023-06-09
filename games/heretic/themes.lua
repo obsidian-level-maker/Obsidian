@@ -229,26 +229,27 @@ HERETIC.THEMES =
       ;    width so SLIGE can make them look nice).
 
       ; City walls
-      Texture CSTLRCK wall core CIT subtle CSTLMOSS
+      Texture CSTLRCK size 64 128 wall core CIT subtle CSTLMOSS
 
       ; Heretic only has two switches so make them generic to every theme
-      Texture SW1OFF isswitch comp CIT comp RED
-      Texture SW2OFF isswitch comp CIT comp RED
+      Texture SW1OFF size 64 128 isswitch comp CIT comp RED
+      Texture SW2OFF size 64 128 isswitch comp CIT comp RED
 
       ; And the lift texture
       Texture METL2 size 64 128 lift comp CIT comp RED
 
       ; RED walls
-      Texture REDWALL wall core RED
+      Texture REDWALL size 64 128 wall core RED
 
       ; Doors of all kinds.  "size" gives the width and height of the texture,
       ; and "locked" means that it's a good texture to use on a door that only
       ; opens with a switch, not a touch.
       Texture DOORSTON size 64 128 door comp CIT comp RED
+      Texture GRSKULL2 size 128 128 door comp CIT comp RED
 
       ; Heretic only has two switches so make them the exit switches as well
-      Texture SW1OFF exitswitch comp CIT comp RED
-      Texture SW2OFF exitswitch comp CIT comp RED
+      Texture SW1OFF size 64 128 exitswitch comp CIT comp RED
+      Texture SW2OFF size 64 128 exitswitch comp CIT comp RED
 
       ; Lights, suitable for lighting recesses and stuff.
       Texture LAVAFL1 size 8 128 light comp RED
@@ -258,14 +259,15 @@ HERETIC.THEMES =
       ;    making the big central pillar in an arena.
       ; "half_plaque" means that the upper half of this texture can be used
       ;    by itself, as well as the whole thing.
-      Texture BANNER1 plaque comp CIT
-      Texture BANNER2 plaque comp CIT
+      Texture BANNER1 size 64 128 plaque comp CIT
+      Texture BANNER2 size 64 128 plaque comp CIT
+      Texture REDWALL size 64 128 plaque comp RED
 
       ; Gratings
-      Texture GATMETL2 grating comp CIT comp RED
-      Texture GATMETL3 grating comp CIT comp RED
-      Texture GATMETL4 grating comp CIT comp RED
-      Texture GATMETL5 grating comp CIT comp RED
+      Texture GATMETL2 size 64 32 grating comp CIT comp RED
+      Texture GATMETL3 size 64 32 grating comp CIT comp RED
+      Texture GATMETL4 size 64 64 grating comp CIT comp RED
+      Texture GATMETL5 size 64 128 grating comp CIT comp RED
 
       ; Colors (suitable for marking key-locked things)
       ; We use the 'red' keyword for Heretic's Green Key
@@ -277,24 +279,17 @@ HERETIC.THEMES =
       Texture TMBSTON2 size 64 48 step comp CIT comp RED
 
       ; "Doorjambs"
-      Texture METL2 jamb comp CIT comp RED
+      Texture METL2 size 16 128 jamb comp CIT comp RED
 
       ; Support textures, used in various places
-      ;Texture SKSNAKE2 support comp RED
-      ;Texture ROCKRED1 support comp RED
-      ;Texture COMPSPAN support comp MIL 
-      ;Texture SUPPORT2 support comp MIL 
-      ;Texture SHAWN2 support comp MIL  
-      ;Texture ASHWALL3 support  noDoom0 noDoom1
-      ;Texture ASHWALL support  noDoom2
-      ;Texture BROWNHUG support  comp MIL  
-      ;Texture METAL support comp RED
+      Texture METL1 size 64 128 support comp CIT
+      Texture REDWALL size 64 128 support comp RED
 
       ; Bunch of things for outside patios (no themes applied here)
-      Texture MOSSRCK1 outside
+      Texture MOSSRCK1 size 128 128 outside
 
       ; Misc
-      Texture REDWALL error
+      Texture REDWALL size 64 128 error
 
       ; Now the flats.  Keywords should all be pretty obvious...   *8)
 
@@ -304,15 +299,23 @@ HERETIC.THEMES =
       ; Floors and ceilings for City theme
       Flat FLOOR26 ceiling light comp CIT
       Flat FLOOR05 ceiling outside comp CIT
-      Flat FLOOR04 floor ceiling comp CIT
+      Flat FLOOR04 floor comp CIT
+      Flat FLOOR04 ceiling comp CIT
       Flat FLOOR17 floor outside comp CIT
+
       ; and nukage
       Flat FLTLAVA1 nukage comp CIT
       Flat FLTSLUD1 nukage comp CIT
+      Flat FLATHUH1 nukage red comp RED
 
       ; Floors and ceilings for (secret) RED theme
-      Flat FLOOR09 floor ceiling comp RED
+      Flat FLOOR09 floor comp RED
+      Flat FLOOR09 floor outside comp RED
+      Flat FLOOR09 ceiling comp RED
+      Flat FLOOR09 ceiling outside comp RED
+      Flat FLOOR09 ceiling light comp RED
       Flat FLATHUH1 nukage comp RED
+      Flat FLATHUH1 nukage red comp RED
 
       ; Floors for outside areas not yet mentioned
       Flat FLOOR27 outside

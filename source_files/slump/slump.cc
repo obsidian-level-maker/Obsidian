@@ -340,71 +340,141 @@ arena *new_arena(level *l, config *c)
 
   switch (bossno) {
     case 0:  /* Baron Brothers */
-      answer->boss = find_genus(c,ID_BARON);
-      answer->boss_count = 2;
-      if (rollpercent(75)) {
-        answer->weapon = find_genus(c,ID_LAUNCHER);
-        answer->ammo = find_genus(c,ID_ROCKBOX);
+      if (c->gamemask & HERETIC_BIT) {
+        answer->boss = find_genus(c,ID_IRONLICH);
+        answer->boss_count = 3;
+        if (rollpercent(75)) {
+          answer->weapon = find_genus(c,ID_PHOENIXROD);
+          answer->ammo = find_genus(c,ID_INFERNOORB);
+        } else {
+          answer->weapon = find_genus(c,ID_DRAGONCLAW);
+          answer->ammo = find_genus(c,ID_ENERGYORB);
+        }
       } else {
-        answer->weapon = find_genus(c,ID_CHAINGUN);
-        answer->ammo = find_genus(c,ID_BULBOX);
+        answer->boss = find_genus(c,ID_BARON);
+        answer->boss_count = 2;
+        if (rollpercent(75)) {
+          answer->weapon = find_genus(c,ID_LAUNCHER);
+          answer->ammo = find_genus(c,ID_ROCKBOX);
+        } else {
+          answer->weapon = find_genus(c,ID_CHAINGUN);
+          answer->ammo = find_genus(c,ID_BULBOX);
+        }
       }
       break;
     case 1:  /* Cybie */
-      answer->boss = find_genus(c,ID_CYBER);
-      if (rollpercent(75)) {
-        answer->weapon = find_genus(c,ID_LAUNCHER);
-        answer->ammo = find_genus(c,ID_ROCKBOX);
+      if (c->gamemask & HERETIC_BIT) {
+        answer->boss = find_genus(c,ID_MAULOTAUR);
+        if (rollpercent(75)) {
+          answer->weapon = find_genus(c,ID_PHOENIXROD);
+          answer->ammo = find_genus(c,ID_INFERNOORB);
+        } else {
+          answer->weapon = find_genus(c,ID_FIREMACE);
+          answer->ammo = find_genus(c,ID_MACESPHEREPILE);
+        }
       } else {
-        answer->weapon = find_genus(c,ID_BFG);
-        answer->ammo = find_genus(c,ID_CELLPACK);
+        answer->boss = find_genus(c,ID_CYBER);
+        if (rollpercent(75)) {
+          answer->weapon = find_genus(c,ID_LAUNCHER);
+          answer->ammo = find_genus(c,ID_ROCKBOX);
+        } else {
+          answer->weapon = find_genus(c,ID_BFG);
+          answer->ammo = find_genus(c,ID_CELLPACK);
+        }
       }
       break;
     case 2:  /* Spiderboss */
-      answer->boss = find_genus(c,ID_SPIDERBOSS);
-      if (rollpercent(75)) {
-        answer->weapon = find_genus(c,ID_BFG);
-        answer->ammo = find_genus(c,ID_CELLPACK);
+      if (c->gamemask & HERETIC_BIT) {
+        answer->boss = find_genus(c,ID_DSPARIL);
+        if (rollpercent(75)) {
+          answer->weapon = find_genus(c,ID_FIREMACE);
+          answer->ammo = find_genus(c,ID_MACESPHEREPILE);
+        } else {
+          answer->weapon = find_genus(c,ID_PHOENIXROD);
+          answer->ammo = find_genus(c,ID_INFERNOORB);
+        }
       } else {
-        answer->weapon = find_genus(c,ID_LAUNCHER);
-        answer->ammo = find_genus(c,ID_ROCKBOX);
+        answer->boss = find_genus(c,ID_SPIDERBOSS);
+        if (rollpercent(75)) {
+          answer->weapon = find_genus(c,ID_BFG);
+          answer->ammo = find_genus(c,ID_CELLPACK);
+        } else {
+          answer->weapon = find_genus(c,ID_LAUNCHER);
+          answer->ammo = find_genus(c,ID_ROCKBOX);
+        }
       }
       break;
     case 3:  /* Two mancubi (for MAP07, random) */
-      answer->boss = find_genus(c,ID_MANCUB);
-      answer->boss_count = 2;
-      if (rollpercent(75)) {
-        answer->weapon = find_genus(c,ID_LAUNCHER);
-        answer->ammo = find_genus(c,ID_ROCKBOX);
+      if (c->gamemask & HERETIC_BIT) {
+        answer->boss = find_genus(c,ID_IRONLICH);
+        answer->boss_count = 2;
+        if (rollpercent(75)) {
+          answer->weapon = find_genus(c,ID_PHOENIXROD);
+          answer->ammo = find_genus(c,ID_INFERNOORB);
+        } else {
+          answer->weapon = find_genus(c,ID_HELLSTAFF);
+          answer->ammo = find_genus(c,ID_GREATERRUNES);
+        }
       } else {
-        answer->weapon = find_genus(c,ID_PLASMA);
-        answer->ammo = find_genus(c,ID_CELLPACK);
+        answer->boss = find_genus(c,ID_MANCUB);
+        answer->boss_count = 2;
+        if (rollpercent(75)) {
+          answer->weapon = find_genus(c,ID_LAUNCHER);
+          answer->ammo = find_genus(c,ID_ROCKBOX);
+        } else {
+          answer->weapon = find_genus(c,ID_PLASMA);
+          answer->ammo = find_genus(c,ID_CELLPACK);
+        }
       }
       break;
     case 4:  /* Two pains */
-      answer->boss = find_genus(c,ID_PAIN);
-      answer->boss_count = 2;
-      if (rollpercent(50)) {
-        answer->weapon = find_genus(c,ID_CHAINGUN);
-        answer->ammo = find_genus(c,ID_BULBOX);
+      if (c->gamemask & HERETIC_BIT) {
+        answer->boss = find_genus(c,ID_WEREDRAGON);
+        answer->boss_count = 4;
+        if (rollpercent(50)) {
+          answer->weapon = find_genus(c,ID_DRAGONCLAW);
+          answer->ammo = find_genus(c,ID_ENERGYORB);
+        } else {
+          answer->weapon = find_genus(c,ID_HELLSTAFF);
+          answer->ammo = find_genus(c,ID_GREATERRUNES);
+        }
       } else {
-        answer->weapon = find_genus(c,ID_PLASMA);
-        answer->ammo = find_genus(c,ID_CELLPACK);
+        answer->boss = find_genus(c,ID_PAIN);
+        answer->boss_count = 2;
+        if (rollpercent(50)) {
+          answer->weapon = find_genus(c,ID_CHAINGUN);
+          answer->ammo = find_genus(c,ID_BULBOX);
+        } else {
+          answer->weapon = find_genus(c,ID_PLASMA);
+          answer->ammo = find_genus(c,ID_CELLPACK);
+        }
       }
       break; 
     case 5:
     case 6:
-      switch (roll(2)) {
-        case 0:  answer->boss = find_genus(c,ID_ARCHIE); break;
-        default: answer->boss = find_genus(c,ID_ARACH); break;
-      }
-      answer->boss_count = 2;
-      if (rollpercent(75)) {
-        answer->weapon = find_genus(c,ID_LAUNCHER);
-        answer->ammo = find_genus(c,ID_ROCKBOX);
+      if (c->gamemask & HERETIC_BIT) {
+        answer->boss = find_genus(c,ID_MAULOTAUR);
+        answer->boss_count = 1;
+        if (rollpercent(75)) {
+          answer->weapon = find_genus(c,ID_PHOENIXROD);
+          answer->ammo = find_genus(c,ID_INFERNOORB);
+        } else {
+          answer->weapon = find_genus(c,ID_HELLSTAFF);
+          answer->ammo = find_genus(c,ID_GREATERRUNES);
+        }
       } else {
-        answer->weapon = find_genus(c,ID_PLASMA);
-        answer->ammo = find_genus(c,ID_CELLPACK);
+        switch (roll(2)) {
+          case 0:  answer->boss = find_genus(c,ID_ARCHIE); break;
+          default: answer->boss = find_genus(c,ID_ARACH); break;
+        }
+        answer->boss_count = 2;
+        if (rollpercent(75)) {
+          answer->weapon = find_genus(c,ID_LAUNCHER);
+          answer->ammo = find_genus(c,ID_ROCKBOX);
+        } else {
+          answer->weapon = find_genus(c,ID_PLASMA);
+          answer->ammo = find_genus(c,ID_CELLPACK);
+        }
       }
       break;
     case 666:
@@ -1121,7 +1191,7 @@ config *get_config(std::filesystem::path filename) {
         } else if (StringCaseCmp(current_game, "ultdoom") == 0) {
             answer->levelcount = 32;
         } else {
-            answer->levelcount = 32; // Fallback but it shouldn't get here until we add other games to SLUMP
+            answer->levelcount = 40; // Heretic
         }
     }
     answer->force_arena = SLUMP_TRUE;
@@ -2801,14 +2871,25 @@ void basic_background3(byte *fbuf, byte bottom, int range)
 boolean need_secret_level(config *c)
 {
   if (c->do_seclevels==SLUMP_FALSE) return SLUMP_FALSE;
-  if (c->map==15) return SLUMP_TRUE;
-  if (c->map==31) return SLUMP_TRUE;
-  switch (c->episode) {
-    case 1: return (c->mission == 3);
-    case 2: return (c->mission == 5);
-    case 3: return (c->mission == 6);
-    case 4: return (c->mission == 2);
-    default: return SLUMP_FALSE;
+  if (c->gamemask & HERETIC_BIT) {
+    switch (c->episode) {
+      case 1: return (c->mission == 6);
+      case 2: return (c->mission == 4);
+      case 3: return (c->mission == 4);
+      case 4: return (c->mission == 4);
+      case 5: return (c->mission == 3);
+      default: return SLUMP_FALSE;
+    }
+  } else {
+    if (c->map==15) return SLUMP_TRUE;
+    if (c->map==31) return SLUMP_TRUE;
+    switch (c->episode) {
+      case 1: return (c->mission == 3);
+      case 2: return (c->mission == 5);
+      case 3: return (c->mission == 6);
+      case 4: return (c->mission == 2);
+      default: return SLUMP_FALSE;
+    }
   }
 }
 
@@ -7133,6 +7214,8 @@ void update_haa_for_armor(haa *haa,int levels,short armortype)
         if (haa->haas[UV].armor<200) haa->haas[UV].armor = (float)200;
       }
       break;
+    case 0: // This is for Heretic as it has no ID_HELMET equivalent
+      break;
     default:
       announce(SLUMP_ERROR,"Odd armortype in u_h_f_armor");
   }
@@ -7450,7 +7533,12 @@ void update_haa_for_health(haa *haa,int levels,short healthtype)
       case ID_POTION:   amount=  1; break;
       case ID_SOUL:     
       case ID_MYSTICURN: amount=100; break;
-      default: announce(WARNING,"Odd healthtype in u_h_f_h");
+      case 0: // Heretic - No equivalent to ID_POTION
+      case ID_WANDCRYSTAL: // Heretic - Sometimes placed where an ID_POTION would occur
+        amount = 0;
+        break;
+      default: 
+        announce(WARNING,"Odd healthtype in u_h_f_h");
         amount=0;
     }
     if (levels&0x01) haa->haas[ITYTD].health += amount;
