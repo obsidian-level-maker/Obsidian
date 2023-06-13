@@ -304,7 +304,7 @@ OB_MODULES["stealth_mons"] =
       label = _("Default Quantity"),
       choices = STEALTH.CHOICES,
       randomize_group = "monsters",
-      tooltip = _("Control the appearance of stealth monster variants (ZDoom Family and EDGE-Classic only).")
+      tooltip = _("Control the appearance of stealth monster variants (GZDoom and EDGE-Classic only).")
     },
   },
 }
