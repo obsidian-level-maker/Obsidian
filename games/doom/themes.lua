@@ -1436,7 +1436,8 @@ DOOM.THEMES =
       gtd_window_dem = 25,
       gtd_window_plut_litebox = 30,
       gtd_window_lite_cross = 15,
-      gtd_window_low_gap_closed = 15
+      gtd_window_low_gap_closed = 15,
+      gtd_window_half_chamfer_techy = 30
     },
 
     fence_groups =
@@ -1895,7 +1896,8 @@ DOOM.THEMES =
       gtd_window_gothic_archs = 30,
       gtd_window_plut_litebox = 45,
       gtd_window_lite_cross = 20,
-      gtd_window_low_gap_closed = 10
+      gtd_window_low_gap_closed = 10,
+      gtd_window_half_chamfer_techy = 30,
     },
 
     fence_groups =
