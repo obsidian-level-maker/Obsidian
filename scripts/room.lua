@@ -795,6 +795,9 @@ function Room_pick_joiner_prefab(LEVEL, C, chunk)
 
   if C.kind == "terminator" then
     none_ok = nil
+
+    -- if it ends up here, something's wrong with growth
+    if reqs.shape == "N" then reqs.shape = "I" end
   end
 
   chunk.prefab_def = Fab_pick(LEVEL, reqs, none_ok)
