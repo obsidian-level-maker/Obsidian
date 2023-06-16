@@ -55,7 +55,7 @@ PREFABS.Pic_mining_dirt_fenced_radium =
 
   tex_STONE7 =
   {
-    GRNSTON1 = 1
+    GRNSTONE = 1
   },
 
   tex_RROCK18 =
@@ -82,7 +82,7 @@ PREFABS.Pic_mining_dirt_fenced_driller_radium =
 
   tex_STONE7 =
   {
-    GRNSTON1 = 1
+    GRNSTONE = 1
   },
 
   tex_RROCK18 =
