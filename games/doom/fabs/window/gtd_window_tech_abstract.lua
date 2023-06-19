@@ -135,3 +135,113 @@ PREFABS.Window_tech_abstract_half_chamfer_techy_vanilla4 =
   seed_w = 4,
   z_fit = { 44 + 4, 64 - 4 }
 }
+
+--
+
+PREFABS.Window_generic_cubby_holes =
+{
+  file   = "window/gtd_window_tech_abstract.wad",
+  map    = "MAP05",
+
+  group  = "gtd_window_cubby_holes",
+  port = "zdoom",
+  rank = 2,
+
+  prob   = 50,
+
+  where  = "edge",
+  seed_w = 1,
+
+  height = 96,
+  deep   = 16,
+  over   = 16,
+
+  bound_z1 = 0,
+  bound_z2 = 96,
+
+  z_fit = "top",
+}
+
+PREFABS.Window_generic_cubby_holes_2 =
+{
+  template = "Window_generic_cubby_holes",
+  map = "MAP06",
+
+  seed_w = 2
+}
+
+PREFABS.Window_generic_cubby_holes_3 =
+{
+  template = "Window_generic_cubby_holes",
+  map = "MAP06",
+
+  seed_w = 3
+}
+
+PREFABS.Window_generic_cubby_holes_4 =
+{
+  template = "Window_generic_cubby_holes",
+  map = "MAP06",
+
+  seed_w = 4
+}
+
+--
+
+PREFABS.Window_generic_cubby_holes_hell =
+{
+  template = "Window_generic_cubby_holes",
+  map = "MAP05",
+
+  theme = "hell",
+  rank = 1,
+
+  seed_w = 1,
+
+  tex_SHAWN2 = "METAL",
+  flat_FLAT23 = "CEIL5_2"
+}
+
+PREFABS.Window_generic_cubby_holes_2_hell =
+{
+  template = "Window_generic_cubby_holes",
+  map = "MAP06",
+
+  theme = "hell",
+  rank = 1,
+
+  seed_w = 2,
+
+  tex_SHAWN2 = "METAL",
+  flat_FLAT23 = "CEIL5_2"
+}
+
+PREFABS.Window_generic_cubby_holes_3_hell =
+{
+  template = "Window_generic_cubby_holes",
+  map = "MAP06",
+
+  theme = "hell",
+  rank = 1,
+
+  seed_w = 3,
+
+  tex_SHAWN2 = "METAL",
+  flat_FLAT23 = "CEIL5_2"
+}
+
+PREFABS.Window_generic_cubby_holes_4_hell =
+{
+  template = "Window_generic_cubby_holes",
+  map = "MAP06",
+
+  theme = "hell",
+  rank = 1,
+
+  seed_w = 4,
+
+  tex_SHAWN2 = "METAL",
+  flat_FLAT23 = "CEIL5_2"
+}
+
+
