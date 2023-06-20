@@ -1829,7 +1829,7 @@ void gate_populate(level *l,sector *s,haa *haa, boolean first, config *c)
   if (tlx-minx>63) {   /* "63"s are all wrong */
     if (rollpercent(50)) {  /* A monster */
       m = timely_monster(haa,c,&levels,rollpercent(l->p_biggest_monsters),1);
-      if (levels)
+      if (m && levels)
         if (NULL!=place_object_in_region(l,minx,miny,tlx,maxy,
                    c,m->thingid,MONSTER_WIDTH(m),-1,s->entry_x,s->entry_y,
                    levels)) update_haa_for_monster(haa,m,levels,1,c);
@@ -1840,7 +1840,7 @@ void gate_populate(level *l,sector *s,haa *haa, boolean first, config *c)
   if (maxx-thx>63) {   /* "63"s are all wrong */
     if (rollpercent(50)) {  /* A monster */
       m = timely_monster(haa,c,&levels,rollpercent(l->p_biggest_monsters),1);
-      if (levels)
+      if (m && levels)
         if (NULL!=place_object_in_region(l,thx,miny,maxx,maxy,
                    c,m->thingid,MONSTER_WIDTH(m),-1,s->entry_x,s->entry_y,
                    levels)) update_haa_for_monster(haa,m,levels,1,c);
@@ -1853,7 +1853,7 @@ void gate_populate(level *l,sector *s,haa *haa, boolean first, config *c)
   if (tly-miny>63) {   /* "63"s are all wrong */
     if (rollpercent(50)) {  /* A monster */
       m = timely_monster(haa,c,&levels,rollpercent(l->p_biggest_monsters),1);
-      if (levels)
+      if (m && levels)
         if (NULL!=place_object_in_region(l,minx,miny,maxx,tly,
                    c,m->thingid,MONSTER_WIDTH(m),-1,s->entry_x,s->entry_y,
                    levels)) update_haa_for_monster(haa,m,levels,1,c);
@@ -1864,7 +1864,7 @@ void gate_populate(level *l,sector *s,haa *haa, boolean first, config *c)
   if (maxy-thy>63) {   /* "63"s are all wrong */
     if (rollpercent(50)) {  /* A monster */
       m = timely_monster(haa,c,&levels,rollpercent(l->p_biggest_monsters),1);
-      if (levels)
+      if (m && levels)
         if (NULL!=place_object_in_region(l,minx,thy,maxx,maxy,
                    c,m->thingid,MONSTER_WIDTH(m),-1,s->entry_x,s->entry_y,
                    levels)) update_haa_for_monster(haa,m,levels,1,c);
