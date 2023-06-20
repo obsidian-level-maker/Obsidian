@@ -264,7 +264,7 @@ function Quest_create_initial_quest(LEVEL)
       local init_mult = 1
       score_mult = recurse_to_start(R.grow_parent, init_mult)
     end
-    score = score * score_mult
+    score = score * (score_mult or 1)
 
     -- caves are not ideal
     if R.is_cave then score = score / 4 end

@@ -152,7 +152,7 @@ function SKY_GEN.generate_skies()
     end
 
     -- only rarely combine stars + nebula + hills
-    local is_hilly  = rand.odds(sel(is_nebula, 25, 90))
+    -- local is_hilly  = rand.odds(sel(is_nebula, 25, 90))
 
     -- MSSP-SUGGESTS: add sky themes for other level theme types?
     local theme_name = EPI.levels[1].theme_name

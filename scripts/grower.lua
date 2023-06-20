@@ -4373,11 +4373,10 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
     rand.shuffle(room_list)
 
     for _,R in pairs(room_list) do
-      local old_num = #LEVEL.rooms
-
       -- hallways cannot be regrown or resprouted
       if R.is_hallway then goto continue end
 
+      R.emergency_sprouted = true
       Grower_grammatical_room(SEEDS, LEVEL, R, "sprout", "is_emergency")
       ::continue::
     end
@@ -4434,6 +4433,13 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
         Grower_grow_room(SEEDS, LEVEL, R)
         Grower_sprout_room(SEEDS, LEVEL, R)
         return "ok"
+      end
+
+      if not R.shapes_applied or 
+      (R.shapes_applied and R.shapes_applied == 0) and not R.is_start
+      and R.shapes_tried <= 500 then
+        Grower_grow_room(SEEDS, LEVEL, R)
+        Grower_sprout_room(SEEDS, LEVEL, R)
       end
     end
 
@@ -4587,6 +4593,35 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
     and LEVEL.cur_coverage <= LEVEL.min_coverage then
       if emergency_linear_sprouts() == "oof" then
         emergency_teleport_break(LEVEL)
+      end
+    end
+
+    --[[if LEVEL.cur_coverage <= LEVEL.min_coverage / 4
+    and PARAM.bool_allow_teleporter_emergency_breaks == 1 then
+      for _,R in pairs(LEVEL.rooms) do
+        if not R.shapes_applied or 
+        (R.shaped_applied and R.shapes_applied == 0) then
+          Grower_add_teleporter_trunk(SEEDS, LEVEL, R, true)
+        end
+      end
+    end]]
+  end
+
+  if #LEVEL.rooms == 2 then
+    -- gui.printf("BALLS! " .. MAX_LOOP .. "\n")
+    for _,R in pairs(LEVEL.rooms) do
+      if R.grow_parent and R.grow_parent.is_start then
+        -- gui.printf("SHIT HAPPENED! " .. LEVEL.name .. "\n")
+        Grower_kill_room(SEEDS, LEVEL, R)
+        Grower_sprout_room(SEEDS, LEVEL, R.grow_parent)
+      end
+    end
+    for _,R in pairs(LEVEL.rooms) do
+      if R.grow_parent and R.grow_parent.is_start then
+        Grower_grow_room(SEEDS, LEVEL, R)
+        Grower_sprout_room(SEEDS, LEVEL, R)
+        MAX_LOOP = 10
+        MAX_RETRIES = 5
       end
     end
   end
