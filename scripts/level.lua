@@ -618,6 +618,12 @@ function Episode_plan_monsters()
           LEV.global_pal[name] = 1
         end
       end
+
+      if PARAM.bool_enemy_drops and PARAM.bool_enemy_drops == true then
+        if LEV.global_pal[name].give then
+          LEV.global_pal[name].give = nil
+        end
+      end
     end
 
     -- actually skip some monsters (esp. when # is high)

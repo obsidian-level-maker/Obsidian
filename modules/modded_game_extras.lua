@@ -47,6 +47,7 @@ MODDED_GAME_EXTRAS.HN_INFO_TYPE_CHOICES =
 {
   "hn_info_quest",  _("Quest Info"),
   "hn_info_debug", _("Debug Info"),
+  "hn_info_debug_prefabs", _("Debug Info with Prefabs"),
 }
 
 MODDED_GAME_EXTRAS.QCDE_LOOTBOX_NICE_ITEMS =
@@ -1499,7 +1500,8 @@ function MODDED_GAME_EXTRAS.create_hn_info(self, LEVEL)
   -- skip Hellscape Navigator stuff on prebuilt levels (no info to draw from)
   -- and procedural gotchas (what the heck are you gonna navigate in two rooms?)
   if not LEVEL then return end
-  if LEVEL.is_procedural_gotcha and PARAM.hn_info_type ~= "hn_info_debug" then return end
+  if LEVEL.is_procedural_gotcha and (PARAM.hn_info_type ~= "hn_info_debug"
+    or PARAM.hn_info_type == "hn_info_debug_prefabs") then return end
   if LEVEL.prebuilt then return end
 
   if PARAM.bool_hn_markers == 0 then
@@ -1759,8 +1761,13 @@ function MODDED_GAME_EXTRAS.create_hn_info(self, LEVEL)
     end
 
     if R.sprout_rule then
-      shapes_string = shapes_string .. "(SPR: " .. R.sprout_rule .. ") "
+      shapes_string = shapes_string .. "(SPR: " .. R.sprout_rule
     end
+
+    if R.emergency_sprouted then
+      shapes_string = shapes_string .. "[!]"
+    end
+    shapes_string = shapes_string .. ") "
 
     if R.is_grown then
       shapes_string = shapes_string .. "(GROWN) "
@@ -1935,7 +1942,8 @@ function MODDED_GAME_EXTRAS.create_hn_info(self, LEVEL)
     local info = {}
 
     -- pick different info classes
-    if PARAM.hn_info_type == "hn_info_debug" then
+    if PARAM.hn_info_type == "hn_info_debug" 
+    or PARAM.hn_info_type == "hn_info_debug_prefabs" then
       info.name = fetch_room_shapes(R)
     else
       info.name = R.zone.hn_name
@@ -1977,7 +1985,7 @@ function MODDED_GAME_EXTRAS.create_hn_info(self, LEVEL)
   PARAM.hn_secret_count = 1
   for _,R in pairs(LEVEL.rooms) do
     make_room_info(R)
-    if PARAM.hn_info_type == "hn_info_debug" then
+    if PARAM.hn_info_type == "hn_info_debug_prefabs" then
       make_prefab_info(R)
     end
   end
@@ -2506,7 +2514,10 @@ OB_MODULES["modded_game_extras"] =
       name = "hn_info_type",
       label = _("HN Info Type"),
       choices = MODDED_GAME_EXTRAS.HN_INFO_TYPE_CHOICES,
-      tooltip = _("Pick which information type to place into Hellscape Navigator markers.\n\nQuest Info - (DEFAULT) Places traversal progress per room and key quest info into the markers.\nDebug Info - Prints verbose information about shape grammar growth status per room and prefabs. Reveals secret prefabs - which is obviously cheating."),
+      tooltip = _("Pick which information type to place into Hellscape Navigator markers.\n\n" ..
+        "Quest Info - (DEFAULT) Places traversal progress per room and key quest info into the markers.\n" ..
+        "Debug Info - Prints verbose information about shape grammar growth status per room.\n" ..
+        "Debug Info with Prefabs - Room info and with prefab info. Reveals secret prefabs - which is obviously cheating."),
       default = "hn_info_quest",
       priority = 4.9,
       gap = 1,

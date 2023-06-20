@@ -3584,6 +3584,7 @@ DOOM.NAMES =
         ["Killing Fields"]=10,
         ["Life's a Bitch, Then You Die"]=10,
         ["Light at the End of the Tunnel, But It's a Train"]=10,
+        ["Matter of Consequence"]=10,
         ["Max Pain"]=10,
         ["Meatgrinder"]=10,
         ["Mene, Mene, Tekel, Parsin"]=10,
@@ -3613,6 +3614,7 @@ DOOM.NAMES =
         ["Run"]=10,
         ["Running with Scissors"]=10,
         ["Seven Trumpets Sounding"]=10,
+        ["Speck of Dust"]=10,
         ["Surrounded!"]=10,
         ["Standoff"]=10,
         ["Stranglehold"]=10,
@@ -5103,7 +5105,7 @@ DOOM.NAMES =
         Righteous = 10,
         Sanctimonious = 10,
 
-        -- asthetic
+        -- aesthetic
         Appalling = 15,
         Dark = 20,
         Dreadful = 20,

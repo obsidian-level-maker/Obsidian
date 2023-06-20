@@ -599,7 +599,7 @@ DOOM.STORIES.TEXT =
 
       [[You push yourself through the corridors of the overrun area
       which bares the marks of battle. You come across various consoles
-      reading "ERROR" and "AAG targeting comprimised" scrolling the screens.
+      reading "ERROR" and "targeting comprimised" scrolling the screens.
       You hear the boom of anti-aircraft guns - unusual, as no UAC operators
       are in the area. Something is wrong. Something else is in control of the
       system.]],
@@ -1302,7 +1302,7 @@ DOOM.STORIES.TEXT =
       you're fighting twitch rhythmically, as if moving to the beat
       of the music.
       _SPACE
-      You breathe shallowly, as you discover that your own heartbeet
+      You breathe shallowly, as you discover that your own heartbeat
       has synchronized to the beat of the music, and it takes you
       significant effort to not move in sync.
       _SPACE
@@ -1323,8 +1323,7 @@ DOOM.STORIES.TEXT =
       smashing, until it turns into a mess of twisted metal and broken
       bone, then throw it to the floor and stomp it with your boot.
       _SPACE
-      The blissful silence is almost eery. You bask in it for a
-      few minutes, before heading out.]],
+      The silence is almost eerie yet blissful. You head out.]],
     },
   },
 
