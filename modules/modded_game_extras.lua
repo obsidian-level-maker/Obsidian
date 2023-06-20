@@ -1761,8 +1761,13 @@ function MODDED_GAME_EXTRAS.create_hn_info(self, LEVEL)
     end
 
     if R.sprout_rule then
-      shapes_string = shapes_string .. "(SPR: " .. R.sprout_rule .. ") "
+      shapes_string = shapes_string .. "(SPR: " .. R.sprout_rule
     end
+
+    if R.emergency_sprouted then
+      shapes_string = shapes_string .. "[!]"
+    end
+    shapes_string = shapes_string .. ") "
 
     if R.is_grown then
       shapes_string = shapes_string .. "(GROWN) "
