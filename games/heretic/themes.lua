@@ -197,8 +197,8 @@ HERETIC.THEMES =
       ; used on secret levels.  There should be at least one "secret"
       ; theme.
 
-      Theme CIT ; City
-      Theme RED secret
+      Theme CST ; Castle
+      Theme BLU secret
 
       ; Flats and textures and constructs and stuff are also in the [THEMES] section
 
@@ -228,65 +228,71 @@ HERETIC.THEMES =
       ;    divisor of 256 (except for doors, where you should give the real
       ;    width so SLIGE can make them look nice).
 
-      ; City walls
-      Texture CSTLRCK size 64 128 wall core CIT subtle CSTLMOSS
+      ; Castle walls
+      Texture CSTLRCK size 64 128 wall core CST subtle CSTLMOSS
+      Texture GRSTNPB size 64 128 wall comp CST
 
       ; Heretic only has two switches so make them generic to every theme
-      Texture SW1OFF size 64 128 isswitch comp CIT comp RED
-      Texture SW2OFF size 64 128 isswitch comp CIT comp RED
+      Texture SW1OFF size 64 128 isswitch comp CST comp BLU
+      Texture SW2OFF size 64 128 isswitch comp CST comp BLU
 
       ; And the lift texture
-      Texture METL2 size 64 128 lift comp CIT comp RED
+      Texture METL2 size 64 128 lift comp CST comp BLU
 
-      ; RED walls
-      Texture REDWALL size 64 128 wall core RED
+      ; BLU walls
+      Texture MOSAIC1 size 64 128 wall core BLU subtle MOSAIC2
+      Texture MOSAIC3 size 64 128 wall comp BLU subtle MOSAIC2
 
       ; Doors of all kinds.  "size" gives the width and height of the texture,
       ; and "locked" means that it's a good texture to use on a door that only
       ; opens with a switch, not a touch.
-      Texture DOORSTON size 64 128 door comp CIT comp RED
-      Texture GRSKULL2 size 128 128 door comp CIT comp RED
+      Texture DOORSTON size 64 128 door comp CST comp BLU
+      Texture GRSKULL2 size 128 128 door comp CST comp BLU
 
       ; Heretic only has two switches so make them the exit switches as well
-      Texture SW1OFF size 64 128 exitswitch comp CIT comp RED
-      Texture SW2OFF size 64 128 exitswitch comp CIT comp RED
+      Texture SW1OFF size 64 128 exitswitch comp CST comp BLU
+      Texture SW2OFF size 64 128 exitswitch comp CST comp BLU
 
       ; Lights, suitable for lighting recesses and stuff.
-      Texture LAVAFL1 size 8 128 light comp RED
+      Texture WATRWAL1 size 8 128 light comp BLU
 
       ; "Plaques", suitable for wall consoles and paintings and pillars and stuff.
       ; "vtiles" means that it's OK to pile one on top of another, as when
       ;    making the big central pillar in an arena.
       ; "half_plaque" means that the upper half of this texture can be used
       ;    by itself, as well as the whole thing.
-      Texture BANNER1 size 64 128 plaque comp CIT
-      Texture BANNER2 size 64 128 plaque comp CIT
-      Texture REDWALL size 64 128 plaque comp RED
+      Texture BANNER1 size 64 128 plaque comp CST
+      Texture BANNER2 size 64 128 plaque comp CST
+      Texture GRSTNPBV size 64 128 plaque comp CST
+      Texture GRSTNPBW size 64 128 plaque comp CST
+      Texture MOSAIC4 size 64 128 plaque comp BLU
+      Texture MOSAIC5 size 64 128 plaque comp BLU
 
       ; Gratings
-      Texture GATMETL2 size 64 32 grating comp CIT comp RED
-      Texture GATMETL3 size 64 32 grating comp CIT comp RED
-      Texture GATMETL4 size 64 64 grating comp CIT comp RED
-      Texture GATMETL5 size 64 128 grating comp CIT comp RED
+      Texture GATMETL2 size 64 32 grating comp CST comp BLU
+      Texture GATMETL3 size 64 32 grating comp CST comp BLU
+      Texture GATMETL4 size 64 64 grating comp CST comp BLU
+      Texture GATMETL5 size 64 128 grating comp CST comp BLU
 
       ; Colors (suitable for marking key-locked things)
       ; We use the 'red' keyword for Heretic's Green Key
-      Texture GRNBLOK1 size 32 128 red comp CIT comp RED 
-      Texture DRIPWALL size 32 128 yellow comp CIT comp RED
-      Texture BLUEFRAG size 32 128 blue comp CIT comp RED
+      Texture GRNBLOK1 size 32 128 red comp CST comp BLU 
+      Texture DRIPWALL size 32 128 yellow comp CST comp BLU
+      Texture BLUEFRAG size 32 128 blue comp CST comp BLU
 
       ; Step kickplates
-      Texture TMBSTON2 size 64 48 step comp CIT comp RED
+      Texture TMBSTON2 size 64 48 step comp CST comp BLU
 
       ; "Doorjambs"
-      Texture METL2 size 16 128 jamb comp CIT comp RED
+      Texture METL2 size 16 128 jamb comp CST comp BLU
 
       ; Support textures, used in various places
-      Texture METL1 size 64 128 support comp CIT
-      Texture REDWALL size 64 128 support comp RED
+      Texture METL1 size 64 128 support comp CST
+      Texture WATRWAL1 size 64 128 support comp BLU
 
       ; Bunch of things for outside patios (no themes applied here)
       Texture MOSSRCK1 size 128 128 outside
+      Texture ROOTWALL size 128 128 outside
 
       ; Misc
       Texture REDWALL size 64 128 error
@@ -294,31 +300,39 @@ HERETIC.THEMES =
       ; Now the flats.  Keywords should all be pretty obvious...   *8)
 
       ; Teleport-gate floors
-      Flat FLTTELE1 gate comp CIT comp RED
+      Flat FLTTELE1 gate comp CST comp BLU
 
-      ; Floors and ceilings for City theme
-      Flat FLOOR26 ceiling light comp CIT
-      Flat FLOOR05 ceiling outside comp CIT
-      Flat FLOOR04 floor comp CIT
-      Flat FLOOR04 ceiling comp CIT
-      Flat FLOOR17 floor outside comp CIT
+      ; Floors and ceilings for Castle theme
+      Flat FLOOR30 ceiling light comp CST
+      Flat FLOOR05 ceiling outside comp CST
+      Flat FLAT506 ceiling outside comp CST
+      Flat FLOOR03 floor comp CST
+      Flat FLOOR03 ceiling comp CST
+      Flat FLOOR04 floor comp CST
+      Flat FLOOR04 ceiling comp CST
+      Flat FLAT523 floor comp CST
+      Flat FLAT523 ceiling comp CST
+      Flat FLOOR17 floor outside comp CST
+      Flat FLAT513 floor outside comp CST
 
       ; and nukage
-      Flat FLTLAVA1 nukage comp CIT
-      Flat FLTSLUD1 nukage comp CIT
-      Flat FLATHUH1 nukage red comp RED
+      Flat FLTLAVA1 nukage comp CST
+      Flat FLTSLUD1 nukage comp CST comp BLU
+      Flat FLATHUH1 nukage red comp CST comp BLU
 
-      ; Floors and ceilings for (secret) RED theme
-      Flat FLOOR09 floor comp RED
-      Flat FLOOR09 floor outside comp RED
-      Flat FLOOR09 ceiling comp RED
-      Flat FLOOR09 ceiling outside comp RED
-      Flat FLOOR09 ceiling light comp RED
-      Flat FLATHUH1 nukage comp RED
-      Flat FLATHUH1 nukage red comp RED
+      ; Floors and ceilings for (secret) BLU theme
+      Flat FLOOR07 floor comp BLU
+      Flat FLOOR07 ceiling comp BLU
+      Flat FLAT504 floor comp BLU
+      Flat FLAT504 ceiling comp BLU
+      Flat FLOOR16 floor comp BLU
+      Flat FLOOR16 ceiling comp BLU
+      Flat FLTWAWA1 floor outside comp BLU
+      Flat FLTWAWA1 ceiling outside comp BLU
+      Flat FLAT502 ceiling light comp BLU
 
       ; Floors for outside areas not yet mentioned
-      Flat FLOOR27 outside
+      Flat FLAT506 outside
       Flat FLOOR01 outside
 
       ; These are the defaults, but we'll list them anyway.
@@ -329,7 +343,7 @@ HERETIC.THEMES =
       ; This is pretty complex!  Fool with it at your peril.
 
       ; Family 1 is crates of various sizes and kinds
-      Construct family 1 height 128 comp CIT 
+      Construct family 1 height 128 comp CST 
         top FLOOR04
         Primary SAINT1 width 64
 
@@ -340,9 +354,9 @@ HERETIC.THEMES =
       ; Say which lamps we like in which themes, and where barrels are allowed
       ; Information like which Doom version each object is in, and which ones
       ; cast light, and which ones explode, is still hardwired.
-      Thing 2035 comp CIT comp RED ; pod
-      Thing 27  comp CIT comp RED  ; serpent torch
-      Thing 76 comp CIT comp RED   ; fire brazier
+      Thing 2035 comp CST comp BLU ; pod
+      Thing 27  comp CST comp BLU  ; serpent torch
+      Thing 76 comp CST comp BLU   ; fire brazier
 
       ; and that's it!
     ]]
