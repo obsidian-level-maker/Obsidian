@@ -2607,7 +2607,9 @@ function ob_build_cool_shit()
         ob_merge_table_list(mod.tables)
       end
     end
+    ob_invoke_hook("slump_setup")
     ob_invoke_hook("setup")
+    assert(PARAM.slump_config)
     gui.minimap_disable(gui.gettext("SLUMP"))
     return "ok" 
   end -- Skip the rest if using Vanilla Doom/SLUMP

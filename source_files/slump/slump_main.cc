@@ -75,7 +75,6 @@ void machioize(config *c,float amount) {
 
   ThisConfig = get_config(filename);
   if (ThisConfig==NULL) {
-    Usage();
     return false;
   }
   if (ThisConfig->cwadonly) {
@@ -125,7 +124,7 @@ void machioize(config *c,float amount) {
     }
     FreeLevel(&ThisLevel);
   }
-  if (!(ThisConfig->gamemask&DOOMI_BIT)) {
+  if (!(ThisConfig->gamemask&(DOOMI_BIT|HERETIC_BIT))) {
     record_custom_textures(dh,ThisConfig);
     record_custom_flats(dh,ThisConfig,SLUMP_FALSE);
     record_custom_patches(dh,ThisConfig,SLUMP_FALSE);

@@ -67,6 +67,7 @@ OB_GAMES["doom2"] =
   hooks =
   {
     factory_setup = DOOM.factory_setup,
+    slump_setup = DOOM.slump_setup,
     get_levels = DOOM.get_levels,
     end_level  = DOOM.end_level,
     all_done   = DOOM.all_done

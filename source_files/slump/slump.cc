@@ -125,16 +125,29 @@ short new_tag(level *l)
 /* Zero if all are used. */
 short new_key(level *l)
 {
-  if ((!l->used_red)&&rollpercent(33)) {
-    l->used_red = SLUMP_TRUE;
-    return (l->skullkeys) ? ID_REDKEY : ID_REDCARD;
-  } else if ((!l->used_blue)&&rollpercent(50)) {
-    l->used_blue = SLUMP_TRUE;
-    return (l->skullkeys) ? ID_BLUEKEY : ID_BLUECARD;
-  } else if ((!l->used_yellow)) {
-    l->used_yellow = SLUMP_TRUE;
-    return (l->skullkeys) ? ID_YELLOWKEY : ID_YELLOWCARD;
-  } else return 0;
+  if (l->heretic_level) {
+    if ((!l->used_red)&&rollpercent(33)) { // still using the 'red' check for green key here
+      l->used_red = SLUMP_TRUE;
+      return ID_HERETICGREENKEY;
+    } else if ((!l->used_blue)&&rollpercent(50)) {
+      l->used_blue = SLUMP_TRUE;
+      return ID_HERETICBLUEKEY;
+    } else if ((!l->used_yellow)) {
+      l->used_yellow = SLUMP_TRUE;
+      return ID_HERETICYELLOWKEY;
+    } else return 0;
+  } else {
+    if ((!l->used_red)&&rollpercent(33)) {
+      l->used_red = SLUMP_TRUE;
+      return (l->skullkeys) ? ID_REDKEY : ID_REDCARD;
+    } else if ((!l->used_blue)&&rollpercent(50)) {
+      l->used_blue = SLUMP_TRUE;
+      return (l->skullkeys) ? ID_BLUEKEY : ID_BLUECARD;
+    } else if ((!l->used_yellow)) {
+      l->used_yellow = SLUMP_TRUE;
+      return (l->skullkeys) ? ID_YELLOWKEY : ID_YELLOWCARD;
+    } else return 0;
+  }
 }
 
 /* Remove a vertex from the level.  Frees the memory, but */
@@ -327,71 +340,141 @@ arena *new_arena(level *l, config *c)
 
   switch (bossno) {
     case 0:  /* Baron Brothers */
-      answer->boss = find_genus(c,ID_BARON);
-      answer->boss_count = 2;
-      if (rollpercent(75)) {
-        answer->weapon = find_genus(c,ID_LAUNCHER);
-        answer->ammo = find_genus(c,ID_ROCKBOX);
+      if (c->gamemask & HERETIC_BIT) {
+        answer->boss = find_genus(c,ID_IRONLICH);
+        answer->boss_count = 3;
+        if (rollpercent(75)) {
+          answer->weapon = find_genus(c,ID_PHOENIXROD);
+          answer->ammo = find_genus(c,ID_INFERNOORB);
+        } else {
+          answer->weapon = find_genus(c,ID_DRAGONCLAW);
+          answer->ammo = find_genus(c,ID_ENERGYORB);
+        }
       } else {
-        answer->weapon = find_genus(c,ID_CHAINGUN);
-        answer->ammo = find_genus(c,ID_BULBOX);
+        answer->boss = find_genus(c,ID_BARON);
+        answer->boss_count = 2;
+        if (rollpercent(75)) {
+          answer->weapon = find_genus(c,ID_LAUNCHER);
+          answer->ammo = find_genus(c,ID_ROCKBOX);
+        } else {
+          answer->weapon = find_genus(c,ID_CHAINGUN);
+          answer->ammo = find_genus(c,ID_BULBOX);
+        }
       }
       break;
     case 1:  /* Cybie */
-      answer->boss = find_genus(c,ID_CYBER);
-      if (rollpercent(75)) {
-        answer->weapon = find_genus(c,ID_LAUNCHER);
-        answer->ammo = find_genus(c,ID_ROCKBOX);
+      if (c->gamemask & HERETIC_BIT) {
+        answer->boss = find_genus(c,ID_MAULOTAUR);
+        if (rollpercent(75)) {
+          answer->weapon = find_genus(c,ID_PHOENIXROD);
+          answer->ammo = find_genus(c,ID_INFERNOORB);
+        } else {
+          answer->weapon = find_genus(c,ID_FIREMACE);
+          answer->ammo = find_genus(c,ID_MACESPHEREPILE);
+        }
       } else {
-        answer->weapon = find_genus(c,ID_BFG);
-        answer->ammo = find_genus(c,ID_CELLPACK);
+        answer->boss = find_genus(c,ID_CYBER);
+        if (rollpercent(75)) {
+          answer->weapon = find_genus(c,ID_LAUNCHER);
+          answer->ammo = find_genus(c,ID_ROCKBOX);
+        } else {
+          answer->weapon = find_genus(c,ID_BFG);
+          answer->ammo = find_genus(c,ID_CELLPACK);
+        }
       }
       break;
     case 2:  /* Spiderboss */
-      answer->boss = find_genus(c,ID_SPIDERBOSS);
-      if (rollpercent(75)) {
-        answer->weapon = find_genus(c,ID_BFG);
-        answer->ammo = find_genus(c,ID_CELLPACK);
+      if (c->gamemask & HERETIC_BIT) {
+        answer->boss = find_genus(c,ID_DSPARIL);
+        if (rollpercent(75)) {
+          answer->weapon = find_genus(c,ID_FIREMACE);
+          answer->ammo = find_genus(c,ID_MACESPHEREPILE);
+        } else {
+          answer->weapon = find_genus(c,ID_PHOENIXROD);
+          answer->ammo = find_genus(c,ID_INFERNOORB);
+        }
       } else {
-        answer->weapon = find_genus(c,ID_LAUNCHER);
-        answer->ammo = find_genus(c,ID_ROCKBOX);
+        answer->boss = find_genus(c,ID_SPIDERBOSS);
+        if (rollpercent(75)) {
+          answer->weapon = find_genus(c,ID_BFG);
+          answer->ammo = find_genus(c,ID_CELLPACK);
+        } else {
+          answer->weapon = find_genus(c,ID_LAUNCHER);
+          answer->ammo = find_genus(c,ID_ROCKBOX);
+        }
       }
       break;
     case 3:  /* Two mancubi (for MAP07, random) */
-      answer->boss = find_genus(c,ID_MANCUB);
-      answer->boss_count = 2;
-      if (rollpercent(75)) {
-        answer->weapon = find_genus(c,ID_LAUNCHER);
-        answer->ammo = find_genus(c,ID_ROCKBOX);
+      if (c->gamemask & HERETIC_BIT) {
+        answer->boss = find_genus(c,ID_IRONLICH);
+        answer->boss_count = 2;
+        if (rollpercent(75)) {
+          answer->weapon = find_genus(c,ID_PHOENIXROD);
+          answer->ammo = find_genus(c,ID_INFERNOORB);
+        } else {
+          answer->weapon = find_genus(c,ID_HELLSTAFF);
+          answer->ammo = find_genus(c,ID_GREATERRUNES);
+        }
       } else {
-        answer->weapon = find_genus(c,ID_PLASMA);
-        answer->ammo = find_genus(c,ID_CELLPACK);
+        answer->boss = find_genus(c,ID_MANCUB);
+        answer->boss_count = 2;
+        if (rollpercent(75)) {
+          answer->weapon = find_genus(c,ID_LAUNCHER);
+          answer->ammo = find_genus(c,ID_ROCKBOX);
+        } else {
+          answer->weapon = find_genus(c,ID_PLASMA);
+          answer->ammo = find_genus(c,ID_CELLPACK);
+        }
       }
       break;
     case 4:  /* Two pains */
-      answer->boss = find_genus(c,ID_PAIN);
-      answer->boss_count = 2;
-      if (rollpercent(50)) {
-        answer->weapon = find_genus(c,ID_CHAINGUN);
-        answer->ammo = find_genus(c,ID_BULBOX);
+      if (c->gamemask & HERETIC_BIT) {
+        answer->boss = find_genus(c,ID_WEREDRAGON);
+        answer->boss_count = 4;
+        if (rollpercent(50)) {
+          answer->weapon = find_genus(c,ID_DRAGONCLAW);
+          answer->ammo = find_genus(c,ID_ENERGYORB);
+        } else {
+          answer->weapon = find_genus(c,ID_HELLSTAFF);
+          answer->ammo = find_genus(c,ID_GREATERRUNES);
+        }
       } else {
-        answer->weapon = find_genus(c,ID_PLASMA);
-        answer->ammo = find_genus(c,ID_CELLPACK);
+        answer->boss = find_genus(c,ID_PAIN);
+        answer->boss_count = 2;
+        if (rollpercent(50)) {
+          answer->weapon = find_genus(c,ID_CHAINGUN);
+          answer->ammo = find_genus(c,ID_BULBOX);
+        } else {
+          answer->weapon = find_genus(c,ID_PLASMA);
+          answer->ammo = find_genus(c,ID_CELLPACK);
+        }
       }
       break; 
     case 5:
     case 6:
-      switch (roll(2)) {
-        case 0:  answer->boss = find_genus(c,ID_ARCHIE); break;
-        default: answer->boss = find_genus(c,ID_ARACH); break;
-      }
-      answer->boss_count = 2;
-      if (rollpercent(75)) {
-        answer->weapon = find_genus(c,ID_LAUNCHER);
-        answer->ammo = find_genus(c,ID_ROCKBOX);
+      if (c->gamemask & HERETIC_BIT) {
+        answer->boss = find_genus(c,ID_MAULOTAUR);
+        answer->boss_count = 1;
+        if (rollpercent(75)) {
+          answer->weapon = find_genus(c,ID_PHOENIXROD);
+          answer->ammo = find_genus(c,ID_INFERNOORB);
+        } else {
+          answer->weapon = find_genus(c,ID_HELLSTAFF);
+          answer->ammo = find_genus(c,ID_GREATERRUNES);
+        }
       } else {
-        answer->weapon = find_genus(c,ID_PLASMA);
-        answer->ammo = find_genus(c,ID_CELLPACK);
+        switch (roll(2)) {
+          case 0:  answer->boss = find_genus(c,ID_ARCHIE); break;
+          default: answer->boss = find_genus(c,ID_ARACH); break;
+        }
+        answer->boss_count = 2;
+        if (rollpercent(75)) {
+          answer->weapon = find_genus(c,ID_LAUNCHER);
+          answer->ammo = find_genus(c,ID_ROCKBOX);
+        } else {
+          answer->weapon = find_genus(c,ID_PLASMA);
+          answer->ammo = find_genus(c,ID_CELLPACK);
+        }
       }
       break;
     case 666:
@@ -633,7 +716,7 @@ flat *new_flat(config *c,const char *name)
   answer = (flat *)malloc(sizeof(*answer));
   memset(answer->name,0,9);
   memcpy(answer->name,name,strlen(name));
-  answer->gamemask = DOOM0_BIT | DOOM1_BIT | DOOM2_BIT | DOOMC_BIT | DOOMI_BIT;
+  answer->gamemask = DOOM0_BIT | DOOM1_BIT | DOOM2_BIT | DOOMC_BIT | DOOMI_BIT | HERETIC_BIT;
   answer->compatible = 0;
   answer->props = 0;
   answer->used = SLUMP_FALSE;
@@ -713,7 +796,7 @@ genus *new_genus(config *c,int thingid)
 
   answer = (genus *)malloc(sizeof(*answer));
   /* Default mask */
-  answer->gamemask = DOOM0_BIT|DOOM1_BIT|DOOM2_BIT|DOOMC_BIT|DOOMI_BIT;
+  answer->gamemask = DOOM0_BIT|DOOM1_BIT|DOOM2_BIT|DOOMC_BIT|DOOMI_BIT|HERETIC_BIT;
   answer->compatible = ~(unsigned int)0;     /* Assume all themes OK */
   answer->thingid = thingid;
   answer->width = 65;  /* Sort of sensible default */
@@ -769,7 +852,7 @@ texture *new_texture(config *c,const char *name)
   memset(answer->name,0,9);
   memcpy(answer->name,name,strlen(name));
   answer->realname = answer->name;
-  answer->gamemask = DOOM0_BIT | DOOM1_BIT | DOOM2_BIT | DOOMC_BIT | DOOMI_BIT;
+  answer->gamemask = DOOM0_BIT | DOOM1_BIT | DOOM2_BIT | DOOMC_BIT | DOOMI_BIT | HERETIC_BIT;
   answer->compatible = 0;
   answer->core = 0;
   answer->props = 0;     /* Filled in later */
@@ -928,23 +1011,6 @@ linedef *flip_linedef(linedef *ld)
   return ld;
 }
 
-void Usage0(void)
-{
-  printf("Usage: slige [switches] [filename.ext] [switches]\n\n");
-  printf("Produces a (nodeless) PWAD file that can be completed by a\n");
-  printf("nodebuilder such as BSP, and then played using the -file\n");
-  printf("function of DOOM (or DOOM2).  The default output file is\n");
-  printf("SLUMP.OUT.  Gets all sorts of data and options and stuff from\n");
-  printf("SLUMP.CFG (or other file given with the -config switch.)\n\n");
-}
-
-void Usage(void)
-{
-  Usage0();
-  printf("For details, say \"slige -?\".\n\n");
-  return;
-}
-
 /* Remove anything from the config that would be dangerous if left */
 /* in, and optionally remove anything that just benignly won't ever */
 /* be used and might take up valuable time and space. */
@@ -1039,7 +1105,6 @@ config *get_config(std::filesystem::path filename) {
     answer = (config *)malloc(sizeof(*answer));
 
     /* Set various defaults and stuff */
-    answer->configfile = strdup("SLUMP.CFG"); /* So's we kin free() it */
     answer->cwadonly = SLUMP_FALSE;
     answer->outfile = strdup(filename.string().c_str());
 
@@ -1091,12 +1156,17 @@ config *get_config(std::filesystem::path filename) {
     }
     std::string current_game = ob_get_param("game");
     if (StringCaseCmp(current_game, "doom1") == 0 || StringCaseCmp(current_game, "ultdoom") == 0) {
-        answer->gamemask = DOOM1_BIT;
+        answer->gamemask = (DOOM1_BIT|DOOMI_BIT);
+        answer->map = 0;
+        answer->episode = 1;
+        answer->mission = 1;
+    } else if (StringCaseCmp(current_game, "heretic") == 0) {
+        answer->gamemask = HERETIC_BIT;
         answer->map = 0;
         answer->episode = 1;
         answer->mission = 1;
     } else {
-        answer->gamemask = DOOM2_BIT;
+        answer->gamemask = (DOOM2_BIT|DOOMI_BIT);
         answer->map = 1;
         answer->episode = 0;
         answer->mission = 0;
@@ -1121,7 +1191,7 @@ config *get_config(std::filesystem::path filename) {
         } else if (StringCaseCmp(current_game, "ultdoom") == 0) {
             answer->levelcount = 32;
         } else {
-            answer->levelcount = 32; // Fallback but it shouldn't get here until we add other games to SLUMP
+            answer->levelcount = 40; // Heretic
         }
     }
     answer->force_arena = SLUMP_TRUE;
@@ -1188,7 +1258,7 @@ config *get_config(std::filesystem::path filename) {
         announce(VERBOSE, s);
     }
     answer->weapons_are_special =
-        SLUMP_FALSE; /* Just mix weapons in with ammo */
+        SLUMP_TRUE;
     answer->recess_switches = rollpercent(95);
     answer->allow_boring_rooms = rollpercent(20);
     answer->both_doors = rollpercent(50);
@@ -1209,10 +1279,7 @@ config *get_config(std::filesystem::path filename) {
         answer->big_monsters = rollpercent(35);
 
     /* Open or whatever the config file */
-    load_config(answer);
-
-    /* Read switch-defaults from the config file */
-    if (!read_switches(answer)) return NULL;
+    load_obsidian_config(answer);
 
     /* And finally read in all the hard stuff from the file */
     if (!nonswitch_config(answer)) return NULL;
@@ -1394,7 +1461,7 @@ short random_doortype(level *l, config *c, style *s)
 
   answer = LINEDEF_NORMAL_DOOR;
   if (rollpercent(l->p_s1_door)) answer = LINEDEF_NORMAL_S1_DOOR;
-  if (!(DOOM0_BIT&c->gamemask) && rollpercent(20)) {
+  if (!((DOOM0_BIT|HERETIC_BIT)&c->gamemask) && rollpercent(20)) {
     if (answer==LINEDEF_NORMAL_DOOR) answer=LINEDEF_BLAZE_DOOR;
     if (answer==LINEDEF_NORMAL_S1_DOOR) answer=LINEDEF_BLAZE_S1_DOOR;
     announce(VERBOSE,"Blaze door type");
@@ -1407,7 +1474,7 @@ short random_slifttype(config *c, style *s)
   short answer;
 
   answer = LINEDEF_SR_LOWER_LIFT;
-  if (!(DOOM0_BIT&c->gamemask) && rollpercent(20))
+  if (!((DOOM0_BIT|HERETIC_BIT)&c->gamemask) && rollpercent(20))
     answer = LINEDEF_SR_TURBO_LIFT;
   return answer;
 }
@@ -1458,22 +1525,34 @@ genus *random_plant(config *c, style *s)
   genus *answer;
   int tcount;
 
-  tcount = (c->gamemask & DOOM1_BIT) ? 3 : 4;
-
-  switch (roll(tcount)) {
-    case 0: answer = find_genus(c,ID_SMIT);
-      answer->bits &= ~PICKABLE;
-      answer->width = 33; break;
-    case 1: answer = find_genus(c,ID_TREE1);
-      answer->bits &= ~PICKABLE;
-      answer->width = 33; break;
-    case 2: answer = find_genus(c,ID_TREE2);
-      answer->bits &= ~PICKABLE;
-      answer->width = 65; break;
-    case 3:
-    default: answer = find_genus(c,ID_FBARREL);
-      answer->bits &= ~PICKABLE;
-      answer->width = 33; break;
+  if (c->gamemask & HERETIC_BIT) {
+    tcount = 2;
+    switch (roll(tcount)) {
+      case 0: answer = find_genus(c,ID_SMSTALAGMITE);
+        answer->bits &= ~PICKABLE;
+        answer->width = 33; break;
+      case 1: 
+      default: answer = find_genus(c,ID_LGSTALAGMITE);
+        answer->bits &= ~PICKABLE;
+        answer->width = 33; break;
+    }
+  } else {
+    tcount = (c->gamemask & DOOM1_BIT) ? 3 : 4;
+    switch (roll(tcount)) {
+      case 0: answer = find_genus(c,ID_SMIT);
+        answer->bits &= ~PICKABLE;
+        answer->width = 33; break;
+      case 1: answer = find_genus(c,ID_TREE1);
+        answer->bits &= ~PICKABLE;
+        answer->width = 33; break;
+      case 2: answer = find_genus(c,ID_TREE2);
+        answer->bits &= ~PICKABLE;
+        answer->width = 65; break;
+      case 3:
+      default: answer = find_genus(c,ID_FBARREL);
+        answer->bits &= ~PICKABLE;
+        answer->width = 33; break;
+    }
   }
   return answer;
 }
@@ -1750,7 +1829,7 @@ void gate_populate(level *l,sector *s,haa *haa, boolean first, config *c)
   if (tlx-minx>63) {   /* "63"s are all wrong */
     if (rollpercent(50)) {  /* A monster */
       m = timely_monster(haa,c,&levels,rollpercent(l->p_biggest_monsters),1);
-      if (levels)
+      if (m && levels)
         if (NULL!=place_object_in_region(l,minx,miny,tlx,maxy,
                    c,m->thingid,MONSTER_WIDTH(m),-1,s->entry_x,s->entry_y,
                    levels)) update_haa_for_monster(haa,m,levels,1,c);
@@ -1761,7 +1840,7 @@ void gate_populate(level *l,sector *s,haa *haa, boolean first, config *c)
   if (maxx-thx>63) {   /* "63"s are all wrong */
     if (rollpercent(50)) {  /* A monster */
       m = timely_monster(haa,c,&levels,rollpercent(l->p_biggest_monsters),1);
-      if (levels)
+      if (m && levels)
         if (NULL!=place_object_in_region(l,thx,miny,maxx,maxy,
                    c,m->thingid,MONSTER_WIDTH(m),-1,s->entry_x,s->entry_y,
                    levels)) update_haa_for_monster(haa,m,levels,1,c);
@@ -1774,7 +1853,7 @@ void gate_populate(level *l,sector *s,haa *haa, boolean first, config *c)
   if (tly-miny>63) {   /* "63"s are all wrong */
     if (rollpercent(50)) {  /* A monster */
       m = timely_monster(haa,c,&levels,rollpercent(l->p_biggest_monsters),1);
-      if (levels)
+      if (m && levels)
         if (NULL!=place_object_in_region(l,minx,miny,maxx,tly,
                    c,m->thingid,MONSTER_WIDTH(m),-1,s->entry_x,s->entry_y,
                    levels)) update_haa_for_monster(haa,m,levels,1,c);
@@ -1785,7 +1864,7 @@ void gate_populate(level *l,sector *s,haa *haa, boolean first, config *c)
   if (maxy-thy>63) {   /* "63"s are all wrong */
     if (rollpercent(50)) {  /* A monster */
       m = timely_monster(haa,c,&levels,rollpercent(l->p_biggest_monsters),1);
-      if (levels)
+      if (m && levels)
         if (NULL!=place_object_in_region(l,minx,thy,maxx,maxy,
                    c,m->thingid,MONSTER_WIDTH(m),-1,s->entry_x,s->entry_y,
                    levels)) update_haa_for_monster(haa,m,levels,1,c);
@@ -1842,160 +1921,6 @@ boolean enough_quest(level *l,sector *s,quest *ThisQuest,config *c)
   return 0;
 }
 
-/* Process the switches in the given arg array, filling in the  */
-/* given config structure.  Use s in error messages.  If conly, */
-/* all we're parsing for here are -config and -seed.            */
-/* Print msg and return SLUMP_FALSE if error, else return SLUMP_TRUE.       */
-boolean do_switches(int argc,char *argv[],config *c,char *s,int conly)
-{
-  int i;
-
-  if (conly) {  /* config, seed, -v only; imperfect algorithm! Can be fooled. */
-    for (i=1;i<argc;i++) {
-      if (!slump_stricmp(argv[i],"-config")) {
-        if (i<(argc-1)) {   /* If -config is the last arg, just ignore it */
-          c->configfile = strdup(argv[++i]);
-        }  /* end if enough args */
-      } else if (!slump_stricmp(argv[i],"-v")) {
-        global_verbosity = 1;
-      }  /* end if -config arg */
-    }  /* end for args */
-  } else {  /* not conly */
-    for (i=1;i<argc;i++) {
-      if (argv[i][0]!='-') {
-        c->outfile = strdup(argv[i]);   /* Just take last if multiple */
-      } else if (!slump_stricmp(argv[i],"-?")) {
-        Usage2();
-        exit(100);
-      } else if (!slump_stricmp(argv[i],"-outfile")) {
-        if (i<(argc-1)) {   /* If this is the last arg, just ignore it */
-          c->outfile = strdup(argv[++i]);
-        }  /* end not last arg */
-      } else if (!slump_stricmp(argv[i],"-doom")) {
-        c->gamemask = DOOM1_BIT;
-        if (c->episode==0) c->episode = c->mission = 1;
-        c->map = 0;
-      } else if (!slump_stricmp(argv[i],"-doom2")) {
-        c->gamemask = DOOM2_BIT;
-        c->episode = c->mission = 0;
-        if (c->map==0) c->map = 1;
-      } else if (!slump_stricmp(argv[i],"-nogross")) {
-        c->gamemask |= DOOMC_BIT;
-      } else if (!slump_stricmp(argv[i],"-v")) {
-        global_verbosity = 1;
-      } else if (!slump_stricmp(argv[i],"-cwad")) {
-        c->cwadonly = SLUMP_TRUE;
-      } else if (!slump_stricmp(argv[i],"-nocustom")) {
-        c->gamemask |= DOOMI_BIT;
-      } else if (!slump_stricmp(argv[i],"-nulls")) {
-        c->produce_null_lmps = SLUMP_TRUE;
-      } else if (!slump_stricmp(argv[i],"-noslinfo")) {
-        c->do_slinfo = SLUMP_FALSE;
-      } else if (!slump_stricmp(argv[i],"-noseclevels")) {
-        c->do_seclevels = SLUMP_FALSE;
-      } else if (!slump_stricmp(argv[i],"-bimo!")) {
-        c->force_biggest = SLUMP_TRUE;
-      } else if (!slump_stricmp(argv[i],"-bimo")) {
-        c->big_monsters = SLUMP_TRUE;
-      } else if (!slump_stricmp(argv[i],"-biwe")) {
-        c->big_weapons = SLUMP_TRUE;
-      } else if (!slump_stricmp(argv[i],"-xsecret")) {
-        c->force_secret = SLUMP_TRUE;
-      } else if (!slump_stricmp(argv[i],"-gross")) {
-        c->gamemask &= ~DOOMC_BIT;
-      } else if (!slump_stricmp(argv[i],"-music")) {
-        c->do_music = SLUMP_TRUE;
-      } else if (!slump_stricmp(argv[i],"-nosemo")) {
-        c->secret_monsters = SLUMP_FALSE;
-      } else if (!slump_stricmp(argv[i],"-dm")) {
-        c->do_dm = SLUMP_TRUE;
-      } else if (!slump_stricmp(argv[i],"-arena")) {
-        c->force_arena = SLUMP_TRUE;
-      } else if (!slump_stricmp(argv[i],"-levels")) {
-        if (i<(argc-1)) {   /* If this is the last arg, just ignore it */
-          c->levelcount = atoi(argv[++i]);
-          if (c->levelcount==0) {
-            fprintf(stderr,"%s error: invalid -levels arg <%s>.\n",
-                                s,argv[i]);
-            return SLUMP_FALSE;
-          }
-        }  /* end if enough args */
-      } else if (!slump_stricmp(argv[i],"-minlight")) {
-        if (i<(argc-1)) {   /* If this is the last arg, just ignore it */
-          c->minlight = atoi(argv[++i]);
-          if (c->minlight==0) {
-            fprintf(stderr,"%s error: invalid -minlight arg <%s>.\n",
-                                s,argv[i]);
-            return SLUMP_FALSE;
-          }
-        }  /* end if enough args */
-      } else if (!slump_stricmp(argv[i],"-macho")) {
-        int mfac;
-        if (i<(argc-1)) {   /* If this is the last arg, just ignore it */
-          mfac = atoi(argv[++i]);
-          if ((mfac<1) || (mfac>100)) {
-            fprintf(stderr,"%s error: -macho must be in [1,100], not <%s>.\n",
-                                s,argv[i]);
-            return SLUMP_FALSE;
-          }
-          c->machoh = ((float)100 - (float)mfac/(float)4) / (float)100;
-          c->machou = ((float)100 - (float)mfac/(float)2) / (float)100;
-        }  /* end if enough args */
-      } else if (!slump_stricmp(argv[i],"-restrict")) {
-        if (i<(argc-1)) {   /* If this is the last arg, just ignore it */
-          int j;
-          i++;
-          c->gamemask = 0;
-          for (j=0;j<(int)strlen(argv[i]);j++) {
-            if (argv[i][j]=='C') c->gamemask |= DOOMC_BIT;
-              else if (argv[i][j]=='I') c->gamemask |= DOOMI_BIT;
-              else if (argv[i][j]=='0') c->gamemask |= DOOM0_BIT | DOOM1_BIT;
-              else if (argv[i][j]=='1') c->gamemask |= DOOM1_BIT;
-              else if (argv[i][j]=='2') c->gamemask |= DOOM2_BIT;
-              else {
-                fprintf(stderr,"%s error: invalid -restrict arg <%s>.\n",
-                                    s,argv[i]);
-                return SLUMP_FALSE;
-              }
-          }  /* end for bits of next arg */
-        }  /* end if enough args */
-      } else if ((strlen(argv[i])==5) &&
-                 ( (argv[i][1]=='E') || (argv[i][1]=='e') ) &&
-                 ( (argv[i][3]=='M') || (argv[i][3]=='m') ) ) {
-        if (2!=sscanf(argv[i],"-%*c%d%*c%d",&(c->episode),&(c->mission))) {
-          fprintf(stderr,"%s error: Invalid -ExMx switch <%s>.\n",s,argv[i]);
-          return SLUMP_FALSE;
-        }
-        c->map = 0;
-      } else if (!slump_strnicmp(argv[i],"-map",4)) {
-        c->map = atoi(argv[i]+4);
-        if (c->map==0) {
-          fprintf(stderr,"%s error: Invalid -MAPxx switch <%s>.\n",s,argv[i]);
-          return SLUMP_FALSE;
-        }
-        c->episode = c->mission = 0;
-      } else if (!slump_stricmp(argv[i],"-rooms")) {
-        if (i<(argc-1)) {   /* If this is the last arg, just ignore it */
-          c->minrooms = atoi(argv[++i]);
-	  if(c->minrooms < 2) 
-		  c->minrooms = 2;
-	  if(c->minrooms > 37)
-		  c->minrooms = 37;
-        }  /* end if enough args */
-      } else if (!slump_stricmp(argv[i],"-config")) {
-        if (i<(argc-1)) i++;   /* Ignored in this stage */
-      } else if (!slump_stricmp(argv[i],"-seed")) {
-        if (i<(argc-1)) i++;   /* Ignored in this stage */
-      } else {  /* Unknown switch */
-        fprintf(stderr,"%s error: unknown switch <%s>.\n\n",s,argv[i]);
-        return SLUMP_FALSE;
-      }
-    }  /* end for args */
-  }  /* end not conly */
-
-  return SLUMP_TRUE;
-}
-
 /* Put this object in this sector.  It's a non-obstable object */
 thing *place_required_pickable(level *l,sector *s,config *c,short id)
 {
@@ -2012,8 +1937,13 @@ thing *place_required_small_pickable(level *l,sector *s,config *c)
 {
   short tid;
 
-  if (rollpercent(50)) tid = ID_POTION;
-    else tid = ID_HELMET;                 /* More choices? */
+  if (l->heretic_level) { // Don't really know what to put here
+    if (rollpercent(50)) tid = ID_WANDCRYSTAL;
+      else tid = ID_ETHEREALARROWS;
+  } else {
+    if (rollpercent(50)) tid = ID_POTION;
+      else tid = ID_HELMET;                 /* More choices? */
+  }
 
   return place_required_pickable(l,s,c,tid);
 }
@@ -2473,22 +2403,6 @@ quest *pop_quest(quest *current)
 }
 
 /******* Many routines from here on need more work ****************/
-
-void Usage2(void)
-{
-  Usage0();
-  printf("Switches that do something at the moment:\n");
-  printf("  -rooms [n]   -seed [nnnnnn]  -outfile [filename.ext]\n");
-  printf("  -restrict [012C] -ExMx -MAPxx -doom1 -doom2 -levels <x> \n");
-  printf("  -minlight <x>  -music  -macho <nn> -noslinfo -nocustom -cwad \n");
-  printf("  -arena  -nulls -nosemo -biwe -bimo -bimo! \n");
-#ifdef SWITCHES_IN_CONFIG_FILES
-  printf("(-outfile being most useful in the config file; on the\n");
-  printf("command line you don't need the switch.)\n");
-#endif
-  printf("\nM O R E   D E T A I L S   T O   F O L L O W\n\n");
-  return;
-}
 
 /*
    Anything that calls this routine is probably too simple to
@@ -2957,14 +2871,25 @@ void basic_background3(byte *fbuf, byte bottom, int range)
 boolean need_secret_level(config *c)
 {
   if (c->do_seclevels==SLUMP_FALSE) return SLUMP_FALSE;
-  if (c->map==15) return SLUMP_TRUE;
-  if (c->map==31) return SLUMP_TRUE;
-  switch (c->episode) {
-    case 1: return (c->mission == 3);
-    case 2: return (c->mission == 5);
-    case 3: return (c->mission == 6);
-    case 4: return (c->mission == 2);
-    default: return SLUMP_FALSE;
+  if (c->gamemask & HERETIC_BIT) {
+    switch (c->episode) {
+      case 1: return (c->mission == 6);
+      case 2: return (c->mission == 4);
+      case 3: return (c->mission == 4);
+      case 4: return (c->mission == 4);
+      case 5: return (c->mission == 3);
+      default: return SLUMP_FALSE;
+    }
+  } else {
+    if (c->map==15) return SLUMP_TRUE;
+    if (c->map==31) return SLUMP_TRUE;
+    switch (c->episode) {
+      case 1: return (c->mission == 3);
+      case 2: return (c->mission == 5);
+      case 3: return (c->mission == 6);
+      case 4: return (c->mission == 2);
+      default: return SLUMP_FALSE;
+    }
   }
 }
 
@@ -3663,11 +3588,14 @@ texture *texture_for_key(short key, style *s, config *c)
 {
   switch (key) {
     case ID_BLUEKEY:
-    case ID_BLUECARD: return s->blueface;
+    case ID_BLUECARD: 
+    case ID_HERETICBLUEKEY: return s->blueface;
     case ID_REDKEY:
-    case ID_REDCARD: return s->redface;
+    case ID_REDCARD: 
+    case ID_HERETICGREENKEY: return s->redface;
     case ID_YELLOWKEY:
-    case ID_YELLOWCARD: return s->yellowface;
+    case ID_YELLOWCARD: 
+    case ID_HERETICYELLOWKEY: return s->yellowface;
   }
   announce(WARNING,"Unknown key in texture_for_key()");
   return c->error_texture;
@@ -3691,11 +3619,14 @@ short type_for_key(short key)
 {
   switch (key) {
     case ID_BLUEKEY:
-    case ID_BLUECARD: return LINEDEF_BLUE_S1_DOOR;
+    case ID_BLUECARD: 
+    case ID_HERETICBLUEKEY: return LINEDEF_BLUE_S1_DOOR;
     case ID_REDKEY:
-    case ID_REDCARD: return LINEDEF_RED_S1_DOOR;
+    case ID_REDCARD: 
+    case ID_HERETICGREENKEY: return LINEDEF_RED_S1_DOOR;
     case ID_YELLOWKEY:
-    case ID_YELLOWCARD: return LINEDEF_YELLOW_S1_DOOR;
+    case ID_YELLOWCARD: 
+    case ID_HERETICYELLOWKEY: return LINEDEF_YELLOW_S1_DOOR;
   }
   announce(WARNING,"Unknown key in type_for_key()");
   return LINEDEF_NORMAL_S1_DOOR;
@@ -3739,7 +3670,7 @@ short locked_linedef_for(short type,short key,config *c)
 {
   switch (type) {
     case LINEDEF_S1_OPEN_DOOR:
-      if (DOOM0_BIT & c->gamemask) return 0;  /* Not in ancient DooMs */
+      if ((DOOM0_BIT|HERETIC_BIT) & c->gamemask) return 0;  /* Not in ancient DooMs (or Heretic) */
       switch (key) {
         case ID_BLUEKEY:
         case ID_BLUECARD:
@@ -4049,7 +3980,7 @@ void try_falling_core(level *l,linedef *ld1,linedef *ld2,haa *haa,config *c)
   ldn1->left = ldn1->right = new_sidedef(l,coresec,c);
   ldn1->left->middle_texture = c->null_texture;
   ldn1->flags |= TWO_SIDED;
-  if (!(c->gamemask&DOOM0_BIT)) {
+  if (!(c->gamemask&(DOOM0_BIT|HERETIC_BIT))) {
     ldn1->type = LINEDEF_WR_TURBO_LIFT;
   } else {
     ldn1->type = LINEDEF_WR_LOWER_LIFT;
@@ -4565,11 +4496,14 @@ void e_bl_inner(level *l,linedef *ldf1,linedef *ldf2,link *ThisLink,
   if ((ThisQuest) && (ThisQuest->goal==KEY_GOAL)) {
     switch (ThisQuest->type) {
       case ID_BLUEKEY:
-      case ID_BLUECARD: litecol = BLUE; break;
+      case ID_BLUECARD: 
+      case ID_HERETICBLUEKEY: litecol = BLUE; break;
       case ID_REDKEY:
-      case ID_REDCARD: litecol = RED; break;
+      case ID_REDCARD: 
+      case ID_HERETICGREENKEY: litecol = RED; break;
       case ID_YELLOWKEY:
-      case ID_YELLOWCARD: litecol = YELLOW; break;
+      case ID_YELLOWCARD: 
+      case ID_HERETICYELLOWKEY: litecol = YELLOW; break;
     }
   } else {
     litecol = LIGHT;
@@ -5426,9 +5360,15 @@ boolean maybe_add_dm_start(level *l, sector *s, config *c, boolean force) {
   if (place_object(l,s,c,ID_DM,34,-1,s->entry_x,s->entry_y,7)) {
     s->has_dm = SLUMP_TRUE;
     l->dm_count++;
-    if (!s->has_dm_weapon)
-      if (place_object(l,s,c,ID_SHOTGUN,24,0,0,0,0x17))
-        s->has_dm_weapon = SLUMP_TRUE;
+    if (!s->has_dm_weapon) {
+      if (l->heretic_level) {
+        if (place_object(l,s,c,ID_CROSSBOW,24,0,0,0,0x17))
+          s->has_dm_weapon = SLUMP_TRUE;
+      } else {
+        if (place_object(l,s,c,ID_SHOTGUN,24,0,0,0,0x17))
+          s->has_dm_weapon = SLUMP_TRUE;
+      }
+    }
     return SLUMP_TRUE;
   }
   return SLUMP_FALSE;
@@ -5504,7 +5444,11 @@ short death_room(level *l,linedef *ld,style *ThisStyle,config *c)
   newsector->pstyle = ThisStyle;
   paint_room(l,newsector,ThisStyle,c);
   newsector->tag = new_tag(l);
-  newsector->special = DEATH_SECTOR;
+  if (l->heretic_level) {
+    newsector->special = HERETIC_LAVA;
+  } else {
+    newsector->special = DEATH_SECTOR;
+  }
   newsector->light_level = 80;
 
   find_rec(l,newsector,&minx,&miny,&maxx,&maxy);
@@ -5512,8 +5456,13 @@ short death_room(level *l,linedef *ld,style *ThisStyle,config *c)
 
   /* Worry about having *too many* sergeants? */
   for (x=minx+22; x<=maxx-22; x+=44) {
-    new_thing(l,x,miny+22,90,ID_SERGEANT,7,c);
-    new_thing(l,x,maxy-22,270,ID_SERGEANT,7,c);
+    if (l->heretic_level){
+      new_thing(l,x,miny+22,90,ID_UNDEADWARRIOR,7,c);
+      new_thing(l,x,maxy-22,270,ID_UNDEADWARRIOR,7,c);
+    } else {
+      new_thing(l,x,miny+22,90,ID_SERGEANT,7,c);
+      new_thing(l,x,maxy-22,270,ID_SERGEANT,7,c);
+    }
   }
 
   return newsector->tag;
@@ -6092,7 +6041,7 @@ boolean rising_room(level *l,sector *s,config *c,haa *haa,quest *ThisQuest)
     t = new_thing(l,(minx+maxx)/2,(miny+maxy)/2,0,ThisQuest->type,7,c);
     ThisQuest->pthing = t;   /* For later */
     if (ThisQuest->auxtag==0)
-      if (!(c->gamemask&DOOM0_BIT))
+      if (!(c->gamemask&(DOOM0_BIT|HERETIC_BIT)))
         if (rollpercent(80)) {
           did_trigger = SLUMP_TRUE;
           trigger_box(l,t,newsec,newsec->tag,LINEDEF_W1_RAISE_FLOOR,c);
@@ -6103,7 +6052,7 @@ boolean rising_room(level *l,sector *s,config *c,haa *haa,quest *ThisQuest)
   if (ThisQuest->goal == NULL_GOAL) {
     ThisQuest->pthing = place_required_small_pickable(l,newsec,c);
     if (ThisQuest->auxtag==0)
-      if (!(c->gamemask&DOOM0_BIT))
+      if (!(c->gamemask&(DOOM0_BIT|HERETIC_BIT)))
         if (rollpercent(50)) {
           t = new_thing(l,(minx+maxx)/2,(miny+maxy)/2,0,tid,7,c);
           did_trigger = SLUMP_TRUE;
@@ -7212,11 +7161,11 @@ int timely_armor(haa *haa, int *rlevels, config *c)
 
   /* Should be less primitive? */
   if (rollpercent(50)) {
-    armortype = ID_HELMET;
+    armortype = (c->gamemask & HERETIC_BIT) ? 0 : ID_HELMET;
   } else if (rollpercent(70)) {
-    armortype = ID_GREENSUIT;
+    armortype = (c->gamemask & HERETIC_BIT) ? ID_SILVERSHIELD : ID_GREENSUIT;
   } else {
-    armortype = ID_BLUESUIT;
+    armortype = (c->gamemask & HERETIC_BIT) ? ID_ENCHANTEDSHIELD : ID_BLUESUIT;
   }
 
   return armortype;
@@ -7236,6 +7185,7 @@ void update_haa_for_armor(haa *haa,int levels,short armortype)
       if (levels&0x04) haa->haas[UV].armor++;
       break;
     case ID_GREENSUIT:
+    case ID_SILVERSHIELD:
       if (levels&0x01) {
         haa->haas[ITYTD].armor += 20;
         if (haa->haas[ITYTD].armor<100) haa->haas[ITYTD].armor = (float)100;
@@ -7250,6 +7200,7 @@ void update_haa_for_armor(haa *haa,int levels,short armortype)
       }
       break;
     case ID_BLUESUIT:
+    case ID_ENCHANTEDSHIELD:
       if (levels&0x01) {
         haa->haas[ITYTD].armor += 40;
         if (haa->haas[ITYTD].armor<200) haa->haas[ITYTD].armor = (float)200;
@@ -7262,6 +7213,8 @@ void update_haa_for_armor(haa *haa,int levels,short armortype)
         haa->haas[UV].armor += 100;
         if (haa->haas[UV].armor<200) haa->haas[UV].armor = (float)200;
       }
+      break;
+    case 0: // This is for Heretic as it has no ID_HELMET equivalent
       break;
     default:
       announce(SLUMP_ERROR,"Odd armortype in u_h_f_armor");
@@ -7326,55 +7279,79 @@ int timely_ammo(haa *haa, int *rlevels, config *c)
   /* if to any, if any at all didn't have one yet. */
 
   if ( (!c->weapons_are_special) && (need_shotgun) ) {
-    if ((!(c->gamemask&(DOOM0_BIT|DOOM1_BIT))) && rollpercent(30)) {
+    if ((!(c->gamemask&(DOOM0_BIT|DOOM1_BIT|HERETIC_BIT))) && rollpercent(30)) {
       ammotype = ID_SSGUN;
+    } else if (c->gamemask & HERETIC_BIT) {
+      ammotype = ID_CROSSBOW;
     } else {
       ammotype = ID_SHOTGUN;
     }
   } else if ( (!c->weapons_are_special) && rollpercent(15) ) {
     int weapcount;
-    if (c->gamemask&(DOOM0_BIT|DOOM1_BIT)) weapcount = 4;
-      else weapcount = 5;
-    switch (roll(weapcount)) {
-      case 0: if (c->big_weapons) {
-          ammotype = ID_PLASMA;
-        } else {
-          ammotype = ID_SHOTGUN;
-        }
-        break;
-      case 1: ammotype = ID_SHOTGUN; break;
-      case 2: ammotype = ID_CHAINGUN; break;
-      case 3: if (c->big_weapons) {
-          ammotype = ID_LAUNCHER;
-        } else {
-          ammotype = ID_SHOTGUN;
-        }
-        break;
-      case 4: ammotype = ID_SSGUN; break;
+    if (c->gamemask & HERETIC_BIT) {
+      weapcount = 5;
+      switch (roll(weapcount)) {
+        case 0: if (c->big_weapons) {
+            ammotype = ID_HELLSTAFF;
+          } else {
+            ammotype = ID_CROSSBOW;
+          }
+          break;
+        case 1: ammotype = ID_CROSSBOW; break;
+        case 2: ammotype = ID_DRAGONCLAW; break;
+        case 3: if (c->big_weapons) {
+            ammotype = ID_PHOENIXROD;
+          } else {
+            ammotype = ID_CROSSBOW;
+          }
+          break;
+        case 4: ammotype = ID_FIREMACE; break;
+      }
+    } else {
+      if (c->gamemask&(DOOM0_BIT|DOOM1_BIT)) weapcount = 4;
+        else weapcount = 5;
+      switch (roll(weapcount)) {
+        case 0: if (c->big_weapons) {
+            ammotype = ID_PLASMA;
+          } else {
+            ammotype = ID_SHOTGUN;
+          }
+          break;
+        case 1: ammotype = ID_SHOTGUN; break;
+        case 2: ammotype = ID_CHAINGUN; break;
+        case 3: if (c->big_weapons) {
+            ammotype = ID_LAUNCHER;
+          } else {
+            ammotype = ID_SHOTGUN;
+          }
+          break;
+        case 4: ammotype = ID_SSGUN; break;
+      }
     }
+  // TODO: Account for Firemace/Dragon Claw
   } else if (rollpercent(10)) {
-    ammotype = ID_CLIP;
+    ammotype = (c->gamemask & HERETIC_BIT) ? ID_WANDCRYSTAL : ID_CLIP;
   } else if (haa->haas[0].can_use_cells && rollpercent(10)) {
-    ammotype = ID_CELL;
+    ammotype = (c->gamemask & HERETIC_BIT) ? ID_LESSERRUNES : ID_CELL;
   } else if (haa->haas[0].can_use_cells && rollpercent(15)) {
-    ammotype = ID_CELLPACK;
+    ammotype = (c->gamemask & HERETIC_BIT) ? ID_GREATERRUNES : ID_CELLPACK;
   } else if (haa->haas[0].can_use_rockets && rollpercent(12)) {
-    ammotype = ID_ROCKET;
+    ammotype = (c->gamemask & HERETIC_BIT) ? ID_FLAMEORB : ID_ROCKET;
   } else if (haa->haas[0].can_use_rockets && rollpercent(15)) {
-    ammotype = ID_ROCKBOX;
+    ammotype = (c->gamemask & HERETIC_BIT) ? ID_INFERNOORB : ID_ROCKBOX;
   } else if (rollpercent(10)) {
-    ammotype = ID_BULBOX;
+    ammotype = (c->gamemask & HERETIC_BIT) ? ID_CRYSTALGEODE : ID_BULBOX;
   } else if (rollpercent(60)) {
-    ammotype = ID_SHELLS;
+    ammotype = (c->gamemask & HERETIC_BIT) ? ID_ETHEREALARROWS : ID_SHELLS;
   } else {
-    ammotype = ID_SHELLBOX;
+    ammotype = (c->gamemask & HERETIC_BIT) ? ID_ETHEREALQUIVER : ID_SHELLBOX;
   }
 
-  if ((ammotype==ID_PLASMA) && (need_plasgun)) {
+  if ((ammotype==(c->gamemask & HERETIC_BIT) ? ID_HELLSTAFF : ID_PLASMA) && (need_plasgun)) {
     levels |= 0x07;   /* All, if any */
   }
 
-  if ((ammotype==ID_LAUNCHER) && (need_launcher)) {
+  if ((ammotype==(c->gamemask & HERETIC_BIT) ? ID_PHOENIXROD : ID_LAUNCHER) && (need_launcher)) {
     levels |= 0x07;   /* All, if any */
   }
 
@@ -7408,6 +7385,18 @@ void ammo_value(short ammotype,haa *haa,int *f0,int *f1,int *f2)
     case ID_CELLPACK: answer = 2200; break;
     case ID_ROCKET: answer = 100; break;
     case ID_ROCKBOX: answer = 500; break;
+    case ID_WANDCRYSTAL: answer = 100; break;
+    case ID_CRYSTALGEODE: answer = 500; break;
+    case ID_ETHEREALARROWS: answer = 225; break;
+    case ID_ETHEREALQUIVER: answer = 900; break;
+    case ID_CLAWORB: answer = 180; break;
+    case ID_ENERGYORB: answer = 450; break;
+    case ID_LESSERRUNES: answer = 280; break;
+    case ID_GREATERRUNES: answer = 1400; break;
+    case ID_FLAMEORB: answer = 90; break;
+    case ID_INFERNOORB: answer = 900; break;
+    case ID_MACESPHERES: answer = 180; break;
+    case ID_MACESPHEREPILE: answer = 900; break;
     default:
       announce(SLUMP_ERROR,"Funny ammo type in a_v");
       answer = 0;
@@ -7472,6 +7461,7 @@ boolean is_weapon(short thingid)
     case ID_PLASMA:
     case ID_BFG:
     case ID_LAUNCHER:
+    case ID_DRAGONCLAW:
       return SLUMP_TRUE;
     default: return SLUMP_FALSE;
   }
@@ -7506,7 +7496,18 @@ void update_haa_for_health(haa *haa,int levels,short healthtype)
 {
   int amount;
 
-  if (healthtype==ID_BERSERK) {
+  if (healthtype==ID_TOMEOFPOWER) {
+    announce(VERBOSE,"Put in a tome of power!");
+    if (levels&0x01) {
+      haa->haas[ITYTD].has_berserk = SLUMP_TRUE;
+    }
+    if (levels&0x02) {
+      haa->haas[HMP].has_berserk = SLUMP_TRUE;
+    }
+    if (levels&0x04) {
+      haa->haas[UV].has_berserk = SLUMP_TRUE;
+    }
+  } else if (healthtype==ID_BERSERK) {
     announce(VERBOSE,"Put in a berserk pack!");
     if (levels&0x01) {
       if (haa->haas[ITYTD].health<100)
@@ -7525,11 +7526,19 @@ void update_haa_for_health(haa *haa,int levels,short healthtype)
     }
   } else {
     switch (healthtype) {
-      case ID_STIMPACK: amount= 10; break;
-      case ID_MEDIKIT:  amount= 25; break;
+      case ID_STIMPACK: 
+      case ID_CRYSTALVIAL: amount= 10; break;
+      case ID_MEDIKIT:  
+      case ID_QUARTZFLASK: amount= 25; break;
       case ID_POTION:   amount=  1; break;
-      case ID_SOUL:     amount=100; break;
-      default: announce(WARNING,"Odd healthtype in u_h_f_h");
+      case ID_SOUL:     
+      case ID_MYSTICURN: amount=100; break;
+      case 0: // Heretic - No equivalent to ID_POTION
+      case ID_WANDCRYSTAL: // Heretic - Sometimes placed where an ID_POTION would occur
+        amount = 0;
+        break;
+      default: 
+        announce(WARNING,"Odd healthtype in u_h_f_h");
         amount=0;
     }
     if (levels&0x01) haa->haas[ITYTD].health += amount;
@@ -7556,16 +7565,28 @@ short timely_health(haa *haa,int *levels,config *c)
 
   if ((*levels)==0) return 0;
 
-  if (rollpercent(50)) {
-    healthtype = ID_STIMPACK;
-  } else if (rollpercent(50)) {
-    healthtype = ID_MEDIKIT;
-  } else if (rollpercent(90)) {
-    healthtype = ID_POTION;
-  } else if (berserk_ok&&rollpercent(50)) {
-    healthtype = ID_BERSERK;
+  if (c->gamemask & HERETIC_BIT) {
+    if (rollpercent(50)) {
+      healthtype = ID_CRYSTALVIAL;
+    } else if (rollpercent(50)) {
+      healthtype = ID_QUARTZFLASK;
+    } else if (berserk_ok&&rollpercent(50)) {
+      healthtype = ID_TOMEOFPOWER;
+    } else {
+      healthtype = ID_MYSTICURN;
+    }
   } else {
-    healthtype = ID_SOUL;
+    if (rollpercent(50)) {
+      healthtype = ID_STIMPACK;
+    } else if (rollpercent(50)) {
+      healthtype = ID_MEDIKIT;
+    } else if (rollpercent(90)) {
+      healthtype = ID_POTION;
+    } else if (berserk_ok&&rollpercent(50)) {
+      healthtype = ID_BERSERK;
+    } else {
+      healthtype = ID_SOUL;
+    }
   }
   return healthtype;
 }
@@ -7961,437 +7982,50 @@ boolean isAdequate(level *l,linedef *ld,style *ThisStyle,config *c)
   }
 }
 
-/* Fill in the default config-file data contents stuff */
-void load_default_config(config *c)
-{
-  char *p;
-  
-  /* Legend In Progress - Dasho
-  T = Theme, followed by the name or first letter of theme name
-  ? = Secret, add after the theme name
-  t = texture
-  0 = noDoom0 (not in DOOM 1.2)
-  1 = noDoom1 (not in Doom 1, period)
-  2 = noDoom2 (not in DOOM 2)
-  u = only intrinsic textures (need to clarify)
-  G = for clean mode (no Gross things)
-  c (first occurrence) = core <theme> (Should occur often in a theme)
-  c (second occurrence) = comp <theme> (Compatible, but less common)
-  i = isswitch , followed by comp <theme>
-  w = wall
-  S = subtle <texture> (identifies as a variant of <texture> for secret hints)
-  f = flat
-  G = gate (must be after a flat)
-  d = door
-  F = lift texture
-  I = support
-  j = jamb
-  e = step
-  E = exit switch
-  L = locked
-  o = outside
-  U = ceiling
-  n = nukage
-  p = plaque
-  v = vtiles
-  H = half plaque
-  l = light
-  r = red
-  b = blue
-  y = yellow
-  ! = error texture
-  X = exit sign texture
-  Y = y bias
-  @ = y_hint ?
-  K = sky flat
-  = = real texture name, followed by the real texture name
-  W = water flat  */
-  
-  c->configdata = strdup(    // So we can free() it
-    "[THEMES] T M T B T W T R ? "
-    "t PANEL5 0 1 "
-    "t PANCASE2 0 1 "
-    "t PANCASE1 0 1 "
-    "t PANBORD2 0 1 "
-    "t PANBORD1 0 1 "
-    "t METAL7 0 1 "
-    "t METAL6 0 1 "
-    "t METAL2 0 1 "
-    "t COMP2 2 "
-    "t SILVER2 0 1 "
-    "t SILVER1 0 1 "
-    "t EXITSIGN X "
-    "t ZZWOLF1 o 0 1 "
-    "t ZIMMER3 o 0 1 "
-    "t ZIMMER5 o 0 1 "
-    "t TANROCK5 o 0 1 "
-    "t TANROCK4 o 0 1 "
-    "t TANROCK2 o 0 1 "
-    "t STUCCO o 0 1 "
-    "t STONE6 o 0 1 "
-    "t ROCK1 o 0 1 "
-    "t MODWALL1 o 0 1 "
-    "t BSTONE1 o 0 1 "
-    "t BRICK5 o 0 1 "
-    "t BRICK4 o 0 1 "
-    "t ASHWALL7 o 0 1 "
-    "t ASHWALL6 o 0 1 "
-    "t ASHWALL4 o 0 1 "
-    "t ASHWALL2 o 0 1 "
-    "t STONE3 o "
-    "t SP_ROCK1 o "
-    "t GRAYVINE o "
-    "t GRAYBIG o "
-    "t SLDOOR1 z 64 128 d L c M c B = SP_DUDE5 u "
-    "t DOORSKUL z 64 72 d L c M c B 0 1 u "
-    "t TEKBRON2 z 64 128 d c M c B 0 1 "
-    "t SPCDOOR4 z 64 128 d c M 0 1 "
-    "t SPCDOOR3 z 64 128 d c M 0 1 "
-    "t SPCDOOR2 z 64 128 d c M 0 1 "
-    "t SPCDOOR1 z 64 128 d c M 0 1 "
-    "t DOORHI z 64 128 d c M 2 "
-    "t DOOR3 z 64 72 d c M "
-    "t DOOR1 z 64 72 d c M "
-    "t WOODSKUL z 64 128 d c W c B c R 2 "
-    "t WOODMET2 z 64 128 d c W c B c R 0 1 "
-    "t WOODGARG z 64 128 d c W c B c R "
-    "t BIGDOOR4 z 128 128 d c M "
-    "t BIGDOOR3 z 128 128 d c M "
-    "t BIGDOOR2 z 128 128 d c M "
-    "t BIGDOOR1 z 128 96 d c M "
-    "t BIGDOOR7 z 128 128 d c W c B c R "
-    "t BIGDOOR6 z 128 112 d c W c B c R "
-    "t BIGDOOR5 z 128 128 d c W c B c R "
-    "t EXITSWIR E c R 0 1 u "
-    "t EXITSWIW E c W c B 0 1 u "
-    "t EXITSWIT E c M 0 1 u "
-    "t BFALL1 z 8 128 l c R 0 1 "
-    "t LITEREDL z 8 128 l c R = LITERED 2 "
-    "t TEKLITE l c M 0 1 "
-    "t LITE4 l c M c B 2 "
-    "t LITE5 l c M c B "
-    "t LITE3 l c M c B "
-    "t SILVER3 p v c M 0 1 "
-    "t SPACEW3 p v c M 0 1 "
-    "t COMPSTA2 p v H c M "
-    "t COMPSTA1 p v H c M "
-    "t COMPTALL p v c M "
-    "t COMPUTE1 p v H c M 2 "
-    "t PLANET1 p v H c M 2 "
-    "t PANBOOK p c W 0 1 "
-    "t SKIN2 p v c R "
-    "t GSTFONT1 p c R "
-    "t SKY1 p c W c B "
-    "t SKY3 p c B c R "
-    "t MARBFAC3 p v c W c B "
-    "t MARBFAC2 p v c W c B "
-    "t MARBFACE p v c W c B "
-    "t BRNBIGC g c M 2 "
-    "t MIDSPACE g c M 0 1 "
-    "t MIDVINE1 g c W c M c B c R 2 "
-    "t MIDBARS1 g c W c M c B c R 0 1 "
-    "t MIDGRATE g c W c M c B c R "
-    "t LITERED z 8 128 r c M c B 2 "
-    "t DOORYEL z 8 128 y c M c B "
-    "t DOORRED z 8 128 r c M c B "
-    "t LITEBLU4 z 16 128 b c M c B "
-    "t LITEBLU1 z 8 128 b c M c B "
-    "t DOORBLU z 8 128 b c M c B "
-    "t DOORYEL2 z 16 128 y c W c R "
-    "t DOORBLU2 z 16 128 b c W c R "
-    "t DOORRED2 z 16 128 r c W c R "
-    "t STEP6 z 256 16 e c W c M c B "
-    "t STEP5 z 256 16 e c W c M c B "
-    "t STEP4 z 256 16 e c W c M c B "
-    "t STEP3 z 256 8 e c W c M c B "
-    "t STEP2 z 256 8 e c W c M c B "
-    "t STEP1 z 256 8 e c W c M c B "
-    "t FIRELAVA j c R "
-    "t DOORTRAK j c W c M c B "
-    "t DOORSTOP j c W c M c B "
-    "t SKSNAKE2 I c R "
-    "t ROCKRED1 I c R "
-    "t ZIMMER7 I c B 0 1 "
-    "t BRICK10 I o c B 0 1 "
-    "t COMPSPAN I c M "
-    "t SUPPORT2 I c M c B "
-    "t SHAWN2 I c M c B "
-    "t ASHWALL3 I o c W 0 1 "
-    "t ASHWALL I o c W 2 "
-    "t BROWNHUG I o c W c M c B "
-    "t SUPPORT3 I c W c B "
-    "t METAL z 64 128 I d c W c B c R "
-    "t SW1HOT i c R "
-    "t SKY3_W w c R = SKY3 "
-    "t SP_HOT1 w C R "
-    "t REDWALL w ! C R "
-    "t FIREMAG1 p c B "
-    "t FIREBLU1 w C R S FIREMAG1 @ 0 "
-    "t SW1MARB i c B 0 1 "
-    "t SW1GSTON i c B "
-    "t GSTVINE1 w o c B S GSTVINE2 "
-    "t MARBGRAY w c B S GRAY5 0 1 "
-    "t GSTONE1 w o c B S GSTGARG "
-    "t MARBGARG w c B S MARBLE1 0 1 u "
-    "t MARBLE2 w C B S MARBLE3 "
-    "t MARBLE3 w C B S MARBLE1 "
-    "t MARBLE1 w C B S MARBLE3 @ 0 "
-    "t PLAT1 z 128 128 F c M "
-    "t GRAYALT w C M s SW1GRAY 0 1 u "
-    "t TEKVINE w c M S TEKGREN3 s SW1TEK @ 0 0 1 u "
-    "t SPACEW4 w c M s SW1TEK 0 1 "
-    "t SW1MET2 Y 64 "
-    "t METAL3 0 1 "
-    "t METAL5 w c M S METAL3 s SW1MET2 0 1 "
-    "t COMPUTE3 w c M s SW1STRTN 2 "
-    "t TEKWALL4 w c M S COMPWERD s SW1COMP @ 0 "
-    "t TEKWALL1 w c M S COMPWERD s SW1COMP @ 0 "
-    "t ICKWALL3 o "
-    "t GRAY1 w c M S ICKWALL3 s SW1GRAY "
-    "t BROVINE2 w c M s SW1SLAD @ 24 "
-    "t BRONZE4 w C M S BRONZE3 s SW1TEK 0 1 "
-    "t STARTAN1 w C M S STARTAN2 s SW1STRTN 2 "
-    "t STARTAN3 w C M S STARG3 s SW1STRTN "
-    "t LITEMET 2 "
-    "t METAL1 w c M S LITEMET s SW1METAL "
-    "t STARBR2 w c M S STARTAN2 s SW1STRTN "
-    "t STARTAN2 w C M S STARBR2 s SW1STRTN "
-    "t STARG3 w C M S STARGR1 s SW1STRTN "
-    "t STARG2 w C M S STARG1 s SW1STRTN "
-    "t STARG1 w C M S STARG2 s SW1STRTN "
-    "t SW1DIRT Y 72 "
-    "t BROWN144 o "
-    "t BROWN96 w C M S BROWN144 s SW1DIRT "
-    "t BROWN1 w C M s SW1BRN2 "
-    "t BROWNGRN w C M S SLADWALL s SW1BRNGN "
-    "t SLADWALL w C M S BROWNGRN s SW1SLAD "
-    "t SW1WOOD i c W c B "
-    "t SW1SATYR i c W "
-    "t SW1LION i c W "
-    "t SW1GARG i c W "
-    "t WOOD12 w c W @ 3 0 1 "
-    "t SLOPPY2 w c W S SLOPPY1 @ 0 0 1 Q "
-    "t SKULWALL w c W S SKULWAL3 @ 0 2 Q "
-    "t SKINSYMB w c W S SKINMET1 "
-    "t SKINMET2 w c W S SKINMET1 "
-    "t SKINMET1 w c W S SKINMET2 "
-    "t PIPE2 w j c W c M S PIPE4 s SW1WOOD @ 0 "
-    "t WOODVINE w c W S WOOD9 @ 0 0 1 u "
-    "t WOOD4 w c W @ 64 "
-    "t WOOD9 w C W S WOOD7 @ 0 0 1 "
-    "t WOOD5 w C W S WOOD1 "
-    "t WOOD3 w C W S WOOD1 @ 3 "
-    "t WOOD1 w C W S WOOD3 "
-    "f FWATER1 W "
-    "f F_SKY1 K "
-    "f SLGATE1 G c W c M c B c R u "
-    "f GATE4 G c W c M c B c R "
-    "f GATE3 G c W c M c B c R "
-    "f GATE2 G c W c M c B c R "
-    "f GATE1 G c W c M c B c R "
-    "f SLGRASS1 o u "
-    "f SLIME13 o 0 1 "
-    "f RROCK19 o 0 1 "
-    "f RROCK16 o 0 1 "
-    "f RROCK11 o 0 1 "
-    "f GRNROCK o 0 1 "
-    "f GRASS2 o 0 1 "
-    "f GRASS1 o 0 1 "
-    "f MFLR8_4 o "
-    "f MFLR8_3 o "
-    "f MFLR8_2 o "
-    "f FLAT5_7 o "
-    "f FLAT10 o "
-    "f GRNLITE1 U l c B 0 1 "
-    "f FLOOR7_2 U c B "
-    "f SLLITE1 U l c M u "
-    "f TLITE6_6 U l c M "
-    "f FLOOR7_1 U o c M "
-    "f FLOOR5_2 U c M "
-    "f FLOOR5_1 U c M "
-    "f CEIL3_1 U c M "
-    "f FLOOR5_4 U o c W "
-    "f FLOOR4_6 U c W "
-    "f CEIL3_3 U c W "
-    "f CEIL1_1 U c W "
-    "f LAVA1 n c R "
-    "f SLSPARKS D c R u "
-    "f SFLR6_4 D U c R "
-    "f TLITE6_5 U l c R "
-    "f FLOOR6_1 D U r c R "
-    "f FLOOR1_7 U l c R "
-    "f FLOOR1_6 D U r c R "
-    "f FLAT5_3 D U r c R "
-    "f SLFLAT01 D c B u "
-    "f FLAT1 D c B "
-    "f DEM1_6 D c B "
-    "f DEM1_5 D U c B "
-    "f NUKAGE1 n c M c B "
-    "f FLOOR4_1 D c M "
-    "f FLOOR3_3 D U c M c B "
-    "f FLOOR0_2 D c M "
-    "f FLOOR0_1 D o c M "
-    "f FLAT1_2 D o c M "
-    "f FLAT5 D c M "
-    "f SLIME09 n c W 0 1 "
-    "f BLOOD1 n r c W c B c R "
-    "f FLAT8 D c W "
-    "f FLAT5_2 D c W "
-    "f FLAT5_1 D U c W c B "
-    "f FLAT1_1 D o c W "
-    "f CEIL5_2 D o c W "
-    "f MFLR8_1 D c W "
-    "x m 4 h 128 c W c B 0 1 "
-    "O FLAT5_1 O CRATOP2 O CEIL5_2 O CEIL3_3 O CEIL1_1 "
-    "B PANEL5 ~ 64 "
-    "B PANCASE2 ~ 64 "
-    "B PANCASE1 ~ 64 "
-    "B PANBORD2 ~ 16 "
-    "B PANBORD1 ~ 32 "
-    "A PANBOOK ~ 64 "
-    "x m 3 h 64 c W c M "
-    "O CRATOP2 "
-    "A CRATWIDE ] 64 64 "
-    "A CRATE1 ~ 64 "
-    "x m 3 h 64 c W c M "
-    "O CRATOP1 "
-    "A CRATWIDE "
-    "A CRATE2 ~ 64 "
-    "x m 3 h 64 c W c M "
-    "O CRATOP1 "
-    "A CRATELIT ~ 32 "
-    "x m 3 h 32 c W c M "
-    "O CRATOP1 "
-    "A CRATELIT ~ 32 "
-    "x m 3 h 16 c W c M "
-    "O CRATOP1 "
-    "A CRATINY ~ 16 "
-    "x m 2 h 128 c M "
-    "O CEIL5_1 O FLAT4 O TLITE6_1 "
-    "B METAL7 ] 0 64 ~ 64 "
-    "B METAL6 ] 0 64 ~ 64 "
-    "B METAL5 ] 0 64 ~ 64 "
-    "B METAL3 ] 0 64 ~ 64 "
-    "B METAL2 ] 0 64 ~ 64 "
-    "B COMPWERD ~ 64 "
-    "B COMPSPAN ~ 16 "
-    "A SPACEW3 ~ 64 "
-    "A COMPTALL ~ 256 "
-    "A COMP2 ~ 256 "
-    "x m 2 h 64 c M "
-    "O CEIL5_1 O FLAT4 O TLITE6_1 "
-    "B METAL7 ] 0 64 ~ 64 "
-    "B METAL6 ] 0 64 ~ 64 "
-    "B METAL5 ] 0 64 ~ 64 "
-    "B METAL3 ] 0 64 ~ 64 "
-    "B METAL2 ] 0 64 ~ 64 "
-    "B COMPWERD ~ 64 "
-    "B COMPSPAN ~ 16 "
-    "A SPACEW3 ] 0 64 ~ 64 "
-    "A COMPTALL ] 0 64 ~ 256 "
-    "A COMP2 ] 0 64 ~ 256 "
-    "x m 1 h 128 c M c B "
-    "O FLAT9 O FLAT4 O FLAT23 O FLAT19 O FLAT18 O CRATOP1 O COMP01 "
-    "B SILVER2 ~ 64 "
-    "B SILVER1 ~ 64 "
-    "B SUPPORT2 ~ 16 "
-    "B SHAWN2 ~ 16 "
-    "A SILVER3 "
-    "A COMPUTE1 ] 0 64 "
-    "x m 1 h 64 c M c B "
-    "O FLAT9 O FLAT4 O FLAT23 O FLAT19 O FLAT18 O CRATOP1 O COMP01 "
-    "B SUPPORT2 ~ 16 "
-    "B SHAWN2 ~ 16 "
-    "A COMPUTE1 ] 0 64 "
-    "A COMPSTA2 "
-    "A COMPSTA1 "
-    ". 2035 c M "
-    ". 34 c W c M c B "
-    ". 44 c W c B "
-    ". 45 c W c B "
-    ". 46 c W c B c R "
-    ". 55 c W c B "
-    ". 56 c W c B "
-    ". 57 c W c B c R "
-    ". 48 c M "
-    ". 2028 c M "
-    ". 85 c M "
-    ". 86 c M "
-    ". 70 c M c W "
-    ". 35 c W "
-    "# ");
-  for (p=c->configdata;*p;p++)
-    if (*p==' ') *p = '\0';
-  return;
-}
-
 /* Make the config-file data accessible */
-void load_config(config *c)
+void load_obsidian_config(config *c)
 {
-  FILE *f;
+  std::string obsidian_theme = ob_get_param("slump_config");
   char thisline[200];
-  char *inc, *outc;
-  long flen;
+  char *inc;
+  const char *ot_charpointer = obsidian_theme.c_str();
+  const char **f = (const char **)&ot_charpointer;
   boolean blankmode = SLUMP_TRUE;   /* Strip leading blanks */
 
-  f = fopen(c->configfile,"rb");
-  if (f==NULL) {
-    //fprintf(stderr,"Could not open %s; using default configuration.\n",
-      //c->configfile);
-    load_default_config(c);
+  if (obsidian_theme.empty()) {
+    exit(110); // Should really hook into Obsidian's error stuff - Dasho
   } else {
-    fseek(f,0,SEEK_END);
-    flen = ftell(f);
-    fseek(f,0,SEEK_SET);
-    c->configdata = (char *)malloc(5+flen);
-    outc = c->configdata;
-    printf("Loading %s...\n",c->configfile);
+    c->configdata = new std::vector<char>;
     for (;;) {
-      fgets(thisline,190,f);
-      if (feof(f)) break;
+      memset(thisline, 0, 200);
+      mem_gets(thisline,190,f);
+      if (!thisline[0]) 
+        break;
       if (strlen(thisline)>180) {
-        fprintf(stderr,"Line too long in %s: %s\n",c->configfile,thisline);
         exit(110);
       }
       for (inc=thisline;*inc;inc++) {
         if (*inc==';') break;
         if (strchr(" \t\n\r",*inc)) {
-          if (!blankmode) *(outc++) = '\0';
+          if (!blankmode) c->configdata->push_back('\0');
           blankmode = SLUMP_TRUE;
         } else {
-          *(outc++) = *inc;
+          c->configdata->push_back(*inc);
           blankmode = SLUMP_FALSE;
         }
       }  /* Done with line */
     }  /* Done reading file */
-    if (!blankmode) *(outc++) = '\0';
-    *(outc++) = '\0';
-    printf("Loaded.\n");
-    c->configdata = (char *)realloc(c->configdata,1+(outc-c->configdata));
-    fclose(f);
+    if (!blankmode) c->configdata->push_back('\0');
+    c->configdata->push_back('\0');
   }
-#if 0
-  for (inc=c->configdata;*inc;inc+=1+strlen(inc))
-    printf("%s ",inc);
-#endif
-  return;
 }
 
 /* Free up config-file resources */
 void unload_config(config *c)
 {
-  if (c->configdata) free(c->configdata);
-  c->configdata = NULL;
+  c->configdata->clear();
+  delete c->configdata;
   return;
-}
-
-/* Look through the config's config file, and fill in values for */
-/* the switch lines therein.  Return SLUMP_FALSE if error.  These are  */
-/* of course overridable by command-line switches.               */
-boolean read_switches(config *c)
-{
-  /* Dis here is a STUB */
-  return SLUMP_TRUE;
 }
 
 /* Allocate and return a new, empty construct */
@@ -8400,7 +8034,7 @@ construct *new_construct(config *c)
   construct *answer = (construct *)malloc(sizeof(*answer));
 
   answer->height = 64;
-  answer->gamemask = DOOM1_BIT|DOOM0_BIT|DOOM2_BIT|DOOMI_BIT|DOOMC_BIT;
+  answer->gamemask = DOOM1_BIT|DOOM0_BIT|DOOM2_BIT|DOOMI_BIT|DOOMC_BIT|HERETIC_BIT;
   answer->compatible = 0;
   answer->texture_cell_anchor = NULL;
   answer->flat_cell_anchor = NULL;
@@ -8680,83 +8314,126 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
   genus *m;
 
   /* get these obstacles registered as non-pickables */
-  m = find_genus(c,ID_LAMP);
-  m->bits &= ~PICKABLE;
-  m->bits |= LIGHT;
-  m->width = 33;
-  m = find_genus(c,ID_ELEC);
-  m->bits &= ~PICKABLE;
-  m->bits |= LIGHT;
-  m->width = 33;
-  m->height = 127;  /* About */
-  m = find_genus(c,ID_LAMP2);
-  m->bits &= ~PICKABLE;
-  m->bits |= LIGHT;
-  m->width = 33;
-  m->gamemask = DOOM2_BIT | DOOMC_BIT | DOOMI_BIT;
-  m = find_genus(c,ID_TLAMP2);
-  m->bits &= ~PICKABLE;
-  m->bits |= LIGHT;
-  m->width = 33;
-  m->height = 72;   /* Very roughly */
-  m->gamemask = DOOM2_BIT | DOOMC_BIT | DOOMI_BIT;
-  m = find_genus(c,ID_SHORTRED);
-  m->bits &= ~PICKABLE;
-  m->bits |= LIGHT;
-  m->width = 33;
-  m = find_genus(c,ID_SHORTBLUE);
-  m->bits &= ~PICKABLE;
-  m->bits |= LIGHT;
-  m->width = 33;
-  m = find_genus(c,ID_SHORTGREEN);
-  m->bits &= ~PICKABLE;
-  m->bits |= LIGHT;
-  m->width = 33;
-  m = find_genus(c,ID_TALLRED);
-  m->bits &= ~PICKABLE;
-  m->bits |= LIGHT;
-  m->width = 33;
-  m->height = 127;  /* sure */
-  m = find_genus(c,ID_TALLBLUE);
-  m->bits &= ~PICKABLE;
-  m->bits |= LIGHT;
-  m->width = 33;
-  m->height = 127;  /* sure */
-  m = find_genus(c,ID_TALLGREEN);
-  m->bits &= ~PICKABLE;
-  m->bits |= LIGHT;
-  m->width = 33;
-  m->height = 127;  /* sure */
-  m = find_genus(c,ID_CBRA);
-  m->bits &= ~PICKABLE;
-  m->bits |= LIGHT;
-  m->width = 33;
-  m->height = 72;  /* about */
-  m = find_genus(c,ID_FBARREL);
-  m->gamemask = DOOM2_BIT | DOOMC_BIT | DOOMI_BIT;
-  m->bits &= ~PICKABLE;
-  m->bits |= LIGHT;
-  m->width = 33;
-  m = find_genus(c,ID_BARREL);
-  m->bits &= ~PICKABLE;
-  m->bits |= EXPLODES;
-  m->width = 33;
-  /* pretend the candle is pickable; really just "not blocking" */
-  m = find_genus(c,ID_CANDLE);
-  m->bits |= PICKABLE;
-  m->bits |= LIGHT;
-  m->width = 16;
-  /* and register the weapons and ammos and healths */
-  /* at least the ones that we need for arenas! */
-  m = find_genus(c,ID_ROCKBOX);
-  m->bits |= AMMO;
-  m->ammo_provides = (float)500;
-  m = find_genus(c,ID_BULBOX);
-  m->bits |= AMMO;
-  m->ammo_provides = (float)500;
-  m = find_genus(c,ID_CELLPACK);
-  m->bits |= AMMO;
-  m->ammo_provides = (float)2000;  /* Hoo-hoo!  Same for BFG as plasgun? */
+  if (!(c->gamemask & HERETIC_BIT)) {
+    m = find_genus(c,ID_LAMP);
+    m->bits &= ~PICKABLE;
+    m->bits |= LIGHT;
+    m->width = 33;
+    m = find_genus(c,ID_ELEC);
+    m->bits &= ~PICKABLE;
+    m->bits |= LIGHT;
+    m->width = 33;
+    m->height = 127;  /* About */
+    m = find_genus(c,ID_LAMP2);
+    m->bits &= ~PICKABLE;
+    m->bits |= LIGHT;
+    m->width = 33;
+    m->gamemask = DOOM2_BIT | DOOMC_BIT | DOOMI_BIT;
+    m = find_genus(c,ID_TLAMP2);
+    m->bits &= ~PICKABLE;
+    m->bits |= LIGHT;
+    m->width = 33;
+    m->height = 72;   /* Very roughly */
+    m->gamemask = DOOM2_BIT | DOOMC_BIT | DOOMI_BIT;
+    m = find_genus(c,ID_SHORTRED);
+    m->bits &= ~PICKABLE;
+    m->bits |= LIGHT;
+    m->width = 33;
+    m = find_genus(c,ID_SHORTBLUE);
+    m->bits &= ~PICKABLE;
+    m->bits |= LIGHT;
+    m->width = 33;
+    m = find_genus(c,ID_SHORTGREEN);
+    m->bits &= ~PICKABLE;
+    m->bits |= LIGHT;
+    m->width = 33;
+    m = find_genus(c,ID_TALLRED);
+    m->bits &= ~PICKABLE;
+    m->bits |= LIGHT;
+    m->width = 33;
+    m->height = 127;  /* sure */
+    m = find_genus(c,ID_TALLBLUE);
+    m->bits &= ~PICKABLE;
+    m->bits |= LIGHT;
+    m->width = 33;
+    m->height = 127;  /* sure */
+    m = find_genus(c,ID_TALLGREEN);
+    m->bits &= ~PICKABLE;
+    m->bits |= LIGHT;
+    m->width = 33;
+    m->height = 127;  /* sure */
+    m = find_genus(c,ID_CBRA);
+    m->bits &= ~PICKABLE;
+    m->bits |= LIGHT;
+    m->width = 33;
+    m->height = 72;  /* about */
+    m = find_genus(c,ID_FBARREL);
+    m->gamemask = DOOM2_BIT | DOOMC_BIT | DOOMI_BIT;
+    m->bits &= ~PICKABLE;
+    m->bits |= LIGHT;
+    m->width = 33;
+    m = find_genus(c,ID_BARREL);
+    m->bits &= ~PICKABLE;
+    m->bits |= EXPLODES;
+    m->width = 33;
+    /* pretend the candle is pickable; really just "not blocking" */
+    m = find_genus(c,ID_CANDLE);
+    m->bits |= PICKABLE;
+    m->bits |= LIGHT;
+    m->width = 16;
+
+    /* and register the weapons and ammos and healths */
+    /* at least the ones that we need for arenas! */
+
+    // Doom ammo
+    m = find_genus(c,ID_ROCKBOX);
+    m->bits |= AMMO;
+    m->ammo_provides = (float)500;
+    m = find_genus(c,ID_BULBOX);
+    m->bits |= AMMO;
+    m->ammo_provides = (float)500;
+    m = find_genus(c,ID_CELLPACK);
+    m->bits |= AMMO;
+    m->ammo_provides = (float)2000;  /* Hoo-hoo!  Same for BFG as plasgun? */
+  } else {
+    // Heretic decor
+    m = find_genus(c,ID_POD);
+    m->bits &= ~PICKABLE;
+    m->bits |= EXPLODES;
+    m->width = 33;
+    m->gamemask = HERETIC_BIT;
+    m = find_genus(c,ID_SERPENTTORCH);
+    m->bits &= ~PICKABLE;
+    m->bits |= LIGHT;
+    m->width = 33;
+    m->gamemask = HERETIC_BIT;
+    m = find_genus(c,ID_FIREBRAZIER);
+    m->bits &= ~PICKABLE;
+    m->bits |= LIGHT;
+    m->width = 33;
+    m->gamemask = HERETIC_BIT;
+
+    // Heretic ammo (just the big ones?)
+    m = find_genus(c,ID_CRYSTALGEODE);
+    m->bits |= AMMO;
+    m->ammo_provides = (float)500;
+    m = find_genus(c,ID_ETHEREALQUIVER);
+    m->bits |= AMMO;
+    m->ammo_provides = (float)500;
+    m = find_genus(c,ID_ENERGYORB);
+    m->bits |= AMMO;
+    m->ammo_provides = (float)500;
+    m = find_genus(c,ID_GREATERRUNES);
+    m->bits |= AMMO;
+    m->ammo_provides = (float)500;
+    m = find_genus(c,ID_INFERNOORB);
+    m->bits |= AMMO;
+    m->ammo_provides = (float)500;
+    m = find_genus(c,ID_MACESPHEREPILE);
+    m->bits |= AMMO;
+    m->ammo_provides = (float)500;
+  }
+
   /* violence and mayhem */
   c->usualammo[ITYTD] = 5000;
   c->usualammo[HMP] = 3500;      /* or 3k? */
@@ -8781,150 +8458,152 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
    * 11) Head 
    */
   /* Description of monsters */
-  m = find_monster(c,ID_TROOPER);
-  m->width = 42;
-  m->ammo_provides = (float)100;
-  m->ammo_to_kill[ITYTD] = (float)55;
-  m->ammo_to_kill[HMP] = (float)35;
-  m->ammo_to_kill[UV] = (float)30;
-  m->damage[ITYTD] = (float)15;
-  m->damage[HMP] = (float)3;
-  m->damage[UV] = (float)1;
-  m->altdamage[ITYTD] = (float)10;
-  m->altdamage[HMP] = (float)1;
-  m->altdamage[UV] = (float)1;
-  m->bits |= SHOOTS;
-  m->min_level = 1;
-  /* Tropper with gun */
-  m = find_monster(c,ID_SERGEANT);
-  m->width = 42;
-  m->ammo_provides = (float)280;
-  m->ammo_to_kill[ITYTD] = (float)80;
-  m->ammo_to_kill[HMP] = (float)50;
-  m->ammo_to_kill[UV] = (float)40;
-  m->damage[ITYTD] = (float)25;
-  m->damage[HMP] = (float)6;
-  m->damage[UV] = (float)2;
-  m->altdamage[ITYTD] = (float)20;
-  m->altdamage[HMP] = (float)2;
-  m->altdamage[UV] = (float)1;
-  m->bits |= SHOOTS;
-  m->min_level = 2;
-  /* Imp */
-  m = find_monster(c,ID_IMP);
-  m->width = 42;
-  m->ammo_provides = (float)0;
-  m->ammo_to_kill[ITYTD] = (float)160;
-  m->ammo_to_kill[HMP] = (float)95;
-  m->ammo_to_kill[UV] = (float)80;
-  m->damage[ITYTD] = (float)20;
-  m->damage[HMP] = (float)6;
-  m->damage[UV] = (float)3;
-  m->altdamage[ITYTD] = (float)20;
-  m->altdamage[HMP] = (float)5;
-  m->altdamage[UV] = (float)2;
-  m->bits |= SHOOTS;
-  m->min_level = 1;
-  /* Pinky */
-  m = find_monster(c,ID_PINK);
-  m->width = 62;
-  m->ammo_provides = (float)0;
-  m->ammo_to_kill[ITYTD] = (float)385;
-  m->ammo_to_kill[HMP] = (float)236;
-  m->ammo_to_kill[UV] = (float)195;
-  m->damage[ITYTD] = (float)25;
-  m->damage[HMP] = (float)10;
-  m->damage[UV] = (float)8;
-  m->altdamage[ITYTD] = (float)20;
-  m->altdamage[HMP] = (float)8;
-  m->altdamage[UV] = (float)4;
-  m->min_level = 3;
-  /* Invisible pinky */
-  m = find_monster(c,ID_SPECTRE);
-  m->width = 62;
-  m->ammo_provides = (float)0;
-  m->ammo_to_kill[ITYTD] = (float)410;
-  m->ammo_to_kill[HMP] = (float)260;
-  m->ammo_to_kill[UV] = (float)220;
-  m->damage[ITYTD] = (float)25;
-  m->damage[HMP] = (float)10;
-  m->damage[UV] = (float)8;
-  m->altdamage[ITYTD] = (float)25;
-  m->altdamage[HMP] = (float)8;
-  m->altdamage[UV] = (float) 6;
-  m->min_level = 7;
-  /* Floating head */
-  m = find_monster(c,ID_SKULL);
-  m->width = 34;
-  m->bits |= BIG;  /* Well, sort of! */
-  m->ammo_provides = (float)0;
-  m->ammo_to_kill[ITYTD] = (float)260;
-  m->ammo_to_kill[HMP] = (float)165;
-  m->ammo_to_kill[UV] = (float)130;
-  m->damage[ITYTD] = (float)22;
-  m->damage[HMP] = (float)8;
-  m->damage[UV] = (float)5;
-  m->altdamage[ITYTD] = (float)18;
-  m->altdamage[HMP] = (float)5;
-  m->altdamage[UV] = (float)2;
-  m->bits |= FLIES;
-  m->min_level = 6;
-  /* Spider thing (I think) */
-  m = find_monster(c,ID_HEAD);
-  m->width = 63;                 /* Or 62 or maybe 64 */
-  m->bits |= BIG;
-  m->ammo_provides = (float)0;
-  m->ammo_to_kill[ITYTD] = (float)1050;
-  m->ammo_to_kill[HMP] = (float)630;
-  m->ammo_to_kill[UV] = (float)590;
-  m->damage[ITYTD] = (float)60;
-  m->damage[HMP] = (float)35;
-  m->damage[UV] = (float)18;
-  m->altdamage[ITYTD] = (float)50;
-  m->altdamage[HMP] = (float)20;
-  m->altdamage[UV] = (float)10;
-  m->bits |= SHOOTS;
-  m->bits |= FLIES;
-  m->min_level = 11;
-  /* Baron of Hell */
-  m = find_monster(c,ID_BARON);
-  m->width = 50;                 /* Roughly */
-  m->height = 64;
-  m->bits |= BIG | BOSS;         /* Not placed randomly */
-  m->ammo_provides = (float)0;
-  m->ammo_to_kill[ITYTD] = (float)1900;   /* Numbers are all guesses; fix */
-  m->ammo_to_kill[HMP] = (float)1600;
-  m->ammo_to_kill[UV] = (float)1500;
-  m->damage[ITYTD] = (float)80;
-  m->damage[HMP] = (float)40;
-  m->damage[UV] = (float)25;
-  m->altdamage[ITYTD] = (float)70;
-  m->altdamage[HMP] = (float)25;
-  m->altdamage[UV] = (float)18;
-  m->bits |= SHOOTS;
-  m->min_level = 12;
+  if (!(c->gamemask&(HERETIC_BIT))) {
+    m = find_monster(c,ID_TROOPER);
+    m->width = 42;
+    m->ammo_provides = (float)100;
+    m->ammo_to_kill[ITYTD] = (float)55;
+    m->ammo_to_kill[HMP] = (float)35;
+    m->ammo_to_kill[UV] = (float)30;
+    m->damage[ITYTD] = (float)15;
+    m->damage[HMP] = (float)3;
+    m->damage[UV] = (float)1;
+    m->altdamage[ITYTD] = (float)10;
+    m->altdamage[HMP] = (float)1;
+    m->altdamage[UV] = (float)1;
+    m->bits |= SHOOTS;
+    m->min_level = 1;
+    /* Tropper with gun */
+    m = find_monster(c,ID_SERGEANT);
+    m->width = 42;
+    m->ammo_provides = (float)280;
+    m->ammo_to_kill[ITYTD] = (float)80;
+    m->ammo_to_kill[HMP] = (float)50;
+    m->ammo_to_kill[UV] = (float)40;
+    m->damage[ITYTD] = (float)25;
+    m->damage[HMP] = (float)6;
+    m->damage[UV] = (float)2;
+    m->altdamage[ITYTD] = (float)20;
+    m->altdamage[HMP] = (float)2;
+    m->altdamage[UV] = (float)1;
+    m->bits |= SHOOTS;
+    m->min_level = 2;
+    /* Imp */
+    m = find_monster(c,ID_IMP);
+    m->width = 42;
+    m->ammo_provides = (float)0;
+    m->ammo_to_kill[ITYTD] = (float)160;
+    m->ammo_to_kill[HMP] = (float)95;
+    m->ammo_to_kill[UV] = (float)80;
+    m->damage[ITYTD] = (float)20;
+    m->damage[HMP] = (float)6;
+    m->damage[UV] = (float)3;
+    m->altdamage[ITYTD] = (float)20;
+    m->altdamage[HMP] = (float)5;
+    m->altdamage[UV] = (float)2;
+    m->bits |= SHOOTS;
+    m->min_level = 1;
+    /* Pinky */
+    m = find_monster(c,ID_PINK);
+    m->width = 62;
+    m->ammo_provides = (float)0;
+    m->ammo_to_kill[ITYTD] = (float)385;
+    m->ammo_to_kill[HMP] = (float)236;
+    m->ammo_to_kill[UV] = (float)195;
+    m->damage[ITYTD] = (float)25;
+    m->damage[HMP] = (float)10;
+    m->damage[UV] = (float)8;
+    m->altdamage[ITYTD] = (float)20;
+    m->altdamage[HMP] = (float)8;
+    m->altdamage[UV] = (float)4;
+    m->min_level = 3;
+    /* Invisible pinky */
+    m = find_monster(c,ID_SPECTRE);
+    m->width = 62;
+    m->ammo_provides = (float)0;
+    m->ammo_to_kill[ITYTD] = (float)410;
+    m->ammo_to_kill[HMP] = (float)260;
+    m->ammo_to_kill[UV] = (float)220;
+    m->damage[ITYTD] = (float)25;
+    m->damage[HMP] = (float)10;
+    m->damage[UV] = (float)8;
+    m->altdamage[ITYTD] = (float)25;
+    m->altdamage[HMP] = (float)8;
+    m->altdamage[UV] = (float) 6;
+    m->min_level = 7;
+    /* Floating head */
+    m = find_monster(c,ID_SKULL);
+    m->width = 34;
+    m->bits |= BIG;  /* Well, sort of! */
+    m->ammo_provides = (float)0;
+    m->ammo_to_kill[ITYTD] = (float)260;
+    m->ammo_to_kill[HMP] = (float)165;
+    m->ammo_to_kill[UV] = (float)130;
+    m->damage[ITYTD] = (float)22;
+    m->damage[HMP] = (float)8;
+    m->damage[UV] = (float)5;
+    m->altdamage[ITYTD] = (float)18;
+    m->altdamage[HMP] = (float)5;
+    m->altdamage[UV] = (float)2;
+    m->bits |= FLIES;
+    m->min_level = 6;
+    /* Spider thing (I think) */
+    m = find_monster(c,ID_HEAD);
+    m->width = 63;                 /* Or 62 or maybe 64 */
+    m->bits |= BIG;
+    m->ammo_provides = (float)0;
+    m->ammo_to_kill[ITYTD] = (float)1050;
+    m->ammo_to_kill[HMP] = (float)630;
+    m->ammo_to_kill[UV] = (float)590;
+    m->damage[ITYTD] = (float)60;
+    m->damage[HMP] = (float)35;
+    m->damage[UV] = (float)18;
+    m->altdamage[ITYTD] = (float)50;
+    m->altdamage[HMP] = (float)20;
+    m->altdamage[UV] = (float)10;
+    m->bits |= SHOOTS;
+    m->bits |= FLIES;
+    m->min_level = 11;
+    /* Baron of Hell */
+    m = find_monster(c,ID_BARON);
+    m->width = 50;                 /* Roughly */
+    m->height = 64;
+    m->bits |= BIG | BOSS;         /* Not placed randomly */
+    m->ammo_provides = (float)0;
+    m->ammo_to_kill[ITYTD] = (float)1900;   /* Numbers are all guesses; fix */
+    m->ammo_to_kill[HMP] = (float)1600;
+    m->ammo_to_kill[UV] = (float)1500;
+    m->damage[ITYTD] = (float)80;
+    m->damage[HMP] = (float)40;
+    m->damage[UV] = (float)25;
+    m->altdamage[ITYTD] = (float)70;
+    m->altdamage[HMP] = (float)25;
+    m->altdamage[UV] = (float)18;
+    m->bits |= SHOOTS;
+    m->min_level = 12;
 
-  /* Other bosses; need to fill in data! */
-  m = find_monster(c,ID_CYBER);
-  m->width = 84;
-  m->height = 110;
-  m->bits |= BIG | BOSS;
-  m->ammo_provides = (float)0;
-  m->ammo_to_kill[ITYTD] = (float)8000;   /* Numbers are all guesses; fix */
-  m->ammo_to_kill[HMP] = (float)6500;
-  m->ammo_to_kill[UV] = (float)6200;
-  m = find_monster(c,ID_SPIDERBOSS);
-  m->width = 260;
-  m->height = 100;
-  m->bits |= BIG | BOSS;
-  m->ammo_provides = (float)0;
-  m->ammo_to_kill[ITYTD] = (float)6000;   /* Numbers are all guesses; fix */
-  m->ammo_to_kill[HMP] = (float)5000;
-  m->ammo_to_kill[UV] = (float)4500;
-  m->min_level=17;
+    /* Other bosses; need to fill in data! */
+    m = find_monster(c,ID_CYBER);
+    m->width = 84;
+    m->height = 110;
+    m->bits |= BIG | BOSS;
+    m->ammo_provides = (float)0;
+    m->ammo_to_kill[ITYTD] = (float)8000;   /* Numbers are all guesses; fix */
+    m->ammo_to_kill[HMP] = (float)6500;
+    m->ammo_to_kill[UV] = (float)6200;
+    m = find_monster(c,ID_SPIDERBOSS);
+    m->width = 260;
+    m->height = 100;
+    m->bits |= BIG | BOSS;
+    m->ammo_provides = (float)0;
+    m->ammo_to_kill[ITYTD] = (float)6000;   /* Numbers are all guesses; fix */
+    m->ammo_to_kill[HMP] = (float)5000;
+    m->ammo_to_kill[UV] = (float)4500;
+    m->min_level=17;
+  }
 
   /* DOOM2 monsters */
-  if (!(c->gamemask&(DOOM0_BIT|DOOM1_BIT))) {
+  if (!(c->gamemask&(DOOM0_BIT|DOOM1_BIT|HERETIC_BIT))) {
     m = find_monster(c,ID_NAZI);
     m->gamemask = DOOM2_BIT;
     m->width = 42;
@@ -9027,6 +8706,204 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->min_level = 23;
   }
 
+  /* this should be the rough range of where the new monsters are:
+  m->width = radius * 2 + 2
+  m->ammo_to_kill[ITYTD] = 2.5 x health
+  m->ammo_to_kill[HMP] = 1.5 x health
+  m->ammo_to_kill[UV] = 1.3 x health
+  m->damage[ITYTD] = max damage value for attack
+  m->damage[HMP] = 1/2 max damage
+  m->damage[UV] = 1/4 max damage
+  m->altdamage (all cases) = 2/3 of above values
+  m->ammo_provides = ammo dropped * avg damage for weapon/ammo
+  m->bits = appropriate per-monster values
+  m->minlevel = first level they appear in from their IWAD
+  */
+
+  /* Heretic monsters */
+  if (c->gamemask&(HERETIC_BIT)) {
+    m = find_monster(c,ID_GARGOYLE);
+    m->gamemask = HERETIC_BIT;
+    m->width = 34;
+    m->ammo_to_kill[ITYTD] = (float)100;
+    m->ammo_to_kill[HMP] = (float)60;
+    m->ammo_to_kill[UV] = (float)50;
+    m->damage[ITYTD] = (float)12;
+    m->damage[HMP] = (float)6;
+    m->damage[UV] = (float)3;
+    m->altdamage[ITYTD] = (float)8;
+    m->altdamage[HMP] = (float)4;
+    m->altdamage[UV] = (float)2;
+    m->bits |= FLIES;
+    m->min_level = 1;
+    m = find_monster(c,ID_FIREGARGOYLE);
+    m->gamemask = HERETIC_BIT;
+    m->width = 34;
+    m->ammo_to_kill[ITYTD] = (float)200;
+    m->ammo_to_kill[HMP] = (float)120;
+    m->ammo_to_kill[UV] = (float)100;
+    m->damage[ITYTD] = (float)12;
+    m->damage[HMP] = (float)6;
+    m->damage[UV] = (float)3;
+    m->altdamage[ITYTD] = (float)8;
+    m->altdamage[HMP] = (float)4;
+    m->altdamage[UV] = (float)2;
+    m->bits |= FLIES;
+    m->bits |= SHOOTS;
+    m->min_level = 3;   
+    m = find_monster(c,ID_GOLEM);
+    m->gamemask = HERETIC_BIT;
+    m->width = 46;
+    m->ammo_to_kill[ITYTD] = (float)200;
+    m->ammo_to_kill[HMP] = (float)120;
+    m->ammo_to_kill[UV] = (float)100;
+    m->ammo_provides = (float)10;
+    m->damage[ITYTD] = (float)16;
+    m->damage[HMP] = (float)8;
+    m->damage[UV] = (float)4;
+    m->altdamage[ITYTD] = (float)12;
+    m->altdamage[HMP] = (float)6;
+    m->altdamage[UV] = (float)3;
+    m->min_level = 1;
+    m = find_monster(c,ID_NITROGOLEM);
+    m->gamemask = HERETIC_BIT;
+    m->width = 46;
+    m->ammo_to_kill[ITYTD] = (float)250;
+    m->ammo_to_kill[HMP] = (float)150;
+    m->ammo_to_kill[UV] = (float)130;
+    m->damage[ITYTD] = (float)32;
+    m->damage[HMP] = (float)16;
+    m->damage[UV] = (float)8;
+    m->altdamage[ITYTD] = (float)20;
+    m->altdamage[HMP] = (float)10;
+    m->altdamage[UV] = (float)6;
+    m->bits |= SHOOTS;
+    m->min_level = 4;
+    m = find_monster(c,ID_OPHIDIAN);
+    m->gamemask = HERETIC_BIT;
+    m->width = 46;
+    m->ammo_to_kill[ITYTD] = (float)700;
+    m->ammo_to_kill[HMP] = (float)420;
+    m->ammo_to_kill[UV] = (float)360;
+    m->ammo_provides = (float)90;
+    m->damage[ITYTD] = (float)24;
+    m->damage[HMP] = (float)12;
+    m->damage[UV] = (float)6;
+    m->altdamage[ITYTD] = (float)16;
+    m->altdamage[HMP] = (float)8;
+    m->altdamage[UV] = (float)4;
+    m->bits |= SHOOTS;
+    m->min_level = 17;
+    m = find_monster(c,ID_SABRECLAW);
+    m->gamemask = HERETIC_BIT;
+    m->width = 42;
+    m->ammo_to_kill[ITYTD] = (float)375;
+    m->ammo_to_kill[HMP] = (float)225;
+    m->ammo_to_kill[UV] = (float)195;
+    m->ammo_provides = (float)14;
+    m->damage[ITYTD] = (float)9;
+    m->damage[HMP] = (float)5;
+    m->damage[UV] = (float)3;
+    m->altdamage[ITYTD] = (float)8;
+    m->altdamage[HMP] = (float)4;
+    m->altdamage[UV] = (float)2;
+    m->min_level = 10;
+    m = find_monster(c,ID_UNDEADWARRIOR);
+    m->gamemask = HERETIC_BIT;
+    m->width = 50;
+    m->ammo_to_kill[ITYTD] = (float)500;
+    m->ammo_to_kill[HMP] = (float)300;
+    m->ammo_to_kill[UV] = (float)275;
+    m->damage[ITYTD] = (float)16;
+    m->damage[HMP] = (float)8;
+    m->damage[UV] = (float)4;
+    m->altdamage[ITYTD] = (float)10;
+    m->altdamage[HMP] = (float)6;
+    m->altdamage[UV] = (float)3;
+    m->min_level = 1;
+    m->bits |= SHOOTS;
+    m = find_monster(c,ID_DISCIPLE);
+    m->gamemask = HERETIC_BIT;
+    m->width = 34;
+    m->ammo_to_kill[ITYTD] = (float)450;
+    m->ammo_to_kill[HMP] = (float)270;
+    m->ammo_to_kill[UV] = (float)240;
+    m->ammo_provides = (float)18;
+    m->damage[ITYTD] = (float)24;
+    m->damage[HMP] = (float)12;
+    m->damage[UV] = (float)6;
+    m->altdamage[ITYTD] = (float)16;
+    m->altdamage[HMP] = (float)8;
+    m->altdamage[UV] = (float)4;
+    m->min_level = 4;
+    m->bits |= SHOOTS;
+    m = find_monster(c,ID_WEREDRAGON);
+    m->gamemask = HERETIC_BIT;
+    m->width = 66;
+    m->ammo_to_kill[ITYTD] = (float)550;
+    m->ammo_to_kill[HMP] = (float)330;
+    m->ammo_to_kill[UV] = (float)290;
+    m->ammo_provides = (float)45;
+    m->damage[ITYTD] = (float)32;
+    m->damage[HMP] = (float)16;
+    m->damage[UV] = (float)8;
+    m->altdamage[ITYTD] = (float)20;
+    m->altdamage[HMP] = (float)12;
+    m->altdamage[UV] = (float)6;
+    m->min_level = 9;
+    m->bits |= SHOOTS;
+    m = find_monster(c,ID_MAULOTAUR);
+    m->gamemask = HERETIC_BIT;
+    m->width = 58;
+    m->ammo_to_kill[ITYTD] = (float)7500;
+    m->ammo_to_kill[HMP] = (float)4500;
+    m->ammo_to_kill[UV] = (float)4000;
+    m->ammo_provides = (float)90;
+    m->damage[ITYTD] = (float)56;
+    m->damage[HMP] = (float)28;
+    m->damage[UV] = (float)14;
+    m->altdamage[ITYTD] = (float)38;
+    m->altdamage[HMP] = (float)18;
+    m->altdamage[UV] = (float)10;
+    m->min_level = 16;
+    m->bits |= SHOOTS;
+    m->bits |= BOSS;
+    m->bits |= BIG;
+    m = find_monster(c,ID_IRONLICH);
+    m->gamemask = HERETIC_BIT;
+    m->width = 82;
+    m->ammo_to_kill[ITYTD] = (float)1750;
+    m->ammo_to_kill[HMP] = (float)1050;
+    m->ammo_to_kill[UV] = (float)925;
+    m->ammo_provides = (float)18;
+    m->damage[ITYTD] = (float)48;
+    m->damage[HMP] = (float)24;
+    m->damage[UV] = (float)12;
+    m->altdamage[ITYTD] = (float)32;
+    m->altdamage[HMP] = (float)16;
+    m->altdamage[UV] = (float)8;
+    m->min_level = 8;
+    m->bits |= SHOOTS;
+    m->bits |= BOSS;
+    m->bits |= BIG;
+    m = find_monster(c,ID_DSPARIL);
+    m->gamemask = HERETIC_BIT;
+    m->width = 58;
+    m->ammo_to_kill[ITYTD] = (float)13500;
+    m->ammo_to_kill[HMP] = (float)8000;
+    m->ammo_to_kill[UV] = (float)6500;
+    m->damage[ITYTD] = (float)80;
+    m->damage[HMP] = (float)40;
+    m->damage[UV] = (float)20;
+    m->altdamage[ITYTD] = (float)60;
+    m->altdamage[HMP] = (float)30;
+    m->altdamage[UV] = (float)15;
+    m->min_level = 24;
+    m->bits |= SHOOTS;
+    m->bits |= BOSS;
+    m->bits |= BIG;
+  }
+
   return SLUMP_TRUE;
 }
 
@@ -9082,6 +8959,7 @@ gamebits absorb_gamebit(char **r)
   if ((!slump_stricmp(p,"nodoom2")) || (!strcmp(p,"2"))) return DOOM2_BIT;
   if ((!slump_stricmp(p,"gross")) || (!strcmp(p,"Q"))) return DOOMC_BIT;
   if ((!slump_stricmp(p,"custom")) || (!strcmp(p,"u"))) return DOOMI_BIT;
+  if ((!slump_stricmp(p,"heretic")) || (!strcmp(p,"R"))) return HERETIC_BIT; // "R" for Raven, since "H" is already used
 
   return 0;
 }
@@ -9363,13 +9241,10 @@ char *absorb_construct(char *p, config *c)
 /* all the non-switch lines therein.  Return SLUMP_FALSE if error.     */
 boolean nonswitch_config(config *c)
 {
-
-#ifndef USE_OLD_HARDWIRED_STUFF
-
   char *p;
 
   /* Skip to the "[THEMES]" section */
-  for (p=c->configdata;*p;p+=1+strlen(p))
+  for (p=c->configdata->data();*p;p+=1+strlen(p))
     if (!slump_stricmp("[themes]",p)) break;
   if (!*p) {
     fprintf(stderr,"No [THEMES] section in config file.\n");
@@ -9395,17 +9270,6 @@ boolean nonswitch_config(config *c)
        exit(174);
     }
   }
-
-#else
-
-  /* Read from the config file here! */
-  hardwired_nonswitch_config(c);
-
-#endif
-
-#ifdef CONFIG_DUMP
-  dump_foo(c);
-#endif
 
   return SLUMP_TRUE;
 }
@@ -10717,22 +10581,39 @@ void populate_linedef(level *l,linedef *ldnew2,haa *haa,config *c,
   /* pick a prize; stubby */
   bonustype = ID_POTION;   /* Just in case! */
   if (rollpercent(50)) {  /* Health or whatever */
-    switch (roll(4)) {
-      case 0: bonustype = ID_MEDIKIT; bonusamount = 25; break;
-      case 1: bonustype = ID_MEDIKIT; bonusamount = 25; break;
-      case 2: bonustype = ID_STIMPACK; bonusamount = 10; break;
-      case 3: if ((SLUMP_FALSE==l->seen_suit)&&(rollpercent(l->p_force_nukage))) {
-                bonustype = ID_SUIT; bonusamount = 10;   /* Guess */
-                l->seen_suit = SLUMP_TRUE;
-              } else if ((SLUMP_FALSE==l->seen_map)&&rollpercent(30)) {
-                bonustype = ID_MAP; bonusamount = 0;
-                l->seen_map = SLUMP_TRUE;
-                announce(VERBOSE,"Area map");
-              } else {
-                bonustype = ID_INVIS; bonusamount = 10;  /* Also guess */
-              }
-              break;
-      default: bonustype = ID_POTION; bonusamount = 1;  /* Impossible */
+    if (l->heretic_level) {
+        switch (roll(4)) {
+        case 0: bonustype = ID_QUARTZFLASK; bonusamount = 25; break;
+        case 1: bonustype = ID_QUARTZFLASK; bonusamount = 25; break;
+        case 2: bonustype = ID_CRYSTALVIAL; bonusamount = 10; break;
+        case 3: if ((SLUMP_FALSE==l->seen_map)&&rollpercent(30)) {
+                  bonustype = ID_MAPSCROLL; bonusamount = 0;
+                  l->seen_map = SLUMP_TRUE;
+                  announce(VERBOSE,"Area map");
+                } else {
+                  bonustype = ID_SHADOWSPHERE; bonusamount = 10;  /* Also guess */
+                }
+                break;
+        default: bonustype = ID_WANDCRYSTAL; bonusamount = 0;  /* Impossible */
+      }
+    } else {
+      switch (roll(4)) {
+        case 0: bonustype = ID_MEDIKIT; bonusamount = 25; break;
+        case 1: bonustype = ID_MEDIKIT; bonusamount = 25; break;
+        case 2: bonustype = ID_STIMPACK; bonusamount = 10; break;
+        case 3: if ((SLUMP_FALSE==l->seen_suit)&&(rollpercent(l->p_force_nukage))) {
+                  bonustype = ID_SUIT; bonusamount = 10;   /* Guess */
+                  l->seen_suit = SLUMP_TRUE;
+                } else if ((SLUMP_FALSE==l->seen_map)&&rollpercent(30)) {
+                  bonustype = ID_MAP; bonusamount = 0;
+                  l->seen_map = SLUMP_TRUE;
+                  announce(VERBOSE,"Area map");
+                } else {
+                  bonustype = ID_INVIS; bonusamount = 10;  /* Also guess */
+                }
+                break;
+        default: bonustype = ID_POTION; bonusamount = 1;  /* Impossible */
+      }
     }
     /* We assume ITYTD didn't find the closet! */
     haa->haas[1].health += bonusamount/2;  /* and HMP might not have */
@@ -10825,7 +10706,7 @@ linedef *secret_closet(level *l,linedef *ld,style *ThisStyle,int h,
   if (!empty_left_side(l,ld,72)) return NULL;   /* Room? */
 
   doortype = LINEDEF_NORMAL_DOOR;
-  if (!(DOOM0_BIT&c->gamemask) && rollpercent(80))
+  if (!((DOOM0_BIT|HERETIC_BIT)&c->gamemask) && rollpercent(80))
     doortype = LINEDEF_BLAZE_DOOR;
 
   /* Modify the outermost linedef to be doory */
@@ -11821,10 +11702,18 @@ void embellish_room(level *l,sector *oldsector,haa *haa,style *ThisStyle,
             /* Maybe some small bonus also */
             if (rollpercent(15) && ld->type==0) {  /* Not if ld is a trap? */
               if (rollpercent(50)) {  /* Health or whatever */
-                switch (roll(3)) {
-                  case 0: bonustype = ID_MEDIKIT; break;
-                  case 1: bonustype = ID_STIMPACK; break;
-                  default: bonustype = ID_POTION; break;
+                if (l->heretic_level) {
+                  switch (roll(3)) {
+                    case 0: bonustype = ID_QUARTZFLASK; break;
+                    case 1: bonustype = ID_CRYSTALVIAL; break;
+                    default: bonustype = ID_WANDCRYSTAL; break;
+                  }
+                } else {
+                  switch (roll(3)) {
+                    case 0: bonustype = ID_MEDIKIT; break;
+                    case 1: bonustype = ID_STIMPACK; break;
+                    default: bonustype = ID_POTION; break;
+                  }
                 }
                 update_haa_for_health(haa,7,bonustype);
               } else {   /* Some ammo or whatever */
@@ -11920,7 +11809,7 @@ void embellish_room(level *l,sector *oldsector,haa *haa,style *ThisStyle,
                   if (sync_doors) {
                     ldnew->tag = sync_tag;
                     ldnew->type = LINEDEF_SR_OC_DOOR;
-                    if (!(c->gamemask&DOOM0_BIT))
+                    if (!(c->gamemask&(DOOM0_BIT|HERETIC_BIT)))
                       ldnew->type = LINEDEF_SR_BLAZE_OC_DOOR;
                     if (sync_count++) announce(VERBOSE,"Synced doors");
                   }
@@ -12014,7 +11903,7 @@ void embellish_room(level *l,sector *oldsector,haa *haa,style *ThisStyle,
           if (switch_closet) {
             switch_ld = install_switch(l,switch_ld,SLUMP_TRUE,SLUMP_FALSE,0,ThisStyle,c,NULL);
             switch_ld->tag = switch_tag;
-            if (DOOM0_BIT&c->gamemask) switch_ld->type = LINEDEF_S1_OPEN_DOOR;
+            if ((DOOM0_BIT|HERETIC_BIT)&c->gamemask) switch_ld->type = LINEDEF_S1_OPEN_DOOR;
               else switch_ld->type = LINEDEF_S1_BLAZE_O_DOOR;
             announce(VERBOSE,"Switch closet");
           }
@@ -12226,7 +12115,11 @@ void place_start_things(level *l,sector *s,config *c)
   find_rec(l,s,&minx,&miny,&maxx,&maxy);
 
   /* Let's make sure they always have a single-barrel shotgun */
-  new_thing(l,(minx+maxx)/2,(miny+maxy)/2,90,ID_SHOTGUN,7,c);  
+  if (c->gamemask == HERETIC_BIT) {
+    new_thing(l,(minx+maxx)/2,(miny+maxy)/2,90,ID_CROSSBOW,7,c);  
+  } else {
+    new_thing(l,(minx+maxx)/2,(miny+maxy)/2,90,ID_SHOTGUN,7,c);  
+  }
 
   /* Now the start positions */
   if (rational_angles) angle = 0; else angle = 90*roll(4);
@@ -12417,6 +12310,11 @@ void NewLevel(level *l, haa *ThisHaa, config *c)
    int keys_used = 0;
 
    current_level_number = c->map + (9 * c->episode) + c->mission;
+
+   if (c->gamemask & HERETIC_BIT)
+    l->heretic_level = SLUMP_TRUE;
+   else
+    l->heretic_level = SLUMP_FALSE;
 
    empty_level(l,c);
 

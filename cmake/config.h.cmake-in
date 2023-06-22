@@ -1,0 +1,7 @@
+#ifndef OBSIDIAN_CONFIG_H_
+#define OBSIDIAN_CONFIG_H_
+
+#define CMAKE_INSTALL_PREFIX "@CMAKE_INSTALL_PREFIX@"
+
+#endif
+

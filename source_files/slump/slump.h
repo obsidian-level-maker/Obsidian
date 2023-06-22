@@ -31,6 +31,7 @@
 
 #include <cstdio>
 #include <filesystem>
+#include <vector>
 
 /* Slump 0.003.02 */
 #define SOURCE_VERSION (0)
@@ -42,7 +43,6 @@
 /* Some Microsoft-specific defines which we will probably get rid of in
  * a later release */
 #ifdef _MSC_VER
-#define RAND_SUCKS
 #define strncasecmp _strnicmp
 #define strcasecmp _stricmp
 #endif
@@ -80,7 +80,7 @@ typedef unsigned char byte;
 typedef unsigned long themebits;  /* Bitarray, really */
 /* So at most 32 themes in a config file */
 
-typedef unsigned char gamebits;   /* Also bitarray    */
+typedef unsigned int gamebits;   /* Also bitarray    */
 #define DOOM0_BIT (0x01)
 #define DOOM1_BIT (0x02)
 #define DOOM2_BIT (0x04)
@@ -88,6 +88,7 @@ typedef unsigned char gamebits;   /* Also bitarray    */
 #define DOOMC_BIT (0x08)
 /* "Intrinsic"; i.e. no SLUMP-special textures */
 #define DOOMI_BIT (0x10)
+#define HERETIC_BIT (0x20)
 /* and that's all */
 
 typedef unsigned long propertybits;  /* Another bitarray */
@@ -238,6 +239,19 @@ typedef struct s_genus {
 #define ID_CYBER (0x10)
 #define ID_SPIDERBOSS (0x07)
 #define ID_BRAIN (0x58)
+/* The Heretic monsters (No ghosts - Dasho) */
+#define ID_GARGOYLE (0x42)
+#define ID_FIREGARGOYLE (0x05)
+#define ID_GOLEM (0x44)
+#define ID_NITROGOLEM (0x2D)
+#define ID_OPHIDIAN (0x5C)
+#define ID_SABRECLAW (0x5A)
+#define ID_UNDEADWARRIOR (0x40)
+#define ID_DISCIPLE (0x0F)
+#define ID_WEREDRAGON (0x46)
+#define ID_MAULOTAUR (0x09)
+#define ID_IRONLICH (0x06)
+#define ID_DSPARIL (0x07)
   short width;
   short height;
   int min_level; /* Minimum level to put monster in */
@@ -249,6 +263,7 @@ typedef struct s_genus {
   struct s_genus *next;
 } genus, *pgenus;
 
+// Doom weapons/ammo
 #define ID_SHOTGUN (0x7d1)
 #define ID_SSGUN (0x052)
 #define ID_CHAINGUN (0x7d2)
@@ -266,6 +281,27 @@ typedef struct s_genus {
 #define ID_ROCKET (0x7da)
 #define ID_ROCKBOX (0x7fe)
 
+// Heretic weapons/ammo
+#define ID_GAUNTLETS (0x7D5)
+#define ID_CROSSBOW (0x7D1)
+#define ID_DRAGONCLAW (0x035)
+#define ID_PHOENIXROD (0x7D3)
+#define ID_HELLSTAFF (0x7D4)
+#define ID_FIREMACE (0x7D2)
+#define ID_WANDCRYSTAL (0xA)
+#define ID_CRYSTALGEODE (0xC)
+#define ID_ETHEREALARROWS (0x12)
+#define ID_ETHEREALQUIVER (0x13)
+#define ID_CLAWORB (0x36)
+#define ID_ENERGYORB (0x37)
+#define ID_LESSERRUNES (0x14)
+#define ID_GREATERRUNES (0x15)
+#define ID_FLAMEORB (0x16)
+#define ID_INFERNOORB (0x17)
+#define ID_MACESPHERES (0xD)
+#define ID_MACESPHEREPILE (0x10)
+
+// Doom health/powerups
 #define ID_STIMPACK (0x7DB)
 #define ID_MEDIKIT (0x7dc)
 #define ID_POTION (0x7de)
@@ -275,10 +311,29 @@ typedef struct s_genus {
 #define ID_SUIT (0x7e9)
 #define ID_MAP (0x7ea)
 
+// Heretic health/powerups
+#define ID_CRYSTALVIAL (0x51)
+#define ID_QUARTZFLASK (0x52)
+#define ID_MYSTICURN (0x20)
+#define ID_MAPSCROLL (0x23)
+#define ID_CHAOSDEVICE (0x24)
+#define ID_MORPHOVUM (0x1E)
+#define ID_RINGOFINVINCIBILITY (0x54)
+#define ID_SHADOWSPHERE (0x4B)
+#define ID_TIMEBOMB (0x22)
+#define ID_TOMEOFPOWER (0x56)
+#define ID_TORCH (0x21)
+
+// Doom armor
 #define ID_HELMET (0x7df)
 #define ID_BLUESUIT (0x7e3)
 #define ID_GREENSUIT (0x7e2)
 
+// Heretic armor
+#define ID_SILVERSHIELD (0x55)
+#define ID_ENCHANTEDSHIELD (0x1F)
+
+// Doom keys
 #define ID_BLUEKEY (0x028)
 #define ID_REDKEY (0x026)
 #define ID_YELLOWKEY (0x027)
@@ -286,6 +341,12 @@ typedef struct s_genus {
 #define ID_REDCARD (0x00d)
 #define ID_YELLOWCARD (0x006)
 
+// Heretic keys
+#define ID_HERETICBLUEKEY (0x4F)
+#define ID_HERETICYELLOWKEY (0x50)
+#define ID_HERETICGREENKEY (0x49)
+
+// Doom decor
 #define ID_LAMP (0x07ec)
 #define ID_ELEC (0x030)
 #define ID_TLAMP2 (0x055)
@@ -303,6 +364,14 @@ typedef struct s_genus {
 #define ID_SMIT (0x002f)
 #define ID_TREE1 (0x002b)
 #define ID_TREE2 (0x0036)
+
+// Heretic decor
+#define ID_POD (0x7F3)
+#define ID_SERPENTTORCH (0x1B)
+#define ID_FIREBRAZIER (0x4C)
+#define ID_SMSTALAGMITE (0x25)
+#define ID_LGSTALAGMITE (0x26)
+
 
 /* The style is the dynamic architectural knowledge and stuff. */
 /* It changes throughout the run.                              */
@@ -499,44 +568,48 @@ struct s_linedef {
 #define LINEDEF_RED_S1_DOOR (33)
 #define LINEDEF_YELLOW_S1_DOOR (34)
 #define LINEDEF_S1_OPEN_DOOR (103)
-#define LINEDEF_S1_OPEN_DOOR_BLUE (133)
-#define LINEDEF_S1_OPEN_DOOR_RED (135)
-#define LINEDEF_S1_OPEN_DOOR_YELLOW (137)
+#define LINEDEF_S1_RAISE_STAIRS (7)
+#define LINEDEF_S1_LOWER_FLOOR (23)
+#define LINEDEF_SCROLL (48)
+#define LINEDEF_TELEPORT (97)
 #define LINEDEF_WR_OPEN_DOOR (86)
 #define LINEDEF_W1_OPEN_DOOR (2)
 #define LINEDEF_GR_OPEN_DOOR (46)
 #define LINEDEF_SR_OC_DOOR (63)
 #define LINEDEF_WR_OC_DOOR (90)
+#define LINEDEF_S1_END_LEVEL (11)
+#define LINEDEF_W1_END_LEVEL (52)
+#define LINEDEF_S1_SEC_LEVEL (51)
+#define LINEDEF_WR_FAST_CRUSH (77)
+#define LINEDEF_WR_LOWER_LIFT (88)
+#define LINEDEF_SR_LOWER_LIFT (62)
+#define LINEDEF_S1_RAISE_AND_CLEAN_FLOOR (20)
+#define LINEDEF_S1_RAISE_FLOOR (18)
+
+// These aren't in Heretic
+#define LINEDEF_WR_TURBO_LIFT (120)
+#define LINEDEF_SR_TURBO_LIFT (123)
+#define LINEDEF_S1_OPEN_DOOR_BLUE (133)
+#define LINEDEF_S1_OPEN_DOOR_RED (135)
+#define LINEDEF_S1_OPEN_DOOR_YELLOW (137)
 #define LINEDEF_BLAZE_DOOR (117)
 #define LINEDEF_BLAZE_S1_DOOR (118)
 #define LINEDEF_S1_BLAZE_O_DOOR (112)
 #define LINEDEF_SR_BLAZE_OC_DOOR (114)
-#define LINEDEF_S1_END_LEVEL (11)
-#define LINEDEF_W1_END_LEVEL (52)
-#define LINEDEF_S1_SEC_LEVEL (51)
 #define LINEDEF_W1_SEC_LEVEL (124)
-#define LINEDEF_WR_FAST_CRUSH (77)
-#define LINEDEF_WR_LOWER_LIFT (88)
-#define LINEDEF_SR_LOWER_LIFT (62)
-#define LINEDEF_WR_TURBO_LIFT (120)
-#define LINEDEF_SR_TURBO_LIFT (123)
-#define LINEDEF_S1_RAISE_AND_CLEAN_FLOOR (20)
-#define LINEDEF_S1_RAISE_FLOOR (18)
 #define LINEDEF_W1_RAISE_FLOOR (119)
-#define LINEDEF_S1_RAISE_STAIRS (7)
-#define LINEDEF_S1_LOWER_FLOOR (23)
-#define LINEDEF_SCROLL (48)
-#define LINEDEF_TELEPORT (97)
+
 /* and so on and so on */
 
-/* Sector specials */
+/* sector specials */
 #define RANDOM_BLINK (1)
 #define SYNC_FAST_BLINK (0x0c)
 #define SYNC_SLOW_BLINK (0x0d)
 #define GLOW_BLINK (0x08)
 #define SECRET_SECTOR (0x09)
 #define NUKAGE1_SPECIAL (5)
-#define DEATH_SECTOR (0x0b)
+#define DEATH_SECTOR (0x0b) // This is a no-op for Heretic
+#define HERETIC_LAVA (0x10) // Use this instead
 
 /* Stuff related to an open PWAD we're generating */
 
@@ -721,6 +794,7 @@ typedef struct s_level {
   boolean raise_gates; /* Teleport flats raised a bit? */
   boolean all_wide_links;
   boolean no_doors;
+  boolean heretic_level;
   short outside_light_level;  /* I don't know if it's cloudy or bright */
   short bright_light_level;  /* How bright a bright room is */
   short lit_light_level;     /* How bright a working lamp/light is */
@@ -734,8 +808,7 @@ typedef struct s_level {
 /* The config is the static architectural knowledge and stuff. */
 /* It's read from a config file (parts of it, anyway!).        */
 typedef struct s_config {
-  char *configfile;    /* Name of the configuration file */
-  char *configdata;    /* Contents of the configuration file */
+  std::vector<char> *configdata;    /* Contents of the configuration */
   char *outfile;       /* Name of the output file */
   boolean cwadonly;    /* Do we want just the customization lumps? */
   unsigned char themecount;   /* How many (non-secret) themes there are */
@@ -886,13 +959,8 @@ linedef *split_linedef(level *l, linedef *ld, int len, config *c);
 boolean link_fitsq(link *ThisLink,quest *ThisQuest);
 boolean link_fitsh(linedef *ldf,link *ThisLink,config *c);
 boolean link_fitsv(level *l,linedef *ldf1,linedef *ldf2,link *ThisLink);
-void Usage0(void);
-void Usage(void);
-void Usage2(void);
-boolean do_switches(int argc,char *argv[],config *c,char *s,int conly);
-boolean read_switches(config *c);
 boolean nonswitch_config(config *c);
-void load_config(config *c);
+void load_obsidian_config(config *c);
 void unload_config(config *c);
 texture *new_texture(config *c, const char *name);
 texture *find_texture(config *c, const char *name);
