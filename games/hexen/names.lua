@@ -3634,7 +3634,7 @@ HEXEN.NAMES =
         Soldiers = 10,
         Slayer = 10,
 
-        Unbelievier = 10,
+        Unbeliever = 10,
         -- Armaetus adds things here
         ["Sin Bringer"] = 10,
         ["The Icon"] = 10,
