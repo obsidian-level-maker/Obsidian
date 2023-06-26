@@ -142,15 +142,15 @@ PREFABS.Joiner_simple_2lite_gtd =
 
   prob = 700,
 
-  seed_w = 2,
+  seed_w = 3,
 }
 
 PREFABS.Joiner_simple_3lite_gtd =
 {
   template = "Joiner_simple_1lite_gtd",
-  map = "MAP09",
+  map = "MAP10",
 
   prob = 800,
 
-  seed_w = 3,
+  seed_w = 4,
 }
