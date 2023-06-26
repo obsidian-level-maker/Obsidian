@@ -155,6 +155,7 @@ function SKY_GEN.generate_skies()
 
     -- only rarely combine stars + nebula + hills
     -- local is_hilly  = rand.odds(sel(is_nebula, 25, 90))
+    local is_hilly = rand.odds(50)
 
     -- MSSP-SUGGESTS: add sky themes for other level theme types?
     local theme_name = EPI.levels[1].theme_name
@@ -180,48 +181,51 @@ function SKY_GEN.generate_skies()
 
     gui.fsky_create(256, 128, 0)
 
+    local cloud_palette
 
     --- Clouds ---
 
-    if not (is_starry or is_nebula) then
+    if not is_starry then
+      cloud_palette = rand.key_by_probs(cloud_tab)
+      -- don't use same one again
+      cloud_tab[cloud_palette] = cloud_tab[cloud_palette] / 1000
 
-      local name
-
-      if is_nebula then
-        name = rand.key_by_probs(nebula_tab)
-        -- don't use same one again
-        nebula_tab[name] = nebula_tab[name] / 1000
-
-        if PARAM.nebula_color ~= "default" then
-          name = PARAM.nebula_color
-        end
-      else
-        name = rand.key_by_probs(cloud_tab)
-        -- don't use same one again
-        cloud_tab[name] = cloud_tab[name] / 1000
-
-        if PARAM.cloud_color ~= "default" then
-          name = PARAM.cloud_color
-        end
+      if PARAM.cloud_color ~= "default" then
+        cloud_palette = PARAM.cloud_color
       end
+    end
 
-      local colormap = GAME.RESOURCES.SKY_GEN_COLORMAPS[name]
+    --- Nebula ---
+
+    if is_nebula and is_starry then
+      cloud_palette = rand.key_by_probs(nebula_tab)
+      -- don't use same one again
+      nebula_tab[cloud_palette] = nebula_tab[cloud_palette] / 1000
+
+      if PARAM.nebula_color ~= "default" then
+        cloud_palette = PARAM.nebula_color
+      end
+    end
+
+    --- get sky color ---
+
+    if cloud_palette then
+      local colormap = GAME.RESOURCES.SKY_GEN_COLORMAPS[cloud_palette]
       if not colormap then
-        error("SKY_GEN: unknown colormap: " .. tostring(name))
+        error("SKY_GEN: unknown colormap: " .. tostring(cloud_palette))
       end
 
       gui.printf("Sky theme: " .. theme_name .. "\n")
-      gui.printf("  %d = %s\n", index, name)
+      gui.printf("  %d = %s\n", index, cloud_palette)
 
       gui.set_colormap(1, colormap)
       gui.fsky_add_clouds({ seed=seed, colmap=1, squish=2.0 })
 
       EPI.dark_prob = 10
 
-      PARAM.episode_sky_color[index] = name
+      PARAM.episode_sky_color[index] = cloud_palette
     end
-
-
+  
     --- Stars ---
 
     if is_starry then
