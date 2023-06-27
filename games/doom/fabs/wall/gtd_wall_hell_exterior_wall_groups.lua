@@ -336,6 +336,7 @@ PREFABS.Wall_hell_outdoor_torch_fenced_EPIC =
 
   tex_FENCE4 = "FENCE4",
   tex_METL02 = "METL02",
+  tex_FIREMAG1 = "HELWAL2",
 
   z_fit = { 28,32 },
 }
