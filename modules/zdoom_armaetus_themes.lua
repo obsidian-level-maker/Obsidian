@@ -319,6 +319,16 @@ ARMAETUS_ROOM_THEMES =
       OBTSVBZ1 = 20,
       OBTSVBZ2 = 20,
       OBTSVBZ3 = 20,
+
+      SDOM_WL1 = 18,
+      SDOM_WL2 = 18,
+      SDOM_WL3 = 18,
+      SDOM_WL4 = 18,
+      SDOM_WL5 = 18,
+      SDOM_WL6 = 18,
+
+      SDOM_WG1 = 24,
+      SDOM_WG2 = 24
     },
 
     floors =
@@ -361,7 +371,11 @@ ARMAETUS_ROOM_THEMES =
 
       OBTSVBF1 = 20,
       OBTSVBF2 = 20,
-      OBTSVBF3 = 20
+      OBTSVBF3 = 20,
+
+      SDOM_FT1 = 20,
+      SDOM_FT2 = 20,
+      SDOM_FT3 = 20,
     },
 
     ceilings =
@@ -380,7 +394,11 @@ ARMAETUS_ROOM_THEMES =
       FLAT9  = 15,
       FLAT23 = 5,
 
-      OBTBSFL3 = 10
+      OBTBSFL3 = 10,
+
+      SDOM_FT1 = 7,
+      SDOM_FT2 = 7,
+      SDOM_FT3 = 7,
     }
   },
 
@@ -863,8 +881,7 @@ ARMAETUS_ROOM_THEMES =
 
       OBTSVBZ1 = 15,
       OBTSVBZ2 = 15,
-      OBTSVBZ3 = 15,
-
+      OBTSVBZ3 = 15
     },
 
     floors =
@@ -885,7 +902,9 @@ ARMAETUS_ROOM_THEMES =
 
       OBTBSFL1 = 15,
       OBTBSFL2 = 15,
-      OBTBSFL3 = 15
+      OBTBSFL3 = 15,
+
+      SDOM_FT2 = 20
     },
 
     ceilings =
@@ -898,7 +917,9 @@ ARMAETUS_ROOM_THEMES =
       SHINY03 = 15,
       SHINY04 = 10,
 
-      OBTBSFL3 = 10
+      OBTBSFL3 = 10,
+
+      SDOM_FT2 = 7
     }
   },
 
@@ -940,6 +961,15 @@ ARMAETUS_ROOM_THEMES =
       OBTSVBZ2 = 10,
       OBTSVBZ3 = 10,
 
+      SDOM_WL1 = 7,
+      SDOM_WL2 = 7,
+      SDOM_WL3 = 7,
+      SDOM_WL4 = 7,
+      SDOM_WL5 = 7,
+      SDOM_WL6 = 7,
+
+      SDOM_WG1 = 12,
+      SDOM_WG2 = 12
     },
 
     floors =
@@ -981,7 +1011,17 @@ ARMAETUS_ROOM_THEMES =
 
       G8_BRNF1 = 20,
       G8_BRNF2 = 20,
-      G8_BRNF3 = 20
+      G8_BRNF3 = 20,
+
+      SDOM_FT1 = 15,
+      SDOM_FT2 = 15,
+      SDOM_FT3 = 15,
+      SDOM_FT4 = 15,
+      SDOM_FT5 = 15,
+      SDOM_FT6 = 15,
+
+      SDOM_FG1 = 25,
+      SDOM_FG2 = 25
     },
 
     ceilings =
@@ -1006,7 +1046,17 @@ ARMAETUS_ROOM_THEMES =
 
       G8_BRNF1 = 20,
       G8_BRNF2 = 20,
-      G8_BRNF3 = 20
+      G8_BRNF3 = 20,
+
+      SDOM_FT1 = 7,
+      SDOM_FT2 = 7,
+      SDOM_FT3 = 7,
+      SDOM_FT4 = 7,
+      SDOM_FT5 = 7,
+      SDOM_FT6 = 7,
+
+      SDOM_FG1 = 10,
+      SDOM_FG2 = 10
     },
   },
 
@@ -1056,7 +1106,17 @@ ARMAETUS_ROOM_THEMES =
 
       OBTBCEM1 = 30,
       OBTBCEM2 = 30,
-      OBTBCEM3 = 30
+      OBTBCEM3 = 30,
+
+      SDOM_WL1 = 25,
+      SDOM_WL2 = 25,
+      SDOM_WL3 = 25,
+      SDOM_WL4 = 25,
+      SDOM_WL5 = 25,
+      SDOM_WL6 = 25,
+
+      SDOM_WG1 = 32,
+      SDOM_WG2 = 32
     },
 
     floors =
@@ -1081,7 +1141,17 @@ ARMAETUS_ROOM_THEMES =
 
       OBTSVBF1 = 15,
       OBTSVBF2 = 15,
-      OBTSVBF3 = 15
+      OBTSVBF3 = 15,
+
+      SDOM_FT1 = 10,
+      SDOM_FT2 = 10,
+      SDOM_FT3 = 10,
+      SDOM_FT4 = 10,
+      SDOM_FT5 = 10,
+      SDOM_FT6 = 10,
+
+      SDOM_FG1 = 15,
+      SDOM_FG2 = 15
     },
 
     ceilings =
@@ -1098,7 +1168,17 @@ ARMAETUS_ROOM_THEMES =
       SLIME14 = 10,
       SLIME15 = 10,
 
-      OBTBSFL3 = 10
+      OBTBSFL3 = 10,
+
+      SDOM_FT1 = 5,
+      SDOM_FT2 = 5,
+      SDOM_FT3 = 5,
+      SDOM_FT4 = 5,
+      SDOM_FT5 = 5,
+      SDOM_FT6 = 5,
+
+      SDOM_FG1 = 20,
+      SDOM_FG2 = 20
     },
   },
 
@@ -1394,6 +1474,16 @@ ARMAETUS_ROOM_THEMES =
       OBTSBF1B = 20,
       OBTSBF2B = 20,
       OBTSBF3B = 20,
+
+      SDOM_FT1 = 17,
+      SDOM_FT2 = 17,
+      SDOM_FT3 = 17,
+      SDOM_FT4 = 17,
+      SDOM_FT5 = 17,
+      SDOM_FT6 = 17,
+
+      SDOM_FG1 = 25,
+      SDOM_FG2 = 25
     },
 
     naturals =
@@ -1514,6 +1604,16 @@ ARMAETUS_ROOM_THEMES =
       OBTSBF1B = 20,
       OBTSBF2B = 20,
       OBTSBF3B = 20,
+
+      SDOM_FT1 = 17,
+      SDOM_FT2 = 17,
+      SDOM_FT3 = 17,
+      SDOM_FT4 = 17,
+      SDOM_FT5 = 17,
+      SDOM_FT6 = 17,
+
+      SDOM_FG1 = 20,
+      SDOM_FG2 = 20
     },
   },
 
@@ -3304,7 +3404,18 @@ ARMAETUS_ROOM_THEMES =
 
       OBTBCEM1 = 30,
       OBTBCEM2 = 30,
-      OBTBCEM3 = 30
+      OBTBCEM3 = 30,
+
+      SDOM_WL1 = 25,
+      SDOM_WL2 = 25,
+      SDOM_WL3 = 25,
+      SDOM_WL4 = 25,
+      SDOM_WL5 = 25,
+      SDOM_WL6 = 25,
+
+      SDOM_WG1 = 30,
+      SDOM_WG2 = 30
+
     },
 
     floors =
@@ -3346,7 +3457,17 @@ ARMAETUS_ROOM_THEMES =
 
       G8_BRNF1 = 25,
       G8_BRNF2 = 25,
-      G8_BRNF3 = 25
+      G8_BRNF3 = 25,
+
+      SDOM_FT1 = 18,
+      SDOM_FT2 = 18,
+      SDOM_FT3 = 18,
+      SDOM_FT4 = 18,
+      SDOM_FT5 = 18,
+      SDOM_FT6 = 18,
+
+      SDOM_FG1 = 25,
+      SDOM_FG2 = 25
     },
 
     ceilings =
@@ -3378,8 +3499,17 @@ ARMAETUS_ROOM_THEMES =
 
       G8_BRNF1 = 25,
       G8_BRNF2 = 25,
-      G8_BRNF3 = 25
+      G8_BRNF3 = 25,
 
+      SDOM_FT1 = 18,
+      SDOM_FT2 = 18,
+      SDOM_FT3 = 18,
+      SDOM_FT4 = 18,
+      SDOM_FT5 = 18,
+      SDOM_FT6 = 18,
+
+      SDOM_FG1 = 25,
+      SDOM_FG2 = 25
     }
   },
 
@@ -3667,7 +3797,17 @@ ARMAETUS_ROOM_THEMES =
       TEKGRY01 = 25,
       TEKGRY02 = 25,
       URBAN7 = 25,
-      URBAN8 = 25
+      URBAN8 = 25,
+
+      SDOM_WL1 = 22,
+      SDOM_WL2 = 22,
+      SDOM_WL3 = 22,
+      SDOM_WL4 = 22,
+      SDOM_WL5 = 22,
+      SDOM_WL6 = 22,
+
+      SDOM_WG1 = 28,
+      SDOM_WG2 = 28
     },
 
     floors =
@@ -3915,7 +4055,19 @@ ARMAETUS_ROOM_THEMES =
       TILES3 = 20,
       TILES4 = 20,
       TILES5 = 20,
-      TILES6 = 20
+      TILES6 = 20,
+
+      --
+
+      SDOM_FT1 = 7,
+      SDOM_FT2 = 7,
+      SDOM_FT3 = 7,
+      SDOM_FT4 = 7,
+      SDOM_FT5 = 7,
+      SDOM_FT6 = 7,
+
+      SDOM_FG1 = 10,
+      SDOM_FG2 = 10
     },
 
     naturals =
@@ -5360,7 +5512,17 @@ ARMAETUS_THEMES =
 
       OBTBCEM1 = 25,
       OBTBCEM2 = 25,
-      OBTBCEM3 = 25
+      OBTBCEM3 = 25,
+
+      SDOM_WL1 = 22,
+      SDOM_WL2 = 22,
+      SDOM_WL3 = 22,
+      SDOM_WL4 = 22,
+      SDOM_WL5 = 22,
+      SDOM_WL6 = 22,
+
+      SDOM_WG1 = 28,
+      SDOM_WG2 = 28
     },
 
     fences =
@@ -5751,7 +5913,9 @@ ARMAETUS_THEMES =
 
       OBTBCEM1 = 25,
       OBTBCEM2 = 25,
-      OBTBCEM3 = 25
+      OBTBCEM3 = 25,
+
+      SDOM_WL4 = 25,
     },
 
     fences =

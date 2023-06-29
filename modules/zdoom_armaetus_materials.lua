@@ -1569,6 +1569,34 @@ ARMAETUS_MATERIALS = {
   OBTSBF2R = { t="HELLCMT2", f="OBTSBF2R"},
   OBTSBF3R = { t="REDMARB1", f="OBTSBF3R"},
 
+  -- STABLE DIFFUSION, NEUROGEN --
+  -- techy grey walls
+  SDOM_WL1 = { t="SDOM_WL1", f="SDOM_FT1"},
+  SDOM_WL2 = { t="SDOM_WL2", f="SDOM_FT2"},
+  SDOM_WL3 = { t="SDOM_WL3", f="SDOM_FT3"},
+  SDOM_WL4 = { t="SDOM_WL4", f="SDOM_FT4"},
+  SDOM_WL5 = { t="SDOM_WL5", f="SDOM_FT1"},
+  SDOM_WL6 = { t="SDOM_WL6", f="SDOM_FT2"},
+  -- green
+  SDOM_WG1 = { t="SDOM_WG1", f="SDOM_FG1"},
+  SDOM_WG2 = { t="SDOM_WG2", f="SDOM_FG2"},
+
+  -- computers 256px
+  SDMSRCP1 = { t="SDMSRCP1", f="SDOM_FT1"},
+  SDMSRCP2 = { t="SDMSRCP1", f="SDOM_FT4"},
+  SDMSRCP3 = { t="SDMSRCP1", f="SDOM_FT6"},
+
+  -- flats
+  SDOM_FT1 = { t="SDOM_WL1", f="SDOM_FT1"},
+  SDOM_FT2 = { t="SDOM_WL2", f="SDOM_FT2"},
+  SDOM_FT3 = { t="SDOM_WL3", f="SDOM_FT3"},
+  SDOM_FT4 = { t="SDOM_WL4", f="SDOM_FT4"},
+  SDOM_FT5 = { t="SDOM_WL3", f="SDOM_FT5"},
+  SDOM_FT6 = { t="SDOM_WL6", f="SDOM_FT6"},
+  -- green
+  SDOM_FG1 = { t="SDOM_WG1", f="SDOM_FG1"},
+  SDOM_FG2 = { t="SDOM_WG2", f="SDOM_FG2"},
+
   -- MSSP-GOTH --
   -- green-ish gothic metal walls with skulls (128px)
   G7_GOGN1 = { t="G7_GOGN1", f="G7_GOGF1"},
@@ -2478,3 +2506,26 @@ brightmap texture GRNSTONE
   map OBRGRNST
 }
 ]]
+
+-- aliases - when you're too lazy to write down wall and flat names in every
+-- room theme
+
+ARMAETUS_TEXTURE_SET_ALIASES =
+{
+  __SD_GRAY_TECH_WALLS =
+  {
+    materials =
+    {
+      "SDOM_WL1", "SDOM_WL2", "SDOM_WL3", 
+      "SDOM_WL4", "SDOM_WL5", "SDOM_WL6"
+    }
+  },
+
+  __SD_GRAY_TECH =
+  {
+    materials =
+    {
+      "SDOM_FT1", "SDOM_FT2", "SDOM_FT3", "SDOM_FT4"
+    }
+  }
+}
