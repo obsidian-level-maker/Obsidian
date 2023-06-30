@@ -1597,6 +1597,14 @@ ARMAETUS_MATERIALS = {
   SDOM_FG1 = { t="SDOM_WG1", f="SDOM_FG1"},
   SDOM_FG2 = { t="SDOM_WG2", f="SDOM_FG2"},
 
+  -- shipping containers with optional meme
+  SDM_CTR1 = { t="SDM_CTR1", f="SDMCTRF1"},
+  SDM_CTR2 = { t="SDM_CTR2", f="SDMCTRF1"},
+  SDM_CTR3 = { t="SDM_CTR3", f="SDMCTRF1"},
+  SDM_CTR4 = { t="SDM_CTR4", f="SDMCTRF1"},
+  SDM_CTR5 = { t="SDM_CTR5", f="SDMCTRF1"},
+  SDMCTRF1 = { t="SDM_CTR1", f="SDMCTRF1"},
+
   -- MSSP-GOTH --
   -- green-ish gothic metal walls with skulls (128px)
   G7_GOGN1 = { t="G7_GOGN1", f="G7_GOGF1"},

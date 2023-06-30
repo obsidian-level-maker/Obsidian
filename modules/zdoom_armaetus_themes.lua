@@ -5679,7 +5679,9 @@ ARMAETUS_THEMES =
       gtd_wall_lit_h_window_tall_collite_orange = 15,
       --
       wall_collite_flat_green = 25,
-      wall_collite_flat_blue = 25
+      wall_collite_flat_blue = 25,
+      --
+      gtd_green_shipping_containers = 50
     },
 
     window_groups =
@@ -6137,7 +6139,9 @@ ARMAETUS_THEMES =
       gtd_comp_grntek_blue = 20,
       --
       gtd_wall_lit_h_window_tall_collite_blue = 15,
-      gtd_wall_lit_h_window_tall_collite_orange = 35
+      gtd_wall_lit_h_window_tall_collite_orange = 35,
+      --
+      gtd_green_shipping_containers = 50
     },
 
     window_groups =
