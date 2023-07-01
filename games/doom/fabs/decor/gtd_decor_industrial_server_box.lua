@@ -5,6 +5,7 @@ PREFABS.Decor_SD_server_rack =
 
   prob = 7500,
   theme = "!hell",
+  env = "building",
   texture_pack = "armaetus",
 
   where = "point",
