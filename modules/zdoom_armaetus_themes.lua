@@ -327,8 +327,11 @@ ARMAETUS_ROOM_THEMES =
       SDOM_WL5 = 18,
       SDOM_WL6 = 18,
 
-      SDOM_WG1 = 24,
-      SDOM_WG2 = 24
+      SDOM_WG1 = 18,
+      SDOM_WG2 = 18,
+      SDOM_WG3 = 18,
+      SDOM_WG4 = 18,
+      SDOM_WG5 = 18,
     },
 
     floors =
@@ -968,8 +971,12 @@ ARMAETUS_ROOM_THEMES =
       SDOM_WL5 = 7,
       SDOM_WL6 = 7,
 
-      SDOM_WG1 = 12,
-      SDOM_WG2 = 12
+      SDOM_WG1 = 9,
+      SDOM_WG2 = 9,
+      SDOM_WG3 = 9,
+      SDOM_WG4 = 9,
+      SDOM_WG5 = 9,
+
     },
 
     floors =
@@ -1115,8 +1122,11 @@ ARMAETUS_ROOM_THEMES =
       SDOM_WL5 = 25,
       SDOM_WL6 = 25,
 
-      SDOM_WG1 = 32,
-      SDOM_WG2 = 32
+      SDOM_WG1 = 28,
+      SDOM_WG2 = 28,
+      SDOM_WG3 = 28,
+      SDOM_WG4 = 28,
+      SDOM_WG5 = 28,
     },
 
     floors =
@@ -3413,9 +3423,11 @@ ARMAETUS_ROOM_THEMES =
       SDOM_WL5 = 25,
       SDOM_WL6 = 25,
 
-      SDOM_WG1 = 30,
-      SDOM_WG2 = 30
-
+      SDOM_WG1 = 28,
+      SDOM_WG2 = 28,
+      SDOM_WG3 = 28,
+      SDOM_WG4 = 28,
+      SDOM_WG5 = 28
     },
 
     floors =
@@ -3806,8 +3818,11 @@ ARMAETUS_ROOM_THEMES =
       SDOM_WL5 = 22,
       SDOM_WL6 = 22,
 
-      SDOM_WG1 = 28,
-      SDOM_WG2 = 28
+      SDOM_WG1 = 25,
+      SDOM_WG2 = 25,
+      SDOM_WG3 = 25,
+      SDOM_WG4 = 25,
+      SDOM_WG5 = 25
     },
 
     floors =
@@ -5521,8 +5536,11 @@ ARMAETUS_THEMES =
       SDOM_WL5 = 22,
       SDOM_WL6 = 22,
 
-      SDOM_WG1 = 28,
-      SDOM_WG2 = 28
+      SDOM_WG1 = 25,
+      SDOM_WG2 = 25,
+      SDOM_WG3 = 25,
+      SDOM_WG4 = 25,
+      SDOM_WG5 = 25
     },
 
     fences =

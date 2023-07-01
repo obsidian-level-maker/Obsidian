@@ -1580,6 +1580,9 @@ ARMAETUS_MATERIALS = {
   -- green
   SDOM_WG1 = { t="SDOM_WG1", f="SDOM_FG1"},
   SDOM_WG2 = { t="SDOM_WG2", f="SDOM_FG2"},
+  SDOM_WG3 = { t="SDOM_WG3", f="SDOM_FG1"},
+  SDOM_WG4 = { t="SDOM_WG4", f="SDOM_FG2"},
+  SDOM_WG5 = { t="SDOM_WG5", f="SDOM_FG1"},
 
   -- computers 256px
   SDMSRCP1 = { t="SDMSRCP1", f="SDOM_FT1"},
