@@ -169,17 +169,19 @@ void VFS_ScanForAddons() {
     int result2 = 0;
 
     for (auto &file : std::filesystem::directory_iterator(dir_name)) {
-        if (PHYSFS_mount(file.path().string().c_str(), nullptr, 0)) {
-            PHYSFS_unmount(file.path().string().c_str());
-            result1 += 1;
-            list.push_back(file.path());
-        }
-        else {
-            LogPrintf(
-                fmt::format("Failed to mount '{}' archive in PhysFS:\n{}\n",
-                            file.path().string(),
-                            PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()))
-                    .c_str());
+        if (file.is_directory() || StringCaseCmp(file.path().extension().generic_string(), ".oaf") == 0) {
+            if (PHYSFS_mount(file.path().string().c_str(), nullptr, 0)) {
+                PHYSFS_unmount(file.path().string().c_str());
+                result1 += 1;
+                list.push_back(file.path());
+            }
+            else {
+                LogPrintf(
+                    fmt::format("Failed to mount '{}' archive in PhysFS:\n{}\n",
+                                file.path().string(),
+                                PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()))
+                        .c_str());
+            }
         }
     }
 
@@ -194,17 +196,19 @@ void VFS_ScanForAddons() {
         std::vector<std::filesystem::path> list2;
 
         for (auto &file : std::filesystem::directory_iterator(dir_name)) {
-            if (PHYSFS_mount(file.path().string().c_str(), nullptr, 0)) {
-                PHYSFS_unmount(file.path().string().c_str());
-                result2 += 1;
-                list2.push_back(file.path());
-            }
-            else {
-                LogPrintf(
-                fmt::format("Failed to mount '{}' archive in PhysFS:\n{}\n",
-                            file.path().string(),
-                            PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()))
-                    .c_str());
+            if (file.is_directory() || StringCaseCmp(file.path().extension().generic_string(), ".oaf") == 0) {
+                if (PHYSFS_mount(file.path().string().c_str(), nullptr, 0)) {
+                    PHYSFS_unmount(file.path().string().c_str());
+                    result2 += 1;
+                    list2.push_back(file.path());
+                }
+                else {
+                    LogPrintf(
+                    fmt::format("Failed to mount '{}' archive in PhysFS:\n{}\n",
+                                file.path().string(),
+                                PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()))
+                        .c_str());
+                }
             }
         }
         // std::vector<std::filesystem::path>().swap(list2);

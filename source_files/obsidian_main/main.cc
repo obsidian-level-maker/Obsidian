@@ -1841,7 +1841,9 @@ softrestart:;
                 _("Surprise Me/Randomize Other"), nullptr, main_win_misc_config_CB,
                 nullptr, FL_MENU_TOGGLE | (randomize_misc ? FL_MENU_VALUE : 0));
             if (all_addons.size() == 0) {
-                main_win->menu_bar->add(_("Addons/No Addons Detected"), nullptr, nullptr, nullptr,
+                main_win->menu_bar->add(_("Addons/No folders or *.oaf files"), nullptr, nullptr, nullptr,
+                                        FL_MENU_INACTIVE);
+                main_win->menu_bar->add(_("Addons/found in the \\/addons directory!"), nullptr, nullptr, nullptr,
                                         FL_MENU_INACTIVE);
             } else {
                 main_win->menu_bar->add(_("Addons/Restart and Apply Changes"),

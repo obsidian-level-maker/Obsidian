@@ -45,9 +45,9 @@ UI_Module::UI_Module(int X, int Y, int W, int H, std::string id,
     mod_button =
         new UI_CustomCheckBox(X + kf_w(6), Y + kf_h(5), W - kf_w(12), kf_h(24));
     mod_button->box(FL_NO_BOX);
-    if (!suboptions) {
+    /*if (!suboptions) {
         mod_button->down_box(FL_NO_BOX);
-    }
+    }*/
     mod_button->color(WINDOW_BG);
 
     if (Is_UI()) {
@@ -63,10 +63,6 @@ UI_Module::UI_Module(int X, int Y, int W, int H, std::string id,
         heading->copy_label(label.c_str());
         heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
         heading->labelfont(use_system_fonts ? font_style : font_style | FL_BOLD);
-        disabled = new Fl_Box(FL_NO_BOX, X + kf_w(tx), Y + kf_h(4), W - kf_w(tx + 4),
-                            kf_h(24), _("(Disabled)"));
-        disabled->align(FL_ALIGN_RIGHT | FL_ALIGN_INSIDE);
-        disabled->labelfont(use_system_fonts ? font_style : font_style | FL_BOLD);
     }
 
     if (!tip.empty()) {
@@ -486,12 +482,6 @@ int UI_Module::CalcHeight() const {
 }
 
 void UI_Module::update_Enable() {
-
-    if (mod_button->value()) {
-        disabled->hide();
-    } else {
-        disabled->show();
-    }
 
     std::map<std::string, UI_RChoice *>::const_iterator IT;
     std::map<std::string, UI_RSlide *>::const_iterator IT2;
