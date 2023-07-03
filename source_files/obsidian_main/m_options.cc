@@ -75,10 +75,6 @@ void Parse_Option(const std::string &name, const std::string &value) {
         filename_prefix = StringToInt(value);
     } else if (StringCaseCmp(name, "custom_prefix") == 0) {
         custom_prefix = value;
-    } else if (StringCaseCmp(name, "log_size") == 0) {
-        log_size = StringToInt(value);
-    } else if (StringCaseCmp(name, "log_limit") == 0) {
-        log_limit = StringToInt(value);
     } else if (StringCaseCmp(name, "default_output_path") == 0) {
         default_output_path = value;
     } else if (StringCaseCmp(name, "builds_per_run") == 0) {
@@ -185,8 +181,6 @@ bool Options_Save(std::filesystem::path filename) {
     option_fp << "mature_word_lists = " << (mature_word_lists ? 1 : 0) << "\n";
     option_fp << "filename_prefix = " << filename_prefix << "\n";
     option_fp << "custom_prefix = " << custom_prefix << "\n";
-    option_fp << "log_size = " << log_size << "\n";
-    option_fp << "log_limit = " << log_limit << "\n";
     option_fp << "default_output_path = " << default_output_path.generic_string() << "\n";
     option_fp << "builds_per_run = " << builds_per_run << "\n";
 
@@ -232,8 +226,6 @@ class UI_OptionsWin : public Fl_Window {
     UI_CustomCheckBox *opt_limit_break;
     Fl_Simple_Counter *opt_builds_per_run;
     // UI_CustomCheckBox *opt_preserve_failures;
-    Fl_Simple_Counter *opt_log_size;
-    Fl_Simple_Counter *opt_log_limit;
 
    public:
     UI_OptionsWin(int W, int H, const char *label = NULL);
@@ -307,18 +299,6 @@ class UI_OptionsWin : public Fl_Window {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
 
         builds_per_run = that->opt_builds_per_run->value();
-    }
-
-    static void callback_LogSize(Fl_Widget *w, void *data) {
-        UI_OptionsWin *that = (UI_OptionsWin *)data;
-
-        log_size = that->opt_log_size->value();
-    }
-
-    static void callback_LogLimit(Fl_Widget *w, void *data) {
-        UI_OptionsWin *that = (UI_OptionsWin *)data;
-
-        log_limit = that->opt_log_limit->value();
     }
 
     static void callback_Random_String_Seeds(Fl_Widget *w, void *data) {
@@ -758,38 +738,6 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     cy += opt_preserve_failures->h() + y_step * .5;*/
 
-    opt_log_size =
-        new Fl_Simple_Counter(cx + W * .38, cy, listwidth, kf_h(24), "");
-    opt_log_size->copy_label(_("Max Log Size (MB) "));
-    opt_log_size->align(FL_ALIGN_LEFT);
-    opt_log_size->step(1);
-    opt_log_size->bounds(1, 25);
-    opt_log_size->callback(callback_LogSize, this);
-    opt_log_size->value(log_size);
-    opt_log_size->labelfont(font_style);
-    opt_log_size->textfont(font_style);
-    opt_log_size->textcolor(FONT2_COLOR);
-    opt_log_size->selection_color(SELECTION);
-    opt_log_size->visible_focus(0);
-    opt_log_size->color(BUTTON_COLOR);
-
-    cy += opt_log_size->h() + y_step * .5;
-
-    opt_log_limit =
-        new Fl_Simple_Counter(cx + W * .38, cy, listwidth, kf_h(24), "");
-    opt_log_limit->copy_label(_("# of Logs Preserved "));
-    opt_log_limit->align(FL_ALIGN_LEFT);
-    opt_log_limit->step(1);
-    opt_log_limit->bounds(2, 25);
-    opt_log_limit->callback(callback_LogLimit, this);
-    opt_log_limit->value(log_limit);
-    opt_log_limit->labelfont(font_style);
-    opt_log_limit->textfont(font_style);
-    opt_log_limit->textcolor(FONT2_COLOR);
-    opt_log_limit->selection_color(SELECTION);
-    opt_log_limit->visible_focus(0);
-    opt_log_limit->color(BUTTON_COLOR);
-
     //----------------
 
     int dh = kf_h(60);
@@ -843,7 +791,7 @@ int UI_OptionsWin::handle(int event) {
 
 void DLG_OptionsEditor(void) {
     int opt_w = kf_w(500);
-    int opt_h = kf_h(550);
+    int opt_h = kf_h(475);
 
     UI_OptionsWin *option_window =
         new UI_OptionsWin(opt_w, opt_h, _("OBSIDIAN Misc Options"));

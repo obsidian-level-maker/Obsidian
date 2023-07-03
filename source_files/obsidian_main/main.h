@@ -22,7 +22,6 @@
 #ifndef __OBSIDIAN_MAIN_H__
 #define __OBSIDIAN_MAIN_H__
 
-#include <hedley.h>
 #include <cstddef>
 #include <fmt/format.h>
 #include <fmt/ostream.h>
@@ -59,29 +58,12 @@ constexpr const char *REF_FILENAME = "REFERENCE.txt";
 
 #ifdef _WIN32
 #ifndef CONSOLE_ONLY
-HEDLEY_ALWAYS_INLINE
-int i_load_private_font(const char *path) {
-    return AddFontResourceEx(path, FR_PRIVATE, nullptr);
-}
-HEDLEY_ALWAYS_INLINE
-int v_unload_private_font(const char *path) {
-    return RemoveFontResourceEx(path, FR_PRIVATE, nullptr);
-}
+extern int v_unload_private_font(const char *path);
 #endif
 #else
 #ifndef CONSOLE_ONLY
 #ifndef __APPLE__
-#include <fontconfig/fontconfig.h>
-HEDLEY_ALWAYS_INLINE
-int i_load_private_font(const char *path) {
-    return static_cast<int>(FcConfigAppFontAddFile(
-        nullptr, reinterpret_cast<const FcChar8 *>(path)));
-}
-HEDLEY_ALWAYS_INLINE
-int v_unload_private_font(const char *path) {
-    FcConfigAppFontClear(nullptr);
-    return 0;
-}
+extern int v_unload_private_font(const char *path);
 #endif
 #endif
 #endif
@@ -183,8 +165,6 @@ extern bool random_string_seeds;
 extern bool password_mode;
 extern bool mature_word_lists;
 extern bool did_specify_seed;
-extern int log_size;
-extern int log_limit;
 extern bool first_run;
 extern bool mid_batch;
 extern int builds_per_run;

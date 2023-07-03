@@ -158,8 +158,6 @@ bool random_string_seeds = false;
 bool password_mode = false;
 bool mature_word_lists = false;
 bool did_specify_seed = false;
-int log_size = 7;
-int log_limit = 5;
 bool mid_batch = false;
 int builds_per_run = 1;
 
@@ -199,6 +197,31 @@ Fl_BMP_Image *tutorial10;
 
 #ifdef WIN32
 FLASHWINFO *blinker;
+#endif
+
+#ifdef _WIN32
+#ifndef CONSOLE_ONLY
+static int i_load_private_font(const char *path) {
+    return AddFontResourceEx(path, FR_PRIVATE, nullptr);
+}
+int v_unload_private_font(const char *path) {
+    return RemoveFontResourceEx(path, FR_PRIVATE, nullptr);
+}
+#endif
+#else
+#ifndef CONSOLE_ONLY
+#ifndef __APPLE__
+#include <fontconfig/fontconfig.h>
+static int i_load_private_font(const char *path) {
+    return static_cast<int>(FcConfigAppFontAddFile(
+        nullptr, reinterpret_cast<const FcChar8 *>(path)));
+}
+int v_unload_private_font(const char *path) {
+    FcConfigAppFontClear(nullptr);
+    return 0;
+}
+#endif
+#endif
 #endif
 
 static void main_win_surprise_config_CB(Fl_Widget *w, void *data) {

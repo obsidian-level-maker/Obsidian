@@ -28,9 +28,9 @@
 #include <string>
 #include <fmt/core.h>
 #include <fmt/ostream.h>
-#include "spdlog.h"
 extern bool terminal;
 extern bool debugging;
+extern std::fstream log_file;
 extern std::fstream ref_file;
 bool LogInit(const std::filesystem::path &filename);  // NULL for none
 void LogClose(void);
@@ -42,7 +42,7 @@ void LogEnableTerminal(bool enable);
 
 template <typename... Args>
 void LogPrintf(std::string_view str, Args &&...args) {
-    spdlog::info(str, args...);
+    fmt::print(log_file, str, args...);
 
     // show on the Linux terminal too
     if (terminal) {
@@ -56,7 +56,7 @@ void RefPrintf(std::string_view str, Args &&...args) {
 template <typename... Args>
 void DebugPrintf(std::string_view format, Args &&...args) {
     if (debugging) {
-        spdlog::info(format, args...);
+        fmt::print(log_file, format, args...);
         // show on the Linux terminal too
         if (terminal) {
             fmt::print(format, args...);

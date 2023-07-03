@@ -9,13 +9,11 @@ if(NOT CONSOLE_ONLY AND NOT HAIKU)
   add_subdirectory(source_files/fltk EXCLUDE_FROM_ALL)
 endif()
 add_subdirectory(source_files/fmt EXCLUDE_FROM_ALL)
-add_subdirectory(source_files/hedley EXCLUDE_FROM_ALL)
 add_subdirectory(source_files/lua EXCLUDE_FROM_ALL)
 add_subdirectory(source_files/miniz EXCLUDE_FROM_ALL)
 add_subdirectory(source_files/physfs EXCLUDE_FROM_ALL)
 add_subdirectory(source_files/qsavetex EXCLUDE_FROM_ALL)
 add_subdirectory(source_files/slump EXCLUDE_FROM_ALL)
-add_subdirectory(source_files/spdlog EXCLUDE_FROM_ALL)
 
 project(
   obsidian
@@ -214,9 +212,6 @@ target_include_directories(obsidian SYSTEM PRIVATE source_files/lua/src)
 target_include_directories(obsidian SYSTEM PRIVATE source_files/miniz)
 target_include_directories(obsidian SYSTEM PRIVATE source_files/physfs/src)
 target_include_directories(obsidian SYSTEM PRIVATE source_files/slump)
-target_include_directories(
-  obsidian SYSTEM PRIVATE source_files/spdlog/include/spdlog
-)
 
 if(MINGW
    OR WIN32
@@ -251,7 +246,7 @@ if(UNIX)
   endif()
 endif()
 
-target_link_libraries(obsidian PRIVATE fmt::fmt-header-only hedley::hedley spdlog::spdlog_header_only)
+target_link_libraries(obsidian PRIVATE fmt::fmt-header-only)
 
 # Copies executables to local install directory after build
 add_custom_command(
