@@ -1042,15 +1042,9 @@ void secretize_config(config *c)
   c->lock_themes = SLUMP_TRUE;
   if (rollpercent(25)) c->force_biggest = SLUMP_TRUE;   /* stub */
   c->big_monsters = SLUMP_TRUE;
+  c->secret_themes = SLUMP_TRUE;
 
   for (;!something_special;) {
-
-    /* Sometimes bizarre theme */
-    if (rollpercent(30)) {
-      c->secret_themes = SLUMP_TRUE;
-      something_special = SLUMP_TRUE;
-      announce(VERBOSE,"Bizarre theme");
-    }
 
     /* Sometimes lots and lots of nukage */
     if (rollpercent(30)) {
@@ -1060,7 +1054,7 @@ void secretize_config(config *c)
     }
 
     /* Sometimes some DooM II nazis */
-    if (rollpercent(80)&&!(c->gamemask&(DOOM0_BIT|DOOM1_BIT))) {
+    if (rollpercent(80)&&!(c->gamemask&(DOOM0_BIT|DOOM1_BIT|HERETIC_BIT))) {
       c->forbidden_monster_bits &= ~SPECIAL;
       something_special = SLUMP_TRUE;
       if (rollpercent(50)) {
@@ -1123,7 +1117,7 @@ config *get_config(std::filesystem::path filename) {
     answer->themecount = 0;
     answer->sthemecount = 0;
     answer->secret_themes = SLUMP_FALSE;
-    answer->lock_themes = SLUMP_FALSE;
+    answer->lock_themes = SLUMP_TRUE;
     std::string nukage = ob_get_param("bool_major_nukage_slump");
     if (nukage.empty()) nukage = "0";
     answer->major_nukage = StringToInt(nukage) ? SLUMP_TRUE : SLUMP_FALSE;
