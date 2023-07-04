@@ -33,6 +33,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <errno.h>
+#include <wayland-client-core.h>
 #include <wayland-cursor.h>
 
 #include "libdecor-plugin.h"
@@ -427,10 +428,13 @@ libdecor_plugin_gtk_destroy(struct libdecor_plugin *plugin)
 
 	free(plugin_gtk->cursor_theme_name);
 
-	wl_shm_destroy(plugin_gtk->wl_shm);
+	if (plugin_gtk->wl_shm)
+		wl_shm_destroy(plugin_gtk->wl_shm);
 
-	wl_compositor_destroy(plugin_gtk->wl_compositor);
-	wl_subcompositor_destroy(plugin_gtk->wl_subcompositor);
+	if (plugin_gtk->wl_compositor)
+		wl_compositor_destroy(plugin_gtk->wl_compositor);
+	if (plugin_gtk->wl_subcompositor)
+		wl_subcompositor_destroy(plugin_gtk->wl_subcompositor);
 
 
 	free(plugin_gtk);
@@ -659,8 +663,10 @@ libdecor_plugin_gtk_frame_free(struct libdecor_plugin *plugin,
 	/* when in SSD mode, frame_gtk->header is not a proper GTK widget */
 	if (!GTK_IS_WIDGET(frame_gtk->header)) return;
 	gtk_widget_destroy(frame_gtk->header);
+	frame_gtk->header = NULL;
 	if (!GTK_IS_WIDGET(frame_gtk->window)) return;
 	gtk_widget_destroy(frame_gtk->window);
+	frame_gtk->window = NULL;
 
 	free_border_component(&frame_gtk->headerbar);
 	free_border_component(&frame_gtk->shadow);
@@ -671,6 +677,7 @@ libdecor_plugin_gtk_frame_free(struct libdecor_plugin *plugin,
 	}
 
 	free(frame_gtk->title);
+	frame_gtk->title = NULL;
 
 	frame_gtk->decoration_type = DECORATION_TYPE_NONE;
 
@@ -885,11 +892,15 @@ ensure_title_bar_surfaces(struct libdecor_frame_gtk *frame_gtk)
 	 *       after construction. So we just destroy and re-create them.
 	 */
 	/* avoid warning when restoring previously turned off decoration */
-	if (GTK_IS_WIDGET(frame_gtk->header))
+	if (GTK_IS_WIDGET(frame_gtk->header)) {
 		gtk_widget_destroy(frame_gtk->header);
+		frame_gtk->header = NULL;
+	}
 	/* avoid warning when restoring previously turned off decoration */
-	if (GTK_IS_WIDGET(frame_gtk->window))
+	if (GTK_IS_WIDGET(frame_gtk->window)) {
 		gtk_widget_destroy(frame_gtk->window);
+		frame_gtk->window = NULL;
+	}
 	frame_gtk->window = gtk_offscreen_window_new();
 	frame_gtk->header = gtk_header_bar_new();
 
@@ -1350,7 +1361,7 @@ draw_title_bar(struct libdecor_frame_gtk *frame_gtk)
 	enum libdecor_window_state state;
 	GtkStyleContext *style;
 	int pref_width;
-	int current_min_w, current_min_h, W, H;
+	int current_min_w, current_min_h, current_max_w, current_max_h, W, H;
 
 	state = libdecor_frame_get_window_state((struct libdecor_frame*)frame_gtk);
 	style = gtk_widget_get_style_context(frame_gtk->window);
@@ -1378,10 +1389,10 @@ draw_title_bar(struct libdecor_frame_gtk *frame_gtk)
 	if (current_min_w < pref_width) {
 		current_min_w = pref_width;
 		libdecor_frame_set_min_content_size(&frame_gtk->frame, current_min_w, current_min_h);
-		if (!resizable(frame_gtk)) {
-			libdecor_frame_set_max_content_size(&frame_gtk->frame,
-				current_min_w, current_min_h);
-		}
+	}
+	libdecor_frame_get_max_content_size(&frame_gtk->frame, &current_max_w, &current_max_h);
+	if (current_max_w && current_max_w < current_min_w) {
+		libdecor_frame_set_max_content_size(&frame_gtk->frame, current_min_w, current_max_h);
 	}
 	W = libdecor_frame_get_content_width(&frame_gtk->frame);
 	H = libdecor_frame_get_content_height(&frame_gtk->frame);
@@ -1526,10 +1537,9 @@ libdecor_plugin_gtk_frame_property_changed(struct libdecor_plugin *plugin,
 	if (!streq(frame_gtk->title, new_title))
 		redraw_needed = true;
 	free(frame_gtk->title);
+	frame_gtk->title = NULL;
 	if (new_title)
 		frame_gtk->title = strdup(new_title);
-	else
-		frame_gtk->title = NULL;
 
 	if (frame_gtk->capabilities != libdecor_frame_get_capabilities(frame)) {
 		frame_gtk->capabilities = libdecor_frame_get_capabilities(frame);
@@ -2100,6 +2110,7 @@ pointer_leave(void *data,
 	if (frame_gtk) {
 		frame_gtk->active = NULL;
 		frame_gtk->hdr_focus.widget = NULL;
+		frame_gtk->hdr_focus.type = HEADER_NONE;
 		draw_decoration(frame_gtk);
 		libdecor_frame_toplevel_commit(&frame_gtk->frame);
 		update_local_cursor(seat);
@@ -2532,15 +2543,6 @@ globals_callback(void *user_data,
 
 	wl_callback_destroy(callback);
 	plugin_gtk->globals_callback = NULL;
-
-	if (!has_required_globals(plugin_gtk)) {
-		struct libdecor *context = plugin_gtk->context;
-
-		libdecor_notify_plugin_error(
-				context,
-				LIBDECOR_ERROR_COMPOSITOR_INCOMPATIBLE,
-				"Compositor is missing required globals");
-	}
 }
 
 static const struct wl_callback_listener globals_callback_listener = {
@@ -2580,6 +2582,13 @@ libdecor_plugin_new(struct libdecor *context)
 	wl_callback_add_listener(plugin_gtk->globals_callback,
 				 &globals_callback_listener,
 				 plugin_gtk);
+	wl_display_roundtrip(wl_display);
+
+	if (!has_required_globals(plugin_gtk)) {
+		fprintf(stderr, "libdecor-gtk-WARNING: Could not get required globals\n");
+		libdecor_plugin_gtk_destroy(&plugin_gtk->plugin);
+		return NULL;
+	}
 
 	/* setup GTK context */
 	gdk_set_allowed_backends("wayland");

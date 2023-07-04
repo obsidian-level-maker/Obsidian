@@ -25,6 +25,7 @@
 #include "../../Fl_Screen_Driver.H"
 #include <FL/platform.H>
 #include <FL/fl_draw.H>
+#include <FL/fl_utf8.h>
 #include <cairo/cairo.h>
 #include <pango/pangocairo.h>
 #if ! PANGO_VERSION_CHECK(1,16,0)
@@ -1068,6 +1069,18 @@ Fl_Font Fl_Cairo_Graphics_Driver::set_fonts(const char* /*pattern_name*/)
   fl_open_display();
   int n_families, count = 0;
   PangoFontFamily **families;
+  char *saved_lang = fl_getenv("LANG");
+  const char *Clang = "LANG=C";
+  if (saved_lang && strcmp(saved_lang, Clang)) {
+    // Force LANG=C to prevent pango_font_face_get_face_name() below from returning
+    // translated versions of Bold, Italic, etc… (see issue #732).
+    // Unfortunately, using setlocale() doesn't do the job.
+    char *p = saved_lang;
+    saved_lang = (char*)malloc(strlen(p) + 6);
+    memcpy(saved_lang, "LANG=", 5);
+    strcpy(saved_lang + 5, p);
+    fl_putenv(Clang);
+  } else saved_lang = NULL;
   static PangoFontMap *pfmap_ = pango_cairo_font_map_get_default(); // 1.10
   Fl_Cairo_Graphics_Driver::init_built_in_fonts();
   pango_font_map_list_families(pfmap_, &families, &n_families);
@@ -1079,15 +1092,22 @@ Fl_Font Fl_Cairo_Graphics_Driver::set_fonts(const char* /*pattern_name*/)
     pango_font_family_list_faces(families[fam], &faces, &n_faces);
     for (int j = 0; j < n_faces; j++) {
       const char *p = pango_font_face_get_face_name(faces[j]);
+      // Remove " Regular" suffix from font names
+      if (!strcasecmp(p, "regular")) p = NULL;
       // build the font's FLTK name
-      int lfont = lfam + strlen(p) + 2;
+      int lfont = lfam + (p ? strlen(p) + 2 : 1);
       char *q = new char[lfont];
-      snprintf(q, lfont, "%s %s", fam_name, p);
+      if (p) snprintf(q, lfont, "%s %s", fam_name, p);
+      else strcpy(q, fam_name);
       Fl::set_font((Fl_Font)(count++ + FL_FREE_FONT), q);
     }
     /*g_*/free(faces); // glib source code shows that g_free is equivalent to free
   }
   /*g_*/free(families);
+  if (saved_lang) {
+    fl_putenv(saved_lang);
+    free(saved_lang);
+  }
   // Sort the list into alphabetic order
   qsort(fl_fonts + FL_FREE_FONT, count, sizeof(Fl_Fontdesc), (sort_f_type)font_sort);
   return FL_FREE_FONT + count;
