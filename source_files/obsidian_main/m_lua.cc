@@ -27,7 +27,6 @@
 #endif
 #include <array>
 
-#include "fmt/format.h"
 #ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
@@ -101,7 +100,7 @@ int gui_console_print(lua_State *L) {
             res += 2;
         }
 
-        fmt::print("{}", res);
+        StdOutPrintf("%s", res);
     }
 
     return 0;
@@ -121,7 +120,7 @@ int gui_ref_print(lua_State *L) {
             res += 2;
         }
 
-        RefPrintf("{}", res);
+        RefPrintf("%s", res);
     }
 
     return 0;
@@ -141,7 +140,7 @@ int gui_raw_log_print(lua_State *L) {
             res += 2;
         }
 
-        LogPrintf("{}", res);
+        LogPrintf("%s", res);
     }
 
     return 0;
@@ -156,7 +155,7 @@ int gui_raw_debug_print(lua_State *L) {
         const char *res = luaL_checkstring(L, 1);
         SYS_ASSERT(res);
 
-        DebugPrintf("{}", res);
+        DebugPrintf("%s", res);
     }
 
     return 0;
@@ -278,7 +277,7 @@ int gui_get_install_dir(lua_State *L) {
 
 static bool scan_dir_process_name(const std::filesystem::path &name,
                                   const std::filesystem::path &parent,
-                                  std::string_view match) {
+                                  std::string match) {
     if (name.native()[0] == '.') {
         return false;
     }
@@ -330,8 +329,8 @@ static bool scan_dir_process_name(const std::filesystem::path &name,
                "." + std::string{match.begin() + 2, match.end()};
     }
 
-    Main::FatalError("gui.scan_directory: unsupported match expression: {}\n",
-                     match);
+    Main::FatalError("gui.scan_directory: unsupported match expression: %s\n",
+                     match.c_str());
     return false; /* NOT REACHED */
 }
 
@@ -422,7 +421,6 @@ int gui_add_choice(lua_State *L) {
 
     SYS_ASSERT(!button.empty() && !id.empty() && !label.empty());
 
-    //    DebugPrintf("  add_choice: {} id:{}\n", button, id);
 #ifndef CONSOLE_ONLY
     if (!main_win) {
         return 0;
@@ -451,8 +449,6 @@ int gui_enable_choice(lua_State *L) {
 
     SYS_ASSERT(!button.empty() && !id.empty());
 
-    //    DebugPrintf("  enable_choice: {} id:{} {}\n", button, id, enable ?
-    //"enable" : "DISABLE");
 #ifndef CONSOLE_ONLY
     if (!main_win) {
         return 0;
@@ -474,7 +470,6 @@ int gui_set_button(lua_State *L) {
 
     SYS_ASSERT(!button.empty() && !id.empty());
 
-    //    DebugPrintf("  change_button: {} --> {}\n", button, id);
 #ifndef CONSOLE_ONLY
     if (!main_win) {
         return 0;
@@ -502,7 +497,6 @@ int gui_add_module(lua_State *L) {
 
     SYS_ASSERT(!where.empty() && !id.empty() && !label.empty());
 
-    //    DebugPrintf("  add_module: {} id:{}\n", where, id);
 #ifndef CONSOLE_ONLY
     if (!main_win) {
         return 0;
@@ -548,7 +542,6 @@ int gui_set_module(lua_State *L) {
 
     SYS_ASSERT(!module.empty());
 
-    //    DebugPrintf("  set_module: {} --> {}\n", module, opt_val);
 #ifndef CONSOLE_ONLY
     if (!main_win) {
         return 0;
@@ -578,9 +571,6 @@ int gui_show_module(lua_State *L) {
 
     SYS_ASSERT(!module.empty());
 
-    //    DebugPrintf("  show_module: {} --> {}\n", what, module, shown ? "show"
-    //    :
-    //"HIDE");
 #ifndef CONSOLE_ONLY
     if (!main_win) {
         return 0;
@@ -934,7 +924,6 @@ int gui_add_option_choice(lua_State *L) {
 
     SYS_ASSERT(!module.empty() && !option.empty());
 
-    //    DebugPrintf("  add_option_choice: {}.{}\n", module, option);
 #ifndef CONSOLE_ONLY
     if (!main_win) {
         return 0;
@@ -970,8 +959,6 @@ int gui_set_module_option(lua_State *L) {
 
     SYS_ASSERT(!module.empty() && !option.empty() && !value.empty());
 
-    //    DebugPrintf("  set_module_option: {}.{} --> {}\n", module, option,
-    // value);
 #ifndef CONSOLE_ONLY
     if (!main_win) {
         return 0;
@@ -1083,8 +1070,6 @@ int gui_get_module_slider_value(lua_State *L) {
 
     SYS_ASSERT(!module.empty() && !option.empty());
 
-    //    DebugPrintf("  set_module_option: {}.{} --> {}\n", module, option,
-    // value);
 #ifndef CONSOLE_ONLY
     if (!main_win) {
         return 0;
@@ -1224,8 +1209,6 @@ int gui_get_module_button_value(lua_State *L) {
 
     SYS_ASSERT(!module.empty() && !option.empty());
 
-    //    DebugPrintf("  set_module_option: {}.{} --> {}\n", module, option,
-    // value);
 #ifndef CONSOLE_ONLY
     if (!main_win) {
         return 0;
@@ -1285,7 +1268,7 @@ int gui_at_level(lua_State *L) {
     int index = luaL_checkinteger(L, 2);
     int total = luaL_checkinteger(L, 3);
 
-    Main::ProgStatus(fmt::format("{} {}", _("Making"), name).c_str());
+    Main::ProgStatus("%s %s", _("Making"), name.c_str());
 #ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->Prog_AtLevel(index, total);
@@ -1405,9 +1388,9 @@ int gui_minimap_disable(lua_State *L) {
         main_win->build_box->mini_map->EmptyMap();
         std::string genny = luaL_checkstring(L, 1);
         // clang-format off
-        main_win->build_box->alt_disp->copy_label(fmt::format("{} {} -\n{}", 
+        main_win->build_box->alt_disp->copy_label(StringFormat("%s %s -\n%s", 
             _("Using"),
-            genny, _("Preview Not Available")).c_str());
+            genny.c_str(), _("Preview Not Available")).c_str());
         // clang-format on
     }
 #endif
@@ -1779,7 +1762,7 @@ static bool Script_CallFunc(std::string func_name, int nresult = 0,
     lua_getglobal(LUA_ST, func_name.c_str());
 
     if (lua_type(LUA_ST, -1) == LUA_TNIL) {
-        Main::FatalError("Script problem: missing function '{}'", func_name);
+        Main::FatalError("Script problem: missing function '%s'", func_name.c_str());
     }
 
     int nargs = 0;
@@ -1802,20 +1785,20 @@ static bool Script_CallFunc(std::string func_name, int nresult = 0,
         }
 
         if (batch_mode) {
-            LogPrintf("ERROR MESSAGE: {}\n", err_msg);
+            LogPrintf("ERROR MESSAGE: %s\n", err_msg);
         }
 
 // this will appear in the log file too
 #ifndef CONSOLE_ONLY
         if (main_win) {
-            main_win->label(fmt::format("{} {} {} \"{}\"", _("[ ERROR ]"),
-                                        OBSIDIAN_TITLE, OBSIDIAN_SHORT_VERSION,
-                                        OBSIDIAN_CODE_NAME)
+            main_win->label(StringFormat("%s %s %s \"%s\"", _("[ ERROR ]"),
+                                        OBSIDIAN_TITLE.c_str(), OBSIDIAN_SHORT_VERSION,
+                                        OBSIDIAN_CODE_NAME.c_str())
                                 .c_str());
             DLG_ShowError("%s: %s", _("Script Error: "), err_msg);
-            main_win->label(fmt::format("{} {} \"{}\"", OBSIDIAN_TITLE,
+            main_win->label(StringFormat("%s %s \"%s\"", OBSIDIAN_TITLE.c_str(),
                                         OBSIDIAN_SHORT_VERSION,
-                                        OBSIDIAN_CODE_NAME)
+                                        OBSIDIAN_CODE_NAME.c_str())
                                 .c_str());
         }
 #endif
@@ -1828,62 +1811,6 @@ static bool Script_CallFunc(std::string func_name, int nresult = 0,
 
     return true;
 }
-
-/* UNUSED
-bool Script_RunString(const char *str, ...)
-{
-        static char buffer[MSG_BUF_LEN];
-
-        va_list args;
-
-        va_start(args, str);
-        vsnprintf(buffer, MSG_BUF_LEN-1, str, args);
-        va_end(args);
-
-        buffer[MSG_BUF_LEN-2] = 0;
-
-
-        lua_getglobal(LUA_ST, "ob_traceback");
-
-        if (lua_type(LUA_ST, -1) == LUA_TNIL)
-                Main_FatalError("Script problem: missing function '%s'",
-"ob_traceback");
-
-        int status = luaL_loadbuffer(LUA_ST, buffer, strlen(buffer),
-"=CONSOLE");
-
-        if (status != 0)
-        {
-                // const char *msg = lua_tolstring(LUA_ST, -1, NULL);
-
-                ConPrintf("Error: @1Bad Syntax or Unknown Command\n");
-
-                lua_pop(LUA_ST, 2);  // ob_traceback, message
-                return false;
-        }
-
-        status = lua_pcall(LUA_ST, 0, 0, -2);
-        if (status != 0)
-        {
-                const char *msg = lua_tolstring(LUA_ST, -1, NULL);
-
-                // skip the filename
-                const char *err_msg = strstr(msg, ": ");
-                if (err_msg)
-                        err_msg += 2;
-                else
-                        err_msg = msg;
-
-                LogPrintf("\nScript Error: {}\n", err_msg);
-
-                lua_pop(LUA_ST, 2);  // ob_traceback, message
-                return false;
-        }
-
-        lua_pop(LUA_ST, 1);  // ob_traceback
-        return true;
-}
-*/
 
 typedef struct load_info_t {
     PHYSFS_File *fp;
@@ -1951,7 +1878,7 @@ static int my_loadfile(lua_State *L, const std::filesystem::path &filename) {
         status = LUA_ERRFILE;
 
         lua_pushstring(
-            L, fmt::format("file read error: {}", info.error_msg).c_str());
+            L, StringFormat("file read error: %s", info.error_msg.c_str()).c_str());
     }
 
     lua_remove(L, fnameindex);
@@ -1970,7 +1897,7 @@ void Script_Load(std::filesystem::path script_name) {
     std::filesystem::path filename =
         std::filesystem::path{import_dir} / script_name;
 
-    DebugPrintf(fmt::format("  loading script: '{}'\n", filename).c_str());
+    DebugPrintf("  loading script: '%s'\n", filename.string().c_str());
 
     int status = my_loadfile(LUA_ST, filename);
 
@@ -1981,7 +1908,7 @@ void Script_Load(std::filesystem::path script_name) {
     if (status != 0) {
         const char *msg = lua_tolstring(LUA_ST, -1, NULL);
 
-        Main::FatalError("Unable to load script '{}'\n{}", filename, msg);
+        Main::FatalError("Unable to load script '%s'\n%s", filename.string().c_str(), msg);
     }
 }
 
@@ -1999,7 +1926,7 @@ void Script_Open() {
 
     int status = p_init_lua(LUA_ST);
     if (status != 0) {
-        Main::FatalError("LUA Init failed: cannot load standard libs ({})",
+        Main::FatalError("LUA Init failed: cannot load standard libs (%d)",
                          status);
     }
 
@@ -2058,19 +1985,19 @@ void Script_Close() {
 // WRAPPERS TO LUA FUNCTIONS
 //------------------------------------------------------------------------
 
-bool ob_set_config(std::string_view key, std::string_view value) {
+bool ob_set_config(std::string key, std::string value) {
     // See the document 'doc/Config_Flow.txt' for a good
     // description of the flow of configuration values
     // between the C++ GUI and the Lua scripts.
 
     if (!has_loaded) {
-        DebugPrintf("ob_set_config({}) called before loaded!\n", key);
+        DebugPrintf("ob_set_config(%s) called before loaded!\n", key.c_str());
         return false;
     }
 
     std::array<std::string, 3> params{
-        std::string{key},
-        std::string{value},
+        key,
+        value,
         "",
     };
 
@@ -2222,17 +2149,17 @@ std::string ob_random_advice() {
 void ob_print_reference() {
     if (!Script_CallFunc("ob_print_reference", 1)) {
         // clang-format off
-        fmt::print(_("ob_print_reference: Error creating REFERENCE.txt!\n"));
+        StdOutPrintf(_("ob_print_reference: Error creating REFERENCE.txt!\n"));
         // clang-format on
     }
-    fmt::print("\nA copy of this output can be found at {}\n",
-               reference_file.generic_string());
+    StdOutPrintf("\nA copy of this output can be found at %s\n",
+               reference_file.string().c_str());
 }
 
 void ob_print_reference_json() {
     if (!Script_CallFunc("ob_print_reference_json", 1)) {
         // clang-format off
-        fmt::print(_("ob_print_reference_json: Error printing json reference!\n"));
+        StdOutPrintf(_("ob_print_reference_json: Error printing json reference!\n"));
         // clang-format on
     }
 }
@@ -2249,18 +2176,18 @@ bool ob_build_cool_shit() {
     if (!Script_CallFunc("ob_build_cool_shit", 1)) {
 #ifndef CONSOLE_ONLY
         if (main_win) {
-            main_win->label(fmt::format("{} {} {} \"{}\"", _("[ ERROR ]"),
-                                        OBSIDIAN_TITLE, OBSIDIAN_SHORT_VERSION,
-                                        OBSIDIAN_CODE_NAME)
+            main_win->label(StringFormat("%s %s %s \"%s\"", _("[ ERROR ]"),
+                                        OBSIDIAN_TITLE.c_str(), OBSIDIAN_SHORT_VERSION,
+                                        OBSIDIAN_CODE_NAME.c_str())
                                 .c_str());
         }
 #endif
         Main::ProgStatus(_("Script Error"));
 #ifndef CONSOLE_ONLY
         if (main_win) {
-            main_win->label(fmt::format("{} {} \"{}\"", OBSIDIAN_TITLE,
+            main_win->label(StringFormat("%s %s \"%s\"", OBSIDIAN_TITLE.c_str(),
                                         OBSIDIAN_SHORT_VERSION,
-                                        OBSIDIAN_CODE_NAME)
+                                        OBSIDIAN_CODE_NAME.c_str())
                                 .c_str());
 #ifdef WIN32
             Main::Blinker();

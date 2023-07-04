@@ -149,7 +149,7 @@ public:
 
 		buffer[MSG_BUF_LEN-1] = 0;
 
-		LogPrintf("{}\n", buffer);
+		LogPrintf("%s\n", buffer);
 	}
 
 	void Debug(const char *fmt, ...)
@@ -162,7 +162,7 @@ public:
 		vsnprintf(buffer, sizeof(buffer), fmt, args);
 		va_end(args);
 
-		DebugPrintf("{}\n", buffer);
+		DebugPrintf("%s\n", buffer);
 	}
 
 	//
@@ -182,7 +182,7 @@ public:
 
         ajbsp::CloseWad();
 
-		Main::FatalError("'{}'\n", buffer);
+		Main::FatalError("'%s'\n", buffer);
 	}
 
     // Update status bar with nodebuilding progress
@@ -197,7 +197,7 @@ public:
 //------------------------------------------------------------------------
 
 namespace Doom {
-void WriteLump(std::string_view name, const void *data, u32_t len) {
+void WriteLump(std::string name, const void *data, u32_t len) {
     SYS_ASSERT(name.size() <= 8);
 
     WAD_NewLump(name);
@@ -212,7 +212,7 @@ void WriteLump(std::string_view name, const void *data, u32_t len) {
 }
 }  // namespace Doom
 
-void Doom::WriteLump(std::string_view name, qLump_c *lump) {
+void Doom::WriteLump(std::string name, qLump_c *lump) {
     WriteLump(name, lump->GetBuffer(), lump->GetSize());
 }
 
@@ -287,7 +287,7 @@ void Doom::AddSectionLump(char ch, std::string name, qLump_c *lump) {
             break;
 
         default:
-            Main::FatalError("DM_AddSectionLump: bad section '{}'\n", ch);
+            Main::FatalError("DM_AddSectionLump: bad section '%c'\n", ch);
     }
 
     lump->name = name;
@@ -300,7 +300,7 @@ bool Doom::StartWAD(std::filesystem::path filename) {
 #ifndef CONSOLE_ONLY
         DLG_ShowError(_("Unable to create wad file:\n\n%s"), strerror(errno));
 #else
-        fmt::print(_("Unable to create wad file:\n\n%s"), strerror(errno));
+        StdOutPrintf(_("Unable to create wad file:\n\n%s"), strerror(errno));
 #endif
         return false;
     }
@@ -378,7 +378,7 @@ int Doom::v094_begin_level(lua_State *L) {
     return 0;
 }
 
-void Doom::EndLevel(std::string_view level_name) {
+void Doom::EndLevel(std::string level_name) {
     // terminate header lump with trailing NUL
     if (header_lump->GetSize() > 0) {
         const byte nuls[4] = {0, 0, 0, 0};
@@ -1216,15 +1216,15 @@ bool Doom::game_interface_c::Finish(bool build_ok) {
                     delete[] zip_buf;
                 } else {
                     LogPrintf(
-                        "Zipping output WAD to {} failed! Retaining original "
+                        "Zipping output WAD to %s failed! Retaining original "
                         "WAD.\n",
-                        zip_filename.generic_string());
+                        zip_filename.string().c_str());
                 }
             } else {
                 LogPrintf(
-                    "Zipping output WAD to {} failed! Retaining original "
+                    "Zipping output WAD to %s failed! Retaining original "
                     "WAD.\n",
-                    zip_filename.generic_string());
+                    zip_filename.string().c_str());
             }
         }
     }
@@ -1270,7 +1270,7 @@ void Doom::game_interface_c::Property(std::string key, std::string value) {
     } else if (StringCaseCmp(key, "ef_thing_mode") == 0) {
         ef_thing_mode = StringToInt(value);
     } else {
-        LogPrintf("WARNING: unknown DOOM property: {}={}\n", key, value);
+        LogPrintf("WARNING: unknown DOOM property: %s=%s\n", key.c_str(), value.c_str());
     }
 }
 

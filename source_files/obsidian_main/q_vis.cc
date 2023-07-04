@@ -451,7 +451,7 @@ void QVIS_CreateClusters(double min_x, double min_y, double max_x,
     cluster_W = cx2 - cx1;
     cluster_H = cy2 - cy1;
 
-    LogPrintf("Cluster Size: {}{}  (origin %+d %+d)\n", cluster_W, cluster_H,
+    LogPrintf("Cluster Size: %d %d  (origin %+d %+d)\n", cluster_W, cluster_H,
               cluster_X, cluster_Y);
 
     qk_clusters = new qCluster_c *[cluster_W * cluster_H];
@@ -824,22 +824,22 @@ static void ShowVisStats() {
     phs_stats.Finish();
 
     if (qk_game < 3) {
-        LogPrintf("pvs compression ratio {:1.0}%% ({} bytes --> {})\n",
+        LogPrintf("pvs compression ratio %1.0f%% (%d bytes --> %d)\n",
                   pvs_stats.CalcRatio(), pvs_stats.uncompressed,
                   pvs_stats.compressed);
     }
 
     if (qk_game == 2) {
-        LogPrintf("phs compression ratio {:1.0}%% ({} bytes --> {})\n",
+        LogPrintf("phs compression ratio %1.0f%% (%d bytes --> %d)\n",
                   phs_stats.CalcRatio(), phs_stats.uncompressed,
                   phs_stats.compressed);
 
         LogPrintf(
-            "average hearability: {:1.0}%%  best:{:1.0}%%  worst:{:1.0}%%\n",
+            "average hearability: %1.0f%%  best:%1.0f%%  worst:%1.0f%%\n",
             phs_stats.average, phs_stats.best, phs_stats.worst);
     }
 
-    LogPrintf("average visibility: {:1.0}%%  best:{:1.0}%%  worst:{:1.0}%%\n",
+    LogPrintf("average visibility: %1.0f%%  best:%1.0f%%  worst:%1.0f%%\n",
               pvs_stats.average, pvs_stats.best, pvs_stats.worst);
 }
 
@@ -866,7 +866,7 @@ void QVIS_Visibility(int lump, int max_size, int numleafs) {
 
     v_bytes_per_row = (v_row_bits + 7) >> 3;
 
-    LogPrintf("bits per row: {} --> bytes: {}\n", v_row_bits, v_bytes_per_row);
+    LogPrintf("bits per row: %d --> bytes: %d\n", v_row_bits, v_bytes_per_row);
 
     v_row_buffer = new byte[1 + v_bytes_per_row];
 

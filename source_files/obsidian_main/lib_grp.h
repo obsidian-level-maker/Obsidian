@@ -39,14 +39,12 @@ const char *GRP_EntryName(int entry);
 
 bool GRP_ReadData(int entry, int offset, int length, void *buffer);
 
-void GRP_ListEntries(void);
-
 /* GRP writing */
 
 bool GRP_OpenWrite(const std::filesystem::path &filename);
 void GRP_CloseWrite(void);
 
-void GRP_NewLump(std::string_view name);
+void GRP_NewLump(std::string name);
 bool GRP_AppendData(const void *data, int length);
 void GRP_FinishLump(void);
 

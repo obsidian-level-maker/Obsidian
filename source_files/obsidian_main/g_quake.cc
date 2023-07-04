@@ -22,7 +22,6 @@
 #include "csg_local.h"
 #include "csg_main.h"
 #include "csg_quake.h"
-#include "fmt/format.h"
 #ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
@@ -239,7 +238,7 @@ static void TransferOneMipTex(qLump_c *lump, unsigned int m, const char *name) {
     }
 
     // not found!
-    LogPrintf("WARNING: texture '{}' not found in texture wad!\n", name);
+    LogPrintf("WARNING: texture '%s' not found in texture wad!\n", name);
 
     CreateDummyMip(lump, name, 4, 12);
 }
@@ -290,7 +289,7 @@ static void Q1_WriteMipTex() {
 
     if (!WAD2_OpenRead(qk_texture_wad.c_str())) {
         // should not happen, Lua code has checked that the file exists
-        Main::FatalError("Missing wad file: {}\n", qk_texture_wad);
+        Main::FatalError("Missing wad file: %s\n", qk_texture_wad.c_str());
     }
 
     u32_t num_miptex = q1_miptexs.size();
@@ -452,7 +451,7 @@ u16_t Q1_AddTexInfo(std::string texture, int flags, float *s4, float *t4) {
 
 static void Q1_WriteTexInfo(void) {
     if (q1_texinfos.size() >= MAX_MAP_TEXINFO) {
-        Main::FatalError("Quake build failure: exceeded limit of {} TEXINFOS\n",
+        Main::FatalError("Quake build failure: exceeded limit of %d TEXINFOS\n",
                          MAX_MAP_TEXINFO);
     }
 
@@ -832,17 +831,17 @@ static void Q1_WriteBSP() {
     Q1_WriteNode(qk_bsp_root);
 
     if (q1_total_faces >= MAX_MAP_FACES) {
-        Main::FatalError("Quake1 build failure: exceeded limit of {} FACES\n",
+        Main::FatalError("Quake1 build failure: exceeded limit of %d FACES\n",
                          MAX_MAP_FACES);
     }
 
     if (q1_total_leafs >= MAX_MAP_LEAFS) {
-        Main::FatalError("Quake1 build failure: exceeded limit of {} LEAFS\n",
+        Main::FatalError("Quake1 build failure: exceeded limit of %d LEAFS\n",
                          MAX_MAP_LEAFS);
     }
 
     if (q1_total_nodes >= MAX_MAP_NODES) {
-        Main::FatalError("Quake1 build failure: exceeded limit of {} NODES\n",
+        Main::FatalError("Quake1 build failure: exceeded limit of %d NODES\n",
                          MAX_MAP_NODES);
     }
 }
@@ -1389,7 +1388,7 @@ void quake1_game_interface_c::Property(std::string key, std::string value) {
         } else if (StringCaseCmp(value, "halflife") == 0) {
             qk_sub_format = SUBFMT_HalfLife;
         } else {
-            LogPrintf("WARNING: unknown QUAKE1 sub_format '{}'\n", value);
+            LogPrintf("WARNING: unknown QUAKE1 sub_format '%s'\n", value.c_str());
         }
 
 #ifndef CONSOLE_ONLY
@@ -1401,7 +1400,7 @@ void quake1_game_interface_c::Property(std::string key, std::string value) {
     } else if (StringCaseCmp(key, "worldtype") == 0) {
         qk_worldtype = StringToInt(value);
     } else {
-        LogPrintf("WARNING: unknown QUAKE1 property: {}={}\n", key, value);
+        LogPrintf("WARNING: unknown QUAKE1 property: %s=%s\n", key.c_str(), value.c_str());
     }
 }
 
@@ -1415,11 +1414,11 @@ void quake1_game_interface_c::EndLevel() {
     }
 
     if (level_name.size() >= 32) {
-        Main::FatalError("Script problem: level name too long: {}\n",
-                         level_name);
+        Main::FatalError("Script problem: level name too long: %s\n",
+                         level_name.c_str());
     }
 
-    std::string entry_in_pak = fmt::format("maps/{}.bsp", level_name);
+    std::string entry_in_pak = StringFormat("maps/%s.bsp", level_name.c_str());
 
     Q1_CreateBSPFile(entry_in_pak.c_str());
 }

@@ -38,8 +38,6 @@ const char *ZIPF_EntryName(int entry);
 
 bool ZIPF_ReadData(int entry, int offset, int length, void *buffer);
 
-void ZIPF_ListEntries();
-
 /* ZIP writing */
 
 bool ZIPF_OpenWrite(const std::filesystem::path &filename);

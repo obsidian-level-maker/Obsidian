@@ -27,7 +27,6 @@
 
 #include <list>
 
-#include "fmt/core.h"
 #include "lib_util.h"
 #include "main.h"
 
@@ -237,7 +236,7 @@ static bool load_end_part() {
         return false;
     }
 
-    DebugPrintf("ZIP end-of-directory found at: 0x{:08x}\n", position);
+    DebugPrintf("ZIP end-of-directory found at: 0x%08x\n", position);
 
     fseek(r_zip_fp, position, SEEK_SET);
 
@@ -302,7 +301,7 @@ static bool read_directory_entry(zip_central_entry_t *E) {
     int name_length = E->hdr.name_length;
 
     if (name_length > ZIPF_MAX_PATH - 2) {
-        LogPrintf("ZIP: truncating long filename ({} chars)\n", name_length);
+        LogPrintf("ZIP: truncating long filename (%d chars)\n", name_length);
         name_length = ZIPF_MAX_PATH - 2;
     }
 
@@ -330,11 +329,11 @@ bool ZIPF_OpenRead(const char *filename) {
     r_zip_fp = fopen(filename, "rb");
 
     if (!r_zip_fp) {
-        LogPrintf("ZIPF_OpenRead: no such file: {}\n", filename);
+        LogPrintf("ZIPF_OpenRead: no such file: %s\n", filename);
         return false;
     }
 
-    LogPrintf("Opened ZIP file: {}\n", filename);
+    LogPrintf("Opened ZIP file: %s\n", filename);
 
     if (!load_end_part()) {
         fclose(r_zip_fp);
@@ -343,19 +342,19 @@ bool ZIPF_OpenRead(const char *filename) {
 
     /* read directory */
 
-    DebugPrintf("ZIP central directory at offset: 0x{:08x}\n",
+    DebugPrintf("ZIP central directory at offset: 0x%08x\n",
                 static_cast<u32_t>(r_end_part.dir_offset));
 
     if (r_end_part.total_entries >= 5000)  // sanity check
     {
-        LogPrintf("ZIPF_OpenRead: bad ZIP file? ({} entries!)\n",
+        LogPrintf("ZIPF_OpenRead: bad ZIP file? (%u entries!)\n",
                   static_cast<u16_t>(r_end_part.total_entries));
         fclose(r_zip_fp);
         return false;
     }
 
     if (fseek(r_zip_fp, r_end_part.dir_offset, SEEK_SET) != 0) {
-        LogPrintf("ZIPF_OpenRead: cannot seek to directory (at 0x{:08x})\n",
+        LogPrintf("ZIPF_OpenRead: cannot seek to directory (at 0x%08x)\n",
                   static_cast<u32_t>(r_end_part.dir_offset));
         fclose(r_zip_fp);
         return false;
@@ -367,7 +366,7 @@ bool ZIPF_OpenRead(const char *filename) {
         zip_central_entry_t *E = &r_directory[i];
 
         if (!read_directory_entry(E)) {
-            LogPrintf("ZIPF_OpenRead: bad central directory (entry {})\n",
+            LogPrintf("ZIPF_OpenRead: bad central directory (entry %d)\n",
                       i + 1);
 
             delete[] r_directory;
@@ -379,9 +378,6 @@ bool ZIPF_OpenRead(const char *filename) {
 
         // the real start of data is determined at read time
         E->data_offset = -1;
-
-        //  DebugPrintf(" {:4}: +{:08x} {:08x} : {}\n", i+1,
-        //  E->hdr.local_offset, E->hdr.full_size, E->name);
     }
 
     return true;  // OK
@@ -424,24 +420,6 @@ const char *ZIPF_EntryName(int entry) {
     return r_directory[entry].name;
 }
 
-void ZIPF_ListEntries(void) {
-    fmt::print("--------------------------------------------------\n");
-
-    if (r_end_part.total_entries == 0) {
-        fmt::print("ZIP file is empty\n");
-    } else {
-        for (int i = 0; i < (int)r_end_part.total_entries; i++) {
-            zip_central_entry_t *E = &r_directory[i];
-
-            fmt::print("{:4}: +{:08x} {:08x} : {}\n", i + 1,
-                       static_cast<unsigned int>(E->hdr.local_offset),
-                       static_cast<unsigned int>(E->hdr.full_size), E->name);
-        }
-    }
-
-    fmt::print("--------------------------------------------------\n");
-}
-
 ///////// READING STUFF ///////////////////////////////////////
 
 static void create_read_state(int entry) {
@@ -465,7 +443,6 @@ static void destroy_read_state() {
 }
 
 static bool decompressing_read(int length, byte *buffer) {
-    // DebugPrintf("decompressing_read: {}\n", length);
 
     r_read_state->Z.next_out = buffer;
     r_read_state->Z.avail_out = length;
@@ -479,21 +456,7 @@ static bool decompressing_read(int length, byte *buffer) {
             }
         }
 
-        //  DebugPrintf("  in_position: 0x{:08x}  in_length: {}\n",
-        //  r_read_state->in_position, r_read_state->in_length); DebugPrintf("
-        //  avail_in: %u   next_in: +%u\n", r_read_state->Z.avail_in,
-        //  r_read_state->Z.next_in - r_read_state->in_buffer); DebugPrintf("
-        //  avail_out: %u  next_out: +%u\n", r_read_state->Z.avail_out,
-        //  r_read_state->Z.next_out - buffer);
-
         int res = inflate(&r_read_state->Z, Z_NO_FLUSH);
-
-        //  DebugPrintf("  --> res: {}\n", res);
-        //  DebugPrintf("  --> avail_in: {}   next_in: +{}\n",
-        //  r_read_state->Z.avail_in, r_read_state->Z.next_in -
-        //  r_read_state->in_buffer); DebugPrintf("  --> avail_out: {} next_out:
-        //  +%u\n", r_read_state->Z.avail_out, r_read_state->Z.next_out -
-        //  buffer);
 
         // all done?
         if (res == Z_STREAM_END) {
@@ -501,19 +464,17 @@ static bool decompressing_read(int length, byte *buffer) {
         }
 
         if (res == Z_BUF_ERROR) {
-            //    DebugPrintf("  refill buffer...\n");
             r_read_state->Consume();
             r_read_state->Fill();
             continue;
         }
 
         if (res != Z_OK) {
-            LogPrintf("ZIP: error occurred during decompression ({})\n", res);
+            LogPrintf("ZIP: error occurred during decompression (%d)\n", res);
             return false;
         }
     }
 
-    // DebugPrintf("  OK\n");
 
     r_read_state->cur_offset += length;
 
@@ -567,9 +528,9 @@ bool ZIPF_ReadData(int entry, int offset, int length, void *buffer) {
 
     if (E->hdr.comp_method != ZIPF_COMP_STORE &&
         E->hdr.comp_method != ZIPF_COMP_DEFLATE) {
-        LogPrintf("ZIP: unknown compression method: {}\n",
+        LogPrintf("ZIP: unknown compression method: %u\n",
                   static_cast<u16_t>(E->hdr.comp_method));
-        LogPrintf("ZIP: used in entry: {}\n", E->name);
+        LogPrintf("ZIP: used in entry: %s\n", E->name);
 
         return false;
     }
@@ -623,11 +584,11 @@ bool ZIPF_OpenWrite(const std::filesystem::path &filename) {
     w_zip_fp.open(filename, std::ios::out | std::ios::binary);
 
     if (!w_zip_fp) {
-        LogPrintf("ZIPF_OpenWrite: cannot create file: {}\n", filename);
+        LogPrintf("ZIPF_OpenWrite: cannot create file: %s\n", filename.string().c_str());
         return false;
     }
 
-    LogPrintf("Created ZIP file: {}\n", filename);
+    LogPrintf("Created ZIP file: %s\n", filename.string().c_str());
 
     // grab the current date and time
     time_t cur_time = time(NULL);
@@ -704,7 +665,7 @@ void ZIPF_CloseWrite(void) {
 
 void ZIPF_NewLump(const char *name) {
     if (strlen(name) + 1 >= ZIPF_MAX_PATH) {
-        Main::FatalError("ZIPF_NewLump: name too long (>= {})\n",
+        Main::FatalError("ZIPF_NewLump: name too long (>= %d)\n",
                          ZIPF_MAX_PATH);
     }
 

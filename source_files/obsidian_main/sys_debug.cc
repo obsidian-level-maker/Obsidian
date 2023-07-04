@@ -51,7 +51,7 @@ bool LogInit(const std::filesystem::path &filename) {
 
     LogPrintf("====== START OF OBSIDIAN LOGS ======\n\n");
 
-    LogPrintf("Initialized on {}", 
+    LogPrintf("Initialized on %s",
         std::ctime(&result));
 
     return true;
@@ -73,7 +73,7 @@ bool RefInit(const std::filesystem::path &filename) {
         }
     }
 
-    RefPrintf("====== OBSIDIAN REFERENCE for V{} BUILD {} ======\n\n",
+    RefPrintf("====== OBSIDIAN REFERENCE for V%s BUILD %s ======\n\n",
               OBSIDIAN_SHORT_VERSION, OBSIDIAN_VERSION);
 
     return true;

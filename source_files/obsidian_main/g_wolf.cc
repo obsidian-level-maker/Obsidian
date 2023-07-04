@@ -18,7 +18,6 @@
 //
 //------------------------------------------------------------------------
 
-#include "fmt/format.h"
 #ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
@@ -139,7 +138,7 @@ static void WF_WritePlane(u16_t *plane, int *offset, int *length) {
     if (1 != fwrite(plane, *length, 1, map_fp)) {
         if (write_errors_seen < 10) {
             write_errors_seen += 1;
-            LogPrintf("Failure writing to map file! ({} bytes)\n", *length);
+            LogPrintf("Failure writing to map file! (%d bytes)\n", *length);
         }
     }
 }
@@ -159,7 +158,7 @@ static void WF_WriteBlankPlane(int *offset, int *length) {
 }
 
 static void WF_WriteMap(void) {
-    const auto message = fmt::format("{} {}", OBSIDIAN_TITLE, OBSIDIAN_VERSION);
+    const auto message = StringFormat("%s %s", OBSIDIAN_TITLE.c_str(), OBSIDIAN_VERSION);
 
     WF_PutNString(message.c_str(), 64, map_fp);
 
@@ -301,7 +300,7 @@ static void WF_DumpMap(void) {
 
         line_buf[64] = 0;
 
-        DebugPrintf("{}\n", line_buf);
+        DebugPrintf("%s\n", line_buf);
     }
 }
 
@@ -371,7 +370,7 @@ bool wolf_game_interface_c::Start(const char *ext) {
             switch (result) {
                 case -1:
                     LogPrintf(_("Error choosing directory:\n"));
-                    LogPrintf("   {}\n", chooser.errmsg());
+                    LogPrintf("   %s\n", chooser.errmsg());
                     break;
 
                 case 1:
@@ -407,7 +406,7 @@ bool wolf_game_interface_c::Start(const char *ext) {
     }
 
     if (!map_fp) {
-        LogPrintf("Unable to create map file:\n{}", strerror(errno));
+        LogPrintf("Unable to create map file:\n%s", strerror(errno));
 
         Main::ProgStatus(_("Error (create file)"));
         return false;
@@ -418,7 +417,7 @@ bool wolf_game_interface_c::Start(const char *ext) {
     if (!head_fp) {
         fclose(map_fp);
 
-        LogPrintf("Unable to create {}:\n{}", TEMP_HEADFILE, strerror(errno));
+        LogPrintf("Unable to create %s:\n%s", TEMP_HEADFILE, strerror(errno));
 
         Main::ProgStatus(_("Error (create file)"));
         return false;
@@ -472,9 +471,9 @@ bool wolf_game_interface_c::Finish(bool build_ok) {
 
 void wolf_game_interface_c::Rename() {
     std::filesystem::path gamemaps =
-        wolf_output_dir / (StringCaseCmp(file_ext, "BS6") == 0 ? fmt::format("MAPTEMP.{}", file_ext) : fmt::format("GAMEMAPS.{}", file_ext));
+        wolf_output_dir / (StringCaseCmp(file_ext, "BS6") == 0 ? StringFormat("MAPTEMP.%s", file_ext.c_str()) : StringFormat("GAMEMAPS.%s", file_ext.c_str()));
     std::filesystem::path maphead =
-        wolf_output_dir / fmt::format("MAPHEAD.{}", file_ext);
+        wolf_output_dir / StringFormat("MAPHEAD.%s", file_ext.c_str());
 
     if (create_backups) {
         Main::BackupFile(gamemaps);
@@ -534,7 +533,7 @@ void wolf_game_interface_c::Property(std::string key, std::string value) {
     } else if (StringCaseCmp(key, "file_ext") == 0) {
         file_ext = value.c_str();
     } else {
-        LogPrintf("WARNING: unknown WOLF3D property: {}={}\n", key, value);
+        LogPrintf("WARNING: unknown WOLF3D property: %s=%s\n", key.c_str(), value.c_str());
     }
 }
 

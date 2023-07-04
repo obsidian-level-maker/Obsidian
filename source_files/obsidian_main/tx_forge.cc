@@ -34,7 +34,6 @@
 
 #include "tx_forge.h"
 
-#include "fmt/core.h"
 #include "headers.h"
 #include "lib_util.h"
 #include "main.h"
@@ -300,7 +299,7 @@ void TX_SpectralSynth(unsigned long long seed, float *buf, int width,
     for (int test = width; test > 1; test >>= 1) {
         if (test & 1) {
             Main::FatalError(
-                "TX_SpectralSynth: width '{}' is not a power of two\n", width);
+                "TX_SpectralSynth: width '%d' is not a power of two\n", width);
         }
     }
 
@@ -324,7 +323,7 @@ void TX_TestSynth(unsigned long long seed) {
 
     TX_SpectralSynth(seed, buf, 128);
 
-    fmt::print("P6\n128 128 255\n");
+    LogPrintf("P6\n128 128 255\n");
 
     for (int y = 0; y < 128; y++) {
         for (int x = 0; x < 128; x++) {
@@ -332,7 +331,7 @@ void TX_TestSynth(unsigned long long seed) {
 
             int ity = (int)(1 + f * 253);
 
-            fmt::print("ITY: {}\n", ity);
+            LogPrintf("ITY: %d\n", ity);
         }
     }
 

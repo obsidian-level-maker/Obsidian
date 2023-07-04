@@ -21,7 +21,6 @@
 
 #include "csg_main.h"
 #include "csg_quake.h"
-#include "fmt/format.h"
 #ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
@@ -180,10 +179,9 @@ u16_t Q2_AddTexInfo(std::string texture, int flags, int value, float *s4,
     memset(&raw_tex, 0, sizeof(raw_tex));
 
     if (texture.size() + 1 >= sizeof(raw_tex.texture)) {
-        Main::FatalError("Quake2 texture name too long: '{}'\n", texture);
+        Main::FatalError("Quake2 texture name too long: '%s'\n", texture.c_str());
     }
 
-    // strcpy(raw_tex.texture, texture);
     std::copy(texture.data(), texture.data() + texture.size(), raw_tex.texture);
 
     for (int k = 0; k < 4; k++) {
@@ -230,7 +228,7 @@ u16_t Q2_AddTexInfo(std::string texture, int flags, int value, float *s4,
 static void Q2_WriteTexInfo() {
     if (q2_texinfos.size() >= MAX_MAP_TEXINFO) {
         Main::FatalError(
-            "Quake2 build failure: exceeded limit of {} TEXINFOS\n",
+            "Quake2 build failure: exceeded limit of %d TEXINFOS\n",
             MAX_MAP_TEXINFO);
     }
 
@@ -640,17 +638,17 @@ static void Q2_WriteBSP() {
     Q2_WriteNode(qk_bsp_root);
 
     if (q2_total_faces >= MAX_MAP_FACES) {
-        Main::FatalError("Quake2 build failure: exceeded limit of {} FACES\n",
+        Main::FatalError("Quake2 build failure: exceeded limit of %d FACES\n",
                          MAX_MAP_FACES);
     }
 
     if (q2_total_leafs >= MAX_MAP_LEAFS) {
-        Main::FatalError("Quake2 build failure: exceeded limit of {} LEAFS\n",
+        Main::FatalError("Quake2 build failure: exceeded limit of %d LEAFS\n",
                          MAX_MAP_LEAFS);
     }
 
     if (q2_total_nodes >= MAX_MAP_NODES) {
-        Main::FatalError("Quake2 build failure: exceeded limit of {} NODES\n",
+        Main::FatalError("Quake2 build failure: exceeded limit of %d NODES\n",
                          MAX_MAP_NODES);
     }
 }
@@ -1089,7 +1087,7 @@ void quake2_game_interface_c::Property(std::string key, std::string value) {
     } else if (StringCaseCmp(key, "description") == 0) {
         description = !value.empty() ? value.c_str() : "";
     } else {
-        LogPrintf("WARNING: unknown QUAKE2 property: {}={}\n", key, value);
+        LogPrintf("WARNING: unknown QUAKE2 property: %s=%s\n", key.c_str(), value.c_str());
     }
 }
 
@@ -1103,11 +1101,11 @@ void quake2_game_interface_c::EndLevel() {
     }
 
     if (level_name.size() >= 32) {
-        Main::FatalError("Script problem: level name too long: {}\n",
-                         level_name);
+        Main::FatalError("Script problem: level name too long: %s\n",
+                         level_name.c_str());
     }
 
-    std::string entry_in_pak = fmt::format("maps/{}.bsp", level_name);
+    std::string entry_in_pak = StringFormat("maps/%s.bsp", level_name.c_str());
 
     Q2_CreateBSPFile(entry_in_pak.c_str());
 }

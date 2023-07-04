@@ -19,7 +19,6 @@
 //
 //----------------------------------------------------------------------
 
-#include "fmt/core.h"
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
 #include "headers.h"
@@ -61,7 +60,7 @@ std::filesystem::path Theme_OutputFilename() {
     switch (chooser.show()) {
         case -1:
             LogPrintf("Error choosing output file:\n");
-            LogPrintf("   {}\n", chooser.errmsg());
+            LogPrintf("   %s\n", chooser.errmsg());
 
             DLG_ShowError(_("Unable to create the file:\n\n%s"),
                           chooser.errmsg());
@@ -109,7 +108,7 @@ std::filesystem::path Theme_AskLoadFilename() {
     switch (result) {
         case -1:
             LogPrintf("Error choosing load file:\n");
-            LogPrintf("   {}\n", chooser.errmsg());
+            LogPrintf("   %s\n", chooser.errmsg());
 
             DLG_ShowError(_("Unable to load the file:\n\n%s"),
                           chooser.errmsg());
@@ -199,7 +198,7 @@ static void Parse_Theme_Option(std::string name, std::string value) {
     } else if (StringCaseCmp(name, "gap_blue") == 0) {
         gap_blue = StringToInt(value);
     } else {
-        LogPrintf("Unknown option: '{}'\n", name);
+        LogPrintf("Unknown option: '%s'\n", name.c_str());
     }
 }
 
@@ -217,7 +216,7 @@ static bool Theme_Options_ParseLine(std::string buf) {
     }
 
     if (!(isalpha(buf.front()) || buf.front() == '@')) {
-        LogPrintf("Weird theme option line: [{}]\n", buf);
+        LogPrintf("Weird theme option line: [%s]\n", buf);
         return false;
     }
 
@@ -242,7 +241,7 @@ bool Theme_Options_Load(std::filesystem::path filename) {
         return false;
     }
 
-    LogPrintf("Loading theme file: {}\n", filename.string());
+    LogPrintf("Loading theme file: %s\n", filename.string().c_str());
 
     int error_count = 0;
 
@@ -253,7 +252,7 @@ bool Theme_Options_Load(std::filesystem::path filename) {
     }
 
     if (error_count > 0) {
-        LogPrintf("DONE (found {} parse errors)\n\n", error_count);
+        LogPrintf("DONE (found %d parse errors)\n\n", error_count);
     } else {
         LogPrintf("DONE.\n\n");
     }
@@ -267,8 +266,8 @@ bool Theme_Options_Save(std::filesystem::path filename) {
     std::ofstream option_fp(filename);
 
     if (!option_fp.is_open()) {
-        LogPrintf("Error: unable to create file: {}\n({})\n\n",
-                  filename.string(), strerror(errno));
+        LogPrintf("Error: unable to create file: %s\n(%s)\n\n",
+                  filename.string().c_str(), strerror(errno));
         return false;
     }
 

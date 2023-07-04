@@ -229,8 +229,6 @@ static void NK_MakeBasicWall(nukem_sector_c *S, snag_c *snag) {
     int y2 = I_ROUND(-snag->y2 * NK_WALL_MUL);
 
     if (x1 == x2 && y1 == y2) {
-        //        LogPrintf("WARNING: degenerate wall @ ({} {})\n", x1,
-        // y1);
         return;
     }
 

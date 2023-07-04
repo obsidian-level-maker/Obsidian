@@ -1047,10 +1047,10 @@ static void DoMergeSection(char ch, const char *start1, const char *start2,
     }
 
     if (end < 0) {
-        LogPrintf("WARNING: {} found but {} is missing.\n", start1, end1);
+        LogPrintf("WARNING: %s found but %s is missing.\n", start1, end1);
         return;
     } else if (end < start) {
-        LogPrintf("WARNING: {} marker found before {}!\n", end1, start1);
+        LogPrintf("WARNING: %s marker found before %s!\n", end1, start1);
         return;
     }
 
@@ -1074,7 +1074,7 @@ int wad_merge_sections(lua_State *L) {
 
     std::filesystem::path pkg_name = luaL_checkstring(L, 1);
 
-    LogPrintf("Merging WAD sections from: {}\n", pkg_name.string());
+    LogPrintf("Merging WAD sections from: %s\n", pkg_name.string().c_str());
 
     if (pkg_name.extension() != ".wad") {
         return luaL_error(L,

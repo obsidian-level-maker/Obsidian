@@ -19,7 +19,6 @@
 //
 //------------------------------------------------------------------------
 
-#include "fmt/format.h"
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
 #include "headers.h"
@@ -85,8 +84,8 @@ UI_About::UI_About(int W, int H, const char *label)
     int cy = kf_h(6);
 
     Fl_Box *box = new Fl_Box(0, cy, W, kf_h(50), "");
-    box->copy_label(fmt::format("{} {}\n\"{}\" Build {}", OBSIDIAN_TITLE,
-                                OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME,
+    box->copy_label(StringFormat("%s %s\n\"%s\" Build %s", OBSIDIAN_TITLE.c_str(),
+                                OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str(),
                                 OBSIDIAN_VERSION)
                         .c_str());
     box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER | FL_ALIGN_WRAP |

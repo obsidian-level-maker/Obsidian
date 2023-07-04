@@ -8,7 +8,6 @@ add_subdirectory(source_files/filename_formatter EXCLUDE_FROM_ALL)
 if(NOT CONSOLE_ONLY AND NOT HAIKU)
   add_subdirectory(source_files/fltk EXCLUDE_FROM_ALL)
 endif()
-add_subdirectory(source_files/fmt EXCLUDE_FROM_ALL)
 add_subdirectory(source_files/lua EXCLUDE_FROM_ALL)
 add_subdirectory(source_files/miniz EXCLUDE_FROM_ALL)
 add_subdirectory(source_files/physfs EXCLUDE_FROM_ALL)
@@ -245,8 +244,6 @@ if(UNIX)
     find_package(Fontconfig REQUIRED)
   endif()
 endif()
-
-target_link_libraries(obsidian PRIVATE fmt::fmt-header-only)
 
 # Copies executables to local install directory after build
 add_custom_command(

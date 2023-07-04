@@ -23,7 +23,6 @@
 
 #include "headers.h"
 
-#include "fmt/core.h"
 #ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
@@ -48,43 +47,41 @@ void VFS_AddFolder(std::string name) {
     std::filesystem::path path = install_dir;
 #endif
     path /= name;
-    std::string mount = fmt::format("/{}", name);
+    std::string mount = StringFormat("/%s", name.c_str());
 
     if (!PHYSFS_mount(path.string().c_str(), mount.c_str(), 0)) {
-        Main::FatalError("Failed to mount '{}' folder in PhysFS:\n{}\n", name,
+        Main::FatalError("Failed to mount '%s' folder in PhysFS:\n%s\n", name.c_str(),
                          PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         return; /* NOT REACHED */
     }
 
-    DebugPrintf("mounted folder '{}'\n", name);
+    DebugPrintf("mounted folder '%s'\n", name.c_str());
 }
 
 bool VFS_AddArchive(std::filesystem::path filename, bool options_file) {
-    LogPrintf("  using: {}\n", filename.string());
+    LogPrintf("  using: %s\n", filename.string().c_str());
 
    // when handling "bare" filenames from the command line (i.e. ones
     // containing no paths or drive spec) and the file does not exist in
     // the current dir, look for it in the standard addons/ folder.
     if ((!std::filesystem::exists(filename) && !filename.has_parent_path())) {
         std::filesystem::path new_name =
-            fmt::format("{}/addons/{}", home_dir.string(), filename.string());
+            StringFormat("%s/addons/%s", home_dir.string().c_str(), filename.string().c_str());
         if (!std::filesystem::exists(new_name)) {
-            new_name = fmt::format("{}/addons/{}", install_dir.string(),
-                                   filename.string());
+            new_name = StringFormat("%s/addons/%s", install_dir.string().c_str(),
+                                   filename.string().c_str());
         }
         filename = new_name;
     }
 
     if (!PHYSFS_mount(filename.string().c_str(), "/", 0)) {
         if (options_file) {
-            LogPrintf(
-                fmt::format("Failed to mount '{}' archive in PhysFS:\n{}\n",
-                            filename.string(),
-                            PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()))
-                    .c_str());
+            LogPrintf("Failed to mount '%s' archive in PhysFS:\n%s\n",
+                            filename.string().c_str(),
+                            PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         } else {
-            Main::FatalError("Failed to mount '{}' archive in PhysFS:\n{}\n",
-                             filename.string(),
+            Main::FatalError("Failed to mount '%s' archive in PhysFS:\n%s\n",
+                             filename.string().c_str(),
                              PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         }
 
@@ -98,7 +95,7 @@ void VFS_InitAddons(const char *argv0) {
     LogPrintf("Initializing VFS...\n");
 
     if (!PHYSFS_init(argv0)) {
-        Main::FatalError("Failed to init PhysFS:\n{}\n",
+        Main::FatalError("Failed to init PhysFS:\n%s\n",
                          PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
     }
 
@@ -176,11 +173,9 @@ void VFS_ScanForAddons() {
                 list.push_back(file.path());
             }
             else {
-                LogPrintf(
-                    fmt::format("Failed to mount '{}' archive in PhysFS:\n{}\n",
-                                file.path().string(),
-                                PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()))
-                        .c_str());
+                LogPrintf("Failed to mount '%s' archive in PhysFS:\n%s\n",
+                                file.path().string().c_str(),
+                                PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
             }
         }
     }
@@ -203,11 +198,9 @@ void VFS_ScanForAddons() {
                     list2.push_back(file.path());
                 }
                 else {
-                    LogPrintf(
-                    fmt::format("Failed to mount '{}' archive in PhysFS:\n{}\n",
-                                file.path().string(),
-                                PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()))
-                        .c_str());
+                    LogPrintf("Failed to mount '%s' archive in PhysFS:\n%s\n",
+                                file.path().string().c_str(),
+                                PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
                 }
             }
         }
@@ -239,7 +232,7 @@ no_home_addon_dir:
         // DEBUG
         // info.enabled = true;
 
-        LogPrintf("  found: {}{}\n", info.name.string(),
+        LogPrintf("  found: %s%s\n", info.name.string().c_str(),
                   info.enabled ? " (Enabled)" : " (Disabled)");
 
         all_addons.push_back(info);

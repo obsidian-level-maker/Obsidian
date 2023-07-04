@@ -26,8 +26,6 @@
 #include <filesystem>
 #include <fstream>
 #include <string>
-#include <fmt/core.h>
-#include <fmt/ostream.h>
 extern bool terminal;
 extern bool debugging;
 extern std::fstream log_file;
@@ -42,26 +40,41 @@ void LogEnableTerminal(bool enable);
 
 template <typename... Args>
 void LogPrintf(std::string_view str, Args &&...args) {
-    fmt::print(log_file, str, args...);
-
-    // show on the Linux terminal too
+    std::string msg = StringFormat(str, args...);
+    log_file << msg;
     if (terminal) {
-        fmt::print(str, args...);
+        std::cout << msg;
     }
 }
 template <typename... Args>
 void RefPrintf(std::string_view str, Args &&...args) {
-    fmt::print(ref_file, str, args...);
+    std::string msg = StringFormat(str, args...);
+    ref_file << msg;
+    if (terminal) {
+        std::cout << msg;
+    }
 }
 template <typename... Args>
-void DebugPrintf(std::string_view format, Args &&...args) {
+void DebugPrintf(std::string_view str, Args &&...args) {
     if (debugging) {
-        fmt::print(log_file, format, args...);
-        // show on the Linux terminal too
+        std::string msg = StringFormat(str, args...);
+        log_file << msg;
         if (terminal) {
-            fmt::print(format, args...);
+            std::cout << msg;
         }
     }
+}
+template <typename... Args>
+void StdOutPrintf(std::string_view str, Args &&...args) {
+    std::cout << StringFormat(str, args...);
+}
+template <typename... Args>
+void StdErrPrintf(std::string_view str, Args &&...args) {
+    std::cerr << StringFormat(str, args...);
+}
+template <typename... Args>
+void StreamPrintf(std::ostream &stream, std::string_view str, Args &&...args) {
+    stream << StringFormat(str, args...);
 }
 
 using log_display_func_t = void (*)(std::string_view line, void *priv_data);

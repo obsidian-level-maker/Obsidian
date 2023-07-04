@@ -25,7 +25,6 @@
 
 #include "csg_local.h"
 #include "csg_main.h"
-#include "fmt/format.h"
 #ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
@@ -45,8 +44,6 @@ double CLUSTER_SIZE = 128.0;
 double q3_default_tex_scale = 1.0 / 128.0;
 
 #define FACE_MAX_SIZE (qk_game < 3 ? 240 : 768)
-
-#define NODE_DEBUG 0
 
 //------------------------------------------------------------------------
 //  NEW LOGIC
@@ -140,14 +137,6 @@ class quake_side_c {
 
         plane->Normalize();
     }
-
-    void Dump(unsigned int index) const {
-        DebugPrintf(
-            "Side {} : ({:1.1} {:1.1}) -> ({:1.1} {:1.1}) snag:{}  "
-            "on_node:{}/{}\n",
-            index, x1, y1, x2, y2, static_cast<const void *>(snag),
-            static_cast<const void *>(on_node), node_side);
-    }
 };
 
 class quake_group_c {
@@ -225,18 +214,6 @@ class quake_group_c {
         CalcMid(&mid_x, &mid_y);
 
         return CSG_PointInRegion(mid_x, mid_y);
-    }
-
-    void Dump() const {
-        DebugPrintf("Group {} : {} sides, {} brushes\n",
-                    static_cast<const void *>(this), sides.size(),
-                    brushes.size());
-
-        for (unsigned int i = 0; i < sides.size(); i++) {
-            const quake_side_c *S = sides[i];
-
-            S->Dump(i);
-        }
     }
 };
 
@@ -514,23 +491,6 @@ struct intersect_qdist_Cmp {
     }
 };
 
-void DumpIntersections(std::vector<intersect_t> &cuts, const char *title) {
-    DebugPrintf("{}:\n", title);
-
-    for (unsigned int i = 0; i < cuts.size(); i++) {
-        DebugPrintf("  {:03} : along:{:1.3} dir:{:+} {} angle:{:1.2}\n", i,
-                    cuts[i].along, cuts[i].dir,
-                    (cuts[i].kind == K1_NORMAL)           ? "NORM"
-                    : (cuts[i].kind == K1_SITTING)        ? "SITT"
-                    : (cuts[i].kind == 0)                 ? "C==C"
-                    : (cuts[i].kind == K2F_OPEN_FORWARD)  ? "C->O"
-                    : (cuts[i].kind == K2F_OPEN_BACKWARD) ? "O<-C"
-                    : (cuts[i].kind == 3)                 ? "O--O"
-                                                          : "???",
-                    cuts[i].angle);
-    }
-}
-
 static void AddIntersection(std::vector<intersect_t> &cut_list, double along,
                             int dir, int kind, double angle) {
     intersect_t new_cut;
@@ -571,12 +531,6 @@ static void AddIntersection(std::vector<intersect_t> &cut_list,
 
         p_angle = CalcAngle(part->x1, part->y1, part->x2, part->y2);
 
-        // DebugPrintf("\nPART = ({:1.0} {:1.0}) .. ({:1.0} {:1.0}) along:{:1.0}
-        // raw_angle: %1.1f\n", part->x1, part->y1, part->x2, part->y2, along,
-        // p_angle); DebugPrintf("SEG = ({:1.0} {:1.0}) .. ({:1.0} {:1.0})
-        // vert:{} dir:%+d raw_angle: %1.1f\n", S->x1, S->y1, S->x2, S->y2,
-        // vert, dir, s_angle);
-
         s_angle = s_angle - p_angle;
 
         if (s_angle > 180.0) {
@@ -584,8 +538,6 @@ static void AddIntersection(std::vector<intersect_t> &cut_list,
         } else if (s_angle < -180.0) {
             s_angle += 360.0;
         }
-
-        // DebugPrintf("angle_diff ---> {:1.2}\n", s_angle);
     }
 
     AddIntersection(cut_list, along, dir, kind, s_angle);
@@ -659,14 +611,8 @@ static void MergeIntersections(std::vector<intersect_t> &cuts,
             last++;
         }
 
-        /// LogPrintf("DIST {:1.0} [{}..{}]\n", cuts[first].along, first, last);
-
         bool backward = TestIntersectionOpen(cuts, (int)first, (int)last, -1);
         bool forward = TestIntersectionOpen(cuts, (int)first, (int)last, +1);
-
-        /// LogPrintf("--> backward:{} forward:{}\n",
-        ///          backward ? "OPEN" : "closed",
-        ///           forward ? "OPEN" : "closed");
 
         intersect_t new_cut;
 
@@ -688,13 +634,9 @@ static void CreateMiniSides(std::vector<intersect_t> &cuts, quake_node_c *node,
                             quake_group_c &back) {
     std::sort(cuts.begin(), cuts.end(), intersect_qdist_Cmp());
 
-    ///   DumpIntersections(cuts, "Intersection List");
-
     std::vector<intersect_t> merged;
 
     MergeIntersections(cuts, merged);
-
-    ///   DumpIntersections(merged, "Merged List");
 
     for (unsigned int i = 0; i + 1 < merged.size(); i++) {
         if ((merged[i].kind & K2F_OPEN_FORWARD) &&
@@ -955,11 +897,6 @@ static bool FindPartition_XY(quake_group_c &group, quake_side_c *part,
             SYS_ASSERT(*reached_cluster);
 
             CheckClusterEdges(group, cx, cy);
-
-            ///   DebugPrintf("Reached cluster ({} {}) @ ({:1.1} {:1.1}) ..
-            ///   ({:1.1} %1.1f)\n",
-            ///               cx, cy, gx1, gy1, gx2, gy2);
-            ///   group.Dump();
         }
     }
 
@@ -1778,7 +1715,7 @@ static int ParseLiquidMedium(csg_property_set_c *props) {
             return MEDIUM_LAVA;
         }
 
-        LogPrintf("WARNING: unknown liquid medium '{}'\n", str);
+        LogPrintf("WARNING: unknown liquid medium '%s'\n", str.c_str());
     }
 
     return MEDIUM_WATER;  // the default
@@ -2041,12 +1978,6 @@ static quake_node_c *Partition_Group(quake_group_c &group,
         // the front should never be empty
         SYS_ASSERT(!front.sides.empty());
 
-#if (NODE_DEBUG == 1)
-        LogPrintf("partition {} ({:1.2} {:1.2}) ({:1.2} {:1.2})\n",
-                  static_cast<const void *>(new_node), part.x1, part.y1,
-                  part.x2, part.y2);
-#endif
-
         new_node->front_N =
             Partition_Group(front, reached_cluster, new_node, 0);
 
@@ -2057,33 +1988,11 @@ static quake_node_c *Partition_Group(quake_group_c &group,
                 Partition_Group(back, reached_cluster, new_node, 1);
         }
 
-#if (NODE_DEBUG == 1)
-        LogPrintf("part_info {} = {} / {}\n",
-                  static_cast<const void *>(new_node),
-                  leaf_to_string(new_node->front_L, new_node->front_N),
-                  leaf_to_string(new_node->back_L, new_node->back_N));
-#endif
-
         // input group has been consumed now
 
         return new_node;
     } else {
         SYS_ASSERT(reached_cluster);
-
-#if (NODE_DEBUG == 1)
-        SYS_ASSERT(parent);
-        LogPrintf("side_group @ {} : {} = {}\n",
-                  static_cast<const void *>(parent), parent_side,
-                  group.sides.size());
-
-        for (unsigned int i = 0; i < group.sides.size(); i++) {
-            const quake_side_c *S = group.sides[i];
-            LogPrintf(
-                "  side {} : ({:1.2} {:1.2}) ({:1.2} {:1.2}) in {}\n",
-                static_cast<const void *>(S), S->x1, S->y1, S->x2, S->y2,
-                S->snag ? static_cast<const void *>(S->snag->region) : NULL);
-        }
-#endif
 
         return Partition_Z(group, reached_cluster);
     }
@@ -2539,7 +2448,7 @@ static void Model_ProcessEntity(csg_entity_c *E) {
 
     // sanity check
     if (leaf->faces.empty() && leaf->brushes.empty()) {
-        LogPrintf("WARNING: mapmodel for '{}' was empty.\n", E->id.c_str());
+        LogPrintf("WARNING: mapmodel for '%s' was empty.\n", E->id.c_str());
 
         delete leaf;
 
@@ -2590,15 +2499,7 @@ void CSG_QUAKE_Build() {
     qk_solid_leaf = new quake_leaf_c(MEDIUM_SOLID);
     qk_solid_leaf->index = 0;
 
-#if (NODE_DEBUG == 1)
-    LogPrintf("begin_node_stuff\n");
-#endif
-
     qk_bsp_root = Partition_Group(GROUP, NULL, NULL, 0);
-
-#if (NODE_DEBUG == 1)
-    LogPrintf("root = {}\n", static_cast<const void *>(qk_bsp_root));
-#endif
 
     if (qk_game == 1) {
         RemoveSolidNodes(qk_bsp_root);
@@ -2697,7 +2598,7 @@ int Q1_add_mapmodel(lua_State *L) {
     lua_pop(L, 3);
 
     // create model reference (for entity)
-    std::string ref_name = fmt::format("*{}", qk_all_mapmodels.size());
+    std::string ref_name = StringFormat("*%lu", (unsigned long)qk_all_mapmodels.size());
 
     lua_pushstring(L, ref_name.c_str());
     return 1;

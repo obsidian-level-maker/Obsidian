@@ -25,7 +25,6 @@
 #include <algorithm>
 
 #include "csg_main.h"
-#include "fmt/format.h"
 #ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
 #include "hdr_ui.h"  // ui_build.h
@@ -92,7 +91,7 @@ bool NK_StartGRP(const std::filesystem::path &filename) {
 void NK_EndGRP(void) { GRP_CloseWrite(); }
 
 void NK_BeginLevel(const char *level_name) {
-    std::string lump_name = fmt::format("{}.MAP", level_name);
+    std::string lump_name = StringFormat("%s.MAP", level_name);
     lump_name = StringUpper(lump_name.c_str());
 
     GRP_NewLump(lump_name.c_str());
@@ -486,7 +485,7 @@ void nukem_game_interface_c::Property(std::string key, std::string value) {
         // ignored (for now)
         // [another mechanism sets the description via BEX/DDF]
     } else {
-        LogPrintf("WARNING: unknown NUKEM property: {}={}\n", key, value);
+        LogPrintf("WARNING: unknown NUKEM property: %s=%s\n", key.c_str(), value.c_str());
     }
 }
 

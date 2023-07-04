@@ -38,14 +38,12 @@ const char *WAD_EntryName(int entry);
 
 bool WAD_ReadData(int entry, int offset, int length, void *buffer);
 
-void WAD_ListEntries();
-
 /* WAD writing */
 
 bool WAD_OpenWrite(std::filesystem::path filename);
 void WAD_CloseWrite();
 
-void WAD_NewLump(std::string_view name);
+void WAD_NewLump(std::string name);
 bool WAD_AppendData(const void *data, int length);
 void WAD_FinishLump();
 
@@ -61,8 +59,6 @@ int WAD2_EntryType(int entry);
 const char *WAD2_EntryName(int entry);
 
 bool WAD2_ReadData(int entry, int offset, int length, void *buffer);
-
-void WAD2_ListEntries();
 
 /* WAD2 writing */
 

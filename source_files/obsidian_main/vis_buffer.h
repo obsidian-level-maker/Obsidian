@@ -105,9 +105,6 @@ class Vis_Buffer {
 
     bool TestWall(int x, int y, int side);
 
-    void ReadMap(const char *filename);
-    void WriteMap(const char *filename);
-
     void SimplifySolid();
 
     void ClearVis();

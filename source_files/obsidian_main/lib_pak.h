@@ -42,8 +42,6 @@ const char *PAK_EntryName(int entry);
 
 bool PAK_ReadData(int entry, int offset, int length, void *buffer);
 
-void PAK_ListEntries(void);
-
 /* PAK writing */
 
 bool PAK_OpenWrite(const std::filesystem::path &filename);

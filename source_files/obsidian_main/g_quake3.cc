@@ -22,7 +22,6 @@
 #include <algorithm>
 #include "csg_main.h"
 #include "csg_quake.h"
-#include "fmt/format.h"
 #ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
@@ -158,7 +157,7 @@ static void DoAddBrushPlane(int *planes, float px, float py, float pz, float nx,
         }
     }
 
-    Main::FatalError("Quake3 build failure: brush with more than {} planes\n",
+    Main::FatalError("Quake3 build failure: brush with more than %d planes\n",
                      MAX_BRUSH_PLANES);
 }
 
@@ -347,7 +346,7 @@ s32_t Q3_AddShader(const char *texture, u32_t flags, u32_t contents) {
     memset(&raw_tex, 0, sizeof(raw_tex));
 
     // add texture/ prefix to every texture
-    std::string shader = fmt::format("textures/{}", texture);
+    std::string shader = StringFormat("textures/%s", texture);
     std::copy(shader.begin(), shader.end(), raw_tex.shader.begin());
 
     raw_tex.surfaceFlags = LE_U32(flags);
@@ -388,7 +387,7 @@ s32_t Q3_AddShader(const char *texture, u32_t flags, u32_t contents) {
 
 static void Q3_WriteShaders() {
     if (q3_shaders.size() >= MAX_MAP_SHADERS) {
-        Main::FatalError("Quake3 build failure: exceeded limit of {} SHADERS\n",
+        Main::FatalError("Quake3 build failure: exceeded limit of %d SHADERS\n",
                          MAX_MAP_SHADERS);
     }
 
@@ -626,7 +625,7 @@ static void Q3_TriangulateSurface(quake_face_c *face, dsurface3_t *raw_surf) {
     raw_surf->numVerts = (int)face->verts.size();
 
     if (raw_surf->numVerts + 2 > MAX_FACE_VERTS) {
-        Main::FatalError("Quake3 build failure: face with more than {} verts\n",
+        Main::FatalError("Quake3 build failure: face with more than %d verts\n",
                          MAX_FACE_VERTS);
     }
 
@@ -954,17 +953,17 @@ static void Q3_WriteBSP() {
 
     if (q3_total_surfaces >= MAX_MAP_DRAW_SURFS) {
         Main::FatalError(
-            "Quake3 build failure: exceeded limit of {} DRAW_SURFS\n",
+            "Quake3 build failure: exceeded limit of %d DRAW_SURFS\n",
             MAX_MAP_DRAW_SURFS);
     }
 
     if (q3_total_leafs >= MAX_MAP_LEAFS) {
-        Main::FatalError("Quake3 build failure: exceeded limit of {} LEAFS\n",
+        Main::FatalError("Quake3 build failure: exceeded limit of %d LEAFS\n",
                          MAX_MAP_LEAFS);
     }
 
     if (q3_total_nodes >= MAX_MAP_NODES) {
-        Main::FatalError("Quake3 build failure: exceeded limit of {} NODES\n",
+        Main::FatalError("Quake3 build failure: exceeded limit of %d NODES\n",
                          MAX_MAP_NODES);
     }
 }
@@ -1023,7 +1022,7 @@ static void Q3_CreateSubModel(quake_leaf_c *L) {
     SYS_ASSERT(E);
 
     // create the important "model" keyword
-    std::string model_name = fmt::format("*{}", q3_total_models);
+    std::string model_name = StringFormat("*%d", q3_total_models);
 
     E->props.Add("model", model_name.c_str());
 
@@ -1191,10 +1190,10 @@ static void DP_CreateRTLights(const char *entry_in_pak) {
         double g = E->props.getDouble("g", RGB_GREEN(color) / 255.0);
         double b = E->props.getDouble("b", RGB_BLUE(color) / 255.0);
 
-        buffer = fmt::format(
-            "{:1.3} {:1.3} {:1.3} {:1.3} {:1.5} {:1.5} {:1.5} {}\n", E->x, E->y,
-            E->z, E->props.getDouble("radius", RT_DEFAULT_RADIUS), r, g, b,
-            E->props.getInt("style", 0));
+        buffer = StringFormat("%1.3f %1.3f %1.3f %1.3f %1.5f %1.5f %1.5f %d\n",
+				 E->x, E->y, E->z,
+				 E->props.getDouble("radius", RT_DEFAULT_RADIUS),
+				 r, g, b, E->props.getInt("style", 0));
 
         ZIPF_AppendData(buffer.c_str(), buffer.size());
     }
@@ -1324,7 +1323,7 @@ void quake3_game_interface_c::Property(std::string key, std::string value) {
     } else if (StringCaseCmp(key, "lava_shader") == 0) {
         lava_shader = value.c_str();
     } else {
-        LogPrintf("WARNING: unknown QUAKE3 property: {}={}\n", key, value);
+        LogPrintf("WARNING: unknown QUAKE3 property: %s=%s\n", key.c_str(), value.c_str());
     }
 }
 
@@ -1338,15 +1337,15 @@ void quake3_game_interface_c::EndLevel() {
     }
 
     if (level_name.size() >= 32) {
-        Main::FatalError("Script problem: level name too long: {}\n",
-                         level_name);
+        Main::FatalError("Script problem: level name too long: %s\n",
+                         level_name.c_str());
     }
 
-    std::string entry_in_pak = fmt::format("maps/{}.bsp", level_name);
+    std::string entry_in_pak = StringFormat("maps/%s.bsp", level_name.c_str());
 
     Q3_CreateBSPFile(entry_in_pak.c_str());
 
-    entry_in_pak = fmt::format("maps/{}.rtlights", level_name);
+    entry_in_pak = StringFormat("maps/%s.rtlights", level_name.c_str());
 
     DP_CreateRTLights(entry_in_pak.c_str());
 }

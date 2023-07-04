@@ -24,7 +24,6 @@
 #include <array>
 #include <iostream>
 
-#include "fmt/core.h"
 #ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
@@ -46,9 +45,9 @@ static bool keep_seed;
 
 static void Cookie_SetValue(std::string name, std::string value) {
     if (context == cookie_context_e::Load) {
-        DebugPrintf("CONFIG: Name: [{}] Value: [{}]\n", name, value);
+        DebugPrintf("CONFIG: Name: [%s] Value: [%s]\n", name.c_str(), value.c_str());
     } else if (context == cookie_context_e::Arguments) {
-        DebugPrintf("ARGUMENT: Name: [{}] Value: [{}]\n", name, value);
+        DebugPrintf("ARGUMENT: Name: [%s] Value: [%s]\n", name.c_str(), value.c_str());
     }
 
     // the new style module syntax
@@ -120,7 +119,7 @@ static bool Cookie_ParseLine(std::string buf) {
     }
 
     if (!(isalpha(buf.front()) || buf.front() == '@')) {
-        LogPrintf("Weird config line: [{}]\n", buf);
+        LogPrintf("Weird config line: [%s]\n", buf);
         return false;
     }
 
@@ -181,7 +180,7 @@ bool Cookie_Load(std::filesystem::path filename) {
     }
 
     if (main_action != MAIN_SOFT_RESTART) {
-        LogPrintf("Loading config file: {}\n", filename.string());
+        LogPrintf("Loading config file: %s\n", filename.string().c_str());
     }
 
     int error_count = 0;
@@ -194,7 +193,7 @@ bool Cookie_Load(std::filesystem::path filename) {
 
     if (main_action != MAIN_SOFT_RESTART) {
         if (error_count > 0) {
-            LogPrintf("DONE (found {} parse errors)\n\n", error_count);
+            LogPrintf("DONE (found %d parse errors)\n\n", error_count);
         } else {
             LogPrintf("DONE.\n\n");
         }
@@ -251,7 +250,7 @@ bool Cookie_Save(std::filesystem::path filename) {
     std::ofstream cookie_fp(filename, std::ios::out);
 
     if (!cookie_fp.is_open()) {
-        LogPrintf("Error: unable to create file: {}\n({})\n\n", filename,
+        LogPrintf("Error: unable to create file: %s\n(%s)\n\n", filename.string().c_str(),
                   strerror(errno));
         return false;
     }
@@ -344,7 +343,7 @@ void Cookie_ParseArguments(void) {
         name[eq_offset] = 0;
 
         if (name[0] == 0 || value[0] == 0) {
-            Main::FatalError("Bad setting on command line: '{}'\n", arg);
+            Main::FatalError("Bad setting on command line: '%s'\n", arg.c_str());
         }
 
         Cookie_SetValue(name.c_str(), value);
@@ -466,7 +465,7 @@ class RecentFiles_c {
         const std::filesystem::path &name = filenames[index];
 
         if (for_menu) {
-            buffer = fmt::format("{:<.32}", name.filename());
+            buffer = StringFormat("%-.32s", name.filename().c_str());
         } else {
             buffer = name;
         }

@@ -23,8 +23,6 @@
 #define __OBSIDIAN_MAIN_H__
 
 #include <cstddef>
-#include <fmt/format.h>
-#include <fmt/ostream.h>
 #include <iostream>
 #include <vector>
 #include <string>
@@ -33,6 +31,8 @@
 #ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
 #include "ui_window.h"
+#include "lib_util.h"
+#include "sys_debug.h"
 #endif
 extern std::string OBSIDIAN_TITLE;
 
@@ -209,7 +209,6 @@ extern Fl_Pixmap *clippy;
 void DLG_AboutText();
 void DLG_OptionsEditor();
 void DLG_ThemeEditor();
-void DLG_SelectAddons();
 
 void DLG_EditSeed();
 void DLG_ViewLogs();
@@ -227,15 +226,15 @@ void Shutdown(bool error);
 
 template <typename... Args>
 [[noreturn]] void FatalError(std::string_view msg, Args &&...args) {
-    auto buffer = fmt::format(msg, std::forward<Args>(args)...);
+    auto buffer = StringFormat(msg, std::forward<Args>(args)...);
 #ifndef CONSOLE_ONLY
     DLG_ShowError("%s", buffer.c_str());
 #endif
     Detail::Shutdown(true);
 
     if (batch_mode) {
-        fmt::print(std::cerr, "{}\n", buffer);
-        fmt::print(std::cerr, "ERROR!\n");
+        StdErrPrintf("%s\n", buffer.c_str());
+        StdErrPrintf("ERROR!\n");
 #ifdef WIN32
         std::cout << '\n' << "Close window when finished...";
         do {
@@ -248,16 +247,16 @@ template <typename... Args>
 
 template <typename... Args>
 void ProgStatus(std::string_view msg, Args &&...args) {
-    const auto buffer = fmt::format(msg, std::forward<Args>(args)...);
+    const std::string buffer = StringFormat(msg, std::forward<Args>(args)...);
 
 #ifndef CONSOLE_ONLY
     if (main_win) {
-        main_win->build_box->SetStatus(buffer);
+        main_win->build_box->SetStatus(buffer.c_str());
     } else if (batch_mode) {
-        fmt::print(std::cerr, "{}\n", buffer);
+        StdErrPrintf("%s\n", buffer.c_str());
     }
 #else
-    fmt::print(std::cerr, "{}\n", buffer);
+    StdErrPrintf("%s\n", buffer.c_str());
 #endif
 }
 bool BackupFile(const std::filesystem::path &filename);

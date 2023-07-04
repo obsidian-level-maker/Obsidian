@@ -46,9 +46,9 @@ bool StartWAD(std::filesystem::path filename);
 bool EndWAD();
 
 void BeginLevel();
-void EndLevel(std::string_view level_name);
+void EndLevel(std::string level_name);
 
-void WriteLump(std::string_view name, qLump_c *lump);
+void WriteLump(std::string name, qLump_c *lump);
 
 // the section parameter can be:
 //   'P' : patches   //   'F' : flats

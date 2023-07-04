@@ -19,7 +19,6 @@
 //
 //----------------------------------------------------------------------
 
-#include "fmt/core.h"
 #ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
@@ -80,7 +79,7 @@ void Parse_Option(const std::string &name, const std::string &value) {
     } else if (StringCaseCmp(name, "builds_per_run") == 0) {
         builds_per_run = StringToInt(value);
     } else {
-        fmt::print("{} '{}'\n", _("Unknown option: "), name);
+        StdOutPrintf("%s '%s'\n", _("Unknown option: "), name.c_str());
     }
 }
 
@@ -101,7 +100,7 @@ static bool Options_ParseLine(std::string buf) {
     }*/
 
     if (!isalpha(buf.front())) {
-        fmt::print("{} [{}]\n", _("Weird option line: "), buf);
+        StdOutPrintf("%s [%s]\n", _("Weird option line: "), buf.c_str());
         return false;
     }
 
@@ -110,7 +109,7 @@ static bool Options_ParseLine(std::string buf) {
     std::string value = buf.substr(pos + 2);
 
     if (name.empty() || value.empty()) {
-        fmt::print(_("Name or value missing!\n"));
+        StdOutPrintf(_("Name or value missing!\n"));
         return false;
     }
 
@@ -122,7 +121,7 @@ bool Options_Load(std::filesystem::path filename) {
     std::ifstream option_fp(filename, std::ios::in);
 
     if (!option_fp.is_open()) {
-        fmt::print(_("Missing Options file -- using defaults.\n\n"));
+        StdOutPrintf(_("Missing Options file -- using defaults.\n\n"));
         return false;
     }
 
@@ -143,8 +142,8 @@ bool Options_Save(std::filesystem::path filename) {
     std::ofstream option_fp(filename, std::ios::out);
 
     if (!option_fp.is_open()) {
-        LogPrintf("Error: unable to create file: {}\n({})\n\n",
-                  filename.string(), strerror(errno));
+        LogPrintf("Error: unable to create file: %s\n(%s)\n\n",
+                  filename.string().c_str(), strerror(errno));
         return false;
     }
 
@@ -492,7 +491,7 @@ class UI_OptionsWin : public Fl_Window {
         switch (result) {
             case -1:
                 LogPrintf(_("Error choosing directory:\n"));
-                LogPrintf("   {}\n", chooser.errmsg());
+                LogPrintf("   %s\n", chooser.errmsg());
 
                 return;
 
@@ -519,7 +518,7 @@ class UI_OptionsWin : public Fl_Window {
         blanker.append(250,' ');
         that->opt_current_output_path->copy_label(blanker.c_str());
         that->opt_current_output_path->redraw_label();
-        that->opt_current_output_path->copy_label(fmt::format("{}: {}", _("Current Path"), BestDirectory().generic_string()).c_str());
+        that->opt_current_output_path->copy_label(StringFormat("%s: %s", _("Current Path"), BestDirectory().generic_string().c_str()).c_str());
         that->opt_current_output_path->redraw_label();
     }
 };
@@ -614,7 +613,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_current_output_path->labelfont(font_style);
     opt_current_output_path->labelcolor(FONT2_COLOR);
     // clang-format off
-    opt_current_output_path->copy_label(fmt::format("{}: {}", _("Current Path"), BestDirectory().generic_string()).c_str());
+    opt_current_output_path->copy_label(StringFormat("%s: %s", _("Current Path"), BestDirectory().generic_string().c_str()).c_str());
     // clang-format on
 
     cy += opt_current_output_path->h() + y_step;

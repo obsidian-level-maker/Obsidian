@@ -25,7 +25,6 @@
 
 #include "csg_main.h"
 #include "csg_quake.h"
-#include "fmt/format.h"
 #include "hdr_lua.h"
 #include "headers.h"
 #include "lib_file.h"
@@ -661,8 +660,8 @@ void BSP_WriteEntities(int lump_num, const char *description) {
 
     if (qk_game >= 3) {
         std::string obsidian_version_string =
-            fmt::format("OBSIDIAN {} \"{}\" Build {}", OBSIDIAN_SHORT_VERSION,
-                        OBSIDIAN_CODE_NAME, OBSIDIAN_VERSION);
+            StringFormat("OBSIDIAN %s \"%s\" Build %s", OBSIDIAN_SHORT_VERSION,
+                        OBSIDIAN_CODE_NAME.c_str(), OBSIDIAN_VERSION);
         lump->KeyPair("_generated_by", obsidian_version_string.c_str());
     } else if (description) {
         lump->KeyPair("message", description);
@@ -670,7 +669,7 @@ void BSP_WriteEntities(int lump_num, const char *description) {
 
     // TODO : do this via oblige_worldspawn entity
     if (qk_game == 1) {
-        std::string buffer = fmt::format("{}", qk_worldtype);
+        std::string buffer = StringFormat("%d", qk_worldtype);
 
         lump->KeyPair("worldtype", buffer.c_str());
     }
