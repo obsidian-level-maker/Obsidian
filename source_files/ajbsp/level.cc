@@ -2052,19 +2052,25 @@ void PutNodes(const char *name, int do_v5, node_t *root)
 
 void CheckLimits()
 {
-	if (num_sectors > 65534)
+	// this could potentially be 65536, since there are no reserved values
+	// for sectors, but there may be source ports or tools treating 0xFFFF
+	// as a special value, so we are extra cautious here (and in some of
+	// the other checks below, like the vertex counts).
+	if (num_sectors > 65535)
 	{
 		Failure("Map has too many sectors.\n");
 		MarkOverflow(LIMIT_SECTORS);
 	}
 
-	if (num_sidedefs > 65534)
+	// the sidedef 0xFFFF is reserved to mean "no side" in DOOM map format
+	if (num_sidedefs > 65535)
 	{
 		Failure("Map has too many sidedefs.\n");
 		MarkOverflow(LIMIT_SIDEDEFS);
 	}
 
-	if (num_linedefs > 65534)
+	// the linedef 0xFFFF is reserved for minisegs in GL nodes
+	if (num_linedefs > 65535)
 	{
 		Failure("Map has too many linedefs.\n");
 		MarkOverflow(LIMIT_LINEDEFS);
@@ -2074,7 +2080,7 @@ void CheckLimits()
 	{
 		if (num_old_vert > 32767 ||
 			num_new_vert > 32767 ||
-			num_segs     > 65534 ||
+			num_segs     > 65535 ||
 			num_nodes    > 32767)
 		{
 			Warning("Forcing V5 of GL-Nodes due to overflows.\n");
@@ -2485,6 +2491,7 @@ void FreeLevel()
 	FreeSubsecs();
 	FreeNodes();
 	FreeWallTips();
+	FreeIntersections();
 }
 
 
