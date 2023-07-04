@@ -4616,6 +4616,7 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
         Grower_sprout_room(SEEDS, LEVEL, R.grow_parent)
       end
     end
+
     for _,R in pairs(LEVEL.rooms) do
       if R.grow_parent and R.grow_parent.is_start then
         Grower_grow_room(SEEDS, LEVEL, R)
@@ -4625,6 +4626,19 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
       end
     end
   end
+
+  if LEVEL.rooms == 1 then
+    for _,R in pairs(LEVEL.rooms) do
+      if R.is_start then
+        Grower_sprout_room(SEEDS, LEVEL, R)
+        Grower_grow_room(SEEDS, LEVEL, R)
+        Grower_sprout_room(SEEDS, LEVEL, R)
+        Grower_sprout_room(SEEDS, LEVEL, R)
+        Grower_sprout_room(SEEDS, LEVEL, R)
+      end
+    end
+  end
+
 end
 
 

@@ -466,7 +466,11 @@ PREFABS.Pic_EPIC_box_metal_superwide =
     CONSOLEG = 50,
     SHAWCOMP = 10,
     METACOMP = 10,
-    SILVCOMP = 10
+    SILVCOMP = 10,
+
+    SDMSRCP1 = 40,
+    SDMSRCP2 = 40,
+    SDMSRCP3 = 40
   },
 
   flat_CEIL5_2 = "FLAT20",

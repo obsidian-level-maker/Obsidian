@@ -1569,6 +1569,45 @@ ARMAETUS_MATERIALS = {
   OBTSBF2R = { t="HELLCMT2", f="OBTSBF2R"},
   OBTSBF3R = { t="REDMARB1", f="OBTSBF3R"},
 
+  -- STABLE DIFFUSION, NEUROGEN --
+  -- techy grey walls
+  SDOM_WL1 = { t="SDOM_WL1", f="SDOM_FT1"},
+  SDOM_WL2 = { t="SDOM_WL2", f="SDOM_FT2"},
+  SDOM_WL3 = { t="SDOM_WL3", f="SDOM_FT3"},
+  SDOM_WL4 = { t="SDOM_WL4", f="SDOM_FT4"},
+  SDOM_WL5 = { t="SDOM_WL5", f="SDOM_FT1"},
+  SDOM_WL6 = { t="SDOM_WL6", f="SDOM_FT2"},
+  -- green
+  SDOM_WG1 = { t="SDOM_WG1", f="SDOM_FG1"},
+  SDOM_WG2 = { t="SDOM_WG2", f="SDOM_FG2"},
+  SDOM_WG3 = { t="SDOM_WG3", f="SDOM_FG1"},
+  SDOM_WG4 = { t="SDOM_WG4", f="SDOM_FG2"},
+  SDOM_WG5 = { t="SDOM_WG5", f="SDOM_FG1"},
+
+  -- computers 256px
+  SDMSRCP1 = { t="SDMSRCP1", f="SDOM_FT1"},
+  SDMSRCP2 = { t="SDMSRCP1", f="SDOM_FT4"},
+  SDMSRCP3 = { t="SDMSRCP1", f="SDOM_FT6"},
+
+  -- flats
+  SDOM_FT1 = { t="SDOM_WL1", f="SDOM_FT1"},
+  SDOM_FT2 = { t="SDOM_WL2", f="SDOM_FT2"},
+  SDOM_FT3 = { t="SDOM_WL3", f="SDOM_FT3"},
+  SDOM_FT4 = { t="SDOM_WL4", f="SDOM_FT4"},
+  SDOM_FT5 = { t="SDOM_WL3", f="SDOM_FT5"},
+  SDOM_FT6 = { t="SDOM_WL6", f="SDOM_FT6"},
+  -- green
+  SDOM_FG1 = { t="SDOM_WG1", f="SDOM_FG1"},
+  SDOM_FG2 = { t="SDOM_WG2", f="SDOM_FG2"},
+
+  -- shipping containers with optional meme
+  SDM_CTR1 = { t="SDM_CTR1", f="SDMCTRF1"},
+  SDM_CTR2 = { t="SDM_CTR2", f="SDMCTRF1"},
+  SDM_CTR3 = { t="SDM_CTR3", f="SDMCTRF1"},
+  SDM_CTR4 = { t="SDM_CTR4", f="SDMCTRF1"},
+  SDM_CTR5 = { t="SDM_CTR5", f="SDMCTRF1"},
+  SDMCTRF1 = { t="SDM_CTR1", f="SDMCTRF1"},
+
   -- MSSP-GOTH --
   -- green-ish gothic metal walls with skulls (128px)
   G7_GOGN1 = { t="G7_GOGN1", f="G7_GOGF1"},
@@ -2478,3 +2517,26 @@ brightmap texture GRNSTONE
   map OBRGRNST
 }
 ]]
+
+-- aliases - when you're too lazy to write down wall and flat names in every
+-- room theme
+
+ARMAETUS_TEXTURE_SET_ALIASES =
+{
+  __SD_GRAY_TECH_WALLS =
+  {
+    materials =
+    {
+      "SDOM_WL1", "SDOM_WL2", "SDOM_WL3", 
+      "SDOM_WL4", "SDOM_WL5", "SDOM_WL6"
+    }
+  },
+
+  __SD_GRAY_TECH =
+  {
+    materials =
+    {
+      "SDOM_FT1", "SDOM_FT2", "SDOM_FT3", "SDOM_FT4"
+    }
+  }
+}
