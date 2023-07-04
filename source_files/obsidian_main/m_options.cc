@@ -543,8 +543,6 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     int listwidth = kf_w(160);
 
-    Fl_Box *heading;
-
     opt_language =
         new UI_CustomMenu(cx + W * .38, cy, listwidth, kf_h(24), "");
     opt_language->copy_label(_("Language: "));

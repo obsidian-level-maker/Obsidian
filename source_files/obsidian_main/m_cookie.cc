@@ -74,6 +74,7 @@ static void Cookie_SetValue(std::string name, std::string value) {
                 next_rand_seed = std::stoull(value);
                 return;
             } catch (std::invalid_argument &e) {
+                (void)e;
                 if (!value.empty()) {
                     string_seed = value;
                     ob_set_config("string_seed", value.c_str());
@@ -96,6 +97,7 @@ static void Cookie_SetValue(std::string name, std::string value) {
                     LogPrintf("Invalid argument. Will generate new seed.\n");
                 }
             } catch (std::out_of_range &e) {
+                (void)e;
                 LogPrintf(
                     "Resulting number would be out of range. Will generate new "
                     "seed.\n");

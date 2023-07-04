@@ -273,17 +273,16 @@ u32_t IntHash(u32_t key) {
 }
 
 u32_t StringHash(std::string str) {
-    /*u32_t hash = 0;
+    u32_t hash = 0;
+    const char *pos = str.data();
 
     if (!str.empty()) {
-        while (str) {
-            hash = (hash << 5) - hash + *str++;
+        while (pos) {
+            hash = (hash << 5) - hash + *pos++;
         }
     }
 
-    return hash;*/
-
-    return std::hash<std::string>{}(str);
+    return hash;
 }
 
 double PerpDist(double x, double y, double x1, double y1, double x2,

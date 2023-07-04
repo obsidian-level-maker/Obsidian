@@ -337,8 +337,10 @@ void DLG_EditSeed(void) {
         next_rand_seed = std::stoull(word);
         return;
     } catch (std::invalid_argument &e) {
+        (void)e;
         std::cout << _("Invalid argument. Will process as string.\n");
     } catch (std::out_of_range &e) {
+        (void)e;
         // clang-format off
         std::cout << _("Resulting number would be out of range. Will process as string.\n");
         // clang-format on
