@@ -766,7 +766,7 @@ void UI_Module::callback_PresetCheck(Fl_Widget *w, void *data) {
         current_slider->unit_label->copy_label(
             new_label.c_str());
     } else {
-        new_label = StringFormat("%1.2f", value);
+        new_label = StringFormat("%1.2g", value);
         current_slider->unit_label->copy_label(new_label.append(current_slider->units)
                                                   .c_str());
     }
@@ -889,7 +889,7 @@ void UI_Module::callback_ManualEntry(Fl_Widget *w, void *data) {
     double new_value = 0;
     std::string string_value;
 
-    float_buf = StringFormat("%1.2f", current_slider->mod_slider->value());
+    float_buf = StringFormat("%1.2g", current_slider->mod_slider->value());
 
 tryagain:
 

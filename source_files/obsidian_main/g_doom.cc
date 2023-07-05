@@ -973,14 +973,6 @@ void Send_Prog_Nodes(int progress, int num_maps) {
 #endif
 }
 
-void Send_Prog_Step(const char *step_name) {
-#ifndef CONSOLE_ONLY
-    if (main_win) {
-        main_win->build_box->AddStatusStep(step_name);
-    }
-#endif
-}
-
 static bool BuildNodes(std::filesystem::path filename) {
     LogPrintf("\n");
 
@@ -1101,6 +1093,11 @@ bool Doom::game_interface_c::Start(const char *preset) {
     if (StringCaseCmp(current_port, "limit_enforcing") == 0) {
         map_format = FORMAT_BINARY;
         build_nodes = true;
+#ifndef CONSOLE_ONLY
+        if (main_win) {
+            main_win->build_box->Prog_Init(0, "");
+        }
+#endif
         return true;
     }
 
@@ -1290,9 +1287,6 @@ void Doom::game_interface_c::EndLevel() {
 #endif
 
     CSG_DOOM_Write();
-#if 0
-        CSG_TestRegions_Doom();
-#endif
 
     Doom::EndLevel(level_name);
 
