@@ -8729,7 +8729,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->altdamage[HMP] = (float)4;
     m->altdamage[UV] = (float)2;
     m->bits |= FLIES;
-    m->min_level = 1;
+    m->min_level = 10;
     m = find_monster(c,ID_FIREGARGOYLE);
     m->gamemask = HERETIC_BIT;
     m->width = 34;
@@ -8744,7 +8744,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->altdamage[UV] = (float)2;
     m->bits |= FLIES;
     m->bits |= SHOOTS;
-    m->min_level = 3;   
+    m->min_level = 12;   
     m = find_monster(c,ID_GOLEM);
     m->gamemask = HERETIC_BIT;
     m->width = 46;
@@ -8758,7 +8758,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->altdamage[ITYTD] = (float)12;
     m->altdamage[HMP] = (float)6;
     m->altdamage[UV] = (float)3;
-    m->min_level = 1;
+    m->min_level = 10;
     m = find_monster(c,ID_NITROGOLEM);
     m->gamemask = HERETIC_BIT;
     m->width = 46;
@@ -8772,7 +8772,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->altdamage[HMP] = (float)10;
     m->altdamage[UV] = (float)6;
     m->bits |= SHOOTS;
-    m->min_level = 4;
+    m->min_level = 13;
     m = find_monster(c,ID_OPHIDIAN);
     m->gamemask = HERETIC_BIT;
     m->width = 46;
@@ -8787,7 +8787,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->altdamage[HMP] = (float)8;
     m->altdamage[UV] = (float)4;
     m->bits |= SHOOTS;
-    m->min_level = 17;
+    m->min_level = 28;
     m = find_monster(c,ID_SABRECLAW);
     m->gamemask = HERETIC_BIT;
     m->width = 42;
@@ -8801,7 +8801,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->altdamage[ITYTD] = (float)8;
     m->altdamage[HMP] = (float)4;
     m->altdamage[UV] = (float)2;
-    m->min_level = 10;
+    m->min_level = 20;
     m = find_monster(c,ID_UNDEADWARRIOR);
     m->gamemask = HERETIC_BIT;
     m->width = 50;
@@ -8814,7 +8814,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->altdamage[ITYTD] = (float)10;
     m->altdamage[HMP] = (float)6;
     m->altdamage[UV] = (float)3;
-    m->min_level = 1;
+    m->min_level = 10;
     m->bits |= SHOOTS;
     m = find_monster(c,ID_DISCIPLE);
     m->gamemask = HERETIC_BIT;
@@ -8829,7 +8829,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->altdamage[ITYTD] = (float)16;
     m->altdamage[HMP] = (float)8;
     m->altdamage[UV] = (float)4;
-    m->min_level = 4;
+    m->min_level = 13;
     m->bits |= SHOOTS;
     m = find_monster(c,ID_WEREDRAGON);
     m->gamemask = HERETIC_BIT;
@@ -8844,7 +8844,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->altdamage[ITYTD] = (float)20;
     m->altdamage[HMP] = (float)12;
     m->altdamage[UV] = (float)6;
-    m->min_level = 9;
+    m->min_level = 19;
     m->bits |= SHOOTS;
     m = find_monster(c,ID_MAULOTAUR);
     m->gamemask = HERETIC_BIT;
@@ -8859,7 +8859,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->altdamage[ITYTD] = (float)38;
     m->altdamage[HMP] = (float)18;
     m->altdamage[UV] = (float)10;
-    m->min_level = 16;
+    m->min_level = 27;
     m->bits |= SHOOTS;
     m->bits |= BOSS;
     m->bits |= BIG;
@@ -8876,7 +8876,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->altdamage[ITYTD] = (float)32;
     m->altdamage[HMP] = (float)16;
     m->altdamage[UV] = (float)8;
-    m->min_level = 8;
+    m->min_level = 17;
     m->bits |= SHOOTS;
     m->bits |= BOSS;
     m->bits |= BIG;
@@ -8892,7 +8892,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->altdamage[ITYTD] = (float)60;
     m->altdamage[HMP] = (float)30;
     m->altdamage[UV] = (float)15;
-    m->min_level = 24;
+    m->min_level = 35;
     m->bits |= SHOOTS;
     m->bits |= BOSS;
     m->bits |= BIG;
