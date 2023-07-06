@@ -315,25 +315,43 @@ arena *new_arena(level *l, config *c)
 
   answer->boss_count = 1;   /* Default */
 
-  if (c->mission==8) {       /* Do episode-ends canonically */
-    if (c->episode==1) {
-      bossno = 0;
-    } else if (c->episode==2) {
-      bossno = 1;
+  if (c->gamemask & HERETIC_BIT) {
+    if (c->mission==8) {       /* Do episode-ends canonically */
+      if (c->episode==1) {
+        bossno = 0;
+      } else if (c->episode==2) {
+        bossno = 1;
+      } else if (c->episode==3) {
+        bossno = 2;
+      } else if (c->episode==4) {
+        bossno = 0;
+      } else if (c->episode==5) {
+        bossno = 1;
+      }
     } else {
-      bossno = 2;
+      bossno = roll(7);
     }
-  } else if (c->map==7) {
-    bossno = 3;
-#ifdef USING_SPAWNER
-  } else if (c->map==30) {   /* Including the end of DooM II, eventually */
-    /* bossno=666; */
-    bossno = 1;
-#endif
-  } else if (c->map) {       /* Otherwise a random DooM II boss, */
-    bossno = roll(7);
-  } else {                   /* Or a random DooM I boss. */
-    bossno = roll(3);
+  } else {
+    if (c->mission==8) {       /* Do episode-ends canonically */
+      if (c->episode==1) {
+        bossno = 0;
+      } else if (c->episode==2) {
+        bossno = 1;
+      } else {
+        bossno = 2;
+      }
+    } else if (c->map==7) {
+      bossno = 3;
+  #ifdef USING_SPAWNER
+    } else if (c->map==30) {   /* Including the end of DooM II, eventually */
+      /* bossno=666; */
+      bossno = 1;
+  #endif
+    } else if (c->map) {       /* Otherwise a random DooM II boss, */
+      bossno = roll(7);
+    } else {                   /* Or a random DooM I boss. */
+      bossno = roll(3);
+    }
   }
 
   /*   How can we configify all the monsters and weapons in here??     */
@@ -5866,42 +5884,10 @@ void arena_boss(level *l,arena *a,haa *haa,config *c)
   if (a->boss_count>1)  /* Only 1 and 2 supported! */
     new_thing(l,cx,cy-(a->boss->width+8),facing,a->boss->thingid,7,c);
 
-  if ((c->episode==2)&&(c->mission==8)) need_switch = SLUMP_FALSE;
-  if ((c->episode==3)&&(c->mission==8)) need_switch = SLUMP_FALSE;
-  if (((c->episode==4)&&(c->mission==8))||(c->map==7)) {
-    linedef *ld1, *ld2, *ld3, *ld4;
-    sector *newsec;
-    need_switch = SLUMP_FALSE;
-    cx -= 32;
-    cx &= ~(63);
-    cy += a->boss->width+72;
-    cy &= ~(63);
-    newsec = new_sector(l,(short)(a->innersec->floor_height+64),
-                          a->innersec->ceiling_height,
-                          random_gate(c,a->innersec->pstyle),
-                          a->innersec->ceiling_flat);
-    newsec->pstyle = a->innersec->pstyle;
-    newsec->light_level = 250;
-    newsec->special = GLOW_BLINK;
-    newsec->tag = 666;
-    parallel_innersec_ex(l,a->innersec,newsec,
-                         NULL,NULL,a->innersec->pstyle->wall0,
-                         cx,cy,cx+64,cy+64,c,
-                         &ld1,&ld2,&ld3,&ld4);
-    ld1->type = LINEDEF_W1_END_LEVEL;
-    ld1->flags &= ~LOWER_UNPEGGED;
-    ld2->type = LINEDEF_W1_END_LEVEL;
-    ld2->flags &= ~LOWER_UNPEGGED;
-    ld3->type = LINEDEF_W1_END_LEVEL;
-    ld3->flags &= ~LOWER_UNPEGGED;
-    ld4->type = LINEDEF_W1_END_LEVEL;
-    ld4->flags &= ~LOWER_UNPEGGED;
-  }
-  if ((c->episode==1)&&(c->mission==8)) {
-    linedef *ld1, *ld2, *ld3, *ld4;
-    sector *newsec;
-    short tag = death_room(l,NULL,a->innersec->pstyle,c);
-    if (tag) {
+  if (c->gamemask & HERETIC_BIT) {
+    if (c->mission==8) {
+      linedef *ld1, *ld2, *ld3, *ld4;
+      sector *newsec;
       need_switch = SLUMP_FALSE;
       cx -= 32;
       cx &= ~(63);
@@ -5916,21 +5902,86 @@ void arena_boss(level *l,arena *a,haa *haa,config *c)
       newsec->special = GLOW_BLINK;
       newsec->tag = 666;
       parallel_innersec_ex(l,a->innersec,newsec,
-                           NULL,NULL,a->innersec->pstyle->wall0,
-                           cx,cy,cx+64,cy+64,c,
-                           &ld1,&ld2,&ld3,&ld4);
-      ld1->type = LINEDEF_TELEPORT;
-      ld1->tag = tag;
+                          NULL,NULL,a->innersec->pstyle->wall0,
+                          cx,cy,cx+64,cy+64,c,
+                          &ld1,&ld2,&ld3,&ld4);
+      ld1->type = LINEDEF_W1_END_LEVEL;
       ld1->flags &= ~LOWER_UNPEGGED;
-      ld2->type = LINEDEF_TELEPORT;
-      ld2->tag = tag;
+      ld2->type = LINEDEF_W1_END_LEVEL;
       ld2->flags &= ~LOWER_UNPEGGED;
-      ld3->type = LINEDEF_TELEPORT;
-      ld3->tag = tag;
+      ld3->type = LINEDEF_W1_END_LEVEL;
       ld3->flags &= ~LOWER_UNPEGGED;
-      ld4->type = LINEDEF_TELEPORT;
-      ld4->tag = tag;
+      ld4->type = LINEDEF_W1_END_LEVEL;
       ld4->flags &= ~LOWER_UNPEGGED;
+    }
+  }
+  else {
+    if ((c->episode==2)&&(c->mission==8)) need_switch = SLUMP_FALSE;
+    if ((c->episode==3)&&(c->mission==8)) need_switch = SLUMP_FALSE;
+    if (((c->episode==4)&&(c->mission==8))||(c->map==7)) {
+      linedef *ld1, *ld2, *ld3, *ld4;
+      sector *newsec;
+      need_switch = SLUMP_FALSE;
+      cx -= 32;
+      cx &= ~(63);
+      cy += a->boss->width+72;
+      cy &= ~(63);
+      newsec = new_sector(l,(short)(a->innersec->floor_height+64),
+                            a->innersec->ceiling_height,
+                            random_gate(c,a->innersec->pstyle),
+                            a->innersec->ceiling_flat);
+      newsec->pstyle = a->innersec->pstyle;
+      newsec->light_level = 250;
+      newsec->special = GLOW_BLINK;
+      newsec->tag = 666;
+      parallel_innersec_ex(l,a->innersec,newsec,
+                          NULL,NULL,a->innersec->pstyle->wall0,
+                          cx,cy,cx+64,cy+64,c,
+                          &ld1,&ld2,&ld3,&ld4);
+      ld1->type = LINEDEF_W1_END_LEVEL;
+      ld1->flags &= ~LOWER_UNPEGGED;
+      ld2->type = LINEDEF_W1_END_LEVEL;
+      ld2->flags &= ~LOWER_UNPEGGED;
+      ld3->type = LINEDEF_W1_END_LEVEL;
+      ld3->flags &= ~LOWER_UNPEGGED;
+      ld4->type = LINEDEF_W1_END_LEVEL;
+      ld4->flags &= ~LOWER_UNPEGGED;
+    }
+    if ((c->episode==1)&&(c->mission==8)) {
+      linedef *ld1, *ld2, *ld3, *ld4;
+      sector *newsec;
+      short tag = death_room(l,NULL,a->innersec->pstyle,c);
+      if (tag) {
+        need_switch = SLUMP_FALSE;
+        cx -= 32;
+        cx &= ~(63);
+        cy += a->boss->width+72;
+        cy &= ~(63);
+        newsec = new_sector(l,(short)(a->innersec->floor_height+64),
+                              a->innersec->ceiling_height,
+                              random_gate(c,a->innersec->pstyle),
+                              a->innersec->ceiling_flat);
+        newsec->pstyle = a->innersec->pstyle;
+        newsec->light_level = 250;
+        newsec->special = GLOW_BLINK;
+        newsec->tag = 666;
+        parallel_innersec_ex(l,a->innersec,newsec,
+                            NULL,NULL,a->innersec->pstyle->wall0,
+                            cx,cy,cx+64,cy+64,c,
+                            &ld1,&ld2,&ld3,&ld4);
+        ld1->type = LINEDEF_TELEPORT;
+        ld1->tag = tag;
+        ld1->flags &= ~LOWER_UNPEGGED;
+        ld2->type = LINEDEF_TELEPORT;
+        ld2->tag = tag;
+        ld2->flags &= ~LOWER_UNPEGGED;
+        ld3->type = LINEDEF_TELEPORT;
+        ld3->tag = tag;
+        ld3->flags &= ~LOWER_UNPEGGED;
+        ld4->type = LINEDEF_TELEPORT;
+        ld4->tag = tag;
+        ld4->flags &= ~LOWER_UNPEGGED;
+      }
     }
   }
 
