@@ -6052,6 +6052,9 @@ boolean rising_room(level *l,sector *s,config *c,haa *haa,quest *ThisQuest)
   linedef *ld1,*ld2,*ld3,*ld4;
   thing *t;
   short tid = rollpercent(50) ? ID_POTION : ID_HELMET;
+  if (l->heretic_level) {
+    tid = rollpercent(50) ? ID_WANDCRYSTAL : ID_ETHEREALARROWS;
+  }
 
   if (s->pgate) return SLUMP_FALSE;
 
@@ -10625,6 +10628,9 @@ void populate_linedef(level *l,linedef *ldnew2,haa *haa,config *c,
   point_from(ldnew2->to->x,ldnew2->to->y,x1,y1,RIGHT_TURN,farness,&x,&y);
   /* pick a prize; stubby */
   bonustype = ID_POTION;   /* Just in case! */
+  if (l->heretic_level) {
+    bonustype = ID_WANDCRYSTAL;
+  }
   if (rollpercent(50)) {  /* Health or whatever */
     if (l->heretic_level) {
         switch (roll(4)) {
@@ -10668,42 +10674,76 @@ void populate_linedef(level *l,linedef *ldnew2,haa *haa,config *c,
       haa->haas[1].health += bonusamount/2;
     }
   } else {   /* Some ammo or whatever */
-    if ((haa->haas[0].can_use_cells)&&(rollpercent(20))) {
-      bonustype = ID_CELLPACK;
-      bonusamount = 2000;  /* yow! */
-    } else if ((haa->haas[0].can_use_rockets)&&(rollpercent(20))) {
-      bonustype = ID_ROCKBOX;
-      bonusamount = 500;
-    } else if ((!(haa->haas[2].has_chainsaw))&&(rollpercent(20))) {
-      bonustype = ID_CHAINSAW;
-      bonusamount = 0;
-      haa->haas[2].has_chainsaw = SLUMP_TRUE;
-    } else if (rollpercent(2)) {
-      bonustype = ID_CHAINSAW;
-      bonusamount = 0;
-      haa->haas[2].has_chainsaw = SLUMP_TRUE;
-    } else switch (roll(3)) {
-      case 1: bonustype = ID_SHELLBOX; bonusamount = 1400; break;
-      case 2: bonustype = ID_BACKPACK;
-        bonusamount = 380;
-        if (haa->haas[1].can_use_rockets) bonusamount += 100;
-        if (haa->haas[1].can_use_cells) bonusamount += 400;
-        haa->haas[1].has_backpack = SLUMP_TRUE;
-        haa->haas[2].has_backpack = SLUMP_TRUE;
-        break;
-      default: bonustype = ID_BULBOX; bonusamount = 500; break;
-    }  /* end switch */
-    /* We assume ITYTD didn't find the closet! */
-    haa->haas[1].ammo += bonusamount/2;   /* And HMP only prolly did */
-    haa->haas[2].ammo += bonusamount;
-    if (!secret) {  /* Unless it's not a secret */
-      haa->haas[0].ammo += bonusamount;
-      haa->haas[1].ammo += bonusamount/2;
-    }
-    /* Account for chainsaws; primitive */
-    if (bonustype==ID_CHAINSAW) {
-      haa->haas[1].has_chainsaw = SLUMP_TRUE;   /* OK? */
-      haa->haas[2].has_chainsaw = SLUMP_TRUE;
+    if (l->heretic_level) {
+      if ((haa->haas[0].can_use_cells)&&(rollpercent(20))) {
+        bonustype = ID_HELLSTAFF;
+        bonusamount = 1400;  /* yow! */
+      } else if ((haa->haas[0].can_use_rockets)&&(rollpercent(20))) {
+        bonustype = ID_INFERNOORB;
+        bonusamount = 900;
+      } else if ((!(haa->haas[2].has_chainsaw))&&(rollpercent(20))) {
+        bonustype = ID_GAUNTLETS;
+        bonusamount = 0;
+        haa->haas[2].has_chainsaw = SLUMP_TRUE;
+      } else if (rollpercent(2)) {
+        bonustype = ID_GAUNTLETS;
+        bonusamount = 0;
+        haa->haas[2].has_chainsaw = SLUMP_TRUE;
+      } else switch (roll(3)) { // knickknacks
+        case 1: bonustype = ID_MAPSCROLL; bonusamount = 0; break;
+        case 2: bonustype = ID_TIMEBOMB; bonusamount = 0; break;
+        default: bonustype = ID_TORCH; bonusamount = 0; break;
+      }  /* end switch */
+      /* We assume ITYTD didn't find the closet! */
+      haa->haas[1].ammo += bonusamount/2;   /* And HMP only prolly did */
+      haa->haas[2].ammo += bonusamount;
+      if (!secret) {  /* Unless it's not a secret */
+        haa->haas[0].ammo += bonusamount;
+        haa->haas[1].ammo += bonusamount/2;
+      }
+      /* Account for chainsaws; primitive */
+      if (bonustype==ID_GAUNTLETS) {
+        haa->haas[1].has_chainsaw = SLUMP_TRUE;   /* OK? */
+        haa->haas[2].has_chainsaw = SLUMP_TRUE;
+      }
+    } else {
+      if ((haa->haas[0].can_use_cells)&&(rollpercent(20))) {
+        bonustype = ID_CELLPACK;
+        bonusamount = 2000;  /* yow! */
+      } else if ((haa->haas[0].can_use_rockets)&&(rollpercent(20))) {
+        bonustype = ID_ROCKBOX;
+        bonusamount = 500;
+      } else if ((!(haa->haas[2].has_chainsaw))&&(rollpercent(20))) {
+        bonustype = ID_CHAINSAW;
+        bonusamount = 0;
+        haa->haas[2].has_chainsaw = SLUMP_TRUE;
+      } else if (rollpercent(2)) {
+        bonustype = ID_CHAINSAW;
+        bonusamount = 0;
+        haa->haas[2].has_chainsaw = SLUMP_TRUE;
+      } else switch (roll(3)) {
+        case 1: bonustype = ID_SHELLBOX; bonusamount = 1400; break;
+        case 2: bonustype = ID_BACKPACK;
+          bonusamount = 380;
+          if (haa->haas[1].can_use_rockets) bonusamount += 100;
+          if (haa->haas[1].can_use_cells) bonusamount += 400;
+          haa->haas[1].has_backpack = SLUMP_TRUE;
+          haa->haas[2].has_backpack = SLUMP_TRUE;
+          break;
+        default: bonustype = ID_BULBOX; bonusamount = 500; break;
+      }  /* end switch */
+      /* We assume ITYTD didn't find the closet! */
+      haa->haas[1].ammo += bonusamount/2;   /* And HMP only prolly did */
+      haa->haas[2].ammo += bonusamount;
+      if (!secret) {  /* Unless it's not a secret */
+        haa->haas[0].ammo += bonusamount;
+        haa->haas[1].ammo += bonusamount/2;
+      }
+      /* Account for chainsaws; primitive */
+      if (bonustype==ID_CHAINSAW) {
+        haa->haas[1].has_chainsaw = SLUMP_TRUE;   /* OK? */
+        haa->haas[2].has_chainsaw = SLUMP_TRUE;
+      }
     }
   }  /* end ammo bonuses */
   new_thing(l,x,y,0,bonustype,7,c);  /* Place the bonus */
@@ -11762,17 +11802,32 @@ void embellish_room(level *l,sector *oldsector,haa *haa,style *ThisStyle,
                 }
                 update_haa_for_health(haa,7,bonustype);
               } else {   /* Some ammo or whatever */
-                if ((!(haa->haas[2].has_chainsaw))&&(rollpercent(5))) {
-                  bonustype = ID_CHAINSAW;
-                  haa->haas[0].has_chainsaw = SLUMP_TRUE;
-                  haa->haas[1].has_chainsaw = SLUMP_TRUE;
-                  haa->haas[2].has_chainsaw = SLUMP_TRUE;
+                if (l->heretic_level) {
+                  if ((!(haa->haas[2].has_chainsaw))&&(rollpercent(5))) {
+                    bonustype = ID_GAUNTLETS;
+                    haa->haas[0].has_chainsaw = SLUMP_TRUE;
+                    haa->haas[1].has_chainsaw = SLUMP_TRUE;
+                    haa->haas[2].has_chainsaw = SLUMP_TRUE;
+                  } else {
+                    switch (roll(2)) {   /* What about a cell? / a rocket */
+                      case 0: bonustype = ID_WANDCRYSTAL; break;
+                      default: bonustype = ID_ETHEREALARROWS; break;
+                    }  /* end switch */
+                    update_haa_for_ammo(haa,7,bonustype);
+                  }
                 } else {
-                  switch (roll(2)) {   /* What about a cell? / a rocket */
-                    case 0: bonustype = ID_CLIP; break;
-                    default: bonustype = ID_SHELLS; break;
-                  }  /* end switch */
-                  update_haa_for_ammo(haa,7,bonustype);
+                  if ((!(haa->haas[2].has_chainsaw))&&(rollpercent(5))) {
+                    bonustype = ID_CHAINSAW;
+                    haa->haas[0].has_chainsaw = SLUMP_TRUE;
+                    haa->haas[1].has_chainsaw = SLUMP_TRUE;
+                    haa->haas[2].has_chainsaw = SLUMP_TRUE;
+                  } else {
+                    switch (roll(2)) {   /* What about a cell? / a rocket */
+                      case 0: bonustype = ID_CLIP; break;
+                      default: bonustype = ID_SHELLS; break;
+                    }  /* end switch */
+                    update_haa_for_ammo(haa,7,bonustype);
+                  }
                 }
               }  /* end ammo bonuses */
               new_thing(l,x1+1,y1+1,0,bonustype,7,c);  /* Place the bonus */
