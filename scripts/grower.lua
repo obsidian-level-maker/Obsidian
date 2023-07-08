@@ -4456,12 +4456,18 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
       if not R.is_grown then
         if R.is_hallway then
           Grower_kill_room(SEEDS, LEVEL, R)
-        elseif R.prelim_conn_num == 1 and rand.odds(style_sel("sub_rooms", 100, 66, 33, 0)) then
+        elseif R.prelim_conn_num == 1 
+        and rand.odds(style_sel("sub_rooms", 100, 66, 33, 0)) then
           Grower_kill_room(SEEDS, LEVEL, R)
         else
           R.is_sub_room = true
         end
       end
+
+    if R.prelim_conn_num == 1 and R.areas[1].svolume <= 4 then
+      Grower_kill_room(SEEDS, LEVEL, R)
+    end
+
     end
   end
 
