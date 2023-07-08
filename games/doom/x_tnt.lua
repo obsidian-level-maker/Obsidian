@@ -444,6 +444,7 @@ TNT.EPISODES =
     dark_prob = 10,
     bex_mid_name = "T1TEXT",
     bex_end_name = "T2TEXT",
+    ep_index = 1
   },
 
   episode2 =
@@ -455,17 +456,19 @@ TNT.EPISODES =
     sky_patch4 = "DOSNITE",
     dark_prob = 80,
     bex_end_name = "T3TEXT",
+    ep_index = 2
   },
 
   episode3 =
   {
-    theme = "hell",
+    theme = "egypt",
     sky_patch  = "DOEHELL",
     sky_patch2 = "DONHELL",
     sky_patch3 = "DOWHELL",
     sky_patch4 = "DOSHELL",
     dark_prob = 10,
     bex_end_name = "T4TEXT",
+    ep_index = 3
   },
 }
 

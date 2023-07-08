@@ -138,6 +138,7 @@ PLUTONIA.EPISODES =
     dark_prob = 10,
     bex_mid_name = "P1TEXT",
     bex_end_name = "P2TEXT",
+    ep_index = 1
   },
 
   episode2 =
@@ -149,6 +150,7 @@ PLUTONIA.EPISODES =
     sky_patch4 = "SKY2D",
     dark_prob = 10,
     bex_end_name = "P3TEXT",
+    ep_index = 2
   },
 
   episode3 =
@@ -158,6 +160,7 @@ PLUTONIA.EPISODES =
     sky_patch2 = "SKY3B",
     dark_prob = 40,
     bex_end_name = "P4TEXT",
+    ep_index = 3
   },
 }
 
