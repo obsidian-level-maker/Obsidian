@@ -13565,6 +13565,44 @@ GROW_T_STAIR =
   },
 },
 
+GROW_T_STAIR_LIQUID =
+{
+  prob = 15,
+  skip_prob = 80,
+
+  structure =
+  {
+    "xxxxx11xxxxx","xxxxx11xxxxx",
+    "xxxx....xxxx","xxxx1111xxxx",
+    "xxxx....xxxx","xxxx1111xxxx",
+    "xxxx....xxxx","xxxxvvvvxxxx",
+    "xxxx....xxxx","xxxxvvvvxxxx",
+    "............","11>>AAAA<<11",
+    "............","11>>A~~A<<11",
+    "............","11>>A~~A<<11",
+    "............","11>>AAAA<<11",
+  },
+},
+
+GROW_T_STAIR_ALT =
+{
+  prob = 12,
+  skip_prob = 75,
+
+  structure =
+  {
+    "xxxxx11xxxxx","xxxxx11xxxxx",
+    "xxxx....xxxx","xxxx1111xxxx",
+    "xxxx....xxxx","xxxx1111xxxx",
+    "xxxx....xxxx","xxxxvAAvxxxx",
+    "xxxx....xxxx","xxxxvAAvxxxx",
+    "............","11>>AAAA<<11",
+    "............","11AAAAAAAA11",
+    "............","11AAAAAAAA11",
+    "............","11>>AAAA<<11",
+  },
+},
+
 -- Elevated letters.
 
 GROW_ELEVATED_T_STALK_ENTRY =
@@ -15091,6 +15129,30 @@ GROW_PLUS_SINGLE_STAIR_OPPOSITE =
     "x..........","x11##AA##11",
     "x..........","x11>AAAAA11",
     "x..........","x11>AAAAA11",
+    "1..........","111##AA##11",
+    "1..........","111##AA##11",
+    "xxxxx..xxxx","xxxxxAAxxxx"
+  },
+
+  diagonals =
+  {
+    "1.",".1"
+  }
+},
+
+GROW_PLUS_SINGLE_STAIR_OPPOSITE_DOUBLE =
+{
+  prob = 40,
+  skip_prob = 80,
+
+  structure =
+  {
+    "x..........","x1111AA1111",
+    "x..........","x1111AA1111",
+    "x..........","x11/#AA#%11",
+    "x..........","x11##AA##11",
+    "x..........","x11>AAAA<11",
+    "x..........","x11>AAAA<11",
     "1..........","111##AA##11",
     "1..........","111##AA##11",
     "xxxxx..xxxx","xxxxxAAxxxx"
