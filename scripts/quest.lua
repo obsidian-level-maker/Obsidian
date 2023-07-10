@@ -365,6 +365,12 @@ function Quest_create_initial_quest(LEVEL)
 
 
   local function add_secret_exit()
+
+    if LEVEL.is_procedural_gotcha and PARAM.bool_boss_gen and PARAM.bool_boss_gen == 1 then
+      LEVEL.need_secret_exit = true
+      return
+    end
+
     local R = pick_exit_room("secret_mode")
 
     if not R then

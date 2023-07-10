@@ -23,6 +23,10 @@ project(
 string(TIMESTAMP BUILD_TIMESTAMP "%Y.%m.%d" UTC)
 add_compile_definitions(OBSIDIAN_TIMESTAMP="${BUILD_TIMESTAMP}")
 
+if(NOT WIN32)
+  add_compile_definitions(OBSIDIAN_INSTALL_PREFIX="${CMAKE_INSTALL_PREFIX}")
+endif()
+
 if(CONSOLE_ONLY OR HAIKU)
   add_compile_definitions(CONSOLE_ONLY=1)
 endif()
@@ -65,10 +69,6 @@ if(OBSIDIAN_TIDY)
     clang-tidy COMMAND "${CMAKE_CXX_CLANG_TIDY}" -p "${CMAKE_BINARY_DIR}"
                        ${ALL_SOURCES}
   )
-endif()
-
-if(NOT WIN32)
-  configure_file(cmake/config.h.cmake-in obsidian-include/obsidian_config.h)
 endif()
 
 # cpmaddpackage( NAME Format.cmake VERSION 1.7.0 GITHUB_REPOSITORY

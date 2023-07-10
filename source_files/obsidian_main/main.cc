@@ -21,9 +21,6 @@
 
 #include <array>
 #include "main.h"
-#ifndef _WIN32
-#include "obsidian_config.h"
-#endif
 #include "images.h"
 
 #include "csg_main.h"
@@ -472,7 +469,7 @@ void Determine_InstallDir(const char *argv0) {
 #ifdef WIN32
     install_dir = home_dir;
 #else
-    if (Verify_InstallDir(CMAKE_INSTALL_PREFIX "/share/obsidian")) {
+    if (Verify_InstallDir(OBSIDIAN_INSTALL_PREFIX "/share/obsidian")) {
         return;
     }
 

@@ -121,7 +121,7 @@ static bool Cookie_ParseLine(std::string buf) {
     }
 
     if (!(isalpha(buf.front()) || buf.front() == '@')) {
-        LogPrintf("Weird config line: [%s]\n", buf);
+        LogPrintf("Weird config line: [%s]\n", buf.c_str());
         return false;
     }
 

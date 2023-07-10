@@ -741,7 +741,7 @@ int Doom::v094_add_linedef(lua_State *L) {
     byte *args = new byte[5];
     v094_grab_args(L, args, 8);
     AddLinedef(vert1, vert2, side1, side2, type, flags, tag, args);
-    delete args;
+    delete[] args;
     return 0;
 }
 
@@ -912,7 +912,7 @@ int Doom::v094_add_thing(lua_State *L) {
     byte *args = new byte[5];
     v094_grab_args(L, args, 9);
     AddThing(x, y, h, type, angle, options, tid, special, args);
-    delete args;
+    delete[] args;
     return 0;
 }
 
@@ -1254,7 +1254,7 @@ void Doom::game_interface_c::Property(std::string key, std::string value) {
         } else if (StringCaseCmp(value, "strife") == 0) {
             sub_format = SUBFMT_Strife;
         } else {
-            LogPrintf("WARNING: unknown DOOM sub_format '%s'\n", value);
+            LogPrintf("WARNING: unknown DOOM sub_format '%s'\n", value.c_str());
         }
     } else if (StringCaseCmp(key, "offset_map") == 0) {
         dm_offset_map = StringToInt(value);

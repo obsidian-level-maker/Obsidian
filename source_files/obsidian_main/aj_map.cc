@@ -504,7 +504,7 @@ void ParseUDMF_Pass(const std::string& data, int pass)
 		}
 
 		if (! lex.Match("{"))
-			Main::FatalError("Malformed TEXTMAP lump: missing opening bracket, instead {}\n", section);
+			Main::FatalError("Malformed TEXTMAP lump: missing opening bracket, instead %s\n", section.c_str());
 
 		int cur_type = 0;
 

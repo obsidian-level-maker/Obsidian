@@ -216,7 +216,7 @@ static bool Theme_Options_ParseLine(std::string buf) {
     }
 
     if (!(isalpha(buf.front()) || buf.front() == '@')) {
-        LogPrintf("Weird theme option line: [%s]\n", buf);
+        LogPrintf("Weird theme option line: [%s]\n", buf.c_str());
         return false;
     }
 
