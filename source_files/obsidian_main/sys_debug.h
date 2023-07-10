@@ -26,10 +26,13 @@
 #include <filesystem>
 #include <fstream>
 #include <string>
+#include <iostream>
 extern bool terminal;
 extern bool debugging;
 extern std::fstream log_file;
 extern std::fstream ref_file;
+extern std::string StringFormat(std::string_view str, ...);
+
 bool LogInit(const std::filesystem::path &filename);  // NULL for none
 void LogClose(void);
 bool RefInit(const std::filesystem::path &filename);  // NULL for none
