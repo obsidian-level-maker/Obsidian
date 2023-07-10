@@ -50,7 +50,6 @@ PREFABS.Pic_mining_dirt_fenced_radium =
   template = "Pic_mining_dirt_fenced",
   map = "MAP01",
 
-
   texture_pack = "armaetus",
 
   tex_STONE7 =
@@ -104,6 +103,8 @@ PREFABS.Pic_mining_dirt_fenced_broken =
 {
   template = "Pic_mining_dirt_fenced",
   map = "MAP04",
+
+  texture_pack = "armaetus",
 
   x_fit = { 20,72 , 168,220 }
 }
