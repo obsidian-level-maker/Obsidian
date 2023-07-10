@@ -4456,7 +4456,7 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
       if not R.is_grown then
         if R.is_hallway then
           Grower_kill_room(SEEDS, LEVEL, R)
-        elseif R.prelim_conn_num == 1 
+        elseif R.prelim_conn_num == 1
         and rand.odds(style_sel("sub_rooms", 100, 66, 33, 0)) then
           Grower_kill_room(SEEDS, LEVEL, R)
         else
@@ -4464,7 +4464,10 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
         end
       end
 
-    if R.prelim_conn_num == 1 and R.areas[1].svolume <= 4 then
+    if R.prelim_conn_num(R, LEVEL) == 1 and R.areas[1].svolume <= 8
+    and #R.closets == 0 and #R.areas == 1 and R.is_start then
+      gui.printf("Prelim conn num: " .. R.prelim_conn_num(R, LEVEL) .. "\n")
+      gui.printf(table.tostr(R, 2))
       Grower_kill_room(SEEDS, LEVEL, R)
     end
 
@@ -4614,10 +4617,10 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
   end
 
   if #LEVEL.rooms == 2 then
-    -- gui.printf("BALLS! " .. MAX_LOOP .. "\n")
+    gui.printf("BALLS! " .. MAX_LOOP .. "\n")
     for _,R in pairs(LEVEL.rooms) do
       if R.grow_parent and R.grow_parent.is_start then
-        -- gui.printf("SHIT HAPPENED! " .. LEVEL.name .. "\n")
+        gui.printf("SHIT HAPPENED! " .. LEVEL.name .. "\n")
         Grower_kill_room(SEEDS, LEVEL, R)
         Grower_sprout_room(SEEDS, LEVEL, R.grow_parent)
       end

@@ -1617,6 +1617,12 @@ ARMAETUS_MATERIALS = {
   G7_GOGN2 = { t="G7_GOGN2", f="G7_GOGF1"},
   G7_GOGN3 = { t="G7_GOGN3", f="G7_GOGF1"},
 
+  -- grey brick, occasional gold trims
+  SDM_HAW1 = { t="SDM_HAW1", f="G12"},
+  SDM_HAW2 = { t="SDM_HAW2", f="GMET07"},
+  SDM_HAW3 = { t="SDM_HAW3", f="RROCK21"},
+  SDM_HAW4 = { t="SDM_HAW4", f="RROCK22"},
+
   -- flats
   G7_GOGF1 = { t="G7_GOGN2", f="G7_GOGF1"}, -- TO BE REPLACED DO NOT USE
 

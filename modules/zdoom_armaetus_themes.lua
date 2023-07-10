@@ -1126,15 +1126,6 @@ ARMAETUS_ROOM_THEMES =
       SDOM_WL4 = 25,
       SDOM_WL5 = 25,
       SDOM_WL6 = 25,
-
-      SDOM_WG1 = 28,
-      SDOM_WG2 = 28,
-      SDOM_WG3 = 28,
-      SDOM_WG4 = 28,
-      SDOM_WG5 = 28,
-      SDOM_WG6 = 28,
-      SDOM_WG7 = 28,
-      SDOM_WG8 = 28
     },
 
     floors =
@@ -1423,7 +1414,7 @@ ARMAETUS_ROOM_THEMES =
   tech_AITextures =
   {
     env = "building",
-    prob = 5,
+    prob = 15,
   
     walls =
     {
@@ -1774,7 +1765,12 @@ ARMAETUS_ROOM_THEMES =
 
       G7_GOGN1 = 20,
       G7_GOGN2 = 20,
-      G7_GOGN3 = 20
+      G7_GOGN3 = 20,
+
+      SDM_HAW1 = 25,
+      SDM_HAW2 = 25,
+      SDM_HAW3 = 25,
+      SDM_HAW4 = 25
     },
 
     floors =
@@ -2382,6 +2378,11 @@ ARMAETUS_ROOM_THEMES =
       OBTSVBZ1 = 10,
       OBTSVBZ2 = 10,
       OBTSVBZ3 = 10,
+
+      SDM_HAW1 = 10,
+      SDM_HAW2 = 10,
+      SDM_HAW3 = 10,
+      SDM_HAW4 = 10
     },
 
     floors =
@@ -2666,6 +2667,84 @@ ARMAETUS_ROOM_THEMES =
       QFLAT05 = 7,
       QFLAT06 = 7,
       QFLAT07 = 7
+    }
+  },
+
+  hell_gilded_bricks =
+  {
+    env = "building",
+    prob = 15,
+
+    walls =
+    {
+      SDM_HAW1 = 10,
+      SDM_HAW2 = 10,
+      SDM_HAW3 = 10,
+      SDM_HAW4 = 10
+    },
+
+    floors =
+    {
+      FLAT5_7 = 10,
+      FLAT5_8 = 10,
+      FLOOR6_2 = 10,
+      MFLR8_4 = 10,
+      MFLR8_1 = 10,
+      RROCK13 = 10,
+
+      BLACK0 = 10,
+      BMARB1 = 10,
+      BMARB2 = 10,
+      BMARB3 = 10,
+
+      G05 = 10,
+      G06 = 10,
+      G07 = 10,
+      G08 = 10,
+
+      G11 = 10,
+      G12 = 10,
+      G19 = 10,
+
+      GMET01 = 10,
+      GMET02 = 10,
+      GMET03 = 10,
+      GMET04 = 10,
+      GMET05 = 10,
+      GMET06 = 10,
+      GMET07 = 10
+    },
+
+    ceilings =
+    {
+      FLAT5_7 = 10,
+      FLAT5_8 = 10,
+      FLOOR6_2 = 10,
+      MFLR8_4 = 10,
+      MFLR8_1 = 10,
+      RROCK13 = 10,
+
+      BLACK0 = 10,
+      BMARB1 = 10,
+      BMARB2 = 10,
+      BMARB3 = 10,
+
+      G05 = 10,
+      G06 = 10,
+      G07 = 10,
+      G08 = 10,
+
+      G11 = 10,
+      G12 = 10,
+      G19 = 10,
+
+      GMET01 = 10,
+      GMET02 = 10,
+      GMET03 = 10,
+      GMET04 = 10,
+      GMET05 = 10,
+      GMET06 = 10,
+      GMET07 = 10
     }
   },
 
@@ -6486,7 +6565,12 @@ ARMAETUS_THEMES =
 
       G7_GOGN1 = 25,
       G7_GOGN2 = 25,
-      G7_GOGN3 = 25
+      G7_GOGN3 = 25,
+
+      SDM_HAW1 = 25,
+      SDM_HAW2 = 25,
+      SDM_HAW3 = 25,
+      SDM_HAW4 = 25
     },
 
     fences =
