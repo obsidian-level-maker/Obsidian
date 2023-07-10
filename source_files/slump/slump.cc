@@ -1190,13 +1190,15 @@ config *get_config(std::filesystem::path filename) {
     } else if (StringCaseCmp(wadlength, "few") == 0) {
         answer->levelcount = 4;
     } else if (StringCaseCmp(wadlength, "episode") == 0) {
-        if (StringCaseCmp(current_game, "doom2") == 0 || StringCaseCmp(current_game, "plutonia") == 0 || StringCaseCmp(current_game, "tnt") == 0) {
+        if (StringCaseCmp(current_game, "doom2") == 0 || StringCaseCmp(current_game, "plutonia") == 0 || StringCaseCmp(current_game, "tnt") == 0
+            || StringCaseCmp(current_game, "hacx") == 0 || StringCaseCmp(current_game, "harmony") == 0) {
             answer->levelcount = 11;
         } else {
             answer->levelcount = 8;
         }
     } else {
-        if (StringCaseCmp(current_game, "doom2") == 0 || StringCaseCmp(current_game, "plutonia") == 0 || StringCaseCmp(current_game, "tnt") == 0) {
+        if (StringCaseCmp(current_game, "doom2") == 0 || StringCaseCmp(current_game, "plutonia") == 0 || StringCaseCmp(current_game, "tnt") == 0
+            || StringCaseCmp(current_game, "hacx") == 0 || StringCaseCmp(current_game, "harmony") == 0) {
             answer->levelcount = 32;
         } else if (StringCaseCmp(current_game, "doom1") == 0) {
             answer->levelcount = 24;
@@ -5800,8 +5802,13 @@ void arena_arrival(level *l,arena *a,haa *haa,config *c)
     if (na2<=0) mask &= ~0x04;
   }
   if (a->props&ARENA_NUKAGE) {  /* Little stub health */
-    place_object_in_region(l,minx,a->miny,maxx,a->maxy,
-                           c,ID_MEDIKIT,16,0,0,0,7);
+    if (l->heretic_level) {
+      place_object_in_region(l,minx,a->miny,maxx,a->maxy,
+                            c,ID_QUARTZFLASK,16,0,0,0,7);
+    } else {
+      place_object_in_region(l,minx,a->miny,maxx,a->maxy,
+                            c,ID_MEDIKIT,16,0,0,0,7);
+    }
   }
 
 }

@@ -11,13 +11,14 @@ gui.import("themes")
 gui.import("levels")
 gui.import("resources")
 gui.import("vanilla_mats")
+gui.import("names")
 ----------------------------------------------------------------
 
 function HARMONY.all_done()
 	gui.wad_insert_file("data/endoom/ENDOOM.bin", "ENDOOM")
 end
 
-UNFINISHED["harmony"] =
+OB_GAMES["harmony"] =
 {
 	label = _("Harmony"),
 	priority = 91,
@@ -37,6 +38,7 @@ UNFINISHED["harmony"] =
 	hooks =
 	{
 		--setup = HARMONY.setup,
+		slump_setup = HARMONY.slump_setup,
 		get_levels = HARMONY.get_levels,
 		all_done = HARMONY.all_done
 	},

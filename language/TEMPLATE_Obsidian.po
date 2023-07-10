@@ -253,11 +253,11 @@ msgstr ""
 msgid "Episodic"
 msgstr ""
 
-#: scripts/level.lua:2735
-msgid "\nWarning: The game that you have selected is in an experimental state. WADs may not build successfully and certain gameplay features may not be implemented yet! To ignore this warning and continue generation for these games, check the \"Experimental Games\" checkbox located in the Miscellaneous Options Module.\n\nThis message will change should development scope expand."
+#: scripts/level.lua:2741
+msgid "\nWarning: The game that you have selected is in an experimental state. WADs may not build successfully and certain gameplay features may not be implemented yet! To ignore this warning and continue generation for these games, check the \"Experimental Games\" checkbox located in the Miscellaneous Options Module.\n\nUse the help link for the \"Experimental Games\" module to find the exact status for the game in question."
 msgstr ""
 
-#: scripts/level.lua:2834
+#: scripts/level.lua:2840
 msgid "Oblige V2"
 msgstr ""
 
@@ -277,203 +277,203 @@ msgstr ""
 msgid "Progressive"
 msgstr ""
 
-#: scripts/obsidian.lua:2359
+#: scripts/obsidian.lua:2392
 msgid "option: "
 msgstr ""
 
-#: scripts/obsidian.lua:2360
+#: scripts/obsidian.lua:2393
 msgid "option: "
 msgstr ""
 
-#: scripts/obsidian.lua:2361
+#: scripts/obsidian.lua:2394
 msgid "comment: "
 msgstr ""
 
-#: scripts/obsidian.lua:2362
+#: scripts/obsidian.lua:2395
 msgid "comment: "
+msgstr ""
+
+#: scripts/obsidian.lua:2396
+msgid "engine: "
 msgstr ""
 
 #: scripts/obsidian.lua:2397
 msgid "engine: "
 msgstr ""
 
-#: scripts/obsidian.lua:2398
-msgid "engine: "
+#: scripts/obsidian.lua:2404
+msgid "game: "
 msgstr ""
 
 #: scripts/obsidian.lua:2405
 msgid "game: "
 msgstr ""
 
-#: scripts/obsidian.lua:2406
-msgid "game: "
+#: scripts/obsidian.lua:2412
+msgid "port: "
 msgstr ""
 
 #: scripts/obsidian.lua:2413
 msgid "port: "
 msgstr ""
 
-#: scripts/obsidian.lua:2414
-msgid "port: "
+#: scripts/obsidian.lua:2419
+msgid "values: "
 msgstr ""
 
 #: scripts/obsidian.lua:2420
 msgid "values: "
 msgstr ""
 
-#: scripts/obsidian.lua:2421
-msgid "values: "
+#: scripts/obsidian.lua:2425
+msgid "default: "
 msgstr ""
 
 #: scripts/obsidian.lua:2426
 msgid "default: "
 msgstr ""
 
-#: scripts/obsidian.lua:2427
-msgid "default: "
+#: scripts/obsidian.lua:2428
+msgid "values: "
 msgstr ""
 
 #: scripts/obsidian.lua:2429
-msgid "values: "
+msgid "default: "
 msgstr ""
 
 #: scripts/obsidian.lua:2430
-msgid "default: "
-msgstr ""
-
-#: scripts/obsidian.lua:2431
 msgid "values: "
 msgstr ""
 
-#: scripts/obsidian.lua:2432
+#: scripts/obsidian.lua:2431
 msgid "default: "
+msgstr ""
+
+#: scripts/obsidian.lua:2433
+msgid "values: "
 msgstr ""
 
 #: scripts/obsidian.lua:2434
 msgid "values: "
 msgstr ""
 
-#: scripts/obsidian.lua:2435
-msgid "values: "
+#: scripts/obsidian.lua:2446
+msgid "randomize_group: "
 msgstr ""
 
 #: scripts/obsidian.lua:2447
 msgid "randomize_group: "
 msgstr ""
 
-#: scripts/obsidian.lua:2448
-msgid "randomize_group: "
-msgstr ""
-
-#: scripts/obsidian.lua:2447
+#: scripts/obsidian.lua:2480
 msgid "tooltip"
 msgstr ""
 
-#: scripts/obsidian.lua:2448
+#: scripts/obsidian.lua:2481
 msgid "engine"
 msgstr ""
 
-#: scripts/obsidian.lua:2450
+#: scripts/obsidian.lua:2483
 msgid "ALL"
 msgstr ""
 
-#: scripts/obsidian.lua:2462
+#: scripts/obsidian.lua:2495
 msgid "game"
+msgstr ""
+
+#: scripts/obsidian.lua:2496
+msgid "ALL"
 msgstr ""
 
 #: scripts/obsidian.lua:2497
 msgid "ALL"
 msgstr ""
 
-#: scripts/obsidian.lua:2464
-msgid "ALL"
+#: scripts/obsidian.lua:2509
+msgid "port"
 msgstr ""
 
-#: scripts/obsidian.lua:2476
-msgid "port"
+#: scripts/obsidian.lua:2510
+msgid "ALL"
 msgstr ""
 
 #: scripts/obsidian.lua:2511
 msgid "ALL"
 msgstr ""
 
-#: scripts/obsidian.lua:2478
-msgid "ALL"
+#: scripts/obsidian.lua:2524
+msgid "type"
 msgstr ""
 
 #: scripts/obsidian.lua:2525
-msgid "type"
-msgstr ""
-
-#: scripts/obsidian.lua:2492
 msgid "slider"
 msgstr ""
 
-#: scripts/obsidian.lua:2493
+#: scripts/obsidian.lua:2526
 msgid "values"
 msgstr ""
 
-#: scripts/obsidian.lua:2494
+#: scripts/obsidian.lua:2527
 msgid "min"
 msgstr ""
 
-#: scripts/obsidian.lua:2495
+#: scripts/obsidian.lua:2528
 msgid "max"
 msgstr ""
 
-#: scripts/obsidian.lua:2534
+#: scripts/obsidian.lua:2533
 msgid "default"
+msgstr ""
+
+#: scripts/obsidian.lua:2549
+msgid "type"
 msgstr ""
 
 #: scripts/obsidian.lua:2550
-msgid "type"
-msgstr ""
-
-#: scripts/obsidian.lua:2517
 msgid "boolean"
 msgstr ""
 
-#: scripts/obsidian.lua:2518
+#: scripts/obsidian.lua:2551
 msgid "default"
 msgstr ""
 
-#: scripts/obsidian.lua:2554
+#: scripts/obsidian.lua:2553
 msgid "type"
 msgstr ""
 
-#: scripts/obsidian.lua:2521
+#: scripts/obsidian.lua:2554
 msgid "choice"
 msgstr ""
 
-#: scripts/obsidian.lua:2522
+#: scripts/obsidian.lua:2555
 msgid "values"
 msgstr ""
 
-#: scripts/obsidian.lua:2533
+#: scripts/obsidian.lua:2566
 msgid "randomize_group"
 msgstr ""
 
-#: scripts/obsidian.lua:2595
+#: scripts/obsidian.lua:2594
 msgid "~~~~~~~ Making Levels ~~~~~~~\n\n"
 msgstr ""
 
-#: scripts/obsidian.lua:2612
+#: scripts/obsidian.lua:2613
 msgid "SLUMP"
 msgstr ""
 
-#: scripts/obsidian.lua:2623
+#: scripts/obsidian.lua:2624
 msgid "id Tech 0"
 msgstr ""
 
-#: scripts/obsidian.lua:2631
+#: scripts/obsidian.lua:2632
 msgid "Hexen's level linking in Oblige v2 is incompatible with Obsidian's level progression. Please set the slider to 100% to generate the full WAD with Oblige v2."
 msgstr ""
 
-#: scripts/obsidian.lua:2658
+#: scripts/obsidian.lua:2659
 msgid "~~~~~~~ Build Aborted! ~~~~~~~\n\n"
 msgstr ""
 
-#: scripts/obsidian.lua:2663
+#: scripts/obsidian.lua:2664
 msgid "~~~~~~ Finished Making Levels ~~~~~~\n\n"
 msgstr ""
 
@@ -509,87 +509,87 @@ msgstr ""
 msgid "Villa Chex"
 msgstr ""
 
-#: games/doom/base.lua:50
+#: games/doom/base.lua:51
 msgid "Doom 2"
 msgstr ""
 
-#: games/doom/themes.lua:5070
+#: games/doom/themes.lua:5933
 msgid "Tech"
 msgstr ""
 
-#: games/doom/themes.lua:5080
+#: games/doom/themes.lua:5943
 msgid "Urban"
 msgstr ""
 
-#: games/doom/themes.lua:5090
+#: games/doom/themes.lua:5953
 msgid "Hell"
 msgstr ""
 
-#: games/doom/x_doom1.lua:9738
+#: games/doom/x_doom1.lua:10682
 msgid "Doom 1"
 msgstr ""
 
-#: games/doom/x_doom1.lua:9766
+#: games/doom/x_doom1.lua:10711
 msgid "Ultimate Doom"
 msgstr ""
 
-#: games/doom/x_doom1.lua:9783
+#: games/doom/x_doom1.lua:10728
 msgid "Deimos"
 msgstr ""
 
-#: games/doom/x_doom1.lua:9793
+#: games/doom/x_doom1.lua:10738
 msgid "Thy Flesh"
 msgstr ""
 
-#: games/doom/x_plutonia.lua:1196
+#: games/doom/x_plutonia.lua:1199
 msgid "Plutonia"
 msgstr ""
 
-#: games/doom/x_tnt.lua:723
+#: games/doom/x_tnt.lua:726
 msgid "TNT Evilution"
 msgstr ""
 
-#: games/doom/x_tnt.lua:743
+#: games/doom/x_tnt.lua:746
 msgid "Egypt"
 msgstr ""
 
-#: games/hacx/base.lua:47
+#: games/hacx/base.lua:49
 msgid "HacX 1.2"
 msgstr ""
 
-#: games/hacx/themes.lua:449
+#: games/hacx/themes.lua:855
 msgid "HacX Urban"
 msgstr ""
 
-#: games/harmony/base.lua:22
+#: games/harmony/base.lua:23
 msgid "Harmony"
 msgstr ""
 
-#: games/harmony/themes.lua:413
+#: games/harmony/themes.lua:857
 msgid "NDF Base"
 msgstr ""
 
-#: games/heretic/base.lua:51
+#: games/heretic/base.lua:52
 msgid "Heretic"
 msgstr ""
 
-#: games/heretic/themes.lua:2808
+#: games/heretic/themes.lua:2998
 msgid "City"
 msgstr ""
 
-#: games/heretic/themes.lua:2816
+#: games/heretic/themes.lua:3006
 msgid "Maw"
 msgstr ""
 
-#: games/heretic/themes.lua:2824
+#: games/heretic/themes.lua:3014
 msgid "Dome"
 msgstr ""
 
-#: games/heretic/themes.lua:2832
+#: games/heretic/themes.lua:3022
 msgid "Ossuary"
 msgstr ""
 
-#: games/heretic/themes.lua:2840
+#: games/heretic/themes.lua:3030
 msgid "Demense"
 msgstr ""
 
@@ -641,7 +641,7 @@ msgstr ""
 msgid "Castle"
 msgstr ""
 
-#: games/strife/base.lua:51
+#: games/strife/base.lua:52
 msgid "Strife"
 msgstr ""
 
@@ -679,6 +679,22 @@ msgstr ""
 
 #: modules/alt_shape_grammars.lua:60
 msgid "Gives levels a chance of being generated using Boxes of Death shape grammar. With this grammar, rooms are square shaped, with the occasional chunk taken out of one of the corners or sides. Room sizes are very consistent."
+msgstr ""
+
+#: modules/alt_shape_grammars.lua:67
+msgid "Oblige 7.45"
+msgstr ""
+
+#: modules/alt_shape_grammars.lua:69
+msgid "% Chance Per Level"
+msgstr ""
+
+#: modules/alt_shape_grammars.lua:74
+msgid "Sets chance of levels using the shape grammar from Oblige v7.45."
+msgstr ""
+
+#: modules/alt_shape_grammars.lua:75
+msgid "Gives levels a chance of being generated using the shape grammar from Oblige v7.45. This is primarily to provide a simpler grammar for facilitating new game support, but is available for curious users as well."
 msgstr ""
 
 #: modules/build_nodes.lua:21
@@ -1021,7 +1037,7 @@ msgstr ""
 msgid "PK3 Output"
 msgstr ""
 
-#: modules/compress_output.lua:30
+#: modules/compress_output.lua:29
 msgid "Automatically compress output to PK3 to save space."
 msgstr ""
 
@@ -2174,7 +2190,7 @@ msgid "Enables building of levels for experimental games."
 msgstr ""
 
 #: modules/debugger.lua:211
-msgid "The following games are in an experimental status, meaning that they may have errors when building levels, or support for certain gameplay features has not been implemented yet:\n\nDuke Nukem 3D (currently disabled)\n\nQuake (currently disabled)"
+msgid "The following games are in an experimental status, meaning that they may have errors when building levels, or support for certain gameplay features has not been implemented yet:\n\nHacX: SLUMP/Vanilla Port support only\n\nHarmony: SLUMP/Vanilla Port support only\n\nHexen: Oblige v2 support only (Architecture->Historical Versions must be set to 100%)\n\nChex Quest 3: Currently disabled\n\nStrife: Currently disabled\n\nDuke Nukem 3D: Currently disabled\n\nQuake: Currently disabled"
 msgstr ""
 
 #: modules/debugger.lua:219
@@ -2398,11 +2414,11 @@ msgid "No"
 msgstr ""
 
 #: modules/gzdoom_marine_closet.lua:1537
-msgid "[Exp]GZDoom Marine Closets"
+msgid "GZDoom Marine Closets"
 msgstr ""
 
 #: modules/gzdoom_marine_closet.lua:1552
-msgid "[WIP/Experimental]This module adds customizable closets to the map filled with friendly AI marines."
+msgid "This module adds customizable closets to the map filled with friendly AI marines."
 msgstr ""
 
 #: modules/gzdoom_marine_closet.lua:1559
@@ -3733,499 +3749,243 @@ msgstr ""
 msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
 msgstr ""
 
-#: modules/heretic/sky_generator.lua:26
-msgid "Default"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:27
-msgid "Random"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:28
-msgid "Night"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:29
-msgid "Day"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:34
-msgid "Random"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:35
-msgid "Never"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:36
-msgid "Always"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:41
-msgid "Random"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:42
-msgid "Hills"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:43
-msgid "Mountainous"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:44
-msgid "Cavernous"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:49
-msgid "DEFAULT"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:50
-msgid "Blue + White Clouds"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:51
-msgid "Grey"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:52
-msgid "Dark Grey"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:53
-msgid "Dark Blue"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:54
-msgid "Red"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:55
-msgid "Orange"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:56
-msgid "Red-ish"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:57
-msgid "Brown"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:58
-msgid "Brown-ish"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:59
-msgid "Yellow"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:60
-msgid "Green"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:61
-msgid "Jade"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:62
-msgid "Dark Red"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:63
-msgid "Peach"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:64
-msgid "White"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:65
-msgid "Purple"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:66
-msgid "Rainbow"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:71
-msgid "DEFAULT"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:72
-msgid "Black"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:73
-msgid "Brown"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:74
-msgid "Tan"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:75
-msgid "Green"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:76
-msgid "Dark Green"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:77
-msgid "Red"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:78
-msgid "Dark Brown"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:79
-msgid "Green-ish"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:80
-msgid "Ice"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:85
-msgid "DEFAULT"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:86
-msgid "None"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:87
-msgid "Blue"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:88
-msgid "Red"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:89
-msgid "Brown"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:90
-msgid "Green"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:729
-msgid "Sky Generator"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:749
-msgid "Time of Day"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:752
-msgid "This forces the sky background (behind the hills and clouds) to either be night or day. Default means vanilla Oblige behavior of picking one episode to be night. Random means 50% chance of night or day to be picked per episode."
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:759
-msgid "Terrain Foreground"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:762
-msgid "Influences whether the sky generator should generate terrain in the skybox."
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:769
-msgid "Terrain Parameters"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:772
-msgid "Changes the parameters of generated hills, if there are any. 'Cavernous' causes the terrain to nearly fill up most of the sky, making an impression of being inside a cave or crater."
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:780
-msgid "Day Sky Color"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:783
-msgid "Picks the color of the sky if day. Default means random and theme-ish."
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:790
-msgid "Terrain Color"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:793
-msgid "Picks the color of the terrain in the sky if available. Default means random and theme-ish."
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:800
-msgid "Nebula Color"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:803
-msgid "Picks the color of nebula if sky is night. 'None' means just a plain starry night sky. Default means random and theme-ish."
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:811
-msgid "Sky Gen Lighting"
-msgstr ""
-
-#: modules/heretic/sky_generator.lua:815
-msgid "Overrides (and ignores) Dark Outdoors setting in Miscellaneous tab. If the sky generator creates night skies for an episode, episode's map outdoors is also dark but bright if day-ish."
-msgstr ""
-
-#: modules/heretic/theme_control.lua:24
+#: modules/heretic/theme_control_heretic.lua:24
 msgid "NO CHANGE"
 msgstr ""
 
-#: modules/heretic/theme_control.lua:25
+#: modules/heretic/theme_control_heretic.lua:25
 msgid "City"
 msgstr ""
 
-#: modules/heretic/theme_control.lua:26
+#: modules/heretic/theme_control_heretic.lua:26
 msgid "Maw"
 msgstr ""
 
-#: modules/heretic/theme_control.lua:27
+#: modules/heretic/theme_control_heretic.lua:27
 msgid "Dome"
 msgstr ""
 
-#: modules/heretic/theme_control.lua:28
+#: modules/heretic/theme_control_heretic.lua:28
 msgid "Ossuary"
 msgstr ""
 
-#: modules/heretic/theme_control.lua:29
+#: modules/heretic/theme_control_heretic.lua:29
 msgid "Demense"
 msgstr ""
 
-#: modules/heretic/theme_control.lua:30
+#: modules/heretic/theme_control_heretic.lua:30
 msgid "Psychedelic"
 msgstr ""
 
-#: modules/heretic/theme_control.lua:31
+#: modules/heretic/theme_control_heretic.lua:31
 msgid "Minisodic"
 msgstr ""
 
-#: modules/heretic/theme_control.lua:98
+#: modules/heretic/theme_control_heretic.lua:99
 msgid "[Exp] Heretic Theme Control"
 msgstr ""
 
-#: modules/heretic/theme_control.lua:113
+#: modules/heretic/theme_control_heretic.lua:114
 msgid "Episode 1"
 msgstr ""
 
-#: modules/heretic/theme_control.lua:114
+#: modules/heretic/theme_control_heretic.lua:115
 msgid "Override regular theme for Episode 1."
 msgstr ""
 
-#: modules/heretic/theme_control.lua:117
+#: modules/heretic/theme_control_heretic.lua:118
 msgid "Episode 2"
 msgstr ""
 
-#: modules/heretic/theme_control.lua:118
+#: modules/heretic/theme_control_heretic.lua:119
 msgid "Override regular theme for Episode 2."
 msgstr ""
 
-#: modules/heretic/theme_control.lua:121
+#: modules/heretic/theme_control_heretic.lua:122
 msgid "Episode 3"
 msgstr ""
 
-#: modules/heretic/theme_control.lua:122
+#: modules/heretic/theme_control_heretic.lua:123
 msgid "Override regular theme for Episode 3."
 msgstr ""
 
-#: modules/heretic/theme_control.lua:125
+#: modules/heretic/theme_control_heretic.lua:126
 msgid "Episode 4"
 msgstr ""
 
-#: modules/heretic/theme_control.lua:126
+#: modules/heretic/theme_control_heretic.lua:127
 msgid "Override regular theme for Episode 4."
 msgstr ""
 
-#: modules/heretic/theme_control.lua:129
+#: modules/heretic/theme_control_heretic.lua:130
 msgid "Episode 5"
 msgstr ""
 
-#: modules/heretic/theme_control.lua:130
+#: modules/heretic/theme_control_heretic.lua:131
 msgid "Override regular theme for Episode 5."
 msgstr ""
 
-#: modules/heretic/theme_control.lua:133
+#: modules/heretic/theme_control_heretic.lua:134
 msgid "Secret Levels"
 msgstr ""
 
-#: modules/heretic/theme_control.lua:134
+#: modules/heretic/theme_control_heretic.lua:135
 msgid "Override regular theme for Secret Levels."
 msgstr ""
 
-#: modules/heretic/theme_control.lua:138
+#: modules/heretic/theme_control_heretic.lua:139
 msgid "Warning: Mix-ins are for now completely overriden when picking a choice with change."
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:26
+#: modules/heretic/zdoom_specials.lua:24
 msgid "Yes"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:27
+#: modules/heretic/zdoom_specials.lua:25
 msgid "No"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:32
+#: modules/heretic/zdoom_specials.lua:30
 msgid "Per Sky Generator"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:33
+#: modules/heretic/zdoom_specials.lua:31
 msgid "Random"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:34
+#: modules/heretic/zdoom_specials.lua:32
 msgid "Natural"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:35
+#: modules/heretic/zdoom_specials.lua:33
 msgid "No"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:40
+#: modules/heretic/zdoom_specials.lua:38
 msgid "All"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:41
+#: modules/heretic/zdoom_specials.lua:39
 msgid "Outdoors Only"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:46
+#: modules/heretic/zdoom_specials.lua:44
 msgid "Subtle"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:47
+#: modules/heretic/zdoom_specials.lua:45
 msgid "Misty"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:48
+#: modules/heretic/zdoom_specials.lua:46
 msgid "Smoky"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:49
+#: modules/heretic/zdoom_specials.lua:47
 msgid "Foggy"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:50
+#: modules/heretic/zdoom_specials.lua:48
 msgid "Dense"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:51
+#: modules/heretic/zdoom_specials.lua:49
 msgid "Mix It Up"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:56
+#: modules/heretic/zdoom_specials.lua:54
 msgid "Generic"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:57
+#: modules/heretic/zdoom_specials.lua:55
 msgid "Generated"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:58
+#: modules/heretic/zdoom_specials.lua:56
 msgid "NONE"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:187
+#: modules/heretic/zdoom_specials.lua:178
 msgid "Universal Intermission"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1149
+#: modules/heretic/zdoom_specials.lua:976
 msgid "ZDoom Special Addons"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1166
+#: modules/heretic/zdoom_specials.lua:993
 msgid "This module adds new ZDoom-exclusive features such as fog. More ZDoom-specific features will be included soon."
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1172
+#: modules/heretic/zdoom_specials.lua:999
 msgid "Fog Generator"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1176
+#: modules/heretic/zdoom_specials.lua:1003
 msgid "Generates fog colors based on the Sky Generator or generate completely randomly."
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1182
+#: modules/heretic/zdoom_specials.lua:1009
 msgid "Fog Environment"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1186
+#: modules/heretic/zdoom_specials.lua:1013
 msgid "Limits fog to outdoors (sectors with exposed sky ceilings) or allows for all."
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1192
+#: modules/heretic/zdoom_specials.lua:1019
 msgid "Fog Intensity"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1196
+#: modules/heretic/zdoom_specials.lua:1023
 msgid "Determines thickness and intensity of fog, if the Fog Generator is enabled. Subtle or Misty is recommended."
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1202
+#: modules/heretic/zdoom_specials.lua:1029
 msgid "Sky Fog"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1206
+#: modules/heretic/zdoom_specials.lua:1033
 msgid "Tints the sky texture with the fog color, intensity is based on the Fog Intensity selection."
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1213
-msgid "Dynamic Lights"
-msgstr ""
-
-#: modules/heretic/zdoom_specials.lua:1217
-msgid "Generates dynamic point lights on ceiling light prefabs."
-msgstr ""
-
-#: modules/heretic/zdoom_specials.lua:1222
-msgid "Glowing Flats"
-msgstr ""
-
-#: modules/heretic/zdoom_specials.lua:1226
-msgid "Adds Doom-64 style lighting/glowing flats via GLDEFS lump. Visible on Zandronum ports as well."
-msgstr ""
-
-#: modules/heretic/zdoom_specials.lua:1232
+#: modules/heretic/zdoom_specials.lua:1040
 msgid "Shuffle Music"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1236
+#: modules/heretic/zdoom_specials.lua:1044
 msgid "Shuffles music in the MAPINFO lump."
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1241
+#: modules/heretic/zdoom_specials.lua:1049
 msgid "Story Generator"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1245
+#: modules/heretic/zdoom_specials.lua:1053
 msgid "Adds cluster information with generic or randomized story text into the MAPINFO structure!"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1250
+#: modules/heretic/zdoom_specials.lua:1058
 msgid "Quit Messages"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1254
+#: modules/heretic/zdoom_specials.lua:1062
 msgid "Adds custom quit messages into the MAPINFO game definition."
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1259
+#: modules/heretic/zdoom_specials.lua:1067
 msgid "Intermission Music"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1263
+#: modules/heretic/zdoom_specials.lua:1071
 msgid "Changes the music playing during intermission screens."
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1268
+#: modules/heretic/zdoom_specials.lua:1076
 msgid "Disable Intermissions"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1272
+#: modules/heretic/zdoom_specials.lua:1080
 msgid "Removes end-level Intermission Screens (containing map completion data) but retains Text Screens with story."
 msgstr ""
 
@@ -5101,23 +4861,23 @@ msgstr ""
 msgid "Attempts to mimic various architectural features seen in the Doom 2 IWAD maps.\nNOTE: This will override settings in other parts of the program such as Level Size, Room Size, etc!"
 msgstr ""
 
-#: modules/jokewad_module.lua:429
+#: modules/jokewad_module.lua:433
 msgid "Jokewad Module"
 msgstr ""
 
-#: modules/jokewad_module.lua:449
+#: modules/jokewad_module.lua:453
 msgid "FIREBLU Mode"
 msgstr ""
 
-#: modules/jokewad_module.lua:452
+#: modules/jokewad_module.lua:456
 msgid "Allows the creation of the greatest maps to ever be generated on the face of the earth. Warning: ticking this waives any liability for potential emotional and physical damage on the part of the user."
 msgstr ""
 
-#: modules/jokewad_module.lua:458
+#: modules/jokewad_module.lua:462
 msgid "Pandemic Mode"
 msgstr ""
 
-#: modules/jokewad_module.lua:461
+#: modules/jokewad_module.lua:465
 msgid "Do your part in preventing the coronavirus crisis! Hell is taking away all our tissue rolls and hand sanitizers! It's up to the Slayer to take it back. Every square and every squeeze."
 msgstr ""
 
@@ -5873,67 +5633,67 @@ msgstr ""
 msgid "Debug Info"
 msgstr ""
 
-#: modules/modded_game_extras.lua:2477
+#: modules/modded_game_extras.lua:50
+msgid "Debug Info with Prefabs"
+msgstr ""
+
+#: modules/modded_game_extras.lua:2485
 msgid "Modded Game Extras"
 msgstr ""
 
-#: modules/modded_game_extras.lua:2492
+#: modules/modded_game_extras.lua:2500
 msgid "Offers extra features and expanded support for various mods."
 msgstr ""
 
-#: modules/modded_game_extras.lua:2499
+#: modules/modded_game_extras.lua:2507
 msgid "HN Markers"
 msgstr ""
 
-#: modules/modded_game_extras.lua:2502
+#: modules/modded_game_extras.lua:2510
 msgid "Adds support for m8f's Hellscape Navigator by generating name markers in the map per room."
 msgstr ""
 
-#: modules/modded_game_extras.lua:2507
+#: modules/modded_game_extras.lua:2515
 msgid "HN Info Type"
 msgstr ""
 
-#: modules/modded_game_extras.lua:2509
-msgid "Pick which information type to place into Hellscape Navigator markers.\n\nQuest Info - (DEFAULT) Places traversal progress per room and key quest info into the markers.\nDebug Info - Prints verbose information about shape grammar growth status per room and prefabs. Reveals secret prefabs - which is obviously cheating."
-msgstr ""
-
-#: modules/modded_game_extras.lua:2518
+#: modules/modded_game_extras.lua:2529
 msgid "Custom Actor Names"
 msgstr ""
 
-#: modules/modded_game_extras.lua:2521
+#: modules/modded_game_extras.lua:2532
 msgid "Renames tags of monsters with generated names. Humans recieve human names, demons recieve exotic names.\nBest used with TargetSpy or other healthbar mods to see the name.\nUses class inheritance and string comparisons to determine monster species (human or demon). Use compatibility options only when necessary, preferably use Universal option instead."
 msgstr ""
 
-#: modules/modded_game_extras.lua:2528
+#: modules/modded_game_extras.lua:2539
 msgid "QC:DE Lootboxes"
 msgstr ""
 
-#: modules/modded_game_extras.lua:2531
+#: modules/modded_game_extras.lua:2542
 msgid "Adds Quake Champions: Doom Edition Lootboxes as nice item pickups."
 msgstr ""
 
-#: modules/modded_game_extras.lua:2538
+#: modules/modded_game_extras.lua:2549
 msgid "D4T Entities"
 msgstr ""
 
-#: modules/modded_game_extras.lua:2541
+#: modules/modded_game_extras.lua:2552
 msgid "Adds Death Foretold field drones into items table and gore nests as potential minor boss monsters."
 msgstr ""
 
-#: modules/modded_game_extras.lua:2548
+#: modules/modded_game_extras.lua:2559
 msgid "Trailblazer Upgrades"
 msgstr ""
 
-#: modules/modded_game_extras.lua:2551
+#: modules/modded_game_extras.lua:2562
 msgid "Adds Trailblazer's upgrade blueprints as separate pickups that can be found in the map."
 msgstr ""
 
-#: modules/modded_game_extras.lua:2558
+#: modules/modded_game_extras.lua:2569
 msgid "Complex Doom Modifications"
 msgstr ""
 
-#: modules/modded_game_extras.lua:2561
+#: modules/modded_game_extras.lua:2572
 msgid "Modifies general gameplay settings to balance generated maps more for use with Complex Doom due to its difficulty spike."
 msgstr ""
 
@@ -7022,242 +6782,250 @@ msgid "Control the amount of Thunderbolts."
 msgstr ""
 
 #: modules/sky_generator.lua:25
-msgid "Default"
+msgid "Default (33% of Episodes Day)"
 msgstr ""
 
 #: modules/sky_generator.lua:26
-msgid "Random"
-msgstr ""
-
-#: modules/sky_generator.lua:27
 msgid "Night"
 msgstr ""
 
-#: modules/sky_generator.lua:28
+#: modules/sky_generator.lua:27
 msgid "Day"
 msgstr ""
 
-#: modules/sky_generator.lua:33
-msgid "Random"
+#: modules/sky_generator.lua:28
+msgid "25% of Episodes Day"
 msgstr ""
 
-#: modules/sky_generator.lua:34
-msgid "Never"
+#: modules/sky_generator.lua:29
+msgid "50% of Episodes Day"
+msgstr ""
+
+#: modules/sky_generator.lua:30
+msgid "75% of Episodes Day"
 msgstr ""
 
 #: modules/sky_generator.lua:35
-msgid "Always"
-msgstr ""
-
-#: modules/sky_generator.lua:40
 msgid "Random"
 msgstr ""
 
-#: modules/sky_generator.lua:41
-msgid "Hills"
+#: modules/sky_generator.lua:36
+msgid "Never"
+msgstr ""
+
+#: modules/sky_generator.lua:37
+msgid "Always"
 msgstr ""
 
 #: modules/sky_generator.lua:42
-msgid "Mountainous"
+msgid "Random"
 msgstr ""
 
 #: modules/sky_generator.lua:43
+msgid "Hills"
+msgstr ""
+
+#: modules/sky_generator.lua:44
+msgid "Mountainous"
+msgstr ""
+
+#: modules/sky_generator.lua:45
 msgid "Cavernous"
 msgstr ""
 
-#: modules/sky_generator.lua:48
-msgid "DEFAULT"
-msgstr ""
-
-#: modules/sky_generator.lua:49
-msgid "Blue + White Clouds"
-msgstr ""
-
 #: modules/sky_generator.lua:50
-msgid "Grey"
+msgid "DEFAULT"
 msgstr ""
 
 #: modules/sky_generator.lua:51
-msgid "Dark Grey"
+msgid "Blue + White Clouds"
 msgstr ""
 
 #: modules/sky_generator.lua:52
-msgid "Dark Blue"
+msgid "Grey"
 msgstr ""
 
 #: modules/sky_generator.lua:53
-msgid "Red"
+msgid "Dark Grey"
 msgstr ""
 
 #: modules/sky_generator.lua:54
-msgid "Orange"
+msgid "Dark Blue"
 msgstr ""
 
 #: modules/sky_generator.lua:55
-msgid "Red-ish"
+msgid "Red"
 msgstr ""
 
 #: modules/sky_generator.lua:56
-msgid "Brown"
+msgid "Orange"
 msgstr ""
 
 #: modules/sky_generator.lua:57
-msgid "Brown-ish"
+msgid "Red-ish"
 msgstr ""
 
 #: modules/sky_generator.lua:58
-msgid "Yellow"
+msgid "Brown"
 msgstr ""
 
 #: modules/sky_generator.lua:59
-msgid "Green"
+msgid "Brown-ish"
 msgstr ""
 
 #: modules/sky_generator.lua:60
-msgid "Jade"
+msgid "Yellow"
 msgstr ""
 
 #: modules/sky_generator.lua:61
-msgid "Dark Red"
+msgid "Green"
 msgstr ""
 
 #: modules/sky_generator.lua:62
-msgid "Peach"
+msgid "Jade"
 msgstr ""
 
 #: modules/sky_generator.lua:63
-msgid "White"
+msgid "Dark Red"
 msgstr ""
 
 #: modules/sky_generator.lua:64
-msgid "Purple"
+msgid "Peach"
 msgstr ""
 
 #: modules/sky_generator.lua:65
+msgid "White"
+msgstr ""
+
+#: modules/sky_generator.lua:66
+msgid "Purple"
+msgstr ""
+
+#: modules/sky_generator.lua:67
 msgid "Rainbow"
 msgstr ""
 
-#: modules/sky_generator.lua:70
-msgid "DEFAULT"
-msgstr ""
-
-#: modules/sky_generator.lua:71
-msgid "Black"
-msgstr ""
-
 #: modules/sky_generator.lua:72
-msgid "Brown"
+msgid "DEFAULT"
 msgstr ""
 
 #: modules/sky_generator.lua:73
-msgid "Tan"
+msgid "Black"
 msgstr ""
 
 #: modules/sky_generator.lua:74
-msgid "Green"
-msgstr ""
-
-#: modules/sky_generator.lua:75
-msgid "Dark Green"
-msgstr ""
-
-#: modules/sky_generator.lua:76
-msgid "Red"
-msgstr ""
-
-#: modules/sky_generator.lua:77
-msgid "Dark Brown"
-msgstr ""
-
-#: modules/sky_generator.lua:78
-msgid "Green-ish"
-msgstr ""
-
-#: modules/sky_generator.lua:79
-msgid "Ice"
-msgstr ""
-
-#: modules/sky_generator.lua:84
-msgid "DEFAULT"
-msgstr ""
-
-#: modules/sky_generator.lua:85
-msgid "None"
-msgstr ""
-
-#: modules/sky_generator.lua:86
-msgid "Blue"
-msgstr ""
-
-#: modules/sky_generator.lua:87
-msgid "Red"
-msgstr ""
-
-#: modules/sky_generator.lua:88
 msgid "Brown"
 msgstr ""
 
-#: modules/sky_generator.lua:89
+#: modules/sky_generator.lua:75
+msgid "Tan"
+msgstr ""
+
+#: modules/sky_generator.lua:76
 msgid "Green"
 msgstr ""
 
-#: modules/sky_generator.lua:643
+#: modules/sky_generator.lua:77
+msgid "Dark Green"
+msgstr ""
+
+#: modules/sky_generator.lua:78
+msgid "Red"
+msgstr ""
+
+#: modules/sky_generator.lua:79
+msgid "Dark Brown"
+msgstr ""
+
+#: modules/sky_generator.lua:80
+msgid "Green-ish"
+msgstr ""
+
+#: modules/sky_generator.lua:81
+msgid "Ice"
+msgstr ""
+
+#: modules/sky_generator.lua:86
+msgid "DEFAULT"
+msgstr ""
+
+#: modules/sky_generator.lua:87
+msgid "None"
+msgstr ""
+
+#: modules/sky_generator.lua:88
+msgid "Blue"
+msgstr ""
+
+#: modules/sky_generator.lua:89
+msgid "Red"
+msgstr ""
+
+#: modules/sky_generator.lua:90
+msgid "Brown"
+msgstr ""
+
+#: modules/sky_generator.lua:91
+msgid "Green"
+msgstr ""
+
+#: modules/sky_generator.lua:335
 msgid "Sky Generator"
 msgstr ""
 
-#: modules/sky_generator.lua:662
+#: modules/sky_generator.lua:354
 msgid "Time of Day"
 msgstr ""
 
-#: modules/sky_generator.lua:665
+#: modules/sky_generator.lua:357
 msgid "This forces the sky background (behind the hills and clouds) to either be night or day. Default means vanilla Oblige behavior of picking one episode to be night. Random means 50% chance of night or day to be picked per episode."
 msgstr ""
 
-#: modules/sky_generator.lua:672
+#: modules/sky_generator.lua:364
 msgid "Terrain Foreground"
 msgstr ""
 
-#: modules/sky_generator.lua:675
+#: modules/sky_generator.lua:367
 msgid "Influences whether the sky generator should generate terrain in the skybox."
 msgstr ""
 
-#: modules/sky_generator.lua:683
+#: modules/sky_generator.lua:375
 msgid "Terrain Parameters"
 msgstr ""
 
-#: modules/sky_generator.lua:686
+#: modules/sky_generator.lua:378
 msgid "Changes the parameters of generated hills, if there are any. 'Cavernous' causes the terrain to nearly fill up most of the sky, making an impression of being inside a cave or crater."
 msgstr ""
 
-#: modules/sky_generator.lua:695
+#: modules/sky_generator.lua:387
 msgid "Day Sky Color"
 msgstr ""
 
-#: modules/sky_generator.lua:698
+#: modules/sky_generator.lua:390
 msgid "Picks the color of the sky if day. Default means random and theme-ish."
 msgstr ""
 
-#: modules/sky_generator.lua:706
+#: modules/sky_generator.lua:398
 msgid "Terrain Color"
 msgstr ""
 
-#: modules/sky_generator.lua:709
+#: modules/sky_generator.lua:401
 msgid "Picks the color of the terrain in the sky if available. Default means random and theme-ish."
 msgstr ""
 
-#: modules/sky_generator.lua:717
+#: modules/sky_generator.lua:409
 msgid "Nebula Color"
 msgstr ""
 
-#: modules/sky_generator.lua:720
+#: modules/sky_generator.lua:412
 msgid "Picks the color of nebula if sky is night. 'None' means just a plain starry night sky. Default means random and theme-ish."
 msgstr ""
 
-#: modules/sky_generator.lua:729
+#: modules/sky_generator.lua:421
 msgid "Sky Gen Lighting"
 msgstr ""
 
-#: modules/sky_generator.lua:733
+#: modules/sky_generator.lua:425
 msgid "Overrides (and ignores) Dark Outdoors setting in Miscellaneous tab. If the sky generator creates night skies for an episode, episode's map outdoors is also dark but bright if day-ish."
 msgstr ""
 
@@ -7286,11 +7054,11 @@ msgid "Default Quantity"
 msgstr ""
 
 #: modules/stealth_mons.lua:307
-msgid "Control the appearance of stealth monster variants (ZDoom Family and EDGE-Classic only)."
+msgid "Control the appearance of stealth monster variants (GZDoom and EDGE-Classic only)."
 msgstr ""
 
 #: modules/stealth_mons.lua:357
-msgid "Stealth Monsters : Control"
+msgid "Stealth Monsters Fine Tuning"
 msgstr ""
 
 #: modules/stealth_mons.lua:375
@@ -7901,139 +7669,151 @@ msgstr ""
 msgid "Control the amount of teleporters."
 msgstr ""
 
-#: modules/ui_arch.lua:251
-msgid "Steepness"
-msgstr ""
-
 #: modules/ui_arch.lua:252
-msgid "Control the height difference of stairs, lifts, and joiners throughout levels."
+msgid "Teleporter Emergency Breaks"
 msgstr ""
 
-#: modules/ui_arch.lua:258
-msgid "Bottomless Vistas"
+#: modules/ui_arch.lua:255
+msgid "Allow/disallow teleporter emergency breaks."
+msgstr ""
+
+#: modules/ui_arch.lua:256
+msgid "Teleporters are sometimes used when performing an emergency room break in order to continue level growth. With this setting disabled, teleports will never be used in an emergency break. This could result in truncated level growth or, in the worst case, a script error."
 msgstr ""
 
 #: modules/ui_arch.lua:261
-msgid "This feature allows for vistas that show more of the skybox below the horizon. This does not prevent skybox tiling."
+msgid "Steepness"
 msgstr ""
 
 #: modules/ui_arch.lua:262
-msgid "Enable - Bottomless vistas can always show. Pick this choice when using 3D Skyboxes.\n\nSky-gen Smart - Bottomless vistas appear only on episodes with no mountain backdrop based on the Sky Generator.\n\nDisable - Old Oblige behavior - no bottomless vistas."
+msgid "Control the height difference of stairs, lifts, and joiners throughout levels."
 msgstr ""
 
-#: modules/ui_arch.lua:269
-msgid "3D Skyboxes"
+#: modules/ui_arch.lua:268
+msgid "Bottomless Vistas"
+msgstr ""
+
+#: modules/ui_arch.lua:271
+msgid "This feature allows for vistas that show more of the skybox below the horizon. This does not prevent skybox tiling."
 msgstr ""
 
 #: modules/ui_arch.lua:272
+msgid "Enable - Bottomless vistas can always show. Pick this choice when using 3D Skyboxes.\n\nSky-gen Smart - Bottomless vistas appear only on episodes with no mountain backdrop based on the Sky Generator.\n\nDisable - Old Oblige behavior - no bottomless vistas."
+msgstr ""
+
+#: modules/ui_arch.lua:279
+msgid "3D Skyboxes"
+msgstr ""
+
+#: modules/ui_arch.lua:282
 msgid "Choose if 3D Skyboxes are rendered into levels and their style."
 msgstr ""
 
-#: modules/ui_arch.lua:273
+#: modules/ui_arch.lua:283
 msgid "This is highly recommended when Bottomless Vistas are enabled."
 msgstr ""
 
-#: modules/ui_arch.lua:285
+#: modules/ui_arch.lua:295
 msgid "Very Fast Curve"
 msgstr ""
 
-#: modules/ui_arch.lua:286
+#: modules/ui_arch.lua:296
 msgid "Fast Curve"
 msgstr ""
 
-#: modules/ui_arch.lua:287
+#: modules/ui_arch.lua:297
 msgid "Linear"
 msgstr ""
 
-#: modules/ui_arch.lua:288
+#: modules/ui_arch.lua:298
 msgid "Slow Curve"
 msgstr ""
 
-#: modules/ui_arch.lua:289
+#: modules/ui_arch.lua:299
 msgid "Very Slow Curve"
 msgstr ""
 
-#: modules/ui_arch.lua:294
+#: modules/ui_arch.lua:304
 msgid "Smaller"
 msgstr ""
 
-#: modules/ui_arch.lua:295
+#: modules/ui_arch.lua:305
 msgid "DEFAULT"
 msgstr ""
 
-#: modules/ui_arch.lua:296
+#: modules/ui_arch.lua:306
 msgid "Larger"
 msgstr ""
 
-#: modules/ui_arch.lua:309
+#: modules/ui_arch.lua:319
 msgid "Architecture"
 msgstr ""
 
-#: modules/ui_arch.lua:328
+#: modules/ui_arch.lua:338
 msgid "Level Size"
 msgstr ""
 
-#: modules/ui_arch.lua:334
+#: modules/ui_arch.lua:344
 msgid "Mix It Up,Episodic,Progressive"
 msgstr ""
 
-#: modules/ui_arch.lua:335
+#: modules/ui_arch.lua:345
 msgid "10:10 (Microscopic),16:16 (Miniature),22:22 (Tiny),30:30 (Small),36:36 (Average),42:42 (Large),48:48 (Huge),58:58 (Colossal),66:66 (Gargantuan),75:75 (Transcendent)"
 msgstr ""
 
-#: modules/ui_arch.lua:336
+#: modules/ui_arch.lua:346
 msgid "Determines size of map (Width x Height) in grid squares."
 msgstr ""
 
-#: modules/ui_arch.lua:337
+#: modules/ui_arch.lua:347
 msgid "If you are planning to generate Binary format maps at sizes of 50 and above, Autodetailing will be enabled by default. The stability of maps with sizes 60 and beyond is not predictable unless using UDMF map format (supported engines only)."
 msgstr ""
 
-#: modules/ui_arch.lua:345
+#: modules/ui_arch.lua:355
 msgid "Upper Bound"
 msgstr ""
 
-#: modules/ui_arch.lua:351
+#: modules/ui_arch.lua:361
 msgid "10:10 (Microscopic),16:16 (Miniature),22:22 (Tiny),30:30 (Small),36:36 (Average),42:42 (Large),48:48 (Huge),58:58 (Colossal),66:66 (Gargantuan),75:75 (Transcendent)"
 msgstr ""
 
-#: modules/ui_arch.lua:352
+#: modules/ui_arch.lua:362
 msgid "Fine tune upper limit when Level Size is set to Episodic, Progressive or Mixed."
 msgstr ""
 
-#: modules/ui_arch.lua:359
+#: modules/ui_arch.lua:369
 msgid "Lower Bound"
 msgstr ""
 
-#: modules/ui_arch.lua:365
+#: modules/ui_arch.lua:375
 msgid "10:10 (Microscopic),16:16 (Miniature),22:22 (Tiny),30:30 (Small),36:36 (Average),42:42 (Large),48:48 (Huge),58:58 (Colossal),66:66 (Gargantuan),75:75 (Transcendent)"
 msgstr ""
 
-#: modules/ui_arch.lua:366
+#: modules/ui_arch.lua:376
 msgid "Fine tune lower limit when Level Size is set to Episodic, Progressive or Mixed."
 msgstr ""
 
-#: modules/ui_arch.lua:374
+#: modules/ui_arch.lua:384
 msgid "Ramp Factor"
 msgstr ""
 
-#: modules/ui_arch.lua:375
+#: modules/ui_arch.lua:385
 msgid "Determines how fast or slow larger level sizes are reached in Progressive/Episodic mode."
 msgstr ""
 
-#: modules/ui_arch.lua:376
+#: modules/ui_arch.lua:386
 msgid "Very Fast Curve: Reach half-size at 1/4th of the game.\nFast Curve: Reach half-size at 1/3rds.\nLinear: Reach half-size at half the game.\nSlow Curve: Reach half-size at 2/3rds.\nVery Slow Curve: Reach half-size at 3/4ths.\n\nObsidian default is Fast Curve."
 msgstr ""
 
-#: modules/ui_arch.lua:386
+#: modules/ui_arch.lua:396
 msgid "Level Size Bias"
 msgstr ""
 
-#: modules/ui_arch.lua:387
+#: modules/ui_arch.lua:397
 msgid "Alters probability skew when using Mix It Up for level sizes."
 msgstr ""
 
-#: modules/ui_arch.lua:388
+#: modules/ui_arch.lua:398
 msgid "DEFAULT is a normal curve where Average is the most common size while smaller or larger sizes become rarer.\n\nCombine with Level Upper and Lower Bounds for greater control."
 msgstr ""
 
@@ -8333,59 +8113,63 @@ msgstr ""
 msgid "I'm in your secret rooms, placing some monsters. Note: default is none."
 msgstr ""
 
-#: modules/ui_mons.lua:353
+#: modules/ui_mons.lua:336
+msgid "Enemy Drop Compensation"
+msgstr ""
+
+#: modules/ui_mons.lua:363
 msgid "Combat"
 msgstr ""
 
-#: modules/ui_mons.lua:367
+#: modules/ui_mons.lua:377
 msgid "Monster Quantity"
 msgstr ""
 
-#: modules/ui_mons.lua:373
+#: modules/ui_mons.lua:383
 msgid "Mix It Up,Progressive"
 msgstr ""
 
-#: modules/ui_mons.lua:374
+#: modules/ui_mons.lua:384
 msgid "0:None,0.15:0.15 (Trivial),0.35:0.35 (Sporadic),0.7:0.7 (Meager),1.0:1.0 (Easy),1.3:1.3 (Modest),1.5:1.5 (Bearable),2.0:2.0 (Rough),2.5:2.5 (Strenuous),3.0:3.0 (Formidable),3.5:3.5 (Harsh),4.0:4.0 (Painful),4.5:4.5 (Ferocious),5.0:5.0 (Unforgiving),5.5:5.5 (Punishing),6.0:6.0 (Murderous),6.5:6.5 (Grueling),7.0:7.0 (Unrelenting),7.5:7.5 (Arduous),8.0:8.0 (Barbaric),8.5:8.5 (Savage),9.0:9.0 (Brutal),9.5:9.5 (Draconian),10.0:10.00 (Merciless)"
 msgstr ""
 
-#: modules/ui_mons.lua:375
+#: modules/ui_mons.lua:385
 msgid "Changes the amount of monsters placed in a map. Scales with level size."
 msgstr ""
 
-#: modules/ui_mons.lua:376
+#: modules/ui_mons.lua:386
 msgid "For reference: Obsidian's default for normal is 1.0.\n\nMix It Up: Selects quantities specified between Upper and Lower Bound choices on a chosen by the user.\n\nProgressive: creates a curve of increasing monster population also based on the Fine Tune options below.\n\nIt does not matter if your Upper/Lower Bound selections are reversed. Progressive will pick the min VS max quantities selected.\n\nNone: No monsters. Why would you choose this option? \nTrivial: Very, very few monsters. Almost nothing to kill.\nSporadic: Very few monsters. Not many things to kill.\nMeager: Fewer monsters. Not challenging for the average player.\nEasy: Obsidian default quantity. Not too bad for casual players.\nModest: Slightly above default. Still pretty easy for most. \nBearable: Above average opposition. Getting warmer! \nRough: Slightly difficult. Equivalent to late 90s megawads. \nStrenuous: Baby steps into big boy difficulty. Lots to kill! \nFormidable/Harsh: 'Easy' level of difficult. Considerable opposition. \nPainful/Ferocious: Getting into slaughterwad territory. Difficult! \nUnforgiving/Punishing: Slaughterwad level difficulty. Skill needed. \nMurderous/Grueling: Extremely high monster count. \nUnrelenting/Arduous: An uphill battle. Expect to reload saves often! \nBarbaric/Savage: Up into the hardest slaughterwads out there. \nBrutal/Draconian: Legions of demons await you on this setting. \nMerciless: Hell will throw everything at you at this setting, you masochist."
 msgstr ""
 
-#: modules/ui_mons.lua:382
+#: modules/ui_mons.lua:392
 msgid "Upper Bound"
 msgstr ""
 
-#: modules/ui_mons.lua:388
+#: modules/ui_mons.lua:398
 msgid "0:None,0.15:0.15 (Trivial),0.35:0.35 (Sporadic),0.7:0.7 (Meager),1.0:1.0 (Easy),1.3:1.3 (Modest),1.5:1.5 (Bearable),2.0:2.0 (Rough),2.5:2.5 (Strenuous),3.0:3.0 (Formidable),3.5:3.5 (Harsh),4.0:4.0 (Painful),4.5:4.5 (Ferocious),5.0:5.0 (Unforgiving),5.5:5.5 (Punishing),6.0:6.0 (Murderous),6.5:6.5 (Grueling),7.0:7.0 (Unrelenting),7.5:7.5 (Arduous),8.0:8.0 (Barbaric),8.5:8.5 (Savage),9.0:9.0 (Brutal),9.5:9.5 (Draconian),10.0:10.00 (Merciless)"
 msgstr ""
 
-#: modules/ui_mons.lua:389
+#: modules/ui_mons.lua:399
 msgid "If you have Mix It Up or Progressive selected, you can define the upper bound here. Otherwise, this option is simply ignored."
 msgstr ""
 
-#: modules/ui_mons.lua:390
+#: modules/ui_mons.lua:400
 msgid "For reference: Obsidian's default for normal is 1.0.\n\nMix It Up: Selects quantities specified between Upper and Lower Bound choices on a chosen by the user.\n\nProgressive: creates a curve of increasing monster population also based on the Fine Tune options below.\n\nIt does not matter if your Upper/Lower Bound selections are reversed. Progressive will pick the min VS max quantities selected.\n\nNone: No monsters. Why would you choose this option? \nTrivial: Very, very few monsters. Almost nothing to kill.\nSporadic: Very few monsters. Not many things to kill.\nMeager: Fewer monsters. Not challenging for the average player.\nEasy: Obsidian default quantity. Not too bad for casual players.\nModest: Slightly above default. Still pretty easy for most. \nBearable: Above average opposition. Getting warmer! \nRough: Slightly difficult. Equivalent to late 90s megawads. \nStrenuous: Baby steps into big boy difficulty. Lots to kill! \nFormidable/Harsh: 'Easy' level of difficult. Considerable opposition. \nPainful/Ferocious: Getting into slaughterwad territory. Difficult! \nUnforgiving/Punishing: Slaughterwad level difficulty. Skill needed. \nMurderous/Grueling: Extremely high monster count. \nUnrelenting/Arduous: An uphill battle. Expect to reload saves often! \nBarbaric/Savage: Up into the hardest slaughterwads out there. \nBrutal/Draconian: Legions of demons await you on this setting. \nMerciless: Hell will throw everything at you at this setting, you masochist."
 msgstr ""
 
-#: modules/ui_mons.lua:395
+#: modules/ui_mons.lua:405
 msgid "Lower Bound"
 msgstr ""
 
-#: modules/ui_mons.lua:401
+#: modules/ui_mons.lua:411
 msgid "0:None,0.15:0.15 (Trivial),0.35:0.35 (Sporadic),0.7:0.7 (Meager),1.0:1.0 (Easy),1.3:1.3 (Modest),1.5:1.5 (Bearable),2.0:2.0 (Rough),2.5:2.5 (Strenuous),3.0:3.0 (Formidable),3.5:3.5 (Harsh),4.0:4.0 (Painful),4.5:4.5 (Ferocious),5.0:5.0 (Unforgiving),5.5:5.5 (Punishing),6.0:6.0 (Murderous),6.5:6.5 (Grueling),7.0:7.0 (Unrelenting),7.5:7.5 (Arduous),8.0:8.0 (Barbaric),8.5:8.5 (Savage),9.0:9.0 (Brutal),9.5:9.5 (Draconian),10.0:10.00 (Merciless)"
 msgstr ""
 
-#: modules/ui_mons.lua:402
+#: modules/ui_mons.lua:412
 msgid "If you have Mix It Up or Progressive selected, you can define the lower bound here. Otherwise, this option is simply ignored."
 msgstr ""
 
-#: modules/ui_mons.lua:403
+#: modules/ui_mons.lua:413
 msgid "For reference: Obsidian's default for normal is 1.0.\n\nMix It Up: Selects quantities specified between Upper and Lower Bound choices on a chosen by the user.\n\nProgressive: creates a curve of increasing monster population also based on the Fine Tune options below.\n\nIt does not matter if your Upper/Lower Bound selections are reversed. Progressive will pick the min VS max quantities selected.\n\nNone: No monsters. Why would you choose this option? \nTrivial: Very, very few monsters. Almost nothing to kill.\nSporadic: Very few monsters. Not many things to kill.\nMeager: Fewer monsters. Not challenging for the average player.\nEasy: Obsidian default quantity. Not too bad for casual players.\nModest: Slightly above default. Still pretty easy for most. \nBearable: Above average opposition. Getting warmer! \nRough: Slightly difficult. Equivalent to late 90s megawads. \nStrenuous: Baby steps into big boy difficulty. Lots to kill! \nFormidable/Harsh: 'Easy' level of difficult. Considerable opposition. \nPainful/Ferocious: Getting into slaughterwad territory. Difficult! \nUnforgiving/Punishing: Slaughterwad level difficulty. Skill needed. \nMurderous/Grueling: Extremely high monster count. \nUnrelenting/Arduous: An uphill battle. Expect to reload saves often! \nBarbaric/Savage: Up into the hardest slaughterwads out there. \nBrutal/Draconian: Legions of demons await you on this setting. \nMerciless: Hell will throw everything at you at this setting, you masochist."
 msgstr ""
 
@@ -8858,7 +8642,7 @@ msgid "30000"
 msgstr ""
 
 #: modules/zdoom_frozsoul_sound.lua:252
-msgid "ZDoom: Ambient Sounds"
+msgid "ZDoom Ambient Sounds"
 msgstr ""
 
 #: modules/zdoom_frozsoul_sound.lua:273
@@ -8914,7 +8698,7 @@ msgid "Control the appearance of hostile ZDoom Marines."
 msgstr ""
 
 #: modules/zdoom_marines.lua:294
-msgid "Hostile Marines : Control"
+msgid "Hostile Marines Fine Tuning"
 msgstr ""
 
 #: modules/zdoom_marines.lua:316
@@ -9221,107 +9005,115 @@ msgstr ""
 msgid "Doom 1 Vanilla"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1176
-msgid "ZDoom Special Addons"
+#: modules/zdoom_specials.lua:912
+msgid "ZDoom Lighting Options"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1195
-msgid "This module adds new ZDoom-exclusive features such as fog. More ZDoom-specific features will be included soon."
+#: modules/zdoom_specials.lua:927
+msgid "This module adds ZDoom-exclusive GL/dynamic lighting definitions."
 msgstr ""
 
-#: modules/zdoom_specials.lua:1201
-msgid "Fog Generator"
-msgstr ""
-
-#: modules/zdoom_specials.lua:1205
-msgid "Generates fog colors based on the Sky Generator or generate completely randomly."
-msgstr ""
-
-#: modules/zdoom_specials.lua:1211
-msgid "Fog Environment"
-msgstr ""
-
-#: modules/zdoom_specials.lua:1215
-msgid "Limits fog to outdoors (sectors with exposed sky ceilings) or allows for all."
-msgstr ""
-
-#: modules/zdoom_specials.lua:1221
-msgid "Fog Intensity"
-msgstr ""
-
-#: modules/zdoom_specials.lua:1225
-msgid "Determines thickness and intensity of fog, if the Fog Generator is enabled. Subtle or Misty is recommended."
-msgstr ""
-
-#: modules/zdoom_specials.lua:1231
-msgid "Sky Fog"
-msgstr ""
-
-#: modules/zdoom_specials.lua:1235
-msgid "Tints the sky texture with the fog color, intensity is based on the Fog Intensity selection."
-msgstr ""
-
-#: modules/zdoom_specials.lua:1242
+#: modules/zdoom_specials.lua:933
 msgid "Dynamic Lights"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1246
+#: modules/zdoom_specials.lua:937
 msgid "Generates dynamic point lights on prefabs if available."
 msgstr ""
 
-#: modules/zdoom_specials.lua:1251
+#: modules/zdoom_specials.lua:942
 msgid "Glowing Flats"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1255
+#: modules/zdoom_specials.lua:946
 msgid "Adds Doom-64 style lighting/glowing flats via GLDEFS lump. Visible on Zandronum ports as well."
 msgstr ""
 
-#: modules/zdoom_specials.lua:1261
+#: modules/zdoom_specials.lua:957
+msgid "ZDoom Special Addons"
+msgstr ""
+
+#: modules/zdoom_specials.lua:976
+msgid "This module adds new ZDoom-exclusive features such as fog. More ZDoom-specific features will be included soon."
+msgstr ""
+
+#: modules/zdoom_specials.lua:982
+msgid "Fog Generator"
+msgstr ""
+
+#: modules/zdoom_specials.lua:986
+msgid "Generates fog colors based on the Sky Generator or generate completely randomly."
+msgstr ""
+
+#: modules/zdoom_specials.lua:992
+msgid "Fog Environment"
+msgstr ""
+
+#: modules/zdoom_specials.lua:996
+msgid "Limits fog to outdoors (sectors with exposed sky ceilings) or allows for all."
+msgstr ""
+
+#: modules/zdoom_specials.lua:1002
+msgid "Fog Intensity"
+msgstr ""
+
+#: modules/zdoom_specials.lua:1006
+msgid "Determines thickness and intensity of fog, if the Fog Generator is enabled. Subtle or Misty is recommended."
+msgstr ""
+
+#: modules/zdoom_specials.lua:1012
+msgid "Sky Fog"
+msgstr ""
+
+#: modules/zdoom_specials.lua:1016
+msgid "Tints the sky texture with the fog color, intensity is based on the Fog Intensity selection."
+msgstr ""
+
+#: modules/zdoom_specials.lua:1023
 msgid "Shuffle Music"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1265
+#: modules/zdoom_specials.lua:1027
 msgid "Shuffles music in the MAPINFO lump. Oblige's vanilla music shuffler uses a BEX lump and is therefore ignored when the ZDoom Addons module is active.\n\nWarning: the 'Merge Doom 1 and 2' option is for music packs that contain both Doom 1 and 2 direct patch replacements. Do not use unless you have such a pack."
 msgstr ""
 
-#: modules/zdoom_specials.lua:1270
+#: modules/zdoom_specials.lua:1032
 msgid "Story Generator"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1274
+#: modules/zdoom_specials.lua:1036
 msgid "Adds cluster information with generic or randomized story text into the MAPINFO structure!"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1279
+#: modules/zdoom_specials.lua:1041
 msgid "Quit Messages"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1283
+#: modules/zdoom_specials.lua:1045
 msgid "Adds custom quit messages into the MAPINFO game definition."
 msgstr ""
 
-#: modules/zdoom_specials.lua:1288
+#: modules/zdoom_specials.lua:1050
 msgid "Intermission Music"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1292
+#: modules/zdoom_specials.lua:1054
 msgid "Changes the music playing during intermission screens."
 msgstr ""
 
-#: modules/zdoom_specials.lua:1297
+#: modules/zdoom_specials.lua:1059
 msgid "Episode Selection"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1301
+#: modules/zdoom_specials.lua:1063
 msgid "Creates a classic Doom/Ultimate Doom style episode selection."
 msgstr ""
 
-#: modules/zdoom_specials.lua:1307
+#: modules/zdoom_specials.lua:1069
 msgid "Disable Intermissions"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1311
+#: modules/zdoom_specials.lua:1073
 msgid "Removes end-level Intermission Screens (containing map completion data) but retains Text Screens with story."
 msgstr ""
 
@@ -9341,11 +9133,11 @@ msgstr ""
 msgid "EDGE Music Swapper"
 msgstr ""
 
-#: ports/edge.lua:150
+#: ports/edge.lua:148
 msgid "Shuffles songs using DDFPLAY."
 msgstr ""
 
-#: ports/edge.lua:160
+#: ports/edge.lua:158
 msgid "EDGE-Classic"
 msgstr ""
 
@@ -9362,7 +9154,7 @@ msgid "Vanilla"
 msgstr ""
 
 #: ports/zdoom.lua:62
-msgid "ZDoom Family"
+msgid "GZDoom"
 msgstr ""
 
 #: scripts/defs.lua:67
@@ -9433,8 +9225,12 @@ msgstr ""
 msgid "Mix It Up"
 msgstr ""
 
-#: scripts/obsidian.lua:2284
+#: scripts/obsidian.lua:2283
 msgid "Choose which engine to build maps for:\n  id Tech 0: Wolfenstein 3D and similar games\n  id Tech 1: Doom and similar games\n"
+msgstr ""
+
+#: scripts/obsidian.lua:2284
+msgid "ALL"
 msgstr ""
 
 #: scripts/obsidian.lua:2285
@@ -9445,12 +9241,12 @@ msgstr ""
 msgid "ALL"
 msgstr ""
 
-#: scripts/obsidian.lua:2287
-msgid "ALL"
+#: scripts/obsidian.lua:2294
+msgid "Choose which game to build maps for."
 msgstr ""
 
 #: scripts/obsidian.lua:2295
-msgid "Choose which game to build maps for."
+msgid "ALL"
 msgstr ""
 
 #: scripts/obsidian.lua:2296
@@ -9461,12 +9257,12 @@ msgstr ""
 msgid "ALL"
 msgstr ""
 
-#: scripts/obsidian.lua:2298
-msgid "ALL"
+#: scripts/obsidian.lua:2317
+msgid "Choose which port to build maps for.\n  Vanilla is the only option for id Tech 0; the remaining options are for id Tech 1.\n"
 msgstr ""
 
 #: scripts/obsidian.lua:2318
-msgid "Choose which port to build maps for.\n  Vanilla is the only option for id Tech 0; the remaining options are for id Tech 1.\n"
+msgid "ALL"
 msgstr ""
 
 #: scripts/obsidian.lua:2319
@@ -9477,12 +9273,12 @@ msgstr ""
 msgid "ALL"
 msgstr ""
 
-#: scripts/obsidian.lua:2321
-msgid "ALL"
+#: scripts/obsidian.lua:2333
+msgid "Choose how many levels to create."
 msgstr ""
 
 #: scripts/obsidian.lua:2334
-msgid "Choose how many levels to create."
+msgid "ALL"
 msgstr ""
 
 #: scripts/obsidian.lua:2335
@@ -9493,12 +9289,12 @@ msgstr ""
 msgid "ALL"
 msgstr ""
 
-#: scripts/obsidian.lua:2337
-msgid "ALL"
+#: scripts/obsidian.lua:2346
+msgid "The following values are game-specific:\n  Chex Quest 3: bazoik,spaceport,villa\n  Ultimate Doom/Doom 1: deimos,flesh\n  Ultimate Doom/Doom 1/Doom 2/TNT/Plutonia: tech,urban,hell\n  TNT: egypt\n  HacX: hacx_urban\n  Harmony: ndf_base\n  Heretic: city,maw,dome,ossuary,demense\n  Hexen: forest,ice_caves,fire_steel,swamp,dungeon,town\n  Strife: town\n\n  Note: This setting currently does nothing for id Tech 0 games!\n"
 msgstr ""
 
 #: scripts/obsidian.lua:2347
-msgid "The following values are game-specific:\n  Chex Quest 3: bazoik,spaceport,villa\n  Ultimate Doom/Doom 1: deimos,flesh\n  Ultimate Doom/Doom 1/Doom 2/TNT/Plutonia: tech,urban,hell\n  TNT: egypt\n  HacX: hacx_urban\n  Harmony: ndf_base\n  Heretic: city,maw,dome,ossuary,demense\n  Hexen: forest,ice_caves,fire_steel,swamp,dungeon,town\n  Strife: town\n\n  Note: This setting currently does nothing for id Tech 0 games!\n"
+msgid "ALL"
 msgstr ""
 
 #: scripts/obsidian.lua:2348
@@ -9509,11 +9305,7 @@ msgstr ""
 msgid "ALL"
 msgstr ""
 
-#: scripts/obsidian.lua:2350
-msgid "ALL"
-msgstr ""
-
-#: source_files/obsidian_main/g_doom.cc:232
+#: source_files/obsidian_main/g_doom.cc:301
 msgid "Unable to create wad file:\n\n%s"
 msgstr ""
 
@@ -9521,263 +9313,267 @@ msgstr ""
 msgid "Unable to create wad file:\n\n%s"
 msgstr ""
 
-#: source_files/obsidian_main/g_doom.cc:1022
+#: source_files/obsidian_main/g_doom.cc:1008
 msgid "AJBSP Error!"
 msgstr ""
 
-#: source_files/obsidian_main/g_doom.cc:1086
+#: source_files/obsidian_main/g_doom.cc:1077
 msgid "Cancelled"
 msgstr ""
 
-#: source_files/obsidian_main/g_doom.cc:1109
+#: source_files/obsidian_main/g_doom.cc:1105
 msgid "Error (create file)"
 msgstr ""
 
-#: source_files/obsidian_main/g_doom.cc:1115
+#: source_files/obsidian_main/g_doom.cc:1111
 msgid "CSG"
 msgstr ""
 
-#: source_files/obsidian_main/g_nukem.cc:445
+#: source_files/obsidian_main/g_nukem.cc:444
 msgid "Cancelled"
 msgstr ""
 
-#: source_files/obsidian_main/g_nukem.cc:454
+#: source_files/obsidian_main/g_nukem.cc:453
 msgid "Error (create file)"
 msgstr ""
 
-#: source_files/obsidian_main/g_nukem.cc:460
+#: source_files/obsidian_main/g_nukem.cc:459
+msgid "CSG"
+msgstr ""
+
+#: source_files/obsidian_main/g_quake.cc:1270
 msgid "CSG"
 msgstr ""
 
 #: source_files/obsidian_main/g_quake.cc:1271
-msgid "CSG"
-msgstr ""
-
-#: source_files/obsidian_main/g_quake.cc:1272
 msgid "BSP"
 msgstr ""
 
-#: source_files/obsidian_main/g_quake.cc:1273
+#: source_files/obsidian_main/g_quake.cc:1272
 msgid "Vis"
 msgstr ""
 
-#: source_files/obsidian_main/g_quake.cc:1274
+#: source_files/obsidian_main/g_quake.cc:1273
 msgid "Light"
 msgstr ""
 
-#: source_files/obsidian_main/g_quake.cc:1275
+#: source_files/obsidian_main/g_quake.cc:1274
 msgid "Hull"
 msgstr ""
 
-#: source_files/obsidian_main/g_quake.cc:1332
+#: source_files/obsidian_main/g_quake.cc:1331
 msgid "Cancelled"
 msgstr ""
 
-#: source_files/obsidian_main/g_quake.cc:1341
+#: source_files/obsidian_main/g_quake.cc:1340
 msgid "Error (create file)"
 msgstr ""
 
-#: source_files/obsidian_main/g_quake2.cc:1041
+#: source_files/obsidian_main/g_quake2.cc:1039
 msgid "Cancelled"
 msgstr ""
 
-#: source_files/obsidian_main/g_quake2.cc:1050
+#: source_files/obsidian_main/g_quake2.cc:1048
 msgid "Error (create file)"
 msgstr ""
 
-#: source_files/obsidian_main/g_quake3.cc:1267
+#: source_files/obsidian_main/g_quake3.cc:1266
 msgid "Cancelled"
 msgstr ""
 
-#: source_files/obsidian_main/g_quake3.cc:1276
+#: source_files/obsidian_main/g_quake3.cc:1275
 msgid "Error (create file)"
 msgstr ""
 
-#: source_files/obsidian_main/g_wolf.cc:361
+#: source_files/obsidian_main/g_wolf.cc:360
 msgid "Select output directory"
 msgstr ""
 
-#: source_files/obsidian_main/g_wolf.cc:373
+#: source_files/obsidian_main/g_wolf.cc:372
 msgid "Error choosing directory:\n"
 msgstr ""
 
-#: source_files/obsidian_main/g_wolf.cc:378
+#: source_files/obsidian_main/g_wolf.cc:377
 msgid "Cancelled"
 msgstr ""
 
-#: source_files/obsidian_main/g_wolf.cc:388
+#: source_files/obsidian_main/g_wolf.cc:387
 msgid "Empty directory provided???:\n"
 msgstr ""
 
-#: source_files/obsidian_main/g_wolf.cc:412
+#: source_files/obsidian_main/g_wolf.cc:411
 msgid "Error (create file)"
 msgstr ""
 
-#: source_files/obsidian_main/g_wolf.cc:423
+#: source_files/obsidian_main/g_wolf.cc:422
 msgid "Error (create file)"
 msgstr ""
 
-#: source_files/obsidian_main/g_wolf.cc:463
+#: source_files/obsidian_main/g_wolf.cc:462
 msgid "Error (write file)"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:233
+#: source_files/obsidian_main/main.cc:258
 msgid "Addons/"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:244
+#: source_files/obsidian_main/main.cc:269
 msgid "OBSIDIAN will now restart and apply changes to addons."
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1058
+#: source_files/obsidian_main/main.cc:1066
 msgid "No"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1059
+#: source_files/obsidian_main/main.cc:1067
 msgid "Yes"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1060
+#: source_files/obsidian_main/main.cc:1068
 msgid "OK"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1061
+#: source_files/obsidian_main/main.cc:1069
 msgid "Cancel"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1062
+#: source_files/obsidian_main/main.cc:1070
 msgid "Close"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1175
+#: source_files/obsidian_main/main.cc:1183
 msgid "Seed:"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1232
+#: source_files/obsidian_main/main.cc:1239
 msgid "Seed:"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1236
+#: source_files/obsidian_main/main.cc:1243
 msgid "Seed:"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1240
+#: source_files/obsidian_main/main.cc:1247
 msgid "Preparing..."
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1277
+#: source_files/obsidian_main/main.cc:1284
 msgid "Success"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1295
+#: source_files/obsidian_main/main.cc:1302
 msgid "Seed: -"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1321
+#: source_files/obsidian_main/main.cc:1328
 msgid "Cancelled"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1541
+#: source_files/obsidian_main/main.cc:1548
 msgid "OBSIDIAN Level Maker"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1542
+#: source_files/obsidian_main/main.cc:1549
 msgid "Unstable"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1653
-msgid "No such config file: {}\n"
-msgstr ""
-
 #: source_files/obsidian_main/main.cc:1660
-msgid "No such config file: {}\n"
+msgid "No such config file: %s\n"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1810
-msgid "No such config file: {}\n"
+#: source_files/obsidian_main/main.cc:1667
+msgid "No such config file: %s\n"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1832
+#: source_files/obsidian_main/main.cc:1817
+msgid "No such config file: %s\n"
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:1838
 msgid "Surprise Me/Preserve Old Config"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1836
+#: source_files/obsidian_main/main.cc:1842
 msgid "Surprise Me/Randomize Architecture"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1840
+#: source_files/obsidian_main/main.cc:1846
 msgid "Surprise Me/Randomize Combat"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1844
+#: source_files/obsidian_main/main.cc:1850
 msgid "Surprise Me/Randomize Pickups"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1848
+#: source_files/obsidian_main/main.cc:1854
 msgid "Surprise Me/Randomize Other"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1851
-msgid "Addons/No Addons Detected"
+#: source_files/obsidian_main/main.cc:1857
+msgid "Addons/No folders or *.oaf files"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1854
+#: source_files/obsidian_main/main.cc:1859
+msgid "Addons/found in the \\/addons directory!"
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:1862
 msgid "Addons/Restart and Apply Changes"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1857
+#: source_files/obsidian_main/main.cc:1865
 msgid "Addons/"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1959
+#: source_files/obsidian_main/main.cc:1968
 msgid "Seed:"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:2066
-msgid "Sorry, an internal error occurred:\n{}"
+#: source_files/obsidian_main/main.cc:2073
+msgid "Sorry, an internal error occurred:\n%s"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:2069
-msgid "An exception occurred: \n{}"
+#: source_files/obsidian_main/main.cc:2076
+msgid "An exception occurred: \n%s"
 msgstr ""
 
-#: source_files/obsidian_main/m_about.cc:104
+#: source_files/obsidian_main/m_about.cc:103
 msgid "OBSIDIAN is a random level generator\nfor classic FPS games like DOOM.\nIt is a continuation of the OBLIGE Level Maker\nCopyright (C) 2006-2017 Andrew Apted, et al.\nThis program is free software, and may be\ndistributed and modified under the terms of\nthe GNU General Public License.\nThere is ABSOLUTELY NO WARRANTY!\nUse at your OWN RISK!"
 msgstr ""
 
-#: source_files/obsidian_main/m_about.cc:155
+#: source_files/obsidian_main/m_about.cc:154
 msgid "About OBSIDIAN"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:217
+#: source_files/obsidian_main/m_dialog.cc:215
 msgid "OBSIDIAN - Error Message"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:233
+#: source_files/obsidian_main/m_dialog.cc:231
 msgid "files"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:247
+#: source_files/obsidian_main/m_dialog.cc:245
 msgid "Select output file"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:270
+#: source_files/obsidian_main/m_dialog.cc:268
 msgid "Error choosing output file:\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:273
+#: source_files/obsidian_main/m_dialog.cc:271
 msgid "Unable to create the file:\n\n%s"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:318
+#: source_files/obsidian_main/m_dialog.cc:316
 msgid "Enter New Seed Number or Phrase:"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:334
+#: source_files/obsidian_main/m_dialog.cc:332
 msgid "String contains non-digits. Will process as string\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:342
+#: source_files/obsidian_main/m_dialog.cc:341
 msgid "Invalid argument. Will process as string.\n"
 msgstr ""
 
@@ -9829,667 +9625,659 @@ msgstr ""
 msgid "OBSIDIAN Glossary Viewer"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1288
+#: source_files/obsidian_main/m_lua.cc:1271
 msgid "Making"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1409
+#: source_files/obsidian_main/m_lua.cc:1392
 msgid "Using"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1410
+#: source_files/obsidian_main/m_lua.cc:1393
 msgid "Preview Not Available"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1811
+#: source_files/obsidian_main/m_lua.cc:1794
 msgid "[ ERROR ]"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1815
+#: source_files/obsidian_main/m_lua.cc:1798
 msgid "Script Error: "
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:2225
+#: source_files/obsidian_main/m_lua.cc:2152
 msgid "ob_print_reference: Error creating REFERENCE.txt!\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:2235
+#: source_files/obsidian_main/m_lua.cc:2162
 msgid "ob_print_reference_json: Error printing json reference!\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:2244
+#: source_files/obsidian_main/m_lua.cc:2171
 msgid "Script Error"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:2252
+#: source_files/obsidian_main/m_lua.cc:2179
 msgid "[ ERROR ]"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:2258
+#: source_files/obsidian_main/m_lua.cc:2185
 msgid "Script Error"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:2282
+#: source_files/obsidian_main/m_lua.cc:2209
 msgid "Cancelled"
 msgstr ""
 
-#: source_files/obsidian_main/m_manage.cc:300
+#: source_files/obsidian_main/m_manage.cc:299
 msgid "CURRENT SETTINGS"
 msgstr ""
 
-#: source_files/obsidian_main/m_manage.cc:314
+#: source_files/obsidian_main/m_manage.cc:313
 msgid "Pick file to save to"
 msgstr ""
 
-#: source_files/obsidian_main/m_manage.cc:327
+#: source_files/obsidian_main/m_manage.cc:326
 msgid "Error choosing save file:\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_manage.cc:330
+#: source_files/obsidian_main/m_manage.cc:329
 msgid "Unable to save the file:\n\n%s"
 msgstr ""
 
-#: source_files/obsidian_main/m_manage.cc:364
+#: source_files/obsidian_main/m_manage.cc:363
 msgid "Error writing to file."
 msgstr ""
 
-#: source_files/obsidian_main/m_manage.cc:366
+#: source_files/obsidian_main/m_manage.cc:365
 msgid "Unable to save the file:\n\n%s"
 msgstr ""
 
-#: source_files/obsidian_main/m_manage.cc:375
+#: source_files/obsidian_main/m_manage.cc:374
 msgid "Select file to load"
 msgstr ""
 
-#: source_files/obsidian_main/m_manage.cc:397
+#: source_files/obsidian_main/m_manage.cc:396
 msgid "Error choosing load file:\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_manage.cc:400
+#: source_files/obsidian_main/m_manage.cc:399
 msgid "Unable to load the file:\n\n%s"
 msgstr ""
 
-#: source_files/obsidian_main/m_manage.cc:420
+#: source_files/obsidian_main/m_manage.cc:419
 msgid "Cannot open: %s\n\n%s"
 msgstr ""
 
-#: source_files/obsidian_main/m_manage.cc:429
+#: source_files/obsidian_main/m_manage.cc:428
 msgid "No config found in file."
 msgstr ""
 
-#: source_files/obsidian_main/m_manage.cc:454
+#: source_files/obsidian_main/m_manage.cc:453
 msgid "PASTED TEXT"
 msgstr ""
 
-#: source_files/obsidian_main/m_manage.cc:622
+#: source_files/obsidian_main/m_manage.cc:621
 msgid "Load WAD/TXT"
 msgstr ""
 
-#: source_files/obsidian_main/m_manage.cc:633
+#: source_files/obsidian_main/m_manage.cc:632
 msgid "Save"
 msgstr ""
 
-#: source_files/obsidian_main/m_manage.cc:643
+#: source_files/obsidian_main/m_manage.cc:642
 msgid "Use"
 msgstr ""
 
-#: source_files/obsidian_main/m_manage.cc:653
+#: source_files/obsidian_main/m_manage.cc:652
 msgid "Note: This will replace\nall current settings!"
 msgstr ""
 
-#: source_files/obsidian_main/m_manage.cc:660
+#: source_files/obsidian_main/m_manage.cc:659
 msgid "Reset to Default"
 msgstr ""
 
-#: source_files/obsidian_main/m_manage.cc:670
+#: source_files/obsidian_main/m_manage.cc:669
 msgid "Note: This will delete\nthe current CONFIG.txt\nand restart Obsidian!"
 msgstr ""
 
-#: source_files/obsidian_main/m_manage.cc:702
+#: source_files/obsidian_main/m_manage.cc:701
 msgid " Clipboard Operations"
 msgstr ""
 
-#: source_files/obsidian_main/m_manage.cc:713
+#: source_files/obsidian_main/m_manage.cc:712
 msgid "Cut"
 msgstr ""
 
-#: source_files/obsidian_main/m_manage.cc:725
+#: source_files/obsidian_main/m_manage.cc:724
 msgid "Copy"
 msgstr ""
 
-#: source_files/obsidian_main/m_manage.cc:737
+#: source_files/obsidian_main/m_manage.cc:736
 msgid "Paste"
 msgstr ""
 
-#: source_files/obsidian_main/m_manage.cc:765
+#: source_files/obsidian_main/m_manage.cc:764
 msgid "OBSIDIAN Config Manager"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:87
+#: source_files/obsidian_main/m_options.cc:82
 msgid "Unknown option: "
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:108
+#: source_files/obsidian_main/m_options.cc:103
 msgid "Weird option line: "
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:117
+#: source_files/obsidian_main/m_options.cc:112
 msgid "Name or value missing!\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:129
+#: source_files/obsidian_main/m_options.cc:124
 msgid "Missing Options file -- using defaults.\n\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:252
+#: source_files/obsidian_main/m_options.cc:243
 msgid "AUTO"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:296
+#: source_files/obsidian_main/m_options.cc:287
 msgid "Obsidian will now restart to apply language changes.\nObsidian will be in your selected language after restarting."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:346
+#: source_files/obsidian_main/m_options.cc:318
 msgid "Random String Seeds"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:356
+#: source_files/obsidian_main/m_options.cc:328
 msgid "Will randomly pull 1 to 3 words from Obsidian's random word list and use those as input for the map generation seed. Purely for cosmetic/entertainment value."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:368
+#: source_files/obsidian_main/m_options.cc:340
 msgid "Password Mode"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:378
+#: source_files/obsidian_main/m_options.cc:350
 msgid "Will produce a pseudo-random sequence of characters as input for the map generation seed. Random String Seeds must be enabled to use this option."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:396
+#: source_files/obsidian_main/m_options.cc:368
 msgid "Mature Wordlists"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:406
+#: source_files/obsidian_main/m_options.cc:378
 msgid "When enabled, will use a random wordlist that can result in obscene or otherwise offensive language being used for seed, map and WAD title elements."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:434
+#: source_files/obsidian_main/m_options.cc:406
 msgid "File prefix changes require a restart.\nOBSIDIAN will now restart."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:446
+#: source_files/obsidian_main/m_options.cc:418
 msgid "WARNING! This option will allow you to manually enter values in excess of the \n(usually) stable slider limits for Obsidian.\nAny bugs, crashes, or errors as a result of this will not be addressed by the developers.\nYou must select Yes for this option to be applied."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:447
+#: source_files/obsidian_main/m_options.cc:419
 msgid "Cancel"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:448
+#: source_files/obsidian_main/m_options.cc:420
 msgid "Yes, break Obsidian"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:458
+#: source_files/obsidian_main/m_options.cc:430
 msgid "Restoring slider limits requires a restart.\nObsidian will now restart."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:475
+#: source_files/obsidian_main/m_options.cc:447
 msgid "Custom Prefix"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:485
+#: source_files/obsidian_main/m_options.cc:457
 msgid "Custom prefixes can use any of the special format strings listed below. Anything else is used as-is.\n\n%year or %Y: The current year.\n\n%month or %M: The current month.\n\n%day or %D: The current day.\n\n%hour or %h: The current hour.\n\n%minute or %m: The current minute.\n\n%second or %s: The current second.\n\n%version or %v: The current Obsidian version.\n\n%game or %g: Which game the WAD is for.\n\n%port or %p: Which port the WAD is for.\n\n%theme or %t: Which theme was selected from the game's choices.\n\n%count or %c: The number of levels in the generated WAD."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:492
+#: source_files/obsidian_main/m_options.cc:464
 msgid "Enter Custom Prefix Format:"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:497
+#: source_files/obsidian_main/m_options.cc:469
 msgid "Custom prefix cannot be blank!"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:511
+#: source_files/obsidian_main/m_options.cc:483
 msgid "Select default save directory"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:521
+#: source_files/obsidian_main/m_options.cc:493
 msgid "Error choosing directory:\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:536
+#: source_files/obsidian_main/m_options.cc:508
 msgid "Empty default directory provided???:\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:549
+#: source_files/obsidian_main/m_options.cc:521
 msgid "Current Path"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:578
+#: source_files/obsidian_main/m_options.cc:548
 msgid "Language: "
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:592
+#: source_files/obsidian_main/m_options.cc:562
 msgid "Filename Prefix: "
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:597
+#: source_files/obsidian_main/m_options.cc:567
 msgid "Date and Time|Number of Levels|Game|Port|Theme|Version|Custom|Nothing"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:608
+#: source_files/obsidian_main/m_options.cc:578
 msgid "Set Custom Prefix..."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:625
+#: source_files/obsidian_main/m_options.cc:595
 msgid "Set Default Output Path"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:644
+#: source_files/obsidian_main/m_options.cc:614
 msgid "Current Path"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:651
+#: source_files/obsidian_main/m_options.cc:621
 msgid " Random String Seeds"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:667
+#: source_files/obsidian_main/m_options.cc:637
 msgid " Password Mode"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:686
+#: source_files/obsidian_main/m_options.cc:656
 msgid " Use Mature Wordlists"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:701
+#: source_files/obsidian_main/m_options.cc:671
 msgid " Create Backups"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:711
+#: source_files/obsidian_main/m_options.cc:681
 msgid " Overwrite File Warning"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:721
+#: source_files/obsidian_main/m_options.cc:691
 msgid " Debugging Messages"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:731
+#: source_files/obsidian_main/m_options.cc:701
 msgid " Ignore Slider Limits"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:742
+#: source_files/obsidian_main/m_options.cc:712
 msgid "Builds Per Run "
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:759
+#: source_files/obsidian_main/m_options.cc:729
 msgid " Preserve Failed Builds"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:770
-msgid "Max Log Size (MB) "
-msgstr ""
-
-#: source_files/obsidian_main/m_options.cc:787
-msgid "# of Logs Preserved "
-msgstr ""
-
-#: source_files/obsidian_main/m_options.cc:856
+#: source_files/obsidian_main/m_options.cc:794
 msgid "OBSIDIAN Misc Options"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:46
+#: source_files/obsidian_main/m_theme.cc:45
 msgid "Select output file"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:66
+#: source_files/obsidian_main/m_theme.cc:65
 msgid "Unable to create the file:\n\n%s"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:98
+#: source_files/obsidian_main/m_theme.cc:97
 msgid "Select Theme file to load"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:114
+#: source_files/obsidian_main/m_theme.cc:113
 msgid "Unable to load the file:\n\n%s"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:395
-msgid "Windows scaling changes require a restart.\nOBSIDIAN will now restart."
+#: source_files/obsidian_main/m_theme.cc:394
+msgid "Windows scaling changes cannot be applied automatically, but will take effect the next time Obsidian is run.\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:890
+#: source_files/obsidian_main/m_theme.cc:888
 msgid "Plastic widget theme requires a restart.\nOBSIDIAN will now restart."
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1438
+#: source_files/obsidian_main/m_theme.cc:1436
 msgid "Switching font selection requires a restart.\nOBSIDIAN will now restart."
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1497
+#: source_files/obsidian_main/m_theme.cc:1495
 msgid "Select Panel Text Color"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1708
+#: source_files/obsidian_main/m_theme.cc:1706
 msgid "Select Button Text Color"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1810
+#: source_files/obsidian_main/m_theme.cc:1808
 msgid "Select Panel Color"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1899
+#: source_files/obsidian_main/m_theme.cc:1897
 msgid "Select Highlight Color"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2037
+#: source_files/obsidian_main/m_theme.cc:2035
 msgid "Select Button Color"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2125
+#: source_files/obsidian_main/m_theme.cc:2123
 msgid "Select Gradient Color"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2169
+#: source_files/obsidian_main/m_theme.cc:2167
 msgid "Select Border Color"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2211
+#: source_files/obsidian_main/m_theme.cc:2209
 msgid "Select Gap Color"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2285
+#: source_files/obsidian_main/m_theme.cc:2283
 msgid "Defaults loaded.\nOBSIDIAN will now restart."
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2297
+#: source_files/obsidian_main/m_theme.cc:2295
 msgid "Theme loading requires a restart.\nOBSIDIAN will now restart."
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2338
+#: source_files/obsidian_main/m_theme.cc:2336
 msgid "Window Scaling: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2340
+#: source_files/obsidian_main/m_theme.cc:2338
 msgid "AUTO|Tiny|Small|Medium|Large|Huge"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2352
+#: source_files/obsidian_main/m_theme.cc:2350
 msgid "Font Size: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2369
+#: source_files/obsidian_main/m_theme.cc:2367
 msgid "Font: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2385
+#: source_files/obsidian_main/m_theme.cc:2383
 msgid "Widget Theme: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2387
+#: source_files/obsidian_main/m_theme.cc:2385
 msgid "Default|Gleam|Win95|Plastic|Oxy"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2399
+#: source_files/obsidian_main/m_theme.cc:2397
 msgid "Box Theme: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2401
+#: source_files/obsidian_main/m_theme.cc:2399
 msgid "Default|Shadow|Embossed|Engraved|Inverted|Raised"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2413
+#: source_files/obsidian_main/m_theme.cc:2411
 msgid "Button Theme: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2415
+#: source_files/obsidian_main/m_theme.cc:2413
 msgid "Default|Raised|Engraved|Embossed|Flat"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2427
+#: source_files/obsidian_main/m_theme.cc:2425
 msgid "Color Scheme: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2429
+#: source_files/obsidian_main/m_theme.cc:2427
 msgid "Default|Custom"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2440
+#: source_files/obsidian_main/m_theme.cc:2438
 msgid "Panel Font"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2450
+#: source_files/obsidian_main/m_theme.cc:2448
 msgid "Button Font"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2460
+#: source_files/obsidian_main/m_theme.cc:2458
 msgid "Panels"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2470
+#: source_files/obsidian_main/m_theme.cc:2468
 msgid "Highlights"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2481
+#: source_files/obsidian_main/m_theme.cc:2479
 msgid "Buttons"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2492
+#: source_files/obsidian_main/m_theme.cc:2490
 msgid "Gradient"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2503
+#: source_files/obsidian_main/m_theme.cc:2501
 msgid "Borders"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2514
+#: source_files/obsidian_main/m_theme.cc:2512
 msgid "Gaps"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2527
+#: source_files/obsidian_main/m_theme.cc:2525
 msgid " Use System Fonts (disables bundled fonts)"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2537
+#: source_files/obsidian_main/m_theme.cc:2535
 msgid "Load Defaults"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2547
+#: source_files/obsidian_main/m_theme.cc:2545
 msgid "Load Theme"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2558
+#: source_files/obsidian_main/m_theme.cc:2556
 msgid "Save Theme"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2594
+#: source_files/obsidian_main/m_theme.cc:2592
 msgid "Note: Most settings will only affect tabs after a restart."
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2631
+#: source_files/obsidian_main/m_theme.cc:2629
 msgid "OBSIDIAN Theme Options"
 msgstr ""
 
-#: source_files/obsidian_main/m_trans.cc:53
+#: source_files/obsidian_main/m_trans.cc:52
 msgid "AUTO"
 msgstr ""
 
-#: source_files/obsidian_main/m_tutorial.cc:97
+#: source_files/obsidian_main/m_tutorial.cc:96
 msgid "Next"
 msgstr ""
 
-#: source_files/obsidian_main/m_tutorial.cc:108
+#: source_files/obsidian_main/m_tutorial.cc:107
 msgid "<center>Welcome to OBSIDIAN Level Maker! This quick tutorial will teach you the basics of navigating the user interface.</center>"
 msgstr ""
 
-#: source_files/obsidian_main/m_tutorial.cc:117
+#: source_files/obsidian_main/m_tutorial.cc:116
 msgid "Next"
 msgstr ""
 
-#: source_files/obsidian_main/m_tutorial.cc:124
+#: source_files/obsidian_main/m_tutorial.cc:123
 msgid "Back"
 msgstr ""
 
-#: source_files/obsidian_main/m_tutorial.cc:140
+#: source_files/obsidian_main/m_tutorial.cc:139
 msgid "<center>Game Settings, in the upper left area of the program window, contains all you need to build your very first mapset. Select the Engine to filter available games, the Game you would like to build maps for, the Port that it will be played on, the Length (number of maps) of the mapset, and the Theme that you would like it to have. Once you press 'Build', you will be prompted to choose a location and filename for your mapset. After that, it will be generated and saved to the location that you specified.\n\nNOTE: If you select 'Vanilla Doom' for the port, an alternate map generator will be used to create your WAD. Although this WAD will be compatible with all ports, it is much simpler in nature than the maps made by Obsidian's main generator.</center>"
 msgstr ""
 
-#: source_files/obsidian_main/m_tutorial.cc:148
+#: source_files/obsidian_main/m_tutorial.cc:147
 msgid "Next"
 msgstr ""
 
-#: source_files/obsidian_main/m_tutorial.cc:155
+#: source_files/obsidian_main/m_tutorial.cc:154
 msgid "Back"
 msgstr ""
 
-#: source_files/obsidian_main/m_tutorial.cc:171
+#: source_files/obsidian_main/m_tutorial.cc:170
 msgid "<center>At some point, you will want to have more control over the contents of the maps that you generate. This is where modules come into play. Modules are groups of options that can be changed to fine-tune your experience. Most modules are optional, and will need to be enabled or disabled accordingly.</center>"
 msgstr ""
 
-#: source_files/obsidian_main/m_tutorial.cc:179
+#: source_files/obsidian_main/m_tutorial.cc:178
 msgid "Next"
 msgstr ""
 
-#: source_files/obsidian_main/m_tutorial.cc:186
+#: source_files/obsidian_main/m_tutorial.cc:185
 msgid "Back"
 msgstr ""
 
-#: source_files/obsidian_main/m_tutorial.cc:202
+#: source_files/obsidian_main/m_tutorial.cc:201
 msgid "<center>Some modules do not have any additional options to configure, and only need to be enabled or disabled. To enable them, simply click the checkbox to the left of their name. To disable them, clear the same checkbox by clicking it again.</center>"
 msgstr ""
 
-#: source_files/obsidian_main/m_tutorial.cc:210
+#: source_files/obsidian_main/m_tutorial.cc:209
 msgid "Next"
 msgstr ""
 
-#: source_files/obsidian_main/m_tutorial.cc:217
+#: source_files/obsidian_main/m_tutorial.cc:216
 msgid "Back"
 msgstr ""
 
-#: source_files/obsidian_main/m_tutorial.cc:233
+#: source_files/obsidian_main/m_tutorial.cc:232
 msgid "<center>Other modules will have options that you can adjust after you enable them. These modules will have a + symbol next to their name instead of a checkbox. To enable them, click the + symbol. The + will turn into a - and the module will expand to show its options. Once you have adjusted these options, you MUST LEAVE THE MODULE EXPANDED for them to take effect. To disable the module, click the - symbol. It will collapse and the - will turn back into a +</center>"
 msgstr ""
 
-#: source_files/obsidian_main/m_tutorial.cc:240
+#: source_files/obsidian_main/m_tutorial.cc:239
 msgid "Next"
 msgstr ""
 
-#: source_files/obsidian_main/m_tutorial.cc:247
+#: source_files/obsidian_main/m_tutorial.cc:246
 msgid "Back"
 msgstr ""
 
-#: source_files/obsidian_main/m_tutorial.cc:263
+#: source_files/obsidian_main/m_tutorial.cc:262
 msgid "<center>Module options come in three different flavors: Checkboxes, drop-down menus, and sliders. Checkboxes and drop-down menus are fairly self-explanatory, but we will cover some of the more advanced slider functions.</center>"
 msgstr ""
 
-#: source_files/obsidian_main/m_tutorial.cc:270
+#: source_files/obsidian_main/m_tutorial.cc:269
 msgid "Next"
 msgstr ""
 
-#: source_files/obsidian_main/m_tutorial.cc:277
+#: source_files/obsidian_main/m_tutorial.cc:276
 msgid "Back"
 msgstr ""
 
-#: source_files/obsidian_main/m_tutorial.cc:293
+#: source_files/obsidian_main/m_tutorial.cc:292
 msgid "<center>Some sliders will have an inverted triangle icon in the top right corner. Clicking this will show a menu with various choices. With the exception of 'Use Slider Value', these will ignore the number that the slider is set to in favor of a different means of determining the related value.</center>"
 msgstr ""
 
-#: source_files/obsidian_main/m_tutorial.cc:300
+#: source_files/obsidian_main/m_tutorial.cc:299
 msgid "Next"
 msgstr ""
 
-#: source_files/obsidian_main/m_tutorial.cc:307
+#: source_files/obsidian_main/m_tutorial.cc:306
 msgid "Back"
 msgstr ""
 
-#: source_files/obsidian_main/m_tutorial.cc:323
+#: source_files/obsidian_main/m_tutorial.cc:322
 msgid "<center>All sliders will have a pair of brackets in the top right corner. Clicking these will open a dialog box where you can enter a value manually instead of using the slider handle or arrow buttons.</center>"
 msgstr ""
 
-#: source_files/obsidian_main/m_tutorial.cc:330
+#: source_files/obsidian_main/m_tutorial.cc:329
 msgid "Next"
 msgstr ""
 
-#: source_files/obsidian_main/m_tutorial.cc:337
+#: source_files/obsidian_main/m_tutorial.cc:336
 msgid "Back"
 msgstr ""
 
-#: source_files/obsidian_main/m_tutorial.cc:353
+#: source_files/obsidian_main/m_tutorial.cc:352
 msgid "<center>At first, the amount of settings in Obsidian can seem daunting. To help with this, every option has several helper widgets. To reset any option to its default value, click the \"rollback\" icon in the upper right corner. For a brief explanation of an option, a tooltip can be shown by hovering your cursor over the option title. In addition, there is a question mark icon in the top right corner of each option that can be clicked to open a window with a more detailed explanation.</center>"
 msgstr ""
 
-#: source_files/obsidian_main/m_tutorial.cc:360
+#: source_files/obsidian_main/m_tutorial.cc:359
 msgid "Next"
 msgstr ""
 
-#: source_files/obsidian_main/m_tutorial.cc:367
+#: source_files/obsidian_main/m_tutorial.cc:366
 msgid "Back"
 msgstr ""
 
-#: source_files/obsidian_main/m_tutorial.cc:383
+#: source_files/obsidian_main/m_tutorial.cc:382
 msgid "<center>Addons are a way to enhance the Obsidian experience further by adding new content, modules, and options. They come in the form of folders or ZIP/7Z archives that must be placed in the /addons folder of your Obsidian install before starting the program. Once there, they can be viewed, enabled, or disabled by clicking the \"Addons\" menu located in the top bar of the program. Good sources for new addons are either<br /><A HREF='https://obsidian-level-maker.github.io/addons.html'>the public Addons page</A> or the #addon-files channel of our Discord.</center>"
 msgstr ""
 
-#: source_files/obsidian_main/m_tutorial.cc:390
+#: source_files/obsidian_main/m_tutorial.cc:389
 msgid "Next"
 msgstr ""
 
-#: source_files/obsidian_main/m_tutorial.cc:397
+#: source_files/obsidian_main/m_tutorial.cc:396
 msgid "Back"
 msgstr ""
 
-#: source_files/obsidian_main/m_tutorial.cc:413
+#: source_files/obsidian_main/m_tutorial.cc:412
 msgid "<center>If, for whatever reason, you are encountering unexpected behavior, you can view Obsidian's logs by pressing F6 or selecting Help->View Logs from the program menu. From here, you can view and save the log contents to a file of your choosing. In addition, there will be LOGS*.txt files with the same information that are stored in the same folder as obsidian.exe (or ~/.config/obsidian on *nix). These are rolling logs that will eventually be overwritten, so be sure to save this information elsewhere if you need to refer to it later! These logs are extremely important when seeking help or filing bug reports!</center>"
 msgstr ""
 
-#: source_files/obsidian_main/m_tutorial.cc:420
+#: source_files/obsidian_main/m_tutorial.cc:419
 msgid "Finish"
 msgstr ""
 
-#: source_files/obsidian_main/m_tutorial.cc:427
+#: source_files/obsidian_main/m_tutorial.cc:426
 msgid "Back"
 msgstr ""
 
-#: source_files/obsidian_main/m_tutorial.cc:439
+#: source_files/obsidian_main/m_tutorial.cc:438
 msgid "<center>There are more options to explore within Obsidian, but this should be enough to get you started. The tutorial can be viewed again at any time by choosing Help->Tutorial from the program menu.\n\nIf you need more help, please ask in our Discord (invite link <A HREF='https://discord.gg/dfqCt9v'>https://discord.gg/dfqCt9v</A>) or check our wiki at <A HREF='https://github.com/obsidian-level-maker/Obsidian/wiki'>https://github.com/obsidian-level-maker/Obsidian/wiki</A>.\n\nGood luck in the infinite Hells!</center>"
 msgstr ""
 
-#: source_files/obsidian_main/m_tutorial.cc:453
+#: source_files/obsidian_main/m_tutorial.cc:452
 msgid "OBSIDIAN Tutorial"
 msgstr ""
 
-#: source_files/obsidian_main/ui_build.cc:33
+#: source_files/obsidian_main/ui_build.cc:32
 msgid "Progress and minimap display.\nMinimap Legend:\nWhite - Regular rooms\nBrown - Caves\nBlue - Outdoors\nGreen - Parks"
 msgstr ""
 
-#: source_files/obsidian_main/ui_build.cc:55
+#: source_files/obsidian_main/ui_build.cc:54
 msgid "Seed: -"
 msgstr ""
 
-#: source_files/obsidian_main/ui_build.cc:74
+#: source_files/obsidian_main/ui_build.cc:73
 msgid "Ready to go!"
 msgstr ""
 
-#: source_files/obsidian_main/ui_build.cc:233
+#: source_files/obsidian_main/ui_build.cc:225
 msgid "Plan"
 msgstr ""
 
-#: source_files/obsidian_main/ui_build.cc:281
+#: source_files/obsidian_main/ui_build.cc:273
 msgid "Building Nodes"
 msgstr ""
 
-#: source_files/obsidian_main/ui_build.cc:318
+#: source_files/obsidian_main/ui_build.cc:310
 msgid "Success"
 msgstr ""
 
-#: source_files/obsidian_main/ui_build.cc:332
+#: source_files/obsidian_main/ui_build.cc:324
 msgid "Plan"
 msgstr ""
 
-#: source_files/obsidian_main/ui_build.cc:333
+#: source_files/obsidian_main/ui_build.cc:325
 msgid "Rooms"
 msgstr ""
 
-#: source_files/obsidian_main/ui_build.cc:334
+#: source_files/obsidian_main/ui_build.cc:326
 msgid "Mons"
 msgstr ""
 
@@ -10525,55 +10313,55 @@ msgstr ""
 msgid "Quit"
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:202
+#: source_files/obsidian_main/ui_game.cc:200
 msgid "Engine"
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:212
+#: source_files/obsidian_main/ui_game.cc:210
 msgid "id Tech 0: Powered Wolfenstein-3D and similar games\n\nid Tech 1: Powered Doom, Doom 2, Heretic, etc"
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:218
+#: source_files/obsidian_main/ui_game.cc:216
 msgid "Game"
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:228
+#: source_files/obsidian_main/ui_game.cc:226
 msgid "The following games will have gameplay that differs from the original IWADs:\n\nHexen: Game progression is linear and episodic. There are no hubs present. The Death Wyvern is not present in the monster table due to the infeasibility of scripting and flight pathing.\n\nStrife: Quests/multiple endings not yet implemented. Progression is linear and game will end on last level generated."
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:234
+#: source_files/obsidian_main/ui_game.cc:232
 msgid "Port"
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:244
-msgid "Available Ports:\n\nid Tech 0:\n\nVanilla: Works with the original executables\n\nid Tech 1:\n\nZDoom Family: Ports that use ZDoom as a base. Example ports: GZDoom, LZDoom\n\nVanilla: Works with the original program or ports that enforce the original limits. Examples: Doom within DOSBox, Chocolate Doom. NOTE: This option will use SLUMP as the map builder.\n\nLimit Removing: Any port that raises the limits of the original game to prevent crashes, but is not Boom-compatible. Example ports: Doom2-plus, Doomsday 1.x, Crispy Doom\n\nBoom-Compatible: Ports that are able to use the entire suite of Boom types and features. Most modern source ports fall into this category at a minimum.\n\nEDGE-Classic: Boom-compatible, plus additional specials and other advanced features.\n\nEternity: Boom-compatible, software renderer only, but with advanced features such as UDMF."
+#: source_files/obsidian_main/ui_game.cc:242
+msgid "Available Ports:\n\nid Tech 0:\n\nVanilla: Works with the original executables\n\nid Tech 1:\n\nGZDoom: GZDoom and variants (LZDoom, QZDoom, etc)\n\nVanilla: Works with the original program or ports that enforce the original limits. Examples: Doom within DOSBox, Chocolate Doom. NOTE: This option will use SLUMP as the map builder.\n\nBoom-Compatible: Ports that are able to use the entire suite of Boom types and features. Most modern source ports fall into this category at a minimum.\n\nDSDA-Doom: Targets version 0.26.0 and newer; PrBoom-Plus fork with additional features such as ZIP and UDMF support.\n\nEDGE-Classic: Boom-compatible, plus UDMF support, additional specials and other advanced features.\n\nEternity: Boom-compatible, software renderer only, but with advanced features such as UDMF."
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:250
+#: source_files/obsidian_main/ui_game.cc:248
 msgid "Length"
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:260
+#: source_files/obsidian_main/ui_game.cc:258
 msgid "Available Game Lengths:\n\nSingle Level: One map.\n\nA Few Maps: Four maps.\n\nOne Episode: The length of an episode in the original game. For Doom 2 and other games which normally doesn't have episodes, this number is determined by Obsidian.\n\nFull Game: The length of a full game in the original program."
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:266
+#: source_files/obsidian_main/ui_game.cc:264
 msgid "Theme"
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:277
+#: source_files/obsidian_main/ui_game.cc:275
 msgid "Available Themes:\n\nOriginal: Follows the theme progression of the original game.\n\nEpisodic: Each episode follows a single randomly chosen theme.\n\nBit Mixed: Theme will change every few levels.\n\nJumbled Up: Level themes are purely random.\n\nPsychedelic: Trippy.\n\nOther themes listed are game-specific."
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:378
+#: source_files/obsidian_main/ui_game.cc:376
 msgid "Cancel"
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:386
+#: source_files/obsidian_main/ui_game.cc:384
 msgid "Quit"
 msgstr ""
 
-#: source_files/obsidian_main/ui_module.cc:292
+#: source_files/obsidian_main/ui_module.cc:291
 msgid "Use Slider Value"
 msgstr ""
 
@@ -10581,58 +10369,66 @@ msgstr ""
 msgid "Enter Value:"
 msgstr ""
 
-#: source_files/obsidian_main/ui_module.cc:1653
+#: source_files/obsidian_main/ui_module.cc:1646
 msgid "Architecture"
 msgstr ""
 
-#: source_files/obsidian_main/ui_module.cc:1655
+#: source_files/obsidian_main/ui_module.cc:1648
 msgid "Combat"
 msgstr ""
 
-#: source_files/obsidian_main/ui_module.cc:1657
+#: source_files/obsidian_main/ui_module.cc:1650
 msgid "Pickups"
 msgstr ""
 
-#: source_files/obsidian_main/ui_module.cc:1659
+#: source_files/obsidian_main/ui_module.cc:1652
 msgid "Other"
 msgstr ""
 
-#: source_files/obsidian_main/ui_window.cc:78
-msgid "File/Options"
+#: source_files/obsidian_main/ui_widgets.cc:897
+msgid "Next"
 msgstr ""
 
-#: source_files/obsidian_main/ui_window.cc:79
-msgid "File/Theme"
+#: source_files/obsidian_main/ui_widgets.cc:906
+msgid "Close"
 msgstr ""
 
 #: source_files/obsidian_main/ui_window.cc:80
-msgid "File/Set Seed"
+msgid "File/Options"
 msgstr ""
 
 #: source_files/obsidian_main/ui_window.cc:81
-msgid "File/Config Manager"
+msgid "File/Theme"
 msgstr ""
 
 #: source_files/obsidian_main/ui_window.cc:82
-msgid "Help/About"
+msgid "File/Set Seed"
 msgstr ""
 
 #: source_files/obsidian_main/ui_window.cc:83
-msgid "Help/View Logs"
+msgid "File/Config Manager"
 msgstr ""
 
 #: source_files/obsidian_main/ui_window.cc:84
-msgid "Help/Glossary"
+msgid "Help/About"
 msgstr ""
 
 #: source_files/obsidian_main/ui_window.cc:85
-msgid "Help/ "
+msgid "Help/View Logs"
 msgstr ""
 
 #: source_files/obsidian_main/ui_window.cc:86
-msgid "Help/Tutorial"
+msgid "Help/Glossary"
 msgstr ""
 
 #: source_files/obsidian_main/ui_window.cc:87
+msgid "Help/ "
+msgstr ""
+
+#: source_files/obsidian_main/ui_window.cc:88
+msgid "Help/Tutorial"
+msgstr ""
+
+#: source_files/obsidian_main/ui_window.cc:89
 msgid "Surprise Me/Go"
 msgstr ""
