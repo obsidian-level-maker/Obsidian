@@ -186,7 +186,9 @@ Fl_Pixmap *clippy;
 Fl_BMP_Image *tutorial1;
 Fl_BMP_Image *tutorial2;
 Fl_BMP_Image *tutorial3;
+Fl_BMP_Image *tutorial3_2;
 Fl_BMP_Image *tutorial4;
+Fl_BMP_Image *tutorial4_2;
 Fl_BMP_Image *tutorial5;
 Fl_BMP_Image *tutorial6;
 Fl_BMP_Image *tutorial7;
@@ -1755,9 +1757,17 @@ softrestart:;
         if (!tutorial3) {
             tutorial3 = new Fl_BMP_Image(image_loc.generic_string().c_str());
         }
+        image_loc.replace_filename("tutorial3_2.bmp");
+        if (!tutorial3_2) {
+            tutorial3_2 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+        }
         image_loc.replace_filename("tutorial4.bmp");
         if (!tutorial4) {
             tutorial4 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+        }
+        image_loc.replace_filename("tutorial4_2.bmp");
+        if (!tutorial4_2) {
+            tutorial4_2 = new Fl_BMP_Image(image_loc.generic_string().c_str());
         }
         image_loc.replace_filename("tutorial5.bmp");
         if (!tutorial5) {
