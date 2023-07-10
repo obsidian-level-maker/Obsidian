@@ -1230,13 +1230,11 @@ bool Doom::game_interface_c::Finish(bool build_ok) {
 }
 
 void Doom::game_interface_c::BeginLevel() {
-    if (map_format = FORMAT_UDMF) {
-        udmf_vertexes = 0;
-        udmf_sectors = 0;
-        udmf_linedefs = 0;
-        udmf_things = 0;
-        udmf_sidedefs = 0;
-    }
+    udmf_vertexes = 0;
+    udmf_sectors = 0;
+    udmf_linedefs = 0;
+    udmf_things = 0;
+    udmf_sidedefs = 0;
     Doom::BeginLevel();
 }
 
