@@ -18,7 +18,6 @@
 //
 //------------------------------------------------------------------------
 
-#include "fmt/format.h"
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
 #include "headers.h"
@@ -137,7 +136,7 @@ UI_Tutorial_Window::UI_Tutorial_Window(int W, int H, const char *label)
         out->textfont(font_style);
         out->textsize(FL_NORMAL_SIZE + 2);
         // clang-format off
-        out->value(_("<center>Game Settings, in the upper left area of the program window, contains all you need to build your very first mapset. Select the Engine to filter available games, the Game you would like to build maps for, the Port that it will be played on, the Length (number of maps) of the mapset, and the Theme that you would like it to have. Once you press 'Build', you will be prompted to choose a location and filename for your mapset. After that, it will be generated and saved to the location that you specified.\n\nNOTE: If you select 'Vanilla Doom' for the port, an alternate map generator will be used to create your WAD. Although this WAD will be compatible with all ports, it is much simpler in nature than the maps made by Obsidian's main generator.</center>"));
+        out->value(_("<center>Game Settings, in the upper left area of the program window, contains all you need to build your very first mapset. Select the Engine to filter available games, the Game you would like to build maps for, the Port that it will be played on, the Length (number of maps) of the mapset, and the Theme that you would like it to have. Once you press 'Build', you will be prompted to choose a location and filename for your mapset. After that, it will be generated and saved to the location that you specified.\n\nNOTE: If you select 'Vanilla' for the port while building for the id Tech 1 engine, an alternate map generator will be used to create your WAD. Although this WAD will be compatible with all ports, it is much simpler in nature than the maps made by Obsidian's main generator.</center>"));
         // clang-format on
         g->end();
     }
@@ -159,16 +158,16 @@ UI_Tutorial_Window::UI_Tutorial_Window(int W, int H, const char *label)
         back->labelfont(font_style);
         back->labelcolor(FONT2_COLOR);
         back->callback(wiz_back, this->tutorial_wiz);
-        Fl_Box *pic = new Fl_Box(10, 30, W - 20, H / 2 - 80);
+        Fl_Box *pic = new Fl_Box(10, 70, W - 20, H / 2 - 80);
         pic->box(FL_FLAT_BOX);
         pic->image(tutorial2);
         Fl_Help_View *out =
-            new Fl_Help_View(10, 30 + H / 2, W - 20, H / 2 - 80);
+            new Fl_Help_View(10, 70 + H / 2, W - 20, H / 2 - 120);
         out->box(FL_FLAT_BOX);
         out->textfont(font_style);
         out->textsize(FL_NORMAL_SIZE + 2);
         // clang-format off
-        out->value(_("<center>At some point, you will want to have more control over the contents of the maps that you generate. This is where modules come into play. Modules are groups of options that can be changed to fine-tune your experience. Most modules are optional, and will need to be enabled or disabled accordingly.</center>"));
+        out->value(_("<center>At some point, you will want to have more control over the contents of the maps that you generate. This is where modules come into play. Modules are sets of options that can be changed to fine-tune your experience.They are grouped into four categories: Architecture, Combat, Pickups and Other, and can be navigated using the tabs at the top of the program window.\n\nMost modules are optional, and will need to be enabled or disabled accordingly.</center>"));
         // clang-format on
         g->end();
     }
@@ -190,9 +189,12 @@ UI_Tutorial_Window::UI_Tutorial_Window(int W, int H, const char *label)
         back->labelfont(font_style);
         back->labelcolor(FONT2_COLOR);
         back->callback(wiz_back, this->tutorial_wiz);
-        Fl_Box *pic = new Fl_Box(10, 30, W - 20, H / 2 - 80);
+        Fl_Box *pic = new Fl_Box(10, 30, W - 20, H / 4 - 40);
         pic->box(FL_FLAT_BOX);
         pic->image(tutorial3);
+        Fl_Box *pic2 = new Fl_Box(10, 30 + H / 4 - 40, W - 20, H / 4 - 40);
+        pic2->box(FL_FLAT_BOX);
+        pic2->image(tutorial3_2);
         Fl_Help_View *out =
             new Fl_Help_View(10, 30 + H / 2, W - 20, H / 2 - 80);
         out->box(FL_FLAT_BOX);
@@ -221,16 +223,19 @@ UI_Tutorial_Window::UI_Tutorial_Window(int W, int H, const char *label)
         back->labelfont(font_style);
         back->labelcolor(FONT2_COLOR);
         back->callback(wiz_back, this->tutorial_wiz);
-        Fl_Box *pic = new Fl_Box(10, 30, W - 20, H / 2 - 80);
+        Fl_Box *pic = new Fl_Box(10, 30, W - 20, H / 4 - 40);
         pic->box(FL_FLAT_BOX);
         pic->image(tutorial4);
+        Fl_Box *pic2 = new Fl_Box(10, 30 + H / 4 - 40, W - 20, H / 4 - 40);
+        pic2->box(FL_FLAT_BOX);
+        pic2->image(tutorial4_2);
         Fl_Help_View *out =
             new Fl_Help_View(10, 30 + H / 2, W - 20, H / 2 - 80);
         out->box(FL_FLAT_BOX);
         out->textfont(font_style);
         out->textsize(FL_NORMAL_SIZE + 2);
         // clang-format off
-        out->value(_("<center>Other modules will have options that you can adjust after you enable them. These modules will have a + symbol next to their name instead of a checkbox. To enable them, click the + symbol. The + will turn into a - and the module will expand to show its options. Once you have adjusted these options, you MUST LEAVE THE MODULE EXPANDED for them to take effect. To disable the module, click the - symbol. It will collapse and the - will turn back into a +</center>"));
+        out->value(_("<center>Other modules will have options that you can adjust after you enable them. After ticking its checkbox, the module will expand to show its options. Once you have adjusted these options, you MUST LEAVE THE MODULE EXPANDED for them to take effect. When the checkbox is cleared, the module will collapse again.</center>"));
         // clang-format on
         g->end();
     }
@@ -260,7 +265,7 @@ UI_Tutorial_Window::UI_Tutorial_Window(int W, int H, const char *label)
         out->textfont(font_style);
         out->textsize(FL_NORMAL_SIZE + 2);
         // clang-format off
-        out->value(_("<center>Module options come in three different flavors: Checkboxes, drop-down menus, and sliders. Checkboxes and drop-down menus are fairly self-explanatory, but we will cover some of the more advanced slider functions.</center>"));
+        out->value(_("<center>Module options come in three different flavors: Sliders, checkboxes, and drop-down menus. Checkboxes and drop-down menus are fairly self-explanatory, but we will cover some of the more advanced slider functions.</center>"));
         // clang-format on
         g->end();
     }
@@ -290,7 +295,7 @@ UI_Tutorial_Window::UI_Tutorial_Window(int W, int H, const char *label)
         out->textfont(font_style);
         out->textsize(FL_NORMAL_SIZE + 2);
         // clang-format off
-        out->value(_("<center>Some sliders will have an inverted triangle icon in the top right corner. Clicking this will show a menu with various choices. With the exception of 'Use Slider Value', these will ignore the number that the slider is set to in favor of a different means of determining the related value.</center>"));
+        out->value(_("<center>Some sliders will have an inverted triangle icon next to them. Clicking this will show a menu with various choices. With the exception of 'Use Slider Value', these will ignore the number that the slider is set to in favor of a different means of determining the related value.</center>"));
         // clang-format on
         g->end();
     }
@@ -320,7 +325,7 @@ UI_Tutorial_Window::UI_Tutorial_Window(int W, int H, const char *label)
         out->textfont(font_style);
         out->textsize(FL_NORMAL_SIZE + 2);
         // clang-format off
-        out->value(_("<center>All sliders will have a pair of brackets in the top right corner. Clicking these will open a dialog box where you can enter a value manually instead of using the slider handle or arrow buttons.</center>"));
+        out->value(_("<center>All sliders will have a pair of brackets to their right. Clicking these will open a dialog box where you can enter a value manually instead of using the slider handle or arrow buttons.</center>"));
         // clang-format on
         g->end();
     }
@@ -350,7 +355,7 @@ UI_Tutorial_Window::UI_Tutorial_Window(int W, int H, const char *label)
         out->textfont(font_style);
         out->textsize(FL_NORMAL_SIZE + 2);
         // clang-format off
-        out->value(_("<center>At first, the amount of settings in Obsidian can seem daunting. To help with this, every option has several helper widgets. To reset any option to its default value, click the \"rollback\" icon in the upper right corner. For a brief explanation of an option, a tooltip can be shown by hovering your cursor over the option title. In addition, there is a question mark icon in the top right corner of each option that can be clicked to open a window with a more detailed explanation.</center>"));
+        out->value(_("<center>At first, the amount of settings in Obsidian can seem daunting. To help with this, every option has several helper widgets. To reset any option to its default value, click the \"rollback\" icon found to its right. For a brief explanation of an option, a tooltip can be shown by hovering your cursor over the option title. In addition, there is a question mark icon to the right of each option that can be clicked to open a window with a more detailed explanation.</center>"));
         // clang-format on
         g->end();
     }
@@ -380,7 +385,7 @@ UI_Tutorial_Window::UI_Tutorial_Window(int W, int H, const char *label)
         out->textfont(font_style);
         out->textsize(FL_NORMAL_SIZE + 2);
         // clang-format off
-        out->value(_("<center>Addons are a way to enhance the Obsidian experience further by adding new content, modules, and options. They come in the form of folders or ZIP/7Z archives that must be placed in the /addons folder of your Obsidian install before starting the program. Once there, they can be viewed, enabled, or disabled by clicking the \"Addons\" menu located in the top bar of the program. Good sources for new addons are either<br /><A HREF='https://obsidian-level-maker.github.io/addons.html'>the public Addons page</A> or the #addon-files channel of our Discord.</center>"));
+        out->value(_("<center>Addons are a way to enhance the Obsidian experience further by adding new content, modules, and options. They come in the form of folders or ZIP/7Z archives with the *.OAF (Obsidian Addon File) extension that must be placed in the /addons folder of your Obsidian install before starting the program. Once there, they can be viewed, enabled, or disabled by clicking the \"Addons\" menu located in the top bar of the program. Good sources for new addons are either<br /><A HREF='https://obsidian-level-maker.github.io/addons.html'>the public Addons page</A> or the #addon-files channel of our Discord.</center>"));
         // clang-format on
         g->end();
     }
@@ -410,7 +415,7 @@ UI_Tutorial_Window::UI_Tutorial_Window(int W, int H, const char *label)
         out->textfont(font_style);
         out->textsize(FL_NORMAL_SIZE + 2);
         // clang-format off
-        out->value(_("<center>If, for whatever reason, you are encountering unexpected behavior, you can view Obsidian's logs by pressing F6 or selecting Help->View Logs from the program menu. From here, you can view and save the log contents to a file of your choosing. In addition, there will be LOGS*.txt files with the same information that are stored in the same folder as obsidian.exe (or ~/.config/obsidian on *nix). These are rolling logs that will eventually be overwritten, so be sure to save this information elsewhere if you need to refer to it later! These logs are extremely important when seeking help or filing bug reports!</center>"));
+        out->value(_("<center>If, for whatever reason, you are encountering unexpected behavior, you can view Obsidian's logs by pressing F6 or selecting Help->View Logs from the program menu. From here, you can view and save the log contents to a file of your choosing. In addition, there will be LOGS*.txt files with the same information that are stored in the same folder as obsidian.exe (or ~/.config/obsidian on *nix). These will be overwritten each time the program is started, so be sure to save this information elsewhere if you need to refer to it later! These logs are extremely important when seeking help or filing bug reports!</center>"));
         // clang-format on
         g->end();
     }

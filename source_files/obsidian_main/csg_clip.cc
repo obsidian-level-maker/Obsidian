@@ -1169,7 +1169,7 @@ void Q1_ClippingHull(int hull) {
         return;
     }
 
-    LogPrintf("\nClipping Hull {}...\n", hull);
+    LogPrintf("\nClipping Hull %d...\n", hull);
 
 #ifndef CONSOLE_ONLY
     if (main_win) {
@@ -1199,7 +1199,7 @@ void Q1_ClippingHull(int hull) {
 
     if (q1_total_clip >= MAX_MAP_CLIPNODES) {
         Main::FatalError(
-            "Quake build failure: exceeded limit of {} CLIPNODES\n",
+            "Quake build failure: exceeded limit of %d CLIPNODES\n",
             MAX_MAP_CLIPNODES);
     }
 }

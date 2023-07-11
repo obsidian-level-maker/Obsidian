@@ -304,7 +304,7 @@ void Fl_Wayland_Gl_Window_Driver::make_current_before() {
     //   OpenGL3-glut-test, OpenGL3test.
     // Tested wayland compositors: mutter, kde-plasma, weston, sway on FreeBSD.
     if (pWindow->parent()) win = fl_wl_xid(pWindow->top_window());
-    while (!win->xdg_surface) wl_display_roundtrip(fl_wl_display());
+    while (wl_list_empty(&win->outputs)) wl_display_dispatch(fl_wl_display());
   }
 }
 
@@ -358,11 +358,7 @@ void Fl_Wayland_Gl_Window_Driver::swap_buffers() {
 
   if (egl_surface && !egl_swap_in_progress) {
     egl_swap_in_progress = true; // prevents crash while down resizing rotating glpuzzle
-    while (wl_display_prepare_read(Fl_Wayland_Screen_Driver::wl_display) != 0) {
-      wl_display_dispatch_pending(Fl_Wayland_Screen_Driver::wl_display);
-    }
-    wl_display_flush(Fl_Wayland_Screen_Driver::wl_display);
-    wl_display_read_events(Fl_Wayland_Screen_Driver::wl_display);
+    wl_display_dispatch_pending(Fl_Wayland_Screen_Driver::wl_display);
     eglSwapBuffers(Fl_Wayland_Gl_Window_Driver::egl_display, egl_surface);
     egl_swap_in_progress = false;
   }
@@ -411,7 +407,8 @@ void Fl_Wayland_Gl_Window_Driver::resize(int is_a_resize, int W, int H) {
   wl_egl_window_get_attached_size(egl_window, &W2, &H2);
   if (W2 != W || H2 != H) {
     wl_egl_window_resize(egl_window, W, H, 0, 0);
-    //fprintf(stderr, "Fl_Wayland_Gl_Window_Driver::resize to %dx%d\n", W, H);
+    //fprintf(stderr, "Fl_Wayland_Gl_Window_Driver::resize from %dx%d to %dx%d\n",
+    //        W2, H2, W, H);
   }
   /* CONTROL_LEAKING_SUB_GL_WINDOWS
   if (Fl_Wayland_Window_Driver::driver(pWindow)->subRect()) {
@@ -430,9 +427,6 @@ void Fl_Wayland_Gl_Window_Driver::gl_visual(Fl_Gl_Choice *c) {
   wld_egl_conf = ((Fl_Wayland_Gl_Choice*)c)->egl_conf;
 }
 
-static void delayed_redraw(Fl_Window *win) {
-  win->redraw();
-}
 
 void Fl_Wayland_Gl_Window_Driver::gl_start() {
   float f = Fl::screen_scale(Fl_Window::current()->screen_num());
@@ -443,7 +437,6 @@ void Fl_Wayland_Gl_Window_Driver::gl_start() {
   wl_egl_window_get_attached_size(dr->gl_start_support_->egl_window, &W2, &H2);
   if (W2 != W || H2 != H) {
     wl_egl_window_resize(dr->gl_start_support_->egl_window, W, H, 0, 0);
-    Fl::add_timeout(0.01, (Fl_Timeout_Handler)delayed_redraw, Fl_Window::current());
   }
   glClearColor(0., 0., 0., 0.);
   glClear(GL_COLOR_BUFFER_BIT);

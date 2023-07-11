@@ -37,6 +37,7 @@
 class Fl_X;
 class Fl_Image;
 class Fl_RGB_Image;
+class Fl_Image_Surface;
 
 /**
  \brief A base class for platform specific window handling code.
@@ -64,7 +65,7 @@ public:
   static fl_uintptr_t xid(const Fl_Window *win);
   static Fl_Window *find(fl_uintptr_t xid);
   int wait_for_expose_value;
-  Fl_Offscreen other_xid; // offscreen bitmap (overlay and double-buffered windows)
+  Fl_Image_Surface *other_xid; // offscreen bitmap (overlay and double-buffered windows)
   int screen_num();
   void screen_num(int n) { screen_num_ = n; }
 
@@ -199,8 +200,10 @@ public:
   static int menu_itemheight(Fl_Window*);
   static int menu_bartitle(Fl_Window*);
   static int menu_selected(Fl_Window*);
+  static int *menu_offset_y(Fl_Window*);
   static bool is_floating_title(Fl_Window *);
   static void scroll_to_selected_item(Fl_Window *);
+  static bool is_menutitle(Fl_Window *);
 
   virtual fl_uintptr_t os_id() { return 0; }
 };

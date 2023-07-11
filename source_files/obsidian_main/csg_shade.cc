@@ -83,35 +83,6 @@ Lighting Model
 
 static int current_region_group;
 
-#if 0  // DISABLED, WE DO TORCH RAY-TRACING IN LUA CODE
-
-static std::vector< csg_entity_c *> cave_lights;
-
-static void SHADE_CollectLights()
-{
-    cave_lights.clear();
-
-    for (unsigned int i = 0 ; i < all_regions.size() ; i++)
-    {
-        region_c * R = all_regions[i];
-
-        // closed regions never provide light
-        if (R->isClosed())
-            continue;
-
-        for (unsigned int k = 0 ; k < R->entities.size() ; k++)
-        {
-            csg_entity_c *E = R->entities[k];
-
-            if (E->props.getInt("cave_light", 0) > 0)
-                cave_lights.push_back(E);
-        }
-    }
-
-    LogPrintf("Found {} cave light entities\n", (int)cave_lights.size());
-}
-#endif
-
 static int SHADE_CalcRegionGroup(region_c *R) {
     if (R->gaps.empty()) {
         return -1;

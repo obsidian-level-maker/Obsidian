@@ -1124,7 +1124,7 @@ static mz_bool tdefl_compress_lz_codes(tdefl_compressor *d)
         {
             mz_uint s0, s1, n0, n1, sym, num_extra_bits;
             mz_uint match_len = pLZ_codes[0];
-            match_dist = (pLZ_codes[1] | (pLZ_codes[2] << 8));
+            mz_uint match_dist = (pLZ_codes[1] | (pLZ_codes[2] << 8));
             pLZ_codes += 3;
 
             MZ_ASSERT(d->m_huff_code_sizes[0][s_tdefl_len_sym[match_len]]);
@@ -3068,7 +3068,7 @@ static WCHAR* mz_utf8z_to_widechar(const char* str)
 {
   int reqChars = MultiByteToWideChar(CP_UTF8, 0, str, -1, NULL, 0);
   WCHAR* wStr = (WCHAR*)malloc(reqChars * sizeof(WCHAR));
-  MultiByteToWideChar(CP_UTF8, 0, str, -1, wStr, sizeof(WCHAR) * reqChars);
+  MultiByteToWideChar(CP_UTF8, 0, str, -1, wStr, reqChars);
   return wStr;
 }
 

@@ -12,7 +12,9 @@
 --
 ------------------------------------------------------------------------
 
-HEXEN.PALETTES =
+HEXEN.RESOURCES = {}
+
+HEXEN.RESOURCES.PALETTES =
 {
   normal =
   {

@@ -1410,8 +1410,6 @@ static void MakeLine(region_c *R, snag_c *S) {
     int y2 = I_ROUND(S->y2);
 
     if (x1 == x2 && y1 == y2) {
-        //        LogPrintf("WARNING: degenerate linedef @ ({:1.0f}
-        //{:1.0})\n", S->x1, S->y1);
         return;
     }
 
@@ -1580,7 +1578,7 @@ static void MergeColinearLines(bool show_count = true) {
     }
 
     if (show_count) {
-        LogPrintf("Merged {} colinear lines\n", count);
+        LogPrintf("Merged %d colinear lines\n", count);
     }
 }
 
@@ -1691,13 +1689,9 @@ static void AlignTextures() {
         }
 
         count += prev_count + next_count;
-
-        //  DebugPrintf("AlignTextures pass {} : naturals:{} prevs:{}
-        //  nexts:%d\n",
-        //              pass, naturals, prev_count, next_count);
     }
 
-    LogPrintf("Aligned {} textures\n", count);
+    LogPrintf("Aligned %d textures\n", count);
 }
 }  // namespace Doom
 
@@ -1977,7 +1971,7 @@ static void RoundCorners() {
         }
     }
 
-    LogPrintf("Rounded {} square corners\n", count);
+    LogPrintf("Rounded %d square corners\n", count);
 
     // need this again, since we often create co-linear diagonals
     MergeColinearLines(false /* show_count */);
@@ -2611,7 +2605,7 @@ static void AddThing_FraggleScript(int x, int y, int z, csg_entity_c *E,
     std::string fs_name = E->props.getStr("fs_name", "");
 
     if (fs_name.empty()) {
-        LogPrintf("WARNING: entity lost (no fragglescript name for type #{})\n",
+        LogPrintf("WARNING: entity lost (no fragglescript name for type #%d)\n",
                   type);
         return;
     }
@@ -2639,7 +2633,7 @@ static void WriteThing(sector_c *S, csg_entity_c *E) {
     int type = StringToInt(E->id);
 
     if (type <= 0) {
-        LogPrintf("WARNING: bad doom entity number: '{}'\n", E->id.c_str());
+        LogPrintf("WARNING: bad doom entity number: '%s'\n", E->id.c_str());
         return;
     }
 

@@ -23,7 +23,6 @@
 
 #include <algorithm>
 
-#include "fmt/format.h"
 #include "headers.h"
 #include "lib_util.h"
 #include "main.h"
@@ -87,20 +86,9 @@ void Signal_DontCare(const char *name, signal_notify_f func) {
 
 void Signal_Raise(std::string name) {
     if (signal_in_progress) {
-#if 0
-        if (strcmp(signal_in_progress, name) == 0)
-        {
-            DebugPrintf("Signal '{}' raised when already in progress\n", name);
-            return;
-        }
-#endif
-
         for (auto LI = pending_sigs.begin(); LI != pending_sigs.end(); LI++) {
             if (*LI == name) {
-                DebugPrintf(
-                    fmt::format("Signal '{}' raised when already pending\n",
-                                name)
-                        .c_str());
+                DebugPrintf("Signal '%s' raised when already pending\n", name.c_str());
                 return;
             }
         }
@@ -118,7 +106,7 @@ void Signal_Raise(std::string name) {
     for (;;) {
         loop_count++;
         if (loop_count >= EXCESSIVE_LOOPS) {
-            Main::FatalError("Signal_Raise({}) : excessive looping!\n", name);
+            Main::FatalError("Signal_Raise(%s) : excessive looping!\n", name.c_str());
         }
 
         signal_in_progress = name.c_str();

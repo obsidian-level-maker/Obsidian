@@ -315,25 +315,43 @@ arena *new_arena(level *l, config *c)
 
   answer->boss_count = 1;   /* Default */
 
-  if (c->mission==8) {       /* Do episode-ends canonically */
-    if (c->episode==1) {
-      bossno = 0;
-    } else if (c->episode==2) {
-      bossno = 1;
+  if (c->gamemask & HERETIC_BIT) {
+    if (c->mission==8) {       /* Do episode-ends canonically */
+      if (c->episode==1) {
+        bossno = 0;
+      } else if (c->episode==2) {
+        bossno = 1;
+      } else if (c->episode==3) {
+        bossno = 2;
+      } else if (c->episode==4) {
+        bossno = 0;
+      } else if (c->episode==5) {
+        bossno = 1;
+      }
     } else {
-      bossno = 2;
+      bossno = roll(7);
     }
-  } else if (c->map==7) {
-    bossno = 3;
-#ifdef USING_SPAWNER
-  } else if (c->map==30) {   /* Including the end of DooM II, eventually */
-    /* bossno=666; */
-    bossno = 1;
-#endif
-  } else if (c->map) {       /* Otherwise a random DooM II boss, */
-    bossno = roll(7);
-  } else {                   /* Or a random DooM I boss. */
-    bossno = roll(3);
+  } else {
+    if (c->mission==8) {       /* Do episode-ends canonically */
+      if (c->episode==1) {
+        bossno = 0;
+      } else if (c->episode==2) {
+        bossno = 1;
+      } else {
+        bossno = 2;
+      }
+    } else if (c->map==7) {
+      bossno = 3;
+  #ifdef USING_SPAWNER
+    } else if (c->map==30) {   /* Including the end of DooM II, eventually */
+      /* bossno=666; */
+      bossno = 1;
+  #endif
+    } else if (c->map) {       /* Otherwise a random DooM II boss, */
+      bossno = roll(7);
+    } else {                   /* Or a random DooM I boss. */
+      bossno = roll(3);
+    }
   }
 
   /*   How can we configify all the monsters and weapons in here??     */
@@ -1042,15 +1060,9 @@ void secretize_config(config *c)
   c->lock_themes = SLUMP_TRUE;
   if (rollpercent(25)) c->force_biggest = SLUMP_TRUE;   /* stub */
   c->big_monsters = SLUMP_TRUE;
+  c->secret_themes = SLUMP_TRUE;
 
   for (;!something_special;) {
-
-    /* Sometimes bizarre theme */
-    if (rollpercent(30)) {
-      c->secret_themes = SLUMP_TRUE;
-      something_special = SLUMP_TRUE;
-      announce(VERBOSE,"Bizarre theme");
-    }
 
     /* Sometimes lots and lots of nukage */
     if (rollpercent(30)) {
@@ -1060,7 +1072,7 @@ void secretize_config(config *c)
     }
 
     /* Sometimes some DooM II nazis */
-    if (rollpercent(80)&&!(c->gamemask&(DOOM0_BIT|DOOM1_BIT))) {
+    if (rollpercent(80)&&!(c->gamemask&(DOOM0_BIT|DOOM1_BIT|HERETIC_BIT))) {
       c->forbidden_monster_bits &= ~SPECIAL;
       something_special = SLUMP_TRUE;
       if (rollpercent(50)) {
@@ -1123,7 +1135,7 @@ config *get_config(std::filesystem::path filename) {
     answer->themecount = 0;
     answer->sthemecount = 0;
     answer->secret_themes = SLUMP_FALSE;
-    answer->lock_themes = SLUMP_FALSE;
+    answer->lock_themes = SLUMP_TRUE;
     std::string nukage = ob_get_param("bool_major_nukage_slump");
     if (nukage.empty()) nukage = "0";
     answer->major_nukage = StringToInt(nukage) ? SLUMP_TRUE : SLUMP_FALSE;
@@ -1178,13 +1190,15 @@ config *get_config(std::filesystem::path filename) {
     } else if (StringCaseCmp(wadlength, "few") == 0) {
         answer->levelcount = 4;
     } else if (StringCaseCmp(wadlength, "episode") == 0) {
-        if (StringCaseCmp(current_game, "doom2") == 0 || StringCaseCmp(current_game, "plutonia") == 0 || StringCaseCmp(current_game, "tnt") == 0) {
+        if (StringCaseCmp(current_game, "doom2") == 0 || StringCaseCmp(current_game, "plutonia") == 0 || StringCaseCmp(current_game, "tnt") == 0
+            || StringCaseCmp(current_game, "hacx") == 0 || StringCaseCmp(current_game, "harmony") == 0) {
             answer->levelcount = 11;
         } else {
             answer->levelcount = 8;
         }
     } else {
-        if (StringCaseCmp(current_game, "doom2") == 0 || StringCaseCmp(current_game, "plutonia") == 0 || StringCaseCmp(current_game, "tnt") == 0) {
+        if (StringCaseCmp(current_game, "doom2") == 0 || StringCaseCmp(current_game, "plutonia") == 0 || StringCaseCmp(current_game, "tnt") == 0
+            || StringCaseCmp(current_game, "hacx") == 0 || StringCaseCmp(current_game, "harmony") == 0) {
             answer->levelcount = 32;
         } else if (StringCaseCmp(current_game, "doom1") == 0) {
             answer->levelcount = 24;
@@ -5788,8 +5802,13 @@ void arena_arrival(level *l,arena *a,haa *haa,config *c)
     if (na2<=0) mask &= ~0x04;
   }
   if (a->props&ARENA_NUKAGE) {  /* Little stub health */
-    place_object_in_region(l,minx,a->miny,maxx,a->maxy,
-                           c,ID_MEDIKIT,16,0,0,0,7);
+    if (l->heretic_level) {
+      place_object_in_region(l,minx,a->miny,maxx,a->maxy,
+                            c,ID_QUARTZFLASK,16,0,0,0,7);
+    } else {
+      place_object_in_region(l,minx,a->miny,maxx,a->maxy,
+                            c,ID_MEDIKIT,16,0,0,0,7);
+    }
   }
 
 }
@@ -5872,42 +5891,10 @@ void arena_boss(level *l,arena *a,haa *haa,config *c)
   if (a->boss_count>1)  /* Only 1 and 2 supported! */
     new_thing(l,cx,cy-(a->boss->width+8),facing,a->boss->thingid,7,c);
 
-  if ((c->episode==2)&&(c->mission==8)) need_switch = SLUMP_FALSE;
-  if ((c->episode==3)&&(c->mission==8)) need_switch = SLUMP_FALSE;
-  if (((c->episode==4)&&(c->mission==8))||(c->map==7)) {
-    linedef *ld1, *ld2, *ld3, *ld4;
-    sector *newsec;
-    need_switch = SLUMP_FALSE;
-    cx -= 32;
-    cx &= ~(63);
-    cy += a->boss->width+72;
-    cy &= ~(63);
-    newsec = new_sector(l,(short)(a->innersec->floor_height+64),
-                          a->innersec->ceiling_height,
-                          random_gate(c,a->innersec->pstyle),
-                          a->innersec->ceiling_flat);
-    newsec->pstyle = a->innersec->pstyle;
-    newsec->light_level = 250;
-    newsec->special = GLOW_BLINK;
-    newsec->tag = 666;
-    parallel_innersec_ex(l,a->innersec,newsec,
-                         NULL,NULL,a->innersec->pstyle->wall0,
-                         cx,cy,cx+64,cy+64,c,
-                         &ld1,&ld2,&ld3,&ld4);
-    ld1->type = LINEDEF_W1_END_LEVEL;
-    ld1->flags &= ~LOWER_UNPEGGED;
-    ld2->type = LINEDEF_W1_END_LEVEL;
-    ld2->flags &= ~LOWER_UNPEGGED;
-    ld3->type = LINEDEF_W1_END_LEVEL;
-    ld3->flags &= ~LOWER_UNPEGGED;
-    ld4->type = LINEDEF_W1_END_LEVEL;
-    ld4->flags &= ~LOWER_UNPEGGED;
-  }
-  if ((c->episode==1)&&(c->mission==8)) {
-    linedef *ld1, *ld2, *ld3, *ld4;
-    sector *newsec;
-    short tag = death_room(l,NULL,a->innersec->pstyle,c);
-    if (tag) {
+  if (c->gamemask & HERETIC_BIT) {
+    if (c->mission==8) {
+      linedef *ld1, *ld2, *ld3, *ld4;
+      sector *newsec;
       need_switch = SLUMP_FALSE;
       cx -= 32;
       cx &= ~(63);
@@ -5922,21 +5909,86 @@ void arena_boss(level *l,arena *a,haa *haa,config *c)
       newsec->special = GLOW_BLINK;
       newsec->tag = 666;
       parallel_innersec_ex(l,a->innersec,newsec,
-                           NULL,NULL,a->innersec->pstyle->wall0,
-                           cx,cy,cx+64,cy+64,c,
-                           &ld1,&ld2,&ld3,&ld4);
-      ld1->type = LINEDEF_TELEPORT;
-      ld1->tag = tag;
+                          NULL,NULL,a->innersec->pstyle->wall0,
+                          cx,cy,cx+64,cy+64,c,
+                          &ld1,&ld2,&ld3,&ld4);
+      ld1->type = LINEDEF_W1_END_LEVEL;
       ld1->flags &= ~LOWER_UNPEGGED;
-      ld2->type = LINEDEF_TELEPORT;
-      ld2->tag = tag;
+      ld2->type = LINEDEF_W1_END_LEVEL;
       ld2->flags &= ~LOWER_UNPEGGED;
-      ld3->type = LINEDEF_TELEPORT;
-      ld3->tag = tag;
+      ld3->type = LINEDEF_W1_END_LEVEL;
       ld3->flags &= ~LOWER_UNPEGGED;
-      ld4->type = LINEDEF_TELEPORT;
-      ld4->tag = tag;
+      ld4->type = LINEDEF_W1_END_LEVEL;
       ld4->flags &= ~LOWER_UNPEGGED;
+    }
+  }
+  else {
+    if ((c->episode==2)&&(c->mission==8)) need_switch = SLUMP_FALSE;
+    if ((c->episode==3)&&(c->mission==8)) need_switch = SLUMP_FALSE;
+    if (((c->episode==4)&&(c->mission==8))||(c->map==7)) {
+      linedef *ld1, *ld2, *ld3, *ld4;
+      sector *newsec;
+      need_switch = SLUMP_FALSE;
+      cx -= 32;
+      cx &= ~(63);
+      cy += a->boss->width+72;
+      cy &= ~(63);
+      newsec = new_sector(l,(short)(a->innersec->floor_height+64),
+                            a->innersec->ceiling_height,
+                            random_gate(c,a->innersec->pstyle),
+                            a->innersec->ceiling_flat);
+      newsec->pstyle = a->innersec->pstyle;
+      newsec->light_level = 250;
+      newsec->special = GLOW_BLINK;
+      newsec->tag = 666;
+      parallel_innersec_ex(l,a->innersec,newsec,
+                          NULL,NULL,a->innersec->pstyle->wall0,
+                          cx,cy,cx+64,cy+64,c,
+                          &ld1,&ld2,&ld3,&ld4);
+      ld1->type = LINEDEF_W1_END_LEVEL;
+      ld1->flags &= ~LOWER_UNPEGGED;
+      ld2->type = LINEDEF_W1_END_LEVEL;
+      ld2->flags &= ~LOWER_UNPEGGED;
+      ld3->type = LINEDEF_W1_END_LEVEL;
+      ld3->flags &= ~LOWER_UNPEGGED;
+      ld4->type = LINEDEF_W1_END_LEVEL;
+      ld4->flags &= ~LOWER_UNPEGGED;
+    }
+    if ((c->episode==1)&&(c->mission==8)) {
+      linedef *ld1, *ld2, *ld3, *ld4;
+      sector *newsec;
+      short tag = death_room(l,NULL,a->innersec->pstyle,c);
+      if (tag) {
+        need_switch = SLUMP_FALSE;
+        cx -= 32;
+        cx &= ~(63);
+        cy += a->boss->width+72;
+        cy &= ~(63);
+        newsec = new_sector(l,(short)(a->innersec->floor_height+64),
+                              a->innersec->ceiling_height,
+                              random_gate(c,a->innersec->pstyle),
+                              a->innersec->ceiling_flat);
+        newsec->pstyle = a->innersec->pstyle;
+        newsec->light_level = 250;
+        newsec->special = GLOW_BLINK;
+        newsec->tag = 666;
+        parallel_innersec_ex(l,a->innersec,newsec,
+                            NULL,NULL,a->innersec->pstyle->wall0,
+                            cx,cy,cx+64,cy+64,c,
+                            &ld1,&ld2,&ld3,&ld4);
+        ld1->type = LINEDEF_TELEPORT;
+        ld1->tag = tag;
+        ld1->flags &= ~LOWER_UNPEGGED;
+        ld2->type = LINEDEF_TELEPORT;
+        ld2->tag = tag;
+        ld2->flags &= ~LOWER_UNPEGGED;
+        ld3->type = LINEDEF_TELEPORT;
+        ld3->tag = tag;
+        ld3->flags &= ~LOWER_UNPEGGED;
+        ld4->type = LINEDEF_TELEPORT;
+        ld4->tag = tag;
+        ld4->flags &= ~LOWER_UNPEGGED;
+      }
     }
   }
 
@@ -6007,6 +6059,9 @@ boolean rising_room(level *l,sector *s,config *c,haa *haa,quest *ThisQuest)
   linedef *ld1,*ld2,*ld3,*ld4;
   thing *t;
   short tid = rollpercent(50) ? ID_POTION : ID_HELMET;
+  if (l->heretic_level) {
+    tid = rollpercent(50) ? ID_WANDCRYSTAL : ID_ETHEREALARROWS;
+  }
 
   if (s->pgate) return SLUMP_FALSE;
 
@@ -8735,7 +8790,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->altdamage[HMP] = (float)4;
     m->altdamage[UV] = (float)2;
     m->bits |= FLIES;
-    m->min_level = 1;
+    m->min_level = 10;
     m = find_monster(c,ID_FIREGARGOYLE);
     m->gamemask = HERETIC_BIT;
     m->width = 34;
@@ -8750,7 +8805,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->altdamage[UV] = (float)2;
     m->bits |= FLIES;
     m->bits |= SHOOTS;
-    m->min_level = 3;   
+    m->min_level = 12;   
     m = find_monster(c,ID_GOLEM);
     m->gamemask = HERETIC_BIT;
     m->width = 46;
@@ -8764,7 +8819,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->altdamage[ITYTD] = (float)12;
     m->altdamage[HMP] = (float)6;
     m->altdamage[UV] = (float)3;
-    m->min_level = 1;
+    m->min_level = 10;
     m = find_monster(c,ID_NITROGOLEM);
     m->gamemask = HERETIC_BIT;
     m->width = 46;
@@ -8778,7 +8833,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->altdamage[HMP] = (float)10;
     m->altdamage[UV] = (float)6;
     m->bits |= SHOOTS;
-    m->min_level = 4;
+    m->min_level = 13;
     m = find_monster(c,ID_OPHIDIAN);
     m->gamemask = HERETIC_BIT;
     m->width = 46;
@@ -8793,7 +8848,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->altdamage[HMP] = (float)8;
     m->altdamage[UV] = (float)4;
     m->bits |= SHOOTS;
-    m->min_level = 17;
+    m->min_level = 28;
     m = find_monster(c,ID_SABRECLAW);
     m->gamemask = HERETIC_BIT;
     m->width = 42;
@@ -8807,7 +8862,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->altdamage[ITYTD] = (float)8;
     m->altdamage[HMP] = (float)4;
     m->altdamage[UV] = (float)2;
-    m->min_level = 10;
+    m->min_level = 20;
     m = find_monster(c,ID_UNDEADWARRIOR);
     m->gamemask = HERETIC_BIT;
     m->width = 50;
@@ -8820,7 +8875,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->altdamage[ITYTD] = (float)10;
     m->altdamage[HMP] = (float)6;
     m->altdamage[UV] = (float)3;
-    m->min_level = 1;
+    m->min_level = 10;
     m->bits |= SHOOTS;
     m = find_monster(c,ID_DISCIPLE);
     m->gamemask = HERETIC_BIT;
@@ -8835,7 +8890,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->altdamage[ITYTD] = (float)16;
     m->altdamage[HMP] = (float)8;
     m->altdamage[UV] = (float)4;
-    m->min_level = 4;
+    m->min_level = 13;
     m->bits |= SHOOTS;
     m = find_monster(c,ID_WEREDRAGON);
     m->gamemask = HERETIC_BIT;
@@ -8850,7 +8905,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->altdamage[ITYTD] = (float)20;
     m->altdamage[HMP] = (float)12;
     m->altdamage[UV] = (float)6;
-    m->min_level = 9;
+    m->min_level = 19;
     m->bits |= SHOOTS;
     m = find_monster(c,ID_MAULOTAUR);
     m->gamemask = HERETIC_BIT;
@@ -8865,7 +8920,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->altdamage[ITYTD] = (float)38;
     m->altdamage[HMP] = (float)18;
     m->altdamage[UV] = (float)10;
-    m->min_level = 16;
+    m->min_level = 27;
     m->bits |= SHOOTS;
     m->bits |= BOSS;
     m->bits |= BIG;
@@ -8882,7 +8937,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->altdamage[ITYTD] = (float)32;
     m->altdamage[HMP] = (float)16;
     m->altdamage[UV] = (float)8;
-    m->min_level = 8;
+    m->min_level = 17;
     m->bits |= SHOOTS;
     m->bits |= BOSS;
     m->bits |= BIG;
@@ -8898,7 +8953,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->altdamage[ITYTD] = (float)60;
     m->altdamage[HMP] = (float)30;
     m->altdamage[UV] = (float)15;
-    m->min_level = 24;
+    m->min_level = 35;
     m->bits |= SHOOTS;
     m->bits |= BOSS;
     m->bits |= BIG;
@@ -10580,6 +10635,9 @@ void populate_linedef(level *l,linedef *ldnew2,haa *haa,config *c,
   point_from(ldnew2->to->x,ldnew2->to->y,x1,y1,RIGHT_TURN,farness,&x,&y);
   /* pick a prize; stubby */
   bonustype = ID_POTION;   /* Just in case! */
+  if (l->heretic_level) {
+    bonustype = ID_WANDCRYSTAL;
+  }
   if (rollpercent(50)) {  /* Health or whatever */
     if (l->heretic_level) {
         switch (roll(4)) {
@@ -10623,42 +10681,76 @@ void populate_linedef(level *l,linedef *ldnew2,haa *haa,config *c,
       haa->haas[1].health += bonusamount/2;
     }
   } else {   /* Some ammo or whatever */
-    if ((haa->haas[0].can_use_cells)&&(rollpercent(20))) {
-      bonustype = ID_CELLPACK;
-      bonusamount = 2000;  /* yow! */
-    } else if ((haa->haas[0].can_use_rockets)&&(rollpercent(20))) {
-      bonustype = ID_ROCKBOX;
-      bonusamount = 500;
-    } else if ((!(haa->haas[2].has_chainsaw))&&(rollpercent(20))) {
-      bonustype = ID_CHAINSAW;
-      bonusamount = 0;
-      haa->haas[2].has_chainsaw = SLUMP_TRUE;
-    } else if (rollpercent(2)) {
-      bonustype = ID_CHAINSAW;
-      bonusamount = 0;
-      haa->haas[2].has_chainsaw = SLUMP_TRUE;
-    } else switch (roll(3)) {
-      case 1: bonustype = ID_SHELLBOX; bonusamount = 1400; break;
-      case 2: bonustype = ID_BACKPACK;
-        bonusamount = 380;
-        if (haa->haas[1].can_use_rockets) bonusamount += 100;
-        if (haa->haas[1].can_use_cells) bonusamount += 400;
-        haa->haas[1].has_backpack = SLUMP_TRUE;
-        haa->haas[2].has_backpack = SLUMP_TRUE;
-        break;
-      default: bonustype = ID_BULBOX; bonusamount = 500; break;
-    }  /* end switch */
-    /* We assume ITYTD didn't find the closet! */
-    haa->haas[1].ammo += bonusamount/2;   /* And HMP only prolly did */
-    haa->haas[2].ammo += bonusamount;
-    if (!secret) {  /* Unless it's not a secret */
-      haa->haas[0].ammo += bonusamount;
-      haa->haas[1].ammo += bonusamount/2;
-    }
-    /* Account for chainsaws; primitive */
-    if (bonustype==ID_CHAINSAW) {
-      haa->haas[1].has_chainsaw = SLUMP_TRUE;   /* OK? */
-      haa->haas[2].has_chainsaw = SLUMP_TRUE;
+    if (l->heretic_level) {
+      if ((haa->haas[0].can_use_cells)&&(rollpercent(20))) {
+        bonustype = ID_HELLSTAFF;
+        bonusamount = 1400;  /* yow! */
+      } else if ((haa->haas[0].can_use_rockets)&&(rollpercent(20))) {
+        bonustype = ID_INFERNOORB;
+        bonusamount = 900;
+      } else if ((!(haa->haas[2].has_chainsaw))&&(rollpercent(20))) {
+        bonustype = ID_GAUNTLETS;
+        bonusamount = 0;
+        haa->haas[2].has_chainsaw = SLUMP_TRUE;
+      } else if (rollpercent(2)) {
+        bonustype = ID_GAUNTLETS;
+        bonusamount = 0;
+        haa->haas[2].has_chainsaw = SLUMP_TRUE;
+      } else switch (roll(3)) { // knickknacks
+        case 1: bonustype = ID_MAPSCROLL; bonusamount = 0; break;
+        case 2: bonustype = ID_TIMEBOMB; bonusamount = 0; break;
+        default: bonustype = ID_TORCH; bonusamount = 0; break;
+      }  /* end switch */
+      /* We assume ITYTD didn't find the closet! */
+      haa->haas[1].ammo += bonusamount/2;   /* And HMP only prolly did */
+      haa->haas[2].ammo += bonusamount;
+      if (!secret) {  /* Unless it's not a secret */
+        haa->haas[0].ammo += bonusamount;
+        haa->haas[1].ammo += bonusamount/2;
+      }
+      /* Account for chainsaws; primitive */
+      if (bonustype==ID_GAUNTLETS) {
+        haa->haas[1].has_chainsaw = SLUMP_TRUE;   /* OK? */
+        haa->haas[2].has_chainsaw = SLUMP_TRUE;
+      }
+    } else {
+      if ((haa->haas[0].can_use_cells)&&(rollpercent(20))) {
+        bonustype = ID_CELLPACK;
+        bonusamount = 2000;  /* yow! */
+      } else if ((haa->haas[0].can_use_rockets)&&(rollpercent(20))) {
+        bonustype = ID_ROCKBOX;
+        bonusamount = 500;
+      } else if ((!(haa->haas[2].has_chainsaw))&&(rollpercent(20))) {
+        bonustype = ID_CHAINSAW;
+        bonusamount = 0;
+        haa->haas[2].has_chainsaw = SLUMP_TRUE;
+      } else if (rollpercent(2)) {
+        bonustype = ID_CHAINSAW;
+        bonusamount = 0;
+        haa->haas[2].has_chainsaw = SLUMP_TRUE;
+      } else switch (roll(3)) {
+        case 1: bonustype = ID_SHELLBOX; bonusamount = 1400; break;
+        case 2: bonustype = ID_BACKPACK;
+          bonusamount = 380;
+          if (haa->haas[1].can_use_rockets) bonusamount += 100;
+          if (haa->haas[1].can_use_cells) bonusamount += 400;
+          haa->haas[1].has_backpack = SLUMP_TRUE;
+          haa->haas[2].has_backpack = SLUMP_TRUE;
+          break;
+        default: bonustype = ID_BULBOX; bonusamount = 500; break;
+      }  /* end switch */
+      /* We assume ITYTD didn't find the closet! */
+      haa->haas[1].ammo += bonusamount/2;   /* And HMP only prolly did */
+      haa->haas[2].ammo += bonusamount;
+      if (!secret) {  /* Unless it's not a secret */
+        haa->haas[0].ammo += bonusamount;
+        haa->haas[1].ammo += bonusamount/2;
+      }
+      /* Account for chainsaws; primitive */
+      if (bonustype==ID_CHAINSAW) {
+        haa->haas[1].has_chainsaw = SLUMP_TRUE;   /* OK? */
+        haa->haas[2].has_chainsaw = SLUMP_TRUE;
+      }
     }
   }  /* end ammo bonuses */
   new_thing(l,x,y,0,bonustype,7,c);  /* Place the bonus */
@@ -11717,17 +11809,32 @@ void embellish_room(level *l,sector *oldsector,haa *haa,style *ThisStyle,
                 }
                 update_haa_for_health(haa,7,bonustype);
               } else {   /* Some ammo or whatever */
-                if ((!(haa->haas[2].has_chainsaw))&&(rollpercent(5))) {
-                  bonustype = ID_CHAINSAW;
-                  haa->haas[0].has_chainsaw = SLUMP_TRUE;
-                  haa->haas[1].has_chainsaw = SLUMP_TRUE;
-                  haa->haas[2].has_chainsaw = SLUMP_TRUE;
+                if (l->heretic_level) {
+                  if ((!(haa->haas[2].has_chainsaw))&&(rollpercent(5))) {
+                    bonustype = ID_GAUNTLETS;
+                    haa->haas[0].has_chainsaw = SLUMP_TRUE;
+                    haa->haas[1].has_chainsaw = SLUMP_TRUE;
+                    haa->haas[2].has_chainsaw = SLUMP_TRUE;
+                  } else {
+                    switch (roll(2)) {   /* What about a cell? / a rocket */
+                      case 0: bonustype = ID_WANDCRYSTAL; break;
+                      default: bonustype = ID_ETHEREALARROWS; break;
+                    }  /* end switch */
+                    update_haa_for_ammo(haa,7,bonustype);
+                  }
                 } else {
-                  switch (roll(2)) {   /* What about a cell? / a rocket */
-                    case 0: bonustype = ID_CLIP; break;
-                    default: bonustype = ID_SHELLS; break;
-                  }  /* end switch */
-                  update_haa_for_ammo(haa,7,bonustype);
+                  if ((!(haa->haas[2].has_chainsaw))&&(rollpercent(5))) {
+                    bonustype = ID_CHAINSAW;
+                    haa->haas[0].has_chainsaw = SLUMP_TRUE;
+                    haa->haas[1].has_chainsaw = SLUMP_TRUE;
+                    haa->haas[2].has_chainsaw = SLUMP_TRUE;
+                  } else {
+                    switch (roll(2)) {   /* What about a cell? / a rocket */
+                      case 0: bonustype = ID_CLIP; break;
+                      default: bonustype = ID_SHELLS; break;
+                    }  /* end switch */
+                    update_haa_for_ammo(haa,7,bonustype);
+                  }
                 }
               }  /* end ammo bonuses */
               new_thing(l,x1+1,y1+1,0,bonustype,7,c);  /* Place the bonus */

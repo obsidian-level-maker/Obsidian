@@ -24,7 +24,6 @@
 #include "csg_local.h"
 #include "csg_main.h"
 #include "g_doom.h"  // for MLF_DontDraw
-#include "fmt/core.h"
 #ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
 #endif
@@ -103,7 +102,7 @@ snag_c::snag_c(brush_vert_c *side, double _x1, double _y1, double _x2,
       seen(false) {
     if (Length() < SNAG_EPSILON) {
         Main::FatalError(
-            "Line loop contains zero-length line! ({:1.2} {:1.2})\n", x1, y1);
+            "Line loop contains zero-length line! (%1.2f %1.2f)\n", x1, y1);
     }
 
     sides.push_back(side);
@@ -293,18 +292,6 @@ bool region_c::RemoveSnag(snag_c *S) {
     }
 
     return false;
-}
-
-void region_c::DebugDump() {
-    DebugPrintf("Region {}: has {} snags\n", static_cast<const void *>(this),
-                snags.size());
-
-    for (unsigned int i = 0; i < snags.size(); i++) {
-        snag_c *S = snags[i];
-
-        DebugPrintf("  {}: Snag {} ({:1.4} {:1.4}) -> (%1.4f %1.4f)\n", i,
-                    static_cast<const void *>(S), S->x1, S->y1, S->x2, S->y2);
-    }
 }
 
 void region_c::AddBrush(csg_brush_c *P) { brushes.push_back(P); }
@@ -979,14 +966,14 @@ static void DivideOneRegion(region_c *R, partition_c *part, group_c &front,
 
     if (R->snags.size() < 3) {
         R->degenerate = true;
-        LogPrintf("WARNING: region degenerated ({} snags)\n", R->snags.size());
+        LogPrintf("WARNING: region degenerated (%zu snags)\n", R->snags.size());
     } else {
         front.AddRegion(R);
     }
 
     if (N->snags.size() < 3) {
         N->degenerate = true;
-        LogPrintf("WARNING: region degenerated ({} snags)\n", N->snags.size());
+        LogPrintf("WARNING: region degenerated (%zu snags)\n", N->snags.size());
     } else {
         back.AddRegion(N);
     }
@@ -1118,7 +1105,7 @@ static void SplitGroup(group_c &group, bool reached_chunk, region_c **leaf_out,
 
     if (group.regs.empty()) {
         if (!group.ents.empty()) {
-            DebugPrintf("SplitGroup: lost {} entities\n", group.ents.size());
+            DebugPrintf("SplitGroup: lost %zu entities\n", group.ents.size());
         }
 
         return;
@@ -1277,7 +1264,7 @@ static bool TestOverlap(std::vector<snag_c *> &list, int i, int k) {
         for (size_t i = 0; i < list.size(); i++) {
             snag_c *S = list[i];
             if (S && S->partner == B) {
-                DebugPrintf("TestOverlap: FOUND DANGLING PARTNER ({}, {})\n", i,
+                DebugPrintf("TestOverlap: FOUND DANGLING PARTNER (%zu, %d)\n", i,
                             k);
                 S->partner = NULL;
             }
@@ -1487,29 +1474,6 @@ static void PruneBSPTree(bsp_node_c * node)
 }
 #endif
 
-void DumpCSGTree(const bsp_node_c *node, const region_c *leaf = NULL,
-                 int level = 0) {
-    for (int i = 0; i < level; i++) {
-        fmt::print(stderr, "  ");
-    }
-
-    if (node) {
-        fmt::print(stderr,
-                   "node {} ({:1.1} {:1.1}) --> ({:1.1} {:1.1})  BBOX: ({:1.0} "
-                   "{:1.0}) .. ({:1.0} {:1.0})\n",
-                   static_cast<const void *>(node), node->x1, node->y1,
-                   node->x2, node->y2, node->bb_x1, node->bb_y1, node->bb_x2,
-                   node->bb_y2);
-
-        DumpCSGTree(node->front_node, node->front_leaf, level + 1);
-        DumpCSGTree(node->back_node, node->back_leaf, level + 1);
-    } else if (leaf) {
-        fmt::print(stderr, "region {}\n", static_cast<const void *>(leaf));
-    } else {
-        fmt::print(stderr, "NULL!!");
-    }
-}
-
 static void RemoveDeadRegions() {
     int before = (int)all_regions.size();
     int lost_ents = 0;
@@ -1542,10 +1506,10 @@ static void RemoveDeadRegions() {
     int after = (int)all_regions.size();
     int count = before - after;
 
-    LogPrintf("Removed {} dead regions (of {})\n", count, before);
+    LogPrintf("Removed %d dead regions (of %d)\n", count, before);
 
     if (lost_ents > 0) {
-        LogPrintf("WARNING: {} entities in dead region\n", lost_ents);
+        LogPrintf("WARNING: %d entities in dead region\n", lost_ents);
     }
 
     ///  PruneBSPTree(bsp_root);
@@ -1595,7 +1559,7 @@ void CSG_SwallowBrushes() {
         }
     }
 
-    LogPrintf("Swallowed {} brushes (of {})\n", count, total);
+    LogPrintf("Swallowed %d brushes (of %d)\n", count, total);
 }
 
 static gap_c *GapForEntity(const region_c *R, csg_entity_c *E) {
@@ -1641,8 +1605,8 @@ static void MarkGapsWithEntities() {
             if (!gap) {
                 if (!csg_is_clip_hull) {
                     LogPrintf(
-                        "WARNING: entity '{}' is inside solid @ "
-                        "({:1.0},{:1.0},{:1.0})\n",
+                        "WARNING: entity '%s' is inside solid @ "
+                        "(%1.0f,%1.0f,%1.0f)\n",
                         E->id.c_str(), E->x, E->y, E->z);
                 }
                 continue;
@@ -1799,7 +1763,7 @@ static void RemoveUnusedGaps() {
         Main::FatalError("CSG: all gaps were unreachable (no entities?)\n");
     }
 
-    LogPrintf("Filled {} gaps (of {} total)\n", filled, total);
+    LogPrintf("Filled %d gaps (of %d total)\n", filled, total);
 }
 
 struct csg_brush_bz_Compare {
@@ -1966,11 +1930,6 @@ void CSG_BSP(double grid, bool is_clip_hull) {
     // CSG_SwallowBrushes();
 
     CSG_DiscoverGaps();
-
-#if 0
-    fprintf(stderr, "CSG BSP Tree:\n");
-    DumpCSGTree(bsp_root);
-#endif
 }
 
 region_c *CSG_PointInRegion(double x, double y) {

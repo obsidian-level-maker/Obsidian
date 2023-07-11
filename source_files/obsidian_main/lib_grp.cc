@@ -22,7 +22,6 @@
 #include <algorithm>
 #include <list>
 
-#include "fmt/core.h"
 #include "headers.h"
 #include "main.h"
 
@@ -60,11 +59,11 @@ bool GRP_OpenRead(const char *filename) {
 #endif
 
     if (!grp_R_fp) {
-        LogPrintf("GRP_OpenRead: no such file: {}\n", filename);
+        LogPrintf("GRP_OpenRead: no such file: %s\n", filename);
         return false;
     }
 
-    LogPrintf("Opened GRP file: {}\n", filename);
+    LogPrintf("Opened GRP file: %s\n", filename);
 
 #ifdef HAVE_PHYSFS
     if ((PHYSFS_readBytes(grp_R_fp, &grp_R_header, sizeof(grp_R_header)) /
@@ -98,7 +97,7 @@ bool GRP_OpenRead(const char *filename) {
 
     if (grp_R_header.num_lumps >= 5000)  // sanity check
     {
-        LogPrintf("GRP_OpenRead: bad header ({} entries?)\n",
+        LogPrintf("GRP_OpenRead: bad header (%u entries?)\n",
                   static_cast<unsigned int>(grp_R_header.num_lumps));
 #ifdef HAVE_PHYSFS
         PHYSFS_close(grp_R_fp);
@@ -132,7 +131,7 @@ bool GRP_OpenRead(const char *filename) {
                 return false;
             }
 
-            LogPrintf("GRP_OpenRead: hit EOF reading dir-entry {}\n", i);
+            LogPrintf("GRP_OpenRead: hit EOF reading dir-entry %d\n", i);
 
             // truncate directory
             grp_R_header.num_lumps = i;
@@ -143,9 +142,6 @@ bool GRP_OpenRead(const char *filename) {
 
         grp_R_starts[i] = L_start;
         L_start += L->length;
-
-        //  DebugPrintf(" {:4}: {:08x} {:08x} : {}\n", i, L->start, L->length,
-        //  L->name);
     }
 
     return true;  // OK
@@ -229,26 +225,6 @@ bool GRP_ReadData(int entry, int offset, int length, void *buffer) {
     return (res == 1);
 }
 
-void GRP_ListEntries(void) {
-    fmt::print("--------------------------------------------------\n");
-
-    if (grp_R_header.num_lumps == 0) {
-        fmt::print("GRP file is empty\n");
-    } else {
-        for (int i = 0; i < (int)grp_R_header.num_lumps; i++) {
-            raw_grp_lump_t *L = &grp_R_dir[i];
-
-            int L_start = grp_R_starts[i];
-
-            fmt::print("{:4}: +{:08x} {:08x} : {}\n", i + 1,
-                       static_cast<unsigned int>(L_start),
-                       static_cast<unsigned int>(L->length), GRP_EntryName(i));
-        }
-    }
-
-    fmt::print("--------------------------------------------------\n");
-}
-
 //------------------------------------------------------------------------
 //  GRP WRITING
 //------------------------------------------------------------------------
@@ -267,11 +243,11 @@ bool GRP_OpenWrite(const std::filesystem::path &filename) {
     grp_W_fp.open(filename, std::ios::out | std::ios::binary);
 
     if (!grp_W_fp.is_open()) {
-        LogPrintf("GRP_OpenWrite: cannot create file: {}\n", filename);
+        LogPrintf("GRP_OpenWrite: cannot create file: %s\n", filename.string().c_str());
         return false;
     }
 
-    LogPrintf("Created GRP file: {}\n", filename);
+    LogPrintf("Created GRP file: %s\n", filename.string().c_str());
 
     // write out a dummy header
     raw_grp_header_t header;
@@ -286,7 +262,7 @@ bool GRP_OpenWrite(const std::filesystem::path &filename) {
         raw_grp_lump_t entry;
         memset(&entry, 0, sizeof(entry));
 
-        std::string name = fmt::format("__{:03}.ZZZ", i + 1);
+        std::string name = StringFormat("__%03d.ZZZ", i + 1);
         std::copy(name.data(), name.data() + name.size(), entry.name.begin());
 
         entry.length = LE_U32(1);
@@ -344,13 +320,13 @@ void GRP_CloseWrite(void) {
     grp_W_directory.clear();
 }
 
-void GRP_NewLump(std::string_view name) {
+void GRP_NewLump(std::string name) {
     if (grp_W_directory.size() >= GRP_MAX_LUMPS) {
-        Main::FatalError("GRP_NewLump: too many lumps (> {})\n", GRP_MAX_LUMPS);
+        Main::FatalError("GRP_NewLump: too many lumps (> %d)\n", GRP_MAX_LUMPS);
     }
 
     if (name.size() > GRP_NAME_LEN) {
-        Main::FatalError("GRP_NewLump: name too long: '{}'\n", name);
+        Main::FatalError("GRP_NewLump: name too long: '%s'\n", name.c_str());
     }
 
     memset(&grp_W_lump, 0, sizeof(grp_W_lump));

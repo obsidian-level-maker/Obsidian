@@ -19,7 +19,6 @@
 //
 //------------------------------------------------------------------------
 
-#include "fmt/format.h"
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
 #include "lib_util.h"
@@ -229,7 +228,7 @@ class UI_Manage_Config : public Fl_Double_Window {
     bool WantQuit() const { return want_quit; }
 
     void MarkSource(const char *where) {
-        std::string full = fmt::format("[ {} ]", where);
+        std::string full = StringFormat("[ %s ]", where);
 
         conf_disp->copy_label(full.c_str());
 
@@ -238,7 +237,7 @@ class UI_Manage_Config : public Fl_Double_Window {
 
     void MarkSource_FILE(std::filesystem::path filename) {
         conf_disp->copy_label(
-            fmt::format("[ {} ]", filename.filename().generic_string())
+            StringFormat("[ %s ]", filename.filename().generic_string().c_str())
                 .c_str());
 
         redraw();
@@ -325,7 +324,7 @@ class UI_Manage_Config : public Fl_Double_Window {
         switch (chooser.show()) {
             case -1:
                 LogPrintf(_("Error choosing save file:\n"));
-                LogPrintf("   {}\n", chooser.errmsg());
+                LogPrintf("   %s\n", chooser.errmsg());
 
                 DLG_ShowError(_("Unable to save the file:\n\n%s"),
                               chooser.errmsg());
@@ -395,7 +394,7 @@ class UI_Manage_Config : public Fl_Double_Window {
         switch (chooser.show()) {
             case -1:
                 LogPrintf(_("Error choosing load file:\n"));
-                LogPrintf("   {}\n", chooser.errmsg());
+                LogPrintf("   %s\n", chooser.errmsg());
 
                 DLG_ShowError(_("Unable to load the file:\n\n%s"),
                               chooser.errmsg());

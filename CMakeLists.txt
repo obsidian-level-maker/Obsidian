@@ -8,14 +8,11 @@ add_subdirectory(source_files/filename_formatter EXCLUDE_FROM_ALL)
 if(NOT CONSOLE_ONLY AND NOT HAIKU)
   add_subdirectory(source_files/fltk EXCLUDE_FROM_ALL)
 endif()
-add_subdirectory(source_files/fmt EXCLUDE_FROM_ALL)
-add_subdirectory(source_files/hedley EXCLUDE_FROM_ALL)
 add_subdirectory(source_files/lua EXCLUDE_FROM_ALL)
 add_subdirectory(source_files/miniz EXCLUDE_FROM_ALL)
 add_subdirectory(source_files/physfs EXCLUDE_FROM_ALL)
 add_subdirectory(source_files/qsavetex EXCLUDE_FROM_ALL)
 add_subdirectory(source_files/slump EXCLUDE_FROM_ALL)
-add_subdirectory(source_files/spdlog EXCLUDE_FROM_ALL)
 
 project(
   obsidian
@@ -25,6 +22,10 @@ project(
 
 string(TIMESTAMP BUILD_TIMESTAMP "%Y.%m.%d" UTC)
 add_compile_definitions(OBSIDIAN_TIMESTAMP="${BUILD_TIMESTAMP}")
+
+if(NOT WIN32)
+  add_compile_definitions(OBSIDIAN_INSTALL_PREFIX="${CMAKE_INSTALL_PREFIX}")
+endif()
 
 if(CONSOLE_ONLY OR HAIKU)
   add_compile_definitions(CONSOLE_ONLY=1)
@@ -68,10 +69,6 @@ if(OBSIDIAN_TIDY)
     clang-tidy COMMAND "${CMAKE_CXX_CLANG_TIDY}" -p "${CMAKE_BINARY_DIR}"
                        ${ALL_SOURCES}
   )
-endif()
-
-if(NOT WIN32)
-  configure_file(cmake/config.h.cmake-in obsidian-include/obsidian_config.h)
 endif()
 
 # cpmaddpackage( NAME Format.cmake VERSION 1.7.0 GITHUB_REPOSITORY
@@ -214,9 +211,6 @@ target_include_directories(obsidian SYSTEM PRIVATE source_files/lua/src)
 target_include_directories(obsidian SYSTEM PRIVATE source_files/miniz)
 target_include_directories(obsidian SYSTEM PRIVATE source_files/physfs/src)
 target_include_directories(obsidian SYSTEM PRIVATE source_files/slump)
-target_include_directories(
-  obsidian SYSTEM PRIVATE source_files/spdlog/include/spdlog
-)
 
 if(MINGW
    OR WIN32
@@ -250,8 +244,6 @@ if(UNIX)
     find_package(Fontconfig REQUIRED)
   endif()
 endif()
-
-target_link_libraries(obsidian PRIVATE fmt::fmt-header-only hedley::hedley spdlog::spdlog_header_only)
 
 # Copies executables to local install directory after build
 add_custom_command(

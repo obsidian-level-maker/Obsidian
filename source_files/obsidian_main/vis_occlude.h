@@ -23,7 +23,6 @@
 // all angles are in degrees, and must be in the range [-720,+720]
 
 void Occlusion_Clear(void);
-void Occlusion_Dump(void);
 
 void Occlusion_Set(float low, float high);
 

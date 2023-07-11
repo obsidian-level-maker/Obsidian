@@ -94,6 +94,87 @@ void StringReplaceChar(std::string *str, char old_ch, char new_ch) {
     }
 }
 
+std::string StringFormat(std::string_view fmt, ...)
+{
+	/* Algorithm: keep doubling the allocated buffer size
+	 * until the output fits. Based on code by Darren Salt.
+	 */
+	int buf_size = 128;
+
+	for (;;)
+	{
+		char *buf = new char[buf_size];
+
+		va_list args;
+
+		va_start(args, fmt);
+		int out_len = vsnprintf(buf, buf_size, fmt.data(), args);
+		va_end(args);
+
+		// old versions of vsnprintf() simply return -1 when
+		// the output doesn't fit.
+		if (out_len >= 0 && out_len < buf_size)
+		{
+			std::string result(buf);
+			delete[] buf;
+
+			return result;
+		}
+
+		delete[] buf;
+
+		buf_size *= 2;
+	}
+}
+
+// The following string conversion classes/code are adapted from public domain
+// code by Andrew Choi originally found at https://web.archive.org/web/20151209032329/http://members.shaw.ca/akochoi/articles/unicode-processing-c++0x/
+
+template<>
+int storageMultiplier<UTF8, UTF32>() { return 4; }
+
+template<>
+int storageMultiplier<UTF8, UTF16>() { return 3; }
+
+template<>
+int storageMultiplier<UTF16, UTF8>() { return 1; }
+
+template<>
+int storageMultiplier<UTF32, UTF8>() { return 1; }
+
+std::string StringToUTF8(const std::string& s)
+{
+  return s;
+}
+
+std::string StringToUTF8(const std::u16string& s)
+{
+  static str_converter<UTF8, UTF16, UTF16> converter;
+
+  return converter.out(s);
+}
+
+std::string StringToUTF8(const std::u32string& s)
+{
+  static str_converter<UTF8, UTF32, UTF32> converter;
+
+  return converter.out(s);
+}
+
+std::u16string StringToUTF16(const std::string& s)
+{
+  static str_converter<UTF16, UTF8, UTF16> converter;
+
+  return converter.in(s);
+}
+
+std::u32string StringToUTF32(const std::string& s)
+{
+  static str_converter<UTF32, UTF8, UTF32> converter;
+
+  return converter.in(s);
+}
+
 std::string NumToString(long long unsigned int value) {
     std::string num_string;
     num_string.resize(50, ' ');
@@ -192,17 +273,16 @@ u32_t IntHash(u32_t key) {
 }
 
 u32_t StringHash(std::string str) {
-    /*u32_t hash = 0;
+    u32_t hash = 0;
+    const char *pos = str.data();
 
     if (!str.empty()) {
-        while (str) {
-            hash = (hash << 5) - hash + *str++;
+        while (pos) {
+            hash = (hash << 5) - hash + *pos++;
         }
     }
 
-    return hash;*/
-
-    return std::hash<std::string>{}(str);
+    return hash;
 }
 
 double PerpDist(double x, double y, double x1, double y1, double x2,

@@ -24,7 +24,6 @@
 #include "wad.h"
 
 
-#define DEBUG_PICKNODE  0
 #define DEBUG_SPLIT     0
 #define DEBUG_CUTLIST   0
 
@@ -62,7 +61,7 @@ namespace ajbsp
 class eval_info_t
 {
 public:
-	int cost;
+	double cost;
 	int splits;
 	int iffy;
 	int near_miss;
@@ -93,16 +92,21 @@ public:
 
 std::vector<intersection_t *> alloc_cuts;
 
-size_t used_intersections = 0;
-
 intersection_t *NewIntersection()
 {
-	SYS_ASSERT(used_intersections <= alloc_cuts.size());
+	intersection_t *cut = new intersection_t;
 
-	if (used_intersections == alloc_cuts.size())
-		alloc_cuts.push_back(new intersection_t);
+	alloc_cuts.push_back(cut);
 
-	return alloc_cuts[used_intersections++];
+	return cut;
+}
+
+void FreeIntersections(void)
+{
+	for (size_t i = 0 ; i < alloc_cuts.size() ; i++)
+		delete alloc_cuts[i];
+
+	alloc_cuts.clear();
 }
 
 
@@ -298,9 +302,9 @@ void AddIntersection(intersection_t ** cut_list,
 //
 // Returns true if a "bad seg" was found early.
 //
-int EvalPartitionWorker(quadtree_c *tree, seg_t *part, int best_cost, eval_info_t *info)
+bool EvalPartitionWorker(quadtree_c *tree, seg_t *part, double best_cost, eval_info_t *info)
 {
-	int split_cost = cur_info->split_cost;
+	double split_cost = cur_info->split_cost;
 
 	// -AJA- this is the heart of the superblock idea, it tests the
 	//       *whole* quad against the partition line to quickly handle
@@ -376,7 +380,7 @@ int EvalPartitionWorker(quadtree_c *tree, seg_t *part, int best_cost, eval_info_
 		if (fa <= DIST_EPSILON || fb <= DIST_EPSILON)
 		{
 			if (check->linedef != NULL && check->linedef->is_precious)
-				info->cost += 40 * split_cost * PRECIOUS_MULTIPLY;
+				info->cost += 40.0 * split_cost * PRECIOUS_MULTIPLY;
 		}
 
 		/* check for right side */
@@ -404,7 +408,7 @@ int EvalPartitionWorker(quadtree_c *tree, seg_t *part, int best_cost, eval_info_
 			else
 				qnty = IFFY_LEN / std::min(a, b);
 
-			info->cost += (int) (70 * split_cost * (qnty * qnty - 1.0));
+			info->cost += 70.0 * split_cost * (qnty * qnty - 1.0);
 			continue;
 		}
 
@@ -429,7 +433,7 @@ int EvalPartitionWorker(quadtree_c *tree, seg_t *part, int best_cost, eval_info_
 			else
 				qnty = IFFY_LEN / -std::max(a, b);
 
-			info->cost += (int) (70 * split_cost * (qnty * qnty - 1.0));
+			info->cost += 70.0 * split_cost * (qnty * qnty - 1.0);
 			continue;
 		}
 
@@ -444,9 +448,9 @@ int EvalPartitionWorker(quadtree_c *tree, seg_t *part, int best_cost, eval_info_
 		// lifts/stairs from being messed up accidentally by splits.
 
 		if (check->linedef && check->linedef->is_precious)
-			info->cost += 100 * split_cost * PRECIOUS_MULTIPLY;
+			info->cost += 100.0 * split_cost * PRECIOUS_MULTIPLY;
 		else
-			info->cost += 100 * split_cost;
+			info->cost += 100.0 * split_cost;
 
 		// -AJA- check if the split point is very close to one end, which
 		//       is an undesirable situation (producing very short segs).
@@ -459,7 +463,7 @@ int EvalPartitionWorker(quadtree_c *tree, seg_t *part, int best_cost, eval_info_
 
 			// the closer to the end, the higher the cost
 			qnty = IFFY_LEN / std::min(fa, fb);
-			info->cost += (int) (140 * split_cost * (qnty * qnty - 1.0));
+			info->cost += 140.0 * split_cost * (qnty * qnty - 1.0);
 		}
 	}
 
@@ -490,7 +494,7 @@ int EvalPartitionWorker(quadtree_c *tree, seg_t *part, int best_cost, eval_info_
 // Returns the computed cost, or a negative value if the seg should be
 // skipped altogether.
 //
-int EvalPartition(quadtree_c *tree, seg_t *part, int best_cost)
+double EvalPartition(quadtree_c *tree, seg_t *part, double best_cost)
 {
 	eval_info_t info;
 
@@ -506,41 +510,28 @@ int EvalPartition(quadtree_c *tree, seg_t *part, int best_cost)
 	info.mini_right = 0;
 
 	if (EvalPartitionWorker(tree, part, best_cost, &info))
-		return -1;
+		return -1.0;
 
 	/* make sure there is at least one real seg on each side */
 	if (info.real_left == 0 || info.real_right == 0)
 	{
-#if DEBUG_PICKNODE
-		cur_info->Debug("Eval : No real segs on %s%sside\n",
-				info.real_left  ? "" : "left ",
-				info.real_right ? "" : "right ");
-#endif
-
-		return -1;
+		return -1.0;
 	}
 
 	/* increase cost by the difference between left & right */
-	info.cost += 100 * abs(info.real_left - info.real_right);
+	info.cost += 100.0 * abs(info.real_left - info.real_right);
 
 	// -AJA- allow miniseg counts to affect the outcome, but to a
 	//       lesser degree than real segs.
 
-	info.cost += 50 * abs(info.mini_left - info.mini_right);
+	info.cost += 50.0 * abs(info.mini_left - info.mini_right);
 
 	// -AJA- Another little twist, here we show a slight preference for
 	//       partition lines that lie either purely horizontally or
 	//       purely vertically.
 
 	if (part->pdx != 0 && part->pdy != 0)
-		info.cost += 25;
-
-#if DEBUG_PICKNODE
-	cur_info->Debug("Eval %p: splits=%d iffy=%d near=%d left=%d+%d right=%d+%d "
-			"cost=%d.%02d\n", part, info.splits, info.iffy, info.near_miss,
-			info.real_left, info.mini_left, info.real_right, info.mini_right,
-			info.cost / 100, info.cost % 100);
-#endif
+		info.cost += 25.0;
 
 	return info.cost;
 }
@@ -611,19 +602,14 @@ seg_t *FindFastSeg(quadtree_c *tree)
 
 	EvaluateFastWorker(tree, &best_H, &best_V, mid_x, mid_y);
 
-	int H_cost = -1;
-	int V_cost = -1;
+	double H_cost = -1.0;
+	double V_cost = -1.0;
 
 	if (best_H)
-		H_cost = EvalPartition(tree, best_H, INT_MAX);
+		H_cost = EvalPartition(tree, best_H, 1.0e99);
 
 	if (best_V)
-		V_cost = EvalPartition(tree, best_V, INT_MAX);
-
-#if DEBUG_PICKNODE
-	cur_info->Debug("FindFastSeg: best_H=%p (cost %d) | best_V=%p (cost %d)\n",
-			best_H, H_cost, best_V, V_cost);
-#endif
+		V_cost = EvalPartition(tree, best_V, 1.0e99);
 
 	if (H_cost < 0 && V_cost < 0)
 		return NULL;
@@ -637,7 +623,7 @@ seg_t *FindFastSeg(quadtree_c *tree)
 
 /* returns false if cancelled */
 bool PickNodeWorker(quadtree_c *part_list,
-		quadtree_c *tree, seg_t ** best, int *best_cost)
+		quadtree_c *tree, seg_t ** best, double *best_cost)
 {
 	/* try each Seg as partition */
 	for (seg_t *part = part_list->list ; part ; part = part->next)
@@ -645,17 +631,11 @@ bool PickNodeWorker(quadtree_c *part_list,
 		if (cur_info->cancelled)
 			return false;
 
-#if DEBUG_PICKNODE
-		cur_info->Debug("PickNode:   %sSEG %p  (%1.1f,%1.1f) -> (%1.1f,%1.1f)\n",
-				part->linedef ? "" : "MINI", part,
-				part->start->x, part->start->y, part->end->x, part->end->y);
-#endif
-
 		/* ignore minisegs as partition candidates */
 		if (part->linedef == NULL)
 			continue;
 
-		int cost = EvalPartition(tree, part, *best_cost);
+		double cost = EvalPartition(tree, part, *best_cost);
 
 		/* seg unsuitable or too costly ? */
 		if (cost < 0 || cost >= *best_cost)
@@ -690,11 +670,7 @@ seg_t *PickNode(quadtree_c *tree, int depth)
 {
 	seg_t *best = NULL;
 
-	int best_cost = INT_MAX;
-
-#if DEBUG_PICKNODE
-	cur_info->Debug("PickNode: BEGUN (depth %d)\n", depth);
-#endif
+	double best_cost = 1.0e99;
 
 	/* -AJA- here is the logic for "fast mode".  We look for segs which
 	 *       are axis-aligned and roughly divide the current group into
@@ -702,18 +678,10 @@ seg_t *PickNode(quadtree_c *tree, int depth)
 	 */
 	if (cur_info->fast && tree->real_num >= SEG_FAST_THRESHHOLD)
 	{
-#if DEBUG_PICKNODE
-		cur_info->Debug("PickNode: Looking for Fast node...\n");
-#endif
-
 		best = FindFastSeg(tree);
 
 		if (best != NULL)
 		{
-#if DEBUG_PICKNODE
-			cur_info->Debug("PickNode: Using Fast node (%1.1f,%1.1f) -> (%1.1f,%1.1f)\n",
-					best->start->x, best->start->y, best->end->x, best->end->y);
-#endif
 			return best;
 		}
 	}
@@ -723,19 +691,6 @@ seg_t *PickNode(quadtree_c *tree, int depth)
 		/* hack here : BuildNodes will detect the cancellation */
 		return NULL;
 	}
-
-#if DEBUG_PICKNODE
-	if (! best)
-	{
-		cur_info->Debug("PickNode: NO BEST FOUND !\n");
-	}
-	else
-	{
-		cur_info->Debug("PickNode: Best has score %d.%02d  (%1.1f,%1.1f) -> (%1.1f,%1.1f)\n",
-				best_cost / 100, best_cost % 100, best->start->x, best->start->y,
-				best->end->x, best->end->y);
-	}
-#endif
 
 	return best;
 }
@@ -1617,9 +1572,6 @@ build_result_e BuildNodes(seg_t *list, int depth, bbox_t *bounds /* output */,
 
 	node_t *node = NewNode();
 	*N = node;
-
-	// re-use any previous intersections
-	used_intersections = 0;
 
 	/* divide the segs into two lists: left & right */
 	seg_t *lefts  = NULL;

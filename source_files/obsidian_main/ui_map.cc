@@ -28,7 +28,7 @@
 #include "gif.h"
 
 // The includes got too messy to make these part of the UI_MiniMap class - Dasho
-GifWriter *gif_writer;
+static GifWriter *gif_writer;
 int gif_delay;
 
 UI_MiniMap::UI_MiniMap(int x, int y, int w, int h, const char *label)

@@ -24,13 +24,11 @@
 #include "headers.h"
 #include "lib_util.h"
 #include "main.h"
-#include "miniz.h"
 #include "m_lua.h"
-#include "sinks/rotating_file_sink.h"
 
 #define DEBUG_BUF_LEN 20000
 
-std::shared_ptr<spdlog::logger> log_file;
+std::fstream log_file;
 std::fstream ref_file;
 std::filesystem::path log_filename;
 std::filesystem::path ref_filename;
@@ -42,24 +40,18 @@ bool LogInit(const std::filesystem::path &filename) {
     if (!filename.empty()) {
         log_filename = filename;
 
-        spdlog::set_pattern("%v");
+        log_file.open(log_filename, std::ios::out);
 
-        log_file = spdlog::rotating_logger_mt(
-            "ob_logger", log_filename.generic_string().c_str(),
-            1048576 * log_size, log_limit, true);
-
-        if (log_file == nullptr) {
+        if (!log_file.is_open()) {
             return false;
         }
-        spdlog::flush_every(std::chrono::seconds(1));
-        spdlog::set_default_logger(log_file);
     }
 
     std::time_t result = std::time(nullptr);
 
     LogPrintf("====== START OF OBSIDIAN LOGS ======\n\n");
 
-    LogPrintf("Initialized on {}", 
+    LogPrintf("Initialized on %s",
         std::ctime(&result));
 
     return true;
@@ -81,7 +73,7 @@ bool RefInit(const std::filesystem::path &filename) {
         }
     }
 
-    RefPrintf("====== OBSIDIAN REFERENCE for V{} BUILD {} ======\n\n",
+    RefPrintf("====== OBSIDIAN REFERENCE for V%s BUILD %s ======\n\n",
               OBSIDIAN_SHORT_VERSION, OBSIDIAN_VERSION);
 
     return true;
@@ -106,11 +98,9 @@ void LogEnableTerminal(bool enable) { terminal = enable; }
 void LogClose(void) {
     LogPrintf("\n====== END OF OBSIDIAN LOGS ======\n\n");
 
-    spdlog::shutdown();
+    log_file.close();
 
     log_filename.clear();
-
-    log_file.reset();
 }
 
 void RefClose(void) {
@@ -122,7 +112,8 @@ void RefClose(void) {
 }
 
 void LogReadLines(log_display_func_t display_func, void *priv_data) {
-    if (log_file == nullptr) {
+
+    if (!log_file) {
         return;
     }
 
@@ -131,26 +122,17 @@ void LogReadLines(log_display_func_t display_func, void *priv_data) {
     // fussy about opening already open files (in Linux it would
     // not be an issue).
 
-    spdlog::shutdown();
+    log_file.close();
 
-    std::fstream log_stream;
-
-    log_stream.open(log_filename, std::ios::in);
+    log_file.open(log_filename, std::ios::in);
 
     // this is very unlikely to happen, but check anyway
-    if (!log_stream.is_open()) {
-        log_file = spdlog::rotating_logger_mt(
-            "ob_logger", log_filename.generic_string().c_str(),
-            1048576 * log_size, log_limit);
-        if (log_file != nullptr) {
-            spdlog::flush_every(std::chrono::seconds(1));
-            spdlog::set_default_logger(log_file);
-        }
+    if (!log_file.is_open()) {
         return;
     }
 
     std::string buffer;
-    while (std::getline(log_stream, buffer)) {
+    while (std::getline(log_file, buffer)) {
         // remove any newline at the end (LF or CR/LF)
         StringRemoveCRLF(&buffer);
 
@@ -163,16 +145,10 @@ void LogReadLines(log_display_func_t display_func, void *priv_data) {
     }
 
     // close the log file after current contents are read
-    log_stream.close();
+    log_file.close();
 
     // open the log file for writing again
-    log_file = spdlog::rotating_logger_mt("ob_logger",
-                                          log_filename.generic_string().c_str(),
-                                          1048576 * log_size, log_limit);
-    if (log_file != nullptr) {
-        spdlog::flush_every(std::chrono::seconds(1));
-        spdlog::set_default_logger(log_file);
-    }
+    log_file.open(log_filename, std::ios::app);
 }
 
 //--- editor settings ---

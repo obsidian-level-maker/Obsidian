@@ -10663,7 +10663,7 @@ function ULTDOOM.slump_setup()
       local possible_configs = {}
       for _,tab in pairs(ULTDOOM.THEMES) do
         if tab.slump_config then
-          possible_configs[tab] = tab.slump_config
+          table.insert(possible_configs, tab.slump_config)
         end
       end
       PARAM.slump_config = rand.pick(possible_configs)

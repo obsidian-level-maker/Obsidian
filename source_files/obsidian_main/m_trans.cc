@@ -28,7 +28,6 @@
 #include "m_trans.h"
 #include <filesystem>
 
-#include "fmt/format.h"
 #include "hdr_lua.h"
 #include "headers.h"
 #include "lib_file.h"
@@ -798,9 +797,6 @@ void Trans_ParseLangLine(char *line) {
     lang.langcode = line;
     lang.fullname = pos;
 
-    // DEBUG
-    //  LogPrintf("  '{}' --> '{}'\n", lang.langcode, lang.fullname);
-
     available_langs.push_back(lang);
 }
 
@@ -862,19 +858,19 @@ struct po_parse_state_t {
         }
 
         if (*p++ != '"') {
-            LogPrintf("WARNING: missing string on line {}\n", line_number);
+            LogPrintf("WARNING: missing string on line %d\n", line_number);
             return;
         }
 
         while (*p != '"') {
             if (*p == 0) {
-                LogPrintf("WARNING: unterminated string on line {}\n",
+                LogPrintf("WARNING: unterminated string on line %d\n",
                           line_number);
                 break;
             }
 
             if (dest >= dest_end) {
-                LogPrintf("WARNING: string too long on line {}\n", line_number);
+                LogPrintf("WARNING: string too long on line %d\n", line_number);
                 break;
             }
 
@@ -887,7 +883,7 @@ struct po_parse_state_t {
             p++;
 
             if (*p == 0) {
-                LogPrintf("WARNING: unterminated string on line {}\n",
+                LogPrintf("WARNING: unterminated string on line %d\n",
                           line_number);
                 break;
             }
@@ -924,7 +920,7 @@ struct po_parse_state_t {
                     break;
 
                 default:
-                    LogPrintf("WARNING: strange escape sequence on line {}\n",
+                    LogPrintf("WARNING: strange escape sequence on line %d\n",
                               line_number);
                     break;
             }
@@ -940,7 +936,7 @@ struct po_parse_state_t {
         } else if (has_id) {
             ParseString(p, id, sizeof(id));
         } else {
-            LogPrintf("WARNING: unexpected string on line {}\n", line_number);
+            LogPrintf("WARNING: unexpected string on line %d\n", line_number);
         }
     }
 
@@ -1008,7 +1004,7 @@ void Trans_Read_PO_File(FILE *fp) {
         } else if (strncmp(p, "msgstr ", 7) == 0) {
             po_state.SetString(p + 7);
         } else {
-            LogPrintf("WARNING: unsupported keyword on line {}\n",
+            LogPrintf("WARNING: unsupported keyword on line %d\n",
                       po_state.line_number);
         }
     }
@@ -1042,7 +1038,7 @@ void Trans_Init() {
         return;
     }
 
-    LogPrintf("Loading language list: {}\n", path.string());
+    LogPrintf("Loading language list: %s\n", path.string().c_str());
 
     for (std::string line; std::getline(trans_fp, line);) {
         Trans_ParseLangLine((char *)line.c_str());
@@ -1059,8 +1055,7 @@ void Trans_SetLanguage() {
     if (langcode.empty() || langcode == "AUTO") {
         langcode = Trans_GetUserLanguage();
 
-        LogPrintf(
-            fmt::format("Detected user language: '{}'\n", langcode).c_str());
+        LogPrintf("Detected user language: '%s'\n", langcode.c_str());
     }
 
     std::string lang_plain = remove_territory(langcode);
@@ -1075,21 +1070,19 @@ void Trans_SetLanguage() {
 
     // see if the translation file exists
     std::string path =
-        fmt::format("{}/language/{}.po", install_dir.string(), langcode);
+        StringFormat("%s/language/%s.po", install_dir.string().c_str(), langcode.c_str());
 
     if (!std::filesystem::exists(path)) {
         // if language has a territory field (like zh_TW or en_AU) then
         // try again with the plain language code.
 
         path =
-            fmt::format("{}/language/{}.po", install_dir.string(), lang_plain);
+            StringFormat("%s/language/%s.po", install_dir.string().c_str(), lang_plain.c_str());
     }
 
     FILE *fp = fopen(path.c_str(), "rb");
     if (!fp) {
-        LogPrintf(
-            fmt::format("No translation file: language/{}.po\n", lang_plain)
-                .c_str());
+        LogPrintf("No translation file: language/%s.po\n", lang_plain.c_str());
         LogPrintf("Using the default language (English)\n\n");
         selected_lang = "en";
         return;
@@ -1097,7 +1090,7 @@ void Trans_SetLanguage() {
 
     selected_lang = lang_plain;
 
-    LogPrintf(fmt::format("Loading translation: {}\n", path).c_str());
+    LogPrintf("Loading translation: %s\n", path.c_str());
 
     Trans_Read_PO_File(fp);
 

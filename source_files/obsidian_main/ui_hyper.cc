@@ -25,7 +25,6 @@
 //
 //------------------------------------------------------------------------
 
-#include "fmt/format.h"
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
 #include "headers.h"
@@ -138,19 +137,13 @@ void UI_HyperLink::draw() {
         fl_line(x() + label_X, yy, x() + label_X + label_W, yy);
         fl_line_style(0);
     }
-
-    /*
-       if (Fl::focus() == this)
-       draw_focus();
-     */
 }
 
 void UI_HyperLink::callback_Link(Fl_Widget *w, void *data) {
     UI_HyperLink *link = (UI_HyperLink *)w;
 
     if (!fl_open_uri(link->url.c_str())) {
-        LogPrintf(fmt::format("\nOpen URL failed: {}\n\n", link->url.c_str())
-                      .c_str());
+        LogPrintf("\nOpen URL failed: %s\n\n", link->url.c_str());
     }
 }
 

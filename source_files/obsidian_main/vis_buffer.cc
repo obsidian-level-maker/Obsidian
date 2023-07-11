@@ -19,7 +19,6 @@
 
 #include "vis_buffer.h"
 
-#include "fmt/core.h"
 #include "headers.h"
 #include "main.h"
 
@@ -107,45 +106,6 @@ void Vis_Buffer::AddDiagonal(int x, int y, int dir) {
     } else {
         at(x, y) |= V_DIAG_SE;
     }
-}
-
-void Vis_Buffer::ReadMap(const char *filename) {
-    FILE *fp = fopen(filename, "r");
-    if (!fp) {
-        Main::FatalError("Cannot access file: {}\n", filename);
-    }
-
-    int x, y, side;
-
-    while (fscanf(fp, " %d %d %d ", &x, &y, &side) == 3) {
-        if (side & 1) {
-            AddDiagonal(x, y, side);
-        } else {
-            AddWall(x, y, side);
-        }
-    }
-
-    fclose(fp);
-}
-
-void Vis_Buffer::WriteMap(const char *filename) {
-    FILE *fp = fopen(filename, "w");
-    if (!fp) {
-        Main::FatalError("Cannot create file: {}\n", filename);
-    }
-
-    for (int y = 0; y < H; y++) {
-        for (int x = 0; x < W; x++) {
-            if (at(x, y) & V_BOTTOM) {
-                fmt::print(fp, "%d %d {}\n", x, y, 2);
-            }
-            if (at(x, y) & V_LEFT) {
-                fmt::print(fp, "%d %d {}\n", x, y, 4);
-            }
-        }
-    }
-
-    fclose(fp);
 }
 
 //------------------------------------------------------------------------

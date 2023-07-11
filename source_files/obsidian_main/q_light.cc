@@ -28,7 +28,6 @@
 
 #include "csg_main.h"
 #include "csg_quake.h"
-#include "fmt/core.h"
 #ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
@@ -117,7 +116,7 @@ rgb_color_t QLIT_ParseColorString(std::string name) {
     }
 
     if (name.at(0) != '#') {
-        LogPrintf("WARNING: bad color string for light: '{}'\n", name);
+        LogPrintf("WARNING: bad color string for light: '%s'\n", name.c_str());
         return WHITE;
     }
 
@@ -133,7 +132,7 @@ rgb_color_t QLIT_ParseColorString(std::string name) {
         g = (raw_hex >> 8) & 0xff;
         b = (raw_hex)&0xff;
     } else {
-        LogPrintf("WARNING: bad color string for light: '{}'\n", name);
+        LogPrintf("WARNING: bad color string for light: '%s'\n", name.c_str());
         return WHITE;
     }
 
@@ -425,20 +424,6 @@ class q3_lightmap_block_c {
             }
         }
     }
-
-    void SavePPM(FILE *fp) {
-        fmt::print(fp, "P6\n");
-        fmt::print(fp, "128 128\n");
-        fmt::print(fp, "255\n");
-
-        for (int y = 0; y < LIGHTMAP_HEIGHT; y++) {
-            for (int x = 0; x < LIGHTMAP_WIDTH; x++) {
-                for (int c = 0; c < 3; c++) {
-                    fputc(samples[x][y][c], fp);
-                }
-            }
-        }
-    }
 };
 
 static std::vector<q3_lightmap_block_c *> all_q3_light_blocks;
@@ -548,16 +533,9 @@ void QLIT_BuildQ3Lighting(int lump, int max_size) {
         q3_lightmap_block_c *BL = all_q3_light_blocks[b];
 
         BL->Write(lightmap_lump);
-
-#if 0  // DEBUG
-        static char test_file[500];
-        snprintf(test_file, sizeof(test_file), "lm_block_%03d.ppm", (int)b);
-        FILE *fp = fopen(test_file, "wb");
-        if (fp) { BL->SavePPM(fp); fclose(fp); }
-#endif
     }
 
-    LogPrintf("created {} LM blocks\n", (int)all_q3_light_blocks.size());
+    LogPrintf("created %zu LM blocks\n", all_q3_light_blocks.size());
 }
 
 //------------------------------------------------------------------------
@@ -842,10 +820,10 @@ static void Q3_CalcFaceStuff(quake_face_c *F) {
     // once here: N, T and S are three unit vectors which are
     // orthogonal to each other.
 
-    fmt::print(stderr, "Face {}\n", static_cast<const void *>(F));
-    fmt::print(stderr, "  n = ({:+5.4} {:+5.4} {:+5.4})\n", nx, ny, nz);
-    fmt::print(stderr, "  t = ({:+5.4} {:+5.4} {:+5.4})\n", tx, ty, tz);
-    fmt::print(stderr, "  s = ({:+5.4} {:+5.4} {:+5.4})\n", sx, sy, sz);
+    DebugPrintf("Face %p\n", F);
+    DebugPrintf("  n = (%+5.4f %+5.4f %+5.4f)\n", nx, ny, nz);
+    DebugPrintf("  t = (%+5.4f %+5.4f %+5.4f)\n", tx, ty, tz);
+    DebugPrintf("  s = (%+5.4f %+5.4f %+5.4f)\n", sx, sy, sz);
 
     // compute extents in the ST space...
 
@@ -877,8 +855,8 @@ static void Q3_CalcFaceStuff(quake_face_c *F) {
     avg_s /= (double)(F->verts.size());
     avg_t /= (double)(F->verts.size());
 
-    fmt::print(stderr, "  t range: %+8.2f .. %+8.2f\n", min_t, max_t);
-    fmt::print(stderr, "  s range: %+8.2f .. %+8.2f\n", min_s, max_s);
+    StdErrPrintf("  t range: %+8.2f .. %+8.2f\n", min_t, max_t);
+    StdErrPrintf("  s range: %+8.2f .. %+8.2f\n", min_s, max_s);
 
 #if 0  // DEBUG
     for (unsigned int k = 0 ; k < F->verts.size() ; k++)
@@ -907,7 +885,7 @@ static void Q3_CalcFaceStuff(quake_face_c *F) {
     lt_W = (int)ceil((max_s - min_s + q3_luxel_size * 0.6) / q3_luxel_size);
     lt_H = (int)ceil((max_t - min_t + q3_luxel_size * 0.6) / q3_luxel_size);
 
-    fmt::print(stderr, "LM SIZE: %d x {}\n", lt_W, lt_H);
+    StdErrPrintf("LM SIZE: %d x %d\n", lt_W, lt_H);
 
     lt_W = CLAMP(1, lt_W, MAX_LM_SIZE);
     lt_H = CLAMP(1, lt_H, MAX_LM_SIZE);
@@ -1051,7 +1029,7 @@ void qLightmap_c::Store() {
     }
 
     if (qk_game >= 3 && isDark()) {
-        fmt::print(stderr, "DARK LIGHTMAP !\n");
+        StdErrPrintf("DARK LIGHTMAP !\n");
         offset = 0;
     } else if (qk_game >= 3) {
         // this is lousy for memory usage...
@@ -1060,7 +1038,7 @@ void qLightmap_c::Store() {
         offset = Q3_AllocLightBlock(width, height, &lx, &ly);
         SYS_ASSERT(offset >= 0);
 
-        fmt::print(stderr, "LM POSITION: block #{} ({:3} {})\n", offset, lx,
+        StdErrPrintf("LM POSITION: block #%d (%3d %3d)\n", offset, lx,
                    ly);
 
         double s1 = (lx + 0.5) / (double)LIGHTMAP_WIDTH;
@@ -1703,7 +1681,7 @@ static void Q3_GridLighting() {
         g_count[b] = (g_maxs[b] - g_mins[b]) / block_size + 1;
     }
 
-    LogPrintf("grid counts: {} x {} x {}\n", g_count[0], g_count[1],
+    LogPrintf("grid counts: %d x %d x %d\n", g_count[0], g_count[1],
               g_count[2]);
 
     qLump_c *lump = BSP_NewLump(LUMP_Q3_LIGHTGRID);
@@ -1740,7 +1718,7 @@ void QLIT_LightAllFaces() {
         Q3_InitSharedBlock();
     }
 
-    LogPrintf("found {} lights\n", qk_all_lights.size());
+    LogPrintf("found %zu lights\n", qk_all_lights.size());
 
     QVIS_MakeTraceNodes();
 
@@ -1769,13 +1747,10 @@ void QLIT_LightAllFaces() {
             if (main_action >= MAIN_CANCEL) {
                 break;
             }
-
-            // fprintf(stderr, "lit %d faces (of %u)\n", lit_faces,
-            // qk_all_faces.size());
         }
     }
 
-    LogPrintf("lit {} faces (of {}) using {} luxels\n", lit_faces,
+    LogPrintf("lit %d faces (of %zu) using %d luxels\n", lit_faces,
               qk_all_faces.size(), lit_luxels);
 
     // for Q3, determine grid lighting

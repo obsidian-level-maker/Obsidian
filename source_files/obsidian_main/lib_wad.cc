@@ -21,7 +21,6 @@
 
 #include <list>
 
-#include "fmt/core.h"
 #include "headers.h"
 #include "main.h"
 
@@ -55,11 +54,11 @@ bool WAD_OpenRead(std::filesystem::path filename) {
 #endif
 
     if (!wad_R_fp) {
-        LogPrintf("WAD_OpenRead: no such file: {}\n", filename.string());
+        LogPrintf("WAD_OpenRead: no such file: %s\n", filename.string().c_str());
         return false;
     }
 
-    LogPrintf("Opened WAD file: {}\n", filename.string());
+    LogPrintf("Opened WAD file: %s\n", filename.string().c_str());
 
 #ifdef HAVE_PHYSFS
     if ((PHYSFS_readBytes(wad_R_fp, &wad_R_header, sizeof(wad_R_header)) /
@@ -94,7 +93,7 @@ bool WAD_OpenRead(std::filesystem::path filename) {
 
     if (wad_R_header.num_lumps >= 5000)  // sanity check
     {
-        LogPrintf("WAD_OpenRead: bad header ({} entries?)\n",
+        LogPrintf("WAD_OpenRead: bad header (%u entries?)\n",
                   static_cast<unsigned int>(wad_R_header.num_lumps));
 #ifdef HAVE_PHYSFS
         PHYSFS_close(wad_R_fp);
@@ -110,7 +109,7 @@ bool WAD_OpenRead(std::filesystem::path filename) {
     if (fseek(wad_R_fp, wad_R_header.dir_start, SEEK_SET) != 0)
 #endif
     {
-        LogPrintf("WAD_OpenRead: cannot seek to directory (at 0x{})\n",
+        LogPrintf("WAD_OpenRead: cannot seek to directory (at 0x%u)\n",
                   static_cast<unsigned int>(wad_R_header.dir_start));
 #ifdef HAVE_PHYSFS
         PHYSFS_close(wad_R_fp);
@@ -140,7 +139,7 @@ bool WAD_OpenRead(std::filesystem::path filename) {
                 return false;
             }
 
-            LogPrintf("WAD_OpenRead: hit EOF reading dir-entry {}\n", i);
+            LogPrintf("WAD_OpenRead: hit EOF reading dir-entry %d\n", i);
 
             // truncate directory
             wad_R_header.num_lumps = i;
@@ -149,9 +148,6 @@ bool WAD_OpenRead(std::filesystem::path filename) {
 
         L->start = LE_U32(L->start);
         L->length = LE_U32(L->length);
-
-        //  DebugPrintf(" {:4}: {:08x} {:08x} : {}\n", i, L->start, L->length,
-        //  L->name);
     }
 
     return true;  // OK
@@ -229,24 +225,6 @@ bool WAD_ReadData(int entry, int offset, int length, void *buffer) {
 #endif
 }
 
-void WAD_ListEntries(void) {
-    fmt::print("--------------------------------------------------\n");
-
-    if (wad_R_header.num_lumps == 0) {
-        fmt::print("WAD file is empty\n");
-    } else {
-        for (int i = 0; i < (int)wad_R_header.num_lumps; i++) {
-            raw_wad_lump_t *L = &wad_R_dir[i];
-
-            fmt::print("{:4}: +{:08x} {:08x} : {}\n", i + 1,
-                       static_cast<unsigned int>(L->start),
-                       static_cast<unsigned int>(L->length), WAD_EntryName(i));
-        }
-    }
-
-    fmt::print("--------------------------------------------------\n");
-}
-
 //------------------------------------------------------------------------
 //  WAD WRITING
 //------------------------------------------------------------------------
@@ -261,11 +239,11 @@ bool WAD_OpenWrite(std::filesystem::path filename) {
     wad_W_fp.open(filename, std::ios::out | std::ios::binary);
 
     if (!wad_W_fp.is_open()) {
-        LogPrintf("WAD_OpenWrite: cannot create file: {}\n", filename);
+        LogPrintf("WAD_OpenWrite: cannot create file: %s\n", filename.string().c_str());
         return false;
     }
 
-    LogPrintf("Created WAD file: {}\n", filename.string());
+    LogPrintf("Created WAD file: %s\n", filename.string().c_str());
 
     // write out a dummy header
     raw_wad_header_t header;
@@ -323,9 +301,9 @@ void WAD_CloseWrite(void) {
     wad_W_directory.clear();
 }
 
-void WAD_NewLump(std::string_view name) {
+void WAD_NewLump(std::string name) {
     if (name.size() > 8) {
-        Main::FatalError("WAD_NewLump: name too long: '{}'\n", name);
+        Main::FatalError("WAD_NewLump: name too long: '%s'\n", name.c_str());
     }
 
     memset(&wad_W_lump, 0, sizeof(wad_W_lump));
@@ -388,11 +366,11 @@ bool WAD2_OpenRead(const char *filename) {
 #endif
 
     if (!wad2_R_fp) {
-        LogPrintf("WAD2_OpenRead: no such file: {}\n", filename);
+        LogPrintf("WAD2_OpenRead: no such file: %s\n", filename);
         return false;
     }
 
-    LogPrintf("Opened WAD2 file: {}\n", filename);
+    LogPrintf("Opened WAD2 file: %s\n", filename);
 
 #ifdef HAVE_PHYSFS
     if ((PHYSFS_readBytes(wad2_R_fp, &wad2_R_header, sizeof(wad2_R_header)) /
@@ -427,7 +405,7 @@ bool WAD2_OpenRead(const char *filename) {
 
     if (wad2_R_header.num_lumps >= 5000)  // sanity check
     {
-        LogPrintf("WAD2_OpenRead: bad header ({} entries?)\n",
+        LogPrintf("WAD2_OpenRead: bad header (%u entries?)\n",
                   static_cast<unsigned int>(wad2_R_header.num_lumps));
 #ifdef HAVE_PHYSFS
         PHYSFS_close(wad2_R_fp);
@@ -443,7 +421,7 @@ bool WAD2_OpenRead(const char *filename) {
     if (fseek(wad2_R_fp, wad2_R_header.dir_start, SEEK_SET) != 0)
 #endif
     {
-        LogPrintf("WAD2_OpenRead: cannot seek to directory (at 0x{})\n",
+        LogPrintf("WAD2_OpenRead: cannot seek to directory (at 0x&u)\n",
                   static_cast<unsigned int>(wad2_R_header.dir_start));
 #ifdef HAVE_PHYSFS
         PHYSFS_close(wad2_R_fp);
@@ -473,7 +451,7 @@ bool WAD2_OpenRead(const char *filename) {
                 return false;
             }
 
-            LogPrintf("WAD2_OpenRead: hit EOF reading dir-entry {}\n", i);
+            LogPrintf("WAD2_OpenRead: hit EOF reading dir-entry %d\n", i);
 
             // truncate directory
             wad2_R_header.num_lumps = i;
@@ -486,9 +464,6 @@ bool WAD2_OpenRead(const char *filename) {
         L->start = LE_U32(L->start);
         L->length = LE_U32(L->length);
         L->u_len = LE_U32(L->u_len);
-
-        //  DebugPrintf(" {:4}: {:08x} {:08x} : {}\n", i, L->start, L->length,
-        //  L->name);
     }
 
     return true;  // OK
@@ -589,25 +564,6 @@ static char LetterForType(u8_t type) {
     }
 }
 
-void WAD2_ListEntries(void) {
-    fmt::print("--------------------------------------------------\n");
-
-    if (wad2_R_header.num_lumps == 0) {
-        fmt::print("WAD2 file is empty\n");
-    } else {
-        for (int i = 0; i < (int)wad2_R_header.num_lumps; i++) {
-            raw_wad2_lump_t *L = &wad2_R_dir[i];
-
-            fmt::print("{:4}: +{:08x} {:08x} {} : {}\n", i + 1,
-                       static_cast<unsigned int>(L->start),
-                       static_cast<unsigned int>(L->length),
-                       LetterForType(L->type), L->name);
-        }
-    }
-
-    fmt::print("--------------------------------------------------\n");
-}
-
 //------------------------------------------------------------------------
 //  WAD2 WRITING
 //------------------------------------------------------------------------
@@ -622,11 +578,11 @@ bool WAD2_OpenWrite(const char *filename) {
     wad2_W_fp = fopen(filename, "wb");
 
     if (!wad2_W_fp) {
-        LogPrintf("WAD2_OpenWrite: cannot create file: {}\n", filename);
+        LogPrintf("WAD2_OpenWrite: cannot create file: %s\n", filename);
         return false;
     }
 
-    LogPrintf("Created WAD2 file: {}\n", filename);
+    LogPrintf("Created WAD2 file: %s\n", filename);
 
     // write out a dummy header
     raw_wad2_header_t header;

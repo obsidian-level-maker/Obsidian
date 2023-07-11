@@ -372,7 +372,7 @@ void QCOM_Fix_T_Junctions() {
     TJ_FixFaces(qk_bsp_root);
     TJ_FreeHash();
 
-    LogPrintf("Fixed {} T-Junctions\n", tjunc_count);
+    LogPrintf("Fixed %d T-Junctions\n", tjunc_count);
 }
 
 //--- editor settings ---

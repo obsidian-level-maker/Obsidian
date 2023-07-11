@@ -44,7 +44,7 @@ function HACX.all_done()
 	gui.wad_insert_file("data/endoom/ENDOOM.bin", "ENDOOM")
 end
 
-UNFINISHED["hacx"] =
+OB_GAMES["hacx"] =
 {
 	label = _("HacX 1.2"),
 	priority = 92,
@@ -62,6 +62,7 @@ UNFINISHED["hacx"] =
 	
 	hooks =
 	{
+		slump_setup = HACX.slump_setup,
 		get_levels = HACX.get_levels,
 		all_done   = HACX.all_done
 	},

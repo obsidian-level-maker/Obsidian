@@ -29,8 +29,6 @@
 #include <iso646.h>
 #endif
 
-#include "fmt/core.h"
-#include "fmt/format.h"
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
 #include "headers.h"
@@ -205,7 +203,7 @@ void DLG_ShowError(const char *msg, ...) {
 
     buffer[MSG_BUF_LEN - 2] = 0;
 
-    LogPrintf("\n{}\n\n", buffer);
+    LogPrintf("\n%s\n\n", buffer);
 
     const char *link_title = NULL;
     const char *link_url = NULL;
@@ -230,7 +228,7 @@ std::filesystem::path BestDirectory() {
 }
 
 std::filesystem::path DLG_OutputFilename(const char *ext, const char *preset) {
-    std::string kind_buf = fmt::format("{} {}\t*.{}", ext, _("files"), ext);
+    std::string kind_buf = StringFormat("%s %s\t*.%s", ext, _("files"), ext);
 
     // uppercase the first word
     for (char *p = &kind_buf[0]; *p && *p != ' '; p++) {
@@ -268,7 +266,7 @@ std::filesystem::path DLG_OutputFilename(const char *ext, const char *preset) {
     switch (result) {
         case -1:
             LogPrintf(_("Error choosing output file:\n"));
-            LogPrintf("   {}\n", chooser.errmsg());
+            LogPrintf("   %s\n", chooser.errmsg());
 
             DLG_ShowError(_("Unable to create the file:\n\n%s"),
                           chooser.errmsg());
@@ -328,7 +326,7 @@ void DLG_EditSeed(void) {
     try {
         for (long unsigned int i = 0; i < word.size(); i++) {
             char character = word.at(i);
-            if (not std::isdigit(character)) {
+            if (!std::isdigit(character)) {
                 throw std::runtime_error(
                     // clang-format off
                     _("String contains non-digits. Will process as string\n"));
@@ -339,8 +337,10 @@ void DLG_EditSeed(void) {
         next_rand_seed = std::stoull(word);
         return;
     } catch (std::invalid_argument &e) {
+        (void)e;
         std::cout << _("Invalid argument. Will process as string.\n");
     } catch (std::out_of_range &e) {
+        (void)e;
         // clang-format off
         std::cout << _("Resulting number would be out of range. Will process as string.\n");
         // clang-format on
@@ -355,7 +355,7 @@ void DLG_EditSeed(void) {
     next_rand_seed = split_limit;
     for (size_t i = 0; i < word.size(); i++) {
         char character = word.at(i);
-        if (not std::iscntrl(character)) {
+        if (!std::iscntrl(character)) {
             if (next_rand_seed < split_limit) {
                 next_rand_seed *= abs(int(character));
             } else {
@@ -550,7 +550,7 @@ void UI_LogViewer::WriteLogs(std::ofstream &fp) {
         const char *str = browser->text(n);
 
         if (str) {
-            fmt::print(fp, "{}\n", str);
+            StreamPrintf(fp, "%s\n", str);
         }
     }
 }
@@ -741,7 +741,7 @@ UI_GlossaryViewer::~UI_GlossaryViewer() {}
 void UI_GlossaryViewer::ReadGlossary() {
 
     std::string glossary =
-        fmt::format("{}/language/{}.txt", install_dir.string(), selected_lang);
+        StringFormat("%s/language/%s.txt", install_dir.string().c_str(), selected_lang.c_str());
 
     if (!std::filesystem::exists(glossary)) {
         return;

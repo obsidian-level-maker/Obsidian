@@ -21,7 +21,6 @@
 
 #include <list>
 
-#include "fmt/core.h"
 #include "headers.h"
 #include "main.h"
 
@@ -56,11 +55,11 @@ bool PAK_OpenRead(const char *filename) {
 #endif
 
     if (!r_pak_fp) {
-        LogPrintf("PAK_OpenRead: no such file: {}\n", filename);
+        LogPrintf("PAK_OpenRead: no such file: %s\n", filename);
         return false;
     }
 
-    LogPrintf("Opened PAK file: {}\n", filename);
+    LogPrintf("Opened PAK file: %s\n", filename);
 
 #ifdef HAVE_PHYSFS
     if ((PHYSFS_readBytes(r_pak_fp, &r_header, sizeof(r_header)) /
@@ -98,7 +97,7 @@ bool PAK_OpenRead(const char *filename) {
 
     if (r_header.entry_num >= 5000)  // sanity check
     {
-        LogPrintf("PAK_OpenRead: bad header ({} entries?)\n",
+        LogPrintf("PAK_OpenRead: bad header (%u entries?)\n",
                   static_cast<unsigned int>(r_header.entry_num));
 #ifdef HAVE_PHYSFS
         PHYSFS_close(r_pak_fp);
@@ -114,7 +113,7 @@ bool PAK_OpenRead(const char *filename) {
     if (fseek(r_pak_fp, r_header.dir_start, SEEK_SET) != 0)
 #endif
     {
-        LogPrintf("PAK_OpenRead: cannot seek to directory (at 0x{})\n",
+        LogPrintf("PAK_OpenRead: cannot seek to directory (at 0x%u)\n",
                   static_cast<unsigned int>(r_header.dir_start));
 #ifdef HAVE_PHYSFS
         PHYSFS_close(r_pak_fp);
@@ -144,7 +143,7 @@ bool PAK_OpenRead(const char *filename) {
                 return false;
             }
 
-            LogPrintf("PAK_OpenRead: hit EOF reading dir-entry {}\n", i);
+            LogPrintf("PAK_OpenRead: hit EOF reading dir-entry %d\n", i);
 
             // truncate directory
             r_header.entry_num = i;
@@ -156,9 +155,6 @@ bool PAK_OpenRead(const char *filename) {
 
         E->offset = LE_U32(E->offset);
         E->length = LE_U32(E->length);
-
-        //  DebugPrintf(" {:4}: {:08x} {:08x} : {}\n", i, E->offset, E->length,
-        //  E->name);
     }
 
     return true;  // OK
@@ -226,8 +222,6 @@ void PAK_FindMaps(std::vector<int> &entries) {
 
         if (strcmp(name, ".bsp") == 0) {
             entries.push_back(i);
-
-            //    DebugPrintf("Found map [{}] : '{}'\n", i, E->name);
         }
     }
 }
@@ -258,24 +252,6 @@ bool PAK_ReadData(int entry, int offset, int length, void *buffer) {
     return (res == 1);
 }
 
-void PAK_ListEntries(void) {
-    fmt::print("--------------------------------------------------\n");
-
-    if (r_header.entry_num == 0) {
-        fmt::print("PAK file is empty\n");
-    } else {
-        for (int i = 0; i < (int)r_header.entry_num; i++) {
-            raw_pak_entry_t *E = &r_directory[i];
-
-            fmt::print("{:4}: +{:08x} {:08x} : {}\n", i + 1,
-                       static_cast<unsigned int>(E->offset),
-                       static_cast<unsigned int>(E->length), E->name.data());
-        }
-    }
-
-    fmt::print("--------------------------------------------------\n");
-}
-
 //------------------------------------------------------------------------
 //  PAK WRITING
 //------------------------------------------------------------------------
@@ -290,11 +266,11 @@ bool PAK_OpenWrite(const std::filesystem::path &filename) {
     w_pak_fp.open(filename, std::ios::out | std::ios::binary);
 
     if (!w_pak_fp) {
-        LogPrintf("PAK_OpenWrite: cannot create file: {}\n", filename);
+        LogPrintf("PAK_OpenWrite: cannot create file: %s\n", filename.string().c_str());
         return false;
     }
 
-    LogPrintf("Created PAK file: {}\n", filename);
+    LogPrintf("Created PAK file: %s\n", filename.string().c_str());
 
     // write out a dummy header
     raw_pak_header_t header;

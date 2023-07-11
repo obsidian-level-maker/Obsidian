@@ -25,7 +25,6 @@
 
 #include "csg_local.h"
 #include "csg_quake.h"  // for quake_plane_c
-#include "fmt/core.h"
 #ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
 #endif
@@ -68,19 +67,6 @@ void csg_property_set_c::Add(std::string key, std::string value) {
 }
 
 void csg_property_set_c::Remove(std::string key) { dict.erase(key); }
-
-void csg_property_set_c::DebugDump() {
-    std::map<std::string, std::string>::iterator PI;
-
-    fmt::print(stderr, "{\n");
-
-    for (PI = dict.begin(); PI != dict.end(); PI++) {
-        fmt::print(stderr, "  {} = \"{}\"\n", PI->first.c_str(),
-                   PI->second.c_str());
-    }
-
-    fmt::print(stderr, "}\n");
-}
 
 std::string csg_property_set_c::getStr(std::string key,
                                        std::string def_val) const {
@@ -1351,7 +1337,7 @@ void CSG_LinkBrushToEntity(csg_brush_c *B, std::string link_key) {
     }
 
     // not found
-    LogPrintf("WARNING: brush has unknown link entity '{}'\n", link_key);
+    LogPrintf("WARNING: brush has unknown link entity '%s'\n", link_key.c_str());
 
     // ensure we ignore this brush
     B->bkind = BKIND_Light;

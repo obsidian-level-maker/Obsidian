@@ -21,10 +21,6 @@
 
 #include <array>
 #include "main.h"
-#ifndef _WIN32
-#include "obsidian_config.h"
-#endif
-#include "fmt/core.h"
 #include "images.h"
 
 #include "csg_main.h"
@@ -158,8 +154,6 @@ bool random_string_seeds = false;
 bool password_mode = false;
 bool mature_word_lists = false;
 bool did_specify_seed = false;
-int log_size = 7;
-int log_limit = 5;
 bool mid_batch = false;
 int builds_per_run = 1;
 
@@ -189,7 +183,9 @@ Fl_Pixmap *clippy;
 Fl_BMP_Image *tutorial1;
 Fl_BMP_Image *tutorial2;
 Fl_BMP_Image *tutorial3;
+Fl_BMP_Image *tutorial3_2;
 Fl_BMP_Image *tutorial4;
+Fl_BMP_Image *tutorial4_2;
 Fl_BMP_Image *tutorial5;
 Fl_BMP_Image *tutorial6;
 Fl_BMP_Image *tutorial7;
@@ -199,6 +195,31 @@ Fl_BMP_Image *tutorial10;
 
 #ifdef WIN32
 FLASHWINFO *blinker;
+#endif
+
+#ifdef _WIN32
+#ifndef CONSOLE_ONLY
+static int i_load_private_font(const char *path) {
+    return AddFontResourceExW((LPCWSTR)StringToUTF16(path).data(), FR_PRIVATE, nullptr);
+}
+int v_unload_private_font(const char *path) {
+    return RemoveFontResourceExW((LPCWSTR)StringToUTF16(path).data(), FR_PRIVATE, nullptr);
+}
+#endif
+#else
+#ifndef CONSOLE_ONLY
+#ifndef __APPLE__
+#include <fontconfig/fontconfig.h>
+static int i_load_private_font(const char *path) {
+    return static_cast<int>(FcConfigAppFontAddFile(
+        nullptr, reinterpret_cast<const FcChar8 *>(path)));
+}
+int v_unload_private_font(const char *path) {
+    FcConfigAppFontClear(nullptr);
+    return 0;
+}
+#endif
+#endif
 #endif
 
 static void main_win_surprise_config_CB(Fl_Widget *w, void *data) {
@@ -265,16 +286,16 @@ static void main_win_clippy_CB(Fl_Widget *w, void *data) {
 /* ----- user information ----------------------------- */
 
 static void ShowInfo() {
-    fmt::print(
+    StdOutPrintf(
         "\n"
-        "** {} {} \"{}\"\n"
-        "** Build {} **\n"
+        "** %s %s \"%s\"\n"
+        "** Build %s **\n"
         "** Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted **\n"
         "\n",
-        OBSIDIAN_TITLE, OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME,
+        OBSIDIAN_TITLE.c_str(), OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str(),
         OBSIDIAN_VERSION);
 
-    fmt::print(
+    StdOutPrintf(
         "Usage: Obsidian [options...] [key=value...]\n"
         "\n"
         "Available options:\n"
@@ -309,13 +330,13 @@ static void ShowInfo() {
         "                            (section should be 'c' or 'o')\n"
         "\n");
 
-    fmt::print(
+    StdOutPrintf(
         "Please visit the web site for complete information:\n"
-        "  {} \n"
+        "  %s \n"
         "\n",
         OBSIDIAN_WEBSITE);
 
-    fmt::print(
+    StdOutPrintf(
         "This program is free software, under the terms of the GNU General "
         "Public\n"
         "License, and comes with ABSOLUTELY NO WARRANTY.  See the "
@@ -327,8 +348,8 @@ static void ShowInfo() {
 }
 
 static void ShowVersion() {
-    fmt::print("{} {} \"{}\" Build {}\n", OBSIDIAN_TITLE,
-               OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME, OBSIDIAN_VERSION);
+    StdOutPrintf("%s %s \"%s\" Build %s\n", OBSIDIAN_TITLE.c_str(),
+               OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str(), OBSIDIAN_VERSION);
 
     fflush(stdout);
 }
@@ -347,7 +368,7 @@ void Determine_WorkingPath(const char *argv0) {
 
     if (const int home_arg = argv::Find(0, "home"); home_arg >= 0) {
         if (home_arg + 1 >= argv::list.size() || argv::IsOption(home_arg + 1)) {
-            fmt::print(stderr, "OBSIDIAN ERROR: missing path for --home\n");
+            StdErrPrintf("OBSIDIAN ERROR: missing path for --home\n");
             exit(EXIT_FAILURE);
         }
 
@@ -416,11 +437,6 @@ std::filesystem::path Resolve_DefaultOutputPath() {
 static bool Verify_InstallDir(const std::filesystem::path &path) {
     const std::filesystem::path filename = path / "scripts" / "obsidian.lua";
 
-#if 0  // DEBUG
-    fprintf(stderr, "Trying install dir: [%s]\n", path);
-    fprintf(stderr, "  using file: [%s]\n\n", filename);
-#endif
-
     return exists(filename);
 }
 
@@ -431,7 +447,7 @@ void Determine_InstallDir(const char *argv0) {
 
     if (const int inst_arg = argv::Find(0, "install"); inst_arg >= 0) {
         if (inst_arg + 1 >= argv::list.size() || argv::IsOption(inst_arg + 1)) {
-            fmt::print(stderr, "OBSIDIAN ERROR: missing path for --install\n");
+            StdErrPrintf("OBSIDIAN ERROR: missing path for --install\n");
             exit(EXIT_FAILURE);
         }
 
@@ -453,7 +469,7 @@ void Determine_InstallDir(const char *argv0) {
 #ifdef WIN32
     install_dir = home_dir;
 #else
-    if (Verify_InstallDir(CMAKE_INSTALL_PREFIX "/share/obsidian")) {
+    if (Verify_InstallDir(OBSIDIAN_INSTALL_PREFIX "/share/obsidian")) {
         return;
     }
 
@@ -471,7 +487,7 @@ void Determine_InstallDir(const char *argv0) {
 void Determine_ConfigFile() {
     if (const int conf_arg = argv::Find(0, "config"); conf_arg >= 0) {
         if (conf_arg + 1 >= argv::list.size() || argv::IsOption(conf_arg + 1)) {
-            fmt::print(stderr, "OBSIDIAN ERROR: missing path for --config\n");
+            StdErrPrintf("OBSIDIAN ERROR: missing path for --config\n");
             exit(EXIT_FAILURE);
         }
 
@@ -485,7 +501,7 @@ void Determine_ConfigFile() {
 void Determine_OptionsFile() {
     if (const int optf_arg = argv::Find(0, "options"); optf_arg >= 0) {
         if (optf_arg + 1 >= argv::list.size() || argv::IsOption(optf_arg + 1)) {
-            fmt::print(stderr, "OBSIDIAN ERROR: missing path for --options\n");
+            StdErrPrintf("OBSIDIAN ERROR: missing path for --options\n");
             exit(EXIT_FAILURE);
         }
 
@@ -501,7 +517,7 @@ void Determine_ThemeFile() {
     if (const int themef_arg = argv::Find(0, "theme"); themef_arg >= 0) {
         if (themef_arg + 1 >= argv::list.size() ||
             argv::IsOption(themef_arg + 1)) {
-            fmt::print(stderr, "OBSIDIAN ERROR: missing path for --theme\n");
+            StdErrPrintf("OBSIDIAN ERROR: missing path for --theme\n");
             exit(EXIT_FAILURE);
         }
 
@@ -516,7 +532,7 @@ void Determine_ThemeFile() {
 void Determine_LoggingFile() {
     if (const int logf_arg = argv::Find(0, "log"); logf_arg >= 0) {
         if (logf_arg + 1 >= argv::list.size() || argv::IsOption(logf_arg + 1)) {
-            fmt::print(stderr, "OBSIDIAN ERROR: missing path for --log\n");
+            StdErrPrintf("OBSIDIAN ERROR: missing path for --log\n");
             exit(EXIT_FAILURE);
         }
 
@@ -526,8 +542,8 @@ void Determine_LoggingFile() {
         std::ofstream fp{logging_file};
 
         if (!fp.is_open()) {
-            Main::FatalError("Cannot create log file: {}\n",
-                             logging_file.string());
+            Main::FatalError("Cannot create log file: %s\n",
+                             logging_file.string().c_str());
         }
 
         fp.close();
@@ -556,10 +572,10 @@ bool Main::BackupFile(const std::filesystem::path &filename) {
     if (std::filesystem::exists(filename)) {
         std::filesystem::path backup_name = filename;
 
-        backup_name.replace_extension(fmt::format(
-            "{}.{}", backup_name.filename().extension().generic_string(), "bak"));
+        backup_name.replace_extension(StringFormat(
+            "%s.%s", backup_name.filename().extension().string().c_str(), "bak"));
 
-        LogPrintf("Backing up existing file to: {}\n", backup_name.string());
+        LogPrintf("Backing up existing file to: %s\n", backup_name.string().c_str());
 
         std::filesystem::remove(backup_name);
         std::filesystem::rename(filename, backup_name);
@@ -1039,10 +1055,6 @@ void Main::SetupFLTK() {
     screen_w = Fl::w();
     screen_h = Fl::h();
 
-#if 0  // debug
-    fmt::print(stderr, "Screen dimensions = {}x{}\n", screen_w, screen_h);
-#endif
-
     KF = Main::DetermineScaling();
     // load icons for file chooser
 #ifndef WIN32
@@ -1167,7 +1179,7 @@ void Main_SetSeed() {
 #ifndef CONSOLE_ONLY
     if (!batch_mode) {
         main_win->build_box->seed_disp->copy_label(
-            fmt::format("{} {}", _("Seed:"), seed).c_str());
+            StringFormat("%s %s", _("Seed:"), seed.c_str()).c_str());
         main_win->build_box->seed_disp->redraw();
     }
 #endif
@@ -1211,7 +1223,7 @@ bool Build_Cool_Shit() {
         } else if (StringCaseCmp(format, "quake3") == 0) {
             game_object = Quake3_GameObject();
         } else {
-            Main::FatalError("ERROR: unknown format: '{}'\n", format);
+            Main::FatalError("ERROR: unknown format: '%s'\n", format.c_str());
         }
     }
 
@@ -1223,11 +1235,11 @@ bool Build_Cool_Shit() {
         std::string seed = NumToString(next_rand_seed);
         if (!string_seed.empty()) {
             main_win->build_box->seed_disp->copy_label(
-                fmt::format("{} {}", _("Seed:"), string_seed).c_str());
+                StringFormat("%s %s", _("Seed:"), string_seed.c_str()).c_str());
             main_win->build_box->seed_disp->redraw();
         } else {
             main_win->build_box->seed_disp->copy_label(
-                fmt::format("{} {}", _("Seed:"), seed).c_str());
+                StringFormat("%s %s", _("Seed:"), seed.c_str()).c_str());
             main_win->build_box->seed_disp->redraw();
         }
         main_win->game_box->SetAbortButton(true);
@@ -1273,7 +1285,7 @@ bool Build_Cool_Shit() {
         const u32_t end_time = TimeGetMillies();
         const u32_t total_time = end_time - start_time;
 
-        LogPrintf("\nTOTAL TIME: {} seconds\n\n", total_time / 1000.0);
+        LogPrintf("\nTOTAL TIME: %g seconds\n\n", total_time / 1000.0);
 
         string_seed.clear();
 
@@ -1306,9 +1318,9 @@ bool Build_Cool_Shit() {
         main_action = 0;
 #ifndef CONSOLE_ONLY
         if (main_win) {
-            main_win->label(fmt::format("{} {} \"{}\"", OBSIDIAN_TITLE,
+            main_win->label(StringFormat("%s %s \"%s\"", OBSIDIAN_TITLE.c_str(),
                                         OBSIDIAN_SHORT_VERSION,
-                                        OBSIDIAN_CODE_NAME)
+                                        OBSIDIAN_CODE_NAME.c_str())
                                 .c_str());
         }
 #endif
@@ -1418,7 +1430,7 @@ hardrestart:;
     if (batch_arg >= 0) {
         if (batch_arg + 1 >= argv::list.size() ||
             argv::IsOption(batch_arg + 1)) {
-            fmt::print(stderr,
+            StdErrPrintf(
                        "OBSIDIAN ERROR: missing filename for --batch\n");
             exit(EXIT_FAILURE);
         }
@@ -1450,19 +1462,19 @@ hardrestart:;
         if (update_arg + 3 >= argv::list.size() ||
             argv::IsOption(update_arg + 1) || argv::IsOption(update_arg + 2) ||
             argv::IsOption(update_arg + 3)) {
-            fmt::print(stderr,
+            StdErrPrintf(
                        "OBSIDIAN ERROR: missing one or more args for --update "
                        "<section> <key> <value>\n");
             exit(EXIT_FAILURE);
         }
         if (argv::list[update_arg + 1].length() > 1) {
-            fmt::print(stderr,
+            StdErrPrintf(
                        "OBSIDIAN ERROR: section name must be one character\n");
             exit(EXIT_FAILURE);
         }
         char section = argv::list[update_arg + 1][0];
         if (section != 'c' && section != 'o') {
-            fmt::print(stderr,
+            StdErrPrintf(
                        "OBSIDIAN ERROR: section name must be 'c' or 'o'\n");
             exit(EXIT_FAILURE);
         }
@@ -1510,20 +1522,20 @@ hardrestart:;
 
     LogPrintf("\n");
     LogPrintf("********************************************************\n");
-    LogPrintf("** {} {} \"{}\" **\n", OBSIDIAN_TITLE, OBSIDIAN_SHORT_VERSION,
-              OBSIDIAN_CODE_NAME);
-    LogPrintf("** Build {} **\n", OBSIDIAN_VERSION);
+    LogPrintf("** %s %s \"%s\" **\n", OBSIDIAN_TITLE.c_str(), OBSIDIAN_SHORT_VERSION,
+              OBSIDIAN_CODE_NAME.c_str());
+    LogPrintf("** Build %s **\n", OBSIDIAN_VERSION);
     LogPrintf("********************************************************\n");
     LogPrintf("\n");
 
 #ifndef CONSOLE_ONLY
-    LogPrintf("Library versions: FLTK {}.{}.{}\n\n", FL_MAJOR_VERSION,
+    LogPrintf("Library versions: FLTK %d.%d.%d\n\n", FL_MAJOR_VERSION,
               FL_MINOR_VERSION, FL_PATCH_VERSION);
 #endif
 
-    LogPrintf("home_dir: {}\n", home_dir.string());
-    LogPrintf("install_dir: {}\n", install_dir.string());
-    LogPrintf("config_file: {}\n\n", config_file.string());
+    LogPrintf("home_dir: %s\n", home_dir.string().c_str());
+    LogPrintf("install_dir: %s\n", install_dir.string().c_str());
+    LogPrintf("config_file: %s\n\n", config_file.string().c_str());
 
     Trans_Init();
 
@@ -1575,7 +1587,7 @@ softrestart:;
         if (const int load_arg = argv::Find('l', "load"); load_arg >= 0) {
             if (load_arg + 1 >= argv::list.size() ||
                 argv::IsOption(load_arg + 1)) {
-                fmt::print(stderr,
+                StdErrPrintf(
                            "OBSIDIAN ERROR: missing filename for --load\n");
                 exit(EXIT_FAILURE);
             }
@@ -1593,7 +1605,7 @@ softrestart:;
     memcpy(testy, (void *)test_file.data(), 64 * 64);
     int numba_counter = 0;
     for (int i = 0; i < 64 * 64; i++) {
-        LogPrintf("{:d},", testy[i]);
+        LogPrintf("%d,", testy[i]);
         numba_counter++;
         if (numba_counter == 16) {
             LogPrintf("\n");
@@ -1644,14 +1656,14 @@ softrestart:;
 
         if (!load_file.empty()) {
             if (!Cookie_Load(load_file)) {
-                Main::FatalError(_("No such config file: {}\n"), load_file);
+                Main::FatalError(_("No such config file: %s\n"), load_file.c_str());
             }
         } else {
             if (!std::filesystem::exists(config_file)) {
                 Cookie_Save(config_file);
             }
             if (!Cookie_Load(config_file)) {
-                Main::FatalError(_("No such config file: {}\n"), config_file);
+                Main::FatalError(_("No such config file: %s\n"), config_file.c_str());
             }
         }
 
@@ -1673,7 +1685,7 @@ softrestart:;
         }
 
         if (batch_output_file.empty()) {
-            fmt::print(stderr,
+            StdErrPrintf(
                        "\nNo output filename given! Did you forget the --batch "
                        "parameter?\n");
             LogPrintf(
@@ -1691,7 +1703,7 @@ softrestart:;
 
         Main_SetSeed();
         if (!Build_Cool_Shit()) {
-            fmt::print(stderr, "FAILED!\n");
+            StdErrPrintf("FAILED!\n");
             LogPrintf("FAILED!\n");
 
             Main::Detail::Shutdown(false);
@@ -1709,8 +1721,8 @@ softrestart:;
     /* ---- normal GUI mode ---- */
 
     std::string main_title =
-        fmt::format("{} {} \"{}\"", OBSIDIAN_TITLE, OBSIDIAN_SHORT_VERSION,
-                    OBSIDIAN_CODE_NAME);
+        StringFormat("%s %s \"%s\"", OBSIDIAN_TITLE.c_str(), OBSIDIAN_SHORT_VERSION,
+                    OBSIDIAN_CODE_NAME.c_str());
 
     if (main_action != MAIN_SOFT_RESTART) {
         // this not only finds PK3 files, but also activates the ones specified
@@ -1742,9 +1754,17 @@ softrestart:;
         if (!tutorial3) {
             tutorial3 = new Fl_BMP_Image(image_loc.generic_string().c_str());
         }
+        image_loc.replace_filename("tutorial3_2.bmp");
+        if (!tutorial3_2) {
+            tutorial3_2 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+        }
         image_loc.replace_filename("tutorial4.bmp");
         if (!tutorial4) {
             tutorial4 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+        }
+        image_loc.replace_filename("tutorial4_2.bmp");
+        if (!tutorial4_2) {
+            tutorial4_2 = new Fl_BMP_Image(image_loc.generic_string().c_str());
         }
         image_loc.replace_filename("tutorial5.bmp");
         if (!tutorial5) {
@@ -1801,7 +1821,7 @@ softrestart:;
 
     if (!load_file.empty()) {
         if (!Cookie_Load(load_file)) {
-            Main::FatalError(_("No such config file: {}\n"), load_file);
+            Main::FatalError(_("No such config file: %s\n"), load_file.c_str());
         }
     }
 
@@ -1841,7 +1861,9 @@ softrestart:;
                 _("Surprise Me/Randomize Other"), nullptr, main_win_misc_config_CB,
                 nullptr, FL_MENU_TOGGLE | (randomize_misc ? FL_MENU_VALUE : 0));
             if (all_addons.size() == 0) {
-                main_win->menu_bar->add(_("Addons/No Addons Detected"), nullptr, nullptr, nullptr,
+                main_win->menu_bar->add(_("Addons/No folders or *.oaf files"), nullptr, nullptr, nullptr,
+                                        FL_MENU_INACTIVE);
+                main_win->menu_bar->add(_("Addons/found in the \\/addons directory!"), nullptr, nullptr, nullptr,
                                         FL_MENU_INACTIVE);
             } else {
                 main_win->menu_bar->add(_("Addons/Restart and Apply Changes"),
@@ -1950,7 +1972,7 @@ softrestart:;
 
         if (!old_seed.empty()) {
             main_win->build_box->seed_disp->copy_label(
-                fmt::format("{} {}", _("Seed:"), old_seed).c_str());
+                StringFormat("%s %s", _("Seed:"), old_seed.c_str()).c_str());
             old_seed.clear();
         }
 
@@ -2055,10 +2077,10 @@ softrestart:;
             }
         }
     } catch (const assert_fail_c &err) {
-        Main::FatalError(_("Sorry, an internal error occurred:\n{}"),
+        Main::FatalError(_("Sorry, an internal error occurred:\n%s"),
                          err.GetMessage());
     } catch (std::exception &e) {
-        Main::FatalError(_("An exception occurred: \n{}"), e.what());
+        Main::FatalError(_("An exception occurred: \n%s"), e.what());
     }
 
     if (main_action != MAIN_SOFT_RESTART) {

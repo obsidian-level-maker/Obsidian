@@ -19,7 +19,6 @@
 //
 //------------------------------------------------------------------------
 
-#include "fmt/format.h"
 #include "hdr_fltk.h"
 #include "hdr_lua.h"
 #include "hdr_ui.h"
@@ -45,9 +44,9 @@ UI_Module::UI_Module(int X, int Y, int W, int H, std::string id,
     mod_button =
         new UI_CustomCheckBox(X + kf_w(6), Y + kf_h(5), W - kf_w(12), kf_h(24));
     mod_button->box(FL_NO_BOX);
-    if (!suboptions) {
+    /*if (!suboptions) {
         mod_button->down_box(FL_NO_BOX);
-    }
+    }*/
     mod_button->color(WINDOW_BG);
 
     if (Is_UI()) {
@@ -63,10 +62,6 @@ UI_Module::UI_Module(int X, int Y, int W, int H, std::string id,
         heading->copy_label(label.c_str());
         heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
         heading->labelfont(use_system_fonts ? font_style : font_style | FL_BOLD);
-        disabled = new Fl_Box(FL_NO_BOX, X + kf_w(tx), Y + kf_h(4), W - kf_w(tx + 4),
-                            kf_h(24), _("(Disabled)"));
-        disabled->align(FL_ALIGN_RIGHT | FL_ALIGN_INSIDE);
-        disabled->labelfont(use_system_fonts ? font_style : font_style | FL_BOLD);
     }
 
     if (!tip.empty()) {
@@ -141,7 +136,7 @@ void UI_Module::AddOption(std::string opt, std::string label, std::string tip,
     rch->mod_label = new Fl_Box(
         rch->x(), rch->y(), rch->w() * .40,
         kf_h(24), "");
-    rch->mod_label->copy_label(fmt::format("{}: ", label).c_str());
+    rch->mod_label->copy_label(StringFormat("%s: ", label.c_str()).c_str());
     rch->mod_label->align(FL_ALIGN_RIGHT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
     rch->mod_label->labelfont(font_style);
     rch->mod_label->copy_tooltip(tip.c_str());
@@ -210,7 +205,7 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
         longtip = tip;
     }
 
-    label = fmt::format("{}: ", label);
+    label = StringFormat("%s: ", label.c_str());
 
     UI_RSlide *rsl = new UI_RSlide(nx, ny + kf_h(15), nw * .95, kf_h(24));
 
@@ -426,7 +421,7 @@ void UI_Module::AddButtonOption(std::string opt, std::string label,
     rbt->mod_label =
         new Fl_Box(rbt->x(), rbt->y(),
                    rbt->w() * .40, kf_h(24), "");
-    rbt->mod_label->copy_label(fmt::format("{}: ", label).c_str());
+    rbt->mod_label->copy_label(StringFormat("%s: ", label.c_str()).c_str());
     rbt->mod_label->align(FL_ALIGN_RIGHT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
     rbt->mod_label->labelfont(font_style);
     rbt->mod_label->copy_tooltip(tip.c_str());
@@ -486,12 +481,6 @@ int UI_Module::CalcHeight() const {
 }
 
 void UI_Module::update_Enable() {
-
-    if (mod_button->value()) {
-        disabled->hide();
-    } else {
-        disabled->show();
-    }
 
     std::map<std::string, UI_RChoice *>::const_iterator IT;
     std::map<std::string, UI_RSlide *>::const_iterator IT2;
@@ -600,8 +589,8 @@ void UI_Module::AddOptionChoice(std::string option, std::string id,
     UI_RChoice *rch = FindOpt(option);
 
     if (!rch) {
-        LogPrintf("Warning: module '{}' lacks option '{}' (for choice '{}')\n",
-                  id_name.c_str(), option, id);
+        LogPrintf("Warning: module '%s' lacks option '%s' (for choice '%s')\n",
+                  id_name.c_str(), option.c_str(), id.c_str());
         return;
     }
 
@@ -777,7 +766,7 @@ void UI_Module::callback_PresetCheck(Fl_Widget *w, void *data) {
         current_slider->unit_label->copy_label(
             new_label.c_str());
     } else {
-        new_label = fmt::format("{}", value);
+        new_label = StringFormat("%2g", value);
         current_slider->unit_label->copy_label(new_label.append(current_slider->units)
                                                   .c_str());
     }
@@ -900,7 +889,7 @@ void UI_Module::callback_ManualEntry(Fl_Widget *w, void *data) {
     double new_value = 0;
     std::string string_value;
 
-    float_buf = fmt::format("{}", current_slider->mod_slider->value());
+    float_buf = StringFormat("%2g", current_slider->mod_slider->value());
 
 tryagain:
 

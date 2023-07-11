@@ -58,7 +58,7 @@ void AssertFail(const char *msg, ...) {
 
     // NO WORKY WITH LUA :( ---> throw assert_fail_c(buffer);
 
-    Main::FatalError("Sorry, an internal error occurred.\n{}", buffer);
+    Main::FatalError("Sorry, an internal error occurred.\n%s", buffer);
 }
 
 //--- editor settings ---

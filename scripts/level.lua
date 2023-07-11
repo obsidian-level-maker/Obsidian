@@ -2736,9 +2736,9 @@ function Level_make_all()
   GAME.episodes = {}
 
   -- semi-supported games warning
-  if ob_match_game({ game = { nukem=1, quake=1 } }) then
+  if ob_match_game({ game = { chex=1, hacx=1, harmony=1, hexen=1, strife=1, nukem=1, quake=1 } }) then
     if not PARAM.bool_experimental_games or PARAM.bool_experimental_games == 0 then
-      error(gui.gettext("\nWarning: The game that you have selected is in an experimental state. WADs may not build successfully and certain gameplay features may not be implemented yet! To ignore this warning and continue generation for these games, check the \"Experimental Games\" checkbox located in the Miscellaneous Options Module.\n\nThis message will change should development scope expand."))
+      error(gui.gettext("\nWarning: The game that you have selected is in an experimental state. WADs may not build successfully and certain gameplay features may not be implemented yet! To ignore this warning and continue generation for these games, check the \"Experimental Games\" checkbox located in the Miscellaneous Options Module.\n\nUse the help link for the \"Experimental Games\" module to find the exact status for the game in question."))
     end
   end
 
