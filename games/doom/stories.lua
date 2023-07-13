@@ -950,6 +950,9 @@ DOOM.STORIES.TEXT =
 
   the_avenger =
   {
+    level_theme = "GOTHIC",
+    enemy_theme = "GOTHIC",
+
     hooks =
     {
       -- the vengeful marine
