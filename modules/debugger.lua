@@ -208,7 +208,7 @@ OB_MODULES["debugger"] =
       valuator = "button",
       default = 0,
       tooltip = _("Enables building of levels for experimental games."),
-      longtip = _("The following games are in an experimental status, meaning that they may have errors when building levels, or support for certain gameplay features has not been implemented yet:\n\nHacX: SLUMP/Vanilla Port support only\n\nHarmony: SLUMP/Vanilla Port support only\n\nHexen: Oblige v2 support only (Architecture->Historical Versions must be set to 100%)\n\nChex Quest 3: Currently disabled\n\nStrife: Currently disabled\n\nDuke Nukem 3D: Currently disabled\n\nQuake: Currently disabled"),
+      longtip = _("The following games are in an experimental status, meaning that they may have errors when building levels, or support for certain gameplay features has not been implemented yet:\n\nChex Quest 1: SLUMP/Vanilla Port support only\n\nHacX: SLUMP/Vanilla Port support only\n\nHarmony: SLUMP/Vanilla Port support only\n\nHexen: Oblige v2 support only (Architecture->Historical Versions must be set to 100%)\n\nChex Quest 3: Currently disabled\n\nStrife: Currently disabled\n\nDuke Nukem 3D: Currently disabled\n\nQuake: Currently disabled"),
       priority = 60,
       gap = 1,
     },
