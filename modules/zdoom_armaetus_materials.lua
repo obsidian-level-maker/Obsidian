@@ -1618,12 +1618,19 @@ ARMAETUS_MATERIALS = {
   G7_GOGN3 = { t="G7_GOGN3", f="G7_GOGF1"},
 
   -- grey brick, occasional gold trims
-  SDM_HAW1 = { t="SDM_HAW1", f="G12"},
-  SDM_HAW2 = { t="SDM_HAW2", f="GMET07"},
-  SDM_HAW3 = { t="SDM_HAW3", f="RROCK21"},
-  SDM_HAW4 = { t="SDM_HAW4", f="RROCK22"},
+  SDM_HAW1 = { t="SDM_HAW1", f="SDM_HGF1"},
+  SDM_HAW2 = { t="SDM_HAW2", f="SDM_HGF2"},
+  SDM_HAW3 = { t="SDM_HAW3", f="SDM_HGF3"},
+  SDM_HAW4 = { t="SDM_HAW4", f="SDM_HGF1"},
+  SDM_HAW5 = { t="SDM_HAW5", f="SDM_HGF2"},
+  SDM_HAW6 = { t="SDM_HAW6", f="SDM_HGF3"},
+  SDM_HAW7 = { t="SDM_HAW7", f="SDM_HGF1"},
+  SDM_HAW8 = { t="SDM_HAW8", f="SDM_HGF2"},
 
   -- flats
+  SDM_HGF1 = { t="SDM_HGF1", f="SDM_HAW5"},
+  SDM_HGF2 = { t="SDM_HGF2", f="SDM_HAW6"},
+  SDM_HGF3 = { t="SDM_HGF3", f="SDM_HAW7"},
   G7_GOGF1 = { t="G7_GOGN2", f="G7_GOGF1"}, -- TO BE REPLACED DO NOT USE
 
   -- 256-wide doors
