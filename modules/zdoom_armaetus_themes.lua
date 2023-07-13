@@ -1414,7 +1414,7 @@ ARMAETUS_ROOM_THEMES =
   tech_AITextures =
   {
     env = "building",
-    prob = 15,
+    prob = 30,
   
     walls =
     {
@@ -2692,7 +2692,7 @@ ARMAETUS_ROOM_THEMES =
   hell_gilded_bricks =
   {
     env = "building",
-    prob = 15,
+    prob = 30,
 
     walls =
     {
