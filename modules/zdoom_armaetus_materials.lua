@@ -1628,9 +1628,9 @@ ARMAETUS_MATERIALS = {
   SDM_HAW8 = { t="SDM_HAW8", f="SDM_HGF2"},
 
   -- flats
-  SDM_HGF1 = { t="SDM_HGF1", f="SDM_HAW5"},
-  SDM_HGF2 = { t="SDM_HGF2", f="SDM_HAW6"},
-  SDM_HGF3 = { t="SDM_HGF3", f="SDM_HAW7"},
+  SDM_HGF1 = { t="SDM_HAW5", f="SDM_HGF1"},
+  SDM_HGF2 = { t="SDM_HAW6", f="SDM_HGF2"},
+  SDM_HGF3 = { t="SDM_HAW7", f="SDM_HGF3"},
   G7_GOGF1 = { t="G7_GOGN2", f="G7_GOGF1"}, -- TO BE REPLACED DO NOT USE
 
   -- 256-wide doors
