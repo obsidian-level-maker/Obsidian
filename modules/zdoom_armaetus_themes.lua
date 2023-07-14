@@ -2779,6 +2779,88 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
+  hell_copper_steampunk =
+  {
+    env = "building",
+    prob = 30,
+
+    walls =
+    {
+      SD_HCSW1 = 5,
+      SD_HCSW2 = 5,
+      SD_HCSW3 = 5,
+      SD_HCSW4 = 5,
+      SD_HCSW5 = 5,
+      SD_HCSW6 = 5
+    },
+
+    floors =
+    {
+      FLAT8 = 2,
+      FLOOR0_1 = 2,
+      FLOOR0_2 = 2,
+      FLOOR3_3 = 2,
+      FLOOR4_1 = 2,
+      FLOOR4_5 = 2,
+      FLOOR4_6 = 2,
+      FLOOR5_2 = 2,
+      FLOOR5_4 = 2,
+      FLOOR7_1 = 2,
+
+      G8_BRNF1 = 5,
+      G8_BRNF2 = 5,
+      G8_BRNF3 = 5,
+
+      BRIK01 = 5,
+      EG03 = 5,
+      EG06 = 5,
+      GSTN04 = 5,
+      GSTN05 = 5,
+      RROCK10 = 5,
+      STARTANF = 5,
+
+      SD_HCSF1 = 15,
+      SD_HCSF2 = 15,
+      SD_HCSF3 = 15,
+      SD_HCSF4 = 15,
+      SD_HCSF5 = 15,
+      SD_HCSF6 = 15
+    },
+
+    ceilings =
+    {
+      FLAT8 = 2,
+      FLOOR0_1 = 2,
+      FLOOR0_2 = 2,
+      FLOOR3_3 = 2,
+      FLOOR4_1 = 2,
+      FLOOR4_5 = 2,
+      FLOOR4_6 = 2,
+      FLOOR5_2 = 2,
+      FLOOR5_4 = 2,
+      FLOOR7_1 = 2,
+
+      G8_BRNF1 = 5,
+      G8_BRNF2 = 5,
+      G8_BRNF3 = 5,
+
+      BRIK01 = 5,
+      EG03 = 5,
+      EG06 = 5,
+      GSTN04 = 5,
+      GSTN05 = 5,
+      RROCK10 = 5,
+      STARTANF = 5,
+
+      SD_HCSF1 = 15,
+      SD_HCSF2 = 15,
+      SD_HCSF3 = 15,
+      SD_HCSF4 = 15,
+      SD_HCSF5 = 15,
+      SD_HCSF6 = 15
+    }
+  },
+
   hell_armaetuscave =
   {
     env  = "cave",

@@ -1633,6 +1633,22 @@ ARMAETUS_MATERIALS = {
   SDM_HGF3 = { t="SDM_HAW7", f="SDM_HGF3"},
   G7_GOGF1 = { t="G7_GOGN2", f="G7_GOGF1"}, -- TO BE REPLACED DO NOT USE
 
+  -- copper steampunk hell (?!)
+  SD_HCSW1 = { t="SD_HCSW1" , f="SD_HCSF1"},
+  SD_HCSW2 = { t="SD_HCSW2" , f="SD_HCSF2"},
+  SD_HCSW3 = { t="SD_HCSW3" , f="SD_HCSF3"},
+  SD_HCSW4 = { t="SD_HCSW4" , f="SD_HCSF4"},
+  SD_HCSW5 = { t="SD_HCSW5" , f="SD_HCSF5"},
+  SD_HCSW6 = { t="SD_HCSW6" , f="SD_HCSF6"},
+
+  -- flats
+  SD_HCSF1 = { t="SD_HCSW1", f="SD_HCSF1"},
+  SD_HCSF2 = { t="SD_HCSW3", f="SD_HCSF2"},
+  SD_HCSF3 = { t="SD_HCSW4", f="SD_HCSF3"},
+  SD_HCSF4 = { t="SD_HCSW1", f="SD_HCSF4"},
+  SD_HCSF5 = { t="SD_HCSW3", f="SD_HCSF5"},
+  SD_HCSF6 = { t="SD_HCSW4", f="SD_HCSF6"},
+
   -- 256-wide doors
   G8_SVDR3 = { t="G8_SVDR3", f="FLAT23"},
 
