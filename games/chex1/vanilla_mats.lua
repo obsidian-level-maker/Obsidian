@@ -3,7 +3,7 @@ CHEX1.VANILLA_MATS =
     -- There are always added by Obsidian regardless of Engine selected
     "O_BOLT",
     -- Added for exit sign fabs
-    "CQ3_EXIT",
+    "CQ1_EXIT",
     -- Vanilla Flats
     "BLOOD1",
     "BLOOD2",

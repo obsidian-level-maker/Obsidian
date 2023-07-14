@@ -26,37 +26,11 @@ CHEX1.EPISODES =
     ep_index = 1,
 
     theme = "bazoik",
-    sky_patch = "CJSKY3A",
+    sky_patch = "SKY1",
     boss = "Maximus",
     sky_light = 0.75,
     dark_prob = 10
   },
-
--- E2M5 and E3M5 will exit when all bosses (Maximus, Flembomination
--- and Snotfolus) are dead, so perhaps prevent an exit door or
--- switch from appearing if any of those appear in these levels?
-
-  episode2 =
-  {
-    ep_index = 2,
-
-    theme = "spaceport",
-    sky_patch = "CJSKY3A",
-    boss = "Flembomination",
-    sky_light = 0.75,
-    dark_prob = 10
-  },
-
-  episode3 =
-  {
-    ep_index = 3,
-
-    theme = "villa",
-    sky_patch = "CJSKY3A",
-    boss = "Snotfolus",
-    sky_light = 0.75,
-    dark_prob = 10
-  }
 }
 
 
@@ -69,14 +43,14 @@ CHEX1.PREBUILT_LEVELS =
 --------------------------------------------------------------------
 
 function CHEX1.get_levels()
-  local EP_NUM  = sel(OB_CONFIG.length == "game",   3, 1)
+  local EP_NUM  = sel(OB_CONFIG.length == "game",   1, 1)
   local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 5)
 
   if OB_CONFIG.length == "few" then MAP_NUM = 4 end
 
   -- create episode info...
 
-  for ep_index = 1,3 do
+  for ep_index = 1,1 do
     local ep_info = CHEX1.EPISODES["episode" .. ep_index]
     assert(ep_info)
 
@@ -136,27 +110,27 @@ function CHEX1.get_levels()
         elseif OB_CONFIG.length == "episode" then
           if current_map == 5 then LEV.is_procedural_gotcha = true end
         elseif OB_CONFIG.length == "game" then
-          if current_map == 15 then LEV.is_procedural_gotcha = true end
+          if current_map == 5 then LEV.is_procedural_gotcha = true end
         end
       end
 
       if PARAM.gotcha_frequency == "epi" then
-        if current_map % 5 == 0 then
+        if current_map == 3 then
           LEV.is_procedural_gotcha = true
         end
       end
       if PARAM.gotcha_frequency == "2epi" then
-        if current_map == ep_index * 5 or current_map == ep_index * 5 - 2 then
+        if current_map == 2 or current_map == 4 then
           LEV.is_procedural_gotcha = true
         end
       end
       if PARAM.gotcha_frequency == "3epi" then
-        if current_map == ep_index * 5 or current_map == ep_index * 5 - 2 or current_map == ep_index * 5 - 4 then
+        if current_map == 1 or current_map == 3 or current_map == 5 then
           LEV.is_procedural_gotcha = true
         end
       end
-      if PARAM.gotcha_frequency == "4epi" then -- Latter 4/5 of each episode? - Dasho
-        if current_map ~= 1 and current_map ~= 6 and current_map ~= 11 then
+      if PARAM.gotcha_frequency == "4epi" then
+        if current_map ~= 1 then
           LEV.is_procedural_gotcha = true
         end
       end
