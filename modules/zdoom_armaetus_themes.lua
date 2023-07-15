@@ -326,6 +326,10 @@ ARMAETUS_ROOM_THEMES =
       SDOM_WL4 = 18,
       SDOM_WL5 = 18,
       SDOM_WL6 = 18,
+      SDOM_WL7 = 18,
+      SDOM_WL8 = 18,
+      SDOM_WL9 = 18,
+      SDOM_WLA = 18,
 
       SDOM_WG1 = 18,
       SDOM_WG2 = 18,
@@ -973,6 +977,10 @@ ARMAETUS_ROOM_THEMES =
       SDOM_WL4 = 7,
       SDOM_WL5 = 7,
       SDOM_WL6 = 7,
+      SDOM_WL7 = 7,
+      SDOM_WL8 = 7,
+      SDOM_WL9 = 7,
+      SDOM_WLA = 7,
 
       SDOM_WG1 = 9,
       SDOM_WG2 = 9,
@@ -1031,6 +1039,10 @@ ARMAETUS_ROOM_THEMES =
       SDOM_FT4 = 15,
       SDOM_FT5 = 15,
       SDOM_FT6 = 15,
+      SDOM_FT7 = 15,
+      SDOM_FT8 = 15,
+      SDOM_FT9 = 15,
+      SDOM_FTA = 15,
 
       SDOM_FG1 = 25,
       SDOM_FG2 = 25
@@ -1066,6 +1078,10 @@ ARMAETUS_ROOM_THEMES =
       SDOM_FT4 = 7,
       SDOM_FT5 = 7,
       SDOM_FT6 = 7,
+      SDOM_FT7 = 7,
+      SDOM_FT8 = 7,
+      SDOM_FT9 = 7,
+      SDOM_FTA = 7,
 
       SDOM_FG1 = 10,
       SDOM_FG2 = 10
@@ -1126,6 +1142,10 @@ ARMAETUS_ROOM_THEMES =
       SDOM_WL4 = 25,
       SDOM_WL5 = 25,
       SDOM_WL6 = 25,
+      SDOM_WL7 = 25,
+      SDOM_WL8 = 25,
+      SDOM_WL9 = 25,
+      SDOM_WLA = 25,
     },
 
     floors =
@@ -1158,6 +1178,10 @@ ARMAETUS_ROOM_THEMES =
       SDOM_FT4 = 10,
       SDOM_FT5 = 10,
       SDOM_FT6 = 10,
+      SDOM_FT7 = 10,
+      SDOM_FT8 = 10,
+      SDOM_FT9 = 10,
+      SDOM_FTA = 10,
 
       SDOM_FG1 = 15,
       SDOM_FG2 = 15
@@ -1185,6 +1209,10 @@ ARMAETUS_ROOM_THEMES =
       SDOM_FT4 = 5,
       SDOM_FT5 = 5,
       SDOM_FT6 = 5,
+      SDOM_FT7 = 5,
+      SDOM_FT8 = 5,
+      SDOM_FT9 = 5,
+      SDOM_FTA = 5,
 
       SDOM_FG1 = 20,
       SDOM_FG2 = 20
@@ -1424,6 +1452,11 @@ ARMAETUS_ROOM_THEMES =
       SDOM_WL4 = 5,
       SDOM_WL5 = 5,
       SDOM_WL6 = 5,
+      SDOM_WL7 = 5,
+      SDOM_WL8 = 5,
+      SDOM_WL9 = 5,
+      SDOM_WLA = 5,
+
       SDOM_WG1 = 5,
       SDOM_WG2 = 5,
       SDOM_WG3 = 5,
@@ -1458,7 +1491,11 @@ ARMAETUS_ROOM_THEMES =
       SDOM_FT3 = 5,
       SDOM_FT4 = 5,
       SDOM_FT5 = 5,
-      SDOM_FT6 = 5
+      SDOM_FT6 = 5,
+      SDOM_FT7 = 5,
+      SDOM_FT8 = 5,
+      SDOM_FT9 = 5,
+      SDOM_FTA = 5
     },
 
     ceilings =
@@ -1476,7 +1513,11 @@ ARMAETUS_ROOM_THEMES =
       SDOM_FT3 = 5,
       SDOM_FT4 = 5,
       SDOM_FT5 = 5,
-      SDOM_FT6 = 5
+      SDOM_FT6 = 5,
+      SDOM_FT7 = 5,
+      SDOM_FT8 = 5,
+      SDOM_FT9 = 5,
+      SDOM_FTA = 5
     }
   },
 
@@ -1559,6 +1600,10 @@ ARMAETUS_ROOM_THEMES =
       SDOM_FT4 = 17,
       SDOM_FT5 = 17,
       SDOM_FT6 = 17,
+      SDOM_FT7 = 17,
+      SDOM_FT8 = 17,
+      SDOM_FT9 = 17,
+      SDOM_FTA = 17,
 
       SDOM_FG1 = 25,
       SDOM_FG2 = 25
@@ -1689,6 +1734,10 @@ ARMAETUS_ROOM_THEMES =
       SDOM_FT4 = 17,
       SDOM_FT5 = 17,
       SDOM_FT6 = 17,
+      SDOM_FT7 = 17,
+      SDOM_FT8 = 17,
+      SDOM_FT9 = 17,
+      SDOM_FTA = 17,
 
       SDOM_FG1 = 20,
       SDOM_FG2 = 20
@@ -3696,6 +3745,10 @@ ARMAETUS_ROOM_THEMES =
       SDOM_WL4 = 25,
       SDOM_WL5 = 25,
       SDOM_WL6 = 25,
+      SDOM_WL7 = 25,
+      SDOM_WL8 = 25,
+      SDOM_WL9 = 25,
+      SDOM_WLA = 25,
 
       SDOM_WG1 = 28,
       SDOM_WG2 = 28,
@@ -3754,6 +3807,10 @@ ARMAETUS_ROOM_THEMES =
       SDOM_FT4 = 18,
       SDOM_FT5 = 18,
       SDOM_FT6 = 18,
+      SDOM_FT7 = 18,
+      SDOM_FT8 = 18,
+      SDOM_FT9 = 18,
+      SDOM_FTA = 18,
 
       SDOM_FG1 = 25,
       SDOM_FG2 = 25
@@ -3796,6 +3853,10 @@ ARMAETUS_ROOM_THEMES =
       SDOM_FT4 = 18,
       SDOM_FT5 = 18,
       SDOM_FT6 = 18,
+      SDOM_FT7 = 18,
+      SDOM_FT8 = 18,
+      SDOM_FT9 = 18,
+      SDOM_FTA = 18,
 
       SDOM_FG1 = 25,
       SDOM_FG2 = 25
@@ -4094,6 +4155,10 @@ ARMAETUS_ROOM_THEMES =
       SDOM_WL4 = 22,
       SDOM_WL5 = 22,
       SDOM_WL6 = 22,
+      SDOM_WL7 = 22,
+      SDOM_WL8 = 22,
+      SDOM_WL9 = 22,
+      SDOM_WLA = 22,
 
       SDOM_WG1 = 25,
       SDOM_WG2 = 25,
@@ -4364,6 +4429,10 @@ ARMAETUS_ROOM_THEMES =
       SDOM_FT4 = 7,
       SDOM_FT5 = 7,
       SDOM_FT6 = 7,
+      SDOM_FT7 = 7,
+      SDOM_FT8 = 7,
+      SDOM_FT9 = 7,
+      SDOM_FTA = 7,
 
       SDOM_FG1 = 10,
       SDOM_FG2 = 10
@@ -5827,6 +5896,10 @@ ARMAETUS_THEMES =
       SDOM_WL4 = 22,
       SDOM_WL5 = 22,
       SDOM_WL6 = 22,
+      SDOM_WL7 = 22,
+      SDOM_WL8 = 22,
+      SDOM_WL9 = 22,
+      SDOM_WLA = 22,
 
       SDOM_WG1 = 25,
       SDOM_WG2 = 25,

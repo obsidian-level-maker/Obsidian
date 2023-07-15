@@ -1575,8 +1575,12 @@ ARMAETUS_MATERIALS = {
   SDOM_WL2 = { t="SDOM_WL2", f="SDOM_FT2"},
   SDOM_WL3 = { t="SDOM_WL3", f="SDOM_FT3"},
   SDOM_WL4 = { t="SDOM_WL4", f="SDOM_FT4"},
-  SDOM_WL5 = { t="SDOM_WL5", f="SDOM_FT1"},
-  SDOM_WL6 = { t="SDOM_WL6", f="SDOM_FT2"},
+  SDOM_WL5 = { t="SDOM_WL5", f="SDOM_FT5"},
+  SDOM_WL6 = { t="SDOM_WL6", f="SDOM_FT6"},
+  SDOM_WL7 = { t="SDOM_WL7", f="SDOM_FT7"},
+  SDOM_WL8 = { t="SDOM_WL8", f="SDOM_FT8"},
+  SDOM_WL9 = { t="SDOM_WL9", f="SDOM_FT9"},
+  SDOM_WLA = { t="SDOM_WLA", f="SDOM_FTA"},
   -- green
   SDOM_WG1 = { t="SDOM_WG1", f="SDOM_FG1"},
   SDOM_WG2 = { t="SDOM_WG2", f="SDOM_FG2"},
@@ -1598,7 +1602,12 @@ ARMAETUS_MATERIALS = {
   SDOM_FT3 = { t="SDOM_WL3", f="SDOM_FT3"},
   SDOM_FT4 = { t="SDOM_WL4", f="SDOM_FT4"},
   SDOM_FT5 = { t="SDOM_WL3", f="SDOM_FT5"},
-  SDOM_FT6 = { t="SDOM_WL6", f="SDOM_FT6"},
+  SDOM_FT6 = { t="SDOM_WL2", f="SDOM_FT6"},
+  SDOM_FT7 = { t="SDOM_WL1", f="SDOM_FT7"},
+  SDOM_FT8 = { t="SDOM_WL4", f="SDOM_FT8"},
+  SDOM_FT9 = { t="SDOM_WL2", f="SDOM_FT9"},
+  SDOM_FTA = { t="SDOM_WL3", f="SDOM_FTA"},
+
   -- green
   SDOM_FG1 = { t="SDOM_WG1", f="SDOM_FG1"},
   SDOM_FG2 = { t="SDOM_WG2", f="SDOM_FG2"},
