@@ -1464,7 +1464,83 @@ ARMAETUS_ROOM_THEMES =
       SDOM_WG5 = 5,
       SDOM_WG6 = 5,
       SDOM_WG7 = 5,
-      SDOM_WG8 = 5
+      SDOM_WG8 = 5,
+
+      SD_GTHW1 = 2,
+      SD_GTHW2 = 2,
+      SD_GTHW3 = 2,
+      SD_GTHW4 = 2,
+      SD_GTHW5 = 2,
+      SD_GTHW6 = 2
+    },
+
+    floors =
+    {
+      SLIME14 = 10,
+      FLOOR4_8 = 10,
+      FLAT1 = 10,
+      FLAT3 = 10,
+      FLAT19 = 10,
+
+      GRATE1 = 2,
+      GRATE2 = 2,
+      GRATE3 = 2,
+      GRATE4 = 2,
+      GRATE5 = 2,
+      GRATE6 = 2,
+      GRATE7 = 2,
+      GRATE8 = 2,
+
+      SDOM_FG1 = 5,
+      SDOM_FG2 = 5,
+      SDOM_FT1 = 5,
+      SDOM_FT2 = 5,
+      SDOM_FT3 = 5,
+      SDOM_FT4 = 5,
+      SDOM_FT5 = 5,
+      SDOM_FT6 = 5,
+      SDOM_FT7 = 5,
+      SDOM_FT8 = 5,
+      SDOM_FT9 = 5,
+      SDOM_FTA = 5
+    },
+
+    ceilings =
+    {
+      SLIME14 = 10,
+      FLOOR4_8 = 10,
+      FLAT1 = 10,
+      FLAT3 = 10,
+      FLAT19 = 10,
+
+      SDOM_FG1 = 5,
+      SDOM_FG2 = 5,
+      SDOM_FT1 = 5,
+      SDOM_FT2 = 5,
+      SDOM_FT3 = 5,
+      SDOM_FT4 = 5,
+      SDOM_FT5 = 5,
+      SDOM_FT6 = 5,
+      SDOM_FT7 = 5,
+      SDOM_FT8 = 5,
+      SDOM_FT9 = 5,
+      SDOM_FTA = 5
+    }
+  },
+
+  tech_goth_tech =
+  {
+    env = "building",
+    prob = 15,
+  
+    walls =
+    {
+      SD_GTHW1 = 10,
+      SD_GTHW2 = 10,
+      SD_GTHW3 = 10,
+      SD_GTHW4 = 10,
+      SD_GTHW5 = 10,
+      SD_GTHW6 = 10
     },
 
     floors =

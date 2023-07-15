@@ -1620,6 +1620,14 @@ ARMAETUS_MATERIALS = {
   SDM_CTR5 = { t="SDM_CTR5", f="SDMCTRF1"},
   SDMCTRF1 = { t="SDM_CTR1", f="SDMCTRF1"},
 
+  -- MSSP-GOTH-TECH --
+  SD_GTHW1 = { t="SD_GTHW1", f="SDOM_FT9"},
+  SD_GTHW2 = { t="SD_GTHW2", f="SDOM_FTA"},
+  SD_GTHW3 = { t="SD_GTHW3", f="SDOM_FT3"},
+  SD_GTHW4 = { t="SD_GTHW4", f="SDOM_FT4"},
+  SD_GTHW5 = { t="SD_GTHW5", f="SDOM_FT5"},
+  SD_GTHW6 = { t="SD_GTHW6", f="SDOM_FT1"},
+
   -- MSSP-GOTH --
   -- green-ish gothic metal walls with skulls (128px)
   G7_GOGN1 = { t="G7_GOGN1", f="G7_GOGF1"},
