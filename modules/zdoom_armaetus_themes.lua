@@ -1502,7 +1502,14 @@ ARMAETUS_ROOM_THEMES =
       SDOM_FT7 = 5,
       SDOM_FT8 = 5,
       SDOM_FT9 = 5,
-      SDOM_FTA = 5
+      SDOM_FTA = 5,
+
+      SD_GTHF1 = 1,
+      SD_GTHF2 = 1,
+      SD_GTHF3 = 1,
+      SD_GTHF4 = 1,
+      SD_GTHF5 = 1,
+      SD_GTHF6 = 1
     },
 
     ceilings =
@@ -1571,7 +1578,14 @@ ARMAETUS_ROOM_THEMES =
       SDOM_FT7 = 5,
       SDOM_FT8 = 5,
       SDOM_FT9 = 5,
-      SDOM_FTA = 5
+      SDOM_FTA = 5,
+
+      SD_GTHF1 = 18,
+      SD_GTHF2 = 18,
+      SD_GTHF3 = 18,
+      SD_GTHF4 = 18,
+      SD_GTHF5 = 18,
+      SD_GTHF6 = 18
     },
 
     ceilings =
@@ -1593,7 +1607,12 @@ ARMAETUS_ROOM_THEMES =
       SDOM_FT7 = 5,
       SDOM_FT8 = 5,
       SDOM_FT9 = 5,
-      SDOM_FTA = 5
+      SDOM_FTA = 5,
+
+      SD_GTHF1 = 18,
+      SD_GTHF2 = 18,
+      SD_GTHF3 = 18,
+      SD_GTHF4 = 18
     }
   },
 
