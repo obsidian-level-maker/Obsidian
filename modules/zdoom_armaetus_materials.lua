@@ -1627,6 +1627,10 @@ ARMAETUS_MATERIALS = {
   SD_GTHW4 = { t="SD_GTHW4", f="SD_GTHF4"},
   SD_GTHW5 = { t="SD_GTHW5", f="SD_GTHF5"},
   SD_GTHW6 = { t="SD_GTHW6", f="SD_GTHF6"},
+  SD_GTHW7 = { t="SD_GTHW7", f="SDOM_FT1"},
+  SD_GTHW8 = { t="SD_GTHW8", f="SDOM_FT3"},
+  SD_GTHW9 = { t="SD_GTHW9", f="SD_GTHF4"},
+  SD_GTHWA = { t="SD_GTHWA", f="SD_GTHF5"},
 
   -- flats
   SD_GTHF1 = { t="SD_GTHW1", f="SD_GTHF1"},
