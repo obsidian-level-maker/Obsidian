@@ -222,7 +222,9 @@ function Quest_create_initial_quest(LEVEL)
     if R.is_start and #LEVEL.rooms > 1 then return -1 end
 
     -- must be a leaf room
-    if R:total_conns() > 1 then return -1 end
+    --[[if R:total_conns() > 1 then 
+      return -1 
+    end]]
 
     local conn = R.conns[1]
 
@@ -275,6 +277,10 @@ function Quest_create_initial_quest(LEVEL)
 
     if not R.is_sub_room then
       score = score + gui.random() * 10
+    end
+
+    if R:total_conns() > 1 then
+      score = score / 10
     end
 
     R.exit_score = score
