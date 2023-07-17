@@ -233,7 +233,7 @@ ARMAETUS_ROOM_THEMES =
 
 -- START OF TECH THEMES
 
-  tech_GrayMet =
+  tech_GrayMet = --120
   {
     env = "building",
     prob = 120,
@@ -412,7 +412,7 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
-  tech_Computers =
+  tech_Computers = --15
   {
     prob = 15,
     env = "building",
@@ -805,7 +805,7 @@ ARMAETUS_ROOM_THEMES =
   },]]
 
   -- Hooray, CEMENT textures!
-  tech_Cement =
+  tech_Cement = --50
   {
     env = "building",
     prob = 50,
@@ -850,7 +850,7 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
-  tech_Shiny =
+  tech_Shiny = --100
   {
     prob = 100,
     env = "building",
@@ -933,7 +933,7 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
-  tech_HeavyMetal =
+  tech_HeavyMetal = --120
   {
     env = "building",
     prob = 120,
@@ -1109,7 +1109,7 @@ ARMAETUS_ROOM_THEMES =
     },
   },
 
-  tech_VeryGray =
+  tech_VeryGray = --100
   {
     env = "building",
     prob = 100,
@@ -1240,7 +1240,7 @@ ARMAETUS_ROOM_THEMES =
     },
   },
 
-  tech_VeryBrown =
+  tech_VeryBrown = --60
   {
     env = "building",
     prob = 60,
@@ -1315,7 +1315,7 @@ ARMAETUS_ROOM_THEMES =
     },
   },
 
-  tech_darkBronze =
+  tech_darkBronze = --40
   {
     env = "building",
     prob = 40,
@@ -1393,7 +1393,7 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
-  tech_redFloorsBrownWalls =
+  tech_redFloorsBrownWalls = --25
   {
     env = "building",
     prob = 25,
@@ -1460,7 +1460,7 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
-  tech_AITextures =
+  tech_AITextures = --30
   {
     env = "building",
     prob = 30,
@@ -1560,10 +1560,10 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
-  tech_goth_tech =
+  tech_goth_tech = --30
   {
     env = "building",
-    prob = 15,
+    prob = 30,
   
     walls =
     {
@@ -1645,7 +1645,7 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
-  tech_Outdoors_generic =
+  tech_Outdoors_generic = --50
   {
     env  = "outdoor",
     prob = 50,
