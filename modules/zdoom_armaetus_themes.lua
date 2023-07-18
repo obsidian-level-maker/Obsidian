@@ -1000,7 +1000,9 @@ ARMAETUS_ROOM_THEMES =
       SD_GTHW7 = 2,
       SD_GTHW8 = 2,
       SD_GTHW9 = 2,
-      SD_GTHWA = 2
+      SD_GTHWA = 2,
+      SD_GTHWB = 2,
+      SD_GTHWC = 2
     },
 
     floors =
@@ -1496,7 +1498,9 @@ ARMAETUS_ROOM_THEMES =
       SD_GTHW7 = 2,
       SD_GTHW8 = 2,
       SD_GTHW9 = 2,
-      SD_GTHWA = 2
+      SD_GTHWA = 2,
+      SD_GTHWB = 2,
+      SD_GTHWC = 2
     },
 
     floors =
@@ -1576,7 +1580,9 @@ ARMAETUS_ROOM_THEMES =
       SD_GTHW7 = 10,
       SD_GTHW8 = 10,
       SD_GTHW9 = 10,
-      SD_GTHWA = 10
+      SD_GTHWA = 10,
+      SD_GTHWB = 10,
+      SD_GTHWC = 10,
     },
 
     floors =

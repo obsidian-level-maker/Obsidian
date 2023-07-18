@@ -1631,6 +1631,8 @@ ARMAETUS_MATERIALS = {
   SD_GTHW8 = { t="SD_GTHW8", f="SDOM_FT3"},
   SD_GTHW9 = { t="SD_GTHW9", f="SD_GTHF4"},
   SD_GTHWA = { t="SD_GTHWA", f="SD_GTHF5"},
+  SD_GTHWB = { t="SD_GTHWB", f="SDOM_FT9"},
+  SD_GTHWC = { t="SD_GTHWC", f="SDOM_FTA"},
 
   -- flats
   SD_GTHF1 = { t="SD_GTHW1", f="SD_GTHF1"},
