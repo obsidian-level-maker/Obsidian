@@ -145,7 +145,7 @@ PREFABS.Window_generic_cubby_holes =
 
   group  = "gtd_window_cubby_holes",
   port = "zdoom",
-  rank = 2,
+  rank = 1,
 
   prob   = 50,
 
@@ -194,7 +194,7 @@ PREFABS.Window_generic_cubby_holes_hell =
   map = "MAP05",
 
   theme = "hell",
-  rank = 1,
+  rank = 2,
 
   seed_w = 1,
 
@@ -208,7 +208,7 @@ PREFABS.Window_generic_cubby_holes_2_hell =
   map = "MAP06",
 
   theme = "hell",
-  rank = 1,
+  rank = 2,
 
   seed_w = 2,
 
@@ -222,7 +222,7 @@ PREFABS.Window_generic_cubby_holes_3_hell =
   map = "MAP06",
 
   theme = "hell",
-  rank = 1,
+  rank = 2,
 
   seed_w = 3,
 
@@ -236,7 +236,7 @@ PREFABS.Window_generic_cubby_holes_4_hell =
   map = "MAP06",
 
   theme = "hell",
-  rank = 1,
+  rank = 2,
 
   seed_w = 4,
 
