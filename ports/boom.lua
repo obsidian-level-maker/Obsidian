@@ -145,7 +145,7 @@ OB_PORTS["boom"] =
 
   priority = 98,  -- this makes it top-most, and the default engine
 
-  game = { doom1=1, doom2=1, hacx=1 },
+  game = { chex1=1, doom1=1, doom2=1, hacx=1 },
 
   tables =
   {
@@ -219,7 +219,7 @@ OB_PORTS["dsda"] =
 
   extends = "advanced",
 
-  game = { doom1=1, doom2=1, hacx=1, heretic=1, hexen=1 },
+  game = { chex1=1, doom1=1, doom2=1, hacx=1, heretic=1, hexen=1 },
 
   tables =
   {

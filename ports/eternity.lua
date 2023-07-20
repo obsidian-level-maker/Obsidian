@@ -26,7 +26,7 @@ OB_PORTS["eternity"] =
 
   extends = "advanced",
 
-  game = { doom1=1, doom2=1, heretic=1, hexen=1 },
+  game = { chex3=1, doom1=1, doom2=1, heretic=1, hexen=1 },
 
   tables =
   {

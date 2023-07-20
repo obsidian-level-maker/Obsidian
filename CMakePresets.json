@@ -87,56 +87,6 @@
       }
     },
     {
-      "name": "vscode+msvc2019",
-      "description": "Compile natively on Windows (Dasho)",
-      "binaryDir": "build/vscode",
-      "generator": "Visual Studio 16 2019",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release"
-      }
-    },
-    {
-      "name": "vscode+msvc2019+debug",
-      "description": "Compile natively on Windows (Dasho)",
-      "binaryDir": "build/vscode",
-      "generator": "Visual Studio 16 2019",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug",
-        "OBSIDIAN_MSVC_DEBUG": "ON"
-      }
-    },
-    {
-      "name": "vscode+msvc2019+win32",
-      "description": "Compile natively on Windows (32-bit) (Dasho)",
-      "binaryDir": "build/vscode",
-      "generator": "Visual Studio 16 2019",
-      "architecture": "Win32",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release"
-      }
-    },
-    {
-      "name": "vscode+msvc2019-console",
-      "description": "Compile natively on Windows (CLI-only) (Dasho)",
-      "binaryDir": "build/vscode",
-      "generator": "Visual Studio 16 2019",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release",
-        "CONSOLE_ONLY": "ON"
-      }
-    },
-    {
-      "name": "vscode+msvc2019+win32-console",
-      "description": "Compile natively on Windows (CLI-only) (32-bit) (Dasho)",
-      "binaryDir": "build/vscode",
-      "generator": "Visual Studio 16 2019",
-      "architecture": "Win32",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release",
-        "CONSOLE_ONLY": "ON"
-      }
-    },
-    {
       "name": "msvc",
       "description": "Compile natively on Windows",
       "binaryDir": "build/msvc",
@@ -196,31 +146,6 @@
       "name": "msvc",
       "configuration": "Release",
       "configurePreset": "msvc"
-    },
-    {
-      "name": "vscode+msvc2019",
-      "configuration": "Release",
-      "configurePreset": "vscode+msvc2019"
-    },
-    {
-      "name": "vscode+msvc2019+debug",
-      "configuration": "Debug",
-      "configurePreset": "vscode+msvc2019+debug"
-    },
-    {
-      "name": "vscode+msvc2019+win32",
-      "configuration": "Release",
-      "configurePreset": "vscode+msvc2019+win32"
-    },
-    {
-      "name": "vscode+msvc2019-console",
-      "configuration": "Release",
-      "configurePreset": "vscode+msvc2019-console"
-    },
-    {
-      "name": "vscode+msvc2019+win32-console",
-      "configuration": "Release",
-      "configurePreset": "vscode+msvc2019+win32"
     },
     {
       "name": "msys",

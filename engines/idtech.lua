@@ -50,7 +50,7 @@ OB_ENGINES["idtech_1"] =
 
   priority = 100,
 
-  game = { chex3=1, doom1=1, doom2=1, hacx=1, harmony=1, heretic=1, hexen=1, strife=1 },
+  game = { chex1=1, chex3=1, doom1=1, doom2=1, hacx=1, harmony=1, heretic=1, hexen=1, strife=1 },
 
   tables =
   {
