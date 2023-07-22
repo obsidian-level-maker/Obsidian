@@ -220,9 +220,12 @@ function Quest_create_initial_quest(LEVEL)
     if R.is_exit    then return -1 end
     if R.is_hallway then return -1 end
     if R.is_start and #LEVEL.rooms > 1 then return -1 end
+    if R.is_exit then return -1 end
 
-    -- must be a leaf room
-    if R:total_conns() > 1 then return -1 end
+    -- must be a leaf room, but only if secret
+    if R:total_conns() > 1 and secret_mode then 
+      return -1 
+    end
 
     local conn = R.conns[1]
 
@@ -275,6 +278,10 @@ function Quest_create_initial_quest(LEVEL)
 
     if not R.is_sub_room then
       score = score + gui.random() * 10
+    end
+
+    if R:total_conns() > 1 then
+      score = score / 10
     end
 
     R.exit_score = score
@@ -3165,7 +3172,7 @@ function Quest_room_themes(LEVEL)
       or OB_CONFIG.game == "doom1"
       or OB_CONFIG.game == "ultdoom")
       and not PARAM.obsidian_resource_pack_active then
-        c_tab[hues] = c_tab[hues_compat]
+        c_tab = LIGHT_COLORS_COMPAT
       end
 
       for _,color_set in pairs(color_group) do

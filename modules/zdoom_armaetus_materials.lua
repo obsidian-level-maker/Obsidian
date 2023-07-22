@@ -1575,8 +1575,12 @@ ARMAETUS_MATERIALS = {
   SDOM_WL2 = { t="SDOM_WL2", f="SDOM_FT2"},
   SDOM_WL3 = { t="SDOM_WL3", f="SDOM_FT3"},
   SDOM_WL4 = { t="SDOM_WL4", f="SDOM_FT4"},
-  SDOM_WL5 = { t="SDOM_WL5", f="SDOM_FT1"},
-  SDOM_WL6 = { t="SDOM_WL6", f="SDOM_FT2"},
+  SDOM_WL5 = { t="SDOM_WL5", f="SDOM_FT5"},
+  SDOM_WL6 = { t="SDOM_WL6", f="SDOM_FT6"},
+  SDOM_WL7 = { t="SDOM_WL7", f="SDOM_FT7"},
+  SDOM_WL8 = { t="SDOM_WL8", f="SDOM_FT8"},
+  SDOM_WL9 = { t="SDOM_WL9", f="SDOM_FT9"},
+  SDOM_WLA = { t="SDOM_WLA", f="SDOM_FTA"},
   -- green
   SDOM_WG1 = { t="SDOM_WG1", f="SDOM_FG1"},
   SDOM_WG2 = { t="SDOM_WG2", f="SDOM_FG2"},
@@ -1598,7 +1602,12 @@ ARMAETUS_MATERIALS = {
   SDOM_FT3 = { t="SDOM_WL3", f="SDOM_FT3"},
   SDOM_FT4 = { t="SDOM_WL4", f="SDOM_FT4"},
   SDOM_FT5 = { t="SDOM_WL3", f="SDOM_FT5"},
-  SDOM_FT6 = { t="SDOM_WL6", f="SDOM_FT6"},
+  SDOM_FT6 = { t="SDOM_WL2", f="SDOM_FT6"},
+  SDOM_FT7 = { t="SDOM_WL1", f="SDOM_FT7"},
+  SDOM_FT8 = { t="SDOM_WL4", f="SDOM_FT8"},
+  SDOM_FT9 = { t="SDOM_WL2", f="SDOM_FT9"},
+  SDOM_FTA = { t="SDOM_WL3", f="SDOM_FTA"},
+
   -- green
   SDOM_FG1 = { t="SDOM_WG1", f="SDOM_FG1"},
   SDOM_FG2 = { t="SDOM_WG2", f="SDOM_FG2"},
@@ -1610,6 +1619,28 @@ ARMAETUS_MATERIALS = {
   SDM_CTR4 = { t="SDM_CTR4", f="SDMCTRF1"},
   SDM_CTR5 = { t="SDM_CTR5", f="SDMCTRF1"},
   SDMCTRF1 = { t="SDM_CTR1", f="SDMCTRF1"},
+
+  -- MSSP-GOTH-TECH --
+  SD_GTHW1 = { t="SD_GTHW1", f="SD_GTHF1"},
+  SD_GTHW2 = { t="SD_GTHW2", f="SD_GTHF2"},
+  SD_GTHW3 = { t="SD_GTHW3", f="SD_GTHF3"},
+  SD_GTHW4 = { t="SD_GTHW4", f="SD_GTHF4"},
+  SD_GTHW5 = { t="SD_GTHW5", f="SD_GTHF5"},
+  SD_GTHW6 = { t="SD_GTHW6", f="SD_GTHF6"},
+  SD_GTHW7 = { t="SD_GTHW7", f="SDOM_FT1"},
+  SD_GTHW8 = { t="SD_GTHW8", f="SDOM_FT3"},
+  SD_GTHW9 = { t="SD_GTHW9", f="SD_GTHF4"},
+  SD_GTHWA = { t="SD_GTHWA", f="SD_GTHF5"},
+  SD_GTHWB = { t="SD_GTHWB", f="SDOM_FT9"},
+  SD_GTHWC = { t="SD_GTHWC", f="SDOM_FTA"},
+
+  -- flats
+  SD_GTHF1 = { t="SD_GTHW1", f="SD_GTHF1"},
+  SD_GTHF2 = { t="SD_GTHW2", f="SD_GTHF2"},
+  SD_GTHF3 = { t="SD_GTHW3", f="SD_GTHF3"},
+  SD_GTHF4 = { t="SD_GTHW4", f="SD_GTHF4"},
+  SD_GTHF5 = { t="SD_GTHW5", f="SD_GTHF5"},
+  SD_GTHF6 = { t="SD_GTHW6", f="SD_GTHF6"},
 
   -- MSSP-GOTH --
   -- green-ish gothic metal walls with skulls (128px)
@@ -1628,10 +1659,26 @@ ARMAETUS_MATERIALS = {
   SDM_HAW8 = { t="SDM_HAW8", f="SDM_HGF2"},
 
   -- flats
-  SDM_HGF1 = { t="SDM_HGF1", f="SDM_HAW5"},
-  SDM_HGF2 = { t="SDM_HGF2", f="SDM_HAW6"},
-  SDM_HGF3 = { t="SDM_HGF3", f="SDM_HAW7"},
+  SDM_HGF1 = { t="SDM_HAW5", f="SDM_HGF1"},
+  SDM_HGF2 = { t="SDM_HAW6", f="SDM_HGF2"},
+  SDM_HGF3 = { t="SDM_HAW7", f="SDM_HGF3"},
   G7_GOGF1 = { t="G7_GOGN2", f="G7_GOGF1"}, -- TO BE REPLACED DO NOT USE
+
+  -- copper steampunk hell (?!)
+  SD_HCSW1 = { t="SD_HCSW1" , f="SD_HCSF1"},
+  SD_HCSW2 = { t="SD_HCSW2" , f="SD_HCSF2"},
+  SD_HCSW3 = { t="SD_HCSW3" , f="SD_HCSF3"},
+  SD_HCSW4 = { t="SD_HCSW4" , f="SD_HCSF4"},
+  SD_HCSW5 = { t="SD_HCSW5" , f="SD_HCSF5"},
+  SD_HCSW6 = { t="SD_HCSW6" , f="SD_HCSF6"},
+
+  -- flats
+  SD_HCSF1 = { t="SD_HCSW1", f="SD_HCSF1"},
+  SD_HCSF2 = { t="SD_HCSW3", f="SD_HCSF2"},
+  SD_HCSF3 = { t="SD_HCSW4", f="SD_HCSF3"},
+  SD_HCSF4 = { t="SD_HCSW1", f="SD_HCSF4"},
+  SD_HCSF5 = { t="SD_HCSW3", f="SD_HCSF5"},
+  SD_HCSF6 = { t="SD_HCSW4", f="SD_HCSF6"},
 
   -- 256-wide doors
   G8_SVDR3 = { t="G8_SVDR3", f="FLAT23"},

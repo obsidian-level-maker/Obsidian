@@ -233,7 +233,7 @@ ARMAETUS_ROOM_THEMES =
 
 -- START OF TECH THEMES
 
-  tech_GrayMet =
+  tech_GrayMet = --120
   {
     env = "building",
     prob = 120,
@@ -326,6 +326,10 @@ ARMAETUS_ROOM_THEMES =
       SDOM_WL4 = 18,
       SDOM_WL5 = 18,
       SDOM_WL6 = 18,
+      SDOM_WL7 = 18,
+      SDOM_WL8 = 18,
+      SDOM_WL9 = 18,
+      SDOM_WLA = 18,
 
       SDOM_WG1 = 18,
       SDOM_WG2 = 18,
@@ -408,7 +412,7 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
-  tech_Computers =
+  tech_Computers = --15
   {
     prob = 15,
     env = "building",
@@ -801,7 +805,7 @@ ARMAETUS_ROOM_THEMES =
   },]]
 
   -- Hooray, CEMENT textures!
-  tech_Cement =
+  tech_Cement = --50
   {
     env = "building",
     prob = 50,
@@ -846,7 +850,7 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
-  tech_Shiny =
+  tech_Shiny = --100
   {
     prob = 100,
     env = "building",
@@ -929,7 +933,7 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
-  tech_HeavyMetal =
+  tech_HeavyMetal = --120
   {
     env = "building",
     prob = 120,
@@ -973,6 +977,10 @@ ARMAETUS_ROOM_THEMES =
       SDOM_WL4 = 7,
       SDOM_WL5 = 7,
       SDOM_WL6 = 7,
+      SDOM_WL7 = 7,
+      SDOM_WL8 = 7,
+      SDOM_WL9 = 7,
+      SDOM_WLA = 7,
 
       SDOM_WG1 = 9,
       SDOM_WG2 = 9,
@@ -981,7 +989,20 @@ ARMAETUS_ROOM_THEMES =
       SDOM_WG5 = 9,
       SDOM_WG6 = 9,
       SDOM_WG7 = 9,
-      SDOM_WG8 = 9
+      SDOM_WG8 = 9,
+
+      SD_GTHW1 = 2,
+      SD_GTHW2 = 2,
+      SD_GTHW3 = 2,
+      SD_GTHW4 = 2,
+      SD_GTHW5 = 2,
+      SD_GTHW6 = 2,
+      SD_GTHW7 = 2,
+      SD_GTHW8 = 2,
+      SD_GTHW9 = 2,
+      SD_GTHWA = 2,
+      SD_GTHWB = 2,
+      SD_GTHWC = 2
     },
 
     floors =
@@ -1031,19 +1052,28 @@ ARMAETUS_ROOM_THEMES =
       SDOM_FT4 = 15,
       SDOM_FT5 = 15,
       SDOM_FT6 = 15,
+      SDOM_FT7 = 15,
+      SDOM_FT8 = 15,
+      SDOM_FT9 = 15,
+      SDOM_FTA = 15,
 
       SDOM_FG1 = 25,
-      SDOM_FG2 = 25
+      SDOM_FG2 = 25,
+
+      SD_GTHF1 = 15,
+      SD_GTHF2 = 15,
+      SD_GTHF3 = 15,
+      SD_GTHF4 = 15
     },
 
     ceilings =
     {
-      CEIL5_1 = 40,
+      CEIL5_1 = 30,
       CEIL5_2 = 15,
       GRATE4  = 25,
       SLIME15 = 40,
       CEIL4_1 = 20,
-      SLIME14 = 40,
+      SLIME14 = 30,
       SLIME16 = 20,
       GRATE3  = 20,
       GRATE5  = 15,
@@ -1066,13 +1096,22 @@ ARMAETUS_ROOM_THEMES =
       SDOM_FT4 = 7,
       SDOM_FT5 = 7,
       SDOM_FT6 = 7,
+      SDOM_FT7 = 7,
+      SDOM_FT8 = 7,
+      SDOM_FT9 = 7,
+      SDOM_FTA = 7,
 
       SDOM_FG1 = 10,
-      SDOM_FG2 = 10
+      SDOM_FG2 = 10,
+
+      SD_GTHF1 = 15,
+      SD_GTHF2 = 15,
+      SD_GTHF3 = 15,
+      SD_GTHF4 = 15
     },
   },
 
-  tech_VeryGray =
+  tech_VeryGray = --100
   {
     env = "building",
     prob = 100,
@@ -1126,6 +1165,10 @@ ARMAETUS_ROOM_THEMES =
       SDOM_WL4 = 25,
       SDOM_WL5 = 25,
       SDOM_WL6 = 25,
+      SDOM_WL7 = 25,
+      SDOM_WL8 = 25,
+      SDOM_WL9 = 25,
+      SDOM_WLA = 25,
     },
 
     floors =
@@ -1158,6 +1201,10 @@ ARMAETUS_ROOM_THEMES =
       SDOM_FT4 = 10,
       SDOM_FT5 = 10,
       SDOM_FT6 = 10,
+      SDOM_FT7 = 10,
+      SDOM_FT8 = 10,
+      SDOM_FT9 = 10,
+      SDOM_FTA = 10,
 
       SDOM_FG1 = 15,
       SDOM_FG2 = 15
@@ -1185,13 +1232,17 @@ ARMAETUS_ROOM_THEMES =
       SDOM_FT4 = 5,
       SDOM_FT5 = 5,
       SDOM_FT6 = 5,
+      SDOM_FT7 = 5,
+      SDOM_FT8 = 5,
+      SDOM_FT9 = 5,
+      SDOM_FTA = 5,
 
       SDOM_FG1 = 20,
       SDOM_FG2 = 20
     },
   },
 
-  tech_VeryBrown =
+  tech_VeryBrown = --60
   {
     env = "building",
     prob = 60,
@@ -1266,7 +1317,7 @@ ARMAETUS_ROOM_THEMES =
     },
   },
 
-  tech_darkBronze =
+  tech_darkBronze = --40
   {
     env = "building",
     prob = 40,
@@ -1344,7 +1395,7 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
-  tech_redFloorsBrownWalls =
+  tech_redFloorsBrownWalls = --25
   {
     env = "building",
     prob = 25,
@@ -1411,10 +1462,10 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
-  tech_AITextures =
+  tech_AITextures = --30
   {
     env = "building",
-    prob = 15,
+    prob = 30,
   
     walls =
     {
@@ -1424,6 +1475,11 @@ ARMAETUS_ROOM_THEMES =
       SDOM_WL4 = 5,
       SDOM_WL5 = 5,
       SDOM_WL6 = 5,
+      SDOM_WL7 = 5,
+      SDOM_WL8 = 5,
+      SDOM_WL9 = 5,
+      SDOM_WLA = 5,
+
       SDOM_WG1 = 5,
       SDOM_WG2 = 5,
       SDOM_WG3 = 5,
@@ -1431,7 +1487,20 @@ ARMAETUS_ROOM_THEMES =
       SDOM_WG5 = 5,
       SDOM_WG6 = 5,
       SDOM_WG7 = 5,
-      SDOM_WG8 = 5
+      SDOM_WG8 = 5,
+
+      SD_GTHW1 = 2,
+      SD_GTHW2 = 2,
+      SD_GTHW3 = 2,
+      SD_GTHW4 = 2,
+      SD_GTHW5 = 2,
+      SD_GTHW6 = 2,
+      SD_GTHW7 = 2,
+      SD_GTHW8 = 2,
+      SD_GTHW9 = 2,
+      SD_GTHWA = 2,
+      SD_GTHWB = 2,
+      SD_GTHWC = 2
     },
 
     floors =
@@ -1458,7 +1527,18 @@ ARMAETUS_ROOM_THEMES =
       SDOM_FT3 = 5,
       SDOM_FT4 = 5,
       SDOM_FT5 = 5,
-      SDOM_FT6 = 5
+      SDOM_FT6 = 5,
+      SDOM_FT7 = 5,
+      SDOM_FT8 = 5,
+      SDOM_FT9 = 5,
+      SDOM_FTA = 5,
+
+      SD_GTHF1 = 1,
+      SD_GTHF2 = 1,
+      SD_GTHF3 = 1,
+      SD_GTHF4 = 1,
+      SD_GTHF5 = 1,
+      SD_GTHF6 = 1
     },
 
     ceilings =
@@ -1476,11 +1556,102 @@ ARMAETUS_ROOM_THEMES =
       SDOM_FT3 = 5,
       SDOM_FT4 = 5,
       SDOM_FT5 = 5,
-      SDOM_FT6 = 5
+      SDOM_FT6 = 5,
+      SDOM_FT7 = 5,
+      SDOM_FT8 = 5,
+      SDOM_FT9 = 5,
+      SDOM_FTA = 5
     }
   },
 
-  tech_Outdoors_generic =
+  tech_goth_tech = --30
+  {
+    env = "building",
+    prob = 30,
+  
+    walls =
+    {
+      SD_GTHW1 = 10,
+      SD_GTHW2 = 10,
+      SD_GTHW3 = 10,
+      SD_GTHW4 = 10,
+      SD_GTHW5 = 10,
+      SD_GTHW6 = 10,
+      SD_GTHW7 = 10,
+      SD_GTHW8 = 10,
+      SD_GTHW9 = 10,
+      SD_GTHWA = 10,
+      SD_GTHWB = 10,
+      SD_GTHWC = 10,
+    },
+
+    floors =
+    {
+      SLIME14 = 10,
+      FLOOR4_8 = 10,
+      FLAT1 = 10,
+      FLAT3 = 10,
+      FLAT19 = 10,
+
+      GRATE1 = 2,
+      GRATE2 = 2,
+      GRATE3 = 2,
+      GRATE4 = 2,
+      GRATE5 = 2,
+      GRATE6 = 2,
+      GRATE7 = 2,
+      GRATE8 = 2,
+
+      SDOM_FG1 = 5,
+      SDOM_FG2 = 5,
+      SDOM_FT1 = 5,
+      SDOM_FT2 = 5,
+      SDOM_FT3 = 5,
+      SDOM_FT4 = 5,
+      SDOM_FT5 = 5,
+      SDOM_FT6 = 5,
+      SDOM_FT7 = 5,
+      SDOM_FT8 = 5,
+      SDOM_FT9 = 5,
+      SDOM_FTA = 5,
+
+      SD_GTHF1 = 18,
+      SD_GTHF2 = 18,
+      SD_GTHF3 = 18,
+      SD_GTHF4 = 18,
+      SD_GTHF5 = 18,
+      SD_GTHF6 = 18
+    },
+
+    ceilings =
+    {
+      SLIME14 = 10,
+      FLOOR4_8 = 10,
+      FLAT1 = 10,
+      FLAT3 = 10,
+      FLAT19 = 10,
+
+      SDOM_FG1 = 5,
+      SDOM_FG2 = 5,
+      SDOM_FT1 = 5,
+      SDOM_FT2 = 5,
+      SDOM_FT3 = 5,
+      SDOM_FT4 = 5,
+      SDOM_FT5 = 5,
+      SDOM_FT6 = 5,
+      SDOM_FT7 = 5,
+      SDOM_FT8 = 5,
+      SDOM_FT9 = 5,
+      SDOM_FTA = 5,
+
+      SD_GTHF1 = 18,
+      SD_GTHF2 = 18,
+      SD_GTHF3 = 18,
+      SD_GTHF4 = 18
+    }
+  },
+
+  tech_Outdoors_generic = --50
   {
     env  = "outdoor",
     prob = 50,
@@ -1559,6 +1730,10 @@ ARMAETUS_ROOM_THEMES =
       SDOM_FT4 = 17,
       SDOM_FT5 = 17,
       SDOM_FT6 = 17,
+      SDOM_FT7 = 17,
+      SDOM_FT8 = 17,
+      SDOM_FT9 = 17,
+      SDOM_FTA = 17,
 
       SDOM_FG1 = 25,
       SDOM_FG2 = 25
@@ -1689,6 +1864,10 @@ ARMAETUS_ROOM_THEMES =
       SDOM_FT4 = 17,
       SDOM_FT5 = 17,
       SDOM_FT6 = 17,
+      SDOM_FT7 = 17,
+      SDOM_FT8 = 17,
+      SDOM_FT9 = 17,
+      SDOM_FTA = 17,
 
       SDOM_FG1 = 20,
       SDOM_FG2 = 20
@@ -2692,7 +2871,7 @@ ARMAETUS_ROOM_THEMES =
   hell_gilded_bricks =
   {
     env = "building",
-    prob = 15,
+    prob = 30,
 
     walls =
     {
@@ -2776,6 +2955,88 @@ ARMAETUS_ROOM_THEMES =
       SDM_HGF1 = 45,
       SDM_HGF2 = 45,
       SDM_HGF3 = 45
+    }
+  },
+
+  hell_copper_steampunk =
+  {
+    env = "building",
+    prob = 30,
+
+    walls =
+    {
+      SD_HCSW1 = 5,
+      SD_HCSW2 = 5,
+      SD_HCSW3 = 5,
+      SD_HCSW4 = 5,
+      SD_HCSW5 = 5,
+      SD_HCSW6 = 5
+    },
+
+    floors =
+    {
+      FLAT8 = 2,
+      FLOOR0_1 = 2,
+      FLOOR0_2 = 2,
+      FLOOR3_3 = 2,
+      FLOOR4_1 = 2,
+      FLOOR4_5 = 2,
+      FLOOR4_6 = 2,
+      FLOOR5_2 = 2,
+      FLOOR5_4 = 2,
+      FLOOR7_1 = 2,
+
+      G8_BRNF1 = 5,
+      G8_BRNF2 = 5,
+      G8_BRNF3 = 5,
+
+      BRIK01 = 5,
+      EG03 = 5,
+      EG06 = 5,
+      GSTN04 = 5,
+      GSTN05 = 5,
+      RROCK10 = 5,
+      STARTANF = 5,
+
+      SD_HCSF1 = 15,
+      SD_HCSF2 = 15,
+      SD_HCSF3 = 15,
+      SD_HCSF4 = 15,
+      SD_HCSF5 = 15,
+      SD_HCSF6 = 15
+    },
+
+    ceilings =
+    {
+      FLAT8 = 2,
+      FLOOR0_1 = 2,
+      FLOOR0_2 = 2,
+      FLOOR3_3 = 2,
+      FLOOR4_1 = 2,
+      FLOOR4_5 = 2,
+      FLOOR4_6 = 2,
+      FLOOR5_2 = 2,
+      FLOOR5_4 = 2,
+      FLOOR7_1 = 2,
+
+      G8_BRNF1 = 5,
+      G8_BRNF2 = 5,
+      G8_BRNF3 = 5,
+
+      BRIK01 = 5,
+      EG03 = 5,
+      EG06 = 5,
+      GSTN04 = 5,
+      GSTN05 = 5,
+      RROCK10 = 5,
+      STARTANF = 5,
+
+      SD_HCSF1 = 15,
+      SD_HCSF2 = 15,
+      SD_HCSF3 = 15,
+      SD_HCSF4 = 15,
+      SD_HCSF5 = 15,
+      SD_HCSF6 = 15
     }
   },
 
@@ -3614,6 +3875,10 @@ ARMAETUS_ROOM_THEMES =
       SDOM_WL4 = 25,
       SDOM_WL5 = 25,
       SDOM_WL6 = 25,
+      SDOM_WL7 = 25,
+      SDOM_WL8 = 25,
+      SDOM_WL9 = 25,
+      SDOM_WLA = 25,
 
       SDOM_WG1 = 28,
       SDOM_WG2 = 28,
@@ -3672,6 +3937,10 @@ ARMAETUS_ROOM_THEMES =
       SDOM_FT4 = 18,
       SDOM_FT5 = 18,
       SDOM_FT6 = 18,
+      SDOM_FT7 = 18,
+      SDOM_FT8 = 18,
+      SDOM_FT9 = 18,
+      SDOM_FTA = 18,
 
       SDOM_FG1 = 25,
       SDOM_FG2 = 25
@@ -3714,6 +3983,10 @@ ARMAETUS_ROOM_THEMES =
       SDOM_FT4 = 18,
       SDOM_FT5 = 18,
       SDOM_FT6 = 18,
+      SDOM_FT7 = 18,
+      SDOM_FT8 = 18,
+      SDOM_FT9 = 18,
+      SDOM_FTA = 18,
 
       SDOM_FG1 = 25,
       SDOM_FG2 = 25
@@ -4012,6 +4285,10 @@ ARMAETUS_ROOM_THEMES =
       SDOM_WL4 = 22,
       SDOM_WL5 = 22,
       SDOM_WL6 = 22,
+      SDOM_WL7 = 22,
+      SDOM_WL8 = 22,
+      SDOM_WL9 = 22,
+      SDOM_WLA = 22,
 
       SDOM_WG1 = 25,
       SDOM_WG2 = 25,
@@ -4282,6 +4559,10 @@ ARMAETUS_ROOM_THEMES =
       SDOM_FT4 = 7,
       SDOM_FT5 = 7,
       SDOM_FT6 = 7,
+      SDOM_FT7 = 7,
+      SDOM_FT8 = 7,
+      SDOM_FT9 = 7,
+      SDOM_FTA = 7,
 
       SDOM_FG1 = 10,
       SDOM_FG2 = 10
@@ -5745,6 +6026,10 @@ ARMAETUS_THEMES =
       SDOM_WL4 = 22,
       SDOM_WL5 = 22,
       SDOM_WL6 = 22,
+      SDOM_WL7 = 22,
+      SDOM_WL8 = 22,
+      SDOM_WL9 = 22,
+      SDOM_WLA = 22,
 
       SDOM_WG1 = 25,
       SDOM_WG2 = 25,
