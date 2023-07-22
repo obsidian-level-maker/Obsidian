@@ -719,9 +719,18 @@ LIGHT_COLORS =
     beige = 6,
     green = 10,
     purple = 2
+  }
+}
+
+LIGHT_COLORS_COMPAT = -- table of colors compatible with base Doom textures
+{
+  neutrals =
+  {
+    white = 10,
+    beige = 10
   },
 
-  hues_compat = -- hues, but compatible with base Doom textures
+  hues =
   {
     blue = 10,
     red = 10,
