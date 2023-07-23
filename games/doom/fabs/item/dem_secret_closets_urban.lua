@@ -193,9 +193,10 @@ PREFABS.Item_secret_yard_closet1 =
   theme = "urban",
   env = "outdoor",
 
+  height = 256,
+
   deep   = 16,
   over   = -16,
-
 
   prob  = 1150,
 
