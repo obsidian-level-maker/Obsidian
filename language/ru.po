@@ -5592,7 +5592,7 @@ msgstr "Удивить/Случайные предметы"
 
 #: source_files/obsidian_main/main.cc:1432
 msgid "Surprise Me/Randomize Other"
-msgstr "Удивить/Случайные иные настройки"
+msgstr "Удивить/Случайные другие настройки"
 
 #: source_files/obsidian_main/main.cc:1435
 msgid "Addons/No Addons Detected"
@@ -5911,17 +5911,33 @@ msgstr "Ввести префикс..."
 msgid "Set Default Output Path"
 msgstr "Путь сохранения..."
 
-#: source_files/obsidian_main/m_options.cc:598
-msgid " Random String Seeds"
-msgstr "Случайные слова для сида"
+#: source_files/obsidian_main/m_options.cc:318
+msgid "Random String Seeds"
+msgstr "Сид из случайных слов"
 
-#: source_files/obsidian_main/m_options.cc:377
-msgid "Will randomly pull 1 to 3 words from Obsidian's random word list and use those as input for the map generation seed. Purely for cosmetic/entertainment value."
-msgstr "При включённой настройке будет случайно выбирать несколько слов из встроенной базы данных, добавляя их к ключу генерации. Можно считать, что используется исключительно для развлечения."
+#: source_files/obsidian_main/m_options.cc:340
+msgid "Password Mode"
+msgstr "Режим \"пароля\""
 
 #: source_files/obsidian_main/m_options.cc:614
 msgid " Password Mode"
 msgstr "Режим \"пароля\""
+
+#: source_files/obsidian_main/m_options.cc:368
+msgid "Mature Wordlists"
+msgstr "Любые слова"
+
+#: source_files/obsidian_main/m_options.cc:378
+msgid "When enabled, will use a random wordlist that can result in obscene or otherwise offensive language being used for seed, map and WAD title elements."
+msgstr "При включении этой опции будет использоваться случайный список слов, что может привести к нецензурной или оскорбительной лексике в сиде, заголовках карт и названии файла."
+
+#: source_files/obsidian_main/m_options.cc:656
+msgid " Use Mature Wordlists"
+msgstr "Добавлять любые слова"
+
+#: source_files/obsidian_main/m_options.cc:377
+msgid "Will randomly pull 1 to 3 words from Obsidian's random word list and use those as input for the map generation seed. Purely for cosmetic/entertainment value."
+msgstr "При включённой настройке будет случайно выбирать несколько слов из встроенной базы данных, добавляя их к ключу генерации. Можно считать, что используется исключительно для развлечения."
 
 #: source_files/obsidian_main/m_options.cc:397
 msgid "Will produce a pseudo-random sequence of characters as input for the map generation seed. Random String Seeds must be enabled to use this option."
@@ -5943,9 +5959,9 @@ msgid ""
 "You must select Yes for this option to be applied."
 msgstr ""
 "ВНИМАНИЕ! Эта опция позволит вам вручную вводить значения, выходящие за \n"
-"стабильные/выверенные пределы слайдеров. Поэтому о любых ошибках,\n"
-"вылетах и иных подобных вещах, порождённых нерегламентированным\n"
-"использованием программы, разработчикам сообщать не надо."
+"стабильные/выверенные пределы слайдеров. Что значит, что сообщать\n"
+"разработчикам о любых ошибках, вылетах и иных подобных вещах, порождённых\n"
+"нерегламентированным использованием программы, не стоит."
 
 #: source_files/obsidian_main/m_options.cc:437
 msgid "Yes, break Obsidian"
@@ -5963,7 +5979,7 @@ msgstr "Создание резервных копий"
 
 #: source_files/obsidian_main/m_options.cc:642
 msgid " Overwrite File Warning"
-msgstr "Предупреждение о перезаписи файла"
+msgstr "Предупреждать при перезаписи"
 
 #: source_files/obsidian_main/m_options.cc:652
 msgid " Debugging Messages"
@@ -6247,48 +6263,48 @@ msgstr "Назад"
 msgid "Finish"
 msgstr "Закрыть"
 
-#: source_files/obsidian_main/m_tutorial.cc:140
-msgid ""
-"<center>Game Settings, in the upper left area of the program window, contains all you need to build your very first mapset. Select the Engine to filter available games, the Game you would like to build maps for, the Port that it will be played on, the Length (number of maps) of the mapset, and the Theme that you would like it to have. Once you press 'Build', you will be prompted to choose a location and filename for your mapset. After that, it will be generated and saved to the location that you specified.\n"
-"\n"
-"NOTE: If you select 'Vanilla Doom' for the port, an alternate map generator will be used to create your WAD. Although this WAD will be compatible with all ports, it is much simpler in nature than the maps made by Obsidian's main generator.</center>"
-msgstr "<center>Общие настройки в левой-верхней части окна программы содержат всё, что нужно для быстрого создания файла уровней. Выберите игру, для которой вы хотите создать WAD, игровой движок, длину (количество карт) сборника, а также его общую тему. По нажатию на кнопку «Старт», появится диалоговое окно места сохранения Вашего WAD; кнопка «Сохранить» запустит генерацию. ПРИМЕЧАНИЕ. Альтернативный генератор карт будет использоваться, если в качестве движка Вы выберете «Ванильный Doom». Подобный WAD будет совместим абсолютно со всеми движками, однако структура уровней в нём будет намного проще по сравнению с картами, созданными основным генератором Obsidian.</center>"
+#: source_files/obsidian_main/m_tutorial.cc:139
+msgid "<center>Game Settings, in the upper left area of the program window, contains all you need to build your very first mapset. Select the Engine to filter available games, the Game you would like to build maps for, the Port that it will be played on, the Length (number of maps) of the mapset, and the Theme that you would like it to have. Once you press 'Build', you will be prompted to choose a location and filename for your mapset. After that, it will be generated and saved to the location that you specified.\n\nNOTE: If you select 'Vanilla' for the port while building for the id Tech 1 engine, an alternate map generator will be used to create your WAD. Although this WAD will be compatible with all ports, it is much simpler in nature than the maps made by Obsidian's main generator.</center>"
+msgstr "<center>Общие настройки, расположенные в левой-верхней части окна программы, содержат всё, что нужно для быстрого создания файла уровней. Выберите игровой движок и саму игру, для которых необходимо создать уровни, целевой порт, длину (количество карт) сборника, а также его общую тему. По нажатию на кнопку «Старт», появится диалоговое окно места сохранения Вашего сборника; кнопка «Сохранить» запустит генерацию. ПРИМЕЧАНИЕ. Если в качестве движка Вы выберете «Ванильный Doom», будет использоваться альтернативный генератор карт. Подобный WAD будет совместим абсолютно со всеми движками, однако структура уровней в нём окажется гораздо, гораздо проще по сравнению с картами, созданными основным генератором Obsidian.</center>"
 
 #: source_files/obsidian_main/m_tutorial.cc:166
-msgid "<center>At some point, you will want to have more control over the contents of the maps that you generate. This is where modules come into play. Modules are groups of options that can be changed to fine-tune your experience. Most modules are optional, and will need to be enabled or disabled accordingly.</center>"
-msgstr "<center>В какой-то момент Вы, вероятно, пожелаете управлять всем содержимым создаваемых Вами уровней. В этом случае Вам понадобятся разделы (модули) тонкого контроля; параметры для точной настройки, используемые в них, сгруппированы по смыслу. Большинство разделов являются необязательными и могут быть отключены (свёрнуты), и в этом случае настройки из них не будут применяться к генерации.</center>"
+msgid ""
+"<center>At some point, you will want to have more control over the contents of the maps that you generate. This is where modules come into play. Modules are sets of options that can be changed to fine-tune your experience.They are grouped into four categories: Architecture, Combat, Pickups and Other, and can be navigated using the tabs at the top of the program window.\n"
+"\n"
+"Most modules are optional, and will need to be enabled or disabled accordingly.</center>"
+msgstr "<center>В какой-то момент Вы, вероятно, пожелаете управлять всем содержимым создаваемых Вами уровней. В этом случае Вам понадобятся разделы (модули) тонкого контроля, которые поделены на четыре глобальные категории: Архитектура, Бой, Предметы и Другие настройки. Параметры, используемые в них, сгруппированы по смыслу. Большинство разделов являются необязательными и могут быть отключены (свёрнуты), и в этом случае настройки из них не будут применяться к генерации.</center>"
 
 #: source_files/obsidian_main/m_tutorial.cc:195
 msgid "<center>Some modules do not have any additional options to configure, and only need to be enabled or disabled. To enable them, simply click the checkbox to the left of their name. To disable them, clear the same checkbox by clicking it again.</center>"
 msgstr "<center>Некоторые разделы не имеют дополнительных параметров для настройки, их можно лишь включить или отключить. Чтобы включить их, просто установите флажок слева от их имени. Чтобы отключить их, снимите этот же флажок, нажав на него еще раз.</center>"
 
 #: source_files/obsidian_main/m_tutorial.cc:224
-msgid "<center>Other modules will have options that you can adjust after you enable them. These modules will have a + symbol next to their name instead of a checkbox. To enable them, click the + symbol. The + will turn into a - and the module will expand to show its options. Once you have adjusted these options, you MUST LEAVE THE MODULE EXPANDED for them to take effect. To disable the module, click the - symbol. It will collapse and the - will turn back into a +</center>"
-msgstr "<center>Другие разделы имеют параметры. Они вместо флажка будут иметь символ \"+\" рядом с их именем (в стандартной теме). Чтобы включить их, щёлкните символ \"+\", и тогда ниже развернётся список доступных параметров, а сам символ превратится в \"-\". После настройки параметров НЕОБХОДИМО ОСТАВИТЬ РАЗДЕЛ РАЗВЁРНУТЫМ для того, чтобы они вступили в силу. Вновь отключить раздел можно повторным нажатием на символ \"-\".</center>"
+msgid "<center>Other modules will have options that you can adjust after you enable them. After ticking its checkbox, the module will expand to show its options. Once you have adjusted these options, you MUST LEAVE THE MODULE EXPANDED for them to take effect. When the checkbox is cleared, the module will collapse again.</center>"
+msgstr "<center>Другие разделы имеют параметры. После щелчка по такому разделу развернётся список доступных настроек; РАЗДЕЛ НЕОБХОДИМО ОСТАВИТЬ РАЗВЁРНУТЫМ для того, чтобы они вступили в силу. Соответственно, вновь полностью отключить раздел можно повторным нажатием на его название.</center>"
 
-#: source_files/obsidian_main/m_tutorial.cc:252
-msgid "<center>Module options come in three different flavors: Checkboxes, drop-down menus, and sliders. Checkboxes and drop-down menus are fairly self-explanatory, but we will cover some of the more advanced slider functions.</center>"
-msgstr "<center>Параметры раздела представлены в виде флажков, выпадающих меню и ползунков/слайдеров. Флажки и раскрывающиеся меню говорят сами за себя, но на следующей странице мы рассмотрим некоторые из сложных функций ползунка.</center>"
+#: source_files/obsidian_main/m_tutorial.cc:262
+msgid "<center>Module options come in three different flavors: Sliders, checkboxes, and drop-down menus. Checkboxes and drop-down menus are fairly self-explanatory, but we will cover some of the more advanced slider functions.</center>"
+msgstr "<center>Параметры раздела представлены в виде слайдеров (ползунков), флажков и выпадающих меню. Флажки и раскрывающиеся меню говорят сами за себя. На следующей странице мы рассмотрим некоторые из дополнительных функций слайдеров.</center>"
 
-#: source_files/obsidian_main/m_tutorial.cc:280
-msgid "<center>Some sliders will have an inverted triangle icon in the top right corner. Clicking this will show a menu with various choices. With the exception of 'Use Slider Value', these will ignore the number that the slider is set to in favor of a different means of determining the related value.</center>"
-msgstr "<center>Некоторые слайдеры имеют значок перёвернутого треугольника в правом-верхнем углу. Нажав на него, Вы увидите меню с различными вариантами. Практически все из них, за исключением пункта «Использовать слайдер», будут игнорировать установленное число, используя иной способ определения связанного значения.</center>"
+#: source_files/obsidian_main/m_tutorial.cc:292
+msgid "<center>Some sliders will have an inverted triangle icon next to them. Clicking this will show a menu with various choices. With the exception of 'Use Slider Value', these will ignore the number that the slider is set to in favor of a different means of determining the related value.</center>"
+msgstr "<center>Рядом с некоторыми слайдерами находится значок перёвернутого треугольника. Нажав на него, Вы увидите меню с различными вариантами. Все из них, за исключением пункта «Использовать слайдер», будут игнорировать установленное число, используя иной способ определения связанного значения.</center>"
 
 #: source_files/obsidian_main/m_tutorial.cc:308
-msgid "<center>All sliders will have a pair of brackets in the top right corner. Clicking these will open a dialog box where you can enter a value manually instead of using the slider handle or arrow buttons.</center>"
-msgstr "<center>Все слайдеры имеют пару квадратных скобок в правом верхнем углу. При нажатии на них откроется диалоговое окно, в котором Вы можете ввести значение вручную.</center>"
+msgid "<center>All sliders will have a pair of brackets to their right. Clicking these will open a dialog box where you can enter a value manually instead of using the slider handle or arrow buttons.</center>"
+msgstr "<center>Все слайдеры имеют пару квадратных скобок справа от себя. При нажатии на них откроется диалоговое окно, в котором Вы можете ввести значение вручную.</center>"
 
-#: source_files/obsidian_main/m_tutorial.cc:336
-msgid "<center>At first, the amount of settings in Obsidian can seem daunting. To help with this, every option has several helper widgets. To reset any option to its default value, click the \"rollback\" icon in the upper right corner. For a brief explanation of an option, a tooltip can be shown by hovering your cursor over the option title. In addition, there is a question mark icon in the top right corner of each option that can be clicked to open a window with a more detailed explanation.</center>"
-msgstr "<center>Поначалу количество настроек в Obsidian может выглядеть пугающим. Однако у каждой опции есть несколько облегчающих восприятие и работу функций. Во-первых, всплывающая подсказка при наведении курсора мыши на заглавие параметра. Во-вторых, сброс любого параметра до значения по умолчанию по нажатию на стрелочку справа от опции. В-третих, также справа от каждой настройки есть значок вопросительного знака, по которому можно щёлкнуть, чтобы открыть окно с (зачастую) более подробным объяснением.</center>"
+#: source_files/obsidian_main/m_tutorial.cc:352
+msgid "<center>At first, the amount of settings in Obsidian can seem daunting. To help with this, every option has several helper widgets. To reset any option to its default value, click the \"rollback\" icon found to its right. For a brief explanation of an option, a tooltip can be shown by hovering your cursor over the option title. In addition, there is a question mark icon to the right of each option that can be clicked to open a window with a more detailed explanation.</center>"
+msgstr "<center>Поначалу количество настроек в Obsidian может выглядеть пугающим. Однако у каждой опции есть несколько облегчающих восприятие и работу функций. Во-первых, всплывающая подсказка при наведении курсора мыши на заглавие параметра. Во-вторых, сброс любого параметра до значения по умолчанию по нажатию на стрелку возврата справа от опции. В-третих, также справа от каждой настройки есть значок вопросительного знака, по которому можно щёлкнуть, чтобы открыть окно с (зачастую) более подробным объяснением.</center>"
 
-#: source_files/obsidian_main/m_tutorial.cc:364
-msgid "<center>Addons are a way to enhance the Obsidian experience further by adding new content, modules, and options. They come in the form of *.pk3 files that must be placed in the /addons folder of your Obsidian install before starting the program. Once there, they can be viewed, enabled, or disabled by clicking the \"Addons\" menu located in the top bar of the program. Good sources for new addons are either<br /><A HREF='https://obsidian-level-maker.github.io/addons.html'>the public Addons page</A> or the #addon-files channel of our Discord.</center>"
-msgstr "<center>Аддоны — это способ ещё больше улучшить возможности Obsidian путём добавления нового контента, разделов и параметров. Они поставляются в виде файлов *.pk3, для подключения которых необходимо перед запуском программы поместить их в папку \"/addons\" внутри установочной директории Obsidian. После этого их можно просматривать, включать или отключать, нажав на пункт «Дополнения», расположенное в верхнем горизонтальном меню программы. Хорошие источники новых дополнений — <A HREF='https://obsidian-level-maker.github.io/addons.html'>общедоступная страница Аддонов</A>, а также канал #addon-files нашего Discord-сервера.</center>"
+#: source_files/obsidian_main/m_tutorial.cc:382
+msgid "<center>Addons are a way to enhance the Obsidian experience further by adding new content, modules, and options. They come in the form of folders or ZIP/7Z archives with the *.OAF (Obsidian Addon File) extension that must be placed in the /addons folder of your Obsidian install before starting the program. Once there, they can be viewed, enabled, or disabled by clicking the \"Addons\" menu located in the top bar of the program. Good sources for new addons are either<br /><A HREF='https://obsidian-level-maker.github.io/addons.html'>the public Addons page</A> or the #addon-files channel of our Discord.</center>"
+msgstr "<center>Аддоны — это способ ещё больше улучшить возможности Obsidian путём добавления нового контента, разделов и параметров. Они поставляются либо в виде каталогов, либо в виде архивов *.zip/*.7z, либо в виде файлов *.oaf (\"Obsidian Addon File\"). Для подключения необходимо перед запуском программы поместить их в папку \"/addons\" внутри установочной директории Obsidian. После этого их можно просматривать, включать или отключать, нажав на пункт «Дополнения», расположенное в верхнем горизонтальном меню программы. Хорошие источники новых дополнений — <A HREF='https://obsidian-level-maker.github.io/addons.html'>общедоступная страница Аддонов</A>, а также канал #addon-files <A HREF='https://discord.gg/dfqCt9v'>нашего Discord-сервера</A>.</center>"
 
-#: source_files/obsidian_main/m_tutorial.cc:392
-msgid "<center>If, for whatever reason, you receive an error while building, you can view Obsidian's logs by pressing F6 or selecting Help->View Logs from the program menu. From here, you can view and save the log contents to a file of your choosing. In addition, there will be LOGS*.txt files with the same information that are stored in the same folder as obsidian.exe (or ~/.config/obsidian on *nix). These are rolling logs that will eventually be overwritten, so be sure to save this information elsewhere if you need to refer to it later! These logs are extremely important when seeking help or filing bug reports!</center>"
-msgstr "<center>Если Вы получите сообщение об ошибке во время сборки, можно просмотреть журнал Obsidian, нажав F6 или выбрав \"Помощь\"->\"Просмотр лога\" в меню программы. Там же можно сохранить содержимое журнала в отдельный файл. Кроме того, в каталоге с исполняемым файлом Obsidian (или по пути \"~/.config/obsidian\" на *nix-системах) существует файл LOGS*.txt с аналогичной информацией. Эти файлы циклично перезаписывается при каждом запуске программы, поэтому обязательно сохраняйте информацию об ошибке в другом месте или используйте параметры сохранения журнала из меню \"Файл\"->\"Опции\"! Журналирование чрезвычайно важно при поиске ошибок!</center>"
+#: source_files/obsidian_main/m_tutorial.cc:412
+msgid "<center>If, for whatever reason, you are encountering unexpected behavior, you can view Obsidian's logs by pressing F6 or selecting Help->View Logs from the program menu. From here, you can view and save the log contents to a file of your choosing. In addition, there will be LOGS*.txt files with the same information that are stored in the same folder as obsidian.exe (or ~/.config/obsidian on *nix). These will be overwritten each time the program is started, so be sure to save this information elsewhere if you need to refer to it later! These logs are extremely important when seeking help or filing bug reports!</center>"
+msgstr "<center>Если Вы получите сообщение об ошибке во время сборки, можно просмотреть журнал Obsidian, нажав F6 или выбрав \"Помощь\"->\"Просмотр лога\" в меню программы. Там же можно сохранить содержимое журнала в отдельный файл. Кроме того, в каталоге с исполняемым файлом Obsidian (или по пути \"~/.config/obsidian\" на *nix-системах) существует файл LOGS*.txt с аналогичной информацией. Эти файлы перезаписывается при каждом запуске программы, поэтому обязательно сохраняйте информацию об ошибке в другом месте или используйте параметры сохранения журнала из меню \"Файл\"->\"Опции\"! Журналирование чрезвычайно важно при поиске ошибок!</center>"
 
 #: source_files/obsidian_main/m_tutorial.cc:416
 msgid ""
@@ -6297,50 +6313,7 @@ msgid ""
 "If you need more help, please ask in our Discord (invite link <A HREF='https://discord.gg/dfqCt9v'>https://discord.gg/dfqCt9v</A>) or check our wiki at <A HREF='https://github.com/obsidian-level-maker/Obsidian/wiki'>https://github.com/obsidian-level-maker/Obsidian/wiki</A>.\n"
 "\n"
 "Good luck in the infinite Hells!</center>"
-msgstr "<center>Obsidian можно изучать гораздо дольше, но этой информации для начала должно быть более чем достаточно. Руководство можно снова просмотреть в любое время, выбрав пункт меню \"Помощь\"->\"Руководство\". Если нужна дополнительная помощь, Вы можете спросить в нашем Discord-сервере (ссылка-приглашение: <A HREF='https://discord.gg/dfqCt9v'>https://discord.gg/dfqCt9v</A>) или посетить Википедию Obsidian по адресу <A HREF='https://github.com/obsidian-level-maker/Obsidian/wiki'>https://github.com/obsidian-level-maker/Obsidian/wiki</A>. Удачи в бесконечных проявлениях Ада!</center>"
-
-
-#: source_files/obsidian_main/m_tutorial.cc:139
-msgid ""
-"<center>Game Settings, in the upper left area of the program window, contains all you need to build your very first mapset. Select the Engine to filter available games, the Game you would like to build maps for, the Port that it will be played on, the Length (number of maps) of the mapset, and the Theme that you would like it to have. Once you press 'Build', you will be prompted to choose a location and filename for your mapset. After that, it will be generated and saved to the location that you specified.\n"
-"\n"
-"NOTE: If you select 'Vanilla' for the port while building for the id Tech 1 engine, an alternate map generator will be used to create your WAD. Although this WAD will be compatible with all ports, it is much simpler in nature than the maps made by Obsidian's main generator.</center>"
-msgstr ""
-
-#: source_files/obsidian_main/m_tutorial.cc:170
-msgid ""
-"<center>At some point, you will want to have more control over the contents of the maps that you generate. This is where modules come into play. Modules are sets of options that can be changed to fine-tune your experience.They are grouped into four categories: Architecture, Combat, Pickups and Other, and can be navigated using the tabs at the top of the program window.\n"
-"\n"
-"Most modules are optional, and will need to be enabled or disabled accordingly.</center>"
-msgstr ""
-
-#: source_files/obsidian_main/m_tutorial.cc:232
-msgid "<center>Other modules will have options that you can adjust after you enable them. After ticking its checkbox, the module will expand to show its options. Once you have adjusted these options, you MUST LEAVE THE MODULE EXPANDED for them to take effect. When the checkbox is cleared, the module will collapse again.</center>"
-msgstr ""
-
-#: source_files/obsidian_main/m_tutorial.cc:262
-msgid "<center>Module options come in three different flavors: Sliders, checkboxes, and drop-down menus. Checkboxes and drop-down menus are fairly self-explanatory, but we will cover some of the more advanced slider functions.</center>"
-msgstr ""
-
-#: source_files/obsidian_main/m_tutorial.cc:292
-msgid "<center>Some sliders will have an inverted triangle icon next to them. Clicking this will show a menu with various choices. With the exception of 'Use Slider Value', these will ignore the number that the slider is set to in favor of a different means of determining the related value.</center>"
-msgstr ""
-
-#: source_files/obsidian_main/m_tutorial.cc:322
-msgid "<center>All sliders will have a pair of brackets to their right. Clicking these will open a dialog box where you can enter a value manually instead of using the slider handle or arrow buttons.</center>"
-msgstr ""
-
-#: source_files/obsidian_main/m_tutorial.cc:352
-msgid "<center>At first, the amount of settings in Obsidian can seem daunting. To help with this, every option has several helper widgets. To reset any option to its default value, click the \"rollback\" icon found to its right. For a brief explanation of an option, a tooltip can be shown by hovering your cursor over the option title. In addition, there is a question mark icon to the right of each option that can be clicked to open a window with a more detailed explanation.</center>"
-msgstr ""
-
-#: source_files/obsidian_main/m_tutorial.cc:382
-msgid "<center>Addons are a way to enhance the Obsidian experience further by adding new content, modules, and options. They come in the form of folders or ZIP/7Z archives with the *.OAF (Obsidian Addon File) extension that must be placed in the /addons folder of your Obsidian install before starting the program. Once there, they can be viewed, enabled, or disabled by clicking the \"Addons\" menu located in the top bar of the program. Good sources for new addons are either<br /><A HREF='https://obsidian-level-maker.github.io/addons.html'>the public Addons page</A> or the #addon-files channel of our Discord.</center>"
-msgstr ""
-
-#: source_files/obsidian_main/m_tutorial.cc:412
-msgid "<center>If, for whatever reason, you are encountering unexpected behavior, you can view Obsidian's logs by pressing F6 or selecting Help->View Logs from the program menu. From here, you can view and save the log contents to a file of your choosing. In addition, there will be LOGS*.txt files with the same information that are stored in the same folder as obsidian.exe (or ~/.config/obsidian on *nix). These will be overwritten each time the program is started, so be sure to save this information elsewhere if you need to refer to it later! These logs are extremely important when seeking help or filing bug reports!</center>"
-msgstr ""
+msgstr "<center>Obsidian можно изучать гораздо дольше, но этой информации для начала должно быть более чем достаточно. Это руководство можно снова просмотреть в любое время, выбрав пункт меню \"Помощь\"->\"Руководство\". Если нужна дополнительная помощь, Вы можете спросить в нашем Discord-сервере (ссылка-приглашение: <A HREF='https://discord.gg/dfqCt9v'>https://discord.gg/dfqCt9v</A>) или посетить Википедию Obsidian по адресу <A HREF='https://github.com/obsidian-level-maker/Obsidian/wiki'>https://github.com/obsidian-level-maker/Obsidian/wiki</A>. Удачи в бесконечных проявлениях Ада!</center>"
 
 
 #: source_files/obsidian_main/ui_build.cc:32
@@ -7106,7 +7079,7 @@ msgstr "Аддоны/    Подкаталогов или файлов *.oaf"
 
 #: source_files/obsidian_main/main.cc:1859
 msgid "Addons/found in the \\/addons directory!"
-msgstr "Аддоны/в директории \\/addons не найдено!"
+msgstr "Аддоны/в директории \"\\/addons\" не найдено!"
 
 #: source_files/obsidian_main/main.cc:2073
 msgid ""
@@ -7201,26 +7174,6 @@ msgid ""
 "Missing Options file -- using defaults.\n"
 "\n"
 msgstr ""
-
-#: source_files/obsidian_main/m_options.cc:318
-msgid "Random String Seeds"
-msgstr "Случайные слова для сида"
-
-#: source_files/obsidian_main/m_options.cc:340
-msgid "Password Mode"
-msgstr "Режим \"пароля\""
-
-#: source_files/obsidian_main/m_options.cc:368
-msgid "Mature Wordlists"
-msgstr "Любые слова"
-
-#: source_files/obsidian_main/m_options.cc:378
-msgid "When enabled, will use a random wordlist that can result in obscene or otherwise offensive language being used for seed, map and WAD title elements."
-msgstr "При включении этой опции будет использоваться случайный список слов, который может привести к использованию нецензурной или иной оскорбительной лексики в сиде, заголовках карт и названии файла."
-
-#: source_files/obsidian_main/m_options.cc:656
-msgid " Use Mature Wordlists"
-msgstr "Использовать любые слова"
 
 #: source_files/obsidian_main/ui_build.cc:273
 msgid "Building Nodes"
