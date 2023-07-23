@@ -6,7 +6,7 @@
 # For each language, the file <langcode>.po must exist.
 #---------------------------------------------------------------
 en=English
-ru=Russian
+ru=Русский (Russian)
 
 # ############################
 # Future support listed here #
