@@ -2390,11 +2390,11 @@ function Title_add_title()
   local spacing = 0.45
 
   if not line2 then
-    w1 = Title_widest_size_to_fit(line1, bb_main.w, 50, spacing)
+    w1 = Title_widest_size_to_fit(line1, bb_main.w - 30, 50, spacing)
     w2 = w1
   else
     w1 = Title_widest_size_to_fit(line1, bb_main.w - 30, 50, spacing)
-    w2 = Title_widest_size_to_fit(line2, bb_main.w,      50, spacing)
+    w2 = Title_widest_size_to_fit(line2, bb_main.w - 30, 50, spacing)
 
     if false then
       w1 = math.min(w1, w2)
