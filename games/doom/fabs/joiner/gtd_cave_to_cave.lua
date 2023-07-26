@@ -18,7 +18,7 @@ PREFABS.Joiner_gtd_cave_to_cave_2_pillars =
   over = 16,
 
   x_fit = { 120,136 },
-  y_fit = { 160,256 }
+  y_fit = { 32,128 }
 }
 
 PREFABS.Joiner_gtd_cave_to_cave_1_pillar =
@@ -26,5 +26,6 @@ PREFABS.Joiner_gtd_cave_to_cave_1_pillar =
   template = "Joiner_gtd_cave_to_cave_2_pillars",
   map = "MAP02",
 
-  y_fit = { 136,184 , 232,280 }
+  x_fit = { 72,200 },
+  y_fit = { 8,56 , 80,152 }
 }
