@@ -261,10 +261,7 @@ OB_MODULES["ui_mons"] =
       label=_("Enemy Drop Compensation"),
       valuator = "button",
       default = 0,
-      tooltip=_("Decides whether monster drops (i.e. magazines from zombiemen) influence map pickup spawns or not.\n\n" ..
-      "Yes - Add pickups regardless of extra ammunition and weapons dropped by monsters.\n" ..
-      "No (DEFAULT) - Removes extra pickups from the map based on items dropped " ..
-      "by monsters (i.e. less buckshot on the ground if shotgunners carry them)."),
+      tooltip=_("Decides whether monster drops (i.e. magazines from zombiemen) influence map pickup spawns or not.\n\nYes - Ignore extra ammunition and weapons dropped by monsters when calculating pickups.\nNo (DEFAULT) - Removes extra pickups from the map based on items dropped by monsters (i.e. less shells on the ground if shotgunners carry them)."),
     },
 
   },
