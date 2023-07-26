@@ -1118,7 +1118,7 @@ config *get_config(std::filesystem::path filename) {
 
     /* Set various defaults and stuff */
     answer->cwadonly = SLUMP_FALSE;
-    answer->outfile = strdup(filename.string().c_str());
+    answer->outfile = strdup(filename.generic_u8string().c_str());
 
     ok_to_roll = SLUMP_TRUE;
 

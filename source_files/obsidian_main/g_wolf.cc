@@ -359,7 +359,7 @@ bool wolf_game_interface_c::Start(const char *ext) {
 
             chooser.title(_("Select output directory"));
 
-            chooser.directory(BestDirectory().generic_string().c_str());
+            chooser.directory(BestDirectory().generic_u8string().c_str());
 
             chooser.type(Fl_Native_File_Chooser::BROWSE_DIRECTORY);
 

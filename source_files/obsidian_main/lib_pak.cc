@@ -266,11 +266,11 @@ bool PAK_OpenWrite(const std::filesystem::path &filename) {
     w_pak_fp.open(filename, std::ios::out | std::ios::binary);
 
     if (!w_pak_fp) {
-        LogPrintf("PAK_OpenWrite: cannot create file: %s\n", filename.string().c_str());
+        LogPrintf("PAK_OpenWrite: cannot create file: %s\n", filename.u8string().c_str());
         return false;
     }
 
-    LogPrintf("Created PAK file: %s\n", filename.string().c_str());
+    LogPrintf("Created PAK file: %s\n", filename.u8string().c_str());
 
     // write out a dummy header
     raw_pak_header_t header;

@@ -1646,7 +1646,6 @@ static void AlignTextures() {
     // propagate to similar neighbors), the next pass checks 128, 64, etc..
 
     for (int pass = 12; pass >= 0; pass--) {
-        int naturals = 0;
         int prev_count = 0;
         int next_count = 0;
 
@@ -1664,7 +1663,6 @@ static void AlignTextures() {
 
                 if ((i & mask) == 0) {
                     L->front->x_offset = NaturalXOffset(L, 0);
-                    naturals++;
                 }
             }
 
@@ -1964,9 +1962,9 @@ static void RoundCorners() {
     int count = 0;
 
     for (int pass = 0; pass < 2; pass++) {
-        for (auto *vertex : vertices) {
-            if (vertex->getNumLines() == 2) {
-                count += TryRoundAtVertex(vertex);
+        for (int i =0; i < vertices.size(); i++) {
+            if (vertices[i]->getNumLines() == 2) {
+                count += TryRoundAtVertex(vertices[i]);
             }
         }
     }
@@ -2436,7 +2434,8 @@ static int CalcDoorLight(const sector_c *S) {
 }
 
 static void ProcessLightFX() {
-    for (auto *S : sectors) {
+    for (int i=0; i < sectors.size(); i++) {
+        Doom::sector_c *S = sectors[i];
         if (S->unused) {
             continue;
         }

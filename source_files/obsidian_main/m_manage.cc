@@ -237,7 +237,7 @@ class UI_Manage_Config : public Fl_Double_Window {
 
     void MarkSource_FILE(std::filesystem::path filename) {
         conf_disp->copy_label(
-            StringFormat("[ %s ]", filename.filename().generic_string().c_str())
+            StringFormat("[ %s ]", filename.filename().u8string().c_str())
                 .c_str());
 
         redraw();
@@ -316,9 +316,9 @@ class UI_Manage_Config : public Fl_Double_Window {
         chooser.filter("Text files\t*.txt");
 
         if (!last_directory.empty()) {
-            chooser.directory(last_directory.generic_string().c_str());
+            chooser.directory(last_directory.generic_u8string().c_str());
         } else {
-            chooser.directory(install_dir.generic_string().c_str());
+            chooser.directory(install_dir.generic_u8string().c_str());
         }
 
         switch (chooser.show()) {
@@ -386,9 +386,9 @@ class UI_Manage_Config : public Fl_Double_Window {
 #endif
 
         if (!last_directory.empty()) {
-            chooser.directory(last_directory.generic_string().c_str());
+            chooser.directory(last_directory.generic_u8string().c_str());
         } else {
-            chooser.directory(install_dir.generic_string().c_str());
+            chooser.directory(install_dir.generic_u8string().c_str());
         }
 
         switch (chooser.show()) {
@@ -413,11 +413,11 @@ class UI_Manage_Config : public Fl_Double_Window {
     }
 
     bool LoadFromFile(std::filesystem::path filename) {
-        FILE *fp = fl_fopen(filename.generic_string().c_str(), "rb");
+        FILE *fp = fl_fopen(filename.generic_u8string().c_str(), "rb");
 
         if (!fp) {
             DLG_ShowError(_("Cannot open: %s\n\n%s"),
-                          filename.filename().generic_string().c_str(),
+                          filename.filename().u8string().c_str(),
                           strerror(errno));
             return false;
         }

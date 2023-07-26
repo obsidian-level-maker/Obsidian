@@ -182,7 +182,7 @@ bool Cookie_Load(std::filesystem::path filename) {
     }
 
     if (main_action != MAIN_SOFT_RESTART) {
-        LogPrintf("Loading config file: %s\n", filename.string().c_str());
+        LogPrintf("Loading config file: %s\n", filename.u8string().c_str());
     }
 
     int error_count = 0;
@@ -252,7 +252,7 @@ bool Cookie_Save(std::filesystem::path filename) {
     std::ofstream cookie_fp(filename, std::ios::out);
 
     if (!cookie_fp.is_open()) {
-        LogPrintf("Error: unable to create file: %s\n(%s)\n\n", filename.string().c_str(),
+        LogPrintf("Error: unable to create file: %s\n(%s)\n\n", filename.u8string().c_str(),
                   strerror(errno));
         return false;
     }
@@ -450,7 +450,8 @@ class RecentFiles_c {
         // order they are read.
 
         for (int k = size - 1; k >= 0; k--) {
-            fp << keyword << " = " << filenames[k].string() << "\n";
+            std::string fn = StringFormat("%s = %s\n", keyword.c_str(), StringToUTF8(filenames[k].generic_u16string()).c_str());
+            fp.write(fn.c_str(), fn.size());
         }
 
         if (size > 0) {

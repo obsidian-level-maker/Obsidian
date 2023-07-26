@@ -41,15 +41,11 @@ std::map<std::filesystem::path, int> initial_enabled_addons;
 std::vector<addon_info_t> all_addons;
 
 void VFS_AddFolder(std::string name) {
-#ifdef _WIN32
-    std::filesystem::path path = physfs_dir;
-#else
     std::filesystem::path path = install_dir;
-#endif
     path /= name;
     std::string mount = StringFormat("/%s", name.c_str());
 
-    if (!PHYSFS_mount(path.string().c_str(), mount.c_str(), 0)) {
+    if (!PHYSFS_mount(path.generic_u8string().c_str(), mount.c_str(), 0)) {
         Main::FatalError("Failed to mount '%s' folder in PhysFS:\n%s\n", name.c_str(),
                          PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         return; /* NOT REACHED */
@@ -59,29 +55,29 @@ void VFS_AddFolder(std::string name) {
 }
 
 bool VFS_AddArchive(std::filesystem::path filename, bool options_file) {
-    LogPrintf("  using: %s\n", filename.string().c_str());
+    LogPrintf("  using: %s\n", filename.u8string().c_str());
 
    // when handling "bare" filenames from the command line (i.e. ones
     // containing no paths or drive spec) and the file does not exist in
     // the current dir, look for it in the standard addons/ folder.
     if ((!std::filesystem::exists(filename) && !filename.has_parent_path())) {
         std::filesystem::path new_name =
-            StringFormat("%s/addons/%s", home_dir.string().c_str(), filename.string().c_str());
+            std::filesystem::u8path(StringFormat("%s/addons/%s", home_dir.generic_u8string().c_str(), filename.string().c_str()));
         if (!std::filesystem::exists(new_name)) {
-            new_name = StringFormat("%s/addons/%s", install_dir.string().c_str(),
+            new_name = StringFormat("%s/addons/%s", install_dir.generic_u8string().c_str(),
                                    filename.string().c_str());
         }
         filename = new_name;
     }
 
-    if (!PHYSFS_mount(filename.string().c_str(), "/", 0)) {
+    if (!PHYSFS_mount(filename.generic_u8string().c_str(), "/", 0)) {
         if (options_file) {
             LogPrintf("Failed to mount '%s' archive in PhysFS:\n%s\n",
-                            filename.string().c_str(),
+                            filename.u8string().c_str(),
                             PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         } else {
             Main::FatalError("Failed to mount '%s' archive in PhysFS:\n%s\n",
-                             filename.string().c_str(),
+                             filename.u8string().c_str(),
                              PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         }
 
@@ -91,10 +87,10 @@ bool VFS_AddArchive(std::filesystem::path filename, bool options_file) {
     return true;  // Ok
 }
 
-void VFS_InitAddons(const char *argv0) {
+void VFS_InitAddons(std::filesystem::path search_dir) {
     LogPrintf("Initializing VFS...\n");
 
-    if (!PHYSFS_init(argv0)) {
+    if (!PHYSFS_init(search_dir.generic_u8string().c_str())) {
         Main::FatalError("Failed to init PhysFS:\n%s\n",
                          PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
     }
@@ -122,7 +118,7 @@ void VFS_ParseCommandLine() {
     LogPrintf("Command-line addons....\n");
 
     for (; arg < argv::list.size() && !argv::IsOption(arg); arg++, count++) {
-        VFS_AddArchive(argv::list[arg], false /* options_file */);
+        VFS_AddArchive(std::filesystem::u8path(argv::list[arg]), false /* options_file */);
     }
 
     if (!count) {
@@ -166,22 +162,21 @@ void VFS_ScanForAddons() {
     int result2 = 0;
 
     for (auto &file : std::filesystem::directory_iterator(dir_name)) {
-        if (file.is_directory() || StringCaseCmp(file.path().extension().generic_string(), ".oaf") == 0) {
-            if (PHYSFS_mount(file.path().string().c_str(), nullptr, 0)) {
-                PHYSFS_unmount(file.path().string().c_str());
+        if (file.is_directory() || StringCaseCmp(file.path().extension().string(), ".oaf") == 0) {
+            if (PHYSFS_mount(file.path().generic_u8string().c_str(), nullptr, 0)) {
+                PHYSFS_unmount(file.path().generic_u8string().c_str());
                 result1 += 1;
                 list.push_back(file.path());
             }
             else {
                 LogPrintf("Failed to mount '%s' archive in PhysFS:\n%s\n",
-                                file.path().string().c_str(),
+                                file.path().u8string().c_str(),
                                 PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
             }
         }
     }
 
-    if (StringCaseCmp(home_dir.generic_string(),
-                      install_dir.generic_string()) != 0) {
+    if (home_dir != install_dir) {
         dir_name = home_dir;
         dir_name /= "addons";
         if (!std::filesystem::exists(dir_name)) {
@@ -191,15 +186,15 @@ void VFS_ScanForAddons() {
         std::vector<std::filesystem::path> list2;
 
         for (auto &file : std::filesystem::directory_iterator(dir_name)) {
-            if (file.is_directory() || StringCaseCmp(file.path().extension().generic_string(), ".oaf") == 0) {
-                if (PHYSFS_mount(file.path().string().c_str(), nullptr, 0)) {
-                    PHYSFS_unmount(file.path().string().c_str());
+            if (file.is_directory() || StringCaseCmp(file.path().extension().string(), ".oaf") == 0) {
+                if (PHYSFS_mount(file.path().generic_u8string().c_str(), nullptr, 0)) {
+                    PHYSFS_unmount(file.path().generic_u8string().c_str());
                     result2 += 1;
                     list2.push_back(file.path());
                 }
                 else {
                     LogPrintf("Failed to mount '%s' archive in PhysFS:\n%s\n",
-                                file.path().string().c_str(),
+                                file.path().u8string().c_str(),
                                 PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
                 }
             }
@@ -232,7 +227,7 @@ no_home_addon_dir:
         // DEBUG
         // info.enabled = true;
 
-        LogPrintf("  found: %s%s\n", info.name.string().c_str(),
+        LogPrintf("  found: %s%s\n", info.name.u8string().c_str(),
                   info.enabled ? " (Enabled)" : " (Disabled)");
 
         all_addons.push_back(info);

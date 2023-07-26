@@ -31,7 +31,7 @@
 
 #include "sys_type.h"
 
-void VFS_InitAddons(const char *argv0);
+void VFS_InitAddons(std::filesystem::path search_dir);
 void VFS_ParseCommandLine();
 void VFS_ScanForAddons();
 

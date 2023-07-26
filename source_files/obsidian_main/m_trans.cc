@@ -1038,7 +1038,7 @@ void Trans_Init() {
         return;
     }
 
-    LogPrintf("Loading language list: %s\n", path.string().c_str());
+    LogPrintf("Loading language list: %s\n", path.u8string().c_str());
 
     for (std::string line; std::getline(trans_fp, line);) {
         Trans_ParseLangLine((char *)line.c_str());
@@ -1069,18 +1069,18 @@ void Trans_SetLanguage() {
     }
 
     // see if the translation file exists
-    std::string path =
-        StringFormat("%s/language/%s.po", install_dir.string().c_str(), langcode.c_str());
+    std::filesystem::path path =
+        std::filesystem::u8path(StringFormat("%s/language/%s.po", install_dir.generic_u8string().c_str(), langcode.c_str()));
 
     if (!std::filesystem::exists(path)) {
         // if language has a territory field (like zh_TW or en_AU) then
         // try again with the plain language code.
 
         path =
-            StringFormat("%s/language/%s.po", install_dir.string().c_str(), lang_plain.c_str());
+            std::filesystem::u8path(StringFormat("%s/language/%s.po", install_dir.generic_u8string().c_str(), lang_plain.c_str()));
     }
 
-    FILE *fp = fopen(path.c_str(), "rb");
+    FILE *fp = fopen(path.generic_u8string().c_str(), "rb");
     if (!fp) {
         LogPrintf("No translation file: language/%s.po\n", lang_plain.c_str());
         LogPrintf("Using the default language (English)\n\n");
