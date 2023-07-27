@@ -1371,7 +1371,7 @@ int main(int argc, char **argv) {
     argv::short_flags.emplace('u');
 
     // parse the flags
-    argv::Init(argc - 1, argv + 1);
+    argv::Init(argc, argv);
 
 hardrestart:;
 
