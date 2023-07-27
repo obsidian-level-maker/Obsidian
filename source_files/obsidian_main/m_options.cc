@@ -75,7 +75,7 @@ void Parse_Option(const std::string &name, const std::string &value) {
     } else if (StringCaseCmp(name, "custom_prefix") == 0) {
         custom_prefix = value;
     } else if (StringCaseCmp(name, "default_output_path") == 0) {
-        default_output_path = value;
+        default_output_path = std::filesystem::u8path(value);
     } else if (StringCaseCmp(name, "builds_per_run") == 0) {
         builds_per_run = StringToInt(value);
     } else {
@@ -499,7 +499,7 @@ class UI_OptionsWin : public Fl_Window {
                 break;  // OK
         }
 
-        std::filesystem::path dir_name = chooser.filename();
+        std::filesystem::path dir_name = std::filesystem::u8path(chooser.filename());
 
         if (dir_name.empty()) {
             LogPrintf(_("Empty default directory provided???:\n"));

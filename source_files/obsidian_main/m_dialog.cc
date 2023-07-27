@@ -613,7 +613,7 @@ tryagain:;
             break;  // OK
     }
 
-    std::filesystem::path filename = chooser.filename();
+    std::filesystem::path filename = std::filesystem::u8path(chooser.filename());
 
     // add an extension if missing
     if (!filename.has_extension()) {

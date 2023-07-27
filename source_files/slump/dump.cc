@@ -33,6 +33,7 @@
 #include <assert.h>
 #include <cstdlib>
 #include <string.h>
+#include "lib_util.h"
 
 /* Global variables */
 
@@ -70,7 +71,11 @@ dumphandle OpenDump(config *c)
   } headerstuff;
 
   answer = (dumphandle)malloc(sizeof (*answer));
+#ifdef _WIN32
+  answer->f = _wfopen(std::filesystem::u8path(c->outfile).c_str(), (const wchar_t *)StringToUTF16("wb").c_str());
+#else
   answer->f = fopen(c->outfile,"wb");
+#endif
   if (answer->f==NULL) {
     fprintf(stderr,"Error opening <%s>.\n",c->outfile);
     perror("Maybe");

@@ -482,10 +482,10 @@ static RecentFiles_c recent_configs;
 
 void Recent_Parse(std::string name, std::string value) {
     if (StringCaseCmp(name, "recent_wad") == 0) {
-        recent_wads.insert(value);
+        recent_wads.insert(std::filesystem::u8path(value));
 
     } else if (StringCaseCmp(name, "recent_config") == 0) {
-        recent_configs.insert(value);
+        recent_configs.insert(std::filesystem::u8path(value));
     }
 }
 

@@ -73,7 +73,7 @@ std::filesystem::path Theme_OutputFilename() {
             break;  // OK
     }
 
-    std::filesystem::path filename = chooser.filename();
+    std::filesystem::path filename = std::filesystem::u8path(chooser.filename());
     filename.replace_extension(".txt");
     // re-check for overwriting
     if (std::filesystem::exists(filename)) {
@@ -116,7 +116,7 @@ std::filesystem::path Theme_AskLoadFilename() {
             break;  // OK
     }
 
-    std::filesystem::path filename = chooser.filename();
+    std::filesystem::path filename = std::filesystem::u8path(chooser.filename());
 
     return filename;
 }

@@ -407,7 +407,7 @@ class UI_Manage_Config : public Fl_Double_Window {
                 break;  // OK
         }
 
-        std::filesystem::path filename = chooser.filename();
+        std::filesystem::path filename = std::filesystem::u8path(chooser.filename());
 
         return filename;
     }
