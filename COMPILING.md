@@ -34,6 +34,7 @@ The C++ compiler/toolchain should already be present on a typical BSD install
 4. Development libraries
    * package: `libfontconfig1-dev`
    * recommended if using X11 for better fonts: `libxft-dev`
+   * if using X11 and not pulled in by one of the above packages: `libx11-dev`
    * Wayland support for FLTK 1.4 is in a state of flux; instructions and
      dependencies can be found in the source_files/fltk/README.Wayland.txt file
 
