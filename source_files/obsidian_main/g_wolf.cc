@@ -359,7 +359,7 @@ bool wolf_game_interface_c::Start(const char *ext) {
 
             chooser.title(_("Select output directory"));
 
-            chooser.directory(BestDirectory().generic_string().c_str());
+            chooser.directory(BestDirectory().generic_u8string().c_str());
 
             chooser.type(Fl_Native_File_Chooser::BROWSE_DIRECTORY);
 
@@ -381,7 +381,7 @@ bool wolf_game_interface_c::Start(const char *ext) {
                     break;  // OK
             }
 
-            std::filesystem::path dir_name = chooser.filename();
+            std::filesystem::path dir_name = std::filesystem::u8path(chooser.filename());
 
             if (dir_name.empty()) {
                 LogPrintf(_("Empty directory provided???:\n"));

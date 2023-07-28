@@ -1815,7 +1815,9 @@ function ob_default_filename()
   else
     local name_tab = {}
     if OB_CONFIG.game == "chex3" then
-      name_tab = CHEX.NAMES
+      name_tab = CHEX3.NAMES
+    elseif OB_CONFIG.game == "chex1" then
+      name_tab = CHEX1.NAMES
     elseif ob_match_game({game = "doomish"}) then
       name_tab = DOOM.NAMES
     elseif OB_CONFIG.game == "hacx" then
@@ -1859,7 +1861,7 @@ function ob_default_filename()
         levelcount = "11"
       elseif OB_CONFIG.game == "hexen" then
         levelcount = "6"
-      elseif OB_CONFIG.game == "chex3" then
+      elseif OB_CONFIG.game == "chex3" or OB_CONFIG.game == "chex1" then
         levelcount = "5"
       else
         levelcount = "9"
@@ -2296,6 +2298,7 @@ local function ob_get_module_refs()
       game = {_("ALL")},
       port = {_("ALL")},
       choices = {
+        "chex1",
         "chex3",
         "doom1",
         "doom2",

@@ -75,7 +75,7 @@ void Parse_Option(const std::string &name, const std::string &value) {
     } else if (StringCaseCmp(name, "custom_prefix") == 0) {
         custom_prefix = value;
     } else if (StringCaseCmp(name, "default_output_path") == 0) {
-        default_output_path = value;
+        default_output_path = std::filesystem::u8path(value);
     } else if (StringCaseCmp(name, "builds_per_run") == 0) {
         builds_per_run = StringToInt(value);
     } else {
@@ -125,12 +125,8 @@ bool Options_Load(std::filesystem::path filename) {
         return false;
     }
 
-    int error_count = 0;
-
     for (std::string line; std::getline(option_fp, line);) {
-        if (!Options_ParseLine(line)) {
-            error_count += 1;
-        }
+        Options_ParseLine(line);
     }
 
     option_fp.close();
@@ -143,7 +139,7 @@ bool Options_Save(std::filesystem::path filename) {
 
     if (!option_fp.is_open()) {
         LogPrintf("Error: unable to create file: %s\n(%s)\n\n",
-                  filename.string().c_str(), strerror(errno));
+                  filename.u8string().c_str(), strerror(errno));
         return false;
     }
 
@@ -180,7 +176,8 @@ bool Options_Save(std::filesystem::path filename) {
     option_fp << "mature_word_lists = " << (mature_word_lists ? 1 : 0) << "\n";
     option_fp << "filename_prefix = " << filename_prefix << "\n";
     option_fp << "custom_prefix = " << custom_prefix << "\n";
-    option_fp << "default_output_path = " << default_output_path.generic_string() << "\n";
+    std::string dop = StringFormat("default_output_path = %s\n", StringToUTF8(default_output_path.generic_u16string()).c_str());
+    option_fp.write(dop.c_str(), dop.size());
     option_fp << "builds_per_run = " << builds_per_run << "\n";
 
     option_fp << "\n";
@@ -482,7 +479,7 @@ class UI_OptionsWin : public Fl_Window {
 
         chooser.title(_("Select default save directory"));
         chooser.type(Fl_Native_File_Chooser::BROWSE_DIRECTORY);
-        chooser.directory(BestDirectory().generic_string().c_str());
+        chooser.directory(BestDirectory().generic_u8string().c_str());
 
         int result = chooser.show();
 
@@ -502,7 +499,7 @@ class UI_OptionsWin : public Fl_Window {
                 break;  // OK
         }
 
-        std::filesystem::path dir_name = chooser.filename();
+        std::filesystem::path dir_name = std::filesystem::u8path(chooser.filename());
 
         if (dir_name.empty()) {
             LogPrintf(_("Empty default directory provided???:\n"));
@@ -510,15 +507,12 @@ class UI_OptionsWin : public Fl_Window {
         }
 
         default_output_path = dir_name;
-#ifdef WIN32
-        dir_name = ucs4_path(dir_name.generic_string().c_str());
-#endif
         UI_OptionsWin *that = (UI_OptionsWin *)data;
         std::string blanker;
         blanker.append(250,' ');
         that->opt_current_output_path->copy_label(blanker.c_str());
         that->opt_current_output_path->redraw_label();
-        that->opt_current_output_path->copy_label(StringFormat("%s: %s", _("Current Path"), BestDirectory().generic_string().c_str()).c_str());
+        that->opt_current_output_path->copy_label(StringFormat("%s: %s", _("Current Path"), BestDirectory().u8string().c_str()).c_str());
         that->opt_current_output_path->redraw_label();
     }
 };
@@ -611,7 +605,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_current_output_path->labelfont(font_style);
     opt_current_output_path->labelcolor(FONT2_COLOR);
     // clang-format off
-    opt_current_output_path->copy_label(StringFormat("%s: %s", _("Current Path"), BestDirectory().generic_string().c_str()).c_str());
+    opt_current_output_path->copy_label(StringFormat("%s: %s", _("Current Path"), BestDirectory().u8string().c_str()).c_str());
     // clang-format on
 
     cy += opt_current_output_path->h() + y_step;

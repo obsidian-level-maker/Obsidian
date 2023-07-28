@@ -1118,7 +1118,7 @@ config *get_config(std::filesystem::path filename) {
 
     /* Set various defaults and stuff */
     answer->cwadonly = SLUMP_FALSE;
-    answer->outfile = strdup(filename.string().c_str());
+    answer->outfile = strdup(filename.generic_u8string().c_str());
 
     ok_to_roll = SLUMP_TRUE;
 
@@ -1172,6 +1172,11 @@ config *get_config(std::filesystem::path filename) {
         answer->map = 0;
         answer->episode = 1;
         answer->mission = 1;
+    } else if (StringCaseCmp(current_game, "chex1") == 0) {
+        answer->gamemask = (DOOM1_BIT|DOOMI_BIT|DOOMC_BIT);
+        answer->map = 0;
+        answer->episode = 1;
+        answer->mission = 1;
     } else if (StringCaseCmp(current_game, "heretic") == 0) {
         answer->gamemask = HERETIC_BIT;
         answer->map = 0;
@@ -1193,6 +1198,8 @@ config *get_config(std::filesystem::path filename) {
         if (StringCaseCmp(current_game, "doom2") == 0 || StringCaseCmp(current_game, "plutonia") == 0 || StringCaseCmp(current_game, "tnt") == 0
             || StringCaseCmp(current_game, "hacx") == 0 || StringCaseCmp(current_game, "harmony") == 0) {
             answer->levelcount = 11;
+        } else if (StringCaseCmp(current_game, "chex1") == 5) {
+            answer->levelcount = 5;
         } else {
             answer->levelcount = 8;
         }
@@ -1204,6 +1211,8 @@ config *get_config(std::filesystem::path filename) {
             answer->levelcount = 24;
         } else if (StringCaseCmp(current_game, "ultdoom") == 0) {
             answer->levelcount = 32;
+        } else if (StringCaseCmp(current_game, "chex1") == 0) {
+            answer->levelcount = 5;
         } else {
             answer->levelcount = 40; // Heretic
         }

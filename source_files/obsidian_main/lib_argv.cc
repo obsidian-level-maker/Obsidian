@@ -24,6 +24,11 @@
 #include "headers.h"
 #include "lib_util.h"
 
+#ifdef _WIN32
+#include <shellapi.h>
+#include <processenv.h>
+#endif
+
 std::vector<std::string> argv::list;
 std::unordered_set<char> argv::short_flags;
 
@@ -75,6 +80,54 @@ static void Parse_ShortArgs(std::string_view arg) {
 // NOTE: doesn't merge multiple uses of an option, hence
 //       using ArgvFind() will only return the first usage.
 //
+#ifdef _WIN32
+void argv::Init(const int argc, const char *const *argv) {
+    
+    (void)argc;
+	(void)argv;    
+    
+    int win_argc = 0;
+	size_t i;
+	wchar_t **win_argv = CommandLineToArgvW(GetCommandLineW(), &win_argc);
+
+    SYS_NULL_CHECK(win_argv);
+
+    list.reserve(win_argc);
+    SYS_ASSERT(argv::list.size() >= 0);
+
+    std::vector<std::string> argv_block;
+
+    for (i = 0; i < win_argc; i++) {
+        SYS_NULL_CHECK(win_argv[i]);
+		std::u16string arg = reinterpret_cast<char16_t *>(win_argv[i]);
+		argv_block.push_back(StringToUTF8(arg));
+    }
+
+	LocalFree(win_argv);
+
+    for (int i = 0; i < argv_block.size(); i++) {
+
+        std::string_view cur = argv_block[i];
+
+        // support GNU-style long and short options
+        if (cur[0] == '-') {
+            if (cur[1] == '-') {
+                Parse_LongArg(cur);
+            } else {
+                Parse_ShortArgs(cur);
+            }
+        } else {
+            list.emplace_back(cur);
+        }
+
+        // support DOS-style short options
+        if (cur[0] == '/' && (isalnum(cur[1]) || cur[1] == '?') &&
+            cur[2] == '\0') {
+            list.emplace_back(std::string{"-"} + std::string{&cur[1], 1});
+        }
+    }
+}
+#else
 void argv::Init(const int argc, const char *const *argv) {
     list.reserve(argc);
     SYS_ASSERT(argv::list.size() >= 0);
@@ -108,6 +161,7 @@ void argv::Init(const int argc, const char *const *argv) {
         }
     }
 }
+#endif
 
 int argv::Find(const char shortName, const char *longName, int *numParams) {
     SYS_ASSERT(shortName || longName);

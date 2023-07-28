@@ -96,7 +96,7 @@ typedef opaque Fl_Timestamp;
 
 #ifdef _WIN64
 
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) && !defined(__clang__)
 # include <stddef.h>  /* M$VC */
 #else
 # include <stdint.h>

@@ -31,7 +31,7 @@ function Render_add_exit_sign(E, z, SEEDS, LEVEL)
   if OB_CONFIG.game == "hexen" then return end
 
   -- These games need an engine that supports TX_START/TX_END merging
-  if ob_match_game({ game = { chex3=1, hacx=1, heretic=1} }) then
+  if ob_match_game({ game = { chex1=1, chex3=1, hacx=1, heretic=1} }) then
      if not ob_match_port({ port = { edge=1, eternity=1, zdoom=1 } }) then return end
   end
 

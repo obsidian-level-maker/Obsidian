@@ -1059,10 +1059,10 @@ bool Doom::game_interface_c::Start(const char *preset) {
             if (ob_mod_enabled("compress_output")) {
                 if ((StringCaseCmp(current_port, "dsda") == 0)) {
                     filename = DLG_OutputFilename("zip", 
-                        std::filesystem::path{preset}.replace_extension("zip").string().c_str());
+                        std::filesystem::path{preset}.replace_extension("zip").u8string().c_str());
                 } else {
                     filename = DLG_OutputFilename("pk3", 
-                        std::filesystem::path{preset}.replace_extension("pk3").string().c_str());
+                        std::filesystem::path{preset}.replace_extension("pk3").u8string().c_str());
                 }
             } else {
                 filename = DLG_OutputFilename("wad", preset);
@@ -1194,7 +1194,11 @@ bool Doom::game_interface_c::Finish(bool build_ok) {
                 }
                 std::filesystem::remove(zip_filename);
             }
-            FILE *zip_file = fopen(filename.string().c_str(), "rb");
+#ifdef _WIN32
+            FILE *zip_file = _wfopen(filename.c_str(), (const wchar_t *)StringToUTF16("rb").c_str());
+#else
+            FILE *zip_file = fopen(filename.generic_string().c_str(), "rb");
+#endif
             int zip_length = std::filesystem::file_size(filename);
             byte *zip_buf = new byte[zip_length];
             if (zip_buf && zip_file) {
@@ -1206,22 +1210,22 @@ bool Doom::game_interface_c::Finish(bool build_ok) {
             }
             if (zip_buf) {
                 if (mz_zip_add_mem_to_archive_file_in_place(
-                        zip_filename.string().c_str(),
-                        filename.filename().string().c_str(), zip_buf,
-                        zip_length, NULL, 0, MZ_DEFAULT_COMPRESSION)) {
+                        zip_filename.generic_u8string().c_str(),
+                        filename.filename().generic_u8string().c_str(), zip_buf,
+                        zip_length, NULL, 0, MZ_DEFAULT_COMPRESSION) == MZ_TRUE) {
                     std::filesystem::remove(filename);
                     delete[] zip_buf;
                 } else {
                     LogPrintf(
                         "Zipping output WAD to %s failed! Retaining original "
                         "WAD.\n",
-                        zip_filename.string().c_str());
+                        zip_filename.u8string().c_str());
                 }
             } else {
                 LogPrintf(
                     "Zipping output WAD to %s failed! Retaining original "
                     "WAD.\n",
-                    zip_filename.string().c_str());
+                    zip_filename.u8string().c_str());
             }
         }
     }

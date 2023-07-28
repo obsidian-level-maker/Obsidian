@@ -306,7 +306,7 @@ void UI_MiniMap::DrawEntity(int x, int y, byte r, byte g, byte b) {
 void UI_MiniMap::GifStart(std::filesystem::path filename, int delay) {
     gif_writer = new GifWriter;
     gif_delay = delay;
-    GifBegin(gif_writer, filename.string().c_str(), map_W, map_H, gif_delay);
+    GifBegin(gif_writer, filename.generic_u8string().c_str(), map_W, map_H, gif_delay);
 }
 
 void UI_MiniMap::GifFrame() {

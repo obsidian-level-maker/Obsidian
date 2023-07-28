@@ -179,7 +179,7 @@ build_result_e BuildFile(buildinfo_t *build_info)
 void VisitFile(std::filesystem::path filename, buildinfo_t *build_info)
 {
 	build_info->Print(0, "\n");
-	build_info->Print(0, "Building %s\n", filename.string().c_str());
+	build_info->Print(0, "Building %s\n", filename.u8string().c_str());
 
 	// this will fatal error if it fails
 	ajbsp::OpenWad(filename);
@@ -347,7 +347,7 @@ int AJBSP_BuildNodes(std::filesystem::path filename, buildinfo_t *build_info)
 
 	// validate file before processing it
 	if (! ajbsp::FileExists(filename))
-		build_info->FatalError("no such file: %s\n", filename.string().c_str());
+		build_info->FatalError("no such file: %s\n", filename.u8string().c_str());
 
 	VisitFile(filename, build_info);
 

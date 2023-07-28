@@ -119,7 +119,7 @@ bool FileMakeDir(std::filesystem::path dir_name) {
 u8_t *FileLoad(std::filesystem::path filename, int *length) {
     *length = 0;
 
-    FILE *fp = fopen(filename.string().c_str(), "rb");
+    FILE *fp = fopen(filename.generic_u8string().c_str(), "rb");
 
     if (!fp) return NULL;
 

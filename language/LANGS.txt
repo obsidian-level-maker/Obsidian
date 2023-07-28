@@ -2,11 +2,11 @@
 # LANGUAGES LIST
 #---------------------------------------------------------------
 # Each line below has the format: <langcode>=<fullname>
-# No whitespace allowed.  Comment lines begin with '#'.
+# Comment lines begin with '#'.
 # For each language, the file <langcode>.po must exist.
 #---------------------------------------------------------------
 en=English
-ru=Russian
+ru=Русский (Russian)
 
 # ############################
 # Future support listed here #

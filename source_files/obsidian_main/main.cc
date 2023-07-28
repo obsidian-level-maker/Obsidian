@@ -54,10 +54,6 @@ constexpr size_t TICKER_TIME = 50;
 
 std::filesystem::path home_dir;
 std::filesystem::path install_dir;
-#ifdef WIN32
-std::filesystem::path physfs_dir;
-#endif
-
 std::filesystem::path config_file;
 std::filesystem::path options_file;
 std::filesystem::path theme_file;
@@ -73,7 +69,7 @@ struct UpdateKv {
 UpdateKv update_kv;
 
 std::string OBSIDIAN_TITLE = "OBSIDIAN Level Maker";
-std::string OBSIDIAN_CODE_NAME = "Gates of Tartarus";
+std::string OBSIDIAN_CODE_NAME = "UNSTABLE";
 
 int screen_w;
 int screen_h;
@@ -354,15 +350,7 @@ static void ShowVersion() {
     fflush(stdout);
 }
 
-#ifdef WIN32
-char32_t *ucs4_path(const char *path) {
-    PHYSFS_uint32 *long_path = new PHYSFS_uint32[strlen(path) * 4 + 1];
-    PHYSFS_utf8ToUcs4(path, long_path, strlen(path) * 4);
-    return (char32_t *)long_path;
-}
-#endif
-
-void Determine_WorkingPath(const char *argv0) {
+void Determine_WorkingPath(std::filesystem::path &path_check) {
     // firstly find the "Working directory" : that's the place where
     // the CONFIG.txt and LOGS.txt files are, as well the temp files.
 
@@ -372,15 +360,13 @@ void Determine_WorkingPath(const char *argv0) {
             exit(EXIT_FAILURE);
         }
 
-        home_dir = argv::list[home_arg + 1];
+        home_dir = std::filesystem::u8path(argv::list[home_arg + 1]);
         return;
     }
 
-#ifdef WIN32
-    home_dir = ucs4_path(argv0);
+#ifdef _WIN32
+    home_dir = path_check;
     home_dir.remove_filename();
-    physfs_dir = argv0;
-    physfs_dir.remove_filename();
 #else
     const char *xdg_config_home = std::getenv("XDG_CONFIG_HOME");
     if (xdg_config_home == nullptr) {
@@ -425,8 +411,8 @@ std::filesystem::path Resolve_DefaultOutputPath() {
     if (default_output_path.empty()) {
         default_output_path = install_dir;
     }
-    if (default_output_path.generic_string()[0] == '$') {
-        const char *var = getenv(default_output_path.generic_string().c_str() + 1);
+    if (default_output_path.generic_u8string()[0] == '$') {
+        const char *var = getenv(default_output_path.generic_u8string().c_str() + 1);
         if (var != nullptr) {
             return var;
         }
@@ -440,7 +426,7 @@ static bool Verify_InstallDir(const std::filesystem::path &path) {
     return exists(filename);
 }
 
-void Determine_InstallDir(const char *argv0) {
+void Determine_InstallDir(std::filesystem::path &path_check) {
     // secondly find the "Install directory", and store the
     // result in the global variable 'install_dir'.  This is
     // where all the LUA scripts and other data files are.
@@ -451,7 +437,7 @@ void Determine_InstallDir(const char *argv0) {
             exit(EXIT_FAILURE);
         }
 
-        install_dir = argv::list[inst_arg + 1];
+        install_dir = std::filesystem::u8path(argv::list[inst_arg + 1]);
 
         if (Verify_InstallDir(install_dir)) {
             return;
@@ -461,7 +447,7 @@ void Determine_InstallDir(const char *argv0) {
     }
 
     // if run from current directory, look there
-    if (argv0[0] == '.' && Verify_InstallDir(".")) {
+    if (path_check == "." && Verify_InstallDir(".")) {
         install_dir = std::filesystem::canonical(".");
         return;
     }
@@ -536,14 +522,14 @@ void Determine_LoggingFile() {
             exit(EXIT_FAILURE);
         }
 
-        logging_file = argv::list[logf_arg + 1];
+        logging_file = std::filesystem::u8path(argv::list[logf_arg + 1]);
 
         // test that it can be created
         std::ofstream fp{logging_file};
 
         if (!fp.is_open()) {
             Main::FatalError("Cannot create log file: %s\n",
-                             logging_file.string().c_str());
+                             logging_file.u8string().c_str());
         }
 
         fp.close();
@@ -575,7 +561,7 @@ bool Main::BackupFile(const std::filesystem::path &filename) {
         backup_name.replace_extension(StringFormat(
             "%s.%s", backup_name.filename().extension().string().c_str(), "bak"));
 
-        LogPrintf("Backing up existing file to: %s\n", backup_name.string().c_str());
+        LogPrintf("Backing up existing file to: %s\n", backup_name.u8string().c_str());
 
         std::filesystem::remove(backup_name);
         std::filesystem::rename(filename, backup_name);
@@ -1385,7 +1371,7 @@ int main(int argc, char **argv) {
     argv::short_flags.emplace('u');
 
     // parse the flags
-    argv::Init(argc - 1, argv + 1);
+    argv::Init(argc, argv);
 
 hardrestart:;
 
@@ -1494,8 +1480,9 @@ hardrestart:;
 #endif
     }
 
-    Determine_WorkingPath(argv[0]);
-    Determine_InstallDir(argv[0]);
+    std::filesystem::path path_check = std::filesystem::u8path(argv::list[0]);
+    Determine_WorkingPath(path_check);
+    Determine_InstallDir(path_check);
 
     Determine_ConfigFile();
     Determine_OptionsFile();
@@ -1533,9 +1520,9 @@ hardrestart:;
               FL_MINOR_VERSION, FL_PATCH_VERSION);
 #endif
 
-    LogPrintf("home_dir: %s\n", home_dir.string().c_str());
-    LogPrintf("install_dir: %s\n", install_dir.string().c_str());
-    LogPrintf("config_file: %s\n\n", config_file.string().c_str());
+    LogPrintf("home_dir: %s\n", home_dir.u8string().c_str());
+    LogPrintf("install_dir: %s\n", install_dir.u8string().c_str());
+    LogPrintf("config_file: %s\n\n", config_file.u8string().c_str());
 
     Trans_Init();
 
@@ -1582,7 +1569,7 @@ softrestart:;
     //    TX_TestSynth(next_rand_seed); - Fractal testing stuff
 
     if (main_action != MAIN_SOFT_RESTART) {
-        VFS_InitAddons(argv[0]);
+        VFS_InitAddons(install_dir);
 
         if (const int load_arg = argv::Find('l', "load"); load_arg >= 0) {
             if (load_arg + 1 >= argv::list.size() ||
@@ -1744,51 +1731,51 @@ softrestart:;
         std::filesystem::path image_loc = install_dir;
         image_loc.append("data").append("tutorial").append("tutorial1.bmp");
         if (!tutorial1) {
-            tutorial1 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+            tutorial1 = new Fl_BMP_Image(image_loc.generic_u8string().c_str());
         }
         image_loc.replace_filename("tutorial2.bmp");
         if (!tutorial2) {
-            tutorial2 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+            tutorial2 = new Fl_BMP_Image(image_loc.generic_u8string().c_str());
         }
         image_loc.replace_filename("tutorial3.bmp");
         if (!tutorial3) {
-            tutorial3 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+            tutorial3 = new Fl_BMP_Image(image_loc.generic_u8string().c_str());
         }
         image_loc.replace_filename("tutorial3_2.bmp");
         if (!tutorial3_2) {
-            tutorial3_2 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+            tutorial3_2 = new Fl_BMP_Image(image_loc.generic_u8string().c_str());
         }
         image_loc.replace_filename("tutorial4.bmp");
         if (!tutorial4) {
-            tutorial4 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+            tutorial4 = new Fl_BMP_Image(image_loc.generic_u8string().c_str());
         }
         image_loc.replace_filename("tutorial4_2.bmp");
         if (!tutorial4_2) {
-            tutorial4_2 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+            tutorial4_2 = new Fl_BMP_Image(image_loc.generic_u8string().c_str());
         }
         image_loc.replace_filename("tutorial5.bmp");
         if (!tutorial5) {
-            tutorial5 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+            tutorial5 = new Fl_BMP_Image(image_loc.generic_u8string().c_str());
         }
         image_loc.replace_filename("tutorial6.bmp");
         if (!tutorial6) {
-            tutorial6 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+            tutorial6 = new Fl_BMP_Image(image_loc.generic_u8string().c_str());
         }
         image_loc.replace_filename("tutorial7.bmp");
         if (!tutorial7) {
-            tutorial7 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+            tutorial7 = new Fl_BMP_Image(image_loc.generic_u8string().c_str());
         }
         image_loc.replace_filename("tutorial8.bmp");
         if (!tutorial8) {
-            tutorial8 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+            tutorial8 = new Fl_BMP_Image(image_loc.generic_u8string().c_str());
         }
         image_loc.replace_filename("tutorial9.bmp");
         if (!tutorial9) {
-            tutorial9 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+            tutorial9 = new Fl_BMP_Image(image_loc.generic_u8string().c_str());
         }
         image_loc.replace_filename("tutorial10.bmp");
         if (!tutorial10) {
-            tutorial10 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+            tutorial10 = new Fl_BMP_Image(image_loc.generic_u8string().c_str());
         }
 
         int main_w, main_h;

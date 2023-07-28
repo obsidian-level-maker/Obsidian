@@ -2620,7 +2620,11 @@ function Level_make_level(LEV)
 
   local LEVEL = table.copy(LEV)
   local SEEDS = Seed_init(LEVEL)
-  
+  local res = "ok'"
+  local retry_counter = 0
+  local error_mat = assert(GAME.MATERIALS["_ERROR"])
+
+  ::retryafterfailure::
 
   gui.at_level(LEVEL.name, index, total)
 
@@ -2639,8 +2643,8 @@ function Level_make_level(LEV)
   if LEVEL.prebuilt then
     ob_invoke_hook_with_table("begin_level", LEVEL)
 
-    local res = Level_handle_prebuilt(LEVEL)
-    if res ~= "ok" then
+    local pb_res = Level_handle_prebuilt(LEVEL)
+    if pb_res ~= "ok" then
       for _,k in pairs (LEVEL) do
         LEVEL[k] = nil
       end
@@ -2651,7 +2655,7 @@ function Level_make_level(LEV)
       SEEDS = nil
       collectgarbage("collect")
       collectgarbage("collect")
-      return res
+      return pb_res
     end
     ob_invoke_hook_with_table("end_level", LEVEL)
     for _,k in pairs (LEVEL) do
@@ -2681,9 +2685,6 @@ function Level_make_level(LEV)
 
   gui.printf("\nStyles = \n%s\n\n", table.tostr(STYLE, 1))
 
-
-  local error_mat = assert(GAME.MATERIALS["_ERROR"])
-
   gui.property("error_tex",  error_mat.t)
   gui.property("error_flat", error_mat.f or error_mat.t)
 
@@ -2695,7 +2696,11 @@ function Level_make_level(LEV)
 
   LEVEL.PREFABS = table.copy(PREFABS)
 
-  local res = Level_build_it(LEVEL, SEEDS)
+  res = Level_build_it(LEVEL, SEEDS)
+  if LEVEL.cur_coverage < LEVEL.min_coverage or #LEVEL.rooms < LEVEL.min_rooms then
+    print("STUNTED LEVEL!\nCOVERAGE: " .. LEVEL.cur_coverage .. "\nMIN COVERAGE: " .. LEVEL.min_coverage .. "\nROOMS: " .. #LEVEL.rooms .. "\nMIN ROOMS: " .. LEVEL.min_rooms .. "\n")
+    res = "runt"
+  end
   if res ~= "ok" then
     for _,k in pairs (LEVEL) do
       LEVEL[k] = nil
@@ -2707,7 +2712,15 @@ function Level_make_level(LEV)
     SEEDS = nil
     collectgarbage("collect")
     collectgarbage("collect")
-    return res
+    retry_counter = retry_counter + 1
+    if retry_counter > 3 then
+      return res
+    else
+      LEVEL = table.copy(LEV)
+      SEEDS = Seed_init(LEVEL)
+      gui.reseed_rng(gui.random_int())
+      goto retryafterfailure
+    end
   end
 
   ob_invoke_hook_with_table("end_level", LEVEL)
@@ -2736,7 +2749,7 @@ function Level_make_all()
   GAME.episodes = {}
 
   -- semi-supported games warning
-  if ob_match_game({ game = { chex=1, hacx=1, harmony=1, hexen=1, strife=1, nukem=1, quake=1 } }) then
+  if ob_match_game({ game = { chex1=1, chex3=1, hacx=1, harmony=1, hexen=1, strife=1, nukem=1, quake=1 } }) then
     if not PARAM.bool_experimental_games or PARAM.bool_experimental_games == 0 then
       error(gui.gettext("\nWarning: The game that you have selected is in an experimental state. WADs may not build successfully and certain gameplay features may not be implemented yet! To ignore this warning and continue generation for these games, check the \"Experimental Games\" checkbox located in the Miscellaneous Options Module.\n\nUse the help link for the \"Experimental Games\" module to find the exact status for the game in question."))
     end

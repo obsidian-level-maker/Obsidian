@@ -254,9 +254,9 @@ std::filesystem::path DLG_OutputFilename(const char *ext, const char *preset) {
     auto best_dir = BestDirectory();
 
     if (preset) {
-        chooser.preset_file((best_dir / preset).generic_string().c_str());
+        chooser.preset_file((best_dir / preset).generic_u8string().c_str());
     } else {
-        chooser.directory(best_dir.generic_string().c_str());
+        chooser.directory(best_dir.generic_u8string().c_str());
     }
 
     int result = chooser.show();
@@ -279,7 +279,7 @@ std::filesystem::path DLG_OutputFilename(const char *ext, const char *preset) {
             break;  // OK
     }
 
-    std::filesystem::path src_name = chooser.filename();
+    std::filesystem::path src_name = std::filesystem::u8path(chooser.filename());
 
     std::filesystem::path dir_name = src_name.parent_path();
 
@@ -300,9 +300,6 @@ std::filesystem::path DLG_OutputFilename(const char *ext, const char *preset) {
             }
         }
     }
-    src_name = ucs4_path(src_name.generic_string().c_str());
-    src_name.replace_extension(
-        ext);  // Ucs4 conversion sometimes goofs the extension
 #endif
     return src_name;
 }
@@ -599,7 +596,7 @@ void UI_LogViewer::save_callback(Fl_Widget *w, void *data) {
 tryagain:;
 
     if (!last_directory.empty()) {
-        chooser.directory(last_directory.generic_string().c_str());
+        chooser.directory(last_directory.generic_u8string().c_str());
     }
 
     switch (chooser.show()) {
@@ -616,7 +613,7 @@ tryagain:;
             break;  // OK
     }
 
-    std::filesystem::path filename = chooser.filename();
+    std::filesystem::path filename = std::filesystem::u8path(chooser.filename());
 
     // add an extension if missing
     if (!filename.has_extension()) {
@@ -629,7 +626,7 @@ tryagain:;
                           _("Yes"), 
                           _("No"), 0,
                           // clang-format on
-                          filename.generic_string().c_str())) {
+                          filename.u8string().c_str())) {
             case 0:
                 std::filesystem::remove(filename);
                 break;
@@ -740,8 +737,8 @@ UI_GlossaryViewer::~UI_GlossaryViewer() {}
 
 void UI_GlossaryViewer::ReadGlossary() {
 
-    std::string glossary =
-        StringFormat("%s/language/%s.txt", install_dir.string().c_str(), selected_lang.c_str());
+    std::filesystem::path glossary =
+        std::filesystem::u8path(StringFormat("%s/language/%s.txt", install_dir.u8string().c_str(), selected_lang.c_str()));
 
     if (!std::filesystem::exists(glossary)) {
         return;

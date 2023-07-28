@@ -243,11 +243,11 @@ bool GRP_OpenWrite(const std::filesystem::path &filename) {
     grp_W_fp.open(filename, std::ios::out | std::ios::binary);
 
     if (!grp_W_fp.is_open()) {
-        LogPrintf("GRP_OpenWrite: cannot create file: %s\n", filename.string().c_str());
+        LogPrintf("GRP_OpenWrite: cannot create file: %s\n", filename.u8string().c_str());
         return false;
     }
 
-    LogPrintf("Created GRP file: %s\n", filename.string().c_str());
+    LogPrintf("Created GRP file: %s\n", filename.u8string().c_str());
 
     // write out a dummy header
     raw_grp_header_t header;

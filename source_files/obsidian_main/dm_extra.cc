@@ -1072,19 +1072,19 @@ int wad_merge_sections(lua_State *L) {
     // and other stuff (which occur in between P_START/P_END and similar
     // marker lumps).
 
-    std::filesystem::path pkg_name = luaL_checkstring(L, 1);
+    std::filesystem::path pkg_name = std::filesystem::u8path(luaL_checkstring(L, 1));
 
-    LogPrintf("Merging WAD sections from: %s\n", pkg_name.string().c_str());
+    LogPrintf("Merging WAD sections from: %s\n", pkg_name.u8string().c_str());
 
     if (pkg_name.extension() != ".wad") {
         return luaL_error(L,
                           "wad_merge_sections: file extension is not WAD: %s\n",
-                          pkg_name.c_str());
+                          pkg_name.u8string().c_str());
     }
 
     if (!WAD_OpenRead(pkg_name)) {
         return luaL_error(L, "wad_merge_sections: bad WAD file: %s",
-                          pkg_name.c_str());
+                          pkg_name.u8string().c_str());
     }
 
     DoMergeSection('P', "P_START", "PP_START", "P_END", "PP_END");

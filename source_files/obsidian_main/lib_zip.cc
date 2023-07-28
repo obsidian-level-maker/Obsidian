@@ -584,11 +584,11 @@ bool ZIPF_OpenWrite(const std::filesystem::path &filename) {
     w_zip_fp.open(filename, std::ios::out | std::ios::binary);
 
     if (!w_zip_fp) {
-        LogPrintf("ZIPF_OpenWrite: cannot create file: %s\n", filename.string().c_str());
+        LogPrintf("ZIPF_OpenWrite: cannot create file: %s\n", filename.u8string().c_str());
         return false;
     }
 
-    LogPrintf("Created ZIP file: %s\n", filename.string().c_str());
+    LogPrintf("Created ZIP file: %s\n", filename.u8string().c_str());
 
     // grab the current date and time
     time_t cur_time = time(NULL);

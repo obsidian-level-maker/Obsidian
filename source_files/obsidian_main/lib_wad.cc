@@ -48,17 +48,17 @@ static raw_wad_lump_t *wad_R_dir;
 
 bool WAD_OpenRead(std::filesystem::path filename) {
 #ifdef HAVE_PHYSFS
-    wad_R_fp = PHYSFS_openRead(filename.generic_string().c_str());
+    wad_R_fp = PHYSFS_openRead(filename.generic_u8string().c_str());
 #else
-    wad_R_fp = fopen(filename, "rb");
+    wad_R_fp = fopen(filename.generic_u8string().c_str(), "rb");
 #endif
 
     if (!wad_R_fp) {
-        LogPrintf("WAD_OpenRead: no such file: %s\n", filename.string().c_str());
+        LogPrintf("WAD_OpenRead: no such file: %s\n", filename.u8string().c_str());
         return false;
     }
 
-    LogPrintf("Opened WAD file: %s\n", filename.string().c_str());
+    LogPrintf("Opened WAD file: %s\n", filename.u8string().c_str());
 
 #ifdef HAVE_PHYSFS
     if ((PHYSFS_readBytes(wad_R_fp, &wad_R_header, sizeof(wad_R_header)) /
@@ -239,11 +239,11 @@ bool WAD_OpenWrite(std::filesystem::path filename) {
     wad_W_fp.open(filename, std::ios::out | std::ios::binary);
 
     if (!wad_W_fp.is_open()) {
-        LogPrintf("WAD_OpenWrite: cannot create file: %s\n", filename.string().c_str());
+        LogPrintf("WAD_OpenWrite: cannot create file: %s\n", filename.u8string().c_str());
         return false;
     }
 
-    LogPrintf("Created WAD file: %s\n", filename.string().c_str());
+    LogPrintf("Created WAD file: %s\n", filename.u8string().c_str());
 
     // write out a dummy header
     raw_wad_header_t header;

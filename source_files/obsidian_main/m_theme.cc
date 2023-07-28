@@ -53,7 +53,7 @@ std::filesystem::path Theme_OutputFilename() {
 
     std::filesystem::path theme_dir = install_dir;
     theme_dir /= "theme";
-    chooser.directory(theme_dir.string().c_str());
+    chooser.directory(theme_dir.generic_u8string().c_str());
 
     FL_NORMAL_SIZE = old_font_h;
 
@@ -73,13 +73,8 @@ std::filesystem::path Theme_OutputFilename() {
             break;  // OK
     }
 
-#ifdef WIN32
-    std::filesystem::path filename = ucs4_path(chooser.filename());
+    std::filesystem::path filename = std::filesystem::u8path(chooser.filename());
     filename.replace_extension(".txt");
-#else
-    std::filesystem::path filename = chooser.filename();
-    filename.replace_extension(".txt");
-#endif
     // re-check for overwriting
     if (std::filesystem::exists(filename)) {
         if (!fl_choice("%s", fl_cancel, fl_ok, NULL,
@@ -101,7 +96,7 @@ std::filesystem::path Theme_AskLoadFilename() {
 
     std::filesystem::path theme_dir = install_dir;
     theme_dir /= "theme";
-    chooser.directory(theme_dir.generic_string().c_str());
+    chooser.directory(theme_dir.generic_u8string().c_str());
 
     int result = chooser.show();
 
@@ -121,12 +116,7 @@ std::filesystem::path Theme_AskLoadFilename() {
             break;  // OK
     }
 
-#ifdef WIN32
-    std::filesystem::path filename = ucs4_path(chooser.filename());
-    filename.replace_extension(".txt");
-#else
-    std::filesystem::path filename = chooser.filename();
-#endif
+    std::filesystem::path filename = std::filesystem::u8path(chooser.filename());
 
     return filename;
 }
@@ -241,7 +231,7 @@ bool Theme_Options_Load(std::filesystem::path filename) {
         return false;
     }
 
-    LogPrintf("Loading theme file: %s\n", filename.string().c_str());
+    LogPrintf("Loading theme file: %s\n", filename.u8string().c_str());
 
     int error_count = 0;
 
@@ -267,7 +257,7 @@ bool Theme_Options_Save(std::filesystem::path filename) {
 
     if (!option_fp.is_open()) {
         LogPrintf("Error: unable to create file: %s\n(%s)\n\n",
-                  filename.string().c_str(), strerror(errno));
+                  filename.u8string().c_str(), strerror(errno));
         return false;
     }
 
