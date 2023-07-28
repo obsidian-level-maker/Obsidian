@@ -89,6 +89,7 @@ typedef unsigned int gamebits;   /* Also bitarray    */
 /* "Intrinsic"; i.e. no SLUMP-special textures */
 #define DOOMI_BIT (0x10)
 #define HERETIC_BIT (0x20)
+#define CHEX_BIT (0x40)
 /* and that's all */
 
 typedef unsigned long propertybits;  /* Another bitarray */
