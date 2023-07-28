@@ -1323,6 +1323,12 @@ int gui_random_int(lua_State *L) {
     return 1;
 }
 
+int gui_reseed_rng(lua_State *L) {
+    int seed = luaL_checkinteger(L, 1);
+    xoshiro_Reseed(seed);
+    return 0;
+}
+
 // LUA: bit_and(A, B) --> number
 //
 int gui_bit_and(lua_State *L) {
@@ -1621,6 +1627,7 @@ static const luaL_Reg gui_script_funcs[] = {
     {"abort", gui_abort},
     {"random", gui_random},
     {"random_int", gui_random_int},
+    {"reseed_rng", gui_reseed_rng},
 
     // file & directory functions
     {"import", gui_import},
