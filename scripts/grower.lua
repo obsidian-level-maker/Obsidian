@@ -4464,12 +4464,17 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
         end
       end
 
-    if R.prelim_conn_num(R, LEVEL) == 1 and R.areas[1].svolume <= 8
+    --[[if R.prelim_conn_num(R, LEVEL) == 1 and R.areas[1].svolume <= 8
     and #R.areas == 1 and not R.is_start then
       gui.printf("Prelim conn num: " .. R.prelim_conn_num(R, LEVEL) .. "\n")
       gui.printf(table.tostr(R, 2))
+      local hallway_parent
+      if R.parent_R and R.parent_R.is_hallway then
+        hallway_parent = R.parent_R
+      end
       Grower_kill_room(SEEDS, LEVEL, R)
-    end
+      if hallway_parent then Grower_kill_room(SEEDS, LEVEL, hallway_parent) end
+    end]]
 
     end
   end
