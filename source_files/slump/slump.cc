@@ -734,7 +734,7 @@ flat *new_flat(config *c,const char *name)
   answer = (flat *)malloc(sizeof(*answer));
   memset(answer->name,0,9);
   memcpy(answer->name,name,strlen(name));
-  answer->gamemask = DOOM0_BIT | DOOM1_BIT | DOOM2_BIT | DOOMC_BIT | DOOMI_BIT | HERETIC_BIT;
+  answer->gamemask = DOOM0_BIT | DOOM1_BIT | DOOM2_BIT | DOOMC_BIT | DOOMI_BIT | HERETIC_BIT | CHEX_BIT;
   answer->compatible = 0;
   answer->props = 0;
   answer->used = SLUMP_FALSE;
@@ -814,7 +814,7 @@ genus *new_genus(config *c,int thingid)
 
   answer = (genus *)malloc(sizeof(*answer));
   /* Default mask */
-  answer->gamemask = DOOM0_BIT|DOOM1_BIT|DOOM2_BIT|DOOMC_BIT|DOOMI_BIT|HERETIC_BIT;
+  answer->gamemask = DOOM0_BIT|DOOM1_BIT|DOOM2_BIT|DOOMC_BIT|DOOMI_BIT|HERETIC_BIT|CHEX_BIT;
   answer->compatible = ~(unsigned int)0;     /* Assume all themes OK */
   answer->thingid = thingid;
   answer->width = 65;  /* Sort of sensible default */
@@ -870,7 +870,7 @@ texture *new_texture(config *c,const char *name)
   memset(answer->name,0,9);
   memcpy(answer->name,name,strlen(name));
   answer->realname = answer->name;
-  answer->gamemask = DOOM0_BIT | DOOM1_BIT | DOOM2_BIT | DOOMC_BIT | DOOMI_BIT | HERETIC_BIT;
+  answer->gamemask = DOOM0_BIT | DOOM1_BIT | DOOM2_BIT | DOOMC_BIT | DOOMI_BIT | HERETIC_BIT | CHEX_BIT;
   answer->compatible = 0;
   answer->core = 0;
   answer->props = 0;     /* Filled in later */
@@ -1060,7 +1060,12 @@ void secretize_config(config *c)
   c->lock_themes = SLUMP_TRUE;
   if (rollpercent(25)) c->force_biggest = SLUMP_TRUE;   /* stub */
   c->big_monsters = SLUMP_TRUE;
-  c->secret_themes = SLUMP_TRUE;
+  if (!(c->gamemask & CHEX_BIT)) {
+    c->secret_themes = SLUMP_TRUE;
+  }
+  else {
+    c->secret_themes = SLUMP_FALSE;
+  }
 
   for (;!something_special;) {
 
@@ -1072,7 +1077,7 @@ void secretize_config(config *c)
     }
 
     /* Sometimes some DooM II nazis */
-    if (rollpercent(80)&&!(c->gamemask&(DOOM0_BIT|DOOM1_BIT|HERETIC_BIT))) {
+    if (rollpercent(80)&&!(c->gamemask&(DOOM0_BIT|DOOM1_BIT|HERETIC_BIT|CHEX_BIT))) {
       c->forbidden_monster_bits &= ~SPECIAL;
       something_special = SLUMP_TRUE;
       if (rollpercent(50)) {
@@ -1173,7 +1178,7 @@ config *get_config(std::filesystem::path filename) {
         answer->episode = 1;
         answer->mission = 1;
     } else if (StringCaseCmp(current_game, "chex1") == 0) {
-        answer->gamemask = (DOOM1_BIT|DOOMI_BIT|DOOMC_BIT);
+        answer->gamemask = (DOOM1_BIT|DOOMI_BIT|DOOMC_BIT|CHEX_BIT);
         answer->map = 0;
         answer->episode = 1;
         answer->mission = 1;
@@ -1226,7 +1231,7 @@ config *get_config(std::filesystem::path filename) {
     answer->do_dm = StringToInt(dm_starts);
     answer->do_slinfo = SLUMP_TRUE;
     answer->produce_null_lmps = SLUMP_FALSE;
-    answer->do_seclevels = SLUMP_TRUE;
+    answer->do_seclevels = (StringCaseCmp(current_game, "chex1") == 0) ? SLUMP_FALSE : SLUMP_TRUE;
     answer->force_secret = SLUMP_FALSE;
     answer->minlight = 115;
     /* Is this the right place for all these? */
@@ -1590,6 +1595,10 @@ genus *random_barrel(config *c, style *s)
 /* A lamp or similar decoration, tall or short */
 genus *random_lamp0(config *c, style *s)
 {
+  if (c->gamemask & CHEX_BIT) {
+    return find_genus(c,ID_LAMP);
+  }
+
   genus *answer;
 
   answer = random_thing0(LIGHT,c,s,70,10000);
@@ -1600,6 +1609,10 @@ genus *random_lamp0(config *c, style *s)
 /* A lamp or similar decoration, no taller than a player */
 genus *random_shortlamp0(config *c, style *s)
 {
+  if (c->gamemask & CHEX_BIT) {
+    return find_genus(c,ID_LAMP);
+  }
+
   return random_thing0(LIGHT,c,s,0,56);
 }
 
@@ -1919,23 +1932,23 @@ void populate(level *l,sector *s,config *c,haa *haa,boolean first_room)
 /* to do special end-stuff, like arenas.                */
 boolean enough_quest(level *l,sector *s,quest *ThisQuest,config *c)
 {
-#ifndef NOT_DOING_ARENAS
-  /* Perhaps an arena? */
-  if ( (ThisQuest->goal==LEVEL_END_GOAL) &&
-       (s!=l->first_room) &&
-       (!c->do_dm) &&
-       ( (l->sl_tag!=0) || !need_secret_level(c) ) &&
-       ( (l->sl_tag==0) || l->sl_done ) &&
-       (ThisQuest->count >= (ThisQuest->minrooms - 5)) ) {
-    if ( (c->mission==8) ||
-         (c->map==30) ||
-         ((c->map==7)&&(c->last_mission)) ||
-         (c->last_mission&&(c->force_arena||rollpercent(3*c->levelcount))) ) {
-      ThisQuest->goal = ARENA_GOAL;
-      return 1;
+  if (!(c->gamemask & CHEX_BIT)) {
+    /* Perhaps an arena? */
+    if ( (ThisQuest->goal==LEVEL_END_GOAL) &&
+        (s!=l->first_room) &&
+        (!c->do_dm) &&
+        ( (l->sl_tag!=0) || !need_secret_level(c) ) &&
+        ( (l->sl_tag==0) || l->sl_done ) &&
+        (ThisQuest->count >= (ThisQuest->minrooms - 5)) ) {
+      if ( (c->mission==8) ||
+          (c->map==30) ||
+          ((c->map==7)&&(c->last_mission)) ||
+          (c->last_mission&&(c->force_arena||rollpercent(3*c->levelcount))) ) {
+        ThisQuest->goal = ARENA_GOAL;
+        return 1;
+      }
     }
   }
-#endif
   /* Don't stop a GATE_QUEST at an already-gate room */
   if (ThisQuest->goal==GATE_GOAL)
     if (s->pgate) return 0;
@@ -8098,7 +8111,7 @@ construct *new_construct(config *c)
   construct *answer = (construct *)malloc(sizeof(*answer));
 
   answer->height = 64;
-  answer->gamemask = DOOM1_BIT|DOOM0_BIT|DOOM2_BIT|DOOMI_BIT|DOOMC_BIT|HERETIC_BIT;
+  answer->gamemask = DOOM1_BIT|DOOM0_BIT|DOOM2_BIT|DOOMI_BIT|DOOMC_BIT|HERETIC_BIT|CHEX_BIT;
   answer->compatible = 0;
   answer->texture_cell_anchor = NULL;
   answer->flat_cell_anchor = NULL;
@@ -8383,11 +8396,13 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->bits &= ~PICKABLE;
     m->bits |= LIGHT;
     m->width = 33;
-    m = find_genus(c,ID_ELEC);
-    m->bits &= ~PICKABLE;
-    m->bits |= LIGHT;
-    m->width = 33;
-    m->height = 127;  /* About */
+    if (!(c->gamemask & CHEX_BIT)) {
+      m = find_genus(c,ID_ELEC);
+      m->bits &= ~PICKABLE;
+      m->bits |= LIGHT;
+      m->width = 33;
+      m->height = 127;  /* About */
+    }
     m = find_genus(c,ID_LAMP2);
     m->bits &= ~PICKABLE;
     m->bits |= LIGHT;
@@ -8399,52 +8414,54 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->width = 33;
     m->height = 72;   /* Very roughly */
     m->gamemask = DOOM2_BIT | DOOMC_BIT | DOOMI_BIT;
-    m = find_genus(c,ID_SHORTRED);
-    m->bits &= ~PICKABLE;
-    m->bits |= LIGHT;
-    m->width = 33;
-    m = find_genus(c,ID_SHORTBLUE);
-    m->bits &= ~PICKABLE;
-    m->bits |= LIGHT;
-    m->width = 33;
-    m = find_genus(c,ID_SHORTGREEN);
-    m->bits &= ~PICKABLE;
-    m->bits |= LIGHT;
-    m->width = 33;
-    m = find_genus(c,ID_TALLRED);
-    m->bits &= ~PICKABLE;
-    m->bits |= LIGHT;
-    m->width = 33;
-    m->height = 127;  /* sure */
-    m = find_genus(c,ID_TALLBLUE);
-    m->bits &= ~PICKABLE;
-    m->bits |= LIGHT;
-    m->width = 33;
-    m->height = 127;  /* sure */
-    m = find_genus(c,ID_TALLGREEN);
-    m->bits &= ~PICKABLE;
-    m->bits |= LIGHT;
-    m->width = 33;
-    m->height = 127;  /* sure */
-    m = find_genus(c,ID_CBRA);
-    m->bits &= ~PICKABLE;
-    m->bits |= LIGHT;
-    m->width = 33;
-    m->height = 72;  /* about */
-    m = find_genus(c,ID_FBARREL);
-    m->gamemask = DOOM2_BIT | DOOMC_BIT | DOOMI_BIT;
-    m->bits &= ~PICKABLE;
-    m->bits |= LIGHT;
-    m->width = 33;
-    m = find_genus(c,ID_BARREL);
-    m->bits &= ~PICKABLE;
-    m->bits |= EXPLODES;
-    m->width = 33;
-    /* pretend the candle is pickable; really just "not blocking" */
-    m = find_genus(c,ID_CANDLE);
-    m->bits |= PICKABLE;
-    m->bits |= LIGHT;
-    m->width = 16;
+    if (!(c->gamemask & CHEX_BIT)) {
+      m = find_genus(c,ID_SHORTRED);
+      m->bits &= ~PICKABLE;
+      m->bits |= LIGHT;
+      m->width = 33;
+      m = find_genus(c,ID_SHORTBLUE);
+      m->bits &= ~PICKABLE;
+      m->bits |= LIGHT;
+      m->width = 33;
+      m = find_genus(c,ID_SHORTGREEN);
+      m->bits &= ~PICKABLE;
+      m->bits |= LIGHT;
+      m->width = 33;
+      m = find_genus(c,ID_TALLRED);
+      m->bits &= ~PICKABLE;
+      m->bits |= LIGHT;
+      m->width = 33;
+      m->height = 127;  /* sure */
+      m = find_genus(c,ID_TALLBLUE);
+      m->bits &= ~PICKABLE;
+      m->bits |= LIGHT;
+      m->width = 33;
+      m->height = 127;  /* sure */
+      m = find_genus(c,ID_TALLGREEN);
+      m->bits &= ~PICKABLE;
+      m->bits |= LIGHT;
+      m->width = 33;
+      m->height = 127;  /* sure */
+      m = find_genus(c,ID_CBRA);
+      m->bits &= ~PICKABLE;
+      m->bits |= LIGHT;
+      m->width = 33;
+      m->height = 72;  /* about */
+      m = find_genus(c,ID_FBARREL);
+      m->gamemask = DOOM2_BIT | DOOMC_BIT | DOOMI_BIT;
+      m->bits &= ~PICKABLE;
+      m->bits |= LIGHT;
+      m->width = 33;
+      m = find_genus(c,ID_BARREL);
+      m->bits &= ~PICKABLE;
+      m->bits |= EXPLODES;
+      m->width = 33;
+      /* pretend the candle is pickable; really just "not blocking" */
+      m = find_genus(c,ID_CANDLE);
+      m->bits |= PICKABLE;
+      m->bits |= LIGHT;
+      m->width = 16;
+    }
 
     /* and register the weapons and ammos and healths */
     /* at least the ones that we need for arenas! */
@@ -8581,53 +8598,55 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->altdamage[HMP] = (float)8;
     m->altdamage[UV] = (float)4;
     m->min_level = 3;
-    /* Invisible pinky */
-    m = find_monster(c,ID_SPECTRE);
-    m->width = 62;
-    m->ammo_provides = (float)0;
-    m->ammo_to_kill[ITYTD] = (float)410;
-    m->ammo_to_kill[HMP] = (float)260;
-    m->ammo_to_kill[UV] = (float)220;
-    m->damage[ITYTD] = (float)25;
-    m->damage[HMP] = (float)10;
-    m->damage[UV] = (float)8;
-    m->altdamage[ITYTD] = (float)25;
-    m->altdamage[HMP] = (float)8;
-    m->altdamage[UV] = (float) 6;
-    m->min_level = 7;
-    /* Floating head */
-    m = find_monster(c,ID_SKULL);
-    m->width = 34;
-    m->bits |= BIG;  /* Well, sort of! */
-    m->ammo_provides = (float)0;
-    m->ammo_to_kill[ITYTD] = (float)260;
-    m->ammo_to_kill[HMP] = (float)165;
-    m->ammo_to_kill[UV] = (float)130;
-    m->damage[ITYTD] = (float)22;
-    m->damage[HMP] = (float)8;
-    m->damage[UV] = (float)5;
-    m->altdamage[ITYTD] = (float)18;
-    m->altdamage[HMP] = (float)5;
-    m->altdamage[UV] = (float)2;
-    m->bits |= FLIES;
-    m->min_level = 6;
-    /* Spider thing (I think) */
-    m = find_monster(c,ID_HEAD);
-    m->width = 63;                 /* Or 62 or maybe 64 */
-    m->bits |= BIG;
-    m->ammo_provides = (float)0;
-    m->ammo_to_kill[ITYTD] = (float)1050;
-    m->ammo_to_kill[HMP] = (float)630;
-    m->ammo_to_kill[UV] = (float)590;
-    m->damage[ITYTD] = (float)60;
-    m->damage[HMP] = (float)35;
-    m->damage[UV] = (float)18;
-    m->altdamage[ITYTD] = (float)50;
-    m->altdamage[HMP] = (float)20;
-    m->altdamage[UV] = (float)10;
-    m->bits |= SHOOTS;
-    m->bits |= FLIES;
-    m->min_level = 11;
+    if (!(c->gamemask&(CHEX_BIT))) {
+      /* Invisible pinky */
+      m = find_monster(c,ID_SPECTRE);
+      m->width = 62;
+      m->ammo_provides = (float)0;
+      m->ammo_to_kill[ITYTD] = (float)410;
+      m->ammo_to_kill[HMP] = (float)260;
+      m->ammo_to_kill[UV] = (float)220;
+      m->damage[ITYTD] = (float)25;
+      m->damage[HMP] = (float)10;
+      m->damage[UV] = (float)8;
+      m->altdamage[ITYTD] = (float)25;
+      m->altdamage[HMP] = (float)8;
+      m->altdamage[UV] = (float) 6;
+      m->min_level = 7;
+      /* Floating head */
+      m = find_monster(c,ID_SKULL);
+      m->width = 34;
+      m->bits |= BIG;  /* Well, sort of! */
+      m->ammo_provides = (float)0;
+      m->ammo_to_kill[ITYTD] = (float)260;
+      m->ammo_to_kill[HMP] = (float)165;
+      m->ammo_to_kill[UV] = (float)130;
+      m->damage[ITYTD] = (float)22;
+      m->damage[HMP] = (float)8;
+      m->damage[UV] = (float)5;
+      m->altdamage[ITYTD] = (float)18;
+      m->altdamage[HMP] = (float)5;
+      m->altdamage[UV] = (float)2;
+      m->bits |= FLIES;
+      m->min_level = 6;
+      /* Spider thing (I think) */
+      m = find_monster(c,ID_HEAD);
+      m->width = 63;                 /* Or 62 or maybe 64 */
+      m->bits |= BIG;
+      m->ammo_provides = (float)0;
+      m->ammo_to_kill[ITYTD] = (float)1050;
+      m->ammo_to_kill[HMP] = (float)630;
+      m->ammo_to_kill[UV] = (float)590;
+      m->damage[ITYTD] = (float)60;
+      m->damage[HMP] = (float)35;
+      m->damage[UV] = (float)18;
+      m->altdamage[ITYTD] = (float)50;
+      m->altdamage[HMP] = (float)20;
+      m->altdamage[UV] = (float)10;
+      m->bits |= SHOOTS;
+      m->bits |= FLIES;
+      m->min_level = 11;
+    }
     /* Baron of Hell */
     m = find_monster(c,ID_BARON);
     m->width = 50;                 /* Roughly */
@@ -8647,27 +8666,29 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->min_level = 12;
 
     /* Other bosses; need to fill in data! */
-    m = find_monster(c,ID_CYBER);
-    m->width = 84;
-    m->height = 110;
-    m->bits |= BIG | BOSS;
-    m->ammo_provides = (float)0;
-    m->ammo_to_kill[ITYTD] = (float)8000;   /* Numbers are all guesses; fix */
-    m->ammo_to_kill[HMP] = (float)6500;
-    m->ammo_to_kill[UV] = (float)6200;
-    m = find_monster(c,ID_SPIDERBOSS);
-    m->width = 260;
-    m->height = 100;
-    m->bits |= BIG | BOSS;
-    m->ammo_provides = (float)0;
-    m->ammo_to_kill[ITYTD] = (float)6000;   /* Numbers are all guesses; fix */
-    m->ammo_to_kill[HMP] = (float)5000;
-    m->ammo_to_kill[UV] = (float)4500;
-    m->min_level=17;
+    if (!(c->gamemask&(CHEX_BIT))) {
+      m = find_monster(c,ID_CYBER);
+      m->width = 84;
+      m->height = 110;
+      m->bits |= BIG | BOSS;
+      m->ammo_provides = (float)0;
+      m->ammo_to_kill[ITYTD] = (float)8000;   /* Numbers are all guesses; fix */
+      m->ammo_to_kill[HMP] = (float)6500;
+      m->ammo_to_kill[UV] = (float)6200;
+      m = find_monster(c,ID_SPIDERBOSS);
+      m->width = 260;
+      m->height = 100;
+      m->bits |= BIG | BOSS;
+      m->ammo_provides = (float)0;
+      m->ammo_to_kill[ITYTD] = (float)6000;   /* Numbers are all guesses; fix */
+      m->ammo_to_kill[HMP] = (float)5000;
+      m->ammo_to_kill[UV] = (float)4500;
+      m->min_level=17;
+    }
   }
 
   /* DOOM2 monsters */
-  if (!(c->gamemask&(DOOM0_BIT|DOOM1_BIT|HERETIC_BIT))) {
+  if (!(c->gamemask&(DOOM0_BIT|DOOM1_BIT|HERETIC_BIT|CHEX_BIT))) {
     m = find_monster(c,ID_NAZI);
     m->gamemask = DOOM2_BIT;
     m->width = 42;
