@@ -49,7 +49,6 @@ OB_GAMES["chex1"] =
 	priority = 93,
 	
 	engine = "idtech_1",
-	port = "!zdoom",
 
 	format = "doom",
 	
