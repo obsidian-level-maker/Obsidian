@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: Obsidian Level Maker\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-05-09 23:41+1000\n"
-"PO-Revision-Date: 2023-01-04 18:20-0600\n"
+"PO-Revision-Date: 2023-07-30 23:00-0700\n"
 "Last-Translator:  Dasho\n"
 "Language-Team: English\n"
 "Language: en_US\n"
@@ -253,11 +253,11 @@ msgstr ""
 msgid "Episodic"
 msgstr ""
 
-#: scripts/level.lua:2741
+#: scripts/level.lua:2756
 msgid "\nWarning: The game that you have selected is in an experimental state. WADs may not build successfully and certain gameplay features may not be implemented yet! To ignore this warning and continue generation for these games, check the \"Experimental Games\" checkbox located in the Miscellaneous Options Module.\n\nUse the help link for the \"Experimental Games\" module to find the exact status for the game in question."
 msgstr ""
 
-#: scripts/level.lua:2840
+#: scripts/level.lua:2855
 msgid "Oblige V2"
 msgstr ""
 
@@ -277,63 +277,51 @@ msgstr ""
 msgid "Progressive"
 msgstr ""
 
-#: scripts/obsidian.lua:2395
-msgid "option: "
-msgstr ""
-
-#: scripts/obsidian.lua:2396
-msgid "option: "
-msgstr ""
-
-#: scripts/obsidian.lua:2397
-msgid "comment: "
-msgstr ""
-
-#: scripts/obsidian.lua:2398
-msgid "comment: "
-msgstr ""
-
 #: scripts/obsidian.lua:2399
-msgid "engine: "
+msgid "option: "
 msgstr ""
 
 #: scripts/obsidian.lua:2400
+msgid "option: "
+msgstr ""
+
+#: scripts/obsidian.lua:2401
+msgid "comment: "
+msgstr ""
+
+#: scripts/obsidian.lua:2402
+msgid "comment: "
+msgstr ""
+
+#: scripts/obsidian.lua:2403
 msgid "engine: "
 msgstr ""
 
-#: scripts/obsidian.lua:2407
+#: scripts/obsidian.lua:2404
+msgid "engine: "
+msgstr ""
+
+#: scripts/obsidian.lua:2411
 msgid "game: "
 msgstr ""
 
-#: scripts/obsidian.lua:2408
+#: scripts/obsidian.lua:2412
 msgid "game: "
 msgstr ""
 
-#: scripts/obsidian.lua:2415
+#: scripts/obsidian.lua:2419
 msgid "port: "
 msgstr ""
 
-#: scripts/obsidian.lua:2416
+#: scripts/obsidian.lua:2420
 msgid "port: "
 msgstr ""
 
-#: scripts/obsidian.lua:2422
+#: scripts/obsidian.lua:2426
 msgid "values: "
 msgstr ""
 
-#: scripts/obsidian.lua:2423
-msgid "values: "
-msgstr ""
-
-#: scripts/obsidian.lua:2428
-msgid "default: "
-msgstr ""
-
-#: scripts/obsidian.lua:2429
-msgid "default: "
-msgstr ""
-
-#: scripts/obsidian.lua:2431
+#: scripts/obsidian.lua:2427
 msgid "values: "
 msgstr ""
 
@@ -342,98 +330,98 @@ msgid "default: "
 msgstr ""
 
 #: scripts/obsidian.lua:2433
-msgid "values: "
-msgstr ""
-
-#: scripts/obsidian.lua:2434
 msgid "default: "
 msgstr ""
 
-#: scripts/obsidian.lua:2436
+#: scripts/obsidian.lua:2435
 msgid "values: "
+msgstr ""
+
+#: scripts/obsidian.lua:2436
+msgid "default: "
 msgstr ""
 
 #: scripts/obsidian.lua:2437
 msgid "values: "
 msgstr ""
 
-#: scripts/obsidian.lua:2449
+#: scripts/obsidian.lua:2438
+msgid "default: "
+msgstr ""
+
+#: scripts/obsidian.lua:2440
+msgid "values: "
+msgstr ""
+
+#: scripts/obsidian.lua:2441
+msgid "values: "
+msgstr ""
+
+#: scripts/obsidian.lua:2453
 msgid "randomize_group: "
 msgstr ""
 
-#: scripts/obsidian.lua:2450
+#: scripts/obsidian.lua:2454
 msgid "randomize_group: "
 msgstr ""
 
-#: scripts/obsidian.lua:2483
+#: scripts/obsidian.lua:2487
 msgid "tooltip"
 msgstr ""
 
-#: scripts/obsidian.lua:2484
+#: scripts/obsidian.lua:2488
 msgid "engine"
 msgstr ""
 
-#: scripts/obsidian.lua:2486
+#: scripts/obsidian.lua:2490
 msgid "ALL"
 msgstr ""
 
-#: scripts/obsidian.lua:2498
+#: scripts/obsidian.lua:2502
 msgid "game"
 msgstr ""
 
-#: scripts/obsidian.lua:2499
+#: scripts/obsidian.lua:2503
 msgid "ALL"
 msgstr ""
 
-#: scripts/obsidian.lua:2500
+#: scripts/obsidian.lua:2504
 msgid "ALL"
 msgstr ""
 
-#: scripts/obsidian.lua:2512
+#: scripts/obsidian.lua:2516
 msgid "port"
 msgstr ""
 
-#: scripts/obsidian.lua:2513
+#: scripts/obsidian.lua:2517
 msgid "ALL"
 msgstr ""
 
-#: scripts/obsidian.lua:2514
+#: scripts/obsidian.lua:2518
 msgid "ALL"
-msgstr ""
-
-#: scripts/obsidian.lua:2527
-msgid "type"
-msgstr ""
-
-#: scripts/obsidian.lua:2528
-msgid "slider"
-msgstr ""
-
-#: scripts/obsidian.lua:2529
-msgid "values"
-msgstr ""
-
-#: scripts/obsidian.lua:2530
-msgid "min"
 msgstr ""
 
 #: scripts/obsidian.lua:2531
-msgid "max"
-msgstr ""
-
-#: scripts/obsidian.lua:2536
-msgid "default"
-msgstr ""
-
-#: scripts/obsidian.lua:2552
 msgid "type"
 msgstr ""
 
-#: scripts/obsidian.lua:2553
-msgid "boolean"
+#: scripts/obsidian.lua:2532
+msgid "slider"
 msgstr ""
 
-#: scripts/obsidian.lua:2554
+#: scripts/obsidian.lua:2533
+msgid "values"
+msgstr ""
+
+#: scripts/obsidian.lua:2534
+msgid "min"
+msgstr ""
+
+#: scripts/obsidian.lua:2535
+msgid "max"
+msgstr ""
+
+#: scripts/obsidian.lua:2540
 msgid "default"
 msgstr ""
 
@@ -442,38 +430,50 @@ msgid "type"
 msgstr ""
 
 #: scripts/obsidian.lua:2557
-msgid "choice"
+msgid "boolean"
 msgstr ""
 
 #: scripts/obsidian.lua:2558
+msgid "default"
+msgstr ""
+
+#: scripts/obsidian.lua:2560
+msgid "type"
+msgstr ""
+
+#: scripts/obsidian.lua:2561
+msgid "choice"
+msgstr ""
+
+#: scripts/obsidian.lua:2562
 msgid "values"
 msgstr ""
 
-#: scripts/obsidian.lua:2569
+#: scripts/obsidian.lua:2573
 msgid "randomize_group"
 msgstr ""
 
-#: scripts/obsidian.lua:2597
+#: scripts/obsidian.lua:2601
 msgid "~~~~~~~ Making Levels ~~~~~~~\n\n"
 msgstr ""
 
-#: scripts/obsidian.lua:2616
+#: scripts/obsidian.lua:2620
 msgid "SLUMP"
 msgstr ""
 
-#: scripts/obsidian.lua:2627
+#: scripts/obsidian.lua:2631
 msgid "id Tech 0"
 msgstr ""
 
-#: scripts/obsidian.lua:2635
+#: scripts/obsidian.lua:2639
 msgid "Hexen's level linking in Oblige v2 is incompatible with Obsidian's level progression. Please set the slider to 100% to generate the full WAD with Oblige v2."
 msgstr ""
 
-#: scripts/obsidian.lua:2662
+#: scripts/obsidian.lua:2666
 msgid "~~~~~~~ Build Aborted! ~~~~~~~\n\n"
 msgstr ""
 
-#: scripts/obsidian.lua:2667
+#: scripts/obsidian.lua:2671
 msgid "~~~~~~ Finished Making Levels ~~~~~~\n\n"
 msgstr ""
 
@@ -553,15 +553,15 @@ msgstr ""
 msgid "Chex Quest 1"
 msgstr ""
 
-#: games/chex1/themes.lua:1508
+#: games/chex1/themes.lua:1235
 msgid "Bazoik"
 msgstr ""
 
-#: games/chex1/themes.lua:1516
+#: games/chex1/themes.lua:1243
 msgid "Chextropolis"
 msgstr ""
 
-#: games/chex1/themes.lua:1524
+#: games/chex1/themes.lua:1251
 msgid "Villa Chex"
 msgstr ""
 
@@ -2283,6 +2283,14 @@ msgstr ""
 
 #: modules/debugger.lua:233
 msgid "Higher levels of detail will increase the amount of time that it takes to generate a WAD. If saving an animated GIF of the build process, its animation speed will also be affected by this setting (less detail=slower, more detail=faster)."
+msgstr ""
+
+#: modules/debugger.lua:239
+msgid "Max Failed Level Retries"
+msgstr ""
+
+#: modules/debugger.lua:246
+msgid "Set the amount of times Obsidian will attempt to scrap and restart a level if it encounters an error during the build process."
 msgstr ""
 
 #: modules/export_map.lua:265
@@ -9313,83 +9321,83 @@ msgstr ""
 msgid "Mix It Up"
 msgstr ""
 
-#: scripts/obsidian.lua:2285
+#: scripts/obsidian.lua:2289
 msgid "Choose which engine to build maps for:\n  id Tech 0: Wolfenstein 3D and similar games\n  id Tech 1: Doom and similar games\n"
 msgstr ""
 
-#: scripts/obsidian.lua:2286
+#: scripts/obsidian.lua:2290
 msgid "ALL"
 msgstr ""
 
-#: scripts/obsidian.lua:2287
+#: scripts/obsidian.lua:2291
 msgid "ALL"
 msgstr ""
 
-#: scripts/obsidian.lua:2288
+#: scripts/obsidian.lua:2292
 msgid "ALL"
 msgstr ""
 
-#: scripts/obsidian.lua:2296
+#: scripts/obsidian.lua:2300
 msgid "Choose which game to build maps for."
 msgstr ""
 
-#: scripts/obsidian.lua:2297
+#: scripts/obsidian.lua:2301
 msgid "ALL"
 msgstr ""
 
-#: scripts/obsidian.lua:2298
+#: scripts/obsidian.lua:2302
 msgid "ALL"
 msgstr ""
 
-#: scripts/obsidian.lua:2299
+#: scripts/obsidian.lua:2303
 msgid "ALL"
 msgstr ""
 
-#: scripts/obsidian.lua:2320
+#: scripts/obsidian.lua:2324
 msgid "Choose which port to build maps for.\n  Vanilla is the only option for id Tech 0; the remaining options are for id Tech 1.\n"
 msgstr ""
 
-#: scripts/obsidian.lua:2321
+#: scripts/obsidian.lua:2325
 msgid "ALL"
 msgstr ""
 
-#: scripts/obsidian.lua:2322
+#: scripts/obsidian.lua:2326
 msgid "ALL"
 msgstr ""
 
-#: scripts/obsidian.lua:2323
+#: scripts/obsidian.lua:2327
 msgid "ALL"
 msgstr ""
 
-#: scripts/obsidian.lua:2336
+#: scripts/obsidian.lua:2340
 msgid "Choose how many levels to create."
 msgstr ""
 
-#: scripts/obsidian.lua:2337
+#: scripts/obsidian.lua:2341
 msgid "ALL"
 msgstr ""
 
-#: scripts/obsidian.lua:2338
+#: scripts/obsidian.lua:2342
 msgid "ALL"
 msgstr ""
 
-#: scripts/obsidian.lua:2339
+#: scripts/obsidian.lua:2343
 msgid "ALL"
 msgstr ""
 
-#: scripts/obsidian.lua:2349
+#: scripts/obsidian.lua:2353
 msgid "The following values are game-specific:\n  Chex Quest 3: bazoik,spaceport,villa\n  Ultimate Doom/Doom 1: deimos,flesh\n  Ultimate Doom/Doom 1/Doom 2/TNT/Plutonia: tech,urban,hell\n  TNT: egypt\n  HacX: hacx_urban\n  Harmony: ndf_base\n  Heretic: city,maw,dome,ossuary,demense\n  Hexen: forest,ice_caves,fire_steel,swamp,dungeon,town\n  Strife: town\n\n  Note: This setting currently does nothing for id Tech 0 games!\n"
 msgstr ""
 
-#: scripts/obsidian.lua:2350
+#: scripts/obsidian.lua:2354
 msgid "ALL"
 msgstr ""
 
-#: scripts/obsidian.lua:2351
+#: scripts/obsidian.lua:2355
 msgid "ALL"
 msgstr ""
 
-#: scripts/obsidian.lua:2352
+#: scripts/obsidian.lua:2356
 msgid "ALL"
 msgstr ""
 
@@ -9717,43 +9725,43 @@ msgstr ""
 msgid "Making"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1392
+#: source_files/obsidian_main/m_lua.cc:1398
 msgid "Using"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1393
+#: source_files/obsidian_main/m_lua.cc:1399
 msgid "Preview Not Available"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1794
+#: source_files/obsidian_main/m_lua.cc:1801
 msgid "[ ERROR ]"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1798
+#: source_files/obsidian_main/m_lua.cc:1805
 msgid "Script Error: "
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:2152
+#: source_files/obsidian_main/m_lua.cc:2159
 msgid "ob_print_reference: Error creating REFERENCE.txt!\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:2162
+#: source_files/obsidian_main/m_lua.cc:2169
 msgid "ob_print_reference_json: Error printing json reference!\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:2171
+#: source_files/obsidian_main/m_lua.cc:2178
 msgid "Script Error"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:2179
+#: source_files/obsidian_main/m_lua.cc:2186
 msgid "[ ERROR ]"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:2185
+#: source_files/obsidian_main/m_lua.cc:2192
 msgid "Script Error"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:2209
+#: source_files/obsidian_main/m_lua.cc:2216
 msgid "Cancelled"
 msgstr ""
 

@@ -2622,6 +2622,7 @@ function Level_make_level(LEV)
   local SEEDS = Seed_init(LEVEL)
   local res = "ok'"
   local retry_counter = 0
+  local retry_target = PARAM.float_max_build_retries or 3
   local error_mat = assert(GAME.MATERIALS["_ERROR"])
 
   ::retryafterfailure::
@@ -2713,11 +2714,12 @@ function Level_make_level(LEV)
     collectgarbage("collect")
     collectgarbage("collect")
     retry_counter = retry_counter + 1
-    if retry_counter > 3 then
+    if retry_counter > retry_target then
       return res
     else
       LEVEL = table.copy(LEV)
       SEEDS = Seed_init(LEVEL)
+      print("RETRYING MAP " .. LEVEL.name)
       gui.reseed_rng(gui.random_int())
       goto retryafterfailure
     end

@@ -573,7 +573,11 @@ function ob_update_ports()
     if OB_CONFIG.engine == "idtech_0" then
       OB_CONFIG.port = "vanilla"
     elseif OB_CONFIG.engine == "idtech_1" then
-      OB_CONFIG.port = "zdoom"
+      if OB_CONFIG.game == "chex1" then  -- Ugh
+        OB_CONFIG.port = "limit_enforcing"
+      else
+        OB_CONFIG.port = "zdoom"
+      end
     elseif OB_CONFIG.engine == "idtech_2" then
       OB_CONFIG.port = "vanilla"
     else

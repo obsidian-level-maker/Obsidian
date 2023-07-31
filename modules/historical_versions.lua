@@ -35,7 +35,7 @@ OB_MODULES["historical_versions"] =
   where = "arch",
   priority = 103,
   port = "!limit_enforcing",
-  game = { chex3=0, doom1=1, doom2=1, ultdoom=1, heretic=1, hexen=1, hacx=0, harmony=0, strife=0, nukem=0, quake=0, wolf=0, noah=0 },
+  game = { chex1=1, chex3=0, doom1=1, doom2=1, ultdoom=1, heretic=1, hexen=1, hacx=0, harmony=0, strife=0, nukem=0, quake=0, wolf=0, noah=0 },
 
   tooltip = _("Options to generate levels using past releases of Oblige, Obsidian's predecessor."),
 
