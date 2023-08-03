@@ -6906,7 +6906,21 @@ ARMAETUS_THEMES =
       SDM_HAW5 = 20,
       SDM_HAW6 = 20,
       SDM_HAW7 = 20,
-      SDM_HAW8 = 20
+      SDM_HAW8 = 20,
+
+      SD_GTHW1 = 4,
+      SD_GTHW6 = 4,
+      SD_GTHW7 = 4,
+      SD_GTHW8 = 4,
+
+      SD_HCSW1 = 6,
+      SD_HCSW3 = 6,
+      SD_HCSW4 = 6,
+
+      SDMHAZW1 = 20,
+      SDMHAZW2 = 20,
+      SDMHAZW3 = 20,
+      SDMHAZW4 = 20
     },
 
     fences =

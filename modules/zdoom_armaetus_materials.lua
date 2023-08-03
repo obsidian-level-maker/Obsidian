@@ -1680,6 +1680,15 @@ ARMAETUS_MATERIALS = {
   SD_HCSF5 = { t="SD_HCSW3", f="SD_HCSF5"},
   SD_HCSF6 = { t="SD_HCSW4", f="SD_HCSF6"},
 
+  -- aztec demonic
+  SDMHAZW1 = { t="SDMHAZW1", f="EG01"},
+  SDMHAZW2 = { t="SDMHAZW2", f="EG02"},
+  SDMHAZW3 = { t="SDMHAZW3", f="EG03"},
+  SDMHAZW4 = { t="SDMHAZW4", f="EG04"},
+  SDMHAZW5 = { t="SDMHAZW5", f="EG05"},
+  SDMHAZW6 = { t="SDMHAZW6", f="EG06"},
+  SDMHAZW7 = { t="SDMHAZW7", f="BRIK01"},
+
   -- 256-wide doors
   G8_SVDR3 = { t="G8_SVDR3", f="FLAT23"},
 
