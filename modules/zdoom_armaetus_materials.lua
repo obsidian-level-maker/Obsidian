@@ -1681,13 +1681,21 @@ ARMAETUS_MATERIALS = {
   SD_HCSF6 = { t="SD_HCSW4", f="SD_HCSF6"},
 
   -- aztec demonic
-  SDMHAZW1 = { t="SDMHAZW1", f="EG01"},
-  SDMHAZW2 = { t="SDMHAZW2", f="EG02"},
-  SDMHAZW3 = { t="SDMHAZW3", f="EG03"},
-  SDMHAZW4 = { t="SDMHAZW4", f="EG04"},
-  SDMHAZW5 = { t="SDMHAZW5", f="EG05"},
-  SDMHAZW6 = { t="SDMHAZW6", f="EG06"},
-  SDMHAZW7 = { t="SDMHAZW7", f="BRIK01"},
+  SDMHAZW1 = { t="SDMHAZW1", f="SDMHAZF1"},
+  SDMHAZW2 = { t="SDMHAZW2", f="SDMHAZF2"},
+  SDMHAZW3 = { t="SDMHAZW3", f="SDMHAZF3"},
+  SDMHAZW4 = { t="SDMHAZW4", f="SDMHAZF4"},
+  SDMHAZW5 = { t="SDMHAZW5", f="SDMHAZF5"},
+  SDMHAZW6 = { t="SDMHAZW6", f="SDMHAZF6"},
+  SDMHAZW7 = { t="SDMHAZW7", f="SDMHAZF4"},
+
+  -- flats
+  SDMHAZF1 = { t="SDMHAZW1", f="SDMHAZF1"},
+  SDMHAZF2 = { t="SDMHAZW2", f="SDMHAZF2"},
+  SDMHAZF3 = { t="SDMHAZW3", f="SDMHAZF3"},
+  SDMHAZF4 = { t="SDMHAZW4", f="SDMHAZF4"},
+  SDMHAZF5 = { t="SDMHAZW1", f="SDMHAZF5"},
+  SDMHAZF6 = { t="SDMHAZW4", f="SDMHAZF6"},
 
   -- 256-wide doors
   G8_SVDR3 = { t="G8_SVDR3", f="FLAT23"},

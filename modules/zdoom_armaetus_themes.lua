@@ -3113,6 +3113,103 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
+
+  hell_AztecClay =
+  {
+    env = "building",
+    prob = 35,
+
+    walls =
+    {
+      SDMHAZW1 = 5,
+      SDMHAZW2 = 5,
+      SDMHAZW3 = 5,
+      SDMHAZW4 = 5,
+      SDMHAZW5 = 5,
+      SDMHAZW6 = 5,
+      SDMHAZW7 = 5
+    },
+
+    floors =
+    {
+      FLAT1_1 = 2,
+      FLAT1_2 = 2,
+      FLAT8 = 2,
+      FLOOR0_1 = 2,
+      FLOOR0_2 = 2,
+      FLOOR3_3 = 2,
+      FLOOR4_6 = 2,
+      FLOOR5_4 = 2,
+      FLOOR7_1 = 2,
+
+      BRIK01 = 5,
+      EG01 = 5,
+      EG02 = 5,
+      EG03 = 5,
+      EG04 = 5,
+      EG05 = 5,
+      EG06 = 5,
+      GSTN03 = 5,
+      GSTN04 = 5,
+      GSTN05 = 5,
+      RROCK09 = 5,
+      RROCK10 = 5,
+      RROCK11 = 5,
+      RROCK12 = 5,
+      RROCK16 = 5,
+      RROCK17 = 5,
+      RROCK18 = 5,
+      SKINFLT = 5,
+
+      SDMHAZF1 = 25,
+      SDMHAZF2 = 25,
+      SDMHAZF3 = 25,
+      SDMHAZF4 = 25,
+      SDMHAZF5 = 25,
+      SDMHAZF6 = 25
+    },
+
+    ceilings =
+    {
+      FLAT1_1 = 2,
+      FLAT1_2 = 2,
+      FLAT8 = 2,
+      FLOOR0_1 = 2,
+      FLOOR0_2 = 2,
+      FLOOR3_3 = 2,
+      FLOOR4_6 = 2,
+      FLOOR5_4 = 2,
+      FLOOR7_1 = 2,
+
+      BRIK01 = 5,
+      EG01 = 5,
+      EG02 = 5,
+      EG03 = 5,
+      EG04 = 5,
+      EG05 = 5,
+      EG06 = 5,
+      GSTN03 = 5,
+      GSTN04 = 5,
+      GSTN05 = 5,
+      RROCK09 = 5,
+      RROCK10 = 5,
+      RROCK11 = 5,
+      RROCK12 = 5,
+      RROCK16 = 5,
+      RROCK17 = 5,
+      RROCK18 = 5,
+      SKINFLT = 5,
+
+      SDMHAZF1 = 25,
+      SDMHAZF2 = 25,
+      SDMHAZF3 = 25,
+      SDMHAZF4 = 25,
+      SDMHAZF5 = 25,
+      SDMHAZF6 = 25
+    }
+  },
+
+
   -- Hell has frozen over!
   hell_icecave =
   {
@@ -3246,7 +3343,14 @@ ARMAETUS_ROOM_THEMES =
 
       SDM_HGF1 = 20,
       SDM_HGF2 = 20,
-      SDM_HGF3 = 20
+      SDM_HGF3 = 20,
+
+      SDMHAZF1 = 15,
+      SDMHAZF2 = 15,
+      SDMHAZF3 = 15,
+      SDMHAZF4 = 15,
+      SDMHAZF5 = 15,
+      SDMHAZF6 = 15
     },
 
     naturals =
@@ -7523,7 +7627,14 @@ ARMAETUS_DESERT_OUTDOORS =
       EG05  = 10,
       EG03  = 15,
       EG02  = 10,
-      EG01  = 15
+      EG01  = 15,
+
+      SDMHAZF1 = 10,
+      SDMHAZF2 = 10,
+      SDMHAZF3 = 10,
+      SDMHAZF4 = 10,
+      SDMHAZF5 = 10,
+      SDMHAZF6 = 10
     }
   },
 
