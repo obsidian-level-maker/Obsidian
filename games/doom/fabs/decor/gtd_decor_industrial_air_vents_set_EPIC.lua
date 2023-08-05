@@ -9,13 +9,13 @@ PREFABS.Decor_air_vent_large_module =
   group = "gtd_wall_air_vents",
 
   where  = "point",
-  size   = 104,
+  size   = 88,
   height = 104,
 
   bound_z1 = 0,
   bound_z2 = 104,
 
-  z_fit  = "top",
+  z_fit  = "top"
 }
 
 PREFABS.Decor_air_vent_pillar =
@@ -26,7 +26,7 @@ PREFABS.Decor_air_vent_pillar =
   size = 64,
   height = 96,
 
-  bound_z2 = 96,
+  bound_z2 = 96
 }
 
 PREFABS.Decor_air_vent_tetromino_curve =
