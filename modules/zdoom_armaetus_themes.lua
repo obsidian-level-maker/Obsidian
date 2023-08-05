@@ -1877,7 +1877,7 @@ ARMAETUS_ROOM_THEMES =
 
 -- START OF HELL THEMES
 
-  hell_ArmaetusGothic =
+  hell_ArmaetusGothic = --150
   {
     env  = "building",
     prob = 150,
@@ -2043,7 +2043,7 @@ ARMAETUS_ROOM_THEMES =
     },
   },
 
-  hell_CementCautionlines =
+  hell_CementCautionlines = --20
   {
     env = "building",
     prob = 20,
@@ -2126,7 +2126,7 @@ ARMAETUS_ROOM_THEMES =
     keep_prob = 10,
   },
 
-  hell_CementCautionless =
+  hell_CementCautionless = --20
   {
     env = "building",
     prob = 20,
@@ -2193,7 +2193,7 @@ ARMAETUS_ROOM_THEMES =
     keep_prob = 20,
   },
 
-  hell_fleshcraft =
+  hell_fleshcraft = --50
   {
     env  = "building",
     prob = 50,
@@ -2261,7 +2261,7 @@ ARMAETUS_ROOM_THEMES =
     },
   },
 
-  hell_blackened =
+  hell_blackened = --40
   {
     env  = "building",
     prob = 40,
@@ -2309,7 +2309,7 @@ ARMAETUS_ROOM_THEMES =
     },
   },
 
-  hell_crimson =
+  hell_crimson = --40
   {
     env  = "building",
     prob = 40,
@@ -2349,7 +2349,7 @@ ARMAETUS_ROOM_THEMES =
   },
 
   -- MSSP
-  hell_egyptish =
+  hell_egyptish = --60
   {
     env = "building",
     prob = 60,
@@ -2416,7 +2416,7 @@ ARMAETUS_ROOM_THEMES =
     },
   },
 
-  hell_greenBrick =
+  hell_greenBrick = --20
   {
     env = "building",
     prob = 20,
@@ -2484,7 +2484,7 @@ ARMAETUS_ROOM_THEMES =
     },
   },
 
-  hell_metal =
+  hell_metal = --50
   {
     env = "building",
     prob = 50,
@@ -2723,10 +2723,10 @@ ARMAETUS_ROOM_THEMES =
     },
   },
 
-  hell_rocky_ruins =
+  hell_rocky_ruins = --45
   {
     env = "building",
-    prob = 30,
+    prob = 45,
 
     walls =
     {
@@ -2868,10 +2868,10 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
-  hell_gilded_bricks =
+  hell_gilded_bricks = --60
   {
     env = "building",
-    prob = 30,
+    prob = 60,
 
     walls =
     {
@@ -2958,10 +2958,10 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
-  hell_copper_steampunk =
+  hell_copper_steampunk = --45
   {
     env = "building",
-    prob = 30,
+    prob = 45,
 
     walls =
     {
@@ -3040,84 +3040,10 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
-  hell_armaetuscave =
-  {
-    env  = "cave",
-    prob = 60,
-
-    walls =
-    {
-      RDROK1   = 80,
-      RDROK2   = 80,
-      SP_ROCK1 = 50,
-      ASHWALL2 = 50,
-      ASHWALL3 = 50,
-      ASHWALL4 = 50,
-      ASHWALL6 = 50,
-      ASHWALL7 = 50,
-      ASH05    = 50,
-      ROK04    = 35,
-      ROK05    = 35,
-      ROK12    = 35,
-      ROK13    = 35,
-      ROK14    = 30,
-      ROK15    = 30,
-      ROK20    = 20,
-      ROK21    = 20,
-      ROK22    = 20,
-      ROK23    = 20,
-      ROK24    = 15,
-      ROK25    = 15,
-      ROK26    = 10,
-    },
-
-    floors =
-    {
-     FLAT10 = 60,
-     MFLR8_3 = 50,
-     RROCK03 = 50,
-     RROCK09 = 30
-    }
-  },
-
-  hell_fireycave =
-  {
-    env  = "cave",
-    prob = 60,
-
-    light_adjusts = { 32,48,64 },
-
-    walls =
-    {
-      ROCKRED1 = 50,
-      HELLROK1 = 30,
-      RDROK1   = 20,
-      RDROK2   = 20,
-      CRACKRED = 15,
-      CRACKRD2 = 15,
-      FIREBLU1 = 15,
-      CRACKLE2 =  5,
-      CRACKLE4 =  5,
-      FIREBLK1 =  3
-    },
-
-    floors =
-    {
-      FLOOR6_2 = 40,
-      FLOOR6_1 = 20,
-
-      RROCK01  = 20,
-      RROCK05  = 20,
-      RROCK03  = 10,
-      RROCK02  = 5
-    }
-  },
-
-
-  hell_AztecClay =
+  hell_AztecClay = --45
   {
     env = "building",
-    prob = 35,
+    prob = 45,
 
     walls =
     {
@@ -3209,11 +3135,10 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
-
-  hell_babylonian =
+  hell_babylonian = --45
   {
     env = "building",
-    prob = 35,
+    prob = 45,
 
     walls =
     {
@@ -3257,12 +3182,12 @@ ARMAETUS_ROOM_THEMES =
       RROCK18 = 5,
       SKINFLT = 5,
 
-      SDMHAZF1 = 25,
-      SDMHAZF2 = 25,
-      SDMHAZF3 = 25,
-      SDMHAZF4 = 25,
-      SDMHAZF5 = 25,
-      SDMHAZF6 = 25
+      SDPBBFT1 = 45,
+      SDPBBFT2 = 45,
+      SDPBBFT3 = 45,
+      SDPBBFT4 = 45,
+      SDPBBFT5 = 45,
+      SDPBBFT6 = 45
     },
 
     ceilings =
@@ -3301,13 +3226,92 @@ ARMAETUS_ROOM_THEMES =
       SDMHAZF3 = 25,
       SDMHAZF4 = 25,
       SDMHAZF5 = 25,
-      SDMHAZF6 = 25
+      SDMHAZF6 = 25,
+
+      SDPBBFT1 = 45,
+      SDPBBFT2 = 45,
+      SDPBBFT3 = 45,
+      SDPBBFT4 = 45,
+      SDPBBFT5 = 45,
+      SDPBBFT6 = 45
     }
   },
 
+  hell_armaetuscave = --60
+  {
+    env  = "cave",
+    prob = 60,
+
+    walls =
+    {
+      RDROK1   = 80,
+      RDROK2   = 80,
+      SP_ROCK1 = 50,
+      ASHWALL2 = 50,
+      ASHWALL3 = 50,
+      ASHWALL4 = 50,
+      ASHWALL6 = 50,
+      ASHWALL7 = 50,
+      ASH05    = 50,
+      ROK04    = 35,
+      ROK05    = 35,
+      ROK12    = 35,
+      ROK13    = 35,
+      ROK14    = 30,
+      ROK15    = 30,
+      ROK20    = 20,
+      ROK21    = 20,
+      ROK22    = 20,
+      ROK23    = 20,
+      ROK24    = 15,
+      ROK25    = 15,
+      ROK26    = 10,
+    },
+
+    floors =
+    {
+     FLAT10 = 60,
+     MFLR8_3 = 50,
+     RROCK03 = 50,
+     RROCK09 = 30
+    }
+  },
+
+  hell_fireycave = --60
+  {
+    env  = "cave",
+    prob = 60,
+
+    light_adjusts = { 32,48,64 },
+
+    walls =
+    {
+      ROCKRED1 = 50,
+      HELLROK1 = 30,
+      RDROK1   = 20,
+      RDROK2   = 20,
+      CRACKRED = 15,
+      CRACKRD2 = 15,
+      FIREBLU1 = 15,
+      CRACKLE2 =  5,
+      CRACKLE4 =  5,
+      FIREBLK1 =  3
+    },
+
+    floors =
+    {
+      FLOOR6_2 = 40,
+      FLOOR6_1 = 20,
+
+      RROCK01  = 20,
+      RROCK05  = 20,
+      RROCK03  = 10,
+      RROCK02  = 5
+    }
+  },
 
   -- Hell has frozen over!
-  hell_icecave =
+  hell_icecave = --50
   {
     env  = "cave",
     prob = 50,

@@ -1706,6 +1706,14 @@ ARMAETUS_MATERIALS = {
   SDPBBWL6 = { t="SDPBBWL6", f="SDMHAZF6"},
   SDPBBWL7 = { t="SDPBBWL7", f="SDMHAZF6"},
 
+  -- flats
+  SDPBBFT1 = { t="SDPBBWL1", f="SDPBBFT1"},
+  SDPBBFT2 = { t="SDPBBWL2", f="SDPBBFT2"},
+  SDPBBFT3 = { t="SDPBBWL3", f="SDPBBFT3"},
+  SDPBBFT4 = { t="SDPBBWL5", f="SDPBBFT4"},
+  SDPBBFT5 = { t="SDPBBWL6", f="SDPBBFT5"},
+  SDPBBFT6 = { t="SDPBBWL7", f="SDPBBFT6"},
+
   -- 256-wide doors
   G8_SVDR3 = { t="G8_SVDR3", f="FLAT23"},
 
