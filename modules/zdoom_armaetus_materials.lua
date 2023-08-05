@@ -1697,6 +1697,15 @@ ARMAETUS_MATERIALS = {
   SDMHAZF5 = { t="SDMHAZW1", f="SDMHAZF5"},
   SDMHAZF6 = { t="SDMHAZW4", f="SDMHAZF6"},
 
+  -- babylonian demonic
+  SDPBBWL1 = { t="SDPBBWL1", f="SDMHAZF1"},
+  SDPBBWL2 = { t="SDPBBWL2", f="SDMHAZF2"},
+  SDPBBWL3 = { t="SDPBBWL3", f="SDMHAZF3"},
+  SDPBBWL4 = { t="SDPBBWL4", f="SDMHAZF4"},
+  SDPBBWL5 = { t="SDPBBWL5", f="SDMHAZF5"},
+  SDPBBWL6 = { t="SDPBBWL6", f="SDMHAZF6"},
+  SDPBBWL7 = { t="SDPBBWL7", f="SDMHAZF6"},
+
   -- 256-wide doors
   G8_SVDR3 = { t="G8_SVDR3", f="FLAT23"},
 
