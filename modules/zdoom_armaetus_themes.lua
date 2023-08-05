@@ -3149,6 +3149,11 @@ ARMAETUS_ROOM_THEMES =
       SDPBBWL5 = 5,
       SDPBBWL6 = 5,
       SDPBBWL7 = 5,
+      SDPBBWL8 = 5,
+      SDPBBWL9 = 5,
+      SDPBBWLA = 5,
+      SDPBBWLB = 5,
+      SDPBBWLC = 5
     },
 
     floors =
