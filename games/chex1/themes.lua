@@ -117,7 +117,8 @@ CHEX1.THEMES =
       ; used on secret levels.  There should be at least one "secret"
       ; theme.
 
-      Theme BAZ ; Bazoik caves/E1M5 theme
+	  Theme LAB ; Chex labs
+	  Theme BAZ ; Bazoik caves/E1M5 theme
 
       ; Flats and textures and constructs and stuff are also in the [THEMES] section
 
@@ -147,54 +148,74 @@ CHEX1.THEMES =
       ;    divisor of 256 (except for doors, where you should give the real
       ;    width so SLIGE can make them look nice).
 
-      ; Bazoik walls
+	  ; Lab walls
+	  Texture SKIN2 size 128 128 wall core LAB
+	  Texture STARG3 size 128 128 wall core LAB subtle CEMENT6
+	  Texture TEKWALL2 size 128 128 wall core LAB subtle STONE2
+
+	  ; Lab switches
+	  Texture SW1STARG size 128 128 isswitch comp LAB
+	  Texture SW1PIPE size 128 128 isswitch comp LAB
+
+	  ; Bazoik walls
       Texture BIGDOOR2 size 128 128 wall core BAZ subtle STARGR1
 
       ; Bazoik switches
       Texture SW1BRCOM size 128 128 isswitch comp BAZ
 
       ; And the lift texture
-      Texture COMPBLUE size 64 128 lift comp BAZ
+      Texture COMPBLUE size 64 128 lift comp LAB comp BAZ
 
       ; Doors of all kinds.  "size" gives the width and height of the texture,
       ; and "locked" means that it's a good texture to use on a door that only
       ; opens with a switch, not a touch.
-      Texture BIGDOOR1 size 128 128 door comp BAZ
-      Texture SP_DUDE4 size 64 128 door comp BAZ
+      Texture BIGDOOR4 size 128 128 door comp LAB
+	  Texture BIGDOOR1 size 128 128 door comp LAB comp BAZ
+      Texture SP_DUDE4 size 64 128 door comp LAB comp BAZ
+	  Texture SKSNAKE1 size 64 128 door comp LAB comp BAZ
+
+	  ; Lab exit switches
+	  Texture SW1STARG size 128 128 exitswitch comp LAB
+	  Texture SW1PIPE size 128 128 exitswitch comp LAB
 
       ; Bazoik exit switches
       Texture SW1BRCOM size 128 128 exitswitch comp BAZ
 
       ; Lights, suitable for lighting recesses and stuff.
-      Texture BLODRIP1 size 64 128 light comp BAZ
+      Texture LITEMET size 128 128 light comp LAB
+	  Texture BLODRIP1 size 64 128 light comp BAZ
 
       ; "Plaques", suitable for wall consoles and paintings and pillars and stuff.
       ; "vtiles" means that it's OK to pile one on top of another, as when
       ;    making the big central pillar in an arena.
       ; "half_plaque" means that the upper half of this texture can be used
       ;    by itself, as well as the whole thing.
-      Texture DOORTRAK size 128 128 plaque vtiles comp BAZ
+      Texture FIREWALL size 128 112 plaque vtiles comp LAB
+	  Texture DOORTRAK size 128 128 plaque vtiles comp BAZ
       Texture FIREMAG1 size 128 128 plaque comp BAZ
 
       ; Gratings
-      Texture SKSPINE1 size 64 128 grating comp BAZ
+      Texture MIDVINE1 size 256 128 grating comp LAB
+	  Texture MIDVINE2 size 256 128 grating comp LAB
+	  Texture SKSPINE1 size 64 128 grating comp BAZ
 
       ; Colors (suitable for marking key-locked things)
-      Texture DOORRED size 8 128 red comp BAZ
-      Texture DOORYEL size 8 128 yellow comp BAZ
-      Texture DOORBLU size 8 128 blue comp BAZ
+      Texture DOORRED size 8 128 red comp LAB comp BAZ
+      Texture DOORYEL size 8 128 yellow comp LAB comp BAZ
+      Texture DOORBLU size 8 128 blue comp LAB comp BAZ
 
       ; Step kickplates
-      Texture STEP1 size 32 8 step comp BAZ
+      Texture STEP1 size 32 8 step comp LAB comp BAZ
 
       ; "Doorjambs"
-      Texture COMPSTA1 size 8 128 jamb comp BAZ
+      Texture COMPSTA1 size 8 128 jamb comp LAB comp BAZ
 
       ; Support textures, used in various places
-      Texture NUKEDGE1 size 128 128 support comp BAZ
+      Texture SUPPORT2 size 64 128 support comp LAB
+	  Texture NUKEDGE1 size 128 128 support comp BAZ
 
       ; Bunch of things for outside patios (no themes applied here)
-      Texture BIGDOOR3 size 128 128 outside
+	  Texture BIGDOOR3 size 128 128 outside
 
       ; Misc
       Texture LITEBLU1 size 128 128 error
@@ -202,7 +223,15 @@ CHEX1.THEMES =
       ; Now the flats.  Keywords should all be pretty obvious...   *8)
 
       ; Teleport-gate floors
-      Flat GATE1 gate comp BAZ
+      Flat GATE1 gate comp LAB comp BAZ
+
+      ; Lab floors and ceilings
+      Flat FLOOR4_1 ceiling light comp LAB
+      Flat FLOOR4_1 ceiling outside comp LAB
+      Flat FLOOR4_1 floor comp LAB
+	  Flat STEP1 floor comp LAB
+      Flat FLOOR4_1 ceiling comp LAB
+      Flat FLOOR4_1 floor outside comp LAB
 
       ; Bazoik floors and ceilings
       Flat CEIL3_1 ceiling light comp BAZ
@@ -212,8 +241,8 @@ CHEX1.THEMES =
       Flat CEIL3_1 floor outside comp BAZ
 
       ; and nukage
-      Flat BLOOD1 nukage comp BAZ
-      Flat LAVA1 nukage red comp BAZ
+      Flat BLOOD1 nukage comp LAB comp BAZ
+      Flat LAVA1 nukage red comp LAB comp BAZ
 
       ; Floors for outside areas not yet mentioned
       Flat CEIL3_1 outside
@@ -226,7 +255,7 @@ CHEX1.THEMES =
       ; This is pretty complex!  Fool with it at your peril.
 
       ; Family 1 is crates of various sizes and kinds
-      Construct family 1 height 128 comp BAZ
+      Construct family 1 height 128 comp LAB comp BAZ
         top CRATOP2
         Primary CRATE2 width 64
 
@@ -237,7 +266,7 @@ CHEX1.THEMES =
       ; Say which lamps we like in which themes, and where barrels are allowed
       ; Information like which Doom version each object is in, and which ones
       ; cast light, and which ones explode, is still hardwired.
-      Thing 2028  comp BAZ  ; floor lamp
+      Thing 2028 comp LAB comp BAZ  ; floor lamp
 
       ; and that's it!
     ]]

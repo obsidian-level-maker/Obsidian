@@ -2713,9 +2713,10 @@ function Level_make_level(LEV)
     SEEDS = nil
     collectgarbage("collect")
     collectgarbage("collect")
+    if res == "abort" then return res end
     retry_counter = retry_counter + 1
     if retry_counter > retry_target then
-      return res
+      error("Level failed to build after " .. retry_target .. " tries!\nReason: " .. res .. "\n")
     else
       LEVEL = table.copy(LEV)
       SEEDS = Seed_init(LEVEL)
