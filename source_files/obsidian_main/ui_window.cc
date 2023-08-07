@@ -47,10 +47,10 @@ static void main_win_close_CB(Fl_Widget *w, void *data) {
 }
 
 static void main_win_surprise_go_CB(Fl_Widget *w, void *data) {
-    main_win->mod_tabs->arch_mods->SurpriseMe();
-    main_win->mod_tabs->combat_mods->SurpriseMe();
-    main_win->mod_tabs->pickup_mods->SurpriseMe();
-    main_win->mod_tabs->other_mods->SurpriseMe();
+    for (int i=0; i < main_win->mod_tabs->children(); i++) {
+        UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(i);
+        tab->SurpriseMe();
+    }
     did_randomize = true;
 }
 
@@ -137,10 +137,10 @@ void UI_MainWin::Locked(bool value) {
         main_win->menu_bar->activate();
     }
     game_box->Locked(value);
-    mod_tabs->arch_mods->Locked(value);
-    mod_tabs->combat_mods->Locked(value);
-    mod_tabs->pickup_mods->Locked(value);
-    mod_tabs->other_mods->Locked(value);
+    for (int i=0; i < main_win->mod_tabs->children(); i++) {
+        UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(i);
+        tab->Locked(value);
+    }
 }
 
 void UI_MainWin::menu_do_about(Fl_Widget *w, void *data) { DLG_AboutText(); }

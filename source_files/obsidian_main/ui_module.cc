@@ -1651,6 +1651,12 @@ UI_CustomTabs::UI_CustomTabs(int X, int Y, int W, int H)
     pickup_mods->end();
     other_mods = new UI_CustomMods(X, Y+kf_h(22), W, H, _("Other"));
     other_mods->end();
+    debug_mods = new UI_CustomMods(X, Y+kf_h(22), W, H, _("Debug"));
+    debug_mods->end();
+    experimental_mods = new UI_CustomMods(X, Y+kf_h(22), W, H, _("Experimental"));
+    experimental_mods->end();
+    links = new UI_CustomMods(X, Y+kf_h(22), W, H, _("Links"));
+    links->end();
 
     end();
 
