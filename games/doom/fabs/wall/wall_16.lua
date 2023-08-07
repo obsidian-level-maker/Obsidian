@@ -9,7 +9,7 @@ PREFABS.Wall_plain =
 
   
 
-  prob   = 50,
+  prob   = 50 * 15,
 
   where  = "edge",
   deep   = 16,
@@ -29,7 +29,7 @@ PREFABS.Wall_plain_diag =
 
   
 
-  prob   = 50,
+  prob   = 50 * 10,
 
   where  = "diagonal",
 
