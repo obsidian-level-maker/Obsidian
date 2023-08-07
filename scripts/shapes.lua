@@ -9929,6 +9929,25 @@ GROW_WIDE_LOW_CEILING_SIDE =
   },
 },
 
+GROW_WIDE_LOW_CEILING_SIDE_LIQUID =
+{
+  prob = 20,
+  skip_prob = 80,
+
+  structure =
+  {
+    "....","1111",
+    "....","1111",
+    "....","1#AA",
+    "....","1A~~",
+    "....","1A~~",
+    "....","1#AA",
+    "11..","1111",
+    "11xx","11xx",
+  },
+},
+
+
 GROW_WIDE_LOW_CEILING_CENTER =
 {
   prob = 20,

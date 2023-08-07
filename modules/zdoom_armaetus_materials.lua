@@ -1680,6 +1680,45 @@ ARMAETUS_MATERIALS = {
   SD_HCSF5 = { t="SD_HCSW3", f="SD_HCSF5"},
   SD_HCSF6 = { t="SD_HCSW4", f="SD_HCSF6"},
 
+  -- aztec demonic
+  SDMHAZW1 = { t="SDMHAZW1", f="SDMHAZF1"},
+  SDMHAZW2 = { t="SDMHAZW2", f="SDMHAZF2"},
+  SDMHAZW3 = { t="SDMHAZW3", f="SDMHAZF3"},
+  SDMHAZW4 = { t="SDMHAZW4", f="SDMHAZF4"},
+  SDMHAZW5 = { t="SDMHAZW5", f="SDMHAZF5"},
+  SDMHAZW6 = { t="SDMHAZW6", f="SDMHAZF6"},
+  SDMHAZW7 = { t="SDMHAZW7", f="SDMHAZF4"},
+
+  -- flats
+  SDMHAZF1 = { t="SDMHAZW1", f="SDMHAZF1"},
+  SDMHAZF2 = { t="SDMHAZW2", f="SDMHAZF2"},
+  SDMHAZF3 = { t="SDMHAZW3", f="SDMHAZF3"},
+  SDMHAZF4 = { t="SDMHAZW4", f="SDMHAZF4"},
+  SDMHAZF5 = { t="SDMHAZW1", f="SDMHAZF5"},
+  SDMHAZF6 = { t="SDMHAZW4", f="SDMHAZF6"},
+
+  -- babylonian demonic
+  SDPBBWL1 = { t="SDPBBWL1", f="SDMHAZF1"},
+  SDPBBWL2 = { t="SDPBBWL2", f="SDMHAZF2"},
+  SDPBBWL3 = { t="SDPBBWL3", f="SDMHAZF3"},
+  SDPBBWL4 = { t="SDPBBWL4", f="SDMHAZF4"},
+  SDPBBWL5 = { t="SDPBBWL5", f="SDMHAZF5"},
+  SDPBBWL6 = { t="SDPBBWL6", f="SDMHAZF6"},
+  SDPBBWL7 = { t="SDPBBWL7", f="SDMHAZF6"},
+  SDPBBWL8 = { t="SDPBBWL8", f="SDMHAZF5"},
+  SDPBBWL9 = { t="SDPBBWL9", f="SDMHAZF4"},
+  SDPBBWLA = { t="SDPBBWLA", f="SDMHAZF3"},
+  SDPBBWLB = { t="SDPBBWLB", f="SDMHAZF2"},
+  SDPBBWLC = { t="SDPBBWLC", f="SDMHAZF1"},
+
+  -- flats
+  SDPBBFT1 = { t="SDPBBWL1", f="SDPBBFT1"},
+  SDPBBFT2 = { t="SDPBBWL2", f="SDPBBFT2"},
+  SDPBBFT3 = { t="SDPBBWL3", f="SDPBBFT3"},
+  SDPBBFT4 = { t="SDPBBWL5", f="SDPBBFT4"},
+  SDPBBFT5 = { t="SDPBBWL6", f="SDPBBFT5"},
+  SDPBBFT6 = { t="SDPBBWL7", f="SDPBBFT6"},
+
   -- 256-wide doors
   G8_SVDR3 = { t="G8_SVDR3", f="FLAT23"},
 

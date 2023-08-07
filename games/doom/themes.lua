@@ -3005,7 +3005,9 @@ DOOM.THEMES =
       BROWN1  = 10,
       METAL2  = 5,
       BROWNGRN = 5,
-      BROVINE2 = 5
+      BROVINE2 = 5,
+
+      
     },
 
     fences =
@@ -4658,6 +4660,7 @@ DOOM.ROOM_THEMES =
     }
   },
 
+
   hell_Panel =
   {
     prob = 30,
@@ -4886,6 +4889,7 @@ DOOM.ROOM_THEMES =
       RROCK14 = 10
     }
   },
+
 
   hell_deuce_Hallway =
   {

@@ -1877,7 +1877,7 @@ ARMAETUS_ROOM_THEMES =
 
 -- START OF HELL THEMES
 
-  hell_ArmaetusGothic =
+  hell_ArmaetusGothic = --150
   {
     env  = "building",
     prob = 150,
@@ -2043,7 +2043,7 @@ ARMAETUS_ROOM_THEMES =
     },
   },
 
-  hell_CementCautionlines =
+  hell_CementCautionlines = --20
   {
     env = "building",
     prob = 20,
@@ -2126,7 +2126,7 @@ ARMAETUS_ROOM_THEMES =
     keep_prob = 10,
   },
 
-  hell_CementCautionless =
+  hell_CementCautionless = --20
   {
     env = "building",
     prob = 20,
@@ -2193,7 +2193,7 @@ ARMAETUS_ROOM_THEMES =
     keep_prob = 20,
   },
 
-  hell_fleshcraft =
+  hell_fleshcraft = --50
   {
     env  = "building",
     prob = 50,
@@ -2261,7 +2261,7 @@ ARMAETUS_ROOM_THEMES =
     },
   },
 
-  hell_blackened =
+  hell_blackened = --40
   {
     env  = "building",
     prob = 40,
@@ -2309,7 +2309,7 @@ ARMAETUS_ROOM_THEMES =
     },
   },
 
-  hell_crimson =
+  hell_crimson = --40
   {
     env  = "building",
     prob = 40,
@@ -2349,7 +2349,7 @@ ARMAETUS_ROOM_THEMES =
   },
 
   -- MSSP
-  hell_egyptish =
+  hell_egyptish = --60
   {
     env = "building",
     prob = 60,
@@ -2416,7 +2416,7 @@ ARMAETUS_ROOM_THEMES =
     },
   },
 
-  hell_greenBrick =
+  hell_greenBrick = --20
   {
     env = "building",
     prob = 20,
@@ -2484,7 +2484,7 @@ ARMAETUS_ROOM_THEMES =
     },
   },
 
-  hell_metal =
+  hell_metal = --50
   {
     env = "building",
     prob = 50,
@@ -2723,10 +2723,10 @@ ARMAETUS_ROOM_THEMES =
     },
   },
 
-  hell_rocky_ruins =
+  hell_rocky_ruins = --45
   {
     env = "building",
-    prob = 30,
+    prob = 45,
 
     walls =
     {
@@ -2868,10 +2868,10 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
-  hell_gilded_bricks =
+  hell_gilded_bricks = --60
   {
     env = "building",
-    prob = 30,
+    prob = 60,
 
     walls =
     {
@@ -2958,10 +2958,10 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
-  hell_copper_steampunk =
+  hell_copper_steampunk = --45
   {
     env = "building",
-    prob = 30,
+    prob = 45,
 
     walls =
     {
@@ -3040,7 +3040,209 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
-  hell_armaetuscave =
+  hell_AztecClay = --45
+  {
+    env = "building",
+    prob = 45,
+
+    walls =
+    {
+      SDMHAZW1 = 5,
+      SDMHAZW2 = 5,
+      SDMHAZW3 = 5,
+      SDMHAZW4 = 5,
+      SDMHAZW5 = 5,
+      SDMHAZW6 = 5,
+      SDMHAZW7 = 5
+    },
+
+    floors =
+    {
+      FLAT1_1 = 2,
+      FLAT1_2 = 2,
+      FLAT8 = 2,
+      FLOOR0_1 = 2,
+      FLOOR0_2 = 2,
+      FLOOR3_3 = 2,
+      FLOOR4_6 = 2,
+      FLOOR5_4 = 2,
+      FLOOR7_1 = 2,
+
+      BRIK01 = 5,
+      EG01 = 5,
+      EG02 = 5,
+      EG03 = 5,
+      EG04 = 5,
+      EG05 = 5,
+      EG06 = 5,
+      GSTN03 = 5,
+      GSTN04 = 5,
+      GSTN05 = 5,
+      RROCK09 = 5,
+      RROCK10 = 5,
+      RROCK11 = 5,
+      RROCK12 = 5,
+      RROCK16 = 5,
+      RROCK17 = 5,
+      RROCK18 = 5,
+      SKINFLT = 5,
+
+      SDMHAZF1 = 25,
+      SDMHAZF2 = 25,
+      SDMHAZF3 = 25,
+      SDMHAZF4 = 25,
+      SDMHAZF5 = 25,
+      SDMHAZF6 = 25
+    },
+
+    ceilings =
+    {
+      FLAT1_1 = 2,
+      FLAT1_2 = 2,
+      FLAT8 = 2,
+      FLOOR0_1 = 2,
+      FLOOR0_2 = 2,
+      FLOOR3_3 = 2,
+      FLOOR4_6 = 2,
+      FLOOR5_4 = 2,
+      FLOOR7_1 = 2,
+
+      BRIK01 = 5,
+      EG01 = 5,
+      EG02 = 5,
+      EG03 = 5,
+      EG04 = 5,
+      EG05 = 5,
+      EG06 = 5,
+      GSTN03 = 5,
+      GSTN04 = 5,
+      GSTN05 = 5,
+      RROCK09 = 5,
+      RROCK10 = 5,
+      RROCK11 = 5,
+      RROCK12 = 5,
+      RROCK16 = 5,
+      RROCK17 = 5,
+      RROCK18 = 5,
+      SKINFLT = 5,
+
+      SDMHAZF1 = 25,
+      SDMHAZF2 = 25,
+      SDMHAZF3 = 25,
+      SDMHAZF4 = 25,
+      SDMHAZF5 = 25,
+      SDMHAZF6 = 25
+    }
+  },
+
+  hell_babylonian = --45
+  {
+    env = "building",
+    prob = 45,
+
+    walls =
+    {
+      SDPBBWL1 = 5,
+      SDPBBWL2 = 5,
+      SDPBBWL3 = 5,
+      SDPBBWL4 = 5,
+      SDPBBWL5 = 5,
+      SDPBBWL6 = 5,
+      SDPBBWL7 = 5,
+      SDPBBWL8 = 5,
+      SDPBBWL9 = 5,
+      SDPBBWLA = 5,
+      SDPBBWLB = 5,
+      SDPBBWLC = 5
+    },
+
+    floors =
+    {
+      FLAT1_1 = 2,
+      FLAT1_2 = 2,
+      FLAT8 = 2,
+      FLOOR0_1 = 2,
+      FLOOR0_2 = 2,
+      FLOOR3_3 = 2,
+      FLOOR4_6 = 2,
+      FLOOR5_4 = 2,
+      FLOOR7_1 = 2,
+
+      BRIK01 = 5,
+      EG01 = 5,
+      EG02 = 5,
+      EG03 = 5,
+      EG04 = 5,
+      EG05 = 5,
+      EG06 = 5,
+      GSTN03 = 5,
+      GSTN04 = 5,
+      GSTN05 = 5,
+      RROCK09 = 5,
+      RROCK10 = 5,
+      RROCK11 = 5,
+      RROCK12 = 5,
+      RROCK16 = 5,
+      RROCK17 = 5,
+      RROCK18 = 5,
+      SKINFLT = 5,
+
+      SDPBBFT1 = 45,
+      SDPBBFT2 = 45,
+      SDPBBFT3 = 45,
+      SDPBBFT4 = 45,
+      SDPBBFT5 = 45,
+      SDPBBFT6 = 45
+    },
+
+    ceilings =
+    {
+      FLAT1_1 = 2,
+      FLAT1_2 = 2,
+      FLAT8 = 2,
+      FLOOR0_1 = 2,
+      FLOOR0_2 = 2,
+      FLOOR3_3 = 2,
+      FLOOR4_6 = 2,
+      FLOOR5_4 = 2,
+      FLOOR7_1 = 2,
+
+      BRIK01 = 5,
+      EG01 = 5,
+      EG02 = 5,
+      EG03 = 5,
+      EG04 = 5,
+      EG05 = 5,
+      EG06 = 5,
+      GSTN03 = 5,
+      GSTN04 = 5,
+      GSTN05 = 5,
+      RROCK09 = 5,
+      RROCK10 = 5,
+      RROCK11 = 5,
+      RROCK12 = 5,
+      RROCK16 = 5,
+      RROCK17 = 5,
+      RROCK18 = 5,
+      SKINFLT = 5,
+
+      SDMHAZF1 = 25,
+      SDMHAZF2 = 25,
+      SDMHAZF3 = 25,
+      SDMHAZF4 = 25,
+      SDMHAZF5 = 25,
+      SDMHAZF6 = 25,
+
+      SDPBBFT1 = 45,
+      SDPBBFT2 = 45,
+      SDPBBFT3 = 45,
+      SDPBBFT4 = 45,
+      SDPBBFT5 = 45,
+      SDPBBFT6 = 45
+    }
+  },
+
+  hell_armaetuscave = --60
   {
     env  = "cave",
     prob = 60,
@@ -3080,7 +3282,7 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
-  hell_fireycave =
+  hell_fireycave = --60
   {
     env  = "cave",
     prob = 60,
@@ -3114,7 +3316,7 @@ ARMAETUS_ROOM_THEMES =
   },
 
   -- Hell has frozen over!
-  hell_icecave =
+  hell_icecave = --50
   {
     env  = "cave",
     prob = 50,
@@ -3246,7 +3448,14 @@ ARMAETUS_ROOM_THEMES =
 
       SDM_HGF1 = 20,
       SDM_HGF2 = 20,
-      SDM_HGF3 = 20
+      SDM_HGF3 = 20,
+
+      SDMHAZF1 = 15,
+      SDMHAZF2 = 15,
+      SDMHAZF3 = 15,
+      SDMHAZF4 = 15,
+      SDMHAZF5 = 15,
+      SDMHAZF6 = 15
     },
 
     naturals =
@@ -6906,7 +7115,21 @@ ARMAETUS_THEMES =
       SDM_HAW5 = 20,
       SDM_HAW6 = 20,
       SDM_HAW7 = 20,
-      SDM_HAW8 = 20
+      SDM_HAW8 = 20,
+
+      SD_GTHW1 = 4,
+      SD_GTHW6 = 4,
+      SD_GTHW7 = 4,
+      SD_GTHW8 = 4,
+
+      SD_HCSW1 = 6,
+      SD_HCSW3 = 6,
+      SD_HCSW4 = 6,
+
+      SDMHAZW1 = 20,
+      SDMHAZW2 = 20,
+      SDMHAZW3 = 20,
+      SDMHAZW4 = 20
     },
 
     fences =
@@ -7509,7 +7732,14 @@ ARMAETUS_DESERT_OUTDOORS =
       EG05  = 10,
       EG03  = 15,
       EG02  = 10,
-      EG01  = 15
+      EG01  = 15,
+
+      SDMHAZF1 = 10,
+      SDMHAZF2 = 10,
+      SDMHAZF3 = 10,
+      SDMHAZF4 = 10,
+      SDMHAZF5 = 10,
+      SDMHAZF6 = 10
     }
   },
 
