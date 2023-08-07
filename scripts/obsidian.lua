@@ -756,7 +756,7 @@ function ob_mod_enabled(name)
   local mod = OB_MODULES[name]
   if not mod then
     gui.printf("ob_mod_enabled: Ignoring unknown module: %s\n", name)
-    return false
+    return 0
   else
     if mod.enabled and mod.shown then return 1 else return 0 end
   end
@@ -2040,7 +2040,6 @@ function ob_invoke_hook(name, ...)
     if string.match(name, "^pre_setup") then goto skip end
     for _,mod in pairs(GAME.modules) do
       local func = mod.hooks and mod.hooks[name]
-
       if func then
         func(mod, ...)
       end

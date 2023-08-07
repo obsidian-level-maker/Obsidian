@@ -71,7 +71,7 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title)
     int TOP_H = kf_h(240);
     int BOT_H = H - TOP_H - kf_h(4);
 
-    menu_bar = new Fl_Menu_Bar(0, 0, LEFT_W, kf_h(20));
+    menu_bar = new Fl_Menu_Bar(0, 0, W, kf_h(20));
     menu_bar->box(box_style);
     menu_bar->textfont(font_style);
     menu_bar->textsize(font_scaling * .90);
@@ -97,7 +97,7 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title)
 
     build_box = new UI_Build(0, TOP_H + kf_h(4), LEFT_W, BOT_H);
 
-    mod_tabs = new UI_CustomTabs(LEFT_W + kf_h(4), 0, MOD_W * 2,
+    mod_tabs = new UI_CustomTabs(LEFT_W + kf_h(4), kf_h(22), MOD_W * 2,
                                   H - kf_h(22));
 
     clippy = new UI_Clippy();

@@ -1865,7 +1865,7 @@ softrestart:;
                             (all_addons[i].enabled ? FL_MENU_VALUE : 0));
                 }
             }
-            main_win->menu_bar->add("@-2menu", nullptr, main_win_clippy_CB);
+            main_win->menu_bar->add(_("Summon Clippy"), nullptr, main_win_clippy_CB);
         }
 
 #ifdef WIN32
