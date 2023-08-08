@@ -108,6 +108,10 @@ end
 function DOOM.get_levels()
   local MAP_LEN_TAB = { few=4, episode=11, game=32 }
 
+  if OB_CONFIG.length == "game" and PARAM.float_full_game_length then
+    MAP_LEN_TAB["game"] = PARAM.float_full_game_length
+  end
+
   local MAP_NUM = MAP_LEN_TAB[OB_CONFIG.length] or 1
 
   local EP_NUM = 1

@@ -2713,9 +2713,10 @@ function Level_make_level(LEV)
     SEEDS = nil
     collectgarbage("collect")
     collectgarbage("collect")
+    if res == "abort" then return res end
     retry_counter = retry_counter + 1
     if retry_counter > retry_target then
-      return res
+      error("Level failed to build after " .. retry_target .. " tries!\nReason: " .. res .. "\n")
     else
       LEVEL = table.copy(LEV)
       SEEDS = Seed_init(LEVEL)
@@ -2752,8 +2753,8 @@ function Level_make_all()
 
   -- semi-supported games warning
   if ob_match_game({ game = { chex1=1, chex3=1, hacx=1, harmony=1, hexen=1, strife=1, nukem=1, quake=1 } }) then
-    if not PARAM.bool_experimental_games or PARAM.bool_experimental_games == 0 then
-      error(gui.gettext("\nWarning: The game that you have selected is in an experimental state. WADs may not build successfully and certain gameplay features may not be implemented yet! To ignore this warning and continue generation for these games, check the \"Experimental Games\" checkbox located in the Miscellaneous Options Module.\n\nUse the help link for the \"Experimental Games\" module to find the exact status for the game in question."))
+    if ob_mod_enabled("experimental_games") == 0 then
+      error(gui.gettext("\nWarning: The game that you have selected is in an experimental state. WADs may not build successfully and certain gameplay features may not be implemented yet! To ignore this warning and continue generation for these games, check the \"Allow Partially Supported Games\" checkbox located under the Experimental tab.\n\nUse the tooltip for the \"Allow Partially Supported Games\" module to find the exact status for the game in question."))
     end
   end
 

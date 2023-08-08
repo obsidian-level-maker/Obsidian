@@ -47,10 +47,10 @@ static void main_win_close_CB(Fl_Widget *w, void *data) {
 }
 
 static void main_win_surprise_go_CB(Fl_Widget *w, void *data) {
-    main_win->mod_tabs->arch_mods->SurpriseMe();
-    main_win->mod_tabs->combat_mods->SurpriseMe();
-    main_win->mod_tabs->pickup_mods->SurpriseMe();
-    main_win->mod_tabs->other_mods->SurpriseMe();
+    for (int i=0; i < main_win->mod_tabs->children(); i++) {
+        UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(i);
+        tab->SurpriseMe();
+    }
     did_randomize = true;
 }
 
@@ -71,7 +71,7 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title)
     int TOP_H = kf_h(240);
     int BOT_H = H - TOP_H - kf_h(4);
 
-    menu_bar = new Fl_Menu_Bar(0, 0, LEFT_W, kf_h(20));
+    menu_bar = new Fl_Menu_Bar(0, 0, W, kf_h(20));
     menu_bar->box(box_style);
     menu_bar->textfont(font_style);
     menu_bar->textsize(font_scaling * .90);
@@ -97,7 +97,7 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title)
 
     build_box = new UI_Build(0, TOP_H + kf_h(4), LEFT_W, BOT_H);
 
-    mod_tabs = new UI_CustomTabs(LEFT_W + kf_h(4), 0, MOD_W * 2,
+    mod_tabs = new UI_CustomTabs(LEFT_W + kf_h(4), kf_h(22), MOD_W * 2,
                                   H - kf_h(22));
 
     clippy = new UI_Clippy();
@@ -137,10 +137,10 @@ void UI_MainWin::Locked(bool value) {
         main_win->menu_bar->activate();
     }
     game_box->Locked(value);
-    mod_tabs->arch_mods->Locked(value);
-    mod_tabs->combat_mods->Locked(value);
-    mod_tabs->pickup_mods->Locked(value);
-    mod_tabs->other_mods->Locked(value);
+    for (int i=0; i < main_win->mod_tabs->children(); i++) {
+        UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(i);
+        tab->Locked(value);
+    }
 }
 
 void UI_MainWin::menu_do_about(Fl_Widget *w, void *data) { DLG_AboutText(); }

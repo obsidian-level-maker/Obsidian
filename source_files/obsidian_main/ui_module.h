@@ -81,9 +81,6 @@ class UI_Module : public Fl_Group {
 
     void AddOptionChoice(std::string option, std::string id, std::string label);
 
-    void AddOptionSliderChoice(std::string option, double minimum,
-                               double maximum, double increment);
-
     bool SetOption(std::string option, std::string value);
 
     bool SetSliderOption(std::string option, std::string value);
@@ -205,6 +202,9 @@ class UI_CustomTabs : public Fl_Tabs {
     UI_CustomMods *combat_mods;
     UI_CustomMods *pickup_mods;
     UI_CustomMods *other_mods;
+    UI_CustomMods *debug_mods;
+    UI_CustomMods *experimental_mods;
+    UI_CustomMods *links; // Tentative; use with a new "URL" widget option type
 
    private:
 

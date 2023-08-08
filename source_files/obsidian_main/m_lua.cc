@@ -527,7 +527,18 @@ int gui_add_module(lua_State *L) {
             main_win->mod_tabs->other_mods->AddModule(id, label, tip, red, green, blue,
                                         suboptions);
         }
-    } 
+    } else if (StringCaseCmp(where, "debug") == 0) {
+        if (!main_win->mod_tabs->debug_mods->FindID(id)) {
+            main_win->mod_tabs->debug_mods->AddModule(id, label, tip, red, green, blue,
+                                        suboptions);
+        }
+    } else if (StringCaseCmp(where, "experimental") == 0) {
+        if (!main_win->mod_tabs->experimental_mods->FindID(id)) {
+            main_win->mod_tabs->experimental_mods->AddModule(id, label, tip, red, green, blue,
+                                        suboptions);
+        }
+    }
+    // How to handle the "Links" tab?
 
 #endif
     return 0;
@@ -548,16 +559,13 @@ int gui_set_module(lua_State *L) {
     }
 
     // FIXME : error if module is unknown
-    bool mod_enabled = main_win->mod_tabs->arch_mods->EnableMod(module, opt_val);
-    if (!mod_enabled) {
-        main_win->mod_tabs->combat_mods->EnableMod(module, opt_val);
+    for (int i=0; i < main_win->mod_tabs->children(); i++) {
+        UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(i);
+        if (tab->EnableMod(module, opt_val)) {
+            break;
+        }
     }
-    if (!mod_enabled) {
-        main_win->mod_tabs->pickup_mods->EnableMod(module, opt_val);
-    }
-    if (!mod_enabled) {
-        main_win->mod_tabs->other_mods->EnableMod(module, opt_val);
-    }
+
 #endif
     return 0;
 }
@@ -577,15 +585,11 @@ int gui_show_module(lua_State *L) {
     }
 
     // FIXME : error if module is unknown
-    bool mod_shown = main_win->mod_tabs->arch_mods->ShowModule(module, shown);
-    if (!mod_shown) {
-        main_win->mod_tabs->combat_mods->ShowModule(module, shown);
-    }
-    if (!mod_shown) {
-        main_win->mod_tabs->pickup_mods->ShowModule(module, shown);
-    }
-    if (!mod_shown) {
-        main_win->mod_tabs->other_mods->ShowModule(module, shown);
+    for (int i=0; i < main_win->mod_tabs->children(); i++) {
+        UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(i);
+        if (tab->ShowModule(module, shown)) {
+            break;
+        }
     }
 #endif
     return 0;
@@ -613,49 +617,20 @@ int gui_add_module_header(lua_State *L) {
             "Script problem: gui.add_module_header called late.\n");
     }
 
-    UI_Module *mod = main_win->mod_tabs->arch_mods->FindID(module);
-    if (mod) {
-        if (!mod->FindHeaderOpt(option)) {
-            main_win->mod_tabs->arch_mods->AddHeader(module, option, label, gap);
+    for (int i=0; i < main_win->mod_tabs->children(); i++) {
+        UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(i);
+        UI_Module *mod = tab->FindID(module);
+        if (mod) {
+            if (!mod->FindHeaderOpt(option)) {
+                tab->AddHeader(module, option, label, gap);
+            }
+            return 0;
         }
-        return 0;
-    }
-
-    if (!mod) {
-        mod = main_win->mod_tabs->combat_mods->FindID(module);
     } 
-    if (mod) {
-        if (!mod->FindHeaderOpt(option)) {
-            main_win->mod_tabs->combat_mods->AddHeader(module, option, label, gap);
-        }
-        return 0;
-    }
 
-    if (!mod) {
-        mod = main_win->mod_tabs->pickup_mods->FindID(module);
-    }
-    if (mod) {
-        if (!mod->FindHeaderOpt(option)) {
-            main_win->mod_tabs->pickup_mods->AddHeader(module, option, label, gap);
-        }
-        return 0;
-    }
-
-    if (!mod) {
-        mod = main_win->mod_tabs->other_mods->FindID(module);
-    }
-    if (mod) {
-        if (!mod->FindHeaderOpt(option)) {
-            main_win->mod_tabs->other_mods->AddHeader(module, option, label, gap);
-        }
-        return 0;
-    }
-
-    if (!mod) {
-        Main::FatalError(
-            "Script problem: gui.add_module_slider_option called for "
-            "non-existent module!\n");
-    }
+    Main::FatalError(
+        "Script problem: gui.add_module_header_option called for "
+        "non-existent module!\n");
 #endif
     return 0;
 }
@@ -688,53 +663,21 @@ int gui_add_module_option(lua_State *L) {
             "Script problem: gui.add_module_option called late.\n");
     }
 
-    UI_Module *mod = main_win->mod_tabs->arch_mods->FindID(module);
-    if (mod) {
-        if (!mod->FindOpt(option)) {
-            main_win->mod_tabs->arch_mods->AddOption(module, option, label, tip, longtip, gap,
+    for (int i=0; i < main_win->mod_tabs->children(); i++) {
+        UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(i);
+        UI_Module *mod = tab->FindID(module);
+        if (mod) {
+            if (!mod->FindOpt(option)) {
+                tab->AddOption(module, option, label, tip, longtip, gap,
                                         randomize_group, default_value);
+            }
+            return 0;
         }
-        return 0;
-    }
+    } 
 
-    if (!mod) {
-        mod = main_win->mod_tabs->combat_mods->FindID(module);
-    }
-    if (mod) {
-        if (!mod->FindOpt(option)) {
-            main_win->mod_tabs->combat_mods->AddOption(module, option, label, tip, longtip, gap,
-                                        randomize_group, default_value);
-        }
-        return 0;
-    }
-
-    if (!mod) {
-        mod = main_win->mod_tabs->pickup_mods->FindID(module);
-    }
-    if (mod) {
-        if (!mod->FindOpt(option)) {
-            main_win->mod_tabs->pickup_mods->AddOption(module, option, label, tip, longtip, gap,
-                                        randomize_group, default_value);
-        }
-        return 0;
-    }
-
-    if (!mod) {
-        mod = main_win->mod_tabs->other_mods->FindID(module);
-    }
-    if (mod) {
-        if (!mod->FindOpt(option)) {
-            main_win->mod_tabs->other_mods->AddOption(module, option, label, tip, longtip, gap,
-                                        randomize_group, default_value);
-        }
-        return 0;
-    }
-
-    if (!mod) {
-        Main::FatalError(
-            "Script problem: gui.add_module_slider_option called for "
-            "non-existent module!\n");
-    }
+    Main::FatalError(
+        "Script problem: gui.add_module_option called for "
+        "non-existent module!\n");
 #endif
     return 0;
 }
@@ -775,57 +718,22 @@ int gui_add_module_slider_option(lua_State *L) {
             "Script problem: gui.add_module_option called late.\n");
     }
 
-    UI_Module *mod = main_win->mod_tabs->arch_mods->FindID(module);
-    if (mod) {
-        if (!mod->FindSliderOpt(option)) {
-            main_win->mod_tabs->arch_mods->AddSliderOption(
-                module, option, label, tip, longtip, gap, min, max, inc, units,
-                presets, nan, randomize_group, default_value);
+    for (int i=0; i < main_win->mod_tabs->children(); i++) {
+        UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(i);
+        UI_Module *mod = tab->FindID(module);
+        if (mod) {
+            if (!mod->FindSliderOpt(option)) {
+                tab->AddSliderOption(
+                    module, option, label, tip, longtip, gap, min, max, inc, units,
+                    presets, nan, randomize_group, default_value);
+            }
+            return 0;
         }
-        return 0;
-    }
+    } 
 
-    if (!mod) {
-        mod = main_win->mod_tabs->combat_mods->FindID(module);
-    }
-    if (mod) {
-        if (!mod->FindSliderOpt(option)) {
-            main_win->mod_tabs->combat_mods->AddSliderOption(
-                module, option, label, tip, longtip, gap, min, max, inc, units,
-                presets, nan, randomize_group, default_value);
-        }
-        return 0;
-    }
-
-    if (!mod) {
-        mod = main_win->mod_tabs->pickup_mods->FindID(module);
-    }
-    if (mod) {
-        if (!mod->FindSliderOpt(option)) {
-            main_win->mod_tabs->pickup_mods->AddSliderOption(
-                module, option, label, tip, longtip, gap, min, max, inc, units,
-                presets, nan, randomize_group, default_value);
-        }
-        return 0;
-    }
-
-    if (!mod) {
-        mod = main_win->mod_tabs->other_mods->FindID(module);
-    }
-    if (mod) {
-        if (!mod->FindSliderOpt(option)) {
-            main_win->mod_tabs->other_mods->AddSliderOption(
-                module, option, label, tip, longtip, gap, min, max, inc, units,
-                presets, nan, randomize_group, default_value);
-        }
-        return 0;
-    }
-
-    if (!mod) {
-        Main::FatalError(
-            "Script problem: gui.add_module_slider_option called for "
-            "non-existent module!\n");
-    }
+    Main::FatalError(
+        "Script problem: gui.add_module_slider_option called for "
+        "non-existent module!\n");
 #endif
     return 0;
 }
@@ -858,57 +766,22 @@ int gui_add_module_button_option(lua_State *L) {
             "Script problem: gui.add_module_option called late.\n");
     }
 
-    UI_Module *mod = main_win->mod_tabs->arch_mods->FindID(module);
-    if (mod) {
-        if (!mod->FindButtonOpt(option)) {
-            main_win->mod_tabs->arch_mods->AddButtonOption(module, option, label, tip,
+    for (int i=0; i < main_win->mod_tabs->children(); i++) {
+        UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(i);
+        UI_Module *mod = tab->FindID(module);
+        if (mod) {
+            if (!mod->FindButtonOpt(option)) {
+                tab->AddButtonOption(module, option, label, tip,
                                                 longtip, gap, randomize_group,
                                                 default_value);
+            }
+            return 0;
         }
-        return 0;
-    }
+    } 
 
-    if (!mod) {
-        mod = main_win->mod_tabs->combat_mods->FindID(module);
-    }
-    if (mod) {
-        if (!mod->FindButtonOpt(option)) {
-            main_win->mod_tabs->combat_mods->AddButtonOption(module, option, label, tip,
-                                                longtip, gap, randomize_group,
-                                                default_value);
-        }
-        return 0;
-    }
-
-    if (!mod) {
-        mod = main_win->mod_tabs->pickup_mods->FindID(module);
-    }
-    if (mod) {
-        if (!mod->FindButtonOpt(option)) {
-            main_win->mod_tabs->pickup_mods->AddButtonOption(module, option, label, tip,
-                                                longtip, gap, randomize_group,
-                                                default_value);
-        }
-        return 0;
-    }
-
-    if (!mod) {
-        mod = main_win->mod_tabs->other_mods->FindID(module);
-    }
-    if (mod) {
-        if (!mod->FindButtonOpt(option)) {
-            main_win->mod_tabs->other_mods->AddButtonOption(module, option, label, tip,
-                                                longtip, gap, randomize_group,
-                                                default_value);
-        }
-        return 0;
-    }
-
-    if (!mod) {
-        Main::FatalError(
-            "Script problem: gui.add_module_button_option called for "
-            "non-existent module!\n");
-    }
+    Main::FatalError(
+        "Script problem: gui.add_module_button_option called for "
+        "non-existent module!\n");
 #endif
     return 0;
 }
@@ -935,16 +808,11 @@ int gui_add_option_choice(lua_State *L) {
             "Script problem: gui.add_option_choice called late.\n");
     }
 
-    // FIXME : error if module or option is unknown
-    bool choice_added = main_win->mod_tabs->arch_mods->AddOptionChoice(module, option, id, label);
-    if (!choice_added) {
-        choice_added = main_win->mod_tabs->combat_mods->AddOptionChoice(module, option, id, label);
-    }
-    if (!choice_added) {
-        choice_added = main_win->mod_tabs->pickup_mods->AddOptionChoice(module, option, id, label);
-    }
-    if (!choice_added) {
-        choice_added = main_win->mod_tabs->other_mods->AddOptionChoice(module, option, id, label);
+    for (int i=0; i < main_win->mod_tabs->children(); i++) {
+        UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(i);
+        if (tab->AddOptionChoice(module, option, id, label)) {
+            break;
+        }
     }
 #endif
     return 0;
@@ -969,22 +837,15 @@ int gui_set_module_option(lua_State *L) {
                           option.c_str());
     }
 
-    bool option_set = main_win->mod_tabs->arch_mods->SetOption(module, option, value);
-    if (!option_set) {
-        option_set = main_win->mod_tabs->combat_mods->SetOption(module, option, value);
-    }
-    if (!option_set) {
-        option_set = main_win->mod_tabs->pickup_mods->SetOption(module, option, value);
-    }
-    if (!option_set) {
-        option_set = main_win->mod_tabs->other_mods->SetOption(module, option, value);
+    for (int i=0; i < main_win->mod_tabs->children(); i++) {
+        UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(i);
+        if (tab->SetOption(module, option, value)) {
+            return 0;
+        }
     }
 
-
-    if (!option_set) {
-        return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
-                          module.c_str(), option.c_str());
-    }
+    return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
+                        module.c_str(), option.c_str());
 #endif
     return 0;
 }
@@ -1007,21 +868,15 @@ int gui_set_module_slider_option(lua_State *L) {
                           option.c_str());
     }
 
-    bool option_set = main_win->mod_tabs->arch_mods->SetSliderOption(module, option, value);
-    if (!option_set) {
-        option_set = main_win->mod_tabs->combat_mods->SetSliderOption(module, option, value);
-    }
-    if (!option_set) {
-        option_set = main_win->mod_tabs->pickup_mods->SetSliderOption(module, option, value);
-    }
-    if (!option_set) {
-        option_set = main_win->mod_tabs->other_mods->SetSliderOption(module, option, value);
+    for (int i=0; i < main_win->mod_tabs->children(); i++) {
+        UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(i);
+        if (tab->SetSliderOption(module, option, value)) {
+            return 0;
+        }
     }
 
-    if (!option_set) {
-        return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
-                          module.c_str(), option.c_str());
-    }
+    return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
+                        module.c_str(), option.c_str());
 #endif
     return 0;
 }
@@ -1044,21 +899,15 @@ int gui_set_module_button_option(lua_State *L) {
                           option.c_str());
     }
 
-    bool option_set = main_win->mod_tabs->arch_mods->SetButtonOption(module, option, value);
-    if (!option_set) {
-        option_set = main_win->mod_tabs->combat_mods->SetButtonOption(module, option, value);
-    }
-    if (!option_set) {
-        option_set = main_win->mod_tabs->pickup_mods->SetButtonOption(module, option, value);
-    }
-    if (!option_set) {
-        option_set = main_win->mod_tabs->other_mods->SetButtonOption(module, option, value);
+    for (int i=0; i < main_win->mod_tabs->children(); i++) {
+        UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(i);
+        if (tab->SetButtonOption(module, option, value)) {
+            return 0;
+        }
     }
 
-    if (!option_set) {
-        return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
-                          module.c_str(), option.c_str());
-    }
+    return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
+                        module.c_str(), option.c_str());
 #endif
     return 0;
 }
@@ -1075,128 +924,30 @@ int gui_get_module_slider_value(lua_State *L) {
         return 0;
     }
 
-    double value;
-    std::string nan_value;
+    for (int i=0; i < main_win->mod_tabs->children(); i++) {
+        UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(i);
+        UI_Module *mod = tab->FindID(module);
+        if (mod) {
+            UI_RSlide *slider = mod->FindSliderOpt(option);
+            if (slider) {
+                if (slider->nan_choices.size() > 0) {
+                    if (slider->nan_options->value() > 0) {
+                        lua_pushstring(L, slider->nan_options->text(
+                                        slider->nan_options->value()));
+                    } else {
+                        lua_pushnumber(L, slider->mod_slider->value());
+                    }
+                } else {
+                    lua_pushnumber(L, slider->mod_slider->value());
+                }
+                return 1;
+            }
+        }
+    } 
 
-    if (main_win->mod_tabs->arch_mods->FindID(module)) {
-        if (main_win->mod_tabs->arch_mods->FindID(module)->FindSliderOpt(option)) {
-            if (main_win->mod_tabs->arch_mods->FindID(module)
-                    ->FindSliderOpt(option)
-                    ->nan_choices.size() > 0) {
-                if (main_win->mod_tabs->arch_mods->FindID(module)
-                        ->FindSliderOpt(option)
-                        ->nan_options->value() > 0) {
-                    nan_value = main_win->mod_tabs->arch_mods->FindID(module)
-                                    ->FindSliderOpt(option)
-                                    ->nan_options->text(
-                                        main_win->mod_tabs->arch_mods->FindID(module)
-                                            ->FindSliderOpt(option)
-                                            ->nan_options->value());
-                    lua_pushstring(L, nan_value.c_str());
-                } else {
-                    value = main_win->mod_tabs->arch_mods->FindID(module)
-                                ->FindSliderOpt(option)
-                                ->mod_slider->value();
-                    lua_pushnumber(L, value);
-                }
-            } else {
-                value = main_win->mod_tabs->arch_mods->FindID(module)
-                            ->FindSliderOpt(option)
-                            ->mod_slider->value();
-                lua_pushnumber(L, value);
-            }
-        }
-    } else if (main_win->mod_tabs->combat_mods->FindID(module)) {
-        if (main_win->mod_tabs->combat_mods->FindID(module)->FindSliderOpt(option)) {
-            if (main_win->mod_tabs->combat_mods->FindID(module)
-                    ->FindSliderOpt(option)
-                    ->nan_choices.size() > 0) {
-                if (main_win->mod_tabs->combat_mods->FindID(module)
-                        ->FindSliderOpt(option)
-                        ->nan_options->value() > 0) {
-                    nan_value = main_win->mod_tabs->combat_mods->FindID(module)
-                                    ->FindSliderOpt(option)
-                                    ->nan_options->text(
-                                        main_win->mod_tabs->combat_mods->FindID(module)
-                                            ->FindSliderOpt(option)
-                                            ->nan_options->value());
-                    lua_pushstring(L, nan_value.c_str());
-                } else {
-                    value = main_win->mod_tabs->combat_mods->FindID(module)
-                                ->FindSliderOpt(option)
-                                ->mod_slider->value();
-                    lua_pushnumber(L, value);
-                }
-            } else {
-                value = main_win->mod_tabs->combat_mods->FindID(module)
-                            ->FindSliderOpt(option)
-                            ->mod_slider->value();
-                lua_pushnumber(L, value);
-            }
-        }
-    } else if (main_win->mod_tabs->pickup_mods->FindID(module)) {
-        if (main_win->mod_tabs->pickup_mods->FindID(module)->FindSliderOpt(option)) {
-            if (main_win->mod_tabs->pickup_mods->FindID(module)
-                    ->FindSliderOpt(option)
-                    ->nan_choices.size() > 0) {
-                if (main_win->mod_tabs->pickup_mods->FindID(module)
-                        ->FindSliderOpt(option)
-                        ->nan_options->value() > 0) {
-                    nan_value = main_win->mod_tabs->pickup_mods->FindID(module)
-                                    ->FindSliderOpt(option)
-                                    ->nan_options->text(
-                                        main_win->mod_tabs->pickup_mods->FindID(module)
-                                            ->FindSliderOpt(option)
-                                            ->nan_options->value());
-                    lua_pushstring(L, nan_value.c_str());
-                } else {
-                    value = main_win->mod_tabs->pickup_mods->FindID(module)
-                                ->FindSliderOpt(option)
-                                ->mod_slider->value();
-                    lua_pushnumber(L, value);
-                }
-            } else {
-                value = main_win->mod_tabs->pickup_mods->FindID(module)
-                            ->FindSliderOpt(option)
-                            ->mod_slider->value();
-                lua_pushnumber(L, value);
-            }
-        }
-    } else if (main_win->mod_tabs->other_mods->FindID(module)) {
-        if (main_win->mod_tabs->other_mods->FindID(module)->FindSliderOpt(option)) {
-            if (main_win->mod_tabs->other_mods->FindID(module)
-                    ->FindSliderOpt(option)
-                    ->nan_choices.size() > 0) {
-                if (main_win->mod_tabs->other_mods->FindID(module)
-                        ->FindSliderOpt(option)
-                        ->nan_options->value() > 0) {
-                    nan_value = main_win->mod_tabs->other_mods->FindID(module)
-                                    ->FindSliderOpt(option)
-                                    ->nan_options->text(
-                                        main_win->mod_tabs->other_mods->FindID(module)
-                                            ->FindSliderOpt(option)
-                                            ->nan_options->value());
-                    lua_pushstring(L, nan_value.c_str());
-                } else {
-                    value = main_win->mod_tabs->other_mods->FindID(module)
-                                ->FindSliderOpt(option)
-                                ->mod_slider->value();
-                    lua_pushnumber(L, value);
-                }
-            } else {
-                value = main_win->mod_tabs->other_mods->FindID(module)
-                            ->FindSliderOpt(option)
-                            ->mod_slider->value();
-                lua_pushnumber(L, value);
-            }
-        }
-    } else {
-        return luaL_error(L,
-                          "get_module_slider_value: unknown option '%s.%s'\n",
-                          module.c_str(), option.c_str());
-    }
-
-    return 1;
+    return luaL_error(L,
+                        "get_module_slider_value: unknown option '%s.%s'\n",
+                        module.c_str(), option.c_str());
 #else
     return 0;
 #endif
@@ -1214,47 +965,21 @@ int gui_get_module_button_value(lua_State *L) {
         return 0;
     }
 
-    int value;
-
-    if (main_win->mod_tabs->arch_mods->FindID(module)) {
-        if (main_win->mod_tabs->arch_mods->FindID(module)->FindButtonOpt(option)) {
-            value = main_win->mod_tabs->arch_mods->FindID(module)
-                        ->FindButtonOpt(option)
-                        ->mod_check->value();
-            lua_pushnumber(L, value);
-            return 1;
+    for (int i=0; i < main_win->mod_tabs->children(); i++) {
+        UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(i);
+        UI_Module *mod = tab->FindID(module);
+        if (mod) {
+            UI_RButton *button = mod->FindButtonOpt(option);
+            if (button) {
+                lua_pushnumber(L, button->mod_check->value());
+                return 1;
+            }
         }
-    } else if (main_win->mod_tabs->combat_mods->FindID(module)) {
-        if (main_win->mod_tabs->combat_mods->FindID(module)->FindButtonOpt(option)) {
-            value = main_win->mod_tabs->combat_mods->FindID(module)
-                        ->FindButtonOpt(option)
-                        ->mod_check->value();
-            lua_pushnumber(L, value);
-            return 1;
-        }      
-    } else if (main_win->mod_tabs->pickup_mods->FindID(module)) {
-        if (main_win->mod_tabs->pickup_mods->FindID(module)->FindButtonOpt(option)) {
-            value = main_win->mod_tabs->pickup_mods->FindID(module)
-                        ->FindButtonOpt(option)
-                        ->mod_check->value();
-            lua_pushnumber(L, value);
-            return 1;
-        }      
-    } else if (main_win->mod_tabs->other_mods->FindID(module)) {
-        if (main_win->mod_tabs->other_mods->FindID(module)->FindButtonOpt(option)) {
-            value = main_win->mod_tabs->other_mods->FindID(module)
-                        ->FindButtonOpt(option)
-                        ->mod_check->value();
-            lua_pushnumber(L, value);
-            return 1;
-        }      
-    } else {
-        return luaL_error(L,
-                          "get_module_slider_value: unknown option '%s.%s'\n",
-                          module.c_str(), option.c_str());
-    }
+    } 
 
-    return 1;
+    return luaL_error(L,
+                        "get_module_slider_value: unknown option '%s.%s'\n",
+                        module.c_str(), option.c_str());
 #else
     return 0;
 #endif

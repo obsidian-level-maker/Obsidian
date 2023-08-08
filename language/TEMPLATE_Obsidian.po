@@ -19,6 +19,7 @@ msgstr ""
 # Comments by Dashodanger: One can automate this process for each time the code is changed with the following nightmarish one-liners:                                                                #
 # grep -n -r -o "gui[.]gettext[(]\".*\"[)]" | sed -r {s/"^"/"#: "/} | sed -r {s/":_"/"\n"/} | sed -r {s/"\gui[.]gettext[(]"/"\nmsgid "/} | sed -r {s/"\)$"/"\nmsgstr \"\"\n"/} | sed -r {s/":$"/""/} #        
 # grep -n -r -o "[_][(]\".*\"[)]" | sed -r {s/"^"/"#: "/} | sed -r {s/":_"/"\n"/} | sed -r {s/"\("/"msgid "/} | sed -r {s/"\)$"/"\nmsgstr \"\"\n"/} | sed -r {s/":$"/""/}                            #
+# msguniq --no-wrap --use-first --escape <result file from above commands> -o <target PO file> (may need to use dos2unix depending on platform)                                                      #
 # ################################################################################################################################################################################################## #
 #: games/noah/factory.lua:5153
 msgid "Episodic"
@@ -36,131 +37,131 @@ msgstr ""
 msgid "Default"
 msgstr ""
 
-#: scripts/level.lua:2756
+#: scripts/level.lua:2757
 msgid ""
 "\n"
-"Warning: The game that you have selected is in an experimental state. WADs may not build successfully and certain gameplay features may not be implemented yet! To ignore this warning and continue generation for these games, check the \"Experimental Games\" checkbox located in the Miscellaneous Options Module.\n"
+"Warning: The game that you have selected is in an experimental state. WADs may not build successfully and certain gameplay features may not be implemented yet! To ignore this warning and continue generation for these games, check the \"Allow Partially Supported Games\" checkbox located under the Experimental tab.\n"
 "\n"
-"Use the help link for the \"Experimental Games\" module to find the exact status for the game in question."
+"Use the tooltip for the \"Allow Partially Supported Games\" module to find the exact status for the game in question."
 msgstr ""
 
-#: scripts/level.lua:2855
+#: scripts/level.lua:2856
 msgid "Oblige V2"
 msgstr ""
 
-#: scripts/obsidian.lua:2399
+#: scripts/obsidian.lua:2398
 msgid "option: "
 msgstr ""
 
-#: scripts/obsidian.lua:2401
+#: scripts/obsidian.lua:2400
 msgid "comment: "
 msgstr ""
 
-#: scripts/obsidian.lua:2403
+#: scripts/obsidian.lua:2402
 msgid "engine: "
 msgstr ""
 
-#: scripts/obsidian.lua:2411
+#: scripts/obsidian.lua:2410
 msgid "game: "
 msgstr ""
 
-#: scripts/obsidian.lua:2419
+#: scripts/obsidian.lua:2418
 msgid "port: "
 msgstr ""
 
-#: scripts/obsidian.lua:2426
+#: scripts/obsidian.lua:2425
 msgid "values: "
 msgstr ""
 
-#: scripts/obsidian.lua:2432
+#: scripts/obsidian.lua:2431
 msgid "default: "
 msgstr ""
 
-#: scripts/obsidian.lua:2453
+#: scripts/obsidian.lua:2452
 msgid "randomize_group: "
 msgstr ""
 
-#: scripts/obsidian.lua:2487
+#: scripts/obsidian.lua:2486
 msgid "tooltip"
 msgstr ""
 
-#: scripts/obsidian.lua:2488
+#: scripts/obsidian.lua:2487
 msgid "engine"
 msgstr ""
 
-#: scripts/obsidian.lua:2490
+#: scripts/obsidian.lua:2489
 msgid "ALL"
 msgstr ""
 
-#: scripts/obsidian.lua:2502
+#: scripts/obsidian.lua:2501
 msgid "game"
 msgstr ""
 
-#: scripts/obsidian.lua:2516
+#: scripts/obsidian.lua:2515
 msgid "port"
 msgstr ""
 
-#: scripts/obsidian.lua:2531
+#: scripts/obsidian.lua:2530
 msgid "type"
 msgstr ""
 
-#: scripts/obsidian.lua:2532
+#: scripts/obsidian.lua:2531
 msgid "slider"
 msgstr ""
 
-#: scripts/obsidian.lua:2533
+#: scripts/obsidian.lua:2532
 msgid "values"
 msgstr ""
 
-#: scripts/obsidian.lua:2534
+#: scripts/obsidian.lua:2533
 msgid "min"
 msgstr ""
 
-#: scripts/obsidian.lua:2535
+#: scripts/obsidian.lua:2534
 msgid "max"
 msgstr ""
 
-#: scripts/obsidian.lua:2540
+#: scripts/obsidian.lua:2539
 msgid "default"
 msgstr ""
 
-#: scripts/obsidian.lua:2557
+#: scripts/obsidian.lua:2556
 msgid "boolean"
 msgstr ""
 
-#: scripts/obsidian.lua:2561
+#: scripts/obsidian.lua:2560
 msgid "choice"
 msgstr ""
 
-#: scripts/obsidian.lua:2573
+#: scripts/obsidian.lua:2572
 msgid "randomize_group"
 msgstr ""
 
-#: scripts/obsidian.lua:2601
+#: scripts/obsidian.lua:2600
 msgid ""
 "~~~~~~~ Making Levels ~~~~~~~\n"
 "\n"
 msgstr ""
 
-#: scripts/obsidian.lua:2620
+#: scripts/obsidian.lua:2619
 msgid "SLUMP"
 msgstr ""
 
-#: scripts/obsidian.lua:2631
+#: scripts/obsidian.lua:2630
 msgid "id Tech 0"
 msgstr ""
 
-#: scripts/obsidian.lua:2639
+#: scripts/obsidian.lua:2638
 msgid "Hexen's level linking in Oblige v2 is incompatible with Obsidian's level progression. Please set the slider to 100% to generate the full WAD with Oblige v2."
 msgstr ""
 
-#: scripts/obsidian.lua:2666
+#: scripts/obsidian.lua:2665
 msgid ""
 "~~~~~~~ Build Aborted! ~~~~~~~\n"
 "\n"
 msgstr ""
 
-#: scripts/obsidian.lua:2671
+#: scripts/obsidian.lua:2670
 msgid ""
 "~~~~~~ Finished Making Levels ~~~~~~\n"
 "\n"
@@ -307,15 +308,15 @@ msgstr ""
 msgid "Chex Quest 1"
 msgstr ""
 
-#: games/chex1/themes.lua:1235
+#: games/chex1/themes.lua:1264
 msgid "Bazoik"
 msgstr ""
 
-#: games/chex1/themes.lua:1243
+#: games/chex1/themes.lua:1272
 msgid "Chextropolis"
 msgstr ""
 
-#: games/chex1/themes.lua:1251
+#: games/chex1/themes.lua:1280
 msgid "Villa Chex"
 msgstr ""
 
@@ -327,15 +328,15 @@ msgstr ""
 msgid "Doom 2"
 msgstr ""
 
-#: games/doom/themes.lua:5933
+#: games/doom/themes.lua:5937
 msgid "Tech"
 msgstr ""
 
-#: games/doom/themes.lua:5943
+#: games/doom/themes.lua:5947
 msgid "Urban"
 msgstr ""
 
-#: games/doom/themes.lua:5953
+#: games/doom/themes.lua:5957
 msgid "Hell"
 msgstr ""
 
@@ -1173,34 +1174,92 @@ msgid "Disable sub-titles on the Title Screen."
 msgstr ""
 
 #: modules/debugger.lua:126
-msgid "Alternate Item Quantities"
+msgid "Whole Name Gen Names Only"
 msgstr ""
 
 #: modules/debugger.lua:129
-msgid "Scales item distribution with map size (Experimental)"
+msgid "Use only complete names from the Name Generator"
 msgstr ""
 
-#: modules/debugger.lua:135
-msgid "Print Fab Materials"
+#: modules/debugger.lua:130
+msgid ""
+"Uses name generator names that are already complete phrases/sentences \n"
+"instead of trying to procedurally generate them."
 msgstr ""
 
-#: modules/debugger.lua:138
-msgid "Print list of textures/flats present in each fab"
+#: modules/debugger.lua:136
+msgid "Shape Rule Stats"
 msgstr ""
 
 #: modules/debugger.lua:139
-msgid "Print the names of all textures/flats preset in a prefab WAD. This will also list values like _FLOOR, _WALL, etc, prior to their conversion."
+msgid "Displays usage statistics for shape grammar rules."
 msgstr ""
 
-#: modules/debugger.lua:145
-msgid "Missing Fab Material Behavior"
-msgstr ""
-
-#: modules/debugger.lua:148
-msgid "Choose what to do when encountering a missing material"
+#: modules/debugger.lua:146
+msgid "Save Map Previews"
 msgstr ""
 
 #: modules/debugger.lua:149
+msgid "Saves SVG format images of generated map thumbnails."
+msgstr ""
+
+#: modules/debugger.lua:157
+msgid "Save Minimap GIF"
+msgstr ""
+
+#: modules/debugger.lua:160
+msgid "Save an animated GIF of the building process. Recommended in combination with the Live Growth Minimap."
+msgstr ""
+
+#: modules/debugger.lua:167
+msgid "Live Growth Minimap"
+msgstr ""
+
+#: modules/debugger.lua:170
+msgid "Controls the granularity of steps shown on the GUI minimap as a level is built."
+msgstr ""
+
+#: modules/debugger.lua:171
+msgid "Higher levels of detail will increase the amount of time that it takes to generate a WAD. If saving an animated GIF of the build process, its animation speed will also be affected by this setting (less detail=slower, more detail=faster)."
+msgstr ""
+
+#: modules/debugger.lua:177
+msgid "Max Failed Level Retries"
+msgstr ""
+
+#: modules/debugger.lua:184
+msgid "Set the amount of times Obsidian will attempt to scrap and restart a level if it encounters an error during the build process."
+msgstr ""
+
+#: modules/debugger.lua:196
+msgid "Material Options"
+msgstr ""
+
+#: modules/debugger.lua:203
+msgid "Debugging options related to textures and flats"
+msgstr ""
+
+#: modules/debugger.lua:214
+msgid "Print Fab Materials"
+msgstr ""
+
+#: modules/debugger.lua:217
+msgid "Print list of textures/flats present in each fab"
+msgstr ""
+
+#: modules/debugger.lua:218
+msgid "Print the names of all textures/flats preset in a prefab WAD. This will also list values like _FLOOR, _WALL, etc, prior to their conversion."
+msgstr ""
+
+#: modules/debugger.lua:224
+msgid "Missing Fab Material Behavior"
+msgstr ""
+
+#: modules/debugger.lua:227
+msgid "Choose what to do when encountering a missing material"
+msgstr ""
+
+#: modules/debugger.lua:228
 msgid ""
 "Provides the following options if a material definition isn't present in a game's MATERIALS table: \n"
 "\n"
@@ -1211,65 +1270,31 @@ msgid ""
 "Abort: Throw an error and halt generation, with an error message explaining which fab and material are causing the issue. Will also write this information to the logfile."
 msgstr ""
 
-#: modules/debugger.lua:155
+#: modules/debugger.lua:234
 msgid "Check For Non-Vanilla Materials"
 msgstr ""
 
-#: modules/debugger.lua:158
+#: modules/debugger.lua:237
 msgid "Choose what to do when encountering a non-vanilla material"
 msgstr ""
 
-#: modules/debugger.lua:159
+#: modules/debugger.lua:238
 msgid "If checked, will compare all flats/textures used against a list of vanilla materials for that IWAD, and treat non-vanilla materials as missing for the purposes of logging and throwing errors."
 msgstr ""
 
-#: modules/debugger.lua:166
-msgid "Whole Name Gen Names Only"
+#: modules/debugger.lua:244
+msgid "Custom Error Texture"
 msgstr ""
 
-#: modules/debugger.lua:169
-msgid "Use only complete names from the Name Generator"
+#: modules/debugger.lua:247
+msgid "Replaces Obsidian's default texture with a high visibility version for easier detection of broken level geometry or missing textures."
 msgstr ""
 
-#: modules/debugger.lua:170
-msgid ""
-"Uses name generator names that are already complete phrases/sentences \n"
-"instead of trying to procedurally generate them."
+#: modules/debugger.lua:256
+msgid "Allow Partially Supported Games"
 msgstr ""
 
-#: modules/debugger.lua:176
-msgid "Shape Rule Stats"
-msgstr ""
-
-#: modules/debugger.lua:179
-msgid "Displays usage statistics for shape grammar rules."
-msgstr ""
-
-#: modules/debugger.lua:186
-msgid "Save Map Previews"
-msgstr ""
-
-#: modules/debugger.lua:189
-msgid "Saves SVG format images of generated map thumbnails."
-msgstr ""
-
-#: modules/debugger.lua:197
-msgid "Save Minimap GIF"
-msgstr ""
-
-#: modules/debugger.lua:200
-msgid "Save an animated GIF of the building process. Recommended in combination with the Live Growth Minimap."
-msgstr ""
-
-#: modules/debugger.lua:207
-msgid "Experimental Games"
-msgstr ""
-
-#: modules/debugger.lua:210
-msgid "Enables building of levels for experimental games."
-msgstr ""
-
-#: modules/debugger.lua:211
+#: modules/debugger.lua:260
 msgid ""
 "The following games are in an experimental status, meaning that they may have errors when building levels, or support for certain gameplay features has not been implemented yet:\n"
 "\n"
@@ -1290,32 +1315,40 @@ msgid ""
 "Quake: Currently disabled"
 msgstr ""
 
-#: modules/debugger.lua:219
-msgid "Custom Error Texture"
+#: modules/debugger.lua:268
+msgid "Game Length Options"
 msgstr ""
 
-#: modules/debugger.lua:222
-msgid "Replaces Obsidian's default texture with a high visibility version for easier detection of broken level geometry or missing textures."
+#: modules/debugger.lua:276
+msgid "Alter the amount of levels used with the Full Game length option. Will probably break something."
 msgstr ""
 
-#: modules/debugger.lua:229
-msgid "Live Growth Minimap"
+#: modules/debugger.lua:287
+msgid "Full Game Length"
 msgstr ""
 
-#: modules/debugger.lua:232
-msgid "Controls the granularity of steps shown on the GUI minimap as a level is built."
+#: modules/debugger.lua:289
+msgid " Levels"
 msgstr ""
 
-#: modules/debugger.lua:233
-msgid "Higher levels of detail will increase the amount of time that it takes to generate a WAD. If saving an animated GIF of the build process, its animation speed will also be affected by this setting (less detail=slower, more detail=faster)."
+#: modules/debugger.lua:294
+msgid "Sets the number of levels in a full game. May cause issues if this value does not match the original game."
 msgstr ""
 
-#: modules/debugger.lua:239
-msgid "Max Failed Level Retries"
+#: modules/debugger.lua:305
+msgid "Pickup Options"
 msgstr ""
 
-#: modules/debugger.lua:246
-msgid "Set the amount of times Obsidian will attempt to scrap and restart a level if it encounters an error during the build process."
+#: modules/debugger.lua:312
+msgid "Experimental options related to pickups (items, weapons, etc)"
+msgstr ""
+
+#: modules/debugger.lua:323
+msgid "Alternate Item Quantities"
+msgstr ""
+
+#: modules/debugger.lua:326
+msgid "Scales item distribution with map size"
 msgstr ""
 
 #: modules/export_map.lua:265
@@ -5575,28 +5608,28 @@ msgstr ""
 msgid "Full Game"
 msgstr ""
 
-#: scripts/obsidian.lua:2289
+#: scripts/obsidian.lua:2288
 msgid ""
 "Choose which engine to build maps for:\n"
 "  id Tech 0: Wolfenstein 3D and similar games\n"
 "  id Tech 1: Doom and similar games\n"
 msgstr ""
 
-#: scripts/obsidian.lua:2300
+#: scripts/obsidian.lua:2299
 msgid "Choose which game to build maps for."
 msgstr ""
 
-#: scripts/obsidian.lua:2324
+#: scripts/obsidian.lua:2323
 msgid ""
 "Choose which port to build maps for.\n"
 "  Vanilla is the only option for id Tech 0; the remaining options are for id Tech 1.\n"
 msgstr ""
 
-#: scripts/obsidian.lua:2340
+#: scripts/obsidian.lua:2339
 msgid "Choose how many levels to create."
 msgstr ""
 
-#: scripts/obsidian.lua:2353
+#: scripts/obsidian.lua:2352
 msgid ""
 "The following values are game-specific:\n"
 "  Chex Quest 3: bazoik,spaceport,villa\n"
@@ -5747,6 +5780,10 @@ msgstr ""
 msgid "Addons/Restart and Apply Changes"
 msgstr ""
 
+#: source_files/obsidian_main/main.cc:1868
+msgid "Summon Clippy"
+msgstr ""
+
 #: source_files/obsidian_main/main.cc:2067
 msgid ""
 "Sorry, an internal error occurred:\n"
@@ -5852,35 +5889,35 @@ msgstr ""
 msgid "OBSIDIAN Glossary Viewer"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1271
+#: source_files/obsidian_main/m_lua.cc:996
 msgid "Making"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1398
+#: source_files/obsidian_main/m_lua.cc:1123
 msgid "Using"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1399
+#: source_files/obsidian_main/m_lua.cc:1124
 msgid "Preview Not Available"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1801
+#: source_files/obsidian_main/m_lua.cc:1526
 msgid "[ ERROR ]"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1805
+#: source_files/obsidian_main/m_lua.cc:1530
 msgid "Script Error: "
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:2159
+#: source_files/obsidian_main/m_lua.cc:1884
 msgid "ob_print_reference: Error creating REFERENCE.txt!\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:2169
+#: source_files/obsidian_main/m_lua.cc:1894
 msgid "ob_print_reference_json: Error printing json reference!\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:2178
+#: source_files/obsidian_main/m_lua.cc:1903
 msgid "Script Error"
 msgstr ""
 
@@ -6162,163 +6199,163 @@ msgstr ""
 msgid "Windows scaling changes cannot be applied automatically, but will take effect the next time Obsidian is run.\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:878
+#: source_files/obsidian_main/m_theme.cc:653
 msgid ""
 "Plastic widget theme requires a restart.\n"
 "OBSIDIAN will now restart."
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1426
+#: source_files/obsidian_main/m_theme.cc:1033
 msgid ""
 "Switching font selection requires a restart.\n"
 "OBSIDIAN will now restart."
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1485
+#: source_files/obsidian_main/m_theme.cc:1092
 msgid "Select Panel Text Color"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1696
+#: source_files/obsidian_main/m_theme.cc:1186
 msgid "Select Button Text Color"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1798
+#: source_files/obsidian_main/m_theme.cc:1237
 msgid "Select Panel Color"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1887
+#: source_files/obsidian_main/m_theme.cc:1284
 msgid "Select Highlight Color"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2025
+#: source_files/obsidian_main/m_theme.cc:1344
 msgid "Select Button Color"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2113
+#: source_files/obsidian_main/m_theme.cc:1387
 msgid "Select Gradient Color"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2157
+#: source_files/obsidian_main/m_theme.cc:1419
 msgid "Select Border Color"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2199
+#: source_files/obsidian_main/m_theme.cc:1449
 msgid "Select Gap Color"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2273
+#: source_files/obsidian_main/m_theme.cc:1514
 msgid ""
 "Defaults loaded.\n"
 "OBSIDIAN will now restart."
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2285
+#: source_files/obsidian_main/m_theme.cc:1526
 msgid ""
 "Theme loading requires a restart.\n"
 "OBSIDIAN will now restart."
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2326
+#: source_files/obsidian_main/m_theme.cc:1567
 msgid "Window Scaling: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2328
+#: source_files/obsidian_main/m_theme.cc:1569
 msgid "AUTO|Tiny|Small|Medium|Large|Huge"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2340
+#: source_files/obsidian_main/m_theme.cc:1581
 msgid "Font Size: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2357
+#: source_files/obsidian_main/m_theme.cc:1598
 msgid "Font: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2373
+#: source_files/obsidian_main/m_theme.cc:1614
 msgid "Widget Theme: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2375
+#: source_files/obsidian_main/m_theme.cc:1616
 msgid "Default|Gleam|Win95|Plastic|Oxy"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2387
+#: source_files/obsidian_main/m_theme.cc:1628
 msgid "Box Theme: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2389
+#: source_files/obsidian_main/m_theme.cc:1630
 msgid "Default|Shadow|Embossed|Engraved|Inverted|Raised"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2401
+#: source_files/obsidian_main/m_theme.cc:1642
 msgid "Button Theme: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2403
+#: source_files/obsidian_main/m_theme.cc:1644
 msgid "Default|Raised|Engraved|Embossed|Flat"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2415
+#: source_files/obsidian_main/m_theme.cc:1656
 msgid "Color Scheme: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2417
+#: source_files/obsidian_main/m_theme.cc:1658
 msgid "Default|Custom"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2428
+#: source_files/obsidian_main/m_theme.cc:1669
 msgid "Panel Font"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2438
+#: source_files/obsidian_main/m_theme.cc:1679
 msgid "Button Font"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2448
+#: source_files/obsidian_main/m_theme.cc:1689
 msgid "Panels"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2458
+#: source_files/obsidian_main/m_theme.cc:1699
 msgid "Highlights"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2469
+#: source_files/obsidian_main/m_theme.cc:1710
 msgid "Buttons"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2480
+#: source_files/obsidian_main/m_theme.cc:1721
 msgid "Gradient"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2491
+#: source_files/obsidian_main/m_theme.cc:1732
 msgid "Borders"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2502
+#: source_files/obsidian_main/m_theme.cc:1743
 msgid "Gaps"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2515
+#: source_files/obsidian_main/m_theme.cc:1756
 msgid " Use System Fonts (disables bundled fonts)"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2525
+#: source_files/obsidian_main/m_theme.cc:1766
 msgid "Load Defaults"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2535
+#: source_files/obsidian_main/m_theme.cc:1776
 msgid "Load Theme"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2546
+#: source_files/obsidian_main/m_theme.cc:1787
 msgid "Save Theme"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2582
+#: source_files/obsidian_main/m_theme.cc:1823
 msgid "Note: Most settings will only affect tabs after a restart."
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:2619
+#: source_files/obsidian_main/m_theme.cc:1860
 msgid "OBSIDIAN Theme Options"
 msgstr ""
 
@@ -6554,6 +6591,18 @@ msgstr ""
 
 #: source_files/obsidian_main/ui_module.cc:1652
 msgid "Other"
+msgstr ""
+
+#: source_files/obsidian_main/ui_module.cc:1654
+msgid "Debug"
+msgstr ""
+
+#: source_files/obsidian_main/ui_module.cc:1656
+msgid "Experimental"
+msgstr ""
+
+#: source_files/obsidian_main/ui_module.cc:1658
+msgid "Links"
 msgstr ""
 
 #: source_files/obsidian_main/ui_window.cc:80

@@ -456,172 +456,49 @@ class UI_ThemeWin : public Fl_Window {
         for (int x = 0; x < main_win->build_box->children(); x++) {
             main_win->build_box->child(x)->redraw();
         }
-        for (int x = 0; x < main_win->mod_tabs->arch_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->arch_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            if (!M->Is_UI()) {
-                M->heading->labelsize(header_font_size);
-                M->redraw();
-            }
-            std::map<std::string, UI_RChoice *>::const_iterator IT;
-            std::map<std::string, UI_RSlide *>::const_iterator IT2;
-            std::map<std::string, UI_RButton *>::const_iterator IT3;
-            for (IT = M->choice_map.begin(); IT != M->choice_map.end(); IT++) {
-                UI_RChoice *rch = IT->second;
-                rch->mod_label->labelsize(FL_NORMAL_SIZE);
-                rch->mod_menu->textsize(FL_NORMAL_SIZE);
-                rch->mod_help->labelsize(FL_NORMAL_SIZE);
-                rch->mod_reset->labelsize(FL_NORMAL_SIZE);
-                rch->mod_label->redraw();
-            }
-            for (IT2 = M->choice_map_slider.begin();
-                 IT2 != M->choice_map_slider.end(); IT2++) {
-                UI_RSlide *rsl = IT2->second;
-                rsl->mod_label->labelsize(FL_NORMAL_SIZE);
-                rsl->mod_entry->labelsize(FL_NORMAL_SIZE);
-                rsl->mod_help->labelsize(FL_NORMAL_SIZE);
-                rsl->mod_reset->labelsize(FL_NORMAL_SIZE);
-                rsl->unit_label->labelsize(FL_NORMAL_SIZE);
-                if (rsl->nan_choices.size() > 0) {
-                    rsl->nan_options->labelsize(FL_NORMAL_SIZE);
-                    rsl->nan_options->textsize(FL_NORMAL_SIZE);
-                    rsl->nan_options->redraw();
+        for (int t = 0; t < main_win->mod_tabs->children(); t++) {
+            UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(t);
+            for (int x = 0; x < tab->mod_pack->children(); x++) {
+                UI_Module *M = (UI_Module *)tab->mod_pack->child(x);
+                SYS_ASSERT(M);
+                if (!M->Is_UI()) {
+                    M->heading->labelsize(header_font_size);
+                    M->redraw();
                 }
-                rsl->mod_label->redraw();
-            }
-            for (IT3 = M->choice_map_button.begin();
-                 IT3 != M->choice_map_button.end(); IT3++) {
-                UI_RButton *rbt = IT3->second;
-                rbt->mod_label->labelsize(FL_NORMAL_SIZE);
-                rbt->mod_help->labelsize(FL_NORMAL_SIZE);
-                rbt->mod_reset->labelsize(FL_NORMAL_SIZE);
-                rbt->mod_label->redraw();
-            }
-        }
-        for (int x = 0; x < main_win->mod_tabs->combat_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->combat_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            if (!M->Is_UI()) {
-                M->heading->labelsize(header_font_size);
-                M->redraw();
-            }
-            std::map<std::string, UI_RChoice *>::const_iterator IT;
-            std::map<std::string, UI_RSlide *>::const_iterator IT2;
-            std::map<std::string, UI_RButton *>::const_iterator IT3;
-            for (IT = M->choice_map.begin(); IT != M->choice_map.end(); IT++) {
-                UI_RChoice *rch = IT->second;
-                rch->mod_label->labelsize(FL_NORMAL_SIZE);
-                rch->mod_menu->textsize(FL_NORMAL_SIZE);
-                rch->mod_help->labelsize(FL_NORMAL_SIZE);
-                rch->mod_reset->labelsize(FL_NORMAL_SIZE);
-                rch->mod_label->redraw();
-            }
-            for (IT2 = M->choice_map_slider.begin();
-                 IT2 != M->choice_map_slider.end(); IT2++) {
-                UI_RSlide *rsl = IT2->second;
-                rsl->mod_label->labelsize(FL_NORMAL_SIZE);
-                rsl->mod_entry->labelsize(FL_NORMAL_SIZE);
-                rsl->mod_help->labelsize(FL_NORMAL_SIZE);
-                rsl->mod_reset->labelsize(FL_NORMAL_SIZE);
-                rsl->unit_label->labelsize(FL_NORMAL_SIZE);
-                if (rsl->nan_choices.size() > 0) {
-                    rsl->nan_options->labelsize(FL_NORMAL_SIZE);
-                    rsl->nan_options->textsize(FL_NORMAL_SIZE);
-                    rsl->nan_options->redraw();
+                std::map<std::string, UI_RChoice *>::const_iterator IT;
+                std::map<std::string, UI_RSlide *>::const_iterator IT2;
+                std::map<std::string, UI_RButton *>::const_iterator IT3;
+                for (IT = M->choice_map.begin(); IT != M->choice_map.end(); IT++) {
+                    UI_RChoice *rch = IT->second;
+                    rch->mod_label->labelsize(FL_NORMAL_SIZE);
+                    rch->mod_menu->textsize(FL_NORMAL_SIZE);
+                    rch->mod_help->labelsize(FL_NORMAL_SIZE);
+                    rch->mod_reset->labelsize(FL_NORMAL_SIZE);
+                    rch->mod_label->redraw();
                 }
-                rsl->mod_label->redraw();
-            }
-            for (IT3 = M->choice_map_button.begin();
-                 IT3 != M->choice_map_button.end(); IT3++) {
-                UI_RButton *rbt = IT3->second;
-                rbt->mod_label->labelsize(FL_NORMAL_SIZE);
-                rbt->mod_help->labelsize(FL_NORMAL_SIZE);
-                rbt->mod_reset->labelsize(FL_NORMAL_SIZE);
-                rbt->mod_label->redraw();
-            }
-        }
-        for (int x = 0; x < main_win->mod_tabs->pickup_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->pickup_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            if (!M->Is_UI()) {
-                M->heading->labelsize(header_font_size);
-                M->redraw();
-            }
-            std::map<std::string, UI_RChoice *>::const_iterator IT;
-            std::map<std::string, UI_RSlide *>::const_iterator IT2;
-            std::map<std::string, UI_RButton *>::const_iterator IT3;
-            for (IT = M->choice_map.begin(); IT != M->choice_map.end(); IT++) {
-                UI_RChoice *rch = IT->second;
-                rch->mod_label->labelsize(FL_NORMAL_SIZE);
-                rch->mod_menu->textsize(FL_NORMAL_SIZE);
-                rch->mod_help->labelsize(FL_NORMAL_SIZE);
-                rch->mod_reset->labelsize(FL_NORMAL_SIZE);
-                rch->mod_label->redraw();
-            }
-            for (IT2 = M->choice_map_slider.begin();
-                 IT2 != M->choice_map_slider.end(); IT2++) {
-                UI_RSlide *rsl = IT2->second;
-                rsl->mod_label->labelsize(FL_NORMAL_SIZE);
-                rsl->mod_entry->labelsize(FL_NORMAL_SIZE);
-                rsl->mod_help->labelsize(FL_NORMAL_SIZE);
-                rsl->mod_reset->labelsize(FL_NORMAL_SIZE);
-                rsl->unit_label->labelsize(FL_NORMAL_SIZE);
-                if (rsl->nan_choices.size() > 0) {
-                    rsl->nan_options->labelsize(FL_NORMAL_SIZE);
-                    rsl->nan_options->textsize(FL_NORMAL_SIZE);
-                    rsl->nan_options->redraw();
+                for (IT2 = M->choice_map_slider.begin();
+                    IT2 != M->choice_map_slider.end(); IT2++) {
+                    UI_RSlide *rsl = IT2->second;
+                    rsl->mod_label->labelsize(FL_NORMAL_SIZE);
+                    rsl->mod_entry->labelsize(FL_NORMAL_SIZE);
+                    rsl->mod_help->labelsize(FL_NORMAL_SIZE);
+                    rsl->mod_reset->labelsize(FL_NORMAL_SIZE);
+                    rsl->unit_label->labelsize(FL_NORMAL_SIZE);
+                    if (rsl->nan_choices.size() > 0) {
+                        rsl->nan_options->labelsize(FL_NORMAL_SIZE);
+                        rsl->nan_options->textsize(FL_NORMAL_SIZE);
+                        rsl->nan_options->redraw();
+                    }
+                    rsl->mod_label->redraw();
                 }
-                rsl->mod_label->redraw();
-            }
-            for (IT3 = M->choice_map_button.begin();
-                 IT3 != M->choice_map_button.end(); IT3++) {
-                UI_RButton *rbt = IT3->second;
-                rbt->mod_label->labelsize(FL_NORMAL_SIZE);
-                rbt->mod_help->labelsize(FL_NORMAL_SIZE);
-                rbt->mod_reset->labelsize(FL_NORMAL_SIZE);
-                rbt->mod_label->redraw();
-            }
-        }
-        for (int x = 0; x < main_win->mod_tabs->other_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->other_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            if (!M->Is_UI()) {
-                M->heading->labelsize(header_font_size);
-                M->redraw();
-            }
-            std::map<std::string, UI_RChoice *>::const_iterator IT;
-            std::map<std::string, UI_RSlide *>::const_iterator IT2;
-            std::map<std::string, UI_RButton *>::const_iterator IT3;
-            for (IT = M->choice_map.begin(); IT != M->choice_map.end(); IT++) {
-                UI_RChoice *rch = IT->second;
-                rch->mod_label->labelsize(FL_NORMAL_SIZE);
-                rch->mod_menu->textsize(FL_NORMAL_SIZE);
-                rch->mod_help->labelsize(FL_NORMAL_SIZE);
-                rch->mod_reset->labelsize(FL_NORMAL_SIZE);
-                rch->mod_label->redraw();
-            }
-            for (IT2 = M->choice_map_slider.begin();
-                 IT2 != M->choice_map_slider.end(); IT2++) {
-                UI_RSlide *rsl = IT2->second;
-                rsl->mod_label->labelsize(FL_NORMAL_SIZE);
-                rsl->mod_entry->labelsize(FL_NORMAL_SIZE);
-                rsl->mod_help->labelsize(FL_NORMAL_SIZE);
-                rsl->mod_reset->labelsize(FL_NORMAL_SIZE);
-                rsl->unit_label->labelsize(FL_NORMAL_SIZE);
-                if (rsl->nan_choices.size() > 0) {
-                    rsl->nan_options->labelsize(FL_NORMAL_SIZE);
-                    rsl->nan_options->textsize(FL_NORMAL_SIZE);
-                    rsl->nan_options->redraw();
+                for (IT3 = M->choice_map_button.begin();
+                    IT3 != M->choice_map_button.end(); IT3++) {
+                    UI_RButton *rbt = IT3->second;
+                    rbt->mod_label->labelsize(FL_NORMAL_SIZE);
+                    rbt->mod_help->labelsize(FL_NORMAL_SIZE);
+                    rbt->mod_reset->labelsize(FL_NORMAL_SIZE);
+                    rbt->mod_label->redraw();
                 }
-                rsl->mod_label->redraw();
-            }
-            for (IT3 = M->choice_map_button.begin();
-                 IT3 != M->choice_map_button.end(); IT3++) {
-                UI_RButton *rbt = IT3->second;
-                rbt->mod_label->labelsize(FL_NORMAL_SIZE);
-                rbt->mod_help->labelsize(FL_NORMAL_SIZE);
-                rbt->mod_reset->labelsize(FL_NORMAL_SIZE);
-                rbt->mod_label->redraw();
             }
         }
         for (int x = 0; x < main_win->mod_tabs->children(); x++) {
@@ -700,144 +577,42 @@ class UI_ThemeWin : public Fl_Window {
         for (int x = 0; x < main_win->build_box->children(); x++) {
             main_win->build_box->child(x)->redraw();
         }
-        for (int x = 0; x < main_win->mod_tabs->arch_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->arch_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            if (!M->Is_UI()) {
-                M->heading->labelfont(use_system_fonts ? font_style
-                                                    : font_style | FL_BOLD);
-                M->redraw();
-            }
-            std::map<std::string, UI_RChoice *>::const_iterator IT;
-            std::map<std::string, UI_RSlide *>::const_iterator IT2;
-            std::map<std::string, UI_RButton *>::const_iterator IT3;
-            for (IT = M->choice_map.begin(); IT != M->choice_map.end(); IT++) {
-                UI_RChoice *rch = IT->second;
-                rch->mod_label->labelfont(font_style);
-                rch->mod_menu->textfont(font_style);
-                rch->mod_help->labelfont(font_style);
-                rch->mod_label->redraw();
-            }
-            for (IT2 = M->choice_map_slider.begin();
-                 IT2 != M->choice_map_slider.end(); IT2++) {
-                UI_RSlide *rsl = IT2->second;
-                rsl->mod_label->labelfont(font_style);
-                rsl->mod_entry->labelfont(font_style);
-                rsl->mod_help->labelfont(font_style);
-                rsl->unit_label->labelfont(font_style);
-                rsl->mod_label->redraw();
-            }
-            for (IT3 = M->choice_map_button.begin();
-                 IT3 != M->choice_map_button.end(); IT3++) {
-                UI_RButton *rbt = IT3->second;
-                rbt->mod_label->labelfont(font_style);
-                rbt->mod_help->labelfont(font_style);
-                rbt->mod_label->redraw();
-            }
-        }
-        for (int x = 0; x < main_win->mod_tabs->combat_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->combat_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            if (!M->Is_UI()) {
-                M->heading->labelfont(use_system_fonts ? font_style
-                                                    : font_style | FL_BOLD);
-                M->redraw();
-            }
-            std::map<std::string, UI_RChoice *>::const_iterator IT;
-            std::map<std::string, UI_RSlide *>::const_iterator IT2;
-            std::map<std::string, UI_RButton *>::const_iterator IT3;
-            for (IT = M->choice_map.begin(); IT != M->choice_map.end(); IT++) {
-                UI_RChoice *rch = IT->second;
-                rch->mod_label->labelfont(font_style);
-                rch->mod_menu->textfont(font_style);
-                rch->mod_help->labelfont(font_style);
-                rch->mod_label->redraw();
-            }
-            for (IT2 = M->choice_map_slider.begin();
-                 IT2 != M->choice_map_slider.end(); IT2++) {
-                UI_RSlide *rsl = IT2->second;
-                rsl->mod_label->labelfont(font_style);
-                rsl->mod_entry->labelfont(font_style);
-                rsl->mod_help->labelfont(font_style);
-                rsl->unit_label->labelfont(font_style);
-                rsl->mod_label->redraw();
-            }
-            for (IT3 = M->choice_map_button.begin();
-                 IT3 != M->choice_map_button.end(); IT3++) {
-                UI_RButton *rbt = IT3->second;
-                rbt->mod_label->labelfont(font_style);
-                rbt->mod_help->labelfont(font_style);
-                rbt->mod_label->redraw();
-            }
-        }
-        for (int x = 0; x < main_win->mod_tabs->pickup_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->pickup_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            if (!M->Is_UI()) {
-                M->heading->labelfont(use_system_fonts ? font_style
-                                                    : font_style | FL_BOLD);
-                M->redraw();
-            }
-            std::map<std::string, UI_RChoice *>::const_iterator IT;
-            std::map<std::string, UI_RSlide *>::const_iterator IT2;
-            std::map<std::string, UI_RButton *>::const_iterator IT3;
-            for (IT = M->choice_map.begin(); IT != M->choice_map.end(); IT++) {
-                UI_RChoice *rch = IT->second;
-                rch->mod_label->labelfont(font_style);
-                rch->mod_menu->textfont(font_style);
-                rch->mod_help->labelfont(font_style);
-                rch->mod_label->redraw();
-            }
-            for (IT2 = M->choice_map_slider.begin();
-                 IT2 != M->choice_map_slider.end(); IT2++) {
-                UI_RSlide *rsl = IT2->second;
-                rsl->mod_label->labelfont(font_style);
-                rsl->mod_entry->labelfont(font_style);
-                rsl->mod_help->labelfont(font_style);
-                rsl->unit_label->labelfont(font_style);
-                rsl->mod_label->redraw();
-            }
-            for (IT3 = M->choice_map_button.begin();
-                 IT3 != M->choice_map_button.end(); IT3++) {
-                UI_RButton *rbt = IT3->second;
-                rbt->mod_label->labelfont(font_style);
-                rbt->mod_help->labelfont(font_style);
-                rbt->mod_label->redraw();
-            }
-        }
-        for (int x = 0; x < main_win->mod_tabs->other_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->other_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            if (!M->Is_UI()) {
-                M->heading->labelfont(use_system_fonts ? font_style
-                                                    : font_style | FL_BOLD);
-                M->redraw();
-            }
-            std::map<std::string, UI_RChoice *>::const_iterator IT;
-            std::map<std::string, UI_RSlide *>::const_iterator IT2;
-            std::map<std::string, UI_RButton *>::const_iterator IT3;
-            for (IT = M->choice_map.begin(); IT != M->choice_map.end(); IT++) {
-                UI_RChoice *rch = IT->second;
-                rch->mod_label->labelfont(font_style);
-                rch->mod_menu->textfont(font_style);
-                rch->mod_help->labelfont(font_style);
-                rch->mod_label->redraw();
-            }
-            for (IT2 = M->choice_map_slider.begin();
-                 IT2 != M->choice_map_slider.end(); IT2++) {
-                UI_RSlide *rsl = IT2->second;
-                rsl->mod_label->labelfont(font_style);
-                rsl->mod_entry->labelfont(font_style);
-                rsl->mod_help->labelfont(font_style);
-                rsl->unit_label->labelfont(font_style);
-                rsl->mod_label->redraw();
-            }
-            for (IT3 = M->choice_map_button.begin();
-                 IT3 != M->choice_map_button.end(); IT3++) {
-                UI_RButton *rbt = IT3->second;
-                rbt->mod_label->labelfont(font_style);
-                rbt->mod_help->labelfont(font_style);
-                rbt->mod_label->redraw();
+        for (int t = 0; t < main_win->mod_tabs->children(); t++) {
+            UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(t);
+            for (int x = 0; x < tab->mod_pack->children(); x++) {
+                UI_Module *M = (UI_Module *)tab->mod_pack->child(x);
+                SYS_ASSERT(M);
+                if (!M->Is_UI()) {
+                    M->heading->labelfont(use_system_fonts ? font_style
+                                                        : font_style | FL_BOLD);
+                    M->redraw();
+                }
+                std::map<std::string, UI_RChoice *>::const_iterator IT;
+                std::map<std::string, UI_RSlide *>::const_iterator IT2;
+                std::map<std::string, UI_RButton *>::const_iterator IT3;
+                for (IT = M->choice_map.begin(); IT != M->choice_map.end(); IT++) {
+                    UI_RChoice *rch = IT->second;
+                    rch->mod_label->labelfont(font_style);
+                    rch->mod_menu->textfont(font_style);
+                    rch->mod_help->labelfont(font_style);
+                    rch->mod_label->redraw();
+                }
+                for (IT2 = M->choice_map_slider.begin();
+                    IT2 != M->choice_map_slider.end(); IT2++) {
+                    UI_RSlide *rsl = IT2->second;
+                    rsl->mod_label->labelfont(font_style);
+                    rsl->mod_entry->labelfont(font_style);
+                    rsl->mod_help->labelfont(font_style);
+                    rsl->unit_label->labelfont(font_style);
+                    rsl->mod_label->redraw();
+                }
+                for (IT3 = M->choice_map_button.begin();
+                    IT3 != M->choice_map_button.end(); IT3++) {
+                    UI_RButton *rbt = IT3->second;
+                    rbt->mod_label->labelfont(font_style);
+                    rbt->mod_help->labelfont(font_style);
+                    rbt->mod_label->redraw();
+                }
             }
         }
         for (int x = 0; x < main_win->mod_tabs->children(); x++) {
@@ -1010,129 +785,45 @@ class UI_ThemeWin : public Fl_Window {
             main_win->game_box->redraw();
             main_win->build_box->box(box_style);
             main_win->build_box->redraw();
-            for (int x = 0; x < main_win->mod_tabs->arch_mods->mod_pack->children(); x++) {
-                UI_Module *M = (UI_Module *)main_win->mod_tabs->arch_mods->mod_pack->child(x);
-                SYS_ASSERT(M);
-                M->box(box_style);
-                M->redraw();
-            }
-            for (int x = 0; x < main_win->mod_tabs->combat_mods->mod_pack->children(); x++) {
-                UI_Module *M = (UI_Module *)main_win->mod_tabs->combat_mods->mod_pack->child(x);
-                SYS_ASSERT(M);
-                M->box(box_style);
-                M->redraw();
-            }
-            for (int x = 0; x < main_win->mod_tabs->pickup_mods->mod_pack->children(); x++) {
-                UI_Module *M = (UI_Module *)main_win->mod_tabs->pickup_mods->mod_pack->child(x);
-                SYS_ASSERT(M);
-                M->box(box_style);
-                M->redraw();
-            }
-            for (int x = 0; x < main_win->mod_tabs->other_mods->mod_pack->children(); x++) {
-                UI_Module *M = (UI_Module *)main_win->mod_tabs->other_mods->mod_pack->child(x);
-                SYS_ASSERT(M);
-                M->box(box_style);
-                M->redraw();
+            for (int t = 0; t < main_win->mod_tabs->children(); t++) {
+                UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(t);
+                for (int x = 0; x < tab->mod_pack->children(); x++) {
+                    UI_Module *M = (UI_Module *)tab->mod_pack->child(x);
+                    SYS_ASSERT(M);
+                    M->box(box_style);
+                    M->redraw();
+                }
             }
             main_win->game_box->build->box(button_style);
             main_win->game_box->quit->box(button_style);
             for (int x = 0; x < main_win->game_box->children(); x++) {
                 main_win->game_box->child(x)->redraw();
             }
-            main_win->mod_tabs->arch_mods->sbar->slider(button_style);
-            main_win->mod_tabs->arch_mods->redraw();
-            for (int x = 0; x < main_win->mod_tabs->arch_mods->mod_pack->children(); x++) {
-                UI_Module *M = (UI_Module *)main_win->mod_tabs->arch_mods->mod_pack->child(x);
-                SYS_ASSERT(M);
-                M->mod_button->down_box(button_style);
-                M->redraw();
-                std::map<std::string, UI_RSlide *>::const_iterator IT;
-                std::map<std::string, UI_RButton *>::const_iterator IT2;
-                for (IT = M->choice_map_slider.begin();
-                    IT != M->choice_map_slider.end(); IT++) {
-                    UI_RSlide *rsl = IT->second;
-                    rsl->prev_button->box(button_style);
-                    rsl->mod_slider->box(button_style);
-                    rsl->next_button->box(button_style);
-                    rsl->redraw();
-                }
-                for (IT2 = M->choice_map_button.begin();
-                    IT2 != M->choice_map_button.end(); IT2++) {
-                    UI_RButton *rbt = IT2->second;
-                    rbt->mod_check->down_box(button_style);
-                    rbt->redraw();
-                }
-            }
-            main_win->mod_tabs->combat_mods->sbar->slider(button_style);
-            main_win->mod_tabs->combat_mods->redraw();
-            for (int x = 0; x < main_win->mod_tabs->combat_mods->mod_pack->children(); x++) {
-                UI_Module *M = (UI_Module *)main_win->mod_tabs->combat_mods->mod_pack->child(x);
-                SYS_ASSERT(M);
-                M->mod_button->down_box(button_style);
-                M->redraw();
-                std::map<std::string, UI_RSlide *>::const_iterator IT;
-                std::map<std::string, UI_RButton *>::const_iterator IT2;
-                for (IT = M->choice_map_slider.begin();
-                    IT != M->choice_map_slider.end(); IT++) {
-                    UI_RSlide *rsl = IT->second;
-                    rsl->prev_button->box(button_style);
-                    rsl->mod_slider->box(button_style);
-                    rsl->next_button->box(button_style);
-                    rsl->redraw();
-                }
-                for (IT2 = M->choice_map_button.begin();
-                    IT2 != M->choice_map_button.end(); IT2++) {
-                    UI_RButton *rbt = IT2->second;
-                    rbt->mod_check->down_box(button_style);
-                    rbt->redraw();
-                }
-            }
-            main_win->mod_tabs->pickup_mods->sbar->slider(button_style);
-            main_win->mod_tabs->pickup_mods->redraw();
-            for (int x = 0; x < main_win->mod_tabs->pickup_mods->mod_pack->children(); x++) {
-                UI_Module *M = (UI_Module *)main_win->mod_tabs->pickup_mods->mod_pack->child(x);
-                SYS_ASSERT(M);
-                M->mod_button->down_box(button_style);
-                M->redraw();
-                std::map<std::string, UI_RSlide *>::const_iterator IT;
-                std::map<std::string, UI_RButton *>::const_iterator IT2;
-                for (IT = M->choice_map_slider.begin();
-                    IT != M->choice_map_slider.end(); IT++) {
-                    UI_RSlide *rsl = IT->second;
-                    rsl->prev_button->box(button_style);
-                    rsl->mod_slider->box(button_style);
-                    rsl->next_button->box(button_style);
-                    rsl->redraw();
-                }
-                for (IT2 = M->choice_map_button.begin();
-                    IT2 != M->choice_map_button.end(); IT2++) {
-                    UI_RButton *rbt = IT2->second;
-                    rbt->mod_check->down_box(button_style);
-                    rbt->redraw();
-                }
-            }
-            main_win->mod_tabs->other_mods->sbar->slider(button_style);
-            main_win->mod_tabs->other_mods->redraw();
-            for (int x = 0; x < main_win->mod_tabs->other_mods->mod_pack->children(); x++) {
-                UI_Module *M = (UI_Module *)main_win->mod_tabs->other_mods->mod_pack->child(x);
-                SYS_ASSERT(M);
-                M->mod_button->down_box(button_style);
-                M->redraw();
-                std::map<std::string, UI_RSlide *>::const_iterator IT;
-                std::map<std::string, UI_RButton *>::const_iterator IT2;
-                for (IT = M->choice_map_slider.begin();
-                    IT != M->choice_map_slider.end(); IT++) {
-                    UI_RSlide *rsl = IT->second;
-                    rsl->prev_button->box(button_style);
-                    rsl->mod_slider->box(button_style);
-                    rsl->next_button->box(button_style);
-                    rsl->redraw();
-                }
-                for (IT2 = M->choice_map_button.begin();
-                    IT2 != M->choice_map_button.end(); IT2++) {
-                    UI_RButton *rbt = IT2->second;
-                    rbt->mod_check->down_box(button_style);
-                    rbt->redraw();
+            for (int t = 0; t < main_win->mod_tabs->children(); t++) {
+                UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(t);
+                tab->sbar->slider(button_style);
+                tab->redraw();
+                for (int x = 0; x < tab->mod_pack->children(); x++) {
+                    UI_Module *M = (UI_Module *)tab->mod_pack->child(x);
+                    SYS_ASSERT(M);
+                    M->mod_button->down_box(button_style);
+                    M->redraw();
+                    std::map<std::string, UI_RSlide *>::const_iterator IT;
+                    std::map<std::string, UI_RButton *>::const_iterator IT2;
+                    for (IT = M->choice_map_slider.begin();
+                        IT != M->choice_map_slider.end(); IT++) {
+                        UI_RSlide *rsl = IT->second;
+                        rsl->prev_button->box(button_style);
+                        rsl->mod_slider->box(button_style);
+                        rsl->next_button->box(button_style);
+                        rsl->redraw();
+                    }
+                    for (IT2 = M->choice_map_button.begin();
+                        IT2 != M->choice_map_button.end(); IT2++) {
+                        UI_RButton *rbt = IT2->second;
+                        rbt->mod_check->down_box(button_style);
+                        rbt->redraw();
+                    }
                 }
             }
             that->opt_system_fonts->down_box(button_style);
@@ -1218,29 +909,14 @@ class UI_ThemeWin : public Fl_Window {
         main_win->game_box->redraw();
         main_win->build_box->box(box_style);
         main_win->build_box->redraw();
-        for (int x = 0; x < main_win->mod_tabs->arch_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->arch_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            M->box(box_style);
-            M->redraw();
-        }
-        for (int x = 0; x < main_win->mod_tabs->combat_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->combat_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            M->box(box_style);
-            M->redraw();
-        }
-        for (int x = 0; x < main_win->mod_tabs->pickup_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->pickup_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            M->box(box_style);
-            M->redraw();
-        }
-        for (int x = 0; x < main_win->mod_tabs->other_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->other_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            M->box(box_style);
-            M->redraw();
+        for (int t = 0; t < main_win->mod_tabs->children(); t++) {
+            UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(t);
+            for (int x = 0; x < tab->mod_pack->children(); x++) {
+                UI_Module *M = (UI_Module *)tab->mod_pack->child(x);
+                SYS_ASSERT(M);
+                M->box(box_style);
+                M->redraw();
+            }
         }
     }
 
@@ -1313,100 +989,31 @@ class UI_ThemeWin : public Fl_Window {
         for (int x = 0; x < main_win->game_box->children(); x++) {
             main_win->game_box->child(x)->redraw();
         }
-        main_win->mod_tabs->arch_mods->sbar->slider(button_style);
-        main_win->mod_tabs->arch_mods->redraw();
-        for (int x = 0; x < main_win->mod_tabs->arch_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->arch_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            M->mod_button->down_box(button_style);
-            M->redraw();
-            std::map<std::string, UI_RSlide *>::const_iterator IT;
-            std::map<std::string, UI_RButton *>::const_iterator IT2;
-            for (IT = M->choice_map_slider.begin();
-                 IT != M->choice_map_slider.end(); IT++) {
-                UI_RSlide *rsl = IT->second;
-                rsl->prev_button->box(button_style);
-                rsl->mod_slider->box(button_style);
-                rsl->next_button->box(button_style);
-                rsl->redraw();
-            }
-            for (IT2 = M->choice_map_button.begin();
-                 IT2 != M->choice_map_button.end(); IT2++) {
-                UI_RButton *rbt = IT2->second;
-                rbt->mod_check->down_box(button_style);
-                rbt->redraw();
-            }
-        }
-        main_win->mod_tabs->combat_mods->sbar->slider(button_style);
-        main_win->mod_tabs->combat_mods->redraw();
-        for (int x = 0; x < main_win->mod_tabs->combat_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->combat_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            M->mod_button->down_box(button_style);
-            M->redraw();
-            std::map<std::string, UI_RSlide *>::const_iterator IT;
-            std::map<std::string, UI_RButton *>::const_iterator IT2;
-            for (IT = M->choice_map_slider.begin();
-                 IT != M->choice_map_slider.end(); IT++) {
-                UI_RSlide *rsl = IT->second;
-                rsl->prev_button->box(button_style);
-                rsl->mod_slider->box(button_style);
-                rsl->next_button->box(button_style);
-                rsl->redraw();
-            }
-            for (IT2 = M->choice_map_button.begin();
-                 IT2 != M->choice_map_button.end(); IT2++) {
-                UI_RButton *rbt = IT2->second;
-                rbt->mod_check->down_box(button_style);
-                rbt->redraw();
-            }
-        }
-        main_win->mod_tabs->pickup_mods->sbar->slider(button_style);
-        main_win->mod_tabs->pickup_mods->redraw();
-        for (int x = 0; x < main_win->mod_tabs->pickup_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->pickup_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            M->mod_button->down_box(button_style);
-            M->redraw();
-            std::map<std::string, UI_RSlide *>::const_iterator IT;
-            std::map<std::string, UI_RButton *>::const_iterator IT2;
-            for (IT = M->choice_map_slider.begin();
-                 IT != M->choice_map_slider.end(); IT++) {
-                UI_RSlide *rsl = IT->second;
-                rsl->prev_button->box(button_style);
-                rsl->mod_slider->box(button_style);
-                rsl->next_button->box(button_style);
-                rsl->redraw();
-            }
-            for (IT2 = M->choice_map_button.begin();
-                 IT2 != M->choice_map_button.end(); IT2++) {
-                UI_RButton *rbt = IT2->second;
-                rbt->mod_check->down_box(button_style);
-                rbt->redraw();
-            }
-        }
-        main_win->mod_tabs->other_mods->sbar->slider(button_style);
-        main_win->mod_tabs->other_mods->redraw();
-        for (int x = 0; x < main_win->mod_tabs->other_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->other_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            M->mod_button->down_box(button_style);
-            M->redraw();
-            std::map<std::string, UI_RSlide *>::const_iterator IT;
-            std::map<std::string, UI_RButton *>::const_iterator IT2;
-            for (IT = M->choice_map_slider.begin();
-                 IT != M->choice_map_slider.end(); IT++) {
-                UI_RSlide *rsl = IT->second;
-                rsl->prev_button->box(button_style);
-                rsl->mod_slider->box(button_style);
-                rsl->next_button->box(button_style);
-                rsl->redraw();
-            }
-            for (IT2 = M->choice_map_button.begin();
-                 IT2 != M->choice_map_button.end(); IT2++) {
-                UI_RButton *rbt = IT2->second;
-                rbt->mod_check->down_box(button_style);
-                rbt->redraw();
+        for (int t = 0; t < main_win->mod_tabs->children(); t++) {
+            UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(t);
+            tab->sbar->slider(button_style);
+            tab->redraw();
+            for (int x = 0; x < tab->mod_pack->children(); x++) {
+                UI_Module *M = (UI_Module *)tab->mod_pack->child(x);
+                SYS_ASSERT(M);
+                M->mod_button->down_box(button_style);
+                M->redraw();
+                std::map<std::string, UI_RSlide *>::const_iterator IT;
+                std::map<std::string, UI_RButton *>::const_iterator IT2;
+                for (IT = M->choice_map_slider.begin();
+                    IT != M->choice_map_slider.end(); IT++) {
+                    UI_RSlide *rsl = IT->second;
+                    rsl->prev_button->box(button_style);
+                    rsl->mod_slider->box(button_style);
+                    rsl->next_button->box(button_style);
+                    rsl->redraw();
+                }
+                for (IT2 = M->choice_map_button.begin();
+                    IT2 != M->choice_map_button.end(); IT2++) {
+                    UI_RButton *rbt = IT2->second;
+                    rbt->mod_check->down_box(button_style);
+                    rbt->redraw();
+                }
             }
         }
         that->opt_system_fonts->down_box(button_style);
@@ -1523,164 +1130,47 @@ class UI_ThemeWin : public Fl_Window {
         }
         main_win->mod_tabs->labelcolor(FONT_COLOR);
         main_win->mod_tabs->redraw();
-        for (int x = 0; x < main_win->mod_tabs->arch_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->arch_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            if (!M->Is_UI()) {
-                M->heading->labelcolor(FONT_COLOR);
-                M->redraw();
-            }
-            std::map<std::string, UI_RChoice *>::const_iterator IT;
-            std::map<std::string, UI_RSlide *>::const_iterator IT2;
-            std::map<std::string, UI_RButton *>::const_iterator IT3;
-            for (IT = M->choice_map.begin(); IT != M->choice_map.end(); IT++) {
-                UI_RChoice *rch = IT->second;
-                rch->mod_label->labelcolor(FONT_COLOR);
-                rch->mod_help->labelcolor(FONT_COLOR);
-                rch->mod_reset->labelcolor(FONT_COLOR);
-                rch->mod_label->redraw();
-            }
-            for (IT2 = M->choice_map_slider.begin();
-                 IT2 != M->choice_map_slider.end(); IT2++) {
-                UI_RSlide *rsl = IT2->second;
-                rsl->mod_label->labelcolor(FONT_COLOR);
-                rsl->mod_entry->labelcolor(FONT_COLOR);
-                rsl->mod_help->labelcolor(FONT_COLOR);
-                rsl->mod_reset->labelcolor(FONT_COLOR);
-                if (rsl->nan_choices.size() > 0) {
-                    rsl->nan_options->textcolor(FONT_COLOR);
-                    rsl->nan_options->labelcolor(FONT_COLOR);
-                    rsl->nan_options->redraw();
+        for (int t = 0; t < main_win->mod_tabs->children(); t++) {
+            UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(t);
+            for (int x = 0; x < tab->mod_pack->children(); x++) {
+                UI_Module *M = (UI_Module *)tab->mod_pack->child(x);
+                SYS_ASSERT(M);
+                if (!M->Is_UI()) {
+                    M->heading->labelcolor(FONT_COLOR);
+                    M->redraw();
                 }
-                rsl->mod_label->redraw();
-            }
-            for (IT3 = M->choice_map_button.begin();
-                 IT3 != M->choice_map_button.end(); IT3++) {
-                UI_RButton *rbt = IT3->second;
-                rbt->mod_label->labelcolor(FONT_COLOR);
-                rbt->mod_help->labelcolor(FONT_COLOR);
-                rbt->mod_reset->labelcolor(FONT_COLOR);
-                rbt->mod_label->redraw();
-            }
-        }
-        for (int x = 0; x < main_win->mod_tabs->combat_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->combat_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            if (!M->Is_UI()) {
-                M->heading->labelcolor(FONT_COLOR);
-                M->redraw();
-            }
-            std::map<std::string, UI_RChoice *>::const_iterator IT;
-            std::map<std::string, UI_RSlide *>::const_iterator IT2;
-            std::map<std::string, UI_RButton *>::const_iterator IT3;
-            for (IT = M->choice_map.begin(); IT != M->choice_map.end(); IT++) {
-                UI_RChoice *rch = IT->second;
-                rch->mod_label->labelcolor(FONT_COLOR);
-                rch->mod_help->labelcolor(FONT_COLOR);
-                rch->mod_reset->labelcolor(FONT_COLOR);
-                rch->mod_label->redraw();
-            }
-            for (IT2 = M->choice_map_slider.begin();
-                 IT2 != M->choice_map_slider.end(); IT2++) {
-                UI_RSlide *rsl = IT2->second;
-                rsl->mod_label->labelcolor(FONT_COLOR);
-                rsl->mod_entry->labelcolor(FONT_COLOR);
-                rsl->mod_help->labelcolor(FONT_COLOR);
-                rsl->mod_reset->labelcolor(FONT_COLOR);
-                if (rsl->nan_choices.size() > 0) {
-                    rsl->nan_options->textcolor(FONT_COLOR);
-                    rsl->nan_options->labelcolor(FONT_COLOR);
-                    rsl->nan_options->redraw();
+                std::map<std::string, UI_RChoice *>::const_iterator IT;
+                std::map<std::string, UI_RSlide *>::const_iterator IT2;
+                std::map<std::string, UI_RButton *>::const_iterator IT3;
+                for (IT = M->choice_map.begin(); IT != M->choice_map.end(); IT++) {
+                    UI_RChoice *rch = IT->second;
+                    rch->mod_label->labelcolor(FONT_COLOR);
+                    rch->mod_help->labelcolor(FONT_COLOR);
+                    rch->mod_reset->labelcolor(FONT_COLOR);
+                    rch->mod_label->redraw();
                 }
-                rsl->mod_label->redraw();
-            }
-            for (IT3 = M->choice_map_button.begin();
-                 IT3 != M->choice_map_button.end(); IT3++) {
-                UI_RButton *rbt = IT3->second;
-                rbt->mod_label->labelcolor(FONT_COLOR);
-                rbt->mod_help->labelcolor(FONT_COLOR);
-                rbt->mod_reset->labelcolor(FONT_COLOR);
-                rbt->mod_label->redraw();
-            }
-        }
-        for (int x = 0; x < main_win->mod_tabs->pickup_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->pickup_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            if (!M->Is_UI()) {
-                M->heading->labelcolor(FONT_COLOR);
-                M->redraw();
-            }
-            std::map<std::string, UI_RChoice *>::const_iterator IT;
-            std::map<std::string, UI_RSlide *>::const_iterator IT2;
-            std::map<std::string, UI_RButton *>::const_iterator IT3;
-            for (IT = M->choice_map.begin(); IT != M->choice_map.end(); IT++) {
-                UI_RChoice *rch = IT->second;
-                rch->mod_label->labelcolor(FONT_COLOR);
-                rch->mod_help->labelcolor(FONT_COLOR);
-                rch->mod_reset->labelcolor(FONT_COLOR);
-                rch->mod_label->redraw();
-            }
-            for (IT2 = M->choice_map_slider.begin();
-                 IT2 != M->choice_map_slider.end(); IT2++) {
-                UI_RSlide *rsl = IT2->second;
-                rsl->mod_label->labelcolor(FONT_COLOR);
-                rsl->mod_entry->labelcolor(FONT_COLOR);
-                rsl->mod_help->labelcolor(FONT_COLOR);
-                rsl->mod_reset->labelcolor(FONT_COLOR);
-                if (rsl->nan_choices.size() > 0) {
-                    rsl->nan_options->textcolor(FONT_COLOR);
-                    rsl->nan_options->labelcolor(FONT_COLOR);
-                    rsl->nan_options->redraw();
+                for (IT2 = M->choice_map_slider.begin();
+                    IT2 != M->choice_map_slider.end(); IT2++) {
+                    UI_RSlide *rsl = IT2->second;
+                    rsl->mod_label->labelcolor(FONT_COLOR);
+                    rsl->mod_entry->labelcolor(FONT_COLOR);
+                    rsl->mod_help->labelcolor(FONT_COLOR);
+                    rsl->mod_reset->labelcolor(FONT_COLOR);
+                    if (rsl->nan_choices.size() > 0) {
+                        rsl->nan_options->textcolor(FONT_COLOR);
+                        rsl->nan_options->labelcolor(FONT_COLOR);
+                        rsl->nan_options->redraw();
+                    }
+                    rsl->mod_label->redraw();
                 }
-                rsl->mod_label->redraw();
-            }
-            for (IT3 = M->choice_map_button.begin();
-                 IT3 != M->choice_map_button.end(); IT3++) {
-                UI_RButton *rbt = IT3->second;
-                rbt->mod_label->labelcolor(FONT_COLOR);
-                rbt->mod_help->labelcolor(FONT_COLOR);
-                rbt->mod_reset->labelcolor(FONT_COLOR);
-                rbt->mod_label->redraw();
-            }
-        }
-        for (int x = 0; x < main_win->mod_tabs->other_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->other_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            if (!M->Is_UI()) {
-                M->heading->labelcolor(FONT_COLOR);
-                M->redraw();
-            }
-            std::map<std::string, UI_RChoice *>::const_iterator IT;
-            std::map<std::string, UI_RSlide *>::const_iterator IT2;
-            std::map<std::string, UI_RButton *>::const_iterator IT3;
-            for (IT = M->choice_map.begin(); IT != M->choice_map.end(); IT++) {
-                UI_RChoice *rch = IT->second;
-                rch->mod_label->labelcolor(FONT_COLOR);
-                rch->mod_help->labelcolor(FONT_COLOR);
-                rch->mod_reset->labelcolor(FONT_COLOR);
-                rch->mod_label->redraw();
-            }
-            for (IT2 = M->choice_map_slider.begin();
-                 IT2 != M->choice_map_slider.end(); IT2++) {
-                UI_RSlide *rsl = IT2->second;
-                rsl->mod_label->labelcolor(FONT_COLOR);
-                rsl->mod_entry->labelcolor(FONT_COLOR);
-                rsl->mod_help->labelcolor(FONT_COLOR);
-                rsl->mod_reset->labelcolor(FONT_COLOR);
-                if (rsl->nan_choices.size() > 0) {
-                    rsl->nan_options->textcolor(FONT_COLOR);
-                    rsl->nan_options->labelcolor(FONT_COLOR);
-                    rsl->nan_options->redraw();
+                for (IT3 = M->choice_map_button.begin();
+                    IT3 != M->choice_map_button.end(); IT3++) {
+                    UI_RButton *rbt = IT3->second;
+                    rbt->mod_label->labelcolor(FONT_COLOR);
+                    rbt->mod_help->labelcolor(FONT_COLOR);
+                    rbt->mod_reset->labelcolor(FONT_COLOR);
+                    rbt->mod_label->redraw();
                 }
-                rsl->mod_label->redraw();
-            }
-            for (IT3 = M->choice_map_button.begin();
-                 IT3 != M->choice_map_button.end(); IT3++) {
-                UI_RButton *rbt = IT3->second;
-                rbt->mod_label->labelcolor(FONT_COLOR);
-                rbt->mod_help->labelcolor(FONT_COLOR);
-                rbt->mod_reset->labelcolor(FONT_COLOR);
-                rbt->mod_label->redraw();
             }
         }
         for (int x = 0; x < main_win->mod_tabs->children(); x++) {
@@ -1718,76 +1208,25 @@ class UI_ThemeWin : public Fl_Window {
             main_win->game_box->child(x)->redraw();
             main_win->game_box->child(x)->redraw_label();
         }
-        for (int x = 0; x < main_win->mod_tabs->arch_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->arch_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            std::map<std::string, UI_RChoice *>::const_iterator IT;
-            for (IT = M->choice_map.begin(); IT != M->choice_map.end(); IT++) {
-                UI_RChoice *rch = IT->second;
-                rch->mod_menu->textcolor(FONT2_COLOR);
-                rch->mod_label->redraw();
-                rch->mod_label->redraw_label();
-            }
-            std::map<std::string, UI_RSlide *>::const_iterator IT2;
-            for (IT2 = M->choice_map_slider.begin(); IT2 != M->choice_map_slider.end(); IT2++) {
-                UI_RSlide *rsl = IT2->second;
-                rsl->unit_label->labelcolor(FONT2_COLOR);
-                rsl->unit_label->redraw();
-                rsl->unit_label->redraw_label();
-            }
-        }
-        for (int x = 0; x < main_win->mod_tabs->combat_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->combat_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            std::map<std::string, UI_RChoice *>::const_iterator IT;
-            for (IT = M->choice_map.begin(); IT != M->choice_map.end(); IT++) {
-                UI_RChoice *rch = IT->second;
-                rch->mod_menu->textcolor(FONT2_COLOR);
-                rch->mod_label->redraw();
-                rch->mod_label->redraw_label();
-            }
-            std::map<std::string, UI_RSlide *>::const_iterator IT2;
-            for (IT2 = M->choice_map_slider.begin(); IT2 != M->choice_map_slider.end(); IT2++) {
-                UI_RSlide *rsl = IT2->second;
-                rsl->unit_label->labelcolor(FONT2_COLOR);
-                rsl->unit_label->redraw();
-                rsl->unit_label->redraw_label();
-            }
-        }
-        for (int x = 0; x < main_win->mod_tabs->pickup_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->pickup_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            std::map<std::string, UI_RChoice *>::const_iterator IT;
-            for (IT = M->choice_map.begin(); IT != M->choice_map.end(); IT++) {
-                UI_RChoice *rch = IT->second;
-                rch->mod_menu->textcolor(FONT2_COLOR);
-                rch->mod_label->redraw();
-                rch->mod_label->redraw_label();
-            }
-            std::map<std::string, UI_RSlide *>::const_iterator IT2;
-            for (IT2 = M->choice_map_slider.begin(); IT2 != M->choice_map_slider.end(); IT2++) {
-                UI_RSlide *rsl = IT2->second;
-                rsl->unit_label->labelcolor(FONT2_COLOR);
-                rsl->unit_label->redraw();
-                rsl->unit_label->redraw_label();
-            }
-        }
-        for (int x = 0; x < main_win->mod_tabs->other_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->other_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            std::map<std::string, UI_RChoice *>::const_iterator IT;
-            for (IT = M->choice_map.begin(); IT != M->choice_map.end(); IT++) {
-                UI_RChoice *rch = IT->second;
-                rch->mod_menu->textcolor(FONT2_COLOR);
-                rch->mod_label->redraw();
-                rch->mod_label->redraw_label();
-            }
-            std::map<std::string, UI_RSlide *>::const_iterator IT2;
-            for (IT2 = M->choice_map_slider.begin(); IT2 != M->choice_map_slider.end(); IT2++) {
-                UI_RSlide *rsl = IT2->second;
-                rsl->unit_label->labelcolor(FONT2_COLOR);
-                rsl->unit_label->redraw();
-                rsl->unit_label->redraw_label();
+        for (int t = 0; t < main_win->mod_tabs->children(); t++) {
+            UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(t);
+            for (int x = 0; x < tab->mod_pack->children(); x++) {
+                UI_Module *M = (UI_Module *)tab->mod_pack->child(x);
+                SYS_ASSERT(M);
+                std::map<std::string, UI_RChoice *>::const_iterator IT;
+                for (IT = M->choice_map.begin(); IT != M->choice_map.end(); IT++) {
+                    UI_RChoice *rch = IT->second;
+                    rch->mod_menu->textcolor(FONT2_COLOR);
+                    rch->mod_label->redraw();
+                    rch->mod_label->redraw_label();
+                }
+                std::map<std::string, UI_RSlide *>::const_iterator IT2;
+                for (IT2 = M->choice_map_slider.begin(); IT2 != M->choice_map_slider.end(); IT2++) {
+                    UI_RSlide *rsl = IT2->second;
+                    rsl->unit_label->labelcolor(FONT2_COLOR);
+                    rsl->unit_label->redraw();
+                    rsl->unit_label->redraw_label();
+                }
             }
         }
     }
@@ -1819,64 +1258,22 @@ class UI_ThemeWin : public Fl_Window {
         main_win->game_box->redraw();
         main_win->build_box->color(WINDOW_BG);
         main_win->build_box->redraw();
-        for (int x = 0; x < main_win->mod_tabs->arch_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->arch_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            M->color(WINDOW_BG);
-            M->redraw();
-            std::map<std::string, UI_RSlide *>::const_iterator IT;
-            for (IT = M->choice_map_slider.begin();
-                 IT != M->choice_map_slider.end(); IT++) {
-                UI_RSlide *rsl = IT->second;
-                if (rsl->nan_choices.size() > 0) {
-                    rsl->nan_options->color(WINDOW_BG);
+        for (int t = 0; t < main_win->mod_tabs->children(); t++) {
+            UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(t);
+            for (int x = 0; x < tab->mod_pack->children(); x++) {
+                UI_Module *M = (UI_Module *)tab->mod_pack->child(x);
+                SYS_ASSERT(M);
+                M->color(WINDOW_BG);
+                M->redraw();
+                std::map<std::string, UI_RSlide *>::const_iterator IT;
+                for (IT = M->choice_map_slider.begin();
+                    IT != M->choice_map_slider.end(); IT++) {
+                    UI_RSlide *rsl = IT->second;
+                    if (rsl->nan_choices.size() > 0) {
+                        rsl->nan_options->color(WINDOW_BG);
+                    }
+                    rsl->redraw();
                 }
-                rsl->redraw();
-            }
-        }
-        for (int x = 0; x < main_win->mod_tabs->combat_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->combat_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            M->color(WINDOW_BG);
-            M->redraw();
-            std::map<std::string, UI_RSlide *>::const_iterator IT;
-            for (IT = M->choice_map_slider.begin();
-                 IT != M->choice_map_slider.end(); IT++) {
-                UI_RSlide *rsl = IT->second;
-                if (rsl->nan_choices.size() > 0) {
-                    rsl->nan_options->color(WINDOW_BG);
-                }
-                rsl->redraw();
-            }
-        }
-        for (int x = 0; x < main_win->mod_tabs->pickup_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->pickup_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            M->color(WINDOW_BG);
-            M->redraw();
-            std::map<std::string, UI_RSlide *>::const_iterator IT;
-            for (IT = M->choice_map_slider.begin();
-                 IT != M->choice_map_slider.end(); IT++) {
-                UI_RSlide *rsl = IT->second;
-                if (rsl->nan_choices.size() > 0) {
-                    rsl->nan_options->color(WINDOW_BG);
-                }
-                rsl->redraw();
-            }
-        }
-        for (int x = 0; x < main_win->mod_tabs->other_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->other_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            M->color(WINDOW_BG);
-            M->redraw();
-            std::map<std::string, UI_RSlide *>::const_iterator IT;
-            for (IT = M->choice_map_slider.begin();
-                 IT != M->choice_map_slider.end(); IT++) {
-                UI_RSlide *rsl = IT->second;
-                if (rsl->nan_choices.size() > 0) {
-                    rsl->nan_options->color(WINDOW_BG);
-                }
-                rsl->redraw();
             }
         }
     }
@@ -1909,112 +1306,34 @@ class UI_ThemeWin : public Fl_Window {
         for (int x = 0; x < main_win->game_box->children(); x++) {
             main_win->game_box->child(x)->redraw();
         }
-        main_win->mod_tabs->arch_mods->sbar->labelcolor(SELECTION);
-        main_win->mod_tabs->arch_mods->redraw();
-        for (int x = 0; x < main_win->mod_tabs->arch_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->arch_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            M->mod_button->selection_color(SELECTION);
-            M->redraw();
-            std::map<std::string, UI_RSlide *>::const_iterator IT;
-            std::map<std::string, UI_RButton *>::const_iterator IT2;
-            for (IT = M->choice_map_slider.begin();
-                 IT != M->choice_map_slider.end(); IT++) {
-                UI_RSlide *rsl = IT->second;
-                rsl->prev_button->labelcolor(SELECTION);
-                rsl->mod_slider->selection_color(SELECTION);
-                rsl->next_button->labelcolor(SELECTION);
-                if (rsl->nan_choices.size() > 0) {
-                    rsl->nan_options->selection_color(SELECTION);
+        for (int t = 0; t < main_win->mod_tabs->children(); t++) {
+            UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(t);
+            tab->sbar->labelcolor(SELECTION);
+            tab->redraw();
+            for (int x = 0; x < tab->mod_pack->children(); x++) {
+                UI_Module *M = (UI_Module *)tab->mod_pack->child(x);
+                SYS_ASSERT(M);
+                M->mod_button->selection_color(SELECTION);
+                M->redraw();
+                std::map<std::string, UI_RSlide *>::const_iterator IT;
+                std::map<std::string, UI_RButton *>::const_iterator IT2;
+                for (IT = M->choice_map_slider.begin();
+                    IT != M->choice_map_slider.end(); IT++) {
+                    UI_RSlide *rsl = IT->second;
+                    rsl->prev_button->labelcolor(SELECTION);
+                    rsl->mod_slider->selection_color(SELECTION);
+                    rsl->next_button->labelcolor(SELECTION);
+                    if (rsl->nan_choices.size() > 0) {
+                        rsl->nan_options->selection_color(SELECTION);
+                    }
+                    rsl->redraw();
                 }
-                rsl->redraw();
-            }
-            for (IT2 = M->choice_map_button.begin();
-                 IT2 != M->choice_map_button.end(); IT2++) {
-                UI_RButton *rbt = IT2->second;
-                rbt->mod_check->selection_color(SELECTION);
-                rbt->redraw();
-            }
-        }
-        main_win->mod_tabs->combat_mods->sbar->labelcolor(SELECTION);
-        main_win->mod_tabs->combat_mods->redraw();
-        for (int x = 0; x < main_win->mod_tabs->combat_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->combat_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            M->mod_button->selection_color(SELECTION);
-            M->redraw();
-            std::map<std::string, UI_RSlide *>::const_iterator IT;
-            std::map<std::string, UI_RButton *>::const_iterator IT2;
-            for (IT = M->choice_map_slider.begin();
-                 IT != M->choice_map_slider.end(); IT++) {
-                UI_RSlide *rsl = IT->second;
-                rsl->prev_button->labelcolor(SELECTION);
-                rsl->mod_slider->selection_color(SELECTION);
-                rsl->next_button->labelcolor(SELECTION);
-                if (rsl->nan_choices.size() > 0) {
-                    rsl->nan_options->selection_color(SELECTION);
+                for (IT2 = M->choice_map_button.begin();
+                    IT2 != M->choice_map_button.end(); IT2++) {
+                    UI_RButton *rbt = IT2->second;
+                    rbt->mod_check->selection_color(SELECTION);
+                    rbt->redraw();
                 }
-                rsl->redraw();
-            }
-            for (IT2 = M->choice_map_button.begin();
-                 IT2 != M->choice_map_button.end(); IT2++) {
-                UI_RButton *rbt = IT2->second;
-                rbt->mod_check->selection_color(SELECTION);
-                rbt->redraw();
-            }
-        }
-        main_win->mod_tabs->pickup_mods->sbar->labelcolor(SELECTION);
-        main_win->mod_tabs->pickup_mods->redraw();
-        for (int x = 0; x < main_win->mod_tabs->pickup_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->pickup_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            M->mod_button->selection_color(SELECTION);
-            M->redraw();
-            std::map<std::string, UI_RSlide *>::const_iterator IT;
-            std::map<std::string, UI_RButton *>::const_iterator IT2;
-            for (IT = M->choice_map_slider.begin();
-                 IT != M->choice_map_slider.end(); IT++) {
-                UI_RSlide *rsl = IT->second;
-                rsl->prev_button->labelcolor(SELECTION);
-                rsl->mod_slider->selection_color(SELECTION);
-                rsl->next_button->labelcolor(SELECTION);
-                if (rsl->nan_choices.size() > 0) {
-                    rsl->nan_options->selection_color(SELECTION);
-                }
-                rsl->redraw();
-            }
-            for (IT2 = M->choice_map_button.begin();
-                 IT2 != M->choice_map_button.end(); IT2++) {
-                UI_RButton *rbt = IT2->second;
-                rbt->mod_check->selection_color(SELECTION);
-                rbt->redraw();
-            }
-        }
-        main_win->mod_tabs->other_mods->sbar->labelcolor(SELECTION);
-        main_win->mod_tabs->other_mods->redraw();
-        for (int x = 0; x < main_win->mod_tabs->other_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->other_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            M->mod_button->selection_color(SELECTION);
-            M->redraw();
-            std::map<std::string, UI_RSlide *>::const_iterator IT;
-            std::map<std::string, UI_RButton *>::const_iterator IT2;
-            for (IT = M->choice_map_slider.begin();
-                 IT != M->choice_map_slider.end(); IT++) {
-                UI_RSlide *rsl = IT->second;
-                rsl->prev_button->labelcolor(SELECTION);
-                rsl->mod_slider->selection_color(SELECTION);
-                rsl->next_button->labelcolor(SELECTION);
-                if (rsl->nan_choices.size() > 0) {
-                    rsl->nan_options->selection_color(SELECTION);
-                }
-                rsl->redraw();
-            }
-            for (IT2 = M->choice_map_button.begin();
-                 IT2 != M->choice_map_button.end(); IT2++) {
-                UI_RButton *rbt = IT2->second;
-                rbt->mod_check->selection_color(SELECTION);
-                rbt->redraw();
             }
         }
     }
@@ -2041,68 +1360,23 @@ class UI_ThemeWin : public Fl_Window {
         for (int x = 0; x < main_win->game_box->children(); x++) {
             main_win->game_box->child(x)->redraw();
         }
-        main_win->mod_tabs->arch_mods->sbar->color(GAP_COLOR, BUTTON_COLOR);
-        for (int x = 0; x < main_win->mod_tabs->arch_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->arch_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            std::map<std::string, UI_RSlide *>::const_iterator IT;
-            for (IT = M->choice_map_slider.begin();
-                 IT != M->choice_map_slider.end(); IT++) {
-                UI_RSlide *rsl = IT->second;
-                rsl->prev_button->color(BUTTON_COLOR);
-                rsl->mod_slider->color(BUTTON_COLOR);
-                rsl->next_button->color(BUTTON_COLOR);
-                rsl->prev_button->redraw();
-                rsl->mod_slider->redraw();
-                rsl->prev_button->redraw();
-            }
-        }
-        main_win->mod_tabs->combat_mods->sbar->color(GAP_COLOR, BUTTON_COLOR);
-        for (int x = 0; x < main_win->mod_tabs->combat_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->combat_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            std::map<std::string, UI_RSlide *>::const_iterator IT;
-            for (IT = M->choice_map_slider.begin();
-                 IT != M->choice_map_slider.end(); IT++) {
-                UI_RSlide *rsl = IT->second;
-                rsl->prev_button->color(BUTTON_COLOR);
-                rsl->mod_slider->color(BUTTON_COLOR);
-                rsl->next_button->color(BUTTON_COLOR);
-                rsl->prev_button->redraw();
-                rsl->mod_slider->redraw();
-                rsl->prev_button->redraw();
-            }
-        }
-        main_win->mod_tabs->pickup_mods->sbar->color(GAP_COLOR, BUTTON_COLOR);
-        for (int x = 0; x < main_win->mod_tabs->pickup_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->pickup_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            std::map<std::string, UI_RSlide *>::const_iterator IT;
-            for (IT = M->choice_map_slider.begin();
-                 IT != M->choice_map_slider.end(); IT++) {
-                UI_RSlide *rsl = IT->second;
-                rsl->prev_button->color(BUTTON_COLOR);
-                rsl->mod_slider->color(BUTTON_COLOR);
-                rsl->next_button->color(BUTTON_COLOR);
-                rsl->prev_button->redraw();
-                rsl->mod_slider->redraw();
-                rsl->prev_button->redraw();
-            }
-        }
-        main_win->mod_tabs->other_mods->sbar->color(GAP_COLOR, BUTTON_COLOR);
-        for (int x = 0; x < main_win->mod_tabs->other_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->other_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            std::map<std::string, UI_RSlide *>::const_iterator IT;
-            for (IT = M->choice_map_slider.begin();
-                 IT != M->choice_map_slider.end(); IT++) {
-                UI_RSlide *rsl = IT->second;
-                rsl->prev_button->color(BUTTON_COLOR);
-                rsl->mod_slider->color(BUTTON_COLOR);
-                rsl->next_button->color(BUTTON_COLOR);
-                rsl->prev_button->redraw();
-                rsl->mod_slider->redraw();
-                rsl->prev_button->redraw();
+        for (int t = 0; t < main_win->mod_tabs->children(); t++) {
+            UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(t);
+            tab->sbar->color(GAP_COLOR, BUTTON_COLOR);
+            for (int x = 0; x < tab->mod_pack->children(); x++) {
+                UI_Module *M = (UI_Module *)tab->mod_pack->child(x);
+                SYS_ASSERT(M);
+                std::map<std::string, UI_RSlide *>::const_iterator IT;
+                for (IT = M->choice_map_slider.begin();
+                    IT != M->choice_map_slider.end(); IT++) {
+                    UI_RSlide *rsl = IT->second;
+                    rsl->prev_button->color(BUTTON_COLOR);
+                    rsl->mod_slider->color(BUTTON_COLOR);
+                    rsl->next_button->color(BUTTON_COLOR);
+                    rsl->prev_button->redraw();
+                    rsl->mod_slider->redraw();
+                    rsl->prev_button->redraw();
+                }
             }
         }
     }
@@ -2129,25 +1403,13 @@ class UI_ThemeWin : public Fl_Window {
         main_win->redraw();
         main_win->game_box->redraw();
         main_win->build_box->redraw();
-        for (int x = 0; x < main_win->mod_tabs->arch_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->arch_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            M->redraw();
-        }
-        for (int x = 0; x < main_win->mod_tabs->combat_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->combat_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            M->redraw();
-        }
-        for (int x = 0; x < main_win->mod_tabs->pickup_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->pickup_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            M->redraw();
-        }
-        for (int x = 0; x < main_win->mod_tabs->other_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->other_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            M->redraw();
+        for (int t = 0; t < main_win->mod_tabs->children(); t++) {
+            UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(t);
+            for (int x = 0; x < tab->mod_pack->children(); x++) {
+                UI_Module *M = (UI_Module *)tab->mod_pack->child(x);
+                SYS_ASSERT(M);
+                M->redraw();
+            }
         }
     }
 
@@ -2171,25 +1433,13 @@ class UI_ThemeWin : public Fl_Window {
         main_win->redraw();
         main_win->game_box->redraw();
         main_win->build_box->redraw();
-        for (int x = 0; x < main_win->mod_tabs->arch_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->arch_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            M->redraw();
-        }
-        for (int x = 0; x < main_win->mod_tabs->combat_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->combat_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            M->redraw();
-        }
-        for (int x = 0; x < main_win->mod_tabs->pickup_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->pickup_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            M->redraw();
-        }
-        for (int x = 0; x < main_win->mod_tabs->other_mods->mod_pack->children(); x++) {
-            UI_Module *M = (UI_Module *)main_win->mod_tabs->other_mods->mod_pack->child(x);
-            SYS_ASSERT(M);
-            M->redraw();
+        for (int t = 0; t < main_win->mod_tabs->children(); t++) {
+            UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(t);
+            for (int x = 0; x < tab->mod_pack->children(); x++) {
+                UI_Module *M = (UI_Module *)tab->mod_pack->child(x);
+                SYS_ASSERT(M);
+                M->redraw();
+            }
         }
     }
 
@@ -2216,22 +1466,13 @@ class UI_ThemeWin : public Fl_Window {
         main_win->build_box->redraw();
         main_win->mod_tabs->color(GAP_COLOR, GAP_COLOR);
         main_win->mod_tabs->redraw();
-        main_win->mod_tabs->arch_mods->color(GAP_COLOR, GAP_COLOR);
-        main_win->mod_tabs->combat_mods->color(GAP_COLOR, GAP_COLOR);
-        main_win->mod_tabs->pickup_mods->color(GAP_COLOR, GAP_COLOR);
-        main_win->mod_tabs->other_mods->color(GAP_COLOR, GAP_COLOR);
-        main_win->mod_tabs->arch_mods->sbar->color(GAP_COLOR, BUTTON_COLOR);
-        main_win->mod_tabs->combat_mods->sbar->color(GAP_COLOR, BUTTON_COLOR);
-        main_win->mod_tabs->pickup_mods->sbar->color(GAP_COLOR, BUTTON_COLOR);
-        main_win->mod_tabs->other_mods->sbar->color(GAP_COLOR, BUTTON_COLOR);
-        main_win->mod_tabs->arch_mods->mod_pack->color(GAP_COLOR);
-        main_win->mod_tabs->combat_mods->mod_pack->color(GAP_COLOR);
-        main_win->mod_tabs->pickup_mods->mod_pack->color(GAP_COLOR);
-        main_win->mod_tabs->other_mods->mod_pack->color(GAP_COLOR);
-        main_win->mod_tabs->arch_mods->redraw();
-        main_win->mod_tabs->combat_mods->redraw();
-        main_win->mod_tabs->pickup_mods->redraw();
-        main_win->mod_tabs->other_mods->redraw();
+        for (int t = 0; t < main_win->mod_tabs->children(); t++) {
+            UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(t);
+            tab->color(GAP_COLOR, GAP_COLOR);
+            tab->sbar->color(GAP_COLOR, BUTTON_COLOR);
+            tab->mod_pack->color(GAP_COLOR);
+            tab->redraw();
+        }
     }
 
     static void callback_LoadDefaults(Fl_Widget *w, void *data) {
