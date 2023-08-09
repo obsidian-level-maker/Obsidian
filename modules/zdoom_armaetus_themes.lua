@@ -1462,10 +1462,10 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
-  tech_AITextures = --30
+  tech_AITextures = --50
   {
     env = "building",
-    prob = 30,
+    prob = 50,
   
     walls =
     {
@@ -1564,10 +1564,10 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
-  tech_goth_tech = --30
+  tech_goth_tech = --50
   {
     env = "building",
-    prob = 30,
+    prob = 50,
   
     walls =
     {
