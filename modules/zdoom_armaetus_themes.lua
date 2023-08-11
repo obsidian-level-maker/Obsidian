@@ -330,6 +330,10 @@ ARMAETUS_ROOM_THEMES =
       SDOM_WL8 = 18,
       SDOM_WL9 = 18,
       SDOM_WLA = 18,
+      SDOM_WLB = 18,
+      SDOM_WLC = 18,
+      SDOM_WLD = 18,
+      SDOM_WLE = 18,
 
       SDOM_WG1 = 18,
       SDOM_WG2 = 18,
@@ -981,6 +985,10 @@ ARMAETUS_ROOM_THEMES =
       SDOM_WL8 = 7,
       SDOM_WL9 = 7,
       SDOM_WLA = 7,
+      SDOM_WLB = 7,
+      SDOM_WLC = 7,
+      SDOM_WLD = 7,
+      SDOM_WLE = 7,
 
       SDOM_WG1 = 9,
       SDOM_WG2 = 9,
@@ -1002,7 +1010,16 @@ ARMAETUS_ROOM_THEMES =
       SD_GTHW9 = 2,
       SD_GTHWA = 2,
       SD_GTHWB = 2,
-      SD_GTHWC = 2
+      SD_GTHWC = 2,
+
+      SDSLDWL1 = 6,
+      SDSLDWL2 = 6,
+      SDSLDWL3 = 6,
+      SDSLDWL4 = 6,
+      SDSLDWL5 = 6,
+      SDSLDWL6 = 6,
+      SDSLDWL7 = 6,
+      SDSLDWL8 = 6
     },
 
     floors =
@@ -1169,6 +1186,10 @@ ARMAETUS_ROOM_THEMES =
       SDOM_WL8 = 25,
       SDOM_WL9 = 25,
       SDOM_WLA = 25,
+      SDOM_WLB = 25,
+      SDOM_WLC = 25,
+      SDOM_WLD = 25,
+      SDOM_WLE = 25
     },
 
     floors =
@@ -1479,6 +1500,10 @@ ARMAETUS_ROOM_THEMES =
       SDOM_WL8 = 5,
       SDOM_WL9 = 5,
       SDOM_WLA = 5,
+      SDOM_WLB = 5,
+      SDOM_WLC = 5,
+      SDOM_WLD = 5,
+      SDOM_WLE = 5,
 
       SDOM_WG1 = 5,
       SDOM_WG2 = 5,
@@ -1651,6 +1676,85 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
+  tech_dk_green_tech =
+  {
+    env = "building",
+    prob = 50,
+
+    walls =
+    {
+      SDSLDWL1 = 5,
+      SDSLDWL2 = 5,
+      SDSLDWL3 = 5,
+      SDSLDWL4 = 5,
+      SDSLDWL5 = 5,
+      SDSLDWL6 = 5,
+      SDSLDWL7 = 5,
+      SDSLDWL8 = 5
+    },
+
+    floors =
+    {
+      SDSLDFT1 = 5,
+      SDSLDFT2 = 5,
+      SDSLDFT3 = 5,
+      SDSLDFT4 = 5,
+      SDSLDFT5 = 5,
+      SDSLDFT6 = 5,
+      SDSLDFT7 = 5,
+      SDSLDFT8 = 5,
+
+      FLOOR7_2 = 1,
+      SLIME13 = 1,
+      SLIME14 = 1,
+      SLIME15 = 1,
+
+      FLAT1 = 1,
+      FLAT5_4 = 1,
+      FLOOR0_3 = 1,
+      FLOOR0_5 = 1,
+
+      GRATE1 = 1,
+      GRATE4 = 1,
+      GRATE5 = 1,
+      GRATE6 = 1,
+
+      SHINY04 = 1,
+      STARGRF = 1
+    },
+
+    ceilings =
+    {
+      SDSLDFT1 = 5,
+      SDSLDFT2 = 5,
+      SDSLDFT3 = 5,
+      SDSLDFT4 = 5,
+      SDSLDFT5 = 5,
+      SDSLDFT6 = 5,
+      SDSLDFT7 = 5,
+      SDSLDFT8 = 5,
+
+      
+      FLOOR7_2 = 1,
+      SLIME13 = 1,
+      SLIME14 = 1,
+      SLIME15 = 1,
+
+      FLAT1 = 1,
+      FLAT5_4 = 1,
+      FLOOR0_3 = 1,
+      FLOOR0_5 = 1,
+
+      GRATE1 = 1,
+      GRATE4 = 1,
+      GRATE5 = 1,
+      GRATE6 = 1,
+
+      SHINY04 = 1,
+      STARGRF = 1
+    }
+  },
+
   tech_Outdoors_generic = --50
   {
     env  = "outdoor",
@@ -1710,6 +1814,8 @@ ARMAETUS_ROOM_THEMES =
       TILES4 = 20,
       TILES6 = 20,
 
+      --
+
       G8_BRNF1 = 20,
       G8_BRNF2 = 20,
       G8_BRNF3 = 20,
@@ -1736,7 +1842,16 @@ ARMAETUS_ROOM_THEMES =
       SDOM_FTA = 17,
 
       SDOM_FG1 = 25,
-      SDOM_FG2 = 25
+      SDOM_FG2 = 25,
+
+      SDSLDFT1 = 18,
+      SDSLDFT2 = 18,
+      SDSLDFT3 = 18,
+      SDSLDFT4 = 18,
+      SDSLDFT5 = 18,
+      SDSLDFT6 = 18,
+      SDSLDFT7 = 18,
+      SDSLDFT8 = 18
     },
 
     naturals =
@@ -1870,7 +1985,16 @@ ARMAETUS_ROOM_THEMES =
       SDOM_FTA = 17,
 
       SDOM_FG1 = 20,
-      SDOM_FG2 = 20
+      SDOM_FG2 = 20,
+
+      SDSLDFT1 = 18,
+      SDSLDFT2 = 18,
+      SDSLDFT3 = 18,
+      SDSLDFT4 = 18,
+      SDSLDFT5 = 18,
+      SDSLDFT6 = 18,
+      SDSLDFT7 = 18,
+      SDSLDFT8 = 18
     },
   },
 
@@ -3315,6 +3439,128 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
+  hell_green_tk = -- 40
+  {
+    prob = 40,
+    env = "building",
+
+    walls =
+    {
+      SDSLDWL1 = 5,
+      SDSLDWL2 = 5,
+      SDSLDWL3 = 5,
+      SDSLDWL4 = 5,
+      SDSLDWL5 = 5,
+      SDSLDWL6 = 5,
+      SDSLDWL7 = 5,
+      SDSLDWL8 = 5
+    },
+
+    floors =
+    {
+      DEM1_5 = 5,
+      DEM1_6 = 5,
+      FLOOR7_2 = 5,
+      SLIME13 = 5,
+      SLIME14 = 5,
+      SLIME15 = 5,
+
+      FLAT1 = 5,
+      FLAT5_4 = 5,
+      FLOOR0_3 = 5,
+      FLOOR0_5 = 5,
+      MFLR8_1 = 5,
+
+      DARKF01 = 5,
+      DARKF02 = 5,
+
+      FLOOR51C = 5,
+      FLOOR7_3 = 5,
+      G10 = 5,
+      G17 = 5,
+      G18 = 5,
+      G19 = 5,
+      GMET01 = 5,
+      GMET02 = 5,
+      GMET03 = 5,
+      GMET04 = 5,
+      GMET05 = 5,
+      GMET06 = 5,
+
+      GRATE2 = 5,
+      GRATE3 = 5,
+      GRATE4 = 5,
+      GRATE7 = 5,
+      GRATE8 = 5,
+
+      QFLAT05 = 5,
+      QFLAT06 = 5,
+      QFLAT09 = 5,
+      QFLAT10 = 5,
+
+      SDSLDFT1 = 15,
+      SDSLDFT2 = 15,
+      SDSLDFT3 = 15,
+      SDSLDFT4 = 15,
+      SDSLDFT5 = 15,
+      SDSLDFT6 = 15,
+      SDSLDFT7 = 15,
+      SDSLDFT8 = 15
+    },
+
+    ceilings =
+    {
+      DEM1_5 = 5,
+      DEM1_6 = 5,
+      FLOOR7_2 = 5,
+      SLIME13 = 5,
+      SLIME14 = 5,
+      SLIME15 = 5,
+
+      FLAT1 = 5,
+      FLAT5_4 = 5,
+      FLOOR0_3 = 5,
+      FLOOR0_5 = 5,
+      MFLR8_1 = 5,
+
+      DARKF01 = 5,
+      DARKF02 = 5,
+
+      FLOOR51C = 5,
+      FLOOR7_3 = 5,
+      G10 = 5,
+      G17 = 5,
+      G18 = 5,
+      G19 = 5,
+      GMET01 = 5,
+      GMET02 = 5,
+      GMET03 = 5,
+      GMET04 = 5,
+      GMET05 = 5,
+      GMET06 = 5,
+
+      GRATE2 = 5,
+      GRATE3 = 5,
+      GRATE4 = 5,
+      GRATE7 = 5,
+      GRATE8 = 5,
+
+      QFLAT05 = 5,
+      QFLAT06 = 5,
+      QFLAT09 = 5,
+      QFLAT10 = 5,
+
+      SDSLDFT1 = 15,
+      SDSLDFT2 = 15,
+      SDSLDFT3 = 15,
+      SDSLDFT4 = 15,
+      SDSLDFT5 = 15,
+      SDSLDFT6 = 15,
+      SDSLDFT7 = 15,
+      SDSLDFT8 = 15
+    }
+  },
+
   -- Hell has frozen over!
   hell_icecave = --50
   {
@@ -3597,7 +3843,7 @@ ARMAETUS_ROOM_THEMES =
 -- START OF URBAN THEMES
 
   --  18 through 20 don't tile horizontally well so I removed them. 14 and 30 seems more like it works for exterior.
-  urban_ArmaetusBricks =
+  urban_ArmaetusBricks = --100
   {
     env = "building",
     prob = 100,
@@ -3720,7 +3966,7 @@ ARMAETUS_ROOM_THEMES =
     },
   },
 
-  urban_Wood = -- this is an override of the urban wood theme with
+  urban_Wood = -- 20: -- this is an override of the urban wood theme with
                -- a theme override
   {
     env  = "building",
@@ -3797,7 +4043,7 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
-  urban_MoreWood =
+  urban_MoreWood = --75
   {
     env = "building",
     prob = 75,
@@ -3848,7 +4094,7 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
-  urban_BlackBrick =
+  urban_BlackBrick = --30
   {
     env = "building",
     prob = 30,
@@ -3933,7 +4179,7 @@ ARMAETUS_ROOM_THEMES =
   },
 
   -- MSSP: anything that vaguely looks like cement
-  urban_Cement =
+  urban_Cement = --100
   {
     env = "building",
     prob = 100,
@@ -4019,7 +4265,7 @@ ARMAETUS_ROOM_THEMES =
   },
 
   -- MSSP: emphasis on a sort of dilapitated, grimy, semi-industrial look
-  urban_darkGrimyIndustrial =
+  urban_darkGrimyIndustrial = --75
   {
     env = "building",
     prob = 75,
@@ -4078,25 +4324,14 @@ ARMAETUS_ROOM_THEMES =
       OBTBCEM2 = 30,
       OBTBCEM3 = 30,
 
-      SDOM_WL1 = 25,
-      SDOM_WL2 = 25,
-      SDOM_WL3 = 25,
-      SDOM_WL4 = 25,
-      SDOM_WL5 = 25,
-      SDOM_WL6 = 25,
-      SDOM_WL7 = 25,
-      SDOM_WL8 = 25,
-      SDOM_WL9 = 25,
-      SDOM_WLA = 25,
-
-      SDOM_WG1 = 28,
-      SDOM_WG2 = 28,
-      SDOM_WG3 = 28,
-      SDOM_WG4 = 28,
-      SDOM_WG5 = 28,
-      SDOM_WG6 = 28,
-      SDOM_WG7 = 28,
-      SDOM_WG8 = 28
+      SDSLDFT1 = 22,
+      SDSLDFT2 = 22,
+      SDSLDFT3 = 22,
+      SDSLDFT4 = 22,
+      SDSLDFT5 = 22,
+      SDSLDFT6 = 22,
+      SDSLDFT7 = 22,
+      SDSLDFT8 = 22
     },
 
     floors =
@@ -4202,7 +4437,7 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
-  urban_blueBrick =
+  urban_blueBrick = --25
   {
     env = "building",
     prob = 25,
@@ -4264,7 +4499,7 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
-  urban_brownyMcBrown =
+  urban_brownyMcBrown = --40
   {
     env = "building",
     prob = 40,
@@ -4436,7 +4671,7 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
-  urban_greenFloorsGreyWalls =
+  urban_greenFloorsGreyWalls = --40
   {
     env = "building",
     prob = 40,
@@ -4498,6 +4733,10 @@ ARMAETUS_ROOM_THEMES =
       SDOM_WL8 = 22,
       SDOM_WL9 = 22,
       SDOM_WLA = 22,
+      SDOM_WLB = 22,
+      SDOM_WLC = 22,
+      SDOM_WLD = 22,
+      SDOM_WLE = 22,
 
       SDOM_WG1 = 25,
       SDOM_WG2 = 25,
@@ -4521,7 +4760,16 @@ ARMAETUS_ROOM_THEMES =
       RROCK20 = 25,
 
       GRENFLOR = 50,
-      STARG1F = 25
+      STARG1F = 25,
+
+      SDSLDFT1 = 18,
+      SDSLDFT2 = 18,
+      SDSLDFT3 = 18,
+      SDSLDFT4 = 18,
+      SDSLDFT5 = 18,
+      SDSLDFT6 = 18,
+      SDSLDFT7 = 18,
+      SDSLDFT8 = 18
     },
 
     ceilings =
@@ -4536,13 +4784,22 @@ ARMAETUS_ROOM_THEMES =
       RROCK20 = 25,
 
       GRENFLOR = 50,
-      STARG1F = 25
+      STARG1F = 25,
+
+      SDSLDFT1 = 18,
+      SDSLDFT2 = 18,
+      SDSLDFT3 = 18,
+      SDSLDFT4 = 18,
+      SDSLDFT5 = 18,
+      SDSLDFT6 = 18,
+      SDSLDFT7 = 18,
+      SDSLDFT8 = 18
     }
   },
 
   -- MSSP: inspired by Return to Castle Wolfenstein!
   -- Emphasis on grey/dark bricks and wood floors/ceilings
-  urban_returnToCastleWolf =
+  urban_returnToCastleWolf = --50
   {
     env = "building",
     prob = 50,
@@ -4656,7 +4913,86 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
-  urban_armaetuscave =
+  urban_dk_green_tech = --30
+  {
+    env = "building",
+    prob = 30,
+
+    walls =
+    {
+      SDSLDWL1 = 5,
+      SDSLDWL2 = 5,
+      SDSLDWL3 = 5,
+      SDSLDWL4 = 5,
+      SDSLDWL5 = 5,
+      SDSLDWL6 = 5,
+      SDSLDWL7 = 5,
+      SDSLDWL8 = 5
+    },
+
+    floors =
+    {
+      SDSLDFT1 = 5,
+      SDSLDFT2 = 5,
+      SDSLDFT3 = 5,
+      SDSLDFT4 = 5,
+      SDSLDFT5 = 5,
+      SDSLDFT6 = 5,
+      SDSLDFT7 = 5,
+      SDSLDFT8 = 5,
+
+      FLOOR7_2 = 1,
+      SLIME13 = 1,
+      SLIME14 = 1,
+      SLIME15 = 1,
+
+      FLAT1 = 1,
+      FLAT5_4 = 1,
+      FLOOR0_3 = 1,
+      FLOOR0_5 = 1,
+
+      GRATE1 = 1,
+      GRATE4 = 1,
+      GRATE5 = 1,
+      GRATE6 = 1,
+
+      SHINY04 = 1,
+      STARGRF = 1
+    },
+
+    ceilings =
+    {
+      SDSLDFT1 = 5,
+      SDSLDFT2 = 5,
+      SDSLDFT3 = 5,
+      SDSLDFT4 = 5,
+      SDSLDFT5 = 5,
+      SDSLDFT6 = 5,
+      SDSLDFT7 = 5,
+      SDSLDFT8 = 5,
+
+      
+      FLOOR7_2 = 1,
+      SLIME13 = 1,
+      SLIME14 = 1,
+      SLIME15 = 1,
+
+      FLAT1 = 1,
+      FLAT5_4 = 1,
+      FLOOR0_3 = 1,
+      FLOOR0_5 = 1,
+
+      GRATE1 = 1,
+      GRATE4 = 1,
+      GRATE5 = 1,
+      GRATE6 = 1,
+
+      SHINY04 = 1,
+      STARGRF = 1
+    }
+  },
+
+  urban_armaetuscave = --60
   {
     env  = "cave",
     prob = 60,
@@ -4694,7 +5030,7 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
-  urban_Outdoors_generic =
+  urban_Outdoors_generic = --50
   {
     env  = "outdoor",
     prob = 50,
@@ -4903,7 +5239,7 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
-  urban_whiteWallsDarkFloors =
+  urban_whiteWallsDarkFloors = --30
   {
     env = "building",
     prob = 30,
@@ -6239,6 +6575,10 @@ ARMAETUS_THEMES =
       SDOM_WL8 = 22,
       SDOM_WL9 = 22,
       SDOM_WLA = 22,
+      SDOM_WLB = 22,
+      SDOM_WLC = 22,
+      SDOM_WLD = 22,
+      SDOM_WLE = 22,
 
       SDOM_WG1 = 25,
       SDOM_WG2 = 25,
@@ -6247,7 +6587,16 @@ ARMAETUS_THEMES =
       SDOM_WG5 = 25,
       SDOM_WG6 = 25,
       SDOM_WG7 = 25,
-      SDOM_WG8 = 25
+      SDOM_WG8 = 25,
+
+      SDSLDWL1 = 15,
+      SDSLDWL2 = 15,
+      SDSLDWL3 = 15,
+      SDSLDWL4 = 15,
+      SDSLDWL5 = 15,
+      SDSLDWL6 = 15,
+      SDSLDWL7 = 15,
+      SDSLDWL8 = 15
     },
 
     fences =
@@ -6643,6 +6992,13 @@ ARMAETUS_THEMES =
       OBTBCEM3 = 25,
 
       SDOM_WL4 = 25,
+
+      SDOM_WL1 = 18,
+      SDOM_WL3 = 18,
+      SDOM_WLB = 18,
+      SDOM_WLC = 18,
+      SDOM_WLD = 18,
+      SDOM_WLE = 18
     },
 
     fences =
@@ -6787,6 +7143,20 @@ ARMAETUS_THEMES =
       WOOD15 = 15,
       WOOD16 = 15,
       WOOD17 = 15,
+
+      OBTBSLB2 = 20,
+      OBTBSLB3 = 20,
+      OBTBSLB4 = 20,
+      OBTBSLB5 = 20,
+
+      SDOM_WL1 = 17,
+      SDOM_WL3 = 17,
+      SDOM_WL6 = 17,
+      SDOM_WL8 = 17,
+      SDOM_WLB = 17,
+      SDOM_WLC = 17,
+      SDOM_WLD = 17,
+      SDOM_WLE = 17
     },
 
     fence_groups =

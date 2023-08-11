@@ -1581,6 +1581,10 @@ ARMAETUS_MATERIALS = {
   SDOM_WL8 = { t="SDOM_WL8", f="SDOM_FT8"},
   SDOM_WL9 = { t="SDOM_WL9", f="SDOM_FT9"},
   SDOM_WLA = { t="SDOM_WLA", f="SDOM_FTA"},
+  SDOM_WLB = { t="SDOM_WLB", f="SDOM_FT1"},
+  SDOM_WLC = { t="SDOM_WLC", f="SDOM_FT2"},
+  SDOM_WLD = { t="SDOM_WLD", f="SDOM_FT3"},
+  SDOM_WLE = { t="SDOM_WLE", f="SDOM_FT4"},
   -- green
   SDOM_WG1 = { t="SDOM_WG1", f="SDOM_FG1"},
   SDOM_WG2 = { t="SDOM_WG2", f="SDOM_FG2"},
@@ -1590,6 +1594,15 @@ ARMAETUS_MATERIALS = {
   SDOM_WG6 = { t="SDOM_WG6", f="SDOM_FT4"},
   SDOM_WG7 = { t="SDOM_WG7", f="SDOM_FG1"},
   SDOM_WG8 = { t="SDOM_WG8", f="SDOM_FG2"},
+  -- dark green
+  SDSLDWL1 = { t="SDSLDWL1", f="SDSLDFT1"},
+  SDSLDWL2 = { t="SDSLDWL2", f="SDSLDFT2"},
+  SDSLDWL3 = { t="SDSLDWL3", f="SDSLDFT3"},
+  SDSLDWL4 = { t="SDSLDWL4", f="SDSLDFT4"},
+  SDSLDWL5 = { t="SDSLDWL5", f="SDSLDFT5"},
+  SDSLDWL6 = { t="SDSLDWL6", f="SDSLDFT6"},
+  SDSLDWL7 = { t="SDSLDWL7", f="SDSLDFT7"},
+  SDSLDWL8 = { t="SDSLDWL8", f="SDSLDFT8"},
 
   -- computers 256px
   SDMSRCP1 = { t="SDMSRCP1", f="SDOM_FT1"},
@@ -1607,10 +1620,18 @@ ARMAETUS_MATERIALS = {
   SDOM_FT8 = { t="SDOM_WL4", f="SDOM_FT8"},
   SDOM_FT9 = { t="SDOM_WL2", f="SDOM_FT9"},
   SDOM_FTA = { t="SDOM_WL3", f="SDOM_FTA"},
-
-  -- green
+  -- flats: green
   SDOM_FG1 = { t="SDOM_WG1", f="SDOM_FG1"},
   SDOM_FG2 = { t="SDOM_WG2", f="SDOM_FG2"},
+  -- flats: dark green
+  SDSLDFT1 = { t="SDSLDWL1", f="SDSLDFT1"},
+  SDSLDFT2 = { t="SDSLDWL2", f="SDSLDFT2"},
+  SDSLDFT3 = { t="SDSLDWL3", f="SDSLDFT3"},
+  SDSLDFT4 = { t="SDSLDWL4", f="SDSLDFT4"},
+  SDSLDFT5 = { t="SDSLDWL5", f="SDSLDFT5"},
+  SDSLDFT6 = { t="SDSLDWL6", f="SDSLDFT6"},
+  SDSLDFT7 = { t="SDSLDWL7", f="SDSLDFT7"},
+  SDSLDFT8 = { t="SDSLDWL8", f="SDSLDFT8"},
 
   -- shipping containers with optional meme
   SDM_CTR1 = { t="SDM_CTR1", f="SDMCTRF1"},
