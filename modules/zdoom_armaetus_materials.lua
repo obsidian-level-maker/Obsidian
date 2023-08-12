@@ -1654,7 +1654,6 @@ ARMAETUS_MATERIALS = {
   SD_GTHWA = { t="SD_GTHWA", f="SD_GTHF5"},
   SD_GTHWB = { t="SD_GTHWB", f="SDOM_FT9"},
   SD_GTHWC = { t="SD_GTHWC", f="SDOM_FTA"},
-
   -- flats
   SD_GTHF1 = { t="SD_GTHW1", f="SD_GTHF1"},
   SD_GTHF2 = { t="SD_GTHW2", f="SD_GTHF2"},
@@ -1662,6 +1661,8 @@ ARMAETUS_MATERIALS = {
   SD_GTHF4 = { t="SD_GTHW4", f="SD_GTHF4"},
   SD_GTHF5 = { t="SD_GTHW5", f="SD_GTHF5"},
   SD_GTHF6 = { t="SD_GTHW6", f="SD_GTHF6"},
+  -- switches
+  SDGTHSW1 = { t="SDGTHSW1", f="SD_GTHF1"}, 
 
   -- MSSP-GOTH --
   -- green-ish gothic metal walls with skulls (128px)
@@ -2010,6 +2011,8 @@ ARMAETUS_ANIMDEFS =
   switch doom 3 SW1QUAK on pic SW2QUAK tics 0
   switch doom 3 SW1SKUL1 on pic SW2SKUL1 tics 0
   switch doom 3 SW1PENT on pic SW2PENT tics 0
+  
+  switch doom 3 SDGTHSW1 on pic SDGTHSW2 tics 0
 	
 //Crap for flats here
 	
