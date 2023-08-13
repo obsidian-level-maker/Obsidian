@@ -1807,11 +1807,12 @@ function ob_random_advice()
   end
 
   if last_Clippy_advice_index < 0 then
+    -- Randomize first index:
     last_Clippy_advice_index = rand.irange(1, #HELPFUL_ADVICE)
+  else
+    -- Avoiding previous advice index:
+    last_Clippy_advice_index = 1 + ( (last_Clippy_advice_index + rand.irange(1, #HELPFUL_ADVICE - 2)) % #HELPFUL_ADVICE )
   end
-
-  -- Avoiding previous advice index:
-  last_Clippy_advice_index = 1 + ( (last_Clippy_advice_index + rand.irange(1, #HELPFUL_ADVICE - 2)) % #HELPFUL_ADVICE )
 
   return HELPFUL_ADVICE[ last_Clippy_advice_index ]
 end
