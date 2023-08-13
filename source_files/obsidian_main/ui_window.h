@@ -62,6 +62,9 @@ class UI_MainWin : public Fl_Double_Window {
     void Locked(bool value);
 
    private:
+    int handle(int event);
+
+   private:
     static void menu_do_about(Fl_Widget *w, void *data);
     static void menu_do_tutorial(Fl_Widget *w, void *data);
     static void menu_do_view_logs(Fl_Widget *w, void *data);

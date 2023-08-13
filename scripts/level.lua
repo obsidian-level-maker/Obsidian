@@ -2698,7 +2698,7 @@ function Level_make_level(LEV)
   LEVEL.PREFABS = table.copy(PREFABS)
 
   res = Level_build_it(LEVEL, SEEDS)
-  if LEVEL.cur_coverage < LEVEL.min_coverage or #LEVEL.rooms < LEVEL.min_rooms then
+  if LEVEL.cur_coverage < LEVEL.min_coverage and #LEVEL.rooms < LEVEL.min_rooms then
     print("STUNTED LEVEL!\nCOVERAGE: " .. LEVEL.cur_coverage .. "\nMIN COVERAGE: " .. LEVEL.min_coverage .. "\nROOMS: " .. #LEVEL.rooms .. "\nMIN ROOMS: " .. LEVEL.min_rooms .. "\n")
     res = "runt"
   end
