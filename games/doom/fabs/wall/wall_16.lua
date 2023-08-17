@@ -29,7 +29,7 @@ PREFABS.Wall_plain_diag =
 
   
 
-  prob   = 50 * 10,
+  prob   = 50 * 5,
 
   where  = "diagonal",
 
