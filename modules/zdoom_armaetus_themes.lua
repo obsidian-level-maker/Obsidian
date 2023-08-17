@@ -3209,7 +3209,7 @@ ARMAETUS_ROOM_THEMES =
       RROCK16 = 5,
       RROCK17 = 5,
       RROCK18 = 5,
-      SKINFLT = 5,
+      SKINFLT1 = 5,
 
       SDMHAZF1 = 25,
       SDMHAZF2 = 25,
@@ -3248,7 +3248,7 @@ ARMAETUS_ROOM_THEMES =
       RROCK16 = 5,
       RROCK17 = 5,
       RROCK18 = 5,
-      SKINFLT = 5,
+      SKINFLT1 = 5,
 
       SDMHAZF1 = 25,
       SDMHAZF2 = 25,
@@ -3309,7 +3309,7 @@ ARMAETUS_ROOM_THEMES =
       RROCK16 = 5,
       RROCK17 = 5,
       RROCK18 = 5,
-      SKINFLT = 5,
+      SKINFLT1 = 5,
 
       SDPBBFT1 = 45,
       SDPBBFT2 = 45,
@@ -3348,7 +3348,7 @@ ARMAETUS_ROOM_THEMES =
       RROCK16 = 5,
       RROCK17 = 5,
       RROCK18 = 5,
-      SKINFLT = 5,
+      SKINFLT1 = 5,
 
       SDMHAZF1 = 25,
       SDMHAZF2 = 25,

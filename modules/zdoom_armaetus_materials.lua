@@ -1663,6 +1663,9 @@ ARMAETUS_MATERIALS = {
   SD_GTHF6 = { t="SD_GTHW6", f="SD_GTHF6"},
   -- switches
   SDGTHSW1 = { t="SDGTHSW1", f="SD_GTHF1"}, 
+  -- light pillars, 64px
+  SD_GTLW1 = { t= "SD_GTLW1", f="SD_GTHF1"},
+  SD_GTLW2 = { t= "SD_GTLW2", f="SD_GTHF2"},
 
   -- MSSP-GOTH --
   -- green-ish gothic metal walls with skulls (128px)
