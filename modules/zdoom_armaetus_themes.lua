@@ -6755,7 +6755,13 @@ ARMAETUS_THEMES =
       wall_collite_flat_green = 25,
       wall_collite_flat_blue = 25,
       --
-      gtd_green_shipping_containers = 50
+      gtd_green_shipping_containers = 50,
+      --
+      gtd_power_plant_red_set = 40,
+      --
+      gtd_wall_tech_gothic_inset_gargoyle = 20,
+      gtd_wall_tech_gothic_inset_engine = 20,
+      gtd_wall_tech_gothic_inset_red_lite = 20
     },
 
     window_groups =
@@ -7236,7 +7242,13 @@ ARMAETUS_THEMES =
       gtd_wall_lit_h_window_tall_collite_blue = 15,
       gtd_wall_lit_h_window_tall_collite_orange = 35,
       --
-      gtd_green_shipping_containers = 50
+      gtd_green_shipping_containers = 50,
+      --
+      gtd_power_plant_red_set = 20,
+      --
+      gtd_wall_tech_gothic_inset_gargoyle = 9,
+      gtd_wall_tech_gothic_inset_engine = 9,
+      gtd_wall_tech_gothic_inset_red_lite = 9
     },
 
     window_groups =
@@ -7703,7 +7715,11 @@ ARMAETUS_THEMES =
       gtd_wall_candles = 50,
       --
       gtd_wall_lit_h_window_tall_collite_blue = 10,
-      gtd_wall_lit_h_window_tall_collite_orange = 10
+      gtd_wall_lit_h_window_tall_collite_orange = 10,
+      --
+      gtd_wall_tech_gothic_inset_gargoyle = 20,
+      gtd_wall_tech_gothic_inset_engine = 20,
+      gtd_wall_tech_gothic_inset_red_lite = 20
     },
 
     window_groups =
