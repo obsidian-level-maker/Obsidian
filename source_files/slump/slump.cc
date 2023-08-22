@@ -7637,7 +7637,7 @@ short timely_health(haa *haa,int *levels,config *c)
   for ((*levels)=0,i=0;i<3;i++) {  /* for each hardness level */
     (*levels) >>= 1;
     if (haa->haas[i].health < c->usualhealth[i]) (*levels) |= 0x04;
-    if (haa->haas[i].has_berserk==SLUMP_FALSE) berserk_ok = SLUMP_TRUE;
+    if (haa->haas[i].has_berserk==SLUMP_FALSE && !(c->gamemask & CHEX_BIT)) berserk_ok = SLUMP_TRUE;
   }
 
   if ((*levels)==0) return 0;
