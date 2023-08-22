@@ -2698,10 +2698,23 @@ function Level_make_level(LEV)
   LEVEL.PREFABS = table.copy(PREFABS)
 
   res = Level_build_it(LEVEL, SEEDS)
-  if LEVEL.cur_coverage < LEVEL.min_coverage and #LEVEL.rooms < LEVEL.min_rooms then
-    print("STUNTED LEVEL!\nCOVERAGE: " .. LEVEL.cur_coverage .. "\nMIN COVERAGE: " .. LEVEL.min_coverage .. "\nROOMS: " .. #LEVEL.rooms .. "\nMIN ROOMS: " .. LEVEL.min_rooms .. "\n")
-    res = "runt"
+
+  if LEVEL.is_procedural_gotcha then
+    if LEVEL.cur_coverage < LEVEL.min_coverage then
+      res = "runt"
+    end
+  else
+    if LEVEL.cur_coverage < LEVEL.min_coverage 
+    or #LEVEL.rooms < LEVEL.min_rooms then
+      res = "runt"
+    end
   end
+
+  print("STUNTED LEVEL!\nCOVERAGE: " .. LEVEL.cur_coverage 
+  .. "\nMIN COVERAGE: " .. LEVEL.min_coverage .. "\nROOMS: " 
+  .. #LEVEL.rooms .. "\nMIN ROOMS: " .. LEVEL.min_rooms .. "\n")
+  end
+  
   if res ~= "ok" then
     for _,k in pairs (LEVEL) do
       LEVEL[k] = nil
