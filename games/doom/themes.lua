@@ -1853,7 +1853,6 @@ DOOM.THEMES =
       --
       gtd_mining_set = 50,
       gtd_power_plant_set = 50,
-      gtd_power_plant_red_set = 50,
       --
       gtd_DMV_set = 35,
       --

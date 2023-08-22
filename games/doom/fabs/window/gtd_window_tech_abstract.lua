@@ -144,7 +144,6 @@ PREFABS.Window_generic_cubby_holes =
   map    = "MAP05",
 
   group  = "gtd_window_cubby_holes",
-  port = "zdoom",
   rank = 1,
 
   prob   = 50,

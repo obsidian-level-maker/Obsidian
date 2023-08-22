@@ -2713,8 +2713,7 @@ function Level_make_level(LEV)
   print("STUNTED LEVEL!\nCOVERAGE: " .. LEVEL.cur_coverage 
   .. "\nMIN COVERAGE: " .. LEVEL.min_coverage .. "\nROOMS: " 
   .. #LEVEL.rooms .. "\nMIN ROOMS: " .. LEVEL.min_rooms .. "\n")
-  end
-  
+
   if res ~= "ok" then
     for _,k in pairs (LEVEL) do
       LEVEL[k] = nil

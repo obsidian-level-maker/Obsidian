@@ -32,7 +32,7 @@ PREFABS.Decor_gtd_green_shipping_container_2 =
 
 PREFABS.Decor_gtd_green_shipping_container_3 =
 {
-  template = "Decor_gtd_sewer_3_hatch",
+  template = "Decor_gtd_green_shipping_container_1",
   map = "MAP03",
 
   height = 128,
