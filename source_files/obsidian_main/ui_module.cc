@@ -1643,19 +1643,19 @@ UI_CustomTabs::UI_CustomTabs(int X, int Y, int W, int H)
     
     visible_focus(0);
 
-    arch_mods = new UI_CustomMods(X, Y+kf_h(22), W, H, _("Architecture"));
+    arch_mods = new UI_CustomMods(X, Y+kf_h(22), W, H-kf_h(26), _("Architecture"));
     arch_mods->end();
-    combat_mods = new UI_CustomMods(X, Y+kf_h(22), W, H, _("Combat"));
+    combat_mods = new UI_CustomMods(X, Y+kf_h(22), W, H-kf_h(26), _("Combat"));
     combat_mods->end();
-    pickup_mods = new UI_CustomMods(X, Y+kf_h(22), W, H, _("Pickups"));
+    pickup_mods = new UI_CustomMods(X, Y+kf_h(22), W, H-kf_h(26), _("Pickups"));
     pickup_mods->end();
-    other_mods = new UI_CustomMods(X, Y+kf_h(22), W, H, _("Other"));
+    other_mods = new UI_CustomMods(X, Y+kf_h(22), W, H-kf_h(26), _("Other"));
     other_mods->end();
-    debug_mods = new UI_CustomMods(X, Y+kf_h(22), W, H, _("Debug"));
+    debug_mods = new UI_CustomMods(X, Y+kf_h(22), W, H-kf_h(26), _("Debug"));
     debug_mods->end();
-    experimental_mods = new UI_CustomMods(X, Y+kf_h(22), W, H, _("Experimental"));
+    experimental_mods = new UI_CustomMods(X, Y+kf_h(22), W, H-kf_h(26), _("Experimental"));
     experimental_mods->end();
-    links = new UI_CustomMods(X, Y+kf_h(22), W, H, _("Links"));
+    links = new UI_CustomMods(X, Y+kf_h(22), W, H-kf_h(26), _("Links"));
     links->end();
 
     end();
