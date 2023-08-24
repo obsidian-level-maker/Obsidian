@@ -2,15 +2,17 @@
 -- Keyed doors, medium size
 --
 
-PREFABS.Locked_medium_key1 =
+PREFABS.Locked_medium_green =
 {
   file   = "door/key_medium.wad",
   map    = "MAP01",
 
   prob   = 50,
 
+  key    = "k_green",
   where  = "edge",
-  key    = "kz_red",
+
+  
 
   seed_w = 2,
 
@@ -19,87 +21,79 @@ PREFABS.Locked_medium_key1 =
 
   x_fit  = "frame",
 
+  solid_ents = true
+
+  -- thing is already #95 (green statue)
+  -- line special is already #33,
 }
 
 
-PREFABS.Locked_medium_key1_diag =
+PREFABS.Locked_medium_green_diag =
 {
   file   = "door/key_medium.wad",
   map    = "MAP02",
 
   prob   = 50,
 
+  key    = "k_green",
   where  = "diagonal",
-  key    = "kz_red",
+
+  
 
   seed_w = 2,
   seed_h = 2,
+
+  solid_ents = true
+
+  -- thing is already #95 (green statue)
+  -- line special is already #33,
 }
 
-PREFABS.Locked_medium_key2 =
+
+----------------------------------------------
+
+
+PREFABS.Locked_medium_blue =
 {
-  file   = "door/key_medium.wad",
-  map    = "MAP03",
+  template = "Locked_medium_green",
+  key      = "k_blue",
 
-  prob   = 50,
-
-  where  = "edge",
-  key    = "kz_yellow",
-
-  seed_w = 2,
-
-  deep   = 32,
-  over   = 32,
-
-  x_fit  = "frame",
-
+  -- use the blue statue and correct line special
+  thing_95 = 94,
+  line_33  = 32,
 }
 
-
-PREFABS.Locked_medium_key2_diag =
+PREFABS.Locked_medium_blue_diag =
 {
-  file   = "door/key_medium.wad",
-  map    = "MAP04",
+  template = "Locked_medium_green_diag",
+  key      = "k_blue",
 
-  prob   = 50,
-
-  where  = "diagonal",
-  key    = "kz_yellow",
-
-  seed_w = 2,
-  seed_h = 2,
+  -- use the blue statue and correct line special
+  thing_95 = 94,
+  line_33  = 32,
 }
 
-PREFABS.Locked_medium_key3 =
+
+----------------------------------------------
+
+
+PREFABS.Locked_medium_yellow =
 {
-  file   = "door/key_medium.wad",
-  map    = "MAP05",
+  template = "Locked_medium_green",
+  key      = "k_yellow",
 
-  prob   = 50,
-
-  where  = "edge",
-  key    = "kz_blue",
-
-  seed_w = 2,
-
-  deep   = 32,
-  over   = 32,
-
-  x_fit  = "frame",
-
+  -- use the yellow statue and corresponding line special
+  thing_95 = 96,
+  line_33  = 34,
 }
 
-
-PREFABS.Locked_medium_key3_diag =
+PREFABS.Locked_medium_yellow_diag =
 {
-  file   = "door/key_medium.wad",
-  map    = "MAP06",
+  template = "Locked_medium_green_diag",
+  key      = "k_yellow",
 
-  prob   = 50,
-
-  where  = "diagonal",
-  key    = "kz_blue",
-
-  seed_w = 2,
-  seed_h = 2,
+  -- use the yellow statue and corresponding line special
+  thing_95 = 96,
+  line_33  = 34,
 }
+
