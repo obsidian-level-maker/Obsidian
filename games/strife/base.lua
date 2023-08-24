@@ -47,7 +47,7 @@ function STRIFE.all_done()
 end
 
 
-UNFINISHED["strife"] =
+OB_GAMES["strife"] =
 {
   label = _("Strife"),
   priority = 89,
@@ -66,6 +66,7 @@ UNFINISHED["strife"] =
 
   hooks =
   {
+    slump_setup = STRIFE.slump_setup,
     get_levels = STRIFE.get_levels,
     all_done   = STRIFE.all_done
   },
