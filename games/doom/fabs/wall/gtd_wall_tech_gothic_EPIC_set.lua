@@ -38,7 +38,7 @@ PREFABS.Wall_tech_gothic_inset_engine =
   tex_SD_GTHW8 = "SD_GTHW7"
 }
 
-PREFABS.Wall_tech_gothic_inset_engine =
+PREFABS.Wall_tech_gothic_inset_engine_diag =
 {
   template = "Wall_tech_gothic_inset_gargoyle",
   map = "MAP02",

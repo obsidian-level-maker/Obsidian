@@ -23,5 +23,5 @@ PREFABS.Switch_gtd_epic_sdai_1 =
 
   sector_1  = { [0]=70, [1]=15, [2]=5, [3]=5, [8]=10, [12]=3, [13]=3 },
 
-  tag_1 = "?switch_tag",
+  tag_1 = "?switch_tag"
 }
