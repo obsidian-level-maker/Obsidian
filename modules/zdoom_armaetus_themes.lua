@@ -1755,6 +1755,113 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
+  tech_copper_steampunk = --30
+  {
+    env = "building",
+    prob = 30,
+
+    walls =
+    {
+      SD_HCSW1 = 5,
+      SD_HCSW2 = 5,
+      SD_HCSW3 = 5,
+      SD_HCSW4 = 5,
+      SD_HCSW5 = 5,
+      SD_HCSW6 = 5
+    },
+
+    floors =
+    {
+      FLAT8 = 2,
+      FLOOR0_1 = 2,
+      FLOOR0_2 = 2,
+      FLOOR3_3 = 2,
+      FLOOR4_1 = 2,
+      FLOOR4_5 = 2,
+      FLOOR4_6 = 2,
+      FLOOR5_2 = 2,
+      FLOOR5_4 = 2,
+      FLOOR7_1 = 2,
+
+      G8_BRNF1 = 5,
+      G8_BRNF2 = 5,
+      G8_BRNF3 = 5,
+
+      STARTANF = 5,
+
+      SD_HCSF1 = 15,
+      SD_HCSF2 = 15,
+      SD_HCSF3 = 15,
+      SD_HCSF4 = 15,
+      SD_HCSF5 = 15,
+      SD_HCSF6 = 15,
+
+      G09 = 10,
+      G10 = 10,
+      G16 = 10,
+      G18 = 10,
+
+      GMET01 = 8,
+      GMET02 = 8,
+      GMET03 = 8,
+      GMET04 = 8,
+      GMET05 = 8,
+      GMET06 = 8,
+
+      GRATE1 = 8,
+      GRATE2 = 8,
+      GRATE3 = 8,
+      GRATE4 = 8,
+      GRATE5 = 8,
+      GRATE6 = 8,
+      GRATE7 = 8,
+      GRATE8 = 8
+    },
+
+    ceilings =
+    {
+      FLAT8 = 2,
+      FLOOR0_1 = 2,
+      FLOOR0_2 = 2,
+      FLOOR3_3 = 2,
+      FLOOR4_1 = 2,
+      FLOOR4_5 = 2,
+      FLOOR4_6 = 2,
+      FLOOR5_2 = 2,
+      FLOOR5_4 = 2,
+      FLOOR7_1 = 2,
+
+      G8_BRNF1 = 5,
+      G8_BRNF2 = 5,
+      G8_BRNF3 = 5,
+
+      STARTANF = 5,
+
+      SD_HCSF1 = 15,
+      SD_HCSF2 = 15,
+      SD_HCSF3 = 15,
+      SD_HCSF4 = 15,
+      SD_HCSF5 = 15,
+      SD_HCSF6 = 15,
+
+      GMET01 = 8,
+      GMET02 = 8,
+      GMET03 = 8,
+      GMET04 = 8,
+      GMET05 = 8,
+      GMET06 = 8,
+
+      GRATE1 = 8,
+      GRATE2 = 8,
+      GRATE3 = 8,
+      GRATE4 = 8,
+      GRATE5 = 8,
+      GRATE6 = 8,
+      GRATE7 = 8,
+      GRATE8 = 8
+    }
+  },
+
   tech_Outdoors_generic = --50
   {
     env  = "outdoor",
@@ -3127,7 +3234,23 @@ ARMAETUS_ROOM_THEMES =
       SD_HCSF3 = 15,
       SD_HCSF4 = 15,
       SD_HCSF5 = 15,
-      SD_HCSF6 = 15
+      SD_HCSF6 = 15,
+
+      GMET01 = 8,
+      GMET02 = 8,
+      GMET03 = 8,
+      GMET04 = 8,
+      GMET05 = 8,
+      GMET06 = 8,
+
+      GRATE1 = 8,
+      GRATE2 = 8,
+      GRATE3 = 8,
+      GRATE4 = 8,
+      GRATE5 = 8,
+      GRATE6 = 8,
+      GRATE7 = 8,
+      GRATE8 = 8
     },
 
     ceilings =
@@ -3160,7 +3283,23 @@ ARMAETUS_ROOM_THEMES =
       SD_HCSF3 = 15,
       SD_HCSF4 = 15,
       SD_HCSF5 = 15,
-      SD_HCSF6 = 15
+      SD_HCSF6 = 15,
+
+      GMET01 = 8,
+      GMET02 = 8,
+      GMET03 = 8,
+      GMET04 = 8,
+      GMET05 = 8,
+      GMET06 = 8,
+
+      GRATE1 = 8,
+      GRATE2 = 8,
+      GRATE3 = 8,
+      GRATE4 = 8,
+      GRATE5 = 8,
+      GRATE6 = 8,
+      GRATE7 = 8,
+      GRATE8 = 8
     }
   },
 
