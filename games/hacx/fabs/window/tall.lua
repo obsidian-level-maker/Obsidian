@@ -7,9 +7,12 @@ PREFABS.Window_tall_1 =
   file   = "window/tall.wad",
   map    = "MAP01",
 
+  
+
   group  = "tall",
   prob   = 50,
 
+  rank   = 2,
   height = 176,
 
   where  = "edge",
@@ -51,6 +54,7 @@ PREFABS.Window_tallish_1 =
 
   map      = "MAP11",
 
+  rank     = 1,
   height   = 128,
 }
 
@@ -61,6 +65,7 @@ PREFABS.Window_tallish_2 =
   map      = "MAP12",
   seed_w   = 2,
 
+  rank     = 1,
   height   = 128,
 }
 
@@ -71,6 +76,7 @@ PREFABS.Window_tallish_3 =
   map      = "MAP13",
   seed_w   = 3,
 
+  rank     = 1,
   height   = 128,
 }
 

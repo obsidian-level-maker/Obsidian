@@ -1800,8 +1800,21 @@ function ob_get_random_words()
   end
 end
 
+local last_Clippy_advice_index = -1       -- Like "static last_Clippy_advice_index = -1;"...
 function ob_random_advice()
-  return rand.pick(HELPFUL_ADVICE)
+  if #HELPFUL_ADVICE == 0 then
+    return nil
+  end
+
+  if last_Clippy_advice_index < 0 then
+    -- Randomize first index:
+    last_Clippy_advice_index = rand.irange(1, #HELPFUL_ADVICE)
+  else
+    -- Avoiding previous advice index:
+    last_Clippy_advice_index = 1 + ( (last_Clippy_advice_index + rand.irange(1, #HELPFUL_ADVICE - 2)) % #HELPFUL_ADVICE )
+  end
+
+  return HELPFUL_ADVICE[ last_Clippy_advice_index ]
 end
 
 function ob_default_filename()

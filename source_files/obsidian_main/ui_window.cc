@@ -54,6 +54,16 @@ static void main_win_surprise_go_CB(Fl_Widget *w, void *data) {
     did_randomize = true;
 }
 
+int UI_MainWin::handle(int event) {
+    if (Fl::event_key() == FL_Escape) {
+        if (clippy->shown()) {
+            clippy->hide();
+            return 1;
+        }
+    }
+    return Fl_Window::handle(event);
+}
+
 //
 // MainWin Constructor
 //

@@ -233,8 +233,8 @@ HERETIC.THEMES =
       Texture GRSTNPB size 64 128 wall comp CST
 
       ; Heretic only has two switches so make them generic to every theme
-      Texture SW1OFF size 64 128 isswitch comp CST comp BLU
-      Texture SW2OFF size 64 128 isswitch comp CST comp BLU
+      Texture SW1OFF size 64 128 ybias 100 isswitch comp CST comp BLU
+      Texture SW2OFF size 64 128 ybias 100 isswitch comp CST comp BLU
 
       ; And the lift texture
       Texture METL2 size 64 128 lift comp CST comp BLU
@@ -247,7 +247,7 @@ HERETIC.THEMES =
       ; and "locked" means that it's a good texture to use on a door that only
       ; opens with a switch, not a touch.
       Texture DOORSTON size 64 128 door comp CST comp BLU
-      Texture GRSKULL2 size 128 128 door comp CST comp BLU
+      Texture DOORWOOD size 128 128 door comp CST comp BLU
 
       ; Heretic only has two switches so make them the exit switches as well
       Texture SW1OFF size 64 128 exitswitch comp CST comp BLU
