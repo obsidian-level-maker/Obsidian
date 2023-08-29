@@ -1060,7 +1060,7 @@ void secretize_config(config *c)
   c->lock_themes = SLUMP_TRUE;
   if (rollpercent(25)) c->force_biggest = SLUMP_TRUE;   /* stub */
   c->big_monsters = SLUMP_TRUE;
-  if (!(c->gamemask & CHEX_BIT || c->gamemask & HARMONY_BIT || c->gamemask & STRIFE_BIT)) {
+  if (!(c->gamemask & CHEX_BIT || c->gamemask & HARMONY_BIT || c->gamemask & STRIFE_BIT || c->gamemask & HACX_BIT)) {
     c->secret_themes = SLUMP_TRUE;
   }
   else {
@@ -2917,6 +2917,7 @@ void basic_background3(byte *fbuf, byte bottom, int range)
 /* Should there be a secret level after the current level? */
 boolean need_secret_level(config *c)
 {
+  if (c->gamemask & (CHEX_BIT|HACX_BIT|HARMONY_BIT|STRIFE_BIT)) return SLUMP_FALSE;
   if (c->do_seclevels==SLUMP_FALSE) return SLUMP_FALSE;
   if (c->gamemask & HERETIC_BIT) {
     switch (c->episode) {
