@@ -2704,8 +2704,8 @@ function Level_make_level(LEV)
       res = "runt"
     end
   else
-    if LEVEL.cur_coverage < LEVEL.min_coverage 
-    or #LEVEL.rooms < LEVEL.min_rooms then
+    if LEVEL.cur_coverage < LEVEL.min_coverage then
+    --or #LEVEL.rooms < LEVEL.min_rooms then
       res = "runt"
     end
   end

@@ -1358,6 +1358,7 @@ DOOM.NAMES =
         ["Customer Lifecycle"]=10,
         ["Engineering Gone Bad"]=10, -- Demios, also based on Romero's "Tech Gone Bad",
         ["Organizational Downsizing"]=10,
+        ["Reticulated Spline"]=10,
         ["Segmentation Fault"]=10,
         ["Short-Circuit"]=10, -- Demios
 
