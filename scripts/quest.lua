@@ -276,9 +276,9 @@ function Quest_create_initial_quest(LEVEL)
       score = score / 48
     end
 
-    if not R.is_sub_room then
+    --[[if not R.is_sub_room then
       score = score + gui.random() * 10
-    end
+    end]]
 
     if R:total_conns() > 1 then
       score = score / 10
