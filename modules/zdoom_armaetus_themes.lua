@@ -1293,6 +1293,13 @@ ARMAETUS_ROOM_THEMES =
       OBTSVBZ1 = 10,
       OBTSVBZ2 = 10,
       OBTSVBZ3 = 10,
+
+      SD_TWDW1 = 5,
+      SD_TWDW2 = 5,
+      SD_TWDW3 = 5,
+      SD_TWDW4 = 5,
+      SD_TWDW5 = 5,
+      SD_TWDW6 = 5,
     },
 
     floors =
@@ -1676,7 +1683,7 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
-  tech_dk_green_tech =
+  tech_dk_green_tech = --50
   {
     env = "building",
     prob = 50,
@@ -1859,6 +1866,135 @@ ARMAETUS_ROOM_THEMES =
       GRATE6 = 8,
       GRATE7 = 8,
       GRATE8 = 8
+    }
+  },
+
+  tech_wood_lab = --40
+  {
+    env = "building",
+    prob = 40,
+
+    walls =
+    {
+      SD_TWDW1 = 5,
+      SD_TWDW2 = 5,
+      SD_TWDW3 = 5,
+      SD_TWDW4 = 5,
+      SD_TWDW5 = 5
+    },
+
+    floors =
+    {
+      SD_TWDW1 = 30,
+      SD_TWDW2 = 30,
+      SD_TWDW3 = 30,
+      SD_TWDW4 = 30,
+      SD_TWDW5 = 30, -- deliberate use of this material for floors
+
+      FLAT1 = 5,
+      FLAT20 = 2,
+      FLAT3 = 5,
+      FLAT5_4 = 5,
+
+      FLAT5_5 = 5,
+      FLOOR3_3 = 5,
+      FLOOR4_1 = 5,
+      FLOOR4_5 = 5,
+      FLOOR4_6 = 5,
+      FLOOR4_8 = 5,
+      FLOOR5_2 = 5,
+      FLOOR5_3 = 5,
+      FLOOR5_4 = 5,
+
+      FLOOR0_3 = 5,
+      FLOOR0_5 = 5,
+
+      SLIME14 = 5,
+      SLIME15 = 5,
+
+      GMET01 = 5,
+      GMET02 = 5,
+      GMET04 = 5,
+
+      GRATE1 = 5,
+      GRATE5 = 5,
+      GRATE6 = 5,
+      SHINY01 = 5,
+      SHINY02 = 5,
+      SHINY03 = 5,
+      SHINY04 = 5,
+
+      STARGRF = 1,
+      TILES4 = 5,
+      TILES6 = 5,
+
+      OBTBSFL1 = 5,
+      OBTBSFL2 = 5,
+      OBTSVBF1 = 5,
+      OBTSVBF2 = 5,
+      OBTSVBF3 = 5,
+
+      SDOM_FT1 = 5,
+      SDOM_FT3 = 5,
+      SDOM_FT4 = 5,
+      SDOM_FT5 = 5
+    },
+
+    ceilings =
+    {
+      SD_TWDW1 = 30,
+      SD_TWDW2 = 30,
+      SD_TWDW3 = 30,
+      SD_TWDW4 = 30,
+      SD_TWDW5 = 30, -- deliberate use of this material for floors
+
+      FLAT1 = 5,
+      FLAT20 = 2,
+      FLAT3 = 5,
+      FLAT5_4 = 5,
+
+      FLAT5_5 = 5,
+      FLOOR3_3 = 5,
+      FLOOR4_1 = 5,
+      FLOOR4_5 = 5,
+      FLOOR4_6 = 5,
+      FLOOR4_8 = 5,
+      FLOOR5_2 = 5,
+      FLOOR5_3 = 5,
+      FLOOR5_4 = 5,
+
+      FLOOR0_3 = 5,
+      FLOOR0_5 = 5,
+
+      SLIME14 = 5,
+      SLIME15 = 5,
+
+      GMET01 = 5,
+      GMET02 = 5,
+      GMET04 = 5,
+
+      GRATE1 = 5,
+      GRATE5 = 5,
+      GRATE6 = 5,
+      SHINY01 = 5,
+      SHINY02 = 5,
+      SHINY03 = 5,
+      SHINY04 = 5,
+
+      STARGRF = 1,
+      TILES4 = 5,
+      TILES6 = 5,
+
+      OBTBSFL1 = 5,
+      OBTBSFL2 = 5,
+      OBTSVBF1 = 5,
+      OBTSVBF2 = 5,
+      OBTSVBF3 = 5,
+
+      SDOM_FT1 = 5,
+      SDOM_FT3 = 5,
+      SDOM_FT4 = 5,
+      SDOM_FT5 = 5
     }
   },
 
@@ -5169,6 +5305,138 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
+  urban_wood_lab = --20
+  {
+    env = "building",
+    prob = 20,
+
+    walls =
+    {
+      SD_TWDW1 = 5,
+      SD_TWDW2 = 5,
+      SD_TWDW3 = 5,
+      SD_TWDW4 = 5,
+      SD_TWDW5 = 5,
+      SD_TWDW6 = 5
+    },
+
+    floors =
+    {
+      SD_TWDW1 = 30,
+      SD_TWDW2 = 30,
+      SD_TWDW3 = 30,
+      SD_TWDW4 = 30,
+      SD_TWDW5 = 30, -- deliberate use of this material for floors
+      SD_TWDW6 = 30,
+
+      FLAT1 = 5,
+      FLAT20 = 2,
+      FLAT3 = 5,
+      FLAT5_4 = 5,
+
+      FLAT5_5 = 5,
+      FLOOR3_3 = 5,
+      FLOOR4_1 = 5,
+      FLOOR4_5 = 5,
+      FLOOR4_6 = 5,
+      FLOOR4_8 = 5,
+      FLOOR5_2 = 5,
+      FLOOR5_3 = 5,
+      FLOOR5_4 = 5,
+
+      FLOOR0_3 = 5,
+      FLOOR0_5 = 5,
+
+      SLIME14 = 5,
+      SLIME15 = 5,
+
+      GMET01 = 5,
+      GMET02 = 5,
+      GMET04 = 5,
+
+      GRATE1 = 5,
+      GRATE5 = 5,
+      GRATE6 = 5,
+      SHINY01 = 5,
+      SHINY02 = 5,
+      SHINY03 = 5,
+      SHINY04 = 5,
+
+      STARGRF = 1,
+      TILES4 = 5,
+      TILES6 = 5,
+
+      OBTBSFL1 = 5,
+      OBTBSFL2 = 5,
+      OBTSVBF1 = 5,
+      OBTSVBF2 = 5,
+      OBTSVBF3 = 5,
+
+      SDOM_FT1 = 5,
+      SDOM_FT3 = 5,
+      SDOM_FT4 = 5,
+      SDOM_FT5 = 5
+    },
+
+    ceilings =
+    {
+      SD_TWDW1 = 30,
+      SD_TWDW2 = 30,
+      SD_TWDW3 = 30,
+      SD_TWDW4 = 30,
+      SD_TWDW5 = 30, -- deliberate use of this material for floors
+      SD_TWDW6 = 30,
+
+      FLAT1 = 5,
+      FLAT20 = 2,
+      FLAT3 = 5,
+      FLAT5_4 = 5,
+
+      FLAT5_5 = 5,
+      FLOOR3_3 = 5,
+      FLOOR4_1 = 5,
+      FLOOR4_5 = 5,
+      FLOOR4_6 = 5,
+      FLOOR4_8 = 5,
+      FLOOR5_2 = 5,
+      FLOOR5_3 = 5,
+      FLOOR5_4 = 5,
+
+      FLOOR0_3 = 5,
+      FLOOR0_5 = 5,
+
+      SLIME14 = 5,
+      SLIME15 = 5,
+
+      GMET01 = 5,
+      GMET02 = 5,
+      GMET04 = 5,
+
+      GRATE1 = 5,
+      GRATE5 = 5,
+      GRATE6 = 5,
+      SHINY01 = 5,
+      SHINY02 = 5,
+      SHINY03 = 5,
+      SHINY04 = 5,
+
+      STARGRF = 1,
+      TILES4 = 5,
+      TILES6 = 5,
+
+      OBTBSFL1 = 5,
+      OBTBSFL2 = 5,
+      OBTSVBF1 = 5,
+      OBTSVBF2 = 5,
+      OBTSVBF3 = 5,
+
+      SDOM_FT1 = 5,
+      SDOM_FT3 = 5,
+      SDOM_FT4 = 5,
+      SDOM_FT5 = 5
+    }
+  },
+
   urban_Outdoors_generic = --50
   {
     env  = "outdoor",
@@ -6735,7 +7003,14 @@ ARMAETUS_THEMES =
       SDSLDWL5 = 15,
       SDSLDWL6 = 15,
       SDSLDWL7 = 15,
-      SDSLDWL8 = 15
+      SDSLDWL8 = 15,
+
+      SD_TWDW1 = 20,
+      SD_TWDW2 = 20,
+      SD_TWDW3 = 20,
+      SD_TWDW4 = 20,
+      SD_TWDW5 = 20,
+      SD_TWDW6 = 20
     },
 
     fences =
@@ -6900,7 +7175,10 @@ ARMAETUS_THEMES =
       --
       gtd_wall_tech_gothic_inset_gargoyle = 20,
       gtd_wall_tech_gothic_inset_engine = 20,
-      gtd_wall_tech_gothic_inset_red_lite = 20
+      gtd_wall_tech_gothic_inset_red_lite = 20,
+      --
+      gtd_tekwoodlite_1 = 40,
+      gtd_tekwoodlite_2 = 40
     },
 
     window_groups =
@@ -7143,7 +7421,14 @@ ARMAETUS_THEMES =
       SDOM_WLB = 18,
       SDOM_WLC = 18,
       SDOM_WLD = 18,
-      SDOM_WLE = 18
+      SDOM_WLE = 18,
+
+      SD_TWDW1 = 12,
+      SD_TWDW2 = 12,
+      SD_TWDW3 = 12,
+      SD_TWDW4 = 12,
+      SD_TWDW5 = 12,
+      SD_TWDW6 = 12
     },
 
     fences =
@@ -7387,7 +7672,10 @@ ARMAETUS_THEMES =
       --
       gtd_wall_tech_gothic_inset_gargoyle = 9,
       gtd_wall_tech_gothic_inset_engine = 9,
-      gtd_wall_tech_gothic_inset_red_lite = 9
+      gtd_wall_tech_gothic_inset_red_lite = 9,
+      --
+      gtd_tekwoodlite_1 = 40,
+      gtd_tekwoodlite_2 = 40
     },
 
     window_groups =

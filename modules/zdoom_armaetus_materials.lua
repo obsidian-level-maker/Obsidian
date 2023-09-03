@@ -1664,10 +1664,29 @@ ARMAETUS_MATERIALS = {
   -- switches
   SDGTHSW1 = { t="SDGTHSW1", f="SD_GTHF1"}, 
   -- light pillars, 64px
-  SD_GTLW1 = { t= "SD_GTLW1", f="SD_GTHF1"},
-  SD_GTLW2 = { t= "SD_GTLW2", f="SD_GTHF2"},
-  SD_GTLW2 = { t= "SD_GTLW3", f="SD_GTHF3"},
-  SD_GTLW2 = { t= "SD_GTLW4", f="SD_GTHF4"},
+  SD_GTLW1 = { t="SD_GTLW1", f="SD_GTHF1"},
+  SD_GTLW2 = { t="SD_GTLW2", f="SD_GTHF2"},
+  SD_GTLW3 = { t="SD_GTLW3", f="SD_GTHF3"},
+  SD_GTLW4 = { t="SD_GTLW4", f="SD_GTHF4"},
+
+  -- tech wood
+  SD_TWDW1 = { t="SD_TWDW1", f="SD_TWDF1"},
+  SD_TWDW2 = { t="SD_TWDW2", f="SD_TWDF2"},
+  SD_TWDW3 = { t="SD_TWDW3", f="SD_TWDF3"},
+  SD_TWDW4 = { t="SD_TWDW4", f="SD_TWDF4"},
+  SD_TWDW5 = { t="SD_TWDW5", f="SD_TWDF5"},
+  SD_TWDW6 = { t="SD_TWDW5", f="SD_TWDF6"},
+  -- flats
+  SD_TWDF1 = { t="SD_TWDW1", f="SD_TWDF1"},
+  SD_TWDF2 = { t="SD_TWDW2", f="SD_TWDF2"},
+  SD_TWDF3 = { t="SD_TWDW3", f="SD_TWDF3"},
+  SD_TWDF4 = { t="SD_TWDW4", f="SD_TWDF4"},
+  SD_TWDF5 = { t="SD_TWDW5", f="SD_TWDF5"},
+  SD_TWDF6 = { t="SD_TWDW5", f="SD_TWDF6"},
+  -- lights
+  SD_TWDL1 = { t="SD_TWDL1", f="SD_TWDF6"},
+  SD_TWDL2 = { t="SD_TWDL2", f="SD_TWDF5"},
+  SD_TWDL3 = { t="SD_TWDL3", f="SD_TWDF4"},
 
   -- MSSP-GOTH --
   -- green-ish gothic metal walls with skulls (128px)
