@@ -60,7 +60,7 @@ PREFABS.Item_wallmachines_secret =
   over = -16,
 
   bound_z1 = -256,
-  bound_z2 = 256,
+  bound_z2 = 120,
 
   x_fit = "frame",
   y_fit = "top",
