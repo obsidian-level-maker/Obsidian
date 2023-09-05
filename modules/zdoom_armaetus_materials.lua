@@ -2666,6 +2666,12 @@ brightmap texture GRNSTONE
 {
   map OBRGRNST
 }
+
+// SD stuff
+brightmap texture SDOM_WL2
+{
+  map SDMWL2BR
+}
 ]]
 
 -- aliases - when you're too lazy to write down wall and flat names in every
