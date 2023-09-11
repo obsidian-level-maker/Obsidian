@@ -5324,6 +5324,52 @@ GROW_LIQUID_PLATFORM_FUNNEL =
   },
 },
 
+GROW_LIQUID_PLATFORM_DIAGONAL_DOUBLE_FUNNEL =
+{
+  prob = 18,
+  skip_prob = 80,
+
+  structure =
+  {
+    "111~~%","11....",
+    "111~~~","11....",
+    "111%~~","......",
+    "~~%111","......",
+    "~~~111","......",
+    "%~~111","......"
+  },
+
+  diagonals =
+  {
+    "~.",
+    "1~",
+    "~1",
+    ".~"
+  }
+},
+
+GROW_LIQUID_PLATFORM_DIAGONAL_DOUBLE_FUNNEL_PILLAR =
+{
+  prob = 18,
+  skip_prob = 80,
+
+  structure =
+  {
+    "111~~%","11....",
+    "1111#~","11..#.",
+    "11111~","......",
+    "~11111","......",
+    "~#1111",".#....",
+    "%~~111","......"
+  },
+
+  diagonals =
+  {
+    "~.",
+    ".~"
+  }
+},
+
 GROW_LIQUID_WATERFALL_SIDES =
 {
   prob = 5,

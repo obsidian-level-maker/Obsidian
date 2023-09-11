@@ -4002,6 +4002,8 @@ HERETIC.NAMES =
         ["Obsidian is not an AI."] = 20,
         ["Not an AI Until it Can Do Taxes"] = 20,
         ["Who Generates the Generators?"] = 20,
+        ["Flush Your Anxiety Dookie Away"] = 20,
+        ["Relationship is Temporary, DOOM is Eternal"] = 20,
 
         -- based on popular movie/TV slogans
         ["A Minute in Hell"] = 20,

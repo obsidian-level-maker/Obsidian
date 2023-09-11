@@ -2699,13 +2699,9 @@ function Level_make_level(LEV)
 
   res = Level_build_it(LEVEL, SEEDS)
 
-  if LEVEL.is_procedural_gotcha then
+  if not LEVEL.is_linear then
     if LEVEL.cur_coverage < LEVEL.min_coverage then
-      res = "runt"
-    end
-  else
-    if LEVEL.cur_coverage < LEVEL.min_coverage 
-    or #LEVEL.rooms < LEVEL.min_rooms then
+    --or #LEVEL.rooms < LEVEL.min_rooms then
       res = "runt"
     end
   end
