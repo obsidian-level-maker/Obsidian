@@ -926,6 +926,7 @@ function ob_read_all_config(need_full, log_only)
 
       for _,opt in pairs(def.options) do
         if string.match(opt.name, "header_") then goto justaheader end
+        if string.match(opt.name, "url_") then goto justaheader end
         if string.match(opt.name, "float_") then
             if OB_CONFIG.batch == "yes" then
               if OB_CONFIG[opt.name] then
@@ -985,6 +986,7 @@ function ob_read_all_config(need_full, log_only)
         if def.options[1] then
           for _,opt in pairs(def.options) do
             if string.match(opt.name, "header_") then goto justaheader end
+            if string.match(opt.name, "url_") then goto justaheader end
             if string.match(opt.name, "float_") then
                 if OB_CONFIG.batch == "yes" then
                   if OB_CONFIG[opt.name] then
@@ -1266,10 +1268,10 @@ function ob_restart()
         local where = def.where or "other"
         local suboptions
         assert(def.name and def.label)
-        if def.options then
-          suboptions = 0
-        else
+        if where == "links" then
           suboptions = 1
+        else
+          suboptions = 0
         end
         if def.color then
           gui.add_module(where, def.name, def.label, def.tooltip, def.color["red"], def.color["green"], def.color["blue"], suboptions)
@@ -1333,6 +1335,11 @@ function ob_restart()
           assert(opt.label)
           if string.match(opt.name, "header_") then
             gui.add_module_header(mod.name, opt.name, opt.label, opt.gap)
+            goto justaheader
+          end
+          if string.match(opt.name, "url_") then
+            assert(opt.url)
+            gui.add_module_url(mod.name, opt.name, opt.label, opt.url, opt.gap)
             goto justaheader
           end
           if not opt.valuator then
@@ -1541,10 +1548,10 @@ function ob_init()
         assert(def.name and def.label)
         local where = def.where or "other"
         local suboptions
-        if def.options then
-          suboptions = 0
-        else
+        if where == "links" then
           suboptions = 1
+        else
+          suboptions = 0
         end
         if def.color then
           gui.add_module(where, def.name, def.label, def.tooltip, def.color["red"], def.color["green"], def.color["blue"], suboptions)
@@ -1610,6 +1617,11 @@ function ob_init()
           assert(opt.label)
           if string.match(opt.name, "header_") then
             gui.add_module_header(mod.name, opt.name, opt.label, opt.gap)
+            goto justaheader
+          end
+          if string.match(opt.name, "url_") then
+            assert(opt.url)
+            gui.add_module_url(mod.name, opt.name, opt.label, opt.url, opt.gap)
             goto justaheader
           end
           if not opt.valuator then
@@ -2243,7 +2255,7 @@ local function ob_get_module_refs()
   for _,v in pairs(OB_MODULES) do
     local option_refs = {}
     for _,vv in pairs(v.options) do
-      if not string.match(vv.name, "header_") then
+      if not string.match(vv.name, "header_") and not string.match(vv.name, "url_") then
         option_refs[vv.name] = {}
         if not vv.tooltip then
           option_refs[vv.name].tooltip = "No help yet written for this option!"

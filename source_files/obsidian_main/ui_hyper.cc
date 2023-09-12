@@ -147,5 +147,46 @@ void UI_HyperLink::callback_Link(Fl_Widget *w, void *data) {
     }
 }
 
+UI_ModHyperLink::UI_ModHyperLink(int x, int y, int w, int h, const char *label,
+                           const char *_url)
+    : Fl_Button(x, y, w, h, label) {
+    // copy the URL string
+    url = _url;
+
+    box(FL_NO_BOX);
+
+    // setup the callback
+    callback(callback_Link, NULL);
+}
+
+int UI_ModHyperLink::handle(int event) {
+
+    switch (event) {
+        case FL_ENTER: {
+            fl_cursor(FL_CURSOR_HAND);
+            return 1;
+        }
+
+        case FL_LEAVE: {
+            fl_cursor(FL_CURSOR_DEFAULT);
+            return 1;
+        }
+
+        default:
+            break;
+    }
+
+    return Fl_Button::handle(event);
+
+}
+
+void UI_ModHyperLink::callback_Link(Fl_Widget *w, void *data) {
+    UI_ModHyperLink *link = (UI_ModHyperLink *)w;
+
+    if (!fl_open_uri(link->url.c_str())) {
+        LogPrintf("\nOpen URL failed: %s\n\n", link->url.c_str());
+    }
+}
+
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

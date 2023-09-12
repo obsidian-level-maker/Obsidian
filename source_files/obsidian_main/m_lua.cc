@@ -537,8 +537,12 @@ int gui_add_module(lua_State *L) {
             main_win->mod_tabs->experimental_mods->AddModule(id, label, tip, red, green, blue,
                                         suboptions);
         }
+    } else if (StringCaseCmp(where, "links") == 0) {
+        if (!main_win->mod_tabs->links->FindID(id)) {
+            main_win->mod_tabs->links->AddModule(id, label, tip, red, green, blue,
+                                        suboptions);
+        }
     }
-    // How to handle the "Links" tab?
 
 #endif
     return 0;
@@ -630,6 +634,48 @@ int gui_add_module_header(lua_State *L) {
 
     Main::FatalError(
         "Script problem: gui.add_module_header_option called for "
+        "non-existent module!\n");
+#endif
+    return 0;
+}
+
+// LUA: add_module_url(module, option, label, tooltip, gap, randomize_group)
+//
+int gui_add_module_url(lua_State *L) {
+    std::string module = luaL_optstring(L, 1, "");
+    std::string option = luaL_optstring(L, 2, "");
+
+    std::string label = luaL_optstring(L, 3, "");
+
+    std::string url = luaL_optstring(L, 4, "");
+
+    int gap = luaL_optinteger(L, 5, 0);
+
+    SYS_ASSERT(!module.empty() && !option.empty() && !url.empty());
+#ifndef CONSOLE_ONLY
+    if (!main_win) {
+        return 0;
+    }
+
+    // only allowed during startup
+    if (has_added_buttons) {
+        Main::FatalError(
+            "Script problem: gui.add_module_url called late.\n");
+    }
+
+    for (int i=0; i < main_win->mod_tabs->children(); i++) {
+        UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(i);
+        UI_Module *mod = tab->FindID(module);
+        if (mod) {
+            if (!mod->FindUrlOpt(option)) {
+                tab->AddUrl(module, option, label, url, gap);
+            }
+            return 0;
+        }
+    } 
+
+    Main::FatalError(
+        "Script problem: gui.add_module_url called for "
         "non-existent module!\n");
 #endif
     return 0;
@@ -1334,6 +1380,7 @@ static const luaL_Reg gui_script_funcs[] = {
     {"set_module", gui_set_module},
 
     {"add_module_header", gui_add_module_header},
+    {"add_module_url", gui_add_module_url},
     {"add_module_option", gui_add_module_option},
     {"add_module_slider_option", gui_add_module_slider_option},
     {"add_module_button_option", gui_add_module_button_option},

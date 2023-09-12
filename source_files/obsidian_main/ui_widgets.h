@@ -38,6 +38,8 @@
 #include "FL/Fl_Text_Display.H"
 #include "FL/Fl_Double_Window.H"
 
+#include "ui_hyper.h"
+
 //
 // DESCRIPTION:
 //   A sub-classed Fl_Choice widget which remembers an 'id'
@@ -208,6 +210,18 @@ class UI_RHeader : public Fl_Group {
 
    public:
     Fl_Box *mod_label;
+
+   private:
+};
+
+class UI_RLink : public Fl_Group {
+   private:
+   public:
+    UI_RLink(int x, int y, int w, int h);
+    virtual ~UI_RLink();
+
+   public:
+    UI_ModHyperLink *mod_link;
 
    private:
 };

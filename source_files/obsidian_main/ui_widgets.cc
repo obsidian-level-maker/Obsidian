@@ -228,6 +228,15 @@ UI_RHeader::~UI_RHeader() {}
 
 //----------------------------------------------------------------
 
+UI_RLink::UI_RLink(int x, int y, int w, int h) : Fl_Group(x, y, w, h) {
+    visible_focus(0);
+    labelfont(font_style);
+}
+
+UI_RLink::~UI_RLink() {}
+
+//----------------------------------------------------------------
+
 UI_RChoice::UI_RChoice(int x, int y, int w, int h) : Fl_Group(x, y, w, h) {
     visible_focus(0);
     labelfont(font_style);
