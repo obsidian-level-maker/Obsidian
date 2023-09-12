@@ -104,7 +104,9 @@ Cubebert
   - XBox Dashboard, ZDoom Forums, and ZDoom Forums Submerged program themes
 
 Morthimer McMare
-  - Current Russian translation file updates
+  - Current Russian translation team lead
+  - Clippy functionality patches
+  - Miscellaneous bugfixes
 
 ika707 and Chameleon_111
   - Current Russian translation file proofreading
@@ -144,6 +146,9 @@ Arcterezion
 
 Xenamta
   - Code Bullet theme
+
+Swedra
+  - Naming table contributions
 
 # OBLIGE
 
