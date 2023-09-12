@@ -83,6 +83,11 @@ OB_MODULES["links_source_ports"] =
       url="https://edge-classic.github.io/",    
     },
     { 
+      name="url_dsda_doom",     
+      label=_("DSDA-Doom (PrBoom fork)"),
+      url="https://github.com/kraflab/dsda-doom",    
+    },
+    { 
       name="url_eternity",     
       label=_("Eternity Engine"),
       url="https://github.com/team-eternity/eternity",    
@@ -96,11 +101,6 @@ OB_MODULES["links_source_ports"] =
       name="url_prboomx",     
       label=_("PrBoomX (PrBoom fork)"),
       url="https://github.com/JadingTsunami/prboomX",    
-    },
-    { 
-      name="url_dsda_doom",     
-      label=_("DSDA-Doom (PrBoom fork)"),
-      url="https://github.com/kraflab/dsda-doom",    
     },
     { 
       name="url_doom_retro",     
