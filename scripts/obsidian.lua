@@ -1265,6 +1265,7 @@ function ob_restart()
       if what == "module" then
         local where = def.where or "other"
         local suboptions
+        assert(def.name and def.label)
         if def.options then
           suboptions = 0
         else
@@ -1281,6 +1282,7 @@ function ob_restart()
 
       -- TODO : review this, does it belong HERE ?
       if what == "engine" then
+        assert(def.name)
         gui.enable_choice("engine", def.name, true)
       end
     end
@@ -1536,6 +1538,7 @@ function ob_init()
 
     for _,def in pairs(list) do
       if what == "module" then
+        assert(def.name and def.label)
         local where = def.where or "other"
         local suboptions
         if def.options then
@@ -1549,11 +1552,13 @@ function ob_init()
           gui.add_module(where, def.name, def.label, def.tooltip, nil, nil, nil, suboptions)
         end
       else
+        assert(def.name and def.label)
         gui.add_choice(what, def.name, def.label)
       end
 
       -- TODO : review this, does it belong HERE ?
       if what == "engine" then
+        assert(def.name)
         gui.enable_choice("engine", def.name, true)
       end
     end
