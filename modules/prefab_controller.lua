@@ -135,6 +135,71 @@ function PREFAB_CONTROL.fine_tune_filters()
       end
     end
   end
+
+  local new_fabs_multipliers =
+  {
+
+  }
+  local new_fab_groups_multipliers =
+  {
+    gtd_wall_tech_gothic_inset_gargoyle = 3,
+    gtd_wall_tech_gothic_inset_engine = 3,
+    gtd_wall_tech_gothic_inset_red_lite = 3,
+    gtd_tekwoodlite_1 = 3,
+    gtd_tekwoodlite_2 = 3
+  }
+  local new_themes_multipliers =
+  {
+    tech_AITextures = 3,
+    tech_goth_tech = 3,
+    tech_wood_lab = 3,
+    tech_dk_green_tech = 3,
+    tech_copper_steampunk = 3,
+    tech_wood_lab = 3,
+
+    hell_gilded_bricks = 3,
+    hell_copper_steampunk = 3,
+    hell_AztecClay = 3,
+    hell_babylonian = 3,
+    hell_green_tk = 3,
+
+    urban_dk_green_tech = 3,
+    urban_wood_lab = 3
+  }
+  local themes =
+  {
+    "tech",
+    "urban",
+    "hell",
+    "deimos"
+  }
+
+  if PARAM.bool_more_new_content == 1 then
+    for WG,mult in pairs(new_fab_groups_multipliers) do
+      for _,theme_name in pairs(themes) do
+        if GAME.THEMES[theme_name] then
+          if GAME.THEMES[theme_name].wall_groups[WG] then
+            GAME.THEMES[theme_name].wall_groups[WG] =
+            GAME.THEMES[theme_name].wall_groups[WG] * mult
+          end
+        end
+      end
+    end
+
+    for RT,mult in pairs(new_themes_multipliers) do
+      if GAME.ROOM_THEMES[RT] then 
+        GAME.ROOM_THEMES[RT].prob = GAME.ROOM_THEMES[RT].prob * mult
+      end
+    end
+  end
+
+  local db_tab = ""
+  --[[for _,RT in pairs(GAME.ROOM_THEMES) do
+    db_tab = db_tab .. RT.name .. ": " .. RT.prob .. "\n"
+  end
+  db_tab = db_tab .. table.tostr(GAME.THEMES["tech"].wall_groups, 2)
+  gui.printf(db_tab)
+  error()]]
 end
 
 function PREFAB_CONTROL.set_damaging_hallways()
@@ -433,6 +498,16 @@ OB_MODULES["prefab_control"] =
     },
 
     --
+
+    {
+      name = "bool_more_new_content",
+      label = _("Test New Content"),
+      valuator = "button",
+      default = 0,
+      tooltip = _("Greatly increase probability for recent added content for testing purposes. " .. 
+      "Changes in content is expected and some assets will be gradually removed from this option's effects."),
+      priority = 4
+    },
 
 
     {
