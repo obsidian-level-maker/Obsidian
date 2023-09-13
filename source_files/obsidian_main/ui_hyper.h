@@ -55,6 +55,26 @@ class UI_HyperLink : public Fl_Button {
     static void callback_Link(Fl_Widget *w, void *data);
 };
 
+class UI_ModHyperLink : public Fl_Button {
+   private:
+    // the URL to visit when clicked
+    std::string url;
+
+   public:
+    UI_ModHyperLink(int x, int y, int w, int h, const char *label,
+                 const char *_url);
+    virtual ~UI_ModHyperLink() = default;
+
+   public:
+    // FLTK overrides
+
+    int handle(int event);
+
+   private:
+
+    static void callback_Link(Fl_Widget *w, void *data);
+};
+
 #endif /* __UI_HYPER_H__ */
 
 //--- editor settings ---

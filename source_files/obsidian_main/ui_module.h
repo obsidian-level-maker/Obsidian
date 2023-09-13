@@ -50,6 +50,8 @@ class UI_Module : public Fl_Group {
 
     std::map<std::string, UI_RHeader *> choice_map_header;
 
+    std::map<std::string, UI_RLink *> choice_map_url;
+
     UI_CustomCheckBox *mod_button;
 
     std::string id_name;
@@ -67,6 +69,8 @@ class UI_Module : public Fl_Group {
                    std::string default_value);
 
     void AddHeader(std::string option, std::string label, int gap);
+
+    void AddUrl(std::string option, std::string label, std::string url, int gap);
 
     void AddSliderOption(std::string option, std::string label, std::string tip,
                          std::string longtip, int gap, double min, double max,
@@ -104,6 +108,8 @@ class UI_Module : public Fl_Group {
 
     UI_RHeader *FindHeaderOpt(std::string opt);  // const;
 
+    UI_RLink *FindUrlOpt(std::string opt);  // const;
+
    protected:
    private:
     void resize(int X, int Y, int W, int H);
@@ -127,7 +133,6 @@ class UI_CustomMods : public Fl_Group {
     Fl_Scrollbar *sbar;
 
    private:
-    Fl_Group *mod_pack_group;
 
     // area occupied by module list
     int mx, my, mw, mh;
@@ -152,6 +157,9 @@ class UI_CustomMods : public Fl_Group {
 
     bool AddHeader(std::string module, std::string option, std::string label,
                    int gap);
+
+    bool AddUrl(std::string module, std::string option, std::string label,
+                   std::string url, int gap);
 
     bool AddOption(std::string module, std::string option, std::string label,
                    std::string tip, std::string longtip, int gap,

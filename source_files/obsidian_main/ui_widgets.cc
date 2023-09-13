@@ -228,6 +228,15 @@ UI_RHeader::~UI_RHeader() {}
 
 //----------------------------------------------------------------
 
+UI_RLink::UI_RLink(int x, int y, int w, int h) : Fl_Group(x, y, w, h) {
+    visible_focus(0);
+    labelfont(font_style);
+}
+
+UI_RLink::~UI_RLink() {}
+
+//----------------------------------------------------------------
+
 UI_RChoice::UI_RChoice(int x, int y, int w, int h) : Fl_Group(x, y, w, h) {
     visible_focus(0);
     labelfont(font_style);
@@ -305,7 +314,7 @@ void UI_CustomCheckBox::draw() {
     int dy = (h() - W) / 2;      // neg. offset o.k. for vertical centering
     int lx = 0;                  // relative label position (STR #3237)
 
-    //if (down_box()) {
+    if (down_box()) {
         draw_box(down_box(), x() + dx, y() + dy, W, W, BUTTON_COLOR);
         if (value()) {
             fl_color(SELECTION);
@@ -319,7 +328,7 @@ void UI_CustomCheckBox::draw() {
                 fl_line(tx + d1, ty + d1, tx + tw - 1, ty + d1 - d2 + 1);
             }
         }
-    /*} else {
+    } else {
         if (value()) {
             fl_color(FONT_COLOR);
             int tx = x() + dx + 3;
@@ -336,7 +345,7 @@ void UI_CustomCheckBox::draw() {
             fl_xyline(tx, ty, tx + tw);
             fl_yxline(tx + d1 + 2, ty - d1 - 2, ty + d1 + 2);
         }
-    }*/
+    }
     lx = dx + W + 2;
     draw_label(x() + lx, y(), w() - lx - bx, h());
     if (Fl::focus() == this) {

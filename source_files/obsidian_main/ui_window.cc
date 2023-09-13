@@ -100,7 +100,7 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title)
     menu_bar->selection_color(SELECTION);
     menu_bar->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP | FL_ALIGN_LEFT);
 
-    sizing_group = new Fl_Group(0, 0, W, H - kf_h(22));
+    sizing_group = new Fl_Group(0, kf_h(22), W, H - kf_h(20));
     sizing_group->box(FL_NO_BOX);
 
     game_box = new UI_Game(0, kf_h(22), LEFT_W, TOP_H - kf_h(22));

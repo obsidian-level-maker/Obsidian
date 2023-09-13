@@ -44,9 +44,9 @@ UI_Module::UI_Module(int X, int Y, int W, int H, std::string id,
     mod_button =
         new UI_CustomCheckBox(X + kf_w(6), Y + kf_h(5), W - kf_w(12), kf_h(24));
     mod_button->box(FL_NO_BOX);
-    /*if (!suboptions) {
+    if (suboptions) {
         mod_button->down_box(FL_NO_BOX);
-    }*/
+    }
     mod_button->color(WINDOW_BG);
 
     if (Is_UI()) {
@@ -115,6 +115,36 @@ void UI_Module::AddHeader(std::string opt, std::string label, int gap) {
     redraw();
 
     choice_map_header[opt] = rhead;
+}
+
+void UI_Module::AddUrl(std::string opt, std::string label, std::string url, int gap) {
+    int nw = this->parent()->w();
+
+    int nx = x() + kf_w(6);
+    int ny = y() + cur_opt_y - kf_h(15);
+
+    UI_RLink *rurl = new UI_RLink(nx, ny + kf_h(15), nw * .95, kf_h(24));
+
+    rurl->mod_link = new UI_ModHyperLink(
+        rurl->x(), rurl->y(),
+        rurl->w() * .95, kf_h(24), "", url.c_str());
+    rurl->mod_link->copy_label(label.c_str());
+    rurl->mod_link->align((FL_ALIGN_CENTER | FL_ALIGN_INSIDE | FL_ALIGN_CLIP));
+    rurl->mod_link->labelfont(font_style + 1);
+    rurl->mod_link->labelsize(header_font_size - 2);
+
+    if (!mod_button->value()) {
+        rurl->hide();
+    }
+
+    add(rurl);
+
+    cur_opt_y += (gap ? kf_h(36) : kf_h(26));
+
+    resize(x(), y(), w(), CalcHeight());
+    redraw();
+
+    choice_map_url[opt] = rurl;
 }
 
 void UI_Module::AddOption(std::string opt, std::string label, std::string tip,
@@ -486,6 +516,7 @@ void UI_Module::update_Enable() {
     std::map<std::string, UI_RSlide *>::const_iterator IT2;
     std::map<std::string, UI_RButton *>::const_iterator IT3;
     std::map<std::string, UI_RHeader *>::const_iterator IT4;
+    std::map<std::string, UI_RLink *>::const_iterator IT5;
 
     for (IT = choice_map.begin(); IT != choice_map.end(); IT++) {
         UI_RChoice *M = IT->second;
@@ -521,6 +552,16 @@ void UI_Module::update_Enable() {
     for (IT4 = choice_map_header.begin(); IT4 != choice_map_header.end();
          IT4++) {
         UI_RHeader *M = IT4->second;
+        if (mod_button->value()) {
+            M->show();
+        } else {
+            M->hide();
+        }
+    }
+
+    for (IT5 = choice_map_url.begin(); IT5 != choice_map_url.end();
+         IT5++) {
+        UI_RLink *M = IT5->second;
         if (mod_button->value()) {
             M->show();
         } else {
@@ -684,6 +725,14 @@ UI_RHeader *UI_Module::FindHeaderOpt(std::string option) {
     }
 
     return choice_map_header[option];
+}
+
+UI_RLink *UI_Module::FindUrlOpt(std::string option) {
+    if (choice_map_url.find(option) == choice_map_url.end()) {
+        return NULL;
+    }
+
+    return choice_map_url[option];
 }
 
 void UI_Module::callback_OptChange(Fl_Widget *w, void *data) {
@@ -984,24 +1033,16 @@ UI_CustomMods::UI_CustomMods(int X, int Y, int W, int H, std::string label)
     sbar->color(GAP_COLOR, BUTTON_COLOR);
     sbar->labelcolor(SELECTION);
 
-    mod_pack_group = new Fl_Group(mx, my, mw, mh);
-    mod_pack_group->box(FL_NO_BOX);
-
     mod_pack = new Fl_Group(mx, my, mw, mh);
-    mod_pack->clip_children(1);
-    mod_pack->end();
-
-    mod_pack->align(FL_ALIGN_INSIDE | FL_ALIGN_BOTTOM);
-    mod_pack->labeltype(FL_NORMAL_LABEL);
-    mod_pack->labelsize(FL_NORMAL_SIZE * 3 / 2);
-
     mod_pack->box(FL_FLAT_BOX);
     mod_pack->color(GAP_COLOR);
     mod_pack->resizable(mod_pack);
-
+    mod_pack->clip_children(1);
+    mod_pack->end();
+    
     end();
 
-    resizable(mod_pack_group);
+    resizable(mod_pack);
 
     end();
 }
@@ -1046,6 +1087,22 @@ bool UI_CustomMods::AddHeader(std::string module, std::string option,
 
     return true;
 }
+
+bool UI_CustomMods::AddUrl(std::string module, std::string option,
+                              std::string label, std::string url, int gap) {
+    UI_Module *M = FindID(module);
+
+    if (!M) {
+        return false;
+    }
+
+    M->AddUrl(option, label, url, gap);
+
+    PositionAll();
+
+    return true;
+}
+
 
 bool UI_CustomMods::AddOption(std::string module, std::string option,
                               std::string label, std::string tip,
@@ -1196,7 +1253,8 @@ bool UI_CustomMods::EnableMod(std::string id, bool enable) {
 
     // no options => no height change => no need to reposition
     if (M->choice_map.size() > 0 || M->choice_map_slider.size() > 0 ||
-        M->choice_map_button.size() > 0 || M->choice_map_header.size() > 0) {
+        M->choice_map_button.size() > 0 || M->choice_map_header.size() > 0 ||
+        M->choice_map_url.size() > 0) {
         PositionAll();
     }
 
@@ -1578,7 +1636,7 @@ void UI_CustomMods::callback_ModEnable(Fl_Widget *w, void *data) {
 
     // no options => no height change => no need to reposition
     if (M->choice_map.size() > 0 || M->choice_map_slider.size() > 0 ||
-        M->choice_map_button.size() > 0) {
+        M->choice_map_button.size() > 0 || M->choice_map_url.size() > 0) {
         cb_data->parent->PositionAll(M);
     }
 
@@ -1643,19 +1701,19 @@ UI_CustomTabs::UI_CustomTabs(int X, int Y, int W, int H)
     
     visible_focus(0);
 
-    arch_mods = new UI_CustomMods(X, Y+kf_h(22), W, H-kf_h(26), _("Architecture"));
+    arch_mods = new UI_CustomMods(X, Y+kf_h(22), W, H-kf_h(22), _("Architecture"));
     arch_mods->end();
-    combat_mods = new UI_CustomMods(X, Y+kf_h(22), W, H-kf_h(26), _("Combat"));
+    combat_mods = new UI_CustomMods(X, Y+kf_h(22), W, H-kf_h(22), _("Combat"));
     combat_mods->end();
-    pickup_mods = new UI_CustomMods(X, Y+kf_h(22), W, H-kf_h(26), _("Pickups"));
+    pickup_mods = new UI_CustomMods(X, Y+kf_h(22), W, H-kf_h(22), _("Pickups"));
     pickup_mods->end();
-    other_mods = new UI_CustomMods(X, Y+kf_h(22), W, H-kf_h(26), _("Other"));
+    other_mods = new UI_CustomMods(X, Y+kf_h(22), W, H-kf_h(22), _("Other"));
     other_mods->end();
-    debug_mods = new UI_CustomMods(X, Y+kf_h(22), W, H-kf_h(26), _("Debug"));
+    debug_mods = new UI_CustomMods(X, Y+kf_h(22), W, H-kf_h(22), _("Debug"));
     debug_mods->end();
-    experimental_mods = new UI_CustomMods(X, Y+kf_h(22), W, H-kf_h(26), _("Experimental"));
+    experimental_mods = new UI_CustomMods(X, Y+kf_h(22), W, H-kf_h(22), _("Experimental"));
     experimental_mods->end();
-    links = new UI_CustomMods(X, Y+kf_h(22), W, H-kf_h(26), _("Links"));
+    links = new UI_CustomMods(X, Y+kf_h(22), W, H-kf_h(22), _("Links"));
     links->end();
 
     end();

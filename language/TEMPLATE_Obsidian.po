@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: Obsidian Level Maker\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-05-09 23:41+1000\n"
-"PO-Revision-Date: 2023-07-30 23:00-0700\n"
+"PO-Revision-Date: 2023-09-12 19:30-0700\n"
 "Last-Translator:  Dasho\n"
 "Language-Team: English\n"
 "Language: en_US\n"
@@ -37,7 +37,7 @@ msgstr ""
 msgid "Default"
 msgstr ""
 
-#: scripts/level.lua:2757
+#: scripts/level.lua:2765
 msgid ""
 "\n"
 "Warning: The game that you have selected is in an experimental state. WADs may not build successfully and certain gameplay features may not be implemented yet! To ignore this warning and continue generation for these games, check the \"Allow Partially Supported Games\" checkbox located under the Experimental tab.\n"
@@ -45,123 +45,123 @@ msgid ""
 "Use the tooltip for the \"Allow Partially Supported Games\" module to find the exact status for the game in question."
 msgstr ""
 
-#: scripts/level.lua:2856
+#: scripts/level.lua:2864
 msgid "Oblige V2"
 msgstr ""
 
-#: scripts/obsidian.lua:2398
+#: scripts/obsidian.lua:2445
 msgid "option: "
 msgstr ""
 
-#: scripts/obsidian.lua:2400
+#: scripts/obsidian.lua:2447
 msgid "comment: "
 msgstr ""
 
-#: scripts/obsidian.lua:2402
+#: scripts/obsidian.lua:2449
 msgid "engine: "
 msgstr ""
 
-#: scripts/obsidian.lua:2410
+#: scripts/obsidian.lua:2457
 msgid "game: "
 msgstr ""
 
-#: scripts/obsidian.lua:2418
+#: scripts/obsidian.lua:2465
 msgid "port: "
 msgstr ""
 
-#: scripts/obsidian.lua:2425
+#: scripts/obsidian.lua:2472
 msgid "values: "
 msgstr ""
 
-#: scripts/obsidian.lua:2431
+#: scripts/obsidian.lua:2478
 msgid "default: "
 msgstr ""
 
-#: scripts/obsidian.lua:2452
+#: scripts/obsidian.lua:2499
 msgid "randomize_group: "
 msgstr ""
 
-#: scripts/obsidian.lua:2486
+#: scripts/obsidian.lua:2533
 msgid "tooltip"
 msgstr ""
 
-#: scripts/obsidian.lua:2487
+#: scripts/obsidian.lua:2534
 msgid "engine"
 msgstr ""
 
-#: scripts/obsidian.lua:2489
+#: scripts/obsidian.lua:2536
 msgid "ALL"
 msgstr ""
 
-#: scripts/obsidian.lua:2501
+#: scripts/obsidian.lua:2548
 msgid "game"
 msgstr ""
 
-#: scripts/obsidian.lua:2515
+#: scripts/obsidian.lua:2562
 msgid "port"
 msgstr ""
 
-#: scripts/obsidian.lua:2530
+#: scripts/obsidian.lua:2577
 msgid "type"
 msgstr ""
 
-#: scripts/obsidian.lua:2531
+#: scripts/obsidian.lua:2578
 msgid "slider"
 msgstr ""
 
-#: scripts/obsidian.lua:2532
+#: scripts/obsidian.lua:2579
 msgid "values"
 msgstr ""
 
-#: scripts/obsidian.lua:2533
+#: scripts/obsidian.lua:2580
 msgid "min"
 msgstr ""
 
-#: scripts/obsidian.lua:2534
+#: scripts/obsidian.lua:2581
 msgid "max"
 msgstr ""
 
-#: scripts/obsidian.lua:2539
+#: scripts/obsidian.lua:2586
 msgid "default"
 msgstr ""
 
-#: scripts/obsidian.lua:2556
+#: scripts/obsidian.lua:2603
 msgid "boolean"
 msgstr ""
 
-#: scripts/obsidian.lua:2560
+#: scripts/obsidian.lua:2607
 msgid "choice"
 msgstr ""
 
-#: scripts/obsidian.lua:2572
+#: scripts/obsidian.lua:2619
 msgid "randomize_group"
 msgstr ""
 
-#: scripts/obsidian.lua:2600
+#: scripts/obsidian.lua:2647
 msgid ""
 "~~~~~~~ Making Levels ~~~~~~~\n"
 "\n"
 msgstr ""
 
-#: scripts/obsidian.lua:2619
+#: scripts/obsidian.lua:2666
 msgid "SLUMP"
 msgstr ""
 
-#: scripts/obsidian.lua:2630
+#: scripts/obsidian.lua:2677
 msgid "id Tech 0"
 msgstr ""
 
-#: scripts/obsidian.lua:2638
+#: scripts/obsidian.lua:2685
 msgid "Hexen's level linking in Oblige v2 is incompatible with Obsidian's level progression. Please set the slider to 100% to generate the full WAD with Oblige v2."
 msgstr ""
 
-#: scripts/obsidian.lua:2665
+#: scripts/obsidian.lua:2712
 msgid ""
 "~~~~~~~ Build Aborted! ~~~~~~~\n"
 "\n"
 msgstr ""
 
-#: scripts/obsidian.lua:2670
+#: scripts/obsidian.lua:2717
 msgid ""
 "~~~~~~ Finished Making Levels ~~~~~~\n"
 "\n"
@@ -328,15 +328,15 @@ msgstr ""
 msgid "Doom 2"
 msgstr ""
 
-#: games/doom/themes.lua:5937
+#: games/doom/themes.lua:5936
 msgid "Tech"
 msgstr ""
 
-#: games/doom/themes.lua:5947
+#: games/doom/themes.lua:5946
 msgid "Urban"
 msgstr ""
 
-#: games/doom/themes.lua:5957
+#: games/doom/themes.lua:5956
 msgid "Hell"
 msgstr ""
 
@@ -372,7 +372,7 @@ msgstr ""
 msgid "HacX 1.2"
 msgstr ""
 
-#: games/hacx/themes.lua:855
+#: games/hacx/themes.lua:598
 msgid "HacX Urban"
 msgstr ""
 
@@ -456,7 +456,7 @@ msgstr ""
 msgid "Strife"
 msgstr ""
 
-#: games/strife/themes.lua:427
+#: games/strife/themes.lua:600
 msgid "Town"
 msgstr ""
 
@@ -3577,186 +3577,190 @@ msgstr ""
 msgid "I LOVE IT"
 msgstr ""
 
-#: modules/prefab_controller.lua:176
+#: modules/prefab_controller.lua:241
 msgid "Advanced Level Control"
 msgstr ""
 
-#: modules/prefab_controller.lua:194
+#: modules/prefab_controller.lua:259
 msgid "Alt-start Rooms"
 msgstr ""
 
-#: modules/prefab_controller.lua:197
+#: modules/prefab_controller.lua:262
 msgid "For Co-operative games, sometimes have players start in different rooms"
 msgstr ""
 
-#: modules/prefab_controller.lua:201
+#: modules/prefab_controller.lua:266
 msgid "Foreshadowing Exit"
 msgstr ""
 
-#: modules/prefab_controller.lua:204
+#: modules/prefab_controller.lua:269
 msgid "Gets exit room theme to follow the theme of the next level, if different."
 msgstr ""
 
-#: modules/prefab_controller.lua:210
+#: modules/prefab_controller.lua:275
 msgid "Auto Detailing"
 msgstr ""
 
-#: modules/prefab_controller.lua:213
+#: modules/prefab_controller.lua:278
 msgid "Reduces the amount of complex architecture in a map based on its size. Default is on in binary map format, off in UDMF map format."
 msgstr ""
 
-#: modules/prefab_controller.lua:220
+#: modules/prefab_controller.lua:285
 msgid "Point Decor"
 msgstr ""
 
-#: modules/prefab_controller.lua:222
+#: modules/prefab_controller.lua:287
 msgid ""
 "Decor prefabs are prefabs placed along the floors such as crates, pillars, and other decorative elements which aren't tied to walls. This directly modifies probabilities on a per-room basis, not the density for decor prefabs in any given room.\n"
 "\n"
 "Note: DEFAULT actually behaves like Mix-It-Up."
 msgstr ""
 
-#: modules/prefab_controller.lua:231
+#: modules/prefab_controller.lua:296
 msgid "Wall Decor"
 msgstr ""
 
-#: modules/prefab_controller.lua:233
+#: modules/prefab_controller.lua:298
 msgid "Determines the odds for decorated wall junctions in a map versus plain ones."
 msgstr ""
 
-#: modules/prefab_controller.lua:242
+#: modules/prefab_controller.lua:307
 msgid "Group Walls"
 msgstr ""
 
-#: modules/prefab_controller.lua:244
+#: modules/prefab_controller.lua:309
 msgid "Determines the percentage at which grouped walls are applied to rooms."
 msgstr ""
 
-#: modules/prefab_controller.lua:256
+#: modules/prefab_controller.lua:321
 msgid "Max Room Themes Per Level"
 msgstr ""
 
-#: modules/prefab_controller.lua:263
+#: modules/prefab_controller.lua:328
 msgid "Determines the maximum number of distinct indoor room themes used per level. Default is 1."
 msgstr ""
 
-#: modules/prefab_controller.lua:270
+#: modules/prefab_controller.lua:335
 msgid "Avoid Room Theme Re-Use"
 msgstr ""
 
-#: modules/prefab_controller.lua:274
+#: modules/prefab_controller.lua:339
 msgid "Attempt to use unique room themes for each generated level, unless the pool of available themes is exhausted."
 msgstr ""
 
-#: modules/prefab_controller.lua:280
+#: modules/prefab_controller.lua:345
 msgid "Max Indoor Wall Groups Per Level"
 msgstr ""
 
-#: modules/prefab_controller.lua:287
+#: modules/prefab_controller.lua:352
 msgid "Determines the maximum number of distinct indoor wall groups used per level. Default is 2."
 msgstr ""
 
-#: modules/prefab_controller.lua:294
+#: modules/prefab_controller.lua:359
 msgid "Avoid Wall Group Re-Use"
 msgstr ""
 
-#: modules/prefab_controller.lua:298
+#: modules/prefab_controller.lua:363
 msgid "Attempt to use unique indoor wall groups for each generated level, unless the pool of available groups is exhausted."
 msgstr ""
 
-#: modules/prefab_controller.lua:307
+#: modules/prefab_controller.lua:372
 msgid "Peered Starts/Exits"
 msgstr ""
 
-#: modules/prefab_controller.lua:311
+#: modules/prefab_controller.lua:376
 msgid "Attempt to use matched start and exit fabs for a level (if a matched set is possible)."
 msgstr ""
 
-#: modules/prefab_controller.lua:318
+#: modules/prefab_controller.lua:383
 msgid "Steppy Caves"
 msgstr ""
 
-#: modules/prefab_controller.lua:325
+#: modules/prefab_controller.lua:390
 msgid "Disables or enables caves with height variations."
 msgstr ""
 
-#: modules/prefab_controller.lua:336
+#: modules/prefab_controller.lua:401
 msgid "Crushers"
 msgstr ""
 
-#: modules/prefab_controller.lua:338
+#: modules/prefab_controller.lua:403
 msgid "Changes probabilities for fabs with crushing sectors. Default is on."
 msgstr ""
 
-#: modules/prefab_controller.lua:347
+#: modules/prefab_controller.lua:412
 msgid "Dexterity Fabs"
 msgstr ""
 
-#: modules/prefab_controller.lua:349
+#: modules/prefab_controller.lua:414
 msgid "Changes probabilities for fabs featuring Chasm-ish navigation. Default is on."
 msgstr ""
 
-#: modules/prefab_controller.lua:357
+#: modules/prefab_controller.lua:422
 msgid "Gambling Fabs"
 msgstr ""
 
-#: modules/prefab_controller.lua:359
+#: modules/prefab_controller.lua:424
 msgid "Changes probabilities for fabs that may lockout a player on items. Default is on."
 msgstr ""
 
-#: modules/prefab_controller.lua:368
+#: modules/prefab_controller.lua:433
 msgid "Sight Ambush Cages"
 msgstr ""
 
-#: modules/prefab_controller.lua:370
+#: modules/prefab_controller.lua:435
 msgid "Changes probabilities for cages that unleash its monsters when player is in sight. Default is on."
 msgstr ""
 
-#: modules/prefab_controller.lua:379
+#: modules/prefab_controller.lua:444
 msgid "Mirror Mazes"
 msgstr ""
 
-#: modules/prefab_controller.lua:381
+#: modules/prefab_controller.lua:446
 msgid "Changes probabilities for hell mirror maze closets and joiners."
 msgstr ""
 
-#: modules/prefab_controller.lua:390
+#: modules/prefab_controller.lua:455
 msgid "Dark Mazes"
 msgstr ""
 
-#: modules/prefab_controller.lua:392
+#: modules/prefab_controller.lua:457
 msgid "Changes probabilities for dark/eye maze joiners in hell theme."
 msgstr ""
 
-#: modules/prefab_controller.lua:401
+#: modules/prefab_controller.lua:466
 msgid "Stair Ladders"
 msgstr ""
 
-#: modules/prefab_controller.lua:403
+#: modules/prefab_controller.lua:468
 msgid "Changes probabilities for high-step ladders (stairs)."
 msgstr ""
 
-#: modules/prefab_controller.lua:413
+#: modules/prefab_controller.lua:478
 msgid "Jump/Crouch Fabs"
 msgstr ""
 
-#: modules/prefab_controller.lua:416
+#: modules/prefab_controller.lua:481
 msgid "Enables or disables prefabs that require jumping or crouching to navigate."
 msgstr ""
 
-#: modules/prefab_controller.lua:426
+#: modules/prefab_controller.lua:491
 msgid "Damaging Hallways"
 msgstr ""
 
-#: modules/prefab_controller.lua:428
+#: modules/prefab_controller.lua:493
 msgid "Changes the liquids on hallways with damaging floors to either be damaging (default) or non-damaging."
 msgstr ""
 
-#: modules/prefab_controller.lua:440
+#: modules/prefab_controller.lua:504
+msgid "Test New Content"
+msgstr ""
+
+#: modules/prefab_controller.lua:515
 msgid "Match Theme"
 msgstr ""
 
-#: modules/prefab_controller.lua:443
+#: modules/prefab_controller.lua:518
 msgid "Ensures that prefabs selected match their intended Theme."
 msgstr ""
 
@@ -5221,6 +5225,78 @@ msgstr ""
 msgid "Populates the level with only SS troopers. This may expand to include pinkies/the Cyberdemon."
 msgstr ""
 
+#: modules/useful_links.lua:21
+msgid "Addons"
+msgstr ""
+
+#: modules/useful_links.lua:30
+msgid "Mobreck's MBF21 Expanded DOOM Beastiary"
+msgstr ""
+
+#: modules/useful_links.lua:35
+msgid "xBEEKAYRANDEEx's DoomRLA Pickups"
+msgstr ""
+
+#: modules/useful_links.lua:40
+msgid "Heathen's Maze For Heretic - Craneo"
+msgstr ""
+
+#: modules/useful_links.lua:45
+msgid "mridlen's Realm667 Monsters and Weapons"
+msgstr ""
+
+#: modules/useful_links.lua:50
+msgid "Simon-v's Jukebox"
+msgstr ""
+
+#: modules/useful_links.lua:55
+msgid "SilentZorah's Jukebox - Craneo"
+msgstr ""
+
+#: modules/useful_links.lua:60
+msgid "MsrSgtShooterPerson's Delta Resource Pack"
+msgstr ""
+
+#: modules/useful_links.lua:68
+msgid "Source Ports"
+msgstr ""
+
+#: modules/useful_links.lua:77
+msgid "ZDoom Family (GZDoom, LZDoom, ZDoom)"
+msgstr ""
+
+#: modules/useful_links.lua:82
+msgid "EDGE-Classic (EDGE fork)"
+msgstr ""
+
+#: modules/useful_links.lua:87
+msgid "DSDA-Doom (PrBoom fork)"
+msgstr ""
+
+#: modules/useful_links.lua:92
+msgid "Eternity Engine"
+msgstr ""
+
+#: modules/useful_links.lua:97
+msgid "k8vavoom (Vavoom fork)"
+msgstr ""
+
+#: modules/useful_links.lua:102
+msgid "PrBoomX (PrBoom fork)"
+msgstr ""
+
+#: modules/useful_links.lua:107
+msgid "Doom Retro"
+msgstr ""
+
+#: modules/useful_links.lua:112
+msgid "Helion"
+msgstr ""
+
+#: modules/useful_links.lua:117
+msgid "Woof (WinMBF fork)"
+msgstr ""
+
 #: modules/wolf/miscellaneous.lua:25
 msgid "x0.33"
 msgstr ""
@@ -5608,28 +5684,28 @@ msgstr ""
 msgid "Full Game"
 msgstr ""
 
-#: scripts/obsidian.lua:2288
+#: scripts/obsidian.lua:2335
 msgid ""
 "Choose which engine to build maps for:\n"
 "  id Tech 0: Wolfenstein 3D and similar games\n"
 "  id Tech 1: Doom and similar games\n"
 msgstr ""
 
-#: scripts/obsidian.lua:2299
+#: scripts/obsidian.lua:2346
 msgid "Choose which game to build maps for."
 msgstr ""
 
-#: scripts/obsidian.lua:2323
+#: scripts/obsidian.lua:2370
 msgid ""
 "Choose which port to build maps for.\n"
 "  Vanilla is the only option for id Tech 0; the remaining options are for id Tech 1.\n"
 msgstr ""
 
-#: scripts/obsidian.lua:2339
+#: scripts/obsidian.lua:2386
 msgid "Choose how many levels to create."
 msgstr ""
 
-#: scripts/obsidian.lua:2352
+#: scripts/obsidian.lua:2399
 msgid ""
 "The following values are game-specific:\n"
 "  Chex Quest 3: bazoik,spaceport,villa\n"
@@ -5889,35 +5965,35 @@ msgstr ""
 msgid "OBSIDIAN Glossary Viewer"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:996
+#: source_files/obsidian_main/m_lua.cc:1042
 msgid "Making"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1123
+#: source_files/obsidian_main/m_lua.cc:1169
 msgid "Using"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1124
+#: source_files/obsidian_main/m_lua.cc:1170
 msgid "Preview Not Available"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1526
+#: source_files/obsidian_main/m_lua.cc:1573
 msgid "[ ERROR ]"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1530
+#: source_files/obsidian_main/m_lua.cc:1577
 msgid "Script Error: "
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1884
+#: source_files/obsidian_main/m_lua.cc:1931
 msgid "ob_print_reference: Error creating REFERENCE.txt!\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1894
+#: source_files/obsidian_main/m_lua.cc:1941
 msgid "ob_print_reference_json: Error printing json reference!\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1903
+#: source_files/obsidian_main/m_lua.cc:1950
 msgid "Script Error"
 msgstr ""
 
@@ -6581,66 +6657,66 @@ msgid ""
 "Other themes listed are game-specific."
 msgstr ""
 
-#: source_files/obsidian_main/ui_module.cc:291
+#: source_files/obsidian_main/ui_module.cc:321
 msgid "Use Slider Value"
 msgstr ""
 
-#: source_files/obsidian_main/ui_module.cc:896
+#: source_files/obsidian_main/ui_module.cc:945
 msgid "Enter Value:"
 msgstr ""
 
-#: source_files/obsidian_main/ui_module.cc:1652
+#: source_files/obsidian_main/ui_module.cc:1710
 msgid "Other"
 msgstr ""
 
-#: source_files/obsidian_main/ui_module.cc:1654
+#: source_files/obsidian_main/ui_module.cc:1712
 msgid "Debug"
 msgstr ""
 
-#: source_files/obsidian_main/ui_module.cc:1656
+#: source_files/obsidian_main/ui_module.cc:1714
 msgid "Experimental"
 msgstr ""
 
-#: source_files/obsidian_main/ui_module.cc:1658
+#: source_files/obsidian_main/ui_module.cc:1716
 msgid "Links"
 msgstr ""
 
-#: source_files/obsidian_main/ui_window.cc:80
+#: source_files/obsidian_main/ui_window.cc:90
 msgid "File/Options"
 msgstr ""
 
-#: source_files/obsidian_main/ui_window.cc:81
+#: source_files/obsidian_main/ui_window.cc:91
 msgid "File/Theme"
 msgstr ""
 
-#: source_files/obsidian_main/ui_window.cc:82
+#: source_files/obsidian_main/ui_window.cc:92
 msgid "File/Set Seed"
 msgstr ""
 
-#: source_files/obsidian_main/ui_window.cc:83
+#: source_files/obsidian_main/ui_window.cc:93
 msgid "File/Config Manager"
 msgstr ""
 
-#: source_files/obsidian_main/ui_window.cc:84
+#: source_files/obsidian_main/ui_window.cc:94
 msgid "Help/About"
 msgstr ""
 
-#: source_files/obsidian_main/ui_window.cc:85
+#: source_files/obsidian_main/ui_window.cc:95
 msgid "Help/View Logs"
 msgstr ""
 
-#: source_files/obsidian_main/ui_window.cc:86
+#: source_files/obsidian_main/ui_window.cc:96
 msgid "Help/Glossary"
 msgstr ""
 
-#: source_files/obsidian_main/ui_window.cc:87
+#: source_files/obsidian_main/ui_window.cc:97
 msgid "Help/ "
 msgstr ""
 
-#: source_files/obsidian_main/ui_window.cc:88
+#: source_files/obsidian_main/ui_window.cc:98
 msgid "Help/Tutorial"
 msgstr ""
 
-#: source_files/obsidian_main/ui_window.cc:89
+#: source_files/obsidian_main/ui_window.cc:99
 msgid "Surprise Me/Go"
 msgstr ""
