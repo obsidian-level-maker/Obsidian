@@ -199,6 +199,7 @@ target_include_directories(obsidian SYSTEM PRIVATE source_files/ajbsp)
 target_include_directories(obsidian SYSTEM PRIVATE source_files/ajparse)
 target_include_directories(
   obsidian SYSTEM PRIVATE source_files/filename_formatter
+                          ${CMAKE_CURRENT_BINARY_DIR}/obsidian-include
 )
 if(NOT CONSOLE_ONLY AND NOT HAIKU)
   target_include_directories(obsidian SYSTEM PRIVATE source_files/fltk)
@@ -278,14 +279,8 @@ if(UNIX)
       )
     else()
       target_link_libraries(
-        obsidian
-        PRIVATE ajbsp
-                ajparse
-                filename_formatter
-                miniz
-                libluajit
-                physfs-static
-                obsidian_slump
+        obsidian PRIVATE filename_formatter miniz libluajit physfs-static
+                         obsidian_zdbsp obsidian_slump
       )
     endif()
   elseif(${CMAKE_SYSTEM} MATCHES "BSD")
@@ -304,14 +299,8 @@ if(UNIX)
       )
     else()
       target_link_libraries(
-        obsidian
-        PRIVATE ajbsp
-                ajparse
-                filename_formatter
-                miniz
-                libluajit
-                physfs-static
-                obsidian_slump
+        obsidian PRIVATE filename_formatter miniz libluajit physfs-static
+                         obsidian_zdbsp obsidian_slump
       )
     endif()
   elseif(HAIKU)
@@ -374,22 +363,25 @@ else()
     )
   else()
     target_link_libraries(
-      obsidian
-      PRIVATE ajbsp
-              ajparse
-              filename_formatter
-              miniz
-              libluajit
-              physfs-static
-              obsidian_slump
+      obsidian PRIVATE filename_formatter miniz libluajit physfs-static
+                       obsidian_zdbsp obsidian_slump
     )
   endif()
 endif()
 
-install(TARGETS obsidian RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
+if(OBSIDIAN_INSTALL_STANDARD_LOCATION)
+  set(INSTALL_BASEDIR "${CMAKE_INSTALL_PREFIX}/share/obsidian")
+  install(FILES misc/obsidian.desktop
+          DESTINATION "${CMAKE_INSTALL_PREFIX}/share/applications"
+  )
+else()
+  set(INSTALL_BASEDIR "${CMAKE_INSTALL_PREFIX}")
+endif()
+
+install(TARGETS obsidian RUNTIME DESTINATION ${INSTALL_BASEDIR}
                                  CONFIGURATIONS Release
 )
-install(TARGETS qsavetex RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/tools
+install(TARGETS qsavetex RUNTIME DESTINATION ${INSTALL_BASEDIR}/tools
                                  CONFIGURATIONS Release
 )
 install(
@@ -403,6 +395,6 @@ install(
             scripts
             theme
             tools
-  DESTINATION ${CMAKE_INSTALL_PREFIX}
+  DESTINATION ${INSTALL_BASEDIR}
   CONFIGURATIONS Release
 )
