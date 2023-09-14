@@ -443,8 +443,8 @@ class UI_OptionsWin : public Fl_Window {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
         if (that->opt_limit_break->value()) {
             // clang-format off
-            if (fl_choice("%s", 
-                        _("Cancel"), 
+            if (fl_choice("%s",
+                        _("Cancel"),
                         _("Yes, break Obsidian"), 0,
                 _("WARNING! This option will allow you to manually enter values in excess of the \n(usually) stable slider limits for Obsidian.\nAny bugs, crashes, or errors as a result of this will not be addressed by the developers.\nYou must select Yes for this option to be applied."))) {
                 // clang-format on
