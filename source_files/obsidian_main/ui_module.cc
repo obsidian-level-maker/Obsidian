@@ -95,9 +95,8 @@ void UI_Module::AddHeader(std::string opt, std::string label, int gap) {
 
     UI_RHeader *rhead = new UI_RHeader(nx, ny + kf_h(15), nw * .95, kf_h(24));
 
-    rhead->mod_label = new Fl_Box(
-        rhead->x(), rhead->y(),
-        rhead->w() * .95, kf_h(24), "");
+    rhead->mod_label =
+        new Fl_Box(rhead->x(), rhead->y(), rhead->w() * .95, kf_h(24), "");
     rhead->mod_label->copy_label(label.c_str());
     rhead->mod_label->align((FL_ALIGN_CENTER | FL_ALIGN_INSIDE | FL_ALIGN_CLIP));
     rhead->mod_label->labelfont(font_style + 1);
@@ -356,15 +355,15 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
     oldpos = 0;
     pos = 0;
 #ifdef __APPLE__
-        setlocale(LC_NUMERIC, "C");
+    setlocale(LC_NUMERIC, "C");
 #elif __unix__
 #ifndef __linux__
-        setlocale(LC_NUMERIC, "C");
+    setlocale(LC_NUMERIC, "C");
 #else
-        std::setlocale(LC_NUMERIC, "C");
+    std::setlocale(LC_NUMERIC, "C");
 #endif
 #else
-        std::setlocale(LC_NUMERIC, "C");
+    std::setlocale(LC_NUMERIC, "C");
 #endif
 
     while (pos != std::string::npos) {
@@ -397,15 +396,15 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
         }
     }
 #ifdef __APPLE__
-        setlocale(LC_NUMERIC, numeric_locale.c_str());
+    setlocale(LC_NUMERIC, numeric_locale.c_str());
 #elif __unix__
 #ifndef __linux__
-        setlocale(LC_NUMERIC, numeric_locale.c_str());
+    setlocale(LC_NUMERIC, numeric_locale.c_str());
 #else
-        std::setlocale(LC_NUMERIC, numeric_locale.c_str());
+    std::setlocale(LC_NUMERIC, numeric_locale.c_str());
 #endif
 #else
-        std::setlocale(LC_NUMERIC, numeric_locale.c_str());
+    std::setlocale(LC_NUMERIC, numeric_locale.c_str());
 #endif
 
     rsl->cb_data = new opt_change_callback_data_t;
@@ -942,7 +941,8 @@ void UI_Module::callback_ManualEntry(Fl_Widget *w, void *data) {
 
 tryagain:
 
-    const char *value_buf = fl_input(_("Enter Value:"), float_buf.c_str());
+    const char *value_buf =
+        fl_input("%s", float_buf.c_str(), _("Enter Value:"));
 
     // cancelled?
     if (!value_buf) {
