@@ -2,6 +2,7 @@
 Name=Obsidian Level Maker
 Comment=Generate random levels for classic FPS games (DOOM etc)
 Exec=/usr/share/obsidian/obsidian
+Path=/usr/share/obsidian
 Icon=obsidian
 Terminal=false
 Type=Application
