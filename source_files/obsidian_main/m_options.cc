@@ -517,8 +517,8 @@ class UI_OptionsWin : public Fl_Window {
         that->opt_current_output_path->copy_label(blanker.c_str());
         that->opt_current_output_path->redraw_label();
         that->opt_current_output_path->copy_label(
-            fmt::format("{}: {}", _("Current Path"),
-                        BestDirectory().generic_string())
+            StringFormat("%s: %s", _("Current Path"),
+                         BestDirectory().u8string().c_str())
                 .c_str());
         that->opt_current_output_path->redraw_label();
     }

@@ -246,11 +246,6 @@ if(UNIX)
   endif()
 endif()
 
-target_link_libraries(
-  obsidian PRIVATE fmt::fmt-header-only hedley::hedley
-                   spdlog::spdlog_header_only
-)
-
 # Copies executables to local install directory after build
 add_custom_command(
   TARGET obsidian
@@ -284,19 +279,8 @@ if(UNIX)
       )
     else()
       target_link_libraries(
-<<<<<<< HEAD
-        obsidian
-        PRIVATE ajbsp
-                ajparse
-                filename_formatter
-                miniz
-                libluajit
-                physfs-static
-                obsidian_slump
-=======
         obsidian PRIVATE filename_formatter miniz libluajit physfs-static
                          obsidian_zdbsp obsidian_slump
->>>>>>> 6ee6cbd0e (format and allow customizing output dir more)
       )
     endif()
   elseif(${CMAKE_SYSTEM} MATCHES "BSD")
@@ -315,19 +299,8 @@ if(UNIX)
       )
     else()
       target_link_libraries(
-<<<<<<< HEAD
-        obsidian
-        PRIVATE ajbsp
-                ajparse
-                filename_formatter
-                miniz
-                libluajit
-                physfs-static
-                obsidian_slump
-=======
         obsidian PRIVATE filename_formatter miniz libluajit physfs-static
                          obsidian_zdbsp obsidian_slump
->>>>>>> 6ee6cbd0e (format and allow customizing output dir more)
       )
     endif()
   elseif(HAIKU)
@@ -357,11 +330,7 @@ if(UNIX)
                 libluajit
                 physfs-static
                 obsidian_slump
-<<<<<<< HEAD
                 fontconfig
-=======
-                ${FONTCONFIG}
->>>>>>> 6ee6cbd0e (format and allow customizing output dir more)
                 pthread
       )
     else()
@@ -394,19 +363,8 @@ else()
     )
   else()
     target_link_libraries(
-<<<<<<< HEAD
-      obsidian
-      PRIVATE ajbsp
-              ajparse
-              filename_formatter
-              miniz
-              libluajit
-              physfs-static
-              obsidian_slump
-=======
       obsidian PRIVATE filename_formatter miniz libluajit physfs-static
                        obsidian_zdbsp obsidian_slump
->>>>>>> 6ee6cbd0e (format and allow customizing output dir more)
     )
   endif()
 endif()
