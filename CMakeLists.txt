@@ -384,6 +384,9 @@ endif()
 
 if(OBSIDIAN_INSTALL_STANDARD_LOCATION)
   set(INSTALL_BASEDIR "${CMAKE_INSTALL_PREFIX}/share/obsidian")
+  install(FILES misc/obsidian.desktop
+          DESTINATION "${CMAKE_INSTALL_PREFIX}/share/applications"
+  )
 else()
   set(INSTALL_BASEDIR "${CMAKE_INSTALL_PREFIX}")
 endif()
