@@ -199,6 +199,7 @@ target_include_directories(obsidian SYSTEM PRIVATE source_files/ajbsp)
 target_include_directories(obsidian SYSTEM PRIVATE source_files/ajparse)
 target_include_directories(
   obsidian SYSTEM PRIVATE source_files/filename_formatter
+                          ${CMAKE_CURRENT_BINARY_DIR}/obsidian-include
 )
 if(NOT CONSOLE_ONLY AND NOT HAIKU)
   target_include_directories(obsidian SYSTEM PRIVATE source_files/fltk)
@@ -245,6 +246,11 @@ if(UNIX)
   endif()
 endif()
 
+target_link_libraries(
+  obsidian PRIVATE fmt::fmt-header-only hedley::hedley
+                   spdlog::spdlog_header_only
+)
+
 # Copies executables to local install directory after build
 add_custom_command(
   TARGET obsidian
@@ -278,6 +284,7 @@ if(UNIX)
       )
     else()
       target_link_libraries(
+<<<<<<< HEAD
         obsidian
         PRIVATE ajbsp
                 ajparse
@@ -286,6 +293,10 @@ if(UNIX)
                 libluajit
                 physfs-static
                 obsidian_slump
+=======
+        obsidian PRIVATE filename_formatter miniz libluajit physfs-static
+                         obsidian_zdbsp obsidian_slump
+>>>>>>> 6ee6cbd0e (format and allow customizing output dir more)
       )
     endif()
   elseif(${CMAKE_SYSTEM} MATCHES "BSD")
@@ -304,6 +315,7 @@ if(UNIX)
       )
     else()
       target_link_libraries(
+<<<<<<< HEAD
         obsidian
         PRIVATE ajbsp
                 ajparse
@@ -312,6 +324,10 @@ if(UNIX)
                 libluajit
                 physfs-static
                 obsidian_slump
+=======
+        obsidian PRIVATE filename_formatter miniz libluajit physfs-static
+                         obsidian_zdbsp obsidian_slump
+>>>>>>> 6ee6cbd0e (format and allow customizing output dir more)
       )
     endif()
   elseif(HAIKU)
@@ -341,7 +357,11 @@ if(UNIX)
                 libluajit
                 physfs-static
                 obsidian_slump
+<<<<<<< HEAD
                 fontconfig
+=======
+                ${FONTCONFIG}
+>>>>>>> 6ee6cbd0e (format and allow customizing output dir more)
                 pthread
       )
     else()
@@ -374,6 +394,7 @@ else()
     )
   else()
     target_link_libraries(
+<<<<<<< HEAD
       obsidian
       PRIVATE ajbsp
               ajparse
@@ -382,14 +403,24 @@ else()
               libluajit
               physfs-static
               obsidian_slump
+=======
+      obsidian PRIVATE filename_formatter miniz libluajit physfs-static
+                       obsidian_zdbsp obsidian_slump
+>>>>>>> 6ee6cbd0e (format and allow customizing output dir more)
     )
   endif()
 endif()
 
-install(TARGETS obsidian RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
+if(OBSIDIAN_INSTALL_STANDARD_LOCATION)
+  set(INSTALL_BASEDIR "${CMAKE_INSTALL_PREFIX}/share/obsidian")
+else()
+  set(INSTALL_BASEDIR "${CMAKE_INSTALL_PREFIX}")
+endif()
+
+install(TARGETS obsidian RUNTIME DESTINATION ${INSTALL_BASEDIR}
                                  CONFIGURATIONS Release
 )
-install(TARGETS qsavetex RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/tools
+install(TARGETS qsavetex RUNTIME DESTINATION ${INSTALL_BASEDIR}/tools
                                  CONFIGURATIONS Release
 )
 install(
@@ -403,6 +434,6 @@ install(
             scripts
             theme
             tools
-  DESTINATION ${CMAKE_INSTALL_PREFIX}
+  DESTINATION ${INSTALL_BASEDIR}
   CONFIGURATIONS Release
 )
