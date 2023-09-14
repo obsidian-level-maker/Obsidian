@@ -443,9 +443,10 @@ class UI_OptionsWin : public Fl_Window {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
         if (that->opt_limit_break->value()) {
             // clang-format off
-            if (fl_choice(_("WARNING! This option will allow you to manually enter values in excess of the \n(usually) stable slider limits for Obsidian.\nAny bugs, crashes, or errors as a result of this will not be addressed by the developers.\nYou must select Yes for this option to be applied."),
-                          _("Cancel"), 
-                          _("Yes, break Obsidian"), 0)) {
+            if (fl_choice("%s",
+                        _("Cancel"),
+                        _("Yes, break Obsidian"), 0,
+                _("WARNING! This option will allow you to manually enter values in excess of the \n(usually) stable slider limits for Obsidian.\nAny bugs, crashes, or errors as a result of this will not be addressed by the developers.\nYou must select Yes for this option to be applied."))) {
                 // clang-format on
                 limit_break = true;
             } else {
@@ -543,10 +544,13 @@ class UI_OptionsWin : public Fl_Window {
 #endif
         UI_OptionsWin *that = (UI_OptionsWin *)data;
         std::string blanker;
-        blanker.append(250,' ');
+        blanker.append(250, ' ');
         that->opt_current_output_path->copy_label(blanker.c_str());
         that->opt_current_output_path->redraw_label();
-        that->opt_current_output_path->copy_label(fmt::format("{}: {}", _("Current Path"), BestDirectory().generic_string()).c_str());
+        that->opt_current_output_path->copy_label(
+            fmt::format("{}: {}", _("Current Path"),
+                        BestDirectory().generic_string())
+                .c_str());
         that->opt_current_output_path->redraw_label();
     }
 };
@@ -573,8 +577,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     Fl_Box *heading;
 
-    opt_language =
-        new UI_CustomMenu(cx + W * .38, cy, listwidth, kf_h(24), "");
+    opt_language = new UI_CustomMenu(cx + W * .38, cy, listwidth, kf_h(24), "");
     opt_language->copy_label(_("Language: "));
     opt_language->align(FL_ALIGN_LEFT);
     opt_language->callback(callback_Language, this);
@@ -633,9 +636,9 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     cy += opt_default_output_path->h() + y_step;
 
-    opt_current_output_path = new Fl_Box(
-        cx, cy, W - cx - pad, kf_h(36), "");
-    opt_current_output_path->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER | FL_ALIGN_WRAP);
+    opt_current_output_path = new Fl_Box(cx, cy, W - cx - pad, kf_h(36), "");
+    opt_current_output_path->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER |
+                                   FL_ALIGN_WRAP);
     opt_current_output_path->visible_focus(0);
     opt_current_output_path->color(BUTTON_COLOR);
     opt_current_output_path->labelfont(font_style);
@@ -697,7 +700,8 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     cy += opt_mature_words->h() + y_step * .5;
 
-    opt_backups = new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24), "");
+    opt_backups =
+        new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24), "");
     opt_backups->copy_label(_(" Create Backups"));
     opt_backups->value(create_backups ? 1 : 0);
     opt_backups->callback(callback_Backups, this);
@@ -707,7 +711,8 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     cy += opt_backups->h() + y_step * .5;
 
-    opt_overwrite = new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24), "");
+    opt_overwrite =
+        new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24), "");
     opt_overwrite->copy_label(_(" Overwrite File Warning"));
     opt_overwrite->value(overwrite_warning ? 1 : 0);
     opt_overwrite->callback(callback_Overwrite, this);
@@ -717,7 +722,8 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     cy += opt_overwrite->h() + y_step * .5;
 
-    opt_debug = new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24), "");
+    opt_debug =
+        new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24), "");
     opt_debug->copy_label(_(" Debugging Messages"));
     opt_debug->value(debug_messages ? 1 : 0);
     opt_debug->callback(callback_Debug, this);
@@ -727,7 +733,8 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     cy += opt_debug->h() + y_step * .5;
 
-    opt_limit_break = new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24), "");
+    opt_limit_break =
+        new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24), "");
     opt_limit_break->copy_label(_(" Ignore Slider Limits"));
     opt_limit_break->value(limit_break ? 1 : 0);
     opt_limit_break->callback(callback_LimitBreak, this);
