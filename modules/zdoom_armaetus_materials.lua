@@ -2672,6 +2672,46 @@ brightmap texture SDOM_WL2
 {
   map SDMWL2BR
 }
+
+brightmap texture SD_GTHW1
+{
+  map SDGHW1BR
+}
+
+brightmap texture SD_GTWL1
+{ 
+  map SDGTL1BR
+}
+
+brightmap texture SD_GTWL2
+{ 
+  map SDGTL2BR
+}
+
+brightmap texture SD_GTWL3
+{ 
+  map SDGTL3BR
+}
+
+brightmap texture SD_GTWL4
+{ 
+  map SDGTL4BR
+}
+
+brightmap texture SD_TWDL1
+{
+  map SDTDL1BR
+}
+
+brightmap texture SD_TWDL2
+{
+  map SDTDL2BR
+}
+
+brightmap texture SD_TWDL3
+{
+  map SDTDL3BR
+}
 ]]
 
 -- aliases - when you're too lazy to write down wall and flat names in every
