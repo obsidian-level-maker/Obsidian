@@ -1675,14 +1675,13 @@ ARMAETUS_MATERIALS = {
   SD_TWDW3 = { t="SD_TWDW3", f="SD_TWDF3"},
   SD_TWDW4 = { t="SD_TWDW4", f="SD_TWDF4"},
   SD_TWDW5 = { t="SD_TWDW5", f="SD_TWDF5"},
-  SD_TWDW6 = { t="SD_TWDW5", f="SD_TWDF6"},
+  SD_TWDW6 = { t="SD_TWDW6", f="SD_TWDF1"},
   -- flats
   SD_TWDF1 = { t="SD_TWDW1", f="SD_TWDF1"},
   SD_TWDF2 = { t="SD_TWDW2", f="SD_TWDF2"},
   SD_TWDF3 = { t="SD_TWDW3", f="SD_TWDF3"},
-  SD_TWDF4 = { t="SD_TWDW4", f="SD_TWDF4"},
+  SD_TWDF4 = { t="SD_TWDW6", f="SD_TWDF4"},
   SD_TWDF5 = { t="SD_TWDW5", f="SD_TWDF5"},
-  SD_TWDF6 = { t="SD_TWDW5", f="SD_TWDF6"},
   -- lights
   SD_TWDL1 = { t="SD_TWDL1", f="SD_TWDF6"},
   SD_TWDL2 = { t="SD_TWDL2", f="SD_TWDF5"},
