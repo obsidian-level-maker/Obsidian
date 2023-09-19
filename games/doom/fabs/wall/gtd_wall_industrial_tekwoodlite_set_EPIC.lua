@@ -92,7 +92,7 @@ PREFABS.Wall_gtd_tekwoodlite_3b =
 PREFABS.Wall_gtd_tekwoodlite_3_diag =
 {
   template = "Wall_gtd_tekwoodlite_1a",
-  map = "MAP09"
+  map = "MAP09",
 
   group = "gtd_tekwoodlite_3",
 
