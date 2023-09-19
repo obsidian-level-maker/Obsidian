@@ -39,7 +39,7 @@ PREFABS.Pic_gtd_power_plant_red =
   group = "gtd_power_plant_red_set",
 
   x_fit = { 20,24 , 232,236 },
-  z_fit = { 44,108 }
+  z_fit = { 58,108 }
 }
 
 PREFABS.Pic_gtd_power_plant_red_3x =
@@ -52,5 +52,5 @@ PREFABS.Pic_gtd_power_plant_red_3x =
   group = "gtd_power_plant_red_set",
 
   x_fit = { 20,24 , 360,364 },
-  z_fit = { 44,108 }
+  z_fit = { 58,108 }
 }
