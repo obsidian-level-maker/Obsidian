@@ -173,6 +173,8 @@ std::string selected_lang =
 
 game_interface_c *game_object = NULL;
 
+extern bool ExtractPresetData(FILE *fp, std::string &buf);
+
 #ifndef CONSOLE_ONLY
 Fl_Pixmap *clippy;
 // Tutorial stuff
@@ -272,6 +274,27 @@ static void main_win_apply_addon_CB(Fl_Widget *w, void *data) {
     }
 
     main_action = MAIN_HARD_RESTART;
+}
+
+static void main_win_preset_CB(Fl_Widget *w, void *data) {
+    std::filesystem::path *preset = (std::filesystem::path *)data;
+
+    // adapted from our Config Manager Load/Use callbacks
+    FILE *fp = fl_fopen(preset->generic_u8string().c_str(), "rb");
+    if (!fp) {
+        DLG_ShowError(_("Cannot open: %s\n\n%s"),
+                        preset->filename().u8string().c_str(),
+                        strerror(errno));
+        return;
+    }
+    std::string text_buf;
+    if (!ExtractPresetData(fp, text_buf)) {
+        DLG_ShowError(_("No config found in file."));
+        fclose(fp);
+        return;
+    }
+    fclose(fp);
+    Cookie_LoadString(text_buf, false /* keep_seed */);
 }
 
 static void main_win_clippy_CB(Fl_Widget *w, void *data) {
@@ -1718,6 +1741,8 @@ softrestart:;
 
         VFS_ParseCommandLine();
 
+        VFS_ScanForPresets();
+
 // create the main window
 #ifndef CONSOLE_ONLY
         fl_register_images();  // Needed for Unix window icon and tutorial
@@ -1854,7 +1879,7 @@ softrestart:;
                                         FL_MENU_INACTIVE);
             } else {
                 main_win->menu_bar->add(_("Addons/Restart and Apply Changes"),
-                                        nullptr, main_win_apply_addon_CB, nullptr, 0);
+                    nullptr, main_win_apply_addon_CB, nullptr, 0);
                 for (int i = 0; i < all_addons.size(); i++) {
                     std::string addon_entry = _("Addons/");
                     addon_entry.append(all_addons[i].name.filename().string());
@@ -1863,6 +1888,22 @@ softrestart:;
                         (void *)&all_addons[i],
                         FL_MENU_TOGGLE |
                             (all_addons[i].enabled ? FL_MENU_VALUE : 0));
+                }
+            }
+            if (all_presets.size() == 0) {
+                main_win->menu_bar->add(_("Presets/No *.txt preset files"), nullptr, nullptr, nullptr,
+                                        FL_MENU_INACTIVE);
+                main_win->menu_bar->add(_("Presets/found in the \\/presets directory!"), nullptr, nullptr, nullptr,
+                                        FL_MENU_INACTIVE);
+            } else {
+                main_win->menu_bar->add(_("Presets/Note: Selecting a Preset will immediately apply it!",),
+                        nullptr, nullptr, nullptr, FL_MENU_INACTIVE);
+                for (int i = 0; i < all_presets.size(); i++) {
+                    std::string preset_entry = _("Presets/");
+                    preset_entry.append(all_presets[i].stem().string());
+                    main_win->menu_bar->add(
+                        preset_entry.c_str(), nullptr, main_win_preset_CB,
+                        (void *)&all_presets[i], 0);
                 }
             }
             main_win->menu_bar->add(_("Summon Clippy"), nullptr, main_win_clippy_CB);
