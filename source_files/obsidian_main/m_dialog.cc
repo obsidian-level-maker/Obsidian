@@ -279,7 +279,8 @@ std::filesystem::path DLG_OutputFilename(const char *ext, const char *preset) {
             break;  // OK
     }
 
-    std::filesystem::path src_name = std::filesystem::u8path(chooser.filename());
+    std::filesystem::path src_name =
+        std::filesystem::u8path(chooser.filename());
 
     std::filesystem::path dir_name = src_name.parent_path();
 
@@ -309,21 +310,23 @@ std::filesystem::path DLG_OutputFilename(const char *ext, const char *preset) {
 void DLG_EditSeed(void) {
     ;
 
-    const char *user_buf =
-        fl_input(_("Enter New Seed Number or Phrase:"),
-                 string_seed.empty() ? std::to_string(next_rand_seed).c_str()
-                                     : string_seed.c_str());
+    int user_response;
+    Fl_String user_buf = fl_input_str(
+        user_response, 0 /* limit */, "%s",
+        string_seed.empty() ? std::to_string(next_rand_seed).c_str()
+                            : string_seed.c_str(),
+        _("Enter New Seed Number or Phrase:"));
 
     // cancelled?
-    if (!user_buf) {
+    if (user_response < 0) {
         return;
     }
 
-    std::string word = user_buf;
+    std::string word = {user_buf.c_str(), static_cast<size_t>(user_buf.size())};
     try {
         for (long unsigned int i = 0; i < word.size(); i++) {
             char character = word.at(i);
-            if (!std::isdigit(character)) {
+            if (not std::isdigit(character)) {
                 throw std::runtime_error(
                     // clang-format off
                     _("String contains non-digits. Will process as string\n"));
@@ -613,7 +616,8 @@ tryagain:;
             break;  // OK
     }
 
-    std::filesystem::path filename = std::filesystem::u8path(chooser.filename());
+    std::filesystem::path filename =
+        std::filesystem::u8path(chooser.filename());
 
     // add an extension if missing
     if (!filename.has_extension()) {
@@ -736,9 +740,9 @@ UI_GlossaryViewer::UI_GlossaryViewer(int W, int H, const char *l)
 UI_GlossaryViewer::~UI_GlossaryViewer() {}
 
 void UI_GlossaryViewer::ReadGlossary() {
-
-    std::filesystem::path glossary =
-        std::filesystem::u8path(StringFormat("%s/language/%s.txt", install_dir.u8string().c_str(), selected_lang.c_str()));
+    std::filesystem::path glossary = std::filesystem::u8path(
+        StringFormat("%s/language/%s.txt", install_dir.u8string().c_str(),
+                     selected_lang.c_str()));
 
     if (!std::filesystem::exists(glossary)) {
         return;
