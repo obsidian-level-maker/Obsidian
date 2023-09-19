@@ -62,3 +62,43 @@ PREFABS.Wall_gtd_tekwoodlite_2_diag =
 
   where = "diagonal"
 }
+
+--
+
+PREFABS.Wall_gtd_tekwoodlite_3 =
+{
+  template = "Wall_gtd_tekwoodlite_1a",
+  map = "MAP07",
+
+  group = "gtd_tekwoodlite_3",
+
+  height = 96,
+  bound_z2 = 96,
+  z_fit = {71,72 , 88,90}
+}
+
+PREFABS.Wall_gtd_tekwoodlite_3b =
+{
+  template = "Wall_gtd_tekwoodlite_1a",
+  map = "MAP08",
+
+  group = "gtd_tekwoodlite_3",
+
+  height = 96,
+  bound_z2 = 96,
+  z_fit = {71,72 , 88,90}
+}
+
+PREFABS.Wall_gtd_tekwoodlite_3_diag =
+{
+  template = "Wall_gtd_tekwoodlite_1a",
+  map = "MAP09",
+
+  group = "gtd_tekwoodlite_3",
+
+  where = "diagonal",
+
+  height = 96,
+  bound_z2 = 96,
+  z_fit = {71,72 , 88,90}
+}

@@ -180,7 +180,7 @@ function PREFAB_CONTROL.fine_tune_filters()
         if GAME.THEMES[theme_name] then
           if GAME.THEMES[theme_name].wall_groups[WG] then
             GAME.THEMES[theme_name].wall_groups[WG] =
-            GAME.THEMES[theme_name].wall_groups[WG] * mult
+            GAME.THEMES[theme_name].wall_groups[WG] * 2
           end
         end
       end
@@ -188,7 +188,7 @@ function PREFAB_CONTROL.fine_tune_filters()
 
     for RT,mult in pairs(new_themes_multipliers) do
       if GAME.ROOM_THEMES[RT] then 
-        GAME.ROOM_THEMES[RT].prob = GAME.ROOM_THEMES[RT].prob * mult
+        GAME.ROOM_THEMES[RT].prob = GAME.ROOM_THEMES[RT].prob * 2
       end
     end
   end
