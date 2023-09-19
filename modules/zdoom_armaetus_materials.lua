@@ -2677,22 +2677,22 @@ brightmap texture SD_GTHW1
   map SDGHW1BR
 }
 
-brightmap texture SD_GTWL1
+brightmap texture SD_GTLW1
 { 
   map SDGTL1BR
 }
 
-brightmap texture SD_GTWL2
+brightmap texture SD_GTLW2
 { 
   map SDGTL2BR
 }
 
-brightmap texture SD_GTWL3
+brightmap texture SD_GTLW3
 { 
   map SDGTL3BR
 }
 
-brightmap texture SD_GTWL4
+brightmap texture SD_GTLW4
 { 
   map SDGTL4BR
 }
