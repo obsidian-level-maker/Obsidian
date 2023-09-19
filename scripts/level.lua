@@ -2624,6 +2624,7 @@ function Level_make_level(LEV)
   local retry_counter = 0
   local retry_target = PARAM.float_max_build_retries or 3
   local error_mat = assert(GAME.MATERIALS["_ERROR"])
+  local coverage_target = 0
 
   ::retryafterfailure::
 
@@ -2699,9 +2700,10 @@ function Level_make_level(LEV)
 
   res = Level_build_it(LEVEL, SEEDS)
 
-  if not LEVEL.is_linear then
-    if LEVEL.cur_coverage < LEVEL.min_coverage then
-    --or #LEVEL.rooms < LEVEL.min_rooms then
+  if coverage_target == 0 then coverage_target = LEVEL.min_coverage end
+
+  if not LEVEL.is_linear and not LEVEL.is_absurd then
+    if LEVEL.cur_coverage < coverage_target then
       res = "runt"
     end
 
@@ -2715,9 +2717,11 @@ function Level_make_level(LEV)
     end
   end
 
-  print("STUNTED LEVEL!\nCOVERAGE: " .. LEVEL.cur_coverage 
-  .. "\nMIN COVERAGE: " .. LEVEL.min_coverage .. "\nROOMS: " 
-  .. #LEVEL.rooms .. "\nMIN ROOMS: " .. LEVEL.min_rooms .. "\n")
+  if res == "runt" then
+    print("STUNTED LEVEL!\nCOVERAGE: " .. LEVEL.cur_coverage 
+    .. "\nMIN COVERAGE: " .. coverage_target .. "\nROOMS: " 
+    .. #LEVEL.rooms .. "\nMIN ROOMS: " .. LEVEL.min_rooms .. "\n")
+  end
 
   if res ~= "ok" then
     for _,k in pairs (LEVEL) do
@@ -2735,6 +2739,7 @@ function Level_make_level(LEV)
     if retry_counter > retry_target then
       error("Level failed to build after " .. retry_target .. " tries!\nReason: " .. res .. "\n")
     else
+      coverage_target = coverage_target * 0.75
       LEVEL = table.copy(LEV)
       SEEDS = Seed_init(LEVEL)
       print("RETRYING MAP " .. LEVEL.name)
