@@ -2704,14 +2704,14 @@ function Level_make_level(LEV)
     --or #LEVEL.rooms < LEVEL.min_rooms then
       res = "runt"
     end
+  end
 
-    if LEVEL.is_procedural_gotcha then
-      local exit_R = LEVEL.exit_room
-      local start_R = LEVEL.start_room
+  if LEVEL.is_procedural_gotcha then
+    local exit_R = LEVEL.exit_room
+    local start_R = LEVEL.start_room
 
-      if exit_R ~= start_R and start_R.svolume > exit_R.svolume then
-        res = "runt"
-      end
+    if exit_R ~= start_R and start_R.svolume > exit_R.svolume then
+      res = "runt"
     end
   end
 
