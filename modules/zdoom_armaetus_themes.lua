@@ -3325,10 +3325,10 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
-  hell_copper_steampunk = --45
+  hell_copper_steampunk = --55
   {
     env = "building",
-    prob = 45,
+    prob = 55,
 
     walls =
     {
@@ -3439,10 +3439,10 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
-  hell_AztecClay = --45
+  hell_AztecClay = --55
   {
     env = "building",
-    prob = 45,
+    prob = 55,
 
     walls =
     {
@@ -3534,10 +3534,10 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
-  hell_babylonian = --45
+  hell_babylonian = --55
   {
     env = "building",
-    prob = 45,
+    prob = 55,
 
     walls =
     {
