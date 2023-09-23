@@ -5305,10 +5305,10 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
-  urban_wood_lab = --20
+  urban_wood_lab = --40
   {
     env = "building",
-    prob = 20,
+    prob = 40,
 
     walls =
     {
