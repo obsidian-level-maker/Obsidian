@@ -7177,9 +7177,10 @@ ARMAETUS_THEMES =
       gtd_wall_tech_gothic_inset_engine = 20,
       gtd_wall_tech_gothic_inset_red_lite = 20,
       --
-      gtd_tekwoodlite_1 = 38,
-      gtd_tekwoodlite_2 = 38,
-      gtd_tekwoodlite_3 = 38
+      gtd_tekwoodlite_1 = 25,
+      gtd_tekwoodlite_2 = 25,
+      gtd_tekwoodlite_3 = 25,
+      gtd_tekwoodlite_pillar = 25
     },
 
     window_groups =
@@ -7675,9 +7676,10 @@ ARMAETUS_THEMES =
       gtd_wall_tech_gothic_inset_engine = 9,
       gtd_wall_tech_gothic_inset_red_lite = 9,
       --
-      gtd_tekwoodlite_1 = 38,
-      gtd_tekwoodlite_2 = 38,
-      gtd_tekwoodlite_3 = 38
+      gtd_tekwoodlite_1 = 25,
+      gtd_tekwoodlite_2 = 25,
+      gtd_tekwoodlite_3 = 25,
+      gtd_tekwoodlite_pillar = 25
     },
 
     window_groups =
