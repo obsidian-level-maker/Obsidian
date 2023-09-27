@@ -1909,7 +1909,10 @@ ARMAETUS_ANIMDEFS =
 	// Static screen
 	Texture NOISE1
 	allowdecals
-	range NOISE4 tics 1.5
+	pic NOISE1 tics 1.5
+	pic NOISE2 tics 1.5
+	pic NOISE3 tics 1.5
+	pic NOISE4 tics 1.5
 	
 	// Smaller static screen
 	Texture NOISE2A

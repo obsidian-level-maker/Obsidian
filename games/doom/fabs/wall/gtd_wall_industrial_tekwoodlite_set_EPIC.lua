@@ -102,3 +102,30 @@ PREFABS.Wall_gtd_tekwoodlite_3_diag =
   bound_z2 = 96,
   z_fit = {71,72 , 88,90}
 }
+
+--
+
+PREFABS.Wall_gtd_tekwoodlite_pillar_wl =
+{
+  template = "Wall_gtd_tekwoodlite_1a",
+  map = "MAP10",
+
+  group = "gtd_tekwoodlite_pillar",
+
+  height = 96,
+  bound_z2 = 95,
+  z_fit = "top"
+}
+
+PREFABS.Wall_gtd_tekwoodlite_pillar_diag =
+{
+  template = "Wall_gtd_tekwoodlite_1a",
+  map = "MAP11",
+
+  group = "gtd_tekwoodlite_pillar",
+  where = "diagonal",
+
+  height = 96,
+  bound_z2 = 95,
+  z_fit = "top" 
+}
