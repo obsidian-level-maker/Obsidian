@@ -3671,6 +3671,7 @@ DOOM.NAMES =
         ["I Don't Feel So Good"]=10,
         ["I Told You Not to Turn Around"]=10,
         ["I Ii II L"]=10,
+        ["It's Pants-Shitting Time!"]=10, --Negan
         ["Judgement"]=10,
         ["Killing Fields"]=10,
         ["Life's a Bitch, Then You Die"]=10,
@@ -3730,6 +3731,7 @@ DOOM.NAMES =
         ["You Are Already Dead"]=10,
         ["You'll Float Too"]=10,
         ["You'll See"]=10,
+        ["You Need Food... Badly!"]=10,
         ["Zone of Alienation"]=10,
 
         -- Armaetus adds names too
