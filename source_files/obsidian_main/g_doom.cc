@@ -1022,6 +1022,7 @@ namespace Doom {
 class game_interface_c : public ::game_interface_c {
    private:
     std::filesystem::path filename;
+    std::filesystem::path zip_filename;
 
    public:
     game_interface_c() : filename("") {}
@@ -1107,7 +1108,7 @@ bool Doom::game_interface_c::Start(const char *preset) {
     }
 
     if (ob_mod_enabled("compress_output")) {
-        std::filesystem::path zip_filename = filename;
+        zip_filename = filename;
         if (StringCaseCmp(current_port, "dsda") == 0) {
             zip_filename.replace_extension("zip");
         } else {
@@ -1208,9 +1209,16 @@ bool Doom::game_interface_c::Finish(bool build_ok) {
                     "Adding WAD to PK3 failed! Retaining original "
                     "WAD.\n");
                 ZIPF_CloseWrite();
+                std::filesystem::remove(zip_filename);
             } else {
-                ZIPF_CloseWrite();
-                std::filesystem::remove(filename);
+                if (!ZIPF_CloseWrite()) {
+                    LogPrintf(
+                    "Corrupt PK3! Retaining original WAD.\n");
+                    std::filesystem::remove(zip_filename);
+                }
+                else {
+                    std::filesystem::remove(filename);
+                }
             }
         }
     }
