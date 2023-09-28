@@ -29,7 +29,7 @@
 #include "hdr_lua.h"
 #include "headers.h"
 #include "images.h"
-#include "lib_file.h"
+
 #include "lib_pak.h"
 #include "lib_util.h"
 #include "lib_wad.h"

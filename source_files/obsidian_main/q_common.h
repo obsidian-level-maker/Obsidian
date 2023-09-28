@@ -163,14 +163,6 @@ struct dplane_t {
 };
 #pragma pack(pop)
 
-// Quake 3 format
-#pragma pack(push, 1)
-struct dplane3_t {
-    float normal[3];
-    float dist;
-};
-#pragma pack(pop)
-
 enum {
     // 0-2 are axial planes
     PLANE_X,

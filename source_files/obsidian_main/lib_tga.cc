@@ -27,7 +27,6 @@
 #include "lib_tga.h"
 
 #include "headers.h"
-#include "lib_file.h"
 #include "main.h"
 
 #ifdef HAVE_PHYSFS
@@ -76,11 +75,7 @@ tga_image_c *TGA_LoadImage(const char *path) {
 
     int length;
 
-#ifdef HAVE_PHYSFS
     byte *buffer = VFS_LoadFile(path, &length);
-#else
-    byte *buffer = FileLoad(path, &length);
-#endif
 
     if (!buffer) {
         return NULL;

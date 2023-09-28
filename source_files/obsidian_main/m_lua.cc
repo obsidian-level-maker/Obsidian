@@ -33,8 +33,7 @@
 #endif
 #include "hdr_lua.h"
 #include "headers.h"
-#include "lib_file.h"
-#include "lib_signal.h"
+
 #include "lib_util.h"
 #include "main.h"
 #include "physfs.h"

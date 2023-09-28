@@ -175,7 +175,7 @@ std::u32string StringToUTF32(const std::string& s)
   return converter.in(s);
 }
 
-std::string NumToString(long long unsigned int value) {
+std::string NumToString(unsigned long long int value) {
     std::string num_string;
     num_string.resize(50, ' ');
     static_cast<void>(std::to_chars(

@@ -23,7 +23,6 @@
 #include "hdr_lua.h"
 #include "hdr_ui.h"
 #include "headers.h"
-#include "lib_signal.h"
 #include "lib_util.h"
 #include "m_lua.h"
 #include "main.h"

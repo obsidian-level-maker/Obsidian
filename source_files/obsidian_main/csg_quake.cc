@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------
-//  CSG : QUAKE I, II and III
+//  CSG : QUAKE I and II
 //------------------------------------------------------------------------
 //
 //  OBSIDIAN Level Maker
@@ -31,7 +31,7 @@
 #endif
 #include "hdr_lua.h"
 #include "headers.h"
-#include "lib_file.h"
+
 #include "lib_util.h"
 #include "m_lua.h"
 #include "main.h"

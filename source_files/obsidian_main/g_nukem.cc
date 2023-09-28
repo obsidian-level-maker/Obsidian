@@ -31,7 +31,7 @@
 #endif
 #include "hdr_lua.h"
 #include "images.h"
-#include "lib_file.h"
+
 #include "lib_grp.h"
 #include "lib_util.h"
 #include "m_cookie.h"

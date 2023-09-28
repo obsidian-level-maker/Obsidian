@@ -24,7 +24,7 @@
 #endif
 #include "hdr_lua.h"
 #include "headers.h"
-#include "lib_file.h"
+
 #include "lib_util.h"
 #include "m_lua.h"
 #include "main.h"

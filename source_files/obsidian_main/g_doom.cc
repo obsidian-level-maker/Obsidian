@@ -29,7 +29,7 @@
 #ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
 #endif
-#include "lib_file.h"
+
 #include "lib_util.h"
 #include "lib_wad.h"
 #include "lib_zip.h"

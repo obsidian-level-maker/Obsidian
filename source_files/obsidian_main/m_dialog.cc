@@ -32,7 +32,7 @@
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
 #include "headers.h"
-#include "lib_file.h"
+
 #include "lib_util.h"
 #include "main.h"
 
