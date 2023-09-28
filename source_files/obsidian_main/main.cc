@@ -1876,7 +1876,7 @@ softrestart:;
                 main_win->menu_bar->add(_("Presets/found in the \\/presets directory!"), nullptr, nullptr, nullptr,
                                         FL_MENU_INACTIVE);
             } else {
-                main_win->menu_bar->add(_("Presets/Note: Selecting a Preset will immediately apply it!",),
+                main_win->menu_bar->add(_("Presets/Note: Selecting a Preset will immediately apply it!"),
                         nullptr, nullptr, nullptr, FL_MENU_INACTIVE);
                 for (int i = 0; i < all_presets.size(); i++) {
                     std::string preset_entry = _("Presets/");
