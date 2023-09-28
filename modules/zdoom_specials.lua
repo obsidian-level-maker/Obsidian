@@ -276,7 +276,7 @@ function ZDOOM_SPECIALS.do_special_stuff()
 
   local level_count = #GAME.levels
 
-  if PARAM.float_full_game_length then
+  if PARAM.float_full_game_length and OB_CONFIG.length == "full" then
     level_count = PARAM.float_full_game_length
   end
 
