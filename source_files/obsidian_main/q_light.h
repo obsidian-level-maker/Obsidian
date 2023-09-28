@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------
-//  QUAKE 1/2/3 LIGHTING
+//  QUAKE 1/2 LIGHTING
 //------------------------------------------------------------------------
 //
 //  OBSIDIAN Level Maker
@@ -47,14 +47,7 @@ class qLightmap_c {
     std::array<byte, 4> styles;
 
     // final offset in lightmap lump (if not flat)
-    // for Q3 this is the block number
     int offset;
-
-    // for Q3, position in light block
-    int lx, ly;
-
-    // for Q3, the matrix for computing coords
-    uv_matrix_c *lm_mat;
 
    public:
     qLightmap_c(int w, int h, int value = -1);
@@ -97,15 +90,6 @@ struct quake_light_t {
     int style;
 };
 
-// on-disk structure for Q3 light grid
-#pragma pack(push, 1)
-struct dlightgrid3_t {
-    std::array<byte, 3> ambientLight;
-    std::array<byte, 3> directedLight;
-    byte lat, lng;  // direction to light (angles)
-};
-#pragma pack(pop)
-
 /***** VARIABLES **********/
 
 extern std::vector<quake_light_t> qk_all_lights;
@@ -122,7 +106,6 @@ bool QLIT_ParseProperty(std::string key, std::string value);
 void QLIT_FreeLightmaps();
 
 void QLIT_BuildLightingLump(int lump, int max_size);
-void QLIT_BuildQ3Lighting(int lump, int max_size);
 
 void QLIT_LightAllFaces();
 

@@ -37,7 +37,6 @@
 #include "main.h"
 
 #include "m_lua.h"
-#include "miniz.h"
 
 std::filesystem::path last_directory;
 

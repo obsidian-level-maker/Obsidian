@@ -41,9 +41,7 @@
 
 double CLUSTER_SIZE = 128.0;
 
-double q3_default_tex_scale = 1.0 / 128.0;
-
-#define FACE_MAX_SIZE (qk_game < 3 ? 240 : 768)
+#define FACE_MAX_SIZE 240
 
 //------------------------------------------------------------------------
 //  NEW LOGIC
@@ -54,7 +52,6 @@ quake_leaf_c *qk_solid_leaf;
 
 std::vector<quake_face_c *> qk_all_faces;
 std::vector<quake_mapmodel_c *> qk_all_mapmodels;
-std::vector<quake_leaf_c *> qk_all_detail_models;  // Q3 only
 
 class quake_side_c {
    public:
@@ -394,8 +391,6 @@ quake_mapmodel_c::quake_mapmodel_c()
       firstface(0),
       numfaces(0),
       numleafs(0),
-      firstBrush(0),
-      numBrushes(0),
       light(64) {
     for (int i = 0; i < 6; i++) {
         nodes[i] = 0;
@@ -1027,10 +1022,6 @@ void quake_face_c::SetupMatrix() {
     // the default UV scaling
     float u = 1.0;
     float v = 1.0;
-
-    if (qk_game >= 3) {
-        u = v = q3_default_tex_scale;
-    }
 
     // texture property can override
     csg_property_set_c *props = CSG_LookupTexProps(texture.c_str());
@@ -1840,9 +1831,7 @@ static quake_node_c *CreateLeaf(region_c *R, int g /* gap */,
     quake_node_c *L_node = NULL;
     quake_leaf_c *L_leaf = NULL;
 
-    // Quake3 does things differently (liquids must be detail)
-
-    if (qk_game < 3 && gap->liquid) {
+    if (gap->liquid) {
         bool is_above = (R->TopZ(gap->liquid) > R->BottomZ(gap->top) - 1);
 
         // FIXME: in Q1/Q2, all lower leafs should get this medium
@@ -1853,7 +1842,7 @@ static quake_node_c *CreateLeaf(region_c *R, int g /* gap */,
             // the liquid covers the whole gap : don't need an extra leaf/node
             leaf->medium = medium;
 
-            if (qk_game >= 2) {
+            if (qk_game == 2) {
                 leaf->AddBrush(gap->liquid);
             }
 
@@ -1871,7 +1860,7 @@ static quake_node_c *CreateLeaf(region_c *R, int g /* gap */,
 
             L_leaf->bbox = leaf->bbox;
 
-            if (qk_game >= 2) {
+            if (qk_game == 2) {
                 L_leaf->AddBrush(gap->liquid);
             }
 
@@ -2371,103 +2360,6 @@ static void Detail_CreateFaces(csg_brush_c *B, leaf_map_t *touched_leafs) {
     }
 }
 
-static void FilterDetailBrushes() {
-    // find all the detail brushes, which so far have been
-    // completely ignored, and insert them into the leafs of our
-    // quakey BSP tree.  [ Quake 3 only ]
-
-    for (unsigned int k = 0; k < all_brushes.size(); k++) {
-        leaf_map_t touched_leafs;
-
-        csg_brush_c *B = all_brushes[k];
-
-        if ((B->bflags & BFLAG_Detail) && !B->link_ent) {
-            qk_bsp_root->FilterBrush(B, &touched_leafs);
-
-            ///  fprintf(stderr, "detail brush #%d touches %d leafs\n", (int)k,
-            ///  (int)touched_leafs.size());
-
-            Detail_CreateFaces(B, &touched_leafs);
-        }
-    }
-}
-
-static void Model_ProcessBrush(quake_leaf_c *mod, csg_brush_c *B) {
-    // create surfaces
-    if (!(B->bflags & BFLAG_NoDraw)) {
-        leaf_map_t touched;
-
-        touched[mod] = 1;
-
-        Detail_FloorOrCeilFace(B, true /* is_ceil */, &touched,
-                               true /* is_model */);
-        Detail_FloorOrCeilFace(B, false /* is_ceil */, &touched, true);
-
-        for (unsigned int k = 0; k < B->verts.size(); k++) {
-            Detail_SideFace(B, k, &touched, true /* is_model */);
-        }
-    }
-
-    // collision brush
-    if (!(B->bflags & BFLAG_NoClip)) {
-        mod->AddBrush(B);
-    }
-
-    // update mins and maxs
-    mod->bbox.AddPoint(B->min_x, B->min_y, B->b.z);
-    mod->bbox.AddPoint(B->max_x, B->max_y, B->t.z);
-}
-
-static void Model_ProcessEntity(csg_entity_c *E) {
-    std::string link_id = E->props.getStr("link_id");
-
-    if (link_id.empty()) {
-        return;  // not a model
-    }
-
-    E->props.Remove("link_id");
-
-    // create a container for the faces and brushes
-    // [ the Quake3 engine does a similar thing, using a leaf object ]
-    quake_leaf_c *leaf = new quake_leaf_c(MEDIUM_SOLID);
-
-    leaf->link_ent = E;
-
-    leaf->bbox.Begin();
-
-    // process all brushes associated with this entity
-    for (unsigned int i = 0; i < all_brushes.size(); i++) {
-        csg_brush_c *B = all_brushes[i];
-
-        if (B->link_ent == E) {
-            Model_ProcessBrush(leaf, B);
-        }
-    }
-
-    leaf->bbox.End();
-
-    // sanity check
-    if (leaf->faces.empty() && leaf->brushes.empty()) {
-        LogPrintf("WARNING: mapmodel for '%s' was empty.\n", E->id.c_str());
-
-        delete leaf;
-
-        // ensure entity is not added to final BSP file
-        E->id = std::string("nothing");
-        return;
-    }
-
-    qk_all_detail_models.push_back(leaf);
-}
-
-static void ProcessDetailModels() {
-    // create all the map-models  [ Quake 3 only ]
-
-    for (unsigned int i = 0; i < all_entities.size(); i++) {
-        Model_ProcessEntity(all_entities[i]);
-    }
-}
-
 void CSG_QUAKE_Build() {
     LogPrintf("QUAKE CSG...\n");
 
@@ -2489,7 +2381,7 @@ void CSG_QUAKE_Build() {
 
     CreateSides(GROUP);
 
-    if (qk_game >= 2) {
+    if (qk_game == 2) {
         CreateBrushes(GROUP);
     }
 
@@ -2506,12 +2398,6 @@ void CSG_QUAKE_Build() {
     }
 
     SYS_ASSERT(qk_bsp_root);
-
-    if (qk_game == 3) {
-        FilterDetailBrushes();
-
-        ProcessDetailModels();
-    }
 }
 
 void CSG_QUAKE_Free() {
@@ -2532,13 +2418,8 @@ void CSG_QUAKE_Free() {
         delete qk_all_mapmodels[i];
     }
 
-    for (i = 0; i < qk_all_detail_models.size(); i++) {
-        delete qk_all_detail_models[i];
-    }
-
     qk_all_faces.clear();
     qk_all_mapmodels.clear();
-    qk_all_detail_models.clear();
 }
 
 //------------------------------------------------------------------------

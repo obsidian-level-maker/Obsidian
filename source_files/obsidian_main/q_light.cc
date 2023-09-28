@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------
-//  QUAKE 1/2/3 LIGHTING
+//  QUAKE 1/2 LIGHTING
 //------------------------------------------------------------------------
 //
 //  OBSIDIAN Level Maker
@@ -51,13 +51,6 @@ bool q_mono_lighting = false;
 static int q_low_light = 0;
 static float q_light_scale = 1.0;
 
-static float q3_luxel_size = 12.0;
-
-static bool q3_overbrighting = false;
-
-static float grid_ambient_scale = 4.0;
-static float grid_directed_scale = 0.7;
-
 struct liquid_coloring_t {
     rgb_color_t color;
 
@@ -96,14 +89,8 @@ void QLIT_InitProperties() {
     q_light_quality = 0;
     q_mono_lighting = false;
 
-    q3_luxel_size = 12.0;
-    q3_overbrighting = false;
-
     q_light_scale = 1.0;
     q_low_light = 0;
-
-    grid_ambient_scale = 4.0;
-    grid_directed_scale = 0.7;
 
     q_water.Init(33, 33, 255);
     q_slime.Init(77, 255, 99);
@@ -156,22 +143,6 @@ bool QLIT_ParseProperty(std::string key, std::string value) {
     } else if (StringCaseCmp(key, "q_low_light") == 0) {
         q_low_light = StringToInt(value);
         return true;
-    } else if (StringCaseCmp(key, "q3_luxel_size") == 0)  // Q3 only
-    {
-        q3_luxel_size = StringToDouble(value);
-        return true;
-    } else if (StringCaseCmp(key, "q3_overbrighting") == 0)  // Q3 only
-    {
-        q3_overbrighting = (StringToInt(value) > 0);
-        return true;
-    } else if (StringCaseCmp(key, "grid_ambient_scale") == 0)  // Q3 only
-    {
-        grid_ambient_scale = StringToDouble(value);
-        return true;
-    } else if (StringCaseCmp(key, "grid_directed_scale") == 0)  // Q3 only
-    {
-        grid_directed_scale = StringToDouble(value);
-        return true;
     } else if (StringCaseCmp(key.substr(0, 6), "water_") == 0) {
         return q_water.ParseProp(key.substr(6), value);
     } else if (StringCaseCmp(key.substr(0, 6), "slime_") == 0) {
@@ -191,10 +162,8 @@ qLightmap_c::qLightmap_c(int w, int h, int value)
       height(h),
       num_styles(1),
       samples(),
-      offset(-1),
-      lx(-1),
-      ly(-1) {
-    lm_mat = new uv_matrix_c;
+      offset(-1)
+      {
 
     samples = new rgb_color_t[width * height];
 
@@ -209,8 +178,6 @@ qLightmap_c::qLightmap_c(int w, int h, int value)
 }
 
 qLightmap_c::~qLightmap_c() {
-    delete lm_mat;
-
     delete[] samples;
 }
 
@@ -297,8 +264,6 @@ bool qLightmap_c::isDark() const {
 }
 
 void qLightmap_c::Write(qLump_c *lump) {
-    // (this only used for Q1 and Q2, not Q3)
-
     // grab the offset now...
     offset = lump->GetSize();
 
@@ -328,135 +293,6 @@ void qLightmap_c::Write(qLump_c *lump) {
 #define LIGHTMAP_WIDTH 128
 #define LIGHTMAP_HEIGHT 128
 
-class q3_lightmap_block_c {
-   public:
-    byte samples[LIGHTMAP_WIDTH][LIGHTMAP_HEIGHT][3];
-
-    // index of first free luxel in each column of this block.
-    // hence 0 is completely empty, LIGHTMAP_HEIGHT is completely full.
-    int free_y[LIGHTMAP_WIDTH];
-
-    int fail_count;
-
-   public:
-    q3_lightmap_block_c() : fail_count(0) {
-        memset(samples, 0, sizeof(samples));
-
-        for (int i = 0; i < LIGHTMAP_WIDTH; i++) {
-            free_y[i] = 0;
-        }
-    }
-
-    ~q3_lightmap_block_c() {}
-
-    int Low_Y(int x, int w) {
-        int y = 0;
-
-        for (; w > 0; x++, w--) {
-            y = MAX(y, free_y[x]);
-        }
-
-        return y;
-    }
-
-    int WastedArea(int x, int y, int w) {
-        int area = 0;
-
-        for (; w > 0; x++, w--) {
-            area += (y - free_y[x]);
-        }
-
-        return area;
-    }
-
-    // attempt to allocate a block
-    bool Alloc(int bw, int bh, int *bx, int *by) {
-#if 0
-        // skip when failure count reaches a certain limit
-        if (fail_count & 64)
-            return false;
-#endif
-
-        *bx = -1;
-        *by = -1;
-
-        int best_area = (1 << 30);
-
-        // find column that will waste the least amount of space
-
-        for (int x = 0; x < LIGHTMAP_WIDTH - bw + 1; x++) {
-            int y = Low_Y(x, bw);
-
-            if (y + bh > LIGHTMAP_HEIGHT) {
-                continue;
-            }
-
-            int area = WastedArea(x, y, bw);
-
-            if (area < best_area) {
-                *bx = x;
-                *by = y;
-
-                best_area = area;
-            }
-        }
-
-        if (*bx < 0) {
-            fail_count++;
-            return false;
-        }
-
-        // mark area as used
-
-        for (int i = 0; i < bw; i++) {
-            free_y[*bx + i] = *by + bh;
-        }
-
-        return true;  // Ok
-    }
-
-    void Write(qLump_c *lump) const {
-        for (int y = 0; y < LIGHTMAP_HEIGHT; y++) {
-            for (int x = 0; x < LIGHTMAP_WIDTH; x++) {
-                for (int c = 0; c < 3; c++) {
-                    lump->Append(&samples[x][y][c], 1);
-                }
-            }
-        }
-    }
-};
-
-static std::vector<q3_lightmap_block_c *> all_q3_light_blocks;
-
-static int Q3_AllocLightBlock(int bw, int bh, int *bx, int *by) {
-    // returns the block index numebr
-
-    SYS_ASSERT(bw <= LIGHTMAP_WIDTH);
-    SYS_ASSERT(bh <= LIGHTMAP_HEIGHT);
-
-    for (unsigned int k = 0; k < all_q3_light_blocks.size(); k++) {
-        q3_lightmap_block_c *BL = all_q3_light_blocks[k];
-
-        if (BL->Alloc(bw, bh, bx, by)) {
-            return (int)k;
-        }
-    }
-
-    // it did not fit in any existing block, create a new block
-
-    int bnum = (int)all_q3_light_blocks.size();
-
-    q3_lightmap_block_c *BL = new q3_lightmap_block_c;
-
-    all_q3_light_blocks.push_back(BL);
-
-    if (!BL->Alloc(bw, bh, bx, by)) {
-        Main::FatalError("INTERNAL ERROR: failed to alloc LM in fresh block\n");
-    }
-
-    return bnum;
-}
-
 //------------------------------------------------------------------------
 
 static std::vector<qLightmap_c *> qk_all_lightmaps;
@@ -469,14 +305,6 @@ void QLIT_FreeLightmaps() {
     }
 
     qk_all_lightmaps.clear();
-
-    if (qk_game >= 3) {
-        for (unsigned int k = 0; k < all_q3_light_blocks.size(); k++) {
-            delete all_q3_light_blocks[k];
-        }
-
-        all_q3_light_blocks.clear();
-    }
 }
 
 static qLightmap_c *QLIT_NewLightmap(int w, int h) {
@@ -521,21 +349,6 @@ void QLIT_BuildLightingLump(int lump, int max_size) {
 
         L->Write(lightmap_lump);
     }
-}
-
-void QLIT_BuildQ3Lighting(int lump, int max_size) {
-    // pack individual lightmaps into the 128x128 blocks
-    // [ this is lousy for memory usage.... ]
-
-    lightmap_lump = BSP_NewLump(lump);
-
-    for (unsigned int b = 0; b < all_q3_light_blocks.size(); b++) {
-        q3_lightmap_block_c *BL = all_q3_light_blocks[b];
-
-        BL->Write(lightmap_lump);
-    }
-
-    LogPrintf("created %zu LM blocks\n", all_q3_light_blocks.size());
 }
 
 //------------------------------------------------------------------------
@@ -772,215 +585,6 @@ static bool CheckLightPoint(light_point_t &P, quake_face_c *F, double s,
     return !(P.medium == MEDIUM_OFF_FACE || P.medium == MEDIUM_SOLID);
 }
 
-static void Q3_CalcFaceStuff(quake_face_c *F) {
-    float px = F->plane.x;
-    float py = F->plane.y;
-    float pz = F->plane.z;
-
-    float nx = F->plane.nx;
-    float ny = F->plane.ny;
-    float nz = F->plane.nz;
-
-    // this is constant for every vertex on the face
-    // [ i.e. vert[i] * N == n_dist, where '*' is dot product ]
-    double n_dist = px * nx + py * ny + pz * nz;
-
-    lt_plane_normal[0] = nx;
-    lt_plane_normal[1] = ny;
-    lt_plane_normal[2] = nz;
-
-    lt_plane_dist = F->plane.CalcDist();
-
-    // compute T vector that basically goes "up" the slope of the
-    // face's plane.  If the plane is purely vertical, direction of
-    // T is simply straight up.  If plane is purely horizontal,
-    // then T is arbitrary, so we choose NORTH.
-
-    double tx, ty, tz;
-
-    double xy_len = hypot(nx, ny);
-
-    if (xy_len < 0.001) {
-        tx = 0.0;
-        ty = +1.0;
-        tz = 0.0;
-    } else {
-        tx = -nz * (nx / xy_len);
-        ty = -nz * (ny / xy_len);
-        tz = xy_len;
-    }
-
-    // computing S is easy now, it is simply the cross-product
-    // of T and the plane normal.
-
-    double sx = ty * nz - tz * ny;
-    double sy = tz * nx - tx * nz;
-    double sz = tx * ny - ty * nx;
-
-    // once here: N, T and S are three unit vectors which are
-    // orthogonal to each other.
-
-    DebugPrintf("Face %p\n", F);
-    DebugPrintf("  n = (%+5.4f %+5.4f %+5.4f)\n", nx, ny, nz);
-    DebugPrintf("  t = (%+5.4f %+5.4f %+5.4f)\n", tx, ty, tz);
-    DebugPrintf("  s = (%+5.4f %+5.4f %+5.4f)\n", sx, sy, sz);
-
-    // compute extents in the ST space...
-
-    double min_s = +9e9;
-    double max_s = -9e9;
-
-    double min_t = +9e9;
-    double max_t = -9e9;
-
-    double avg_s = 0;
-    double avg_t = 0;
-
-    for (unsigned int k = 0; k < F->verts.size(); k++) {
-        const quake_vertex_c *V = &F->verts[k];
-
-        double s = V->x * sx + V->y * sy + V->z * sz;
-
-        min_s = MIN(min_s, s);
-        max_s = MAX(max_s, s);
-        avg_s += s;
-
-        double t = V->x * tx + V->y * ty + V->z * tz;
-
-        min_t = MIN(min_t, t);
-        max_t = MAX(max_t, t);
-        avg_t += t;
-    }
-
-    avg_s /= (double)(F->verts.size());
-    avg_t /= (double)(F->verts.size());
-
-    StdErrPrintf("  t range: %+8.2f .. %+8.2f\n", min_t, max_t);
-    StdErrPrintf("  s range: %+8.2f .. %+8.2f\n", min_s, max_s);
-
-#if 0  // DEBUG
-    for (unsigned int k = 0 ; k < F->verts.size() ; k++)
-    {
-        const quake_vertex_c *V = &F->verts[k];
-
-        double s = V->x * sx + V->y * sy + V->z * sz;
-        double t = V->x * tx + V->y * ty + V->z * tz;
-
-        // reverse mapping, ST --> vertex
-        double xx = s * sx + t * tx + n_dist * nx;
-        double yy = s * sy + t * ty + n_dist * ny;
-        double zz = s * sz + t * tz + n_dist * nz;
-
-        s = (s - min_s) / q3_luxel_size;
-        t = (s - min_t) / q3_luxel_size;
-
-        fprintf(stderr, "  st coord (%+5.3f %+5.3f)\n", s, t);
-        fprintf(stderr, "   from: (%+7.2f %+7.2f %+7.2f)\n", V->x, V->y, V->z);
-//        fprintf(stderr, "     to: (%+7.2f %+7.2f %+7.2f)\n", xx, yy, zz);
-//        fprintf(stderr, "  Error: %7.3f\n", fabs(V->x - xx) + fabs(V->y - yy) + fabs(V->z - zz));
-    }
-#endif
-
-    // compute size of lightmap
-    lt_W = (int)ceil((max_s - min_s + q3_luxel_size * 0.6) / q3_luxel_size);
-    lt_H = (int)ceil((max_t - min_t + q3_luxel_size * 0.6) / q3_luxel_size);
-
-    StdErrPrintf("LM SIZE: %d x %d\n", lt_W, lt_H);
-
-    lt_W = CLAMP(1, lt_W, MAX_LM_SIZE);
-    lt_H = CLAMP(1, lt_H, MAX_LM_SIZE);
-
-    F->lmap = QLIT_NewLightmap(lt_W, lt_H);
-
-    // compute the UV matrix...
-    // [ the offsets in s[3] and t[3] are updated later, when block is allocated
-    // ]
-
-    uv_matrix_c *mat = F->lmap->lm_mat;
-
-    double s3 = (lt_W - 1) / (double)LIGHTMAP_WIDTH;
-    double t3 = (lt_H - 1) / (double)LIGHTMAP_HEIGHT;
-
-    double s_mul = s3 / (max_s - min_s);
-    double t_mul = t3 / (max_t - min_t);
-
-    mat->s[0] = s_mul * sx;
-    mat->s[1] = s_mul * sy;
-    mat->s[2] = s_mul * sz;
-    mat->s[3] = s_mul * -min_s;
-
-    mat->t[0] = t_mul * tx;
-    mat->t[1] = t_mul * ty;
-    mat->t[2] = t_mul * tz;
-    mat->t[3] = t_mul * -min_t;
-
-#if 0  // DEBUG
-    for (unsigned int k = 0 ; k < F->verts.size() ; k++)
-    {
-        const quake_vertex_c *V = &F->verts[k];
-
-        double s = mat->Calc_S(V->x, V->y, V->z);
-        double t = mat->Calc_T(V->x, V->y, V->z);
-
-        fprintf(stderr, "  LM coord (%+7.6f %+7.6f)\n", s, t);
-    }
-#endif
-
-    // create the points...
-
-    // nudge amounts
-    double s_nudge = 0.6 / (lt_W + 1);
-    double t_nudge = 0.6 / (lt_H + 1);
-
-    const float away = 0.5;
-
-    if (q_light_quality > 0) {
-        lt_W *= 2;
-        lt_H *= 2;
-    }
-
-    for (int py = 0; py < lt_H; py++) {
-        for (int px = 0; px < lt_W; px++) {
-            float ax = (lt_W == 1) ? 0.5 : px / (float)(lt_W - 1);
-            float ay = (lt_H == 1) ? 0.5 : py / (float)(lt_H - 1);
-
-            ax = 0.5 + (ax - 0.5) * 0.98;
-            ay = 0.5 + (ay - 0.5) * 0.98;
-
-            light_point_t &P = lt_points[px][py];
-
-            // if the point is off the face or inside a solid brush,
-            // try some locations closer to the middle of the face.
-            for (int nudge = 0; nudge < 4; nudge++) {
-                double s = (lt_W == 1) ? avg_s : (min_s + (max_s - min_s) * ax);
-                double t = (lt_H == 1) ? avg_t : (min_t + (max_t - min_t) * ay);
-
-                if (nudge > 0) {
-                    // nudge coordinate towards center of face
-                    double ss = (nudge == 3 ? 4 : nudge) * s_nudge;
-                    double ts = (nudge == 3 ? 4 : nudge) * t_nudge;
-
-                    s = s * (1.0 - ss) + avg_s * ss;
-                    t = t * (1.0 - ts) + avg_t * ts;
-                }
-
-                P.x = s * sx + t * tx + (n_dist + away) * nx;
-                P.y = s * sy + t * ty + (n_dist + away) * ny;
-                P.z = s * sz + t * tz + (n_dist + away) * nz;
-
-                if (CheckLightPoint(P, F, s, t, sx, sy, sz, tx, ty, tz)) {
-                    break;  // ok
-                }
-            }
-
-            ///        fprintf(stderr, "point [%02d %02d] --> (%+7.2f %+7.2f
-            ///%+7.2f)
-            /// medium:%d\n",                 px, py, P.x, P.y, P.z,
-            /// P.medium);
-        }
-    }
-}
-
 static void ClearLightBuffer(int level) {
     level <<= 8;
 
@@ -998,11 +602,7 @@ void qLightmap_c::Store() {
 
     float scale = q_light_scale / 1024.0;
 
-    if (q3_overbrighting) {
-        scale *= 0.5;
-    }
-
-    int limit = q3_overbrighting ? 127 : 254;
+    int limit = 254;
 
     for (int t = 0; t < height; t++) {
         for (int s = 0; s < width; s++) {
@@ -1025,42 +625,6 @@ void qLightmap_c::Store() {
             byte b2 = b;
 
             *dest++ = MAKE_RGBA(r2, g2, b2, 0);
-        }
-    }
-
-    if (qk_game >= 3 && isDark()) {
-        StdErrPrintf("DARK LIGHTMAP !\n");
-        offset = 0;
-    } else if (qk_game >= 3) {
-        // this is lousy for memory usage...
-        // [ but some stuff is using samples[], like CalcAverage() ]
-
-        offset = Q3_AllocLightBlock(width, height, &lx, &ly);
-        SYS_ASSERT(offset >= 0);
-
-        StdErrPrintf("LM POSITION: block #%d (%3d %3d)\n", offset, lx,
-                   ly);
-
-        double s1 = (lx + 0.5) / (double)LIGHTMAP_WIDTH;
-        double t1 = (ly + 0.5) / (double)LIGHTMAP_HEIGHT;
-
-        lm_mat->s[3] += s1;
-        lm_mat->t[3] += t1;
-
-        q3_lightmap_block_c *BL = all_q3_light_blocks[offset];
-        SYS_ASSERT(BL);
-
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                const rgb_color_t col = At(x, y);
-
-                const int bx = lx + x;
-                const int by = ly + y;
-
-                BL->samples[bx][by][0] = RGB_RED(col);
-                BL->samples[bx][by][1] = RGB_GREEN(col);
-                BL->samples[bx][by][2] = RGB_BLUE(col);
-            }
         }
     }
 }
@@ -1272,16 +836,7 @@ static void QLIT_ProcessLight(qLightmap_c *lmap, quake_light_t &light,
     }
 
     // skip lights which are too far away
-    if (light.kind == LTK_Sun) {
-        if (qk_game < 3) {
-            SYS_ASSERT(lt_face->leaf);
-
-            if (lt_face->leaf->cluster &&
-                lt_face->leaf->cluster->ambient_dists[AMBIENT_SKY] > 4) {
-                return;
-            }
-        }
-    } else {
+    if (light.kind != LTK_Sun) {
         if (perp > light.radius) {
             return;
         }
@@ -1390,11 +945,7 @@ void QLIT_LightFace(quake_face_c *F) {
 
     F->GetBounds(&lt_face_bbox);
 
-    if (qk_game < 3) {
-        Q1_CalcFaceStuff(F);
-    } else {
-        Q3_CalcFaceStuff(F);
-    }
+    Q1_CalcFaceStuff(F);
 
 #if 0  // DEBUG
     QLIT_TestingStuff(F->lmap);
@@ -1469,254 +1020,10 @@ static const int grid_xy_deltas[9 * 2] = {0,   0,   +9,  +9,  +9,  -9,
                                           -9,  +9,  -9,  -9,  +18, +18,
                                           +18, -18, -18, +18, -18, -18};
 
-static void Q3_CalcAngularDirection(std::array<float, 3> vec3,
-                                    dlightgrid3_t *out) {
-    float x = vec3[0];
-    float y = vec3[1];
-    float z = vec3[2];
-
-    float len = sqrt(x * x + y * y + z * z);
-
-    if (len > 0) {
-        x /= len;
-        y /= len;
-        z /= len;
-    }
-
-    if (x == 0 && y == 0) {
-        out->lat = (z < 0) ? 128 : 0;
-        out->lng = 0;
-    } else {
-        float lat = atan2(y, x) * (180.0 / M_PI) * (255.0 / 360.0);
-        float lng = acos(z) * (180.0 / M_PI) * (255.0 / 360.0);
-
-        out->lat = (int)lat & 0xff;
-        out->lng = (int)lng & 0xff;
-    }
-}
-
-static void Q3_ColorToBytes(int r, int g, int b, float mul,
-                            std::array<byte, 3> out) {
-    float r2 = r * mul;
-    float g2 = g * mul;
-    float b2 = b * mul;
-
-    /// fprintf(stderr, "Q3_ColorToBytes : (%5.3f %5.3f %5.3f)\n", r2, g2, b2);
-
-    float ity = MAX(r2, MAX(g2, b2));
-
-    int limit = q3_overbrighting ? 127 : 254;
-
-    if (ity > limit) {
-        ity = (float)limit / ity;
-
-        r2 *= ity;
-        g2 *= ity;
-        b2 *= ity;
-    }
-
-    out[0] = (byte)r2;
-    out[1] = (byte)g2;
-    out[2] = (byte)b2;
-}
-
-static void Q3_ProcessLightForGrid(quake_light_t &light, float gx, float gy,
-                                   float gz, int *r, int *g, int *b) {
-    *r = *g = *b = 0;
-
-    float dist = ComputeDist(gx, gy, gz, light.x, light.y, light.z);
-
-    // fast check on distance
-    if (light.kind != LTK_Sun && dist >= light.radius) {
-        return;
-    }
-
-    // slow ray-trace check
-    if (!QVIS_TraceRay(gx, gy, gz, light.x, light.y, light.z)) {
-        return;
-    }
-
-    int value = (int)light.level;
-
-    if (light.kind != LTK_Sun) {
-        value = value * (1.0 - dist / light.radius);
-    }
-
-    *r = value * RGB_RED(light.color);
-    *g = value * RGB_GREEN(light.color);
-    *b = value * RGB_BLUE(light.color);
-}
-
-static void Q3_VisitGridPoint(float gx, float gy, float gz,
-                              dlightgrid3_t *out) {
-    memset(out, 0, sizeof(dlightgrid3_t));
-
-    // the point may lie inside a solid area, so look for a nearby
-    // spot that is open...
-
-    for (int i = 0; i <= 6 * 9; i++) {
-        // everything failed?
-        if (i == 6 * 9) {
-            return;
-        }
-
-        float dx = grid_xy_deltas[(i / 6) * 2 + 0];
-        float dy = grid_xy_deltas[(i / 6) * 2 + 1];
-        float dz = grid_z_deltas[i % 6];
-
-        if (!QVIS_TracePoint(gx + dx, gy + dy, gz + dz)) {
-            continue;
-        }
-
-        // Ok!
-        gx += dx;
-        gy += dy;
-        gz += dz;
-
-        break;
-    }
-
-    // handle liquids
-
-    double liq_depth;
-    int medium = CSG_BrushContents(gx, gy, gz, &liq_depth);
-
-    if (medium >= MEDIUM_WATER && medium <= MEDIUM_LAVA) {
-        liquid_coloring_t &LC = (medium == MEDIUM_SLIME)  ? q_slime
-                                : (medium == MEDIUM_LAVA) ? q_lava
-                                                          : q_water;
-
-        std::array<float, 3> dir = {0, 0, 1};
-
-        Q3_CalcAngularDirection(dir, out);
-
-        out->directedLight[0] = RGB_RED(LC.color) / 1;
-        out->directedLight[1] = RGB_GREEN(LC.color) / 1;
-        out->directedLight[2] = RGB_BLUE(LC.color) / 1;
-
-        out->ambientLight[0] = RGB_RED(LC.color) / 8;
-        out->ambientLight[1] = RGB_GREEN(LC.color) / 8;
-        out->ambientLight[2] = RGB_BLUE(LC.color) / 8;
-
-        return;
-    }
-
-    // process each light, storing each contribution and
-    // remembering the greatest contribution to use for the
-    // directional component.
-
-    int sum_r = 0;
-    int sum_g = 0;
-    int sum_b = 0;
-    int sum_total = 0;
-
-    int best_dir_ity = -999;
-    std::array<int, 3> best_dir_color;
-    std::array<float, 3> best_direction;
-
-    for (unsigned int k = 0; k < qk_all_lights.size(); k++) {
-        int r, g, b, ity;
-
-        Q3_ProcessLightForGrid(qk_all_lights[k], gx, gy, gz, &r, &g, &b);
-
-        ity = MAX(r, MAX(g, b));
-
-        if (ity <= 0) {
-            continue;
-        }
-
-        sum_r += r;
-        sum_g += g;
-        sum_b += b;
-        sum_total += 1;
-
-        if (ity > best_dir_ity) {
-            best_dir_ity = ity;
-
-            best_dir_color[0] = r;
-            best_dir_color[1] = g;
-            best_dir_color[2] = b;
-
-            best_direction[0] = qk_all_lights[k].x - gx;
-            best_direction[1] = qk_all_lights[k].y - gy;
-            best_direction[2] = qk_all_lights[k].z - gz;
-        }
-    }
-
-    float div = q3_overbrighting ? 2048.0 : 1024.0;
-
-    if (best_dir_ity > 0) {
-        Q3_CalcAngularDirection(best_direction, out);
-        Q3_ColorToBytes(best_dir_color[0], best_dir_color[1], best_dir_color[2],
-                        grid_directed_scale / div, out->directedLight);
-    }
-
-    if (sum_total > 0) {
-        Q3_ColorToBytes(sum_r, sum_g, sum_b,
-                        sum_total * grid_ambient_scale / div,
-                        out->ambientLight);
-    }
-}
-
-#define LUMP_Q3_LIGHTGRID 15
-
-static void Q3_GridLighting() {
-    // world mins / maxs
-    float w_mins[3];
-    float w_maxs[3];
-
-    float g_mins[3];
-    float g_maxs[3];
-    int g_count[3];
-
-    for (int b = 0; b < 3; b++) {
-        float block_size = (b < 2) ? 64.0 : 128.0;
-
-        w_mins[b] = qk_bsp_root->bbox.mins[b];
-        w_maxs[b] = qk_bsp_root->bbox.maxs[b];
-
-        g_mins[b] = block_size * ceil(w_mins[b] / block_size);
-        g_maxs[b] = block_size * floor(w_maxs[b] / block_size);
-
-        g_count[b] = (g_maxs[b] - g_mins[b]) / block_size + 1;
-    }
-
-    LogPrintf("grid counts: %d x %d x %d\n", g_count[0], g_count[1],
-              g_count[2]);
-
-    qLump_c *lump = BSP_NewLump(LUMP_Q3_LIGHTGRID);
-
-    dlightgrid3_t raw_point;
-
-    for (int znum = 0; znum < g_count[2]; znum++) {
-        for (int ynum = 0; ynum < g_count[1]; ynum++) {
-            for (int xnum = 0; xnum < g_count[0]; xnum++) {
-                float gx = g_mins[0] + xnum * 64.0;
-                float gy = g_mins[1] + ynum * 64.0;
-                float gz = g_mins[2] + znum * 128.0;
-
-                Q3_VisitGridPoint(gx, gy, gz, &raw_point);
-
-                lump->Append(&raw_point, sizeof(raw_point));
-            }
-        }
-    }
-}
-
-void Q3_InitSharedBlock() {
-    int bx, by;
-
-    Q3_AllocLightBlock(2, 2, &bx, &by);
-}
-
 void QLIT_LightAllFaces() {
     LogPrintf("\nLighting World...\n");
 
     QLIT_FindLights();
-
-    if (qk_game >= 3) {
-        Q3_InitSharedBlock();
-    }
 
     LogPrintf("found %zu lights\n", qk_all_lights.size());
 
@@ -1725,7 +1032,7 @@ void QLIT_LightAllFaces() {
     int lit_faces = 0;
     int lit_luxels = 0;
 
-    // visit all faces, including Q3 detail and map-model faces
+    // visit all faces
 
     for (unsigned int i = 0; i < qk_all_faces.size(); i++) {
         quake_face_c *F = qk_all_faces[i];
@@ -1752,11 +1059,6 @@ void QLIT_LightAllFaces() {
 
     LogPrintf("lit %d faces (of %zu) using %d luxels\n", lit_faces,
               qk_all_faces.size(), lit_luxels);
-
-    // for Q3, determine grid lighting
-    if (qk_game >= 3) {
-        Q3_GridLighting();
-    }
 
 // Todo: Q1/Q2 map models
 #if 0

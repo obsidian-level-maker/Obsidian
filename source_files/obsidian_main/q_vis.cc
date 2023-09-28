@@ -680,7 +680,7 @@ static void CollectRowData(int src_x, int src_y, bool PHS) {
 
             qCluster_c *cluster = qk_clusters[cy * cluster_W + cx];
 
-            if (qk_game >= 2)  // Quake II and III
+            if (qk_game == 2)
             {
                 int index = cy * cluster_W + cx;
 
@@ -741,11 +741,6 @@ static void Build_PVS() {
             qCluster_c *cluster = qk_clusters[cy * cluster_W + cx];
 
             if (cluster->leafs.empty()) {
-                if (qk_game == 3) {
-                    memset(v_row_buffer, 0, v_bytes_per_row);
-                    WriteUncompressedRow();
-                }
-
                 continue;
             }
 
@@ -754,12 +749,7 @@ static void Build_PVS() {
 
             CollectRowData(cx, cy, false);
 
-            if (qk_game == 3) {
-                WriteUncompressedRow();
-                cluster->visofs = 1;  // dummy value, unused
-            } else {
-                cluster->visofs = WriteCompressedRow(false);
-            }
+            cluster->visofs = WriteCompressedRow(false);
 
             if (qk_game == 2) {
                 // Quake II's Potentially Hearable Set
@@ -823,11 +813,9 @@ static void ShowVisStats() {
     pvs_stats.Finish();
     phs_stats.Finish();
 
-    if (qk_game < 3) {
-        LogPrintf("pvs compression ratio %1.0f%% (%d bytes --> %d)\n",
-                  pvs_stats.CalcRatio(), pvs_stats.uncompressed,
-                  pvs_stats.compressed);
-    }
+    LogPrintf("pvs compression ratio %1.0f%% (%d bytes --> %d)\n",
+        pvs_stats.CalcRatio(), pvs_stats.uncompressed,
+        pvs_stats.compressed);
 
     if (qk_game == 2) {
         LogPrintf("phs compression ratio %1.0f%% (%d bytes --> %d)\n",
@@ -858,7 +846,7 @@ void QVIS_Visibility(int lump, int max_size, int numleafs) {
 
     FloodAmbientSounds();
 
-    if (qk_game >= 2) {
+    if (qk_game == 2) {
         v_row_bits = num_clusters;
     } else {
         v_row_bits = numleafs;
@@ -874,17 +862,6 @@ void QVIS_Visibility(int lump, int max_size, int numleafs) {
     v_compress_buffer = new byte[1 + 2 * v_bytes_per_row];
 
     q_visibility = BSP_NewLump(lump);
-
-    if (qk_game == 3) {
-        s32_t raw_count;
-        s32_t raw_size;
-
-        raw_count = LE_S32(num_clusters);
-        raw_size = LE_S32(v_bytes_per_row);
-
-        q_visibility->Append(&raw_count, sizeof(raw_count));
-        q_visibility->Append(&raw_size, sizeof(raw_size));
-    }
 
     Build_PVS();
 

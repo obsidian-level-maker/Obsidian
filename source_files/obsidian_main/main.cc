@@ -1229,8 +1229,6 @@ bool Build_Cool_Shit() {
             game_object = Quake1_GameObject();
         } else if (StringCaseCmp(format, "quake2") == 0) {
             game_object = Quake2_GameObject();
-        } else if (StringCaseCmp(format, "quake3") == 0) {
-            game_object = Quake3_GameObject();
         } else {
             Main::FatalError("ERROR: unknown format: '%s'\n", format.c_str());
         }
