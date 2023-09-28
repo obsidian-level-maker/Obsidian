@@ -955,7 +955,11 @@ function DOOM.all_done()
     gui.wad_merge_sections(dir .. "short_bars.wad")
   end
 
-  gui.wad_insert_file("data/endoom/ENDOOM.bin", "ENDOOM")
+  if ob_mod_enabled("compress_output") then
+    gui.pk3_insert_file("data/endoom/ENDOOM.bin", "ENDOOM.bin")
+  else
+    gui.wad_insert_file("data/endoom/ENDOOM.bin", "ENDOOM")
+  end
 
 -- Honestly, this really should be an option
   if OB_CONFIG.length == "game" then

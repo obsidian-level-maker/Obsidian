@@ -1106,6 +1106,27 @@ bool Doom::game_interface_c::Start(const char *preset) {
         return false;
     }
 
+    if (ob_mod_enabled("compress_output")) {
+        std::filesystem::path zip_filename = filename;
+        if (StringCaseCmp(current_port, "dsda") == 0) {
+            zip_filename.replace_extension("zip");
+        } else {
+            zip_filename.replace_extension("pk3");
+        }
+        if (std::filesystem::exists(zip_filename)) {
+            if (create_backups) {
+                Main::BackupFile(zip_filename);
+            }
+            std::filesystem::remove(zip_filename);
+        }
+        if (!ZIPF_OpenWrite(zip_filename)) {
+            LogPrintf(
+                    "Cannot ZIP output WAD to %s! Falling back to "
+                    "WAD.\n",
+                    zip_filename.u8string().c_str());
+        }
+    }
+
 #ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->Prog_Init(20, N_("CSG"));
@@ -1182,34 +1203,14 @@ bool Doom::game_interface_c::Finish(bool build_ok) {
 
     if (build_ok) {
         if (ob_mod_enabled("compress_output")) {
-            std::filesystem::path zip_filename = filename;
-            if (StringCaseCmp(current_port, "dsda") == 0) {
-                zip_filename.replace_extension("zip");
-            } else {
-                zip_filename.replace_extension("pk3");
-            }
-            if (std::filesystem::exists(zip_filename)) {
-                if (create_backups) {
-                    Main::BackupFile(zip_filename);
-                }
-                std::filesystem::remove(zip_filename);
-            }
-            if (!ZIPF_OpenWrite(zip_filename)) {
+            if (!ZIPF_AddFile(filename, "")) {
                 LogPrintf(
-                        "Zipping output WAD to %s failed! Retaining original "
-                        "WAD.\n",
-                        zip_filename.u8string().c_str());
+                    "Adding WAD to PK3 failed! Retaining original "
+                    "WAD.\n");
+                ZIPF_CloseWrite();
             } else {
-                if (!ZIPF_AddFile(filename)) {
-                    LogPrintf(
-                        "Zipping output WAD to %s failed! Retaining original "
-                        "WAD.\n",
-                        zip_filename.u8string().c_str());
-                    ZIPF_CloseWrite();
-                } else {
-                    ZIPF_CloseWrite();
-                    std::filesystem::remove(filename);
-                }
+                ZIPF_CloseWrite();
+                std::filesystem::remove(filename);
             }
         }
     }

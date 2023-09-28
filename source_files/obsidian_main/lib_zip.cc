@@ -42,7 +42,7 @@ bool ZIPF_OpenWrite(const std::filesystem::path &filename) {
     return true;
 }
 
-bool ZIPF_AddFile(const std::filesystem::path &filename) {
+bool ZIPF_AddFile(const std::filesystem::path &filename, std::filesystem::path directory) {
 #ifdef _WIN32
     FILE *zip_file = _wfopen(filename.c_str(), (const wchar_t *)StringToUTF16("rb").c_str());
 #else
@@ -62,6 +62,7 @@ bool ZIPF_AddFile(const std::filesystem::path &filename) {
     fclose(zip_file);
     if (mz_zip_add_mem_to_archive_file_in_place(
             current_zip.generic_u8string().c_str(),
+            !directory.empty() ? (directory / filename.filename()).generic_u8string().c_str() : 
             filename.filename().generic_u8string().c_str(), zip_buf,
             zip_length, NULL, 0, MZ_DEFAULT_COMPRESSION) == MZ_TRUE) {
         delete[] zip_buf;
