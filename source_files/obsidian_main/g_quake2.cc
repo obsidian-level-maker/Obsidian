@@ -1009,6 +1009,7 @@ class quake2_game_interface_c : public game_interface_c {
     void EndLevel();
     void Property(std::string key, std::string value);
     std::filesystem::path Filename();
+    std::filesystem::path ZIP_Filename();
 };
 
 bool quake2_game_interface_c::Start(const char *preset) {
@@ -1093,6 +1094,10 @@ void quake2_game_interface_c::Property(std::string key, std::string value) {
 
 std::filesystem::path quake2_game_interface_c::Filename() {
     return filename;
+}
+
+std::filesystem::path quake2_game_interface_c::ZIP_Filename() {
+    return "";
 }
 
 void quake2_game_interface_c::EndLevel() {

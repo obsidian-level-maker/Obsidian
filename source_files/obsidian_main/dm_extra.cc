@@ -765,7 +765,12 @@ int wad_add_text_lump(lua_State *L) {
         lua_pop(L, 1);
     }
 
-    WriteLump(name, lump);
+    if (game_object->file_per_map) {
+        ZIPF_AddMem(name, const_cast<byte *>(lump->GetBuffer()), lump->GetSize());
+    } else {
+        WriteLump(name, lump);
+    }
+    
     delete lump;
 
     return 0;
@@ -1578,9 +1583,14 @@ int title_write(lua_State *L) {
         lump = TitleCreateRaw();
     } else {
         lump = TitleCreatePatch();
+        format = "lmp";
     }
 
-    WriteLump(lumpname, lump);
+    if (game_object->file_per_map) {
+        ZIPF_AddMem(StringFormat("graphics/%s.%s", lumpname, format), const_cast<byte *>(lump->GetBuffer()), lump->GetSize());
+    } else {
+        WriteLump(lumpname, lump);
+    }
 
     delete lump;
 

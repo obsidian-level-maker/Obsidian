@@ -70,11 +70,6 @@ extern int v_unload_private_font(const char *path);
 
 extern std::filesystem::path home_dir;
 extern std::filesystem::path install_dir;
-#ifdef WIN32
-char32_t *ucs4_path(const char *path);
-extern std::filesystem::path physfs_dir;
-#endif
-
 extern std::filesystem::path config_file;
 extern std::filesystem::path options_file;
 extern std::filesystem::path theme_file;
@@ -331,6 +326,12 @@ class game_interface_c {
     virtual void Property(std::string key, std::string value) = 0;
 
     virtual std::filesystem::path Filename() = 0;
+
+    virtual std::filesystem::path ZIP_Filename() = 0;
+
+    // likely only useful for Doom, but informs the program if it needs to package
+    // each map in its own native format (WAD, etc)
+    bool file_per_map = false;
 };
 
 extern game_interface_c *game_object;

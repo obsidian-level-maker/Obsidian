@@ -18,7 +18,7 @@
 
 OB_MODULES["compress_output"] =
 {
-  label = _("PK3 Output"),
+  label = _("PK3/ZIP Output"),
 
   where = "other",
   priority = 100,

@@ -32,6 +32,7 @@
 #include "headers.h"
 #include "lib_argv.h"
 #include "lib_util.h"
+#include "lib_zip.h"
 #include "m_addons.h"
 #include "m_cookie.h"
 #include "m_lua.h"
@@ -1337,6 +1338,8 @@ bool Build_Cool_Shit() {
     delete game_object;
     game_object = NULL;
 
+    // Insurance in case the build process errored/cancelled
+    ZIPF_CloseWrite();
     return was_ok;
 }
 

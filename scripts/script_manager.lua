@@ -58,7 +58,11 @@ function ScriptMan_assemble_coalhuds_lump()
   end
 
   if coalhuds_lines ~= "" then
-	add_script_lump("COALHUDS", coalhuds_lines)
+    if ob_mod_enabled("compress_output") == 1 then
+      add_script_lump("scripts/coal_hud.ec", coalhuds_lines)
+    else
+      add_script_lump("COALHUDS", coalhuds_lines)
+    end
   end
 end
 
@@ -70,7 +74,11 @@ function ScriptMan_assemble_ddfthing_lump()
   end
 
   if ddfthing_lines ~= "" then
-	add_script_lump("DDFTHING", ddfthing_lines)
+    if ob_mod_enabled("compress_output") == 1 then
+      add_script_lump("scripts/things.ddf", ddfthing_lines)
+    else
+      add_script_lump("DDFTHING", ddfthing_lines)
+    end
   end
 end
 
@@ -82,7 +90,11 @@ function ScriptMan_assemble_ddfanim_lump()
   end
 
   if ddfanim_lines ~= "" then
-	add_script_lump("DDFANIM", ddfanim_lines)
+    if ob_mod_enabled("compress_output") == 1 then
+      add_script_lump("scripts/anims.ddf", ddfanim_lines)
+    else
+      add_script_lump("DDFANIM", ddfanim_lines)
+    end
   end
 end
 
@@ -94,7 +106,11 @@ function ScriptMan_assemble_ddfatk_lump()
   end
 
   if ddfatk_lines ~= "" then
-	add_script_lump("DDFATK", ddfatk_lines)
+    if ob_mod_enabled("compress_output") == 1 then
+      add_script_lump("scripts/attacks.ddf", ddfatk_lines)
+    else
+      add_script_lump("DDFATK", ddfatk_lines)
+    end
   end
 end
 
@@ -106,7 +122,11 @@ function ScriptMan_assemble_ddfcolm_lump()
   end
 
   if ddfcolm_lines ~= "" then
-	add_script_lump("DDFCOLM", ddfcolm_lines)
+    if ob_mod_enabled("compress_output") == 1 then
+      add_script_lump("scripts/colmap.ddf", ddfcolm_lines)
+    else
+      add_script_lump("DDFCOLM", ddfcolm_lines)
+    end
   end
 end
 
@@ -118,7 +138,11 @@ function ScriptMan_assemble_ddfflat_lump()
   end
 
   if ddfflat_lines ~= "" then
-	add_script_lump("DDFFLAT", ddfflat_lines)
+    if ob_mod_enabled("compress_output") == 1 then
+      add_script_lump("script/flats.ddf", ddfflat_lines)
+    else
+      add_script_lump("DDFFLAT", ddfflat_lines)
+    end
   end
 end
 
@@ -130,7 +154,11 @@ function ScriptMan_assemble_ddffont_lump()
   end
 
   if ddffont_lines ~= "" then
-	add_script_lump("DDFFONT", ddffont_lines)
+    if ob_mod_enabled("compress_output") == 1 then
+      add_script_lump("scripts/fonts.ddf", ddffont_lines)
+    else
+      add_script_lump("DDFFONT", ddffont_lines)
+    end
   end
 end
 
@@ -142,7 +170,11 @@ function ScriptMan_assemble_ddfgame_lump()
   end
 
   if ddfgame_lines ~= "" then
-	add_script_lump("DDFGAME", ddfgame_lines)
+    if ob_mod_enabled("compress_output") == 1 then
+      add_script_lump("scripts/games.ddf", ddfgame_lines)
+    else
+      add_script_lump("DDFGAME", ddfgame_lines)
+    end
   end
 end
 
@@ -154,7 +186,11 @@ function ScriptMan_assemble_ddfimage_lump()
   end
 
   if ddfimage_lines ~= "" then
-	add_script_lump("DDFIMAGE", ddfimage_lines)
+    if ob_mod_enabled("compress_output") == 1 then
+      add_script_lump("scripts/images.ddf", ddfimage_lines)
+    else
+      add_script_lump("DDFIMAGE", ddfimage_lines)
+    end
   end
 end
 
@@ -167,7 +203,11 @@ function ScriptMan_assemble_ddflang_lump()
   end
 
   if ddflang_lines ~= "" then
-	add_script_lump("DDFLANG", ddflang_lines)
+    if ob_mod_enabled("compress_output") == 1 then
+      add_script_lump("scripts/language.ldf", ddflang_lines)
+    else
+      add_script_lump("DDFLANG", ddflang_lines)
+    end
   end
 end
 
@@ -179,7 +219,11 @@ function ScriptMan_assemble_ddfplay_lump()
   end
 
   if ddfplay_lines ~= "" then
-	add_script_lump("DDFPLAY", ddfplay_lines)
+    if ob_mod_enabled("compress_output") == 1 then
+      add_script_lump("scripts/playlist.ddf", ddfplay_lines)
+    else
+      add_script_lump("DDFPLAY", ddfplay_lines)
+    end
   end
 end
 
@@ -191,7 +235,11 @@ function ScriptMan_assemble_ddflevl_lump()
   end
 
   if ddflevl_lines ~= "" then
-	add_script_lump("DDFLEVL", ddflevl_lines)
+    if ob_mod_enabled("compress_output") == 1 then
+      add_script_lump("scripts/levels.ddf", ddflevl_lines)
+    else
+      add_script_lump("DDFLEVL", ddflevl_lines)
+    end
   end
 end
 
@@ -203,7 +251,11 @@ function ScriptMan_assemble_ddfline_lump()
   end
 
   if ddfline_lines ~= "" then
-	add_script_lump("DDFLINE", ddfline_lines)
+    if ob_mod_enabled("compress_output") == 1 then
+      add_script_lump("scripts/lines.ddf", ddfline_lines)
+    else
+      add_script_lump("DDFLINE", ddfline_lines)
+    end
   end
 end
 
@@ -217,7 +269,11 @@ function ScriptMan_assemble_ddfsect_lump()
   end
 
   if ddfsect_lines ~= "" then
-	add_script_lump("DDFSECT", ddfsect_lines)
+    if ob_mod_enabled("compress_output") == 1 then
+      add_script_lump("scripts/sectors.ddf", ddfsect_lines)
+    else
+      add_script_lump("DDFSECT", ddfsect_lines)
+    end
   end
 end
 
@@ -229,7 +285,11 @@ function ScriptMan_assemble_ddfsfx_lump()
   end
 
   if ddfsfx_lines ~= "" then
-	add_script_lump("DDFSFX", ddfsfx_lines)
+    if ob_mod_enabled("compress_output") == 1 then
+      add_script_lump("scripts/sounds.ddf", ddfsfx_lines)
+    else
+      add_script_lump("DDFSFX", ddfsfx_lines)
+    end
   end
 end
 
@@ -241,7 +301,11 @@ function ScriptMan_assemble_ddfstyle_lump()
   end
 
   if ddfstyle_lines ~= "" then
-	add_script_lump("DDFSTYLE", ddfstyle_lines)
+    if ob_mod_enabled("compress_output") == 1 then
+      add_script_lump("scripts/styles.ddf", ddfstyle_lines)
+    else
+      add_script_lump("DDFSTYLE", ddfstyle_lines)
+    end
   end
 end
 
@@ -253,7 +317,11 @@ function ScriptMan_assemble_ddfswth_lump()
   end
 
   if ddfswth_lines ~= "" then
-	add_script_lump("DDFSWTH", ddfswth_lines)
+    if ob_mod_enabled("compress_output") == 1 then
+      add_script_lump("scripts/switch.ddf", ddfswth_lines)
+    else
+      add_script_lump("DDFSWTH", ddfswth_lines)
+    end
   end
 end
 
@@ -265,7 +333,11 @@ function ScriptMan_assemble_ddfweap_lump()
   end
 
   if ddfweap_lines ~= "" then
-	add_script_lump("DDFWEAP", ddfweap_lines)
+    if ob_mod_enabled("compress_output") == 1 then
+      add_script_lump("scripts/weapons.ddf", ddfweap_lines)
+    else
+      add_script_lump("DDFWEAP", ddfweap_lines)
+    end
   end
 end
 
@@ -277,7 +349,11 @@ function ScriptMan_assemble_rscript_lump()
   end
 
   if rscript_lines ~= "" then
-	add_script_lump("RSCRIPT", rscript_lines)
+    if ob_mod_enabled("compress_output") == 1 then
+      add_script_lump("scripts/rscript.rts", rscript_lines)
+    else
+      add_script_lump("RSCRIPT", rscript_lines)
+    end
   end
 end
 
@@ -615,7 +691,9 @@ function ScriptMan_assemble_acs_loader_lump()
     table.insert(acs_loader_lines, "COUNTTIS\n")
   end
 
-  gui.wad_add_text_lump("LOADACS", acs_loader_lines)
+  if not table.empty(acs_loader_lines) then
+    gui.wad_add_text_lump("LOADACS", acs_loader_lines)
+  end
 end
 
 function ScriptMan_merge_acs_lumps()
