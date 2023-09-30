@@ -276,6 +276,10 @@ function ZDOOM_SPECIALS.do_special_stuff()
 
   local level_count = #GAME.levels
 
+  if PARAM.float_full_game_length and OB_CONFIG.length == "full" then
+    level_count = PARAM.float_full_game_length
+  end
+
   local function pick_sky_color_from_skygen_map(epi_num)
     local color = "00 00 00"
 
@@ -333,7 +337,11 @@ function ZDOOM_SPECIALS.do_special_stuff()
     local music_line = ''
 
     if music_list then
-      music_line = '  Music = "' .. music_list[map_num] .. '"\n'
+      if level_count > #music_list then
+        music_line = '  Music = "' .. rand.pick(music_list) .. '"\n'
+      else
+        music_line = '  Music = "' .. music_list[map_num] .. '"\n'
+      end
     else
       music_line = ''
     end

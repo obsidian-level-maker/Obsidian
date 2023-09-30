@@ -74,7 +74,7 @@ PREFABS.Window_tech_abstract_half_chamfer_techy4_no_stretch =
 PREFABS.Window_tech_abstract_half_chamfer_techy_vanilla =
 {
   template = "Window_tech_abstract_half_chamfer_techy",
-  engine = "!zdoom",
+  port = "!zdoom",
 
   rank = 1,
 
@@ -90,7 +90,7 @@ PREFABS.Window_tech_abstract_half_chamfer_techy_vanilla2 =
   template = "Window_tech_abstract_half_chamfer_techy",
   map = "MAP02",
 
-  engine = "!zdoom",
+  port = "!zdoom",
 
   rank = 1,
 
@@ -105,7 +105,7 @@ PREFABS.Window_tech_abstract_half_chamfer_techy_vanilla2 =
 PREFABS.Window_tech_abstract_half_chamfer_techy_vanilla3 =
 {
   template = "Window_tech_abstract_half_chamfer_techy",
-  engine = "!zdoom",
+  port = "!zdoom",
   map = "MAP03",
 
   rank = 1,
@@ -122,7 +122,7 @@ PREFABS.Window_tech_abstract_half_chamfer_techy_vanilla3 =
 PREFABS.Window_tech_abstract_half_chamfer_techy_vanilla4 =
 {
   template = "Window_tech_abstract_half_chamfer_techy",
-  engine = "!zdoom",
+  port = "!zdoom",
   map = "MAP04",
 
   rank = 1,

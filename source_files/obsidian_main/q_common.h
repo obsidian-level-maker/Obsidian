@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------
-//  BSP files - Quake I, II and III
+//  BSP files - Quake I and II
 //------------------------------------------------------------------------
 //
 //  OBSIDIAN Level Maker
@@ -118,10 +118,6 @@ constexpr int Q2_HEADER_LUMPS = 19;
 constexpr int Q2_BSP_VERSION = 38;
 constexpr const char *Q2_IDENT_MAGIC = "IBSP";
 
-constexpr int Q3_HEADER_LUMPS = 17;
-constexpr int Q3_BSP_VERSION = 46;
-constexpr const char *Q3_IDENT_MAGIC = "IBSP";
-
 #pragma pack(push, 1)
 struct lump_t {
     u32_t start;
@@ -146,15 +142,6 @@ struct dheader2_t {
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-struct dheader3_t {
-    char ident[4];
-    s32_t version;
-
-    lump_t lumps[Q3_HEADER_LUMPS];
-};
-#pragma pack(pop)
-
-#pragma pack(push, 1)
 struct dvertex_t {
     float x, y, z;
 };
@@ -173,14 +160,6 @@ struct dplane_t {
     float normal[3];
     float dist;
     s32_t type;  // PLANE_X - PLANE_ANYZ
-};
-#pragma pack(pop)
-
-// Quake 3 format
-#pragma pack(push, 1)
-struct dplane3_t {
-    float normal[3];
-    float dist;
 };
 #pragma pack(pop)
 

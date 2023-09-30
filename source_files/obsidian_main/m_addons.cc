@@ -28,7 +28,7 @@
 #include "hdr_ui.h"
 #endif
 #include "lib_argv.h"
-#include "lib_file.h"
+
 #include "lib_util.h"
 #include "m_cookie.h"
 #include "main.h"
@@ -39,6 +39,8 @@
 std::map<std::filesystem::path, int> initial_enabled_addons;
 
 std::vector<addon_info_t> all_addons;
+
+std::vector<std::filesystem::path> all_presets;
 
 void VFS_AddFolder(std::string name) {
     std::filesystem::path path = install_dir;
@@ -147,6 +149,66 @@ void VFS_OptWrite(std::ofstream &fp) {
     }
 
     fp << "\n";
+}
+
+void VFS_ScanForPresets() {
+    LogPrintf("Scanning for presets....\n");
+
+    all_presets.clear();
+
+    std::filesystem::path dir_name = install_dir;
+    dir_name /= "presets";
+
+    std::vector<std::filesystem::path> list;
+    int result1 = 0;
+    int result2 = 0;
+
+    for (auto &file : std::filesystem::directory_iterator(dir_name)) {
+        if (StringCaseCmp(file.path().extension().string(), ".txt") == 0) {
+            result1 += 1;
+            list.push_back(file.path());
+        }
+    }
+
+    if (home_dir != install_dir) {
+        dir_name = home_dir;
+        dir_name /= "presets";
+        if (!std::filesystem::exists(dir_name)) {
+            goto no_home_preset_dir;
+        }
+
+        std::vector<std::filesystem::path> list2;
+
+        for (auto &file : std::filesystem::directory_iterator(dir_name)) {
+            if (StringCaseCmp(file.path().extension().string(), ".txt") == 0) {
+                result2 += 1;
+                list2.push_back(file.path());
+            }
+        }
+        // std::vector<std::filesystem::path>().swap(list2);
+        for (auto x : list2) {
+            list.push_back(x);
+        }
+    }
+
+no_home_preset_dir:
+
+    if ((result1 < 0) && (result2 < 0)) {
+        LogPrintf("FAILED -- no preset directory found.\n\n");
+        return;
+    }
+
+    for (auto preset : list) {
+        all_presets.push_back(preset);
+    }
+
+    if (list.size() == 0) {
+        LogPrintf("DONE (none found)\n");
+    } else {
+        LogPrintf("DONE\n");
+    }
+
+    LogPrintf("\n");
 }
 
 void VFS_ScanForAddons() {

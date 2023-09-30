@@ -24,7 +24,7 @@
 #endif
 #include "hdr_lua.h"
 #include "headers.h"
-#include "lib_file.h"
+
 #include "lib_util.h"
 #include "m_lua.h"
 #include "main.h"
@@ -332,6 +332,7 @@ class wolf_game_interface_c : public game_interface_c {
     void Property(std::string key, std::string value);
     // Don't really need this, but whatever
     std::filesystem::path Filename();
+    std::filesystem::path ZIP_Filename();
 
    private:
     void Rename();
@@ -538,7 +539,11 @@ void wolf_game_interface_c::Property(std::string key, std::string value) {
 }
 
 std::filesystem::path wolf_game_interface_c::Filename() {
-    return file_ext;
+    return "";
+}
+
+std::filesystem::path wolf_game_interface_c::ZIP_Filename() {
+    return "";
 }
 
 game_interface_c *Wolf_GameObject() { return new wolf_game_interface_c(); }

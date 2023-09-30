@@ -505,6 +505,8 @@ class UI_ThemeWin : public Fl_Window {
             UI_CustomMods *M = (UI_CustomMods *)main_win->mod_tabs->child(x);
             M->labelsize(FL_NORMAL_SIZE);
         }
+        main_win->mod_tabs->labelsize(FL_NORMAL_SIZE);
+        main_win->mod_tabs->redraw();
         main_win->redraw();
     }
 
@@ -619,6 +621,8 @@ class UI_ThemeWin : public Fl_Window {
             UI_CustomMods *M = (UI_CustomMods *)main_win->mod_tabs->child(x);
             M->labelfont(font_style);
         }
+        main_win->mod_tabs->labelfont(font_style);
+        main_win->mod_tabs->redraw();
         main_win->redraw();
     }
 
@@ -794,6 +798,8 @@ class UI_ThemeWin : public Fl_Window {
                     M->redraw();
                 }
             }
+            main_win->mod_tabs->box(box_style);
+            main_win->mod_tabs->redraw();
             main_win->game_box->build->box(button_style);
             main_win->game_box->quit->box(button_style);
             for (int x = 0; x < main_win->game_box->children(); x++) {
@@ -918,6 +924,8 @@ class UI_ThemeWin : public Fl_Window {
                 M->redraw();
             }
         }
+        main_win->mod_tabs->box(box_style);
+        main_win->mod_tabs->redraw();
     }
 
     static void callback_ButtonTheme(Fl_Widget *w, void *data) {
@@ -1276,6 +1284,8 @@ class UI_ThemeWin : public Fl_Window {
                 }
             }
         }
+        main_win->mod_tabs->color(GAP_COLOR, WINDOW_BG);
+        main_win->mod_tabs->redraw();
     }
 
     static void callback_Bg2Color(Fl_Widget *w, void *data) {
@@ -1464,7 +1474,7 @@ class UI_ThemeWin : public Fl_Window {
         main_win->redraw();
         main_win->build_box->progress->color(GAP_COLOR, GAP_COLOR);
         main_win->build_box->redraw();
-        main_win->mod_tabs->color(GAP_COLOR, GAP_COLOR);
+        main_win->mod_tabs->color(GAP_COLOR, WINDOW_BG);
         main_win->mod_tabs->redraw();
         for (int t = 0; t < main_win->mod_tabs->children(); t++) {
             UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(t);

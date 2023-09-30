@@ -29,7 +29,7 @@
 #include "hdr_lua.h"
 #include "headers.h"
 #include "images.h"
-#include "lib_file.h"
+
 #include "lib_pak.h"
 #include "lib_util.h"
 #include "lib_wad.h"
@@ -1287,6 +1287,7 @@ class quake1_game_interface_c : public game_interface_c {
     void EndLevel();
     void Property(std::string key, std::string value);
     std::filesystem::path Filename();
+    std::filesystem::path ZIP_Filename();
 
    private:
     const char *StepsForGame(int sub) {
@@ -1406,6 +1407,10 @@ void quake1_game_interface_c::Property(std::string key, std::string value) {
 
 std::filesystem::path quake1_game_interface_c::Filename() {
     return filename;
+}
+
+std::filesystem::path quake1_game_interface_c::ZIP_Filename() {
+    return "";
 }
 
 void quake1_game_interface_c::EndLevel() {

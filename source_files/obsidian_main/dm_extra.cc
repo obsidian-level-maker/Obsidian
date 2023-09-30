@@ -30,10 +30,11 @@
 #include "hdr_lua.h"
 #include "headers.h"
 #include "images.h"
-#include "lib_file.h"
+
 #include "lib_tga.h"
 #include "lib_util.h"
 #include "lib_wad.h"
+#include "lib_zip.h"
 #include "m_lua.h"
 #include "main.h"
 #include "physfs.h"
@@ -764,7 +765,12 @@ int wad_add_text_lump(lua_State *L) {
         lua_pop(L, 1);
     }
 
-    WriteLump(name, lump);
+    if (game_object->file_per_map) {
+        ZIPF_AddMem(name, const_cast<byte *>(lump->GetBuffer()), lump->GetSize());
+    } else {
+        WriteLump(name, lump);
+    }
+    
     delete lump;
 
     return 0;
@@ -852,6 +858,16 @@ static void TransferFILEtoWAD(PHYSFS_File *fp, const char *dest_lump) {
     WAD_FinishLump();
 }
 
+static void TransferFILEtoPK3(PHYSFS_File *fp, const char *pk3filename) {
+    PHYSFS_sint64 buf_size = PHYSFS_fileLength(fp);
+    byte *buffer = new byte[buf_size];
+    PHYSFS_readBytes(fp, buffer, buf_size);
+
+    ZIPF_AddMem(pk3filename, buffer, buf_size);
+
+    delete[] buffer;
+}
+
 static void TransferWADtoWAD(int src_entry, const char *dest_lump) {
     int length = WAD_EntryLen(src_entry);
 
@@ -924,6 +940,25 @@ static bool IsLevelLump(const char *name) {
 }
 
 namespace Doom {
+int pk3_insert_file(lua_State *L) {
+    // LUA: pk3_insert_file(filename, pk3filename)
+
+    const char *filename = luaL_checkstring(L, 1);
+    const char *pk3filename = luaL_checkstring(L, 2);
+
+    PHYSFS_File *fp = PHYSFS_openRead(filename);
+
+    if (!fp) {  // this is unlikely (we know it exists)
+        return luaL_error(L, "pk3_insert_file: cannot open file: %s", filename);
+    }
+
+    TransferFILEtoPK3(fp, pk3filename);
+
+    PHYSFS_close(fp);
+
+    return 0;
+}
+
 int wad_insert_file(lua_State *L) {
     // LUA: wad_insert_file(filename, lumpname)
 
@@ -1548,9 +1583,14 @@ int title_write(lua_State *L) {
         lump = TitleCreateRaw();
     } else {
         lump = TitleCreatePatch();
+        format = "lmp";
     }
 
-    WriteLump(lumpname, lump);
+    if (game_object->file_per_map) {
+        ZIPF_AddMem(StringFormat("graphics/%s.%s", lumpname, format), const_cast<byte *>(lump->GetBuffer()), lump->GetSize());
+    } else {
+        WriteLump(lumpname, lump);
+    }
 
     delete lump;
 

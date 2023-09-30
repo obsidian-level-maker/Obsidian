@@ -19,8 +19,8 @@ MAIN_MENU MENU DISCARDABLE
 MAIN_ICON ICON "./obsidian.ico"
 
 1 VERSIONINFO
-FILEVERSION 20, 0, 0, 0
-PRODUCTVERSION 20, 0, 0, 0
+FILEVERSION 21, 0, 0, 0
+PRODUCTVERSION 21, 0, 0, 0
 FILEFLAGSMASK 0x0
 FILEOS 0x40004 // VOS_NT_WINDOWS32
 FILETYPE 1     // VFT_APP
@@ -33,12 +33,12 @@ BEGIN
     BEGIN
       VALUE "CompanyName",      "The OBSIDIAN Team\0"
       VALUE "FileDescription",  "OBSIDIAN Level Maker\0"
-      VALUE "FileVersion",      "20\0"
+      VALUE "FileVersion",      "21\0"
       VALUE "InternalName",     "OBSIDIAN\0"
       VALUE "LegalCopyright",   "\251 Andrew Apted et al, GNU General Public License\0"
       VALUE "OriginalFilename", "OBSIDIAN.EXE\0"
       VALUE "ProductName",      "OBSIDIAN\0"
-      VALUE "ProductVersion",   "20\0"
+      VALUE "ProductVersion",   "21\0"
     END
   END
   BLOCK "VarFileInfo"

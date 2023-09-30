@@ -34,7 +34,6 @@
 #include "main.h"
 #include "q_common.h"
 #include "q_light.h"
-#include "vis_occlude.h"
 
 /*
 

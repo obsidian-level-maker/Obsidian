@@ -125,6 +125,7 @@ username
 
 Dan_The_Noob
   - "Dan The Noob" theme
+  - Bundled preset config files
 
 Il Str
   - Discord Dark/Discord Light themes

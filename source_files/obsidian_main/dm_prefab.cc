@@ -69,7 +69,7 @@
 #endif
 #include "hdr_lua.h"
 #include "headers.h"
-#include "lib_file.h"
+
 #include "lib_util.h"
 #include "lib_wad.h"
 #include "m_lua.h"

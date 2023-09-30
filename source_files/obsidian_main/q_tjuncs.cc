@@ -34,7 +34,7 @@
 #include "csg_main.h"
 #include "csg_quake.h"
 #include "headers.h"
-#include "lib_file.h"
+
 #include "lib_util.h"
 #include "main.h"
 #include "q_common.h"

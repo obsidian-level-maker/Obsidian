@@ -127,6 +127,54 @@ class Lookahead_Stream_c {
     }
 };
 
+bool ExtractPresetData(FILE *fp, std::string &buf) {
+    Lookahead_Stream_c stream(fp);
+
+    /* look for a starting string */
+
+    while (1) {
+        if (stream.hit_eof()) {
+            return false;  // not found
+        }
+
+        if (stream.match("-- CONFIG FILE : OBSIDIAN ") ||
+            stream.match("-- Levels created by OBSIDIAN ")) {
+            break;  // found it
+        }
+
+        stream.get_char();
+    }
+
+    /* copy lines until we hit the end */
+
+    char mini_buf[4];
+
+    while (!stream.hit_eof()) {
+        if (stream.match("-- END")) {
+            buf.append("-- END --\n\n");
+            break;
+        }
+
+        int ch = stream.get_char();
+
+        if (ch == 0 || ch == 26) {
+            break;
+        }
+
+        // remove CR (Carriage Return) characters
+        if (ch == '\r') {
+            continue;
+        }
+
+        mini_buf[0] = ch;
+        mini_buf[1] = 0;
+
+        buf.append(mini_buf);
+    }
+
+    return true;  // Success!
+}
+
 static bool ExtractConfigData(FILE *fp, Fl_Text_Buffer *buf) {
     Lookahead_Stream_c stream(fp);
 

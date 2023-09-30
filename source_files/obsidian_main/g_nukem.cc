@@ -31,7 +31,7 @@
 #endif
 #include "hdr_lua.h"
 #include "images.h"
-#include "lib_file.h"
+
 #include "lib_grp.h"
 #include "lib_util.h"
 #include "m_cookie.h"
@@ -419,6 +419,7 @@ class nukem_game_interface_c : public game_interface_c {
     void EndLevel();
     void Property(std::string key, std::string value);
     std::filesystem::path Filename();
+    std::filesystem::path ZIP_Filename();
 
    private:
 };
@@ -491,6 +492,10 @@ void nukem_game_interface_c::Property(std::string key, std::string value) {
 
 std::filesystem::path nukem_game_interface_c::Filename() {
     return filename;
+}
+
+std::filesystem::path nukem_game_interface_c::ZIP_Filename() {
+    return "";
 }
 
 void nukem_game_interface_c::EndLevel() {

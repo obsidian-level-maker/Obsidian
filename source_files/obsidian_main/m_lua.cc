@@ -33,8 +33,7 @@
 #endif
 #include "hdr_lua.h"
 #include "headers.h"
-#include "lib_file.h"
-#include "lib_signal.h"
+
 #include "lib_util.h"
 #include "main.h"
 #include "physfs.h"
@@ -1316,6 +1315,8 @@ extern int wad_transfer_map(lua_State *L);
 extern int wad_merge_sections(lua_State *L);
 extern int wad_read_text_lump(lua_State *L);
 
+extern int pk3_insert_file(lua_State *L);
+
 extern int fsky_create(lua_State *L);
 extern int fsky_write(lua_State *L);
 extern int fsky_free(lua_State *L);
@@ -1447,6 +1448,8 @@ static const luaL_Reg gui_script_funcs[] = {
     {"wad_transfer_map", Doom::wad_transfer_map},
     {"wad_merge_sections", Doom::wad_merge_sections},
     {"wad_read_text_lump", Doom::wad_read_text_lump},
+
+    {"pk3_insert_file", Doom::pk3_insert_file},
 
     {"fsky_create", Doom::fsky_create},
     {"fsky_write", Doom::fsky_write},

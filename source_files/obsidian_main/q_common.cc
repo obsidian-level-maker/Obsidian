@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------
-//  BSP files - Quake I, II and III
+//  BSP files - Quake I and II
 //------------------------------------------------------------------------
 //
 //  OBSIDIAN Level Maker
@@ -27,7 +27,7 @@
 #include "csg_quake.h"
 #include "hdr_lua.h"
 #include "headers.h"
-#include "lib_file.h"
+
 #include "lib_pak.h"
 #include "lib_util.h"
 #include "lib_zip.h"
@@ -297,9 +297,9 @@ u16_t BSP_AddPlane(float x, float y, float z, float nx, float ny, float nz,
 
     u16_t plane_idx = AddRawPlane(&raw_plane, &was_new);
 
-    // Quake2/3 have pairs of planes (opposite directions)
+    // Quake2 has pairs of planes (opposite directions)
 
-    if (was_new && (qk_game >= 2 || qk_sub_format == SUBFMT_HalfLife)) {
+    if (was_new && (qk_game == 2 || qk_sub_format == SUBFMT_HalfLife)) {
         raw_plane.normal[0] = -nx;
         raw_plane.normal[1] = -ny;
         raw_plane.normal[2] = -nz;
@@ -325,21 +325,7 @@ u16_t BSP_AddPlane(const quake_plane_c *P, bool *flip_var) {
 void BSP_WritePlanes(int lump_num, int max_planes) {
     qLump_c *lump = BSP_NewLump(lump_num);
 
-    if (qk_game != 3) {
-        lump->Append(&bsp_planes[0], bsp_planes.size() * sizeof(dplane_t));
-    } else  // Quake 3 has simpler structure
-    {
-        for (unsigned int i = 0; i < bsp_planes.size(); i++) {
-            dplane3_t pl;
-
-            pl.normal[0] = bsp_planes[i].normal[0];
-            pl.normal[1] = bsp_planes[i].normal[1];
-            pl.normal[2] = bsp_planes[i].normal[2];
-            pl.dist = bsp_planes[i].dist;
-
-            lump->Append(&pl, sizeof(pl));
-        }
-    }
+    lump->Append(&bsp_planes[0], bsp_planes.size() * sizeof(dplane_t));
 
     if (lump->GetSize() >= max_planes) {
         Main::FatalError("Quake build failure: exceeded limit of {} PLANES\n",
@@ -525,13 +511,6 @@ static void BSP_WriteLump(qLump_c *lump) {
         return;
     }
 
-    if (qk_game == 3) {
-        ZIPF_AppendData(lump->GetBuffer(), len);
-
-        // no need for padding in PK3 files
-        return;
-    }
-
     PAK_AppendData(lump->GetBuffer(), len);
 
     // pad lumps to a multiple of four bytes
@@ -550,11 +529,7 @@ bool BSP_OpenLevel(const char *entry_in_pak) {
     // assumes that PAK_OpenWrite() has already been called.
 
     // begin the .BSP file
-    if (qk_game == 3) {
-        ZIPF_NewLump(entry_in_pak);
-    } else {
-        PAK_NewLump(entry_in_pak);
-    }
+    PAK_NewLump(entry_in_pak);
 
     switch (qk_game) {
         case 1:
@@ -569,11 +544,6 @@ bool BSP_OpenLevel(const char *entry_in_pak) {
         case 2:
             bsp_version = Q2_BSP_VERSION;
             bsp_numlumps = Q2_HEADER_LUMPS;
-            break;
-
-        case 3:
-            bsp_version = Q3_BSP_VERSION;
-            bsp_numlumps = Q3_HEADER_LUMPS;
             break;
 
         default:
@@ -597,18 +567,11 @@ static void BSP_WriteHeader() {
     if (qk_game == 2) {
         PAK_AppendData(Q2_IDENT_MAGIC, 4);
         offset += 4;
-    } else if (qk_game == 3) {
-        ZIPF_AppendData(Q3_IDENT_MAGIC, 4);
-        offset += 4;
     }
 
     s32_t raw_version = LE_S32(bsp_version);
 
-    if (qk_game == 3) {
-        ZIPF_AppendData(&raw_version, 4);
-    } else {
-        PAK_AppendData(&raw_version, 4);
-    }
+    PAK_AppendData(&raw_version, 4);
 
     offset += 4;
 
@@ -627,15 +590,8 @@ static void BSP_WriteHeader() {
         raw_info.start = LE_U32(offset);
         raw_info.length = LE_U32(length);
 
-        if (qk_game == 3) {
-            ZIPF_AppendData(&raw_info, sizeof(raw_info));
-
-            offset += (u32_t)length;
-        } else {
-            PAK_AppendData(&raw_info, sizeof(raw_info));
-
-            offset += (u32_t)ALIGN_LEN(length);
-        }
+        PAK_AppendData(&raw_info, sizeof(raw_info));
+        offset += (u32_t)ALIGN_LEN(length);
     }
 }
 
@@ -658,12 +614,7 @@ void BSP_WriteEntities(int lump_num, const char *description) {
 
     lump->Printf("{\n");
 
-    if (qk_game >= 3) {
-        std::string obsidian_version_string =
-            StringFormat("OBSIDIAN %s \"%s\" Build %s", OBSIDIAN_SHORT_VERSION,
-                        OBSIDIAN_CODE_NAME.c_str(), OBSIDIAN_VERSION);
-        lump->KeyPair("_generated_by", obsidian_version_string.c_str());
-    } else if (description) {
+    if (description) {
         lump->KeyPair("message", description);
     }
 
@@ -715,11 +666,6 @@ void BSP_WriteEntities(int lump_num, const char *description) {
             continue;
         }
 
-        // skip light entities for Quake3
-        if (qk_game == 3 && strcmp(name, "light") == 0) {
-            continue;
-        }
-
         lump->Printf("{\n");
 
         // write entity properties
@@ -751,11 +697,7 @@ bool BSP_CloseLevel() {
     }
 
     // finish the .BSP file
-    if (qk_game == 3) {
-        ZIPF_FinishLump();
-    } else {
-        PAK_FinishLump();
-    }
+    PAK_FinishLump();
 
     // free all the memory
     BSP_ClearLumps();
@@ -814,15 +756,9 @@ qLump_c *BSP_CreateInfoLump() {
 void BSP_AddInfoFile() {
     qLump_c *info = BSP_CreateInfoLump();
 
-    if (qk_game == 3) {
-        ZIPF_NewLump("oblige_dat.txt");
-        BSP_WriteLump(info);
-        ZIPF_FinishLump();
-    } else {
-        PAK_NewLump("oblige_dat.txt");
-        BSP_WriteLump(info);
-        PAK_FinishLump();
-    }
+    PAK_NewLump("oblige_dat.txt");
+    BSP_WriteLump(info);
+    PAK_FinishLump();
 
     delete info;
 }
