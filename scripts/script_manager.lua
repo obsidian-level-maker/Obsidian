@@ -553,7 +553,11 @@ function ScriptMan_assemble_mapinfo_lump()
     end
   end
   if mapinfo_lines and (#mapinfo_lines > 2  or (OB_CONFIG.port ~= "zdoom" and #mapinfo_lines > 0)) then
-    gui.wad_add_text_lump("MAPINFO", mapinfo_lines)
+    if ob_mod_enabled("compress_output") == 1 and OB_CONFIG.port ~= "dsda" then
+      gui.wad_add_text_lump("MAPINFO.txt", mapinfo_lines)
+    else
+      gui.wad_add_text_lump("MAPINFO", mapinfo_lines)
+    end
   end
 end
 
@@ -565,7 +569,11 @@ function ScriptMan_assemble_trnslate_lump()
   end
 
   if trnslate_lines ~= "" then
-    add_script_lump("TRNSLATE", trnslate_lines)
+    if ob_mod_enabled("compress_output") == 1 and OB_CONFIG.port ~= "dsda" then
+      add_script_lump("TRNSLATE.txt", trnslate_lines)
+    else
+      add_script_lump("TRNSLATE", trnslate_lines)
+    end
   end
 end
 
@@ -588,7 +596,11 @@ function ScriptMan_assemble_zscript_lump()
 
   if zscript_lines ~= "" then
     zscript_lines = 'version "4.3"\n' .. zscript_lines
-    add_script_lump("ZSCRIPT", zscript_lines)
+    if ob_mod_enabled("compress_output") == 1 and OB_CONFIG.port ~= "dsda" then
+      add_script_lump("ZSCRIPT.txt", zscript_lines)
+    else
+      add_script_lump("ZSCRIPT", zscript_lines)
+    end
   end
 end
 
@@ -599,7 +611,11 @@ function ScriptMan_assemble_decorate_lump()
   end
 
   if SCRIPTS.decorate then
-    add_script_lump("DECORATE", SCRIPTS.decorate)
+    if ob_mod_enabled("compress_output") == 1 and OB_CONFIG.port ~= "dsda" then
+      add_script_lump("DECORATE.txt", SCRIPTS.decorate)
+    else
+      add_script_lump("DECORATE", SCRIPTS.decorate)
+    end
   end
 end
 
@@ -621,7 +637,11 @@ function ScriptMan_assemble_sndinfo_lump()
   end
 
   if sndinfo_lines ~= "" then
-    add_script_lump("SNDINFO", sndinfo_lines)
+    if ob_mod_enabled("compress_output") == 1 and OB_CONFIG.port ~= "dsda" then
+      add_script_lump("SNDINFO.txt", sndinfo_lines)
+    else
+      add_script_lump("SNDINFO", sndinfo_lines)
+    end
   end
 end
 
@@ -650,7 +670,11 @@ function ScriptMan_assemble_gldefs_lump()
   end
 
   if gldefs_lines ~= "" then
-    add_script_lump("GLDEFS", gldefs_lines)
+    if ob_mod_enabled("compress_output") == 1 and OB_CONFIG.port ~= "dsda" then
+      add_script_lump("GLDEFS.txt", gldefs_lines)
+    else
+      add_script_lump("GLDEFS", gldefs_lines)
+    end
   end
 end
 
@@ -676,7 +700,11 @@ function ScriptMan_assemble_language_lump()
   end
 
   if #language_lines > 2 then
-    gui.wad_add_text_lump("LANGUAGE", language_lines)
+    if ob_mod_enabled("compress_output") == 1 and OB_CONFIG.port ~= "dsda" then
+      gui.wad_add_text_lump("LANGUAGE.txt", language_lines)
+    else
+      gui.wad_add_text_lump("LANGUAGE", language_lines)
+    end
   end
 
 end
@@ -692,7 +720,11 @@ function ScriptMan_assemble_acs_loader_lump()
   end
 
   if not table.empty(acs_loader_lines) then
-    gui.wad_add_text_lump("LOADACS", acs_loader_lines)
+    if ob_mod_enabled("compress_output") == 1 and OB_CONFIG.port ~= "dsda" then
+      gui.wad_add_text_lump("LOADACS.txt", acs_loader_lines)
+    else
+      gui.wad_add_text_lump("LOADACS", acs_loader_lines)
+    end
   end
 end
 
@@ -715,18 +747,30 @@ function ScriptMan_assemble_textures_lump()
 
   if PARAM.obsidian_resource_pack_active then
     table.insert(textures_lump_lines, EPIC_TEXTUREX_LUMP)
-    gui.wad_add_text_lump("TEXTURES", textures_lump_lines)
+    if ob_mod_enabled("compress_output") == 1 and OB_CONFIG.port ~= "dsda" then
+      gui.wad_add_text_lump("TEXTURES.txt", textures_lump_lines)
+    else
+      gui.wad_add_text_lump("TEXTURES", textures_lump_lines)
+    end
   end
 
   if SCRIPTS.animdefs then
     table.insert(textures_lump_lines, EPIC_TEXTUREX_LUMP)
-    gui.wad_add_text_lump("ANIMDEFS", {SCRIPTS.animdefs})
+    if ob_mod_enabled("compress_output") == 1 and OB_CONFIG.port ~= "dsda" then
+      gui.wad_add_text_lump("ANIMDEFS.txt", {SCRIPTS.animdefs})
+    else
+      gui.wad_add_text_lump("ANIMDEFS", {SCRIPTS.animdefs})
+    end
   end
 end
 
 function ScriptMan_assemble_terrain_lump()
   if SCRIPTS.terrain then
-    gui.wad_add_text_lump("TERRAIN", {SCRIPTS.terrain})
+    if ob_mod_enabled("compress_output") == 1 and OB_CONFIG.port ~= "dsda" then
+      gui.wad_add_text_lump("TERRAIN.txt", {SCRIPTS.terrain})
+    else
+      gui.wad_add_text_lump("TERRAIN", {SCRIPTS.terrain})
+    end
   end
 end
 
