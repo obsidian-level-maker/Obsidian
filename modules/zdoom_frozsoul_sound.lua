@@ -241,7 +241,11 @@ function ZDOOM_SOUND.merge_frozsoul_sounds(self)
     local dir = "data/sounds/"
 
     for _,sound in pairs(ZDOOM_SOUND_DEFS) do
-      gui.wad_insert_file(dir .. sound.lump .. ".ogg", sound.lump)
+      if ob_mod_enabled("compress_output") == 1 then
+        gui.pk3_insert_file(dir .. sound.lump .. ".ogg", "sounds/" .. sound.lump .. ".ogg")
+      else
+        gui.wad_insert_file(dir .. sound.lump .. ".ogg", sound.lump)
+      end
     end
   end
 
