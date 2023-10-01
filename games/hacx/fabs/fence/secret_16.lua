@@ -10,8 +10,6 @@ PREFABS.Fence_plain_secret =
   prob   = 50,
   key    = "secret",
 
-  
-
   where  = "edge",
   seed_w = 2,
 

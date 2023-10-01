@@ -2,12 +2,10 @@
 -- Simple start closet (with door)
 --
 
-PREFABS.Start_closet1 =
+PREFABS.Start_elevator =
 {
-  file  = "start/closet1.wad",
+  file  = "start/elevator.wad",
   map   = "MAP01",
-
-  
 
   prob  = 80,
 
@@ -18,4 +16,3 @@ PREFABS.Start_closet1 =
   x_fit = "frame",
   y_fit = "top",
 }
-
