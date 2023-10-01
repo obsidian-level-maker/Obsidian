@@ -333,6 +333,7 @@ HACX.THEMES =
 
     window_groups = 
     {
+      square = 40,
       tall   = 80,
     },
 
