@@ -516,10 +516,12 @@ map_format_e Wad_file::LevelFormat(int lev_num)
 
 	if (start + LL_BEHAVIOR < (int)NumLumps())
 	{
-		const char *name = GetLump(start + LL_BEHAVIOR)->Name();
-
-		if (StringCaseCmp(name, "BEHAVIOR") == 0)
-			return MAPF_Hexen;
+		for (int i = LL_REJECT; i <= LL_BEHAVIOR; i++)
+		{
+			const char *name = GetLump(start + i)->Name();
+			if (StringCaseCmp(name, "BEHAVIOR") == 0)
+				return MAPF_Hexen;
+		}
 	}
 
 	return MAPF_Doom;

@@ -4,7 +4,7 @@
 --
 --
 --  Copyright (C) 2006-2017 Andrew Apted
---  Copyright (C) 2019-2022 MsrSgtShooterPerson
+--  Copyright (C) 2019-2023 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -875,7 +875,7 @@ function ob_read_all_config(need_full, log_only)
      need_full = false
   end
 
-  do_line("-- Obsidian (C) 2018-2022")
+  do_line("-- Obsidian (C) 2018-2023")
   do_line("-- MsrSgtShooterPerson")
   do_line("-- Armaetus")
   do_line("-- Garrett")
@@ -893,6 +893,23 @@ function ob_read_all_config(need_full, log_only)
   do_line("-- josh771")
   do_line("-- dashodanger")
   do_line("-- Phytolizer")
+  do_line("-- HugLifeTiZ\n")
+  do_line("-- Cubebert\n")
+  do_line("-- Morthimer McMare\n")
+  do_line("-- ika707\n")
+  do_line("-- Chameleon_111\n")
+  do_line("-- hytalego\n")
+  do_line("-- Twin Galaxy\n")
+  do_line("-- WolVexus\n")
+  do_line("-- username\n")
+  do_line("-- Dan_The_Noob\n")
+  do_line("-- Il Str\n")
+  do_line("-- VoidRunner\n")
+  do_line("-- 4ffy\n")
+  do_line("-- DasCake\n")
+  do_line("-- Baysha\n")
+  do_line("-- Arcterezion\n")
+  do_line("-- Xenamta\n")
   do_line("-- https://github.com/obsidian-level-maker/Obsidian/\n")
 
   if OB_CONFIG.seed and OB_CONFIG.seed ~= 0 then
@@ -1425,7 +1442,7 @@ function ob_init()
   end
 
   gui.printf("****************************\n")
-  gui.printf("** Obsidian (C) 2018-2022 **\n")
+  gui.printf("** Obsidian (C) 2018-2023 **\n")
   gui.printf("****************************\n")
   gui.printf("|    A Creation of the     |\n")
   gui.printf("|        Community         |\n")
