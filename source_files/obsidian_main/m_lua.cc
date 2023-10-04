@@ -1904,7 +1904,7 @@ bool ob_mod_enabled(std::string module_name) {
 
 std::string ob_default_filename() {
     if (!Script_CallFunc("ob_default_filename", 1)) {
-        return NULL;
+        return "";
     }
 
     std::string res = luaL_optlstring(LUA_ST, -1, "", NULL);
@@ -1917,7 +1917,7 @@ std::string ob_default_filename() {
 
 std::string ob_random_advice() {
     if (!Script_CallFunc("ob_random_advice", 1)) {
-        return NULL;
+        return "";
     }
 
     std::string res = luaL_optlstring(LUA_ST, -1, "", NULL);
