@@ -2497,6 +2497,72 @@ ARMAETUS_DOOM1_SINK_DEFS =
     trim_light = 16,
   },
 
+  --
+  light_GLITE05_BLUE =
+  {
+    mat = "T_GLT5BL",
+    dz  = 8,
+    light = 32,
+
+    trim_mat = "METAL",
+    trim_dz  = -5,
+    trim_light = 16,
+  },
+
+  light_GLITE05_BLUE =
+  {
+    mat = "T_GLT5BL",
+    dz  = 8,
+    light = 32,
+
+    trim_mat = "METAL",
+    trim_dz  = -5,
+    trim_light = 16,
+  },
+
+  light_GLITE05_GREEN =
+  {
+    mat = "T_GLT5GN",
+    dz  = 8,
+    light = 32,
+
+    trim_mat = "METAL",
+    trim_dz  = -5,
+    trim_light = 16,
+  },
+
+  light_GLITE05_RED =
+  {
+    mat = "T_GLT5RD",
+    dz  = 8,
+    light = 32,
+
+    trim_mat = "METAL",
+    trim_dz  = -5,
+    trim_light = 16,
+  },
+
+  light_GLITE05_WHITE =
+  {
+    mat = "T_GLT5WT",
+    dz  = 8,
+    light = 32,
+
+    trim_mat = "METAL",
+    trim_dz  = -5,
+    trim_light = 16,
+  },
+
+  light_GLITE05_YELLOW =
+  {
+    mat = "T_GLT5YL",
+    dz  = 8,
+    light = 32,
+
+    trim_mat = "METAL",
+    trim_dz  = -5,
+    trim_light = 16,
+  }
 }
 
 -- Natural textures for outdoor parks.
