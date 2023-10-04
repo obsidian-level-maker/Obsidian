@@ -200,6 +200,14 @@ int gui_get_filename_base(lua_State *L) {
     return 1;
 }
 
+// LUA: get_file_extension()
+//
+int gui_get_file_extension(lua_State *L) {
+    std::filesystem::path base = luaL_checkstring(L, 1);
+    lua_pushstring(L, base.extension().generic_u8string().c_str());
+    return 1;
+}
+
 // LUA: get_save_path()
 //
 int gui_get_save_path(lua_State *L) {
@@ -1409,6 +1417,7 @@ static const luaL_Reg gui_script_funcs[] = {
     {"scan_directory", gui_scan_directory},
     {"mkdir", gui_mkdir},
     {"get_filename_base", gui_get_filename_base},
+    {"get_file_extension", gui_get_file_extension},
     {"get_save_path", gui_get_save_path},
 
     // CSG functions
@@ -1904,7 +1913,7 @@ bool ob_mod_enabled(std::string module_name) {
 
 std::string ob_default_filename() {
     if (!Script_CallFunc("ob_default_filename", 1)) {
-        return NULL;
+        return "";
     }
 
     std::string res = luaL_optlstring(LUA_ST, -1, "", NULL);
@@ -1917,7 +1926,7 @@ std::string ob_default_filename() {
 
 std::string ob_random_advice() {
     if (!Script_CallFunc("ob_random_advice", 1)) {
-        return NULL;
+        return "";
     }
 
     std::string res = luaL_optlstring(LUA_ST, -1, "", NULL);

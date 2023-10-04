@@ -296,7 +296,7 @@ HACX.RESOURCES.SKY_GEN_COLORMAPS =
 
 HACX.RESOURCES.SKY_GEN_THEMES =
 {
-  hacx_urban =
+  genemp =
   {
     clouds =
     {

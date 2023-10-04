@@ -230,7 +230,7 @@ HACX.THEMES =
   },
 
 
-  hacx_urban =
+  genemp =
   {
 
    style_list =
@@ -259,21 +259,17 @@ HACX.THEMES =
     {
       water2 = 40,
       water  = 50,
-      lava   = 10,
-      slime = 15,
-      goo  = 10,
       elec = 10
     },
 
     narrow_halls =
     {
-      vent = 50
+
     },
 
     wide_halls =
     {
-      curve = 50,
-      deuce = 50,
+
     },
 
     floor_sinks =
@@ -288,32 +284,17 @@ HACX.THEMES =
 
     fences =
     {
-      MODWALL3 = 30,
-      STONY1 = 10,
-      TECHY1 = 20,
-      CAVEY1 = 10,
-      BLOCKY1 = 30,
-      BLOCKY2 = 10,
+      BRICK8 = 30,
     },
 
     cage_mats =
     {
       MODWALL3 = 30,
-      STONY1 = 10,
-      TECHY1 = 20,
-      CAVEY1 = 10,
-      BLOCKY1 = 30,
-      BLOCKY2 = 10,
     },
 
     facades =
     {
       MODWALL3 = 30,
-      STONY1 = 10,
-      TECHY1 = 20,
-      CAVEY1 = 10,
-      BLOCKY1 = 30,
-      BLOCKY2 = 10,
     },
 
     fence_groups =
@@ -333,12 +314,23 @@ HACX.THEMES =
 
     window_groups = 
     {
+      square = 40,
       tall   = 80,
     },
 
     wall_groups =
     {
       PLAIN = 0.01,
+    },
+
+    cliff_trees =
+    {
+      tree = 50,
+    },
+
+    park_decor =
+    {
+      tree = 50,
     },
 
     cave_torches =
@@ -376,184 +368,60 @@ HACX.THEMES =
 HACX.ROOM_THEMES =
 {
 
-  hacx_urban_Generic =
+  genemp_Interior =
   {
     env  = "building",
     prob = 50,
 
     walls =
     {
-      MODWALL3 = 30,
-      STONY1 = 10,
-      TECHY1 = 20,
-      CAVEY1 = 10,
-      BLOCKY1 = 30,
-      BLOCKY2 = 10,
+      PANEL9 = 30,
+      BRICK9 = 30,
+      BSTONE1 = 30,
+      BSTONE2 = 30,
+      BSTONE3 = 30,
+      COMPUTE1 = 30,
     },
 
     floors =
     {
-      MODWALL3 = 50,
-      STONY1 = 50,
-      TECHY1 = 50,
-      CAVEY1 = 50,
-      BLOCKY1 = 50,
-      WOODY1 = 50,
-      WOOD_TILE = 50
+      FLAT5_4 = 30,
+      CEIL4_3 = 30,
+      FLAT5_5 = 30,   
     },
 
     ceilings =
     {
-      MODWALL3 = 30,
-      STONY1 = 10,
-      TECHY1 = 20,
-      CAVEY1 = 10,
-      BLOCKY1 = 30,
-      WOODY1 = 10,
+      MFLR8_2 = 30,
+      CEIL3_5 = 30,
+      CEIL1_1 = 30,
     }
   },
 
- hacx_urban_Hallway_curve =
-  {
-    env   = "hallway",
-    group = "curve",
-    prob = 50,
-
-    walls =
-    {
-      MODWALL3 = 30,
-      STONY1 = 10,
-      TECHY1 = 20,
-      CAVEY1 = 10,
-      BLOCKY1 = 30,
-      BLOCKY2 = 10,
-    },
-
-    floors =
-    {
-      MODWALL3 = 50,
-      STONY1 = 50,
-      TECHY1 = 50,
-      CAVEY1 = 50,
-      BLOCKY1 = 50,
-      WOODY1 = 50,
-      WOOD_TILE = 50
-    },
-
-    ceilings =
-    {
-      MODWALL3 = 30,
-      STONY1 = 10,
-      TECHY1 = 20,
-      CAVEY1 = 10,
-      BLOCKY1 = 30,
-      WOODY1 = 10,
-    }
-  },
-
-  hacx_urban_Hallway_deuce =
-  {
-    env   = "hallway",
-    group = "deuce",
-    prob = 50,
-
-    walls =
-    {
-      MODWALL3 = 30,
-      STONY1 = 10,
-      TECHY1 = 20,
-      CAVEY1 = 10,
-      BLOCKY1 = 30,
-      BLOCKY2 = 10,
-    },
-
-    floors =
-    {
-      MODWALL3 = 50,
-      STONY1 = 50,
-      TECHY1 = 50,
-      CAVEY1 = 50,
-      BLOCKY1 = 50,
-      WOODY1 = 50,
-      WOOD_TILE = 50
-    },
-
-    ceilings =
-    {
-      MODWALL3 = 30,
-      STONY1 = 10,
-      TECHY1 = 20,
-      CAVEY1 = 10,
-      BLOCKY1 = 30,
-      WOODY1 = 10,
-    }
-  },
-
- hacx_urban_Hallway_vent =
-  {
-    env   = "hallway",
-    group = "vent",
-    prob = 50,
-
-    walls =
-    {
-      MODWALL3 = 30,
-      STONY1 = 10,
-      TECHY1 = 20,
-      CAVEY1 = 10,
-      BLOCKY1 = 30,
-      BLOCKY2 = 10,
-    },
-
-    floors =
-    {
-      MODWALL3 = 50,
-      STONY1 = 50,
-      TECHY1 = 50,
-      CAVEY1 = 50,
-      BLOCKY1 = 50,
-      WOODY1 = 50,
-      WOOD_TILE = 50
-    },
-
-    ceilings =
-    {
-      MODWALL3 = 30,
-      STONY1 = 10,
-      TECHY1 = 20,
-      CAVEY1 = 10,
-      BLOCKY1 = 30,
-      WOODY1 = 10,
-    }
-  },
-
-  hacx_urban_Outdoors =
+  genemp_Outdoors =
   {
     env  = "outdoor",
     prob = 50,
 
     floors =
     {
-      HERRING_1 = 50,
-      GRAY_BRICK = 50
+      FLOOR6_2 = 50,
     },
 
     naturals =
     {
-      GRAY_ROCK = 50,
-      DIRTY1 = 50,
-      GRASS1 = 50
+      TLITE6_1 = 50,
+      CEIL3_4 = 50,
     },
 
     porch_floors =
     {
-      HERRING_1 = 50,
-      GRAY_BRICK = 50
+      FLOOR6_2 = 50,
     },
 
   },
 
-  hacx_urban_Cave =
+  genemp_Cave =
   {
     env  = "cave",
     prob = 50,
@@ -593,11 +461,11 @@ end
 
 ------------------------------------------------------------------------
 
-OB_THEMES["hacx_urban"] =
+OB_THEMES["genemp"] =
 {
-  label = _("HacX Urban"),
+  label = _("GenEmp Corp"),
   game = "hacx",
-  name_theme = "URBAN",
+  name_theme = "GENEMP",
   mixed_prob = 50
 }
 

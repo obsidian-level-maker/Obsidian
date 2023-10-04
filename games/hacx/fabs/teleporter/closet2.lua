@@ -8,8 +8,7 @@ PREFABS.Teleporter_closet =
 
   prob   = 50,
 
-  
-
+  kind = "teleporter",
   where  = "seeds",
   seed_w = 1,
   seed_h = 1,
@@ -23,4 +22,3 @@ PREFABS.Teleporter_closet =
   tag_1 = "?out_tag",
   tag_2 = "?in_tag",
 }
-

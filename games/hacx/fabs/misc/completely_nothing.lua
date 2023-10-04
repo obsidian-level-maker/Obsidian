@@ -5,8 +5,6 @@ PREFABS.Completely_nothing =
 
   where = "seeds",
 
-  
-
   seed_w = 1,
   seed_h = 1,
 }

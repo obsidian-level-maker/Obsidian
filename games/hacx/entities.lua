@@ -25,6 +25,7 @@ HACX.ENTITIES =
   standing_lamp = { id=57, r=38, h=51, pass=true, light=255},
   small_pillar  = { id=48, r=16, h=36 },
   passable_ceiling_decor = { id=74, r=16, h=24, pass=true, ceil=true },
+  tree = { id=54, r=20, h=64 },
 
   light  = { id="light", r=1, h=1, pass=true },
   secret = { id="oblige_secret", r=1, h=1, pass=true },
