@@ -37,7 +37,7 @@ msgstr ""
 msgid "Default"
 msgstr ""
 
-#: scripts/level.lua:2765
+#: scripts/level.lua:2779
 msgid ""
 "\n"
 "Warning: The game that you have selected is in an experimental state. WADs may not build successfully and certain gameplay features may not be implemented yet! To ignore this warning and continue generation for these games, check the \"Allow Partially Supported Games\" checkbox located under the Experimental tab.\n"
@@ -45,123 +45,123 @@ msgid ""
 "Use the tooltip for the \"Allow Partially Supported Games\" module to find the exact status for the game in question."
 msgstr ""
 
-#: scripts/level.lua:2864
+#: scripts/level.lua:2878
 msgid "Oblige V2"
 msgstr ""
 
-#: scripts/obsidian.lua:2445
+#: scripts/obsidian.lua:2462
 msgid "option: "
 msgstr ""
 
-#: scripts/obsidian.lua:2447
+#: scripts/obsidian.lua:2464
 msgid "comment: "
 msgstr ""
 
-#: scripts/obsidian.lua:2449
+#: scripts/obsidian.lua:2466
 msgid "engine: "
 msgstr ""
 
-#: scripts/obsidian.lua:2457
+#: scripts/obsidian.lua:2474
 msgid "game: "
 msgstr ""
 
-#: scripts/obsidian.lua:2465
+#: scripts/obsidian.lua:2482
 msgid "port: "
 msgstr ""
 
-#: scripts/obsidian.lua:2472
+#: scripts/obsidian.lua:2489
 msgid "values: "
 msgstr ""
 
-#: scripts/obsidian.lua:2478
+#: scripts/obsidian.lua:2495
 msgid "default: "
 msgstr ""
 
-#: scripts/obsidian.lua:2499
+#: scripts/obsidian.lua:2516
 msgid "randomize_group: "
 msgstr ""
 
-#: scripts/obsidian.lua:2533
+#: scripts/obsidian.lua:2550
 msgid "tooltip"
 msgstr ""
 
-#: scripts/obsidian.lua:2534
+#: scripts/obsidian.lua:2551
 msgid "engine"
 msgstr ""
 
-#: scripts/obsidian.lua:2536
+#: scripts/obsidian.lua:2553
 msgid "ALL"
 msgstr ""
 
-#: scripts/obsidian.lua:2548
+#: scripts/obsidian.lua:2565
 msgid "game"
 msgstr ""
 
-#: scripts/obsidian.lua:2562
+#: scripts/obsidian.lua:2579
 msgid "port"
 msgstr ""
 
-#: scripts/obsidian.lua:2577
+#: scripts/obsidian.lua:2594
 msgid "type"
 msgstr ""
 
-#: scripts/obsidian.lua:2578
+#: scripts/obsidian.lua:2595
 msgid "slider"
 msgstr ""
 
-#: scripts/obsidian.lua:2579
+#: scripts/obsidian.lua:2596
 msgid "values"
 msgstr ""
 
-#: scripts/obsidian.lua:2580
+#: scripts/obsidian.lua:2597
 msgid "min"
 msgstr ""
 
-#: scripts/obsidian.lua:2581
+#: scripts/obsidian.lua:2598
 msgid "max"
 msgstr ""
 
-#: scripts/obsidian.lua:2586
+#: scripts/obsidian.lua:2603
 msgid "default"
 msgstr ""
 
-#: scripts/obsidian.lua:2603
+#: scripts/obsidian.lua:2620
 msgid "boolean"
 msgstr ""
 
-#: scripts/obsidian.lua:2607
+#: scripts/obsidian.lua:2624
 msgid "choice"
 msgstr ""
 
-#: scripts/obsidian.lua:2619
+#: scripts/obsidian.lua:2636
 msgid "randomize_group"
 msgstr ""
 
-#: scripts/obsidian.lua:2647
+#: scripts/obsidian.lua:2664
 msgid ""
 "~~~~~~~ Making Levels ~~~~~~~\n"
 "\n"
 msgstr ""
 
-#: scripts/obsidian.lua:2666
+#: scripts/obsidian.lua:2683
 msgid "SLUMP"
 msgstr ""
 
-#: scripts/obsidian.lua:2677
+#: scripts/obsidian.lua:2694
 msgid "id Tech 0"
 msgstr ""
 
-#: scripts/obsidian.lua:2685
+#: scripts/obsidian.lua:2702
 msgid "Hexen's level linking in Oblige v2 is incompatible with Obsidian's level progression. Please set the slider to 100% to generate the full WAD with Oblige v2."
 msgstr ""
 
-#: scripts/obsidian.lua:2712
+#: scripts/obsidian.lua:2729
 msgid ""
 "~~~~~~~ Build Aborted! ~~~~~~~\n"
 "\n"
 msgstr ""
 
-#: scripts/obsidian.lua:2717
+#: scripts/obsidian.lua:2734
 msgid ""
 "~~~~~~ Finished Making Levels ~~~~~~\n"
 "\n"
@@ -372,8 +372,8 @@ msgstr ""
 msgid "HacX 1.2"
 msgstr ""
 
-#: games/hacx/themes.lua:598
-msgid "HacX Urban"
+#: games/hacx/themes.lua:466
+msgid "GenEmp Corp"
 msgstr ""
 
 #: games/harmony/base.lua:23
@@ -676,7 +676,7 @@ msgid ""
 msgstr ""
 
 #: modules/compress_output.lua:21
-msgid "PK3 Output"
+msgid "PK3/ZIP Output"
 msgstr ""
 
 #: modules/compress_output.lua:29
@@ -5441,31 +5441,31 @@ msgstr ""
 msgid "30000"
 msgstr ""
 
-#: modules/zdoom_frozsoul_sound.lua:252
+#: modules/zdoom_frozsoul_sound.lua:256
 msgid "ZDoom Ambient Sounds"
 msgstr ""
 
-#: modules/zdoom_frozsoul_sound.lua:273
+#: modules/zdoom_frozsoul_sound.lua:277
 msgid "DoomEdNum Offset"
 msgstr ""
 
-#: modules/zdoom_frozsoul_sound.lua:275
+#: modules/zdoom_frozsoul_sound.lua:279
 msgid "Selects the starting thing ID for generating ambient sound actors. Use only if you are playing a mod using conflicting Editor Numbers. If you don't know what this is this setting is best left as-is."
 msgstr ""
 
-#: modules/zdoom_frozsoul_sound.lua:281
+#: modules/zdoom_frozsoul_sound.lua:285
 msgid "Merge Frozsoul Sound Pack"
 msgstr ""
 
-#: modules/zdoom_frozsoul_sound.lua:284
+#: modules/zdoom_frozsoul_sound.lua:288
 msgid "Merge Frozsoul Ambient Sound Pack sound into generated WAD/PK3"
 msgstr ""
 
-#: modules/zdoom_frozsoul_sound.lua:285
+#: modules/zdoom_frozsoul_sound.lua:289
 msgid "Merge in the sounds from the Frozsoul Ambient Sound Pack, the default set of sounds which this module is designed for. Not necessary if you plan to include the sound pack separately in your launch order."
 msgstr ""
 
-#: modules/zdoom_frozsoul_sound.lua:289
+#: modules/zdoom_frozsoul_sound.lua:293
 msgid "Adds ambient sound things to fabs, room themes, and environments (WIP). Needs an accompanying sound pack containing corresponding sound files to be included with your Doom launcher."
 msgstr ""
 
@@ -5585,54 +5585,54 @@ msgstr ""
 msgid "Doom 1 Vanilla"
 msgstr ""
 
-#: modules/zdoom_specials.lua:912
+#: modules/zdoom_specials.lua:920
 msgid "ZDoom Lighting Options"
 msgstr ""
 
-#: modules/zdoom_specials.lua:927
+#: modules/zdoom_specials.lua:935
 msgid "This module adds ZDoom-exclusive GL/dynamic lighting definitions."
 msgstr ""
 
-#: modules/zdoom_specials.lua:933
+#: modules/zdoom_specials.lua:941
 msgid "Dynamic Lights"
 msgstr ""
 
-#: modules/zdoom_specials.lua:937
+#: modules/zdoom_specials.lua:945
 msgid "Generates dynamic point lights on prefabs if available."
 msgstr ""
 
-#: modules/zdoom_specials.lua:942
+#: modules/zdoom_specials.lua:950
 msgid "Glowing Flats"
 msgstr ""
 
-#: modules/zdoom_specials.lua:946
+#: modules/zdoom_specials.lua:954
 msgid "Adds Doom-64 style lighting/glowing flats via GLDEFS lump. Visible on Zandronum ports as well."
 msgstr ""
 
-#: modules/zdoom_specials.lua:1027
+#: modules/zdoom_specials.lua:1035
 msgid ""
 "Shuffles music in the MAPINFO lump. Oblige's vanilla music shuffler uses a BEX lump and is therefore ignored when the ZDoom Addons module is active.\n"
 "\n"
 "Warning: the 'Merge Doom 1 and 2' option is for music packs that contain both Doom 1 and 2 direct patch replacements. Do not use unless you have such a pack."
 msgstr ""
 
-#: modules/zdoom_specials.lua:1059
+#: modules/zdoom_specials.lua:1067
 msgid "Episode Selection"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1063
+#: modules/zdoom_specials.lua:1071
 msgid "Creates a classic Doom/Ultimate Doom style episode selection."
 msgstr ""
 
-#: ports/boom.lua:144
+#: ports/boom.lua:148
 msgid "BOOM Compat"
 msgstr ""
 
-#: ports/boom.lua:182
+#: ports/boom.lua:186
 msgid "Advanced"
 msgstr ""
 
-#: ports/boom.lua:217
+#: ports/boom.lua:221
 msgid "DSDA-Doom"
 msgstr ""
 
@@ -5684,28 +5684,28 @@ msgstr ""
 msgid "Full Game"
 msgstr ""
 
-#: scripts/obsidian.lua:2335
+#: scripts/obsidian.lua:2352
 msgid ""
 "Choose which engine to build maps for:\n"
 "  id Tech 0: Wolfenstein 3D and similar games\n"
 "  id Tech 1: Doom and similar games\n"
 msgstr ""
 
-#: scripts/obsidian.lua:2346
+#: scripts/obsidian.lua:2363
 msgid "Choose which game to build maps for."
 msgstr ""
 
-#: scripts/obsidian.lua:2370
+#: scripts/obsidian.lua:2387
 msgid ""
 "Choose which port to build maps for.\n"
 "  Vanilla is the only option for id Tech 0; the remaining options are for id Tech 1.\n"
 msgstr ""
 
-#: scripts/obsidian.lua:2386
+#: scripts/obsidian.lua:2403
 msgid "Choose how many levels to create."
 msgstr ""
 
-#: scripts/obsidian.lua:2399
+#: scripts/obsidian.lua:2416
 msgid ""
 "The following values are game-specific:\n"
 "  Chex Quest 3: bazoik,spaceport,villa\n"
@@ -5721,19 +5721,23 @@ msgid ""
 "  Note: This setting currently does nothing for id Tech 0 games!\n"
 msgstr ""
 
-#: source_files/obsidian_main/g_doom.cc:301
+#: source_files/obsidian_main/g_doom.cc:241
+msgid "AJBSP Error!"
+msgstr ""
+
+#: source_files/obsidian_main/g_doom.cc:358
 msgid ""
 "Unable to create wad file:\n"
 "\n"
 "%s"
 msgstr ""
 
-#: source_files/obsidian_main/g_doom.cc:1008
-msgid "AJBSP Error!"
+#: source_files/obsidian_main/g_doom.cc:496
+msgid "Error writing map WAD to %s\n"
 msgstr ""
 
-#: source_files/obsidian_main/g_doom.cc:1077
-msgid "Cancelled"
+#: source_files/obsidian_main/g_doom.cc:1174
+msgid "Error (create PK3/ZIP)"
 msgstr ""
 
 #: source_files/obsidian_main/g_doom.cc:1105
@@ -5760,15 +5764,15 @@ msgstr ""
 msgid "Hull"
 msgstr ""
 
-#: source_files/obsidian_main/g_wolf.cc:360
+#: source_files/obsidian_main/g_wolf.cc:361
 msgid "Select output directory"
 msgstr ""
 
-#: source_files/obsidian_main/g_wolf.cc:372
+#: source_files/obsidian_main/g_wolf.cc:373
 msgid "Error choosing directory:\n"
 msgstr ""
 
-#: source_files/obsidian_main/g_wolf.cc:387
+#: source_files/obsidian_main/g_wolf.cc:388
 msgid "Empty directory provided???:\n"
 msgstr ""
 
@@ -5780,93 +5784,120 @@ msgstr ""
 msgid "Addons/"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:264
+#: source_files/obsidian_main/main.cc:266
 msgid "OBSIDIAN will now restart and apply changes to addons."
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1053
+#: source_files/obsidian_main/main.cc:285
+msgid ""
+"Cannot open: %s\n"
+"\n"
+"%s"
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:292
+msgid "No config found in file."
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:1076
 msgid "OK"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1054
+#: source_files/obsidian_main/main.cc:1077
 msgid "Cancel"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1055
+#: source_files/obsidian_main/main.cc:1078
 msgid "Close"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1168
+#: source_files/obsidian_main/main.cc:1191
 msgid "Seed:"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1232
+#: source_files/obsidian_main/main.cc:1253
 msgid "Preparing..."
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1269
+#: source_files/obsidian_main/main.cc:1290
 msgid "Success"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1287
+#: source_files/obsidian_main/main.cc:1308
 msgid "Seed: -"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1534
+#: source_files/obsidian_main/main.cc:1557
 msgid "OBSIDIAN Level Maker"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1535
+#: source_files/obsidian_main/main.cc:1558
 msgid "Unstable"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1646
+#: source_files/obsidian_main/main.cc:1652
 msgid "No such config file: %s\n"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1832
+#: source_files/obsidian_main/main.cc:1840
 msgid "Surprise Me/Preserve Old Config"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1836
+#: source_files/obsidian_main/main.cc:1844
 msgid "Surprise Me/Randomize Architecture"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1840
+#: source_files/obsidian_main/main.cc:1848
 msgid "Surprise Me/Randomize Combat"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1844
+#: source_files/obsidian_main/main.cc:1852
 msgid "Surprise Me/Randomize Pickups"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1848
+#: source_files/obsidian_main/main.cc:1856
 msgid "Surprise Me/Randomize Other"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1851
+#: source_files/obsidian_main/main.cc:1859
 msgid "Addons/No folders or *.oaf files"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1853
+#: source_files/obsidian_main/main.cc:1861
 msgid "Addons/found in the \\/addons directory!"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1856
+#: source_files/obsidian_main/main.cc:1864
 msgid "Addons/Restart and Apply Changes"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1868
+#: source_files/obsidian_main/main.cc:1877
+msgid "Presets/No *.txt preset files"
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:1879
+msgid "Presets/found in the \\/presets directory!"
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:1882
+msgid "Presets/Note: Selecting a Preset will immediately apply it!"
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:1885
+msgid "Presets/"
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:1892
 msgid "Summon Clippy"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:2067
+#: source_files/obsidian_main/main.cc:2091
 msgid ""
 "Sorry, an internal error occurred:\n"
 "%s"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:2070
+#: source_files/obsidian_main/main.cc:2094
 msgid ""
 "An exception occurred: \n"
 "%s"
@@ -5889,135 +5920,135 @@ msgstr ""
 msgid "About OBSIDIAN"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:215
+#: source_files/obsidian_main/m_dialog.cc:214
 msgid "OBSIDIAN - Error Message"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:231
+#: source_files/obsidian_main/m_dialog.cc:230
 msgid "files"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:245
+#: source_files/obsidian_main/m_dialog.cc:244
 msgid "Select output file"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:268
+#: source_files/obsidian_main/m_dialog.cc:267
 msgid "Error choosing output file:\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:271
+#: source_files/obsidian_main/m_dialog.cc:270
 msgid ""
 "Unable to create the file:\n"
 "\n"
 "%s"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:313
+#: source_files/obsidian_main/m_dialog.cc:317
 msgid "Enter New Seed Number or Phrase:"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:329
+#: source_files/obsidian_main/m_dialog.cc:331
 msgid "String contains non-digits. Will process as string\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:338
+#: source_files/obsidian_main/m_dialog.cc:340
 msgid "Invalid argument. Will process as string.\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:342
+#: source_files/obsidian_main/m_dialog.cc:344
 msgid "Resulting number would be out of range. Will process as string.\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:456
+#: source_files/obsidian_main/m_dialog.cc:458
 msgid "Save"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:468
+#: source_files/obsidian_main/m_dialog.cc:470
 msgid "Copy"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:587
+#: source_files/obsidian_main/m_dialog.cc:589
 msgid "Pick file to save to"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:604
+#: source_files/obsidian_main/m_dialog.cc:606
 msgid ""
 "Unable to save the file:\n"
 "\n"
 "%s"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:625
+#: source_files/obsidian_main/m_dialog.cc:628
 msgid ""
 "%s already exists.\n"
 "Choose Yes to overwrite or No to choose a new filename."
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:640
+#: source_files/obsidian_main/m_dialog.cc:643
 msgid "Please choose a filename ending in .txt"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:779
+#: source_files/obsidian_main/m_dialog.cc:782
 msgid "OBSIDIAN Log Viewer"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:799
+#: source_files/obsidian_main/m_dialog.cc:802
 msgid "OBSIDIAN Glossary Viewer"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1042
+#: source_files/obsidian_main/m_lua.cc:1049
 msgid "Making"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1169
+#: source_files/obsidian_main/m_lua.cc:1176
 msgid "Using"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1170
+#: source_files/obsidian_main/m_lua.cc:1177
 msgid "Preview Not Available"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1573
+#: source_files/obsidian_main/m_lua.cc:1585
 msgid "[ ERROR ]"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1577
+#: source_files/obsidian_main/m_lua.cc:1589
 msgid "Script Error: "
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1931
+#: source_files/obsidian_main/m_lua.cc:1943
 msgid "ob_print_reference: Error creating REFERENCE.txt!\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1941
+#: source_files/obsidian_main/m_lua.cc:1953
 msgid "ob_print_reference_json: Error printing json reference!\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1950
+#: source_files/obsidian_main/m_lua.cc:1962
 msgid "Script Error"
 msgstr ""
 
-#: source_files/obsidian_main/m_manage.cc:299
+#: source_files/obsidian_main/m_manage.cc:347
 msgid "CURRENT SETTINGS"
 msgstr ""
 
-#: source_files/obsidian_main/m_manage.cc:326
+#: source_files/obsidian_main/m_manage.cc:374
 msgid "Error choosing save file:\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_manage.cc:363
+#: source_files/obsidian_main/m_manage.cc:411
 msgid "Error writing to file."
 msgstr ""
 
-#: source_files/obsidian_main/m_manage.cc:374
+#: source_files/obsidian_main/m_manage.cc:422
 msgid "Select file to load"
 msgstr ""
 
-#: source_files/obsidian_main/m_manage.cc:396
+#: source_files/obsidian_main/m_manage.cc:444
 msgid "Error choosing load file:\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_manage.cc:399
+#: source_files/obsidian_main/m_manage.cc:447
 msgid ""
 "Unable to load the file:\n"
 "\n"
@@ -6039,44 +6070,44 @@ msgstr ""
 msgid "PASTED TEXT"
 msgstr ""
 
-#: source_files/obsidian_main/m_manage.cc:621
+#: source_files/obsidian_main/m_manage.cc:669
 msgid "Load WAD/TXT"
 msgstr ""
 
-#: source_files/obsidian_main/m_manage.cc:642
+#: source_files/obsidian_main/m_manage.cc:690
 msgid "Use"
 msgstr ""
 
-#: source_files/obsidian_main/m_manage.cc:652
+#: source_files/obsidian_main/m_manage.cc:700
 msgid ""
 "Note: This will replace\n"
 "all current settings!"
 msgstr ""
 
-#: source_files/obsidian_main/m_manage.cc:659
+#: source_files/obsidian_main/m_manage.cc:707
 msgid "Reset to Default"
 msgstr ""
 
-#: source_files/obsidian_main/m_manage.cc:669
+#: source_files/obsidian_main/m_manage.cc:717
 msgid ""
 "Note: This will delete\n"
 "the current CONFIG.txt\n"
 "and restart Obsidian!"
 msgstr ""
 
-#: source_files/obsidian_main/m_manage.cc:701
+#: source_files/obsidian_main/m_manage.cc:749
 msgid " Clipboard Operations"
 msgstr ""
 
-#: source_files/obsidian_main/m_manage.cc:712
+#: source_files/obsidian_main/m_manage.cc:760
 msgid "Cut"
 msgstr ""
 
-#: source_files/obsidian_main/m_manage.cc:736
+#: source_files/obsidian_main/m_manage.cc:784
 msgid "Paste"
 msgstr ""
 
-#: source_files/obsidian_main/m_manage.cc:764
+#: source_files/obsidian_main/m_manage.cc:812
 msgid "OBSIDIAN Config Manager"
 msgstr ""
 
@@ -6098,47 +6129,51 @@ msgid ""
 "\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:240
+#: source_files/obsidian_main/m_options.cc:242
 msgid "AUTO"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:284
+#: source_files/obsidian_main/m_options.cc:286
 msgid ""
 "Obsidian will now restart to apply language changes.\n"
 "Obsidian will be in your selected language after restarting."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:315
+#: source_files/obsidian_main/m_options.cc:317
 msgid "Random String Seeds"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:325
+#: source_files/obsidian_main/m_options.cc:327
 msgid "Will randomly pull 1 to 3 words from Obsidian's random word list and use those as input for the map generation seed. Purely for cosmetic/entertainment value."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:337
+#: source_files/obsidian_main/m_options.cc:339
 msgid "Password Mode"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:347
+#: source_files/obsidian_main/m_options.cc:349
 msgid "Will produce a pseudo-random sequence of characters as input for the map generation seed. Random String Seeds must be enabled to use this option."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:365
+#: source_files/obsidian_main/m_options.cc:367
 msgid "Mature Wordlists"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:375
+#: source_files/obsidian_main/m_options.cc:377
 msgid "When enabled, will use a random wordlist that can result in obscene or otherwise offensive language being used for seed, map and WAD title elements."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:403
+#: source_files/obsidian_main/m_options.cc:405
 msgid ""
 "File prefix changes require a restart.\n"
 "OBSIDIAN will now restart."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:415
+#: source_files/obsidian_main/m_options.cc:419
+msgid "Yes, break Obsidian"
+msgstr ""
+
+#: source_files/obsidian_main/m_options.cc:420
 msgid ""
 "WARNING! This option will allow you to manually enter values in excess of the \n"
 "(usually) stable slider limits for Obsidian.\n"
@@ -6156,11 +6191,11 @@ msgid ""
 "Obsidian will now restart."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:444
+#: source_files/obsidian_main/m_options.cc:447
 msgid "Custom Prefix"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:454
+#: source_files/obsidian_main/m_options.cc:457
 msgid ""
 "Custom prefixes can use any of the special format strings listed below. Anything else is used as-is.\n"
 "\n"
@@ -6187,83 +6222,83 @@ msgid ""
 "%count or %c: The number of levels in the generated WAD."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:461
+#: source_files/obsidian_main/m_options.cc:464
 msgid "Enter Custom Prefix Format:"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:466
+#: source_files/obsidian_main/m_options.cc:469
 msgid "Custom prefix cannot be blank!"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:480
+#: source_files/obsidian_main/m_options.cc:483
 msgid "Select default save directory"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:505
+#: source_files/obsidian_main/m_options.cc:509
 msgid "Empty default directory provided???:\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:515
+#: source_files/obsidian_main/m_options.cc:520
 msgid "Current Path"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:542
+#: source_files/obsidian_main/m_options.cc:548
 msgid "Language: "
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:556
+#: source_files/obsidian_main/m_options.cc:562
 msgid "Filename Prefix: "
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:561
+#: source_files/obsidian_main/m_options.cc:567
 msgid "Date and Time|Number of Levels|Game|Port|Theme|Version|Custom|Nothing"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:572
+#: source_files/obsidian_main/m_options.cc:578
 msgid "Set Custom Prefix..."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:589
+#: source_files/obsidian_main/m_options.cc:595
 msgid "Set Default Output Path"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:615
+#: source_files/obsidian_main/m_options.cc:621
 msgid " Random String Seeds"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:631
+#: source_files/obsidian_main/m_options.cc:637
 msgid " Password Mode"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:650
+#: source_files/obsidian_main/m_options.cc:656
 msgid " Use Mature Wordlists"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:665
+#: source_files/obsidian_main/m_options.cc:672
 msgid " Create Backups"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:675
+#: source_files/obsidian_main/m_options.cc:683
 msgid " Overwrite File Warning"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:685
+#: source_files/obsidian_main/m_options.cc:694
 msgid " Debugging Messages"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:695
+#: source_files/obsidian_main/m_options.cc:705
 msgid " Ignore Slider Limits"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:706
+#: source_files/obsidian_main/m_options.cc:716
 msgid "Builds Per Run "
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:723
+#: source_files/obsidian_main/m_options.cc:733
 msgid " Preserve Failed Builds"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:788
+#: source_files/obsidian_main/m_options.cc:798
 msgid "OBSIDIAN Misc Options"
 msgstr ""
 
@@ -6275,163 +6310,163 @@ msgstr ""
 msgid "Windows scaling changes cannot be applied automatically, but will take effect the next time Obsidian is run.\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:653
+#: source_files/obsidian_main/m_theme.cc:657
 msgid ""
 "Plastic widget theme requires a restart.\n"
 "OBSIDIAN will now restart."
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1033
+#: source_files/obsidian_main/m_theme.cc:1041
 msgid ""
 "Switching font selection requires a restart.\n"
 "OBSIDIAN will now restart."
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1092
+#: source_files/obsidian_main/m_theme.cc:1100
 msgid "Select Panel Text Color"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1186
+#: source_files/obsidian_main/m_theme.cc:1194
 msgid "Select Button Text Color"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1237
+#: source_files/obsidian_main/m_theme.cc:1245
 msgid "Select Panel Color"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1284
+#: source_files/obsidian_main/m_theme.cc:1294
 msgid "Select Highlight Color"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1344
+#: source_files/obsidian_main/m_theme.cc:1354
 msgid "Select Button Color"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1387
+#: source_files/obsidian_main/m_theme.cc:1397
 msgid "Select Gradient Color"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1419
+#: source_files/obsidian_main/m_theme.cc:1429
 msgid "Select Border Color"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1449
+#: source_files/obsidian_main/m_theme.cc:1459
 msgid "Select Gap Color"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1514
+#: source_files/obsidian_main/m_theme.cc:1524
 msgid ""
 "Defaults loaded.\n"
 "OBSIDIAN will now restart."
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1526
+#: source_files/obsidian_main/m_theme.cc:1536
 msgid ""
 "Theme loading requires a restart.\n"
 "OBSIDIAN will now restart."
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1567
+#: source_files/obsidian_main/m_theme.cc:1577
 msgid "Window Scaling: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1569
+#: source_files/obsidian_main/m_theme.cc:1579
 msgid "AUTO|Tiny|Small|Medium|Large|Huge"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1581
+#: source_files/obsidian_main/m_theme.cc:1591
 msgid "Font Size: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1598
+#: source_files/obsidian_main/m_theme.cc:1608
 msgid "Font: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1614
+#: source_files/obsidian_main/m_theme.cc:1624
 msgid "Widget Theme: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1616
+#: source_files/obsidian_main/m_theme.cc:1626
 msgid "Default|Gleam|Win95|Plastic|Oxy"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1628
+#: source_files/obsidian_main/m_theme.cc:1638
 msgid "Box Theme: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1630
+#: source_files/obsidian_main/m_theme.cc:1640
 msgid "Default|Shadow|Embossed|Engraved|Inverted|Raised"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1642
+#: source_files/obsidian_main/m_theme.cc:1652
 msgid "Button Theme: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1644
+#: source_files/obsidian_main/m_theme.cc:1654
 msgid "Default|Raised|Engraved|Embossed|Flat"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1656
+#: source_files/obsidian_main/m_theme.cc:1666
 msgid "Color Scheme: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1658
+#: source_files/obsidian_main/m_theme.cc:1668
 msgid "Default|Custom"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1669
+#: source_files/obsidian_main/m_theme.cc:1679
 msgid "Panel Font"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1679
+#: source_files/obsidian_main/m_theme.cc:1689
 msgid "Button Font"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1689
+#: source_files/obsidian_main/m_theme.cc:1699
 msgid "Panels"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1699
+#: source_files/obsidian_main/m_theme.cc:1709
 msgid "Highlights"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1710
+#: source_files/obsidian_main/m_theme.cc:1720
 msgid "Buttons"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1721
+#: source_files/obsidian_main/m_theme.cc:1731
 msgid "Gradient"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1732
+#: source_files/obsidian_main/m_theme.cc:1742
 msgid "Borders"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1743
+#: source_files/obsidian_main/m_theme.cc:1753
 msgid "Gaps"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1756
+#: source_files/obsidian_main/m_theme.cc:1766
 msgid " Use System Fonts (disables bundled fonts)"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1766
+#: source_files/obsidian_main/m_theme.cc:1776
 msgid "Load Defaults"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1776
+#: source_files/obsidian_main/m_theme.cc:1786
 msgid "Load Theme"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1787
+#: source_files/obsidian_main/m_theme.cc:1797
 msgid "Save Theme"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1823
+#: source_files/obsidian_main/m_theme.cc:1833
 msgid "Note: Most settings will only affect tabs after a restart."
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1860
+#: source_files/obsidian_main/m_theme.cc:1870
 msgid "OBSIDIAN Theme Options"
 msgstr ""
 
@@ -6540,50 +6575,50 @@ msgstr ""
 msgid "Mons"
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:50
+#: source_files/obsidian_main/ui_game.cc:49
 msgid "Game Settings"
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:62
+#: source_files/obsidian_main/ui_game.cc:61
 msgid "Engine: "
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:75
+#: source_files/obsidian_main/ui_game.cc:74
 msgid "Game: "
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:88
+#: source_files/obsidian_main/ui_game.cc:87
 msgid "Port: "
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:101
+#: source_files/obsidian_main/ui_game.cc:100
 msgid "Length: "
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:114
+#: source_files/obsidian_main/ui_game.cc:113
 msgid "Theme: "
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:138
+#: source_files/obsidian_main/ui_game.cc:137
 msgid "Quit"
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:200
+#: source_files/obsidian_main/ui_game.cc:199
 msgid "Engine"
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:210
+#: source_files/obsidian_main/ui_game.cc:209
 msgid ""
 "id Tech 0: Powered Wolfenstein-3D and similar games\n"
 "\n"
 "id Tech 1: Powered Doom, Doom 2, Heretic, etc"
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:216
+#: source_files/obsidian_main/ui_game.cc:215
 msgid "Game"
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:226
+#: source_files/obsidian_main/ui_game.cc:225
 msgid ""
 "The following games will have gameplay that differs from the original IWADs:\n"
 "\n"
@@ -6592,11 +6627,11 @@ msgid ""
 "Strife: Quests/multiple endings not yet implemented. Progression is linear and game will end on last level generated."
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:232
+#: source_files/obsidian_main/ui_game.cc:231
 msgid "Port"
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:242
+#: source_files/obsidian_main/ui_game.cc:241
 msgid ""
 "Available Ports:\n"
 "\n"
@@ -6619,11 +6654,11 @@ msgid ""
 "Eternity: Boom-compatible, software renderer only, but with advanced features such as UDMF."
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:248
+#: source_files/obsidian_main/ui_game.cc:247
 msgid "Length"
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:258
+#: source_files/obsidian_main/ui_game.cc:257
 msgid ""
 "Available Game Lengths:\n"
 "\n"
@@ -6636,11 +6671,11 @@ msgid ""
 "Full Game: The length of a full game in the original program."
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:264
+#: source_files/obsidian_main/ui_game.cc:263
 msgid "Theme"
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:275
+#: source_files/obsidian_main/ui_game.cc:274
 msgid ""
 "Available Themes:\n"
 "\n"
@@ -6657,7 +6692,7 @@ msgid ""
 "Other themes listed are game-specific."
 msgstr ""
 
-#: source_files/obsidian_main/ui_module.cc:321
+#: source_files/obsidian_main/ui_module.cc:320
 msgid "Use Slider Value"
 msgstr ""
 
@@ -6717,6 +6752,6 @@ msgstr ""
 msgid "Help/Tutorial"
 msgstr ""
 
-#: source_files/obsidian_main/ui_window.cc:99
+#: source_files/obsidian_main/ui_window.cc:98
 msgid "Surprise Me/Go"
 msgstr ""
