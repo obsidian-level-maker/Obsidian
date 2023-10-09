@@ -42,7 +42,9 @@ bool ZIPF_OpenWrite(const std::filesystem::path &filename) {
         return false;
     }
     if (zip_writer) {
-        return false;
+        mz_zip_writer_end(zip_writer);
+        delete zip_writer;
+        zip_writer = nullptr;
     }
     zip_writer = new mz_zip_archive;
     mz_zip_zero_struct(zip_writer);

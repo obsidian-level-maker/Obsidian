@@ -1334,12 +1334,22 @@ bool Build_Cool_Shit() {
         Main::ProgStatus(_("Cancelled"));
     }
 
+    // Insurance in case the build process errored/cancelled
+    ZIPF_CloseWrite();
+    if (!was_ok)
+    {
+        if (std::filesystem::exists(game_object->Filename())) {
+            std::filesystem::remove(game_object->Filename());
+        }
+        if (std::filesystem::exists(game_object->ZIP_Filename())) {
+            std::filesystem::remove(game_object->ZIP_Filename());
+        }
+    }
+
     // don't need game object anymore
     delete game_object;
     game_object = NULL;
 
-    // Insurance in case the build process errored/cancelled
-    ZIPF_CloseWrite();
     return was_ok;
 }
 
