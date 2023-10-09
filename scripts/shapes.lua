@@ -8546,7 +8546,7 @@ GROW_MAZE_ZIGZAG =
     "....","#1/#",
     "x..x","x1#x",
     "x..x","x1%x",
-    "x11x","x11x",
+    "x11x","x11x"
   },
 
   diagonals =
@@ -8555,6 +8555,32 @@ GROW_MAZE_ZIGZAG =
     ".1",
     "1.",
     "1."
+  }
+},
+
+GROW_MAZE_ZIGZAG_CAGE =
+{
+  prob = 5,
+  skip_prob = 80,
+
+  structure =
+  {
+    "x..x","x11x",
+    "x..x","x%1x",
+    "x..x","xC1x",
+    "....","#/1#",
+    "....","#1/#",
+    "x..x","x1Cx",
+    "x..x","x1%x",
+    "x11x","x11x"
+  },
+
+  diagonals =
+  {
+    "C1",
+    "C1",
+    "1C",
+    "1C"
   }
 },
 
@@ -8576,17 +8602,49 @@ GROW_MAZE_ZIGZAG_DOUBLE =
     "...x","#%1x",
     "x..x","x#1x",
     "x..x","x/1x",
-    "x11x","x11x",
+    "x11x","x11x"
   },
 
   diagonals =
   {
-    "1.",
+    ".1",
     ".1",
     "1.",
     "1.",
     ".1",
     ".1"
+  }
+},
+
+GROW_MAZE_ZIGZAG_DOUBLE_CAGE =
+{
+  prob = 5,
+  skip_prob = 80,
+
+  structure =
+  {
+    "x..x","x11x",
+    "x..x","x%1x",
+    "x..x","xC1x",
+    "...x","#/1x",
+    "x...","x1/#",
+    "x..x","x1Cx",
+    "x..x","x1Cx",
+    "x...","x1%#",
+    "...x","#%1x",
+    "x..x","xC1x",
+    "x..x","x/1x",
+    "x11x","x11x"
+  },
+
+  diagonals =
+  {
+    "C1",
+    "C1",
+    "1C",
+    "1C",
+    "C1",
+    "C1"
   }
 },
 
@@ -13440,10 +13498,108 @@ GROW_DEUCE_DIAMONDS =
     ".1","1.",".1","1.",
         ".1","1.",
         ".1","1."
-}
+  }
 },
 
 -- MSSP's rooms shaped like English alphabet letters. [LETTERS]
+
+GROW_SKULL_P1_NEW_AREA =
+{
+  prob = 15,
+  skip_prob = 85,
+
+  structure =
+  {
+    "x.......x","x/AAAAA%x",
+    ".........","/AAAAAAA%",
+    ".........","AA/%A/%AA",
+    ".........","AA%/A%/AA",
+    ".........","AAAAAAAAA",
+    ".........","%AAAAAAA/",
+    "x.......x","x1A1A1A1x",
+    "x.......x","x1A1A1A1x",
+    "x.......x","x1A1A1A1x",
+    "x.......x","x1A1A1A1x",
+    "x.......x","x1111111x",
+    "x.......x","x1111111x",
+    "xxx111xxx","xxx111xxx"
+  },
+
+  diagonals =
+  {
+    ".A","A.",
+    ".A","A.",
+    "A~","~A","A~","~A",
+    "A~","~A","A~","~A",
+    ".A","A."
+  }
+},
+
+GROW_SKULL_P1_STEEPNESS =
+{
+  prob = 10,
+  skip_prob = 85,
+
+  structure =
+  {
+    "x.......x","x/AAAAA%x",
+    ".........","/AAAAAAA%",
+    ".........","AA/%A/%AA",
+    ".........","AA%/A%/AA",
+    ".........","AAAAAAAAA",
+    ".........","%AAAAAAA/",
+    "x.......x","x1A1A1A1x",
+    "x.......x","x1A1A1A1x",
+    "x.......x","x1A1A1A1x",
+    "x.......x","x1^1^1^1x",
+    "x.......x","x1111111x",
+    "x.......x","x1111111x",
+    "xxx111xxx","xxx111xxx"
+  },
+
+  diagonals =
+  {
+    ".A","A.",
+    ".A","A.",
+    "A~","~A","A~","~A",
+    "A~","~A","A~","~A",
+    ".A","A."
+  }
+},
+
+GROW_SKULL_P1_STEEPNESS_HALF =
+{
+  prob = 8,
+  skip_prob = 85,
+
+  structure =
+  {
+    "x....","x/AAA",
+    ".....","/AAAA",
+    ".....","AA/%A",
+    ".....","AA%/A",
+    ".....","AAAAA",
+    ".....","%AAAA",
+    "x....","x1A1A",
+    "x....","x1A1A",
+    "x....","x1A1A",
+    "x....","x1^1^",
+    "x....","x1111",
+    "x....","x1111",
+    "xxx11","xxx11"
+  },
+
+  diagonals =
+  {
+    ".A",
+    ".A",
+    "A~","~A",
+    "A~","~A",
+    ".A"
+  }
+},
+
+-- other shapes
 
 GROW_DIAGONAL_STALK =
 {
