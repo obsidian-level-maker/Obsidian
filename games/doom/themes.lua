@@ -1901,7 +1901,10 @@ DOOM.THEMES =
       tech_o_g_blakwall = 1,
       tech_o_g_modwall1 = 1,
       tech_o_g_modwall2 = 1,
-      tech_o_yellow_compsil = 1
+      tech_o_yellow_compsil = 1,
+      tech_o_letter_A = 1,
+      tech_o_letter_B = 1,
+      tech_o_letter_C = 1
     },
 
     window_groups =

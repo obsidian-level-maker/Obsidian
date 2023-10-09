@@ -93,3 +93,81 @@ PREFABS.Wall_tech_outdoor_lots_of_cement = --#
 
   group = "tech_o_lots_of_cement"
 }
+
+PREFABS.Wall_tech_outdoor_letter_A_tekgreen = --#
+{
+  template = "Wall_tech_outdoor_hex_inset",
+  map = "MAP06",
+
+  height = 120,
+
+  port = "any",
+
+  group = "tech_o_letter_A",
+
+  z_fit = { 20,22 , 118,120 }
+}
+
+PREFABS.Wall_tech_outdoor_letter_B = --#
+{
+  template = "Wall_tech_outdoor_hex_inset",
+  map = "MAP07",
+
+  height = 96,
+
+  port = "any",
+  rank = 1,
+  texture_pack = "armaetus",
+
+  group = "tech_o_letter_B",
+
+  z_fit = "top"
+}
+
+PREFABS.Wall_tech_outdoor_letter_B_compat =
+{
+  template = "Wall_tech_outdoor_hex_inset",
+  map = "MAP07",
+
+  height = 96,
+
+  port = "any",
+
+  group = "tech_o_letter_B",
+
+  tex_COLLITE3 = "COMPBLUE",
+
+  z_fit = "top"
+}
+
+PREFABS.Wall_tech_outdoor_letter_C = --#
+{
+  template = "Wall_tech_outdoor_hex_inset",
+  map = "MAP08",
+
+  height = 96,
+
+  port = "any",
+  rank = 1,
+  texture_pack = "armaetus",
+
+  group = "tech_o_letter_C",
+
+  z_fit = {12,14 , 58,60},
+}
+
+PREFABS.Wall_tech_outdoor_letter_C_compat = --#
+{
+  template = "Wall_tech_outdoor_hex_inset",
+  map = "MAP08",
+
+  height = 96,
+
+  port = "any",
+
+  group = "tech_o_letter_C",
+
+  z_fit = {12,14 , 58,60},
+
+  tex_SHAWN10E = "SHAWN2"
+}
