@@ -99,13 +99,13 @@ PREFABS.Wall_tech_outdoor_letter_A_tekgreen = --#
   template = "Wall_tech_outdoor_hex_inset",
   map = "MAP06",
 
-  height = 120,
+  height = 128,
 
   port = "any",
 
   group = "tech_o_letter_A",
 
-  z_fit = { 20,22 , 118,120 }
+  z_fit = { 38,39 , 121,122 }
 }
 
 PREFABS.Wall_tech_outdoor_letter_B = --#
@@ -113,7 +113,7 @@ PREFABS.Wall_tech_outdoor_letter_B = --#
   template = "Wall_tech_outdoor_hex_inset",
   map = "MAP07",
 
-  height = 96,
+  height = 120,
 
   port = "any",
   rank = 1,
@@ -129,7 +129,7 @@ PREFABS.Wall_tech_outdoor_letter_B_compat =
   template = "Wall_tech_outdoor_hex_inset",
   map = "MAP07",
 
-  height = 96,
+  height = 120,
 
   port = "any",
 
@@ -145,7 +145,7 @@ PREFABS.Wall_tech_outdoor_letter_C = --#
   template = "Wall_tech_outdoor_hex_inset",
   map = "MAP08",
 
-  height = 96,
+  height = 104,
 
   port = "any",
   rank = 1,
@@ -153,15 +153,15 @@ PREFABS.Wall_tech_outdoor_letter_C = --#
 
   group = "tech_o_letter_C",
 
-  z_fit = {12,14 , 58,60},
+  z_fit = {30,31 , 73,74},
 }
 
-PREFABS.Wall_tech_outdoor_letter_C_compat = --#
+PREFABS.Wall_tech_outdoor_letter_C_compat =
 {
   template = "Wall_tech_outdoor_hex_inset",
   map = "MAP08",
 
-  height = 96,
+  height = 104,
 
   port = "any",
 
@@ -170,4 +170,55 @@ PREFABS.Wall_tech_outdoor_letter_C_compat = --#
   z_fit = {12,14 , 58,60},
 
   tex_SHAWN10E = "SHAWN2"
+}
+
+PREFABS.Wall_tech_outdoor_letter_D = --#
+{
+  template = "Wall_tech_outdoor_hex_inset",
+  map = "MAP09",
+
+  height = 104,
+
+  rank = 1,
+  port = "any",
+  texture_pack = "armaetus",
+
+  group = "tech_o_letter_D",
+
+  z_fit = {7,8 , 96,97},
+
+  tex_CITY06N =
+  {
+    CITY06N = 5,
+    CITY05N = 1, 
+  }
+}
+
+PREFABS.Wall_tech_outdoor_letter_D_compat =
+{
+  template = "Wall_tech_outdoor_hex_inset",
+  map = "MAP09",
+
+  height = 104,
+
+  port = "any",
+
+  group = "tech_o_letter_D",
+
+  z_fit = {7,8 , 96,97},
+
+  tex_CITY06N = "BRONZE1"
+}
+
+PREFABS.Wall_tech_outdoor_letter_E = --#
+{
+  template = "Wall_tech_outdoor_hex_inset",
+  map = "MAP10",
+
+  height = 128,
+  port = "any",
+
+  group = "tech_o_letter_E",
+
+  z_fit = "stretch"
 }
