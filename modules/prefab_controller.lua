@@ -142,11 +142,23 @@ function PREFAB_CONTROL.fine_tune_filters()
   }
   local new_fab_groups_multipliers =
   {
-    gtd_wall_tech_gothic_inset_gargoyle = 3,
-    gtd_wall_tech_gothic_inset_engine = 3,
-    gtd_wall_tech_gothic_inset_red_lite = 3,
-    gtd_tekwoodlite_1 = 3,
-    gtd_tekwoodlite_2 = 3
+    gtd_wall_tech_gothic_inset_gargoyle = 1.5,
+    gtd_wall_tech_gothic_inset_engine = 1.5,
+    gtd_wall_tech_gothic_inset_red_lite = 1.5,
+    gtd_tekwoodlite_1 = 1.5,
+    gtd_tekwoodlite_2 = 1.5,
+    --
+    tech_o_letter_A = 5,
+    tech_o_letter_B = 5,
+    tech_o_letter_C = 5,
+    tech_o_letter_D = 5,
+    tech_o_letter_E = 5,
+    tech_o_letter_F = 5,
+    tech_o_letter_G = 5,
+    --
+    gtd_nukage_aquarium = 2,
+    --
+    gtd_prison_A = 2
   }
   local new_themes_multipliers =
   {
@@ -178,9 +190,17 @@ function PREFAB_CONTROL.fine_tune_filters()
     for WG,mult in pairs(new_fab_groups_multipliers) do
       for _,theme_name in pairs(themes) do
         if GAME.THEMES[theme_name] then
-          if GAME.THEMES[theme_name].wall_groups[WG] then
+          if GAME.THEMES[theme_name].wall_groups and 
+          GAME.THEMES[theme_name].wall_groups[WG] then
             GAME.THEMES[theme_name].wall_groups[WG] =
-            GAME.THEMES[theme_name].wall_groups[WG] * 2
+            GAME.THEMES[theme_name].wall_groups[WG] * 
+            mult
+          end
+
+          if GAME.THEMES[theme_name].outdoor_wall_groups 
+          and GAME.THEMES[theme_name].outdoor_wall_groups[WG] then
+            GAME.THEMES[theme_name].outdoor_wall_groups[WG] =
+            GAME.THEMES[theme_name].outdoor_wall_groups[WG] * 2
           end
         end
       end

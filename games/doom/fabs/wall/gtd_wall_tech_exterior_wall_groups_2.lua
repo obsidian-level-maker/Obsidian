@@ -222,3 +222,51 @@ PREFABS.Wall_tech_outdoor_letter_E = --#
 
   z_fit = "stretch"
 }
+
+PREFABS.Wall_tech_outdoor_letter_F = --#
+{
+  template = "Wall_tech_outdoor_hex_inset",
+  map = "MAP11",
+
+  height = 120,
+  port = "any",
+
+  group = "tech_o_letter_F",
+
+  z_fit = { 39,40 , 88,89 },
+  tex_CRATE2 = 
+  {
+    CRATE1 = 1,
+    CRATE2 = 5
+  }
+}
+
+PREFABS.Wall_tech_outdoor_letter_G = --#
+{
+  template = "Wall_tech_outdoor_hex_inset",
+  map = "MAP11",
+
+  rank = 1,
+  texture_pack = "armaetus",
+  height = 120,
+  port = "any",
+
+  group = "tech_o_letter_G",
+
+  z_fit = "top"
+}
+
+PREFABS.Wall_tech_outdoor_letter_G_compat =
+{
+  template = "Wall_tech_outdoor_hex_inset",
+  map = "MAP11",
+
+  height = 120,
+  port = "any",
+
+  group = "tech_o_letter_G",
+
+  z_fit = "top",
+
+  tex_SDOM_WL2 = "PIPEWAL1"
+}
