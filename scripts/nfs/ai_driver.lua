@@ -160,7 +160,7 @@ function Drive_Simulator()
 
 
   local function averages_per_segment()
-    each seg in TRACK.segments do
+    for _,seg in pairs(TRACK.segments) do
       local sum = 0
 
       for i = 1, 4 do

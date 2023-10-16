@@ -357,8 +357,8 @@ function write_objects()
 
   local list = {}
 
-  each node in TRACK.road do
-    each obj in node.objects do
+  for _,node in pairs(TRACK.road) do
+    for _,obj in pairs(node.objects) do
       obj.node = node
       table.insert(list, obj)
     end
@@ -510,7 +510,7 @@ end
 
 
 function write_actual_road()
-  each seg in TRACK.segments do
+  for _,seg in pairs(TRACK.segments) do
     local first_node = 1 + (_index - 1) * 4
 
     if TRACK.sp_ed then

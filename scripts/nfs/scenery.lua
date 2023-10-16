@@ -37,66 +37,66 @@ FEATURES =
   --        force making the road flat.
   plains =
   {
-    length = { 10, 30 }
+    length = { 10, 30 },
 
-    can_start  = true
-    can_finish = true
+    can_start  = true,
+    can_finish = true,
 
-    slopes = "none"
+    slopes = "none",
     twists = "none"
-  }
+  },
 
 
   -- tall trees on each side (using road segments at outer part)
   -- and a dark road.
   forest =
   {
-    length = { 14, 30 }
+    length = { 14, 30 },
 
-    slopes = "none"  -- TODO allow minor slopage
-    twists = "none"
+    slopes = "none",  -- TODO allow minor slopage
+    twists = "none",
 
     allow_lamps = true
-  }
+  },
 
 
   -- flat areas on the sides (asphalt or concrete) with buildings,
   -- and other urbany stuff, generally with a railing.
   city_center =
   {
-    length = { 20, 30 }
+    length = { 20, 30 },
 
-    can_start  = true
-    can_finish = true
+    can_start  = true,
+    can_finish = true,
 
-    slopes = "none"
-    twists = "none"
+    slopes = "none",
+    twists = "none",
 
     allow_lamps = true
-  }
+  },
 
 
   -- makes a stadium (big slope with seats) on sides of road
   stadium =
   {
-    length = { 13, 13 }
+    length = { 13, 13 },
 
-    can_start  = true
-    can_finish = true
+    can_start  = true,
+    can_finish = true,
 
-    slopes = "none"
-    twists = "none"
+    slopes = "none",
+    twists = "none",
 
-    allow_lamps = true
+    allow_lamps = true,
 
     x_profile =
     {
-      near = { 1.5, 3.0, 3.0 }
-      far  = { 2.0, 6.0, 6.0 }
+      near = { 1.5, 3.0, 3.0 },
+      far  = { 2.0, 6.0, 6.0 },
 
       z_power = 1.0
     }
-  }
+  },
 
 
   -- tunnels are formed by folding the side segments over the top
@@ -105,37 +105,37 @@ FEATURES =
   -- might have windows (previous edge is a DROP-OFF) or fake windows.
   low_tunnel =
   {
-    length = { 10, 32 }
+    length = { 10, 32 },
 
-    tunnel_mode = "low"
+    tunnel_mode = "low",
 
-    slopes = "none"
+    slopes = "none",
     twists = "none"
-  }
+  },
 
 
   -- same as low_tunnel, but with a high roof
   high_tunnel =
   {
-    length = { 6, 24 }
+    length = { 6, 24 },
 
-    tunnel_mode = "high"
+    tunnel_mode = "high",
 
-    slopes = "none"
+    slopes = "none",
     twists = "none"
-  }
+  },
 
 
   -- an overpass is a very short tunnel (a single segment)
   overpass =
   {
-    length = { 3, 3 }  -- a seg each side for the transition
+    length = { 3, 3 },  -- a seg each side for the transition
 
-    tunnel_mode = "low"
+    tunnel_mode = "low",
 
-    slopes = "none"
+    slopes = "none",
     twists = "none"
-  }
+  },
 
 
   -- a long tunnel, usually decending down at the entrance and
@@ -143,16 +143,16 @@ FEATURES =
   -- a little bit of twisting.  Never has windows.
   cave =
   {
-    length = { 20, 60 }
+    length = { 20, 60 },
 
-    tunnel_mode = "cave"
+    tunnel_mode = "cave",
 
-    enter_slope = "down"
-     exit_slope = "up"
+    enter_slope = "down",
+     exit_slope = "up",
 
-    slopes = "few"
+    slopes = "few",
     twists = "few"
-  }
+  },
 
 
   -- a tunnel which looks like a parking lot (TR7)
@@ -163,25 +163,25 @@ FEATURES =
   -- never twisted.
   steep_fall =
   {
-    length = { 7, 14 }
+    length = { 7, 14 },
 
-    need_edge = "both"
+    need_edge = "both",
 
-    slopes = "big_fall"
+    slopes = "big_fall",
     twists = "none"
-  }
+  },
 
   -- a section of road which climbs up quite steeply.
   -- never twisted.
   steep_climb =
   {
-    length = { 7, 14 }
+    length = { 7, 14 },
 
-    need_edge = "both"
+    need_edge = "both",
 
-    slopes = "big_climb"
+    slopes = "big_climb",
     twists = "none"
-  }
+  },
 
 
 --[[ TODO
@@ -214,7 +214,7 @@ function assign_features()
     -- this is not a real feature  [ it's the lack of a feature ]
     tab.NONE = TRACK.info.features.NONE
 
-    if not tab.NONE or type(tab.NONE) != "number" or tab.NONE <= 0 then
+    if not tab.NONE or type(tab.NONE) ~= "number" or tab.NONE <= 0 then
       error("Bad track info : features has bad/missing 'NONE' entry")
     end
 
@@ -235,21 +235,23 @@ function assign_features()
 
     -- build the table...
 
-    each name, info in FEATURES do
+    for name,info in pairs(FEATURES) do
       -- starting only?
-      if not info.can_start and pos < 10 then continue end
+      if not info.can_start and pos < 10 then goto continue end
 
       -- do we have enough track left for it?
-      if info.length[1] > (remain_segs - 8) then continue end
+      if info.length[1] > (remain_segs - 8) then goto continue end
 
       -- does it clobber the finish (or is too close)?
       if not info.can_finish and TRACK.open and
          not (pos > finish_p + 2 or
               pos + info.length[2] < finish_p - 3)
-      then continue end
+      then goto continue end
 
       -- this can be NIL if track does not want this feature
       tab[name] = prob_for_feature(name)
+
+      ::continue::
     end
 
     return tab
@@ -291,11 +293,11 @@ function assign_features()
 
     local feature =
     {
-      name = name
-      skin = skin
+      name = name,
+      skin = skin,
 
-      p1  = pos
-      p2  = pos + len - 1
+      p1  = pos,
+      p2  = pos + len - 1,
       len = len
     }
 
@@ -375,21 +377,21 @@ EDGES =
   {
     x_profile =
     {
-      near = { 0.6, 1.5, 3.0 }
-      far  = { 3.0, 7.5, 15.0 }
+      near = { 0.6, 1.5, 3.0 },
+      far  = { 3.0, 7.5, 15.0 },
 
       z_power = 0.9
-    }
+    },
 
     z_profile =
     {
-      low   = { 0.2, 1.0, 2.0 }
-      high  = { 0.8, 2.0, 3.5 }
-      delta = { 0.88, 1.44, 2.22 }
+      low   = { 0.2, 1.0, 2.0 },
+      high  = { 0.8, 2.0, 3.5 },
+      delta = { 0.88, 1.44, 2.22 },
 
       z_power = 0.6
     }
-  }
+  },
 
 
   -- medium to high hills, less scenery that low_hills
@@ -397,17 +399,17 @@ EDGES =
   {
     x_profile =
     {
-      near = { 0.6, 1.5, 3.0 }
+      near = { 0.6, 1.5, 3.0 },
       far  = { 3.0, 7.5, 15.0 }
-    }
+    },
 
     z_profile =
     {
-      low   = { 0.5, 2.0, 4.5 }
-      high  = { 1.5, 5.0, 9.0 }
+      low   = { 0.5, 2.0, 4.5 },
+      high  = { 1.5, 5.0, 9.0 },
       delta = { 1.11, 2.22, 3.33 }
     }
-  }
+  },
 
 
   -- steep incline right next to the road, as if the terrain has
@@ -417,19 +419,19 @@ EDGES =
   {
     x_profile =
     {
-      near = { 0.3, 0.6, 3.0 }
-      far  = { 1.0, 2.0, 8.0 }
+      near = { 0.3, 0.6, 3.0 },
+      far  = { 1.0, 2.0, 8.0 },
 
       z_power = 0.2
-    }
+    },
 
     z_profile =
     {
-      low   = { 2.0, 4.0, 6.0 }
-      high  = { 2.2, 4.5, 7.0 }
+      low   = { 2.0, 4.0, 6.0 },
+      high  = { 2.2, 4.5, 7.0 },
       delta = { 0.5, 0.75, 1.0 }
     }
-  }
+  },
 
 
   -- a lowish area (even below road) in front of a hill or mountain
@@ -451,18 +453,18 @@ EDGES =
   {
     x_profile =
     {
-      near = { 0, 0, 2  }
-      far  = { 0, 0, 15 }
+      near = { 0, 0, 2  },
+      far  = { 0, 0, 15 },
       z_power = 0.2
-    }
+    },
 
     z_profile =
     {
-      low   = { 1.0, 0.0, 0.0 } 
-      high  = { 1.0, 0.0, 0.0 }
+      low   = { 1.0, 0.0, 0.0 },
+      high  = { 1.0, 0.0, 0.0 },
       delta = { 0.0, 0.0, 0.0 }
     }
-  }
+  },
 
 
   -- a short fence with a verge of grass or dirt coming off (sloping up)
@@ -472,38 +474,38 @@ EDGES =
   {
     x_profile =
     {
-      near = { 0,  1.5,  1.5 }
-      far  = { 0,  4.5,  4.5 }
+      near = { 0,  1.5,  1.5 },
+      far  = { 0,  4.5,  4.5 },
       z_power = 0.2
-    }
+    },
 
     z_profile =
     {
-      low   = { 0.11, 0.7, 0.0 } 
-      high  = { 0.11, 1.8, 0.0 }
-      delta = { 0.0, 0.33, 0.0 }
+      low   = { 0.11, 0.7, 0.0 },
+      high  = { 0.11, 1.8, 0.0 },
+      delta = { 0.0, 0.33, 0.0 },
 
       last_h = 1.5
     }
-  }
+  },
 
 
   -- a sharp drop-off, like near a cliff edge.
   -- occasionally a piece juts out (e.g. with a tree on it).
   drop_off =
   {
-  }
+  },
 
 
   -- a shallow drop-off that goes does to a fixed Z height, usually
   -- ending with a watery texture.  only made on a single side.
   beach =
   {
-    single_side = "outer"
+    single_side = "outer",
 
     x_profile =
     {
-      near = { 0.2, 1.2,  4.0 }
+      near = { 0.2, 1.2,  4.0 },
       far  = { 0.6, 3.6, 12.0 }
     }
   }
@@ -519,15 +521,17 @@ function assign_edges(side)
   local function pick_edge(p1, p2)
     local tab = {}
 
-    each name, info in EDGES do
+    for name,info in pairs(EDGES) do
       -- requirements ???
 
       if info.single_side and not match_side(info.single_side, side) then
-        continue
+        goto continue
       end
 
       -- this may be NIL if the track does not want this edge type
       tab[name] = prob_for_feature(name)
+
+      ::continue::
     end
 
     assert(not table.empty(tab))
@@ -545,12 +549,12 @@ function assign_edges(side)
 
     local edge =
     {
-      name = name
-      skin = skin
+      name = name,
+      skin = skin,
 
-      p1   = p1
-      p2   = p2
-      len  = (p2 - p1 + 1)
+      p1   = p1,
+      p2   = p2,
+      len  = (p2 - p1 + 1),
       side = side
     }
 
@@ -603,7 +607,7 @@ stderrf("  %d..%d --> %s\n", edge.p1, edge.p2, edge.name)
   local function fill_the_gap(p1, p2)
     local list = break_into_pieces(p1, p2, 18)
 
-    each part in list do
+    for _,part in pairs(list) do
       fill_an_edge(part.p1, part.p2)
     end
   end
@@ -633,11 +637,13 @@ stderrf("  %d..%d --> %s\n", edge.p1, edge.p2, edge.name)
 
     local list = {}
 
-    each feature in TRACK.features do
-      if feature.skin.need_edge == "both" then continue end
-      if feature.skin.need_edge == side_str(side) then continue end
+    for _,feature in pairs(TRACK.features) do
+      if feature.skin.need_edge == "both" then goto continue end
+      if feature.skin.need_edge == side_str(side) then goto continue end
 
       table.insert(list, feature)
+
+      ::continue::
     end
 
     return list
@@ -770,7 +776,7 @@ function slope_the_track()
 
 stderrf("pick_feature_heights:\n")
 
-    each feature in TRACK.features do
+    for _,feature in pairs(TRACK.features) do
 
       -- keep the very beginning of the track flat
       if feature.p1 < 25 then
@@ -778,7 +784,7 @@ stderrf("  flat : 0 --> 0\n")
         feature.z1 = 0
         feature.z2 = 0
         prev_z = 0
-        continue
+        goto continue
       end
 
       local p1  = feature.p1
@@ -834,6 +840,8 @@ stderrf("  %1.3f --> %1.3f\n", feature.z1, feature.z2)
 
       prev_z  = feature.z2
       prev_p2 = p2
+
+      ::continue::
     end
   end
 
@@ -953,7 +961,7 @@ stderrf("  %d .. %d : FEATURE %s  %1.2f %1.2f\n", p1, p2, feature.name, feature.
 
 
   local function calc_delta_z()
-    each node in TRACK.road do
+    for _,node in pairs(TRACK.road) do
       local node2 = lookup_node(node.index + 1) or node
 
       node.dz = node2.z - node.z
@@ -986,7 +994,7 @@ stderrf("doing slopes:\n")
     twist_a_gap(1, gap_end)
   end
 
-  each feature in TRACK.features do
+  for _,feature in pairs(TRACK.features) do
     local next_ft = TRACK.features[_index + 1]
 
     slope_a_feature(feature.p1, feature.p2, feature)
@@ -1018,7 +1026,7 @@ function render_the_road()
 
   --- Segments ---
 
-  each seg in TRACK.segments do
+  for _,seg in pairs(TRACK.segments) do
     local pos = _index
 
     local skin = normal_skin
@@ -1072,7 +1080,7 @@ function render_the_road()
 
   local road_width = TRACK.info.road_width or { 1.0, 1.5 }
 
-  each node in TRACK.road do
+  for _,node in pairs(TRACK.road) do
     -- make curvey parts a bit wider
     local curve_mul = 1.0 + node.curvature / 20
 
@@ -1108,8 +1116,8 @@ function render_tunnels()
 
   local TEMPLATES =
   {
-    low  =  LOW_TEMPLATE
-    high = HIGH_TEMPLATE
+    low  =  LOW_TEMPLATE,
+    high = HIGH_TEMPLATE,
     cave = CAVE_TEMPLATE
   }
 
@@ -1118,15 +1126,15 @@ function render_tunnels()
   {
     { 2, 0.5,  0.4,
       2, 1.5,  1.0,
-      2, 2.5,  1.8 }
+      2, 2.5,  1.8 },
 
     { 2, 1.0,  1.6,
       2, 1.0,  2.0,
-      2, 1.0,  2.4 }
+      2, 1.0,  2.4 },
 
     { 2, 0.0,  2.8,
       1, 0.0,  3.0,
-      0, 0.0,  3.2 }
+      0, 0.0,  3.2 },
 
     { 2, 0.0,  1.8,
       1, 0.0,  2.0,
@@ -1162,15 +1170,15 @@ function render_tunnels()
   {
     { 2, 0.0,  0.4,
       2, 1.0,  0.6,
-      2, 2.0,  0.8 }
+      2, 2.0,  0.8 },
 
     { 2, 0.0,  0.6,
       2, 0.5,  0.8,
-      2, 1.0,  1.0 }
+      2, 1.0,  1.0 },
 
     { 2, 0.0,  0.8,
       2, 0.0,  0.9,
-      2, 0.0,  1.0 }
+      2, 0.0,  1.0 },
 
     { 2, 0.0,  1.0,
       1, 0.0,  1.0,
@@ -1337,7 +1345,7 @@ function render_tunnels()
 
   ---| render_tunnels |---
 
-  each feature in TRACK.features do
+  for _,feature in pairs(TRACK.features) do
     if feature.skin.tunnel_mode then
       visit_tunnel(feature)
     end
@@ -1433,7 +1441,7 @@ function process_transitions(side)
 
   ---| process_transitions |---
 
-  each edge in TRACK.edges[side] do
+  for _,edge in pairs(TRACK.edges[side]) do
     local prev_e = get_prev_edge(edge)
     local next_e = get_next_edge(edge)
 
@@ -1455,7 +1463,7 @@ function render_the_edges(side)
 
   local std_x_profile =
   {
-    near = { 1.0,  2.0,  3.0 }
+    near = { 1.0,  2.0,  3.0 },
     far  = { 5.0, 10.0, 15.0 }
   }
 
@@ -1730,13 +1738,13 @@ function render_the_edges(side)
 
   local MEDIUM_SPOTS =
   {
-    { dx=2.6, size="small", where="front" }
+    { dx=2.6, size="small", where="front" },
     { dx=5.2, size="big",   where="back"  }
   }
 
   local WIDE_SPOTS =
   {
-    { dx=4.3, size="big", where="front" }
+    { dx=4.3, size="big", where="front" },
     { dx=8.5, size="big", where="back"  }
   }
 
@@ -1764,21 +1772,23 @@ function render_the_edges(side)
 
     local tab = {}
 
-    each child in skin.decoration do
+    for _,child in pairs(skin.decoration) do
       local prob = assert(child.prob)
 
       -- match the size
-      if child.big and size != "big" then continue end
+      if child.big and size ~= "big" then goto continue end
 
       if not child.big and size == "big" then prob = prob / 2 end
 
       -- match the position
-      if child.row and child.row != where then continue end
+      if child.row and child.row ~= where then goto continue end
 
       -- match the road side
-      if child.side and child.side != side_str(side) then continue end
+      if child.side and child.side ~= side_str(side) then goto continue end
 
       tab[child] = prob
+
+      ::continue::
     end
 
     if table.empty(tab) then return nil end
@@ -1796,12 +1806,12 @@ function render_the_edges(side)
 
     local spot_list = categorize_city_spots(node)
 
-    each spot in spot_list do
+    for _,spot in pairs(spot_list) do
       -- don't add small items near road signs
-      if spot.size == "small" and node.signage[side] then continue end
+      if spot.size == "small" and node.signage[side] then goto continue end
 
       local child = select_decor_obj(skin, spot.size, spot.where)
-      if not child then continue end
+      if not child then goto continue end
 
       local OBJ = r_make_object(child.def, child.priority or 4)
 
@@ -1824,6 +1834,8 @@ function render_the_edges(side)
       -- TODO:  support clusters
 
       r_add_object(OBJ, node, 0, side,  dx, 0, 0)
+
+      ::continue::
     end
   end
 
@@ -1967,13 +1979,13 @@ function render_the_edges(side)
   process_transitions(side)
 
   -- do features first
-  each E in TRACK.edges[side] do
+  for _,E in pairs(TRACK.edges[side]) do
     if E.is_feature then
       visit_edge(E)
     end
   end
 
-  each E in TRACK.edges[side] do
+  for _,E in pairs(TRACK.edges[side]) do
     if not E.is_feature then
       visit_edge(E)
     end
@@ -2000,13 +2012,13 @@ function add_road_signs()
   local only_hazard
   local nothing_at_all
 
-  local have_mild   = (lookup_obj("turn_mild")   != nil)
-  local have_sharp  = (lookup_obj("turn_sharp")  != nil)
-  local have_hazard = (lookup_obj("turn_hazard") != nil)
+  local have_mild   = (lookup_obj("turn_mild")   ~= nil)
+  local have_sharp  = (lookup_obj("turn_sharp")  ~= nil)
+  local have_hazard = (lookup_obj("turn_hazard") ~= nil)
 
-  local have_s_bend = (lookup_obj("s_bend_sign") != nil)
-  local have_danger = (lookup_obj("danger_sign") != nil)
-  local have_back   = (lookup_obj("back_of_sign") != nil)
+  local have_s_bend = (lookup_obj("s_bend_sign") ~= nil)
+  local have_danger = (lookup_obj("danger_sign") ~= nil)
+  local have_back   = (lookup_obj("back_of_sign") ~= nil)
 
 
   -- minimum distance between two signs
@@ -2137,13 +2149,13 @@ function add_road_signs()
       local prev = lookup_node(n - 1)
       local node = lookup_node(n)
 
-      if not prev then continue end
+      if not prev then goto continue end
 
       local p_cat = sel(side == LF, prev.cat_L, prev.cat_R)
       local n_cat = sel(side == LF, node.cat_L, node.cat_R)
 
-      if p_cat != 0 then continue end
-      if n_cat  < 1 then continue end
+      if p_cat ~= 0 then goto continue end
+      if n_cat  < 1 then goto continue end
 
       -- start of turn here, find end and max category
 
@@ -2160,22 +2172,24 @@ function add_road_signs()
       end
 
       -- skip some bogus data
-      if len < 2 then continue end
+      if len < 2 then goto continue end
 
       -- OK --
 
       local TURN =
       {
-        side = side
-        n1 = n
-        n2 = n + len - 1
-        len = len
+        side = side,
+        n1 = n,
+        n2 = n + len - 1,
+        len = len,
         max_cat = max_cat
       }
 
       table.insert(list, TURN)
 
       stderrf("  %d .. %d (len %d) (max_cat %d)\n", n, n+len-1, len, max_cat)
+
+      ::continue::
     end
   end
 
@@ -2242,7 +2256,7 @@ function add_road_signs()
 
     table.sort(turns, function(A,B) return A.n1 < B.n1 end)
 
-    each turn in turns do
+    for _,turn in pairs(turns) do
       visit_road_turn(turn)
     end
   end
@@ -2261,7 +2275,7 @@ function add_road_signs()
 
     for side = LF, RT do
       if node.signage[side] then
-        continue
+        goto continue
       end
 
       local OBJ = r_make_object(obj_def, 9)
@@ -2269,6 +2283,8 @@ function add_road_signs()
       r_add_object(OBJ, node, 2, side,  -0.3, 0, 0.0)
 
       mark_as_used(node.index - 4, node.index + 4, side)
+
+      ::continue::
     end
   end
 

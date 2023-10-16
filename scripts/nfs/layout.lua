@@ -41,15 +41,15 @@ PIECES = {}
 PIECES.begin_1 =
 {
   -- begin pieces are only used at start of track
-  begin_prob = 50
+  begin_prob = 50,
 
-  curviness = 0
+  curviness = 0,
 
   points =
   {
-    { x=0, y=8,  ang=0 }
-    { x=0, y=16, ang=0 }
-    { x=0, y=24, ang=0 }
+    { x=0, y=8,  ang=0 },
+    { x=0, y=16, ang=0 },
+    { x=0, y=24, ang=0 },
     { x=0, y=32, ang=0 }
   }
 }
@@ -57,9 +57,9 @@ PIECES.begin_1 =
 
 PIECES.straight_1 =
 {
-  prob = 40
+  prob = 40,
 
-  curviness = 0
+  curviness = 0,
 
   points =
   {
@@ -70,9 +70,9 @@ PIECES.straight_1 =
 
 PIECES.straight_2 =
 {
-  prob = 150
+  prob = 150,
 
-  curviness = 0
+  curviness = 0,
 
   points =
   {
@@ -83,13 +83,13 @@ PIECES.straight_2 =
 
 PIECES.straight_3 =
 {
-  prob = 20
+  prob = 20,
 
-  curviness = 0
+  curviness = 0,
 
   points =
   {
-    { x=0, y=15, ang=0 }
+    { x=0, y=15, ang=0 },
     { x=0, y=30, ang=0 }
   }
 }
@@ -97,9 +97,9 @@ PIECES.straight_3 =
 
 PIECES.small_curve_30 =
 {
-  prob = 20
+  prob = 20,
 
-  curviness = 1
+  curviness = 1,
 
   points =
   {
@@ -110,9 +110,9 @@ PIECES.small_curve_30 =
 
 PIECES.small_curve_70 =
 {
-  prob = 12
+  prob = 12,
 
-  curviness = 2
+  curviness = 2,
 
   points =
   {
@@ -123,9 +123,9 @@ PIECES.small_curve_70 =
 
 PIECES.curve_30 =
 {
-  prob = 80
+  prob = 80,
 
-  curviness = 1
+  curviness = 1,
 
   points =
   {
@@ -136,9 +136,9 @@ PIECES.curve_30 =
 
 PIECES.curve_70 =
 {
-  prob = 60
+  prob = 60,
 
-  curviness = 2
+  curviness = 2,
 
   points =
   {
@@ -149,9 +149,9 @@ PIECES.curve_70 =
 
 PIECES.curve_90 =
 {
-  prob = 40
+  prob = 40,
 
-  curviness = 3
+  curviness = 3,
 
   points =
   {
@@ -162,9 +162,9 @@ PIECES.curve_90 =
 
 PIECES.curve_120 =
 {
-  prob = 40
+  prob = 40,
 
-  curviness = 3
+  curviness = 3,
 
   points =
   {
@@ -204,8 +204,8 @@ end
 function reconstruct_points()
   TRACK.points = {}
 
-  each piece in TRACK.pieces do
-    each P in piece.points do
+  for _,piece in pairs(TRACK.pieces) do
+    for _,P in pairs(piece.points) do
       table.insert(TRACK.points, P)
     end
   end
@@ -290,7 +290,7 @@ function subdivide_beziers(min_len)
 
     if geom.dist(P1.x, P1.y, P2.x, P2.y) < min_len then
       table.insert(TRACK.points, C)
-      continue
+      goto continue
     end
 
     local ax = (P1.x + C.x) / 2
@@ -305,6 +305,8 @@ function subdivide_beziers(min_len)
     table.insert(TRACK.points, { x=ax, y=ay })
     table.insert(TRACK.points, { x=mx, y=my })
     table.insert(TRACK.points, { x=bx, y=by })
+
+    ::continue::
   end
 
   table.insert(TRACK.points, points[#points])
@@ -582,7 +584,7 @@ function add_piece_to_track(info, mirror, scale, TEST_ONLY)
     table.insert(TRACK.pieces, new_piece)
   end
 
-  each P in info.points do
+  for _,P in pairs(info.points) do
     local px   = scale * sel(mirror, - P.x,   P.x)
     local py   = scale * P.y 
     local pang = sel(mirror, - P.ang, P.ang)
@@ -659,8 +661,8 @@ function add_adjustment_piece()
     points =
     {
       {
-        x = diff_ang / 9
-        y = 10
+        x = diff_ang / 9,
+        y = 10,
         ang = diff_ang
       }
     }
@@ -789,7 +791,7 @@ function collect_usable_pieces(reqs)
 
   ---| collect_usable_pieces |---
 
-  each name, piece in PIECES do
+  for name,piece in pairs(PIECES) do
     local prob = prob_for_piece(piece)
 
     if prob > 0 then
@@ -803,7 +805,7 @@ end
 
 
 function dump_pieces()
-  each piece in TRACK.pieces do
+  for _,piece in pairs(TRACK.pieces) do
     if piece.info then
       printf("  [%d] : %s\n", _index, piece.info.name)
     end
@@ -878,7 +880,7 @@ function check_track_overlaps_itself()
   local function calc_bbox()
     bbox = geom.bbox_new()
 
-    each P in TRACK.points do
+    for _,P in pairs(TRACK.points) do
       geom.bbox_add_point(bbox, P.x, P.y)
     end
 
@@ -899,8 +901,8 @@ function check_track_overlaps_itself()
 
     local N =
     {
-      mx = (x1 + x2) / 2
-      my = (y1 + y2) / 2
+      mx = (x1 + x2) / 2,
+      my = (y1 + y2) / 2,
 
       lines = {}
     }
@@ -925,9 +927,9 @@ function check_track_overlaps_itself()
 
       local L =
       {
-        x1 = P1.x
-        y1 = P1.y
-        x2 = P2.x
+        x1 = P1.x,
+        y1 = P1.y,
+        x2 = P2.x,
         y2 = P2.y
       }
 
@@ -987,7 +989,7 @@ function check_track_overlaps_itself()
 
 
   local function fill_quad_tree()
-    each L in all_lines do
+    for _,L in pairs(all_lines) do
       add_line_to_node(L, quad_tree)
     end
   end
@@ -1027,8 +1029,8 @@ function check_track_overlaps_itself()
 
 
   local function check_line_recursive(L1, N)
-    each L2 in N.lines do
-      if L1 != L2 and lines_overlap(L1, L2) then
+    for _,L2 in pairs(N.lines) do
+      if L1 ~= L2 and lines_overlap(L1, L2) then
         return true
       end
     end
@@ -1051,7 +1053,7 @@ function check_track_overlaps_itself()
     -- test all lines in node N itself against all lines in N _and_ all
     -- children of N
 
-    each L1 in N.lines do
+    for _,L1 in pairs(N.lines) do
       if check_line_recursive(L1, N) then
         return true
       end
@@ -1270,7 +1272,7 @@ function mirror_horizontally()
   --
   TRACK.mirrored = true
 
-  each P in TRACK.points do
+  for _,P in pairs(TRACK.points) do
     P.x = - P.x
   end
 end
@@ -1360,8 +1362,8 @@ function create_virtual_nodes()
   -- current location along generated track
   local loc =
   {
-    idx = 1
-    along = 0
+    idx = 1,
+    along = 0,
     total_along = 0
   }
 
@@ -1374,18 +1376,18 @@ function create_virtual_nodes()
   for n = 1, TRACK.num_nodes do
     local node =
     {
-      x = loc.x
-      y = loc.y
+      x = loc.x,
+      y = loc.y,
 
       -- this is overwritten later
-      z = 0
+      z = 0,
 
-      index = n
+      index = n,
 
-      space = {}
-      coords = {}
-      objects = {}
-      hard = {}
+      space = {},
+      coords = {},
+      objects = {},
+      hard = {},
       signage = {}
     }
 
@@ -1417,10 +1419,10 @@ function create_segments()
   for i = 1, TRACK.num_segments do
     local seg =
     {
-      index = i
+      index = i,
 
-      textures = {}
-      railing = {}
+      textures = {},
+      railing = {},
       edges = {}
     }
 
@@ -1507,10 +1509,10 @@ function determine_side_spaces()
     local cy = C.y
 
     for i = - isec_steps, isec_steps do
-      if i == 0 then continue end
+      if i == 0 then goto continue end
 
       local N = lookup_node(index + i)
-      if not N then continue end
+      if not N then goto continue end
 
       local N_x = N.x
       local N_y = N.y
@@ -1518,18 +1520,20 @@ function determine_side_spaces()
       -- skip if parallel (or close to it)
       if math.abs(C.tan_x - N.tan_x) < 0.002 and
          math.abs(C.tan_y - N.tan_y) < 0.002
-      then continue end
+      then goto continue end
 
       -- calc intersection point
       local ix, iy = intersect_normals(C, N)
 
       -- check if intersection is on current side
-      if side_for_point(C, ix, iy) != side then continue end
-      if side_for_point(N, ix, iy) != side then continue end
+      if side_for_point(C, ix, iy) ~= side then goto continue end
+      if side_for_point(N, ix, iy) ~= side then goto continue end
 
       local d = geom.dist(cx, cy, ix, iy) / 1.1
 
       node.space[side] = math.min(node.space[side], d)
+
+      ::continue::
     end
   end
 
@@ -1556,10 +1560,10 @@ function determine_side_spaces()
 
     for i = - prox_steps, prox_steps do
       -- ignore node itself and immediate neighbors
-      if math.abs(i) < 4 then continue end
+      if math.abs(i) < 4 then goto continue end
 
       local N = lookup_node(index + i)
-      if not N then continue end
+      if not N then goto continue end
 
       local delta_x = N.x - cx
       local delta_y = N.y - cy
@@ -1568,9 +1572,9 @@ function determine_side_spaces()
       local hp2 = delta_x * hp2_nx + delta_y * hp2_ny
 
       if side > 0 then
-        if not (hp1 > 0 and hp2 < 0) then continue end
+        if not (hp1 > 0 and hp2 < 0) then goto continue end
       else
-        if not (hp2 > 0 and hp1 < 0) then continue end
+        if not (hp2 > 0 and hp1 < 0) then goto continue end
       end
 
       -- neighbor lies in the wedge, check distance
@@ -1580,6 +1584,8 @@ function determine_side_spaces()
       d = math.abs(d) / 2.2
 
       node.space[side] = math.min(node.space[side], d)
+
+      ::continue::
     end
   end
 
@@ -1616,7 +1622,7 @@ function determine_side_spaces()
   local function smooth_dists(side)
     local dists = {}
 
-    each node in TRACK.road do
+    for _,node in pairs(TRACK.road) do
       table.insert(dists, node.space[side])
     end
 
@@ -1633,7 +1639,7 @@ function determine_side_spaces()
 stderrf("determine_side_spaces...\n")
 
   for side = LF, RT do
-    each node in TRACK.road do
+    for _,node in pairs(TRACK.road) do
       -- the tests below can shorten this distances
       node.space[side] = max_dist
 
@@ -1776,7 +1782,7 @@ function determine_curvature()
 
   ---| determine_curvature |---
 
-  each node in TRACK.road do
+  for _,node in pairs(TRACK.road) do
     local best_diff = 0
 
     for i = -look_dist, look_dist do
@@ -1793,7 +1799,7 @@ function determine_curvature()
   end
 
 
-  each node in TRACK.road do
+  for _,node in pairs(TRACK.road) do
     node.curvature = compute_average(_index, avg_dist)
 
     node.bend = compute_bend(_index)
@@ -1894,8 +1900,8 @@ function generate_a_track(info)
 
     local DONUTS =
     {
-      short  = { mid_x=40,  inner_r=30, outer_r=120 }
-      medium = { mid_x=70,  inner_r=60, outer_r=170 }
+      short  = { mid_x=40,  inner_r=30, outer_r=120 },
+      medium = { mid_x=70,  inner_r=60, outer_r=170 },
       long   = { mid_x=100, inner_r=90, outer_r=230 }
     }
 

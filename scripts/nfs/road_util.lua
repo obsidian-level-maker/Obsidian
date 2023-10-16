@@ -27,7 +27,7 @@ function match_side(name, side)
   if name == "left"  then return (side == LF) end
   if name == "right" then return (side == RT) end
 
-  if TRACK.outer_side != nil then
+  if TRACK.outer_side ~= nil then
     if name == "outer" then return (side == TRACK.outer_side) end
     if name == "inner" then return (side == (3 - TRACK.outer_side)) end
   end
@@ -121,11 +121,13 @@ function lookup_skin(name, none_ok)
     for i = 1,#list do
       local child = table.copy(list[i])
 
-      if child.obj == "NONE" then continue end
+      if child.obj == "NONE" then goto continue end
 
       child.def = lookup_obj(child.obj, "required")
 
       table.insert(new_list, child)
+
+      ::continue::
     end
 
     return new_list
@@ -190,7 +192,7 @@ function prob_for_feature(name)
 
   if val == nil then return nil end
 
-  if type(val) != "table" then return val end
+  if type(val) ~= "table" then return val end
 
   -- entry is a table like { 100, 20, 5 }
   -- use first value if never used feature before, second value if used once, etc...
@@ -301,7 +303,7 @@ function r_make_object(def, priority)
   if type(def) == "table" and type(def[1]) == "table" then
     local OBJ = { group={} }
 
-    each sub in def do
+    for _,sub in pairs(def) do
       local child_def = lookup_obj(sub.obj, "required")
 
       local child = r_make_raw_object(child_def)
@@ -391,7 +393,7 @@ end
 
 function r_add_object(OBJ, node, ref, side, dx, dy, dz)
   if OBJ.group then
-    each child in OBJ.group do
+    for _,child in pairs(OBJ.group) do
       r_add_raw_object(child, node, ref, side, dx, dy, dz)
     end
   else
