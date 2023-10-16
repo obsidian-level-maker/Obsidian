@@ -16,3 +16,13 @@ PREFABS.Decor_prison_support_pillar =
 
   z_fit = { 79,80 }
 }
+
+PREFABS.Decor_prison_freestanding_cage =
+{
+  template = "Decor_prison_support_pillar",
+  map = "MAP02",
+
+  size = 96,
+
+  z_fit = "top"
+}
