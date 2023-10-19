@@ -27,3 +27,12 @@ PREFABS.Pic_industrial_toilet_gallery_urinals =
   template = "Pic_industrial_toilet_gallery_toilets",
   map = "MAP02"
 }
+
+-- only appears on resource pack
+PREFABS.Pic_industrial_toilet_gallery_NAHIDA =
+{
+  template = "Pic_industrial_toilet_gallery_toilets",
+  map = "MAP03",
+
+  prob = 5
+}

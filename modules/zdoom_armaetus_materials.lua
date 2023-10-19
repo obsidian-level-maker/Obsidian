@@ -1770,6 +1770,8 @@ ARMAETUS_MATERIALS = {
   -- it unfortunately needs to be said.
   G7DODSLS = { t="G7DODSLS", f="FLAT23"},
 
+  NAHIDA = { t="NAHIDA", f="FLAT23"},
+
   ----------------------
   -- Special Textures --
   ----------------------

@@ -158,7 +158,9 @@ function PREFAB_CONTROL.fine_tune_filters()
     --
     gtd_nukage_aquarium = 2,
     --
-    gtd_prison_A = 2
+    gtd_prison_A = 2,
+    --
+    gtd_toilet_gallery = 1.5
   }
   local new_themes_multipliers =
   {

@@ -1104,6 +1104,7 @@ function ARMAETUS_EPIC_TEXTURES.put_the_texture_wad_in()
     gui.wad_insert_file(dir .. "TAGCR14.png", "TAGCR14")
     gui.wad_insert_file(dir .. "TAGCR15.png", "TAGCR15")
     gui.wad_insert_file(dir .. "TAGCR16.png", "TAGCR16")
+    gui.wad_insert_file(dir .. "NAHIDA.png", "NAHIDA")
     gui.wad_add_binary_lump("HI_END",{})
   end
 
