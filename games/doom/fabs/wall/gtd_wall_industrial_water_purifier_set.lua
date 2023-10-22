@@ -169,3 +169,33 @@ PREFABS.Wall_gtd_nukage_aquarium_3_compat =
 
   tex_XNUKAGE = "SFALL1"
 }
+
+--
+
+PREFABS.Wall_gtd_bathwater_1 =
+{
+  file = "wall/gtd_wall_industrial_water_purifier_set.wad",
+  map = "MAP21",
+
+  port = "any",
+  prob = 50,
+  texture_pack = "armaetus",
+
+  group = "gtd_bathwater",
+
+  where = "edge",
+  deep = 16,
+  height = 96,
+
+  bound_z1 = 0,
+  bound_z2 = 96,
+
+  z_fit = "top"
+}
+
+PREFABS.Wall_gtd_bathwater_2 =
+{
+  template = "Wall_gtd_bathwater_1",
+  map = "MAP22",
+  prob = 8
+}

@@ -1771,6 +1771,8 @@ ARMAETUS_MATERIALS = {
   G7DODSLS = { t="G7DODSLS", f="FLAT23"},
 
   NAHIDA = { t="NAHIDA", f="FLAT23"},
+  BATHWTR1 = { t="BATHWTR1", f="FLAT23"},
+  BATHWTR2 = { t="BATHWTR2", f="FLAT23"},
 
   ----------------------
   -- Special Textures --

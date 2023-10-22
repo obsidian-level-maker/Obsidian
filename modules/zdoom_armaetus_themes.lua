@@ -7180,7 +7180,9 @@ ARMAETUS_THEMES =
       gtd_tekwoodlite_1 = 25,
       gtd_tekwoodlite_2 = 25,
       gtd_tekwoodlite_3 = 25,
-      gtd_tekwoodlite_pillar = 25
+      gtd_tekwoodlite_pillar = 25,
+      --
+      gtd_bathwater = 50
     },
 
     window_groups =
@@ -7679,7 +7681,9 @@ ARMAETUS_THEMES =
       gtd_tekwoodlite_1 = 25,
       gtd_tekwoodlite_2 = 25,
       gtd_tekwoodlite_3 = 25,
-      gtd_tekwoodlite_pillar = 25
+      gtd_tekwoodlite_pillar = 25,
+      --
+      gtd_bathwater = 50
     },
 
     window_groups =

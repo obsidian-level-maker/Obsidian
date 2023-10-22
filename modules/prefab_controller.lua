@@ -142,11 +142,11 @@ function PREFAB_CONTROL.fine_tune_filters()
   }
   local new_fab_groups_multipliers =
   {
-    gtd_wall_tech_gothic_inset_gargoyle = 1.5,
-    gtd_wall_tech_gothic_inset_engine = 1.5,
-    gtd_wall_tech_gothic_inset_red_lite = 1.5,
-    gtd_tekwoodlite_1 = 1.5,
-    gtd_tekwoodlite_2 = 1.5,
+    gtd_wall_tech_gothic_inset_gargoyle = 1.25,
+    gtd_wall_tech_gothic_inset_engine = 1.25,
+    gtd_wall_tech_gothic_inset_red_lite = 1.25,
+    gtd_tekwoodlite_1 = 1.25,
+    gtd_tekwoodlite_2 = 1.25,
     --
     tech_o_letter_A = 5,
     tech_o_letter_B = 5,
@@ -156,15 +156,17 @@ function PREFAB_CONTROL.fine_tune_filters()
     tech_o_letter_F = 5,
     tech_o_letter_G = 5,
     --
-    gtd_nukage_aquarium = 2,
+    gtd_nukage_aquarium = 1.25,
     --
-    gtd_prison_A = 2,
+    gtd_prison_A = 2.5,
     --
-    gtd_toilet_gallery = 1.5
+    gtd_toilet_gallery = 1.5,
+    --
+    gtd_bathwater = 2.5
   }
   local new_themes_multipliers =
   {
-    tech_AITextures = 3,
+    tech_AITextures = 1.5,
     tech_goth_tech = 3,
     tech_wood_lab = 3,
     tech_dk_green_tech = 3,
@@ -177,7 +179,7 @@ function PREFAB_CONTROL.fine_tune_filters()
     hell_babylonian = 3,
     hell_green_tk = 3,
 
-    urban_dk_green_tech = 3,
+    urban_dk_green_tech = 1.5,
     urban_wood_lab = 3
   }
   local themes =
