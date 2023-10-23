@@ -270,3 +270,29 @@ PREFABS.Wall_tech_outdoor_letter_G_compat =
 
   tex_SDOM_WL2 = "PIPEWAL1"
 }
+
+PREFABS.Wall_tech_outdoor_letter_H = --#
+{
+  template = "Wall_tech_outdoor_hex_inset",
+  map = "MAP12",
+
+  height = 96,
+  group = "tech_o_letter_H",
+
+  bound_ze = 96,
+
+  z_fit = {23,24 , 64,66}
+}
+
+PREFABS.Wall_tech_outdoor_letter_I = --#
+{
+  template = "Wall_tech_outdoor_hex_inset",
+  map = "MAP13",
+
+  height = 96,
+  group = "tech_o_letter_I",
+
+  bound_ze = 96,
+
+  z_fit = { 24,73 }
+}

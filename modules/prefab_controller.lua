@@ -155,6 +155,8 @@ function PREFAB_CONTROL.fine_tune_filters()
     tech_o_letter_E = 5,
     tech_o_letter_F = 5,
     tech_o_letter_G = 5,
+    tech_o_letter_H = 5,
+    tech_o_letter_I = 5,
     --
     gtd_nukage_aquarium = 1.25,
     --

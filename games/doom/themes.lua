@@ -1909,7 +1909,9 @@ DOOM.THEMES =
       tech_o_letter_D = 1,
       tech_o_letter_E = 1,
       tech_o_letter_F = 1,
-      tech_o_letter_G = 1
+      tech_o_letter_G = 1,
+      tech_o_letter_H = 1,
+      tech_o_letter_I = 1
     },
 
     window_groups =
