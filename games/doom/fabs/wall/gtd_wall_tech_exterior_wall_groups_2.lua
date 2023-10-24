@@ -279,7 +279,7 @@ PREFABS.Wall_tech_outdoor_letter_H = --#
   height = 96,
   group = "tech_o_letter_H",
 
-  bound_ze = 96,
+  bound_z2 = 96,
 
   z_fit = {23,24 , 64,66}
 }
@@ -292,7 +292,20 @@ PREFABS.Wall_tech_outdoor_letter_I = --#
   height = 96,
   group = "tech_o_letter_I",
 
-  bound_ze = 96,
+  bound_z2 = 96,
 
   z_fit = { 24,73 }
+}
+
+PREFABS.Wall_tech_outdoor_letter_J = --#
+{
+  template = "Wall_tech_outdoor_hex_inset",
+  map = "MAP14",
+
+  height = 96,
+  group = "tech_o_letter_J",
+
+  bound_z2 = 96,
+
+  z_fit = "top"
 }

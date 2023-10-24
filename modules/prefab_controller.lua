@@ -157,14 +157,15 @@ function PREFAB_CONTROL.fine_tune_filters()
     tech_o_letter_G = 5,
     tech_o_letter_H = 5,
     tech_o_letter_I = 5,
+    tech_o_letter_J = 5,
     --
     gtd_nukage_aquarium = 1.25,
     --
     gtd_prison_A = 2.5,
     --
-    gtd_toilet_gallery = 1.5,
+    gtd_toilet_gallery = 1.75,
     --
-    gtd_bathwater = 2.5
+    gtd_bathwater = 1.5
   }
   local new_themes_multipliers =
   {
