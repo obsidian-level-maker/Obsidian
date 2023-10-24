@@ -34,5 +34,5 @@ PREFABS.Pic_industrial_toilet_gallery_NAHIDA =
   template = "Pic_industrial_toilet_gallery_toilets",
   map = "MAP03",
 
-  prob = 5
+  prob = 25
 }
