@@ -244,7 +244,7 @@ PREFABS.Wall_tech_outdoor_letter_F = --#
 PREFABS.Wall_tech_outdoor_letter_G = --#
 {
   template = "Wall_tech_outdoor_hex_inset",
-  map = "MAP11",
+  map = "MAP12",
 
   rank = 1,
   texture_pack = "armaetus",
@@ -259,7 +259,7 @@ PREFABS.Wall_tech_outdoor_letter_G = --#
 PREFABS.Wall_tech_outdoor_letter_G_compat =
 {
   template = "Wall_tech_outdoor_hex_inset",
-  map = "MAP11",
+  map = "MAP12",
 
   height = 120,
   port = "any",
@@ -274,7 +274,7 @@ PREFABS.Wall_tech_outdoor_letter_G_compat =
 PREFABS.Wall_tech_outdoor_letter_H = --#
 {
   template = "Wall_tech_outdoor_hex_inset",
-  map = "MAP12",
+  map = "MAP13",
 
   height = 96,
   group = "tech_o_letter_H",
@@ -287,7 +287,7 @@ PREFABS.Wall_tech_outdoor_letter_H = --#
 PREFABS.Wall_tech_outdoor_letter_I = --#
 {
   template = "Wall_tech_outdoor_hex_inset",
-  map = "MAP13",
+  map = "MAP14",
 
   height = 96,
   group = "tech_o_letter_I",
@@ -300,7 +300,7 @@ PREFABS.Wall_tech_outdoor_letter_I = --#
 PREFABS.Wall_tech_outdoor_letter_J = --#
 {
   template = "Wall_tech_outdoor_hex_inset",
-  map = "MAP14",
+  map = "MAP15",
 
   height = 96,
   group = "tech_o_letter_J",
