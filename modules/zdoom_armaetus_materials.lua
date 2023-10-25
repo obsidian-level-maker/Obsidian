@@ -2208,6 +2208,14 @@ brightmap texture CONSOLE4
 {
   map OBRCNSL4
 }
+brightmap texture CONSOLEF
+{
+  map OBRCNSLF
+}
+brightmap texture CONSOLEG
+{
+  map OBRCNSLG
+}
 
 // large single monitors
 
