@@ -60,7 +60,7 @@ PREFABS.Pic_gtd_bathwater_warehouse =
   bound_z2 = 96,
 
   x_fit = { 68,82 },
-  z_fit = "top",
+  z_fit = { 64,65 },
   y_fit = "top",
 
   tex_CRATE2 = { BATHWTR1=5, BATHWTR2=4, UACCRT1=1 },

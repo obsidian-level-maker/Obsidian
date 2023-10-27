@@ -22,7 +22,7 @@ SKY_GEN = { }
 
 SKY_GEN.SKY_CHOICES =
 {
-  "sky_default", _("Default (33% of Episodes Day)"),
+  "sky_default", _("Default (66% of Episodes Day)"),
   "sky_night",   _("Night"),
   "sky_day",     _("Day"),
   "sky_25_day",  _("25% of Episodes Day"),
