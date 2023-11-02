@@ -175,12 +175,20 @@ function PREFAB_CONTROL.fine_tune_filters()
     tech_dk_green_tech = 3,
     tech_copper_steampunk = 3,
     tech_wood_lab = 3,
+    tech_wood_comp = 3,
+    tech_silver_grate = 3,
+
+    urban_wood_lab = 3,
+    urban_wood_comp = 3,
+    urban_silver_grate = 3,
+    urban_evil_mansion = 3,
 
     hell_gilded_bricks = 3,
     hell_copper_steampunk = 3,
     hell_AztecClay = 3,
     hell_babylonian = 3,
     hell_green_tk = 3,
+    hell_evil_mansion = 3,
 
     urban_dk_green_tech = 1.5,
     urban_wood_lab = 3
