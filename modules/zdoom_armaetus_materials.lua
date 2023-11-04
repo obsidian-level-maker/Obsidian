@@ -2812,6 +2812,31 @@ brightmap texture SD_TWDL3
 {
   map SDTDL3BR
 }
+
+brightmap texture SD_TWLW1
+{
+  map STWLW1BR
+}
+
+brightmap texture SD_TWLW5
+{
+  map STWLW5BR
+}
+
+brightmap texture SD_TSGW7
+{
+  map STGSW7BR
+}
+
+brightmap texture SD_TSGW9
+{
+  map STGSW8BR
+}
+
+brightmap texture SD_TSGWA
+{
+  map STGSWABR
+}
 ]]
 
 -- aliases - when you're too lazy to write down wall and flat names in every
