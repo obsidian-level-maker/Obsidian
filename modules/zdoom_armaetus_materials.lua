@@ -1741,6 +1741,20 @@ ARMAETUS_MATERIALS = {
   SD_TSGFB = { t="SD_TSGWB", f="SD_TSGFB"},
   SD_TSGFC = { t="SD_TSGWC", f="SD_TSGFC"},
 
+  -- bumblebee tech
+  SD_TBBW1 = { t="SD_TBBW1", f="SD_TSGFC"},
+  SD_TBBW2 = { t="SD_TBBW2", f="SD_TSGFB"},
+  SD_TBBW3 = { t="SD_TBBW3", f="SD_TSGFA"},
+  SD_TBBW4 = { t="SD_TBBW4", f="SD_TSGF9"},
+  SD_TBBW5 = { t="SD_TBBW5", f="SD_TSGF8"},
+  SD_TBBW6 = { t="SD_TBBW6", f="SD_TSGF7"},
+  SD_TBBW7 = { t="SD_TBBW7", f="SD_TSGF6"},
+  SD_TBBW8 = { t="SD_TBBW8", f="SD_TSGF5"},
+  SD_TBBW9 = { t="SD_TBBW9", f="SD_TSGF4"},
+  SD_TBBWA = { t="SD_TBBWA", f="SD_TSGF3"},
+  SD_TBBWB = { t="SD_TBBWB", f="SD_TSGF2"},
+  SD_TBBWC = { t="SD_TBBWC", f="SD_TSGF1"},
+
   -- MSSP-GOTH --
   -- green-ish gothic metal walls with skulls (128px)
   G7_GOGN1 = { t="G7_GOGN1", f="G7_GOGF1"},

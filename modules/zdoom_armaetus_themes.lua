@@ -1059,7 +1059,20 @@ ARMAETUS_ROOM_THEMES =
       SDSLDWL5 = 6,
       SDSLDWL6 = 6,
       SDSLDWL7 = 6,
-      SDSLDWL8 = 6
+      SDSLDWL8 = 6,
+
+      SD_TBBW1 = 3,
+      SD_TBBW2 = 3,
+      SD_TBBW3 = 3,
+      SD_TBBW4 = 3,
+      SD_TBBW5 = 3,
+      SD_TBBW6 = 3,
+      SD_TBBW7 = 3,
+      SD_TBBW8 = 3,
+      SD_TBBW9 = 3,
+      SD_TBBWA = 3,
+      SD_TBBWB = 3,
+      SD_TBBWC = 3
     },
 
     floors =
@@ -2156,6 +2169,103 @@ ARMAETUS_ROOM_THEMES =
       SNOWWAL1 = 5,
       SNOWWAL2 = 5,
       SNOWWAL3 = 5
+    },
+
+    floors =
+    {
+      SD_TSGF1 = 20,
+      SD_TSGF2 = 20,
+      SD_TSGF3 = 20,
+      SD_TSGF4 = 20,
+      SD_TSGF5 = 20,
+      SD_TSGF6 = 20,
+      SD_TSGF7 = 20,
+      SD_TSGF8 = 20,
+      SD_TSGF9 = 20,
+      SD_TSGFA = 20,
+      SD_TSGFB = 20,
+      SD_TSGFC = 20,
+
+      GRATE1 = 6,
+      GRATE6 = 6,
+      SHINY04 = 6,
+
+      SDOM_FT1 = 5,
+      SDOM_FT2 = 5,
+      SDOM_FT3 = 5,
+      SDOM_FT4 = 5,
+      SDOM_FT5 = 5,
+      SDOM_FT6 = 5,
+      SDOM_FT7 = 5,
+      SDOM_FT9 = 5,
+      SDOM_FTA = 5,
+
+      OBTBSFL1 = 5,
+      OBTBSFL2 = 5,
+      OBTBSFL3 = 5,
+      OBTSVBF1 = 5,
+      OBTSVBF2 = 5,
+      OBTSVBF3 = 5
+    },
+
+    ceilings =
+    {
+      SD_TSGF1 = 20,
+      SD_TSGF2 = 20,
+      SD_TSGF3 = 20,
+      SD_TSGF4 = 20,
+      SD_TSGF5 = 20,
+      SD_TSGF6 = 20,
+      SD_TSGF7 = 20,
+      SD_TSGF8 = 20,
+      SD_TSGF9 = 20,
+      SD_TSGFA = 20,
+      SD_TSGFB = 20,
+      SD_TSGFC = 20,
+
+      GRATE1 = 6,
+      GRATE6 = 6,
+      SHINY04 = 6,
+
+      SDOM_FT1 = 5,
+      SDOM_FT2 = 5,
+      SDOM_FT3 = 5,
+      SDOM_FT4 = 5,
+      SDOM_FT5 = 5,
+      SDOM_FT6 = 5,
+      SDOM_FT7 = 5,
+      SDOM_FT9 = 5,
+      SDOM_FTA = 5,
+
+      FLAT1 = 6,
+      FLAT18 = 6,
+      FLAT19 = 6,
+      FLAT3 = 6,
+      FLOOR0_3 = 6,
+      FLOOR0_5 = 6,
+      SLIME14 = 6
+    }
+  },
+
+  tech_bumblebee = --50
+  {
+    env = "building",
+    prob = 50,
+
+    walls =
+    {
+      SD_TBBW1 = 25,
+      SD_TBBW2 = 25,
+      SD_TBBW3 = 25,
+      SD_TBBW4 = 25,
+      SD_TBBW5 = 25,
+      SD_TBBW6 = 25,
+      SD_TBBW7 = 25,
+      SD_TBBW8 = 25,
+      SD_TBBW9 = 25,
+      SD_TBBWA = 25,
+      SD_TBBWB = 25,
+      SD_TBBWC = 25
     },
 
     floors =
@@ -7652,6 +7762,16 @@ ARMAETUS_THEMES =
       SD_TSGWB = 20,
       SD_TSGWC = 20,
       SD_TSGWD = 20,
+
+      SD_TBBW1 = 20,
+      SD_TBBW2 = 20,
+      SD_TBBW3 = 20,
+      SD_TBBW5 = 20,
+      SD_TBBW6 = 20,
+      SD_TBBW7 = 20,
+      SD_TBBW9 = 20,
+      SD_TBBWB = 20,
+      SD_TBBWC = 20
     },
 
     fences =
@@ -8073,7 +8193,7 @@ ARMAETUS_THEMES =
       SD_TWDW3 = 12,
       SD_TWDW4 = 12,
       SD_TWDW5 = 12,
-      SD_TWDW6 = 12
+      SD_TWDW6 = 12,
     },
 
     fences =

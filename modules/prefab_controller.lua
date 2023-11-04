@@ -148,16 +148,16 @@ function PREFAB_CONTROL.fine_tune_filters()
     gtd_tekwoodlite_1 = 1.25,
     gtd_tekwoodlite_2 = 1.25,
     --
-    tech_o_letter_A = 5,
-    tech_o_letter_B = 5,
-    tech_o_letter_C = 5,
-    tech_o_letter_D = 5,
-    tech_o_letter_E = 5,
-    tech_o_letter_F = 5,
-    tech_o_letter_G = 5,
-    tech_o_letter_H = 5,
-    tech_o_letter_I = 5,
-    tech_o_letter_J = 5,
+    tech_o_letter_A = 3,
+    tech_o_letter_B = 3,
+    tech_o_letter_C = 3,
+    tech_o_letter_D = 3,
+    tech_o_letter_E = 3,
+    tech_o_letter_F = 3,
+    tech_o_letter_G = 3,
+    tech_o_letter_H = 3,
+    tech_o_letter_I = 3,
+    tech_o_letter_J = 3,
     --
     gtd_nukage_aquarium = 1.25,
     --
@@ -169,29 +169,28 @@ function PREFAB_CONTROL.fine_tune_filters()
   }
   local new_themes_multipliers =
   {
-    tech_AITextures = 1.5,
-    tech_goth_tech = 3,
-    tech_wood_lab = 3,
-    tech_dk_green_tech = 3,
-    tech_copper_steampunk = 3,
-    tech_wood_lab = 3,
-    tech_wood_comp = 3,
-    tech_silver_grate = 3,
+    tech_AITextures = 1.25,
+    tech_goth_tech = 1.5,
+    tech_wood_lab = 2,
+    tech_dk_green_tech = 2,
+    tech_copper_steampunk = 2,
+    tech_wood_lab = 2,
+    tech_wood_comp = 2,
+    tech_silver_grate = 2,
+    tech_bumblebee = 2,
 
-    urban_wood_lab = 3,
-    urban_wood_comp = 3,
-    urban_silver_grate = 3,
-    urban_evil_mansion = 3,
+    urban_dk_green_tech = 1.25,
+    urban_wood_lab = 2,
+    urban_wood_comp = 2,
+    urban_silver_grate = 2,
+    urban_evil_mansion = 2,
 
-    hell_gilded_bricks = 3,
-    hell_copper_steampunk = 3,
-    hell_AztecClay = 3,
-    hell_babylonian = 3,
-    hell_green_tk = 3,
-    hell_evil_mansion = 3,
-
-    urban_dk_green_tech = 1.5,
-    urban_wood_lab = 3
+    hell_gilded_bricks = 1.25,
+    hell_copper_steampunk = 1.25,
+    hell_AztecClay = 1.5,
+    hell_babylonian = 1.5,
+    hell_green_tk = 2,
+    hell_evil_mansion = 2,
   }
   local themes =
   {
@@ -223,7 +222,7 @@ function PREFAB_CONTROL.fine_tune_filters()
 
     for RT,mult in pairs(new_themes_multipliers) do
       if GAME.ROOM_THEMES[RT] then 
-        GAME.ROOM_THEMES[RT].prob = GAME.ROOM_THEMES[RT].prob * 2
+        GAME.ROOM_THEMES[RT].prob = GAME.ROOM_THEMES[RT].prob * mult
       end
     end
   end
