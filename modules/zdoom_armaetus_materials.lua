@@ -2832,9 +2832,19 @@ brightmap texture SD_TWLW1
   map STWLW1BR
 }
 
+brightmap texture SD_TWLW2
+{
+  map STWLW2BR
+}
+
 brightmap texture SD_TWLW5
 {
   map STWLW5BR
+}
+
+brightmap texture SD_TWLW6
+{
+  map STWLW6BR
 }
 
 brightmap texture SD_TSGW7
