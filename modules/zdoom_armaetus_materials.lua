@@ -2854,7 +2854,7 @@ brightmap texture SD_TSGW7
 
 brightmap texture SD_TSGW9
 {
-  map STGSW8BR
+  map STGSW9BR
 }
 
 brightmap texture SD_TSGWA
