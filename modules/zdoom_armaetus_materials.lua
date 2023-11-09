@@ -1495,6 +1495,35 @@ ARMAETUS_MATERIALS = {
   -- MSSP Stuff --
   ------------------
 
+  -- all --
+  -- copper rust
+  SD_CURW1 = {t="SD_CURW1", f="SD_CURF1"},
+  SD_CURW2 = {t="SD_CURW2", f="SD_CURF2"},
+  SD_CURW3 = {t="SD_CURW3", f="SD_CURF3"},
+  SD_CURW4 = {t="SD_CURW4", f="SD_CURF4"},
+  SD_CURW5 = {t="SD_CURW5", f="SD_CURF5"},
+  SD_CURW6 = {t="SD_CURW6", f="SD_CURF6"},
+  SD_CURW7 = {t="SD_CURW7", f="SD_CURF7"},
+  SD_CURW8 = {t="SD_CURW8", f="SD_CURF8"},
+  SD_CURW9 = {t="SD_CURW9", f="SD_CURF9"},
+  SD_CURWA = {t="SD_CURWA", f="SD_CURFA"},
+  SD_CURWB = {t="SD_CURWB", f="SD_CURFB"},
+  SD_CURWC = {t="SD_CURWC", f="SD_CURFC"},
+  SD_CURWD = {t="SD_CURWD", f="SD_CURF1"},
+  -- flats
+  SD_CURF1 = {t="SD_CURW1", f="SD_CURF1"},
+  SD_CURF2 = {t="SD_CURW2", f="SD_CURF2"},
+  SD_CURF3 = {t="SD_CURW3", f="SD_CURF3"},
+  SD_CURF4 = {t="SD_CURW4", f="SD_CURF4"},
+  SD_CURF5 = {t="SD_CURW5", f="SD_CURF5"},
+  SD_CURF6 = {t="SD_CURW6", f="SD_CURF6"},
+  SD_CURF7 = {t="SD_CURW7", f="SD_CURF7"},
+  SD_CURF8 = {t="SD_CURW8", f="SD_CURF8"},
+  SD_CURF9 = {t="SD_CURW9", f="SD_CURF9"},
+  SD_CURFA = {t="SD_CURWA", f="SD_CURFA"},
+  SD_CURFB = {t="SD_CURWB", f="SD_CURFB"},
+  SD_CURFC = {t="SD_CURWC", f="SD_CURFC"},
+
   -- MSSP-TECH --
   -- silver walls (256px)
   OBTBSLV1 = { t="OBTBSLV1", f="GRATE1"},

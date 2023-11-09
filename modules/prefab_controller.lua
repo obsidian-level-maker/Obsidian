@@ -169,6 +169,8 @@ function PREFAB_CONTROL.fine_tune_filters()
   }
   local new_themes_multipliers =
   {
+    any_copperRust = 2,
+
     tech_AITextures = 1.25,
     tech_goth_tech = 1.5,
     tech_wood_lab = 2,

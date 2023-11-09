@@ -231,6 +231,119 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
+  any_copperRust =
+  {
+    env = "building",
+    prob = 40,
+
+    walls =
+    {
+      SD_CURW1 = 25,
+      SD_CURW2 = 25,
+      SD_CURW3 = 25,
+      SD_CURW4 = 25,
+      SD_CURW5 = 25,
+      SD_CURW6 = 25,
+      SD_CURW7 = 25,
+      SD_CURW8 = 25,
+      SD_CURW9 = 25,
+      SD_CURWA = 25,
+      SD_CURWB = 25,
+      SD_CURWC = 25,
+      SD_CURWD = 25,
+
+      G8_BRNW1 = 10,
+      G8_BRNW2 = 10,
+      G8_BRNW3 = 10,
+
+      BRIKS31 = 10,
+      BRONZE5 = 10,
+      BRONZE6 = 10,
+
+      CEM11 = 10,
+
+      BRONZE1 = 6,
+      BRONZE2 = 6,
+      BRONZE3 = 6,
+      BROWN96 = 6,
+      SPACEW4 = 4,
+    },
+    floors =
+    {
+      SD_CURF1 = 25,
+      SD_CURF2 = 25,
+      SD_CURF3 = 25,
+      SD_CURF4 = 25,
+      SD_CURF5 = 25,
+      SD_CURF6 = 25,
+      SD_CURF7 = 25,
+      SD_CURF8 = 25,
+      SD_CURF9 = 25,
+      SD_CURFA = 25,
+      SD_CURFB = 25,
+      SD_CURFC = 25,
+
+      G8_BRNF1 = 10,
+      G8_BRNF2 = 10,
+      G8_BRNF3 = 10,
+
+      DARKF03 = 6,
+      DARKM01 = 6,
+      GMET01 = 6,
+      GMET02 = 6,
+      GMET03 = 6,
+      GMET04 = 6,
+      GMET05 = 6,
+      GMET06 = 6,
+
+      FLOOR0_1 = 3,
+      FLOOR0_2 = 3,
+      FLOOR3_3 = 3,
+      FLOOR4_1 = 3,
+      FLOOR4_5 = 3,
+      FLOOR4_6 = 3,
+      FLOOR5_3 = 3,
+      SLIME16 = 3
+    },
+    ceilings =
+    {
+      SD_CURF1 = 25,
+      SD_CURF2 = 25,
+      SD_CURF3 = 25,
+      SD_CURF4 = 25,
+      SD_CURF5 = 25,
+      SD_CURF6 = 25,
+      SD_CURF7 = 25,
+      SD_CURF8 = 25,
+      SD_CURF9 = 25,
+      SD_CURFA = 25,
+      SD_CURFB = 25,
+      SD_CURFC = 25,
+
+      G8_BRNF1 = 10,
+      G8_BRNF2 = 10,
+      G8_BRNF3 = 10,
+
+      DARKF03 = 6,
+      DARKM01 = 6,
+      GMET01 = 6,
+      GMET02 = 6,
+      GMET03 = 6,
+      GMET04 = 6,
+      GMET05 = 6,
+      GMET06 = 6,
+      
+      FLOOR0_1 = 3,
+      FLOOR0_2 = 3,
+      FLOOR3_3 = 3,
+      FLOOR4_1 = 3,
+      FLOOR4_5 = 3,
+      FLOOR4_6 = 3,
+      FLOOR5_3 = 3,
+      SLIME16 = 3
+    }
+  },
+
 -- START OF TECH THEMES
 
   tech_GrayMet = --120
