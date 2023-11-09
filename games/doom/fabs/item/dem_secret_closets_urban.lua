@@ -198,7 +198,7 @@ PREFABS.Item_secret_yard_closet1 =
   deep   = 16,
   over   = -16,
 
-  prob  = 1150,
+  prob  = 350,
 
   key   = "secret",
 
@@ -258,7 +258,7 @@ PREFABS.Item_secret_yard_closet2 =
   template = "Item_secret_yard_closet1",
   map      = "MAP04",
 
-  prob  = 240,
+  prob  = 750,
 
   seed_w = 4,
   seed_h = 2,
@@ -271,8 +271,8 @@ PREFABS.Item_secret_yard_closet3 =
 {
   template = "Item_secret_yard_closet1",
   map      = "MAP05",
-
-  prob  = 240,
+750
+  prob  = 850,
 
   seed_w = 4,
   seed_h = 2,
@@ -301,7 +301,7 @@ PREFABS.Item_secret_hanging_vent_closet =
 
   open_to_sky = true,
 
-  prob  = 50,
+  prob  = 250,
 
   seed_w = 1,
   seed_h = 1,
