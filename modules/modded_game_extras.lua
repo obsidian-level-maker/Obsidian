@@ -1807,8 +1807,8 @@ function MODDED_GAME_EXTRAS.create_hn_info(self, LEVEL)
         end
 
         if chunk.area.room then
-          if chunk.area.room.is_outdoor then
-            info.name = info.name .. " (Outdoor Wall Group: " .. LEVEL.outdoor_wall_group .. " )"
+          if chunk.area.outdoor_wall_group then
+            info.name = info.name .. " (Outdoor Wall Group: " .. chunk.area.outdoor_wall_group .. " )"
           elseif chunk.area.room.theme then
             info.name = info.name .. " (Room Theme: " .. chunk.area.room.theme.name .. " )" 
           end
