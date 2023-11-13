@@ -4600,7 +4600,7 @@ ARMAETUS_ROOM_THEMES =
       TILES3 = 6,
       TILES4 = 6,
       TILES5 = 6,
-      TILES6 = 6
+      TILES6 = 6,
 
       FLAT20 = 2,
       FLAT3 = 2,
@@ -6581,7 +6581,7 @@ ARMAETUS_ROOM_THEMES =
       TILES3 = 6,
       TILES4 = 6,
       TILES5 = 6,
-      TILES6 = 6
+      TILES6 = 6,
 
       FLAT20 = 2,
       FLAT3 = 2,

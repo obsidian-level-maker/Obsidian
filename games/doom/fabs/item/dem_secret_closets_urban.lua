@@ -311,6 +311,6 @@ PREFABS.Item_secret_hanging_vent_closet =
   bound_z2 = 132,
 
   x_fit = "frame",
-  y_fit = "top"
-  z_fit = { 65,67 },
+  y_fit = "top",
+  z_fit = { 65,67 }
 }
