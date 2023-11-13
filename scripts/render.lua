@@ -287,6 +287,10 @@ function Render_edge(LEVEL, E, SEEDS)
         if reqs.group == "none" then reqs.group = nil end
       end
 
+      if A.room then --debug purposes
+        A.room.outdoor_wall_group = reqs.group
+      end
+
       if reqs.group == "PLAIN" or rand.odds(10) then
         reqs.group = nil
       end
