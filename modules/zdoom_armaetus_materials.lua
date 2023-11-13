@@ -1784,6 +1784,32 @@ ARMAETUS_MATERIALS = {
   SD_TBBWB = { t="SD_TBBWB", f="SD_TSGF2"},
   SD_TBBWC = { t="SD_TBBWC", f="SD_TSGF1"},
 
+  -- MSSP-URBAN --
+  -- New Yorker art deco
+  SD_UADW1 = { t="SD_UADW1", f="SD_UADF1"},
+  SD_UADW2 = { t="SD_UADW2", f="SD_UADF2"},
+  SD_UADW3 = { t="SD_UADW3", f="SD_UADF3"},
+  SD_UADW4 = { t="SD_UADW4", f="SD_UADF4"},
+  SD_UADW5 = { t="SD_UADW5", f="SD_UADF5"},
+  SD_UADW6 = { t="SD_UADW6", f="SD_UADF6"},
+  SD_UADW7 = { t="SD_UADW7", f="SD_UADF7"},
+  SD_UADW8 = { t="SD_UADW8", f="SD_UADF8"},
+  SD_UADW9 = { t="SD_UADW9", f="SD_UADF1"},
+  SD_UADWA = { t="SD_UADWA", f="SD_UADF2"},
+  SD_UADWB = { t="SD_UADWB", f="SD_UADF3"},
+  SD_UADWC = { t="SD_UADWC", f="SD_UADF5"},
+  SD_UADWD = { t="SD_UADWD", f="SD_UADF6"},
+  SD_UADWE = { t="SD_UADWE", f="SD_UADF8"},
+  -- flats
+  SD_UADF1 = { t="SD_UADW1", f="SD_UADF1"},
+  SD_UADF2 = { t="SD_UADW3", f="SD_UADF2"},
+  SD_UADF3 = { t="SD_UADW5", f="SD_UADF3"},
+  SD_UADF4 = { t="SD_UADW7", f="SD_UADF4"},
+  SD_UADF5 = { t="SD_UADW9", f="SD_UADF5"},
+  SD_UADF6 = { t="SD_UADWB", f="SD_UADF6"},
+  SD_UADF7 = { t="SD_UADWD", f="SD_UADF7"},
+  SD_UADF8 = { t="SD_UADWE", f="SD_UADF8"},
+
   -- MSSP-GOTH --
   -- green-ish gothic metal walls with skulls (128px)
   G7_GOGN1 = { t="G7_GOGN1", f="G7_GOGF1"},
@@ -1887,6 +1913,31 @@ ARMAETUS_MATERIALS = {
   SD_UHMC6 = { t="SD_UHMWA", f="SD_UHMC6"},
   SD_UHMC7 = { t="SD_UHMWB", f="SD_UHMC7"},
   SD_UHMC8 = { t="SD_UHMWC", f="SD_UHMC8"},
+
+  -- Kievan Rus medieval
+  SD_HRFW1 = { t="SD_HRFW1", f="SD_HRFF1"},
+  SD_HRFW2 = { t="SD_HRFW2", f="SD_HRFF2"},
+  SD_HRFW3 = { t="SD_HRFW3", f="SD_HRFF3"},
+  SD_HRFW4 = { t="SD_HRFW4", f="SD_HRFF4"},
+  SD_HRFW5 = { t="SD_HRFW5", f="SD_HRFF5"},
+  SD_HRFW6 = { t="SD_HRFW6", f="SD_HRFF6"},
+  SD_HRFW7 = { t="SD_HRFW7", f="SD_HRFF7"},
+  SD_HRFW8 = { t="SD_HRFW8", f="SD_HRFF8"},
+  SD_HRFW9 = { t="SD_HRFW9", f="SD_HRFF1"},
+  SD_HRFWA = { t="SD_HRFWA", f="SD_HRFF3"},
+  SD_HRFWB = { t="SD_HRFWB", f="SD_HRFF5"},
+  SD_HRFWC = { t="SD_HRFWC", f="SD_HRFF6"},
+  SD_HRFWD = { t="SD_HRFWD", f="SD_HRFF7"},
+  SD_HRFWE = { t="SD_HRFWE", f="SD_HRFF8"},
+  -- flats
+  SD_HRFF1 = { t="SD_HRFW1", f="SD_HRFF1"},
+  SD_HRFF2 = { t="SD_HRFW3", f="SD_HRFF2"},
+  SD_HRFF3 = { t="SD_HRFW5", f="SD_HRFF3"},
+  SD_HRFF4 = { t="SD_HRFW7", f="SD_HRFF4"},
+  SD_HRFF5 = { t="SD_HRFW9", f="SD_HRFF5"},
+  SD_HRFF6 = { t="SD_HRFWA", f="SD_HRFF6"},
+  SD_HRFF7 = { t="SD_HRFWC", f="SD_HRFF7"},
+  SD_HRFF8 = { t="SD_HRFWE", f="SD_HRFF8"},
 
   -- 256-wide doors
   G8_SVDR3 = { t="G8_SVDR3", f="FLAT23"},
