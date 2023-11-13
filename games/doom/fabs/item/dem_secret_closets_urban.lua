@@ -271,7 +271,7 @@ PREFABS.Item_secret_yard_closet3 =
 {
   template = "Item_secret_yard_closet1",
   map      = "MAP05",
-750
+
   prob  = 850,
 
   seed_w = 4,
@@ -299,8 +299,6 @@ PREFABS.Item_secret_hanging_vent_closet =
 
   jump_crouch = false,
 
-  open_to_sky = true,
-
   prob  = 250,
 
   seed_w = 1,
@@ -313,5 +311,6 @@ PREFABS.Item_secret_hanging_vent_closet =
   bound_z2 = 132,
 
   x_fit = "frame",
+  y_fit = "top"
   z_fit = { 65,67 },
 }
