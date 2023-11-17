@@ -6862,7 +6862,7 @@ msgid "Control the amount of Thunderbolts."
 msgstr ""
 
 #: modules/sky_generator.lua:25
-msgid "Default (33% of Episodes Day)"
+msgid "Default (66% of Episodes Day)"
 msgstr ""
 
 #: modules/sky_generator.lua:26

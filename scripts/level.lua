@@ -2702,7 +2702,7 @@ function Level_make_level(LEV)
 
   if coverage_target == 0 then coverage_target = LEVEL.min_coverage end
 
-  if not LEVEL.is_linear and not LEVEL.is_absurd then
+  if not LEVEL.is_linear then
     if LEVEL.cur_coverage < coverage_target then
       res = "runt"
     end

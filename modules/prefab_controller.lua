@@ -142,29 +142,61 @@ function PREFAB_CONTROL.fine_tune_filters()
   }
   local new_fab_groups_multipliers =
   {
-    gtd_wall_tech_gothic_inset_gargoyle = 3,
-    gtd_wall_tech_gothic_inset_engine = 3,
-    gtd_wall_tech_gothic_inset_red_lite = 3,
-    gtd_tekwoodlite_1 = 3,
-    gtd_tekwoodlite_2 = 3
+    gtd_wall_tech_gothic_inset_gargoyle = 1.25,
+    gtd_wall_tech_gothic_inset_engine = 1.25,
+    gtd_wall_tech_gothic_inset_red_lite = 1.25,
+    gtd_tekwoodlite_1 = 1.25,
+    gtd_tekwoodlite_2 = 1.25,
+    --
+    tech_o_letter_A = 3,
+    tech_o_letter_B = 3,
+    tech_o_letter_C = 3,
+    tech_o_letter_D = 3,
+    tech_o_letter_E = 3,
+    tech_o_letter_F = 3,
+    tech_o_letter_G = 3,
+    tech_o_letter_H = 3,
+    tech_o_letter_I = 3,
+    tech_o_letter_J = 3,
+    --
+    gtd_nukage_aquarium = 1.25,
+    --
+    gtd_prison_A = 2.5,
+    --
+    gtd_toilet_gallery = 1.75,
+    --
+    gtd_bathwater = 1.5
   }
   local new_themes_multipliers =
   {
-    tech_AITextures = 3,
-    tech_goth_tech = 3,
-    tech_wood_lab = 3,
-    tech_dk_green_tech = 3,
-    tech_copper_steampunk = 3,
-    tech_wood_lab = 3,
+    any_copperRust = 2,
 
-    hell_gilded_bricks = 3,
-    hell_copper_steampunk = 3,
-    hell_AztecClay = 3,
-    hell_babylonian = 3,
-    hell_green_tk = 3,
+    tech_AITextures = 1.25,
+    tech_goth_tech = 1.25,
+    tech_wood_lab = 1.5,
+    tech_dk_green_tech = 1.5,
+    tech_copper_steampunk = 2,
+    tech_wood_lab = 2,
+    tech_wood_comp = 2,
+    tech_silver_grate = 2,
+    tech_bumblebee = 2,
 
-    urban_dk_green_tech = 3,
-    urban_wood_lab = 3
+    urban_dk_green_tech = 1.25,
+    urban_wood_lab = 1.25,
+    urban_wood_comp = 2,
+    urban_silver_grate = 2,
+    urban_evil_mansion = 2,
+    urban_kievan_rus = 2,
+    urban_new_york_art_deco = 2,
+
+    hell_gilded_bricks = 1.25,
+    hell_copper_steampunk = 1.25,
+    hell_AztecClay = 1.5,
+    hell_babylonian = 1.5,
+    hell_green_tk = 1.5,
+    hell_evil_mansion = 2,
+    hell_kievan_rus = 2,
+    hell_new_york_art_deco = 2
   }
   local themes =
   {
@@ -178,9 +210,17 @@ function PREFAB_CONTROL.fine_tune_filters()
     for WG,mult in pairs(new_fab_groups_multipliers) do
       for _,theme_name in pairs(themes) do
         if GAME.THEMES[theme_name] then
-          if GAME.THEMES[theme_name].wall_groups[WG] then
+          if GAME.THEMES[theme_name].wall_groups and 
+          GAME.THEMES[theme_name].wall_groups[WG] then
             GAME.THEMES[theme_name].wall_groups[WG] =
-            GAME.THEMES[theme_name].wall_groups[WG] * 2
+            GAME.THEMES[theme_name].wall_groups[WG] * 
+            mult
+          end
+
+          if GAME.THEMES[theme_name].outdoor_wall_groups 
+          and GAME.THEMES[theme_name].outdoor_wall_groups[WG] then
+            GAME.THEMES[theme_name].outdoor_wall_groups[WG] =
+            GAME.THEMES[theme_name].outdoor_wall_groups[WG] * 2
           end
         end
       end
@@ -188,7 +228,7 @@ function PREFAB_CONTROL.fine_tune_filters()
 
     for RT,mult in pairs(new_themes_multipliers) do
       if GAME.ROOM_THEMES[RT] then 
-        GAME.ROOM_THEMES[RT].prob = GAME.ROOM_THEMES[RT].prob * 2
+        GAME.ROOM_THEMES[RT].prob = GAME.ROOM_THEMES[RT].prob * mult
       end
     end
   end

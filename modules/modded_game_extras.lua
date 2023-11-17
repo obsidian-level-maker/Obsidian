@@ -1803,13 +1803,19 @@ function MODDED_GAME_EXTRAS.create_hn_info(self, LEVEL)
         info.editor_num = PARAM.hn_thing_start_offset
 
         if chunk.area.floor_group and chunk.area.floor_group.wall_group then
-          info.name = info.name .. " (Wall Group: " .. chunk.area.floor_group.wall_group .. " )"
-          if chunk.area.room then 
-            if chunk.area.is_outdoor then
-              info.name = info.name .. " (Outdoor Wall Group: " .. LEVEL.outdoor_wall_group .. " )"
-            elseif chunk.area.room.theme then
-              info.name = info.name .. " (Room Theme: " .. chunk.area.room.theme.name .. " )" 
-            end
+          info.name = info.name .. " (Wall Group: " .. 
+          chunk.area.floor_group.wall_group .. ")"
+        end
+
+        if chunk.area then
+          if chunk.area.room and chunk.area.room.is_outdoor 
+          and chunk.area.room.outdoor_wall_group then
+            info.name = info.name .. 
+              " (Outdoor Wall Group: " .. 
+              chunk.area.room.outdoor_wall_group .. ")"
+          elseif chunk.area.room.theme then
+            info.name = info.name .. " (Room Theme: " .. 
+              chunk.area.room.theme.name .. ")" 
           end
         end
 
@@ -1844,13 +1850,19 @@ function MODDED_GAME_EXTRAS.create_hn_info(self, LEVEL)
         info.editor_num = PARAM.hn_thing_start_offset
 
         if chunk.from_area.floor_group and chunk.from_area.floor_group.wall_group then
-          info.name = info.name .. " (Wall Group: " .. chunk.from_area.floor_group.wall_group .. " )"
-          if chunk.area.room then 
-            if chunk.area.is_outdoor then
-              info.name = info.name .. " (Outdoor Wall Group: " .. LEVEL.outdoor_wall_group .. " )"
-            elseif chunk.area.room.theme then
-              info.name = info.name .. " (Room Theme: " .. chunk.area.room.theme.name .. " )" 
-            end
+          info.name = info.name .. " (Wall Group: " ..
+            chunk.from_area.floor_group.wall_group .. ")"
+        end
+
+        if chunk.area then
+          if chunk.area.room and chunk.area.room.is_outdoor
+          and chunk.area.room.outdoor_wall_group then
+            info.name = info.name ..
+              " (Outdoor Wall Group: " .. 
+              chunk.area.room.outdoor_wall_group .. ")"
+          elseif chunk.area.room.theme then
+            info.name = info.name .. " (Room Theme: " .. 
+              chunk.area.room.theme.name .. ")" 
           end
         end
 

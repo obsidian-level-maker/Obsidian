@@ -198,7 +198,7 @@ PREFABS.Item_secret_yard_closet1 =
   deep   = 16,
   over   = -16,
 
-  prob  = 1150,
+  prob  = 350,
 
   key   = "secret",
 
@@ -226,30 +226,30 @@ PREFABS.Item_secret_yard_closet1 =
     BRONZE1=50, BROWN1=50, BROWN96=50,
     BROWNGRN=50, CEMENT7=50,
     CEMENT9=50,
-    },
+  },
 
   tex_BRICK9 = {
-	BRICK1=50,
-	BRICK10=50,
-	BRICK11=50,
-	BRICK2=50,
-	BRICK4=50,
-	BRICK6=50,
-	BRICK7=50,
-	BRICK8=50,
-	BIGBRIK1=50,
-	BIGBRIK2=50,
-	STONE2=50,
-	STONE3=50,
-	BRICK12=50,
-	BRICK5=50,
-	BRONZE1=50,
-	BROWN1=50,
-	BROWN96=50,
-	BROWNGRN=50,
-	CEMENT7=50,
+    BRICK1=50,
+    BRICK10=50,
+    BRICK11=50,
+    BRICK2=50,
+    BRICK4=50,
+    BRICK6=50,
+    BRICK7=50,
+    BRICK8=50,
+    BIGBRIK1=50,
+    BIGBRIK2=50,
+    STONE2=50,
+    STONE3=50,
+    BRICK12=50,
+    BRICK5=50,
+    BRONZE1=50,
+    BROWN1=50,
+    BROWN96=50,
+    BROWNGRN=50,
+    CEMENT7=50,
 	CEMENT9=50,
-    }
+  }
 }
 --double porch Appartment secret
 
@@ -258,11 +258,10 @@ PREFABS.Item_secret_yard_closet2 =
   template = "Item_secret_yard_closet1",
   map      = "MAP04",
 
-  prob  = 240,
+  prob  = 750,
 
   seed_w = 4,
   seed_h = 2,
-
 }
 
 --A secret on top of a big fancy mansion's porch 
@@ -273,11 +272,10 @@ PREFABS.Item_secret_yard_closet3 =
   template = "Item_secret_yard_closet1",
   map      = "MAP05",
 
-  prob  = 240,
+  prob  = 850,
 
   seed_w = 4,
   seed_h = 2,
-
 }
 
 --A secret in a building filed with skulls
@@ -290,21 +288,18 @@ PREFABS.Item_secret_yard_closet4 =
   jump_crouch = false,
 
   prob  = 50,
-
 }
 
 --A secret in a downward vent dotting the streets
 
-PREFABS.Item_secret_vent_closet =
+PREFABS.Item_secret_hanging_vent_closet =
 {
   template = "Item_secret_yard_closet1",
   map      = "MAP07",
 
   jump_crouch = false,
 
-  open_to_sky = true,
-
-  prob  = 50,
+  prob  = 250,
 
   seed_w = 1,
   seed_h = 1,
@@ -313,10 +308,9 @@ PREFABS.Item_secret_vent_closet =
   deep   = 80,
 
   bound_z1 = 0,
-  bound_z2 = 128,
+  bound_z2 = 132,
 
   x_fit = "frame",
   y_fit = "top",
-  z_fit = { 65,67 },
-
+  z_fit = { 65,67 }
 }

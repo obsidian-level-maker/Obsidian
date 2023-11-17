@@ -23,7 +23,6 @@ PREFABS.Pic_urban_downtown_yards1 =
 
   tex_CITY01 =
   {
-
     CITY01 = 50,
     CITY02 = 50,
     CITY03 = 50,
@@ -34,34 +33,33 @@ PREFABS.Pic_urban_downtown_yards1 =
     CITY11 = 25,
     CITY12 = 25,
     CITY13 = 25,
-    CITY14 = 25,
+    CITY14 = 25
   },
 
   tex_BRICK9 = {
-	BRICK1=50,
-	BRICK10=50,
-	BRICK11=50,
-	BRICK2=50,
-	BRICK4=50,
-	BRICK6=50,
-	BRICK7=50,
-	BRICK8=50,
-	BIGBRIK1=50,
-	BIGBRIK2=50,
-	STONE2=50,
-	STONE3=50,
-	BRICK12=50,
-	BRICK5=50,
-	BRONZE1=50,
-	BROWN1=50,
-	BROWN96=50,
-	BROWNGRN=50,
-	CEMENT7=50,
-	CEMENT9=50,
-    },
+    BRICK1=50,
+    BRICK10=50,
+    BRICK11=50,
+    BRICK2=50,
+    BRICK4=50,
+    BRICK6=50,
+    BRICK7=50,
+    BRICK8=50,
+    BIGBRIK1=50,
+    BIGBRIK2=50,
+    STONE2=50,
+    STONE3=50,
+    BRICK12=50,
+    BRICK5=50,
+    BRONZE1=50,
+    BROWN1=50,
+    BROWN96=50,
+    BROWNGRN=50,
+    CEMENT7=50,
+    CEMENT9=50
+  },
 
-  can_flip = true,
-
+  can_flip = true
 }
 
 PREFABS.Pic_urban_downtown_yards2 =
@@ -124,6 +122,7 @@ PREFABS.Pic_urban_downtown_yards8 =
   template = "Pic_urban_downtown_yards1",
   map      = "MAP08",
 
+  in_porches = "never"
 }
 
 PREFABS.Pic_urban_downtown_yards9 =

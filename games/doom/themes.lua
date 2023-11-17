@@ -1755,7 +1755,8 @@ DOOM.THEMES =
       gtd_sewer_set_2 = 35,
       gtd_sewer_set_3 = 35,
       --
-      gtd_water_purifier = 50,
+      gtd_water_purifier = 42,
+      gtd_nukage_aquarium = 42,
       gtd_toilet_gallery = 25,
       --
       gtd_generic_beamed_inset = 25,
@@ -1901,7 +1902,17 @@ DOOM.THEMES =
       tech_o_g_blakwall = 1,
       tech_o_g_modwall1 = 1,
       tech_o_g_modwall2 = 1,
-      tech_o_yellow_compsil = 1
+      tech_o_yellow_compsil = 1,
+      tech_o_letter_A = 1,
+      tech_o_letter_B = 1,
+      tech_o_letter_C = 1,
+      tech_o_letter_D = 1,
+      tech_o_letter_E = 1,
+      tech_o_letter_F = 1,
+      tech_o_letter_G = 1,
+      tech_o_letter_H = 1,
+      tech_o_letter_I = 1,
+      tech_o_letter_J = 1
     },
 
     window_groups =
@@ -2657,7 +2668,8 @@ DOOM.THEMES =
       gtd_sewer_set_2 = 30,
       gtd_sewer_set_3 = 30,
       --
-      gtd_water_purifier = 50,
+      gtd_water_purifier = 42,
+      gtd_nukage_aquarium = 42,
       gtd_toilet_gallery = 25,
       --
       gtd_generic_beamed_inset = 25,
@@ -2781,7 +2793,9 @@ DOOM.THEMES =
       gtd_door_storage = 30,
       --
       gtd_wall_lit_h_window_tall_gray = 25,
-      gtd_wall_lit_h_window_tall_brown = 50      
+      gtd_wall_lit_h_window_tall_brown = 40,
+      --
+      gtd_prison_A = 50
     },
 
     window_groups =
