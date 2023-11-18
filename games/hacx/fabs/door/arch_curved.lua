@@ -1,16 +1,18 @@
 --
--- Framed archway
+-- Archway with a curved arch
 --
 
-PREFABS.Arch_framey =
+PREFABS.Arch_curved1 =
 {
-  file   = "door/arch_framey.wad",
+  file   = "door/arch_curved.wad",
   map    = "MAP01",
 
   prob   = 50,
 
   kind   = "arch",
   where  = "edge",
+
+  
 
   seed_w = 2,
 
@@ -23,9 +25,9 @@ PREFABS.Arch_framey =
 }
 
 
-PREFABS.Arch_framey2 =
+PREFABS.Arch_curved2 =
 {
-  template = "Arch_framey",
+  template = "Arch_curved1",
   map      = "MAP02",
 
   prob   = 200,
@@ -34,9 +36,9 @@ PREFABS.Arch_framey2 =
 }
 
 
-PREFABS.Arch_framey3 =
+PREFABS.Arch_curved3 =
 {
-  template = "Arch_framey",
+  template = "Arch_curved1",
   map      = "MAP03",
 
   prob   = 800,

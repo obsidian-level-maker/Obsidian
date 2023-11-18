@@ -1,11 +1,13 @@
 --
--- Simple exit closet (with door)
+-- Simple start closet (with door)
 --
 
-PREFABS.Exit_elevator =
+PREFABS.Start_closet1 =
 {
-  file  = "exit/elevator.wad",
+  file  = "start/closet1.wad",
   map   = "MAP01",
+
+  
 
   prob  = 80,
 
@@ -15,6 +17,5 @@ PREFABS.Exit_elevator =
 
   x_fit = "frame",
   y_fit = "top",
-
-  start_fab_peer = "Start_elevator",
 }
+
