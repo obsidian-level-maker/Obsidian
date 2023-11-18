@@ -304,11 +304,11 @@ PREFABS.Item_secret_hanging_vent_closet =
   seed_w = 1,
   seed_h = 1,
 
-  height = 128,
+  height = 125,
   deep   = 80,
 
   bound_z1 = 0,
-  bound_z2 = 132,
+  bound_z2 = 125,
 
   x_fit = "frame",
   y_fit = "top",
