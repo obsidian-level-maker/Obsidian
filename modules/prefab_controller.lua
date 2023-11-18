@@ -154,6 +154,7 @@ function PREFAB_CONTROL.fine_tune_filters()
     tech_o_letter_J = 2,
     tech_o_letter_K = 3,
     tech_o_letter_L = 3,
+    tech_o_letter_M = 3,
     --
     gtd_prison_A = 2.5,
     --
