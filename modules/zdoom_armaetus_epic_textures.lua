@@ -2,7 +2,7 @@
 --  MODULE: Obsidian Epic Resource Pack
 ------------------------------------------------------------------------
 --
---  Copyright (C) 2019-2022 Armaetus
+--  Copyright (C) 2019-2022 Reisal
 --  Copyright (C) 2019-2022 MsrSgtShooterPerson
 --  Copyright (C) 2020-2022 Craneo
 --
@@ -49,7 +49,7 @@ ARMAETUS_EPIC_TEXTURES.ENVIRONMENT_THEME_CHOICES =
   "no",        _("No"),
 }
 
--- Armaetus: Do we really need the template here anymore? I have not
+-- Reisal: Do we really need the template here anymore? I have not
 -- seen this in use or was superceded by the Tree/Flora module.
 ARMAETUS_EPIC_TEXTURES.TEMPLATES =
 {

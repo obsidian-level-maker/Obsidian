@@ -6,7 +6,7 @@
 --
 --  Copyright (C) 2006-2017 Andrew Apted
 --  Copyright (C) 2020-2022 MsrSgtShooterPerson
---  Copyright (C) 2020 Armaetus
+--  Copyright (C) 2020 Reisal
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -148,7 +148,7 @@ function Level_determine_map_size(LEV)
   -- Named sizes --
 
   -- Since we have other sizes and Auto-Detail, we can have these bigger sizes
-  -- now. -Armaetus, July 9th, 2019,
+  -- now. -Reisal, July 9th, 2019,
   
   local ob_size = PARAM.float_size
     
@@ -182,7 +182,7 @@ function Level_determine_map_size(LEV)
   -- Mix It Up --
 
   -- Readjusted probabilities once again, added "Micro" size as suggested by activity
-  -- in the Discord server. -Armaetus, June 30th, 2019,
+  -- in the Discord server. -Reisal, June 30th, 2019,
   if ob_size == gui.gettext("Mix It Up") then
 
     local result_skew = 1.0

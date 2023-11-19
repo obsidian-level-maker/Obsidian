@@ -3,7 +3,7 @@
 ----------------------------------------------------------------
 --
 --  Copyright (C) 2019-2022 MsrSgtShooterPerson
---  Copyright (C) 2019-2022 Armaetus
+--  Copyright (C) 2019-2022 Reisal
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -2718,7 +2718,7 @@ ARMAETUS_ROOM_THEMES =
 
 -- START OF HELL THEMES
 
-  hell_ArmaetusGothic = --150
+  hell_ReisalGothic = --150
   {
     env  = "building",
     prob = 150,
@@ -4929,7 +4929,7 @@ ARMAETUS_ROOM_THEMES =
 -- START OF URBAN THEMES
 
   --  18 through 20 don't tile horizontally well so I removed them. 14 and 30 seems more like it works for exterior.
-  urban_ArmaetusBricks = --100
+  urban_ReisalBricks = --100
   {
     env = "building",
     prob = 100,

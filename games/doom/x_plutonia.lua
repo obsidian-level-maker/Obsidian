@@ -3,7 +3,7 @@
 --------------------------------------------------------------------
 --
 --  Copyright (C) 2006-2016 Andrew Apted
---  Copyright (C) 2019-2022 Armaetus
+--  Copyright (C) 2019-2022 Reisal
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -166,7 +166,7 @@ PLUTONIA.EPISODES =
 
 -- WORK IN PROGRESS --
 -- TEMPORARY SHIT, USABLE BUT NEEDS MORE!
--- -Armaetus, January 19th, 2021,
+-- -Reisal, January 19th, 2021,
 
 -- More tables and other crap are needed so
 -- Plutonia has some exclusive themes added,
@@ -976,7 +976,7 @@ PLUTONIA.MONSTERS =
     level = 5,
     boss_type = "nasty",
     boss_prob = 50,
-    boss_limit = 2, --Why? Because of the endless revival party in a room full of monsters -Armaetus
+    boss_limit = 2, --Why? Because of the endless revival party in a room full of monsters -Reisal
     prob = 5,
     crazy_prob = 15,
     health = 700,

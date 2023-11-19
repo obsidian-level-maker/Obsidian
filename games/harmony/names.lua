@@ -12,19 +12,19 @@ HARMONY.NAMES =
       -- Why not some level names common in all themes?
       -- Also, how do we keep 'Common' theme full names
       -- from not being in more than one theme?
-      -- -Armaetus, 12/30/20,
+      -- -Reisal, 12/30/20,
 
       -- Another side note, please keep future definitions
       -- in alphabetical order for those who add more to this
       -- besides me lol
-      -- Armaetus, 2/6/21,
+      -- Reisal, 2/6/21,
 
       s =
       {
         ["A Walk on Thin Ice"]=10,
         ["Alternative Means"]=10,
         ["Annihilation"]=10,
-        ["Armaetus Loves Naming"]=10, -- Bahaha!
+        ["Reisal Loves Naming"]=10, -- Bahaha!
         ["Ascent into Madness"]=10,
         ["Backstabbed"]=10,
         ["Black Skies"]=10,
@@ -160,7 +160,7 @@ HARMONY.NAMES =
         ["Waiting for Craneo to Play"]=10,
         ["Message from the Administrator"]=10,
         ["Bye Bye Canadian Pie"]=10,
-        ["Armaetus's Asleep"]=10,
+        ["Reisal's Asleep"]=10,
         ["Getting Too Hot"]=10,
         ["Opening to Evil"]=10,
 
@@ -189,7 +189,7 @@ HARMONY.NAMES =
         ["Hopeless Despair"]=10,
         ["Bells of Agony"]=10,
 
-        -- OwO what's this? More from Armaetus?!
+        -- OwO what's this? More from Reisal?!
         -- Just straight up weird or funny, rarely chosen though. Some memey stuff present!
         ["A Stupid Level Name"]=2,
         ["Another Generated Map"]=2,
@@ -238,7 +238,7 @@ HARMONY.NAMES =
         ["Within the Wicked Mind"]=5,
 
         -- What do we have? MORE Naming? Owo
-        -- A bunch of abstract shit is here too! - Armaetus, Jun. 13, 2021
+        -- A bunch of abstract shit is here too! - Reisal, Jun. 13, 2021
         ["A Madman's Crusade"]=10,
         ["Absence of Nihility"]=10,
         ["Abstract Transcendence"]=10,
@@ -620,7 +620,7 @@ HARMONY.NAMES =
         ["Death Awaits in the"]=5,
         ["Hell in the"]=5,
 
-        -- these by Armaetus
+        -- these by Reisal
         ["Fear the"]=10,
         ["Beware the"]=10,
         ["Bane of the"]=10,
@@ -1560,11 +1560,11 @@ HARMONY.NAMES =
         ["Welcome to the Coalface"]=10,
         ["You Can't Handle the Noose"]=10,
 
-        -- Armaetus adds new names
+        -- Reisal adds new names
         ["Segmentus Infernus"]=10,
         ["Voidborne"]=10,
 
-        -- Armaetus adds even more names, 2020 Edition
+        -- Reisal adds even more names, 2020 Edition
         ["Apocalyptic Prophecy"]=10,
         ["Artwork of Affliction"]=10,
         ["Blood Red Sunshine"]=10,
@@ -1675,7 +1675,7 @@ HARMONY.NAMES =
         ["We Shun the Light"]=10,
         ["Wretched Human Mirror"]=10, -- Bloodbath song name
 
-        -- End of 2021 naming convention by Armaetus
+        -- End of 2021 naming convention by Reisal
         ["Black As The Void"]=10,
         ["Bubbling Blisters"]=10,
         ["Corpse Dumpster"]=10,
@@ -2010,7 +2010,7 @@ HARMONY.NAMES =
         ["You'll See"]=10,
         ["Zone of Alienation"]=10,
 
-        -- Armaetus adds names too
+        -- Reisal adds names too
         ["A Friend to Upheaval"]=10,
         ["Burned and Shut In"]=10,
         ["Circumscribed by Hell"]=10,
@@ -2093,7 +2093,7 @@ HARMONY.NAMES =
 
       -- contributors and their shenanigans
 
-      -- Armaetus's additions
+      -- Reisal's additions
       ["%a %q"] = 10,
       ["%a %j"] = 10,
       ["Dead Base: %a"] = 5,
@@ -2658,7 +2658,7 @@ HARMONY.NAMES =
         ["Security Breach"] = 10,
         ["Arena From Hell"] = 10,
 
-        -- these by Armaetus (mostly)
+        -- these by Reisal (mostly)
         ["Radio Silence"] = 10,
         ["Liquidation"] = 10,
         ["Return to Hell"] = 10,
@@ -2911,7 +2911,7 @@ HARMONY.NAMES =
       -- %e = Entities
       -- %m = Material / Metal alloy
 
-      -- Armaetus adds more grammar rules
+      -- Reisal adds more grammar rules
       ["Vacation in the %d %p"] = 10,  -- Vacation in the [Description] [Place]
       ["Evil Unleashed: %a %d"] = 10,
       ["%c's %d"] = 4, -- [Name]'s Abstract Object
@@ -3635,7 +3635,7 @@ HARMONY.NAMES =
         Slayer = 10,
 
         Unbeliever = 10,
-        -- Armaetus adds things here
+        -- Reisal adds things here
         ["Sin Bringer"] = 10,
         ["The Icon"] = 10,
         Deathbringers = 10,
@@ -3754,7 +3754,7 @@ HARMONY.NAMES =
         ["By Obsidian Contribs"] = 35,
         ["Carthage Special"] = 20,
         ["Simon-v Special"] = 20,
-        ["Armaetus Approved"] = 20,
+        ["Reisal Approved"] = 20,
         ["Caligari Tested"] = 20,
         ["Frozsoul Edition"] = 20,
         ["Garrett Approves"] = 20,
@@ -3812,7 +3812,7 @@ HARMONY.NAMES =
         ["The Seeds of War"] = 20,
         ["The Will To Survive"] = 20,
 
-        -- Armaetus adds names
+        -- Reisal adds names
         ["A Masterpiece in Progress"] = 40,
         ["A Bloody Good Time"] = 30,
         ["A Brand New World!"] = 30,
@@ -4093,7 +4093,7 @@ HARMONY.NAMES =
         ["Sometimes They Hear The Fist"] = 25, -- Atomizer - "Sometimes they hear the Bullet" (song)
         ["Hateful by Nature"] = 20, -- Atrophy - Violent by Nature (album title)
         -- I'll stop here, because I have over 18,000(!!) tracks to go through and this would make this
-        -- list VERY, VERY LONG. - Armaetus
+        -- list VERY, VERY LONG. - Reisal
 
         ["Highway to DOOM"] = 20, -- AC/DC - "Highway to Hell" (song)
         ["Rhythm of Blood"] = 20, -- Unknown - "Rhythm of Red" (Tokyo Xtreme Racer Zero soundtrack)

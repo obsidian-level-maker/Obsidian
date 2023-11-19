@@ -3,7 +3,7 @@
 ------------------------------------------------------------------------
 --
 --  Copyright (C) 2016-2017 Andrew Apted
---  Copyright (C) 2019-2022 Armaetus
+--  Copyright (C) 2019-2022 Reisal
 --  Copyright (C) 2019-2022 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or

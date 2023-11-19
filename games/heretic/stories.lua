@@ -3,7 +3,7 @@
 ----------------------------------------------------------------
 --
 --  Copyright (C) 2020 MsrSgtShooterPerson
---  Copyright (C) 2020 Armaetus
+--  Copyright (C) 2020 Reisal
 --  Copyright (C) 2020 Tapwave
 --  Copyright (C) 2020 Simon-v
 --  Copyright (C) 2020 EpicTyphlosion

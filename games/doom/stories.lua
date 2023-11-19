@@ -3,7 +3,7 @@
 ----------------------------------------------------------------
 --
 --  Copyright (C) 2022 MsrSgtShooterPerson
---  Copyright (C) 2022 Armaetus
+--  Copyright (C) 2022 Reisal
 --  Copyright (C) 2022 Tapwave
 --  Copyright (C) 2022 Simon-v
 --  Copyright (C) 2022 EpicTyphlosion

@@ -3,7 +3,7 @@
 --------------------------------------------------------------------
 --
 --  Copyright (C) 2006-2017 Andrew Apted
---  Copyright (C) 2011,2019, 2021-2022 Armaetus
+--  Copyright (C) 2011,2019, 2021-2022 Reisal
 --  Copyright (C) 2019-2022 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
@@ -559,7 +559,7 @@ ULTDOOM.MATERIALS =
   -- These allow prefabs containing DOOM 2 specific flats or textures
   -- to at least work in DOOM / Ultimate DOOM (a bit mucked up though).
   --
-  -- Big thanks to Chris Pisarczyk for doing the grunt work.
+  -- Big thanks to Reisal for doing the grunt work.
   --
 
   -- flats
@@ -2292,7 +2292,7 @@ ULTDOOM.THEMES =
 
 
 ---- Episode 2 ----
--- Deimos theme by Chris Pisarczyk / Armaetus
+-- Deimos theme by Reisal
 
   deimos =
   {
@@ -3128,7 +3128,7 @@ ULTDOOM.THEMES =
 
 ---- Episode 4 ----
 
--- Thy Flesh Consumed by Chris Pisarczyk / Armaetus
+-- Thy Flesh Consumed by Reisal
 -- Basically a modified version of "hell" to match id's E4 better
 
   flesh =

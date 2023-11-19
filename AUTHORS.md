@@ -14,7 +14,7 @@ MsrSgtShooterPerson
   - Documentation
   - Delta Resource Pack and Doom Tournament addons for Doom 1/2
 
-Armaetus
+Reisal
   - Original base tweaks to Oblige v7.59
   - Prefabs
   - Modules
@@ -161,7 +161,7 @@ Andrew Apted
 
 ## CONTRIBUTORS:
 
-Armaetus
+Reisal
   - DOOM prefabs
   - Skulltag Monsters module
   - ZDoom Beastiary module

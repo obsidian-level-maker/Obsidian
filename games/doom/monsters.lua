@@ -3,7 +3,7 @@
 --------------------------------------------------------------------
 --
 --  Copyright (C) 2006-2017 Andrew Apted
---  Copyright (C) 2011, 2019 Armaetus
+--  Copyright (C) 2011, 2019 Reisal
 --  Copyright (C) 2019-2022 MsrShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
@@ -385,7 +385,7 @@ DOOM.MONSTERS =
     level = 8, --6.5,
     boss_type = "nasty",
     boss_prob = 50,
-    boss_limit = 2, --Why? Because of the endless revival party in a room full of monsters -Armaetus
+    boss_limit = 2, --Why? Because of the endless revival party in a room full of monsters -Reisal
     prob = 5,
     crazy_prob = 15,
     health = 700,
