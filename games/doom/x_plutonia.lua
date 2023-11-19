@@ -430,7 +430,7 @@ DEFAULTS =
       big_tree = 60,
     },
 
---Any rocky/stonelike/metal doors (IE METALDR) would do great for this theme -Chris
+--Any rocky/stonelike/metal doors (IE METALDR) would do great for this theme -Reisal
     scenic_fences =
     {
       MIDBARS3 = 50,

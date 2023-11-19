@@ -26,7 +26,7 @@
 --  Thanks to Jon Vail (a.k.a JohnnyRancid/40oz) who contributed
 --  many of the complete level names and lots of cool words.
 --
---  Thanks to Enhas and Chris for their additions.
+--  Thanks to Enhas and Reisal for their additions.
 --
 ------------------------------------------------------------------------
 

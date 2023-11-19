@@ -2688,7 +2688,7 @@ ULTDOOM.THEMES =
 
   hell =
   {
-    --  Water is seen in a few locations in episode 3 -Chris
+    --  Water is seen in a few locations in episode 3 -Reisal
 
     liquids =
     {

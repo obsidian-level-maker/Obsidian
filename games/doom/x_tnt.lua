@@ -267,7 +267,7 @@ TNT.THEMES =
       demon   = 1.5,
     },
 
---Any rocky/stonelike/metal doors (IE METALDR) would do great for this theme -Chris
+--Any rocky/stonelike/metal doors (IE METALDR) would do great for this theme -Reisal
     scenic_fences =
     {
       MIDBARS3 = 50,

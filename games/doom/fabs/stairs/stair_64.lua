@@ -2,7 +2,7 @@
 -- basic stair, 64 units high
 --
 
--- Fixed by Chris, allows most monsters (except Demons/Spectres) to traverse
+-- Fixed by Reisal, allows most monsters (except Demons/Spectres) to traverse
 -- without piling on top or bottom of staircase edges. Silly Doom port!
 
 -- For AJ, see comments below.
