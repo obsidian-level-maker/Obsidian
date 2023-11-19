@@ -2290,8 +2290,8 @@ function Level_choose_liquid(LEVEL)
   -- exclude liquids from certain environment themes
   if LEVEL.outdoor_theme then
     local exclusions
-    if ARMAETUS_LIQUIDS then
-      exclusions = ARMAETUS_LIQUIDS.exclusions[LEVEL.outdoor_theme]
+    if OBS_RESOURCE_PACK_LIQUIDS then
+      exclusions = OBS_RESOURCE_PACK_LIQUIDS.exclusions[LEVEL.outdoor_theme]
       if exclusions then
         for _,L in pairs(exclusions) do
           liq_tab[L] = 0
@@ -2467,10 +2467,10 @@ function Level_choose_skybox(LEVEL)
 
   -- check against exclusions
   if LEVEL.outdoor_theme and LEVEL.outdoor_theme ~= "temperate"
-  and ARMAETUS_SKYBOX_EXCLUSIONS then
+  and OBS_RESOURCE_PACK_SKYBOX_EXCLUSIONS then
 
     local pick_attempts = 0
-    local ex_list = ARMAETUS_SKYBOX_EXCLUSIONS[LEVEL.outdoor_theme]
+    local ex_list = OBS_RESOURCE_PACK_SKYBOX_EXCLUSIONS[LEVEL.outdoor_theme]
     while same_skyfab == "yes" do
 
       if OB_CONFIG.zdoom_skybox == "episodic" then
@@ -2495,7 +2495,7 @@ function Level_choose_skybox(LEVEL)
 
       pick_attempts = pick_attempts + 1
       if pick_attempts > 10 then 
-        gui.printf(table.tostr(ARMAETUS_SKYBOX_EXCLUSIONS[LEVEL.outdoor_theme]))
+        gui.printf(table.tostr(OBS_RESOURCE_PACK_SKYBOX_EXCLUSIONS[LEVEL.outdoor_theme]))
         error("Skybox pick repeated too many times!!!! Global warming is real and " ..
         "a billion pigs have been killed by swine flu!!!!") 
       end

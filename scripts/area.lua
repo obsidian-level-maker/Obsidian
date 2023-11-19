@@ -1489,8 +1489,8 @@ function Area_locate_chunks(LEVEL, SEEDS)
         -- exclude liquids from certain environment themes
         if LEVEL.outdoor_theme then
           local exclusions
-          if ARMAETUS_LIQUIDS then
-            exclusions = ARMAETUS_LIQUIDS.exclusions[LEVEL.outdoor_theme]
+          if OBS_RESOURCE_PACK_LIQUIDS then
+            exclusions = OBS_RESOURCE_PACK_LIQUIDS.exclusions[LEVEL.outdoor_theme]
             if exclusions then
               for _,L in pairs(exclusions) do
                 liq_tab[L] = 0
