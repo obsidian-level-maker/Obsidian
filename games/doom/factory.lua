@@ -9593,7 +9593,7 @@ function DOOM.factory_setup()
   for name,info in pairs(GAME.FACTORY.monsters) do
     info.pow = pow_factor(info)
 
-    gui.debugf("Monster %s : power %d\n", name, info.pow)
+    gui.debugf("Monster %s : power %f\n", name, info.pow)
 
     local def = GAME.FACTORY.things[name]
     if not def then

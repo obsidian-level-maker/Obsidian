@@ -200,11 +200,11 @@ static void WF_WriteHead(void) {
 // LUA: wolf_block(x, y, plane, value)
 //
 int WF_wolf_block(lua_State *L) {
-    int x = luaL_checkint(L, 1);
-    int y = luaL_checkint(L, 2);
+    int x = luaL_checkinteger(L, 1);
+    int y = luaL_checkinteger(L, 2);
 
-    int tile = luaL_checkint(L, 3);
-    int obj = luaL_checkint(L, 4);
+    int tile = luaL_checkinteger(L, 3);
+    int obj = luaL_checkinteger(L, 4);
 
     // adjust and validate coords
     x = x - 1;

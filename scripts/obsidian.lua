@@ -2652,9 +2652,10 @@ end
 local PROFILING = false
 
 function ob_build_cool_shit()
+  local profiler
   if PROFILING then
     package.path = package.path .. ";./scripts/?.lua"
-    local profiler = require("profiler")
+    profiler = require("profiler")
     profiler.start()
   end
 
