@@ -9,7 +9,7 @@ PREFABS.Hallway_deuce_locked_yellow =
 
   kind   = "terminator",
   group  = "deuce",
-  key    = "k_yellow",
+  key    = "kz_yellow",
 
   
 
@@ -24,14 +24,14 @@ PREFABS.Hallway_deuce_locked_yellow =
   deep   = 16,
 }
 
-PREFABS.Hallway_deuce_locked_green =
+PREFABS.Hallway_deuce_locked_red =
 {
   template  = "Hallway_deuce_locked_yellow",
   map    = "MAP01",
-  key = "k_green",
+  key = "kz_red",
 
   line_34 = 33,
-  thing_96 = 95,
+  tex_HW511 = "HW510",
 }
 
 
@@ -39,10 +39,10 @@ PREFABS.Hallway_deuce_locked_blue =
 {
   template = "Hallway_deuce_locked_yellow",
   map  = "MAP01",
-  key  = "k_blue",
+  key  = "kz_blue",
 
   line_34 = 32,
-  thing_96 = 94,
+  tex_HW511 = "HW512",
 }
 
 

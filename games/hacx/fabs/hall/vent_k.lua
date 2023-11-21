@@ -9,7 +9,7 @@ PREFABS.Hallway_vent_locked_yellow =
 
   kind   = "terminator",
   group  = "vent",
-  key    = "k_yellow",
+  key    = "kz_yellow",
 
   
 
@@ -23,14 +23,14 @@ PREFABS.Hallway_vent_locked_yellow =
 }
 
 
-PREFABS.Hallway_vent_locked_green =
+PREFABS.Hallway_vent_locked_red =
 {
   template = "Hallway_vent_locked_yellow",
 
-  key    = "k_green",
+  key    = "kz_red",
 
-  line_34     = 33,
-  tex_DRIPWALL = "GRNBLOK1",
+  line_34 = 33,
+  tex_HW511 = "HW510",
 }
 
 
@@ -38,10 +38,10 @@ PREFABS.Hallway_vent_locked_blue =
 {
   template = "Hallway_vent_locked_yellow",
 
-  key    = "k_blue",
+  key    = "kz_blue",
 
-  line_34     = 32,
-  tex_DRIPWALL = "BLUEFRAG",
+  line_34 = 32,
+  tex_HW511 = "HW512",
 }
 
 
