@@ -23,17 +23,3 @@ PREFABS.Switch_wall_tight =
   sector_1  = { [0]=70, [1]=15, [2]=5, [3]=5, [8]=10, [12]=3, [13]=3 },
 
 }
-
-PREFABS.Switch_wall_tight2 =
-{
-  template = "Switch_wall_tight",
-
-  map = "MAP02",
-}
-
-PREFABS.Switch_wall_tight3 =
-{
-  template = "Switch_wall_tight",
-
-  map = "MAP03",
-}
