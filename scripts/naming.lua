@@ -7,7 +7,7 @@
 --  Copyright (C) 2008-2018 Andrew Apted
 --  Copyright (C) 2008-2009 Jon Vail
 --  Copyright (C)      2009 Enhas
---  Copyright (C) 2010-2022 Armaetus
+--  Copyright (C) 2010-2022 Reisal
 --  Copyright (C) 2010-2022 MsrSgtShooterPerson
 --  Copyright (C) 2020 EpicTyphlosion
 --
@@ -26,7 +26,7 @@
 --  Thanks to Jon Vail (a.k.a JohnnyRancid/40oz) who contributed
 --  many of the complete level names and lots of cool words.
 --
---  Thanks to Enhas and Chris for their additions.
+--  Thanks to Enhas and Reisal for their additions.
 --
 ------------------------------------------------------------------------
 
@@ -53,7 +53,7 @@ namelib.COMMUNITY_MEMBERS =
   -- Core Obsidian or regular(ish) contributors.
   contributors =
   {
-    "Armaetus", -- Used to be known as Glaice
+    "Reisal", -- Used to be known as Glaice
     "Beed 28",
     "Caligari", --Caligari87,
     "Craneo",

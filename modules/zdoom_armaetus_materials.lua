@@ -3,7 +3,7 @@
 ----------------------------------------------------------------
 --
 --  Copyright (C) 2019-2022 MsrSgtShooterPerson
---  Copyright (C) 2015-2022 Armaetus
+--  Copyright (C) 2015-2022 Reisal
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -21,7 +21,7 @@
 -- and in categories for a more manageable setup when the file is
 -- modified, thanks!
 
-ARMAETUS_LIQUID_DEFS =
+OBS_RESOURCE_PACK_LIQUID_DEFS =
 {
   hotlava  = { mat="XLAV1", special=5, light_add=56, damage=10 },
   magma  = { mat="MAGMA1",  special=5, light_add=56, damage=10 },
@@ -33,7 +33,7 @@ ARMAETUS_LIQUID_DEFS =
   purwater   = { mat="PURW1", special=0 },
 }
 
-ARMAETUS_MATERIALS = {
+OBS_RESOURCE_PACK_MATERIALS = {
 
   -- Organic / Semi-organic
   ALTASH = { t="ALTASH", f="RROCK03" }, --ASPHALT from Evilution
@@ -1956,7 +1956,7 @@ ARMAETUS_MATERIALS = {
 
 }
 
-ARMAETUS_ANIMDEFS =
+OBS_RESOURCE_PACK_ANIMDEFS =
 [[
 // Animations for Obsidian Resource Pack:
 
@@ -2946,7 +2946,7 @@ brightmap texture SD_TSGWA
 -- aliases - when you're too lazy to write down wall and flat names in every
 -- room theme
 
-ARMAETUS_TEXTURE_SET_ALIASES =
+OBS_RESOURCE_PACK_TEXTURE_SET_ALIASES =
 {
   __SD_GRAY_TECH_WALLS =
   {

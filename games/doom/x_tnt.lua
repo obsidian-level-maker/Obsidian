@@ -3,7 +3,7 @@
 --------------------------------------------------------------------
 --
 --  Copyright (C) 2006-2016 Andrew Apted
---  Copyright (C) 2011-2022 Armaetus
+--  Copyright (C) 2011-2022 Reisal
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -267,7 +267,7 @@ TNT.THEMES =
       demon   = 1.5,
     },
 
---Any rocky/stonelike/metal doors (IE METALDR) would do great for this theme -Chris
+--Any rocky/stonelike/metal doors (IE METALDR) would do great for this theme -Reisal
     scenic_fences =
     {
       MIDBARS3 = 50,

@@ -3,7 +3,7 @@
 ----------------------------------------------------------------
 --
 --  Copyright (C) 2019-2022 MsrSgtShooterPerson
---  Copyright (C) 2019-2022 Armaetus
+--  Copyright (C) 2019-2022 Reisal
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -18,7 +18,7 @@
 ------------------------------------------------------------------
 
 -- General room themes are placed here (includes cave rooms)
-ARMAETUS_ROOM_THEMES =
+OBS_RESOURCE_PACK_ROOM_THEMES =
 {
 -- START OF HALLWAY THEMES
   any_ducts_Hallway =
@@ -2718,7 +2718,7 @@ ARMAETUS_ROOM_THEMES =
 
 -- START OF HELL THEMES
 
-  hell_ArmaetusGothic = --150
+  hell_ReisalGothic = --150
   {
     env  = "building",
     prob = 150,
@@ -4929,7 +4929,7 @@ ARMAETUS_ROOM_THEMES =
 -- START OF URBAN THEMES
 
   --  18 through 20 don't tile horizontally well so I removed them. 14 and 30 seems more like it works for exterior.
-  urban_ArmaetusBricks = --100
+  urban_ReisalBricks = --100
   {
     env = "building",
     prob = 100,
@@ -7097,7 +7097,7 @@ ARMAETUS_ROOM_THEMES =
 }
 
 -- Custom liquids
-ARMAETUS_LIQUIDS =
+OBS_RESOURCE_PACK_LIQUIDS =
 {
   tech =
   {
@@ -7155,7 +7155,7 @@ ARMAETUS_LIQUIDS =
 }
 
 -- Custom sink definitions as well as probability tables.
-ARMAETUS_SINK_DEFS =
+OBS_RESOURCE_PACK_SINK_DEFS =
 {
   liquid_warning_strip =
   {
@@ -8198,7 +8198,7 @@ ARMAETUS_SINK_DEFS =
   },
 }
 
-ARMAETUS_THEMES =
+OBS_RESOURCE_PACK_THEMES =
 {
   tech =
   {
@@ -9624,7 +9624,7 @@ ARMAETUS_THEMES =
 }
 
 -- exclude tables for specific environment themes
-ARMAETUS_SKYBOX_EXCLUSIONS =
+OBS_RESOURCE_PACK_SKYBOX_EXCLUSIONS =
 {
   desert =
   {
@@ -9640,7 +9640,7 @@ ARMAETUS_SKYBOX_EXCLUSIONS =
 
 -- intercepts for the new environment theme feature
 
-ARMAETUS_SNOW_OUTDOORS =
+OBS_RESOURCE_PACK_SNOW_OUTDOORS =
 {
   tech =
   {
@@ -9766,7 +9766,7 @@ ARMAETUS_SNOW_OUTDOORS =
 
 -- Snowed-in building facades, per map theme type
 
---[[ARMAETUS_SNOW_TECH_FACADES =
+--[[OBS_RESOURCE_PACK_SNOW_TECH_FACADES =
 {
   SNOWWAL1 = 50,
   SNOWWAL2 = 50,
@@ -9785,7 +9785,7 @@ ARMAETUS_SNOW_OUTDOORS =
   CEM10     = 30,
 },
 
-ARMAETUS_SNOW_URBAN_FACADES =
+OBS_RESOURCE_PACK_SNOW_URBAN_FACADES =
 {
   SNOW01 = 50,
   SNOW02 = 20,
@@ -9809,7 +9809,7 @@ ARMAETUS_SNOW_URBAN_FACADES =
   STONE10   = 20,
 },
 
-ARMAETUS_SNOW_HELL_FACADES =
+OBS_RESOURCE_PACK_SNOW_HELL_FACADES =
 {
   SNOWWAL1 = 70,
   SNOWWAL2 = 70,
@@ -9845,7 +9845,7 @@ ARMAETUS_SNOW_HELL_FACADES =
   STONE10   = 15,
 }]]
 
-ARMAETUS_DESERT_OUTDOORS =
+OBS_RESOURCE_PACK_DESERT_OUTDOORS =
 {
   tech =
   {
@@ -9928,7 +9928,7 @@ ARMAETUS_DESERT_OUTDOORS =
   }
 }
 
---[[ARMAETUS_DESERT_FACADES =
+--[[OBS_RESOURCE_PACK_DESERT_FACADES =
 {
   BSTONE1 = 15,
   BSTONE2 = 15,
@@ -9947,7 +9947,7 @@ ARMAETUS_DESERT_OUTDOORS =
   EGYPT06  = 25,
 },
 
-ARMAETUS_DESERT_URBAN_FACADES =
+OBS_RESOURCE_PACK_DESERT_URBAN_FACADES =
 {
   BSTONE1 = 20,
   BSTONE2 = 20,
@@ -9966,7 +9966,7 @@ ARMAETUS_DESERT_URBAN_FACADES =
   EGYPT06  = 15,
 },
 
-ARMAETUS_DESERT_HELL_FACADES =
+OBS_RESOURCE_PACK_DESERT_HELL_FACADES =
 {
   BSTONE1 = 25,
   BSTONE2 = 25,

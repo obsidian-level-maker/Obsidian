@@ -3,7 +3,7 @@
 --------------------------------------------------------------------
 --
 --  Copyright (C) 2006-2017 Andrew Apted
---  Copyright (C) 2011,2019, 2021-2022 Armaetus
+--  Copyright (C) 2011,2019, 2021-2022 Reisal
 --  Copyright (C) 2019-2022 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
@@ -1912,7 +1912,10 @@ DOOM.THEMES =
       tech_o_letter_G = 1,
       tech_o_letter_H = 1,
       tech_o_letter_I = 1,
-      tech_o_letter_J = 1
+      tech_o_letter_J = 1,
+      tech_o_letter_K = 1,
+      tech_o_letter_L = 1,
+      tech_o_letter_M = 1
     },
 
     window_groups =
@@ -2916,7 +2919,7 @@ DOOM.THEMES =
       gunner   = 1.5,
       shooter  = 1.1,
       zombie   = 0.7,
-      vile     = 0.6, --Slightly less because multiple Arch-Viles in one area can be a pain in the ass -Chris
+      vile     = 0.6, --Slightly less because multiple Arch-Viles in one area can be a pain in the ass -Reisal
       pain     = 0.8,
       mancubus = 1.1,
       Cyberdemon = 1.25

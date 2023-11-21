@@ -2,7 +2,7 @@
 -- Archway with bars
 --
 
-PREFABS.Decor_Armaetus_bars_EPIC =
+PREFABS.Decor_Reisal_bars_EPIC =
 {
   file = "door/armaetus_bars1.wad",
   map = "MAP01",
@@ -27,9 +27,9 @@ PREFABS.Decor_Armaetus_bars_EPIC =
   door_action = "S1_OpenDoor",
 }
 
-PREFABS.Decor_Armaetus_bars_EPIC_tech =
+PREFABS.Decor_Reisal_bars_EPIC_tech =
 {
-  template = "Decor_Armaetus_bars_EPIC",
+  template = "Decor_Reisal_bars_EPIC",
   theme = "tech",
 
   tex_GOTH50 = "DOORHI",
@@ -38,9 +38,9 @@ PREFABS.Decor_Armaetus_bars_EPIC_tech =
 
 --
 
-PREFABS.Decor_Armaetus_bars_EPIC_wide =
+PREFABS.Decor_Reisal_bars_EPIC_wide =
 {
-  template = "Decor_Armaetus_bars_EPIC",
+  template = "Decor_Reisal_bars_EPIC",
   map = "MAP03",
   theme = "!tech",
 
@@ -51,9 +51,9 @@ PREFABS.Decor_Armaetus_bars_EPIC_wide =
   x_fit = "frame",
 }
 
-PREFABS.Decor_Armaetus_bars_EPIC_wide_tech =
+PREFABS.Decor_Reisal_bars_EPIC_wide_tech =
 {
-  template = "Decor_Armaetus_bars_EPIC",
+  template = "Decor_Reisal_bars_EPIC",
   map = "MAP04",
   theme = "tech",
 
@@ -66,9 +66,9 @@ PREFABS.Decor_Armaetus_bars_EPIC_wide_tech =
 
 --
 
-PREFABS.Decor_gtd_Armaetus_bars_EPIC_stretchy =
+PREFABS.Decor_gtd_Reisal_bars_EPIC_stretchy =
 {
-  template = "Decor_Armaetus_bars_EPIC",
+  template = "Decor_Reisal_bars_EPIC",
   map = "MAP03",
   theme = "!tech",
 
@@ -79,9 +79,9 @@ PREFABS.Decor_gtd_Armaetus_bars_EPIC_stretchy =
   x_fit = { 72,120 , 136,184 }
 }
 
-PREFABS.Decor_gtd_Armaetus_bars_EPIC_stretchy_tech =
+PREFABS.Decor_gtd_Reisal_bars_EPIC_stretchy_tech =
 {
-  template = "Decor_Armaetus_bars_EPIC",
+  template = "Decor_Reisal_bars_EPIC",
   map = "MAP04",
   theme = "tech",
 

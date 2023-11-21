@@ -12,19 +12,19 @@ CHEX1.NAMES =
       -- Why not some level names common in all themes?
       -- Also, how do we keep 'Common' theme full names
       -- from not being in more than one theme?
-      -- -Armaetus, 12/30/20,
+      -- -Reisal, 12/30/20,
 
       -- Another side note, please keep future definitions
       -- in alphabetical order for those who add more to this
       -- besides me lol
-      -- Armaetus, 2/6/21,
+      -- Reisal, 2/6/21,
 
       s =
       {
         ["A Walk on Thin Ice"]=10,
         ["Alternative Means"]=10,
         ["Annihilation"]=10,
-        ["Armaetus Loves Naming"]=10, -- Bahaha!
+        ["Reisal Loves Naming"]=10, -- Bahaha!
         ["Ascent into Madness"]=10,
         ["Backstabbed"]=10,
         ["Black Skies"]=10,
@@ -160,7 +160,7 @@ CHEX1.NAMES =
         ["Waiting for Craneo to Play"]=10,
         ["Message from the Administrator"]=10,
         ["Bye Bye Canadian Pie"]=10,
-        ["Armaetus's Asleep"]=10,
+        ["Reisal's Asleep"]=10,
         ["Getting Too Hot"]=10,
         ["Opening to Evil"]=10,
 
@@ -189,7 +189,7 @@ CHEX1.NAMES =
         ["Hopeless Despair"]=10,
         ["Bells of Agony"]=10,
 
-        -- OwO what's this? More from Armaetus?!
+        -- OwO what's this? More from Reisal?!
         -- Just straight up weird or funny, rarely chosen though. Some memey stuff present!
         ["A Stupid Level Name"]=2,
         ["Another Generated Map"]=2,
@@ -238,7 +238,7 @@ CHEX1.NAMES =
         ["Within the Wicked Mind"]=5,
 
         -- What do we have? MORE Naming? Owo
-        -- A bunch of abstract shit is here too! - Armaetus, Jun. 13, 2021
+        -- A bunch of abstract shit is here too! - Reisal, Jun. 13, 2021
         ["A Madman's Crusade"]=10,
         ["Absence of Nihility"]=10,
         ["Abstract Transcendence"]=10,
@@ -620,7 +620,7 @@ CHEX1.NAMES =
         ["Death Awaits in the"]=5,
         ["Hell in the"]=5,
 
-        -- these by Armaetus
+        -- these by Reisal
         ["Fear the"]=10,
         ["Beware the"]=10,
         ["Bane of the"]=10,
@@ -1320,7 +1320,7 @@ CHEX1.NAMES =
         ["Ups and Downs"]=10,
         ["You Don't Belong Here"]=10,
 
-        -- Armaetus adds more names
+        -- Reisal adds more names
         ["A Destructive Path"]=10,
         ["A Doomsday Scenario"]=10,
         ["Administrative Errors"]=10,
@@ -1352,7 +1352,7 @@ CHEX1.NAMES =
         ["Neras"]=10,
         ["Taras Nabad"]=10,
 
-        -- Armaetus adds more names, 2020 edition
+        -- Reisal adds more names, 2020 edition
         ["A Hobo's Paradise"]=10,
         ["Bombardment"]=10,
         ["Everlasting Ashstorm"]=10,
@@ -1362,7 +1362,7 @@ CHEX1.NAMES =
         ["The Smell of Plasma"]=10,
         ["Vertical Drop"]=10,
 
-        -- 2021 naming convention by Armaetus
+        -- 2021 naming convention by Reisal
         ["A Clouded Sun"]=10,
         ["A Cruel Fate"]=10,
         ["A Fate No Worse"]=10,
@@ -1421,7 +1421,7 @@ CHEX1.NAMES =
         ["Damned Demon Destruction"]=10, -- Demios
         ["Nothing Personnel"]=10,
 
-        -- End of 2021 additions by Armaetus
+        -- End of 2021 additions by Reisal
         ["A Weeping Statue"]=10,
         ["As Shade Falls Upon Thee"]=10,
         ["As The Candle Fades"]=10,
@@ -1466,7 +1466,7 @@ CHEX1.NAMES =
         ["Urban Hellscape"]=10,
         ["Weaponized Despair"]=10,
 
-        -- New Year's Eve 2021 additions by Armaetus!
+        -- New Year's Eve 2021 additions by Reisal!
         ["Architects of Sadism"]=10,
         ["Candlestick Bitch"]=10,
         ["Chaotic Opportunism"]=10,
@@ -1777,7 +1777,7 @@ CHEX1.NAMES =
         ["You'll See"]=10,
         ["Zone of Alienation"]=10,
 
-        -- Armaetus adds names too
+        -- Reisal adds names too
         ["A Friend to Upheaval"]=10,
         ["Burned and Shut In"]=10,
         ["Circumscribed by Hell"]=10,
@@ -2035,7 +2035,7 @@ CHEX1.NAMES =
         ["Wet Behind the Ears"]=10,
         ["What??"]=10,
         ["Wheat Field"]=10,
-        ["Where is Armaetus?"]=10, --I'm right here!!
+        ["Where is Reisal?"]=10, --I'm right here!!
         ["Where's the Lamb Sauce?"]=10, --Gordon Ramsay
         ["Yet Another Rewrite"]=10,
         ["You Are Over The Sidedef Limit!"]=10,
@@ -2057,7 +2057,7 @@ CHEX1.NAMES =
         ["You Have 23 Infections!!!"]=10,
         ["Your System Is Below Requirements"]=10,
 
-        -- Armaetus adds errors too
+        -- Reisal adds errors too
         ["Access is Denied"]=10, --ERROR_INVALID_ACCESS
         ["Data Error"]=10, --ERROR_CRC
         ["Network Access is Denied"]=10, --ERROR_NETWORK_ACCESS_DENIED
@@ -2142,7 +2142,7 @@ CHEX1.NAMES =
         ["Vertabre Kundalini Enlightenment"]=10,
         ["Vibrate Spirit"]=10,
 
-        -- Armaetus adds even more, 2020 edition
+        -- Reisal adds even more, 2020 edition
         ["123 WAD Street"]=10,
         ["Goatwave Hornstorm"]=10,
         ["Hallowed Chipmunks"]=10,
@@ -2230,7 +2230,7 @@ CHEX1.NAMES =
 
       -- contributors and their shenanigans
 
-      -- Armaetus's additions
+      -- Reisal's additions
       ["%a %q"] = 10,
       ["%a %j"] = 10,
       ["Dead Base: %a"] = 5,
@@ -2795,7 +2795,7 @@ CHEX1.NAMES =
         ["Security Breach"] = 10,
         ["Arena From Hell"] = 10,
 
-        -- these by Armaetus (mostly)
+        -- these by Reisal (mostly)
         ["Radio Silence"] = 10,
         ["Liquidation"] = 10,
         ["Return to Hell"] = 10,
@@ -3048,7 +3048,7 @@ CHEX1.NAMES =
       -- %e = Entities
       -- %m = Material / Metal alloy
 
-      -- Armaetus adds more grammar rules
+      -- Reisal adds more grammar rules
       ["Doom: %d on Earth"] = 10,
       ["Doomguy VS the %e"] = 10, -- Doomguy VS the [Entity]
       ["Doomguy and the %e"] = 10, -- Doomguy and the [Entity]
@@ -3777,7 +3777,7 @@ CHEX1.NAMES =
         Slayer = 10,
 
         Unbeliever = 10,
-        -- Armaetus adds things here
+        -- Reisal adds things here
         ["Sin Bringer"] = 10,
         ["The Icon"] = 10,
         Deathbringers = 10,
@@ -3896,7 +3896,7 @@ CHEX1.NAMES =
         ["By Obsidian Contribs"] = 35,
         ["Carthage Special"] = 20,
         ["Simon-v Special"] = 20,
-        ["Armaetus Approved"] = 20,
+        ["Reisal Approved"] = 20,
         ["Caligari Tested"] = 20,
         ["Frozsoul Edition"] = 20,
         ["Garrett Approves"] = 20,
@@ -3954,7 +3954,7 @@ CHEX1.NAMES =
         ["The Seeds of War"] = 20,
         ["The Will To Survive"] = 20,
 
-        -- Armaetus adds names
+        -- Reisal adds names
         ["A Masterpiece in Progress"] = 40,
         ["A Bloody Good Time"] = 30,
         ["A Brand New World!"] = 30,
@@ -4236,7 +4236,7 @@ CHEX1.NAMES =
         ["Sometimes They Hear The Fist"] = 25, -- Atomizer - "Sometimes they hear the Bullet" (song)
         ["Hateful by Nature"] = 20, -- Atrophy - Violent by Nature (album title)
         -- I'll stop here, because I have over 18,000(!!) tracks to go through and this would make this
-        -- list VERY, VERY LONG. - Armaetus
+        -- list VERY, VERY LONG. - Reisal
 
         ["Highway to DOOM"] = 20, -- AC/DC - "Highway to Hell" (song)
         ["Rhythm of Blood"] = 20, -- Unknown - "Rhythm of Red" (Tokyo Xtreme Racer Zero soundtrack)

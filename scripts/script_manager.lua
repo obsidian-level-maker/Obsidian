@@ -587,7 +587,7 @@ function ScriptMan_assemble_zscript_lump()
 
   if PARAM.custom_trees == "zs" then
     zscript_lines = zscript_lines ..
-    ARMAETUS_EPIC_TEXTURES.TEMPLATES.ZS_TREES .. "\n"
+    OBS_RESOURCE_PACK_EPIC_TEXTURES.TEMPLATES.ZS_TREES .. "\n"
   end
 
   if SCRIPTS.zscript then

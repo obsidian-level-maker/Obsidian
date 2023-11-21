@@ -1,7 +1,7 @@
 ----------------------------------------------------------------
 --  MODULE: id software mode
 ----------------------------------------------------------------
---  Copyright (C) 2022 Armaetus
+--  Copyright (C) 2022 Reisal
 --  Copyright (C) 2022 dasho
 --  Copyrighr (C) 2022 MsrSgtShooterPerson
 --

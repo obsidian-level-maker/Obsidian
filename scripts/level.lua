@@ -6,7 +6,7 @@
 --
 --  Copyright (C) 2006-2017 Andrew Apted
 --  Copyright (C) 2020-2022 MsrSgtShooterPerson
---  Copyright (C) 2020 Armaetus
+--  Copyright (C) 2020 Reisal
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -148,7 +148,7 @@ function Level_determine_map_size(LEV)
   -- Named sizes --
 
   -- Since we have other sizes and Auto-Detail, we can have these bigger sizes
-  -- now. -Armaetus, July 9th, 2019,
+  -- now. -Reisal, July 9th, 2019,
   
   local ob_size = PARAM.float_size
     
@@ -182,7 +182,7 @@ function Level_determine_map_size(LEV)
   -- Mix It Up --
 
   -- Readjusted probabilities once again, added "Micro" size as suggested by activity
-  -- in the Discord server. -Armaetus, June 30th, 2019,
+  -- in the Discord server. -Reisal, June 30th, 2019,
   if ob_size == gui.gettext("Mix It Up") then
 
     local result_skew = 1.0
@@ -2290,8 +2290,8 @@ function Level_choose_liquid(LEVEL)
   -- exclude liquids from certain environment themes
   if LEVEL.outdoor_theme then
     local exclusions
-    if ARMAETUS_LIQUIDS then
-      exclusions = ARMAETUS_LIQUIDS.exclusions[LEVEL.outdoor_theme]
+    if OBS_RESOURCE_PACK_LIQUIDS then
+      exclusions = OBS_RESOURCE_PACK_LIQUIDS.exclusions[LEVEL.outdoor_theme]
       if exclusions then
         for _,L in pairs(exclusions) do
           liq_tab[L] = 0
@@ -2467,10 +2467,10 @@ function Level_choose_skybox(LEVEL)
 
   -- check against exclusions
   if LEVEL.outdoor_theme and LEVEL.outdoor_theme ~= "temperate"
-  and ARMAETUS_SKYBOX_EXCLUSIONS then
+  and OBS_RESOURCE_PACK_SKYBOX_EXCLUSIONS then
 
     local pick_attempts = 0
-    local ex_list = ARMAETUS_SKYBOX_EXCLUSIONS[LEVEL.outdoor_theme]
+    local ex_list = OBS_RESOURCE_PACK_SKYBOX_EXCLUSIONS[LEVEL.outdoor_theme]
     while same_skyfab == "yes" do
 
       if OB_CONFIG.zdoom_skybox == "episodic" then
@@ -2495,7 +2495,7 @@ function Level_choose_skybox(LEVEL)
 
       pick_attempts = pick_attempts + 1
       if pick_attempts > 10 then 
-        gui.printf(table.tostr(ARMAETUS_SKYBOX_EXCLUSIONS[LEVEL.outdoor_theme]))
+        gui.printf(table.tostr(OBS_RESOURCE_PACK_SKYBOX_EXCLUSIONS[LEVEL.outdoor_theme]))
         error("Skybox pick repeated too many times!!!! Global warming is real and " ..
         "a billion pigs have been killed by swine flu!!!!") 
       end

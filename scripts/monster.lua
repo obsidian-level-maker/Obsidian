@@ -946,7 +946,7 @@ function Monster_fill_room(LEVEL, R, SEEDS)
       end
     end
 
-  --hallway edits Armaetus
+  --hallway edits Reisal
 
     -- hallways have limited spots
     if R.is_hallway then

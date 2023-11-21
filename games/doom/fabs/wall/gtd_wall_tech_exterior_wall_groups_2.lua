@@ -309,3 +309,110 @@ PREFABS.Wall_tech_outdoor_letter_J = --#
 
   z_fit = "top"
 }
+
+PREFABS.Wall_tech_outdoor_letter_K_epic = --#
+{
+  template = "Wall_tech_outdoor_hex_inset",
+  map = "MAP16",
+
+  rank = 2,
+  height = 96,
+  group = "tech_o_letter_K",
+
+  texture_pack = "armaetus",
+
+  bound_z2 = 96,
+
+  z_fit = {26,27}
+}
+
+PREFABS.Wall_tech_outdoor_letter_K_compat =
+{
+  template = "Wall_tech_outdoor_hex_inset",
+  map = "MAP16",
+
+  rank = 1,
+  height = 96,
+  group = "tech_o_letter_K",
+
+  bound_z2 = 96,
+
+  z_fit = {26,27},
+
+  flat_BMARB1 = "CEIL5_1",
+  tex_BRONZEG1 = "BRONZE3",
+  tex_BRONZEG3 = "BRONZE3",
+  tex_DARKMET1 = "BRONZE3",
+  tex_RDWAL01 = "SUPPORT2",
+
+  line_340 = 0,
+  line_341 = 0
+}
+
+PREFABS.Wall_tech_outdoor_letter_L_epic = --#
+{
+  template = "Wall_tech_outdoor_hex_inset",
+  map = "MAP17",
+
+  rank = 2,
+  height = 96,
+  group = "tech_o_letter_L",
+
+  texture_pack = "armaetus",
+
+  bound_z2 = 96,
+
+  z_fit = {63,64 , 65,66}
+}
+
+PREFABS.Wall_tech_outdoor_letter_L_compat =
+{
+  template = "Wall_tech_outdoor_hex_inset",
+  map = "MAP17",
+
+  rank = 1,
+  height = 96,
+  group = "tech_o_letter_L",
+
+  bound_z2 = 96,
+
+  z_fit = {63,64 , 65,66},
+
+  tex_LITESTON = "STONE2"
+}
+
+PREFABS.Wall_tech_outdoor_letter_M = --#
+{
+  template = "Wall_tech_outdoor_hex_inset",
+  map = "MAP18",
+
+  rank = 2,
+  height = 96,
+  group = "tech_o_letter_M",
+
+  texture_pack = "armaetus",
+
+  bound_z2 = 96,
+
+  z_fit = {70,72 , 80,81}
+}
+
+PREFABS.Wall_tech_outdoor_letter_M = --#
+{
+  template = "Wall_tech_outdoor_hex_inset",
+  map = "MAP18",
+
+  rank = 1,
+  height = 96,
+  group = "tech_o_letter_M",
+
+  bound_z2 = 96,
+
+  z_fit = {70,72 , 80,81},
+
+  tex_PIPESV1 = "SUPPORT3",
+  tex_SHAWSH04 = "SHAWN2",
+  tex_COMPRED = "REDWALL",
+
+  line_344 = 0
+}

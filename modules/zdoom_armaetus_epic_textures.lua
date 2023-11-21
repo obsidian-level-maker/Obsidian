@@ -2,7 +2,7 @@
 --  MODULE: Obsidian Epic Resource Pack
 ------------------------------------------------------------------------
 --
---  Copyright (C) 2019-2022 Armaetus
+--  Copyright (C) 2019-2022 Reisal
 --  Copyright (C) 2019-2022 MsrSgtShooterPerson
 --  Copyright (C) 2020-2022 Craneo
 --
@@ -28,16 +28,16 @@ gui.import("zdoom_armaetus_epic_texturex_lump.lua")
 
 -- Rename to OBSIDIAN_TEXTURES? I am not the only author putting the
 -- texture pack together, includes MSSP and Craneo as well.
-ARMAETUS_EPIC_TEXTURES = { }
+OBS_RESOURCE_PACK_EPIC_TEXTURES = { }
 
-ARMAETUS_EPIC_TEXTURES.SOUCEPORT_CHOICES =
+OBS_RESOURCE_PACK_EPIC_TEXTURES.SOUCEPORT_CHOICES =
 {
   "zs",       _("ZScript"),
   "decorate", _("ACS-Decorate"),
   "no",       _("No"),
 }
 
-ARMAETUS_EPIC_TEXTURES.ENVIRONMENT_THEME_CHOICES =
+OBS_RESOURCE_PACK_EPIC_TEXTURES.ENVIRONMENT_THEME_CHOICES =
 {
   "random",    _("Random"),
   "episodic",  _("Episodic"),
@@ -49,9 +49,9 @@ ARMAETUS_EPIC_TEXTURES.ENVIRONMENT_THEME_CHOICES =
   "no",        _("No"),
 }
 
--- Armaetus: Do we really need the template here anymore? I have not
+-- Reisal: Do we really need the template here anymore? I have not
 -- seen this in use or was superceded by the Tree/Flora module.
-ARMAETUS_EPIC_TEXTURES.TEMPLATES =
+OBS_RESOURCE_PACK_EPIC_TEXTURES.TEMPLATES =
 {
    ZS_TREES =
 [[class FancyObligeTree : BigTree replaces BigTree
@@ -653,16 +653,16 @@ actor AssIsHell : Inventory
 ]]
 }
 
-function ARMAETUS_EPIC_TEXTURES.setup(self)
+function OBS_RESOURCE_PACK_EPIC_TEXTURES.setup(self)
 
   PARAM.obsidian_resource_pack_active = true
   module_param_up(self)
-  ARMAETUS_EPIC_TEXTURES.put_new_materials()  
+  OBS_RESOURCE_PACK_EPIC_TEXTURES.put_new_materials()  
 
 end
 
-function ARMAETUS_EPIC_TEXTURES.get_levels_after_themes()
-  ARMAETUS_EPIC_TEXTURES.decide_environment_themes()
+function OBS_RESOURCE_PACK_EPIC_TEXTURES.get_levels_after_themes()
+  OBS_RESOURCE_PACK_EPIC_TEXTURES.decide_environment_themes()
 
   table.deep_merge(GAME.ENTITIES, ORP_ENTITIES.ENTITIES)
 
@@ -679,7 +679,7 @@ function ARMAETUS_EPIC_TEXTURES.get_levels_after_themes()
   end
 end
 
-function ARMAETUS_EPIC_TEXTURES.decide_night_replacement_textures(LEVEL)
+function OBS_RESOURCE_PACK_EPIC_TEXTURES.decide_night_replacement_textures(LEVEL)
   if LEVEL.episode and LEVEL.episode.dark_prob == 100
   or LEVEL.is_dark then
     GAME.MATERIALS["CITY04"].t = "CITY04N"
@@ -702,7 +702,7 @@ function ARMAETUS_EPIC_TEXTURES.decide_night_replacement_textures(LEVEL)
   end
 end
 
-function ARMAETUS_EPIC_TEXTURES.decide_environment_themes()
+function OBS_RESOURCE_PACK_EPIC_TEXTURES.decide_environment_themes()
   --------------------
   -- Outdoor Themes --
   --------------------
@@ -822,7 +822,7 @@ function ARMAETUS_EPIC_TEXTURES.decide_environment_themes()
   end
 end
 
-function ARMAETUS_EPIC_TEXTURES.generate_environment_themes(self, LEVEL)
+function OBS_RESOURCE_PACK_EPIC_TEXTURES.generate_environment_themes(self, LEVEL)
   --------------------------------------
   -- Style Update for Custom Elements --
   --------------------------------------
@@ -878,20 +878,20 @@ function ARMAETUS_EPIC_TEXTURES.generate_environment_themes(self, LEVEL)
 
   -- checking in on custom outdoors
   -- snow
-  local snow_tech_floors = ARMAETUS_SNOW_OUTDOORS.tech.floors
-  local snow_urban_floors = ARMAETUS_SNOW_OUTDOORS.urban.floors
-  local snow_hell_floors = ARMAETUS_SNOW_OUTDOORS.hell.floors
+  local snow_tech_floors = OBS_RESOURCE_PACK_SNOW_OUTDOORS.tech.floors
+  local snow_urban_floors = OBS_RESOURCE_PACK_SNOW_OUTDOORS.urban.floors
+  local snow_hell_floors = OBS_RESOURCE_PACK_SNOW_OUTDOORS.hell.floors
 
-  local snow_naturals = ARMAETUS_SNOW_OUTDOORS.naturals
-  local snow_facades = ARMAETUS_SNOW_FACADE
+  local snow_naturals = OBS_RESOURCE_PACK_SNOW_OUTDOORS.naturals
+  local snow_facades = OBS_RESOURCE_PACK_SNOW_FACADE
 
   --sand
-  local sand_tech_floors = ARMAETUS_DESERT_OUTDOORS.tech.floors
-  local sand_urban_floors = ARMAETUS_DESERT_OUTDOORS.urban.floors
-  local sand_hell_floors = ARMAETUS_DESERT_OUTDOORS.hell.floors
+  local sand_tech_floors = OBS_RESOURCE_PACK_DESERT_OUTDOORS.tech.floors
+  local sand_urban_floors = OBS_RESOURCE_PACK_DESERT_OUTDOORS.urban.floors
+  local sand_hell_floors = OBS_RESOURCE_PACK_DESERT_OUTDOORS.hell.floors
 
-  local sand_naturals = ARMAETUS_DESERT_OUTDOORS.naturals
-  local sand_facades = ARMAETUS_DESERT_FACADE
+  local sand_naturals = OBS_RESOURCE_PACK_DESERT_OUTDOORS.naturals
+  local sand_facades = OBS_RESOURCE_PACK_DESERT_FACADE
 
   if OB_CONFIG.game == "doom2" then
     if LEVEL.outdoor_theme == "snow" then
@@ -949,16 +949,16 @@ function ARMAETUS_EPIC_TEXTURES.generate_environment_themes(self, LEVEL)
     end
   end
 
-  ARMAETUS_EPIC_TEXTURES.decide_night_replacement_textures(LEVEL)
+  OBS_RESOURCE_PACK_EPIC_TEXTURES.decide_night_replacement_textures(LEVEL)
 end
 
-function ARMAETUS_EPIC_TEXTURES.table_insert(table1, table2)
+function OBS_RESOURCE_PACK_EPIC_TEXTURES.table_insert(table1, table2)
   for x,y in pairs(table1) do
     table2[x] = y
   end
 end
 
-function ARMAETUS_EPIC_TEXTURES.put_new_materials()
+function OBS_RESOURCE_PACK_EPIC_TEXTURES.put_new_materials()
   -- MSSP-TODO - redo all this code to just use a single deep merge table operation
   if OB_CONFIG.game == "doom2" or OB_CONFIG.game == "plutonia"
   or OB_CONFIG.game == "tnt" then
@@ -969,73 +969,73 @@ function ARMAETUS_EPIC_TEXTURES.put_new_materials()
     GAME.THEMES["hell"].skyboxes = nil
 
     -- material definitions
-    ARMAETUS_EPIC_TEXTURES.table_insert(ARMAETUS_MATERIALS,
+    OBS_RESOURCE_PACK_EPIC_TEXTURES.table_insert(OBS_RESOURCE_PACK_MATERIALS,
       GAME.MATERIALS)
-    ARMAETUS_EPIC_TEXTURES.table_insert(ARMAETUS_LIQUID_DEFS,
+    OBS_RESOURCE_PACK_EPIC_TEXTURES.table_insert(OBS_RESOURCE_PACK_LIQUID_DEFS,
       GAME.LIQUIDS)
 
     -- put the custom theme definitions in the themes table!!!
     -- LIQUIDZ
     if PARAM.bool_custom_liquids == 1 then
-      GAME.THEMES = table.deep_merge(GAME.THEMES, ARMAETUS_LIQUIDS, 2)
+      GAME.THEMES = table.deep_merge(GAME.THEMES, OBS_RESOURCE_PACK_LIQUIDS, 2)
     end
 
     -- ROOM THEMES
-    GAME.ROOM_THEMES = table.deep_merge(GAME.ROOM_THEMES, ARMAETUS_ROOM_THEMES, 2)
+    GAME.ROOM_THEMES = table.deep_merge(GAME.ROOM_THEMES, OBS_RESOURCE_PACK_ROOM_THEMES, 2)
 
     -- definitions
-    GAME.SINKS = table.deep_merge(GAME.SINKS, ARMAETUS_SINK_DEFS, 2)
-    GAME.THEMES = table.deep_merge(GAME.THEMES, ARMAETUS_THEMES, 2)
+    GAME.SINKS = table.deep_merge(GAME.SINKS, OBS_RESOURCE_PACK_SINK_DEFS, 2)
+    GAME.THEMES = table.deep_merge(GAME.THEMES, OBS_RESOURCE_PACK_THEMES, 2)
   end
 
   if OB_CONFIG.game == "doom1" or OB_CONFIG.game == "ultdoom" then
     -- material definitions
-    ARMAETUS_EPIC_TEXTURES.table_insert(ARMAETUS_MATERIALS,
+    OBS_RESOURCE_PACK_EPIC_TEXTURES.table_insert(OBS_RESOURCE_PACK_MATERIALS,
       GAME.MATERIALS)
-    ARMAETUS_EPIC_TEXTURES.table_insert(ARMAETUS_LIQUID_DEFS,
+    OBS_RESOURCE_PACK_EPIC_TEXTURES.table_insert(OBS_RESOURCE_PACK_LIQUID_DEFS,
       GAME.LIQUIDS)
 
     -- put the custom theme definitions in the themes table!!!
     -- LIQUIDZ
     if PARAM.bool_custom_liquids == 1 then
-      GAME.THEMES = table.deep_merge(GAME.THEMES, ARMAETUS_DOOM1_LIQUIDS, 2)
+      GAME.THEMES = table.deep_merge(GAME.THEMES, OBS_RESOURCE_PACK_DOOM1_LIQUIDS, 2)
     end
 
-    GAME.THEMES = table.deep_merge(GAME.THEMES, ARMAETUS_DOOM1_THEMES, 2)
+    GAME.THEMES = table.deep_merge(GAME.THEMES, OBS_RESOURCE_PACK_DOOM1_THEMES, 2)
 
     -- ROOM THEMES
     GAME.ROOM_THEMES = table.deep_merge(GAME.ROOM_THEMES,
-      ARMAETUS_DOOM1_ROOM_THEMES, 2)
+      OBS_RESOURCE_PACK_DOOM1_ROOM_THEMES, 2)
 
     -- NATURALS
-    ARMAETUS_EPIC_TEXTURES.table_insert(ARMAETUS_DOOM1_TECH_NATURALS,
+    OBS_RESOURCE_PACK_EPIC_TEXTURES.table_insert(OBS_RESOURCE_PACK_DOOM1_TECH_NATURALS,
       GAME.ROOM_THEMES.tech_Outdoors.naturals)
-    ARMAETUS_EPIC_TEXTURES.table_insert(ARMAETUS_DOOM1_DEIMOS_NATURALS,
+    OBS_RESOURCE_PACK_EPIC_TEXTURES.table_insert(OBS_RESOURCE_PACK_DOOM1_DEIMOS_NATURALS,
       GAME.ROOM_THEMES.deimos_Outdoors.naturals)
-    ARMAETUS_EPIC_TEXTURES.table_insert(ARMAETUS_DOOM1_HELL_NATURALS,
+    OBS_RESOURCE_PACK_EPIC_TEXTURES.table_insert(OBS_RESOURCE_PACK_DOOM1_HELL_NATURALS,
       GAME.ROOM_THEMES.hell_Outdoors.naturals)
-    ARMAETUS_EPIC_TEXTURES.table_insert(ARMAETUS_DOOM1_FLESH_NATURALS,
+    OBS_RESOURCE_PACK_EPIC_TEXTURES.table_insert(OBS_RESOURCE_PACK_DOOM1_FLESH_NATURALS,
       GAME.ROOM_THEMES.flesh_Outdoors.naturals)
 
     -- SINKS
-    ARMAETUS_EPIC_TEXTURES.table_insert(ARMAETUS_DOOM1_SINK_DEFS,
+    OBS_RESOURCE_PACK_EPIC_TEXTURES.table_insert(OBS_RESOURCE_PACK_DOOM1_SINK_DEFS,
       GAME.SINKS)
 
     -- inserts for hallways
-    GAME.THEMES.tech.wide_halls = ARMAETUS_TECH_WIDE_HALLS
-    GAME.THEMES.deimos.wide_halls = ARMAETUS_TECH_WIDE_HALLS
-    GAME.THEMES.hell.wide_halls = ARMAETUS_HELL_WIDE_HALLS
-    GAME.THEMES.flesh.wide_halls = ARMAETUS_HELL_WIDE_HALLS
+    GAME.THEMES.tech.wide_halls = OBS_RESOURCE_PACK_TECH_WIDE_HALLS
+    GAME.THEMES.deimos.wide_halls = OBS_RESOURCE_PACK_TECH_WIDE_HALLS
+    GAME.THEMES.hell.wide_halls = OBS_RESOURCE_PACK_HELL_WIDE_HALLS
+    GAME.THEMES.flesh.wide_halls = OBS_RESOURCE_PACK_HELL_WIDE_HALLS
   end
 end
 
-function ARMAETUS_EPIC_TEXTURES.put_the_texture_wad_in()
+function OBS_RESOURCE_PACK_EPIC_TEXTURES.put_the_texture_wad_in()
   local wad_file = "games/doom/data/ObAddon_Textures.wad"
   local wad_file_2 = "games/doom/data/ObAddon_Textures_2.wad"
   local wad_file_3 = "games/doom/data/ObAddon_Textures_3.wad"
 
   if PARAM.bool_include_package == 1 then
-    SCRIPTS.animdefs = ScriptMan_combine_script(SCRIPTS.animdefs, ARMAETUS_ANIMDEFS)
+    SCRIPTS.animdefs = ScriptMan_combine_script(SCRIPTS.animdefs, OBS_RESOURCE_PACK_ANIMDEFS)
 
     gui.wad_transfer_lump(wad_file, "CREDITS", "CREDITS")
     gui.wad_merge_sections(wad_file)
@@ -1148,11 +1148,11 @@ OB_MODULES["armaetus_epic_textures"] =
 
   hooks =
   {
-    setup = ARMAETUS_EPIC_TEXTURES.setup,
-    get_levels_after_themes = ARMAETUS_EPIC_TEXTURES.get_levels_after_themes,
-    begin_level = ARMAETUS_EPIC_TEXTURES.generate_environment_themes,
-    level_layout_finished = ARMAETUS_EPIC_TEXTURES.create_environment_themes,
-    all_done = ARMAETUS_EPIC_TEXTURES.put_the_texture_wad_in
+    setup = OBS_RESOURCE_PACK_EPIC_TEXTURES.setup,
+    get_levels_after_themes = OBS_RESOURCE_PACK_EPIC_TEXTURES.get_levels_after_themes,
+    begin_level = OBS_RESOURCE_PACK_EPIC_TEXTURES.generate_environment_themes,
+    level_layout_finished = OBS_RESOURCE_PACK_EPIC_TEXTURES.create_environment_themes,
+    all_done = OBS_RESOURCE_PACK_EPIC_TEXTURES.put_the_texture_wad_in
   },
 
   tooltip = _("If enabled, adds textures and content from the Obsidian Epic Resource Pack, which also includes new exclusive prefabs."),
@@ -1173,7 +1173,7 @@ OB_MODULES["armaetus_epic_textures"] =
     {
       name = "custom_trees",
       label = _("Custom Trees"),
-      choices = ARMAETUS_EPIC_TEXTURES.SOUCEPORT_CHOICES,
+      choices = OBS_RESOURCE_PACK_EPIC_TEXTURES.SOUCEPORT_CHOICES,
       default = "zs",
       tooltip = _("Adds custom flat-depedendent tree sprites into the game. Currently only replaces trees on specific grass flats and will be expanded in the future to accomnodate custom Textures and more. If you are playing a mod that already does its own trees, it may be better to leave this off."),
       priority=3
@@ -1183,7 +1183,7 @@ OB_MODULES["armaetus_epic_textures"] =
     {
       name = "environment_themes",
       label = _("Environment Theme"),
-      choices = ARMAETUS_EPIC_TEXTURES.ENVIRONMENT_THEME_CHOICES,
+      choices = OBS_RESOURCE_PACK_EPIC_TEXTURES.ENVIRONMENT_THEME_CHOICES,
       default = "random",
       tooltip = _("Influences outdoor environments with different textures such as desert sand or icey snow."),
       priority=2,
