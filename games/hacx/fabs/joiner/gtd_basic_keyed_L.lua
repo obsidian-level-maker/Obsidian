@@ -1,4 +1,4 @@
-PREFABS.Joiner_gtd_basic_keyed_curve_green =
+PREFABS.Joiner_gtd_basic_keyed_curve_red =
 {
   file   = "joiner/gtd_basic_keyed_L.wad",
   map    = "MAP01",
@@ -7,7 +7,7 @@ PREFABS.Joiner_gtd_basic_keyed_curve_green =
 
   
 
-  key    = "k_green",
+  key    = "kz_red",
 
   where  = "seeds",
   shape  = "L",
@@ -18,20 +18,20 @@ PREFABS.Joiner_gtd_basic_keyed_curve_green =
 
 PREFABS.Joiner_gtd_basic_keyed_curve_blue =
 {
-  template = "Joiner_gtd_basic_keyed_curve_green",
+  template = "Joiner_gtd_basic_keyed_curve_red",
 
-  key = "k_blue",
+  key = "kz_blue",
 
   line_33 = 32,
-  thing_95 = 94,
+  tex_HW510 = "HW512",
 }
 
 PREFABS.Joiner_gtd_basic_keyed_curve_yell =
 {
-  template = "Joiner_gtd_basic_keyed_curve_green",
+  template = "Joiner_gtd_basic_keyed_curve_red",
 
-  key = "k_yellow",
+  key = "kz_yellow",
 
   line_33 = 34,
-  thing_95 = 96,
+  tex_HW510 = "HW511",
 }
