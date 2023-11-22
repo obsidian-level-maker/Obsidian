@@ -44,14 +44,23 @@ static void draw(int which, int x,int y,int w,int h, int inset, Fl_Color color)
   void (*f)(int,int,int,int,double,double);
   f = (which==FILL) ? fl_pie : fl_arc_i;
   if (which >= CLOSED) {
-    f(x+w-d, y, d, d, w<=h ? 0 : -90, w<=h ? 180 : 90);
-    f(x, y+h-d, d, d, w<=h ? 180 : 90, w<=h ? 360 : 270);
+    if (w == h) f(x, y, d, d, 0, 360);
+    else {
+      f(x+w-d, y, d, d, w<=h ? 0 : -90, w<=h ? 180 : 90);
+      f(x, y+h-d, d, d, w<=h ? 180 : 90, w<=h ? 360 : 270);
+    }
   } else if (which == UPPER_LEFT) {
-    f(x+w-d, y, d, d, 45, w<=h ? 180 : 90);
-    f(x, y+h-d, d, d, w<=h ? 180 : 90, 225);
+    if (w == h) f(x, y, d, d, 45, 225);
+    else {
+      f(x+w-d, y, d, d, 45, w<=h ? 180 : 90);
+      f(x, y+h-d, d, d, w<=h ? 180 : 90, 225);
+    }
   } else { // LOWER_RIGHT
-    f(x, y+h-d, d, d, 225, w<=h ? 360 : 270);
-    f(x+w-d, y, d, d, w<=h ? 360 : 270, 360+45);
+    if (w == h) f(x, y, d, d, 225, 405);
+    else {
+      f(x, y+h-d, d, d, 225, w<=h ? 360 : 270);
+      f(x+w-d, y, d, d, w<=h ? 360 : 270, 360+45);
+    }
   }
   if (which == FILL) {
     if (w < h)

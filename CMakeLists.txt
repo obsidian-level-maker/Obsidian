@@ -8,7 +8,6 @@ add_subdirectory(source_files/filename_formatter EXCLUDE_FROM_ALL)
 if(NOT CONSOLE_ONLY AND NOT HAIKU)
   add_subdirectory(source_files/fltk EXCLUDE_FROM_ALL)
 endif()
-add_subdirectory(source_files/lua EXCLUDE_FROM_ALL)
 add_subdirectory(source_files/miniz EXCLUDE_FROM_ALL)
 add_subdirectory(source_files/physfs EXCLUDE_FROM_ALL)
 add_subdirectory(source_files/qsavetex EXCLUDE_FROM_ALL)
@@ -200,7 +199,7 @@ if(NOT CONSOLE_ONLY AND NOT HAIKU)
   ) # Hack for FLTK 1.4 (for now)
 endif()
 target_include_directories(obsidian SYSTEM PRIVATE source_files/gif-h)
-target_include_directories(obsidian SYSTEM PRIVATE source_files/lua/src)
+target_include_directories(obsidian SYSTEM PRIVATE source_files/minilua)
 target_include_directories(obsidian SYSTEM PRIVATE source_files/miniz)
 target_include_directories(obsidian SYSTEM PRIVATE source_files/physfs/src)
 target_include_directories(obsidian SYSTEM PRIVATE source_files/slump)
@@ -261,7 +260,6 @@ if(UNIX)
                 fltk
                 fltk_images
                 miniz
-                libluajit
                 physfs-static
                 obsidian_slump
                 "-framework Cocoa"
@@ -271,7 +269,7 @@ if(UNIX)
       )
     else()
       target_link_libraries(
-        obsidian PRIVATE filename_formatter miniz libluajit physfs-static
+        obsidian PRIVATE filename_formatter miniz physfs-static
                          obsidian_zdbsp obsidian_slump
       )
     endif()
@@ -285,13 +283,12 @@ if(UNIX)
                 fltk
                 fltk_images
                 miniz
-                libluajit
                 physfs-static
                 obsidian_slump
       )
     else()
       target_link_libraries(
-        obsidian PRIVATE filename_formatter miniz libluajit physfs-static
+        obsidian PRIVATE filename_formatter miniz physfs-static
                          obsidian_zdbsp obsidian_slump
       )
     endif()
@@ -302,7 +299,6 @@ if(UNIX)
               ajparse
               filename_formatter
               miniz
-              libluajit
               physfs-static
               obsidian_slump
               pthread
@@ -319,7 +315,6 @@ if(UNIX)
                 fltk
                 fltk_images
                 miniz
-                libluajit
                 physfs-static
                 obsidian_slump
                 fontconfig
@@ -332,7 +327,6 @@ if(UNIX)
                 ajparse
                 filename_formatter
                 miniz
-                libluajit
                 physfs-static
                 obsidian_slump
                 pthread
@@ -349,13 +343,12 @@ else()
               fltk
               fltk_images
               miniz
-              libluajit
               physfs-static
               obsidian_slump
     )
   else()
     target_link_libraries(
-      obsidian PRIVATE filename_formatter miniz libluajit physfs-static
+      obsidian PRIVATE filename_formatter miniz physfs-static
                        obsidian_zdbsp obsidian_slump
     )
   endif()

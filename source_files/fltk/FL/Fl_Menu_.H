@@ -54,11 +54,13 @@ class FL_EXPORT Fl_Menu_ : public Fl_Widget {
 
   Fl_Menu_Item *menu_;
   const Fl_Menu_Item *value_;
+  const Fl_Menu_Item *prev_value_;
 
 protected:
 
   uchar alloc;                  // flag indicates if menu_ is a dynamic copy (=1) or not (=0)
   uchar down_box_;
+  Fl_Boxtype menu_box_;
   Fl_Font textfont_;
   Fl_Fontsize textsize_;
   Fl_Color textcolor_;
@@ -73,6 +75,8 @@ public:
   const Fl_Menu_Item* picked(const Fl_Menu_Item*);
   const Fl_Menu_Item* find_item(const char *name);
   const Fl_Menu_Item* find_item(Fl_Callback*);
+  const Fl_Menu_Item* find_item_with_user_data(void*);
+  const Fl_Menu_Item* find_item_with_argument(long);
   int find_index(const char *name) const;
   int find_index(const Fl_Menu_Item *item) const;
   int find_index(Fl_Callback *cb) const;
@@ -156,6 +160,10 @@ public:
 
   /** Returns a pointer to the last menu item that was picked.  */
   const Fl_Menu_Item *mvalue() const {return value_;}
+  /** Returns a pointer to the menu item that was picked before the current one was picked.
+   This call gives devs additional details how a user changed a choice in the Fl_Choice widget.
+   */
+  const Fl_Menu_Item *prev_mvalue() const {return prev_value_;}
   /** Returns the index into menu() of the last item chosen by the user.  It is zero initially. */
   int value() const {return value_ ? (int)(value_-menu_) : -1;}
   int value(const Fl_Menu_Item*);
@@ -193,6 +201,16 @@ public:
   Fl_Boxtype down_box() const {return (Fl_Boxtype)down_box_;}
   /** Sets the box type used to surround the currently-selected items in the menus.  */
   void down_box(Fl_Boxtype b) {down_box_ = b;}
+
+  /** Get the box type for the menu popup windows.
+   \return the box type, or FL_NO_BOX if Fl_Menu_::box() is to be used instead
+   */
+  Fl_Boxtype menu_box() const { return menu_box_; }
+  /** Set the box type for the menu popup windows.
+   If menu_box set to FL_NO_BOX, the menu window will use Fl_Menu_::box() instead.
+   \param[in] b new box type or FL_NO_BOX
+   */
+  void menu_box(Fl_Boxtype b) { menu_box_ = b; }
 
   /** For back compatibility, same as selection_color() */
   Fl_Color down_color() const {return selection_color();}

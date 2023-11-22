@@ -471,7 +471,7 @@ public:
   static int  has_check(Fl_Timeout_Handler, void* = 0);
   static void remove_check(Fl_Timeout_Handler, void* = 0);
 
-  static Fl_Timestamp now();
+  static Fl_Timestamp now(double offset = 0);
   static double seconds_since(Fl_Timestamp& then);
   static double seconds_between(Fl_Timestamp& back, Fl_Timestamp& further_back);
   static long ticks_since(Fl_Timestamp& then);
@@ -1032,7 +1032,12 @@ public:
   */
   static void remove_clipboard_notify(Fl_Clipboard_Notify_Handler h);
   /** Returns non 0 if the clipboard contains data matching \p type.
-   \p type can be Fl::clipboard_plain_text or Fl::clipboard_image.
+   The clipboard can contain both text and image data;  in that situation this function
+   returns non 0 to both requests.
+   This function is \e not meant to check whether the clipboard is empty.
+   This function does not allow to query the selection buffer because FLTK
+   allows to copy/paste non-textual data only from/to the clipboard.
+   \param type can be Fl::clipboard_plain_text or Fl::clipboard_image.
    */
   static int clipboard_contains(const char *type);
   /**  Denotes plain textual data
@@ -1162,7 +1167,7 @@ public:
     that the normal one is first, followed by bold, italic, and bold
     italic.
 
-    The only argument to this function is somehat obsolete since FLTK and most
+    The only argument to this function is somewhat obsolete since FLTK and most
     underlying operating systems move to support Unicode. For completeness,
     following is the original documentation and a few updates:
 

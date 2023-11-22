@@ -168,8 +168,8 @@ Fl_Text_Display::Fl_Text_Display(int X, int Y, int W, int H, const char* l)
   textfont_ = FL_HELVETICA;             // textfont()
   textsize_ = FL_NORMAL_SIZE;           // textsize()
   textcolor_ = FL_FOREGROUND_COLOR;     // textcolor()
-  grammar_underline_color_ = FL_RED;
-  spelling_underline_color_ = FL_BLUE;
+  grammar_underline_color_ = FL_BLUE;
+  spelling_underline_color_ = FL_RED;
   secondary_selection_color_ = FL_GRAY;
   mLineNumLeft = 0;             // XXX: UNUSED
   mLineNumWidth = 0;
@@ -228,6 +228,7 @@ void Fl_Text_Display::linenumber_width(int width) {
   if (width < 0) return;
   mLineNumWidth = width;
   recalc_display();             // recalc line#s        // resize(x(), y(), w(), h());
+  if (width > 0) reset_absolute_top_line_number();
 }
 
 /**

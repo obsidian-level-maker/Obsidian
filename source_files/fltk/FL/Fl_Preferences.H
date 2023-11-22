@@ -22,14 +22,18 @@
 
 #  include <stdio.h>
 #  include "Fl_Export.H"
+#  include "fl_attr.h"
 
-class Fl_String;
+//class Fl_String;
+#if (FLTK_USE_STD)
+#include <string>
+#endif
 
 /**
  \brief Fl_Preferences store user settings between application starts.
 
  Fl_Preferences are similar to the Registry on Windows and Preferences on MacOS,
- providing a simple method to store customisable user settings between app
+ providing a simple method to store customizable user settings between app
  launches, for instance the previous window position or a history of previously
  used documents.
 
@@ -131,6 +135,7 @@ public:
     ROOT_MASK     = 0x00FF,            ///< Mask for the values above
     CORE          = 0x0100,            ///< OR'd by FLTK to read and write core library preferences and options
     C_LOCALE      = 0x1000,            ///< This flag should always be set, it makes sure that floating point
+    CLEAR         = 0x2000,            ///< Don't read a possibly existing database. Instead, start with an empty set of preferences.
                                        ///< values are written correctly independently of the current locale
     SYSTEM_L      = SYSTEM | C_LOCALE, ///< Preferences are used system-wide, locale independent
     USER_L        = USER | C_LOCALE,   ///< Preferences apply only to the current user, locale independent
@@ -188,7 +193,7 @@ public:
   static Root filename( char *buffer, size_t buffer_size, Root root, const char *vendor, const char *application );
 
   Fl_Preferences( Root root, const char *vendor, const char *application );
-  Fl_Preferences( const char *path, const char *vendor, const char *application );
+  Fl_Preferences( const char *path, const char *vendor, const char *application, Root flags );
   Fl_Preferences( Fl_Preferences &parent, const char *group );
   Fl_Preferences( Fl_Preferences *parent, const char *group );
   Fl_Preferences( Fl_Preferences &parent, int groupIndex );
@@ -196,6 +201,9 @@ public:
   Fl_Preferences(const Fl_Preferences&);
   Fl_Preferences( ID id );
   virtual ~Fl_Preferences();
+
+  FL_DEPRECATED("in 1.4.0 - use Fl_Preferences(path, vendor, application, flags) instead",
+                Fl_Preferences( const char *path, const char *vendor, const char *application ) );
 
   Root filename( char *buffer, size_t buffer_size);
 
@@ -236,7 +244,6 @@ public:
   char set( const char *entry, double value, int precision );
   char set( const char *entry, const char *value );
   char set( const char *entry, const void *value, int size );
-  char set( const char *entry, const Fl_String &value );
 
   char get( const char *entry, int &value, int defaultValue );
   char get( const char *entry, float &value,  float defaultValue );
@@ -246,7 +253,14 @@ public:
   char get( const char *entry, void *&value,  const void *defaultValue, int defaultSize );
   char get( const char *entry, void *value,   const void *defaultValue, int defaultSize, int maxSize );
   char get( const char *entry, void *value,   const void *defaultValue, int defaultSize, int *size );
-  char get( const char *entry, Fl_String &value, const Fl_String &defaultValue );
+
+//  char set( const char *entry, const Fl_String &value );
+//  char get( const char *entry, Fl_String &value, const Fl_String &defaultValue );
+
+#if (FLTK_USE_STD)
+  char set( const char *entry, const std::string &value );
+  char get( const char *entry, std::string &value, const std::string &defaultValue );
+#endif
 
   int size( const char *entry );
 
@@ -374,7 +388,7 @@ public:  // older Sun compilers need this (public definition of the following cl
     Root root_type_;
   public:
     RootNode( Fl_Preferences *, Root root, const char *vendor, const char *application );
-    RootNode( Fl_Preferences *, const char *path, const char *vendor, const char *application );
+    RootNode( Fl_Preferences *, const char *path, const char *vendor, const char *application, Root flags );
     RootNode( Fl_Preferences * );
     ~RootNode();
     int read();

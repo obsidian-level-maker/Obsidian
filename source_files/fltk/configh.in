@@ -315,7 +315,7 @@
  * Do we want print support?
  */
 
-#define FL_NO_PRINT_SUPPORT 1
+#undef FL_NO_PRINT_SUPPORT
 
 /*
  * Do we use GDI+ to get antialiased graphics?

@@ -267,16 +267,6 @@ PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_DIFF_CHOICES =
   "nightmare", _("Nightmare"),
 }
 
-PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_HEALTH_CHOICES =
-{
-  "muchless", _("Reduced by 50%"),
-  "less", _("Reduced by 25%"),
-  "default", _("Default"),
-  "more", _("Increased by 50%"),
-  "muchmore", _("Increased by 100%"),
-  "demiosmode", _("Increased by 200%"),
-}
-
 PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_LESS_HITSCAN =
 {
   "default", _("Default"),
@@ -1649,6 +1639,15 @@ function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.end_lvl(self, LEVEL)
 
 end
 
+function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.boss_info(self, info)
+  local btype = {}
+
+  btype.attack = info.attack
+  btype.health = info.health
+
+  table.insert(PARAM.boss_types, btype)
+end
+
 function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.all_done()
 
   if PARAM.bool_boss_gen == 1 then
@@ -1768,7 +1767,7 @@ function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.all_done()
       else mult=1.0 end
     end
 
-    hpcalc = int(rand.pick({5000,5200,5400,5600,5800,6000})*mult*PARAM.boss_gen_mult)
+    hpcalc = int(rand.pick({5000,5200,5400,5600,5800,6000})*mult*PARAM.float_boss_gen_mult)
 
     if batk == "hitscan" and PARAM.boss_gen_dmult<3.0 then hpcalc = hpcalc*0.75 end
 
@@ -1869,20 +1868,6 @@ function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.setup(self)
     PARAM.epi_bosses = {}
     PARAM.epi_names = {}
 
-    if PARAM.boss_gen_health == "muchless" then
-      PARAM.boss_gen_mult = 0.5
-    elseif PARAM.boss_gen_health == "less" then
-      PARAM.boss_gen_mult = 0.75
-    elseif PARAM.boss_gen_health == "default" then
-      PARAM.boss_gen_mult = 1.0
-    elseif PARAM.boss_gen_health == "more" then
-      PARAM.boss_gen_mult = 1.5
-    elseif PARAM.boss_gen_health == "muchmore" then
-      PARAM.boss_gen_mult = 2.0
-    elseif PARAM.boss_gen_health == "demiosmode" then
-      PARAM.boss_gen_mult = 3.0
-    end
-
     if PARAM.boss_gen_diff == "easier" then
       PARAM.boss_gen_dmult = -1.0
     elseif PARAM.boss_gen_diff == "default" then
@@ -1939,7 +1924,8 @@ OB_MODULES["procedural_gotcha_zdoom"] =
     setup = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.setup,
     begin_level = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.check_monsters_enabled,
     end_level = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.end_lvl,
-    all_done = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.all_done
+    all_done = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.all_done,
+    boss_info = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.boss_info
   },
 
   tooltip=_("This module allows you to fine tune the Procedural Gotcha experience if you have Procedural Gotchas enabled. Does not affect prebuilts. It is recommended to pick higher scales on one of the two options, but not both at once for a balanced challenge."),
@@ -2060,11 +2046,15 @@ OB_MODULES["procedural_gotcha_zdoom"] =
     },
 
     {
-      name = "boss_gen_health",
-      label = _("Boss Health Modifier"),
-      choices = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_HEALTH_CHOICES,
-      default = "default",
+      name = "float_boss_gen_mult",
+      label = _("Boss Health Multiplier"),
       tooltip = _("Makes boss health higher or lower than default, useful when playing with mods that have different average power level of weapons."),
+      valuator = "slider",
+      units = _("x"),
+      min = 0.25,
+      max = 5,
+      increment = 0.25,
+      default = 1,
       priority = 97,
       randomize_group="monsters",
     },

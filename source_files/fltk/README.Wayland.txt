@@ -25,7 +25,7 @@ the Wayland platform. It requires a Wayland-equipped OS, namely Linux or FreeBSD
 Pre-existing platform-independent source code for FLTK 1.3.x should build and
 run unchanged with FLTK 1.4 and the Wayland platform.
 The code has been tested on Debian, Ubuntu, RaspberryPiOS and Fedora with
-3 distinct Wayland compositors: mutter (Gnome's compositor), weston, and KDE.
+3 distinct Wayland compositors: Mutter (Gnome's compositor), Weston, and KWin.
 The code has also been tested under FreeBSD and the Sway Wayland compositor.
 CJK text-input methods, as well as dead and compose keys are supported.
 
@@ -79,6 +79,11 @@ The FLTK Wayland platform uses a library called libdecor which handles window de
 this form of libdecor. CMake OPTION_USE_SYSTEM_LIBDECOR can be turned on to have FLTK
 use the system's version of libdecor which is available on recent Linux distributions (e.g.,
 Debian Bookworm or more recent in packages libdecor-0-0 and libdecor-0-plugin-1-cairo).
+FLTK equipped with libdecor supports both the client-side decoration mode (CSD) and the
+server-side decoration mode (SSD) as determined by the active Wayland compositor.
+Mutter (gnome's Wayland compositor) and Weston use CSD mode, KWin and Sway use SSD mode.
+Furthermore, setting environment variable LIBDECOR_FORCE_CSD to 1 will make FLTK use CSD
+mode even if the compositor would have selected SSD mode.
 
  2.2 Known Limitations
 ----------------------

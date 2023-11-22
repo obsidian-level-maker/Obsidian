@@ -267,6 +267,40 @@ const Fl_Menu_Item * Fl_Menu_::find_item(Fl_Callback *cb) {
 }
 
 /**
+ Find the menu item for the given user data \p v.
+
+ \param[in] v find the first item with this user data
+ \returns The item found, or NULL if not found
+ \see find_item(const char*)
+ */
+const Fl_Menu_Item* Fl_Menu_::find_item_with_user_data(void *v) {
+  for ( int t=0; t < size(); t++ ) {
+    const Fl_Menu_Item *m = menu_ + t;
+    if (m->user_data_==v) {
+      return m;
+    }
+  }
+  return (const Fl_Menu_Item *)NULL;
+}
+
+/**
+ Find the menu item for the given user argument \p v.
+
+ \param[in] v find the first item with this user argument
+ \returns The item found, or NULL if not found
+ \see find_item(const char*)
+ */
+const Fl_Menu_Item* Fl_Menu_::find_item_with_argument(long v) {
+  for ( int t=0; t < size(); t++ ) {
+    const Fl_Menu_Item *m = menu_ + t;
+    if (m->argument()==v) {
+      return m;
+    }
+  }
+  return (const Fl_Menu_Item *)NULL;
+}
+
+/**
   The value is the index into menu() of the last item chosen by
   the user.  It is zero initially.  You can set it as an integer, or set
   it with a pointer to a menu item.  The set routines return non-zero if
@@ -274,7 +308,11 @@ const Fl_Menu_Item * Fl_Menu_::find_item(Fl_Callback *cb) {
 */
 int Fl_Menu_::value(const Fl_Menu_Item* m) {
   clear_changed();
-  if (value_ != m) {value_ = m; return 1;}
+  if (value_ != m) {
+    prev_value_ = value_;
+    value_ = m;
+    return 1;
+  }
   return 0;
 }
 
@@ -298,6 +336,7 @@ const Fl_Menu_Item* Fl_Menu_::picked(const Fl_Menu_Item* v) {
     } else if (v != value_) { // normal item
       set_changed();
     }
+    prev_value_ = value_;
     value_ = v;
     if (when()&(FL_WHEN_CHANGED|FL_WHEN_RELEASE)) {
       if (changed() || when()&FL_WHEN_NOT_CHANGED) {
@@ -384,17 +423,21 @@ void Fl_Menu_Item::setonly(Fl_Menu_Item const* first) {
  and label string.  menu() is initialized to null.
  */
 Fl_Menu_::Fl_Menu_(int X,int Y,int W,int H,const char* l)
-: Fl_Widget(X,Y,W,H,l) {
+: Fl_Widget(X,Y,W,H,l),
+  menu_(NULL),
+  value_(NULL),
+  prev_value_(NULL),
+  alloc(0),
+  down_box_(FL_NO_BOX),
+  menu_box_(FL_NO_BOX),
+  textfont_(FL_HELVETICA),
+  textsize_(FL_NORMAL_SIZE),
+  textcolor_(FL_FOREGROUND_COLOR)
+{
   set_flag(SHORTCUT_LABEL);
   box(FL_UP_BOX);
   when(FL_WHEN_RELEASE_ALWAYS);
-  value_ = menu_ = 0;
-  alloc = 0;
   selection_color(FL_SELECTION_COLOR);
-  textfont(FL_HELVETICA);
-  textsize(FL_NORMAL_SIZE);
-  textcolor(FL_FOREGROUND_COLOR);
-  down_box(FL_NO_BOX);
 }
 
 /**
@@ -417,6 +460,7 @@ int Fl_Menu_::size() const {
 */
 void Fl_Menu_::menu(const Fl_Menu_Item* m) {
   clear();
+  prev_value_ = NULL;
   value_ = menu_ = (Fl_Menu_Item*)m;
 }
 
@@ -465,7 +509,7 @@ void Fl_Menu_::clear() {
     alloc = 0;
   }
   menu_ = 0;
-  value_ = 0;
+  value_ = prev_value_ = 0;
 }
 
 /**

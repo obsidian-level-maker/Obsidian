@@ -37,20 +37,20 @@ macro (FL_ADD_LIBRARY LIBNAME LIBTYPE LIBFILES)
 
   add_library(${TARGET_NAME} ${LIBTYPE} ${LIBFILES})
 
-  # target properties for all libraries
+  # Target properties for all libraries
 
-  set_target_properties(${TARGET_NAME}
-    PROPERTIES
-    CLEAN_DIRECT_OUTPUT TRUE
-    COMPILE_DEFINITIONS "FL_LIBRARY"
-  )
+  # Set 'PRIVATE' target compile definitions for the library
+  # so they are not inherited by consumers
+
+  target_compile_definitions(${TARGET_NAME}
+    PRIVATE "FL_LIBRARY")
 
   # additional target properties for static libraries
 
   if (${LIBTYPE} STREQUAL "STATIC")
     set_target_properties(${TARGET_NAME}
       PROPERTIES
-      OUTPUT_NAME ${LIBNAME}
+      OUTPUT_NAME         ${LIBNAME}
       OUTPUT_NAME_DEBUG   ${OUTPUT_NAME_DEBUG}
       OUTPUT_NAME_RELEASE ${OUTPUT_NAME_RELEASE}
     )
@@ -61,9 +61,9 @@ macro (FL_ADD_LIBRARY LIBNAME LIBTYPE LIBFILES)
   if (${LIBTYPE} STREQUAL "SHARED")
     set_target_properties(${TARGET_NAME}
       PROPERTIES
-      VERSION ${FLTK_VERSION}
-      SOVERSION ${FLTK_VERSION_MAJOR}.${FLTK_VERSION_MINOR}
-      OUTPUT_NAME ${LIBNAME}
+      VERSION             ${FLTK_VERSION}
+      SOVERSION           ${FLTK_VERSION_MAJOR}.${FLTK_VERSION_MINOR}
+      OUTPUT_NAME         ${LIBNAME}
       OUTPUT_NAME_DEBUG   ${OUTPUT_NAME_DEBUG}
       OUTPUT_NAME_RELEASE ${OUTPUT_NAME_RELEASE}
     )
@@ -83,11 +83,13 @@ macro (FL_ADD_LIBRARY LIBNAME LIBTYPE LIBFILES)
   set (DEBUG_ONAME 0)
 
   if (DEBUG_ONAME)
+    get_target_property (XX_NAME          ${TARGET_NAME} NAME)
     get_target_property (XX_ONAME         ${TARGET_NAME} OUTPUT_NAME)
     get_target_property (XX_ONAME_DEBUG   ${TARGET_NAME} OUTPUT_NAME_DEBUG)
     get_target_property (XX_ONAME_RELEASE ${TARGET_NAME} OUTPUT_NAME_RELEASE)
 
     fl_debug_var (TARGET_NAME)
+    fl_debug_var (XX_NAME)
     fl_debug_var (XX_ONAME)
     fl_debug_var (XX_ONAME_DEBUG)
     fl_debug_var (XX_ONAME_RELEASE)
@@ -103,11 +105,9 @@ macro (FL_ADD_LIBRARY LIBNAME LIBTYPE LIBFILES)
     endif (OPTION_LARGE_FILE)
 
     if (${LIBTYPE} STREQUAL "SHARED")
-      set_target_properties(${TARGET_NAME}
-        PROPERTIES
-        COMPILE_DEFINITIONS "FL_DLL"
-      )
-    endif (${LIBTYPE} STREQUAL "SHARED")
+      target_compile_definitions(${TARGET_NAME}
+        PRIVATE "FL_DLL")
+    endif ()
   endif (MSVC)
 
   install (TARGETS ${TARGET_NAME}

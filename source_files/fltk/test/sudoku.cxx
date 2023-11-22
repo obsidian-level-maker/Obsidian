@@ -42,6 +42,9 @@
 #ifndef _WIN32
 #  include <unistd.h>
 #endif // !_WIN32
+#if defined __APPLE__ && !defined(FLTK_USE_X11)
+#  define USE_MACOS 1
+#endif
 
 #ifdef HAVE_ALSA_ASOUNDLIB_H
 #  define ALSA_PCM_NEW_HW_PARAMS_API
@@ -62,11 +65,11 @@
 #define GROUP_SIZE      160
 #define CELL_SIZE       50
 #define CELL_OFFSET     5
-#ifdef __APPLE__
+#ifdef USE_MACOS
 #  define MENU_OFFSET   0
 #else
 #  define MENU_OFFSET   25
-#endif // __APPLE__
+#endif // USE_MACOS
 
 // Sound class for Sudoku...
 //
@@ -87,9 +90,6 @@ class SudokuSound {
   // Private, OS-specific data...
 #ifdef __APPLE__
   AudioDeviceID device;
-#ifndef MAC_OS_X_VERSION_10_5
-#define MAC_OS_X_VERSION_10_5 1050
-#endif
 #  if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5
   AudioDeviceIOProcID audio_proc_id;
 #  endif
@@ -643,7 +643,9 @@ Sudoku::Sudoku()
     { "&Solve Game", FL_COMMAND | 's', solve_cb, 0, FL_MENU_DIVIDER },
     { "&Update Helpers", 0, update_helpers_cb, 0, 0 },
     { "&Mute Sound", FL_COMMAND | 'm', mute_cb, 0, FL_MENU_TOGGLE | FL_MENU_DIVIDER },
+#ifndef USE_MACOS
     { "&Quit", FL_COMMAND | 'q', close_cb, 0, 0 },
+#endif
     { 0 },
     { "&Difficulty", 0, 0, 0, FL_SUBMENU },
     { "&Easy", 0, diff_cb, (void *)"0", FL_MENU_RADIO },

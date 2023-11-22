@@ -45,6 +45,7 @@ CPPFILES = \
 	Fl_File_Input.cxx \
 	Fl_Flex.cxx \
 	Fl_Graphics_Driver.cxx \
+	Fl_Grid.cxx \
 	Fl_Group.cxx \
 	Fl_Help_View.cxx \
 	Fl_Image.cxx \
@@ -93,6 +94,7 @@ CPPFILES = \
 	Fl_Table.cxx \
 	Fl_Table_Row.cxx \
 	Fl_Tabs.cxx \
+	Fl_Terminal.cxx \
 	Fl_Text_Buffer.cxx \
 	Fl_Text_Display.cxx \
 	Fl_Text_Editor.cxx \
@@ -242,7 +244,8 @@ IMGCPPFILES = \
 	Fl_SVG_Image.cxx \
 	drivers/SVG/Fl_SVG_File_Surface.cxx
 
-CFILES = fl_call_main.c flstring.c numericsort.c vsnprintf.c
+CFILES = flstring.c numericsort.c vsnprintf.c
+CFILES_WIN = fl_call_main.c
 
 UTF8CFILES = \
 	xutf8/case.c \
@@ -423,12 +426,13 @@ CFILES_WAYLANDX11 = $(WLCFILES)
 EXTRA_OBJECTS_WAYLAND =  ../libdecor/build/fl_libdecor.o ../libdecor/build/libdecor-cairo-blur.o \
   ../libdecor/build/fl_libdecor-plugins.o \
   xdg-decoration-protocol.o xdg-shell-protocol.o text-input-protocol.o \
+  gtk-shell-protocol.o \
   ../libdecor/build/cursor-settings.o ../libdecor/build/os-compatibility.o
 EXTRA_OBJECTS_WAYLANDX11 = $(EXTRA_OBJECTS_WAYLAND)
 EXTRA_CXXFLAGS_WAYLAND = -I.
 EXTRA_CXXFLAGS_WAYLANDX11 = $(EXTRA_CXXFLAGS_WAYLAND)
 
-CFILES_WIN = $(GDICFILES)
+CFILES_WIN += $(GDICFILES)
 
 CFILES += $(CFILES_$(BUILD))
 CXXFLAGS += $(EXTRA_CXXFLAGS_$(BUILD))

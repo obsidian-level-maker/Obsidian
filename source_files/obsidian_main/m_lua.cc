@@ -19,8 +19,6 @@
 //
 //----------------------------------------------------------------------
 
-#include "m_lua.h"
-
 #include <algorithm>
 #ifdef WIN32
 #include <iso646.h>
@@ -31,7 +29,6 @@
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
 #endif
-#include "hdr_lua.h"
 #include "headers.h"
 
 #include "lib_util.h"
@@ -40,6 +37,9 @@
 #include "sys_xoshiro.h"
 
 #include "ff_main.h"
+
+#define LUA_IMPL
+#include "m_lua.h"
 
 static lua_State *LUA_ST;
 
@@ -1656,9 +1656,9 @@ static int my_loadfile(lua_State *L, const std::filesystem::path &filename) {
         return LUA_ERRFILE;
     }
 
-    // int status = lua_load(L, my_reader, &info, lua_tostring(L, -1), "bt");
+    int status = lua_load(L, my_reader, &info, lua_tostring(L, -1), "bt");
 
-    int status = lua_load(L, my_reader, &info, lua_tostring(L, -1));
+    //int status = lua_load(L, my_reader, &info, lua_tostring(L, -1));
 
     /* close file (even in case of errors) */
     PHYSFS_close(info.fp);

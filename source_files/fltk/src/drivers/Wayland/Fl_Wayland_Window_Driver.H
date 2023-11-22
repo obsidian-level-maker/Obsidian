@@ -25,6 +25,7 @@
 #include "../../Fl_Window_Driver.H"
 #include <FL/Fl_Plugin.H>
 #include "Fl_Wayland_Screen_Driver.H"
+#include "Fl_Wayland_Graphics_Driver.H"
 
 
 /*
@@ -55,7 +56,7 @@ private:
     Fl_Image* shape_; ///<  shape image
     cairo_pattern_t *mask_pattern_;
   } *shape_data_;
-  cairo_rectangle_int_t *subRect_;      // makes sure subwindow remains inside its parent window
+  cairo_rectangle_int_t *subRect_;   // makes sure subwindow remains inside its parent window
   static bool in_flush_; // useful for progressive window drawing
   Fl_Cursor standard_cursor_; // window's standard custom kind
   void delete_cursor_(struct wld_window *, bool delete_rgb = true);
@@ -87,7 +88,9 @@ public:
   static struct wld_window *wld_window;
   static Fl_Window *surface_to_window(struct wl_surface *);
 
-  static inline Fl_Wayland_Window_Driver* driver(const Fl_Window *w) {return (Fl_Wayland_Window_Driver*)Fl_Window_Driver::driver(w);}
+  static inline Fl_Wayland_Window_Driver* driver(const Fl_Window *w) {
+    return (Fl_Wayland_Window_Driver*)Fl_Window_Driver::driver(w);
+  }
   static void resize_after_screen_change(void *data);
   static Fl_Wayland_Plugin *gl_plugin();
 
@@ -111,6 +114,8 @@ public:
   void unmap() FL_OVERRIDE;
   void fullscreen_on() FL_OVERRIDE;
   void fullscreen_off(int X, int Y, int W, int H) FL_OVERRIDE;
+  void maximize() FL_OVERRIDE;
+  void un_maximize() FL_OVERRIDE;
   void use_border() FL_OVERRIDE;
   void size_range() FL_OVERRIDE;
   void iconize() FL_OVERRIDE;
@@ -121,8 +126,10 @@ public:
   int set_cursor_4args(const Fl_RGB_Image*, int, int, bool);
 
   void shape(const Fl_Image* img) FL_OVERRIDE;
-  void capture_titlebar_and_borders(Fl_RGB_Image*& top, Fl_RGB_Image*& left, Fl_RGB_Image*& bottom, Fl_RGB_Image*& right) FL_OVERRIDE;
-  int scroll(int src_x, int src_y, int src_w, int src_h, int dest_x, int dest_y, void (*draw_area)(void*, int,int,int,int), void* data) FL_OVERRIDE;
+  void capture_titlebar_and_borders(Fl_RGB_Image*& top, Fl_RGB_Image*& left,
+                                    Fl_RGB_Image*& bottom, Fl_RGB_Image*& right) FL_OVERRIDE;
+  int scroll(int src_x, int src_y, int src_w, int src_h, int dest_x, int dest_y,
+             void (*draw_area)(void*, int,int,int,int), void* data) FL_OVERRIDE;
   void wait_for_expose() FL_OVERRIDE;
   // menu-related stuff
   void reposition_menu_window(int x, int y) FL_OVERRIDE;
@@ -137,7 +144,7 @@ struct wld_window {
   Fl_Window *fl_win;
   struct wl_list outputs; // linked list of displays where part or whole of window maps
   struct wl_surface *wl_surface;
-  struct fl_wld_buffer *buffer;
+  struct Fl_Wayland_Graphics_Driver::wld_buffer *buffer;
   struct xdg_surface *xdg_surface;
   enum Fl_Wayland_Window_Driver::kind kind;
   union { // for each value of kind

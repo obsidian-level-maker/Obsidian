@@ -24,6 +24,6 @@
 
 /* LUA Scripting Language */
 
-#include "lua.hpp"
+#include "../minilua/minilua.h"
 
 #endif  // __OB_HDR_LUA__

@@ -28,8 +28,10 @@ ALL = animgifimage$(EXEEXT) \
       animgifimage-resize$(EXEEXT) \
       browser-simple$(EXEEXT) \
       cairo-draw-x$(EXEEXT) \
+      callbacks$(EXEEXT) \
       chart-simple$(EXEEXT) \
       draggable-group$(EXEEXT) \
+      grid-simple$(EXEEXT) \
       howto-add_fd-and-popen$(EXEEXT) \
       howto-browser-with-icons$(EXEEXT) \
       howto-drag-and-drop$(EXEEXT) \

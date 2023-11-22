@@ -52,6 +52,7 @@ gui.import("/data/text/random_words_en_m.lua")
 gui.import("/data/text/dialogues.lua")
 
 gui.import("094/oblige_v094.lua")
+--gui.import("nfs/main.lua")
 
 function ob_ref_table(op, t)
   if not gui.___REFS then
@@ -2651,9 +2652,10 @@ end
 local PROFILING = false
 
 function ob_build_cool_shit()
+  local profiler
   if PROFILING then
     package.path = package.path .. ";./scripts/?.lua"
-    local profiler = require("profiler")
+    profiler = require("profiler")
     profiler.start()
   end
 

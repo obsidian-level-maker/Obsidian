@@ -2,7 +2,7 @@
 // Declaration of classes Fl_Graphics_Driver, Fl_Scalable_Graphics_Driver,
 // and Fl_Font_Descriptor for the Fast Light Tool Kit (FLTK).
 //
-// Copyright 2010-2022 by Bill Spitzak and others.
+// Copyright 2010-2023 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
@@ -37,7 +37,6 @@
 class Fl_Graphics_Driver;
 class Fl_Font_Descriptor;
 class Fl_Image_Surface;
-/** \brief Points to the driver that currently receives all graphics requests */
 FL_EXPORT extern Fl_Graphics_Driver *fl_graphics_driver;
 
 /**
@@ -316,6 +315,9 @@ public:
   virtual void arc(double x, double y, double r, double start, double end);
   virtual void arc(int x, int y, int w, int h, double a1, double a2);
   virtual void pie(int x, int y, int w, int h, double a1, double a2);
+  // To support fl_draw_circle(int x, int y, int d, Fl_Color color),
+  // the default implementation is most probably enough.
+  virtual void draw_circle(int x, int y, int d, Fl_Color c);
   virtual void curve(double X0, double Y0, double X1, double Y1, double X2, double Y2, double X3, double Y3);
   virtual void line_style(int style, int width=0, char* dashes=0);
   virtual void color(Fl_Color c);
@@ -473,6 +475,7 @@ protected:
   virtual void arc_unscaled(int x, int y, int w, int h, double a1, double a2);
   void pie(int x, int y, int w, int h, double a1, double a2) FL_OVERRIDE;
   virtual void pie_unscaled(int x, int y, int w, int h, double a1, double a2);
+  void draw_circle(int x, int y, int d, Fl_Color c) FL_OVERRIDE;
   void line_style(int style, int width=0, char* dashes=0) FL_OVERRIDE;
   virtual void line_style_unscaled(int style, int width, char* dashes);
   void draw_image_rescale(void *buf, Fl_Draw_Image_Cb cb, int X, int Y, int W, int H, int D, int L, bool mono);

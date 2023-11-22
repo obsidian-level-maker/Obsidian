@@ -34,7 +34,7 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
-extern Fl_Class_Type *current_class;
+extern class Fl_Class_Type *current_class;
 
 int has_toplevel_function(const char *rtype, const char *sig);
 
@@ -42,7 +42,9 @@ const char *c_check(const char *c, int type = 0);
 
 // ---- Fl_Function_Type declaration
 
-class Fl_Function_Type : public Fl_Type {
+class Fl_Function_Type : public Fl_Type
+{
+  typedef Fl_Type super;
   const char* return_type;
   char public_, cdecl_, constructor, havewidgets;
 
@@ -61,7 +63,8 @@ public:
   int is_parent() const FL_OVERRIDE {return 1;}
   int is_code_block() const FL_OVERRIDE {return 1;}
   int is_public() const FL_OVERRIDE;
-  int pixmapID() FL_OVERRIDE { return 7; }
+  ID id() const FL_OVERRIDE { return ID_Function; }
+  bool is_a(ID inID) const FL_OVERRIDE { return (inID==ID_Function) ? true : super::is_a(inID); }
   void write_properties(Fd_Project_Writer &f) FL_OVERRIDE;
   void read_property(Fd_Project_Reader &f, const char *) FL_OVERRIDE;
   int has_signature(const char *, const char*) const;
@@ -69,7 +72,9 @@ public:
 
 // ---- Fl_Code_Type declaration
 
-class Fl_Code_Type : public Fl_Type {
+class Fl_Code_Type : public Fl_Type
+{
+  typedef Fl_Type super;
   ExternalCodeEditor editor_;
   int cursor_position_;
   int code_input_scroll_row;
@@ -84,8 +89,8 @@ public:
   void open() FL_OVERRIDE;
   const char *type_name() FL_OVERRIDE {return "code";}
   int is_code_block() const FL_OVERRIDE {return 0;}
-  int is_code() const FL_OVERRIDE {return 1;}
-  int pixmapID() FL_OVERRIDE { return 8; }
+  ID id() const FL_OVERRIDE { return ID_Code; }
+  bool is_a(ID inID) const FL_OVERRIDE { return (inID==ID_Code) ? true : super::is_a(inID); }
   int is_public() const FL_OVERRIDE { return -1; }
   int is_editing();
   int reap_editor();
@@ -94,7 +99,9 @@ public:
 
 // ---- Fl_CodeBlock_Type declaration
 
-class Fl_CodeBlock_Type : public Fl_Type {
+class Fl_CodeBlock_Type : public Fl_Type
+{
+  typedef Fl_Type super;
   const char* after;
 
 public:
@@ -108,14 +115,17 @@ public:
   int is_code_block() const FL_OVERRIDE {return 1;}
   int is_parent() const FL_OVERRIDE {return 1;}
   int is_public() const FL_OVERRIDE { return -1; }
-  int pixmapID() FL_OVERRIDE { return 9; }
+  ID id() const FL_OVERRIDE { return ID_CodeBlock; }
+  bool is_a(ID inID) const FL_OVERRIDE { return (inID==ID_CodeBlock) ? true : super::is_a(inID); }
   void write_properties(Fd_Project_Writer &f) FL_OVERRIDE;
   void read_property(Fd_Project_Reader &f, const char *) FL_OVERRIDE;
 };
 
 // ---- Fl_Decl_Type declaration
 
-class Fl_Decl_Type : public Fl_Type {
+class Fl_Decl_Type : public Fl_Type
+{
+  typedef Fl_Type super;
 
 protected:
   char public_;
@@ -131,12 +141,15 @@ public:
   void write_properties(Fd_Project_Writer &f) FL_OVERRIDE;
   void read_property(Fd_Project_Reader &f, const char *) FL_OVERRIDE;
   int is_public() const FL_OVERRIDE;
-  int pixmapID() FL_OVERRIDE { return 10; }
+  ID id() const FL_OVERRIDE { return ID_Decl; }
+  bool is_a(ID inID) const FL_OVERRIDE { return (inID==ID_Decl) ? true : super::is_a(inID); }
 };
 
 // ---- Fl_Data_Type declaration
 
-class Fl_Data_Type : public Fl_Decl_Type {
+class Fl_Data_Type : public Fl_Decl_Type
+{
+  typedef Fl_Decl_Type super;
   const char *filename_;
   int text_mode_;
 
@@ -150,12 +163,15 @@ public:
   const char *type_name() FL_OVERRIDE {return "data";}
   void write_properties(Fd_Project_Writer &f) FL_OVERRIDE;
   void read_property(Fd_Project_Reader &f, const char *) FL_OVERRIDE;
-  int pixmapID() FL_OVERRIDE { return 49; }
+  ID id() const FL_OVERRIDE { return ID_Data; }
+  bool is_a(ID inID) const FL_OVERRIDE { return (inID==ID_Data) ? true : super::is_a(inID); }
 };
 
 // ---- Fl_DeclBlock_Type declaration
 
-class Fl_DeclBlock_Type : public Fl_Type {
+class Fl_DeclBlock_Type : public Fl_Type
+{
+  typedef Fl_Type super;
   const char* after;
   char public_;
 
@@ -172,12 +188,15 @@ public:
   int is_parent() const FL_OVERRIDE {return 1;}
   int is_decl_block() const FL_OVERRIDE {return 1;}
   int is_public() const FL_OVERRIDE;
-  int pixmapID() FL_OVERRIDE { return 11; }
+  ID id() const FL_OVERRIDE { return ID_DeclBlock; }
+  bool is_a(ID inID) const FL_OVERRIDE { return (inID==ID_DeclBlock) ? true : super::is_a(inID); }
 };
 
 // ---- Fl_Comment_Type declaration
 
-class Fl_Comment_Type : public Fl_Type {
+class Fl_Comment_Type : public Fl_Type
+{
+  typedef Fl_Type super;
   char in_c_, in_h_, style_;
   char title_buf[64];
 
@@ -192,13 +211,15 @@ public:
   void write_properties(Fd_Project_Writer &f) FL_OVERRIDE;
   void read_property(Fd_Project_Reader &f, const char *) FL_OVERRIDE;
   int is_public() const FL_OVERRIDE { return 1; }
-  int is_comment() const FL_OVERRIDE { return 1; }
-  int pixmapID() FL_OVERRIDE { return 46; }
+  ID id() const FL_OVERRIDE { return ID_Comment; }
+  bool is_a(ID inID) const FL_OVERRIDE { return (inID==ID_Comment) ? true : super::is_a(inID); }
 };
 
 // ---- Fl_Class_Type declaration
 
-class Fl_Class_Type : public Fl_Type {
+class Fl_Class_Type : public Fl_Type
+{
+  typedef Fl_Type super;
   const char* subclass_of;
   char public_;
   const char* class_prefix;
@@ -219,14 +240,14 @@ public:
   int is_decl_block() const FL_OVERRIDE {return 1;}
   int is_class() const FL_OVERRIDE {return 1;}
   int is_public() const FL_OVERRIDE;
-  int pixmapID() FL_OVERRIDE { return 12; }
+  ID id() const FL_OVERRIDE { return ID_Class; }
+  bool is_a(ID inID) const FL_OVERRIDE { return (inID==ID_Class) ? true : super::is_a(inID); }
   void write_properties(Fd_Project_Writer &f) FL_OVERRIDE;
   void read_property(Fd_Project_Reader &f, const char *) FL_OVERRIDE;
 
   // class prefix attribute access
   void prefix(const char* p);
   const char*  prefix() const {return class_prefix;}
-  int has_function(const char*, const char*) const;
 };
 
 #endif // _FLUID_FL_FUNCTION_TYPE_H

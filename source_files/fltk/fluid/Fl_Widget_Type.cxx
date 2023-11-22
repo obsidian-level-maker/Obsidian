@@ -27,6 +27,7 @@
 #include "alignment_panel.h"
 #include "widget_panel.h"
 #include "undo.h"
+#include "mergeback.h"
 
 #include <FL/Fl.H>
 #include <FL/Fl_Group.H>
@@ -59,7 +60,7 @@ const char* subclassname(Fl_Type* l) {
     if (c) return c;
     if (l->is_class()) return "Fl_Group";
     if (p->o->type() == FL_WINDOW+1) return "Fl_Double_Window";
-    if (strcmp(p->type_name(), "Fl_Input") == 0) {
+    if (p->id() == ID_Input) {
       if (p->o->type() == FL_FLOAT_INPUT) return "Fl_Float_Input";
       if (p->o->type() == FL_INT_INPUT) return "Fl_Int_Input";
     }
@@ -70,14 +71,9 @@ const char* subclassname(Fl_Type* l) {
 // Return the ideal widget size...
 void
 Fl_Widget_Type::ideal_size(int &w, int &h) {
-  h = o->labelsize();
-  o->measure_label(w, h);
-
-  w += Fl::box_dw(o->box());
-  h += Fl::box_dh(o->box());
-
-  if (w < 15) w = 15;
-  if (h < 15) h = 15;
+  w = 120;
+  h = 100;
+  Fd_Snap_Action::better_size(w, h);
 }
 
 /**
@@ -88,15 +84,15 @@ Fl_Widget_Type::ideal_size(int &w, int &h) {
 Fl_Type *Fl_Widget_Type::make(Strategy strategy) {
   // Find the current widget, or widget to copy:
   Fl_Type *qq = Fl_Type::current;
-  while (qq && (!qq->is_widget() || qq->is_menu_item())) qq = qq->parent;
+  while (qq && (!qq->is_true_widget() || !qq->is_parent())) qq = qq->parent;
   if (!qq) {
-    fl_message("Please select a widget");
+    fl_message("Please select a group widget or window");
     return 0;
   }
   Fl_Widget_Type* q = (Fl_Widget_Type*)qq;
   // find the parent widget:
   Fl_Widget_Type* p = q;
-  if ((force_parent || !p->is_group()) && p->parent && p->parent->is_widget())
+  if ((force_parent || !p->is_a(ID_Group)) && p->parent && p->parent->is_widget())
     p = (Fl_Widget_Type*)(p->parent);
   force_parent = 0;
 
@@ -104,7 +100,7 @@ Fl_Type *Fl_Widget_Type::make(Strategy strategy) {
   int B = p->o->w()/2; if (p->o->h()/2 < B) B = p->o->h()/2; if (B>25) B = 25;
 
   int ULX,ULY; // parent's origin in window
-  if (!p->is_window()) { // if it is a group, add corner
+  if (!p->is_a(ID_Window)) { // if it is a group, add corner
     ULX = p->o->x(); ULY = p->o->y();
   } else {
     ULX = ULY = 0;
@@ -112,7 +108,7 @@ Fl_Type *Fl_Widget_Type::make(Strategy strategy) {
 
   // Figure out a position and size for the widget
   int X,Y,W,H;
-  if (is_group()) {     // fill the parent with the widget
+  if (is_a(ID_Group)) {     // fill the parent with the widget
     X = ULX+B;
     W = p->o->w()-B;
     Y = ULY+B;
@@ -151,7 +147,7 @@ Fl_Type *Fl_Widget_Type::make(Strategy strategy) {
 }
 
 void Fl_Widget_Type::setimage(Fluid_Image *i) {
-  if (i == image || is_window()) return;
+  if (i == image || is_a(ID_Window)) return;
   if (image) image->decrement();
   if (i) i->increment();
   image = i;
@@ -161,7 +157,7 @@ void Fl_Widget_Type::setimage(Fluid_Image *i) {
 }
 
 void Fl_Widget_Type::setinactive(Fluid_Image *i) {
-  if (i == inactive || is_window()) return;
+  if (i == inactive || is_a(ID_Window)) return;
   if (inactive) inactive->decrement();
   if (i) i->increment();
   inactive = i;
@@ -175,7 +171,9 @@ void Fl_Widget_Type::setlabel(const char *n) {
   redraw();
 }
 
-Fl_Widget_Type::Fl_Widget_Type() {
+Fl_Widget_Type::Fl_Widget_Type()
+: override_visible_(0)
+{
   for (int n=0; n<NUM_EXTRA_CODE; n++) {extra_code_[n] = 0; }
   subclass_ = 0;
   hotspot_ = 0;
@@ -184,7 +182,6 @@ Fl_Widget_Type::Fl_Widget_Type() {
   inactive_name_ = 0;
   image = 0;
   inactive = 0;
-  xclass = 0;
   o = 0;
   public_ = 1;
   bind_image_ = 0;
@@ -242,9 +239,9 @@ void Fl_Widget_Type::inactive_name(const char *n) {
 
 void Fl_Widget_Type::redraw() {
   Fl_Type *t = this;
-  if (is_menu_item()) {
+  if (is_a(ID_Menu_Item)) {
     // find the menu button that parents this menu:
-    do t = t->parent; while (t && t->is_menu_item());
+    do t = t->parent; while (t && t->is_a(ID_Menu_Item));
     // kludge to cause build_menu to be called again:
     if (t)
       t->add_child(0, 0);
@@ -260,7 +257,7 @@ Fl_Type *sort(Fl_Type *parent) {
   for (f = parent ? parent->next : Fl_Type::first; ; f = n) {
     if (!f || (parent && f->level <= parent->level)) return f;
     n = sort(f);
-    if (!f->selected || (!f->is_widget() || f->is_menu_item())) continue;
+    if (!f->selected || !f->is_true_widget()) continue;
     Fl_Widget* fw = ((Fl_Widget_Type*)f)->o;
     Fl_Type *g; // we will insert before this
     for (g = parent ? parent->next : Fl_Type::first; g != f; g = g->next) {
@@ -271,6 +268,7 @@ Fl_Type *sort(Fl_Type *parent) {
     }
     if (g != f) f->move_before(g);
   }
+  parent->layout_widget();
 }
 
 ////////////////////////////////////////////////////////////////
@@ -360,7 +358,7 @@ void name_public_cb(Fl_Choice* i, void* v) {
 
 /* Treating UNDO for text widget.
 
- Goal: we want to continiously update the UI while the user is typing text
+ Goal: we want to continuously update the UI while the user is typing text
  (changing the label, in this case). Source View does deferred updates, and
  the widget browser and widget panel update on every keystroke. At the same
  time, we want to limit undo actions to few and logical units.
@@ -409,7 +407,8 @@ void label_cb(Fl_Input* i, void *v) {
       undo_resume();
       if (mod) set_modflag(1);
     }
-    if ( (Fl::event() == FL_HIDE) || (Fl::event() == FL_UNFOCUS) )
+    int r = (int)Fl::callback_reason();
+    if ( (r == FL_REASON_LOST_FOCUS) || (r == FL_REASON_ENTER_KEY) )
       first_change = 1;
   }
 }
@@ -419,7 +418,7 @@ static Fl_Input *image_input;
 void image_cb(Fl_Input* i, void *v) {
   if (v == LOAD) {
     image_input = i;
-    if (current_widget->is_widget() && !current_widget->is_window()) {
+    if (current_widget->is_widget() && !current_widget->is_a(ID_Window)) {
       i->activate();
       i->value(((Fl_Widget_Type*)current_widget)->image_name());
     } else i->deactivate();
@@ -437,7 +436,7 @@ void image_cb(Fl_Input* i, void *v) {
 
 void image_browse_cb(Fl_Button* b, void *v) {
   if (v == LOAD) {
-    if (current_widget->is_widget() && !current_widget->is_window())
+    if (current_widget->is_widget() && !current_widget->is_a(ID_Window))
       b->activate();
     else
       b->deactivate();
@@ -458,7 +457,7 @@ void image_browse_cb(Fl_Button* b, void *v) {
 
 void bind_image_cb(Fl_Button* b, void *v) {
   if (v == LOAD) {
-    if (current_widget->is_widget() && !current_widget->is_window()) {
+    if (current_widget->is_widget() && !current_widget->is_a(ID_Window)) {
       b->activate();
       b->value(current_widget->bind_image_);
     } else {
@@ -478,7 +477,7 @@ void bind_image_cb(Fl_Button* b, void *v) {
 
 void compress_image_cb(Fl_Button* b, void *v) {
   if (v == LOAD) {
-    if (current_widget->is_widget() && !current_widget->is_window()) {
+    if (current_widget->is_widget() && !current_widget->is_a(ID_Window)) {
       b->activate();
       b->value(current_widget->compress_image_);
     } else {
@@ -501,7 +500,7 @@ static Fl_Input *inactive_input;
 void inactive_cb(Fl_Input* i, void *v) {
   if (v == LOAD) {
     inactive_input = i;
-    if (current_widget->is_widget() && !current_widget->is_window()) {
+    if (current_widget->is_widget() && !current_widget->is_a(ID_Window)) {
       i->activate();
       i->value(((Fl_Widget_Type*)current_widget)->inactive_name());
     } else i->deactivate();
@@ -519,7 +518,7 @@ void inactive_cb(Fl_Input* i, void *v) {
 
 void inactive_browse_cb(Fl_Button* b, void *v) {
   if (v == LOAD) {
-    if (current_widget->is_widget() && !current_widget->is_window())
+    if (current_widget->is_widget() && !current_widget->is_a(ID_Window))
       b->activate();
     else
       b->deactivate();
@@ -540,7 +539,7 @@ void inactive_browse_cb(Fl_Button* b, void *v) {
 
 void bind_deimage_cb(Fl_Button* b, void *v) {
   if (v == LOAD) {
-    if (current_widget->is_widget() && !current_widget->is_window()) {
+    if (current_widget->is_widget() && !current_widget->is_a(ID_Window)) {
       b->activate();
       b->value(current_widget->bind_deimage_);
     } else {
@@ -560,7 +559,7 @@ void bind_deimage_cb(Fl_Button* b, void *v) {
 
 void compress_deimage_cb(Fl_Button* b, void *v) {
   if (v == LOAD) {
-    if (current_widget->is_widget() && !current_widget->is_window()) {
+    if (current_widget->is_widget() && !current_widget->is_a(ID_Window)) {
       b->activate();
       b->value(current_widget->compress_deimage_);
     } else {
@@ -756,7 +755,7 @@ Fluid_Coord_Input_Vars widget_vars[] = {
 void x_cb(Fluid_Coord_Input *i, void *v) {
   if (v == LOAD) {
     x_input = i;
-    if (current_widget->is_widget()) {
+    if (current_widget->is_true_widget()) {
       i->value(((Fl_Widget_Type *)current_widget)->o->x());
       x_input->activate();
     } else x_input->deactivate();
@@ -766,7 +765,7 @@ void x_cb(Fluid_Coord_Input *i, void *v) {
     int mod = 0;
     int v = 0;
     for (Fl_Type *o = Fl_Type::first; o; o = o->next) {
-      if (o->selected && o->is_widget()) {
+      if (o->selected && o->is_true_widget()) {
         Fl_Widget *w = ((Fl_Widget_Type *)o)->o;
         i->variables(widget_vars, o);
         v = i->value();
@@ -787,7 +786,7 @@ void x_cb(Fluid_Coord_Input *i, void *v) {
 void y_cb(Fluid_Coord_Input *i, void *v) {
   if (v == LOAD) {
     y_input = i;
-    if (current_widget->is_widget()) {
+    if (current_widget->is_true_widget()) {
       i->value(((Fl_Widget_Type *)current_widget)->o->y());
       y_input->activate();
     } else y_input->deactivate();
@@ -797,7 +796,7 @@ void y_cb(Fluid_Coord_Input *i, void *v) {
     int mod = 0;
     int v = 0;
     for (Fl_Type *o = Fl_Type::first; o; o = o->next) {
-      if (o->selected && o->is_widget()) {
+      if (o->selected && o->is_true_widget()) {
         Fl_Widget *w = ((Fl_Widget_Type *)o)->o;
         i->variables(widget_vars, o);
         v = i->value();
@@ -817,7 +816,7 @@ void y_cb(Fluid_Coord_Input *i, void *v) {
 void w_cb(Fluid_Coord_Input *i, void *v) {
   if (v == LOAD) {
     w_input = i;
-    if (current_widget->is_widget()) {
+    if (current_widget->is_true_widget()) {
       i->value(((Fl_Widget_Type *)current_widget)->o->w());
       w_input->activate();
     } else w_input->deactivate();
@@ -827,7 +826,7 @@ void w_cb(Fluid_Coord_Input *i, void *v) {
     int mod = 0;
     int v = 0;
     for (Fl_Type *o = Fl_Type::first; o; o = o->next) {
-      if (o->selected && o->is_widget()) {
+      if (o->selected && o->is_true_widget()) {
         Fl_Widget *w = ((Fl_Widget_Type *)o)->o;
         i->variables(widget_vars, o);
         v = i->value();
@@ -847,7 +846,7 @@ void w_cb(Fluid_Coord_Input *i, void *v) {
 void h_cb(Fluid_Coord_Input *i, void *v) {
   if (v == LOAD) {
     h_input = i;
-    if (current_widget->is_widget()) {
+    if (current_widget->is_true_widget()) {
       i->value(((Fl_Widget_Type *)current_widget)->o->h());
       h_input->activate();
     } else h_input->deactivate();
@@ -857,7 +856,7 @@ void h_cb(Fluid_Coord_Input *i, void *v) {
     int mod = 0;
     int v = 0;
     for (Fl_Type *o = Fl_Type::first; o; o = o->next) {
-      if (o->selected && o->is_widget()) {
+      if (o->selected && o->is_true_widget()) {
         Fl_Widget *w = ((Fl_Widget_Type *)o)->o;
         i->variables(widget_vars, o);
         v = i->value();
@@ -876,7 +875,7 @@ void h_cb(Fluid_Coord_Input *i, void *v) {
 
 void wc_relative_cb(Fl_Choice *i, void *v) {
   if (v == LOAD) {
-    if (!strcmp(current_widget->type_name(), "widget_class")) {
+    if (current_widget->is_a(ID_Widget_Class)) {
       i->show();
       i->value(((Fl_Widget_Class_Type *)current_widget)->wc_relative);
     } else {
@@ -886,7 +885,7 @@ void wc_relative_cb(Fl_Choice *i, void *v) {
     int mod = 0;
     undo_checkpoint();
     for (Fl_Type *o = Fl_Type::first; o; o = o->next) {
-      if (o->selected && !strcmp(current_widget->type_name(), "widget_class")) {
+      if (o->selected && current_widget->is_a(ID_Widget_Class)) {
         Fl_Widget_Class_Type *t = (Fl_Widget_Class_Type *)o;
         t->wc_relative = i->value();
         mod = 1;
@@ -899,7 +898,7 @@ void wc_relative_cb(Fl_Choice *i, void *v) {
 ////////////////////////////////////////////////////////////////
 
 // turn number to string or string to number for saving to file:
-// does not work for hierarchial menus!
+// does not work for hierarchical menus!
 
 const char *item_name(Fl_Menu_Item* m, int i) {
   if (m) {
@@ -1020,7 +1019,7 @@ int boxnumber(const char *i) {
 
 void box_cb(Fl_Choice* i, void *v) {
   if (v == LOAD) {
-    if (current_widget->is_menu_item()) {i->deactivate(); return;} else i->activate();
+    if (current_widget->is_a(ID_Menu_Item)) {i->deactivate(); return;} else i->activate();
     int n = current_widget->o->box(); if (!n) n = ZERO_ENTRY;
     for (int j = 0; j < int(sizeof(boxmenu)/sizeof(*boxmenu)); j++)
       if (boxmenu[j].argument() == n) {i->value(j); break;}
@@ -1045,11 +1044,11 @@ void box_cb(Fl_Choice* i, void *v) {
 void down_box_cb(Fl_Choice* i, void *v) {
   if (v == LOAD) {
     int n;
-    if (current_widget->is_button() && !current_widget->is_menu_item())
+    if (current_widget->is_a(ID_Button))
       n = ((Fl_Button*)(current_widget->o))->down_box();
-    else if (!strcmp(current_widget->type_name(), "Fl_Input_Choice"))
+    else if (current_widget->is_a(ID_Input_Choice))
       n = ((Fl_Input_Choice*)(current_widget->o))->down_box();
-    else if (current_widget->is_menu_button())
+    else if (current_widget->is_a(ID_Menu_Manager_))
       n = ((Fl_Menu_*)(current_widget->o))->down_box();
     else {
       i->deactivate(); return;
@@ -1066,14 +1065,14 @@ void down_box_cb(Fl_Choice* i, void *v) {
     if (n == ZERO_ENTRY) n = 0;
     for (Fl_Type *o = Fl_Type::first; o; o = o->next) {
       if (o->selected) {
-        if (o->is_button() && !o->is_menu_item()) {
+        if (o->is_a(ID_Button)) {
           Fl_Widget_Type* q = (Fl_Widget_Type*)o;
           ((Fl_Button*)(q->o))->down_box((Fl_Boxtype)n);
           if (((Fl_Button*)(q->o))->value()) q->redraw();
-        } else if (!strcmp(o->type_name(), "Fl_Input_Choice")) {
+        } else if (o->is_a(ID_Input_Choice)) {
           Fl_Widget_Type* q = (Fl_Widget_Type*)o;
           ((Fl_Input_Choice*)(q->o))->down_box((Fl_Boxtype)n);
-        } else if (o->is_menu_button()) {
+        } else if (o->is_a(ID_Menu_Manager_)) {
           Fl_Widget_Type* q = (Fl_Widget_Type*)o;
           ((Fl_Menu_*)(q->o))->down_box((Fl_Boxtype)n);
         }
@@ -1083,6 +1082,39 @@ void down_box_cb(Fl_Choice* i, void *v) {
     if (mod) set_modflag(1);
   }
 }
+
+void compact_cb(Fl_Light_Button* i, void* v) {
+  if (v == LOAD) {
+    uchar n;
+    if (current_widget->is_a(ID_Button) && !current_widget->is_a(ID_Menu_Item)) {
+      n = ((Fl_Button*)(current_widget->o))->compact();
+      i->value(n);
+      i->show();
+    } else {
+      i->hide();
+    }
+  } else {
+    int mod = 0;
+    uchar n = (uchar)i->value();
+    for (Fl_Type *o = Fl_Type::first; o; o = o->next) {
+      if (o->selected && o->is_a(ID_Button) && !o->is_a(ID_Menu_Item)) {
+        Fl_Widget_Type* q = (Fl_Widget_Type*)o;
+        uchar v = ((Fl_Button*)(q->o))->compact();
+        if (n != v) {
+          if (!mod) {
+            mod = 1;
+            undo_checkpoint();
+          }
+          ((Fl_Button*)(q->o))->compact(n);
+          q->redraw();
+        }
+      }
+    }
+    if (mod) set_modflag(1);
+  }
+}
+
+
 
 ////////////////////////////////////////////////////////////////
 
@@ -1145,7 +1177,7 @@ void set_whenmenu(int n) {
 
 void when_cb(Fl_Menu_Button* i, void *v) {
   if (v == LOAD) {
-    if (current_widget->is_menu_item()) {i->deactivate(); return;} else i->activate();
+    if (current_widget->is_a(ID_Menu_Item)) {i->deactivate(); return;} else i->activate();
     int n = current_widget->o->when();
     set_whenmenu(n);
     w_when_box->copy_label(when_symbol_name(n));
@@ -1174,26 +1206,8 @@ void when_cb(Fl_Menu_Button* i, void *v) {
   }
 }
 
-void when_button_cb(Fl_Box* i, void *v) {
-//  if (v == LOAD) {
-//    if (current_widget->is_menu_item()) {i->deactivate(); return;} else i->activate();
-//    i->value(current_widget->o->when()&FL_WHEN_NOT_CHANGED);
-//  } else {
-//    int mod = 0;
-//    int n = i->value() ? FL_WHEN_NOT_CHANGED : 0;
-//    for (Fl_Type *o = Fl_Type::first; o; o = o->next) {
-//      if (o->selected && o->is_widget()) {
-//        Fl_Widget_Type* q = (Fl_Widget_Type*)o;
-//        q->o->when(n|(q->o->when()&~FL_WHEN_NOT_CHANGED));
-//        mod = 1;
-//      }
-//    }
-//    if (mod) set_modflag(1);
-//  }
-}
-
 uchar Fl_Widget_Type::resizable() const {
-  if (is_window()) return ((Fl_Window*)o)->resizable() != 0;
+  if (is_a(ID_Window)) return ((Fl_Window*)o)->resizable() != 0;
   Fl_Group* p = (Fl_Group*)o->parent();
   if (p) return p->resizable() == o;
   else return 0;
@@ -1202,14 +1216,14 @@ uchar Fl_Widget_Type::resizable() const {
 void Fl_Widget_Type::resizable(uchar v) {
   if (v) {
     if (resizable()) return;
-    if (is_window()) ((Fl_Window*)o)->resizable(o);
+    if (is_a(ID_Window)) ((Fl_Window*)o)->resizable(o);
     else {
       Fl_Group* p = (Fl_Group*)o->parent();
       if (p) p->resizable(o);
     }
   } else {
     if (!resizable()) return;
-    if (is_window()) {
+    if (is_a(ID_Window)) {
       ((Fl_Window*)o)->resizable(0);
     } else {
       Fl_Group* p = (Fl_Group*)o->parent();
@@ -1220,7 +1234,7 @@ void Fl_Widget_Type::resizable(uchar v) {
 
 void resizable_cb(Fl_Light_Button* i,void* v) {
   if (v == LOAD) {
-    if (current_widget->is_menu_item()) {i->deactivate(); return;}
+    if (current_widget->is_a(ID_Menu_Item)) {i->deactivate(); return;}
     if (numselected > 1) {i->deactivate(); return;}
     i->activate();
     i->value(current_widget->resizable());
@@ -1234,21 +1248,21 @@ void resizable_cb(Fl_Light_Button* i,void* v) {
 void hotspot_cb(Fl_Light_Button* i,void* v) {
   if (v == LOAD) {
     if (numselected > 1) {i->deactivate(); return;}
-    if (current_widget->is_menu_item()) i->label("divider");
+    if (current_widget->is_a(ID_Menu_Item)) i->label("divider");
     else i->label("hotspot");
     i->activate();
     i->value(current_widget->hotspot());
   } else {
     undo_checkpoint();
     current_widget->hotspot(i->value());
-    if (current_widget->is_menu_item()) {
+    if (current_widget->is_a(ID_Menu_Item)) {
       current_widget->redraw();
       return;
     }
     if (i->value()) {
       Fl_Type *p = current_widget->parent;
       if (!p || !p->is_widget()) return;
-      while (!p->is_window()) p = p->parent;
+      while (!p->is_a(ID_Window)) p = p->parent;
       for (Fl_Type *o = p->next; o && o->level > p->level; o = o->next) {
         if (o->is_widget() && o != current_widget)
           ((Fl_Widget_Type*)o)->hotspot(0);
@@ -1261,7 +1275,7 @@ void hotspot_cb(Fl_Light_Button* i,void* v) {
 void visible_cb(Fl_Light_Button* i, void* v) {
   if (v == LOAD) {
     i->value(current_widget->o->visible());
-    if (current_widget->is_window()) i->deactivate();
+    if (current_widget->is_a(ID_Window)) i->deactivate();
     else i->activate();
   } else {
     int mod = 0;
@@ -1276,9 +1290,9 @@ void visible_cb(Fl_Light_Button* i, void* v) {
         n ? q->o->show() : q->o->hide();
         q->redraw();
         if (n && q->parent && q->parent->type_name()) {
-          if (!strcmp(q->parent->type_name(), "Fl_Tabs")) {
+          if (q->parent->is_a(ID_Tabs)) {
             ((Fl_Tabs *)q->o->parent())->value(q->o);
-          } else if (!strcmp(q->parent->type_name(), "Fl_Wizard")) {
+          } else if (q->parent->is_a(ID_Wizard)) {
             ((Fl_Wizard *)q->o->parent())->value(q->o);
           }
         }
@@ -1294,7 +1308,7 @@ void visible_cb(Fl_Light_Button* i, void* v) {
 void active_cb(Fl_Light_Button* i, void* v) {
   if (v == LOAD) {
     i->value(current_widget->o->active());
-    if (current_widget->is_window()) i->deactivate();
+    if (current_widget->is_a(ID_Window)) i->deactivate();
     else i->activate();
   } else {
     int mod = 0;
@@ -1317,23 +1331,45 @@ void active_cb(Fl_Light_Button* i, void* v) {
 ////////////////////////////////////////////////////////////////
 
 Fl_Menu_Item fontmenu[] = {
-{"Helvetica"},
-{"Helvetica bold"},
-{"Helvetica italic"},
-{"Helvetica bold italic"},
-{"Courier"},
-{"Courier bold"},
-{"Courier italic"},
-{"Courier bold italic"},
-{"Times"},
-{"Times bold"},
-{"Times italic"},
-{"Times bold italic"},
-{"Symbol"},
-{"Terminal"},
-{"Terminal Bold"},
-{"Zapf Dingbats"},
-{0}};
+  {"Helvetica"},
+  {"Helvetica bold"},
+  {"Helvetica italic"},
+  {"Helvetica bold italic"},
+  {"Courier"},
+  {"Courier bold"},
+  {"Courier italic"},
+  {"Courier bold italic"},
+  {"Times"},
+  {"Times bold"},
+  {"Times italic"},
+  {"Times bold italic"},
+  {"Symbol"},
+  {"Terminal"},
+  {"Terminal Bold"},
+  {"Zapf Dingbats"},
+  {NULL}
+};
+
+Fl_Menu_Item fontmenu_w_default[] = {
+  {"<default>", 0, NULL, NULL, FL_MENU_DIVIDER},
+  {"Helvetica"},
+  {"Helvetica bold"},
+  {"Helvetica italic"},
+  {"Helvetica bold italic"},
+  {"Courier"},
+  {"Courier bold"},
+  {"Courier italic"},
+  {"Courier bold italic"},
+  {"Times"},
+  {"Times bold"},
+  {"Times italic"},
+  {"Times bold italic"},
+  {"Symbol"},
+  {"Terminal"},
+  {"Terminal Bold"},
+  {"Zapf Dingbats"},
+  {NULL}
+};
 
 void labelfont_cb(Fl_Choice* i, void *v) {
   if (v == LOAD) {
@@ -1344,6 +1380,7 @@ void labelfont_cb(Fl_Choice* i, void *v) {
     int mod = 0;
     int n = i->value();
     if (n <= 0) n = layout->labelfont;
+    if (n <= 0) n = FL_HELVETICA;
     for (Fl_Type *o = Fl_Type::first; o; o = o->next) {
       if (o->selected && o->is_widget()) {
         Fl_Widget_Type* q = (Fl_Widget_Type*)o;
@@ -1437,7 +1474,7 @@ void color_common(Fl_Color c) {
     if (o->selected && o->is_widget()) {
       Fl_Widget_Type* q = (Fl_Widget_Type*)o;
       q->o->color(c); q->o->redraw();
-      if (q->parent && q->parent->type_name() == tabs_type_name) {
+      if (q->parent && q->parent->is_a(ID_Tabs)) {
         if (q->o->parent()) q->o->parent()->redraw();
       }
       mod = 1;
@@ -1449,7 +1486,7 @@ void color_common(Fl_Color c) {
 void color_cb(Fl_Button* i, void *v) {
   Fl_Color c = current_widget->o->color();
   if (v == LOAD) {
-    if (current_widget->is_menu_item()) {i->deactivate(); return;} else i->activate();
+    if (current_widget->is_a(ID_Menu_Item)) {i->deactivate(); return;} else i->activate();
   } else {
     Fl_Color d = fl_show_colormap(c);
     if (d == c) return;
@@ -1462,7 +1499,7 @@ void color_cb(Fl_Button* i, void *v) {
 void color_menu_cb(Fl_Menu_Button* i, void *v) {
   Fl_Color c = current_widget->o->color();
   if (v == LOAD) {
-    if (current_widget->is_menu_item()) {i->deactivate(); return;} else i->activate();
+    if (current_widget->is_a(ID_Menu_Item)) {i->deactivate(); return;} else i->activate();
   } else {
     Fl_Color d = (Fl_Color)(i->mvalue()->argument());
     if (d == c) return;
@@ -1487,7 +1524,7 @@ void color2_common(Fl_Color c) {
 void color2_cb(Fl_Button* i, void *v) {
   Fl_Color c = current_widget->o->selection_color();
   if (v == LOAD) {
-    if (current_widget->is_menu_item()) {i->deactivate(); return;} else i->activate();
+    if (current_widget->is_a(ID_Menu_Item)) {i->deactivate(); return;} else i->activate();
   } else {
     Fl_Color d = fl_show_colormap(c);
     if (d == c) return;
@@ -1500,7 +1537,7 @@ void color2_cb(Fl_Button* i, void *v) {
 void color2_menu_cb(Fl_Menu_Button* i, void *v) {
   Fl_Color c = current_widget->o->selection_color();
   if (v == LOAD) {
-    if (current_widget->is_menu_item()) {i->deactivate(); return;} else i->activate();
+    if (current_widget->is_a(ID_Menu_Item)) {i->deactivate(); return;} else i->activate();
   } else {
     Fl_Color d = (Fl_Color)(i->mvalue()->argument());
     if (d == c) return;
@@ -1572,7 +1609,7 @@ static Fl_Menu_Item alignmenu[] = {
 void align_cb(Fl_Button* i, void *v) {
   Fl_Align b = Fl_Align(fl_uintptr_t(i->user_data()));
   if (v == LOAD) {
-    if (current_widget->is_menu_item()) {i->deactivate(); return;} else i->activate();
+    if (current_widget->is_a(ID_Menu_Item)) {i->deactivate(); return;} else i->activate();
     i->value(current_widget->o->align() & b);
   } else {
     int mod = 0;
@@ -1610,7 +1647,7 @@ void align_cb(Fl_Button* i, void *v) {
 
 void align_position_cb(Fl_Choice *i, void *v) {
   if (v == LOAD) {
-    if (current_widget->is_menu_item()) {i->deactivate(); return;} else i->activate();
+    if (current_widget->is_a(ID_Menu_Item)) {i->deactivate(); return;} else i->activate();
     Fl_Menu_Item *mi = (Fl_Menu_Item*)i->menu();
     Fl_Align b = current_widget->o->align() & FL_ALIGN_POSITION_MASK;
     for (;mi->text;mi++) {
@@ -1640,7 +1677,7 @@ void align_position_cb(Fl_Choice *i, void *v) {
 
 void align_text_image_cb(Fl_Choice *i, void *v) {
   if (v == LOAD) {
-    if (current_widget->is_menu_item()) {i->deactivate(); return;} else i->activate();
+    if (current_widget->is_a(ID_Menu_Item)) {i->deactivate(); return;} else i->activate();
     Fl_Menu_Item *mi = (Fl_Menu_Item*)i->menu();
     Fl_Align b = current_widget->o->align() & FL_ALIGN_IMAGE_MASK;
     for (;mi->text;mi++) {
@@ -1781,7 +1818,7 @@ void v_input_cb(Fl_Input* i, void* v) {
 
 void subclass_cb(Fl_Input* i, void* v) {
   if (v == LOAD) {
-    if (current_widget->is_menu_item()) {i->deactivate(); return;} else i->activate();
+    if (current_widget->is_a(ID_Menu_Item)) {i->deactivate(); return;} else i->activate();
     i->value(current_widget->subclass());
   } else {
     int mod = 0;
@@ -1808,7 +1845,9 @@ void subclass_cb(Fl_Input* i, void* v) {
 // 2: set the text size
 // 3: set the text color
 // 4: get all default values for this type
-int Fl_Widget_Type::textstuff(int, Fl_Font&, int&, Fl_Color&) {return 0;}
+int Fl_Widget_Type::textstuff(int, Fl_Font&, int&, Fl_Color&) {
+  return 0;
+}
 
 void textfont_cb(Fl_Choice* i, void* v) {
   Fl_Font n; int s; Fl_Color c;
@@ -1842,6 +1881,7 @@ void textsize_cb(Fl_Value_Input* i, void* v) {
     int mod = 0;
     s = int(i->value());
     if (s <= 0) s = layout->textsize;
+    if (s <= 0) s = layout->labelsize;
     for (Fl_Type *o = Fl_Type::first; o; o = o->next) {
       if (o->selected && o->is_widget()) {
         Fl_Widget_Type* q = (Fl_Widget_Type*)o;
@@ -1903,14 +1943,14 @@ void textcolor_menu_cb(Fl_Menu_Button* i, void* v) {
 
 void min_w_cb(Fl_Value_Input* i, void* v) {
   if (v == LOAD) {
-    if (!current_widget->is_window()) return;
+    if (!current_widget->is_a(ID_Window)) return;
     i->value(((Fl_Window_Type*)current_widget)->sr_min_w);
   } else {
     int mod = 0;
     undo_checkpoint();
     int n = (int)i->value();
     for (Fl_Type *o = Fl_Type::first; o; o = o->next) {
-      if (o->selected && o->is_window()) {
+      if (o->selected && o->is_a(ID_Window)) {
         ((Fl_Window_Type*)current_widget)->sr_min_w = n;
         mod = 1;
       }
@@ -1921,14 +1961,14 @@ void min_w_cb(Fl_Value_Input* i, void* v) {
 
 void min_h_cb(Fl_Value_Input* i, void* v) {
   if (v == LOAD) {
-    if (!current_widget->is_window()) return;
+    if (!current_widget->is_a(ID_Window)) return;
     i->value(((Fl_Window_Type*)current_widget)->sr_min_h);
   } else {
     int mod = 0;
     undo_checkpoint();
     int n = (int)i->value();
     for (Fl_Type *o = Fl_Type::first; o; o = o->next) {
-      if (o->selected && o->is_window()) {
+      if (o->selected && o->is_a(ID_Window)) {
         ((Fl_Window_Type*)current_widget)->sr_min_h = n;
         mod = 1;
       }
@@ -1939,14 +1979,14 @@ void min_h_cb(Fl_Value_Input* i, void* v) {
 
 void max_w_cb(Fl_Value_Input* i, void* v) {
   if (v == LOAD) {
-    if (!current_widget->is_window()) return;
+    if (!current_widget->is_a(ID_Window)) return;
     i->value(((Fl_Window_Type*)current_widget)->sr_max_w);
   } else {
     int mod = 0;
     undo_checkpoint();
     int n = (int)i->value();
     for (Fl_Type *o = Fl_Type::first; o; o = o->next) {
-      if (o->selected && o->is_window()) {
+      if (o->selected && o->is_a(ID_Window)) {
         ((Fl_Window_Type*)current_widget)->sr_max_w = n;
         mod = 1;
       }
@@ -1957,14 +1997,14 @@ void max_w_cb(Fl_Value_Input* i, void* v) {
 
 void max_h_cb(Fl_Value_Input* i, void* v) {
   if (v == LOAD) {
-    if (!current_widget->is_window()) return;
+    if (!current_widget->is_a(ID_Window)) return;
     i->value(((Fl_Window_Type*)current_widget)->sr_max_h);
   } else {
     int mod = 0;
     undo_checkpoint();
     int n = (int)i->value();
     for (Fl_Type *o = Fl_Type::first; o; o = o->next) {
-      if (o->selected && o->is_window()) {
+      if (o->selected && o->is_a(ID_Window)) {
         ((Fl_Window_Type*)current_widget)->sr_max_h = n;
         mod = 1;
       }
@@ -1979,7 +2019,7 @@ void set_min_size_cb(Fl_Button*, void* v) {
     int mod = 0;
     undo_checkpoint();
     for (Fl_Type *o = Fl_Type::first; o; o = o->next) {
-      if (o->selected && o->is_window()) {
+      if (o->selected && o->is_a(ID_Window)) {
         Fl_Window_Type *win = (Fl_Window_Type*)current_widget;
         win->sr_min_w = win->o->w();
         win->sr_min_h = win->o->h();
@@ -1997,7 +2037,7 @@ void set_max_size_cb(Fl_Button*, void* v) {
     int mod = 0;
     undo_checkpoint();
     for (Fl_Type *o = Fl_Type::first; o; o = o->next) {
-      if (o->selected && o->is_window()) {
+      if (o->selected && o->is_a(ID_Window)) {
         Fl_Window_Type *win = (Fl_Window_Type*)current_widget;
         win->sr_max_w = win->o->w();
         win->sr_max_h = win->o->h();
@@ -2011,7 +2051,7 @@ void set_max_size_cb(Fl_Button*, void* v) {
 
 void slider_size_cb(Fl_Value_Input* i, void* v) {
   if (v == LOAD) {
-    if (current_widget->is_valuator()<2) {i->deactivate(); return;}
+    if (!current_widget->is_a(ID_Slider)) {i->deactivate(); return;}
     i->activate();
     i->value(((Fl_Slider*)(current_widget->o))->slider_size());
   } else {
@@ -2021,7 +2061,7 @@ void slider_size_cb(Fl_Value_Input* i, void* v) {
     for (Fl_Type *o = Fl_Type::first; o; o = o->next) {
       if (o->selected && o->is_widget()) {
         Fl_Widget_Type* q = (Fl_Widget_Type*)o;
-        if (q->is_valuator()>=2) {
+        if (q->is_a(ID_Slider)) {
           ((Fl_Slider*)(q->o))->slider_size(n);
           q->o->redraw();
           mod = 1;
@@ -2034,10 +2074,10 @@ void slider_size_cb(Fl_Value_Input* i, void* v) {
 
 void min_cb(Fl_Value_Input* i, void* v) {
   if (v == LOAD) {
-    if (current_widget->is_valuator()) {
+    if (current_widget->is_a(ID_Valuator_)) {
       i->activate();
       i->value(((Fl_Valuator*)(current_widget->o))->minimum());
-    } else if (current_widget->is_spinner()) {
+    } else if (current_widget->is_a(ID_Spinner)) {
       i->activate();
       i->value(((Fl_Spinner*)(current_widget->o))->minimum());
     } else {
@@ -2051,11 +2091,11 @@ void min_cb(Fl_Value_Input* i, void* v) {
     for (Fl_Type *o = Fl_Type::first; o; o = o->next) {
       if (o->selected && o->is_widget()) {
         Fl_Widget_Type* q = (Fl_Widget_Type*)o;
-        if (q->is_valuator()) {
+        if (q->is_a(ID_Valuator_)) {
           ((Fl_Valuator*)(q->o))->minimum(n);
           q->o->redraw();
           mod = 1;
-        } else if (q->is_spinner()) {
+        } else if (q->is_a(ID_Spinner)) {
           ((Fl_Spinner*)(q->o))->minimum(n);
           q->o->redraw();
           mod = 1;
@@ -2068,10 +2108,10 @@ void min_cb(Fl_Value_Input* i, void* v) {
 
 void max_cb(Fl_Value_Input* i, void* v) {
   if (v == LOAD) {
-    if (current_widget->is_valuator()) {
+    if (current_widget->is_a(ID_Valuator_)) {
       i->activate();
       i->value(((Fl_Valuator*)(current_widget->o))->maximum());
-    } else if (current_widget->is_spinner()) {
+    } else if (current_widget->is_a(ID_Spinner)) {
       i->activate();
       i->value(((Fl_Spinner*)(current_widget->o))->maximum());
     } else {
@@ -2085,11 +2125,11 @@ void max_cb(Fl_Value_Input* i, void* v) {
     for (Fl_Type *o = Fl_Type::first; o; o = o->next) {
       if (o->selected && o->is_widget()) {
         Fl_Widget_Type* q = (Fl_Widget_Type*)o;
-        if (q->is_valuator()) {
+        if (q->is_a(ID_Valuator_)) {
           ((Fl_Valuator*)(q->o))->maximum(n);
           q->o->redraw();
           mod = 1;
-        } else if (q->is_spinner()) {
+        } else if (q->is_a(ID_Spinner)) {
           ((Fl_Spinner*)(q->o))->maximum(n);
           q->o->redraw();
           mod = 1;
@@ -2102,10 +2142,10 @@ void max_cb(Fl_Value_Input* i, void* v) {
 
 void step_cb(Fl_Value_Input* i, void* v) {
   if (v == LOAD) {
-    if (current_widget->is_valuator()) {
+    if (current_widget->is_a(ID_Valuator_)) {
       i->activate();
       i->value(((Fl_Valuator*)(current_widget->o))->step());
-    } else if (current_widget->is_spinner()) {
+    } else if (current_widget->is_a(ID_Spinner)) {
       i->activate();
       i->value(((Fl_Spinner*)(current_widget->o))->step());
     } else {
@@ -2119,11 +2159,11 @@ void step_cb(Fl_Value_Input* i, void* v) {
     for (Fl_Type *o = Fl_Type::first; o; o = o->next) {
       if (o->selected && o->is_widget()) {
         Fl_Widget_Type* q = (Fl_Widget_Type*)o;
-        if (q->is_valuator()) {
+        if (q->is_a(ID_Valuator_)) {
           ((Fl_Valuator*)(q->o))->step(n);
           q->o->redraw();
           mod = 1;
-        } else if (q->is_spinner()) {
+        } else if (q->is_a(ID_Spinner)) {
           ((Fl_Spinner*)(q->o))->step(n);
           q->o->redraw();
           mod = 1;
@@ -2136,13 +2176,13 @@ void step_cb(Fl_Value_Input* i, void* v) {
 
 void value_cb(Fl_Value_Input* i, void* v) {
   if (v == LOAD) {
-    if (current_widget->is_valuator()) {
+    if (current_widget->is_a(ID_Valuator_)) {
       i->activate();
       i->value(((Fl_Valuator*)(current_widget->o))->value());
     } else if (current_widget->is_button()) {
       i->activate();
       i->value(((Fl_Button*)(current_widget->o))->value());
-    } else if (current_widget->is_spinner()) {
+    } else if (current_widget->is_a(ID_Spinner)) {
       i->activate();
       i->value(((Fl_Spinner*)(current_widget->o))->value());
     } else
@@ -2154,14 +2194,14 @@ void value_cb(Fl_Value_Input* i, void* v) {
     for (Fl_Type *o = Fl_Type::first; o; o = o->next) {
       if (o->selected && o->is_widget()) {
         Fl_Widget_Type* q = (Fl_Widget_Type*)o;
-        if (q->is_valuator()) {
+        if (q->is_a(ID_Valuator_)) {
           ((Fl_Valuator*)(q->o))->value(n);
           mod = 1;
         } else if (q->is_button()) {
           ((Fl_Button*)(q->o))->value(n != 0);
-          if (q->is_menu_item()) q->redraw();
+          if (q->is_a(ID_Menu_Item)) q->redraw();
           mod = 1;
-        } else if (q->is_spinner()) {
+        } else if (q->is_a(ID_Spinner)) {
           ((Fl_Spinner*)(q->o))->value(n);
           mod = 1;
         }
@@ -2176,9 +2216,10 @@ void value_cb(Fl_Value_Input* i, void* v) {
 
 void values_group_cb(Fl_Group* g, void* v) {
   if (v == LOAD) {
-    if (current_widget->is_flex()) {
-      g->hide();
-    } else if (current_widget->is_window()) {
+    if (   current_widget->is_a(ID_Flex)
+        || current_widget->is_a(ID_Grid)
+        || current_widget->is_a(ID_Window))
+    {
       g->hide();
     } else {
       g->show();
@@ -2189,7 +2230,7 @@ void values_group_cb(Fl_Group* g, void* v) {
 
 void flex_margin_group_cb(Fl_Group* g, void* v) {
   if (v == LOAD) {
-    if (current_widget->is_flex()) {
+    if (current_widget->is_a(ID_Flex)) {
       g->show();
     } else {
       g->hide();
@@ -2200,7 +2241,7 @@ void flex_margin_group_cb(Fl_Group* g, void* v) {
 
 void size_range_group_cb(Fl_Group* g, void* v) {
   if (v == LOAD) {
-    if (current_widget->is_window()) {
+    if (current_widget->is_a(ID_Window)) {
       g->show();
     } else {
       g->hide();
@@ -2214,14 +2255,14 @@ static void flex_margin_cb(Fl_Value_Input* i, void* v,
                            void (*load_margin)(Fl_Flex*,Fl_Value_Input*),
                            int (*update_margin)(Fl_Flex*,int)) {
   if (v == LOAD) {
-    if (current_widget->is_flex()) {
+    if (current_widget->is_a(ID_Flex)) {
       load_margin((Fl_Flex*)current_widget->o, i);
     }
   } else {
     int mod = 0;
     int new_value = (int)i->value();
     for (Fl_Type *o = Fl_Type::first; o; o = o->next) {
-      if (o->selected && o->is_flex()) {
+      if (o->selected && o->is_a(ID_Flex)) {
         Fl_Flex_Type* q = (Fl_Flex_Type*)o;
         Fl_Flex* w = (Fl_Flex*)q->o;
         if (update_margin(w, new_value)) {
@@ -2458,7 +2499,7 @@ void subtype_cb(Fl_Choice* i, void* v) {
       int j;
       for (j = 0;; j++) {
         if (!m[j].text) {j = 0; break;}
-        if (current_widget->is_spinner()) {
+        if (current_widget->is_a(ID_Spinner)) {
           if (m[j].argument() == ((Fl_Spinner*)current_widget->o)->type()) break;
         } else {
           if (m[j].argument() == current_widget->o->type()) break;
@@ -2476,9 +2517,9 @@ void subtype_cb(Fl_Choice* i, void* v) {
       if (o->selected && o->is_widget()) {
         Fl_Widget_Type* q = (Fl_Widget_Type*)o;
         if (q->subtypes()==m) {
-          if (q->is_spinner())
+          if (q->is_a(ID_Spinner))
             ((Fl_Spinner*)q->o)->type(n);
-          else if (q->is_flex())
+          else if (q->is_a(ID_Flex))
             ((Fl_Flex_Type*)q)->change_subtype_to(n);
           else
             q->o->type(n);
@@ -2498,7 +2539,7 @@ void propagate_load(Fl_Group* g, void* v) {
     Fl_Widget*const* a = g->array();
     for (int i=g->children(); i--;) {
       Fl_Widget* o = *a++;
-      o->do_callback(o,LOAD);
+      o->do_callback(o, LOAD, FL_REASON_USER);
     }
   }
 }
@@ -2565,7 +2606,7 @@ void live_mode_cb(Fl_Button*o,void *) {
         live_window->resizable(live_widget);
         live_window->set_modal(); // block all other UI
         live_window->callback(leave_live_mode_cb);
-        if (current_widget->is_window()) {
+        if (current_widget->is_a(ID_Window)) {
           Fl_Window_Type *w = (Fl_Window_Type*)current_widget;
           int mw = w->sr_min_w; if (mw>0) mw += 20;
           int mh = w->sr_min_h; if (mh>0) mh += 55;
@@ -2592,7 +2633,7 @@ void live_mode_cb(Fl_Button*o,void *) {
 }
 
 // update the panel according to current widget set:
-static void load_panel() {
+void load_panel() {
   if (!the_panel) return;
 
   // find all the Fl_Widget subclasses currently selected:
@@ -2606,6 +2647,22 @@ static void load_panel() {
         numselected++;
         if (!current_widget) current_widget = (Fl_Widget_Type*)o;
       }
+    }
+  }
+  if (current_widget && current_widget->is_a(ID_Grid)) {
+    if (widget_tab_grid->parent()!=widget_tabs)
+      widget_tabs->add(widget_tab_grid);
+  } else {
+    if (widget_tab_grid->parent()==widget_tabs) {
+      widget_tabs_repo->add(widget_tab_grid);
+    }
+  }
+  if (current_widget && current_widget->parent && current_widget->parent->is_a(ID_Grid)) {
+    if (widget_tab_grid_child->parent()!=widget_tabs)
+      widget_tabs->add(widget_tab_grid_child);
+  } else {
+    if (widget_tab_grid_child->parent()==widget_tabs) {
+      widget_tabs_repo->add(widget_tab_grid_child);
     }
   }
   if (numselected)
@@ -2748,10 +2805,9 @@ void Fl_Widget_Type::write_static(Fd_Code_Writer& f) {
   }
   if (callback() && is_name(callback())) {
     int write_extern_declaration = 1;
-    const Fl_Class_Type *cc = is_in_class();
     char buf[1024]; snprintf(buf, 1023, "%s(*)",  callback());
-    if (cc) {
-      if (cc->has_function("static void", buf))
+    if (is_in_class()) {
+      if (has_function("static void", buf))
         write_extern_declaration = 0;
     } else {
       if (has_toplevel_function(0L, buf))
@@ -2792,6 +2848,7 @@ void Fl_Widget_Type::write_static(Fd_Code_Writer& f) {
     f.write_c(", %s", ut);
     if (use_v) f.write_c(" v");
     f.write_c(") {\n");
+    // Matt: disabled f.tag(FD_TAG_GENERIC, 0);
     f.write_c_indented(callback(), 1, 0);
     if (*(d-1) != ';' && *(d-1) != '}') {
       const char *p = strrchr(callback(), '\n');
@@ -2801,14 +2858,16 @@ void Fl_Widget_Type::write_static(Fd_Code_Writer& f) {
       // statement...
       if (*p != '#' && *p) f.write_c(";");
     }
-    f.write_c("\n}\n");
+    f.write_c("\n");
+    // Matt: disabled f.tag(FD_TAG_WIDGET_CALLBACK, get_uid());
+    f.write_c("}\n");
     if (k) {
       f.write_c("void %s::%s(%s* o, %s v) {\n", k, cn, t, ut);
       f.write_c("%s((%s*)(o", f.indent(1), k);
       Fl_Type *q = 0;
       for (Fl_Type* p = parent; p && p->is_widget(); q = p, p = p->parent)
         f.write_c("->parent()");
-      if (!q || strcmp(q->type_name(), "widget_class"))
+      if (!q || !q->is_a(ID_Widget_Class))
         f.write_c("->user_data()");
       f.write_c("))->%s_i(o,v);\n}\n", cn);
     }
@@ -2840,7 +2899,7 @@ void Fl_Widget_Type::write_code1(Fd_Code_Writer& f) {
     f.write_h("%sstatic void %s(%s*, %s);\n", f.indent(1), cn, t, ut);
   }
   // figure out if local variable will be used (prevent compiler warnings):
-  int wused = !name() && is_window();
+  int wused = !name() && is_a(ID_Window);
   const char *ptr;
 
   f.varused = wused;
@@ -2901,7 +2960,7 @@ void Fl_Widget_Type::write_code1(Fd_Code_Writer& f) {
   write_comment_inline_c(f);
   if (f.varused) f.write_c("%s* o = ", t);
   if (name()) f.write_c("%s = ", name());
-  if (is_window()) {
+  if (is_a(ID_Window)) {
     // Handle special case where user is faking a Fl_Group type as a window,
     // there is no 2-argument constructor in that case:
     if (!strstr(t, "Window"))
@@ -2918,13 +2977,13 @@ void Fl_Widget_Type::write_code1(Fd_Code_Writer& f) {
         f.write_cstring(label());
         break;
     case 1 : /* GNU gettext */
-        f.write_c("%s(", g_project.i18n_function.c_str());
+        f.write_c("%s(", g_project.i18n_gnu_function.c_str());
         f.write_cstring(label());
         f.write_c(")");
         break;
     case 2 : /* POSIX catgets */
-        f.write_c("catgets(%s,%s,%d,", g_project.i18n_file[0] ? g_project.i18n_file.c_str() : "_catalog",
-                g_project.i18n_set.c_str(), msgnum());
+        f.write_c("catgets(%s,%s,%d,", g_project.i18n_pos_file[0] ? g_project.i18n_pos_file.c_str() : "_catalog",
+                g_project.i18n_pos_set.c_str(), msgnum());
         f.write_cstring(label());
         f.write_c(")");
         break;
@@ -2991,13 +3050,13 @@ void Fl_Widget_Type::write_widget_code(Fd_Code_Writer& f) {
         f.write_cstring(tooltip());
         break;
     case 1 : /* GNU gettext */
-        f.write_c("%s(", g_project.i18n_function.c_str());
+        f.write_c("%s(", g_project.i18n_gnu_function.c_str());
         f.write_cstring(tooltip());
         f.write_c(")");
         break;
     case 2 : /* POSIX catgets */
-        f.write_c("catgets(%s,%s,%d,", g_project.i18n_file[0] ? g_project.i18n_file.c_str() : "_catalog",
-                g_project.i18n_set.c_str(), msgnum() + 1);
+        f.write_c("catgets(%s,%s,%d,", g_project.i18n_pos_file[0] ? g_project.i18n_pos_file.c_str() : "_catalog",
+                g_project.i18n_pos_set.c_str(), msgnum() + 1);
         f.write_cstring(tooltip());
         f.write_c(")");
         break;
@@ -3005,9 +3064,9 @@ void Fl_Widget_Type::write_widget_code(Fd_Code_Writer& f) {
     f.write_c(");\n");
   }
 
-  if (is_spinner() && ((Fl_Spinner*)o)->type() != ((Fl_Spinner*)tplate)->type())
+  if (is_a(ID_Spinner) && ((Fl_Spinner*)o)->type() != ((Fl_Spinner*)tplate)->type())
     f.write_c("%s%s->type(%d);\n", f.indent(), var, ((Fl_Spinner*)o)->type());
-  else if (o->type() != tplate->type() && !is_window())
+  else if (o->type() != tplate->type() && !is_a(ID_Window))
     f.write_c("%s%s->type(%d);\n", f.indent(), var, o->type());
   if (o->box() != tplate->box() || subclass())
     f.write_c("%s%s->box(FL_%s);\n", f.indent(), var, boxname(o->box()));
@@ -3015,9 +3074,9 @@ void Fl_Widget_Type::write_widget_code(Fd_Code_Writer& f) {
   // write shortcut command if needed
   int shortcut = 0;
   if (is_button()) shortcut = ((Fl_Button*)o)->shortcut();
-  else if (is_input()) shortcut = ((Fl_Input_*)o)->shortcut();
-  else if (is_value_input()) shortcut = ((Fl_Value_Input*)o)->shortcut();
-  else if (is_text_display()) shortcut = ((Fl_Text_Display*)o)->shortcut();
+  else if (is_a(ID_Input)) shortcut = ((Fl_Input_*)o)->shortcut();
+  else if (is_a(ID_Value_Input)) shortcut = ((Fl_Value_Input*)o)->shortcut();
+  else if (is_a(ID_Text_Display)) shortcut = ((Fl_Text_Display*)o)->shortcut();
   if (shortcut) {
     if (g_project.use_FL_COMMAND && (shortcut & (FL_CTRL|FL_META))) {
       f.write_c("%s%s->shortcut(", f.indent(), var);
@@ -3029,16 +3088,17 @@ void Fl_Widget_Type::write_widget_code(Fd_Code_Writer& f) {
     }
   }
 
-  if (is_button()) {
+  if (is_a(ID_Button)) {
     Fl_Button* b = (Fl_Button*)o;
     if (b->down_box()) f.write_c("%s%s->down_box(FL_%s);\n", f.indent(), var,
                                boxname(b->down_box()));
     if (b->value()) f.write_c("%s%s->value(1);\n", f.indent(), var);
-  } else if (!strcmp(type_name(), "Fl_Input_Choice")) {
+    if (b->compact()) f.write_c("%s%s->compact(%d);\n", f.indent(), var, b->compact());
+  } else if (is_a(ID_Input_Choice)) {
     Fl_Input_Choice* b = (Fl_Input_Choice*)o;
     if (b->down_box()) f.write_c("%s%s->down_box(FL_%s);\n", f.indent(), var,
                                boxname(b->down_box()));
-  } else if (is_menu_button()) {
+  } else if (is_a(ID_Menu_Manager_)) {
     Fl_Menu_* b = (Fl_Menu_*)o;
     if (b->down_box()) f.write_c("%s%s->down_box(FL_%s);\n", f.indent(), var,
                                boxname(b->down_box()));
@@ -3058,7 +3118,7 @@ void Fl_Widget_Type::write_widget_code(Fd_Code_Writer& f) {
     f.write_c("%s%s->labelsize(%d);\n", f.indent(), var, o->labelsize());
   if (o->labelcolor() != tplate->labelcolor() || subclass())
     write_color(f, "labelcolor", o->labelcolor());
-  if (is_valuator()) {
+  if (is_a(ID_Valuator_)) {
     Fl_Valuator* v = (Fl_Valuator*)o;
     Fl_Valuator* t = (Fl_Valuator*)(tplate);
     if (v->minimum()!=t->minimum())
@@ -3068,19 +3128,19 @@ void Fl_Widget_Type::write_widget_code(Fd_Code_Writer& f) {
     if (v->step()!=t->step())
       f.write_c("%s%s->step(%g);\n", f.indent(), var, v->step());
     if (v->value()) {
-      if (is_valuator()==3) { // Fl_Scrollbar::value(double) is nott available
+      if (is_a(ID_Scrollbar)) { // Fl_Scrollbar::value(double) is not available
         f.write_c("%s%s->Fl_Slider::value(%g);\n", f.indent(), var, v->value());
       } else {
         f.write_c("%s%s->value(%g);\n", f.indent(), var, v->value());
       }
     }
-    if (is_valuator()>=2) {
+    if (is_a(ID_Slider)) {
       double x = ((Fl_Slider*)v)->slider_size();
       double y = ((Fl_Slider*)t)->slider_size();
       if (x != y) f.write_c("%s%s->slider_size(%g);\n", f.indent(), var, x);
     }
   }
-  if (is_spinner()) {
+  if (is_a(ID_Spinner)) {
     Fl_Spinner* v = (Fl_Spinner*)o;
     Fl_Spinner* t = (Fl_Spinner*)(tplate);
     if (v->minimum()!=t->minimum())
@@ -3126,12 +3186,12 @@ void Fl_Widget_Type::write_widget_code(Fd_Code_Writer& f) {
     f.write_c("%s%s->hide();\n", f.indent(), var);
   if (!o->active())
     f.write_c("%s%s->deactivate();\n", f.indent(), var);
-  if (!is_group() && resizable())
+  if (!is_a(ID_Group) && resizable())
     f.write_c("%sFl_Group::current()->resizable(%s);\n", f.indent(), var);
   if (hotspot()) {
     if (is_class())
       f.write_c("%shotspot(%s);\n", f.indent(), var);
-    else if (is_window())
+    else if (is_a(ID_Window))
       f.write_c("%s%s->hotspot(%s);\n", f.indent(), var, var);
     else
       f.write_c("%s%s->window()->hotspot(%s);\n", f.indent(), var, var);
@@ -3183,38 +3243,38 @@ void Fl_Widget_Type::write_properties(Fd_Project_Writer &f) {
   if (bind_deimage_) f.write_string("bind_deimage 1");
   f.write_string("xywh {%d %d %d %d}", o->x(), o->y(), o->w(), o->h());
   Fl_Widget* tplate = ((Fl_Widget_Type*)factory)->o;
-  if (is_spinner() && ((Fl_Spinner*)o)->type() != ((Fl_Spinner*)tplate)->type()) {
+  if (is_a(ID_Spinner) && ((Fl_Spinner*)o)->type() != ((Fl_Spinner*)tplate)->type()) {
     f.write_string("type");
     f.write_word(item_name(subtypes(), ((Fl_Spinner*)o)->type()));
-  } else if (subtypes() && (o->type() != tplate->type() || is_window())) {
+  } else if (subtypes() && (o->type() != tplate->type() || is_a(ID_Window))) {
     f.write_string("type");
     f.write_word(item_name(subtypes(), o->type()));
   }
   if (o->box() != tplate->box()) {
     f.write_string("box"); f.write_word(boxname(o->box()));}
-  if (is_input()) {
+  if (is_a(ID_Input)) {
     Fl_Input_* b = (Fl_Input_*)o;
     if (b->shortcut()) f.write_string("shortcut 0x%x", b->shortcut());
   }
-  if (is_value_input()) {
+  if (is_a(ID_Value_Input)) {
     Fl_Value_Input* b = (Fl_Value_Input*)o;
     if (b->shortcut()) f.write_string("shortcut 0x%x", b->shortcut());
   }
-  if (is_text_display()) {
+  if (is_a(ID_Text_Display)) {
     Fl_Text_Display* b = (Fl_Text_Display*)o;
     if (b->shortcut()) f.write_string("shortcut 0x%x", b->shortcut());
   }
-  if (is_button()) {
+  if (is_a(ID_Button)) {
     Fl_Button* b = (Fl_Button*)o;
     if (b->down_box()) {
       f.write_string("down_box"); f.write_word(boxname(b->down_box()));}
     if (b->shortcut()) f.write_string("shortcut 0x%x", b->shortcut());
     if (b->value()) f.write_string("value 1");
-  } else if (!strcmp(type_name(), "Fl_Input_Choice")) {
+  } else if (is_a(ID_Input_Choice)) {
     Fl_Input_Choice* b = (Fl_Input_Choice*)o;
     if (b->down_box()) {
       f.write_string("down_box"); f.write_word(boxname(b->down_box()));}
-  } else if (is_menu_button()) {
+  } else if (is_a(ID_Menu_)) {
     Fl_Menu_* b = (Fl_Menu_*)o;
     if (b->down_box()) {
       f.write_string("down_box"); f.write_word(boxname(b->down_box()));}
@@ -3237,20 +3297,20 @@ void Fl_Widget_Type::write_properties(Fd_Project_Writer &f) {
     f.write_string("align %d", o->align());
   if (o->when() != tplate->when())
     f.write_string("when %d", o->when());
-  if (is_valuator()) {
+  if (is_a(ID_Valuator_)) {
     Fl_Valuator* v = (Fl_Valuator*)o;
     Fl_Valuator* t = (Fl_Valuator*)(tplate);
     if (v->minimum()!=t->minimum()) f.write_string("minimum %g",v->minimum());
     if (v->maximum()!=t->maximum()) f.write_string("maximum %g",v->maximum());
     if (v->step()!=t->step()) f.write_string("step %g",v->step());
     if (v->value()!=0.0) f.write_string("value %g",v->value());
-    if (is_valuator()>=2) {
+    if (is_a(ID_Slider)) {
       double x = ((Fl_Slider*)v)->slider_size();
       double y = ((Fl_Slider*)t)->slider_size();
       if (x != y) f.write_string("slider_size %g", x);
     }
   }
-  if (is_spinner()) {
+  if (is_a(ID_Spinner)) {
     Fl_Spinner* v = (Fl_Spinner*)o;
     Fl_Spinner* t = (Fl_Spinner*)(tplate);
     if (v->minimum()!=t->minimum()) f.write_string("minimum %g",v->minimum());
@@ -3264,10 +3324,10 @@ void Fl_Widget_Type::write_properties(Fd_Project_Writer &f) {
     if (s != fs) f.write_string("textsize %d", s);
     if (c != fc) f.write_string("textcolor %d", c);
   }}
-  if (!o->visible()) f.write_string("hide");
+  if (!o->visible() && !override_visible_) f.write_string("hide");
   if (!o->active()) f.write_string("deactivate");
   if (resizable()) f.write_string("resizable");
-  if (hotspot()) f.write_string(is_menu_item() ? "divider" : "hotspot");
+  if (hotspot()) f.write_string(is_a(ID_Menu_Item) ? "divider" : "hotspot");
   for (int n=0; n < NUM_EXTRA_CODE; n++) if (extra_code(n)) {
     f.write_indent(level+1);
     f.write_string("code%d",n);
@@ -3326,7 +3386,7 @@ void Fl_Widget_Type::read_property(Fd_Project_Reader &f, const char *c) {
   } else if (!strcmp(c,"compress_deimage")) {
     compress_deimage_ = (int)atol(f.read_word());
   } else if (!strcmp(c,"type")) {
-    if (is_spinner())
+    if (is_a(ID_Spinner))
       ((Fl_Spinner*)o)->type(item_number(subtypes(), f.read_word()));
     else
       o->type(item_number(subtypes(), f.read_word()));
@@ -3336,19 +3396,19 @@ void Fl_Widget_Type::read_property(Fd_Project_Reader &f, const char *c) {
       if (x == ZERO_ENTRY) x = 0;
       o->box((Fl_Boxtype)x);
     } else if (sscanf(value,"%d",&x) == 1) o->box((Fl_Boxtype)x);
-  } else if (is_button() && !strcmp(c,"down_box")) {
+  } else if (is_a(ID_Button) && !strcmp(c,"down_box")) {
     const char* value = f.read_word();
     if ((x = boxnumber(value))) {
       if (x == ZERO_ENTRY) x = 0;
       ((Fl_Button*)o)->down_box((Fl_Boxtype)x);
     }
-  } else if (!strcmp(type_name(), "Fl_Input_Choice") && !strcmp(c,"down_box")) {
+  } else if (is_a(ID_Input_Choice) && !strcmp(c,"down_box")) {
     const char* value = f.read_word();
     if ((x = boxnumber(value))) {
       if (x == ZERO_ENTRY) x = 0;
       ((Fl_Input_Choice*)o)->down_box((Fl_Boxtype)x);
     }
-  } else if (is_menu_button() && !strcmp(c,"down_box")) {
+  } else if (is_a(ID_Menu_) && !strcmp(c,"down_box")) {
     const char* value = f.read_word();
     if ((x = boxnumber(value))) {
       if (x == ZERO_ENTRY) x = 0;
@@ -3395,18 +3455,18 @@ void Fl_Widget_Type::read_property(Fd_Project_Reader &f, const char *c) {
   } else if (!strcmp(c,"when")) {
     if (sscanf(f.read_word(),"%d",&x) == 1) o->when(x);
   } else if (!strcmp(c,"minimum")) {
-    if (is_valuator()) ((Fl_Valuator*)o)->minimum(strtod(f.read_word(),0));
-    if (is_spinner()) ((Fl_Spinner*)o)->minimum(strtod(f.read_word(),0));
+    if (is_a(ID_Valuator_)) ((Fl_Valuator*)o)->minimum(strtod(f.read_word(),0));
+    if (is_a(ID_Spinner)) ((Fl_Spinner*)o)->minimum(strtod(f.read_word(),0));
   } else if (!strcmp(c,"maximum")) {
-    if (is_valuator()) ((Fl_Valuator*)o)->maximum(strtod(f.read_word(),0));
-    if (is_spinner()) ((Fl_Spinner*)o)->maximum(strtod(f.read_word(),0));
+    if (is_a(ID_Valuator_)) ((Fl_Valuator*)o)->maximum(strtod(f.read_word(),0));
+    if (is_a(ID_Spinner)) ((Fl_Spinner*)o)->maximum(strtod(f.read_word(),0));
   } else if (!strcmp(c,"step")) {
-    if (is_valuator()) ((Fl_Valuator*)o)->step(strtod(f.read_word(),0));
-    if (is_spinner()) ((Fl_Spinner*)o)->step(strtod(f.read_word(),0));
+    if (is_a(ID_Valuator_)) ((Fl_Valuator*)o)->step(strtod(f.read_word(),0));
+    if (is_a(ID_Spinner)) ((Fl_Spinner*)o)->step(strtod(f.read_word(),0));
   } else if (!strcmp(c,"value")) {
-    if (is_valuator()) ((Fl_Valuator*)o)->value(strtod(f.read_word(),0));
-    if (is_spinner()) ((Fl_Spinner*)o)->value(strtod(f.read_word(),0));
-  } else if ((!strcmp(c,"slider_size")||!strcmp(c,"size"))&&is_valuator()==2) {
+    if (is_a(ID_Valuator_)) ((Fl_Valuator*)o)->value(strtod(f.read_word(),0));
+    if (is_a(ID_Spinner)) ((Fl_Spinner*)o)->value(strtod(f.read_word(),0));
+  } else if ( (!strcmp(c,"slider_size") || !strcmp(c,"size")) && is_a(ID_Slider)) {
     ((Fl_Slider*)o)->slider_size(strtod(f.read_word(),0));
   } else if (!strcmp(c,"textfont")) {
     if (sscanf(f.read_word(),"%d",&x) == 1) {ft=(Fl_Font)x; textstuff(1,ft,s,cc);}
@@ -3427,9 +3487,9 @@ void Fl_Widget_Type::read_property(Fd_Project_Reader &f, const char *c) {
   } else if (!strcmp(c,"shortcut")) {
     int shortcut = (int)strtol(f.read_word(),0,0);
     if (is_button()) ((Fl_Button*)o)->shortcut(shortcut);
-    else if (is_input()) ((Fl_Input_*)o)->shortcut(shortcut);
-    else if (is_value_input()) ((Fl_Value_Input*)o)->shortcut(shortcut);
-    else if (is_text_display()) ((Fl_Text_Display*)o)->shortcut(shortcut);
+    else if (is_a(ID_Input)) ((Fl_Input_*)o)->shortcut(shortcut);
+    else if (is_a(ID_Value_Input)) ((Fl_Value_Input*)o)->shortcut(shortcut);
+    else if (is_a(ID_Text_Display)) ((Fl_Text_Display*)o)->shortcut(shortcut);
   } else {
     if (!strncmp(c,"code",4)) {
       int n = atoi(c+4);
@@ -3475,7 +3535,7 @@ int Fl_Widget_Type::read_fdesign(const char* propname, const char* value) {
     if (sscanf(value,"%f %f %f %f",&x,&y,&w,&h) == 4) {
       if (fdesign_flip) {
         Fl_Type *p;
-        for (p = parent; p && !p->is_window(); p = p->parent) {/*empty*/}
+        for (p = parent; p && !p->is_a(ID_Window); p = p->parent) {/*empty*/}
         if (p && p->is_widget()) y = ((Fl_Widget_Type*)p)->o->h()-(y+h);
       }
       x += pasteoffset;
@@ -3626,7 +3686,7 @@ void Fl_Widget_Type::copy_properties() {
   }
 
   // copy all attributes specific to widgets derived from Fl_Input_
-  if (is_input()) {
+  if (is_a(ID_Input)) {
     Fl_Input_* d = (Fl_Input_*)live_widget, *s = (Fl_Input_*)o;
     d->shortcut(s->shortcut());
     d->textfont(ff);
@@ -3635,7 +3695,7 @@ void Fl_Widget_Type::copy_properties() {
   }
 
   // copy all attributes specific to widgets derived from Fl_Value_Input
-  if (is_value_input()) {
+  if (is_a(ID_Value_Input)) {
     Fl_Value_Input* d = (Fl_Value_Input*)live_widget, *s = (Fl_Value_Input*)o;
     d->shortcut(s->shortcut());
     d->textfont(ff);
@@ -3644,7 +3704,7 @@ void Fl_Widget_Type::copy_properties() {
   }
 
   // copy all attributes specific to widgets derived from Fl_Text_Display
-  if (is_text_display()) {
+  if (is_a(ID_Text_Display)) {
     Fl_Text_Display* d = (Fl_Text_Display*)live_widget, *s = (Fl_Text_Display*)o;
     d->shortcut(s->shortcut());
     d->textfont(ff);
@@ -3653,20 +3713,20 @@ void Fl_Widget_Type::copy_properties() {
   }
 
   // copy all attributes specific to Fl_Valuator and derived classes
-  if (is_valuator()) {
+  if (is_a(ID_Valuator_)) {
     Fl_Valuator* d = (Fl_Valuator*)live_widget, *s = (Fl_Valuator*)o;
     d->minimum(s->minimum());
     d->maximum(s->maximum());
     d->step(s->step());
     d->value(s->value());
-    if (is_valuator()>=2) {
+    if (is_a(ID_Slider)) {
       Fl_Slider *d = (Fl_Slider*)live_widget, *s = (Fl_Slider*)o;
       d->slider_size(s->slider_size());
     }
   }
 
   // copy all attributes specific to Fl_Spinner and derived classes
-  if (is_spinner()) {
+  if (is_a(ID_Spinner)) {
     Fl_Spinner* d = (Fl_Spinner*)live_widget, *s = (Fl_Spinner*)o;
     d->minimum(s->minimum());
     d->maximum(s->maximum());

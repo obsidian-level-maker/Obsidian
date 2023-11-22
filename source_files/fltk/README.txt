@@ -3,10 +3,10 @@ README - Fast Light Tool Kit (FLTK) Version 1.4.0
 
 WHAT IS FLTK?
 
-    The Fast Light Tool Kit is a cross-platform C++ GUI toolkit for 
-    UNIX(r)/Linux(r) (X11 or Wayland), Microsoft(r) Windows(r), and 
-    macOS(r). FLTK provides modern GUI functionality without the bloat 
-    and supports 3D graphics via OpenGL(r) and its built-in GLUT 
+    The Fast Light Tool Kit is a cross-platform C++ GUI toolkit for
+    UNIX(r)/Linux(r) (X11 or Wayland), Microsoft(r) Windows(r), and
+    macOS(r). FLTK provides modern GUI functionality without the bloat
+    and supports 3D graphics via OpenGL(r) and its built-in GLUT
     emulation. It was originally developed by Mr. Bill Spitzak and is
     currently maintained by a small group of developers across
     the world with a central repository in the US.
@@ -14,7 +14,7 @@ WHAT IS FLTK?
 
 LICENSING
 
-    FLTK comes with complete free source code. FLTK is available
+    FLTK comes with complete free source code.  FLTK is available
     under the terms of the GNU Library General Public License.
     Contrary to popular belief, it can be used in commercial
     software! (Even Bill Gates could use it.)
@@ -70,8 +70,9 @@ BUILDING AND INSTALLING FLTK UNDER UNIX AND macOS
         --enable-xdbe           - Enable the X double-buffer extension
         --enable-xft            - Enable the Xft library (anti-aliased fonts)
         --enable-pango          - Draw text with the pango library
-        --enable-wayland        - Use the Wayland system for handling windows
-
+        --disable-wayland       - Force building for X11 only (no Wayland support)
+        --enable-x11            - Force building for X11 (macOS and Cygwin)
+        --disable-x11           - Force building for Wayland only (Linux/Unix)
         --bindir=/path          - Set the location for executables
                                   [default = /usr/local/bin]
         --libdir=/path          - Set the location for libraries

@@ -19,6 +19,7 @@
 #include "Fl_System_Driver.H"
 
 #include <stdio.h>
+#include <math.h> // for trunc()
 
 /**
   \file Fl_Timeout.cxx
@@ -35,7 +36,7 @@ static int num_timers = 0;    // DEBUG
 #endif
 
 /**
- Set a time stamp at this point in time.
+ Set a time stamp at this point in time with optional signed offset in seconds.
 
  The time stamp is an opaque type and does not represent the time of day or
  some time and date in the calendar. It is used with Fl::seconds_between() and
@@ -54,6 +55,9 @@ static int num_timers = 0;    // DEBUG
  Function seconds_since() below uses this to subtract two timestamps which is
  always a correct delta time with milliseconds or microseconds resolution.
 
+ \param offset optional signed offset in seconds added to the current time
+ \return this moment in time offset by \p offset as an opaque time stamp
+
  \todo Fl::system_driver()->gettime() was implemented for the Forms library and
  has a limited resolution (on Windows: milliseconds). On POSIX platforms it uses
  gettimeofday() with microsecond resolution.
@@ -61,22 +65,34 @@ static int num_timers = 0;    // DEBUG
  timers which requires a new dependency: winmm.lib (dll). This could be a future
  improvement, maybe set as a build option or generally (requires Win95 or 98?).
 
- \return this moment in time as an opaque time stamp
-
  \see Fl::seconds_since(Fl_Timestamp& then)
-    Fl::seconds_between(Fl_Timestamp& back, Fl_Timestamp& further_back)
-    Fl::ticks_since(Fl_Timestamp& then)
-    Fl::ticks_between(Fl_Timestamp& back, Fl_Timestamp& further_back)
+ \see Fl::seconds_between(Fl_Timestamp& back, Fl_Timestamp& further_back)
+ \see Fl::ticks_since(Fl_Timestamp& then)
+ \see Fl::ticks_between(Fl_Timestamp& back, Fl_Timestamp& further_back)
  */
-Fl_Timestamp Fl::now() {
+Fl_Timestamp Fl::now(double offset) {
   Fl_Timestamp ts;
   time_t sec;
   int usec;
   Fl::system_driver()->gettime(&sec, &usec);
-  ts.sec = (long)sec;
+  ts.sec = sec;
   ts.usec = usec;
+  if (offset) {
+    sec = (time_t)trunc(offset);
+    usec = int((offset - sec) * 1000000);
+    ts.sec += sec;
+    if (usec + ts.usec >= 1000000) {
+      ts.sec++;
+      ts.usec += (usec - 1000000);
+    } else if (usec + ts.usec < 0) {
+      ts.sec--;
+      ts.usec += (usec + 1000000);
+    } else
+      ts.usec += usec;
+  }
   return ts; // C++ will copy the result into the lvalue for us
 }
+
 
 /**
  Return the time in seconds between now and a previously taken time stamp.
@@ -85,7 +101,7 @@ Fl_Timestamp Fl::now() {
  \return elapsed seconds and fractions of a second
 
  \see Fl::seconds_between(Fl_Timestamp& back, Fl_Timestamp& further_back)
-    Fl::now()
+    \see Fl::now()  \see Fl::distant_past()
  */
 double Fl::seconds_since(Fl_Timestamp& then) {
   Fl_Timestamp ts_now = Fl::now();
@@ -99,7 +115,7 @@ double Fl::seconds_since(Fl_Timestamp& then) {
  \param[in] further_back an even earlier time stamp
  \return elapsed seconds and fractions of a second
 
- \see Fl::seconds_since(Fl_Timestamp& then), Fl::now()
+ \see Fl::seconds_since(Fl_Timestamp& then) \see  Fl::now()
  */
 double Fl::seconds_between(Fl_Timestamp& back, Fl_Timestamp& further_back) {
   return double((back.sec - further_back.sec) + (back.usec - further_back.usec) / 1000000.);
@@ -115,7 +131,7 @@ double Fl::seconds_between(Fl_Timestamp& back, Fl_Timestamp& further_back) {
  \param[in] then a previously taken time stamp
  \return elapsed ticks in 60th of a second
 
- \see Fl::ticks_between(Fl_Timestamp& back, Fl_Timestamp& further_back), Fl::now()
+ \see Fl::ticks_between(Fl_Timestamp& back,  Fl_Timestamp& further_back) \see  Fl::now()
  */
 long Fl::ticks_since(Fl_Timestamp& then) {
   Fl_Timestamp ts_now = Fl::now();
@@ -129,10 +145,10 @@ long Fl::ticks_since(Fl_Timestamp& then) {
  \param[in] further_back an even earlier time stamp
  \return elapsed ticks in 60th of a second
 
- \see Fl::ticks_since(Fl_Timestamp& then), Fl::now()
+ \see Fl::ticks_since(Fl_Timestamp& then) \see  Fl::now()
  */
 long Fl::ticks_between(Fl_Timestamp& back, Fl_Timestamp& further_back) {
-  return (back.sec-further_back.sec)*60 + (back.usec-further_back.usec)/16666;
+  return long((back.sec-further_back.sec)*60 + (back.usec-further_back.usec)/16666);
 }
 
 

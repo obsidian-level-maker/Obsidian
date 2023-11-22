@@ -193,6 +193,9 @@ protected:
   /* Draw the text in the passed bounding box. */
   void drawtext(int, int, int, int);
 
+  /* Draw the text in the passed bounding box. */
+  void drawtext(int, int, int, int, bool draw_active);
+
   /* Move the cursor to the column given by up_down_pos. */
   int up_down_position(int, int keepmark=0);
 
@@ -236,6 +239,12 @@ public:
   int value(const char*, int);
 
   /* Changes the widget text. */
+  int value(int value);
+
+  /* Changes the widget text. */
+  int value(double value);
+
+  /* Changes the widget text. */
   int static_value(const char*);
 
   /* Changes the widget text. */
@@ -252,6 +261,10 @@ public:
       \see Fl_Input_::value(const char*)
   */
   const char* value() const {return value_;}
+
+  int ivalue() const;
+
+  double dvalue() const;
 
   /* Returns the Unicode character at index \p i. */
   unsigned int index(int i) const;

@@ -19,8 +19,6 @@
 --
 ------------------------------------------------------------------------
 
-local bit = require("bit")
-
 WADFAB_ENTITIES =
 {
   -- monster spots

@@ -18,6 +18,7 @@
 
 #include "Fl_Group_Type.h"
 #include "alignment_panel.h"
+#include "shell_command.h"  // get and set Fl_String preferences
 #include "file.h"
 
 #include <FL/fl_draw.H>
@@ -29,7 +30,7 @@
 
 // TODO: warning if the user wants to change builtin layouts
 // TODO: move panel to global settings panel (move load & save to main pulldown, or to toolbox?)
-// INFO: how about a small tool box for quick preset selection and diabeling of individual snaps?
+// INFO: how about a small tool box for quick preset selection and disabeling of individual snaps?
 
 void select_layout_suite_cb(Fl_Widget *, void *user_data);
 
@@ -42,7 +43,7 @@ static Fd_Layout_Preset fltk_app = {
   25, 25,               // tabs:      t, b
   20, 10, 4,            // widget_x:  min, inc, gap
   20,  4, 8,            // widget_y:  min, inc, gap
-  0, 14, 0, 14          // labelfont/size, textfont/size
+  0, 14, -1, 14          // labelfont/size, textfont/size
 };
 static Fd_Layout_Preset fltk_dlg = {
   10, 10, 10, 10, 0, 0, // window:    l, r, t, b, gx, gy
@@ -50,7 +51,7 @@ static Fd_Layout_Preset fltk_dlg = {
   20, 20,               // tabs:      t, b
   20, 10, 5,            // widget_x:  min, inc, gap
   20,  5, 5,            // widget_y:  min, inc, gap
-  0, 11, 0, 11          // labelfont/size, textfont/size
+  0, 11, -1, 11          // labelfont/size, textfont/size
 };
 static Fd_Layout_Preset fltk_tool = {
   10, 10, 10, 10, 0, 0, // window:    l, r, t, b, gx, gy
@@ -58,7 +59,7 @@ static Fd_Layout_Preset fltk_tool = {
   18, 18,               // tabs:      t, b
   16,  8, 2,            // widget_x:  min, inc, gap
   16,  4, 2,            // widget_y:  min, inc, gap
-  0, 10, 0, 10          // labelfont/size, textfont/size
+  0, 10, -1, 10          // labelfont/size, textfont/size
 };
 
 static Fd_Layout_Preset grid_app = {
@@ -67,7 +68,7 @@ static Fd_Layout_Preset grid_app = {
   24, 24,                 // tabs:      t, b
   12, 6, 6,               // widget_x:  min, inc, gap
   12, 6, 6,               // widget_y:  min, inc, gap
-  0, 14, 0, 14            // labelfont/size, textfont/size
+  0, 14, -1, 14            // labelfont/size, textfont/size
 };
 
 static Fd_Layout_Preset grid_dlg = {
@@ -76,7 +77,7 @@ static Fd_Layout_Preset grid_dlg = {
   20, 20,                 // tabs:      t, b
   10, 5, 5,               // widget_x:  min, inc, gap
   10, 5, 5,               // widget_y:  min, inc, gap
-  0, 12, 0, 12            // labelfont/size, textfont/size
+  0, 12, -1, 12            // labelfont/size, textfont/size
 };
 
 static Fd_Layout_Preset grid_tool = {
@@ -85,7 +86,7 @@ static Fd_Layout_Preset grid_tool = {
   16, 16,           // tabs:      t, b
   8, 4, 4,          // widget_x:  min, inc, gap
   8, 4, 4,          // widget_y:  min, inc, gap
-  0, 10, 0, 10      // labelfont/size, textfont/size
+  0, 10, -1, 10      // labelfont/size, textfont/size
 };
 
 static Fd_Layout_Suite static_suite_list[] = {
@@ -111,7 +112,6 @@ Fd_Layout_List g_layout_list;
 // ---- Callbacks ------------------------------------------------------ MARK: -
 
 void layout_suite_marker(Fl_Widget *, void *) {
-  assert(0);
   // intentionally left empty
 }
 
@@ -145,6 +145,9 @@ void edit_layout_preset_cb(Fl_Button *w, long user_data) {
 
 // ---- Fd_Layout_Suite ------------------------------------------------ MARK: -
 
+/**
+ Write presets to a Preferences database.
+ */
 void Fd_Layout_Preset::write(Fl_Preferences &prefs) {
   assert(this);
   Fl_Preferences p_win(prefs, "Window");
@@ -182,6 +185,9 @@ void Fd_Layout_Preset::write(Fl_Preferences &prefs) {
   p_lyt.set("textsize", textsize);
 }
 
+/**
+ Read presets from a Preferences database.
+ */
 void Fd_Layout_Preset::read(Fl_Preferences &prefs) {
   assert(this);
   Fl_Preferences p_win(prefs, "Window");
@@ -219,6 +225,9 @@ void Fd_Layout_Preset::read(Fl_Preferences &prefs) {
   p_lyt.get("textsize", textsize, 14);
 }
 
+/**
+ Write presets to an .fl project file.
+ */
 void Fd_Layout_Preset::write(Fd_Project_Writer *out) {
   out->write_string("    preset { 1\n"); // preset format version
   out->write_string("      %d %d %d %d %d %d\n",
@@ -238,6 +247,9 @@ void Fd_Layout_Preset::write(Fd_Project_Writer *out) {
   out->write_string("    }\n"); // preset format version
 }
 
+/**
+ Read presets from an .fl project file.
+ */
 void Fd_Layout_Preset::read(Fd_Project_Reader *in) {
   const char *key;
   key = in->read_word(1);
@@ -291,9 +303,24 @@ void Fd_Layout_Preset::read(Fd_Project_Reader *in) {
   }
 }
 
+/**
+ Return the preferred text size, but make sure it's not 0.
+ */
+int Fd_Layout_Preset::textsize_not_null() {
+  // try the user selected text size
+  if (textsize > 0) return textsize;
+  // if the user did not set one, try the label size
+  if (labelsize > 0) return labelsize;
+  // if that doesn;t work, fall back to the default value
+  return 14;
+}
+
 
 // ---- Fd_Layout_Suite ------------------------------------------------ MARK: -
 
+/**
+ Write a presets suite to a Preferences database.
+ */
 void Fd_Layout_Suite::write(Fl_Preferences &prefs) {
   assert(this);
   assert(name_);
@@ -305,6 +332,9 @@ void Fd_Layout_Suite::write(Fl_Preferences &prefs) {
   }
 }
 
+/**
+ Read a presets suite from a Preferences database.
+ */
 void Fd_Layout_Suite::read(Fl_Preferences &prefs) {
   assert(this);
   for (int i = 0; i < 3; ++i) {
@@ -314,6 +344,9 @@ void Fd_Layout_Suite::read(Fl_Preferences &prefs) {
   }
 }
 
+/**
+ Write a presets suite to an .fl project file.
+ */
 void Fd_Layout_Suite::write(Fd_Project_Writer *out) {
   out->write_string("  suite {\n");
   out->write_string("    name "); out->write_word(name_); out->write_string("\n");
@@ -323,6 +356,9 @@ void Fd_Layout_Suite::write(Fd_Project_Writer *out) {
   out->write_string("  }\n");
 }
 
+/**
+ Read a presets suite from an .fl project file.
+ */
 void Fd_Layout_Suite::read(Fd_Project_Reader *in) {
   const char *key;
   key = in->read_word(1);
@@ -347,6 +383,10 @@ void Fd_Layout_Suite::read(Fd_Project_Reader *in) {
   }
 }
 
+/**
+ \brief Update the menu_label to show a symbol representing the storage location.
+ Also updates the FLUID user interface.
+ */
 void Fd_Layout_Suite::update_label() {
   Fl_String sym;
   switch (storage_) {
@@ -362,6 +402,10 @@ void Fd_Layout_Suite::update_label() {
   g_layout_list.update_menu_labels();
 }
 
+/**
+ \brief Update the Suite name and the Suite menu_label.
+ Also updates the FLUID user interface.
+ */
 void Fd_Layout_Suite::name(const char *n) {
   if (name_)
     ::free(name_);
@@ -372,13 +416,19 @@ void Fd_Layout_Suite::name(const char *n) {
   update_label();
 }
 
+/**
+ Initialize the class for first use.
+ */
 void Fd_Layout_Suite::init() {
   name_ = NULL;
   menu_label = NULL;
   layout[0] = layout[1] = layout[2] = NULL;
-  storage_ = 0;
+  storage_ = FD_STORE_INTERNAL;
 }
 
+/**
+ Free all allocated resources.
+ */
 Fd_Layout_Suite::~Fd_Layout_Suite() {
   if (storage_ == FD_STORE_INTERNAL) return;
   if (name_) ::free(name_);
@@ -389,6 +439,9 @@ Fd_Layout_Suite::~Fd_Layout_Suite() {
 
 // ---- Fd_Layout_List ------------------------------------------------- MARK: -
 
+/**
+ Draw a little FLUID beaker symbol.
+ */
 static void fd_beaker(Fl_Color c) {
   fl_color(221);
   fl_begin_polygon();
@@ -414,6 +467,9 @@ static void fd_beaker(Fl_Color c) {
   fl_end_line();
 }
 
+/**
+ Draw a user silhouette symbol
+ */
 static void fd_user(Fl_Color c) {
   fl_color(245);
   fl_begin_complex_polygon();
@@ -429,6 +485,9 @@ static void fd_user(Fl_Color c) {
   fl_end_line();
 }
 
+/**
+ Draw a document symbol.
+ */
 static void fd_project(Fl_Color c) {
   Fl_Color fc = FL_LIGHT2;
   fl_color(fc);
@@ -464,6 +523,9 @@ static void fd_project(Fl_Color c) {
   fl_end_line();
 }
 
+/**
+ Draw a 3 1/2" floppy symbol.
+ */
 void fd_file(Fl_Color c) {
   Fl_Color fl = FL_LIGHT2;
   Fl_Color fc = FL_DARK3;
@@ -515,7 +577,9 @@ void fd_file(Fl_Color c) {
   fl_end_loop();
 }
 
-
+/**
+ Instantiate the class that holds a list of all layouts and manages the UI.
+ */
 Fd_Layout_List::Fd_Layout_List()
 : main_menu_(main_layout_submenu_),
   choice_menu_(static_choice_menu),
@@ -524,8 +588,7 @@ Fd_Layout_List::Fd_Layout_List()
   list_capacity_(2),
   list_is_static_(true),
   current_suite_(0),
-  current_preset_(0),
-  filename_(NULL)
+  current_preset_(0)
 {
   fl_add_symbol("fd_beaker", fd_beaker, 1);
   fl_add_symbol("fd_user", fd_user, 1);
@@ -533,6 +596,9 @@ Fd_Layout_List::Fd_Layout_List()
   fl_add_symbol("fd_file", fd_file, 1);
 }
 
+/**
+ Release allocated resources.
+ */
 Fd_Layout_List::~Fd_Layout_List() {
   assert(this);
   if (!list_is_static_) {
@@ -545,9 +611,11 @@ Fd_Layout_List::~Fd_Layout_List() {
     }
     ::free(list_);
   }
-  if (filename_) ::free(filename_);
 }
 
+/**
+ Update the Setting dialog and menus to reflect the current Layout selection state.
+ */
 void Fd_Layout_List::update_dialogs() {
   static Fl_Menu_Item *preset_menu = NULL;
   if (!preset_menu) {
@@ -569,6 +637,9 @@ void Fd_Layout_List::update_dialogs() {
   main_menu_[current_suite_].setonly(main_menu_);
 }
 
+/**
+ Refresh the label pointers for both pulldown menus.
+ */
 void Fd_Layout_List::update_menu_labels() {
   for (int i=0; i<list_size_; i++) {
     main_menu_[i].label(list_[i].menu_label);
@@ -576,23 +647,31 @@ void Fd_Layout_List::update_menu_labels() {
   }
 }
 
-int Fd_Layout_List::load(const char *filename) {
+/**
+ Load all user layouts from the FLUID user preferences.
+ */
+int Fd_Layout_List::load(const Fl_String &filename) {
   remove_all(FD_STORE_FILE);
-  Fl_Preferences prefs(filename, "layout.fluid.fltk.org", NULL);
+  Fl_Preferences prefs(filename.c_str(), "layout.fluid.fltk.org", NULL, Fl_Preferences::C_LOCALE);
   read(prefs, FD_STORE_FILE);
   return 0;
 }
 
-int Fd_Layout_List::save(const char *filename) {
+/**
+ Save all user layouts to the FLUID user preferences.
+ */
+int Fd_Layout_List::save(const Fl_String &filename) {
   assert(this);
-  assert(filename);
-  Fl_Preferences prefs(filename, "layout.fluid.fltk.org", NULL);
+  Fl_Preferences prefs(filename.c_str(), "layout.fluid.fltk.org", NULL, (Fl_Preferences::Root)(Fl_Preferences::C_LOCALE|Fl_Preferences::CLEAR));
   prefs.clear();
   write(prefs, FD_STORE_FILE);
   return 0;
 }
 
-void Fd_Layout_List::write(Fl_Preferences &prefs, int storage) {
+/**
+ Write Suite and Layout selection and selected layout data to Preferences database.
+ */
+void Fd_Layout_List::write(Fl_Preferences &prefs, Fd_Tool_Store storage) {
   Fl_Preferences prefs_list(prefs, "Layouts");
   prefs_list.clear();
   prefs_list.set("current_suite", list_[current_suite()].name_);
@@ -607,11 +686,14 @@ void Fd_Layout_List::write(Fl_Preferences &prefs, int storage) {
   }
 }
 
-void Fd_Layout_List::read(Fl_Preferences &prefs, int storage) {
+/**
+ Read Suite and Layout selection and selected layout data to Preferences database.
+ */
+void Fd_Layout_List::read(Fl_Preferences &prefs, Fd_Tool_Store storage) {
   Fl_Preferences prefs_list(prefs, "Layouts");
   Fl_String cs;
   int cp = 0;
-  prefs_list.get("current_suite", cs, "");
+  preferences_get(prefs_list, "current_suite", cs, "");
   prefs_list.get("current_preset", cp, 0);
   for (int i = 0; i < prefs_list.groups(); ++i) {
     Fl_Preferences prefs_suite(prefs_list, Fl_Preferences::Name(i));
@@ -629,7 +711,18 @@ void Fd_Layout_List::read(Fl_Preferences &prefs, int storage) {
   update_dialogs();
 }
 
+/**
+ Write Suite and Layout selection and project layout data to an .fl project file.
+ */
 void Fd_Layout_List::write(Fd_Project_Writer *out) {
+  // Don't write the Snap field if no custom layout was used
+  if ((current_suite()==0) && (current_preset()==0)) {
+    int nSuite = 0;
+    for (int i=0; i<list_size_; i++) {
+      if (list_[i].storage_ == FD_STORE_PROJECT) nSuite++;
+    }
+    if (nSuite == 0) return;
+  }
   out->write_string("\nsnap {\n  ver 1\n");
   out->write_string("  current_suite "); out->write_word(list_[current_suite()].name_); out->write_string("\n");
   out->write_string("  current_preset %d\n", current_preset());
@@ -641,6 +734,9 @@ void Fd_Layout_List::write(Fd_Project_Writer *out) {
   out->write_string("}");
 }
 
+/**
+ Read Suite and Layout selection and project layout data from an .fl project file.
+ */
 void Fd_Layout_List::read(Fd_Project_Reader *in) {
   const char *key;
   key = in->read_word(1);
@@ -674,6 +770,10 @@ void Fd_Layout_List::read(Fd_Project_Reader *in) {
   }
 }
 
+/**
+ Set the current Suite.
+ \param[in] ix index into list of suites
+ */
 void Fd_Layout_List::current_suite(int ix) {
   assert(ix >= 0);
   assert(ix < list_size_);
@@ -681,6 +781,11 @@ void Fd_Layout_List::current_suite(int ix) {
   layout = list_[current_suite_].layout[current_preset_];
 }
 
+/**
+ Set the current Suite.
+ \param[in] arg_name name of the selected suite
+ \return if no name is given or the name is not found, keep the current suite selected
+ */
 void Fd_Layout_List::current_suite(Fl_String arg_name) {
   if (arg_name.empty()) return;
   for (int i = 0; i < list_size_; ++i) {
@@ -692,6 +797,10 @@ void Fd_Layout_List::current_suite(Fl_String arg_name) {
   }
 }
 
+/**
+ Select a Preset within the current Suite.
+ \param[in] ix 0 = application, 1 = dialog, 2 = toolbox
+ */
 void Fd_Layout_List::current_preset(int ix) {
   assert(ix >= 0);
   assert(ix < 3);
@@ -728,15 +837,15 @@ void Fd_Layout_List::capacity(int n) {
     new_choice_menu[i] = choice_menu_[i];
   if (!list_is_static_) ::free(choice_menu_);
   choice_menu_ = new_choice_menu;
-  layout_choice->menu(choice_menu_);
+  if (layout_choice) layout_choice->menu(choice_menu_);
 
   list_capacity_ = n;
   list_is_static_ = false;
 }
 
 /**
- Clone the currently selected suite and append it to the list.
- Selectes the new layout and updates the UI.
+ \brief Clone the currently selected suite and append it to the list.
+ Selects the new layout and updates the UI.
  */
 int Fd_Layout_List::add(const char *name) {
   if (list_size_ == list_capacity_) {
@@ -751,7 +860,7 @@ int Fd_Layout_List::add(const char *name) {
     new_suite.layout[i] = new Fd_Layout_Preset;
     ::memcpy(new_suite.layout[i], old_suite.layout[i], sizeof(Fd_Layout_Preset));
   }
-  int new_storage = old_suite.storage_;
+  Fd_Tool_Store new_storage = old_suite.storage_;
   if (new_storage == FD_STORE_INTERNAL)
     new_storage = FD_STORE_USER;
   new_suite.storage(new_storage);
@@ -765,6 +874,9 @@ int Fd_Layout_List::add(const char *name) {
   return n;
 }
 
+/**
+ Rename the current Suite.
+ */
 void Fd_Layout_List::rename(const char *name) {
   int n = current_suite();
   list_[n].name(name);
@@ -772,6 +884,10 @@ void Fd_Layout_List::rename(const char *name) {
   choice_menu_[n].label(list_[n].menu_label);
 }
 
+/**
+ Remove the given suite.
+ \param[in] ix index into list of suites
+ */
 void Fd_Layout_List::remove(int ix) {
   int tail = list_size_-ix-1;
   if (tail) {
@@ -785,7 +901,11 @@ void Fd_Layout_List::remove(int ix) {
     current_suite(list_size_ - 1);
 }
 
-void Fd_Layout_List::remove_all(int storage) {
+/**
+ Remove all Suites that use the given storage attribute.
+ \param[in] storage storage attribute, see FD_STORE_INTERNAL, etc.
+ */
+void Fd_Layout_List::remove_all(Fd_Tool_Store storage) {
   for (int i=list_size_-1; i>=0; --i) {
     if (list_[i].storage_ == storage)
       remove(i);
@@ -801,8 +921,8 @@ static void draw_right_brace(const Fl_Widget *w);
 static void draw_top_brace(const Fl_Widget *w);
 static void draw_bottom_brace(const Fl_Widget *w);
 static void draw_grid(int x, int y, int dx, int dy);
-static void draw_width(int x, int y, int r, Fl_Align a);
-static void draw_height(int x, int y, int b, Fl_Align a);
+void draw_width(int x, int y, int r, Fl_Align a);
+void draw_height(int x, int y, int b, Fl_Align a);
 
 static int nearest(int x, int left, int grid, int right=0x7fff) {
   int grid_x = ((x-left+grid/2)/grid)*grid+left;
@@ -816,11 +936,11 @@ static bool in_window(Fd_Snap_Data &d) {
 }
 
 static bool in_group(Fd_Snap_Data &d) {
-  return (d.wgt && d.wgt->parent && d.wgt->parent->is_group() && d.wgt->parent != d.win);
+  return (d.wgt && d.wgt->parent && d.wgt->parent->is_a(ID_Group) && d.wgt->parent != d.win);
 }
 
 static bool in_tabs(Fd_Snap_Data &d) {
-  return (d.wgt && d.wgt->parent && d.wgt->parent->is_tabs());
+  return (d.wgt && d.wgt->parent && d.wgt->parent->is_a(ID_Tabs));
 }
 
 static Fl_Group *parent(Fd_Snap_Data &d) {
@@ -830,8 +950,30 @@ static Fl_Group *parent(Fd_Snap_Data &d) {
 // ---- Fd_Snap_Action ------------------------------------------------- MARK: -
 
 /** \class Fd_Snap_Action
+
+ When a user drags one or more widgets, snap actions can be defined that provide
+ hints if a preferred widget position or size is nearby. The user's motion is
+ then directed towards the nearest preferred position, and the widget selection
+ snaps into place.
+
+ FLUID provides a list of various snap actions. Every snap action uses the data
+ from the motion event and combines it with the sizes and positions of all other
+ widgets in the layout.
+
+ Common snap actions include gaps and margins, but also alignments and
+ simple grid positions.
  */
 
+/**
+ \brief Check if a snap action has reached a preferred x position.
+ \param[inout] d current event data
+ \param[in] x_ref position of moving point
+ \param[in] x_snap position of target point
+ \return 1 if the points are not within range and won;t be considered
+ \return 0 if the point is as close as another in a previous action
+ \return -1 if this point is closer than any previous check, and this is the
+    new distance to beat.
+ */
 int Fd_Snap_Action::check_x_(Fd_Snap_Data &d, int x_ref, int x_snap) {
   int dd = x_ref + d.dx - x_snap;
   int d2 = abs(dd);
@@ -843,6 +985,10 @@ int Fd_Snap_Action::check_x_(Fd_Snap_Data &d, int x_ref, int x_snap) {
   return -1;
 }
 
+/**
+ \brief Check if a snap action has reached a preferred y position.
+ \see Fd_Snap_Action::check_x_(Fd_Snap_Data &d, int x_ref, int x_snap)
+ */
 int Fd_Snap_Action::check_y_(Fd_Snap_Data &d, int y_ref, int y_snap) {
   int dd = y_ref + d.dy - y_snap;
   int d2 = abs(dd);
@@ -854,6 +1000,10 @@ int Fd_Snap_Action::check_y_(Fd_Snap_Data &d, int y_ref, int y_snap) {
   return -1;
 }
 
+/**
+ \brief Check if a snap action has reached a preferred x and y position.
+ \see Fd_Snap_Action::check_x_(Fd_Snap_Data &d, int x_ref, int x_snap)
+ */
 void Fd_Snap_Action::check_x_y_(Fd_Snap_Data &d, int x_ref, int x_snap, int y_ref, int y_snap) {
   int ddx = x_ref + d.dx - x_snap;
   int d2x = abs(ddx);
@@ -869,6 +1019,12 @@ void Fd_Snap_Action::check_x_y_(Fd_Snap_Data &d, int x_ref, int x_snap, int y_re
   }
 }
 
+/**
+ \brief Check if a snap action was applied to the current event.
+ This method is used to determine if a visual indicator for this snap action
+ should be drawn.
+ \param[inout] d current event data
+ */
 bool Fd_Snap_Action::matches(Fd_Snap_Data &d) {
   switch (type) {
     case 1: return (d.drag & mask) && (eex == ex) && (d.dx == dx);
@@ -878,6 +1034,10 @@ bool Fd_Snap_Action::matches(Fd_Snap_Data &d) {
   return false;
 }
 
+/**
+ \brief Run through all possible snap actions and store the winning coordinates in eex and eey.
+ \param[inout] d current event data
+ */
 void Fd_Snap_Action::check_all(Fd_Snap_Data &data) {
   for (int i=0; list[i]; i++) {
     if (list[i]->mask & data.drag)
@@ -887,6 +1047,13 @@ void Fd_Snap_Action::check_all(Fd_Snap_Data &data) {
   eey = data.ey_out;
 }
 
+/**
+ \brief Draw a visual indicator for all snap actions that were applied during the last check.
+ Only one snap coordinate can win. FLUID chooses the one that is closest to
+ the current user event. If two or more snap actions suggest the same
+ coordinate, all of them will be drawn.
+ \param[inout] d current event data
+ */
 void Fd_Snap_Action::draw_all(Fd_Snap_Data &data) {
   for (int i=0; list[i]; i++) {
     if (list[i]->matches(data))
@@ -922,23 +1089,56 @@ void Fd_Snap_Action::get_move_stepsize(int &x_step, int &y_step) {
   }
 }
 
+/** Fix the given size to the same or next bigger snap position. */
+void Fd_Snap_Action::better_size(int &w, int &h) {
+  int x_min = 1, y_min = 1, x_inc = 1, y_inc = 1;
+  get_resize_stepsize(x_inc, y_inc);
+  if (x_inc < 1) x_inc = 1;
+  if (y_inc < 1) y_inc = 1;
+  if ((layout->widget_min_w > 1) && (layout->widget_min_h > 1)) {
+    x_min = layout->widget_min_w;
+    y_min = layout->widget_min_h;
+  } else if ((layout->group_grid_x > 1) && (layout->group_grid_y > 1)) {
+    x_min = layout->group_grid_x;
+    y_min = layout->group_grid_y;
+  } else {
+    x_min = x_inc;
+    y_min = y_inc;
+  }
+  int ww = fd_max(w - x_min, 0); w = (w - ww + x_inc - 1) / x_inc; w = w * x_inc; w = w + ww;
+  int hh = fd_max(h - y_min, 0); h = (h - hh + y_inc - 1) / y_inc; h = h * y_inc; h = h + hh;
+}
+
+
 // ---- snapping prototypes -------------------------------------------- MARK: -
 
+/**
+ Base class for all actions that drag the left side or the entire widget.
+ */
 class Fd_Snap_Left : public Fd_Snap_Action {
 public:
   Fd_Snap_Left() { type = 1; mask = FD_LEFT|FD_DRAG; }
 };
 
+/**
+ Base class for all actions that drag the right side or the entire widget.
+ */
 class Fd_Snap_Right : public Fd_Snap_Action {
 public:
   Fd_Snap_Right() { type = 1; mask = FD_RIGHT|FD_DRAG; }
 };
 
+/**
+ Base class for all actions that drag the top side or the entire widget.
+ */
 class Fd_Snap_Top : public Fd_Snap_Action {
 public:
   Fd_Snap_Top() { type = 2; mask = FD_TOP|FD_DRAG; }
 };
 
+/**
+ Base class for all actions that drag the bottom side or the entire widget.
+ */
 class Fd_Snap_Bottom : public Fd_Snap_Action {
 public:
   Fd_Snap_Bottom() { type = 2; mask = FD_BOTTOM|FD_DRAG; }
@@ -946,6 +1146,9 @@ public:
 
 // ---- window snapping ------------------------------------------------ MARK: -
 
+/**
+ Check if the widget hits the left window edge.
+ */
 class Fd_Snap_Left_Window_Edge : public Fd_Snap_Left {
 public:
   void check(Fd_Snap_Data &d) FL_OVERRIDE { clr(); check_x_(d, d.bx, 0); }
@@ -953,6 +1156,9 @@ public:
 };
 Fd_Snap_Left_Window_Edge snap_left_window_edge;
 
+/**
+ Check if the widget hits the right window edge.
+ */
 class Fd_Snap_Right_Window_Edge : public Fd_Snap_Right {
 public:
   void check(Fd_Snap_Data &d) FL_OVERRIDE { clr(); check_x_(d, d.br, d.win->o->w()); }
@@ -960,6 +1166,9 @@ public:
 };
 Fd_Snap_Right_Window_Edge snap_right_window_edge;
 
+/**
+ Check if the widget hits the top window edge.
+ */
 class Fd_Snap_Top_Window_Edge : public Fd_Snap_Top {
 public:
   void check(Fd_Snap_Data &d) FL_OVERRIDE { clr(); check_y_(d, d.by, 0); }
@@ -967,6 +1176,9 @@ public:
 };
 Fd_Snap_Top_Window_Edge snap_top_window_edge;
 
+/**
+ Check if the widget hits the bottom window edge.
+ */
 class Fd_Snap_Bottom_Window_Edge : public Fd_Snap_Bottom {
 public:
   void check(Fd_Snap_Data &d) FL_OVERRIDE { clr(); check_y_(d, d.bt, d.win->o->h()); }
@@ -974,6 +1186,9 @@ public:
 };
 Fd_Snap_Bottom_Window_Edge snap_bottom_window_edge;
 
+/**
+ Check if the widget hits the left window edge plus a user defined margin.
+ */
 class Fd_Snap_Left_Window_Margin : public Fd_Snap_Left {
 public:
   void check(Fd_Snap_Data &d) FL_OVERRIDE {
@@ -1024,6 +1239,9 @@ Fd_Snap_Bottom_Window_Margin snap_bottom_window_margin;
 
 // ---- group snapping ------------------------------------------------- MARK: -
 
+/**
+ Check if the widget hits the left group edge.
+ */
 class Fd_Snap_Left_Group_Edge : public Fd_Snap_Left {
 public:
   void check(Fd_Snap_Data &d) FL_OVERRIDE {
@@ -1073,6 +1291,9 @@ public:
 Fd_Snap_Bottom_Group_Edge snap_bottom_group_edge;
 
 
+/**
+ Check if the widget hits the left group edge plus a user defined margin.
+ */
 class Fd_Snap_Left_Group_Margin : public Fd_Snap_Left {
 public:
   void check(Fd_Snap_Data &d) FL_OVERRIDE {
@@ -1127,6 +1348,9 @@ Fd_Snap_Bottom_Group_Margin snap_bottom_group_margin;
 
 // ----- tabs snapping ------------------------------------------------- MARK: -
 
+/**
+ Check if the widget top hits the Fl_Tabs group top edge plus a user defined margin.
+ */
 class Fd_Snap_Top_Tabs_Margin : public Fd_Snap_Top_Group_Margin {
 public:
   void check(Fd_Snap_Data &d) FL_OVERRIDE {
@@ -1147,6 +1371,9 @@ Fd_Snap_Bottom_Tabs_Margin snap_bottom_tabs_margin;
 
 // ----- grid snapping ------------------------------------------------- MARK: -
 
+/**
+ Base class for grid based snapping.
+ */
 class Fd_Snap_Grid : public Fd_Snap_Action {
 protected:
   int nearest_x, nearest_y;
@@ -1172,6 +1399,9 @@ public:
   }
 };
 
+/**
+ Check if the widget hits window grid coordinates.
+ */
 class Fd_Snap_Window_Grid : public Fd_Snap_Grid {
 public:
   void check(Fd_Snap_Data &d) FL_OVERRIDE {
@@ -1185,6 +1415,9 @@ public:
 };
 Fd_Snap_Window_Grid snap_window_grid;
 
+/**
+ Check if the widget hits group grid coordinates.
+ */
 class Fd_Snap_Group_Grid : public Fd_Snap_Grid {
 public:
   void check(Fd_Snap_Data &d) FL_OVERRIDE {
@@ -1203,6 +1436,9 @@ Fd_Snap_Group_Grid snap_group_grid;
 
 // ----- sibling snapping ---------------------------------------------- MARK: -
 
+/**
+ Base class the check distance to other widgets in the same group.
+ */
 class Fd_Snap_Sibling : public Fd_Snap_Action {
 protected:
   Fl_Widget *best_match;
@@ -1213,7 +1449,7 @@ public:
     clr();
     best_match = NULL;
     if (!d.wgt) return;
-    if (!d.wgt->parent->is_group()) return;
+    if (!d.wgt->parent->is_a(ID_Group)) return;
     int dsib_min = 1024;
     Fl_Group_Type *gt = (Fl_Group_Type*)d.wgt->parent;
     Fl_Group *g = (Fl_Group*)gt->o;
@@ -1237,6 +1473,9 @@ public:
   }
 };
 
+/**
+ Check if widgets have the same x coordinate, so they can be vertically aligned.
+ */
 class Fd_Snap_Siblings_Left_Same : public Fd_Snap_Sibling {
 public:
   Fd_Snap_Siblings_Left_Same() { type = 1; mask = FD_LEFT|FD_DRAG; }
@@ -1249,6 +1488,9 @@ public:
 };
 Fd_Snap_Siblings_Left_Same snap_siblings_left_same;
 
+/**
+ Check if widgets touch left to right, or have a user selected gap left to right.
+ */
 class Fd_Snap_Siblings_Left : public Fd_Snap_Sibling {
 public:
   Fd_Snap_Siblings_Left() { type = 1; mask = FD_LEFT|FD_DRAG; }
@@ -1340,6 +1582,9 @@ Fd_Snap_Siblings_Bottom snap_siblings_bottom;
 
 // ------ widget snapping ---------------------------------------------- MARK: -
 
+/**
+ Snap horizontal resizing to min_w or min_w and a multiple of inc_w.
+ */
 class Fd_Snap_Widget_Ideal_Width : public Fd_Snap_Action {
 public:
   Fd_Snap_Widget_Ideal_Width() { type = 1; mask = FD_LEFT|FD_RIGHT; }
@@ -1394,6 +1639,13 @@ Fd_Snap_Widget_Ideal_Height snap_widget_ideal_height;
 
 // ---- snap actions list ---------------------------------------------- MARK: -
 
+/**
+ /brief The list of all snap actions available to FLUID.
+ New snap actions can be appended to the list. If multiple snap actions
+ with different coordinates, but the same snap distance are found, the last
+ action in the list wins. All snap actions with the same distance and same
+ winning coordinates are drawn in the overlay plane.
+ */
 Fd_Snap_Action *Fd_Snap_Action::list[] = {
   &snap_left_window_edge,
   &snap_right_window_edge,
@@ -1482,7 +1734,7 @@ static void draw_bottom_brace(const Fl_Widget *w) {
   fl_xyline(x-2, y, x+w->w()+1);
 }
 
-static void draw_height(int x, int y, int b, Fl_Align a) {
+void draw_height(int x, int y, int b, Fl_Align a) {
   char buf[16];
   int h = b - y;
   sprintf(buf, "%d", h);
@@ -1516,7 +1768,7 @@ static void draw_height(int x, int y, int b, Fl_Align a) {
   fl_xyline(x - 4, b, x + 4);
 }
 
-static void draw_width(int x, int y, int r, Fl_Align a) {
+void draw_width(int x, int y, int r, Fl_Align a) {
   char buf[16];
   int w = r-x;
   sprintf(buf, "%d", w);

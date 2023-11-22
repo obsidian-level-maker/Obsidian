@@ -5,8 +5,20 @@
 PREFABS.Pillar_round1 =
 {
   file   = "decor/pillar1.wad",
-  where  = "point",
+  map    = "MAP01",
 
-  prob   = 5000,
+  prob   = 70,
+  where  = "point",
   env    = "building",
+
+  
+
+  size   = 80,
+  height = 128,
+
+  bound_z1 = 0,
+  bound_z2 = 128,
+
+  z_fit  = { 56,72 }
 }
+

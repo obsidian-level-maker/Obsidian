@@ -216,6 +216,8 @@ static void _oxy_rounded_box_(int x, int y, int w, int h, Fl_Color bg) {
     fl_rectf(x + h / 2, y, w - h, h);         // rectangle between left and right half-circle
     fl_pie(x + w - h, y, h, h, 0.0, 90.0);    // top-left quarter of circle
     fl_pie(x + w - h, y, h, h, 270.0, 360.0); // bottom-left quarter of circle
+  } else if (w == h) {
+    fl_pie(x, y, w, w, 0.0, 360.0);
   } else {
     fl_pie(x, y, w, w, 0.0, 180.0);           // top half of circle
     fl_rectf(x, y + w / 2, w, h - w);         // rectangle between top and bottom half-circle

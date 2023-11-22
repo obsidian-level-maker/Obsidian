@@ -162,18 +162,37 @@ struct Fl_Menu_Item;
   \image html  tabs_uniform.png "Fl_Tabs with uniform colors"
   \image latex tabs_uniform.png "Fl_Tabs with uniform colors" width=8cm
 
+  If Fl_Tabs has no children, the widget will be drawn as a flat rectangle
+  in the background color set by \ref color().
+
   \b Close \b Button \b on \b Tabs
 
   The Fl_Tabs widget allows you to specify that a child widget should display
   a close button in its tab. If the \ref FL_WHEN_CLOSED flag is set for the
   child widget, an "X" symbol will be displayed to the left of the label text
   in the tab. When the close button is clicked, the child widget's callback
-  function will be called with the \ref FL_REASON_CLOSED argument. It is then
+  function will be called with the \ref FL_REASON_CLOSED reason. It is then
   the responsibility of the child widget to remove itself from the
   Fl_Tabs container.
 
   Tabs that are in a compressed state will not display a close button until
   they are fully expanded.
+
+  \b Overflowing \b Tabs
+
+  When the combined width of the tabs exceeds that of the Fl_Tabs widget, the
+  tabs will overflow. Fl_Tabs provides four options for managing tabs overflow:
+
+  - Fl_Tabs::OVERFLOW_COMPRESS: proportionally compress the tabs to the left and right
+    of the selected tab until they all fit within the widget.
+  - Fl_Tabs::OVERFLOW_CLIP: clips any tabs that extend beyond the right edge of the
+    Fl_Tabs widget, making some tabs unreachable.
+  - Fl_Tabs::OVERFLOW_PULLDOWN: doesn't compress the tabs but instead generates a
+    pulldown menu at the right end of the tabs area, displaying
+    all available tabs.
+  - Fl_Tabs::OVERFLOW_DRAG: maintains the tabs' original sizes, allowing horizontal
+    dragging of the tabs area using the mouse, a horizontal mouse wheel,
+    or the horizontal scrolling gesture on touchpads.
 
   \b Resizing \b Caveats
 
@@ -223,15 +242,14 @@ class FL_EXPORT Fl_Tabs : public Fl_Group {
 
 protected:
 
-  int overflow_type;
-  int tab_offset;
-  int *tab_pos;         // array of x-offsets of tabs per child + 1
-  int *tab_width;       // array of widths of tabs per child + 1
-  int *tab_flags;       // array of tab flag of tabs per child + 1
-  int tab_count;        // array size
-  Fl_Align tab_align_;  // tab label alignment
-  int has_overflow_menu;
-  Fl_Menu_Item* overflow_menu;
+  int overflow_type;    ///< \see OVERFLOW_COMPRESS, OVERFLOW_CLIP, etc.
+  int tab_offset;       ///< for pulldown and drag overflow, this is the horizontal offset when the tabs bar is dragged by the user
+  int *tab_pos;         ///< Array of x-offsets of tabs per child + 1 \see tab_positions()
+  int *tab_width;       ///< Array of widths of tabs per child \see tab_positions()
+  int *tab_flags;       ///< Array of tab flag of tabs per child \see tab_positions()
+  int tab_count;        ///< Array size of tab positions etc. \see tab_positions()
+  Fl_Align tab_align_;  ///< tab label alignment
+  int has_overflow_menu;///< set in OVERFLOW_PULLDOWN mode if tabs overflow. The actual menu array is created only on demand
 
   void check_overflow_menu();
   void handle_overflow_menu();
@@ -248,6 +266,8 @@ protected:
   virtual void draw_tab(int x1, int x2, int W, int H, Fl_Widget* o, int flags, int sel);
   virtual int tab_height();
   virtual int hit_close(Fl_Widget *o, int event_x, int event_y);
+  virtual int hit_overflow_menu(int event_x, int event_y);
+  virtual int hit_tabs_area(int event_x, int event_y);
 
   void draw() FL_OVERRIDE;
 
@@ -270,13 +290,10 @@ public:
 
     \see push(Fl_Widget*).
   */
-  Fl_Widget *push() const {return push_;}
+  Fl_Widget *push() const { return push_; }
   int push(Fl_Widget *);
 
-  // Returns the widget of the tab the user clicked on at event_x/event_y.
   virtual Fl_Widget *which(int event_x, int event_y);
-
-  // Returns the position and size available to be used by its children.
   void client_area(int &rx, int &ry, int &rw, int &rh, int tabh=0);
 
   /**
@@ -290,20 +307,20 @@ public:
     set a different label alignment. FL_ALIGN_IMAGE_NEXT_TO_TEXT is the
     recommended alignment to show the icon left of the text.
   */
-  void tab_align(Fl_Align a) {tab_align_ = a;}
+  void tab_align(Fl_Align a) { tab_align_ = a; }
 
   /**
     Gets the tab label alignment.
 
     \see tab_align(Fl_Align)
   */
-  Fl_Align tab_align() const {return tab_align_;}
+  Fl_Align tab_align() const { return tab_align_; }
 
   enum {
-    OVERFLOW_COMPRESS = 0,
-    OVERFLOW_CLIP,
-    OVERFLOW_PULLDOWN,
-    OVERFLOW_DRAG
+    OVERFLOW_COMPRESS = 0,  ///< Tabs will be compressed and overlaid on top of each other.
+    OVERFLOW_CLIP,          ///< Only the first tabs that fit will be displayed.
+    OVERFLOW_PULLDOWN,      ///< Tabs that do not fit will be placed in a pull-down menu.
+    OVERFLOW_DRAG           ///< The tab bar can be dragged horizontally to reveal additional tabs.
   };
 
   void handle_overflow(int ov);

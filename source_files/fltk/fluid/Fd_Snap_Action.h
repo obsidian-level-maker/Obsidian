@@ -17,70 +17,84 @@
 #ifndef _FLUID_FD_SNAP_ACTION_H
 #define _FLUID_FD_SNAP_ACTION_H
 
+#include "fluid.h"
 #include "Fl_Window_Type.h"
+
+#include "../src/Fl_String.H"
 
 struct Fl_Menu_Item;
 
 extern Fl_Menu_Item main_layout_submenu_[];
 
-enum {
-  FD_STORE_INTERNAL,
-  FD_STORE_USER,
-  FD_STORE_PROJECT,
-  FD_STORE_FILE
-};
+/**
+ \brief Collection of layout settings.
 
+ Presets contain default fonts and font sizes for labels and text. They
+ can be used to guide widget positions using margins, grids, and gap sizes.
+ There are three Presets available in one Suite, marked "application",
+ "dialog", and "toolbox".
+ */
 class Fd_Layout_Preset {
 public:
-  int left_window_margin;
+  int left_window_margin;   ///< gap between the window border and the widget
   int right_window_margin;
   int top_window_margin;
   int bottom_window_margin;
-  int window_grid_x;
+  int window_grid_x;        ///< a regular grid across the window with its origin in the top left window corner
   int window_grid_y;
 
-  int left_group_margin;
+  int left_group_margin;    ///< gap between the border of a widget and its parent group
   int right_group_margin;
   int top_group_margin;
   int bottom_group_margin;
-  int group_grid_x;
+  int group_grid_x;         ///< a regular grid across the group with its origin in the top left group corner
   int group_grid_y;
 
-  int top_tabs_margin;
-  int bottom_tabs_margin;
+  int top_tabs_margin;      ///< preferred top edge tab size inside Fl_Tabs
+  int bottom_tabs_margin;   ///< preferred bottom edge tab size inside Fl_Tabs
 
-  int widget_min_w;
-  int widget_inc_w;
-  int widget_gap_x;
+  int widget_min_w;         ///< minimum widget width
+  int widget_inc_w;         ///< widget width increments starting from widget_min_w
+  int widget_gap_x;         ///< preferred horizontal gap between widgets
   int widget_min_h;
   int widget_inc_h;
   int widget_gap_y;
 
-  int labelfont;
-  int labelsize;
-  int textfont;
-  int textsize;
+  int labelfont;            ///< preferred font for labels
+  int labelsize;            ///< preferred size for labels
+  int textfont;             ///< preferred font for text elements
+  int textsize;             ///< preferred size for text elements
 
   void write(Fl_Preferences &prefs);
   void read(Fl_Preferences &prefs);
   void write(Fd_Project_Writer*);
   void read(Fd_Project_Reader*);
+
+  int textsize_not_null();
 };
 
 extern Fd_Layout_Preset *layout;
 
+/**
+ \brief A collection of layout presets.
+
+ A suite of layout presets is designed to cover various use cases when
+ designing UI layouts for applications.
+ There are three Presets available in one Suite, marked "application",
+ "dialog", and "toolbox".
+ */
 class Fd_Layout_Suite {
 public:
-  char *name_;
-  char *menu_label;
-  Fd_Layout_Preset *layout[3]; // application, dialog, toolbox;
-  int storage_;
+  char *name_;                  ///< name of the suite
+  char *menu_label;             ///< label text used in pulldown menu
+  Fd_Layout_Preset *layout[3];  ///< presets for application, dialog, and toolbox windows
+  Fd_Tool_Store storage_;                 ///< storage location (see FD_STORE_INTERNAL, etc.)
   void write(Fl_Preferences &prefs);
   void read(Fl_Preferences &prefs);
   void write(Fd_Project_Writer*);
   void read(Fd_Project_Reader*);
   void update_label();
-  void storage(int s) { storage_ = s; update_label(); }
+  void storage(Fd_Tool_Store s) { storage_ = s; update_label(); }
   void name(const char *n);
   void init();
   ~Fd_Layout_Suite();
@@ -88,6 +102,13 @@ public:
 
 };
 
+/**
+ \brief Manage all layout suites that are available to the user.
+
+ FLUID has two built-in suites. More suites can be cloned or added and stored
+ as a user preference, as part of an .fl project file, or in a separate file
+ for import/export and sharing.
+ */
 class Fd_Layout_List {
 public:
   Fl_Menu_Item *main_menu_;
@@ -98,7 +119,7 @@ public:
   bool list_is_static_;
   int current_suite_;
   int current_preset_;
-  char *filename_;
+  Fl_String filename_;
 public:
   Fd_Layout_List();
   ~Fd_Layout_List();
@@ -114,15 +135,15 @@ public:
   void rename(const char *name);
   void capacity(int);
 
-  int load(const char *filename);
-  int save(const char *filename);
-  void write(Fl_Preferences &prefs, int storage);
-  void read(Fl_Preferences &prefs, int storage);
+  int load(const Fl_String &filename);
+  int save(const Fl_String &filename);
+  void write(Fl_Preferences &prefs, Fd_Tool_Store storage);
+  void read(Fl_Preferences &prefs, Fd_Tool_Store storage);
   void write(Fd_Project_Writer*);
   void read(Fd_Project_Reader*);
   int add(Fd_Layout_Suite*);
   void remove(int index);
-  void remove_all(int storage);
+  void remove_all(Fd_Tool_Store storage);
   Fd_Layout_Preset *at(int);
   int size();
 };
@@ -165,6 +186,7 @@ public:
   static void draw_all(Fd_Snap_Data &d);
   static void get_resize_stepsize(int &x_step, int &y_step);
   static void get_move_stepsize(int &x_step, int &y_step);
+  static void better_size(int &w, int &h);
 };
 
 #endif // _FLUID_FD_SNAP_ACTION_H

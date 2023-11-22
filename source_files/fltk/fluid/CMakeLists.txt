@@ -21,11 +21,13 @@ set (CPPFILES
   StyleParse.cxx
   Fd_Snap_Action.cxx
   Fl_Function_Type.cxx
+  Fl_Grid_Type.cxx
   Fl_Group_Type.cxx
   Fl_Menu_Type.cxx
   Fl_Type.cxx
   Fl_Widget_Type.cxx
   Fl_Window_Type.cxx
+  Fl_Button_Type.cxx
   Fluid_Image.cxx
   about_panel.cxx
   align_widget.cxx
@@ -34,9 +36,12 @@ set (CPPFILES
   custom_widgets.cxx
   factory.cxx
   file.cxx
+  fluid_filename.cxx
   function_panel.cxx
+  mergeback.cxx
   pixmaps.cxx
   shell_command.cxx
+  sourceview_panel.cxx
   template_panel.cxx
   undo.cxx
   widget_browser.cxx
@@ -49,11 +54,13 @@ set (HEADERFILES
   CodeEditor.h
   Fd_Snap_Action.h
   Fl_Function_Type.h
+  Fl_Grid_Type.h
   Fl_Group_Type.h
   Fl_Menu_Type.h
   Fl_Type.h
   Fl_Widget_Type.h
   Fl_Window_Type.h
+  Fl_Button_Type.h
   Fluid_Image.h
   StyleParse.h
   about_panel.h
@@ -64,11 +71,12 @@ set (HEADERFILES
   custom_widgets.h
   factory.h
   file.h
-  fluid.h
   function_panel.h
+  mergeback.h
   print_panel.h
   pixmaps.h
   shell_command.h
+  sourceview_panel.h
   template_panel.h
   undo.h
   widget_browser.h
@@ -87,11 +95,42 @@ endif (WIN32)
 
 source_group("Header Files" FILES ${HEADERFILES})
 
+# make a group in the IDE for easy access to documentation files
+
+set ( USER_DOC_FILES
+  Doxyfile
+  documentation/src/index.dox
+  documentation/src/page_introduction.dox
+  documentation/src/page_getting_started.dox
+  documentation/src/page_ui_overview.dox
+  documentation/src/page_basics.dox
+  documentation/src/page_widget_types.dox
+  documentation/src/page_layout.dox
+  documentation/src/page_code_integration.dox
+  documentation/src/page_build_integration.dox
+  documentation/src/page_advanced.dox
+  documentation/src/page_shortcuts.dox
+  documentation/src/page_faqs.dox
+  documentation/src/page_glossary.dox
+  documentation/src/page_appendices.dox
+  documentation/src/page_index.dox
+  documentation/src/page_legal.dox
+  documentation/src/page_conclusion.dox
+)
+source_group("Documentation: User" FILES ${USER_DOC_FILES})
+
+set ( DEV_DOC_FILES
+  Doxyfile-dev
+  documentation/src-dev/index.dox
+  documentation/src-dev/page_introduction.dox
+)
+source_group("Documentation: Developer" FILES ${DEV_DOC_FILES})
+
 # Build a local object library to avoid compiling all source files
 # for all fluid targets (fluid, fluid-cmd, fluid-shared). This
 # library includes everything except the main program (fluid.cxx).
 
-add_library (fluid-lib OBJECT EXCLUDE_FROM_ALL ${CPPFILES})
+add_library (fluid-lib OBJECT EXCLUDE_FROM_ALL ${CPPFILES} ${HEADERFILES} ${USER_DOC_FILES} ${DEV_DOC_FILES})
 
 # Build fluid with all its variants (fluid-cmd, fluid-shared) ...
 
@@ -104,7 +143,7 @@ if (APPLE AND (NOT OPTION_APPLE_X11))
 
   set (ICON_NAME fluid.icns)
   set (ICON_PATH "${CMAKE_CURRENT_SOURCE_DIR}/icons/${ICON_NAME}")
-  add_executable (fluid MACOSX_BUNDLE fluid.cxx ${HEADERFILES} ${ICON_PATH})
+  add_executable (fluid MACOSX_BUNDLE fluid.cxx fluid.h ${ICON_PATH})
 
   # create macOS bundle wrapper script
 
@@ -121,7 +160,7 @@ if (APPLE AND (NOT OPTION_APPLE_X11))
 else ()
 
   # Option 'WIN32' builds a Windows GUI program, ignored on other platforms
-  add_executable (fluid WIN32 fluid.cxx ${HEADERFILES})
+  add_executable (fluid WIN32 fluid.cxx fluid.h)
 
 endif ()
 
@@ -129,7 +168,7 @@ endif ()
 if (FLTK_HAVE_CAIRO)
   target_include_directories (fluid PRIVATE ${PKG_CAIRO_INCLUDE_DIRS})
   if (PKG_CAIRO_LIBRARY_DIRS)
-    fl_target_link_directories (fluid PRIVATE ${PKG_CAIRO_LIBRARY_DIRS})
+    target_link_directories (fluid PRIVATE ${PKG_CAIRO_LIBRARY_DIRS})
   endif ()
 endif (FLTK_HAVE_CAIRO)
 
@@ -144,7 +183,7 @@ target_link_libraries (fluid ${FLUID_LIBS})
 
 if (WIN32)
   list (APPEND FLUID_TARGETS fluid-cmd)
-  add_executable (fluid-cmd fluid.cxx ${HEADERFILES})
+  add_executable (fluid-cmd fluid.cxx fluid.h)
   target_link_libraries (fluid-cmd ${FLUID_LIBS})
 
   # Link fluid-cmd with Cairo if OPTION_CAIRO is enabled (same as above)
@@ -152,7 +191,7 @@ if (WIN32)
   if (FLTK_HAVE_CAIRO)
     target_include_directories (fluid-cmd PRIVATE ${PKG_CAIRO_INCLUDE_DIRS})
     if (PKG_CAIRO_LIBRARY_DIRS)
-      fl_target_link_directories (fluid-cmd PRIVATE ${PKG_CAIRO_LIBRARY_DIRS})
+      target_link_directories (fluid-cmd PRIVATE ${PKG_CAIRO_LIBRARY_DIRS})
     endif ()
   endif (FLTK_HAVE_CAIRO)
 endif (WIN32)
@@ -161,11 +200,14 @@ endif (WIN32)
 
 if (OPTION_BUILD_SHARED_LIBS)
   list (APPEND FLUID_TARGETS fluid-shared)
-  add_executable (fluid-shared fluid.cxx ${HEADERFILES})
+  add_executable (fluid-shared fluid.cxx fluid.h)
   if (MSVC)
-    target_link_libraries (fluid-shared fluid-lib fltk_SHARED)
+    # Todo: this should link against fltk_SHARED rather than fltk_images but for an unknown
+    # reason this would issue link errors (about 25 undefined symbols). Needs investigation.
+    # AlbrechtS: Sep. 12, 2023
+    target_link_libraries (fluid-shared PRIVATE fluid-lib fltk_images) # should be: fltk_SHARED)
   else ()
-    target_link_libraries (fluid-shared fluid-lib fltk_images_SHARED)
+    target_link_libraries (fluid-shared PRIVATE fluid-lib fltk_images_SHARED)
   endif (MSVC)
 endif ()
 
