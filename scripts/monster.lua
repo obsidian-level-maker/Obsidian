@@ -2380,13 +2380,10 @@ gui.debugf("   doing spot : Mon=%s\n", tostring(mon))
         local info = GAME.MONSTERS[mon]
         spot.bossgen = true
 
-        local btype = {}
-
-        btype.attack = info.attack
-        btype.health = info.health
-
-        table.insert(PARAM.boss_types, btype)
-        gui.printf("Proc boss for " .. LEVEL.name .. ":" .. table.tostr(PARAM.boss_types))
+        -- Dasho: Use info and spot hooks so that ports can do port-specific
+        -- boss gen stuff with it
+        ob_invoke_hook_with_table("boss_info", info)
+        ob_invoke_hook_with_table("boss_spot", spot)
       end
 
       -- look toward the important spot
