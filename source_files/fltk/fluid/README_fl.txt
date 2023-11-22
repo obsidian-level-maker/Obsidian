@@ -50,7 +50,7 @@ File Structure
 --------------
 
 .fl files start with a 'Header', followed by a list of 'Options', followed
-by a hierarchy of 'Type' entires, the 'Tree'. All elements besides the Header
+by a hierarchy of 'Type' entries, the 'Tree'. All elements besides the Header
 are composed of 'Words', 'Strings', and 'Groups'.
 
 
@@ -64,8 +64,8 @@ Simple Words that are composed of 'a'-'z', 'A'-'Z', '0'-'9', and '_' only are
 written verbatim, followed by a space or newline.
 
 All other character sequences are bracketed between between ‘{‘ and ‘}’ without
-padding spaces. For example, "" is written as ‘{}’, and ".hello" is written as
-`{.hello}`.
+padding spaces. For example, an empty word with no characters is written
+as '{}', and ".hello" is written as '{.hello}'.
 
 The special characters ‘\’ and ‘#’ are escaped by prepending the ‘\’ character,
 so "#define" is written as '{\#define}`.
@@ -73,14 +73,15 @@ so "#define" is written as '{\#define}`.
 The characters ‘{‘ and ‘}’ are also escaped with a '\' unless every opening
 ‘{‘ in the Word is matched with a closing ‘}’.
 
-Note: line endings are copied verbatim and become significant within a Word.
+Note: line endings and the following indents are copied verbatim and become
+      significant within a Word.
 
 
 Strings
 -------
 
 Strings are generated with 'printf' statements in the hope that the
-generated text can be read back as one Word, followed by a corresponding
+generated text can be read back as one Word, set against a corresponding
 'scanf' to retrieve the original values.
 
 Note: As there are no defined start and end markers to a String, a reader must
@@ -126,8 +127,8 @@ Note: the version number corresponds not so much to the version of FLUID, but
 
 Note: if the version number is above the internal version number, FLUID will
       report an error and continue reading, hoping for the best.
-      There are no other uses inside the FLUID reader except for fltk2 features
-      which is beyond the scope of this document.
+      There are no other uses inside the FLUID reader except for features for
+      the discontinued fltk2 which is beyond the scope of this document.
 
 Note: fdesign files (.fd) start with the text "Magic:". FLUID can read these
       files, but Forms/XForms files are beyond the scope of this document.
@@ -154,6 +155,8 @@ an Option is missing, a default value is assumed.
 
   "i18n_type" <word> : integer 0=default=none, 1=gettext, 2=catgets
 
+--- the following list is valid until June 2023
+
   "i18n_function" <word> : function name, e.g. “gettext”
 
   "i18n_static_function" <word> : function name, e.g. “gettext_noop”
@@ -161,6 +164,18 @@ an Option is missing, a default value is assumed.
   "i18n_file" <word> : file name
 
   "i18n_set" <word> : string
+
+--- the following list is valid from June 2023
+
+  "i18n_gnu_function" <word> : function name, e.g. “gettext”
+
+  "i18n_gnu_static_function" <word> : function name, e.g. “gettext_noop”
+
+  "i18n_pos_file" <word> : file name
+
+  "i18n_pos_set" <word> : string
+
+--- end of June 2023 changes
 
   "i18n_include" <word> : file name, e.g. “<libintl.h>”
 
@@ -173,11 +188,45 @@ an Option is missing, a default value is assumed.
   "code_name" <word> : can be the full filename, or just the
       extension e.g. “.cxx”
 
-  "snap" <word> : ignored
+  "snap" <word> : starting in V1.4 from May 2023, the 'snap' keyword can be
+      used to store the selected layout and preset and include more suites
+      of presets. The following block can be skipped by reading it as a
+      single word. The format looks like this:
+
+      snap {                         optional snap Word since 5.2023
+        ver 1                        version of following data
+        current_suite {My Test}      opt. name of suite selected at save time
+        current_preset 1             opt. preset selected within suite
+        suite {                      optional suite store within project
+          name {MyLayout v0.3}       name of the layout
+          preset { 1                 3x preset, preset version
+            (24 integers)            values representing the layout preset
+          }
+          ...                        (two more presets)
+        }
+        ...                          (opt. more suites)
+      }
 
   "gridx" <word> : ignored
 
   "gridy" <word> : ignored
+
+  "shell_commands" <word> : starting in V1.4 from Sep 2023, the 'shell_commands'
+      keyword can be used to store user configurable shell commands in a
+      project file. The following block can be skipped by reading it as a
+      single word.
+
+      shell_commands {
+        command {
+          name <string>
+          label <string>
+          shortcut <int>            (optional if not 0)
+          condition <int>         (optional if not 0, see Fd_Shell_Command enum)
+          condition_data <string>   (optional if not "")
+          command <string>          (optional, but usually there)
+          flags <int>         (optional if not 0, see Fd_Shell_Command 2nd enum)
+        }                           ( repeat as needed)
+      }
 
 Note: There is no keyword that marks the end of the Options section. The
       Option list ends when a Word is not in the Options list and it is in
@@ -199,7 +248,7 @@ Tree
 If a keyword is read that is not in the Option list, we start reading Types.
 Types represent all possible entries in the hierarchy including C functions,
 class definitions, and of course all Widgets. A Type is any of the supported
-Widgets classes, or one of the following:
+Widgets classes, or one of the following (case sensitive):
 
 Function, code, codeblock, decl, data, declblock, comment, class, widget_class
 
@@ -219,7 +268,7 @@ another opening ‘{‘, followed by a list of Types, followed by a closing ‘}
 
 The file ends when there are no more Types.
 
-Note: the "class" Type has an additional Word following immediately after
+Note: the "class" Type may have an additional Word following immediately after
       the keyword. It contains the prefix for the class. A class definition may
       be written as:
 
@@ -227,7 +276,10 @@ Note: the "class" Type has an additional Word following immediately after
 
       or without a prefix as
 
-        class {} MyOtherClass { ...properties... } { ...children... }
+        class MyOtherClass { ...properties... } { ...children... }
+
+      According to the source code, we know if the word after class is a prefix
+      if the next word is not a lone '{'. We apologize for the inconvenience.
 
 
 Types
@@ -261,8 +313,10 @@ The list of known Types and their inheritance is:
    |    |    +-- Fl_Table
    |    |    +-- Fl_Tabs
    |    |    +-- Fl_Scroll
+   |    |    +-- Fl_Terminal
    |    |    +-- Fl_Tile
    |    |    +-- Fl_Wizard
+   |    |    +-- Fl_Grid
    |    +-- Fl_Menu_Type (note: can't be written)
    |    |    +-- Fl_Menu_Button
    |    |    +-- Fl_Choice
@@ -287,7 +341,6 @@ The list of known Types and their inheritance is:
    |    +-- Fl_File_Input
    |    +-- Fl_Text_Display
    |    +-- Fl_Text_Editor
-   |    |    +-- Fl_Simple_Terminal
    |    +-- Fl_Clock
    |    +-- Fl_Help_View
    |    +-- Fl_Progress
@@ -317,9 +370,15 @@ mutually exclusive.
 Note: It is possible that the same property by name has different arguments
       when used in a different Type.
 
+Every node can have properties that it holds for its parent. Parent properties
+are stored as "parent_properties { ...list... }". If a node encounters this
+property tag, it must ask its parent to interpret the contents of that list.
+See Fl_Grid for an example.
 
 Type Fl_Type <word>
 
+  "uid" <4-digit-hex> : since Oct 2023, optional, a unique id for this node
+      within the project file
   “label” <word> : text
   “user_data” <word> : a value or an expression
   “user_data_type” <word> : usually “void*” or “long”
@@ -354,6 +413,7 @@ Type "data" <word> : C++ variable name
 
   "filename" <word> : name or path as entered by user, forward slashes
   "textmode" : defaults to binary mode
+  "compressed" : defaults to not compressed
   ... : inherits more from decl
 
 Type "declblock" <word> : C++ code
@@ -424,6 +484,10 @@ Type "Fl_Widget" <word> : C++ variable name
   "extra_code" <word> : C++ extra code lines
   ... : inherits more from Fl_Type
 
+Type "Fl_Button" <word> : C++ variable name
+
+  "compact" <word> : integer, set the flag for compact buttons, defaults to 0
+
 Type "Fl_Flex" <word> : C++ variable name
 
   "margins" <word> : this Word is written with printf as "{%d %d %d %d}",
@@ -448,6 +512,25 @@ Type "Fl_Window" <word> : C++ variable name
       it ensures that window is not created as a subwindow.
   ... : inherits more from Fl_Widget (not Fl_Group)
 
+Type "Fl_Grid" <word> : C++ variable name
+
+  "dimensions" <word> : {int rows, int cols}
+  "margin" <word> : {int left, int top, int right, int bottom}
+  "gap" <word> : {int row gap, int col gap}
+  "rowheights" <word> : {int h, ...*rows}
+  "rowweights" <word> : {int h, ...*rows}
+  "rowgaps" <word> : {int h, ...*rows}
+  "colwidths" <word> : {int h, ...*cols}
+  "colweights" <word> : {int h, ...*cols}
+  "colgaps" <word> : {int h, ...*cols}
+
+  Fl_Grid can also produce parent properties in their children
+
+  "location" <word> : {int row, int col}
+  "colspan" <int>"
+  "rowspan" <int>
+  "align" <int> : see Fl_Grid_Align enum
+  "min_size" <word> : {int width, int height}
 
 Please report errors and omissions to the fltk.coredev or fltk.general
 Google group. Thank you.

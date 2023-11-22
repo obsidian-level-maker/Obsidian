@@ -1,7 +1,7 @@
 //
 // Interface with the libdecor library for the Fast Light Tool Kit (FLTK).
 //
-// Copyright 2022 by Bill Spitzak and others.
+// Copyright 2022-2023 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
@@ -15,6 +15,11 @@
 //
 
 /* Improvements to libdecor.c without modifying libdecor.c itself */
+
+#include "xdg-shell-client-protocol.h"
+#ifdef XDG_TOPLEVEL_STATE_SUSPENDED_SINCE_VERSION
+#  define HAVE_XDG_SHELL_V6 1
+#endif
 
 #define libdecor_frame_set_minimized libdecor_frame_set_minimized_orig
 #define libdecor_new libdecor_new_orig

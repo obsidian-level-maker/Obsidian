@@ -1,7 +1,7 @@
 #
 # FLUID Makefile for the Fast Light Tool Kit (FLTK).
 #
-# Copyright 1998-2021 by Bill Spitzak and others.
+# Copyright 1998-2023 by Bill Spitzak and others.
 #
 # This library is free software. Distribution and use rights are outlined in
 # the file "COPYING" which should have been included with this file.  If this
@@ -20,7 +20,9 @@ CPPFILES = \
 	CodeEditor.cxx \
 	StyleParse.cxx \
 	Fd_Snap_Action.cxx \
+	Fl_Button_Type.cxx \
 	Fl_Function_Type.cxx \
+	Fl_Grid_Type.cxx \
 	Fl_Group_Type.cxx \
 	Fl_Menu_Type.cxx \
 	Fl_Type.cxx \
@@ -35,9 +37,12 @@ CPPFILES = \
 	factory.cxx \
 	file.cxx \
 	fluid.cxx \
+	fluid_filename.cxx \
 	function_panel.cxx \
+	mergeback.cxx \
 	pixmaps.cxx \
 	shell_command.cxx \
+	sourceview_panel.cxx \
 	template_panel.cxx \
 	undo.cxx \
 	widget_browser.cxx \
@@ -141,5 +146,6 @@ rebuild: fluid$(EXEEXT)
 	./fluid$(EXEEXT) -u -c alignment_panel.fl
 	./fluid$(EXEEXT) -u -c function_panel.fl
 	./fluid$(EXEEXT) -u -c print_panel.fl
+	./fluid$(EXEEXT) -u -c sourceview_panel.fl
 	./fluid$(EXEEXT) -u -c template_panel.fl
 	./fluid$(EXEEXT) -u -c widget_panel.fl

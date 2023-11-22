@@ -14,9 +14,9 @@
 //     https://www.fltk.org/bugs.php
 //
 
-/** \file
- Implementation of the member functions of class Fl.
- */
+/** \file src/Fl.cxx
+  Implementation of the member functions of class Fl.
+*/
 
 #include <FL/Fl.H>
 #include <FL/platform.H>
@@ -634,9 +634,9 @@ int Fl::wait() {
 
   \code
   while (!calculation_done()) {
-  calculate();
-  Fl::check();
-  if (user_hit_abort_button()) break;
+    calculate();
+    Fl::check();
+    if (user_hit_abort_button()) break;
   }
   \endcode
 
@@ -672,11 +672,14 @@ int Fl::ready()
   return system_driver()->ready();
 }
 
-/** Hide all visible window to make FLTK leav Fl::run().
- Fl:run() will run as long as there are visible windows. Call hide_all_windows()
- will hide all windows, effectively terminating the Fl::run() loop.
- \see Fl::run()
- */
+/** Hide all visible windows to make FLTK leave Fl::run().
+
+  Fl:run() will run as long as there are visible windows.
+  Call Fl::hide_all_windows() to hide (close) all currently shown
+  (visible) windows, effectively terminating the Fl::run() loop.
+  \see Fl::run()
+  \since 1.4.0
+*/
 void Fl::hide_all_windows() {
   while (Fl::first_window()) {
     Fl::first_window()->hide();
@@ -940,6 +943,10 @@ Fl_Widget* fl_oldfocus; // kludge for Fl_Group...
 /**
     Sets the widget that will receive FL_KEYBOARD events.
 
+    Use this function inside the \c handle(int) member function of a widget of yours
+    to give focus to the widget, for example when it receives the FL_FOCUS or the FL_PUSH event.
+    Otherwise, use Fl_Widget::take_focus() to give focus to a widget;
+
     If you change Fl::focus(), the previous widget and all
     parents (that don't contain the new widget) are sent FL_UNFOCUS
     events.  Changing the focus does \e not send FL_FOCUS to
@@ -1140,12 +1147,12 @@ void fl_throw_focus(Fl_Widget *o) {
 // the inactive widget and all inactive parent groups.
 //
 // This is used to send FL_SHORTCUT events to the Fl::belowmouse() widget
-// in case the target widget itself is inactive_r(). In this case the event
+// in case the target widget itself is !active_r(). In this case the event
 // is sent to the first active_r() parent.
 //
 // This prevents sending events to inactive widgets that might get the
 // input focus otherwise. The search is fast and light and avoids calling
-// inactive_r() multiple times.
+// !active_r() multiple times.
 // See STR #3216.
 //
 // Returns: first active_r() widget "above" the widget wi or NULL if
@@ -1359,7 +1366,7 @@ int Fl::handle_(int e, Fl_Window* window)
       ret = (wi && send_event(e, wi, window));
       if (pbm != belowmouse()) {
 #ifdef DEBUG
-        printf("Fl::handle(e=%d, window=%p);\n", e, window);
+        printf("Fl::handle(e=%d, window=%p) -- Fl_Tooltip::enter(%p);\n", e, window, belowmouse());
 #endif // DEBUG
         Fl_Tooltip::enter(belowmouse());
       }
@@ -1367,19 +1374,44 @@ int Fl::handle_(int e, Fl_Window* window)
     }
 
   case FL_RELEASE: {
-//    printf("FL_RELEASE: window=%p, pushed() = %p, grab() = %p, modal() = %p\n",
-//           window, pushed(), grab(), modal());
+
+    // Mouse drag release mode - Jul 14, 2023, Albrecht-S (WIP):
+    //   0 = old: *first* mouse button release ("up") turns drag mode off
+    //   1 = new: *last* mouse button release ("up") turns drag mode off
+    // The latter enables dragging with two or more pressed mouse buttons
+    // and to continue dragging (i.e. sending FL_DRAG) until the *last*
+    // mouse button is released.
+    // See fltk.general, thread started on Jul 12, 2023
+    // "Is handling simultaneous Left-click and Right-click drags supported?"
+
+    static const int drag_release = 1; // should be 1 => new behavior since Jul 2023
+
+    // Implementation notes:
+    // (1) Mode 1 (new): only if *all* mouse buttons have been released, the
+    //     Fl::pushed_ widget is reset to 0 (NULL) so subsequent system "move"
+    //     events are no longer sent as FL_DRAG events.
+    // (2) Mode 0 (old): Fl::pushed_ was reset on the *first* mouse button release.
+    // (3) The constant 'drag_release' should be removed once the new mode has been
+    //     confirmed to work correctly and no side effects have been observed.
+    //     Hint: remove condition "!drag_release || " twice (below).
+
+    // printf("FL_RELEASE: window=%p, pushed() = %p, grab() = %p, modal() = %p, drag_release = %d, buttons = 0x%x\n",
+    //        window, pushed(), grab(), modal(), drag_release, Fl::event_buttons()>>24);
 
     if (grab()) {
       wi = grab();
-      pushed_ = 0; // must be zero before callback is done!
+      if (!drag_release || !Fl::event_buttons())
+        pushed_ = 0; // must be zero before callback is done!
     } else if (pushed()) {
       wi = pushed();
-      pushed_ = 0; // must be zero before callback is done!
-    } else if (modal() && wi != modal()) return 0;
+      if (!drag_release || !Fl::event_buttons())
+        pushed_ = 0; // must be zero before callback is done!
+    } else if (modal() && wi != modal())
+      return 0;
     int r = send_event(e, wi, window);
     fl_fix_focus();
-    return r;}
+    return r;
+  }
 
   case FL_UNFOCUS:
     window = 0;

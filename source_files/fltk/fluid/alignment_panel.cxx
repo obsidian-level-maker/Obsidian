@@ -22,7 +22,61 @@
 #include <FL/Fl_Tooltip.H>
 #include <FL/fl_ask.H>
 #include <string.h>
+#include "../src/flstring.h"
 void scheme_cb(Fl_Scheme_Choice *, void *);
+int w_settings_shell_list_selected;
+
+Fl_Double_Window *script_panel=(Fl_Double_Window *)0;
+
+static void cb_script_panel(Fl_Double_Window*, void*) {
+  if (Fl::event()==FL_SHORTCUT && Fl::event_key()==FL_Escape)
+    return; // ignore Escape
+  script_panel->hide(); // otherwise hide..;
+}
+
+Fl_Text_Editor *script_input=(Fl_Text_Editor *)0;
+
+Fl_Return_Button *script_panel_ok=(Fl_Return_Button *)0;
+
+Fl_Button *script_panel_cancel=(Fl_Button *)0;
+
+Fl_Double_Window* make_script_panel() {
+  { Fl_Double_Window* o = script_panel = new Fl_Double_Window(540, 180, "Shell Script Editor");
+    script_panel->labelsize(11);
+    script_panel->callback((Fl_Callback*)cb_script_panel);
+    { script_input = new Fl_Text_Editor(10, 10, 520, 130);
+      script_input->box(FL_DOWN_BOX);
+      script_input->labelsize(11);
+      script_input->textfont(4);
+      script_input->textsize(11);
+      script_input->when(FL_WHEN_RELEASE | FL_WHEN_CHANGED | FL_WHEN_ENTER_KEY);
+      Fl_Group::current()->resizable(script_input);
+      script_input->buffer(new Fl_Text_Buffer);
+    } // Fl_Text_Editor* script_input
+    { Fl_Group* o = new Fl_Group(10, 150, 520, 20);
+      o->labelsize(11);
+      { script_panel_ok = new Fl_Return_Button(400, 150, 60, 20, "OK");
+        script_panel_ok->labelsize(11);
+        script_panel_ok->window()->hotspot(script_panel_ok);
+      } // Fl_Return_Button* script_panel_ok
+      { script_panel_cancel = new Fl_Button(470, 150, 60, 20, "Cancel");
+        script_panel_cancel->labelsize(11);
+      } // Fl_Button* script_panel_cancel
+      { Fl_Box* o = new Fl_Box(10, 150, 380, 20);
+        o->labelsize(11);
+        Fl_Group::current()->resizable(o);
+      } // Fl_Box* o
+      o->end();
+    } // Fl_Group* o
+    script_panel->set_modal();
+    o->size_range(200, 150);
+    script_panel->end();
+  } // Fl_Double_Window* script_panel
+  // Enable line numbers
+  script_input->linenumber_width(60);
+  script_input->linenumber_size(script_input->Fl_Text_Display::textsize());
+  return script_panel;
+}
 
 Fl_Double_Window *settings_window=(Fl_Double_Window *)0;
 
@@ -141,6 +195,10 @@ static Fl_Image *image_general_64() {
   return image;
 }
 
+static void cb_(Fl_Group* o, void* v) {
+  propagate_load(o, v);
+}
+
 Fl_Scheme_Choice *scheme_choice=(Fl_Scheme_Choice *)0;
 
 Fl_Check_Button *tooltips_button=(Fl_Check_Button *)0;
@@ -176,6 +234,10 @@ static void cb_show_comments_button(Fl_Check_Button*, void*) {
   redraw_browser();
 }
 
+static void cb_1(Fl_Group* o, void* v) {
+  propagate_load(o, v);
+}
+
 Fl_Spinner *recent_spinner=(Fl_Spinner *)0;
 
 static void cb_recent_spinner(Fl_Spinner*, void*) {
@@ -199,6 +261,12 @@ static void cb_editor_command_input(Fl_Input*, void*) {
   fluid_prefs.set("external_editor_command", G_external_editor_command);
   redraw_browser();
 }
+
+Fl_Check_Button *guides_button=(Fl_Check_Button *)0;
+
+Fl_Check_Button *restricted_button=(Fl_Check_Button *)0;
+
+Fl_Check_Button *ghosted_outline_button=(Fl_Check_Button *)0;
 
 Fl_Group *w_settings_project_tab=(Fl_Group *)0;
 
@@ -334,6 +402,19 @@ static void cb_avoid_early_includes_button(Fl_Check_Button* o, void* v) {
   }
 }
 
+Fl_Check_Button *w_proj_mergeback=(Fl_Check_Button *)0;
+
+static void cb_w_proj_mergeback(Fl_Check_Button* o, void* v) {
+  if (v == LOAD) {
+    o->value(g_project.write_mergeback_data);
+  } else {
+    if (g_project.write_mergeback_data != o->value()) {
+      set_modflag(1);
+      g_project.write_mergeback_data = o->value();
+    }
+  }
+}
+
 Fl_Group *w_settings_layout_tab=(Fl_Group *)0;
 
 static void cb_w_settings_layout_tab(Fl_Group* o, void* v) {
@@ -387,7 +468,7 @@ Fl_Menu_Item menu_layout_choice[] = {
  {0,0,0,0,0,0,0,0,0}
 };
 
-static void cb_(Fl_Button*, void* v) {
+static void cb_2(Fl_Button*, void* v) {
   // Clone the current layout suite
 
   if (v == LOAD) return;
@@ -396,7 +477,7 @@ static void cb_(Fl_Button*, void* v) {
   old_name.append(g_layout_list[g_layout_list.current_suite()].name_);
   const char *new_name = fl_input("Enter a name for the new layout:", old_name.c_str());
   if (new_name == NULL)
-    return; 
+    return;
 
   g_layout_list.add(new_name);
   g_layout_list.update_dialogs();
@@ -426,7 +507,7 @@ static void cb_w_layout_menu_rename(Fl_Menu_*, void*) {
   Fl_String old_name = g_layout_list[g_layout_list.current_suite()].name_;
   const char *new_name = fl_input("Enter a new name for the layout:", old_name.c_str());
   if (new_name == NULL)
-    return; 
+    return;
 
   g_layout_list.rename(new_name);
   g_layout_list.update_dialogs();
@@ -478,25 +559,13 @@ static void cb_w_layout_menu_save(Fl_Menu_*, void*) {
     fnfc.type(Fl_Native_File_Chooser::BROWSE_SAVE_FILE);
     fnfc.options(Fl_Native_File_Chooser::SAVEAS_CONFIRM | Fl_Native_File_Chooser::USE_FILTER_EXT);
     fnfc.filter("FLUID Layouts\t*.fll\n");
-    if (g_layout_list.filename_) {
-      char *fn = fl_strdup(g_layout_list.filename_);
-      char *name = (char*)fl_filename_name(g_layout_list.filename_);
-      if (name > fn) {
-        name[-1] = 0;
-        fnfc.directory(fn);
-        fnfc.preset_file(name);
-        ::free(fn);
-      } else if (name) {
-        fnfc.preset_file(name);
-        ::free(fn);
-      }
-    }
+    Fl_String filename = g_layout_list.filename_;
+    fnfc.directory(fl_filename_path(filename).c_str());
+    fnfc.preset_file(fl_filename_name(filename).c_str());
     if (fnfc.show() != 0) return;
     const char *new_filename = fnfc.filename();
     if (!new_filename) return;
-    if (g_layout_list.filename_)
-      ::free(g_layout_list.filename_);
-    g_layout_list.filename_ = fl_strdup(new_filename);
+    g_layout_list.filename_ = new_filename;
     g_layout_list.save(new_filename);
 }
 
@@ -657,7 +726,7 @@ static void cb_Gap(Fl_Value_Input* o, void* v) {
   }
 }
 
-static void cb_1(Fl_Value_Input* o, void* v) {
+static void cb_3(Fl_Value_Input* o, void* v) {
   if (v == LOAD) {
     o->value((double)layout->widget_min_h);
   } else {
@@ -665,7 +734,7 @@ static void cb_1(Fl_Value_Input* o, void* v) {
   }
 }
 
-static void cb_2(Fl_Value_Input* o, void* v) {
+static void cb_4(Fl_Value_Input* o, void* v) {
   if (v == LOAD) {
     o->value((double)layout->widget_inc_h);
   } else {
@@ -673,7 +742,7 @@ static void cb_2(Fl_Value_Input* o, void* v) {
   }
 }
 
-static void cb_3(Fl_Value_Input* o, void* v) {
+static void cb_5(Fl_Value_Input* o, void* v) {
   if (v == LOAD) {
     o->value((double)layout->widget_gap_y);
   } else {
@@ -681,15 +750,15 @@ static void cb_3(Fl_Value_Input* o, void* v) {
   }
 }
 
-static void cb_4(Fl_Choice* o, void* v) {
+static void cb_6(Fl_Choice* o, void* v) {
   if (v == LOAD) {
-    o->value(layout->labelfont);
+    o->value(layout->labelfont+1);
   } else {
-    layout->labelfont = (int)o->value();
+    layout->labelfont = (int)o->value()-1;
   }
 }
 
-static void cb_5(Fl_Value_Input* o, void* v) {
+static void cb_7(Fl_Value_Input* o, void* v) {
   if (v == LOAD) {
     o->value(layout->labelsize);
   } else {
@@ -697,15 +766,15 @@ static void cb_5(Fl_Value_Input* o, void* v) {
   }
 }
 
-static void cb_6(Fl_Choice* o, void* v) {
+static void cb_8(Fl_Choice* o, void* v) {
   if (v == LOAD) {
-    o->value(layout->textfont);
+    o->value(layout->textfont+1);
   } else {
-    layout->textfont = (int)o->value();
+    layout->textfont = (int)o->value()-1;
   }
 }
 
-static void cb_7(Fl_Value_Input* o, void* v) {
+static void cb_9(Fl_Value_Input* o, void* v) {
   if (v == LOAD) {
     o->value(layout->textsize);
   } else {
@@ -714,10 +783,6 @@ static void cb_7(Fl_Value_Input* o, void* v) {
 }
 
 Fl_Group *w_settings_shell_tab=(Fl_Group *)0;
-
-static void cb_w_settings_shell_tab(Fl_Group* o, void* v) {
-  propagate_load(o, v);
-}
 
 static const unsigned char idata_shell_64[] =
 {137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,96,0,0,0,64,8,4,0,0,0,
@@ -763,63 +828,1096 @@ static Fl_Image *image_shell_64() {
   return image;
 }
 
-static void cb_Command(Fl_Input* o, void* v) {
+Fl_Browser *w_settings_shell_list=(Fl_Browser *)0;
+
+static void cb_w_settings_shell_list(Fl_Browser* o, void* v) {
   if (v == LOAD) {
-    o->value(g_shell_command.c_str());
+    // load from g_shell_config
+    if (g_shell_config) {
+      o->clear();
+      w_settings_shell_list_selected = 0;
+      for (int i=0; i<g_shell_config->list_size; i++) {
+        Fd_Shell_Command *cmd = g_shell_config->list[i];
+        o->add(cmd->name.c_str());
+        if (cmd->storage == FD_STORE_USER)
+          o->icon(i+1, w_settings_shell_fd_user->image());
+        else if (cmd->storage == FD_STORE_PROJECT)
+          o->icon(i+1, w_settings_shell_fd_project->image());
+      }
+    }
   } else {
-    g_shell_command = o->value();
+  //  int prev_selected = w_settings_shell_list_selected;
+    w_settings_shell_list_selected = 0;
+    int selected = w_settings_shell_list->value();
+    if (selected) {
+      if (w_settings_shell_list->selected(selected))
+        w_settings_shell_list_selected = selected;
+    }
+    w_settings_shell_cmd->do_callback(w_settings_shell_cmd, LOAD);
+    w_settings_shell_toolbox->do_callback(w_settings_shell_toolbox, LOAD);
   }
 }
 
-static void cb_save(Fl_Check_Button* o, void* v) {
-  if (v == LOAD) {
-    o->value(g_shell_save_fl);
+Fl_Group *w_settings_shell_toolbox=(Fl_Group *)0;
+
+static void cb_w_settings_shell_toolbox(Fl_Group* o, void* v) {
+  if (v==LOAD) {
+    propagate_load(o, v);
+  }
+}
+
+static void cb_a(Fl_Button*, void* v) {
+  if (v != LOAD) {
+    int selected = w_settings_shell_list_selected;
+    Fd_Shell_Command *cmd = new Fd_Shell_Command("new shell command");
+    g_shell_config->insert(selected, cmd);
+    w_settings_shell_list->insert(selected+1, cmd->name.c_str());
+    w_settings_shell_list->deselect();
+    w_settings_shell_list->value(selected+1);
+    if (cmd->storage == FD_STORE_USER)
+      w_settings_shell_list->icon(selected+1, w_settings_shell_fd_user->image());
+    else if (cmd->storage == FD_STORE_PROJECT)
+      w_settings_shell_list->icon(selected+1, w_settings_shell_fd_project->image());
+    w_settings_shell_list->do_callback();
+    w_settings_shell_cmd->do_callback(w_settings_shell_cmd, LOAD);
+    w_settings_shell_toolbox->do_callback(w_settings_shell_toolbox, LOAD);
+    g_shell_config->rebuild_shell_menu();
+  }
+}
+
+Fl_Button *w_settings_shell_dup=(Fl_Button *)0;
+
+static void cb_w_settings_shell_dup(Fl_Button* o, void* v) {
+  int selected = w_settings_shell_list_selected;
+  if (v==LOAD) {
+    if (selected) {
+      o->activate();
+    } else {
+      o->deactivate();
+    }
   } else {
-    g_shell_save_fl = o->value();
+    if (!selected) return;
+    Fd_Shell_Command *cmd = new Fd_Shell_Command(g_shell_config->list[selected-1]);
+    g_shell_config->insert(selected, cmd);
+    w_settings_shell_list->insert(selected+1, cmd->name.c_str());
+    w_settings_shell_list->deselect();
+    w_settings_shell_list->deselect();
+    w_settings_shell_list->value(selected+1);
+    if (cmd->storage == FD_STORE_USER)
+      w_settings_shell_list->icon(selected+1, w_settings_shell_fd_user->image());
+    else if (cmd->storage == FD_STORE_PROJECT)
+      w_settings_shell_list->icon(selected+1, w_settings_shell_fd_project->image());
+    w_settings_shell_list->do_callback();
+    w_settings_shell_cmd->do_callback(w_settings_shell_cmd, LOAD);
+    w_settings_shell_toolbox->do_callback(w_settings_shell_toolbox, LOAD);
+    g_shell_config->rebuild_shell_menu();
+  }
+}
+
+Fl_Button *w_settings_shell_remove=(Fl_Button *)0;
+
+static void cb_w_settings_shell_remove(Fl_Button* o, void* v) {
+  int selected = w_settings_shell_list_selected;
+  if (v==LOAD) {
+    if (selected) {
+      o->activate();
+    } else {
+      o->deactivate();
+    }
+  } else {
+    if (!selected) return;
+    int ret = fl_choice("Delete the shell command\n\"%s\"?\n\nThis can not be undone.",
+      "Delete", "Cancel", NULL, g_shell_config->list[selected-1]->name.c_str());
+    if (ret==1) return;
+    g_shell_config->remove(selected-1);
+    w_settings_shell_list->remove(selected);
+    if (selected <= w_settings_shell_list->size())
+      w_settings_shell_list->value(selected);
+    else
+      w_settings_shell_list->value(0);
+    w_settings_shell_list->do_callback();
+    w_settings_shell_cmd->do_callback(w_settings_shell_cmd, LOAD);
+    w_settings_shell_toolbox->do_callback(w_settings_shell_toolbox, LOAD);
+    g_shell_config->rebuild_shell_menu();
+  }
+}
+
+Fl_Menu_Button *w_settings_shell_menu=(Fl_Menu_Button *)0;
+
+static void cb_Import(Fl_Menu_*, void* v) {
+  if (v != LOAD)
+    Fd_Shell_Command_List::import_from_file();
+}
+
+static void cb_Export(Fl_Menu_*, void* v) {
+  if (v != LOAD)
+    Fd_Shell_Command_List::export_selected();
+}
+
+Fl_Menu_Item menu_w_settings_shell_menu[] = {
+ {"Import...", 0,  (Fl_Callback*)cb_Import, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
+ {"Export selected...", 0,  (Fl_Callback*)cb_Export, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
+ {"Example Scripts:", 0,  0, 0, 17, (uchar)FL_NORMAL_LABEL, 1, 10, 0},
+ {"Compile with fltk-config", 0,  0, 0, 16, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
+ {"Build and run", 0,  0, 0, 16, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
+ {"Build with Xcode on macOS", 0,  0, 0, 16, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
+ {"Build with CMake", 0,  0, 0, 16, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
+ {0,0,0,0,0,0,0,0,0}
+};
+
+Fl_Button *w_settings_shell_play=(Fl_Button *)0;
+
+static void cb_w_settings_shell_play(Fl_Button* o, void* v) {
+  int selected = w_settings_shell_list_selected;
+  if (v==LOAD) {
+    if (selected) {
+      o->activate();
+    } else {
+      o->deactivate();
+    }
+  } else {
+    if (!selected) return;
+    Fd_Shell_Command *cmd = g_shell_config->list[selected-1];
+    cmd->run();
+  }
+}
+
+Fl_Group *w_settings_shell_cmd=(Fl_Group *)0;
+
+static void cb_w_settings_shell_cmd(Fl_Group* o, void* v) {
+  if (v==LOAD) {
+    int selected = w_settings_shell_list_selected;
+    if (selected) {
+      o->activate();
+    } else {
+      o->deactivate();
+    }
+    propagate_load(o, v);
+  }
+}
+
+static void cb_Name(Fl_Input* o, void* v) {
+  int selected = w_settings_shell_list_selected;
+  if (v == LOAD) {
+    if (selected) {
+      o->value(g_shell_config->list[selected-1]->name.c_str());
+    } else {
+      o->value("");
+    }
+  } else {
+    if (selected) {
+      Fd_Shell_Command *cmd = g_shell_config->list[selected-1];
+      cmd->name = o->value();
+      w_settings_shell_list->text(selected, o->value());
+      if (cmd->storage == FD_STORE_PROJECT) set_modflag(1);
+    }
+  }
+}
+
+static void cb_Menu(Fl_Input* o, void* v) {
+  int selected = w_settings_shell_list_selected;
+  if (v == LOAD) {
+    if (selected) {
+      o->value(g_shell_config->list[selected-1]->label.c_str());
+    } else {
+      o->value("");
+    }
+  } else {
+    if (selected) {
+      Fd_Shell_Command *cmd = g_shell_config->list[selected-1];
+      cmd->label = o->value();
+      cmd->update_shell_menu();
+      if (cmd->storage == FD_STORE_PROJECT) set_modflag(1);
+    }
+  }
+}
+
+static void cb_b(Fl_Group* o, void* v) {
+  propagate_load(o, v);
+}
+
+static void cb_Shortcut(Fl_Shortcut_Button* o, void* v) {
+  int selected = w_settings_shell_list_selected;
+  if (v == LOAD) {
+    if (selected) {
+      o->value(g_shell_config->list[selected-1]->shortcut);
+      o->default_value(o->value());
+    } else {
+      o->value(0);
+    }
+  } else {
+    if (selected) {
+      Fd_Shell_Command *cmd = g_shell_config->list[selected-1];
+      cmd->shortcut = o->value();
+      cmd->update_shell_menu();
+      if (cmd->storage == FD_STORE_PROJECT) set_modflag(1);
+    }
+  }
+}
+
+static void cb_Store(Fl_Choice* o, void* v) {
+  int selected = w_settings_shell_list_selected;
+  if (v == LOAD) {
+    if (selected) {
+      Fd_Tool_Store ts = g_shell_config->list[selected-1]->storage;
+      o->value(o->find_item_with_argument((long)ts));
+    } else {
+      o->value(o->find_item_with_argument((long)FD_STORE_USER));
+    }
+  } else {
+    if (selected) {
+      Fd_Shell_Command *cmd = g_shell_config->list[selected-1];
+      Fd_Tool_Store ts = (Fd_Tool_Store)(o->mvalue()->argument());
+      if (cmd->storage == FD_STORE_PROJECT) set_modflag(1);
+      cmd->storage = ts;
+      //w_settings_shell_list->text(selected, cmd->name.c_str());
+      if (cmd->storage == FD_STORE_USER)
+        w_settings_shell_list->icon(selected, w_settings_shell_fd_user->image());
+      else if (cmd->storage == FD_STORE_PROJECT)
+        w_settings_shell_list->icon(selected, w_settings_shell_fd_project->image());
+      if (cmd->storage == FD_STORE_PROJECT) set_modflag(1);
+    }
+  }
+}
+
+Fl_Menu_Item menu_Store[] = {
+ {"@fd_user User Setting", 0,  0, (void*)(FD_STORE_USER), 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
+ {"@fd_project Project File", 0,  0, (void*)(FD_STORE_PROJECT), 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
+ {0,0,0,0,0,0,0,0,0}
+};
+
+static void cb_Condition(Fl_Choice* o, void* v) {
+  int selected = w_settings_shell_list_selected;
+  if (v == LOAD) {
+    if (selected) {
+      int cond = g_shell_config->list[selected-1]->condition;
+      o->value(o->find_item_with_argument(cond));
+    } else {
+      o->value(o->find_item_with_argument(0));
+    }
+  } else {
+    if (selected) {
+      Fd_Shell_Command *cmd = g_shell_config->list[selected-1];
+      int cond = (int)(o->mvalue()->argument());
+      cmd->condition = cond;
+      g_shell_config->rebuild_shell_menu();
+      if (cmd->storage == FD_STORE_PROJECT) set_modflag(1);
+    }
+  }
+}
+
+Fl_Menu_Item menu_Condition[] = {
+ {"all platforms", 0,  0, (void*)(Fd_Shell_Command::ALWAYS), 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
+ {"MS Windows only", 0,  0, (void*)(Fd_Shell_Command::WIN_ONLY), 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
+ {"Linux only", 0,  0, (void*)(Fd_Shell_Command::UX_ONLY), 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
+ {"macOS only", 0,  0, (void*)(Fd_Shell_Command::MAC_ONLY), 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
+ {"Linux and macOS", 0,  0, (void*)(Fd_Shell_Command::MAC_AND_UX_ONLY), 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
+ {"don\'t use", 0,  0, (void*)(Fd_Shell_Command::NEVER), 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
+ {0,0,0,0,0,0,0,0,0}
+};
+
+static void cb_Label(Fl_Input* o, void* v) {
+  if (v == LOAD) {
+  //  o->value(g_shell_command.c_str());
+  } else {
+  //  g_shell_command = o->value();
+  }
+}
+
+Fl_Text_Editor *w_settings_shell_command=(Fl_Text_Editor *)0;
+
+static void cb_w_settings_shell_command(Fl_Text_Editor* o, void* v) {
+  int selected = w_settings_shell_list_selected;
+  if (v == LOAD) {
+    if (selected) {
+      o->buffer()->text(g_shell_config->list[selected-1]->command.c_str());
+    } else {
+      o->buffer()->text("");
+    }
+  } else {
+    if (selected) {
+      Fd_Shell_Command *cmd = g_shell_config->list[selected-1];
+      cmd->command = o->buffer()->text();
+      if (cmd->storage == FD_STORE_PROJECT) set_modflag(1);
+    }
+  }
+}
+
+Fl_Menu_Button *w_settings_shell_text_macros=(Fl_Menu_Button *)0;
+
+static void cb_w_settings_shell_text_macros(Fl_Menu_Button* o, void*) {
+  const Fl_Menu_Item *mi = o->mvalue();
+  if (mi) {
+    char buffer[256];
+    fl_strlcpy(buffer, mi->label(), 255);
+    int n = (int)strlen(buffer)-1;
+    if (buffer[n]=='@') buffer[n] = 0;
+    char *word = buffer;
+    if (word[0]=='@') word++;
+    if (w_settings_shell_command->buffer()->selected()) {
+      int start = 0, end = 0;
+      w_settings_shell_command->buffer()->selection_position(&start, &end);
+      w_settings_shell_command->buffer()->replace(start, end, word);
+    } else {
+      int pos = w_settings_shell_command->insert_position();
+      w_settings_shell_command->buffer()->insert(pos, word);
+    }
+    w_settings_shell_command->do_callback(w_settings_shell_command, (void*)NULL);
+  }
+}
+
+Fl_Menu_Item menu_w_settings_shell_text_macros[] = {
+ {"@@BASENAME@@", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 4, 11, 0},
+ {"@@PROJECTFILE_PATH@@", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 4, 11, 0},
+ {"@@PROJECTFILE_NAME@@", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 4, 11, 0},
+ {"@@CODEFILE_PATH@@", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 4, 11, 0},
+ {"@@CODEFILE_NAME@@", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 4, 11, 0},
+ {"@@HEADERFILE_PATH@@", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 4, 11, 0},
+ {"@@HEADERFILE_NAME@@", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 4, 11, 0},
+ {"@@TEXTFILE_PATH@@", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 4, 11, 0},
+ {"@@TEXTFILE_NAME@@", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 4, 11, 0},
+ // Not yet implemented
+ {"@@FLTK_CONFIG@@", 0,  0, 0, 16, (uchar)FL_NORMAL_LABEL, 4, 11, 0},
+ {"@@TMPDIR@@", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 4, 11, 0},
+ {0,0,0,0,0,0,0,0,0}
+};
+
+static void cb_1fd_zoom(Fl_Button*, void*) {
+  if (!script_panel) make_script_panel();
+  script_input->buffer()->text(w_settings_shell_command->buffer()->text());
+  script_panel->show();
+
+  for (;;) {
+    Fl_Widget* w = Fl::readqueue();
+    if (w == script_panel_cancel) goto BREAK2;
+    else if (w == script_panel_ok) break;
+    else if (!w) Fl::wait();
+  }
+
+  w_settings_shell_command->buffer()->text(script_input->buffer()->text());
+  w_settings_shell_command->do_callback();
+  BREAK2:
+  script_panel->hide();
+}
+
+static void cb_save(Fl_Check_Button* o, void* v) {
+  int selected = w_settings_shell_list_selected;
+  if (v == LOAD) {
+    if (selected) {
+      o->value(g_shell_config->list[selected-1]->flags & Fd_Shell_Command::SAVE_PROJECT);
+    } else {
+      o->value(0);
+    }
+  } else {
+    if (selected) {
+      Fd_Shell_Command *cmd = g_shell_config->list[selected-1];
+      int v = o->value();
+      if (v) {
+        cmd->flags |= Fd_Shell_Command::SAVE_PROJECT;
+      } else {
+        cmd->flags &= ~Fd_Shell_Command::SAVE_PROJECT;
+      }
+      if (cmd->storage == FD_STORE_PROJECT) set_modflag(1);
+    }
   }
 }
 
 static void cb_save1(Fl_Check_Button* o, void* v) {
+  int selected = w_settings_shell_list_selected;
   if (v == LOAD) {
-    o->value(g_shell_save_code);
+    if (selected) {
+      o->value(g_shell_config->list[selected-1]->flags & Fd_Shell_Command::SAVE_SOURCECODE);
+    } else {
+      o->value(0);
+    }
   } else {
-    g_shell_save_code = o->value();
+    if (selected) {
+      Fd_Shell_Command *cmd = g_shell_config->list[selected-1];
+      int v = o->value();
+      if (v) {
+        cmd->flags |= Fd_Shell_Command::SAVE_SOURCECODE;
+      } else {
+        cmd->flags &= ~Fd_Shell_Command::SAVE_SOURCECODE;
+      }
+      if (cmd->storage == FD_STORE_PROJECT) set_modflag(1);
+    }
   }
 }
 
 static void cb_save2(Fl_Check_Button* o, void* v) {
+  int selected = w_settings_shell_list_selected;
   if (v == LOAD) {
-    o->value(g_shell_save_strings);
-  } else {
-    g_shell_save_strings = o->value();
-  }
-}
-
-Fl_Check_Button *shell_use_fl_button=(Fl_Check_Button *)0;
-
-static void cb_shell_use_fl_button(Fl_Check_Button* o, void* v) {
-  if (v == LOAD) {
-    o->value(g_shell_use_fl_settings);
-  } else {
-    g_shell_use_fl_settings = o->value();
-    fluid_prefs.set("shell_use_fl", g_shell_use_fl_settings);
-    if (g_shell_use_fl_settings) {
-      shell_settings_read();
+    if (selected) {
+      o->value(g_shell_config->list[selected-1]->flags & Fd_Shell_Command::SAVE_STRINGS);
     } else {
-      shell_prefs_get();
+      o->value(0);
     }
-    w_settings_shell_tab->do_callback(w_settings_shell_tab, LOAD);
+  } else {
+    if (selected) {
+      Fd_Shell_Command *cmd = g_shell_config->list[selected-1];
+      int v = o->value();
+      if (v) {
+        cmd->flags |= Fd_Shell_Command::SAVE_STRINGS;
+      } else {
+        cmd->flags &= ~Fd_Shell_Command::SAVE_STRINGS;
+      }
+      if (cmd->storage == FD_STORE_PROJECT) set_modflag(1);
+    }
   }
 }
 
-static void cb_save3(Fl_Button*, void* v) {
-  if (v != LOAD) 
-    shell_prefs_set();
+Fl_Box *w_settings_shell_fd_project=(Fl_Box *)0;
+
+static const unsigned char idata_fd_project[] =
+{137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,32,0,0,0,32,8,6,0,0,0,
+115,122,122,244,0,0,1,110,105,67,67,80,105,99,99,0,0,40,145,117,145,187,75,195,
+80,20,198,127,173,239,23,14,58,136,116,200,80,197,65,65,20,196,81,235,208,165,
+72,169,21,172,186,180,49,109,133,164,13,73,139,136,171,224,226,80,112,16,93,
+124,13,254,7,186,10,174,10,130,160,8,34,110,238,190,22,145,120,174,45,180,136,
+189,225,230,252,248,238,253,14,39,95,192,31,49,117,203,109,156,2,43,87,112,98,
+225,144,182,144,88,212,90,94,104,163,153,46,2,244,39,117,215,158,142,70,35,212,
+93,159,119,248,84,189,29,81,189,234,223,251,119,117,172,24,174,14,190,86,225,9,
+221,118,10,194,50,13,145,181,130,173,120,91,184,87,207,38,87,132,15,133,135,29,
+25,80,248,74,233,169,50,63,43,206,148,249,93,177,19,143,205,128,95,245,212,50,
+53,156,170,97,61,235,88,194,67,194,65,203,44,234,149,121,212,151,116,26,185,
+249,57,169,253,178,3,184,196,8,19,66,35,69,145,85,76,10,140,72,205,73,102,255,
+251,70,127,125,179,228,197,163,203,219,102,29,71,28,25,178,226,29,22,181,40,93,
+13,169,105,209,13,121,76,214,85,238,127,243,116,211,227,99,229,238,157,33,104,
+122,242,188,183,1,104,217,129,239,146,231,125,29,121,222,247,49,52,60,194,69,
+174,234,207,75,78,147,31,162,151,170,90,240,0,186,55,225,236,178,170,165,118,
+225,124,11,250,30,236,164,147,252,149,26,100,251,211,105,120,61,133,174,4,244,
+220,64,251,82,57,171,202,57,39,247,16,223,144,95,116,13,123,251,48,40,247,187,
+151,127,0,229,44,103,253,189,250,32,75,0,0,0,9,112,72,89,115,0,0,22,37,0,0,22,
+37,1,73,82,36,240,0,0,1,13,116,69,88,116,82,97,119,32,112,114,111,102,105,108,
+101,32,116,121,112,101,32,101,120,105,102,0,10,101,120,105,102,10,32,32,32,32,
+32,49,49,52,10,52,53,55,56,54,57,54,54,48,48,48,48,52,57,52,57,50,97,48,48,48,
+56,48,48,48,48,48,48,48,52,48,48,49,97,48,49,48,53,48,48,48,49,48,48,48,48,48,
+48,51,101,48,48,48,48,48,48,49,98,48,49,48,53,48,48,48,49,48,48,48,48,48,48,10,
+52,54,48,48,48,48,48,48,50,56,48,49,48,51,48,48,48,49,48,48,48,48,48,48,48,50,
+48,48,48,48,48,48,54,57,56,55,48,52,48,48,48,49,48,48,48,48,48,48,52,101,48,48,
+48,48,48,48,48,48,48,48,48,48,48,48,57,48,48,48,48,48,48,48,10,48,49,48,48,48,
+48,48,48,57,48,48,48,48,48,48,48,48,49,48,48,48,48,48,48,48,50,48,48,48,50,97,
+48,48,52,48,48,48,49,48,48,48,48,48,48,53,50,48,48,48,48,48,48,48,51,97,48,48,
+52,48,48,48,49,48,48,48,48,48,48,56,48,48,48,10,48,48,48,48,48,48,48,48,48,48,
+48,48,10,190,225,144,105,0,0,0,90,116,69,88,116,82,97,119,32,112,114,111,102,
+105,108,101,32,116,121,112,101,32,105,112,116,99,0,10,105,112,116,99,10,32,32,
+32,32,32,32,50,54,10,53,48,54,56,54,102,55,52,54,102,55,51,54,56,54,102,55,48,
+50,48,51,51,50,101,51,48,48,48,51,56,52,50,52,57,52,100,48,52,48,52,48,48,48,
+48,48,48,48,48,48,48,48,48,10,199,209,105,220,0,0,20,96,116,69,88,116,82,97,
+119,32,112,114,111,102,105,108,101,32,116,121,112,101,32,120,109,112,0,10,120,
+109,112,10,32,32,32,32,50,53,53,53,10,51,99,51,102,55,56,55,48,54,49,54,51,54,
+98,54,53,55,52,50,48,54,50,54,53,54,55,54,57,54,101,51,100,50,50,101,102,98,98,
+98,102,50,50,50,48,54,57,54,52,51,100,50,50,53,55,51,53,52,100,51,48,52,100,55,
+48,52,51,54,53,54,56,54,57,10,52,56,55,97,55,50,54,53,53,51,55,97,52,101,53,52,
+54,51,55,97,54,98,54,51,51,57,54,52,50,50,51,102,51,101,48,97,51,99,55,56,51,
+97,55,56,54,100,55,48,54,100,54,53,55,52,54,49,50,48,55,56,54,100,54,99,54,101,
+55,51,51,97,55,56,10,51,100,50,50,54,49,54,52,54,102,54,50,54,53,51,97,54,101,
+55,51,51,97,54,100,54,53,55,52,54,49,50,102,50,50,50,48,55,56,51,97,55,56,54,
+100,55,48,55,52,54,98,51,100,50,50,53,56,52,100,53,48,50,48,52,51,54,102,55,50,
+54,53,50,48,10,51,52,50,101,51,52,50,101,51,48,50,100,52,53,55,56,54,57,55,54,
+51,50,50,50,51,101,48,97,50,48,51,99,55,50,54,52,54,54,51,97,53,50,52,52,52,54,
+50,48,55,56,54,100,54,99,54,101,55,51,51,97,55,50,54,52,54,54,51,100,50,50,54,
+56,10,55,52,55,52,55,48,51,97,50,102,50,102,55,55,55,55,55,55,50,101,55,55,51,
+51,50,101,54,102,55,50,54,55,50,102,51,49,51,57,51,57,51,57,50,102,51,48,51,50,
+50,102,51,50,51,50,50,100,55,50,54,52,54,54,50,100,55,51,55,57,54,101,55,52,10,
+54,49,55,56,50,100,54,101,55,51,50,51,50,50,51,101,48,97,50,48,50,48,51,99,55,
+50,54,52,54,54,51,97,52,52,54,53,55,51,54,51,55,50,54,57,55,48,55,52,54,57,54,
+102,54,101,50,48,55,50,54,52,54,54,51,97,54,49,54,50,54,102,55,53,10,55,52,51,
+100,50,50,50,50,48,97,50,48,50,48,50,48,50,48,55,56,54,100,54,99,54,101,55,51,
+51,97,54,53,55,56,54,57,54,54,51,100,50,50,54,56,55,52,55,52,55,48,51,97,50,
+102,50,102,54,101,55,51,50,101,54,49,54,52,54,102,54,50,54,53,10,50,101,54,51,
+54,102,54,100,50,102,54,53,55,56,54,57,54,54,50,102,51,49,50,101,51,48,50,102,
+50,50,48,97,50,48,50,48,50,48,50,48,55,56,54,100,54,99,54,101,55,51,51,97,55,
+52,54,57,54,54,54,54,51,100,50,50,54,56,55,52,55,52,55,48,10,51,97,50,102,50,
+102,54,101,55,51,50,101,54,49,54,52,54,102,54,50,54,53,50,101,54,51,54,102,54,
+100,50,102,55,52,54,57,54,54,54,54,50,102,51,49,50,101,51,48,50,102,50,50,48,97,
+50,48,50,48,50,48,54,53,55,56,54,57,54,54,51,97,53,48,10,54,57,55,56,54,53,54,
+99,53,56,52,52,54,57,54,100,54,53,54,101,55,51,54,57,54,102,54,101,51,100,50,
+50,51,56,51,50,50,50,48,97,50,48,50,48,50,48,54,53,55,56,54,57,54,54,51,97,53,
+48,54,57,55,56,54,53,54,99,53,57,52,52,54,57,10,54,100,54,53,54,101,55,51,54,
+57,54,102,54,101,51,100,50,50,51,49,51,50,51,56,50,50,48,97,50,48,50,48,50,48,
+55,52,54,57,54,54,54,54,51,97,53,50,54,53,55,51,54,102,54,99,55,53,55,52,54,57,
+54,102,54,101,53,53,54,101,54,57,55,52,10,51,100,50,50,51,50,50,50,48,97,50,48,
+50,48,50,48,55,52,54,57,54,54,54,54,51,97,53,57,53,50,54,53,55,51,54,102,54,99,
+55,53,55,52,54,57,54,102,54,101,51,100,50,50,51,49,51,52,51,52,50,48,50,102,50,
+48,51,49,50,50,48,97,50,48,10,50,48,50,48,55,52,54,57,54,54,54,54,51,97,53,56,
+53,50,54,53,55,51,54,102,54,99,55,53,55,52,54,57,54,102,54,101,51,100,50,50,51,
+49,51,52,51,52,50,48,50,102,50,48,51,49,50,50,50,102,51,101,48,97,50,48,51,99,
+50,102,55,50,54,52,10,54,54,51,97,53,50,52,52,52,54,51,101,48,97,51,99,50,102,
+55,56,51,97,55,56,54,100,55,48,54,100,54,53,55,52,54,49,51,101,48,97,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,48,97,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,48,97,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,48,97,50,48,10,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,48,97,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,48,97,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,48,97,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,48,
+97,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,48,97,10,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,48,97,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,48,97,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,48,97,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,48,97,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,10,48,97,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,48,97,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,48,
+97,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,48,97,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,48,97,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,48,97,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,48,97,50,48,50,48,50,48,50,48,50,48,10,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,48,97,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,48,97,51,99,51,102,55,56,55,48,54,49,
+54,51,54,98,54,53,55,52,50,48,54,53,54,101,54,52,51,100,50,50,55,55,50,50,51,
+102,51,101,10,87,123,188,247,0,0,3,115,73,68,65,84,88,71,189,151,75,75,91,65,20,
+199,79,110,222,169,52,180,203,22,186,239,210,47,80,236,206,126,5,177,17,151,46,
+68,23,82,220,138,90,84,116,163,184,80,81,132,98,93,234,42,203,210,79,209,149,
+32,213,68,164,165,165,129,230,97,94,246,252,166,157,246,246,102,154,132,230,
+226,31,134,59,247,204,153,243,158,123,207,68,206,206,206,164,86,171,73,52,26,
+149,68,34,17,175,84,42,215,123,123,123,15,119,118,118,164,23,26,141,134,164,211,
+105,243,28,29,29,149,229,229,229,183,177,88,236,101,171,213,106,235,83,154,205,
+166,120,158,39,145,72,196,12,23,188,106,181,42,201,100,82,110,111,111,69,149,55,
+246,247,247,139,187,187,187,102,209,110,252,215,200,100,50,162,202,12,111,62,
+159,151,211,211,211,49,85,252,70,135,231,212,230,64,44,149,74,201,205,205,141,
+196,227,113,97,174,222,84,48,102,102,102,70,230,230,230,186,110,110,183,219,178,
+177,177,33,219,219,219,198,129,133,133,5,188,30,27,31,31,71,78,78,89,90,93,5,40,
+60,60,32,92,8,168,215,235,120,86,96,129,148,244,138,0,70,219,208,142,140,140,
+144,66,89,89,89,145,163,163,163,49,221,255,90,195,31,65,62,60,200,7,240,48,39,
+53,198,0,187,96,94,126,230,43,195,28,239,122,129,189,150,111,120,120,88,22,23,
+23,13,109,105,105,73,142,143,143,95,169,242,247,42,51,107,249,144,79,202,49,
+136,186,1,198,0,191,17,186,88,177,194,123,1,239,134,134,134,76,228,152,79,78,78,
+202,250,250,186,137,232,218,218,154,156,156,156,60,211,72,92,43,235,115,60,247,
+43,166,238,128,137,67,192,136,102,183,170,245,3,30,45,92,227,25,74,121,78,76,
+76,152,72,112,2,168,137,195,195,195,148,210,223,169,226,23,208,40,92,210,203,
+201,3,158,205,15,33,98,232,60,101,22,188,222,133,108,235,135,90,64,40,239,200,
+154,154,154,50,17,96,190,185,185,73,77,80,224,121,93,127,130,62,12,97,15,48,6,
+88,101,254,72,244,19,1,194,138,48,242,74,26,108,152,145,145,203,229,76,65,226,
+212,234,234,170,28,28,28,96,228,71,235,168,69,44,24,110,221,156,237,39,255,22,
+40,197,155,173,173,45,115,36,153,147,22,66,205,241,198,57,140,164,54,74,165,82,
+99,122,122,250,47,71,141,235,129,40,164,131,133,249,47,16,242,96,85,227,29,133,
+201,187,149,107,63,116,58,10,24,131,209,22,158,221,4,51,2,117,67,201,127,110,
+187,1,190,249,249,121,185,188,188,148,98,177,40,87,87,87,102,126,126,126,110,
+230,133,66,65,46,46,46,100,118,118,214,242,127,192,32,127,10,92,149,246,217,65,
+11,11,159,130,4,151,1,53,7,45,44,60,8,18,92,6,60,114,208,194,66,35,72,112,25,
+80,113,208,194,66,50,72,112,25,240,205,65,11,11,55,65,194,93,167,160,175,8,68,
+29,180,176,224,142,0,103,211,254,163,245,140,86,59,247,253,31,252,95,216,95,
+243,108,144,199,21,129,14,166,16,113,63,72,112,25,80,119,208,194,194,215,32,193,
+101,64,104,41,112,160,28,36,220,117,10,238,5,9,119,157,130,14,125,46,3,254,252,
+43,195,71,51,72,112,25,240,197,65,11,11,29,245,229,217,179,106,155,10,237,104,
+154,253,180,228,253,2,153,246,142,161,207,36,223,26,123,155,2,30,139,86,33,237,
+148,246,118,41,255,197,97,16,160,148,238,135,214,140,161,198,52,81,110,47,39,
+224,119,71,196,176,157,45,253,28,173,211,160,176,109,25,45,25,50,213,193,199,
+190,27,152,225,137,209,159,99,17,30,151,203,101,218,236,44,52,154,76,90,234,65,
+128,34,228,250,90,246,136,255,29,196,176,206,118,175,58,79,232,226,83,24,236,
+213,122,16,176,223,94,207,73,175,70,249,59,81,177,117,128,158,31,49,127,246,30,
+207,181,170,20,0,0,0,0,73,69,78,68,174,66,96,130};
+static Fl_Image *image_fd_project() {
+  static Fl_Image *image = NULL;
+  if (!image)
+    image = new Fl_PNG_Image("fd_project.png", idata_fd_project, 6950);
+  return image;
 }
 
-static void cb_Run(Fl_Return_Button*, void* v) {
-  if (v != LOAD)
-    do_shell_command(NULL, NULL);
+Fl_Box *w_settings_shell_fd_user=(Fl_Box *)0;
+
+static const unsigned char idata_fd_user[] =
+{137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,32,0,0,0,32,8,6,0,0,0,
+115,122,122,244,0,0,1,110,105,67,67,80,105,99,99,0,0,40,145,117,145,187,75,195,
+80,20,198,127,173,239,23,14,58,136,116,200,80,197,65,65,20,196,81,235,208,165,
+72,169,21,172,186,180,49,109,133,164,13,73,139,136,171,224,226,80,112,16,93,
+124,13,254,7,186,10,174,10,130,160,8,34,110,238,190,22,145,120,174,45,180,136,
+189,225,230,252,248,238,253,14,39,95,192,31,49,117,203,109,156,2,43,87,112,98,
+225,144,182,144,88,212,90,94,104,163,153,46,2,244,39,117,215,158,142,70,35,212,
+93,159,119,248,84,189,29,81,189,234,223,251,119,117,172,24,174,14,190,86,225,9,
+221,118,10,194,50,13,145,181,130,173,120,91,184,87,207,38,87,132,15,133,135,29,
+25,80,248,74,233,169,50,63,43,206,148,249,93,177,19,143,205,128,95,245,212,50,
+53,156,170,97,61,235,88,194,67,194,65,203,44,234,149,121,212,151,116,26,185,
+249,57,169,253,178,3,184,196,8,19,66,35,69,145,85,76,10,140,72,205,73,102,255,
+251,70,127,125,179,228,197,163,203,219,102,29,71,28,25,178,226,29,22,181,40,93,
+13,169,105,209,13,121,76,214,85,238,127,243,116,211,227,99,229,238,157,33,104,
+122,242,188,183,1,104,217,129,239,146,231,125,29,121,222,247,49,52,60,194,69,
+174,234,207,75,78,147,31,162,151,170,90,240,0,186,55,225,236,178,170,165,118,
+225,124,11,250,30,236,164,147,252,149,26,100,251,211,105,120,61,133,174,4,244,
+220,64,251,82,57,171,202,57,39,247,16,223,144,95,116,13,123,251,48,40,247,187,
+151,127,0,229,44,103,253,189,250,32,75,0,0,0,9,112,72,89,115,0,0,22,37,0,0,22,
+37,1,73,82,36,240,0,0,1,13,116,69,88,116,82,97,119,32,112,114,111,102,105,108,
+101,32,116,121,112,101,32,101,120,105,102,0,10,101,120,105,102,10,32,32,32,32,
+32,49,49,52,10,52,53,55,56,54,57,54,54,48,48,48,48,52,57,52,57,50,97,48,48,48,
+56,48,48,48,48,48,48,48,52,48,48,49,97,48,49,48,53,48,48,48,49,48,48,48,48,48,
+48,51,101,48,48,48,48,48,48,49,98,48,49,48,53,48,48,48,49,48,48,48,48,48,48,10,
+52,54,48,48,48,48,48,48,50,56,48,49,48,51,48,48,48,49,48,48,48,48,48,48,48,50,
+48,48,48,48,48,48,54,57,56,55,48,52,48,48,48,49,48,48,48,48,48,48,52,101,48,48,
+48,48,48,48,48,48,48,48,48,48,48,48,57,48,48,48,48,48,48,48,10,48,49,48,48,48,
+48,48,48,57,48,48,48,48,48,48,48,48,49,48,48,48,48,48,48,48,50,48,48,48,50,97,
+48,48,52,48,48,48,49,48,48,48,48,48,48,53,50,48,48,48,48,48,48,48,51,97,48,48,
+52,48,48,48,49,48,48,48,48,48,48,56,48,48,48,10,48,48,48,48,48,48,48,48,48,48,
+48,48,10,190,225,144,105,0,0,0,90,116,69,88,116,82,97,119,32,112,114,111,102,
+105,108,101,32,116,121,112,101,32,105,112,116,99,0,10,105,112,116,99,10,32,32,
+32,32,32,32,50,54,10,53,48,54,56,54,102,55,52,54,102,55,51,54,56,54,102,55,48,
+50,48,51,51,50,101,51,48,48,48,51,56,52,50,52,57,52,100,48,52,48,52,48,48,48,
+48,48,48,48,48,48,48,48,48,10,199,209,105,220,0,0,20,96,116,69,88,116,82,97,
+119,32,112,114,111,102,105,108,101,32,116,121,112,101,32,120,109,112,0,10,120,
+109,112,10,32,32,32,32,50,53,53,53,10,51,99,51,102,55,56,55,48,54,49,54,51,54,
+98,54,53,55,52,50,48,54,50,54,53,54,55,54,57,54,101,51,100,50,50,101,102,98,98,
+98,102,50,50,50,48,54,57,54,52,51,100,50,50,53,55,51,53,52,100,51,48,52,100,55,
+48,52,51,54,53,54,56,54,57,10,52,56,55,97,55,50,54,53,53,51,55,97,52,101,53,52,
+54,51,55,97,54,98,54,51,51,57,54,52,50,50,51,102,51,101,48,97,51,99,55,56,51,
+97,55,56,54,100,55,48,54,100,54,53,55,52,54,49,50,48,55,56,54,100,54,99,54,101,
+55,51,51,97,55,56,10,51,100,50,50,54,49,54,52,54,102,54,50,54,53,51,97,54,101,
+55,51,51,97,54,100,54,53,55,52,54,49,50,102,50,50,50,48,55,56,51,97,55,56,54,
+100,55,48,55,52,54,98,51,100,50,50,53,56,52,100,53,48,50,48,52,51,54,102,55,50,
+54,53,50,48,10,51,52,50,101,51,52,50,101,51,48,50,100,52,53,55,56,54,57,55,54,
+51,50,50,50,51,101,48,97,50,48,51,99,55,50,54,52,54,54,51,97,53,50,52,52,52,54,
+50,48,55,56,54,100,54,99,54,101,55,51,51,97,55,50,54,52,54,54,51,100,50,50,54,
+56,10,55,52,55,52,55,48,51,97,50,102,50,102,55,55,55,55,55,55,50,101,55,55,51,
+51,50,101,54,102,55,50,54,55,50,102,51,49,51,57,51,57,51,57,50,102,51,48,51,50,
+50,102,51,50,51,50,50,100,55,50,54,52,54,54,50,100,55,51,55,57,54,101,55,52,10,
+54,49,55,56,50,100,54,101,55,51,50,51,50,50,51,101,48,97,50,48,50,48,51,99,55,
+50,54,52,54,54,51,97,52,52,54,53,55,51,54,51,55,50,54,57,55,48,55,52,54,57,54,
+102,54,101,50,48,55,50,54,52,54,54,51,97,54,49,54,50,54,102,55,53,10,55,52,51,
+100,50,50,50,50,48,97,50,48,50,48,50,48,50,48,55,56,54,100,54,99,54,101,55,51,
+51,97,54,53,55,56,54,57,54,54,51,100,50,50,54,56,55,52,55,52,55,48,51,97,50,
+102,50,102,54,101,55,51,50,101,54,49,54,52,54,102,54,50,54,53,10,50,101,54,51,
+54,102,54,100,50,102,54,53,55,56,54,57,54,54,50,102,51,49,50,101,51,48,50,102,
+50,50,48,97,50,48,50,48,50,48,50,48,55,56,54,100,54,99,54,101,55,51,51,97,55,
+52,54,57,54,54,54,54,51,100,50,50,54,56,55,52,55,52,55,48,10,51,97,50,102,50,
+102,54,101,55,51,50,101,54,49,54,52,54,102,54,50,54,53,50,101,54,51,54,102,54,
+100,50,102,55,52,54,57,54,54,54,54,50,102,51,49,50,101,51,48,50,102,50,50,48,97,
+50,48,50,48,50,48,54,53,55,56,54,57,54,54,51,97,53,48,10,54,57,55,56,54,53,54,
+99,53,56,52,52,54,57,54,100,54,53,54,101,55,51,54,57,54,102,54,101,51,100,50,
+50,51,56,51,50,50,50,48,97,50,48,50,48,50,48,54,53,55,56,54,57,54,54,51,97,53,
+48,54,57,55,56,54,53,54,99,53,57,52,52,54,57,10,54,100,54,53,54,101,55,51,54,
+57,54,102,54,101,51,100,50,50,51,49,51,50,51,56,50,50,48,97,50,48,50,48,50,48,
+55,52,54,57,54,54,54,54,51,97,53,50,54,53,55,51,54,102,54,99,55,53,55,52,54,57,
+54,102,54,101,53,53,54,101,54,57,55,52,10,51,100,50,50,51,50,50,50,48,97,50,48,
+50,48,50,48,55,52,54,57,54,54,54,54,51,97,53,57,53,50,54,53,55,51,54,102,54,99,
+55,53,55,52,54,57,54,102,54,101,51,100,50,50,51,49,51,52,51,52,50,48,50,102,50,
+48,51,49,50,50,48,97,50,48,10,50,48,50,48,55,52,54,57,54,54,54,54,51,97,53,56,
+53,50,54,53,55,51,54,102,54,99,55,53,55,52,54,57,54,102,54,101,51,100,50,50,51,
+49,51,52,51,52,50,48,50,102,50,48,51,49,50,50,50,102,51,101,48,97,50,48,51,99,
+50,102,55,50,54,52,10,54,54,51,97,53,50,52,52,52,54,51,101,48,97,51,99,50,102,
+55,56,51,97,55,56,54,100,55,48,54,100,54,53,55,52,54,49,51,101,48,97,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,48,97,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,48,97,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,48,97,50,48,10,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,48,97,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,48,97,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,48,97,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,48,
+97,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,48,97,10,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,48,97,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,48,97,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,48,97,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,48,97,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,10,48,97,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,48,97,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,48,
+97,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,48,97,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,48,97,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,48,97,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,48,97,50,48,50,48,50,48,50,48,50,48,10,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,48,97,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,
+48,50,48,50,48,50,48,50,48,10,50,48,50,48,50,48,50,48,50,48,50,48,50,48,50,48,
+50,48,50,48,50,48,50,48,50,48,50,48,50,48,48,97,51,99,51,102,55,56,55,48,54,49,
+54,51,54,98,54,53,55,52,50,48,54,53,54,101,54,52,51,100,50,50,55,55,50,50,51,
+102,51,101,10,87,123,188,247,0,0,9,241,73,68,65,84,88,71,109,87,105,144,85,197,
+21,254,186,239,242,222,155,25,102,88,12,14,46,227,16,96,12,26,80,118,103,16,
+113,3,5,89,203,10,70,75,42,106,170,48,196,16,141,154,20,18,177,8,41,21,149,82,
+81,244,71,48,166,42,75,37,96,22,29,5,9,155,131,37,139,16,65,113,153,25,71,8,66,
+153,165,148,137,226,204,91,238,210,55,223,233,251,30,49,58,77,53,115,223,237,
+190,167,207,249,206,57,223,57,173,218,59,223,128,163,92,104,147,32,138,12,84,
+162,225,58,62,100,36,137,66,38,147,65,177,88,4,31,225,186,46,130,56,134,210,9,
+188,140,139,158,82,30,78,198,65,20,26,238,5,60,237,91,57,242,157,231,184,8,75,1,
+148,82,118,130,223,12,168,27,152,62,127,97,104,3,23,9,52,226,242,76,228,173,50,
+118,81,169,4,249,124,15,5,198,86,160,85,138,135,185,78,22,189,61,37,104,30,104,
+98,5,87,103,184,158,227,51,191,113,249,206,24,132,97,152,202,41,79,101,13,74,
+240,229,225,26,83,131,68,203,193,49,12,2,24,45,31,184,246,35,199,113,64,120,104,
+177,139,222,82,137,104,228,16,169,88,187,137,250,238,137,79,62,251,246,238,93,
+187,250,83,232,137,113,227,199,71,77,77,77,71,78,22,78,222,149,209,94,41,227,
+249,68,165,68,153,148,65,52,42,255,250,26,174,67,200,211,161,211,153,104,139,
+136,60,151,104,133,235,106,68,38,132,118,29,132,145,25,250,139,103,158,217,186,
+105,227,214,97,199,143,253,131,240,41,56,70,67,211,13,67,134,12,198,236,249,215,
+220,178,112,225,245,187,170,171,252,233,132,58,53,216,162,233,244,121,184,12,
+213,217,222,97,31,100,183,5,138,10,40,229,88,248,5,21,223,23,69,138,242,46,179,
+252,222,159,183,183,190,176,121,104,130,44,178,153,254,152,56,102,10,98,198,196,
+161,183,246,163,55,255,31,120,185,24,87,207,188,20,15,220,191,242,128,49,193,
+196,40,14,98,71,149,229,81,137,218,218,218,20,213,47,12,87,39,97,89,1,5,35,112,
+241,3,109,53,151,169,24,3,69,56,158,118,215,172,121,114,127,235,11,155,134,122,
+110,45,150,46,125,16,45,205,151,211,184,156,85,160,95,181,135,109,59,94,194,170,
+71,238,69,235,11,127,197,160,1,3,198,222,241,163,239,63,79,9,179,147,10,242,
+125,123,128,56,19,70,9,26,9,52,135,24,136,66,137,138,184,196,103,122,194,247,
+125,245,234,206,221,109,191,122,246,119,163,20,170,112,255,202,53,184,184,249,
+106,6,99,21,181,118,224,185,89,20,243,6,151,77,189,6,203,151,61,4,159,10,62,251,
+203,223,98,223,190,191,141,75,143,48,167,142,234,35,6,233,70,30,46,43,137,157,
+113,249,131,116,138,117,68,166,186,189,189,115,50,19,18,115,103,45,192,248,177,
+23,35,10,178,60,184,14,90,101,9,105,22,97,192,248,40,41,76,110,158,134,185,179,
+175,227,59,31,7,14,188,233,126,249,176,190,178,160,18,129,68,168,156,50,246,111,
+100,115,93,16,160,207,146,55,15,190,131,160,148,96,204,133,205,40,246,42,248,78,
+53,24,151,20,232,160,144,15,80,83,221,143,252,193,12,9,52,206,251,198,88,196,
+92,123,243,224,161,56,149,92,65,160,239,161,157,47,40,165,202,81,43,239,44,26,
+212,56,8,130,248,224,129,3,240,189,44,134,15,111,66,198,175,161,229,220,39,123,
+153,1,53,53,57,20,11,198,198,144,239,229,48,98,68,19,60,47,131,183,223,126,183,
+88,62,162,143,99,255,55,180,48,147,107,35,228,203,27,211,223,76,195,184,177,
+177,129,86,149,112,244,232,17,166,98,17,145,216,38,228,198,45,226,127,215,35,
+123,122,224,90,47,142,29,63,76,18,42,161,190,190,254,36,18,221,135,220,175,156,
+162,203,169,167,210,116,41,127,36,40,72,124,184,218,137,167,78,157,130,108,149,
+135,182,157,91,200,7,12,80,29,17,58,11,144,245,171,226,239,48,250,156,73,219,
+131,215,118,109,227,122,140,25,51,102,100,42,178,83,37,250,118,133,85,47,34,158,
+9,179,65,38,148,87,230,1,199,42,101,146,200,204,152,57,237,125,147,228,177,
+243,181,205,120,175,99,31,81,233,229,222,34,21,76,200,142,204,29,174,105,175,
+136,119,59,247,98,123,91,171,85,104,250,244,43,125,77,6,53,166,98,28,229,39,95,
+85,66,71,41,251,83,63,42,65,14,168,40,18,89,10,117,108,38,12,31,209,120,83,115,
+203,120,148,130,147,184,231,222,219,177,105,243,6,120,126,36,52,129,124,177,100,
+41,124,71,219,75,88,198,181,56,233,193,228,201,147,208,216,216,56,75,228,168,
+50,11,138,187,84,31,222,176,172,35,100,33,22,11,92,177,74,103,197,119,36,33,81,
+111,207,83,79,175,217,187,224,186,121,40,20,63,197,99,143,63,136,205,91,90,89,
+17,149,240,4,182,110,219,132,135,30,89,137,124,161,27,243,230,207,196,186,103,
+158,218,67,22,125,79,170,171,84,80,97,191,40,138,208,91,232,65,108,34,235,182,
+34,43,101,41,40,165,65,104,161,150,169,211,103,85,174,15,162,152,148,226,32,40,
+18,137,112,206,178,101,75,183,141,190,224,124,107,49,139,55,74,20,98,40,208,
+247,61,6,102,128,81,163,206,199,138,21,247,173,47,20,10,45,130,105,38,227,217,
+170,88,98,33,75,203,112,130,79,79,118,227,147,238,19,164,238,188,157,172,39,14,
+9,141,126,42,79,139,136,69,37,101,66,177,192,243,60,233,11,62,102,74,62,76,82,
+162,50,9,38,76,152,96,149,148,67,46,188,112,12,171,90,6,29,29,93,193,231,159,23,
+158,20,223,107,126,28,70,37,155,214,242,189,252,22,20,4,101,73,83,249,93,118,
+129,197,223,22,159,116,166,164,45,127,197,255,217,108,214,30,24,4,17,118,239,
+126,61,137,194,4,35,207,29,133,65,3,79,39,180,202,90,87,83,93,135,97,67,207,101,
+63,224,153,3,111,28,202,184,174,239,136,229,41,145,41,203,41,34,75,179,204,139,
+65,50,108,191,192,227,221,83,197,226,212,72,35,213,214,114,250,174,187,187,155,
+188,190,79,255,229,207,47,206,223,183,247,157,135,227,64,161,101,210,101,164,94,
+32,173,90,160,146,53,152,48,126,10,142,28,237,204,254,224,182,59,159,187,100,
+202,164,127,206,155,63,235,195,150,150,139,158,173,170,170,122,217,36,113,94,24,
+95,14,15,67,246,29,236,92,114,185,156,85,66,181,119,118,88,6,252,127,69,82,37,
+94,106,221,56,106,245,234,71,175,232,62,209,51,203,113,170,91,76,224,231,38,76,
+184,20,75,190,119,23,206,58,123,56,203,116,10,181,75,234,62,246,81,39,158,88,
+187,10,239,180,239,71,18,247,218,56,169,98,149,252,241,79,238,196,220,185,179,
+47,247,60,231,21,81,34,117,133,177,127,5,25,213,222,222,14,169,136,142,231,218,
+128,50,73,32,10,12,88,187,246,233,59,215,173,251,245,45,42,169,61,99,120,227,88,
+76,155,190,0,83,155,175,68,255,65,131,105,56,59,7,82,95,28,146,176,24,55,137,
+229,112,33,167,8,255,254,248,24,118,182,109,196,43,109,47,163,189,243,32,15,138,
+177,232,214,155,112,251,29,183,77,85,137,121,53,45,72,58,45,76,68,80,189,253,
+214,33,194,209,207,194,33,41,215,211,243,233,232,229,203,151,255,126,203,150,29,
+231,185,172,120,75,22,255,20,211,167,221,72,70,172,163,94,14,164,159,8,36,152,0,
+219,204,74,200,136,44,9,48,41,227,174,71,106,87,228,6,213,139,23,95,124,14,79,
+174,125,136,27,3,92,50,181,217,172,121,124,245,24,173,205,33,203,158,182,81,165,
+225,75,126,184,132,86,211,227,180,202,209,222,153,119,223,125,207,235,219,183,
+239,110,168,171,61,3,43,239,123,156,254,190,10,85,85,167,161,80,136,88,130,93,
+27,88,68,144,169,71,146,226,193,177,73,27,78,66,12,135,235,113,28,165,5,149,
+194,217,39,226,155,163,70,99,207,174,93,248,224,112,151,58,124,164,107,241,244,
+171,166,29,103,237,56,40,116,45,25,161,125,95,160,15,108,239,199,96,187,97,103,
+219,158,129,190,219,31,171,87,173,195,216,11,46,99,233,29,192,146,27,157,138,
+222,82,41,141,232,56,182,201,99,93,32,214,136,95,77,148,240,119,134,41,153,35,
+186,213,136,131,12,198,140,190,24,143,174,94,135,154,220,215,176,99,251,107,120,
+125,239,254,7,136,182,170,196,154,14,216,239,101,115,210,5,71,151,175,88,249,
+179,165,33,133,44,188,97,49,154,190,62,142,66,171,73,48,20,200,86,91,14,9,73,54,
+174,207,190,136,133,73,44,141,227,52,88,45,205,10,141,11,125,115,198,180,44,138,
+121,71,64,127,148,242,62,70,142,156,136,57,115,174,167,66,46,86,63,242,196,32,
+130,214,84,9,119,45,36,81,40,244,158,182,97,195,134,223,124,208,245,193,192,179,
+207,26,134,111,93,187,144,13,8,157,29,123,105,59,109,42,221,140,177,129,26,210,
+223,18,197,158,167,109,129,137,152,86,202,94,92,202,118,73,185,230,118,135,37,
+211,247,170,17,20,20,22,222,120,11,59,231,6,116,117,29,118,159,127,190,117,69,
+84,142,35,29,209,145,142,155,61,255,15,235,255,116,70,93,221,233,184,249,59,
+139,104,5,153,138,157,175,133,88,167,80,11,2,162,172,237,106,89,5,227,40,96,239,
+79,74,54,129,205,0,197,12,136,19,42,39,237,16,247,243,106,192,192,78,121,223,
+146,26,207,91,116,235,98,42,31,99,195,31,215,79,114,41,75,134,155,48,178,185,
+195,59,114,248,56,130,162,143,230,139,166,216,194,164,43,209,29,167,85,76,243,
+191,48,76,155,28,199,241,108,76,164,205,108,74,90,70,114,154,123,36,150,4,21,
+113,179,40,171,29,9,204,34,41,187,26,227,199,93,100,255,190,223,113,204,72,44,
+249,76,101,22,35,15,135,187,62,26,98,34,31,67,234,207,177,27,148,244,134,210,
+116,136,134,101,4,36,215,229,224,180,175,55,246,112,197,158,80,131,190,86,25,72,
+95,85,25,210,97,185,90,89,235,131,82,104,175,114,48,164,97,93,139,51,235,155,
+104,168,151,251,232,248,103,20,202,119,212,86,31,61,122,108,149,4,80,67,67,131,
+189,136,228,195,30,114,127,129,26,74,235,205,128,67,234,83,200,83,249,222,152,
+118,58,94,249,89,242,46,172,108,42,95,195,180,101,87,47,35,233,202,106,232,196,
+168,98,176,15,30,124,26,254,254,161,170,233,234,234,194,208,198,122,81,52,202,
+53,156,51,196,44,186,245,230,127,13,169,111,200,38,186,23,253,6,120,82,231,221,
+176,196,226,159,208,145,112,107,172,97,9,97,81,9,159,217,14,33,166,242,18,73,
+230,4,103,29,223,243,217,94,114,184,238,68,118,63,97,36,82,174,152,47,212,204,
+238,14,243,174,189,2,19,155,135,117,203,225,246,210,218,222,241,22,3,134,23,84,
+238,147,74,103,27,19,11,113,26,120,114,249,176,150,90,139,203,237,112,5,133,83,
+163,124,159,80,105,166,84,154,25,123,221,51,105,57,150,247,65,216,203,236,81,
+116,89,108,93,41,107,255,5,119,155,194,247,64,241,254,70,0,0,0,0,73,69,78,68,
+174,66,96,130};
+static Fl_Image *image_fd_user() {
+  static Fl_Image *image = NULL;
+  if (!image)
+    image = new Fl_PNG_Image("fd_user.png", idata_fd_user, 8612);
+  return image;
 }
 
 Fl_Group *w_settings_i18n_tab=(Fl_Group *)0;
@@ -910,84 +2008,127 @@ Fl_Menu_Item menu_i18n_type_chooser[] = {
  {0,0,0,0,0,0,0,0,0}
 };
 
-Fl_Input *i18n_include_input=(Fl_Input *)0;
+Fl_Group *i18n_gnu_group=(Fl_Group *)0;
 
-static void cb_i18n_include_input(Fl_Input* o, void* v) {
+static void cb_i18n_gnu_group(Fl_Group* o, void* v) {
+  propagate_load(o, v);
+}
+
+Fl_Input *i18n_gnu_include_input=(Fl_Input *)0;
+
+static void cb_i18n_gnu_include_input(Fl_Input* o, void* v) {
   if (v == LOAD) {
-    o->value(g_project.i18n_include.c_str());
+    o->value(g_project.i18n_gnu_include.c_str());
   } else {
     undo_checkpoint();
-    g_project.i18n_include = o->value();
+    g_project.i18n_gnu_include = o->value();
     set_modflag(1);
   }
 }
 
-Fl_Input *i18n_conditional_input=(Fl_Input *)0;
+Fl_Input *i18n_gnu_conditional_input=(Fl_Input *)0;
 
-static void cb_i18n_conditional_input(Fl_Input* o, void* v) {
+static void cb_i18n_gnu_conditional_input(Fl_Input* o, void* v) {
   if (v == LOAD) {
-    o->value(g_project.i18n_conditional.c_str());
+    o->value(g_project.i18n_gnu_conditional.c_str());
   } else {
     undo_checkpoint();
-    g_project.i18n_conditional = o->value();
+    g_project.i18n_gnu_conditional = o->value();
     set_modflag(1);
   }
 }
 
-Fl_Input *i18n_file_input=(Fl_Input *)0;
+Fl_Input *i18n_gnu_function_input=(Fl_Input *)0;
 
-static void cb_i18n_file_input(Fl_Input* o, void* v) {
+static void cb_i18n_gnu_function_input(Fl_Input* o, void* v) {
   if (v == LOAD) {
-    o->value(g_project.i18n_file.c_str());
+    o->value(g_project.i18n_gnu_function.c_str());
   } else {
     undo_checkpoint();
-    g_project.i18n_file = o->value();
+    g_project.i18n_gnu_function = o->value();
     set_modflag(1);
   }
 }
 
-Fl_Int_Input *i18n_set_input=(Fl_Int_Input *)0;
+Fl_Input *i18n_gnu_static_function_input=(Fl_Input *)0;
 
-static void cb_i18n_set_input(Fl_Int_Input* o, void* v) {
+static void cb_i18n_gnu_static_function_input(Fl_Input* o, void* v) {
   if (v == LOAD) {
-    o->value(g_project.i18n_set.c_str());
+    o->value(g_project.i18n_gnu_static_function.c_str());
   } else {
     undo_checkpoint();
-    g_project.i18n_set = o->value();
+    g_project.i18n_gnu_static_function = o->value();
     set_modflag(1);
   }
 }
 
-Fl_Input *i18n_function_input=(Fl_Input *)0;
+Fl_Group *i18n_posix_group=(Fl_Group *)0;
 
-static void cb_i18n_function_input(Fl_Input* o, void* v) {
+static void cb_i18n_posix_group(Fl_Group* o, void* v) {
+  propagate_load(o, v);
+}
+
+Fl_Input *i18n_pos_include_input=(Fl_Input *)0;
+
+static void cb_i18n_pos_include_input(Fl_Input* o, void* v) {
   if (v == LOAD) {
-    o->value(g_project.i18n_function.c_str());
+    o->value(g_project.i18n_pos_include.c_str());
   } else {
     undo_checkpoint();
-    g_project.i18n_function = o->value();
+    g_project.i18n_pos_include = o->value();
     set_modflag(1);
   }
 }
 
-Fl_Input *i18n_static_function_input=(Fl_Input *)0;
+Fl_Input *i18n_pos_conditional_input=(Fl_Input *)0;
 
-static void cb_i18n_static_function_input(Fl_Input* o, void* v) {
+static void cb_i18n_pos_conditional_input(Fl_Input* o, void* v) {
   if (v == LOAD) {
-    o->value(g_project.i18n_static_function.c_str());
+    o->value(g_project.i18n_pos_conditional.c_str());
   } else {
     undo_checkpoint();
-    g_project.i18n_static_function = o->value();
+    g_project.i18n_pos_conditional = o->value();
+    set_modflag(1);
+  }
+}
+
+Fl_Input *i18n_pos_file_input=(Fl_Input *)0;
+
+static void cb_i18n_pos_file_input(Fl_Input* o, void* v) {
+  if (v == LOAD) {
+    o->value(g_project.i18n_pos_file.c_str());
+  } else {
+    undo_checkpoint();
+    g_project.i18n_pos_file = o->value();
+    set_modflag(1);
+  }
+}
+
+static void cb_c(Fl_Group* o, void* v) {
+  propagate_load(o, v);
+}
+
+Fl_Int_Input *i18n_pos_set_input=(Fl_Int_Input *)0;
+
+static void cb_i18n_pos_set_input(Fl_Int_Input* o, void* v) {
+  if (v == LOAD) {
+    o->value(g_project.i18n_pos_set.c_str());
+  } else {
+    undo_checkpoint();
+    g_project.i18n_pos_set = o->value();
     set_modflag(1);
   }
 }
 
 static void cb_Close(Fl_Button*, void*) {
+  if (g_shell_config)
+    g_shell_config->write(fluid_prefs, FD_STORE_USER);
+  g_layout_list.write(fluid_prefs, FD_STORE_USER);
   settings_window->hide();
 }
 
 Fl_Double_Window* make_settings_window() {
-  { Fl_Double_Window* o = settings_window = new Fl_Double_Window(340, 580, "GUI Settings");
+  { settings_window = new Fl_Double_Window(340, 580, "FLUID Settings");
     settings_window->align(Fl_Align(FL_ALIGN_CLIP|FL_ALIGN_INSIDE));
     { w_settings_tabs = new Fl_Tabs(10, 10, 320, 530);
       w_settings_tabs->selection_color((Fl_Color)12);
@@ -997,26 +2138,34 @@ Fl_Double_Window* make_settings_window() {
       { Fl_Group* o = new Fl_Group(10, 60, 320, 480, "General");
         o->image( image_general_64() );
         o->labelsize(11);
-        { scheme_choice = new Fl_Scheme_Choice(120, 78, 120, 25, "Scheme: ");
-          scheme_choice->box(FL_FLAT_BOX);
-          scheme_choice->down_box(FL_BORDER_BOX);
-          scheme_choice->color(FL_BACKGROUND_COLOR);
-          scheme_choice->selection_color(FL_SELECTION_COLOR);
-          scheme_choice->labeltype(FL_NORMAL_LABEL);
-          scheme_choice->labelfont(1);
-          scheme_choice->labelsize(11);
-          scheme_choice->labelcolor(FL_FOREGROUND_COLOR);
-          scheme_choice->callback((Fl_Callback*)scheme_cb);
-          scheme_choice->align(Fl_Align(FL_ALIGN_LEFT));
-          scheme_choice->when(FL_WHEN_RELEASE);
-          init_scheme();
-        } // Fl_Scheme_Choice* scheme_choice
+        { Fl_Group* o = new Fl_Group(120, 78, 130, 25);
+          o->callback((Fl_Callback*)cb_);
+          { scheme_choice = new Fl_Scheme_Choice(120, 78, 120, 25, "Scheme: ");
+            scheme_choice->box(FL_UP_BOX);
+            scheme_choice->down_box(FL_BORDER_BOX);
+            scheme_choice->color(FL_BACKGROUND_COLOR);
+            scheme_choice->selection_color(FL_SELECTION_COLOR);
+            scheme_choice->labeltype(FL_NORMAL_LABEL);
+            scheme_choice->labelfont(1);
+            scheme_choice->labelsize(11);
+            scheme_choice->labelcolor(FL_FOREGROUND_COLOR);
+            scheme_choice->callback((Fl_Callback*)scheme_cb);
+            scheme_choice->align(Fl_Align(FL_ALIGN_LEFT));
+            scheme_choice->when(FL_WHEN_RELEASE);
+            init_scheme();
+          } // Fl_Scheme_Choice* scheme_choice
+          { Fl_Box* o = new Fl_Box(240, 78, 10, 25);
+            o->hide();
+            Fl_Group::current()->resizable(o);
+          } // Fl_Box* o
+          o->end();
+        } // Fl_Group* o
         { Fl_Box* o = new Fl_Box(120, 115, 0, 20, "Options: ");
           o->labelfont(1);
           o->labelsize(11);
           o->align(Fl_Align(FL_ALIGN_LEFT));
         } // Fl_Box* o
-        { tooltips_button = new Fl_Check_Button(120, 115, 180, 20, "Show Tooltips");
+        { tooltips_button = new Fl_Check_Button(120, 115, 200, 20, "Show Tooltips");
           tooltips_button->down_box(FL_DOWN_BOX);
           tooltips_button->labelsize(11);
           tooltips_button->callback((Fl_Callback*)cb_tooltips_button);
@@ -1025,7 +2174,7 @@ Fl_Double_Window* make_settings_window() {
           tooltips_button->value(b);
           Fl_Tooltip::enable(b);
         } // Fl_Check_Button* tooltips_button
-        { completion_button = new Fl_Check_Button(120, 135, 180, 20, "Show Completion Dialogs");
+        { completion_button = new Fl_Check_Button(120, 135, 200, 20, "Show Completion Dialogs");
           completion_button->down_box(FL_DOWN_BOX);
           completion_button->labelsize(11);
           completion_button->callback((Fl_Callback*)cb_completion_button);
@@ -1033,7 +2182,7 @@ Fl_Double_Window* make_settings_window() {
           fluid_prefs.get("show_completion_dialogs", b, 1);
           completion_button->value(b);
         } // Fl_Check_Button* completion_button
-        { openlast_button = new Fl_Check_Button(120, 155, 180, 20, "Open Previous File on Startup");
+        { openlast_button = new Fl_Check_Button(120, 155, 200, 20, "Open Previous File on Startup");
           openlast_button->down_box(FL_DOWN_BOX);
           openlast_button->labelsize(11);
           openlast_button->callback((Fl_Callback*)cb_openlast_button);
@@ -1041,7 +2190,7 @@ Fl_Double_Window* make_settings_window() {
           fluid_prefs.get("open_previous_file", b, 0);
           openlast_button->value(b);
         } // Fl_Check_Button* openlast_button
-        { prevpos_button = new Fl_Check_Button(120, 175, 180, 20, "Remember Window Positions");
+        { prevpos_button = new Fl_Check_Button(120, 175, 200, 20, "Remember Window Positions");
           prevpos_button->down_box(FL_DOWN_BOX);
           prevpos_button->labelsize(11);
           prevpos_button->callback((Fl_Callback*)cb_prevpos_button);
@@ -1049,25 +2198,33 @@ Fl_Double_Window* make_settings_window() {
           fluid_prefs.get("prev_window_pos", b, 1);
           prevpos_button->value(b);
         } // Fl_Check_Button* prevpos_button
-        { show_comments_button = new Fl_Check_Button(120, 195, 180, 20, "Show Comments in Browser");
+        { show_comments_button = new Fl_Check_Button(120, 195, 200, 20, "Show Comments in Browser");
           show_comments_button->down_box(FL_DOWN_BOX);
           show_comments_button->labelsize(11);
           show_comments_button->callback((Fl_Callback*)cb_show_comments_button);
           fluid_prefs.get("show_comments", show_comments, 1);
           show_comments_button->value(show_comments);
         } // Fl_Check_Button* show_comments_button
-        { recent_spinner = new Fl_Spinner(120, 225, 40, 20, "# Recent Files:");
-          recent_spinner->labelfont(1);
-          recent_spinner->labelsize(11);
-          recent_spinner->maximum(10);
-          recent_spinner->textsize(11);
-          recent_spinner->callback((Fl_Callback*)cb_recent_spinner);
-          recent_spinner->when(FL_WHEN_CHANGED);
-          int c;
-          fluid_prefs.get("recent_files", c, 5);
-          recent_spinner->maximum(10);
-          recent_spinner->value(c);
-        } // Fl_Spinner* recent_spinner
+        { Fl_Group* o = new Fl_Group(120, 225, 50, 20);
+          o->callback((Fl_Callback*)cb_1);
+          { recent_spinner = new Fl_Spinner(120, 225, 40, 20, "# Recent Files:");
+            recent_spinner->labelfont(1);
+            recent_spinner->labelsize(11);
+            recent_spinner->maximum(10);
+            recent_spinner->textsize(11);
+            recent_spinner->callback((Fl_Callback*)cb_recent_spinner);
+            recent_spinner->when(FL_WHEN_CHANGED);
+            int c;
+            fluid_prefs.get("recent_files", c, 5);
+            recent_spinner->maximum(10);
+            recent_spinner->value(c);
+          } // Fl_Spinner* recent_spinner
+          { Fl_Box* o = new Fl_Box(160, 225, 10, 20);
+            o->hide();
+            Fl_Group::current()->resizable(o);
+          } // Fl_Box* o
+          o->end();
+        } // Fl_Group* o
         { use_external_editor_button = new Fl_Check_Button(120, 275, 200, 20, "Use for Code Nodes");
           use_external_editor_button->down_box(FL_DOWN_BOX);
           use_external_editor_button->labelsize(11);
@@ -1088,18 +2245,58 @@ f\n    gedit\n emacs");
           fluid_prefs.get("external_editor_command", G_external_editor_command, "", sizeof(G_external_editor_command)-1);
           editor_command_input->value(G_external_editor_command);
         } // Fl_Input* editor_command_input
+        { Fl_Box* o = new Fl_Box(120, 300, 0, 20, "Overlays: ");
+          o->labelfont(1);
+          o->labelsize(11);
+          o->align(Fl_Align(FL_ALIGN_LEFT));
+        } // Fl_Box* o
+        { Fl_Check_Button* o = guides_button = new Fl_Check_Button(120, 300, 200, 20, "Show Positioning Guides");
+          guides_button->tooltip("show guides that help to position and resize widgets and enable snapping");
+          guides_button->down_box(FL_DOWN_BOX);
+          guides_button->labelsize(11);
+          guides_button->callback((Fl_Callback*)toggle_guides_cb);
+          o->value(show_guides);
+        } // Fl_Check_Button* guides_button
+        { Fl_Check_Button* o = restricted_button = new Fl_Check_Button(120, 320, 200, 20, "Show Restricted Areas");
+          restricted_button->tooltip("show overlapping and out of bounds areas, show unfilled areas in Fl_Pack grou\
+ps");
+          restricted_button->down_box(FL_DOWN_BOX);
+          restricted_button->labelsize(11);
+          restricted_button->callback((Fl_Callback*)toggle_restricted_cb);
+          o->value(show_restricted);
+        } // Fl_Check_Button* restricted_button
+        { Fl_Check_Button* o = ghosted_outline_button = new Fl_Check_Button(120, 340, 200, 20, "Show Ghosted Group Outlines");
+          ghosted_outline_button->tooltip("groups with no box type or flat boxtypes without contrast will be rendered wi\
+th a dim outline in the editing window only");
+          ghosted_outline_button->down_box(FL_DOWN_BOX);
+          ghosted_outline_button->labelsize(11);
+          ghosted_outline_button->callback((Fl_Callback*)toggle_ghosted_outline_cb);
+          o->value(show_ghosted_outline);
+        } // Fl_Check_Button* ghosted_outline_button
+        { Fl_Box* o = new Fl_Box(120, 530, 200, 10);
+          o->hide();
+          Fl_Group::current()->resizable(o);
+        } // Fl_Box* o
         o->image()->scale(36, 24);
         o->end();
+        Fl_Group::current()->resizable(o);
       } // Fl_Group* o
       { Fl_Group* o = w_settings_project_tab = new Fl_Group(10, 60, 320, 480, "Project");
         w_settings_project_tab->image( image_document_64() );
         w_settings_project_tab->labelsize(11);
         w_settings_project_tab->callback((Fl_Callback*)cb_w_settings_project_tab);
         w_settings_project_tab->hide();
-        { Fl_Box* o = new Fl_Box(100, 78, 220, 30, "Use \"name.ext\" to set a file name or just \".ext\" to set extension.");
-          o->labelsize(11);
-          o->align(Fl_Align(132|FL_ALIGN_INSIDE));
-        } // Fl_Box* o
+        { Fl_Group* o = new Fl_Group(100, 78, 220, 30);
+          { Fl_Box* o = new Fl_Box(100, 78, 210, 30, "Use \"name.ext\" to set a file name\nor just \".ext\" to set extension.");
+            o->labelsize(11);
+            o->align(Fl_Align(132|FL_ALIGN_INSIDE));
+          } // Fl_Box* o
+          { Fl_Box* o = new Fl_Box(310, 78, 10, 30);
+            o->hide();
+            Fl_Group::current()->resizable(o);
+          } // Fl_Box* o
+          o->end();
+        } // Fl_Group* o
         { header_file_input = new Fl_Input(100, 112, 220, 20, "Header File:");
           header_file_input->tooltip("The name of the generated header file.");
           header_file_input->box(FL_THIN_DOWN_BOX);
@@ -1120,17 +2317,17 @@ f\n    gedit\n emacs");
           code_file_input->callback((Fl_Callback*)cb_code_file_input, (void*)(1));
           code_file_input->when(FL_WHEN_CHANGED);
         } // Fl_Input* code_file_input
-        { Fl_Box* o = new Fl_Box(100, 205, 0, 20, "Options: ");
-          o->labelfont(1);
-          o->labelsize(11);
-          o->align(Fl_Align(FL_ALIGN_LEFT));
-        } // Fl_Box* o
         { include_H_from_C_button = new Fl_Check_Button(100, 162, 220, 20, "Include Header from Code");
           include_H_from_C_button->tooltip("Include the header file from the code file.");
           include_H_from_C_button->down_box(FL_DOWN_BOX);
           include_H_from_C_button->labelsize(11);
           include_H_from_C_button->callback((Fl_Callback*)cb_include_H_from_C_button);
         } // Fl_Check_Button* include_H_from_C_button
+        { Fl_Box* o = new Fl_Box(100, 205, 0, 20, "Options: ");
+          o->labelfont(1);
+          o->labelsize(11);
+          o->align(Fl_Align(FL_ALIGN_LEFT));
+        } // Fl_Box* o
         { use_FL_COMMAND_button = new Fl_Check_Button(100, 205, 220, 20, "Menu shortcuts use FL_COMMAND");
           use_FL_COMMAND_button->tooltip("Replace FL_CTRL and FL_META with FL_COMMAND when generating menu shortcuts");
           use_FL_COMMAND_button->down_box(FL_DOWN_BOX);
@@ -1151,6 +2348,26 @@ ped using octal notation `\\0123`. If this option is checked, Fluid will write\
           avoid_early_includes_button->labelsize(11);
           avoid_early_includes_button->callback((Fl_Callback*)cb_avoid_early_includes_button);
         } // Fl_Check_Button* avoid_early_includes_button
+        { Fl_Box* o = new Fl_Box(100, 283, 0, 20, "Experimental: ");
+          o->labelfont(1);
+          o->labelsize(11);
+          o->align(Fl_Align(FL_ALIGN_LEFT));
+          o->hide();
+        } // Fl_Box* o
+        { // // Matt: disabled
+          w_proj_mergeback = new Fl_Check_Button(100, 283, 220, 20, "generate MergeBack data");
+          w_proj_mergeback->tooltip("MergeBack is a feature under construction that allows changes in code files t\
+o be merged back into the project file. Checking this option will generate add\
+itional data in code and project files.");
+          w_proj_mergeback->down_box(FL_DOWN_BOX);
+          w_proj_mergeback->labelsize(11);
+          w_proj_mergeback->callback((Fl_Callback*)cb_w_proj_mergeback);
+          w_proj_mergeback->hide();
+        } // Fl_Check_Button* w_proj_mergeback
+        { Fl_Box* o = new Fl_Box(100, 530, 220, 10);
+          o->hide();
+          Fl_Group::current()->resizable(o);
+        } // Fl_Box* o
         o->image()->scale(36, 24);
         w_settings_project_tab->end();
       } // Fl_Group* w_settings_project_tab
@@ -1170,7 +2387,7 @@ ped using octal notation `\\0123`. If this option is checked, Fluid will write\
           layout_choice->menu(menu_layout_choice);
         } // Fl_Choice* layout_choice
         { Fl_Button* o = new Fl_Button(272, 78, 24, 24, "+");
-          o->callback((Fl_Callback*)cb_);
+          o->callback((Fl_Callback*)cb_2);
         } // Fl_Button* o
         { w_layout_menu = new Fl_Menu_Button(296, 78, 24, 24);
           w_layout_menu->callback((Fl_Callback*)cb_w_layout_menu);
@@ -1191,18 +2408,21 @@ ped using octal notation `\\0123`. If this option is checked, Fluid will write\
           { preset_choice[0] = new Fl_Button(85, 107, 78, 20, "Application");
             preset_choice[0]->type(102);
             preset_choice[0]->value(1);
+            preset_choice[0]->compact(1);
             preset_choice[0]->selection_color(FL_DARK2);
             preset_choice[0]->labelsize(11);
             preset_choice[0]->callback((Fl_Callback*)edit_layout_preset_cb, (void*)(0));
           } // Fl_Button* preset_choice[0]
           { preset_choice[1] = new Fl_Button(163, 107, 79, 20, "Dialog");
             preset_choice[1]->type(102);
+            preset_choice[1]->compact(1);
             preset_choice[1]->selection_color(FL_DARK2);
             preset_choice[1]->labelsize(11);
             preset_choice[1]->callback((Fl_Callback*)edit_layout_preset_cb, (void*)(1));
           } // Fl_Button* preset_choice[1]
           { preset_choice[2] = new Fl_Button(242, 107, 78, 20, "Toolbox");
             preset_choice[2]->type(102);
+            preset_choice[2]->compact(1);
             preset_choice[2]->selection_color(FL_DARK2);
             preset_choice[2]->labelsize(11);
             preset_choice[2]->callback((Fl_Callback*)edit_layout_preset_cb, (void*)(2));
@@ -1398,14 +2618,14 @@ ped using octal notation `\\0123`. If this option is checked, Fluid will write\
           o->maximum(32767);
           o->step(1);
           o->textsize(11);
-          o->callback((Fl_Callback*)cb_1);
+          o->callback((Fl_Callback*)cb_3);
         } // Fl_Value_Input* o
         { Fl_Value_Input* o = new Fl_Value_Input(145, 440, 55, 20);
           o->labelsize(11);
           o->maximum(32767);
           o->step(1);
           o->textsize(11);
-          o->callback((Fl_Callback*)cb_2);
+          o->callback((Fl_Callback*)cb_4);
           o->align(Fl_Align(FL_ALIGN_TOP_LEFT));
         } // Fl_Value_Input* o
         { Fl_Value_Input* o = new Fl_Value_Input(205, 440, 55, 20);
@@ -1413,106 +2633,260 @@ ped using octal notation `\\0123`. If this option is checked, Fluid will write\
           o->maximum(32767);
           o->step(1);
           o->textsize(11);
-          o->callback((Fl_Callback*)cb_3);
+          o->callback((Fl_Callback*)cb_5);
           o->align(Fl_Align(FL_ALIGN_TOP_LEFT));
         } // Fl_Value_Input* o
-        { Fl_Group* o = new Fl_Group(85, 465, 200, 20, "Label Font:");
+        { Fl_Group* o = new Fl_Group(85, 465, 201, 20, "Label Font:");
           o->labelsize(11);
           o->callback((Fl_Callback*)propagate_load);
           o->align(Fl_Align(FL_ALIGN_LEFT));
-          { Fl_Choice* o = new Fl_Choice(85, 465, 152, 20);
+          { Fl_Choice* o = new Fl_Choice(85, 465, 150, 20);
             o->tooltip("The style of the label text.");
             o->box(FL_THIN_UP_BOX);
             o->down_box(FL_BORDER_BOX);
             o->labelfont(1);
             o->labelsize(11);
             o->textsize(11);
-            o->callback((Fl_Callback*)cb_4);
+            o->callback((Fl_Callback*)cb_6);
             Fl_Group::current()->resizable(o);
-            o->menu(fontmenu);
+            o->menu(fontmenu_w_default);
           } // Fl_Choice* o
-          { Fl_Value_Input* o = new Fl_Value_Input(236, 465, 49, 20);
+          { Fl_Value_Input* o = new Fl_Value_Input(235, 465, 50, 20);
             o->tooltip("The size of the label text.");
             o->labelsize(11);
-            o->maximum(100);
+            o->minimum(1);
+            o->maximum(1000);
             o->step(1);
             o->value(14);
             o->textsize(11);
-            o->callback((Fl_Callback*)cb_5);
+            o->callback((Fl_Callback*)cb_7);
           } // Fl_Value_Input* o
           o->end();
         } // Fl_Group* o
-        { Fl_Choice* o = new Fl_Choice(85, 490, 152, 20);
-          o->tooltip("The value text style.");
-          o->box(FL_DOWN_BOX);
-          o->down_box(FL_BORDER_BOX);
-          o->labelfont(1);
+        { Fl_Group* o = new Fl_Group(85, 490, 200, 20, "Text Font:");
           o->labelsize(11);
-          o->textsize(11);
-          o->callback((Fl_Callback*)cb_6);
-          o->menu(fontmenu);
-        } // Fl_Choice* o
-        { Fl_Value_Input* o = new Fl_Value_Input(236, 490, 49, 20);
-          o->tooltip("The value text size.");
-          o->labelsize(11);
-          o->maximum(100);
-          o->step(1);
-          o->value(14);
-          o->textsize(11);
-          o->callback((Fl_Callback*)cb_7);
-        } // Fl_Value_Input* o
+          o->callback((Fl_Callback*)propagate_load);
+          o->align(Fl_Align(FL_ALIGN_LEFT));
+          { Fl_Choice* o = new Fl_Choice(85, 490, 150, 20);
+            o->tooltip("The value text style.");
+            o->box(FL_DOWN_BOX);
+            o->down_box(FL_BORDER_BOX);
+            o->labelfont(1);
+            o->labelsize(11);
+            o->textsize(11);
+            o->callback((Fl_Callback*)cb_8);
+            o->menu(fontmenu_w_default);
+          } // Fl_Choice* o
+          { Fl_Value_Input* o = new Fl_Value_Input(235, 490, 50, 20);
+            o->tooltip("The value text size.");
+            o->labelsize(11);
+            o->maximum(1000);
+            o->step(1);
+            o->value(14);
+            o->textsize(11);
+            o->callback((Fl_Callback*)cb_9);
+          } // Fl_Value_Input* o
+          o->end();
+        } // Fl_Group* o
+        { Fl_Box* o = new Fl_Box(325, 535, 5, 5);
+          o->hide();
+          Fl_Group::current()->resizable(o);
+        } // Fl_Box* o
         o->image()->scale(36, 24);
         w_settings_layout_tab->end();
       } // Fl_Group* w_settings_layout_tab
       { Fl_Group* o = w_settings_shell_tab = new Fl_Group(10, 60, 320, 480, "Shell");
         w_settings_shell_tab->image( image_shell_64() );
         w_settings_shell_tab->labelsize(11);
-        w_settings_shell_tab->callback((Fl_Callback*)cb_w_settings_shell_tab);
+        w_settings_shell_tab->callback((Fl_Callback*)propagate_load);
         w_settings_shell_tab->hide();
-        { Fl_Input* o = new Fl_Input(100, 78, 220, 20, "Command:");
-          o->tooltip("external shell command");
-          o->labelfont(1);
-          o->labelsize(11);
-          o->textfont(4);
-          o->textsize(11);
-          o->callback((Fl_Callback*)cb_Command);
-        } // Fl_Input* o
-        { Fl_Check_Button* o = new Fl_Check_Button(100, 98, 220, 20, "save .fl project file");
-          o->tooltip("save the project to the .fl file before running the command");
-          o->down_box(FL_DOWN_BOX);
-          o->labelsize(11);
-          o->callback((Fl_Callback*)cb_save);
-        } // Fl_Check_Button* o
-        { Fl_Check_Button* o = new Fl_Check_Button(100, 118, 220, 19, "save source code");
-          o->tooltip("generate the source code and header file before running the command");
-          o->down_box(FL_DOWN_BOX);
-          o->labelsize(11);
-          o->callback((Fl_Callback*)cb_save1);
-        } // Fl_Check_Button* o
-        { Fl_Check_Button* o = new Fl_Check_Button(100, 137, 220, 20, "save i18n strings");
-          o->tooltip("save the internationalisation string before running the command");
-          o->down_box(FL_DOWN_BOX);
-          o->labelsize(11);
-          o->callback((Fl_Callback*)cb_save2);
-        } // Fl_Check_Button* o
-        { shell_use_fl_button = new Fl_Check_Button(100, 194, 220, 19, "save settings in .fl project files");
-          shell_use_fl_button->tooltip("check to read and write shell command from and to .fl files");
-          shell_use_fl_button->down_box(FL_DOWN_BOX);
-          shell_use_fl_button->labelsize(11);
-          shell_use_fl_button->callback((Fl_Callback*)cb_shell_use_fl_button);
-          shell_use_fl_button->deactivate();
-        } // Fl_Check_Button* shell_use_fl_button
-        { Fl_Button* o = new Fl_Button(100, 218, 115, 20, "save as default");
-          o->tooltip("update the Fluid app settings for external shell commands to the current sett\
-ings");
-          o->labelsize(11);
-          o->callback((Fl_Callback*)cb_save3);
-        } // Fl_Button* o
-        { Fl_Return_Button* o = new Fl_Return_Button(100, 162, 100, 20, "Run");
-          o->tooltip("save selected files and run the command");
-          o->labelsize(11);
-          o->callback((Fl_Callback*)cb_Run);
-        } // Fl_Return_Button* o
+        { Fl_Group* o = new Fl_Group(10, 90, 320, 132);
+          o->callback((Fl_Callback*)propagate_load);
+          { w_settings_shell_list = new Fl_Browser(100, 90, 220, 110, "Shell\ncommand\nlist:");
+            w_settings_shell_list->type(3);
+            w_settings_shell_list->labelfont(1);
+            w_settings_shell_list->labelsize(11);
+            w_settings_shell_list->textsize(13);
+            w_settings_shell_list->callback((Fl_Callback*)cb_w_settings_shell_list);
+            w_settings_shell_list->align(Fl_Align(FL_ALIGN_LEFT));
+            Fl_Group::current()->resizable(w_settings_shell_list);
+          } // Fl_Browser* w_settings_shell_list
+          { w_settings_shell_toolbox = new Fl_Group(100, 200, 220, 22);
+            w_settings_shell_toolbox->callback((Fl_Callback*)cb_w_settings_shell_toolbox);
+            { Fl_Button* o = new Fl_Button(100, 200, 24, 22, "+");
+              o->tooltip("insert a new shell command into the list after the selected command");
+              o->labelfont(1);
+              o->labelsize(11);
+              o->callback((Fl_Callback*)cb_a);
+            } // Fl_Button* o
+            { w_settings_shell_dup = new Fl_Button(124, 200, 24, 22, "++");
+              w_settings_shell_dup->tooltip("duplicate the selected shell command and insert it into the list");
+              w_settings_shell_dup->labelfont(1);
+              w_settings_shell_dup->labelsize(11);
+              w_settings_shell_dup->callback((Fl_Callback*)cb_w_settings_shell_dup);
+              w_settings_shell_dup->deactivate();
+            } // Fl_Button* w_settings_shell_dup
+            { w_settings_shell_remove = new Fl_Button(148, 200, 24, 22, "DEL");
+              w_settings_shell_remove->tooltip("remove the selected shell command - this can not be undone");
+              w_settings_shell_remove->labelsize(10);
+              w_settings_shell_remove->callback((Fl_Callback*)cb_w_settings_shell_remove);
+              w_settings_shell_remove->deactivate();
+            } // Fl_Button* w_settings_shell_remove
+            { w_settings_shell_menu = new Fl_Menu_Button(172, 200, 24, 22);
+              w_settings_shell_menu->labelsize(11);
+              w_settings_shell_menu->textsize(11);
+              w_settings_shell_menu->menu(menu_w_settings_shell_menu);
+            } // Fl_Menu_Button* w_settings_shell_menu
+            { Fl_Box* o = new Fl_Box(253, 200, 13, 22);
+              o->hide();
+              Fl_Group::current()->resizable(o);
+            } // Fl_Box* o
+            { w_settings_shell_play = new Fl_Button(270, 200, 50, 22, "Run");
+              w_settings_shell_play->tooltip("run the selected shell command");
+              w_settings_shell_play->labelsize(11);
+              w_settings_shell_play->callback((Fl_Callback*)cb_w_settings_shell_play);
+              w_settings_shell_play->deactivate();
+            } // Fl_Button* w_settings_shell_play
+            w_settings_shell_toolbox->end();
+          } // Fl_Group* w_settings_shell_toolbox
+          o->end();
+        } // Fl_Group* o
+        { w_settings_shell_cmd = new Fl_Group(10, 235, 320, 291);
+          w_settings_shell_cmd->callback((Fl_Callback*)cb_w_settings_shell_cmd);
+          { Fl_Input* o = new Fl_Input(100, 246, 220, 20, "Name:");
+            o->tooltip("file the shell command under this name in the shell command list");
+            o->labelfont(1);
+            o->labelsize(11);
+            o->textfont(4);
+            o->textsize(11);
+            o->callback((Fl_Callback*)cb_Name);
+            o->when(FL_WHEN_RELEASE | FL_WHEN_CHANGED | FL_WHEN_ENTER_KEY);
+          } // Fl_Input* o
+          { Fl_Input* o = new Fl_Input(100, 272, 220, 20, "Menu Label:");
+            o->tooltip("label text for the Shell menu in the main menu bar");
+            o->labelfont(1);
+            o->labelsize(11);
+            o->textfont(4);
+            o->textsize(11);
+            o->callback((Fl_Callback*)cb_Menu);
+          } // Fl_Input* o
+          { Fl_Group* o = new Fl_Group(100, 297, 140, 71);
+            o->callback((Fl_Callback*)cb_b);
+            { Fl_Shortcut_Button* o = new Fl_Shortcut_Button(100, 297, 130, 20, "Shortcut");
+              o->tooltip("an optional keyboard shortcut to run this shell command");
+              o->box(FL_UP_BOX);
+              o->color(FL_BACKGROUND_COLOR);
+              o->selection_color(FL_BACKGROUND_COLOR);
+              o->labeltype(FL_NORMAL_LABEL);
+              o->labelfont(0);
+              o->labelsize(11);
+              o->labelcolor(FL_FOREGROUND_COLOR);
+              o->callback((Fl_Callback*)cb_Shortcut);
+              o->align(Fl_Align(FL_ALIGN_CENTER|FL_ALIGN_INSIDE));
+              o->when(FL_WHEN_RELEASE);
+            } // Fl_Shortcut_Button* o
+            { Fl_Choice* o = new Fl_Choice(100, 322, 130, 20, "Store:");
+              o->tooltip("store this shell command as a user setting or save it with the .fl project fi\
+le");
+              o->down_box(FL_BORDER_BOX);
+              o->labelfont(1);
+              o->labelsize(11);
+              o->textsize(11);
+              o->callback((Fl_Callback*)cb_Store);
+              o->menu(menu_Store);
+            } // Fl_Choice* o
+            { Fl_Choice* o = new Fl_Choice(100, 348, 130, 20, "Condition:");
+              o->tooltip("add this command to the main menu bar only if this condition is true");
+              o->down_box(FL_BORDER_BOX);
+              o->labelfont(1);
+              o->labelsize(11);
+              o->textsize(11);
+              o->callback((Fl_Callback*)cb_Condition);
+              o->menu(menu_Condition);
+            } // Fl_Choice* o
+            { Fl_Box* o = new Fl_Box(230, 297, 10, 71);
+              o->hide();
+              Fl_Group::current()->resizable(o);
+            } // Fl_Box* o
+            o->end();
+          } // Fl_Group* o
+          { Fl_Input* o = new Fl_Input(230, 348, 90, 20, "Label:");
+            o->labelfont(1);
+            o->labelsize(11);
+            o->textfont(4);
+            o->textsize(11);
+            o->callback((Fl_Callback*)cb_Label);
+            o->hide();
+          } // Fl_Input* o
+          { Fl_Group* o = new Fl_Group(100, 373, 220, 80);
+            o->callback((Fl_Callback*)propagate_load);
+            { Fl_Text_Editor* o = w_settings_shell_command = new Fl_Text_Editor(100, 373, 196, 80, "Shell script:");
+              w_settings_shell_command->labelfont(1);
+              w_settings_shell_command->labelsize(11);
+              w_settings_shell_command->textfont(4);
+              w_settings_shell_command->textsize(12);
+              w_settings_shell_command->callback((Fl_Callback*)cb_w_settings_shell_command);
+              w_settings_shell_command->align(Fl_Align(FL_ALIGN_LEFT));
+              Fl_Group::current()->resizable(w_settings_shell_command);
+              o->buffer(new Fl_Text_Buffer);
+            } // Fl_Text_Editor* w_settings_shell_command
+            { Fl_Group* o = new Fl_Group(296, 373, 24, 80);
+              { w_settings_shell_text_macros = new Fl_Menu_Button(296, 373, 24, 22);
+                w_settings_shell_text_macros->tooltip("a list of text replacements available for the shell script");
+                w_settings_shell_text_macros->labelsize(11);
+                w_settings_shell_text_macros->textsize(11);
+                w_settings_shell_text_macros->callback((Fl_Callback*)cb_w_settings_shell_text_macros);
+                w_settings_shell_text_macros->menu(menu_w_settings_shell_text_macros);
+              } // Fl_Menu_Button* w_settings_shell_text_macros
+              { Fl_Button* o = new Fl_Button(296, 395, 24, 22, "@+1fd_zoom");
+                o->tooltip("open the big code editor");
+                o->labelsize(11);
+                o->callback((Fl_Callback*)cb_1fd_zoom);
+              } // Fl_Button* o
+              { Fl_Box* o = new Fl_Box(296, 417, 24, 10);
+                o->hide();
+                Fl_Group::current()->resizable(o);
+              } // Fl_Box* o
+              o->end();
+            } // Fl_Group* o
+            o->end();
+            Fl_Group::current()->resizable(o);
+          } // Fl_Group* o
+          { Fl_Check_Button* o = new Fl_Check_Button(100, 458, 220, 20, "save .fl project file");
+            o->tooltip("save the project to the .fl file before running the command");
+            o->down_box(FL_DOWN_BOX);
+            o->labelsize(11);
+            o->callback((Fl_Callback*)cb_save);
+          } // Fl_Check_Button* o
+          { Fl_Check_Button* o = new Fl_Check_Button(100, 478, 220, 19, "save source code");
+            o->tooltip("generate the source code and header file before running the command");
+            o->down_box(FL_DOWN_BOX);
+            o->labelsize(11);
+            o->callback((Fl_Callback*)cb_save1);
+          } // Fl_Check_Button* o
+          { Fl_Check_Button* o = new Fl_Check_Button(100, 497, 220, 20, "save i18n strings");
+            o->tooltip("save the internationalisation strings before running the command");
+            o->down_box(FL_DOWN_BOX);
+            o->labelsize(11);
+            o->callback((Fl_Callback*)cb_save2);
+          } // Fl_Check_Button* o
+          w_settings_shell_cmd->end();
+          Fl_Group::current()->resizable(w_settings_shell_cmd);
+        } // Fl_Group* w_settings_shell_cmd
+        { Fl_Box* o = w_settings_shell_fd_project = new Fl_Box(20, 70, 16, 15);
+          w_settings_shell_fd_project->bind_image( image_fd_project() );
+          w_settings_shell_fd_project->labelsize(11);
+          w_settings_shell_fd_project->hide();
+          w_settings_shell_fd_project->deactivate();
+          o->image()->scale(16, 16);
+        } // Fl_Box* w_settings_shell_fd_project
+        { Fl_Box* o = w_settings_shell_fd_user = new Fl_Box(20, 70, 16, 15);
+          w_settings_shell_fd_user->bind_image( image_fd_user() );
+          w_settings_shell_fd_user->labelsize(11);
+          w_settings_shell_fd_user->hide();
+          w_settings_shell_fd_user->deactivate();
+          o->image()->scale(16, 16);
+        } // Fl_Box* w_settings_shell_fd_user
         o->image()->scale(36, 24);
         w_settings_shell_tab->end();
       } // Fl_Group* w_settings_shell_tab
@@ -1521,81 +2895,133 @@ ings");
         w_settings_i18n_tab->labelsize(11);
         w_settings_i18n_tab->callback((Fl_Callback*)cb_w_settings_i18n_tab);
         w_settings_i18n_tab->hide();
-        { i18n_type_chooser = new Fl_Choice(100, 78, 160, 20, "i18n Library:");
-          i18n_type_chooser->tooltip("Type of internationalization to use.");
-          i18n_type_chooser->box(FL_THIN_UP_BOX);
-          i18n_type_chooser->down_box(FL_BORDER_BOX);
-          i18n_type_chooser->labelsize(11);
-          i18n_type_chooser->textsize(11);
-          i18n_type_chooser->callback((Fl_Callback*)i18n_type_cb);
-          i18n_type_chooser->menu(menu_i18n_type_chooser);
-        } // Fl_Choice* i18n_type_chooser
-        { i18n_include_input = new Fl_Input(100, 103, 220, 20, "#include:");
-          i18n_include_input->tooltip("The include file for internationalization.");
-          i18n_include_input->box(FL_THIN_DOWN_BOX);
-          i18n_include_input->labelsize(11);
-          i18n_include_input->textfont(4);
-          i18n_include_input->textsize(11);
-          i18n_include_input->callback((Fl_Callback*)cb_i18n_include_input);
-        } // Fl_Input* i18n_include_input
-        { i18n_conditional_input = new Fl_Input(100, 128, 220, 20, "Conditional:");
-          i18n_conditional_input->tooltip("only include the header file if this preprocessor macro is defined, for examp\
+        { Fl_Group* o = new Fl_Group(100, 78, 170, 20);
+          o->callback((Fl_Callback*)propagate_load);
+          { i18n_type_chooser = new Fl_Choice(100, 78, 160, 20, "i18n Library:");
+            i18n_type_chooser->tooltip("Type of internationalization to use.");
+            i18n_type_chooser->box(FL_THIN_UP_BOX);
+            i18n_type_chooser->down_box(FL_BORDER_BOX);
+            i18n_type_chooser->labelsize(11);
+            i18n_type_chooser->textsize(11);
+            i18n_type_chooser->callback((Fl_Callback*)i18n_type_cb);
+            i18n_type_chooser->menu(menu_i18n_type_chooser);
+          } // Fl_Choice* i18n_type_chooser
+          { Fl_Box* o = new Fl_Box(260, 78, 10, 20);
+            o->hide();
+            Fl_Group::current()->resizable(o);
+          } // Fl_Box* o
+          o->end();
+        } // Fl_Group* o
+        { i18n_gnu_group = new Fl_Group(100, 103, 220, 95);
+          i18n_gnu_group->callback((Fl_Callback*)cb_i18n_gnu_group);
+          { i18n_gnu_include_input = new Fl_Input(100, 103, 220, 20, "#include:");
+            i18n_gnu_include_input->tooltip("The include file for internationalization.");
+            i18n_gnu_include_input->box(FL_THIN_DOWN_BOX);
+            i18n_gnu_include_input->labelsize(11);
+            i18n_gnu_include_input->textfont(4);
+            i18n_gnu_include_input->textsize(11);
+            i18n_gnu_include_input->callback((Fl_Callback*)cb_i18n_gnu_include_input);
+          } // Fl_Input* i18n_gnu_include_input
+          { i18n_gnu_conditional_input = new Fl_Input(100, 128, 220, 20, "Conditional:");
+            i18n_gnu_conditional_input->tooltip("only include the header file if this preprocessor macro is defined, for examp\
 le FLTK_GETTEXT_FOUND");
-          i18n_conditional_input->box(FL_THIN_DOWN_BOX);
-          i18n_conditional_input->labelsize(11);
-          i18n_conditional_input->textfont(4);
-          i18n_conditional_input->textsize(11);
-          i18n_conditional_input->callback((Fl_Callback*)cb_i18n_conditional_input);
-        } // Fl_Input* i18n_conditional_input
-        { i18n_file_input = new Fl_Input(100, 153, 220, 20, "File:");
-          i18n_file_input->tooltip("The name of the message catalog.");
-          i18n_file_input->box(FL_THIN_DOWN_BOX);
-          i18n_file_input->labelsize(11);
-          i18n_file_input->textfont(4);
-          i18n_file_input->textsize(11);
-          i18n_file_input->callback((Fl_Callback*)cb_i18n_file_input);
-        } // Fl_Input* i18n_file_input
-        { i18n_set_input = new Fl_Int_Input(100, 178, 220, 20, "Set:");
-          i18n_set_input->tooltip("The message set number.");
-          i18n_set_input->type(2);
-          i18n_set_input->box(FL_THIN_DOWN_BOX);
-          i18n_set_input->labelsize(11);
-          i18n_set_input->textfont(4);
-          i18n_set_input->textsize(11);
-          i18n_set_input->callback((Fl_Callback*)cb_i18n_set_input);
-        } // Fl_Int_Input* i18n_set_input
-        { i18n_function_input = new Fl_Input(100, 153, 220, 20, "Function:");
-          i18n_function_input->tooltip("The function to call to translate labels and tooltips, usually \"gettext\" or\
+            i18n_gnu_conditional_input->box(FL_THIN_DOWN_BOX);
+            i18n_gnu_conditional_input->labelsize(11);
+            i18n_gnu_conditional_input->textfont(4);
+            i18n_gnu_conditional_input->textsize(11);
+            i18n_gnu_conditional_input->callback((Fl_Callback*)cb_i18n_gnu_conditional_input);
+          } // Fl_Input* i18n_gnu_conditional_input
+          { i18n_gnu_function_input = new Fl_Input(100, 153, 220, 20, "Function:");
+            i18n_gnu_function_input->tooltip("The function to call to translate labels and tooltips, usually \"gettext\" or\
  \"_\"");
-          i18n_function_input->box(FL_THIN_DOWN_BOX);
-          i18n_function_input->labelsize(11);
-          i18n_function_input->textfont(4);
-          i18n_function_input->textsize(11);
-          i18n_function_input->callback((Fl_Callback*)cb_i18n_function_input);
-        } // Fl_Input* i18n_function_input
-        { i18n_static_function_input = new Fl_Input(100, 178, 220, 20, "Static Function:");
-          i18n_static_function_input->tooltip("function to call to translate static text, The function to call to internatio\
+            i18n_gnu_function_input->box(FL_THIN_DOWN_BOX);
+            i18n_gnu_function_input->labelsize(11);
+            i18n_gnu_function_input->textfont(4);
+            i18n_gnu_function_input->textsize(11);
+            i18n_gnu_function_input->callback((Fl_Callback*)cb_i18n_gnu_function_input);
+          } // Fl_Input* i18n_gnu_function_input
+          { i18n_gnu_static_function_input = new Fl_Input(100, 178, 220, 20, "Static Function:");
+            i18n_gnu_static_function_input->tooltip("function to call to translate static text, The function to call to internatio\
 nalize labels and tooltips, usually \"gettext_noop\" or \"N_\"");
-          i18n_static_function_input->box(FL_THIN_DOWN_BOX);
-          i18n_static_function_input->labelsize(11);
-          i18n_static_function_input->textfont(4);
-          i18n_static_function_input->textsize(11);
-          i18n_static_function_input->callback((Fl_Callback*)cb_i18n_static_function_input);
-        } // Fl_Input* i18n_static_function_input
+            i18n_gnu_static_function_input->box(FL_THIN_DOWN_BOX);
+            i18n_gnu_static_function_input->labelsize(11);
+            i18n_gnu_static_function_input->textfont(4);
+            i18n_gnu_static_function_input->textsize(11);
+            i18n_gnu_static_function_input->callback((Fl_Callback*)cb_i18n_gnu_static_function_input);
+          } // Fl_Input* i18n_gnu_static_function_input
+          i18n_gnu_group->end();
+        } // Fl_Group* i18n_gnu_group
+        { i18n_posix_group = new Fl_Group(100, 103, 220, 95);
+          i18n_posix_group->callback((Fl_Callback*)cb_i18n_posix_group);
+          i18n_posix_group->hide();
+          { i18n_pos_include_input = new Fl_Input(100, 103, 220, 20, "#include:");
+            i18n_pos_include_input->tooltip("The include file for internationalization.");
+            i18n_pos_include_input->box(FL_THIN_DOWN_BOX);
+            i18n_pos_include_input->labelsize(11);
+            i18n_pos_include_input->textfont(4);
+            i18n_pos_include_input->textsize(11);
+            i18n_pos_include_input->callback((Fl_Callback*)cb_i18n_pos_include_input);
+          } // Fl_Input* i18n_pos_include_input
+          { i18n_pos_conditional_input = new Fl_Input(100, 128, 220, 20, "Conditional:");
+            i18n_pos_conditional_input->tooltip("only include the header file if this preprocessor macro is defined, for examp\
+le FLTK_GETTEXT_FOUND");
+            i18n_pos_conditional_input->box(FL_THIN_DOWN_BOX);
+            i18n_pos_conditional_input->labelsize(11);
+            i18n_pos_conditional_input->textfont(4);
+            i18n_pos_conditional_input->textsize(11);
+            i18n_pos_conditional_input->callback((Fl_Callback*)cb_i18n_pos_conditional_input);
+          } // Fl_Input* i18n_pos_conditional_input
+          { i18n_pos_file_input = new Fl_Input(100, 153, 220, 20, "File:");
+            i18n_pos_file_input->tooltip("The name of the message catalog.");
+            i18n_pos_file_input->box(FL_THIN_DOWN_BOX);
+            i18n_pos_file_input->labelsize(11);
+            i18n_pos_file_input->textfont(4);
+            i18n_pos_file_input->textsize(11);
+            i18n_pos_file_input->callback((Fl_Callback*)cb_i18n_pos_file_input);
+          } // Fl_Input* i18n_pos_file_input
+          { Fl_Group* o = new Fl_Group(100, 178, 90, 20);
+            o->callback((Fl_Callback*)cb_c);
+            { i18n_pos_set_input = new Fl_Int_Input(100, 178, 80, 20, "Set:");
+              i18n_pos_set_input->tooltip("The message set number.");
+              i18n_pos_set_input->type(2);
+              i18n_pos_set_input->box(FL_THIN_DOWN_BOX);
+              i18n_pos_set_input->labelsize(11);
+              i18n_pos_set_input->textfont(4);
+              i18n_pos_set_input->textsize(11);
+              i18n_pos_set_input->callback((Fl_Callback*)cb_i18n_pos_set_input);
+            } // Fl_Int_Input* i18n_pos_set_input
+            { Fl_Box* o = new Fl_Box(180, 178, 10, 20);
+              o->hide();
+              Fl_Group::current()->resizable(o);
+            } // Fl_Box* o
+            o->end();
+          } // Fl_Group* o
+          i18n_posix_group->end();
+        } // Fl_Group* i18n_posix_group
+        { Fl_Box* o = new Fl_Box(100, 530, 220, 10);
+          o->hide();
+          Fl_Group::current()->resizable(o);
+        } // Fl_Box* o
         o->image()->scale(36, 24);
         w_settings_i18n_tab->end();
       } // Fl_Group* w_settings_i18n_tab
       w_settings_tabs->end();
+      Fl_Group::current()->resizable(w_settings_tabs);
     } // Fl_Tabs* w_settings_tabs
-    { Fl_Button* o = new Fl_Button(230, 550, 100, 20, "Close");
-      o->tooltip("Close this dialog.");
-      o->labelsize(11);
-      o->callback((Fl_Callback*)cb_Close);
-    } // Fl_Button* o
-    o->size_range(o->w(), o->h());
-    settings_window->set_non_modal();
+    { Fl_Group* o = new Fl_Group(10, 550, 320, 20);
+      { Fl_Button* o = new Fl_Button(230, 550, 100, 20, "Close");
+        o->tooltip("Close this dialog.");
+        o->labelsize(11);
+        o->callback((Fl_Callback*)cb_Close);
+      } // Fl_Button* o
+      { Fl_Box* o = new Fl_Box(220, 550, 10, 20);
+        o->hide();
+        Fl_Group::current()->resizable(o);
+      } // Fl_Box* o
+      o->end();
+    } // Fl_Group* o
+    settings_window->size_range(340, 580);
     settings_window->end();
-    settings_window->resizable(settings_window);
   } // Fl_Double_Window* settings_window
   w_settings_tabs->do_callback(w_settings_tabs, LOAD);
   return settings_window;
@@ -1603,7 +3029,11 @@ nalize labels and tooltips, usually \"gettext_noop\" or \"N_\"");
 
 Fl_Double_Window *shell_run_window=(Fl_Double_Window *)0;
 
-Fl_Simple_Terminal *shell_run_terminal=(Fl_Simple_Terminal *)0;
+Fl_Terminal *shell_run_terminal=(Fl_Terminal *)0;
+
+static void cb_Clear(Fl_Button*, void*) {
+  shell_run_terminal->append("\033[2J\033[H");
+}
 
 Fl_Return_Button *shell_run_button=(Fl_Return_Button *)0;
 
@@ -1619,11 +3049,16 @@ static void cb_shell_run_button(Fl_Return_Button*, void*) {
 Fl_Double_Window* make_shell_window() {
   { shell_run_window = new Fl_Double_Window(555, 430, "Shell Command Output");
     shell_run_window->align(Fl_Align(FL_ALIGN_CLIP|FL_ALIGN_INSIDE));
-    { shell_run_terminal = new Fl_Simple_Terminal(10, 10, 535, 375);
+    { shell_run_terminal = new Fl_Terminal(10, 10, 535, 375);
+      shell_run_terminal->ansi(1);
+      shell_run_terminal->end();
       Fl_Group::current()->resizable(shell_run_terminal);
-    } // Fl_Simple_Terminal* shell_run_terminal
+    } // Fl_Terminal* shell_run_terminal
     { Fl_Group* o = new Fl_Group(10, 395, 535, 25);
-      { Fl_Box* o = new Fl_Box(10, 395, 435, 25);
+      { Fl_Button* o = new Fl_Button(10, 395, 94, 25, "Clear");
+        o->callback((Fl_Callback*)cb_Clear);
+      } // Fl_Button* o
+      { Fl_Box* o = new Fl_Box(104, 395, 341, 25);
         o->hide();
         Fl_Group::current()->resizable(o);
       } // Fl_Box* o

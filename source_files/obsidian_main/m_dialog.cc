@@ -310,7 +310,7 @@ void DLG_EditSeed(void) {
     ;
 
     int user_response;
-    Fl_String user_buf = fl_input_str(
+    std::string user_buf = fl_input_str(
         user_response, 0 /* limit */, "%s",
         string_seed.empty() ? std::to_string(next_rand_seed).c_str()
                             : string_seed.c_str(),

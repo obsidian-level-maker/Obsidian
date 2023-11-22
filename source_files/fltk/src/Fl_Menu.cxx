@@ -386,9 +386,12 @@ menuwindow::menuwindow(const Fl_Menu_Item* m, int X, int Y, int Wp, int Hp,
   if (m) m = m->first(); // find the first item that needs to be rendered
   drawn_selected = -1;
   if (button) {
-    box(button->box());
-    // don't force a box type, but make sure that the background is redrawn
-    if (box() == FL_NO_BOX) box(FL_FLAT_BOX);
+    Fl_Boxtype b = button->menu_box();
+    if (b==FL_NO_BOX)
+      b = button->box();
+    if (b==FL_NO_BOX)
+      b = FL_FLAT_BOX;
+    box(b);
   } else {
     box(FL_UP_BOX);
   }
@@ -561,7 +564,7 @@ void menuwindow::drawentry(const Fl_Menu_Item* m, int n, int eraseit) {
     int x1 = xx + ww - sz - 2;
     int y1 = yy + (hh-sz)/2 + 1;
 
-    // draw an arrow whose style dependends on the active scheme
+    // draw an arrow whose style depends on the active scheme
     fl_draw_arrow(Fl_Rect(x1, y1, sz, sz), FL_ARROW_SINGLE, FL_ORIENT_RIGHT, fl_color());
 
   } else if (m->shortcut_) {

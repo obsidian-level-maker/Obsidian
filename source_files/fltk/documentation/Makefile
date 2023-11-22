@@ -48,7 +48,8 @@ HTMLFILES	= 	 \
                          $(SRC_DOCDIR)/development.dox \
                          $(SRC_DOCDIR)/license.dox \
                          $(SRC_DOCDIR)/examples.dox \
-                         $(SRC_DOCDIR)/faq.dox
+                         $(SRC_DOCDIR)/faq.dox \
+                         $(SRC_DOCDIR)/Fl_Terminal.dox
 
 MANPAGES =	$(SRC_DOCDIR)/fltk.$(CAT3EXT) $(SRC_DOCDIR)/fltk-config.$(CAT1EXT) \
 		$(SRC_DOCDIR)/fluid.$(CAT1EXT) $(SRC_DOCDIR)/blocks.$(CAT6EXT) \
@@ -138,27 +139,41 @@ uninstall-linux uninstall-osx:
 # Both files are generated from the common source file Doxyfile.in.
 # Note that Doxyfile.in is shared with CMake to configure these files.
 
+# Note: There's no way to enable the "Driver Documentation" via configure+make,
+#       please use CMake 'OPTION_INCLUDE_DRIVER_DOCUMENTATION' instead.
+#       Alternatively (if you really need it) edit this Makefile and
+#       replace the two lines below containing "@DRIVER_DOCS@" to read:
+#	    -e's, @DRIVER_DOCS@, DriverDev,' \
+#       (w/o leading '#') to enable the "Driver Documentation" section.
+#       Please take care of copying tabs and spaces literally.
+# Note: There's no intention to enable this via configure option (use CMake).
+
 Doxyfile: Doxyfile.in generated.dox copyright.dox
 	echo "Generating Doxyfile ..."
+	./convert_doxyfile $(DOXYDOC) $< $@ Doxyfile_error.log
 	sed -e's,@FLTK_VERSION@,$(FLTK_VERSION),' \
 	    -e's,@GENERATE_HTML@,YES,' \
 	    -e's,@GENERATE_LATEX@,NO,' \
 	    -e's, @LATEX_HEADER@,,' \
+	    -e's, @DRIVER_DOCS@,,' \
 	    -e's,@CMAKE_CURRENT_SOURCE_DIR@,.,' \
 	    -e's,@CMAKE_CURRENT_BINARY_DIR@,,' \
 	    -e's,@FLTK_SOURCE_DIR@,..,' \
-	    < $< > $@
+	    -i $@
 
 Doxybook: Doxyfile.in generated.dox copyright.dox
 	echo "Generating Doxybook ..."
+	./convert_doxyfile $(DOXYDOC) $< $@ Doxybook_error.log
+	$(DOXYDOC) -u -s - < $< 2>Doxybook_error.log | \
 	sed -e's,@FLTK_VERSION@,$(FLTK_VERSION),' \
 	    -e's,@GENERATE_HTML@,NO,' \
 	    -e's,@GENERATE_LATEX@,YES,' \
 	    -e's,@LATEX_HEADER@,src/fltk-book.tex,' \
+	    -e's, @DRIVER_DOCS@,,' \
 	    -e's,@CMAKE_CURRENT_SOURCE_DIR@,.,' \
 	    -e's,@CMAKE_CURRENT_BINARY_DIR@,,' \
 	    -e's,@FLTK_SOURCE_DIR@,..,' \
-	    < $< > $@
+	    -i $@
 
 # The HTML files are generated using doxygen, and this needs
 # an installed doxygen version and may take some time, so this target
@@ -196,7 +211,7 @@ src/fltk-title.tex: src/fltk-title.tex.in
 
 src/fltk-book.tex.in: src/fltk-title.tex
 	echo "Generating $@ ..."
-	./make_header $< $@
+	./make_header $(DOXYDOC) $< $@
 
 src/fltk-book.tex: src/fltk-book.tex.in
 	echo "Generating $@ ..."

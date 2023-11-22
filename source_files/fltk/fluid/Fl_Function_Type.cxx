@@ -1,7 +1,7 @@
 //
 // C function type code for the Fast Light Tool Kit (FLTK).
 //
-// Copyright 1998-2021 by Bill Spitzak and others.
+// Copyright 1998-2023 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
@@ -24,25 +24,33 @@
 #include "code.h"
 #include "function_panel.h"
 #include "comments.h"
+#include "mergeback.h"
+#include "undo.h"
 
 #include <FL/fl_string_functions.h>
 #include <FL/Fl_File_Chooser.H>
 #include <FL/fl_ask.H>
 #include "../src/flstring.h"
 
+#include <zlib.h>
+
+
 /// Set a current class, so that the code of the children is generated correctly.
 Fl_Class_Type *current_class = NULL;
 
 /**
- Return 1 if the list contains a function with the given signature at the top level.
- \param[in] rtype return type
+ \brief Return 1 if the list contains a function with the given signature at the top level.
+ Fl_Widget_Type uses this to check if a callback by a certain signature is
+ already defined by the user within this file. If not, Fl_Widget_Type will
+ generate an `extern $sig$;` statement.
+ \param[in] rtype return type, can be NULL to avoid checking (not used by Fl_Widget_Type)
  \param[in] sig function signature
  \return 1 if found.
  */
 int has_toplevel_function(const char *rtype, const char *sig) {
   Fl_Type *child;
   for (child = Fl_Type::first; child; child = child->next) {
-    if (!child->is_in_class() && strcmp(child->type_name(), "Function")==0) {
+    if (!child->is_in_class() && child->is_a(ID_Function)) {
       const Fl_Function_Type *fn = (const Fl_Function_Type*)child;
       if (fn->has_signature(rtype, sig))
         return 1;
@@ -59,7 +67,7 @@ static char buffer[128]; // for error messages
 
 /**
  Check a quoted string contains a character.
- This is used to find a matchin " or ' in a string.
+ This is used to find a matching " or ' in a string.
  \param[inout] c start searching here, return where we found \c type
  \param[in] type find this character
  \return NULL if the character was found, else a pointer to a static string
@@ -109,7 +117,7 @@ const char *_c_check(const char * & c, int type) {
       break;
 //    case '#':
 //      // treat cpp directives as a comment:
-//      // Matt: a '#' character can appear as a concatenator when defining macros
+//      // Matt: a '#' character can appear as a concatenation when defining macros
 //      // Matt: so instead we just silently ignore the '#'
 //      while (*c != '\n' && *c) c++;
 //      break;
@@ -160,7 +168,7 @@ const char *c_check(const char *c, int type) {
   return _c_check(c,type);
 }
 
-// ---- Fl_Function_Type implemntation
+// ---- Fl_Function_Type implementation
 
 /** \class Fl_Function_Type
  Manage a C++ function node in the Fluid design.
@@ -296,10 +304,9 @@ void Fl_Function_Type::open() {
     // - alert user
     if (message) {
       int v = fl_choice("Potential syntax error detected: %s",
-                        "Cancel Dialog", "Ignore Error", "Continue Editing", message);
-      if (v==0) goto BREAK2;  // Cancel Dialog
-      if (v==1) ;             // Ignore Error
-      if (v==2) continue;     // Continue Editing
+                        "Continue Editing", "Ignore Error", NULL, message);
+      if (v==0) continue;     // Continue Editing
+      //if (v==1) { }         // Ignore Error and close dialog
     }
     // - copy dialog data to target variables
     int mod = 0;
@@ -345,6 +352,51 @@ BREAK2:
 int Fl_Function_Type::is_public() const {
   return public_;
 }
+
+static bool fd_isspace(int c) {
+  return (c>0 && c<128 && isspace(c));
+}
+
+// code duplication: see int is_id(char c) in code.cxx
+static bool fd_iskeyword(int c) {
+  return (c>0 && c<128 && (isalnum(c) || c=='_'));
+}
+
+// remove all function default parameters and `override` keyword
+static void clean_function_for_implementation(char *out, const char *function_name) {
+  char *sptr = out;
+  const char *nptr = function_name;
+  int skips=0,skipc=0;
+  int nc=0,plevel=0;
+  bool arglist_done = false;
+  for (;*nptr; nc++,nptr++) {
+    if (arglist_done && fd_isspace(nptr[0])) {
+      // skip `override` and `FL_OVERRIDE` keywords if they are following the list of arguments
+      if (strncmp(nptr+1, "override", 8)==0 && !fd_iskeyword(nptr[9])) { nptr += 8; continue; }
+      else if (strncmp(nptr+1, "FL_OVERRIDE", 11)==0 && !fd_iskeyword(nptr[12])) { nptr += 11; continue; }
+    }
+    if (!skips && *nptr=='(') plevel++;
+    else if (!skips && *nptr==')') { plevel--; if (plevel==0) arglist_done = true; }
+    if ( *nptr=='"' &&  !(nc &&  *(nptr-1)=='\\') )
+      skips = skips ? 0 : 1;
+    else if(!skips && *nptr=='\'' &&  !(nc &&  *(nptr-1)=='\\'))
+      skipc = skipc ? 0 : 1;
+    if(!skips && !skipc && plevel==1 && *nptr =='=' && !(nc && *(nptr-1)=='\'') ) { // ignore '=' case
+      while(*++nptr  && (skips || skipc || ( (*nptr!=',' && *nptr!=')') || plevel!=1) )) {
+        if ( *nptr=='"' &&  *(nptr-1)!='\\' )
+          skips = skips ? 0 : 1;
+        else if(!skips && *nptr=='\'' &&  *(nptr-1)!='\\')
+          skipc = skipc ? 0 : 1;
+        if (!skips && !skipc && *nptr=='(') plevel++;
+        else if (!skips && *nptr==')') plevel--;
+      }
+      if (*nptr==')') if (--plevel==0) arglist_done = true;
+    }
+    if (sptr < (out + 1024 - 1)) *sptr++ = *nptr;
+  }
+  *sptr = '\0';
+}
+
 
 /**
  Write the code for the source and the header file.
@@ -432,33 +484,10 @@ void Fl_Function_Type::write_code1(Fd_Code_Writer& f) {
       } else {
         f.write_h("%s;\n", s);
       }
-      // skip all function default param. init in body:
-      int skips=0,skipc=0;
-      int nc=0,plevel=0;
-      for (sptr=s,nptr=(char*)name(); *nptr; nc++,nptr++) {
-        if (!skips && *nptr=='(') plevel++;
-        else if (!skips && *nptr==')') plevel--;
-        if ( *nptr=='"' &&  !(nc &&  *(nptr-1)=='\\') )
-          skips = skips ? 0 : 1;
-        else if(!skips && *nptr=='\'' &&  !(nc &&  *(nptr-1)=='\\'))
-          skipc = skipc ? 0 : 1;
-        if(!skips && !skipc && plevel==1 && *nptr =='=' &&
-           !(nc && *(nptr-1)=='\'') ) // ignore '=' case
-          while(*++nptr  && (skips || skipc || ( (*nptr!=',' && *nptr!=')') || plevel!=1) )) {
-            if ( *nptr=='"' &&  *(nptr-1)!='\\' )
-              skips = skips ? 0 : 1;
-            else if(!skips && *nptr=='\'' &&  *(nptr-1)!='\\')
-              skipc = skipc ? 0 : 1;
-            if (!skips && !skipc && *nptr=='(') plevel++;
-            else if (!skips && *nptr==')') plevel--;
-          }
-
-        if (sptr < (s + sizeof(s) - 1)) *sptr++ = *nptr;
-      }
-      *sptr = '\0';
-
-      if (havechildren)
+      if (havechildren) {
+        clean_function_for_implementation(s, name());
         f.write_c("%s::%s {\n", k, s);
+      }
     } else {
       if (havechildren)
         write_comment_c(f);
@@ -475,34 +504,11 @@ void Fl_Function_Type::write_code1(Fd_Code_Writer& f) {
       }
 
       // write everything but the default parameters (if any)
-      char s[1024], *sptr;
-      char *nptr;
-      int skips=0,skipc=0;
-      int nc=0,plevel=0;
-      for (sptr=s,nptr=(char*)name(); *nptr; nc++,nptr++) {
-        if (!skips && *nptr=='(') plevel++;
-        else if (!skips && *nptr==')') plevel--;
-        if ( *nptr=='"' &&  !(nc &&  *(nptr-1)=='\\') )
-          skips = skips ? 0 : 1;
-        else if(!skips && *nptr=='\'' &&  !(nc &&  *(nptr-1)=='\\'))
-          skipc = skipc ? 0 : 1;
-        if(!skips && !skipc && plevel==1 && *nptr =='=' &&
-           !(nc && *(nptr-1)=='\'') ) // ignore '=' case
-          while(*++nptr  && (skips || skipc || ( (*nptr!=',' && *nptr!=')') || plevel!=1) )) {
-            if ( *nptr=='"' &&  *(nptr-1)!='\\' )
-              skips = skips ? 0 : 1;
-            else if(!skips && *nptr=='\'' &&  *(nptr-1)!='\\')
-              skipc = skipc ? 0 : 1;
-            if (!skips && !skipc && *nptr=='(') plevel++;
-            else if (!skips && *nptr==')') plevel--;
-          }
-
-        if (sptr < (s + sizeof(s) - 1)) *sptr++ = *nptr;
-      }
-      *sptr = '\0';
-
-      if (havechildren)
+      char s[1024];
+      if (havechildren) {
+        clean_function_for_implementation(s, name());
         f.write_c("%s%s %s {\n", rtype, star, s);
+      }
     }
   }
 
@@ -522,7 +528,7 @@ void Fl_Function_Type::write_code2(Fd_Code_Writer& f) {
   char havechildren = 0;
   for (child = next; child && child->level > level; child = child->next) {
     havechildren = 1;
-    if (child->is_window() && child->name()) var = child->name();
+    if (child->is_a(ID_Window) && child->name()) var = child->name();
   }
 
   if (ismain()) {
@@ -606,7 +612,7 @@ void Fl_Code_Type::open() {
     const char *cmd = G_external_editor_command;
     const char *code = name();
     if ( editor_.open_editor(cmd, code) == 0 )
-      return;   // return if editor opened ok, fallthru to built-in if not
+      return;   // return if editor opened ok, fall thru to built-in if not
   }
   // Use built-in code editor..
   if (!code_panel) make_code_panel();
@@ -627,10 +633,9 @@ void Fl_Code_Type::open() {
     message = c_check(c);
     if (message) {
       int v = fl_choice("Potential syntax error detected: %s",
-                        "Cancel Dialog", "Ignore Error", "Continue Editing", message);
-      if (v==0) { free(c); goto BREAK2; } // Cancel Dialog
-      if (v==1) ;                         // Ignore Error
-      if (v==2) { free(c); continue; }    // Continue Editing
+                        "Continue Editing", "Ignore Error", NULL, message);
+      if (v==0) continue;     // Continue Editing
+      //if (v==1) { }         // Ignore Error and close dialog
     }
     name(c);
     free(c);
@@ -662,8 +667,9 @@ void Fl_Code_Type::write_code1(Fd_Code_Writer& f) {
   if ( handle_editor_changes() == 1 ) {
     main_window->redraw();    // tell fluid to redraw; edits may affect tree's contents
   }
-
+  // Matt: disabled f.tag(FD_TAG_GENERIC, 0);
   f.write_c_indented(name(), 0, '\n');
+  // Matt: disabled f.tag(FD_TAG_CODE, get_uid());
 }
 
 /**
@@ -707,7 +713,7 @@ int Fl_Code_Type::handle_editor_changes() {
   return 0;
 }
 
-// ---- Fl_CodeBlock_Type implemntation
+// ---- Fl_CodeBlock_Type implementation
 
 /** \class Fl_CodeBlock_Type
  Manage two blocks of C++ code enclosing its children.
@@ -808,10 +814,9 @@ void Fl_CodeBlock_Type::open() {
     // alert user
     if (message) {
       int v = fl_choice("Potential syntax error detected: %s",
-                        "Cancel Dialog", "Ignore Error", "Continue Editing", message);
-      if (v==0) goto BREAK2;  // Cancel Dialog
-      if (v==1) ;             // Ignore Error
-      if (v==2) continue;     // Continue Editing
+                        "Continue Editing", "Ignore Error", NULL, message);
+      if (v==0) continue;     // Continue Editing
+      //if (v==1) { }         // Ignore Error and close dialog
     }
     // write to variables
     name(code_before_input->value());
@@ -964,10 +969,9 @@ void Fl_Decl_Type::open() {
     // alert user
     if (message) {
       int v = fl_choice("Potential syntax error detected: %s",
-                        "Cancel Dialog", "Ignore Error", "Continue Editing", message);
-      if (v==0) goto BREAK2;  // Cancel Dialog
-      if (v==1) ;             // Ignore Error
-      if (v==2) continue;     // Continue Editing
+                        "Continue Editing", "Ignore Error", NULL, message);
+      if (v==0) continue;     // Continue Editing
+      //if (v==1) { }         // Ignore Error and close dialog
     }
     // copy vlaues
     name(c);
@@ -1128,8 +1132,11 @@ void Fl_Data_Type::write_properties(Fd_Project_Writer &f) {
     f.write_string("filename");
     f.write_word(filename_);
   }
-  if (text_mode_) {
+  if (text_mode_ == 1) {
     f.write_string("textmode");
+  }
+  if (text_mode_ == 2) {
+    f.write_string("compressed");
   }
 }
 
@@ -1141,6 +1148,8 @@ void Fl_Data_Type::read_property(Fd_Project_Reader &f, const char *c) {
     storestring(f.read_word(), filename_, 1);
   } else if (!strcmp(c,"textmode")) {
     text_mode_ = 1;
+  } else if (!strcmp(c,"compressed")) {
+    text_mode_ = 2;
   } else {
     Fl_Decl_Type::read_property(f, c);
   }
@@ -1204,12 +1213,12 @@ void Fl_Data_Type::open() {
     if (n==q) {
     OOPS:
       int v = fl_choice("%s",
-                        "Cancel Dialog", "Ignore Error", "Continue Editing",
+                        "Continue Editing", "Ignore Error", NULL,
                         "Variable name must be a C identifier");
-      if (v==0) { free(s); goto BREAK2; } // Cancel Dialog
-      if (v==1) ;                         // Ignore Error
-      if (v==2) { free(s); continue; }    // Continue Editing
+      if (v==0) { free(s); continue; }    // Continue Editing
+      //if (v==1) { }                     // Ignore Error and close dialog
     }
+    undo_checkpoint();
     name(n);
     free(s);
     // store flags
@@ -1229,6 +1238,8 @@ void Fl_Data_Type::open() {
       }
     }
     text_mode_ = data_mode->value();
+    if (text_mode_ < 0) text_mode_ = 0;
+    if (text_mode_ > 2) text_mode_ = 2;
     // store the filename
     c = data_filename->value();
     if (filename_ && strcmp(filename_, data_filename->value()))
@@ -1247,6 +1258,7 @@ void Fl_Data_Type::open() {
       comment(0);
     }
     if (c) free((void*)c);
+    set_modflag(1);
     break;
   }
 BREAK2:
@@ -1263,6 +1275,7 @@ void Fl_Data_Type::write_code1(Fd_Code_Writer& f) {
   const char *fn = filename_;
   char *data = 0;
   int nData = -1;
+  int uncompressedDataSize = 0;
   // path should be set correctly already
   if (filename_ && !f.write_sourceview) {
     enter_project_dir();
@@ -1277,6 +1290,15 @@ void Fl_Data_Type::write_code1(Fd_Code_Writer& f) {
       if (nData) {
         data = (char*)calloc(nData, 1);
         if (fread(data, nData, 1, f)==0) { /* use default */ }
+        if (text_mode_ == 2) {
+          uncompressedDataSize = nData;
+          uLong nzData = compressBound(nData);
+          Bytef *zdata = (Bytef*)::malloc(nzData);
+          if (compress(zdata, &nzData, (Bytef*)data, nData) != Z_OK) { /* error */ }
+          ::free(data);
+          data = (char*)zdata;
+          nData = (int)nzData;
+        }
       }
       fclose(f);
     }
@@ -1285,13 +1307,22 @@ void Fl_Data_Type::write_code1(Fd_Code_Writer& f) {
   }
   if (is_in_class()) {
     f.write_public(public_);
-    if (text_mode_) {
+    if (text_mode_ == 1) {
       f.write_h("%sstatic const char *%s;\n", f.indent(1), c);
       f.write_c("\n");
       write_comment_c(f);
       f.write_c("const char *%s::%s = /* text inlined from %s */\n", class_name(1), c, fn);
       if (message) f.write_c("#error %s %s\n", message, fn);
       f.write_cstring(data, nData);
+    } else if (text_mode_ == 2) {
+      f.write_h("%sstatic int %s_size;\n", f.indent(1), c);
+      f.write_h("%sstatic unsigned char %s[%d];\n", f.indent(1), c, nData);
+      f.write_c("\n");
+      write_comment_c(f);
+      f.write_c("int %s::%s_size = %d;\n", class_name(1), c, uncompressedDataSize);
+      f.write_c("unsigned char %s::%s[%d] = /* data compressed and inlined from %s */\n", class_name(1), c, nData, fn);
+      if (message) f.write_c("#error %s %s\n", message, fn);
+      f.write_cdata(data, nData);
     } else {
       f.write_h("%sstatic unsigned char %s[%d];\n", f.indent(1), c, nData);
       f.write_c("\n");
@@ -1305,13 +1336,22 @@ void Fl_Data_Type::write_code1(Fd_Code_Writer& f) {
     // the "header only" option does not apply here!
     if (public_) {
       if (static_) {
-        if (text_mode_) {
+        if (text_mode_ == 1) {
           f.write_h("extern const char *%s;\n", c);
           f.write_c("\n");
           write_comment_c(f);
           f.write_c("const char *%s = /* text inlined from %s */\n", c, fn);
           if (message) f.write_c("#error %s %s\n", message, fn);
           f.write_cstring(data, nData);
+        } else if (text_mode_ == 2) {
+          f.write_h("extern int %s_size;\n", c);
+          f.write_h("extern unsigned char %s[%d];\n", c, nData);
+          f.write_c("\n");
+          write_comment_c(f);
+          f.write_c("int %s_size = %d;\n", c, uncompressedDataSize);
+          f.write_c("unsigned char %s[%d] = /* data compressed and inlined from %s */\n", c, nData, fn);
+          if (message) f.write_c("#error %s %s\n", message, fn);
+          f.write_cdata(data, nData);
         } else {
           f.write_h("extern unsigned char %s[%d];\n", c, nData);
           f.write_c("\n");
@@ -1324,7 +1364,7 @@ void Fl_Data_Type::write_code1(Fd_Code_Writer& f) {
       } else {
         write_comment_h(f);
         f.write_h("#error Unsupported declaration loading inline data %s\n", fn);
-        if (text_mode_)
+        if (text_mode_ == 1)
           f.write_h("const char *%s = \"abc...\";\n", c);
         else
           f.write_h("unsigned char %s[3] = { 1, 2, 3 };\n", c);
@@ -1334,10 +1374,16 @@ void Fl_Data_Type::write_code1(Fd_Code_Writer& f) {
       write_comment_c(f);
       if (static_)
         f.write_c("static ");
-      if (text_mode_) {
+      if (text_mode_ == 1) {
         f.write_c("const char *%s = /* text inlined from %s */\n", c, fn);
         if (message) f.write_c("#error %s %s\n", message, fn);
         f.write_cstring(data, nData);
+      } else if (text_mode_ == 2) {
+        f.write_c("int %s_size = %d;\n", c, uncompressedDataSize);
+        if (static_) f.write_c("static ");
+        f.write_c("unsigned char %s[%d] = /* data compressed and inlined from %s */\n", c, nData, fn);
+        if (message) f.write_c("#error %s %s\n", message, fn);
+        f.write_cdata(data, nData);
       } else {
         f.write_c("unsigned char %s[%d] = /* data inlined from %s */\n", c, nData, fn);
         if (message) f.write_c("#error %s %s\n", message, fn);
@@ -1464,10 +1510,9 @@ void Fl_DeclBlock_Type::open() {
       message = c_check(b&&b[0]=='#' ? b+1 : b);
     if (message) {
       int v = fl_choice("Potential syntax error detected: %s",
-                        "Cancel Dialog", "Ignore Error", "Continue Editing", message);
-      if (v==0) goto BREAK2;  // Cancel Dialog
-      if (v==1) ;             // Ignore Error
-      if (v==2) continue;     // Continue Editing
+                        "Continue Editing", "Ignore Error", NULL, message);
+      if (v==0) continue;     // Continue Editing
+      //if (v==1) { }         // Ignore Error and close dialog
     }
     name(a);
     storestring(b, after);
@@ -1575,16 +1620,18 @@ void Fl_Comment_Type::read_property(Fd_Project_Reader &f, const char *c) {
 /**
  Load available preset comments.
  Fluid comes with GPL and LGPL preset for comments. Users can
- add their own presets which are stored per user in a seperate
+ add their own presets which are stored per user in a separate
  preferences database.
  */
 static void load_comments_preset(Fl_Preferences &menu) {
   static const char * const predefined_comment[] = {
-    "GNU Public License/GPL Header",  "GNU Public License/GPL Footer",
-    "GNU Public License/LGPL Header", "GNU Public License/LGPL Footer",
+    "GNU Public License v3/GPL Header",  "GNU Public License v3/GPL Footer",
+    "GNU Public License v3/LGPL Header", "GNU Public License v3/LGPL Footer",
     "FLTK/Header" };
-  int i;
-  menu.set("n", 5);
+  int i, n;
+  menu.get("n", n, -1);
+  if (n == -1) menu.set("n", 5);
+  menu.set("version", 10400);
   Fl_Preferences db(Fl_Preferences::USER_L, "fltk.org", "fluid_comments");
   for (i=0; i<5; i++) {
     menu.set(Fl_Preferences::Name(i), predefined_comment[i]);
@@ -1599,13 +1646,13 @@ void Fl_Comment_Type::open() {
   if (!comment_panel) make_comment_panel();
   const char *text = name();
   {
-    int i=0, n=0;
+    int i=0, n=0, version = 0;
     Fl_Preferences menu(Fl_Preferences::USER_L, "fltk.org", "fluid_comments_menu");
     comment_predefined->clear();
     comment_predefined->add("_Edit/Add current comment...");
     comment_predefined->add("_Edit/Remove last selection...");
-    menu.get("n", n, -1);
-    if (n==-1) load_comments_preset(menu);
+    menu.get("version", version, -1);
+    if (version < 10400) load_comments_preset(menu);
     menu.get("n", n, 0);
     for (i=0;i<n;i++) {
       char *text;
@@ -1648,7 +1695,7 @@ void Fl_Comment_Type::open() {
         } else if (comment_predefined->value()==2) {
           // remove the last selected comment from the database
           if (itempath[0]==0 || last_selected_item==0) {
-            fl_message("Please select an entry form this menu first.");
+            fl_message("Please select an entry from this menu first.");
           } else if (fl_choice("Are you sure that you want to delete the entry\n"
                                "\"%s\"\nfrom the database?", "Cancel", "Delete",
                                NULL, itempath)) {
@@ -1976,10 +2023,10 @@ void Fl_Class_Type::write_code2(Fd_Code_Writer& f) {
 /**
  Return 1 if this class contains a function with the given signature.
  */
-int Fl_Class_Type::has_function(const char *rtype, const char *sig) const {
+int Fl_Type::has_function(const char *rtype, const char *sig) const {
   Fl_Type *child;
   for (child = next; child && child->level > level; child = child->next) {
-    if (child->level == level+1 && strcmp(child->type_name(), "Function")==0) {
+    if (child->level == level+1 && child->is_a(ID_Function)) {
       const Fl_Function_Type *fn = (const Fl_Function_Type*)child;
       if (fn->has_signature(rtype, sig))
         return 1;

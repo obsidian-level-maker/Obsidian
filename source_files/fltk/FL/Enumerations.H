@@ -415,7 +415,7 @@ enum Fl_Event { // events
 /**@{*/
 /** These constants determine when a callback is performed.
 
-    Fl_When is a bit field. Some values are merely shorcuts for common bit
+    Fl_When is a bit field. Some values are merely shortcuts for common bit
     combinations. New flags may be added in the future, so it's important to
     mask the required bit when reading via \p when().
 
@@ -455,7 +455,9 @@ enum Fl_Callback_Reason {
   FL_REASON_CHANGED,      ///< the value of the widget was modified
   FL_REASON_GOT_FOCUS,    ///< a widget received focus
   FL_REASON_LOST_FOCUS,   ///< a widget lost focus
-  FL_REASON_RELEASED      ///< the mouse button was released
+  FL_REASON_RELEASED,     ///< the mouse button was released
+  FL_REASON_ENTER_KEY,    ///< user finished input pressing Enter
+  FL_REASON_USER = 32     ///< user defined callback reasons
 };
 /**@}*/          // group: Callback Reasons
 
@@ -1059,9 +1061,9 @@ const Fl_Font FL_SCREEN_BOLD            = 14;   ///< Default monospaced bold scr
 const Fl_Font FL_ZAPF_DINGBATS          = 15;   ///< Zapf-dingbats font
 
 const Fl_Font FL_FREE_FONT              = 16;   ///< first one to allocate
-const Fl_Font FL_BOLD                   = 1;    ///< add this to helvetica, courier, or times
-const Fl_Font FL_ITALIC                 = 2;    ///< add this to helvetica, courier, or times
-const Fl_Font FL_BOLD_ITALIC            = 3;    ///< add this to helvetica, courier, or times
+const Fl_Font FL_BOLD                   = 1;    ///< add this to Helvetica, Courier, or Times
+const Fl_Font FL_ITALIC                 = 2;    ///< add this to Helvetica, Courier, or Times
+const Fl_Font FL_BOLD_ITALIC            = 3;    ///< add this to Helvetica, Courier, or Times
 
 /**@}*/
 
@@ -1316,7 +1318,7 @@ enum Fl_Mode {
 enum Fl_Damage {
   FL_DAMAGE_CHILD    = 0x01, /**< A child needs to be redrawn. */
   FL_DAMAGE_EXPOSE   = 0x02, /**< The window was exposed. */
-  FL_DAMAGE_SCROLL   = 0x04, /**< The Fl_Scroll widget was scrolled. */
+  FL_DAMAGE_SCROLL   = 0x04, /**< The Fl_Scroll widget was scrolled. Used by other widgets for other widget specific damages. */
   FL_DAMAGE_OVERLAY  = 0x08, /**< The overlay planes need to be redrawn. */
   FL_DAMAGE_USER1    = 0x10, /**< First user-defined damage bit. */
   FL_DAMAGE_USER2    = 0x20, /**< Second user-defined damage bit. */

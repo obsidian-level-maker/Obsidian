@@ -39,7 +39,7 @@ private:
   static bool insertion_point_location_is_valid;
 public:
 // type definitions
-  typedef enum {unspecified, MUTTER, WESTON, KDE, OWL} compositor_name;
+  typedef enum {unspecified, MUTTER, WESTON, KWIN, OWL} compositor_name;
   struct seat {
     struct wl_seat *wl_seat;
     struct wl_pointer *wl_pointer;
@@ -146,7 +146,8 @@ public:
   int dnd(int unused) FL_OVERRIDE;
   int compose(int &del) FL_OVERRIDE;
   void compose_reset() FL_OVERRIDE;
-  Fl_RGB_Image *read_win_rectangle(int X, int Y, int w, int h, Fl_Window *win, bool may_capture_subwins, bool *did_capture_subwins) FL_OVERRIDE;
+  Fl_RGB_Image *read_win_rectangle(int X, int Y, int w, int h, Fl_Window *win,
+        bool may_capture_subwins, bool *did_capture_subwins) FL_OVERRIDE;
   int get_mouse(int &x, int &y) FL_OVERRIDE;
   void open_display_platform() FL_OVERRIDE;
   void close_display() FL_OVERRIDE;
@@ -168,6 +169,10 @@ public:
   int get_key(int k) FL_OVERRIDE;
   void enable_im() FL_OVERRIDE;
   void disable_im() FL_OVERRIDE;
+
+  // overridden functions from parent class Fl_Unix_Screen_Driver
+  int poll_or_select_with_delay(double time_to_wait) FL_OVERRIDE;
+  int poll_or_select() FL_OVERRIDE;
 
 // Wayland-specific member functions
   void screen_count_set(int count) {num_screens = count;}

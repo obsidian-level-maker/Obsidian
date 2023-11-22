@@ -26,7 +26,7 @@ decl {\#include "fluid.h"} {private local
 decl {\#include <FL/fl_string_functions.h>} {private local
 }
 
-decl {\#include "../src/flstring.h"} {selected private local
+decl {\#include "../src/flstring.h"} {private local
 }
 
 decl {\#include <stdlib.h>} {private local
@@ -38,7 +38,7 @@ decl {\#include <stdio.h>} {private local
 Function {make_print_panel()} {open
 } {
   Fl_Window print_panel {
-    label Print
+    label Print selected
     xywh {465 222 465 235} type Double modal visible
   } {
     Fl_Group print_panel_controls {open

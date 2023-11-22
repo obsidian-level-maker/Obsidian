@@ -41,6 +41,7 @@ set (CPPFILES
   Fl_File_Input.cxx
   Fl_Flex.cxx
   Fl_Graphics_Driver.cxx
+  Fl_Grid.cxx
   Fl_Group.cxx
   Fl_Help_View.cxx
   Fl_Image.cxx
@@ -89,6 +90,7 @@ set (CPPFILES
   Fl_Table.cxx
   Fl_Table_Row.cxx
   Fl_Tabs.cxx
+  Fl_Terminal.cxx
   Fl_Text_Buffer.cxx
   Fl_Text_Display.cxx
   Fl_Text_Editor.cxx
@@ -511,8 +513,8 @@ if (FLTK_USE_X11)
 endif (FLTK_USE_X11)
 
 if (OPTION_USE_WAYLAND)
-  include_directories(${DBUS_INCLUDE_DIRS})
   pkg_check_modules(DBUS dbus-1)
+  include_directories(${DBUS_INCLUDE_DIRS})
   set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -I${CMAKE_CURRENT_BINARY_DIR} -fPIC -D_GNU_SOURCE")
   if (DBUS_FOUND)
     set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DHAS_DBUS")
@@ -576,11 +578,9 @@ list (APPEND SHARED_FILES ${HEADER_FILES} ${DRIVER_HEADER_FILES})
 
 set (STATIC_FILES ${SHARED_FILES})
 
-if (WIN32)
+if (MSVC)
   list (APPEND STATIC_FILES fl_call_main.c)
-endif (WIN32)
-
-add_definitions(-DFL_LIBRARY)
+endif (MSVC)
 
 #######################################################################
 
@@ -644,14 +644,7 @@ if (USE_XFT)
 endif (USE_XFT)
 
 if (UNIX AND OPTION_USE_WAYLAND)
-  if (NOT (CMAKE_VERSION VERSION_LESS 3.4))
-    pkg_get_variable(PROTOCOLS wayland-protocols pkgdatadir) # requires cmake 3.4
-  else()
-    execute_process(COMMAND pkg-config --variable=pkgdatadir wayland-protocols
-      OUTPUT_VARIABLE PROTOCOLS)
-    # strip trailing newline
-    string (REPLACE "\n" "" PROTOCOLS ${PROTOCOLS})
-  endif (NOT (CMAKE_VERSION VERSION_LESS 3.4))
+  pkg_get_variable(PROTOCOLS wayland-protocols pkgdatadir)
   # replace "//" with "/"
   string (REPLACE "//" "/" PROTOCOLS ${PROTOCOLS})
   if (NOT(EXISTS ${PROTOCOLS}/stable/xdg-shell/xdg-shell.xml))
@@ -689,6 +682,17 @@ if (UNIX AND OPTION_USE_WAYLAND)
     )
     list (APPEND STATIC_FILES "xdg-decoration-protocol.c")
     list (APPEND SHARED_FILES "xdg-decoration-protocol.c")
+    if (GTK_FOUND AND OPTION_ALLOW_GTK_PLUGIN)
+      add_custom_command(
+        OUTPUT gtk-shell-protocol.c gtk-shell-client-protocol.h
+        COMMAND wayland-scanner private-code ${CMAKE_CURRENT_SOURCE_DIR}/../libdecor/build/gtk-shell.xml gtk-shell-protocol.c
+        COMMAND wayland-scanner client-header ${CMAKE_CURRENT_SOURCE_DIR}/../libdecor/build/gtk-shell.xml gtk-shell-client-protocol.h
+        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/../libdecor/build/gtk-shell.xml
+        VERBATIM
+      )
+      list (APPEND STATIC_FILES "gtk-shell-protocol.c")
+      list (APPEND SHARED_FILES "gtk-shell-protocol.c")
+    endif (GTK_FOUND AND OPTION_ALLOW_GTK_PLUGIN)
   endif (NOT OPTION_USE_SYSTEM_LIBDECOR)
   add_custom_command(
     OUTPUT text-input-protocol.c text-input-client-protocol.h
@@ -726,7 +730,7 @@ FL_ADD_LIBRARY (fltk STATIC "${STATIC_FILES}")
 target_link_libraries (fltk ${OPTIONAL_LIBS})
 
 if (FLTK_HAVE_CAIRO)
-  fl_target_link_directories (fltk PUBLIC "${PKG_CAIRO_LIBRARY_DIRS}")
+  target_link_directories (fltk PUBLIC ${PKG_CAIRO_LIBRARY_DIRS})
 endif()
 
 #######################################################################
@@ -774,7 +778,7 @@ if (OPTION_BUILD_SHARED_LIBS AND NOT MSVC)
 
   FL_ADD_LIBRARY (fltk SHARED "${SHARED_FILES}")
   target_link_libraries (fltk_SHARED ${OPTIONAL_LIBS} ${PKG_CAIRO_LIBRARIES})
-  fl_target_link_directories (fltk_SHARED PUBLIC "${PKG_CAIRO_LIBRARY_DIRS}")
+  target_link_directories (fltk_SHARED PUBLIC ${PKG_CAIRO_LIBRARY_DIRS})
 
   ###################################################################
 
@@ -833,19 +837,19 @@ if (OPTION_BUILD_SHARED_LIBS AND MSVC)
   target_link_libraries (fltk_SHARED ${OPTIONAL_LIBS})
 
   if (FLTK_USE_BUILTIN_JPEG)
-    target_link_libraries (fltk_SHARED fltk_jpeg_SHARED)
+    target_link_libraries (fltk_SHARED fltk_jpeg)
   else()
     target_link_libraries (fltk_SHARED ${FLTK_JPEG_LIBRARIES})
   endif ()
 
   if (FLTK_USE_BUILTIN_PNG)
-    target_link_libraries (fltk_SHARED fltk_png_SHARED)
+    target_link_libraries (fltk_SHARED fltk_png)
   else()
     target_link_libraries (fltk_SHARED ${FLTK_PNG_LIBRARIES})
   endif ()
 
   if (FLTK_USE_BUILTIN_ZLIB)
-    target_link_libraries (fltk_SHARED fltk_z_SHARED)
+    target_link_libraries (fltk_SHARED fltk_z)
   else()
     target_link_libraries (fltk_SHARED ${FLTK_ZLIB_LIBRARIES})
   endif ()

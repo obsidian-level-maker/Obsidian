@@ -383,23 +383,18 @@ void Fl_Screen_Driver::rescale_all_windows_from_screen(int screen, float f)
   delete[] win_array;
 }
 
-struct WinAndTracker {
-  Fl_Window *win;
-  Fl_Widget_Tracker *tracker;
-};
 
-static void del_transient_window(WinAndTracker *data) {
-  delete (Fl_Image*)data->win->shape();
-  Fl::delete_widget(data->win);
-  if (data->tracker) {
-    if (data->tracker->exists()) {
-      Fl::focus(data->tracker->widget());
-      data->tracker->widget()->handle(FL_FOCUS);
-    }
-    delete data->tracker;
-  }
-  delete data;
+static Fl_Window *transient_scale_window = NULL;
+Fl_Window *Fl_Screen_Driver::transient_scale_parent = NULL;
+
+
+void Fl_Screen_Driver::del_transient_window(void *) {
+  transient_scale_parent = NULL;
+  delete (Fl_Image*)transient_scale_window->shape();
+  delete transient_scale_window;
+  transient_scale_window = NULL;
 }
+
 
 void Fl_Screen_Driver::transient_scale_display(float f, int nscreen)
 {
@@ -432,7 +427,7 @@ void Fl_Screen_Driver::transient_scale_display(float f, int nscreen)
   b->copy_label(str);
   b->labelfont(FL_TIMES_BOLD);
   b->labelsize(Fl_Fontsize(30 * s / d->scale(nscreen)));
-  b->labelcolor(FL_BLACK);
+  b->labelcolor(Fl_Tooltip::textcolor());
   b->color(Fl_Tooltip::color());
   win->end();
   win->shape(img);
@@ -441,12 +436,14 @@ void Fl_Screen_Driver::transient_scale_display(float f, int nscreen)
   win->set_non_modal();
   Fl_Window_Driver::driver(win)->screen_num(nscreen);
   Fl_Window_Driver::driver(win)->force_position(1);
-  WinAndTracker *data = new WinAndTracker;
-  data->win = win;
-  Fl_Widget *widget = Fl::focus();
-  data->tracker = (widget ? new Fl_Widget_Tracker(widget) : NULL);
+  if (transient_scale_window) {
+    Fl::remove_timeout(del_transient_window);
+    del_transient_window(NULL);
+  }
+  transient_scale_window = win;
   win->show();
-  Fl::add_timeout(1, (Fl_Timeout_Handler)del_transient_window, data); // delete after 1 sec
+  // delete transient win after 1 sec
+  Fl::add_timeout(1, del_transient_window, NULL);
 }
 
 // respond to Ctrl-'+' and Ctrl-'-' and Ctrl-'0' (Ctrl-'=' is same as Ctrl-'+') by rescaling all windows
@@ -496,7 +493,7 @@ int Fl_Screen_Driver::scale_handler(int event)
       f = scaling_values[i];
     }
     if (f == old_f) return 1;
-    screen_dr->rescale_all_windows_from_screen(screen, f*initial_scale);
+    screen_dr->rescale_all_windows_from_screen(screen, f * initial_scale);
     Fl_Screen_Driver::transient_scale_display(f, screen);
     Fl::handle(FL_ZOOM_EVENT, NULL);
     return 1;

@@ -74,8 +74,7 @@ extern Fl_Menu_Item menu_decl_class_choice[];
 extern Fl_Double_Window *data_panel;
 extern Fl_Choice *data_choice;
 extern Fl_Choice *data_class_choice;
-#include <FL/Fl_Check_Button.H>
-extern Fl_Check_Button *data_mode;
+extern Fl_Choice *data_mode;
 extern Fl_Input *data_input;
 extern Fl_Input *data_filename;
 extern Fl_Button *data_filebrowser;
@@ -85,6 +84,7 @@ extern Fl_Button *data_panel_cancel;
 Fl_Double_Window* make_data_panel();
 extern Fl_Menu_Item menu_data_choice[];
 extern Fl_Menu_Item menu_data_class_choice[];
+extern Fl_Menu_Item menu_data_mode[];
 extern Fl_Double_Window *class_panel;
 extern Fl_Light_Button *c_public_button;
 extern Fl_Input *c_name_input;
@@ -107,20 +107,6 @@ void type_make_cb(Fl_Widget*,void*d);
 #include <FL/Fl_Window.H>
 extern Fl_Window *widgetbin_panel;
 Fl_Window* make_widgetbin();
-extern void toggle_sourceview_cb(Fl_Double_Window*, void*);
-extern Fl_Double_Window *sourceview_panel;
-#include <FL/Fl_Tabs.H>
-extern void update_sourceview_position_cb(Fl_Tabs*, void*);
-extern Fl_Tabs *sv_tab;
-extern CodeViewer *sv_source;
-extern CodeViewer *sv_header;
-extern TextViewer *sv_strings;
-extern TextViewer *sv_project;
-extern void update_sourceview_cb(Fl_Button*, void*);
-extern Fl_Light_Button *sv_autorefresh;
-extern Fl_Light_Button *sv_autoposition;
-extern void toggle_sourceview_b_cb(Fl_Button*, void*);
-Fl_Double_Window* make_sourceview();
 #endif
 
 //

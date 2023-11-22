@@ -35,7 +35,7 @@
 
 char *Fl_Window::default_xclass_ = 0L;
 
-char Fl_Window::show_iconic_ = 0;
+char Fl_Window::show_next_window_iconic_ = 0;
 
 Fl_Window *Fl_Window::current_;
 
@@ -507,21 +507,27 @@ void Fl_Window::draw()
 
   if (damage() & ~FL_DAMAGE_CHILD) {     // draw the entire thing
     draw_box(box(),0,0,w(),h(),color()); // draw box with x/y = 0
-
-    if (image() && (align() & FL_ALIGN_INSIDE)) { // draw the image only
-      Fl_Label l1;
-      memset(&l1,0,sizeof(l1));
-      l1.align_ = align();
-      l1.image = image();
-      if (!active_r() && l1.image && l1.deimage) l1.image = l1.deimage;
-      l1.type = labeltype();
-      l1.draw(0,0,w(),h(),align());
-    }
+    draw_backdrop();
   }
   draw_children();
 
   pWindowDriver->draw_end();
   if (!to_display) current_ = save_current;
+}
+
+/**
+ Draw the background image if one is set and is aligned inside.
+ */
+void Fl_Window::draw_backdrop() {
+  if (image() && (align() & FL_ALIGN_INSIDE)) { // draw the image only
+    Fl_Label l1;
+    memset(&l1,0,sizeof(l1));
+    l1.align_ = align();
+    l1.image = image();
+    if (!active_r() && l1.image && l1.deimage) l1.image = l1.deimage;
+    l1.type = labeltype();
+    l1.draw(0,0,w(),h(),align());
+  }
 }
 
 void Fl_Window::make_current()
@@ -916,3 +922,33 @@ bool Fl_Window::is_a_rescale() {return Fl_Window_Driver::is_a_rescale_;}
  \li other platforms: 0.
  */
 fl_uintptr_t Fl_Window::os_id() { return pWindowDriver->os_id();}
+
+/**
+ Maximizes a top-level window to its current screen.
+
+ This function is effective only with a show()'n, resizable, top-level window.
+ Bordered and borderless windows can be used.
+ \see Fl_Window::un_maximize(), Fl_Window::maximize_active()
+ */
+void Fl_Window::maximize() {
+  if (!shown() || parent() || !resizable() || maximize_active()) return;
+  set_flag(MAXIMIZED);
+  if (border()) pWindowDriver->maximize();
+  else pWindowDriver->Fl_Window_Driver::maximize();
+}
+
+/**
+ Returns a previously maximized top-level window to its previous size.
+ \see Fl_Window::maximize()
+*/
+void Fl_Window::un_maximize() {
+  if (!shown() || parent() || !resizable() || !maximize_active()) return;
+  clear_flag(MAXIMIZED);
+  if (border()) pWindowDriver->un_maximize();
+  else pWindowDriver->Fl_Window_Driver::un_maximize();
+}
+
+void Fl_Window::is_maximized_(bool b) {
+  if (b) set_flag(MAXIMIZED);
+  else clear_flag(MAXIMIZED);
+}

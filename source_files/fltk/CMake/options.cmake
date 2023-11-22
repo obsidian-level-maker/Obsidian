@@ -315,6 +315,16 @@ if (APPLE)
   endif (CMAKE_OSX_SYSROOT)
 endif (APPLE)
 
+#######################################################################
+option (OPTION_USE_STD "allow FLTK to use some std:: features" ON)
+if (OPTION_USE_STD)
+  set (FLTK_USE_STD 1)
+else ()
+  set (FLTK_USE_STD 0)
+endif ()
+
+#######################################################################
+
 # find X11 libraries and headers
 set (PATH_TO_XLIBS)
 if ((NOT APPLE OR OPTION_APPLE_X11) AND NOT WIN32 AND NOT OPTION_USE_WAYLAND)
@@ -530,7 +540,7 @@ if (OPTION_USE_GL)
     unset(HAVE_GL_GLU_H CACHE)
     find_file (HAVE_GL_GLU_H GL/glu.h PATHS ${X11_INCLUDE_DIR})
   else()
-    include (FindOpenGL)
+    find_package(OpenGL)
     if (APPLE)
       set (HAVE_GL_GLU_H ${HAVE_OPENGL_GLU_H})
     endif (APPLE)

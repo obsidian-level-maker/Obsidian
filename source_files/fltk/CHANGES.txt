@@ -34,6 +34,7 @@ Changes in FLTK 1.4.0                            Released: ??? ?? 2022
     This supports desktops mixing screens with distinct resolutions.
     In addition, use environment variable FLTK_SCALING_FACTOR to further adjust
     the starting scaling factor of all FLTK apps.
+  - New Fl_Grid class to layout multiple columns and rows of widgets.
   - New Fl_Flex class to layout one row or one column of widgets.
   - New Fl::keyboard_screen_scaling(0) call stops recognition of ctrl/+/-/0/
     keystrokes as scaling all windows of a screen.
@@ -51,7 +52,13 @@ Changes in FLTK 1.4.0                            Released: ??? ?? 2022
   - New Fl_ICO_Image class to read Windows .ico icon files.
   - New classes Fl_SVG_File_Surface and Fl_EPS_File_Surface to save any FLTK
     graphics to SVG or EPS files, respectively.
-  - Fl_Tabs now supports close buttons for individual tabs.
+  - New member functions Fl_Window::maximize(), Fl_Window::un_maximize() and
+    Fl_Window::maximize_active() to programmatically manage window maximization.
+  - Fl_Button now supports a compact flag that visually groups closely set
+    buttons into keypads.
+  - Fl_Tabs widget now supports close buttons for individual tabs.
+  - Fl_Tabs widget now supports four different modes for handling an
+    overflowing number of tabs.
   - Windows platform: added support for using a manifest to set the
     application's level of DPI awareness (issue #309).
   - class Fl_Native_File_Chooser on the X11/Wayland platform relies on external
@@ -121,6 +128,8 @@ Changes in FLTK 1.4.0                            Released: ??? ?? 2022
   - Added Fl_Surface_Device::push_current(new_surface) and
     Fl_Surface_Device::pop_current() to set/unset the current surface
     receiving graphics commands.
+  - New macros for easy function and method callbacks with multiple
+    type safe arguments (see FL_METHOD_CALLBACK_1 etc.) .
 
   New Configuration Options (ABI Version)
 
@@ -162,6 +171,7 @@ Changes in FLTK 1.4.0                            Released: ??? ?? 2022
   Other Improvements
 
   - (add new items here)
+  - Reported support of macOS 14.0 "Sonoma".
   - Added support for macOS 13.0 "Ventura".
   - Added support for macOS 12.0 "Monterey".
   - Added support for macOS 11.0 "Big Sur" and for building for
@@ -186,6 +196,9 @@ Changes in FLTK 1.4.0                            Released: ??? ?? 2022
   - Fl_Roller can now be controlled via the mouse wheel (STR #3120).
   - Tooltips hide by themselves after 12 seconds (STR #2584).
   - Added widget visibility indicator to Fluid (STR #2669).
+  - Improved shell script support in FLUID
+  - Improved constructor for creating Fl_Preferences files with flags for the
+    correct locale and for overwriting existing files.
   - Added Fl_Input_::append() method (STR #2953).
   - Fix for STR#3473 (and its duplicate STR#3507) to restore configure-based
     builds on recent Linux/Unix distributions where the freetype-config
@@ -237,6 +250,7 @@ Changes in FLTK 1.4.0                            Released: ??? ?? 2022
   - Fixed Delete key in Fl_Input deleting entire widgets in Fluid (STR #2841).
   - Reorganized Fluid Template feature (STR #3336).
   - Updated Fluid documentation and image (STR #3328).
+  - FLUID recognizes `override` and `FL_OVERRIDE` keywords (Github #801)
   - Duplicating Widget Class in Fluid no longer crashes (STR #3445).
   - Fl_Check_Browser::add(item) now accepts NULL (STR #3498).
   - Interface to set maximum width of spinner text field (STR #3386).

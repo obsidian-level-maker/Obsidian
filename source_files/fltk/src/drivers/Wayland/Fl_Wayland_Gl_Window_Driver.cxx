@@ -53,6 +53,7 @@ public:
   }
 };
 
+
 struct gl_start_support { // to support use of gl_start / gl_finish
   struct wl_surface *surface;
   struct wl_subsurface *subsurface;
@@ -60,17 +61,18 @@ struct gl_start_support { // to support use of gl_start / gl_finish
   EGLSurface egl_surface;
 };
 
+
 static EGLConfig wld_egl_conf = NULL;
 
+
 EGLDisplay Fl_Wayland_Gl_Window_Driver::egl_display = EGL_NO_DISPLAY;
-EGLint Fl_Wayland_Gl_Window_Driver::configs_count = 0;
 
 
-Fl_Wayland_Gl_Window_Driver::Fl_Wayland_Gl_Window_Driver(Fl_Gl_Window *win) : Fl_Gl_Window_Driver(win) {
+Fl_Wayland_Gl_Window_Driver::Fl_Wayland_Gl_Window_Driver(Fl_Gl_Window *win) :
+    Fl_Gl_Window_Driver(win) {
   if (egl_display == EGL_NO_DISPLAY) init();
   egl_window = NULL;
   egl_surface = NULL;
-  egl_swap_in_progress = false;
 }
 
 
@@ -96,14 +98,14 @@ void Fl_Wayland_Gl_Window_Driver::init() {
     Fl::fatal("Can't initialise egl display\n");
   }
   //printf("EGL major: %d, minor %d\n", major, minor);
-
-  eglGetConfigs(egl_display, NULL, 0, &configs_count);
+  //eglGetConfigs(egl_display, NULL, 0, &configs_count);
   //printf("EGL has %d configs\n", configs_count);
   eglBindAPI(EGL_OPENGL_API);
 }
 
 
-char *Fl_Wayland_Gl_Window_Driver::alpha_mask_for_string(const char *str, int n, int w, int h, Fl_Fontsize fs)
+char *Fl_Wayland_Gl_Window_Driver::alpha_mask_for_string(const char *str, int n,
+                                                         int w, int h, Fl_Fontsize fs)
 {
   // write str to a bitmap just big enough
   Fl_Image_Surface *surf = new Fl_Image_Surface(w, h);
@@ -116,9 +118,10 @@ char *Fl_Wayland_Gl_Window_Driver::alpha_mask_for_string(const char *str, int n,
   fl_draw(str, n, 0, fl_height() - fl_descent());
   // get the R channel only of the bitmap
   char *alpha_buf = new char[w*h], *r = alpha_buf;
-  struct fl_wld_buffer *off = (struct fl_wld_buffer *)surf->offscreen();
+  struct Fl_Wayland_Graphics_Driver::draw_buffer *off =
+    Fl_Wayland_Graphics_Driver::offscreen_buffer(surf->offscreen());
   for (int i = 0; i < h; i++) {
-    uchar *q = off->draw_buffer + i * off->stride;
+    uchar *q = off->buffer + i * off->stride;
     for (int j = 0; j < w; j++) {
       *r++ = *q;
       q += 4;
@@ -134,7 +137,8 @@ Fl_Gl_Choice *Fl_Wayland_Gl_Window_Driver::find(int m, const int *alistp)
 {
   m |= FL_DOUBLE;
   //if (pWindow->parent()) m |= FL_ALPHA; // CONTROL_LEAKING_SUB_GL_WINDOWS
-  Fl_Wayland_Gl_Choice *g = (Fl_Wayland_Gl_Choice*)Fl_Gl_Window_Driver::find_begin(m, alistp);
+  Fl_Wayland_Gl_Choice *g = (Fl_Wayland_Gl_Choice*)Fl_Gl_Window_Driver::find_begin(
+      m, alistp);
   if (g) return g;
 
   EGLint n;
@@ -156,29 +160,16 @@ Fl_Gl_Choice *Fl_Wayland_Gl_Window_Driver::find(int m, const int *alistp)
   if (m & FL_STENCIL) config_attribs[15] = 1;
   if (m & FL_ALPHA) config_attribs[17] = (m & FL_RGB8) ? 8 : 1;
 
-  static EGLConfig *configs = (void**)calloc(configs_count, sizeof(EGLConfig));
-  eglChooseConfig(egl_display, config_attribs, configs, configs_count, &n);
+  g = new Fl_Wayland_Gl_Choice(m, alistp, first);
+  eglChooseConfig(egl_display, config_attribs, &(g->egl_conf), 1, &n);
   if (n == 0 && (m & FL_MULTISAMPLE)) {
     config_attribs[13] = 0;
-    eglChooseConfig(egl_display, config_attribs, configs, configs_count, &n);
+    eglChooseConfig(egl_display, config_attribs, &(g->egl_conf), 1, &n);
   }
   if (n == 0) {
     Fl::fatal("failed to choose an EGL config\n");
   }
 
-  g = new Fl_Wayland_Gl_Choice(m, alistp, first);
-  /*for (int i = 0; i < n; i++) {
-    EGLint size;
-    eglGetConfigAttrib(egl_display, configs[i], EGL_BUFFER_SIZE, &size);
-    printf("Buffer size for config %d is %d\n", i, size);
-    eglGetConfigAttrib(egl_display, configs[i], EGL_RED_SIZE, &size);
-    printf("Red size for config %d is %d\n", i, size);
-    // just choose the first one
-    g->egl_conf = configs[i];
-    break;
-  }*/
-  // just choose the first config
-  g->egl_conf = configs[0];
   first = g;
   return g;
 }
@@ -190,7 +181,10 @@ GLContext Fl_Wayland_Gl_Window_Driver::create_gl_context(Fl_Window* window,
   if (context_list && nContext) shared_ctx = context_list[0];
 
   static const EGLint context_attribs[] = { EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE };
-  GLContext ctx = (GLContext)eglCreateContext(egl_display, ((Fl_Wayland_Gl_Choice*)g)->egl_conf, shared_ctx?(EGLContext)shared_ctx:EGL_NO_CONTEXT, context_attribs);
+  GLContext ctx = (GLContext)eglCreateContext(egl_display,
+    ((Fl_Wayland_Gl_Choice*)g)->egl_conf,
+    (shared_ctx ? (EGLContext)shared_ctx : EGL_NO_CONTEXT),
+    context_attribs);
 //fprintf(stderr, "eglCreateContext=%p shared_ctx=%p\n", ctx, shared_ctx);
   if (ctx) {
     add_context(ctx);
@@ -217,7 +211,8 @@ void Fl_Wayland_Gl_Window_Driver::set_gl_context(Fl_Window* w, GLContext context
     float s = Fl::screen_scale(w->screen_num());
     Fl_Wayland_Screen_Driver *scr_driver = (Fl_Wayland_Screen_Driver*)Fl::screen_driver();
     // the GL scene will be a transparent subsurface above the cairo-drawn surface
-    dr->gl_start_support_->surface = wl_compositor_create_surface(scr_driver->wl_compositor);
+    dr->gl_start_support_->surface =
+          wl_compositor_create_surface(scr_driver->wl_compositor);
     dr->gl_start_support_->subsurface = wl_subcompositor_get_subsurface(
           scr_driver->wl_subcompositor, dr->gl_start_support_->surface, win->wl_surface);
     wl_subsurface_set_position(dr->gl_start_support_->subsurface, w->x() * s, w->y() * s);
@@ -230,7 +225,8 @@ void Fl_Wayland_Gl_Window_Driver::set_gl_context(Fl_Window* w, GLContext context
   if (context != cached_context || w != cached_window) {
     cached_context = context;
     cached_window = w;
-    if (eglMakeCurrent(egl_display, target_egl_surface, target_egl_surface, (EGLContext)context)) {
+    if (eglMakeCurrent(egl_display, target_egl_surface, target_egl_surface,
+                       (EGLContext)context)) {
 //fprintf(stderr, "EGLContext %p made current\n", context);
     } else {
       Fl::error("eglMakeCurrent() failed\n");
@@ -261,12 +257,8 @@ void Fl_Wayland_Gl_Window_Driver::delete_gl_context(GLContext context) {
     cached_context = 0;
     cached_window = 0;
   }
-//EGLBoolean b =
   eglDestroyContext(egl_display, (EGLContext)context);
-//fprintf(stderr,"EGL context %p destroyed %s\n", context, b==EGL_TRUE?"successfully":"w/ error");
-//b =
   eglDestroySurface(egl_display, egl_surface);
-//fprintf(stderr,"EGLSurface %p destroyed %s\n", egl_surface, b==EGL_TRUE?"successfully":"w/ error");
   egl_surface = NULL;
   wl_egl_window_destroy(egl_window);
   egl_window = NULL;
@@ -275,12 +267,11 @@ void Fl_Wayland_Gl_Window_Driver::delete_gl_context(GLContext context) {
 
 
 void Fl_Wayland_Gl_Window_Driver::make_overlay_current() {
-//fprintf(stderr, "make_overlay_current\n");
   glDrawBuffer(GL_FRONT);
 }
 
+
 void Fl_Wayland_Gl_Window_Driver::redraw_overlay() {
-//fprintf(stderr, "redraw_overlay\n");
   pWindow->redraw();
 }
 
@@ -289,17 +280,16 @@ void Fl_Wayland_Gl_Window_Driver::make_current_before() {
   if (!egl_window) {
     struct wld_window *win = fl_wl_xid(pWindow);
     struct wl_surface *surface = win->wl_surface;
-    egl_window = wl_egl_window_create(surface, pWindow->pixel_w(), pWindow->pixel_h());
+    int W = pWindow->pixel_w();
+    int H = pWindow->pixel_h();
+    int scale = Fl_Wayland_Window_Driver::driver(pWindow)->wld_scale();
+    egl_window = wl_egl_window_create(surface, (W/scale)*scale, (H/scale)*scale);
     if (egl_window == EGL_NO_SURFACE) {
       Fl::fatal("Can't create egl window with wl_egl_window_create()\n");
-    } else {
-      //fprintf(stderr, "Created egl window=%p\n", egl_window);
     }
     Fl_Wayland_Gl_Choice *g = (Fl_Wayland_Gl_Choice*)this->g();
     egl_surface = eglCreateWindowSurface(egl_display, g->egl_conf, egl_window, NULL);
-//fprintf(stderr, "Created egl surface=%p at scale=%d\n", egl_surface, win->scale);
-    wl_surface_set_buffer_scale(surface,
-                                Fl_Wayland_Window_Driver::driver(pWindow)->wld_scale());
+    wl_surface_set_buffer_scale(surface, scale);
     // Tested apps: shape, glpuzzle, cube, fractals, gl_overlay, fullscreen, unittests,
     //   OpenGL3-glut-test, OpenGL3test.
     // Tested wayland compositors: mutter, kde-plasma, weston, sway on FreeBSD.
@@ -339,7 +329,7 @@ void Fl_Wayland_Gl_Window_Driver::swap_buffers() {
     glPushMatrix();
     glLoadIdentity();
     glScalef(2.0f/wo, 2.0f/ho, 1.0f);
-    glTranslatef(-wo/2.0f, -ho/2.0f, 0.0f);         // set transform so 0,0 is bottom/left of Gl_Window
+    glTranslatef(-wo/2.0f, -ho/2.0f, 0.0f); // set transform so 0,0 is bottom/left of window
     glRasterPos2i(0,0);                             // set glRasterPos to bottom left corner
     {
       // Emulate overlay by doing copypixels
@@ -356,11 +346,8 @@ void Fl_Wayland_Gl_Window_Driver::swap_buffers() {
     if (!overlay_buffer) return; // don't call eglSwapBuffers until overlay has been drawn
   }
 
-  if (egl_surface && !egl_swap_in_progress) {
-    egl_swap_in_progress = true; // prevents crash while down resizing rotating glpuzzle
-    wl_display_dispatch_pending(Fl_Wayland_Screen_Driver::wl_display);
+  if (egl_surface) {
     eglSwapBuffers(Fl_Wayland_Gl_Window_Driver::egl_display, egl_surface);
-    egl_swap_in_progress = false;
   }
 }
 
@@ -382,7 +369,8 @@ public:
     }
   }
   void destroy(struct gl_start_support *gl_start_support_) FL_OVERRIDE {
-    eglDestroySurface(Fl_Wayland_Gl_Window_Driver::egl_display, gl_start_support_->egl_surface);
+    eglDestroySurface(Fl_Wayland_Gl_Window_Driver::egl_display,
+                      gl_start_support_->egl_surface);
     wl_egl_window_destroy(gl_start_support_->egl_window);
     wl_subsurface_destroy(gl_start_support_->subsurface);
     wl_surface_destroy(gl_start_support_->surface);
@@ -390,25 +378,26 @@ public:
   }
 };
 
+
 static Fl_Wayland_Gl_Plugin Gl_Overlay_Plugin;
+
 
 /* CONTROL_LEAKING_SUB_GL_WINDOWS
 static void delayed_scissor(Fl_Wayland_Gl_Window_Driver *dr) {
   dr->apply_scissor();
 }*/
 
+
 void Fl_Wayland_Gl_Window_Driver::resize(int is_a_resize, int W, int H) {
   if (!egl_window) return;
   float f = Fl::screen_scale(pWindow->screen_num());
   int s = Fl_Wayland_Window_Driver::driver(pWindow)->wld_scale();
-  W = (W * s) * f;
-  H = (H * s) * f;
+  W = int(W * f) * s; // W, H must be multiples of int s
+  H = int(H * f) * s;
   int W2, H2;
   wl_egl_window_get_attached_size(egl_window, &W2, &H2);
   if (W2 != W || H2 != H) {
     wl_egl_window_resize(egl_window, W, H, 0, 0);
-    //fprintf(stderr, "Fl_Wayland_Gl_Window_Driver::resize from %dx%d to %dx%d\n",
-    //        W2, H2, W, H);
   }
   /* CONTROL_LEAKING_SUB_GL_WINDOWS
   if (Fl_Wayland_Window_Driver::driver(pWindow)->subRect()) {

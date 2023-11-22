@@ -2,7 +2,7 @@
 # Main CMakeLists.txt to build the FLTK project using CMake (www.cmake.org)
 # Originally written by Michael Surette
 #
-# Copyright 1998-2022 by Bill Spitzak and others.
+# Copyright 1998-2023 by Bill Spitzak and others.
 #
 # This library is free software. Distribution and use rights are outlined in
 # the file "COPYING" which should have been included with this file.  If this
@@ -16,26 +16,18 @@
 #
 
 #######################################################################
-# set CMake minimum version (must be before `project()`
+# Set CMake minimum version first: must be before `project()`
 #######################################################################
 
-# Minimum CMake version required by FLTK 1.4 (06/2020, work in progress)
-cmake_minimum_required (VERSION 3.2.3 FATAL_ERROR)
+# Minimum CMake version required by FLTK 1.4
 
-#######################################################################
+# Note 1: Linking against OBJECT libraries (fluid, test) requires
+#         at least CMake 3.12.0
+# Note 2: Used in fluid since 05/2023,
+#         used for Windows (MSVC) shared lib builds much earlier
+# Note 3: More modern CMake features require 3.13...3.15 (Nov 2023)
 
-# Use "legacy mode" of FindOpenGL (avoid CMake developer warning).
-# Note: we're using FindOpenGL with `OPENGL_LIBRARIES` and not (yet)
-# the `OpenGL::GL` target. This may be changed in the future.
-# See https://cmake.org/cmake/help/latest/policy/CMP0072.html
-# Update Feb 28, 2021: To avoid a warning about "OLD" policies we set
-# OpenGL_GL_PREFERENCE directly to "LEGACY" (other option: "GLVND").
-
-# if (POLICY CMP0072)
-#   cmake_policy (SET CMP0072 OLD)
-# endif ()
-
-set (OpenGL_GL_PREFERENCE LEGACY)
+cmake_minimum_required (VERSION 3.15.0 FATAL_ERROR)
 
 #######################################################################
 # define the FLTK project and version
@@ -50,7 +42,9 @@ project (FLTK VERSION 1.4.0)
 include (CMake/fl_debug_var.cmake)
 include (CMake/fl_debug_pkg.cmake)
 include (CMake/fl_add_library.cmake)
-include (CMake/compatibility.cmake)
+
+# right now we don't use compatibility functions
+# include (CMake/compatibility.cmake)
 
 if (0)
   fl_debug_var (FLTK_VERSION_MAJOR)
@@ -83,7 +77,7 @@ set (debug_build 0) # set to 1 to show debug info
 
 if (debug_build)
   message ("")
-  message (STATUS "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt: set debug_build to 0 to disable the following info:")
+  message (STATUS "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt: set 'debug_build' to 0 to disable the following info:")
   fl_debug_var (WIN32)
   fl_debug_var (MINGW)
   fl_debug_var (CYGWIN)
@@ -255,57 +249,73 @@ else ()
   message (STATUS "Example programs will not be built (set FLTK_BUILD_EXAMPLES=ON to build)")
 endif ()
 
-if (FLTK_USE_BUILTIN_JPEG)
-  message (STATUS "Image Libraries:         JPEG = Builtin")
+message (STATUS "")
+
+if (CMAKE_BUILD_TYPE STREQUAL "")
+  message (STATUS "Build configuration     : <unspecified>")
 else ()
-  message (STATUS "Image Libraries:         JPEG = System")
+  message (STATUS "Build configuration     : ${CMAKE_BUILD_TYPE}")
+endif ()
+
+message (STATUS "")
+
+if (FLTK_USE_BUILTIN_JPEG)
+  message (STATUS "Image Libraries         : JPEG = Builtin")
+else ()
+  message (STATUS "Image Libraries         : JPEG = System")
 endif ()
 
 if (FLTK_USE_BUILTIN_PNG)
-  message (STATUS "                         PNG  = Builtin")
+  message (STATUS "                        : PNG  = Builtin")
 else ()
-  message (STATUS "                         PNG  = System")
+  message (STATUS "                        : PNG  = System")
 endif ()
 
 if (FLTK_USE_BUILTIN_ZLIB)
-  message (STATUS "                         ZLIB = Builtin")
+  message (STATUS "                        : ZLIB = Builtin")
 else ()
-  message (STATUS "                         ZLIB = System")
+  message (STATUS "                        : ZLIB = System")
 endif ()
 
 if (UNIX AND NOT (APPLE AND NOT OPTION_APPLE_X11))
 
   if (OPTION_USE_WAYLAND)
-    message (STATUS "Use Wayland:             Yes (when available at run-time)")
+    message (STATUS "Use Wayland             : Yes (if available at run-time)")
   else ()
-    message (STATUS "Use Wayland:             No (therefore, X11 is used)")
+    message (STATUS "Use Wayland             : No (therefore, X11 is used)")
   endif ()
 
   if (FLTK_USE_CAIRO)
-    message (STATUS "All drawing uses Cairo:  Yes")
+    message (STATUS "All drawing uses Cairo  : Yes")
   else ()
-    message (STATUS "All drawing uses Cairo:  No")
+    message (STATUS "All drawing uses Cairo  : No")
   endif ()
 
   if (USE_PANGO)
-    message (STATUS "Use Pango:               Yes")
+    message (STATUS "Use Pango               : Yes")
   else (USE_PANGO)
-    message (STATUS "Use Pango:               No")
+    message (STATUS "Use Pango               : No")
     if (USE_XFT)
-      message (STATUS "Use Xft:                 Yes")
+      message (STATUS "Use Xft                 : Yes")
     else ()
-      message (STATUS "Use Xft:                 No")
+      message (STATUS "Use Xft                 : No")
     endif (USE_XFT)
   endif (USE_PANGO)
 
 endif (UNIX AND NOT (APPLE AND NOT OPTION_APPLE_X11))
 
 if (FLTK_HAVE_CAIROEXT)
-  message (STATUS "Fl_Cairo_Window support: Yes (extended)")
+  message (STATUS "Fl_Cairo_Window support : Yes (extended)")
 elseif (FLTK_HAVE_CAIRO)
-  message (STATUS "Fl_Cairo_Window support: Yes (standard)")
+  message (STATUS "Fl_Cairo_Window support : Yes (standard)")
 else ()
-  message (STATUS "Fl_Cairo_Window support: No")
+  message (STATUS "Fl_Cairo_Window support : No")
+endif ()
+
+if (FLTK_USE_STD)
+  message (STATUS "Use std::               : Yes")
+else ()
+  message (STATUS "Use std::               : No")
 endif ()
 
 message ("")

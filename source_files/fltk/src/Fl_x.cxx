@@ -200,6 +200,8 @@ static Atom fl_NET_WM_ICON_NAME;                // utf8 aware window icon name
 static Atom fl_NET_SUPPORTING_WM_CHECK;
 static Atom fl_NET_WM_STATE;
 static Atom fl_NET_WM_STATE_FULLSCREEN;
+static Atom fl_NET_WM_STATE_MAXIMIZED_VERT;
+static Atom fl_NET_WM_STATE_MAXIMIZED_HORZ;
 static Atom fl_NET_WM_FULLSCREEN_MONITORS;
 Atom fl_NET_WORKAREA;
 static Atom fl_NET_WM_ICON;
@@ -590,6 +592,8 @@ void open_display_i(Display* d) {
   fl_NET_SUPPORTING_WM_CHECK = XInternAtom(d, "_NET_SUPPORTING_WM_CHECK", 0);
   fl_NET_WM_STATE       = XInternAtom(d, "_NET_WM_STATE",       0);
   fl_NET_WM_STATE_FULLSCREEN = XInternAtom(d, "_NET_WM_STATE_FULLSCREEN", 0);
+  fl_NET_WM_STATE_MAXIMIZED_VERT = XInternAtom(d, "_NET_WM_STATE_MAXIMIZED_VERT", 0);
+  fl_NET_WM_STATE_MAXIMIZED_HORZ = XInternAtom(d, "_NET_WM_STATE_MAXIMIZED_HORZ", 0);
   fl_NET_WM_FULLSCREEN_MONITORS = XInternAtom(d, "_NET_WM_FULLSCREEN_MONITORS", 0);
   fl_NET_WORKAREA       = XInternAtom(d, "_NET_WORKAREA",       0);
   fl_NET_WM_ICON        = XInternAtom(d, "_NET_WM_ICON",        0);
@@ -1870,6 +1874,15 @@ int fl_handle(const XEvent& thisevent)
         keysym = FL_Favorites;
         break;
     }
+
+    // Special processing for number keys == keycodes 10-19
+    // necessary to support keyboard layouts with digits in uppercase :
+    if (keycode >= 10 && keycode <= 18) {
+      keysym = '1' + (keycode - 10);
+    } else if (keycode == 19) {
+      keysym = '0';
+    }
+
     // We have to get rid of the XK_KP_function keys, because they are
     // not produced on Windoze and thus case statements tend not to check
     // for them.  There are 15 of these in the range 0xff91 ... 0xff9f
@@ -1911,16 +1924,16 @@ int fl_handle(const XEvent& thisevent)
     Fl::e_keysym = FL_Button + xevent.xbutton.button;
     set_event_xy(window);
     Fl::e_dx = Fl::e_dy = 0;
-    if (xevent.xbutton.button == Button4) {
+    if (xevent.xbutton.button == Button4 && !Fl::event_shift()) {
       Fl::e_dy = -1; // Up
       event = FL_MOUSEWHEEL;
-    } else if (xevent.xbutton.button == Button5) {
+    } else if (xevent.xbutton.button == Button5 && !Fl::event_shift()) {
       Fl::e_dy = +1; // Down
       event = FL_MOUSEWHEEL;
-    } else if (xevent.xbutton.button == 6) {
+    } else if (xevent.xbutton.button == 6 || (xevent.xbutton.button == Button4 && Fl::event_shift())) {
         Fl::e_dx = -1; // Left
         event = FL_MOUSEWHEEL;
-    } else if (xevent.xbutton.button == 7) {
+    } else if (xevent.xbutton.button == 7 || (xevent.xbutton.button == Button5 && Fl::event_shift())) {
         Fl::e_dx = +1; // Right
         event = FL_MOUSEWHEEL;
     } else {
@@ -1938,6 +1951,7 @@ int fl_handle(const XEvent& thisevent)
   case PropertyNotify:
     if (xevent.xproperty.atom == fl_NET_WM_STATE) {
       int fullscreen_state = 0;
+      int maximize_state = 0;
       if (xevent.xproperty.state != PropertyDelete) {
         unsigned long nitems;
         unsigned long *words = 0;
@@ -1946,10 +1960,14 @@ int fl_handle(const XEvent& thisevent)
             if (words[item] == fl_NET_WM_STATE_FULLSCREEN) {
               fullscreen_state = 1;
             }
+            if (words[item] == fl_NET_WM_STATE_MAXIMIZED_HORZ) {
+              maximize_state = 1;
+            }
           }
         }
         if ( words ) { XFree(words); words = 0; }
       }
+      Fl_Window_Driver::driver(window)->is_maximized(maximize_state);
       if (window->fullscreen_active() && !fullscreen_state) {
         window->_clear_fullscreen();
         event = FL_FULLSCREEN;
@@ -2135,6 +2153,10 @@ void Fl_X11_Window_Driver::resize(int X,int Y,int W,int H) {
   if (is_a_move && resize_from_program) force_position(1);
   else if (!is_a_resize && !is_a_move) return;
   if (is_a_resize) {
+    if (pWindow->as_double_window() && pWindow->parent()) {
+      if (W < 1) W = 1;
+      if (H < 1) H = 1;
+    }
     pWindow->Fl_Group::resize(X,Y,W,H);
     if (shown()) {
 #if FLTK_USE_CAIRO
@@ -2304,6 +2326,41 @@ void Fl_X11_Window_Driver::fullscreen_off(int X, int Y, int W, int H) {
     Fl::handle(FL_FULLSCREEN, pWindow);
   }
 }
+
+
+void Fl_X11_Window_Driver::maximize() {
+  if (Fl_X11_Screen_Driver::ewmh_supported()) {
+    send_wm_event(fl_xid(pWindow), fl_NET_WM_STATE, _NET_WM_STATE_ADD,
+                  fl_NET_WM_STATE_MAXIMIZED_VERT, fl_NET_WM_STATE_MAXIMIZED_HORZ);
+  } else {
+    *no_fullscreen_x() = x();
+    *no_fullscreen_y() = y();
+    *no_fullscreen_w() = w();
+    *no_fullscreen_h() = h();
+    int X,Y,W,H;
+    Fl::screen_work_area(X, Y, W, H, screen_num());
+    int width, height;
+    decorated_win_size(width, height);
+    int dw = (width - w());
+    int dh = (height - h() - dw);
+    resize(X + dw/2, Y + dh + dw/2, W - dw, H - dh - dw);
+  }
+}
+
+void Fl_X11_Window_Driver::un_maximize() {
+  if (Fl_X11_Screen_Driver::ewmh_supported()) {
+    send_wm_event(fl_xid(pWindow), fl_NET_WM_STATE, _NET_WM_STATE_REMOVE,
+                  fl_NET_WM_STATE_MAXIMIZED_VERT, fl_NET_WM_STATE_MAXIMIZED_HORZ);
+  } else {
+    resize(*no_fullscreen_x(), *no_fullscreen_y(),
+           *no_fullscreen_w(), *no_fullscreen_h());
+    *no_fullscreen_x() = 0;
+    *no_fullscreen_y() = 0;
+    *no_fullscreen_w() = 0;
+    *no_fullscreen_h() = 0;
+  }
+}
+
 
 ////////////////////////////////////////////////////////////////
 
@@ -2562,10 +2619,10 @@ void Fl_X::make_xid(Fl_Window* win, XVisualInfo *visual, Colormap colormap)
     XWMHints *hints = XAllocWMHints();
     hints->input = True;
     hints->flags = InputHint;
-    if (Fl_Window::show_iconic_) {
+    if (Fl_Window::show_next_window_iconic()) {
       hints->flags |= StateHint;
       hints->initial_state = IconicState;
-      Fl_Window::show_iconic_ = 0;
+      Fl_Window::show_next_window_iconic(0);
       showit = 0;
     }
     if (Fl_X11_Window_Driver::driver(win)->icon_ &&

@@ -110,7 +110,7 @@ void reveal_in_browser(Fl_Type *t) {
       if (!p->parent) break;
       p = p->parent;
     }
-    fixvisible(p);
+    update_visibility_flag(p);
   }
   widget_browser->display(t);
   widget_browser->redraw();
@@ -252,7 +252,7 @@ int Widget_Browser::item_height(void *l) const {
  \return height in FLTK units
  */
 int Widget_Browser::incr_height() const {
-  return textsize()+2;
+  return textsize()+5;
 }
 
 /**
@@ -335,7 +335,7 @@ void Widget_Browser::item_draw(void *v, int X, int Y, int, int) const {
   }
 
   // Width=18: Draw the icon associated with the type.
-  Fl_Pixmap *pm = pixmap[l->pixmapID()];
+  Fl_Pixmap *pm = pixmap[l->id()];
   if (pm) pm->draw(X-18, Y);
 
   // Add tags on top of the icon for locked and protected types.
@@ -345,11 +345,11 @@ void Widget_Browser::item_draw(void *v, int X, int Y, int, int) const {
   }
 
   if (   l->is_widget()
-      && !l->is_window()
+      && !l->is_a(ID_Window)
       && ((Fl_Widget_Type*)l)->o
       && !((Fl_Widget_Type*)l)->o->visible()
-      && (!l->parent || (   strcmp(l->parent->type_name(),"Fl_Tabs")
-                         && strcmp(l->parent->type_name(),"Fl_Wizard")) )
+      && (!l->parent || (   !l->parent->is_a(ID_Tabs)
+                         && !l->parent->is_a(ID_Wizard) ) )
       )
   {
     invisible_pixmap->draw(X - 17, Y);
@@ -423,7 +423,7 @@ int Widget_Browser::item_width(void *v) const {
 }
 
 /**
- Callback to tell the FLuid UI when the list of selected items changed.
+ Callback to tell the Fluid UI when the list of selected items changed.
  */
 void Widget_Browser::callback() {
   selection_changed((Fl_Type*)selection());

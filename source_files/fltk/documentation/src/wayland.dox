@@ -17,42 +17,55 @@ This chapter describes how the Wayland backend of FLTK works from a developer's 
 
 \section wayland-intro Introduction to Wayland
 
-Wayland usage involves communication via a socket between a client application and
-another process called the Wayland compositor which creates, moves, resizes and draws windows
-on the display. Diverse Wayland compositors exist. They can follow rather diverse logics.
-For example, FreeBSD offers Sway which is a tiling compositor where the display is always
-entirely filled with whatever windows are mapped at any given time. Compositors follow either the
+Wayland usage involves communication via a Unix domain socket between a client
+application and another process called the Wayland compositor which creates,
+moves, resizes and draws windows on the display.
+Diverse Wayland compositors exist. They can follow rather diverse logics.
+For example, FreeBSD offers Sway which is a tiling compositor where the display is
+always entirely filled with whatever resizable windows are mapped at any given
+time. Compositors follow either the
 client-side decoration (CSD) rule where client apps draw window titlebars, or the
 server-side decoration (SSD) rule where the compositor draws titlebars. FLTK supports both
 CSD and SSD compositors. It bundles a library called \c libdecor charged of determining whether
 a CSD or a SSD compositor is active, and of drawing titlebars in the first case.
 
 Wayland is divided in various protocols that a given compositor may or may not support,
-although they all support the \c core protocol. Each protocol adds functionality not available
-in the core protocol. The core protocol allows a client app
+although they all support the \c core protocol. Each protocol adds functionality
+not available in the core protocol.
+<a href=https://wayland.app/protocols/>Wayland Explorer</a> lists
+all protocols. The core protocol allows a client app
 to discover what protocols the connected compositor supports. Protocols can be stable,
 which means they have a defined API that will not change but can be expanded, or unstable.
 For example, mapping a window on a display is not done by the core protocol but by the
-<tt>xdg shell</tt> protocol which is stable. Unstable protocols are named beginning with
-letter 'z'. For example, the protocol FLTK uses to support CJK input methods is called
-\c zwp_text_input_v3 and is, unfortunately, unstable.
+<tt>xdg shell</tt> protocol which is stable. The names of symbols used by unstable
+protocols allways begin with letter 'z'. For example, the unstable protocol
+FLTK uses to support CJK input methods is called <tt>Text Input</tt> and uses
+names beginning with \c zwp_text_input_v3.
 
 Wayland makes intensive use of the <em>listener</em> mechanism. A listener is a small array
 of pointers to FLTK-defined callback functions associated to a Wayland-defined object;
 Wayland calls these functions when defined events occur (more at \ref wayland-listeners
 below).
 
-Wayland differs noticeably from X11 in that the position of a window in the display is
+Wayland differs noticeably from X11 in that rendering is left to clients: Wayland provides
+no drawing API. Instead, Wayland provides objects of type <tt>struct wl_buffer</tt> which
+encapsulate a memory array of pixel values shared between the client and the compositor.
+The client app is expected to draw to that memory buffer with whatever means it chooses,
+and to instruct the compositor to map those pixels to the display when the drawing
+is complete. The Wayland platform of FLTK draws with the Cairo library to \c Fl_Window's
+and \c Fl_Image_Surface's, and with OpenGL to \c Fl_Gl_Window's.
+
+Wayland differs also from X11 in that the position of a window in the display is
 completely hidden to the client app. This prevents function \c Fl_Window::position() from having
 any effect on a top-level window. Wayland also prevents a client app from knowing whether
 a window is minimized: \c Fl_Window::show() has no effect on a minimized window.
-Subwindows can be positioned as usual relatively to their
-parent window. FLTK uses that for the small, yellow windows that display
-the new scale factor value when it's changed: these are created as short-lived subwindows
-centered above \c Fl::first_window().
+Subwindows can be positioned as usual relatively to their parent window.
 Wayland allows to create popup windows positioned relatively to a previously mapped other
-window. This allows FLTK to position adequately menu and tooltip windows, see
-\ref menu-windows.
+window. This allows FLTK to position adequately menu and tooltip windows
+(see \ref menu-windows).
+FLTK uses also popups for the small, yellow windows that display
+the new scale factor value when it's changed: these are created as short-lived popups
+centered above \c Fl::first_window().
 
 Wayland uses a trick of its own to handle lists of linked records. It defines type
 <tt>struct wl_list</tt> and a few macros (\c wl_list_init(), \c wl_list_for_each(), \c wl_list_insert(),
@@ -62,7 +75,7 @@ and often named 'link'. Access to such a list is possible memorizing a value of 
 <tt>struct wl_list</tt> computed by macro \c wl_list_init().
 Macro <tt>wl_list_for_each(arg1, arg2, arg3)</tt> allows to run through all list elements with:
 - \c arg1 is a pointer variable of the type of elements of the linked list;
-- \c arg2 is the address of a variable of type <tt>struct wl_list</tt> identifying the targetted list;
+- \c arg2 is the address of a variable of type <tt>struct wl_list</tt> identifying the targeted list;
 - \c arg3 is the name of the member variable of these elements used to link them together.
 
 For example, \c wl_list_for_each() can be used as follows to scan the linked list
@@ -75,13 +88,16 @@ of all displays of the system (see \ref wayland-output "Fl_Wayland_Screen_Driver
   }
 \endcode
 
-Overall, and ignoring for now OpenGL usage, FLTK interacts with Wayland in 3 ways :
-- Calling C functions of the \c libwayland-client.so,
-\c libwayland-cursor.so and \c libxkbcommon.so shared libraries and of the bundled libdecor library.
+Overall, and ignoring for now OpenGL usage, FLTK interacts with Wayland as follows :
+- When opening the display: FLTK calls \c Fl::add_fd() in \c FL_READ mode to associate
+a  callback function to the socket connecting the client and the compositor.
+- Client to compositor: FLTK calls C functions of the \c libwayland-client.so,
+\c libwayland-cursor.so and \c libxkbcommon.so shared libraries and of the bundled
+libdecor library. These send suitable messages to the compositor writing to the socket.
 The names of these functions begin with \c wl_, \c xkb_ or \c libdecor_.
-- Being called by these libraries via the 'listener' mechanism.
-- Listening, after a call to \c Fl::add_fd(), to data sent by the compositor to the client via
-the socket.
+- Compositor to client: the callback function runs when there are data to read in the
+socket; it calls \c wl_display_dispatch() which interprets the read data and calls
+corresponding listeners.
 
 The core protocol defines also a number of mostly opaque structures whose names begin with \c wl_.
 The names of symbols and types defined by the other protocols FLTK uses begin with \c xdg_,
@@ -96,7 +112,7 @@ to a mapped Fl_Window.
 
 Classes \c Fl_Wayland_Window_Driver, \c Fl_Wayland_Screen_Driver, \c Fl_Wayland_Graphics_Driver,
 \c Fl_Wayland_Copy_Surface_Driver, \c Fl_Wayland_Image_Surface_Driver and
-\c Fl_Wayland_Gl_Window_Driver and \c file fl_wayland_platform_init.cxx
+\c Fl_Wayland_Gl_Window_Driver and file \c  fl_wayland_platform_init.cxx
 contain all the Wayland-specific code of the FLTK library.
 This code is located at \c src/drivers/Wayland/ in the FLTK source tree.
 A single C++ source file generally contains all the code of a given class.
@@ -104,7 +120,8 @@ The code related to copy, paste and drag-and-drop operations, however,
 is gathered in file \c fl_wayland_clipboard_dnd.cxx and contains a few
 member functions of class \c Fl_Wayland_Screen_Driver.
 Furthermore, class \c Fl_Unix_System_Driver is used by both the Wayland and the X11
-FLTK platforms.
+FLTK platforms. File FL/fl_config.h defines preprocessor variables
+\c FLTK_USE_WAYLAND and \c FLTK_USE_CAIRO.
 
 The public C API to Wayland, xkb, EGL and libdecor libraries are obtained with
 \code
@@ -142,7 +159,9 @@ Similar operations are performed for FLTK to use protocols <tt>xdg decoration un
 The Wayland platform of FLTK is normally a two-legged hybrid able to use either Wayland or X11
 and to choose between these possibilities at run-time, without any change to the client
 application. The Wayland/X11 hybrid is essentially a version of the FLTK library containing both all
-Wayland-specific and all X11-specific code. This creates the constraint that Wayland and X11 cannot
+Wayland-specific and all X11-specific code. That's reflected in file
+FL/fl_config.h which defines both \c FLTK_USE_WAYLAND and \c FLTK_USE_X11.
+This creates the constraint that Wayland and X11 cannot
 use the same type name for different purposes or the same symbol name.
 That is why function <tt>fl_xid(const Fl_Window*)</tt> is deprecated in FLTK 1.4 and replaced by
 \c fl_wl_xid() for Wayland and \c fl_x11_xid() for X11. Also, global variable
@@ -170,7 +189,8 @@ without any other change in the source code nor to the application's environment
 In special situations, such as with embedded systems equipped with the Wayland software but lacking
 the X11 library, it's possible to build the FLTK library such as it contains only the Wayland backend.
 This is achieved building FLTK with <tt>cmake -DOPTION_WAYLAND_ONLY=on</tt> or with
-<tt>configure --disable-x11</tt>.
+<tt>configure --disable-x11</tt>. In that case, FL/fl_config.h does not define
+\c FLTK_USE_X11.
 
 The rest of this chapter describes what happens when the Wayland leg has been chosen.
 
@@ -280,7 +300,7 @@ accessible from this object.
 For example, when \c interface equals "wl_compositor", the value returned by
 \c wl_registry_bind() is stored as member \c wl_compositor of the
 \c Fl_Wayland_Screen_Driver object.
-\c registry_handle_global() also identifies whether the Mutter, Weston, or KDE compositor is connected
+\c registry_handle_global() also identifies whether the Mutter, Weston, or KWin compositor is connected
 and stores this information in static member variable \c Fl_Wayland_Screen_Driver::compositor.
 
 Wayland calls \c registry_handle_global() with its parameter \c interface equals to
@@ -306,18 +326,21 @@ The \c wl_display_dispatch() call is repeated as long as data are available for 
 The event loop is run by function \c Fl_Unix_System_Driver::wait() which is used by both
 the Wayland and X11 FLTK backends. Among various tasks, this function waits for data arriving
 on the file descriptors FLTK is listening. Overall, the event loop of the Wayland backend
-is nearly exactly the
-same as that used by the X11 backend. The Wayland backend differs only in the callback function
-called to handle data read from the Wayland connection socket, which is Wayland-specific.
+is nearly exactly the same as that used by the X11 backend. The Wayland backend differs
+only in the callback function handling data read from the Wayland connection socket,
+and in overridden functions \c Fl_Wayland_Screen_Driver::poll_or_select_with_delay() and
+\c Fl_Wayland_Screen_Driver::poll_or_select().
 
 
 \section wayland-surface Wayland windows and surfaces
 
 Wayland defines objects called surfaces of type <tt>struct wl_surface</tt>. A Wayland surface
 "has a rectangular area which may be displayed on zero or more displays, present buffers,
-receive user input, and define a local coordinate system". Buffers allow the client app to
-draw to surfaces (see \ref wayland-buffer). FLTK creates a surface
-each time an Fl_Window is show()'n.
+receive user input, and define a local coordinate system". In other words,
+surface is the name Wayland uses for a window.
+Buffers allow the client app to draw to surfaces (see \ref wayland-buffer).
+FLTK creates a surface each time an Fl_Window is show()'n calling function
+\c wl_compositor_create_surface().
 Static member function <tt>Fl_Wayland_Window_Driver::surface_to_window(struct wl_surface *)</tt>
 gives the \c Fl_Window* corresponding to the surface given in argument.
 FLTK recognizes 4 distinct
@@ -381,6 +404,14 @@ When the window size change is caused by the app itself calling the window's \c 
 to detect that Wayland needs be informed of the desired size change, which gets done by a call
 to \c libdecor_frame_commit(). Wayland later calls \c handle_configure() and events described
 above unfold.
+
+Wayland generally does not provide a way to control where the compositor should map a window
+in the system displays. Nevertheless, for multi-display systems, Wayland allows to control
+on what display should the compositor map a fullscreen window. That is done inside function
+\c handle_configure() which calls \c libdecor_frame_set_fullscreen() for DECORATED windows
+and inside function \c xdg_toplevel_configure() which calls \c xdg_toplevel_set_fullscreen()
+for UNFRAMED. The <tt>struct wl_output</tt> pointer for the targeted display is transmitted
+as 2nd argument of these calls.
 
 \section menu-windows Menu windows and other popups
 Menu windows, tiny menu title windows, and tooltip windows are implemented using Wayland's
@@ -501,8 +532,9 @@ CAIRO_FORMAT_ARGB32.
 
 FLTK calls function \c Fl_Wayland_Window_Driver::make_current() before drawing to any Fl_Window.
 Member \c buffer of this Fl_Window's <tt>struct wld_window</tt> (see \ref wld_window) is NULL when the
-window has just been created or resized. In that case, FLTK calls member functions
-\c create_shm_buffer() and \c cairo_init() of \c Fl_Wayland_Graphics_Driver to create
+window has just been created or resized. In that case, FLTK calls
+\c Fl_Wayland_Graphics_Driver::create_wld_buffer() which calls
+\c create_shm_buffer() and \c cairo_init() to create
 - a Wayland buffer;
 - a Cairo image surface.
 
@@ -519,16 +551,19 @@ give \c size, the common size of both byte arrays.
 
 Section \ref wayland-buffer-factory below details how FLTK creates \c wl_buffer objects.
 
-FLTK associates to each surface a <tt>struct fl_wld_buffer</tt> (see \ref fl_wld_buffer) containing
-a pointer to the byte array of the Cairo image surface (member \c draw_buffer), information about the
+FLTK associates to each surface a
+<tt>struct Fl_Wayland_Graphics_Driver::wld_buffer</tt> (see \ref wld_buffer) containing
+a pointer to the byte array of the Cairo image surface (member \c draw_buffer.buffer), information about the
 Wayland buffer (members \c wl_buffer and \c data), the common size of the Cairo surface's and
-Wayland buffer's byte arrays (member \c data_size), and other information. A pointer to this
-<tt>struct fl_wld_buffer</tt> is memorized as member \c buffer of the Fl_Window's \ref wld_window.
+Wayland buffer's byte arrays (member \c draw_buffer.data_size), and other information. A pointer to this
+<tt>struct Fl_Wayland_Graphics_Driver::wld_buffer</tt> is memorized as member \c buffer of the Fl_Window's \ref wld_window.
 All drawing operations to the Fl_Window then modify the content of the Cairo image surface.
 
 Function \c Fl_Wayland_Window_Driver::flush() is in charge of sending FLTK
 graphics data to the display. That is done by calling function \c
-Fl_Wayland_Graphics_Driver::buffer_commit() which copies the byte array of the Cairo surface to
+Fl_Wayland_Graphics_Driver::buffer_commit() which creates the <tt>struct wl_buffer</tt>
+object calling \c create_shm_buffer() if that was not done before,
+copies the byte array of the Cairo surface to
 the Wayland buffer's starting memory address, and calls functions \c wl_surface_attach()
 and \c wl_surface_commit(). Before calling Fl_Window::flush(),
 FLTK has computed a damaged region. If that region is not null,
@@ -536,45 +571,113 @@ FLTK has computed a damaged region. If that region is not null,
 surface to the Wayland buffer and calls function \c wl_surface_damage_buffer() for these
 parts to inform the compositor of what parts of the surface need its attention.
 
+<h3>Throttling redrawing operations</h3>
 An important detail here is that FLTK uses Wayland's synchronization
-mechanism to make sure the surface's \c wl_buffer is not changed until the surface is fully
-mapped on the display. This 3-step mechanism works as follows:
+mechanism to make sure the surface's \c wl_buffer is not changed while the
+compositor is using it and to refrain from calling \c wl_surface_commit()
+more frequently than the system can process it.
+This 3-step mechanism works as follows:
 - Fl_Wayland_Graphics_Driver::buffer_commit() first calls function \c wl_surface_frame() to
-obtain a <tt>struct wl_callback</tt> object and stores it as member \c cb of the surface's
-\ref fl_wld_buffer.
-- Then it calls \c wl_callback_add_listener() to associate this object to the FLTK-defined,
-callback function \c surface_frame_done() that Wayland calls when it's ready for another
-mapping operation.
-- Finally \c surface_frame_done() destroys the \c wl_callback object by function
-\c wl_callback_destroy() and sets member \c cb to NULL.
+obtain a pointer to a <tt>struct wl_callback</tt> object and stores it as member
+\c cb of the surface's \ref wld_buffer.
+- Then it calls \c wl_callback_add_listener() to associate this object to the
+FLTK-defined, callback function \c surface_frame_done() that Wayland will call
+later when ready for another mapping operation. It next calls
+\c wl_surface_commit() which starts the mapping of the buffer content on
+the display.
+- Later, \c surface_frame_done() runs and destroys the \c wl_callback object by
+function \c wl_callback_destroy() and sets member \c cb to NULL.
+
+Member variable \c draw_buffer_needs_commit of the \ref wld_buffer is also
+important in this mechanism : it informs FLTK that the graphics buffer has
+changed and needs being committed. This variable is turned \c true every time a
+graphics operation changes the buffer content and turned \c false when the
+buffer gets committed.
 
 This procedure ensures that FLTK never changes the surface's Wayland buffer
-while it's being used by the compositor because \c Fl_Wayland_Window_Driver::flush()
-checks that \c cb is NULL before calling \c Fl_Wayland_Graphics_Driver::buffer_commit().
-If it's not NULL, FLTK calls function \c wl_callback_destroy() which instructs the compositor
-to abort the mapping operation and to get ready for processing of a new byte buffer.
+while it's being used by the compositor and never calls \c wl_surface_commit()
+before Wayland gets ready for a new commit because
+\c Fl_Wayland_Window_Driver::flush() calls
+\c Fl_Wayland_Graphics_Driver::buffer_commit() only if \c cb is NULL.
+If it's not NULL, the exact content of function \c surface_frame_done() :
+\code
+static void surface_frame_done(void *data, struct wl_callback *cb, uint32_t time) {
+  struct wld_window *window = (struct wld_window *)data;
+  wl_callback_destroy(cb);
+  if (window->buffer) {
+    window->buffer->cb = NULL;
+    if (window->buffer->draw_buffer_needs_commit) {
+      Fl_Wayland_Graphics_Driver::buffer_commit(window);
+    }
+  }
+}
+\endcode
+has the effect that when the mapping operation eventually completes, Wayland runs
+\c surface_frame_done(), which calls anew
+\c Fl_Wayland_Graphics_Driver::buffer_commit() because the buffer's
+\c draw_buffer_needs_commit member is true. The net result is that the screen
+shows the most recent surface content.
 
+This synchronization mechanism is also used when performing an interactive window resize
+operation. During such operation, the compositor informs the client an interactive
+resize is being performed and sends window resize commands at high rate (~60 Hz) to the
+client via the socket. Libdecor turns on flag \c LIBDECOR_WINDOW_STATE_RESIZING
+to inform the client, and runs function \c handle_configure() for each received resize
+command. Before calling Fl_Group::resize() and later Fl_Window::draw(),
+\c handle_configure() tests whether \c window->buffer->cb is NULL. When it's not
+because a previous resize operation is being performed, the current resize command is
+skipped. At the end of the interactive resize, flag \c LIBDECOR_WINDOW_STATE_RESIZING
+is off and Wayland sends a final resize command which is not skipped. Overall, this
+ensures the client program resizes its window as frequently as it can without
+falling behind resize commands sent by the compositor.
+
+<h3>Progressive window drawing</h3>
 FLTK supports progressive drawing when an app calls function Fl_Window::make_current()
 at any time and then calls the FLTK drawing API. This is made possible
 in function \c Fl_Wayland_Window_Driver::make_current() with
 \code
   // to support progressive drawing
-  if ( (!Fl_Wayland_Window_Driver::in_flush_) && window->buffer && (!window->buffer->cb) &&
-      !wait_for_expose_value ) {
+  if ( (!Fl_Wayland_Window_Driver::in_flush_) && window->buffer && (!window->buffer->cb)
+      && window->buffer->draw_buffer_needs_commit && (!wait_for_expose_value) ) {
     Fl_Wayland_Graphics_Driver::buffer_commit(window);
   }
 \endcode
 Thus, \c buffer_commit() runs only when \c cb is NULL. If an app rapidly performs calls
-to Fl_Window::make_current() and to drawing functions, FLTK will copy \c draw_buffer to the Wayland
-buffer and instruct Wayland to map it to the display when \c cb is NULL
+to \c Fl_Window::make_current() and to drawing functions, FLTK will copy \c draw_buffer to
+the Wayland buffer and instruct Wayland to map it to the display when \c cb is NULL
 which means that the compositor is ready to start performing a mapping operation.
-In contrast, FLTK will only modify \c draw_buffer when \c cb is not NULL, letting the compositor
-complete its ongoing mapping task.
-For example, FLTK's mandelbrot test app set to fullscreen can be seen to progressively fill its window from
+This occurs when the progressive drawing operation begins. Later, \c cb is generally found
+non NULL when \c Fl_Wayland_Window_Driver::make_current() runs because the compositor
+is busy processing the previous Wayland buffer. When the compositor has completed
+this processing, the client app runs \c surface_frame_done()
+which, provided member variable \c draw_buffer_needs_commit is true, calls
+\c Fl_Wayland_Graphics_Driver::buffer_commit(). This makes the compositor map the
+Wayland buffer in its new, more advanced, state.
+
+An example of progressive drawing is given by FLTK's mandelbrot test app.
+When set to fullscreen, this app can be seen to progressively fill its window from
 top to bottom by blocks of lines, each block appearing when the compositor is ready to map
 a new buffer. When the compositor is not ready, the app does not block but continues
-computing and drawing in memory but not on display more lines of the desired Mandelbrot graph.
+computing and drawing in memory but not on display more lines of the desired Mandelbrot
+graph.
 
+<h3>Wayland buffer deletion</h3>
+Each \ref wld_buffer record contains boolean member \c in_use which is set to \c true
+just before the buffer gets committed, and boolean member \c released which
+is set to \c true when FLTK no longer needs the buffer and calls
+\c Fl_Wayland_Graphics_Driver::buffer_release().
+FLTK's buffer-creating function, \c Fl_Wayland_Graphics_Driver::create_shm_buffer(),
+attaches a 1-member listener to each buffer which Wayland calls after a commit
+operation to indicate the client is allowed to re-use the buffer.
+This listener's member function, \c buffer_release_listener(),
+turns to false member \c in_use of the buffer's \ref wld_buffer record.
+Since the two events 'FLTK no longer needs the buffer' and
+'the client is allowed to re-use the buffer' can arrive in
+any order, FLTK deletes the <tt>struct wl_buffer</tt> object by running
+\c do_buffer_release() only after both events happened, that is, when \c in_use is
+\c false and \c released is \c true. That's why function \c do_buffer_release()
+is called by both functions \c Fl_Wayland_Graphics_Driver::buffer_release()
+and \c buffer_release_listener().
 
 \section wayland-buffer-factory Buffer factories
 
@@ -600,41 +703,49 @@ the \c wl_shm_pool.
 - A variable named \c chunk_offset represents the offset within the pool's shared
 memory available for the buffer being constructed. It equals 0 when the pool has just been
 created and is updated as detailed below when one or more buffers have been previously created
-from the pool. A record of type  <tt>struct fl_wld_buffer</tt> is created. This record will
+from the pool. A record of type  <tt>struct Fl_Wayland_Graphics_Driver::wld_buffer</tt> is created. This record will
 contain (member \c wl_buffer) the address of a \c wl_buffer object that's created by function
 \c wl_shm_pool_create_buffer(). This \c wl_buffer object encapsulates a section of a given
 size of the pool's shared memory beginning at offset \c chunk_offset in it.
 Quantity <tt>pool_memory + chunk_offset</tt> is therefore the address of the
 beginning of the mmap'ed memory section encapsulated by this \c wl_buffer.
-Member \c shm_pool of the newly constructed \c fl_wld_buffer object is set to the address of
+Member \c shm_pool of the newly constructed \c Fl_Wayland_Graphics_Driver::wld_buffer object is set to the address of
 the current \c wl_shm_pool object. This record is added to the head of the linked list of
 current pool's buffers by a call to \c wl_list_insert().
-At that point, a <tt>struct fl_wld_buffer</tt> record is part of the linked list of all
+At that point, a <tt>struct Fl_Wayland_Graphics_Driver::wld_buffer</tt> record is part of the linked list of all
 such records corresponding to \c wl_buffer objects created from the same \c wl_shm_pool
 object, and member \c shm_pool of this record gives the address of this \c wl_shm_pool.
-When a new <tt>struct fl_wld_buffer</tt> record is to be created,
+When a new <tt>struct Fl_Wayland_Graphics_Driver::wld_buffer</tt> record is to be created,
 \code
   struct wld_shm_pool_data *pool_data =
       (struct wld_shm_pool_data *)wl_shm_pool_get_user_data(pool);
-  struct fl_wld_buffer *record = wl_container_of(pool_data->buffers.next, record, link);
+  struct Fl_Wayland_Graphics_Driver::wld_buffer *record = wl_container_of(pool_data->buffers.next, record, link);
   int chunk_offset = ((char*)record->data - pool_data->pool_memory) + record->data_size;
 \endcode
 gives the offset within the current pool's mmap'ed memory available for a new \c wl_buffer.
 Macro \c wl_container_of() gives the address of a record belonging to a linked list of
 records of the same type.
 
-A window's \c wl_buffer is re-used each time the window gets redrawn, and is destroyed by
-function \c Fl_Wayland_Graphics_Driver::buffer_release() when \c Fl_Window::hide() runs or
-the window is resized. Function \c Fl_Wayland_Graphics_Driver::buffer_release() destroys the
-\c wl_buffer with \c wl_buffer_destroy() and removes the corresponding
-\c fl_wld_buffer record from the linked list of buffers from the same \c wl_shm_pool.
-Since new \c fl_wld_buffer records are added at the head of the linked list, and since
+A window's \c wl_buffer is re-filled by graphics data and committed each time
+the window gets redrawn, and is set to be destroyed by function
+\c Fl_Wayland_Graphics_Driver::buffer_release() when \c Fl_Window::hide() runs or
+the window is resized. When the \c wl_buffer is no longer in use, function
+\c do_buffer_release() gets called as explained above. It destroys the
+\c wl_buffer with \c wl_buffer_destroy(), and removes the corresponding
+\c Fl_Wayland_Graphics_Driver::wld_buffer record from the linked list of buffers from the same \c wl_shm_pool.
+Since new \c Fl_Wayland_Graphics_Driver::wld_buffer records are added at the head of the linked list, and since
 the record at the head of this list is used to compute the offset within the pool's mmap'ed
 memory available for a new \c wl_buffer, destruction of the last created \c wl_buffer
 allows to re-use the destroyed buffer's pool's memory for a new \c wl_buffer.
-When the linked list results empty, the \c wl_shm_pool is destroyed by
-\c wl_shm_pool_destroy(), the pool's mmap'ed memory is munmap'ed, and the pool's associated
-<tt>struct wld_shm_pool_data</tt> is freed.
+
+When function \c do_buffer_release() finds the list of buffers from a given pool empty,
+two situations can occur. 1) This pool is the current pool. Its mmap'ed memory will be
+re-used from offset 0 to create future \c wl_buffer objects. 2) This pool is not
+current. It gets destroyed with \c wl_shm_pool_destroy(), the pool's mmap'ed memory
+is munmap'ed, and the pool's associated <tt>struct wld_shm_pool_data</tt> is freed.
+In situation 1) above, the next \c wl_buffer to be created can need more memory than
+the current pool's memory size. If so, the current pool gets destroyed and replaced
+by a new, larger pool.
 
 If the sum of \c chunk_offset plus the buffer size is larger than the current pool's size
 when function \c create_shm_buffer() is called, \c chunk_offset is reset
@@ -644,8 +755,10 @@ the previous mmap'ed section.
 
 Wayland uses also \c wl_buffer objects to support cursors. FLTK uses the "buffer factory"
 described here when creating custom cursors (see \ref custom-cursor) with
-function <tt>Fl_Wayland_Window_Driver::set_cursor(const Fl_RGB_Image *,…)</tt> which calls
-\c create_shm_buffer(). In contrast, standard shaped-cursors (e.g., FL_CURSOR_INSERT)
+function <tt>Fl_Wayland_Window_Driver::set_cursor(const Fl_RGB_Image *,…)</tt> which
+calls \c create_shm_buffer() via \c set_cursor_4args(), \c custom_offscreen()
+and \c create_wld_buffer().
+In contrast, standard shaped-cursors (e.g., FL_CURSOR_INSERT)
 use their own "buffer factory" inside Wayland functions such as
 \c wl_cursor_theme_get_cursor().
 Therefore, the fact that the \c wl_buffer objects behind standard cursors are never destroyed
@@ -677,13 +790,17 @@ One such record is created for each display. These records are put in a
 FLTK uses 2 distinct scaling parameters for each display:
 - <tt>int wld_scale;</tt>. This member variable of the
 \c struct \ref wayland-output "Fl_Wayland_Screen_Driver::output" record
-typically equals 1 for standard, and 2 for
-HighDPI displays. Its value is set by the Wayland compositor for each display with the effect
-that 1 Wayland graphics unit represents a block of \c nxn pixels when the value is \c n.
-Another effect is that a drawing buffer for a surface of size WxH units contains
-<tt>W * n * H * n * 4</tt> bytes. This is enough to make FLTK apps HighDPI-aware because the
-Wayland compositor automatically initializes parameter \c wld_scale to the value adequate for
-each display's DPI. Under the gnome desktop, this parameter is visible in the "Settings" app,
+typically equals 1 for standard, and 2 for HighDPI displays.
+The effect of value \c n of variable \c wld_scale is
+that 1 Wayland graphics unit represents a block of \c nxn pixels.
+Another effect is that a drawing buffer for a surface of size WxH units
+contains <tt>W * n * H * n * 4</tt> bytes.
+Member function \c output_scale() mentionned above sets this value for
+each system's display at startup time. Member function \c
+Fl_Wayland_Graphics_Driver::buffer_commit() informs the Wayland compositor
+of the value of \c wld_scale calling \c wl_surface_set_buffer_scale()
+which is enough to make FLTK apps HighDPI-aware.
+Under the gnome and KDE desktops, this parameter is visible in the "Settings" app,
 "Displays" section, "Scale" parameter which is 200% on HighDPI displays.
 - <tt>float gui_scale;</tt>. This other member variable is where FLTK's own GUI scaling mechanism
 with ctrl/+/-/0/ keystrokes and with environment variable FLTK_SCALING_FACTOR operates:
@@ -694,7 +811,8 @@ member variable of display # \c n. This variable is used by function
 that scales the graphics driver by this factor with \c cairo_scale().
 
 Overall, an FLTK object, say an Fl_Window, of size \c WxH FLTK units occupies
-<tt>W * wld_scale * gui_scale x H * wld_scale * gui_scale</tt> pixels on the display.
+<tt>int(W * gui_scale) * wld_scale x int(H * gui_scale) * wld_scale</tt> pixels
+on the display.
 
 When an \c Fl_Window is to be show()'n, \c Fl_Wayland_Window_Driver::makeWindow() creates
 a <tt>struct wl_surface</tt> with \c wl_compositor_create_surface() and associates it
@@ -718,7 +836,7 @@ is unmapped by function \c Fl_Wayland_Window_Driver::hide(), the surface's list 
 is emptied.
 
 <h3>Fractional scaling</h3>
-The KDE compositor, and gnome too if specially set, allow to use <em>fractional scaling</em>
+The KWin compositor, and gnome too if specially set, allow to use <em>fractional scaling</em>
 that can take intermediate values between 100% and 200%. Wayland implements this rendering all
 <tt>wl_surface</tt>'s as if the scaling was at 200%, and downsizing them
 to the desired fractional scale value at the compositing stage.
@@ -819,7 +937,9 @@ It also shows that a <tt>struct cursor_image</tt> object has an associated
 Function <tt>Fl_Wayland_Window_Driver::set_cursor(const Fl_RGB_Image *rgb, int hotx, int hoty)</tt>
 gives FLTK support of custom cursor shapes. It calls \c Fl_Wayland_Window_Driver::set_cursor_4args()
 that creates a \c cursor_image object, allocates the
-corresponding \c wl_buffer by a call to \c Fl_Wayland_Graphics_Driver::create_shm_buffer() and draws
+corresponding \c wl_buffer by a call to
+\c Fl_Wayland_Graphics_Driver::create_shm_buffer() via \c custom_offscreen()
+and \c create_wld_buffer() and draws
 the cursor shape into that buffer using the offscreen-drawing method of FLTK.
 
 The public type <tt>struct wl_cursor</tt> is essentially an array of \c wl_cursor_image objects
@@ -849,7 +969,7 @@ gets associated to a standard cursor or to a new custom cursor.
 
 
 
-\section wayland-text Text input
+\section wayland-text Keyboard support
 
 The "Mouse handling" section above mentionned function \c seat_capabilities() that Wayland calls when
 the app discovers its "seat". Presence of flag \c WL_SEAT_CAPABILITY_KEYBOARD in argument
@@ -882,7 +1002,7 @@ released. Calls to functions \c xkb_state_update_mask() and \c xkb_state_mod_nam
 to set \c Fl::e_state adequately.
 
 Function \c wl_keyboard_repeat_info() does not run, for now, because this would require version 4 of
-the <tt>wl_keyboard</tt> object which is at version 3 in all tested Wayland compositors.
+the <tt>wl_keyboard</tt> object which is at version 2 in all tested Wayland compositors.
 
 
 \section wayland-text-input Support of text input methods
@@ -911,8 +1031,8 @@ replacing it with the text that will stay in the document. FLTK underlines marke
 to distinguish it from regular text.
 
 Functions \c text_input_delete_surrounding_text() and \c text_input_done() have
-no effect at present, without this preventing input methods that have been tested with FLTK to work
-satisfactorily.
+no effect at present, without this preventing input methods that have been tested
+with FLTK from working satisfactorily.
 
 It's necessary to inform text input methods of the current location of the insertion point in the
 active surface. This information allows them to map their auxiliary windows next to the insertion
@@ -948,9 +1068,16 @@ Desktop. As of early 2023, two titlebar-drawing \c libdecor plugins are availabl
 Because \c libdecor is not yet in Linux packages, or only in a preliminary state, FLTK bundles the
 most recent source code of \c libdecor and its plugins. This code is included in libfltk.
 FLTK uses \c libdecor-gtk when software package \c libgtk-3-dev is present in the
-system, and \c libdecor-cairo otherwise.
+build system, and \c libdecor-cairo otherwise.
 
-\c Libdecor uses the Wayland protocol <tt>"xdg decoration unstable v1"</tt> hinted at before.
+\c Libdecor uses the Wayland protocol
+<a href=https://wayland.app/protocols/xdg-decoration-unstable-v1>
+xdg decoration unstable v1</a> to request being decorated by a supporting compositor.
+If the running compositor supports SSD, \c libdecor doesn't draw window titlebars because
+the compositor does it. That is what happens with the \c KWin and \c Sway compositors.
+However, if environment variable \c LIBDECOR_FORCE_CSD is defined to value \c 1 when an
+FLTK app runs, \c libdecor instructs an SSD-able compositor to refrain from decorating its
+windows and decorates windows itself.
 
 CMake \c OPTION_USE_SYSTEM_LIBDECOR has been defined to allow FLTK in the future, when \c libdecor and
 \c libdecor-gtk will be part of Linux packages, to use these packages rather than the \c libdecor
@@ -996,12 +1123,6 @@ Each plugin puts its own string in member \c description of a record of type
 type is complicated for a reason and solved by a method detailed in a comment before function
 \c get_libdecor_plugin_description().
 
-Function \c get_libdecor_plugin_description() also determines whether the compositor uses CSD or SSD
-mode. This information is stored
-in member \c decoration_mode of <tt>struct libdecor_frame_private</tt> which is not part of
-the public libdecor API. For this reason, FLTK copies to \c fl_libdecor-plugins.c the definition of
-this type present in \c libdecor.c.
-
 Operation 2) above is done by FLTK-defined function \c fl_libdecor_titlebar_buffer() from file
 \c fl_libdecor-plugins.c. This function calls \c get_libdecor_plugin_description() seen above
 to get the running plugin's descriptive string. That is <tt>"GTK3 plugin"</tt> with \c libdecor-gtk.
@@ -1041,10 +1162,7 @@ native platform window system. OpenGL-using FLTK apps are therefore linked to \c
 
 EGL is initialized calling member function \c Fl_Wayland_Gl_Window_Driver::init()
 once, the first time the \c Fl_Wayland_Gl_Window_Driver c'tor runs. That is done
-with calls to <tt>eglGetDisplay(), eglInitialize(), eglGetConfigs(), and
-eglBindAPI()</tt>. Function \c eglGetConfigs() computes the number of usable
-EGL frame buffer configurations for the display and stores it in static member variable
-\c Fl_Wayland_Gl_Window_Driver::configs_count.
+with calls to <tt>eglGetDisplay(), eglInitialize()</tt>, and \c eglBindAPI().
 
 Member function \c Fl_Wayland_Gl_Window_Driver::find() calls \c eglChooseConfig()
 to filter the set of GL configurations that match the \c Fl_Gl_Window's mode(),
@@ -1052,12 +1170,12 @@ and puts in the returned \c Fl_Gl_Choice object the first matching configuration
 The filtering gets done with bits \c EGL_WINDOW_BIT, to support the creation of window
 surfaces, and \c EGL_OPENGL_BIT, to support the creation of OpenGL contexts.
 
-EGL needs 2 more objects created for each \c Fl_Gl_Window of type
-<tt>struct wl_egl_window</tt> and \c EGLSurface. Both are created by member
+EGL needs 2 more objects created for each \c Fl_Gl_Window. They have types
+<tt>struct wl_egl_window</tt> and \c EGLSurface, and are created by member
 function \c Fl_Wayland_Gl_Window_Driver::make_current_before() which runs at the
 beginning of \c Fl_Gl_Window::make_current().
 The first argument of the call to \c wl_egl_window_create() therein has type
-<tt>struct wl_surface *</tt> and is what connects EGL with the desired Wayland window.
+<tt>struct wl_surface *</tt> and is what connects EGL with the targeted Wayland window.
 
 EGL creates with \c eglCreateContext() an object of type \c EGLContext via member
 function \c Fl_Wayland_Gl_Window_Driver::create_gl_context() called by
@@ -1074,10 +1192,7 @@ FLTK function \c Fl_Gl_Window::make_current() calls overridden function
 FLTK calls function \c Fl_Wayland_Gl_Window_Driver::swap_buffers() each time it wants a
 GL context to be sent to the display. This function contains some pure GL code to
 emulate an overlay buffer to support Fl_Gl_Window objects overriding their
-\c draw_overlay() member function.
-Then, it calls function \c eglSwapBuffers() after having called
-\c wl_display_dispatch_pending() to synchronize EGL use
-with the rest of the Wayland compositor's activity.
+\c draw_overlay() member function. Then, it calls function \c eglSwapBuffers().
 
 The overridden \c Fl_Wayland_Gl_Window_Driver::resize() function is implemented with
 calls to \c wl_egl_window_get_attached_size() and \c wl_egl_window_resize().
@@ -1100,7 +1215,7 @@ struct wld_window {
   Fl_Window *fl_win;
   struct wl_list outputs; // linked list of displays where part or whole of window maps
   struct wl_surface *wl_surface; // the window's surface
-  struct fl_wld_buffer *buffer; // see \ref fl_wld_buffer
+  struct Fl_Wayland_Graphics_Driver::wld_buffer *buffer; // see \ref wld_buffer
   struct xdg_surface *xdg_surface;
   enum Fl_Wayland_Window_Driver::kind kind; // DECORATED or POPUP or SUBWINDOW or UNFRAMED
   union {
@@ -1122,27 +1237,46 @@ struct wld_window {
 }
 </pre>
 
-\anchor fl_wld_buffer
-<h3>struct fl_wld_buffer</h3>
-Defined in \c Fl_Wayland_Graphics_Driver.H. One such record is created when and by:
-- an Fl_Window is show()'n or resized, by \c Fl_Wayland_Graphics_Driver::create_shm_buffer();
-- an Fl_Image_Surface object is created, by the \c Fl_Wayland_Image_Surface_Driver c'tor;
-- a custom cursor shape is created or text is dragged, by
-\c Fl_Wayland_Graphics_Driver::create_shm_buffer().
+\anchor draw_buffer
+<h3>struct Fl_Wayland_Graphics_Driver::draw_buffer</h3>
+Defined in file \c Fl_Wayland_Graphics_Driver.H.
+One such record is created when an Fl_Image_Surface object is created.
+One such record is also embedded inside each
+<tt>struct Fl_Wayland_Graphics_Driver::wld_buffer</tt> record (see \ref wld_buffer).
 
 <pre>
-struct fl_wld_buffer {
+struct Fl_Wayland_Graphics_Driver::draw_buffer {
+  unsigned char *buffer; // address of the beginning of the Cairo image surface's byte array
+  cairo_t *cairo_; // used when drawing to the Cairo image surface
+  size_t data_size; // of buffer and wl_buffer, in bytes
+  int stride; // bytes per line
+  int width; // in pixels
+};
+</pre>
+FLTK gives offscreen buffers the platform-dependent type \c Fl_Offscreen which is
+in fact member \c cairo_ of <tt>struct Fl_Wayland_Graphics_Driver::draw_buffer</tt>.
+Thus, a variable with type \c Fl_Offscreen needs be cast to type \c cairo_t*.
+Static member function <tt>struct draw_buffer *offscreen_buffer(Fl_Offscreen)</tt>
+of class \c Fl_Wayland_Graphics_Driver returns the \c draw_buffer record corresponding
+to an \c Fl_Offscreen value.
+
+\anchor wld_buffer
+<h3>struct Fl_Wayland_Graphics_Driver::wld_buffer</h3>
+Defined in file \c Fl_Wayland_Graphics_Driver.H.
+One such record is created by \c Fl_Wayland_Graphics_Driver::create_wld_buffer() when
+an Fl_Window is show()'n or resized, when a custom cursor shape is created, or when
+text is dragged.
+<pre>
+struct Fl_Wayland_Graphics_Driver::wld_buffer {
+  struct draw_buffer draw_buffer; // see \ref draw_buffer
+  struct wl_list link; // links all buffers from the same wl_shm_pool
   struct wl_buffer *wl_buffer; // the Wayland buffer
   void *data; // address of the beginning of the Wayland buffer's byte array
-  size_t data_size; // of wl_buffer and draw_buffer
-  int stride; // bytes per line
-  int width;
-  unsigned char *draw_buffer; // address of the beginning of the Cairo image surface's byte array
-  struct wl_callback *cb; // non-NULL while Wayland buffer is being committed
-  bool draw_buffer_needs_commit; // true when draw_buffer has been modified but not yet committed
-  cairo_t *cairo_; // used when drawing to the Cairo image surface
+  struct wl_callback *cb; // non-NULL until Wayland can process new buffer commit
   struct wl_shm_pool *shm_pool; // pter to wl_shm_pool from which this wl_buffer comes
-  struct wl_list link; // links all buffers from the same wl_shm_pool
+  bool draw_buffer_needs_commit; // true when draw_buffer has been modified but not yet committed
+  bool in_use; // true while being committed
+  bool released; // true after buffer_release() was called
 };
 </pre>
 

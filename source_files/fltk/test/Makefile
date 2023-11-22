@@ -1,7 +1,7 @@
 #
 # Test/example program Makefile for the Fast Light Tool Kit (FLTK).
 #
-# Copyright 1998-2021 by Bill Spitzak and others.
+# Copyright 1998-2023 by Bill Spitzak and others.
 #
 # This library is free software. Distribution and use rights are outlined in
 # the file "COPYING" which should have been included with this file.  If this
@@ -30,24 +30,11 @@ CPPUNITTEST = \
 	unittest_viewport.cxx \
 	unittest_scrollbarsize.cxx \
 	unittest_schemes.cxx \
-	unittest_simple_terminal.cxx \
+	unittest_terminal.cxx \
 	unittest_core.cxx
 
 OBJUNITTEST = \
-	unittests.o \
-	unittest_about.o \
-	unittest_points.o \
-	unittest_complex_shapes.o \
-	unittest_fast_shapes.o \
-	unittest_circles.o \
-	unittest_text.o \
-	unittest_unicode.o \
-	unittest_symbol.o \
-	unittest_images.o \
-	unittest_viewport.o \
-	unittest_scrollbarsize.o \
-	unittest_schemes.o \
-	unittest_simple_terminal.o
+	$(CPPUNITTEST:.cxx=.o)
 
 CPPFILES =\
 	adjuster.cxx \
@@ -88,6 +75,11 @@ CPPFILES =\
 	fullscreen.cxx \
 	gl_overlay.cxx \
 	glpuzzle.cxx \
+	glut_test.cxx \
+	grid_alignment \
+	grid_buttons \
+	grid_dialog \
+	grid_login \
 	hello.cxx \
 	help_dialog.cxx \
 	icon.cxx \
@@ -134,6 +126,7 @@ CPPFILES =\
 	symbols.cxx \
 	table.cxx \
 	tabs.cxx \
+	terminal.cxx \
 	threads.cxx \
 	tile.cxx \
 	tiled_image.cxx \
@@ -142,6 +135,7 @@ CPPFILES =\
 	utf8.cxx \
 	valuators.cxx \
 	windowfocus.cxx \
+	wizard.cxx \
 	$(CPPUNITTEST)
 
 ALL =	\
@@ -173,6 +167,10 @@ ALL =	\
 	fltk-versions$(EXEEXT) \
 	fonts$(EXEEXT) \
 	forms$(EXEEXT) \
+	grid_alignment$(EXEEXT) \
+	grid_buttons$(EXEEXT) \
+	grid_dialog$(EXEEXT) \
+	grid_login$(EXEEXT) \
 	hello$(EXEEXT) \
 	help_dialog$(EXEEXT) \
 	icon$(EXEEXT) \
@@ -212,13 +210,15 @@ ALL =	\
 	sudoku$(EXEEXT) \
 	symbols$(EXEEXT) \
 	table$(EXEEXT) \
+	terminal$(EXEEXT) \
 	$(THREADS) \
 	tile$(EXEEXT) \
 	tiled_image$(EXEEXT) \
 	twowin$(EXEEXT) \
 	utf8$(EXEEXT) \
-	windowfocus$(EXEEXT)
-	
+	windowfocus$(EXEEXT) \
+	wizard$(EXEEXT)
+
 ALLFLUID = \
 	checkers$(EXEEXT) \
 	fast_slow$(EXEEXT) \
@@ -239,6 +239,7 @@ GLALL = \
 	fullscreen$(EXEEXT) \
 	gl_overlay$(EXEEXT) \
 	glpuzzle$(EXEEXT) \
+	glut_test$(EXEEXT) \
 	shape$(EXEEXT) \
 	unittests$(EXEEXT)
 
@@ -273,6 +274,7 @@ clean:
 	$(RM) radio.cxx radio.h
 	$(RM) resize.cxx resize.h
 	$(RM) tabs.cxx tabs.h
+	$(RM) terminal.cxx terminal.h
 	$(RM) tree.cxx tree.h
 	$(RM) valuators.cxx valuators.h
 
@@ -448,6 +450,14 @@ forms$(EXEEXT): forms.o
 	$(CXX) $(ARCHFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@ forms.o $(LINKFLTKFORMS) $(LDLIBS)
 	$(OSX_ONLY) ../fltk-config --post $@
 
+grid_alignment$(EXEEXT): grid_alignment.o
+
+grid_buttons$(EXEEXT): grid_buttons.o
+
+grid_dialog$(EXEEXT): grid_dialog.o
+
+grid_login$(EXEEXT): grid_login.o
+
 hello$(EXEEXT): hello.o
 
 help_dialog$(EXEEXT): help_dialog.o $(IMGLIBNAME)
@@ -617,6 +627,9 @@ table$(EXEEXT): table.o
 tabs$(EXEEXT): tabs.o
 tabs.cxx:	tabs.fl ../fluid/fluid$(EXEEXT)
 
+terminal$(EXEEXT): terminal.o
+terminal.cxx:	terminal.fl ../fluid/fluid$(EXEEXT)
+
 threads$(EXEEXT): threads.o
 # This ensures that we have this dependency even if threads are not
 # enabled in the current tree...
@@ -672,6 +685,11 @@ glpuzzle$(EXEEXT): glpuzzle.o
 gl_overlay$(EXEEXT): gl_overlay.o
 	echo Linking $@...
 	$(CXX) $(ARCHFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@ gl_overlay.o $(LINKFLTKGL) $(LINKFLTK) $(GLDLIBS)
+	$(OSX_ONLY) ../fltk-config --post $@
+
+glut_test$(EXEEXT): glut_test.o
+	echo Linking $@...
+	$(CXX) $(ARCHFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@ glut_test.o $(LINKFLTKGL) $(LINKFLTK) $(GLDLIBS)
 	$(OSX_ONLY) ../fltk-config --post $@
 
 unittests$(EXEEXT): $(OBJUNITTEST)

@@ -92,7 +92,7 @@ int Widget_Bin_Window_Button::handle(int inEvent)
         return ret;
       if (!Fl::event_is_click()) {
         if (!drag_win) {
-          drag_win = new Fl_Window(0, 0, 100, 100);
+          drag_win = new Fl_Window(0, 0, 480, 320);
           drag_win->border(0);
           drag_win->set_non_modal();
         }
@@ -111,7 +111,7 @@ int Widget_Bin_Window_Button::handle(int inEvent)
         Fl_Type *prototype = typename_to_prototype((char*)user_data());
         if (prototype) {
           Fl_Type *new_type = add_new_widget_from_user(prototype, kAddAfterCurrent);
-          if (new_type && new_type->is_window()) {
+          if (new_type && new_type->is_a(ID_Window)) {
             Fl_Window_Type *new_window = (Fl_Window_Type*)new_type;
             Fl_Window *w = (Fl_Window *)new_window->o;
             w->position(Fl::event_x_root(), Fl::event_y_root());
@@ -142,6 +142,7 @@ vars_(0L),
 vars_user_data_(0L)
 {
   Fl_Input::callback((Fl_Callback*)callback_handler_cb);
+  text("0");
 }
 
 void Fluid_Coord_Input::callback_handler_cb(Fluid_Coord_Input *This, void *v) {
@@ -151,18 +152,18 @@ void Fluid_Coord_Input::callback_handler_cb(Fluid_Coord_Input *This, void *v) {
 void Fluid_Coord_Input::callback_handler(void *v) {
   if (user_callback_)
     (*user_callback_)(this, v);
-  // do *not* update the value to show the evaluated fomule here, because the
+  // do *not* update the value to show the evaluated formula here, because the
   // values of the variables have already updated after the user callback.
 }
 
 /**
- Get the value of a variable.
- Collects all conesecutive ASCII letters into a variable name, scans the
+ \brief Get the value of a variable.
+ Collects all consecutive ASCII letters into a variable name, scans the
  Variable list for that name, and then calls the corresponding callback from
  the Variable array.
  \param s points to the first character of the variable name, must point after
     the last character of the variable name when returning.
- \return the integer value that wasf= found or calculated
+ \return the integer value that was found or calculated
  */
 int Fluid_Coord_Input::eval_var(uchar *&s) const {
   if (!vars_)
@@ -291,4 +292,20 @@ void Fluid_Coord_Input::value(int v) {
   char buf[32];
   fl_snprintf(buf, sizeof(buf), "%d", v);
   text(buf);
+}
+
+/**
+ Allow vertical mouse dragging and mouse wheel to interactively change the value.
+ */
+int Fluid_Coord_Input::handle(int event) {
+  switch (event) {
+    case FL_MOUSEWHEEL:
+      if (Fl::event_dy()) {
+        value( value() - Fl::event_dy() );
+        set_changed();
+        do_callback(FL_REASON_CHANGED);
+      }
+      return 1;
+  }
+  return Fl_Input::handle(event);
 }
