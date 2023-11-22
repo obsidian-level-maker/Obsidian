@@ -189,15 +189,5 @@ double ComputeDist(double sx, double sy, double sz, double ex, double ey,
                 (ez - sz) * (ez - sz));
 }
 
-//------------------------------------------------------------------------
-
-u32_t TimeGetMillies() {
-    return std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-}
-
-void TimeDelay(u32_t millies) {
-    std::this_thread::sleep_for(std::chrono::milliseconds(millies));
-}
-
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab

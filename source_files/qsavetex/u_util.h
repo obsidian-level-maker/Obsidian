@@ -33,11 +33,6 @@ char *StringDup(const char *orig);
 char *StringPrintf(const char *str, ...);  // GCCATTR((format (printf, 1, 2)));
 void StringFree(const char *str);
 
-/* time utilities */
-
-u32_t TimeGetMillies();
-void TimeDelay(u32_t millies);
-
 /* math utilities */
 
 u32_t IntHash(u32_t key);
