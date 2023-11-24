@@ -1173,6 +1173,10 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
       SDSLDWL6 = 6,
       SDSLDWL7 = 6,
       SDSLDWL8 = 6,
+      SDSLDWL9 = 6,
+      SDSLDWLA = 6,
+      SDSLDWLB = 6,
+      SDSLDWLC = 6,
 
       SD_TBBW1 = 3,
       SD_TBBW2 = 3,
@@ -1863,7 +1867,11 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
       SDSLDWL5 = 5,
       SDSLDWL6 = 5,
       SDSLDWL7 = 5,
-      SDSLDWL8 = 5
+      SDSLDWL8 = 5,
+      SDSLDWL9 = 5,
+      SDSLDWLA = 5,
+      SDSLDWLB = 5,
+      SDSLDWLC = 5,
     },
 
     floors =
@@ -4202,7 +4210,12 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
       SDSLDWL5 = 5,
       SDSLDWL6 = 5,
       SDSLDWL7 = 5,
-      SDSLDWL8 = 5
+      SDSLDWL8 = 5,
+      SDSLDWL9 = 5,
+      SDSLDWLA = 5,
+      SDSLDWLB = 5,
+      SDSLDWLC = 5,
+
     },
 
     floors =
@@ -6013,7 +6026,11 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
       SDSLDWL5 = 5,
       SDSLDWL6 = 5,
       SDSLDWL7 = 5,
-      SDSLDWL8 = 5
+      SDSLDWL8 = 5,
+      SDSLDWL9 = 5,
+      SDSLDWLA = 5,
+      SDSLDWLB = 5,
+      SDSLDWLC = 5
     },
 
     floors =
@@ -8329,6 +8346,10 @@ OBS_RESOURCE_PACK_THEMES =
       SDSLDWL6 = 15,
       SDSLDWL7 = 15,
       SDSLDWL8 = 15,
+      SDSLDWL9 = 15,
+      SDSLDWLA = 15,
+      SDSLDWLB = 15,
+      SDSLDWLC = 15,
 
       SD_TWDW1 = 20,
       SD_TWDW2 = 20,
