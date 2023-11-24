@@ -24,6 +24,7 @@ HACX = { }
 ----------------------------------------------------------------
 gui.import("params")
 gui.import("entities")
+gui.import("factory") -- For earlier Oblige versions
 gui.import("monsters")
 gui.import("pickups")
 gui.import("weapons")

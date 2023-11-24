@@ -1651,7 +1651,7 @@ function dump_battle_stats(stats)
   gui.printf("BATTLE STATS\n")
 
   for zzz,SK in ipairs(SKILLS) do
-    gui.printf("%7s | h:%4d  ammo:%4d  mon:%4d  pow:%5d\n", SK,
+    gui.printf("%7s | h:%4d  ammo:%4d  mon:%4d  pow:%5f\n", SK,
       stats[SK].health, stats[SK].ammo,
       stats[SK].monsters, stats[SK].power)
   end
