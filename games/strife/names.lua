@@ -694,7 +694,7 @@ STRIFE.NAMES =
 
   --------------------------------------------------
 
-  GOTHIC =
+  CASTLE =
   {
     patterns =
     {
@@ -1773,7 +1773,7 @@ STRIFE.NAMES =
       }
     }
   },
-  -- end of 'GOTHIC' theme
+  -- end of 'CASTLE' theme
 
   --------------------------------------------------
 

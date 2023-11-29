@@ -12,7 +12,9 @@
 --
 ------------------------------------------------------------------------
 
-STRIFE.PALETTES =
+STRIFE.RESOURCES = {}
+
+STRIFE.RESOURCES.PALETTES =
 {
   normal =
   {

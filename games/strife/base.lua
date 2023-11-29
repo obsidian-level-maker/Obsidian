@@ -67,6 +67,7 @@ OB_GAMES["strife"] =
 
   hooks =
   {
+    factory_setup = STRIFE.factory_setup,
     slump_setup = STRIFE.slump_setup,
     get_levels = STRIFE.get_levels,
     all_done   = STRIFE.all_done
