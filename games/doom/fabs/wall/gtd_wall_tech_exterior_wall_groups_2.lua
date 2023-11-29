@@ -207,7 +207,8 @@ PREFABS.Wall_tech_outdoor_letter_D_compat =
 
   z_fit = {7,8 , 96,97},
 
-  tex_CITY06N = "BRONZE1"
+  tex_CITY06N = "BRONZE1",
+  tex_METAL8 = "METAL"
 }
 
 PREFABS.Wall_tech_outdoor_letter_E = --#

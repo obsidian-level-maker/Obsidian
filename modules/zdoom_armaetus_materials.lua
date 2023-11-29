@@ -1632,12 +1632,30 @@ OBS_RESOURCE_PACK_MATERIALS = {
   SDSLDWL6 = { t="SDSLDWL6", f="SDSLDFT6"},
   SDSLDWL7 = { t="SDSLDWL7", f="SDSLDFT7"},
   SDSLDWL8 = { t="SDSLDWL8", f="SDSLDFT8"},
+  SDSLDWL9 = { t="SDSLDWL9", f="SDSLDFT9"},
+  SDSLDWLA = { t="SDSLDWLA", f="SDSLDFT1"},
+  SDSLDWLB = { t="SDSLDWLB", f="SDSLDFT4"},
+  SDSLDWLC = { t="SDSLDWLC", f="SDSLDFT7"},
+  -- flats: dark green
+  SDSLDFT1 = { t="SDSLDWL1", f="SDSLDFT1"},
+  SDSLDFT2 = { t="SDSLDWL2", f="SDSLDFT2"},
+  SDSLDFT3 = { t="SDSLDWL3", f="SDSLDFT3"},
+  SDSLDFT4 = { t="SDSLDWL4", f="SDSLDFT4"},
+  SDSLDFT5 = { t="SDSLDWL5", f="SDSLDFT5"},
+  SDSLDFT6 = { t="SDSLDWL6", f="SDSLDFT6"},
+  SDSLDFT7 = { t="SDSLDWL7", f="SDSLDFT7"},
+  SDSLDFT8 = { t="SDSLDWL8", f="SDSLDFT8"},
+  SDSLDFT9 = { t="SDSLDWL9", f="SDSLDFT9"},
+  SDSLDFTA = { t="SDSLDWLA", f="SDSLDFTA"},
+  SDSLDFTB = { t="SDSLDWLB", f="SDSLDFTB"},
+  SDSLDFTC = { t="SDSLDWLC", f="SDSLDFTC"},
+  SDSLDFTD = { t="SDSLDWL4", f="SDSLDFTD"},
+  SDSLDFTE = { t="SDSLDWL9", f="SDSLDFTE"},
 
   -- computers 256px
   SDMSRCP1 = { t="SDMSRCP1", f="SDOM_FT1"},
   SDMSRCP2 = { t="SDMSRCP1", f="SDOM_FT4"},
   SDMSRCP3 = { t="SDMSRCP1", f="SDOM_FT6"},
-
   -- flats
   SDOM_FT1 = { t="SDOM_WL1", f="SDOM_FT1"},
   SDOM_FT2 = { t="SDOM_WL2", f="SDOM_FT2"},
@@ -1652,15 +1670,6 @@ OBS_RESOURCE_PACK_MATERIALS = {
   -- flats: green
   SDOM_FG1 = { t="SDOM_WG1", f="SDOM_FG1"},
   SDOM_FG2 = { t="SDOM_WG2", f="SDOM_FG2"},
-  -- flats: dark green
-  SDSLDFT1 = { t="SDSLDWL1", f="SDSLDFT1"},
-  SDSLDFT2 = { t="SDSLDWL2", f="SDSLDFT2"},
-  SDSLDFT3 = { t="SDSLDWL3", f="SDSLDFT3"},
-  SDSLDFT4 = { t="SDSLDWL4", f="SDSLDFT4"},
-  SDSLDFT5 = { t="SDSLDWL5", f="SDSLDFT5"},
-  SDSLDFT6 = { t="SDSLDWL6", f="SDSLDFT6"},
-  SDSLDFT7 = { t="SDSLDWL7", f="SDSLDFT7"},
-  SDSLDFT8 = { t="SDSLDWL8", f="SDSLDFT8"},
 
   -- shipping containers with optional meme
   SDM_CTR1 = { t="SDM_CTR1", f="SDMCTRF1"},
