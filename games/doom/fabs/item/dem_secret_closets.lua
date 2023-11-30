@@ -246,6 +246,7 @@ PREFABS.Pic_dem_waterfallC1_secretcloset =
   env = "cave",
 
   where  = "seeds",
+  jump_crouch = true,
 
   seed_w = 3,
   seed_h = 2,
