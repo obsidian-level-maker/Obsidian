@@ -4695,6 +4695,89 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
     }
   },
 
+  hell_computerCatacombs = --50
+  {
+    prov = 50,
+    env = "building",
+
+    walls =
+    {
+      SD_HCCW1 = 25,
+      SD_HCCW2 = 25,
+      SD_HCCW3 = 25,
+      SD_HCCW4 = 25,
+      SD_HCCW5 = 25,
+      SD_HCCW6 = 25,
+      SD_HCCW7 = 25,
+      SD_HCCW8 = 25,
+      SD_HCCW9 = 25,
+      SD_HCCWA = 25,
+      SD_HCCWB = 25,
+      SD_HCCWC = 25,
+      SD_HCCWD = 25,
+      SD_HCCWE = 25
+    },
+
+    floors =
+    {
+      SD_HCCF1 = 25,
+      SD_HCCF2 = 25,
+      SD_HCCF3 = 25,
+      SD_HCCF4 = 25,
+      SD_HCCF5 = 25,
+      SD_HCCF6 = 25,
+      SD_HCCF7 = 25,
+      SD_HCCF8 = 25,
+
+      FLAT18 = 3,
+      FLAT3 = 3,
+      FLAT5_4 = 3,
+      FLOOR0_5 = 3,
+
+      FLAT01 = 8,
+      FLOOR4_7 = 8,
+      FLOOR7_3 = 8,
+      TILES1 = 8,
+      TILES4 = 8,
+      TILES5 = 8,
+      TILES6 = 8,
+
+      SDM_HGF1 = 8,
+      SDM_HGF2 = 8,
+      SDM_HGF3 = 8,
+    },
+
+    ceilings =
+    {
+      SD_HCCF1 = 25,
+      SD_HCCF2 = 25,
+      SD_HCCF3 = 25,
+      SD_HCCF4 = 25,
+      SD_HCCF5 = 25,
+      SD_HCCF6 = 25,
+      SD_HCCF7 = 25,
+      SD_HCCF8 = 25,
+
+      
+      FLAT18 = 3,
+      FLAT3 = 3,
+      FLAT5_4 = 3,
+      FLOOR0_5 = 3,
+
+      FLAT01 = 8,
+      FLOOR4_7 = 8,
+      FLOOR7_3 = 8,
+      TILES1 = 8,
+      TILES4 = 8,
+      TILES5 = 8,
+      TILES6 = 8,
+
+      SDM_HGF1 = 8,
+      SDM_HGF2 = 8,
+      SDM_HGF3 = 8,
+    }
+  },
+
   -- Hell has frozen over!
   hell_icecave = --50
   {
@@ -7172,8 +7255,90 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
       FLOOR0_3 = 3,
       FLOOR5_4 = 3
     }
-  }
+  },
 
+  urban_computerCatacombs = --15
+  {
+    prov = 15,
+    env = "building",
+
+    walls =
+    {
+      SD_HCCW1 = 25,
+      SD_HCCW2 = 25,
+      SD_HCCW3 = 25,
+      SD_HCCW4 = 25,
+      SD_HCCW5 = 25,
+      SD_HCCW6 = 25,
+      SD_HCCW7 = 25,
+      SD_HCCW8 = 25,
+      SD_HCCW9 = 25,
+      SD_HCCWA = 25,
+      SD_HCCWB = 25,
+      SD_HCCWC = 25,
+      SD_HCCWD = 25,
+      SD_HCCWE = 25
+    },
+
+    floors =
+    {
+      SD_HCCF1 = 25,
+      SD_HCCF2 = 25,
+      SD_HCCF3 = 25,
+      SD_HCCF4 = 25,
+      SD_HCCF5 = 25,
+      SD_HCCF6 = 25,
+      SD_HCCF7 = 25,
+      SD_HCCF8 = 25,
+
+      FLAT18 = 3,
+      FLAT3 = 3,
+      FLAT5_4 = 3,
+      FLOOR0_5 = 3,
+
+      FLAT01 = 8,
+      FLOOR4_7 = 8,
+      FLOOR7_3 = 8,
+      TILES1 = 8,
+      TILES4 = 8,
+      TILES5 = 8,
+      TILES6 = 8,
+
+      SDM_HGF1 = 8,
+      SDM_HGF2 = 8,
+      SDM_HGF3 = 8,
+    },
+
+    ceilings =
+    {
+      SD_HCCF1 = 25,
+      SD_HCCF2 = 25,
+      SD_HCCF3 = 25,
+      SD_HCCF4 = 25,
+      SD_HCCF5 = 25,
+      SD_HCCF6 = 25,
+      SD_HCCF7 = 25,
+      SD_HCCF8 = 25,
+
+      
+      FLAT18 = 3,
+      FLAT3 = 3,
+      FLAT5_4 = 3,
+      FLOOR0_5 = 3,
+
+      FLAT01 = 8,
+      FLOOR4_7 = 8,
+      FLOOR7_3 = 8,
+      TILES1 = 8,
+      TILES4 = 8,
+      TILES5 = 8,
+      TILES6 = 8,
+
+      SDM_HGF1 = 8,
+      SDM_HGF2 = 8,
+      SDM_HGF3 = 8,
+    }
+  }
 -- END OF THEMES TABLES
 }
 

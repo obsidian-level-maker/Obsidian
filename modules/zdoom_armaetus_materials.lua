@@ -1948,6 +1948,32 @@ OBS_RESOURCE_PACK_MATERIALS = {
   SD_HRFF7 = { t="SD_HRFWC", f="SD_HRFF7"},
   SD_HRFF8 = { t="SD_HRFWE", f="SD_HRFF8"},
 
+  -- computer catacombs (lolwhat?)
+  -- walls
+  SD_HCCW1 = { t="SD_HCCW1", f="SD_HCCF1"},
+  SD_HCCW2 = { t="SD_HCCW2", f="SD_HCCF2"},
+  SD_HCCW3 = { t="SD_HCCW3", f="SD_HCCF3"},
+  SD_HCCW4 = { t="SD_HCCW4", f="SD_HCCF4"},
+  SD_HCCW5 = { t="SD_HCCW5", f="SD_HCCF5"},
+  SD_HCCW6 = { t="SD_HCCW6", f="SD_HCCF6"},
+  SD_HCCW7 = { t="SD_HCCW7", f="SD_HCCF7"},
+  SD_HCCW8 = { t="SD_HCCW8", f="SD_HCCF8"},
+  SD_HCCW9 = { t="SD_HCCW9", f="SD_HCCF2"},
+  SD_HCCWA = { t="SD_HCCWA", f="SD_HCCF4"},
+  SD_HCCWB = { t="SD_HCCWB", f="SD_HCCF6"},
+  SD_HCCWC = { t="SD_HCCWC", f="SD_HCCF8"},
+  SD_HCCWD = { t="SD_HCCWD", f="SD_HCCF3"},
+  SD_HCCWE = { t="SD_HCCWE", f="SD_HCCF5"},
+  -- flats
+  SD_HCCF1 = { t="SD_HCCW1", f="SD_HCCF1"},
+  SD_HCCF2 = { t="SD_HCCW3", f="SD_HCCF2"},
+  SD_HCCF3 = { t="SD_HCCW5", f="SD_HCCF3"},
+  SD_HCCF4 = { t="SD_HCCW7", f="SD_HCCF4"},
+  SD_HCCF5 = { t="SD_HCCW9", f="SD_HCCF5"},
+  SD_HCCF6 = { t="SD_HCCWB", f="SD_HCCF6"},
+  SD_HCCF7 = { t="SD_HCCWD", f="SD_HCCF7"},
+  SD_HCCF8 = { t="SD_HCCWE", f="SD_HCCF8"},
+
   -- 256-wide doors
   G8_SVDR3 = { t="G8_SVDR3", f="FLAT23"},
 
@@ -2934,6 +2960,16 @@ brightmap texture SD_TWLW5
 brightmap texture SD_TWLW6
 {
   map STWLW6BR
+}
+
+brightmap texture SD_TWLW8
+{
+  map STWLW8BR
+}
+
+brightmap texture SD_TWLWA
+{
+  map STWLWABR
 }
 
 brightmap texture SD_TSGW7
