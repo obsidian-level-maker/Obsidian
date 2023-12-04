@@ -4697,7 +4697,7 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
 
   hell_computerCatacombs = --50
   {
-    prov = 50,
+    prob = 50,
     env = "building",
 
     walls =
@@ -7259,7 +7259,7 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
 
   urban_computerCatacombs = --15
   {
-    prov = 15,
+    prob = 15,
     env = "building",
 
     walls =
