@@ -2972,6 +2972,11 @@ brightmap texture SD_TWLWA
   map STWLWABR
 }
 
+brightmap texture SD_TSGW4
+{
+  map STGSW4BR
+}
+
 brightmap texture SD_TSGW7
 {
   map STGSW7BR
@@ -2986,6 +2991,12 @@ brightmap texture SD_TSGWA
 {
   map STGSWABR
 }
+
+brightmap texture SD_TSGWB
+{
+  map STGSWBBR
+}
+
 ]]
 
 -- aliases - when you're too lazy to write down wall and flat names in every
