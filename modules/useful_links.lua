@@ -41,11 +41,6 @@ OB_MODULES["links_addons"] =
       url="https://obsidian-level-maker.github.io/addons.html",    
     },
     { 
-      name="url_realm667",     
-      label=_("mridlen's Realm667 Monsters and Weapons"),
-      url="https://obsidian-level-maker.github.io/addons.html",    
-    },
-    { 
       name="url_obsidian_jukebox",     
       label=_("Simon-v's Jukebox"),
       url="https://obsidian-level-maker.github.io/addons.html",    

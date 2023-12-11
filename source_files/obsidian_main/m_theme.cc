@@ -135,8 +135,6 @@ static void Parse_Theme_Option(std::string name, std::string value) {
         box_theme = StringToInt(value);
     } else if (StringCaseCmp(name, "button_theme") == 0) {
         button_theme = StringToInt(value);
-    } else if (StringCaseCmp(name, "use_system_fonts") == 0) {
-        use_system_fonts = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "color_scheme") == 0) {
         color_scheme = StringToInt(value);
     } else if (StringCaseCmp(name, "text_red") == 0) {
@@ -278,8 +276,6 @@ bool Theme_Options_Save(std::filesystem::path filename) {
     option_fp << "widget_theme      = " << NumToString(widget_theme) << "\n";
     option_fp << "box_theme      = " << NumToString(box_theme) << "\n";
     option_fp << "button_theme      = " << NumToString(button_theme) << "\n";
-    option_fp << "use_system_fonts = "
-              << NumToString((use_system_fonts ? 1 : 0)) << "\n";
     option_fp << "color_scheme      = " << NumToString(color_scheme) << "\n";
     option_fp << "text_red      = " << NumToString(text_red) << "\n";
     option_fp << "text_green      = " << NumToString(text_green) << "\n";
@@ -331,7 +327,6 @@ class UI_ThemeWin : public Fl_Window {
     UI_CustomMenu *opt_box_theme;
     UI_CustomMenu *opt_button_theme;
 
-    UI_CustomCheckBox *opt_system_fonts;
     UI_CustomMenu *opt_color_scheme;
     Fl_Button *opt_text_color;
     Fl_Button *opt_text2_color;
@@ -359,11 +354,8 @@ class UI_ThemeWin : public Fl_Window {
     int handle(int event);
 
     void PopulateFonts() {
-        for (int x = 0; x < num_fonts; x++) {
-            for (auto font = font_menu_items[x].begin();
-                 font != font_menu_items[x].end(); ++font) {
-                opt_font_theme->add(font->first.c_str());
-            }
+        for (auto font : font_menu_items) {
+            opt_font_theme->add(font.first.c_str());
         }
 
         opt_font_theme->value(font_theme);
@@ -514,16 +506,12 @@ class UI_ThemeWin : public Fl_Window {
         UI_ThemeWin *that = (UI_ThemeWin *)data;
 
         font_theme = that->opt_font_theme->value();
-        for (auto font = font_menu_items[font_theme].begin();
-             font != font_menu_items[font_theme].end(); ++font) {
-            font_style = font->second;
-            fl_font(font_style, FL_NORMAL_SIZE);
-            fl_message_font(font_style, FL_NORMAL_SIZE);
-        }
+        font_style = font_menu_items.at(font_theme).second;
+        fl_font(font_style, FL_NORMAL_SIZE);
+        fl_message_font(font_style, FL_NORMAL_SIZE);
         main_win->menu_bar->textfont(font_style);
         main_win->menu_bar->redraw();
-        main_win->game_box->heading->labelfont(
-            use_system_fonts ? font_style : font_style | FL_BOLD);
+        main_win->game_box->heading->labelfont(font_style | FL_BOLD);
         main_win->game_box->engine->labelfont(font_style);
         main_win->game_box->engine->textfont(font_style);
         main_win->game_box->engine->copy_label(
@@ -557,8 +545,7 @@ class UI_ThemeWin : public Fl_Window {
             "        ");
         main_win->game_box->theme_help->labelfont(font_style);
         main_win->game_box->theme_help->copy_label("");
-        main_win->game_box->build->labelfont(
-            use_system_fonts ? font_style : font_style | FL_BOLD);
+        main_win->game_box->build->labelfont(font_style | FL_BOLD);
         main_win->game_box->quit->labelfont(font_style);
         for (int x = 0; x < main_win->game_box->children(); x++) {
             main_win->game_box->child(x)->redraw();
@@ -585,8 +572,7 @@ class UI_ThemeWin : public Fl_Window {
                 UI_Module *M = (UI_Module *)tab->mod_pack->child(x);
                 SYS_ASSERT(M);
                 if (!M->Is_UI()) {
-                    M->heading->labelfont(use_system_fonts ? font_style
-                                                        : font_style | FL_BOLD);
+                    M->heading->labelfont(font_style | FL_BOLD);
                     M->redraw();
                 }
                 std::map<std::string, UI_RChoice *>::const_iterator IT;
@@ -832,7 +818,6 @@ class UI_ThemeWin : public Fl_Window {
                     }
                 }
             }
-            that->opt_system_fonts->down_box(button_style);
             that->load_defaults->box(button_style);
             that->load_theme->box(button_style);
             that->save_theme->box(button_style);
@@ -1024,57 +1009,12 @@ class UI_ThemeWin : public Fl_Window {
                 }
             }
         }
-        that->opt_system_fonts->down_box(button_style);
         that->load_defaults->box(button_style);
         that->load_theme->box(button_style);
         that->save_theme->box(button_style);
         for (int x = 0; x < that->children(); x++) {
             that->child(x)->redraw();
         }
-    }
-
-    static void callback_SystemFonts(Fl_Widget *w, void *data) {
-        UI_ThemeWin *that = (UI_ThemeWin *)data;
-
-        use_system_fonts = that->opt_system_fonts->value() ? true : false;
-        // clang-format off
-        fl_alert("%s", _("Switching font selection requires a restart.\nOBSIDIAN will now restart."));
-        // clang-format on
-
-        font_menu_items.clear();
-
-#ifndef __APPLE__
-        if (use_system_fonts) {
-            // If we get enough of these, probably store a vector of font paths
-            // on program start and iterate through it instead
-            v_unload_private_font("./theme/fonts/Teko/Teko-Regular.ttf");
-            v_unload_private_font("./theme/fonts/Teko/Teko-Bold.ttf");
-            v_unload_private_font(
-                "./theme/fonts/Avenixel/Avenixel-Regular.ttf");
-            v_unload_private_font(
-                "./theme/fonts/TheNeueBlack/TheNeue-Black.ttf");
-            v_unload_private_font(
-                "./theme/fonts/SourceSansPro/SourceSansPro-Regular.ttf");
-            v_unload_private_font(
-                "./theme/fonts/SourceSansPro/SourceSansPro-Bold.ttf");
-            v_unload_private_font("./theme/fonts/Kalam/Kalam-Regular.ttf");
-            v_unload_private_font("./theme/fonts/Kalam/Kalam-Bold.ttf");
-            v_unload_private_font("./theme/fonts/3270/3270.ttf");
-            v_unload_private_font("./theme/fonts/Workbench/Workbench.ttf");
-            v_unload_private_font(
-                "./theme/fonts/FPD-Pressure/FPDPressure-Light.otf");
-            v_unload_private_font(
-                "./theme/fonts/FPD-Pressure/FPDPressure-Regular.otf");
-            v_unload_private_font("./theme/fonts/DramaSans/DramaSans.ttf");
-            v_unload_private_font("./theme/fonts/SamIAm/MiniSmallCaps.ttf");
-        }
-#endif
-
-        font_theme = 0;
-
-        main_action = MAIN_HARD_RESTART;
-
-        that->want_quit = true;
     }
 
     static void callback_ColorScheme(Fl_Widget *w, void *data) {
@@ -1494,7 +1434,6 @@ class UI_ThemeWin : public Fl_Window {
         widget_theme = 0;
         box_theme = 0;
         button_theme = 0;
-        use_system_fonts = 0;
         color_scheme = 0;
         text_red = 225;
         text_green = 225;
@@ -1760,18 +1699,6 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
 
     cy += opt_text_color->h() + y_step * 3;
 
-    opt_system_fonts =
-        new UI_CustomCheckBox(cx + W * .05, cy, W - cx - pad, kf_h(24), "");
-    opt_system_fonts->copy_label(
-        _(" Use System Fonts (disables bundled fonts)"));
-    opt_system_fonts->value(use_system_fonts ? 1 : 0);
-    opt_system_fonts->callback(callback_SystemFonts, this);
-    opt_system_fonts->labelfont(font_style);
-    opt_system_fonts->selection_color(SELECTION);
-    opt_system_fonts->down_box(button_style);
-
-    cy += opt_system_fonts->h() + y_step;
-
     load_defaults =
         new Fl_Button(cx + W * .05, cy, W * .25, kf_h(24), _("Load Defaults"));
     load_defaults->visible_focus(0);
@@ -1864,7 +1791,7 @@ int UI_ThemeWin::handle(int event) {
 
 void DLG_ThemeEditor(void) {
     int theme_w = kf_w(500);
-    int theme_h = kf_h(500);
+    int theme_h = kf_h(450);
 
     UI_ThemeWin *theme_window =
         new UI_ThemeWin(theme_w, theme_h, _("OBSIDIAN Theme Options"));

@@ -61,7 +61,7 @@ UI_Module::UI_Module(int X, int Y, int W, int H, std::string id,
                             kf_h(24), "");
         heading->copy_label(label.c_str());
         heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
-        heading->labelfont(use_system_fonts ? font_style : font_style | FL_BOLD);
+        heading->labelfont(font_style | FL_BOLD);
     }
 
     if (!tip.empty()) {
@@ -1012,7 +1012,7 @@ UI_CustomMods::UI_CustomMods(int X, int Y, int W, int H, std::string label)
 
     copy_label(label.c_str());
 
-    labelfont(use_system_fonts ? font_style : font_style | FL_BOLD);
+    labelfont(font_style | FL_BOLD);
 
     color(GAP_COLOR, GAP_COLOR);
 

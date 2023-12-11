@@ -94,7 +94,6 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title)
     menu_bar->add(_("Help/About"), FL_F + 1, menu_do_about);
     menu_bar->add(_("Help/View Logs"), FL_F + 6, menu_do_view_logs);
     menu_bar->add(_("Help/Glossary"), 0, menu_do_glossary);
-    menu_bar->add(_("Help/Tutorial"), 0, menu_do_tutorial);
     menu_bar->add(_("Surprise Me/Go"), FL_F + 8, main_win_surprise_go_CB);
     menu_bar->selection_color(SELECTION);
     menu_bar->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP | FL_ALIGN_LEFT);
@@ -153,8 +152,6 @@ void UI_MainWin::Locked(bool value) {
 }
 
 void UI_MainWin::menu_do_about(Fl_Widget *w, void *data) { DLG_AboutText(); }
-
-void UI_MainWin::menu_do_tutorial(Fl_Widget *w, void *data) { DLG_Tutorial(); }
 
 void UI_MainWin::menu_do_view_logs(Fl_Widget *w, void *data) { DLG_ViewLogs(); }
 

@@ -1320,11 +1320,7 @@ bool quake1_game_interface_c::Start(const char *preset) {
         }
     } else {
 #ifndef CONSOLE_ONLY
-        if (!mid_batch) {
-            filename = DLG_OutputFilename("pak", preset);
-        } else {
-            filename = BestDirectory() / preset;
-        }
+        filename = DLG_OutputFilename("pak", preset);
 #endif
     }
 

@@ -56,16 +56,8 @@ constexpr const char *THEME_FILENAME = "THEME.txt";
 constexpr const char *LOG_FILENAME = "LOGS.txt";
 constexpr const char *REF_FILENAME = "REFERENCE.txt";
 
-#ifdef _WIN32
-#ifndef CONSOLE_ONLY
+#if !defined CONSOLE_ONLY && !defined __APPLE__
 extern int v_unload_private_font(const char *path);
-#endif
-#else
-#ifndef CONSOLE_ONLY
-#ifndef __APPLE__
-extern int v_unload_private_font(const char *path);
-#endif
-#endif
 #endif
 
 extern std::filesystem::path home_dir;
@@ -131,7 +123,6 @@ extern Fl_Color GAP_COLOR;
 extern Fl_Color GRADIENT_COLOR;
 extern Fl_Color BUTTON_COLOR;
 extern Fl_Color BORDER_COLOR;
-#endif
 extern int color_scheme;
 extern int font_theme;
 extern int box_theme;
@@ -140,11 +131,10 @@ extern int widget_theme;
 extern int window_scaling;
 extern int font_scaling;
 extern int num_fonts;
+extern std::vector<std::pair<std::string, int>> font_menu_items;
+#endif
 extern int filename_prefix;
 extern std::string custom_prefix;
-extern bool use_system_fonts;
-extern std::vector<std::map<std::string, int>> font_menu_items;
-
 extern bool create_backups;
 extern bool overwrite_warning;
 extern bool debug_messages;
@@ -160,9 +150,6 @@ extern bool random_string_seeds;
 extern bool password_mode;
 extern bool mature_word_lists;
 extern bool did_specify_seed;
-extern bool first_run;
-extern bool mid_batch;
-extern int builds_per_run;
 
 extern std::string def_filename;
 
@@ -187,20 +174,8 @@ extern std::filesystem::path gif_filename;
 extern std::string string_seed;
 extern std::string selected_lang;
 
-// Tutorial stuff
+// Clippy/program menu stuff
 #ifndef CONSOLE_ONLY
-extern Fl_BMP_Image *tutorial1;
-extern Fl_BMP_Image *tutorial2;
-extern Fl_BMP_Image *tutorial3;
-extern Fl_BMP_Image *tutorial3_2;
-extern Fl_BMP_Image *tutorial4;
-extern Fl_BMP_Image *tutorial4_2;
-extern Fl_BMP_Image *tutorial5;
-extern Fl_BMP_Image *tutorial6;
-extern Fl_BMP_Image *tutorial7;
-extern Fl_BMP_Image *tutorial8;
-extern Fl_BMP_Image *tutorial9;
-extern Fl_BMP_Image *tutorial10;
 extern Fl_Pixmap *clippy;
 
 void DLG_AboutText();
@@ -211,8 +186,6 @@ void DLG_EditSeed();
 void DLG_ViewLogs();
 void DLG_ViewGlossary();
 void DLG_ManageConfig();
-
-void DLG_Tutorial();
 #endif
 
 namespace Main {

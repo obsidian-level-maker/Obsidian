@@ -1534,7 +1534,7 @@ OB_MODULES["gzdoom_marine_closets"] =
 
   name = "gzdoom_marine_closets",
 
-  label = _("GZDoom Marine Closets"),
+  label = _("Friendly Marine Closets"),
 
   game = "doomish",
   port = "zdoom",

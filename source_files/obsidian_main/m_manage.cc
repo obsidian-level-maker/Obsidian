@@ -729,7 +729,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
     close_but->box(button_style);
     close_but->visible_focus(0);
     close_but->color(BUTTON_COLOR);
-    close_but->labelfont(use_system_fonts ? font_style : font_style | FL_BOLD);
+    close_but->labelfont(font_style | FL_BOLD);
     close_but->labelcolor(FONT2_COLOR);
     close_but->labelsize(FL_NORMAL_SIZE + 2);
     close_but->callback(callback_Quit, this);
