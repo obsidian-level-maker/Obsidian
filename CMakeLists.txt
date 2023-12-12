@@ -115,7 +115,6 @@ if(NOT CONSOLE_ONLY AND NOT HAIKU)
     source_files/obsidian_main/m_options.cc
     source_files/obsidian_main/m_theme.cc
     source_files/obsidian_main/m_trans.cc
-    source_files/obsidian_main/m_tutorial.cc
     source_files/obsidian_main/main.cc
     source_files/obsidian_main/obsidian.rc
     source_files/obsidian_main/q_common.cc

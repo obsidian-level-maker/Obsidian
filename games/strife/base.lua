@@ -26,6 +26,7 @@ STRIFE = { }
 gui.import("params")
 
 gui.import("entities")
+gui.import("factory") -- For earlier Oblige versions
 gui.import("monsters")
 gui.import("pickups")
 gui.import("weapons")
@@ -66,6 +67,7 @@ OB_GAMES["strife"] =
 
   hooks =
   {
+    factory_setup = STRIFE.factory_setup,
     slump_setup = STRIFE.slump_setup,
     get_levels = STRIFE.get_levels,
     all_done   = STRIFE.all_done

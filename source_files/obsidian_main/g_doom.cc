@@ -1102,30 +1102,18 @@ bool Doom::game_interface_c::Start(const char *preset) {
         }
     } else {
 #ifndef CONSOLE_ONLY
-        if (!mid_batch) {
-            if (compress_output) {
-                if ((StringCaseCmp(current_port, "dsda") == 0)) {
-                    filename = DLG_OutputFilename("zip", 
-                        std::filesystem::path{preset}.replace_extension("zip").u8string().c_str());
-                    zip_filename = filename;
-                } else {
-                    filename = DLG_OutputFilename("pk3", 
-                        std::filesystem::path{preset}.replace_extension("pk3").u8string().c_str());
-                    zip_filename = filename;
-                }
+        if (compress_output) {
+            if ((StringCaseCmp(current_port, "dsda") == 0)) {
+                filename = DLG_OutputFilename("zip", 
+                    std::filesystem::path{preset}.replace_extension("zip").u8string().c_str());
+                zip_filename = filename;
             } else {
-                filename = DLG_OutputFilename("wad", preset);
+                filename = DLG_OutputFilename("pk3", 
+                    std::filesystem::path{preset}.replace_extension("pk3").u8string().c_str());
+                zip_filename = filename;
             }
         } else {
-            filename = BestDirectory() / preset;
-            if (compress_output) {
-                zip_filename = filename;
-                if (current_port == "dsda") {
-                    zip_filename.replace_extension("zip");
-                } else {
-                    zip_filename.replace_extension("pk3");
-                }
-            }
+            filename = DLG_OutputFilename("wad", preset);
         }
 #endif
     }

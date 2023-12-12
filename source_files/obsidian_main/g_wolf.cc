@@ -352,47 +352,43 @@ bool wolf_game_interface_c::Start(const char *ext) {
         }
     } else {
 #ifndef CONSOLE_ONLY
-        if (!mid_batch) {
-            int old_font_h = FL_NORMAL_SIZE;
-            FL_NORMAL_SIZE = 14 + KF;
+        int old_font_h = FL_NORMAL_SIZE;
+        FL_NORMAL_SIZE = 14 + KF;
 
-            Fl_Native_File_Chooser chooser;
+        Fl_Native_File_Chooser chooser;
 
-            chooser.title(_("Select output directory"));
+        chooser.title(_("Select output directory"));
 
-            chooser.directory(BestDirectory().generic_u8string().c_str());
+        chooser.directory(BestDirectory().generic_u8string().c_str());
 
-            chooser.type(Fl_Native_File_Chooser::BROWSE_DIRECTORY);
+        chooser.type(Fl_Native_File_Chooser::BROWSE_DIRECTORY);
 
-            int result = chooser.show();
+        int result = chooser.show();
 
-            FL_NORMAL_SIZE = old_font_h;
+        FL_NORMAL_SIZE = old_font_h;
 
-            switch (result) {
-                case -1:
-                    LogPrintf(_("Error choosing directory:\n"));
-                    LogPrintf("   %s\n", chooser.errmsg());
-                    break;
+        switch (result) {
+            case -1:
+                LogPrintf(_("Error choosing directory:\n"));
+                LogPrintf("   %s\n", chooser.errmsg());
+                break;
 
-                case 1:
-                    Main::ProgStatus(_("Cancelled"));
-                    return false;
+            case 1:
+                Main::ProgStatus(_("Cancelled"));
+                return false;
 
-                default:
-                    break;  // OK
-            }
-
-            std::filesystem::path dir_name = std::filesystem::u8path(chooser.filename());
-
-            if (dir_name.empty()) {
-                LogPrintf(_("Empty directory provided???:\n"));
-                dir_name = Resolve_DefaultOutputPath();
-            }
-
-            wolf_output_dir = dir_name;
-        } else {
-            wolf_output_dir = BestDirectory();
+            default:
+                break;  // OK
         }
+
+        std::filesystem::path dir_name = std::filesystem::u8path(chooser.filename());
+
+        if (dir_name.empty()) {
+            LogPrintf(_("Empty directory provided???:\n"));
+            dir_name = Resolve_DefaultOutputPath();
+        }
+
+        wolf_output_dir = dir_name;
 #endif
     }
 

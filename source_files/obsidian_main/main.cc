@@ -120,21 +120,25 @@ Fl_Color BORDER_COLOR;
 Fl_Font font_style = 0;
 Fl_Boxtype box_style = FL_FLAT_BOX;
 Fl_Boxtype button_style = FL_DOWN_BOX;
-#endif
 int color_scheme = 0;
 int font_theme = 0;
 int box_theme = 0;
 int button_theme = 0;
 int widget_theme = 0;
-bool use_system_fonts = false;
 int window_scaling = 0;
 int font_scaling = 18;
+int num_fonts = 0;
+std::vector<std::pair<std::string, int>> font_menu_items;
+static int old_x = 0;
+static int old_y = 0;
+static int old_w = 0;
+static int old_h = 0;
+static std::string old_seed;
+static std::string old_name;
+static u8_t *old_pixels;
+#endif
 int filename_prefix = 0;
 std::string custom_prefix = "CUSTOM_";
-int num_fonts = 0;
-
-std::vector<std::map<std::string, int>> font_menu_items;
-
 bool create_backups = true;
 bool overwrite_warning = true;
 bool debug_messages = false;
@@ -150,18 +154,6 @@ bool random_string_seeds = false;
 bool password_mode = false;
 bool mature_word_lists = false;
 bool did_specify_seed = false;
-bool mid_batch = false;
-int builds_per_run = 1;
-
-int old_x = 0;
-int old_y = 0;
-int old_w = 0;
-int old_h = 0;
-std::string old_seed;
-std::string old_name;
-u8_t *old_pixels;
-
-bool first_run = false;
 
 std::filesystem::path gif_filename = "gif_output.gif";
 std::filesystem::path default_output_path;
@@ -177,26 +169,10 @@ extern bool ExtractPresetData(FILE *fp, std::string &buf);
 
 #ifndef CONSOLE_ONLY
 Fl_Pixmap *clippy;
-// Tutorial stuff
-Fl_BMP_Image *tutorial1;
-Fl_BMP_Image *tutorial2;
-Fl_BMP_Image *tutorial3;
-Fl_BMP_Image *tutorial3_2;
-Fl_BMP_Image *tutorial4;
-Fl_BMP_Image *tutorial4_2;
-Fl_BMP_Image *tutorial5;
-Fl_BMP_Image *tutorial6;
-Fl_BMP_Image *tutorial7;
-Fl_BMP_Image *tutorial8;
-Fl_BMP_Image *tutorial9;
-Fl_BMP_Image *tutorial10;
-
-#ifdef WIN32
-FLASHWINFO *blinker;
-#endif
 
 #ifdef _WIN32
 #ifndef CONSOLE_ONLY
+static FLASHWINFO *blinker;
 static int i_load_private_font(const char *path) {
     return AddFontResourceExW((LPCWSTR)StringToUTF16(path).data(), FR_PRIVATE, nullptr);
 }
@@ -646,168 +622,118 @@ bool Main::LoadInternalFont(const char *fontpath, const int fontnum,
 
 #ifndef CONSOLE_ONLY
 void Main::PopulateFontMap() {
-    if (font_menu_items.size() == 0) {
+    if (font_menu_items.empty()) {
 
 #ifdef __APPLE__
-        font_menu_items.push_back(
-            std::map<std::string, int>{{"Sans <Default>", 0}});
-        font_menu_items.push_back(
-            std::map<std::string, int>{{"Courier <Internal>", 4}});
-        font_menu_items.push_back(
-            std::map<std::string, int>{{"Times <Internal>", 8}});
-        font_menu_items.push_back(
-            std::map<std::string, int>{{"Screen <Internal>", 13}});
+        font_menu_items.push_back({"Sans <Default>", 0});
+        font_menu_items.push_back({"Courier <Internal>", 4});
+        font_menu_items.push_back({"Times <Internal>", 8});
+        font_menu_items.push_back({"Screen <Internal>", 13});
+#else
 
-        num_fonts = Fl::set_fonts(NULL);
+        // TODO - If feasible, find a better way to automate this/crawl for
+        // *.ttf files
 
-        for (int x = 16; x < num_fonts; x++) {  // Starting at 16 skips the FLTK default enumerations
-            if (std::string fontname = Fl::get_font_name(x);
-                std::isalpha(fontname.at(0))) {
-                std::map<std::string, int> temp_map{{fontname, x}};
-                font_menu_items.push_back(temp_map);
+        // Load bundled fonts. Fonts without a bold variant are essentially
+        // loaded twice in a row so that calls for a bold variant don't
+        // accidentally change fonts
+
+        // Some custom fonts will have a different display name than that of
+        // their TTF fontname. This is because these fonts have been
+        // modified in some fashion, and the OFL 1.1 license dictates that
+        // modified versions cannot display their Reserved Name to users
+
+        int current_free_font = 16;
+
+        if (LoadInternalFont(
+                "./theme/fonts/SourceSansPro/SourceSansPro-Regular.ttf",
+                current_free_font, "Source Sans Pro")) {
+            if (LoadInternalFont(
+                    "./theme/fonts/SourceSansPro/SourceSansPro-Bold.ttf",
+                    current_free_font + 1, "Source Sans Pro Bold")) {
+                font_menu_items.push_back({"Sauce <Default>", current_free_font});
+                current_free_font += 2;
             }
         }
-#else
-        if (use_system_fonts) {
-            font_menu_items.push_back(
-                std::map<std::string, int>{{"Sans <Default>", 0}});
-            font_menu_items.push_back(
-                std::map<std::string, int>{{"Courier <Internal>", 4}});
-            font_menu_items.push_back(
-                std::map<std::string, int>{{"Times <Internal>", 8}});
-            font_menu_items.push_back(
-                std::map<std::string, int>{{"Screen <Internal>", 13}});
 
-            num_fonts = Fl::set_fonts(NULL);
+        font_menu_items.push_back({"Sans <Internal>", 0});
+        font_menu_items.push_back({"Courier <Internal>", 4});
+        font_menu_items.push_back({"Times <Internal>", 8});
+        font_menu_items.push_back({"Screen <Internal>", 13});
 
-            for (int x = 16; x < num_fonts;
-                 x++) {  // Starting at 16 skips the FLTK default enumerations
-                if (std::string fontname = Fl::get_font_name(x);
-                    std::isalpha(fontname.at(0))) {
-                    std::map<std::string, int> temp_map{{fontname, x}};
-                    font_menu_items.push_back(temp_map);
-                }
-            }
+        if (LoadInternalFont("./theme/fonts/Avenixel/Avenixel-Regular.ttf",
+                                current_free_font, "Avenixel")) {
+            Fl::set_font(current_free_font + 1, "Avenixel");
+            font_menu_items.push_back({"Avenixel", current_free_font});
+            current_free_font += 2;
+        }
 
-        } else {
-            // TODO - If feasible, find a better way to automate this/crawl for
-            // *.ttf files
+        if (LoadInternalFont("./theme/fonts/TheNeueBlack/TheNeue-Black.ttf",
+                                current_free_font, "The Neue Black")) {
+            Fl::set_font(current_free_font + 1, "The Neue Black");
+            font_menu_items.push_back({"New Black", current_free_font});
+            current_free_font += 2;
+        }
 
-            // Load bundled fonts. Fonts without a bold variant are essentially
-            // loaded twice in a row so that calls for a bold variant don't
-            // accidentally change fonts
-
-            // Some custom fonts will have a different display name than that of
-            // their TTF fontname. This is because these fonts have been
-            // modified in some fashion, and the OFL 1.1 license dictates that
-            // modified versions cannot display their Reserved Name to users
-
-            int current_free_font = 16;
-
-            if (LoadInternalFont(
-                    "./theme/fonts/SourceSansPro/SourceSansPro-Regular.ttf",
-                    current_free_font, "Source Sans Pro")) {
-                if (LoadInternalFont(
-                        "./theme/fonts/SourceSansPro/SourceSansPro-Bold.ttf",
-                        current_free_font + 1, "Source Sans Pro Bold")) {
-                    font_menu_items.push_back(std::map<std::string, int>{
-                        {"Sauce <Default>", current_free_font}});
-                    current_free_font += 2;
-                }
-            }
-
-            font_menu_items.push_back(
-                std::map<std::string, int>{{"Sans <Internal>", 0}});
-            font_menu_items.push_back(
-                std::map<std::string, int>{{"Courier <Internal>", 4}});
-            font_menu_items.push_back(
-                std::map<std::string, int>{{"Times <Internal>", 8}});
-            font_menu_items.push_back(
-                std::map<std::string, int>{{"Screen <Internal>", 13}});
-
-            if (LoadInternalFont("./theme/fonts/Avenixel/Avenixel-Regular.ttf",
-                                 current_free_font, "Avenixel")) {
-                Fl::set_font(current_free_font + 1, "Avenixel");
-                font_menu_items.push_back(std::map<std::string, int>{
-                    {"Avenixel", current_free_font}});
+        if (LoadInternalFont("./theme/fonts/Teko/Teko-Regular.ttf",
+                                current_free_font, "Teko")) {
+            if (LoadInternalFont("./theme/fonts/Teko/Teko-Bold.ttf",
+                                    current_free_font + 1, "Teko Bold")) {
+                font_menu_items.push_back({"Teko", current_free_font});
                 current_free_font += 2;
             }
+        }
 
-            if (LoadInternalFont("./theme/fonts/TheNeueBlack/TheNeue-Black.ttf",
-                                 current_free_font, "The Neue Black")) {
-                Fl::set_font(current_free_font + 1, "The Neue Black");
-                font_menu_items.push_back(std::map<std::string, int>{
-                    {"New Black", current_free_font}});
+        if (LoadInternalFont("./theme/fonts/Kalam/Kalam-Regular.ttf",
+                                current_free_font, "Kalam")) {
+            if (LoadInternalFont("./theme/fonts/Kalam/Kalam-Bold.ttf",
+                                    current_free_font + 1, "Kalam Bold")) {
+                font_menu_items.push_back({"Kalam", current_free_font});
                 current_free_font += 2;
             }
+        }
 
-            if (LoadInternalFont("./theme/fonts/Teko/Teko-Regular.ttf",
-                                 current_free_font, "Teko")) {
-                if (LoadInternalFont("./theme/fonts/Teko/Teko-Bold.ttf",
-                                     current_free_font + 1, "Teko Bold")) {
-                    font_menu_items.push_back(std::map<std::string, int>{
-                        {"Teko", current_free_font}});
-                    current_free_font += 2;
-                }
-            }
+        if (LoadInternalFont("./theme/fonts/3270/3270.ttf",
+                                current_free_font, "3270 Condensed")) {
+            Fl::set_font(current_free_font + 1, "3270 Condensed");
+            font_menu_items.push_back({"3270", current_free_font});
+            current_free_font += 2;
+        }
 
-            if (LoadInternalFont("./theme/fonts/Kalam/Kalam-Regular.ttf",
-                                 current_free_font, "Kalam")) {
-                if (LoadInternalFont("./theme/fonts/Kalam/Kalam-Bold.ttf",
-                                     current_free_font + 1, "Kalam Bold")) {
-                    font_menu_items.push_back(std::map<std::string, int>{
-                        {"Kalam", current_free_font}});
-                    current_free_font += 2;
-                }
-            }
-
-            if (LoadInternalFont("./theme/fonts/3270/3270.ttf",
-                                 current_free_font, "3270 Condensed")) {
-                Fl::set_font(current_free_font + 1, "3270 Condensed");
-                font_menu_items.push_back(
-                    std::map<std::string, int>{{"3270", current_free_font}});
-                current_free_font += 2;
-            }
-
+        if (LoadInternalFont("./theme/fonts/Workbench/Workbench.ttf",
+                                current_free_font,
+                                "Workbench Light Regular")) {
             if (LoadInternalFont("./theme/fonts/Workbench/Workbench.ttf",
-                                 current_free_font,
-                                 "Workbench Light Regular")) {
-                if (LoadInternalFont("./theme/fonts/Workbench/Workbench.ttf",
-                                     current_free_font + 1,
-                                     "Workbench Regular")) {
-                    font_menu_items.push_back(std::map<std::string, int>{
-                        {"Workbench", current_free_font}});
-                    current_free_font += 2;
-                }
+                                    current_free_font + 1,
+                                    "Workbench Regular")) {
+                font_menu_items.push_back({"Workbench", current_free_font});
+                current_free_font += 2;
             }
+        }
 
+        if (LoadInternalFont(
+                "./theme/fonts/FPD-Pressure/FPDPressure-Light.otf",
+                current_free_font, "FPD Pressure Light")) {
             if (LoadInternalFont(
-                    "./theme/fonts/FPD-Pressure/FPDPressure-Light.otf",
-                    current_free_font, "FPD Pressure Light")) {
-                if (LoadInternalFont(
-                        "./theme/fonts/FPD-Pressure/FPDPressure-Regular.otf",
-                        current_free_font + 1, "FPD Pressure")) {
-                    font_menu_items.push_back(std::map<std::string, int>{
-                        {"FPD Pressure", current_free_font}});
-                    current_free_font += 2;
-                }
-            }
-
-            if (LoadInternalFont("./theme/fonts/DramaSans/DramaSans.ttf",
-                                 current_free_font, "Drama Sans")) {
-                Fl::set_font(current_free_font + 1, "Drama Sans");
-                font_menu_items.push_back(std::map<std::string, int>{
-                    {"Drama Sans", current_free_font}});
+                    "./theme/fonts/FPD-Pressure/FPDPressure-Regular.otf",
+                    current_free_font + 1, "FPD Pressure")) {
+                font_menu_items.push_back({"FPD Pressure", current_free_font});
                 current_free_font += 2;
             }
+        }
 
-            if (LoadInternalFont("./theme/fonts/SamIAm/MiniSmallCaps.ttf",
-                                 current_free_font, "MiniSmallCaps")) {
-                Fl::set_font(current_free_font + 1, "MiniSmallCaps");
-                font_menu_items.push_back(std::map<std::string, int>{
-                    {"Sam I Am", current_free_font}});
-                current_free_font += 2;
-            }
+        if (LoadInternalFont("./theme/fonts/DramaSans/DramaSans.ttf",
+                                current_free_font, "Drama Sans")) {
+            Fl::set_font(current_free_font + 1, "Drama Sans");
+            font_menu_items.push_back({"Drama Sans", current_free_font});
+            current_free_font += 2;
+        }
+
+        if (LoadInternalFont("./theme/fonts/SamIAm/MiniSmallCaps.ttf",
+                                current_free_font, "MiniSmallCaps")) {
+            Fl::set_font(current_free_font + 1, "MiniSmallCaps");
+            font_menu_items.push_back({"Sam I Am", current_free_font});
+            current_free_font += 2;
         }
 #endif
     }
@@ -1046,9 +972,7 @@ void Main::SetupFLTK() {
     }
     if (font_theme < num_fonts) {  // In case the number of installed fonts is
                                    // reduced between launches
-        for (const auto &[_fst, snd] : font_menu_items[font_theme]) {
-            font_style = snd;
-        }
+        font_style = font_menu_items.at(font_theme).second;
     } else {
         // Fallback
         font_style = 0;
@@ -1167,7 +1091,7 @@ void Main_SetSeed() {
             ob_set_config("string_seed", string_seed.c_str());
             unsigned long long split_limit =
                 (std::numeric_limits<long long>::max() /
-                 127);  // It is intentional that I am using the max for signed
+                 127);  // It is intentional that I am using the max for signed long long
                         // - Dasho
             next_rand_seed = split_limit;
             for (size_t i = 0; i < string_seed.size(); i++) {
@@ -1738,62 +1662,10 @@ softrestart:;
 
 // create the main window
 #ifndef CONSOLE_ONLY
-        fl_register_images();  // Needed for Unix window icon and tutorial
-                               // windows
+        fl_register_images();  // Needed for Unix window icon and Clippy
 
         if (!clippy) {
             clippy = new Fl_Pixmap(clippy_xpm);
-        }
-
-        // Load tutorial images
-        std::filesystem::path image_loc = install_dir;
-        image_loc.append("data").append("tutorial").append("tutorial1.bmp");
-        if (!tutorial1) {
-            tutorial1 = new Fl_BMP_Image(image_loc.generic_u8string().c_str());
-        }
-        image_loc.replace_filename("tutorial2.bmp");
-        if (!tutorial2) {
-            tutorial2 = new Fl_BMP_Image(image_loc.generic_u8string().c_str());
-        }
-        image_loc.replace_filename("tutorial3.bmp");
-        if (!tutorial3) {
-            tutorial3 = new Fl_BMP_Image(image_loc.generic_u8string().c_str());
-        }
-        image_loc.replace_filename("tutorial3_2.bmp");
-        if (!tutorial3_2) {
-            tutorial3_2 = new Fl_BMP_Image(image_loc.generic_u8string().c_str());
-        }
-        image_loc.replace_filename("tutorial4.bmp");
-        if (!tutorial4) {
-            tutorial4 = new Fl_BMP_Image(image_loc.generic_u8string().c_str());
-        }
-        image_loc.replace_filename("tutorial4_2.bmp");
-        if (!tutorial4_2) {
-            tutorial4_2 = new Fl_BMP_Image(image_loc.generic_u8string().c_str());
-        }
-        image_loc.replace_filename("tutorial5.bmp");
-        if (!tutorial5) {
-            tutorial5 = new Fl_BMP_Image(image_loc.generic_u8string().c_str());
-        }
-        image_loc.replace_filename("tutorial6.bmp");
-        if (!tutorial6) {
-            tutorial6 = new Fl_BMP_Image(image_loc.generic_u8string().c_str());
-        }
-        image_loc.replace_filename("tutorial7.bmp");
-        if (!tutorial7) {
-            tutorial7 = new Fl_BMP_Image(image_loc.generic_u8string().c_str());
-        }
-        image_loc.replace_filename("tutorial8.bmp");
-        if (!tutorial8) {
-            tutorial8 = new Fl_BMP_Image(image_loc.generic_u8string().c_str());
-        }
-        image_loc.replace_filename("tutorial9.bmp");
-        if (!tutorial9) {
-            tutorial9 = new Fl_BMP_Image(image_loc.generic_u8string().c_str());
-        }
-        image_loc.replace_filename("tutorial10.bmp");
-        if (!tutorial10) {
-            tutorial10 = new Fl_BMP_Image(image_loc.generic_u8string().c_str());
         }
 
         int main_w, main_h;
@@ -1802,8 +1674,6 @@ softrestart:;
         main_win = new UI_MainWin(main_w, main_h, main_title.c_str());
 #endif
     }
-
-    //???    Default_Location();
 
     Script_Open();
 
@@ -1821,7 +1691,6 @@ softrestart:;
     // load config after creating window (will set widget values)
     if (!Cookie_Load(config_file)) {
         LogPrintf("Missing config file -- using defaults.\n\n");
-        first_run = true;
     }
 
     if (!load_file.empty()) {
@@ -1921,11 +1790,6 @@ softrestart:;
             if (old_w > 0 && old_h > 0) {
                 main_win->resize(old_x, old_y, old_w, old_h);
             }
-#ifndef __OpenBSD__ // This somehow messes with FLTK stuff on the first run
-            if (first_run) {
-                DLG_Tutorial();
-            }
-#endif
         }
 
 #ifdef WIN32  // Populate structure for taskbar/window flash. Must be done after
@@ -2019,8 +1883,6 @@ softrestart:;
 
     main_action = MAIN_NONE;
 
-    int runs_left = builds_per_run;
-
     try {
         // run the GUI until the user quits
         for (;;) {
@@ -2034,10 +1896,6 @@ softrestart:;
             }
 
             if (main_action == MAIN_BUILD) {
-
-                if (!mid_batch) {
-                    runs_left = builds_per_run;
-                }
 
                 main_action = 0;
 
@@ -2081,20 +1939,7 @@ softrestart:;
                 // regardless of success or fail, compute a new seed
                 Main_CalcNewSeed();
 
-                if (!result) {
-                    mid_batch = false;
-                    main_action = MAIN_SOFT_RESTART;
-                    break;
-                }
-
-                runs_left--;
-                if (runs_left > 0) {
-                    mid_batch = true;
-                    main_action = MAIN_BUILD;
-                } else {
-                    mid_batch = false;
-                    main_action = MAIN_SOFT_RESTART;
-                }
+                main_action = MAIN_SOFT_RESTART;
             }
         }
     } catch (const assert_fail_c &err) {

@@ -24,6 +24,7 @@ HACX = { }
 ----------------------------------------------------------------
 gui.import("params")
 gui.import("entities")
+gui.import("factory") -- For earlier Oblige versions
 gui.import("monsters")
 gui.import("pickups")
 gui.import("weapons")
@@ -62,6 +63,7 @@ OB_GAMES["hacx"] =
 	
 	hooks =
 	{
+		factory_setup = HACX.factory_setup,
 		slump_setup = HACX.slump_setup,
 		get_levels = HACX.get_levels,
 		all_done   = HACX.all_done

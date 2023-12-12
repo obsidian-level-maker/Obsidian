@@ -1202,7 +1202,12 @@ config *get_config(std::filesystem::path filename) {
         answer->map = 2;
         answer->episode = 0;
         answer->mission = 0;
-    }                                     
+    } else { // Doom 2 / Final Doom
+        answer->gamemask = (DOOM2_BIT|DOOMI_BIT);
+        answer->map = 1;
+        answer->episode = 0;
+        answer->mission = 0;
+    }                                 
     answer->last_mission = SLUMP_FALSE;
     std::string wadlength = ob_get_param("length");
     if (StringCaseCmp(wadlength, "single") == 0) {

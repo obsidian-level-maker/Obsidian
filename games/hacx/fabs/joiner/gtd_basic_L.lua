@@ -5,11 +5,6 @@ PREFABS.Joiner_gtd_basic_curve =
 
   prob   = 30,
 
-  env      = "!cave",
-  neighbor = "!cave",
-
-  
-
   where  = "seeds",
   shape  = "L",
 

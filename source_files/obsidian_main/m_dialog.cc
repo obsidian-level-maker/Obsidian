@@ -95,7 +95,7 @@ static void DialogShowAndRun(const char *message, const char *title,
     icon->box(FL_OVAL_BOX);
     icon->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
     icon->color(FL_RED, FL_RED);
-    icon->labelfont(use_system_fonts ? font_style : font_style | FL_BOLD);
+    icon->labelfont(font_style | FL_BOLD);
     icon->labelsize(24 + KF * 3);
     icon->labelcolor(FL_WHITE);
 
@@ -325,7 +325,7 @@ void DLG_EditSeed(void) {
     try {
         for (long unsigned int i = 0; i < word.size(); i++) {
             char character = word.at(i);
-            if (not std::isdigit(character)) {
+            if (!std::isdigit(character)) {
                 throw std::runtime_error(
                     // clang-format off
                     _("String contains non-digits. Will process as string\n"));
@@ -350,7 +350,7 @@ void DLG_EditSeed(void) {
     ob_set_config("string_seed", word.c_str());
     unsigned long long split_limit =
         (std::numeric_limits<long long>::max() /
-         127);  // It is intentional that I am using the max for signed - Dasho
+         127);  // It is intentional that I am using the max for signed long long - Dasho
     next_rand_seed = split_limit;
     for (size_t i = 0; i < word.size(); i++) {
         char character = word.at(i);
@@ -446,8 +446,7 @@ UI_LogViewer::UI_LogViewer(int W, int H, const char *l)
             but->box(button_style);
             but->visible_focus(0);
             but->color(BUTTON_COLOR);
-            but->labelfont(use_system_fonts ? font_style
-                                            : font_style | FL_BOLD);
+            but->labelfont(font_style | FL_BOLD);
             but->labelcolor(FONT2_COLOR);
             but->callback(quit_callback, this);
         }
@@ -716,8 +715,7 @@ UI_GlossaryViewer::UI_GlossaryViewer(int W, int H, const char *l)
             but->box(button_style);
             but->visible_focus(0);
             but->color(BUTTON_COLOR);
-            but->labelfont(use_system_fonts ? font_style
-                                            : font_style | FL_BOLD);
+            but->labelfont(font_style | FL_BOLD);
             but->labelcolor(FONT2_COLOR);
             but->callback(quit_callback, this);
         }

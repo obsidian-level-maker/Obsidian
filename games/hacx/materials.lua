@@ -1,12 +1,12 @@
 HACX.LIQUIDS =
 {
-  water  = { mat="L_WATER",  light=168, special=0 },
-  water2 = { mat="L_WATER2", light=168, special=0 },
+  water  = { mat="FWATER1",  light=168, special=0 },
+  water2 = { mat="SLIME05", light=168, special=0 },
 
-  slime  = { mat="L_SLIME",  light=168, special=16, damage=20 },
-  goo    = { mat="L_GOO",    light=168, special=16, damage=20 },
-  lava   = { mat="L_LAVA",   light=192, special=16, damage=20 },
-  elec   = { mat="L_ELEC",   light=176, special=16, damage=20 }
+  slime  = { mat="SLIME01",  light=168, special=16, damage=20 },
+  goo    = { mat="LAVA1",    light=168, special=16, damage=20 },
+  lava   = { mat="SLIME09",   light=192, special=16, damage=20 },
+  elec   = { mat="NUKAGE1",   light=176, special=16, damage=20 }
 }
 
 HACX.MATERIALS =
@@ -18,78 +18,51 @@ HACX.MATERIALS =
   _LIQUID = { f="FWATER1", t="BLODRIP1" },
   XEMPTY = { t="-", f="-" },
 
-  -- general purpose --
-
-  METAL  = { t="HW209", f="RROCK03" },
-
-  LIFT   = { t="HW176", f="DEM1_1" },
+  -- crates --
+  HW200 = { t="HW200", f="RROCK03" },
 
   -- walls --
-
-  BROWNHUG = { t="BROWNHUG", f="BLOOD1" },
-
-  DOORTRAK = { t="HW209", f="RROCK03" },
-
+  BRNSMALC = { t="BRNSMALC", f="FLOOR0_1" },
+  BSTONE1 = { t="BSTONE1", f="FLAT5_4" },
+  BSTONE2 = { t="BSTONE2", f="FLAT5_4" },
+  COMPUTE1 = { t="COMPUTE1", f="FLAT5_5" },
   HD6   = { t="HD6",   f="RROCK03" },
   HW211 = { t="HW211", f="RROCK03" },
   HW510 = { t="HW510", f="SLIME15" },
   HW511 = { t="HW511", f="SLIME14" },
   HW512 = { t="HW512", f="SLIME13" },
   HW513 = { t="HW513", f="SLIME16" },
-
-  TECHY1 = { t="HW172", f="FLAT5_1" },
-  WOODY1 = { t="COMPTALL", f="RROCK14" },
-  BLOCKY1 = { t="HW219", f="RROCK11" },
-  BLOCKY2 = { t="MIDBRONZ", f="CONS1_1" },
-
-  CAVEY1 = { t="MARBFAC4", f="RROCK12" },
-  DIRTY1 = { t="PANCASE1", f="RROCK15" },
-  DIRTY2 = { t="PANEL2",   f="RROCK15" },
-  STONY1 = { t="PLANET1",  f="GRNROCK" },
-
-  GRAY_ROCK = { t="HW185", f="FLOOR0_1" },
-
-  DARK_CONC = { t="HW205", f="CONS1_5" },
-
-
   LITE2 = { t="LITE2", f="DEM1_2" },
-
   MODWALL3 = { t="MODWALL3", f="CEIL3_3" },
+  PANEL9 = { t="PANEL9", f="CEIL4_3" },
+  PLAT1 = { t="PLAT1", f="FLOOR6_2" },
+  STARTAN3 = { t="STARTAN3", f="GRASS2" },
+  ZZWOLF6 = { t="ZZWOLF6", f="CONS1_5" },
 
+  -- flats --
+  CEIL1_1 = { t="PLAT1", f="CEIL1_1" },
+  CEIL3_4 = { t="MODWALL3", f="CEIL3_4" },
+  CEIL4_3 = { t="PANEL9", f="CEIL4_3" },
+  CONS1_5 = { t="ZZWOLF6", f="CONS1_5" },
+  FLAT1_2 = { t="BRNSMALC", f="FLAT1_2" },
+  FLAT5_4 = { t="BSTONE2", f="FLAT5_4" },
+  FLAT5_5 = { t="COMPUTE1", f="FLAT5_5" },
+  FLOOR0_1 = { t="BRNSMALC", f="FLOOR0_1" },
+  FLOOR6_2 = { t="PLAT1", f="FLOOR6_2" },
+  MFLR8_2 = { t="BSTONE3", f="MFLR8_2" },
+  GRASS2 = { t="STARTAN3", f="GRASS2" },
+  RROCK03 = { t="HW209", f="RROCK03" },
+  RROCK04 = { t="HW209", f="RROCK04" },
 
-  TECH_PIC1 = { t="BRNSMALR", f="RROCK03" },
-  TECH_PIC2 = { t="CEMENT7",  f="RROCK03" },
-
-  TECH_COMP = { t="COMPSTA2", f="RROCK03" },
-
-  LOGO_1 = { t="PANEL6", f="RROCK03" },
+  -- doorjamb/window frame --
+  HW502 = { t="HW502", f="CONS1_5" },
 
   -- doors --
-  
-  BIGDOOR1   = { t="BIGDOOR1",   f="RROCK03" },
-  BIGDOOR2 = { t="BIGDOOR2", f="RROCK03" },
-  BIGDOOR4 = { t="BIGDOOR4", f="RROCK03" },
-  DOOR1 = { t="DOOR1", f="RROCK03" },
-  DOOR3 = { t="DOOR3", f="RROCK03" },
-  DOORBLU = { t="DOORBLU", f="RROCK03" },
-  DOORRED = { t="DOORRED", f="RROCK03" },
+  HD5 = { t="HD5", f="CONS1_5" },
 
   -- switches --
 
-  SW1CMT = { t="SW1CMT", f="DEM1_2" },
-
-
   -- floors --
-
-  GRASS1 = { t="MARBGRAY", f="TLITE6_1" },
-  GRASS2 = { t="MARBGRAY", f="CONS1_7" },
-
-  GRAY_BRICK = { f="GRASS2", t="STARTAN3" },
-  HERRING_1  = { f="FLAT9", t="HW306" },
-  WOOD_TILE  = { f="CEIL5_2", t="MIDBARS1", },
-
---FLAT14   = { t="STARTAN3", f="FLAT14" }
-
 
   -- rails --
 
@@ -116,14 +89,16 @@ HACX.MATERIALS =
 
   -- liquids / animated --
 
-  L_ELEC   = { f="NUKAGE1", t="HW177" },
-  L_GOO    = { f="LAVA1",   t="HW325" },
-  L_WATER  = { f="FWATER1", t="BLODRIP1" },
-  L_WATER2 = { f="SLIME05", t="WFALL1" },
-  L_LAVA   = { f="SLIME09", t="SFALL1" },
-  L_SLIME  = { f="SLIME01", t="BRICK6" },
+  NUKAGE1   = { f="NUKAGE1", t="HW177" },
+  LAVA1    = { f="LAVA1",   t="HW325" },
+  FWATER1  = { f="FWATER1", t="BLODRIP1" },
+  SLIME05 = { f="SLIME05", t="WFALL1" },
+  SLIME09   = { f="SLIME09", t="SFALL1" },
+  SLIME01  = { f="SLIME01", t="BRICK6" },
+  WFALL1 = { f="SLIME05", t="WFALL1" },
 
-  TELEPORT = { f="BLOOD1",  t="BRONZE1" },
+  -- teleporter
+  BLOOD1 = { f="BLOOD1",  t="BRONZE1" },
 
 
   -- other --

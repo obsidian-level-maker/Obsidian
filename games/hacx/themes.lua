@@ -465,7 +465,7 @@ OB_THEMES["genemp"] =
 {
   label = _("GenEmp Corp"),
   game = "hacx",
-  name_theme = "GENEMP",
+  name_class = "GENEMP",
   mixed_prob = 50
 }
 

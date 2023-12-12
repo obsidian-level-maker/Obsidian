@@ -76,8 +76,6 @@ void Parse_Option(const std::string &name, const std::string &value) {
         custom_prefix = value;
     } else if (StringCaseCmp(name, "default_output_path") == 0) {
         default_output_path = std::filesystem::u8path(value);
-    } else if (StringCaseCmp(name, "builds_per_run") == 0) {
-        builds_per_run = StringToInt(value);
     } else {
         StdOutPrintf("%s '%s'\n", _("Unknown option: "), name.c_str());
     }
@@ -180,7 +178,6 @@ bool Options_Save(std::filesystem::path filename) {
         "default_output_path = %s\n",
         StringToUTF8(default_output_path.generic_u16string()).c_str());
     option_fp.write(dop.c_str(), dop.size());
-    option_fp << "builds_per_run = " << builds_per_run << "\n";
 
     option_fp << "\n";
 
@@ -222,7 +219,6 @@ class UI_OptionsWin : public Fl_Window {
     UI_CustomCheckBox *opt_overwrite;
     UI_CustomCheckBox *opt_debug;
     UI_CustomCheckBox *opt_limit_break;
-    Fl_Simple_Counter *opt_builds_per_run;
     // UI_CustomCheckBox *opt_preserve_failures;
 
    public:
@@ -291,12 +287,6 @@ class UI_OptionsWin : public Fl_Window {
         main_action = MAIN_HARD_RESTART;
 
         that->want_quit = true;
-    }
-
-    static void callback_BuildsPerRun(Fl_Widget *w, void *data) {
-        UI_OptionsWin *that = (UI_OptionsWin *)data;
-
-        builds_per_run = that->opt_builds_per_run->value();
     }
 
     static void callback_Random_String_Seeds(Fl_Widget *w, void *data) {
@@ -709,25 +699,6 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_limit_break->selection_color(SELECTION);
     opt_limit_break->down_box(button_style);
 
-    cy += opt_limit_break->h() + y_step * .5;
-
-    opt_builds_per_run =
-        new Fl_Simple_Counter(cx + W * .38, cy, listwidth, kf_h(24), "");
-    opt_builds_per_run->copy_label(_("Builds Per Run "));
-    opt_builds_per_run->align(FL_ALIGN_LEFT);
-    opt_builds_per_run->step(1);
-    opt_builds_per_run->bounds(1, 25);
-    opt_builds_per_run->callback(callback_BuildsPerRun, this);
-    opt_builds_per_run->value(builds_per_run);
-    opt_builds_per_run->labelfont(font_style);
-    opt_builds_per_run->textfont(font_style);
-    opt_builds_per_run->textcolor(FONT2_COLOR);
-    opt_builds_per_run->selection_color(SELECTION);
-    opt_builds_per_run->visible_focus(0);
-    opt_builds_per_run->color(BUTTON_COLOR);
-
-    cy += opt_builds_per_run->h() + y_step * .5;
-
     /*opt_preserve_failures =
         new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24),, "");
     opt_preserve_failures->copy_label(_(" Preserve Failed Builds"));
@@ -792,7 +763,7 @@ int UI_OptionsWin::handle(int event) {
 
 void DLG_OptionsEditor(void) {
     int opt_w = kf_w(500);
-    int opt_h = kf_h(475);
+    int opt_h = kf_h(450);
 
     UI_OptionsWin *option_window =
         new UI_OptionsWin(opt_w, opt_h, _("OBSIDIAN Misc Options"));

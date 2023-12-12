@@ -433,11 +433,7 @@ bool nukem_game_interface_c::Start(const char *preset) {
         }
     } else {
 #ifndef CONSOLE_ONLY
-        if (!mid_batch) {
-            filename = DLG_OutputFilename("grp", preset);
-        } else {
-            filename = BestDirectory() / preset;
-        }
+        filename = DLG_OutputFilename("grp", preset);
 #endif
     }
 
