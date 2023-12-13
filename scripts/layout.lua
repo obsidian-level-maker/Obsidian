@@ -2177,6 +2177,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
       local tab = grab_usable_sinks(R, fg, "floor")
       if tab == nil then return end
+      if #tab == 0 then return end
 
       local name = rand.key_by_probs(tab)
 
@@ -2213,6 +2214,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
       local tab = grab_usable_sinks(R, cg, "ceiling")
       if tab == nil then return end
+      if #tab == 0 then return end
 
       local name = rand.key_by_probs(tab)
 
