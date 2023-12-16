@@ -8649,6 +8649,57 @@ GROW_MAZE_ZIGZAG_DOUBLE_CAGE =
   }
 },
 
+GROW_MAZE_SIDE_BUMP =
+{
+  prob = 5,
+  skip_prob = 80,
+
+  structure =
+  {
+    "x..x","x11x",
+    "xx.x","xx1x",
+    "xx..","xx1%",
+    "xx..","xx11",
+    "xx..","xx11",
+    "xx..","xx1/",
+    "xx.x","xx1x",
+    "x11x","x11x"
+  },
+
+  diagonals =
+  {
+    "1.",
+    ".1"
+  }
+},
+
+GROW_MAZE_SIDE_BUMP_CAGE =
+{
+  prob = 5,
+  skip_prob = 80,
+
+  structure =
+  {
+    "x..x","x11x",
+    "xx.x","xx1x",
+    "xx..","xx1%",
+    "xx..","xx11",
+    "xx..","xx1C",
+    "xx..","xx11",
+    "xx..","xx1C",
+    "xx..","xx11",
+    "xx..","xx1/",
+    "xx.x","xx1x",
+    "x11x","x11x"
+  },
+
+  diagonals =
+  {
+    "1.",
+    ".1"
+  }
+},
+
 GROW_MAZE_STRAIGHT_NEW_AREA =
 {
   prob = 8,
