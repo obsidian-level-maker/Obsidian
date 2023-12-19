@@ -433,7 +433,7 @@ function Episode_plan_monsters()
 
     local mon_along = LEV.game_along
 
-    local ramp_up = PARAM.float_ramp_up
+    local ramp_up = PARAM.float_ramp_up or 1
 
     -- this is for Doom 1 / Ultimate Doom / Heretic
     if PARAM.episodic_monsters or ramp_up == gui.gettext("Episodic") then

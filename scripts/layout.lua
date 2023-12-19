@@ -967,7 +967,7 @@ function Layout_add_traps(LEVEL)
         teleports = 100
       }
 
-      if OB_CONFIG.trap_style ~= "default" then
+      if OB_CONFIG.trap_style ~= nil and OB_CONFIG.trap_style ~= "default" then
         if rand.odds(prob_tab[OB_CONFIG.trap_style]) then
           if teleport_dice(info.room, is_same) then
             telep_locs = locs_for_room(info.room, "teleport")

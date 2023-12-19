@@ -172,7 +172,8 @@ OB_MODULES["ui_arch"] =
       choices = UI_ARCH.RAMP_FACTOR,
       default = "0.66",
       priority = 97,
-      randomize_group="architecture"
+      randomize_group="architecture",
+      complex_mode = true
     },
 
 
@@ -184,7 +185,8 @@ OB_MODULES["ui_arch"] =
       choices = UI_ARCH.SIZE_BIAS,
       default = "default",
       priority = 96,
-      randomize_group="architecture"
+      randomize_group="architecture",
+      complex_mode = true
     },
 
 
@@ -197,7 +199,8 @@ OB_MODULES["ui_arch"] =
       default = "none",
       priority = 88,
       gap = 1,
-      randomize_group="architecture"
+      randomize_group="architecture",
+      complex_mode = true
     },
   
 
@@ -255,7 +258,8 @@ OB_MODULES["ui_arch"] =
       tooltip = _("Allow/disallow teleporter emergency breaks."),
       longtip = _("Teleporters are sometimes used when performing an emergency room break in order to continue level growth. With this setting disabled, teleports will never be used in an emergency break. This could result in truncated level growth or, in the worst case, a script error."),
       priority = 81,
-      gap = 1
+      gap = 1,
+      complex_mode = true
     },
     { name="steepness",    
     label=_("Steepness"),  choices=STYLE_CHOICES, gap=1, priority = 73, randomize_group="architecture", 

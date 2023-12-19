@@ -317,7 +317,7 @@ class UI_OptionsWin : public Fl_Window {
         win->set_modal();
         win->show();
         // clang-format off
-        buff->text(_("In Simple Mode, generation options that are more nuanced are granular are hidden in order to provide an easier experience for the user."));
+        buff->text(_("In Simple Mode, generation options that are more nuanced or granular are hidden in order to provide an easier experience for the user."));
         // clang-format on
     }
 
