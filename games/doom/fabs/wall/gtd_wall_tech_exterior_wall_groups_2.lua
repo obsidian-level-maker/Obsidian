@@ -417,3 +417,139 @@ PREFABS.Wall_tech_outdoor_letter_M = --#
 
   line_344 = 0
 }
+
+PREFABS.Wall_tech_outdoor_letter_N = --#
+{
+  template = "Wall_tech_outdoor_hex_inset",
+  map = "MAP19",
+
+  height = 128,
+  group = "tech_o_letter_N",
+
+  bound_z2 = 128,
+
+  z_fit = {48, 49}
+}
+
+PREFABS.Wall_tech_outdoor_letter_N_compat =
+{
+  template = "Wall_tech_outdoor_hex_inset",
+  map = "MAP19",
+
+  engine = "!zdoom",
+  height = 128,
+  group = "tech_o_letter_N",
+
+  bound_z2 = 128,
+
+  z_fit = {48, 49},
+
+  line_281 = 0,
+  line_345 = 0
+}
+
+PREFABS.Wall_tech_outdoor_letter_O = --#
+{
+  template = "Wall_tech_outdoor_hex_inset",
+  map = "MAP20",
+
+  height = 128,
+  group = "tech_o_letter_O",
+
+  bound_z2 = 128,
+
+  z_fit = {34, 36}
+}
+
+PREFABS.Wall_tech_outdoor_letter_O_compat =
+{
+  template = "Wall_tech_outdoor_hex_inset",
+  map = "MAP20",
+
+  engine = "!zdoom",
+  height = 128,
+  group = "tech_o_letter_O",
+
+  bound_z2 = 128,
+
+  z_fit = {34, 36},
+
+  line_281 = 0
+}
+
+PREFABS.Wall_tech_outdoor_letter_P = --#
+{
+  template = "Wall_tech_outdoor_hex_inset",
+  map = "MAP21",
+
+  rank = 2,
+  texture_pack = "armaetus",
+  height = 96,
+  group = "tech_o_letter_P",
+
+  bound_z2 = 96,
+
+  z_fit = {30, 32 , 47,48}
+}
+
+PREFABS.Wall_tech_outdoor_letter_P_compat = 
+{
+  template = "Wall_tech_outdoor_hex_inset",
+  map = "MAP21",
+
+  rank = 1,
+  height = 96,
+  group = "tech_o_letter_P",
+
+  bound_z2 = 96,
+
+  z_fit = {30, 32 , 47,48},
+
+  tex_URBAN8 = "GRAY7",
+  tex_PIPESV1 = "GRAY5",
+  tex_SHASH04 = "GRAY7",
+
+  line_345 = 0
+}
+
+PREFABS.Wall_tech_outdoor_letter_Q = --#
+{
+  template = "Wall_tech_outdoor_hex_inset",
+  map = "MAP22",
+
+  texture_pack = "armaetus",
+  rank = 2,
+  height = 96,
+  group = "tech_o_letter_Q",
+
+  bound_z2 = 96,
+  tex_RDLITE01 = 
+  {
+    RDLITE01 = 1,
+    GRAY7 = 5
+  },
+
+  z_fit = {23,24 , 26,28 , 72,73}
+}
+
+PREFABS.Wall_tech_outdoor_letter_Q_compat =
+{
+  template = "Wall_tech_outdoor_hex_inset",
+  map = "MAP22",
+
+  rank = 1,
+  height = 96,
+  group = "tech_o_letter_Q",
+
+  bound_z2 = 96,
+
+  z_fit = {23,24 , 26,28 , 72,73},
+  tex_RDLITE01 =
+  {
+    REDWALL = 1,
+    GRAY7 = 5
+  },
+  tex_GOTH41 = "BROWN144",
+
+  line_345 = 0
+}
