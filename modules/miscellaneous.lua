@@ -45,14 +45,6 @@ MISC_STUFF.LIGHT_CHOICES =
   "+3",   _("Radiant"),
 }
 
-MISC_STUFF.SINK_STYLE_CHOICES =
-{
-  "themed", _("Per Theme"),
-  "curved", _("Curved"),
-  "sharp", _("Sharp"),
-  "random", _("Random"),
-}
-
 MISC_STUFF.HEIGHT_CHOICES =
 {
   "short",     _("Mostly Short"),
@@ -461,14 +453,6 @@ OB_MODULES["misc"] =
     randomize_group="architecture",
     },
 
-    { name = "corner_style",
-      label=_("Sink Style"),
-      choices=MISC_STUFF.SINK_STYLE_CHOICES,
-      tooltip = _("Determines the style for corners with sunken ceilings and floors. Curved makes sink corners soft, while Sharp leaves the corners angular. Per Theme means choice is controlled by theme profile instead. Tech-ish maps favor sharp corners while hell-ish favor curved."),
-      default = "themed",
-      priority = 75,
-      randomize_group="architecture",
-    },
     {
       name = "liquid_sinks",
       label=_("Liquid Sinks"),
@@ -483,15 +467,6 @@ OB_MODULES["misc"] =
     label=_("Dark Outdoors"),  
     tooltip=_("Affects the chance of a level having darker skies."), 
     choices=STYLE_CHOICES, priority = 73 },
-
-    {
-      name="bool_outdoor_shadows",
-      label=_("Outdoor Shadows"),
-      valuator = "button",
-      default = 1,
-      tooltip = _("Adds shadows to outdoor structures."),
-      priority = 73
-    },
 
     { 
       name="float_minimum_brightness", 

@@ -1051,9 +1051,6 @@ function Seed_draw_minimap(SEEDS, LEVEL)
   end
   end
 
-  if PARAM["bool_save_gif"] == 1 then
-    gui.minimap_gif_frame()
-  end
   gui.minimap_finish()
   gui.ticker()
 end

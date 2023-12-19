@@ -2622,7 +2622,7 @@ function Level_make_level(LEV)
   local SEEDS = Seed_init(LEVEL)
   local res = "ok'"
   local retry_counter = 0
-  local retry_target = PARAM.float_max_build_retries or 3
+  local retry_target = 3
   local error_mat = assert(GAME.MATERIALS["_ERROR"])
   local coverage_target = 0
 
@@ -2736,8 +2736,8 @@ function Level_make_level(LEV)
     collectgarbage("collect")
     if res == "abort" then return res end
     retry_counter = retry_counter + 1
-    if retry_counter > retry_target then
-      error("Level failed to build after " .. retry_target .. " tries!\nReason: " .. res .. "\n")
+    if retry_counter > retry_target then -- just move on I guess
+      res = "ok"
     else
       coverage_target = coverage_target * 0.75
       LEVEL = table.copy(LEV)
