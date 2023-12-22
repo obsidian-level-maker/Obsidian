@@ -197,6 +197,7 @@ if(NOT CONSOLE_ONLY AND NOT HAIKU)
     obsidian SYSTEM PRIVATE "${PROJECT_BINARY_DIR}/source_files/fltk"
   ) # Hack for FLTK 1.4 (for now)
 endif()
+target_include_directories(obsidian SYSTEM PRIVATE source_files/gif-h)
 target_include_directories(obsidian SYSTEM PRIVATE source_files/minilua)
 target_include_directories(obsidian SYSTEM PRIVATE source_files/miniz)
 target_include_directories(obsidian SYSTEM PRIVATE source_files/physfs/src)

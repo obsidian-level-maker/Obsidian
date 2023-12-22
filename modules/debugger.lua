@@ -152,6 +152,16 @@ OB_MODULES["debugger"] =
     },
 
     {
+      name = "bool_save_gif",
+      label = _("Save Minimap GIF"),
+      valuator = "button",
+      default = 0,
+      tooltip = _("Save an animated GIF of the building process. Recommended in combination with the Live Growth Minimap."),
+      priority=94,
+      gap = 1,
+    },
+
+    {
       name="live_minimap",
       label=_("Live Growth Minimap"),
       choices=DEBUG_CONTROL.LIVEMAP_CHOICES,

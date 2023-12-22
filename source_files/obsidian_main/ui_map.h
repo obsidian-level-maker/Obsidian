@@ -56,6 +56,10 @@ class UI_MiniMap : public Fl_Box {
 
     void MapClear();
 
+    void GifStart(std::filesystem::path filename, int delay);
+    void GifFrame();
+    void GifFinish();
+
    private:
     inline void RawPixel(int x, int y, byte r, byte g, byte b) {
         u8_t *pos = pixels + ((map_H - 1 - y) * map_W + x) * 3;

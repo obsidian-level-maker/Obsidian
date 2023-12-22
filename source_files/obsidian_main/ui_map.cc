@@ -25,6 +25,11 @@
 #include "lib_util.h"
 #include "main.h"
 #include <vector>
+#include "gif.h"
+
+// The includes got too messy to make these part of the UI_MiniMap class - Dasho
+static GifWriter *gif_writer;
+int gif_delay;
 
 UI_MiniMap::UI_MiniMap(int x, int y, int w, int h, const char *label)
     : Fl_Box(x, y, w, h, label), pixels(NULL), cur_image(NULL) {
@@ -296,6 +301,32 @@ void UI_MiniMap::DrawEntity(int x, int y, byte r, byte g, byte b) {
     RawPixel(x + 1, y, r, g, b);
     RawPixel(x, y - 1, r, g, b);
     RawPixel(x, y + 1, r, g, b);
+}
+
+void UI_MiniMap::GifStart(std::filesystem::path filename, int delay) {
+    gif_writer = new GifWriter;
+    gif_delay = delay;
+    GifBegin(gif_writer, filename.generic_u8string().c_str(), map_W, map_H, gif_delay);
+}
+
+void UI_MiniMap::GifFrame() {
+    std::vector<u8_t> frame_pixels;
+    int rgb_counter = 0;
+    // Sloppy RGB->RGBA conversion for Gif-H - Dasho
+    for (int i = 0; i < map_W * map_H * 3; i++) {
+        frame_pixels.push_back(pixels[i]);
+        rgb_counter++;
+        if (rgb_counter == 3) {
+            frame_pixels.push_back(0);
+            rgb_counter = 0;
+        }
+    }
+    GifWriteFrame(gif_writer, frame_pixels.data(), map_W, map_H, gif_delay);
+}
+
+void UI_MiniMap::GifFinish() {
+    GifEnd(gif_writer);
+    delete gif_writer;
 }
 
 //--- editor settings ---
