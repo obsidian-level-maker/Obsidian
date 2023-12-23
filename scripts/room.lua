@@ -3721,15 +3721,11 @@ end
     calc_min_max_h(R)
 
     -- corner style decision -MSSP
-    if not R.is_outdoor then
-      if PARAM.corner_style == "random" then
-        R.corner_style = rand.pick({"sharp","curved"})
-      elseif PARAM.corner_style == "themed" then
-        R.corner_style = rand.key_by_probs(THEME.sink_style)
-      else
-        R.corner_style = PARAM.corner_style
-      end
+    if THEME.sink_style and #THEME.sink_style > 0 then
+      R.corner_style = rand.key_by_probs(THEME.sink_style)
     elseif R.is_outdoor then
+      R.corner_style = "curved"
+    else
       R.corner_style = "sharp"
     end
 
@@ -4272,7 +4268,6 @@ function Room_build_all(LEVEL, SEEDS)
   Room_add_cage_rails(LEVEL)
 
   Layout_handle_corners(LEVEL)
-  Layout_outdoor_shadows(LEVEL, SEEDS)
 
   ob_invoke_hook_with_table("level_layout_finished", LEVEL) --MSSP
 

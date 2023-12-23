@@ -10714,7 +10714,11 @@ void populate_linedef(level *l,linedef *ldnew2,haa *haa,config *c,
                   l->seen_map = SLUMP_TRUE;
                   announce(VERBOSE,"Area map");
                 } else {
-                  bonustype = ID_INVIS; bonusamount = 10;  /* Also guess */
+                  if (c->gamemask & CHEX_BIT) {
+                    bonustype = ID_STIMPACK; bonusamount = 10;
+                  } else {
+                    bonustype = ID_INVIS; bonusamount = 10;  /* Also guess */
+                  }
                 }
                 break;
         default: bonustype = ID_POTION; bonusamount = 1;  /* Impossible */
@@ -12405,7 +12409,11 @@ void empty_level(level *l, config *c)
    l->dm_count = 0;
    l->dm_rho = 10;
    l->first_room = NULL;
-   l->skullkeys = rollpercent(50);
+   if ((c->gamemask & HERETIC_BIT) || (c->gamemask & CHEX_BIT)) {
+    l->skullkeys = SLUMP_FALSE;
+   } else {
+    l->skullkeys = rollpercent(50);
+   }
    l->use_gates = rollpercent(TELEPORTS_PERCENT);
    l->raise_gates = rollpercent(60);
    l->no_doors =

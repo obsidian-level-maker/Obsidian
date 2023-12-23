@@ -26,7 +26,7 @@ HACX.EPISODES =
     ep_index = 1,
 
     theme = "genemp",
-    sky_patch = "CJSKY3A",
+    sky_patch = "RSKY1",
     boss = "terminatrix",
     sky_light = 0.75,
     dark_prob = 10
@@ -37,7 +37,7 @@ HACX.EPISODES =
     ep_index = 2,
 
     theme = "genemp",
-    sky_patch = "CJSKY3A",
+    sky_patch = "RSKY2",
     boss = "thorn",
     sky_light = 0.75,
     dark_prob = 10
@@ -48,7 +48,7 @@ HACX.EPISODES =
     ep_index = 3,
 
     theme = "genemp",
-    sky_patch = "CJSKY3A",
+    sky_patch = "RSKY3",
     boss = "mecha",
     sky_light = 0.75,
     dark_prob = 10

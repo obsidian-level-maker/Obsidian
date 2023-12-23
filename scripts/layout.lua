@@ -967,7 +967,7 @@ function Layout_add_traps(LEVEL)
         teleports = 100
       }
 
-      if OB_CONFIG.trap_style ~= "default" then
+      if OB_CONFIG.trap_style ~= nil and OB_CONFIG.trap_style ~= "default" then
         if rand.odds(prob_tab[OB_CONFIG.trap_style]) then
           if teleport_dice(info.room, is_same) then
             telep_locs = locs_for_room(info.room, "teleport")
@@ -2177,6 +2177,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
       local tab = grab_usable_sinks(R, fg, "floor")
       if tab == nil then return end
+      if #tab == 0 then return end
 
       local name = rand.key_by_probs(tab)
 
@@ -2213,6 +2214,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
       local tab = grab_usable_sinks(R, cg, "ceiling")
       if tab == nil then return end
+      if #tab == 0 then return end
 
       local name = rand.key_by_probs(tab)
 
@@ -2896,112 +2898,4 @@ function Layout_indoor_lighting(LEVEL)
   end
 
   visit_room(LEVEL.start_room)
-end
-
-
-
-function Layout_outdoor_shadows(LEVEL, SEEDS)
-
-  local function need_shadow(S, dir)
-
-    if OB_CONFIG.game == "quake" or OB_CONFIG.game == "nukem" or (PARAM.bool_outdoor_shadows and PARAM.bool_outdoor_shadows == 0) then return false end
-
-    if not S.area then return false end
-
-    local N = S:neighbor(dir, nil, SEEDS)
-
-    if not (N and N.area) then return false end
-
-    local SA = S.area
-    local NA = N.area
-
-    if not NA.is_outdoor or NA.mode == "void" or NA.is_porch then return false end
-    if not SA.is_outdoor or SA.mode == "void" or SA.is_porch then return true end
-
-    if SA == NA then return false end
-
-    local E1 = S.edge[dir]
-    local E2 = N.edge[10 - dir]
-
-    local junc = Junction_lookup(LEVEL, SA, NA)
-
-    if not E1 then E1 = junc.E1 end
-    if not E2 then E2 = junc.E2 end
-
-    if E1 and Edge_is_wallish(E1) then return true end
-    if E2 and Edge_is_wallish(E2) then return true end
-
-    return false
-  end
-
-
-  local function shadow_from_seed(S, dir)
-    local dx = 64
-    local dy = 96
-
-    local brush
-    local wall
-
-    if dir == 2 then
-      brush =
-      {
-        { m = "light", sky_shadow=LEVEL.sky_shadow },
-        { x = S.x1     , y = S.y1      },
-        { x = S.x1 - dx, y = S.y1 - dy },
-        { x = S.x2 - dx, y = S.y1 - dy },
-        { x = S.x2     , y = S.y1 - 16 },
-        { x = S.x2     , y = S.y1      }
-      }
-    elseif dir == 4 then
-      brush =
-      {
-        { m = "light", sky_shadow=LEVEL.sky_shadow },
-        { x = S.x1     , y = S.y1      },
-        { x = S.x1     , y = S.y2      },
-        { x = S.x1 - 16, y = S.y2      },
-        { x = S.x1 - dx, y = S.y2 - dy },
-        { x = S.x1 - dx, y = S.y1 - dy }
-      }
-    elseif dir == 1 then
-      brush =
-      {
-        { m = "light", sky_shadow=LEVEL.sky_shadow },
-        { x = S.x1     , y = S.y2      },
-        { x = S.x1 - dx, y = S.y2 - dy },
-        { x = S.x2 - dx, y = S.y1 - dy },
-        { x = S.x2     , y = S.y1      }
-      }
-    elseif dir == 3 then
-      brush =
-      {
-        { m = "light", sky_shadow=LEVEL.sky_shadow },
-        { x = S.x1     , y = S.y1      },
-        { x = S.x1 - dx, y = S.y1 - dy },
-        { x = S.x2 - dx, y = S.y2 - dy },
-        { x = S.x2     , y = S.y2      }
-      }
-    else
-      -- nothing needed
-      return
-    end
-
-    raw_add_brush(brush)
-  end
-
-
-  ---| Layout_outdoor_shadows |---
-
-  if LEVEL.sky_shadow < 8 then
-    return
-  end
-
-  for _,A in pairs(LEVEL.areas) do
-  for _,S in pairs(A.seeds) do
-  for _,dir in pairs(geom.ALL_DIRS) do
-    if need_shadow(S, dir) then
-      shadow_from_seed(S, dir)
-    end
-  end -- A, S, dir
-  end
-  end
 end

@@ -2216,7 +2216,9 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
         lethal = 0.85,
       }
 
-      if what == "cage" then
+      if OB_CONFIG.cage_qty == nil then
+        choice = "default"
+      elseif what == "cage" then
         choice = OB_CONFIG.cage_qty
       elseif what == "trap" then
         choice = OB_CONFIG.trap_qty

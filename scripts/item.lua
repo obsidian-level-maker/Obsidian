@@ -1050,7 +1050,7 @@ function Item_pickups_for_class(LEVEL, CL)
     for stat,qty in pairs(stats) do
 
       -- this secret room is a treasure trove, baby!
-      if R.is_secret then
+      if R.is_secret and OB_CONFIG.secrets_bonus ~= nil then
         qty = R.svolume * SECRET_BONUS_FACTORS[OB_CONFIG.secrets_bonus]
       end
 

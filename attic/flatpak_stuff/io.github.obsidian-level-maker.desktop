@@ -1,8 +1,0 @@
-[Desktop Entry]
-Comment=Map generator for 90s FPS games
-Categories=Game;Shooter;
-Exec=obsidian.sh
-Icon=io.github.obsidian-level-maker
-Name=Obsidian
-Terminal=false
-Type=Application

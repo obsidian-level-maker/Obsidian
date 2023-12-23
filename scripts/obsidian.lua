@@ -1349,6 +1349,15 @@ function ob_restart()
           table.sort(list, button_sorter)
         end
 
+        ::keepkilling::
+
+        for _,opt in pairs(list) do
+          if opt.complex_mode and gui.check_simple_mode() then  
+            table.kill_elem(list, opt)
+            goto keepkilling
+          end
+        end
+
         for _,opt in pairs(list) do
           assert(opt.label)
           if string.match(opt.name, "header_") then
@@ -1629,6 +1638,15 @@ function ob_init()
           end
 
           table.sort(list, button_sorter)
+        end
+
+        ::keepkilling::
+
+        for _,opt in pairs(list) do
+          if opt.complex_mode and gui.check_simple_mode() then  
+            table.kill_elem(list, opt)
+            goto keepkilling
+          end
         end
 
         for _,opt in pairs(list) do

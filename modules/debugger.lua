@@ -151,7 +151,6 @@ OB_MODULES["debugger"] =
       gap = 1,
     },
 
-
     {
       name = "bool_save_gif",
       label = _("Save Minimap GIF"),
@@ -171,19 +170,6 @@ OB_MODULES["debugger"] =
       longtip= _("Higher levels of detail will increase the amount of time that it takes to generate a WAD. If saving an animated GIF of the build process, its animation speed will also be affected by this setting (less detail=slower, more detail=faster)."),
       gap = 1
     },
-
-    {
-      name = "float_max_build_retries",
-      label = _("Max Failed Level Retries"),
-      valuator = "slider",
-      min = 0,
-      max = 20,
-      increment = 1,
-      default = 3,
-      nan = "",
-      tooltip = _("Set the amount of times Obsidian will attempt to scrap and restart a level if it encounters an error during the build process."), 
-      presets = "",
-     },
 
   },
 }

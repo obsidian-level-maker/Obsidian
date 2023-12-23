@@ -52,8 +52,6 @@ void Parse_Option(const std::string &name, const std::string &value) {
         debug_messages = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "limit_break") == 0) {
         limit_break = StringToInt(value) ? true : false;
-        //} else if (StringCaseCmp(name, "preserve_failures") == 0) {
-        // preserve_failures = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "preserve_old_config") == 0) {
         preserve_old_config = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "randomize_architecture") == 0) {
@@ -66,6 +64,8 @@ void Parse_Option(const std::string &name, const std::string &value) {
         randomize_misc = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "random_string_seeds") == 0) {
         random_string_seeds = StringToInt(value) ? true : false;
+    } else if (StringCaseCmp(name, "gui_simple_mode") == 0) {
+        gui_simple_mode = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "password_mode") == 0) {
         password_mode = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "mature_word_lists") == 0) {
@@ -158,8 +158,6 @@ bool Options_Save(std::filesystem::path filename) {
     option_fp << "overwrite_warning = " << (overwrite_warning ? 1 : 0) << "\n";
     option_fp << "debug_messages = " << (debug_messages ? 1 : 0) << "\n";
     option_fp << "limit_break = " << (limit_break ? 1 : 0) << "\n";
-    // option_fp << "preserve_failures = " << (preserve_failures ? 1 : 0) <<
-    // "\n";
     option_fp << "preserve_old_config = " << (preserve_old_config ? 1 : 0)
               << "\n";
     option_fp << "randomize_architecture = " << (randomize_architecture ? 1 : 0)
@@ -169,6 +167,8 @@ bool Options_Save(std::filesystem::path filename) {
     option_fp << "randomize_pickups = " << (randomize_pickups ? 1 : 0) << "\n";
     option_fp << "randomize_misc = " << (randomize_misc ? 1 : 0) << "\n";
     option_fp << "random_string_seeds = " << (random_string_seeds ? 1 : 0)
+              << "\n";
+    option_fp << "gui_simple_mode = " << (gui_simple_mode ? 1 : 0)
               << "\n";
     option_fp << "password_mode = " << (password_mode ? 1 : 0) << "\n";
     option_fp << "mature_word_lists = " << (mature_word_lists ? 1 : 0) << "\n";
@@ -209,6 +209,8 @@ class UI_OptionsWin : public Fl_Window {
     Fl_Button *opt_default_output_path;
     Fl_Box *opt_current_output_path;
 
+    UI_CustomCheckBox *opt_simple_mode;
+    UI_HelpLink *simple_mode_help;
     UI_CustomCheckBox *opt_random_string_seeds;
     UI_HelpLink *random_string_seeds_help;
     UI_CustomCheckBox *opt_password_mode;
@@ -219,7 +221,6 @@ class UI_OptionsWin : public Fl_Window {
     UI_CustomCheckBox *opt_overwrite;
     UI_CustomCheckBox *opt_debug;
     UI_CustomCheckBox *opt_limit_break;
-    // UI_CustomCheckBox *opt_preserve_failures;
 
    public:
     UI_OptionsWin(int W, int H, const char *label = NULL);
@@ -287,6 +288,37 @@ class UI_OptionsWin : public Fl_Window {
         main_action = MAIN_HARD_RESTART;
 
         that->want_quit = true;
+    }
+
+    static void callback_Simple_Mode(Fl_Widget *w, void *data) {
+        UI_OptionsWin *that = (UI_OptionsWin *)data;
+
+        gui_simple_mode =
+            that->opt_simple_mode->value() ? true : false;
+
+        // clang-format off
+        fl_alert("%s", _("Toggling Simple Mode requires a restart.\nObsidian will now restart."));
+        // clang-format on
+
+        main_action = MAIN_HARD_RESTART;
+
+        that->want_quit = true;
+    }
+
+    static void callback_SimpleModeHelp(Fl_Widget *w, void *data) {
+        fl_cursor(FL_CURSOR_DEFAULT);
+        Fl_Window *win = new Fl_Window(640, 480, _("Simple Mode"));
+        Fl_Text_Buffer *buff = new Fl_Text_Buffer();
+        Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
+        disp->buffer(buff);
+        disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
+        win->resizable(*disp);
+        win->hotspot(0, 0, 0);
+        win->set_modal();
+        win->show();
+        // clang-format off
+        buff->text(_("In Simple Mode, generation options that are more nuanced or granular are hidden in order to provide an easier experience for the user."));
+        // clang-format on
     }
 
     static void callback_Random_String_Seeds(Fl_Widget *w, void *data) {
@@ -425,12 +457,6 @@ class UI_OptionsWin : public Fl_Window {
             that->want_quit = true;
         }
     }
-
-    /*static void callback_PreserveFailures(Fl_Widget *w, void *data) {
-        UI_OptionsWin *that = (UI_OptionsWin *)data;
-
-        preserve_failures = that->opt_preserve_failures->value() ? true : false;
-    }*/
 
     static void callback_PrefixHelp(Fl_Widget *w, void *data) {
         fl_cursor(FL_CURSOR_DEFAULT);
@@ -606,6 +632,22 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     cy += opt_current_output_path->h() + y_step;
 
+    opt_simple_mode =
+        new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24), "");
+    opt_simple_mode->copy_label(_(" Simple Mode"));
+    opt_simple_mode->value(gui_simple_mode ? 1 : 0);
+    opt_simple_mode->callback(callback_Simple_Mode, this);
+    opt_simple_mode->labelfont(font_style);
+    opt_simple_mode->selection_color(SELECTION);
+    opt_simple_mode->down_box(button_style);
+
+    simple_mode_help = new UI_HelpLink(
+        cx + W * .38 + this->opt_custom_prefix->w(), cy, W * 0.10, kf_h(24));
+    simple_mode_help->labelfont(font_style);
+    simple_mode_help->callback(callback_SimpleModeHelp, this);
+
+    cy += opt_simple_mode->h() + y_step * .5;
+
     opt_random_string_seeds =
         new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24), "");
     opt_random_string_seeds->copy_label(_(" Random String Seeds"));
@@ -699,17 +741,6 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_limit_break->selection_color(SELECTION);
     opt_limit_break->down_box(button_style);
 
-    /*opt_preserve_failures =
-        new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24),, "");
-    opt_preserve_failures->copy_label(_(" Preserve Failed Builds"));
-    opt_preserve_failures->value(preserve_failures ? 1 : 0);
-    opt_preserve_failures->callback(callback_PreserveFailures, this);
-    opt_preserve_failures->labelfont(font_style);
-    opt_preserve_failures->selection_color(SELECTION);
-    opt_preserve_failures->down_box(button_style);
-
-    cy += opt_preserve_failures->h() + y_step * .5;*/
-
     //----------------
 
     int dh = kf_h(60);
@@ -763,7 +794,7 @@ int UI_OptionsWin::handle(int event) {
 
 void DLG_OptionsEditor(void) {
     int opt_w = kf_w(500);
-    int opt_h = kf_h(450);
+    int opt_h = kf_h(475);
 
     UI_OptionsWin *option_window =
         new UI_OptionsWin(opt_w, opt_h, _("OBSIDIAN Misc Options"));

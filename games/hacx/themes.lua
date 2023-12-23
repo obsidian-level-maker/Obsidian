@@ -274,12 +274,12 @@ HACX.THEMES =
 
     floor_sinks =
     {
-      liquid_plain = 50
+
     },
 
     ceiling_sinks =
     {
-      sky_plain = 50
+
     },
 
     fences =
@@ -428,12 +428,12 @@ HACX.ROOM_THEMES =
 
     floors =
     {
-      GRAY_ROCK = 50
+      FLOOR0_1 = 50
     },
 
     walls =
     {
-      GRAY_ROCK = 50
+      HW185 = 50
     }
   }
 
