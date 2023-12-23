@@ -314,17 +314,19 @@ std::filesystem::path DLG_OutputFilename(const char *ext, const char *preset) {
 void DLG_EditSeed(void) {
     ;
 
-    const char *user_buf =
-        fl_input(_("Enter New Seed Number or Phrase:"),
-                 string_seed.empty() ? std::to_string(next_rand_seed).c_str()
-                                     : string_seed.c_str());
+    int user_response;
+    Fl_String user_buf = fl_input_str(
+        user_response, 0 /* limit */, "%s",
+        string_seed.empty() ? std::to_string(next_rand_seed).c_str()
+                            : string_seed.c_str(),
+        _("Enter New Seed Number or Phrase:"));
 
     // cancelled?
-    if (!user_buf) {
+    if (user_response < 0) {
         return;
     }
 
-    std::string word = user_buf;
+    std::string word = {user_buf.c_str(), static_cast<size_t>(user_buf.size())};
     try {
         for (long unsigned int i = 0; i < word.size(); i++) {
             char character = word.at(i);
@@ -349,9 +351,9 @@ void DLG_EditSeed(void) {
     }
     string_seed = word;
     ob_set_config("string_seed", word.c_str());
-    unsigned long long split_limit =
-        (std::numeric_limits<long long>::max() /
-         127);  // It is intentional that I am using the max for signed - Dasho
+    unsigned long long split_limit = (std::numeric_limits<long long>::max() /
+                                      127);  // It is intentional that I am
+                                             // using the max for signed - Dasho
     next_rand_seed = split_limit;
     for (size_t i = 0; i < word.size(); i++) {
         char character = word.at(i);
@@ -739,7 +741,6 @@ UI_GlossaryViewer::UI_GlossaryViewer(int W, int H, const char *l)
 UI_GlossaryViewer::~UI_GlossaryViewer() {}
 
 void UI_GlossaryViewer::ReadGlossary() {
-
     std::string glossary =
         fmt::format("{}/language/{}.txt", install_dir.string(), selected_lang);
 
