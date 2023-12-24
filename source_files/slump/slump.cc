@@ -1077,7 +1077,7 @@ void secretize_config(config *c)
     }
 
     /* Sometimes some DooM II nazis */
-    if (rollpercent(80)&&!(c->gamemask&(DOOM0_BIT|DOOM1_BIT|HERETIC_BIT|CHEX_BIT))) {
+    if (rollpercent(80)&&!(c->gamemask&(DOOM0_BIT|DOOM1_BIT|HERETIC_BIT|CHEX_BIT|HACX_BIT))) {
       c->forbidden_monster_bits &= ~SPECIAL;
       something_special = SLUMP_TRUE;
       if (rollpercent(50)) {
@@ -8493,7 +8493,7 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m = find_genus(c,ID_CELLPACK);
     m->bits |= AMMO;
     m->ammo_provides = (float)2000;  /* Hoo-hoo!  Same for BFG as plasgun? */
-  } else {
+  } else if (c->gamemask & HERETIC_BIT) {
     // Heretic decor
     m = find_genus(c,ID_POD);
     m->bits &= ~PICKABLE;
@@ -8530,6 +8530,42 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m = find_genus(c,ID_MACESPHEREPILE);
     m->bits |= AMMO;
     m->ammo_provides = (float)500;
+  } else if (c->gamemask & HACX_BIT) {
+    // Hacx decor
+    m = find_genus(c,ID_BARREL);
+    m->bits &= ~PICKABLE;
+    m->bits |= EXPLODES;
+    m->width = 33;
+    m->gamemask = HACX_BIT;
+    m = find_genus(c,ID_CEILINGLAMP);
+    m->bits &= ~PICKABLE;
+    m->bits |= LIGHT;
+    m->width = 33;
+    m->height = 32;
+    m->gamemask = HACX_BIT;
+    m = find_genus(c,ID_TALLCEILINGLAMP);
+    m->bits &= ~PICKABLE;
+    m->bits |= LIGHT;
+    m->width = 33;
+    m->height = 64;
+    m->gamemask = HACX_BIT;
+    m = find_genus(c,ID_FLOORLAMP);
+    m->bits &= ~PICKABLE;
+    m->bits |= LIGHT;
+    m->width = 33;
+    m->height = 128;
+    m->gamemask = HACX_BIT;
+
+    // Hacx ammo (pretty much the same as Doom ammo)
+    m = find_genus(c,ID_ROCKBOX);
+    m->bits |= AMMO;
+    m->ammo_provides = (float)500;
+    m = find_genus(c,ID_BULBOX);
+    m->bits |= AMMO;
+    m->ammo_provides = (float)500;
+    m = find_genus(c,ID_CELLPACK);
+    m->bits |= AMMO;
+    m->ammo_provides = (float)2000;  /* Hoo-hoo!  Same for BFG as plasgun? */
   }
 
   /* violence and mayhem */
@@ -9004,6 +9040,213 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     m->bits |= SHOOTS;
     m->bits |= BOSS;
     m->bits |= BIG;
+  }
+
+/* Hacx monsters */
+  if (c->gamemask&(HACX_BIT)) {
+    m = find_monster(c,ID_THUG);
+    m->gamemask = HACX_BIT;
+    m->width = 44;
+    m->height = 72;
+    m->ammo_provides = (float)100;
+    m->ammo_to_kill[ITYTD] = (float)160;
+    m->ammo_to_kill[HMP] = (float)95;
+    m->ammo_to_kill[UV] = (float)80;
+    m->damage[ITYTD] = (float)15;
+    m->damage[HMP] = (float)3;
+    m->damage[UV] = (float)1;
+    m->altdamage[ITYTD] = (float)10;
+    m->altdamage[HMP] = (float)1;
+    m->altdamage[UV] = (float)1;
+    m->bits |= SHOOTS;
+    m->min_level = 1;
+    m = find_monster(c,ID_ANDROID);
+    m->gamemask = HACX_BIT;
+    m->width = 44;
+    m->height = 70;
+    m->ammo_provides = (float)280;
+    m->ammo_to_kill[ITYTD] = (float)200;
+    m->ammo_to_kill[HMP] = (float)120;
+    m->ammo_to_kill[UV] = (float)100;
+    m->damage[ITYTD] = (float)25;
+    m->damage[HMP] = (float)6;
+    m->damage[UV] = (float)2;
+    m->altdamage[ITYTD] = (float)20;
+    m->altdamage[HMP] = (float)2;
+    m->altdamage[UV] = (float)1;
+    m->bits |= SHOOTS;
+    m->min_level = 1;
+    m = find_monster(c,ID_BUZZER);
+    m->gamemask = HACX_BIT;
+    m->width = 52;
+    m->height = 68;
+    m->ammo_provides = (float)0;
+    m->ammo_to_kill[ITYTD] = (float)440;
+    m->ammo_to_kill[HMP] = (float)265;
+    m->ammo_to_kill[UV] = (float)230;
+    m->damage[ITYTD] = (float)75;
+    m->damage[HMP] = (float)35;
+    m->damage[UV] = (float)15;
+    m->altdamage[ITYTD] = (float)60;
+    m->altdamage[HMP] = (float)25;
+    m->altdamage[UV] = (float)10;
+    m->bits |= FLIES;
+    m->min_level = 1;
+    m = find_monster(c,ID_STEALTHBUZZER);
+    m->gamemask = HACX_BIT;
+    m->width = 52;
+    m->height = 68;
+    m->ammo_provides = (float)0;
+    m->ammo_to_kill[ITYTD] = (float)440;
+    m->ammo_to_kill[HMP] = (float)265;
+    m->ammo_to_kill[UV] = (float)230;
+    m->damage[ITYTD] = (float)75;
+    m->damage[HMP] = (float)35;
+    m->damage[UV] = (float)15;
+    m->altdamage[ITYTD] = (float)60;
+    m->altdamage[HMP] = (float)25;
+    m->altdamage[UV] = (float)10;
+    m->bits |= FLIES;
+    m->min_level = 1;
+    m = find_monster(c,ID_HACXPHAGE);
+    m->gamemask = HACX_BIT;
+    m->width = 52;
+    m->height = 96;
+    m->ammo_provides = (float)0;
+    m->ammo_to_kill[ITYTD] = (float)375;
+    m->ammo_to_kill[HMP] = (float)225;
+    m->ammo_to_kill[UV] = (float)200;
+    m->damage[ITYTD] = (float)32;
+    m->damage[HMP] = (float)16;
+    m->damage[UV] = (float)8;
+    m->altdamage[ITYTD] = (float)20;
+    m->altdamage[HMP] = (float)10;
+    m->altdamage[UV] = (float)6;
+    m->bits |= SHOOTS;
+    m->min_level = 2;
+    m = find_monster(c,ID_ICE);
+    m->gamemask = HACX_BIT;
+    m->width = 66;
+    m->height = 55;
+    m->ammo_provides = (float)0;
+    m->ammo_to_kill[ITYTD] = (float)560;
+    m->ammo_to_kill[HMP] = (float)340;
+    m->ammo_to_kill[UV] = (float)300;
+    m->damage[ITYTD] = (float)22;
+    m->damage[HMP] = (float)8;
+    m->damage[UV] = (float)5;
+    m->altdamage[ITYTD] = (float)18;
+    m->altdamage[HMP] = (float)5;
+    m->altdamage[UV] = (float)2;
+    m->bits |= FLIES;
+    m->min_level = 5;
+    m = find_monster(c,ID_DMAN);
+    m->gamemask = HACX_BIT;
+    m->width = 98;
+    m->height = 77;
+    m->ammo_provides = (float)0;
+    m->ammo_to_kill[ITYTD] = (float)625;
+    m->ammo_to_kill[HMP] = (float)375;
+    m->ammo_to_kill[UV] = (float)325;
+    m->damage[ITYTD] = (float)22;
+    m->damage[HMP] = (float)8;
+    m->damage[UV] = (float)5;
+    m->altdamage[ITYTD] = (float)18;
+    m->altdamage[HMP] = (float)5;
+    m->altdamage[UV] = (float)2;
+    m->bits |= FLIES | BIG;
+    m->min_level = 5;
+    m = find_monster(c,ID_MAJONG7);
+    m->gamemask = HACX_BIT;
+    m->width = 64;
+    m->height = 56;
+    m->ammo_provides = (float)0;
+    m->ammo_to_kill[ITYTD] = (float)1500;
+    m->ammo_to_kill[HMP] = (float)600;
+    m->ammo_to_kill[UV] = (float)520;
+    m->min_level = 2;
+    m->bits |= SHOOTS;
+    m = find_monster(c,ID_MONSTRUCT);
+    m->gamemask = HACX_BIT;
+    m->width = 72;
+    m->height = 87;
+    m->ammo_provides = (float)0;
+    m->ammo_to_kill[ITYTD] = (float)1500;
+    m->ammo_to_kill[HMP] = (float)600;
+    m->ammo_to_kill[UV] = (float)520;
+    m->ammo_provides = (float)100;
+    m->damage[ITYTD] = (float)100;
+    m->damage[HMP] = (float)50;
+    m->damage[UV] = (float)25;
+    m->altdamage[ITYTD] = (float)80;
+    m->altdamage[HMP] = (float)40;
+    m->altdamage[UV] = (float)15;
+    m->min_level = 2;
+    m->bits |= SHOOTS | BIG;
+    m = find_monster(c,ID_TERMINATRIX);
+    m->gamemask = HACX_BIT;
+    m->width = 50;
+    m->height = 96;
+    m->ammo_provides = (float)0;
+    m->ammo_to_kill[ITYTD] = (float)2000;
+    m->ammo_to_kill[HMP] = (float)1200;
+    m->ammo_to_kill[UV] = (float)1040;
+    m->damage[ITYTD] = (float)90;
+    m->damage[HMP] = (float)45;
+    m->damage[UV] = (float)20;
+    m->altdamage[ITYTD] = (float)75;
+    m->altdamage[HMP] = (float)35;
+    m->altdamage[UV] = (float)13;
+    m->min_level = 9;
+    m->bits |= SHOOTS | BOSS;
+    m = find_monster(c,ID_THORNTHING);
+    m->gamemask = HACX_BIT;
+    m->width = 130;
+    m->height = 96;
+    m->ammo_provides = (float)0;
+    m->ammo_to_kill[ITYTD] = (float)1500;
+    m->ammo_to_kill[HMP] = (float)900;
+    m->ammo_to_kill[UV] = (float)780;
+    m->damage[ITYTD] = (float)125;
+    m->damage[HMP] = (float)70;
+    m->damage[UV] = (float)40;
+    m->altdamage[ITYTD] = (float)100;
+    m->altdamage[HMP] = (float)40;
+    m->altdamage[UV] = (float)25;
+    m->min_level = 9;
+    m->bits |= SHOOTS | BOSS | BIG;
+    m = find_monster(c,ID_MECHAMANIAC);
+    m->gamemask = HACX_BIT;
+    m->width = 50;
+    m->height = 96;
+    m->ammo_provides = (float)0;
+    m->ammo_to_kill[ITYTD] = (float)2000;
+    m->ammo_to_kill[HMP] = (float)1200;
+    m->ammo_to_kill[UV] = (float)1040;
+    m->damage[ITYTD] = (float)150;
+    m->damage[HMP] = (float)90;
+    m->damage[UV] = (float)50;
+    m->altdamage[ITYTD] = (float)120;
+    m->altdamage[HMP] = (float)80;
+    m->altdamage[UV] = (float)40;
+    m->min_level = 9;
+    m->bits |= SHOOTS | BOSS;
+    m = find_monster(c,ID_ROAMINGMINE);
+    m->gamemask = HACX_BIT;
+    m->width = 18;
+    m->height = 32;
+    m->ammo_provides = (float)0;
+    m->ammo_to_kill[ITYTD] = (float)125;
+    m->ammo_to_kill[HMP] = (float)75;
+    m->ammo_to_kill[UV] = (float)65;
+    m->damage[ITYTD] = (float)100;
+    m->damage[HMP] = (float)50;
+    m->damage[UV] = (float)15;
+    m->altdamage[ITYTD] = (float)80;
+    m->altdamage[HMP] = (float)40;
+    m->altdamage[UV] = (float)10;
+    m->min_level = 16;
+    m->bits |= FLIES;
   }
 
   return SLUMP_TRUE;
@@ -12411,7 +12654,9 @@ void empty_level(level *l, config *c)
    l->first_room = NULL;
    if ((c->gamemask & HERETIC_BIT) || (c->gamemask & CHEX_BIT)) {
     l->skullkeys = SLUMP_FALSE;
-   } else {
+   } else if (c->gamemask & HACX_BIT) {
+    l->skullkeys = rollpercent(100);
+  } else {
     l->skullkeys = rollpercent(50);
    }
    l->use_gates = rollpercent(TELEPORTS_PERCENT);
