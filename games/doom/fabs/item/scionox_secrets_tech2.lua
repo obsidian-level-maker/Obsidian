@@ -78,7 +78,7 @@ PREFABS.Item_pipagery_3_secret =
 {
   template = "Item_control_room_sideways_double_secret",
   map = "MAP02",
-  
+
   theme = "!hell",
 
   env = "!nature",
@@ -88,7 +88,7 @@ PREFABS.Item_pipagery_3_secret =
   sound = "Machine_Air",
 
   x_fit = { 176,208 },
-  z_fit = { 104,112 },
+  z_fit = "top",
 }
 
 --Based on gtd_pic_tech_wallmachines_EPIC
