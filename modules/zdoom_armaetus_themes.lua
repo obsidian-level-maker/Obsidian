@@ -4734,7 +4734,7 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
       FLAT5_4 = 3,
       FLOOR0_5 = 3,
 
-      FLAT01 = 8,
+      FFLAT01 = 8,
       FLOOR4_7 = 8,
       FLOOR7_3 = 8,
       TILES1 = 8,
@@ -4764,7 +4764,7 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
       FLAT5_4 = 3,
       FLOOR0_5 = 3,
 
-      FLAT01 = 8,
+      FFLAT01 = 8,
       FLOOR4_7 = 8,
       FLOOR7_3 = 8,
       TILES1 = 8,
@@ -7296,7 +7296,7 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
       FLAT5_4 = 3,
       FLOOR0_5 = 3,
 
-      FLAT01 = 8,
+      FFLAT01 = 8,
       FLOOR4_7 = 8,
       FLOOR7_3 = 8,
       TILES1 = 8,
@@ -7326,7 +7326,7 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
       FLAT5_4 = 3,
       FLOOR0_5 = 3,
 
-      FLAT01 = 8,
+      FFLAT01 = 8,
       FLOOR4_7 = 8,
       FLOOR7_3 = 8,
       TILES1 = 8,
