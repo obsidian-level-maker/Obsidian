@@ -87,7 +87,8 @@ HACX.THEMES =
       ; used on secret levels.  There should be at least one "secret"
       ; theme.
 
-	  Theme CYB ; "Cyberspace" theme
+	  Theme PRS ; Prison theme
+	  Theme OTA ; Digi-Ota theme
 
       ; Flats and textures and constructs and stuff are also in the [THEMES] section
 
@@ -117,113 +118,124 @@ HACX.THEMES =
       ;    divisor of 256 (except for doors, where you should give the real
       ;    width so SLIGE can make them look nice).
 
-	  ; Cyb walls
-	  Texture BRICK10 size 128 128 wall core CYB
-	  Texture ASHWALL2 size 128 128 wall core CYB subtle TEKWALL1
-    Texture COMPUTE2 size 128 128 wall core CYB
-	  Texture BROWNHUG size 64 128 wall core CYB subtle BROWN96
-    Texture BROWNPIP size 128 128 wall core CYB
-    Texture STONE2 size 128 128 wall core CYB
-    Texture STONE size 128 128 wall core CYB
-    Texture BRNSMAL1 size 128 128 wall core CYB subtle BRNSMALL
+	  ; Prison walls
+	  Texture MIDSPACE size 128 128 wall core PRS
+	  Texture METAL6 size 128 128 wall core PRS subtle METAL5
+	  Texture MIDBARS1 size 128 128 wall core PRS subtle METAL7
+	  
+	  ; Prison switches
+	  Texture SW1STARG size 128 128 isswitch comp PRS comp OTA
+	  Texture SW1BRNGN size 128 128 isswitch comp PRS comp OTA
+	  
+	  ; Digi-Ota walls
+	  Texture HW165 size 128 128 wall core OTA
+	  Texture STUCCO2 size 128 128 wall core OTA
+	  Texture TANROCK2 size 128 128 wall core OTA
 
-	  ; Cyb switches
-	  Texture SW1BRNGN size 128 128 ybias 82 isswitch comp CYB
+	  ; And the lift texture
+	  Texture BIGDOOR1 size 128 128 lift comp PRS comp OTA
 
-    ; And the lift texture
-    Texture BIGDOOR1 size 128 128 lift comp CYB
+	  ; Doors of all kinds.  "size" gives the width and height of the texture,
+	  ; and "locked" means that it's a good texture to use on a door that only
+	  ; opens with a switch, not a touch.
+	  Texture BIGDOOR4 size 128 128 door comp PRS comp OTA
 
-    ; Doors of all kinds.  "size" gives the width and height of the texture,
-    ; and "locked" means that it's a good texture to use on a door that only
-    ; opens with a switch, not a touch.
-    Texture BIGDOOR2 size 128 128 door comp CYB
+	  ; Prison exit switches
+	  Texture DOORRED size 128 128 exitswitch comp PRS comp OTA
 
-	  ; Cyb exit switches
-	  Texture DOORRED size 128 128 exitswitch comp CYB
+	  ; Lights, suitable for lighting recesses and stuff.
+	  Texture HW208 size 8 64 light comp PRS comp OTA
+	  Texture HW215 size 64 8 light comp PRS comp OTA
+	  Texture HW221 size 8 32 light comp PRS comp OTA
 
-    ; Lights, suitable for lighting recesses and stuff.
-    Texture HW208 size 8 64 light comp CYB
+	  ; "Plaques", suitable for wall consoles and paintings and pillars and stuff.
+	  ; "vtiles" means that it's OK to pile one on top of another, as when
+	  ;    making the big central pillar in an arena.
+	  ; "half_plaque" means that the upper half of this texture can be used
+	  ;    by itself, as well as the whole thing.
+	  Texture SPCDOOR1 size 128 128 plaque comp PRS
+	  Texture STUCCO size 128 128 plaque vtiles comp OTA
+	  Texture STUCCO1 size 128 128 plaque vtiles comp OTA
+	  Texture STUCCO3 size 128 128 plaque comp OTA
 
-    ; "Plaques", suitable for wall consoles and paintings and pillars and stuff.
-    ; "vtiles" means that it's OK to pile one on top of another, as when
-    ;    making the big central pillar in an arena.
-    ; "half_plaque" means that the upper half of this texture can be used
-    ;    by itself, as well as the whole thing.
-    Texture COMPSTA1 size 16 128 plaque vtiles comp CYB
+	  ; Gratings
+	  Texture SPACEW3 size 128 128 grating comp PRS
+	  Texture HW203 size 128 128 grating comp PRS comp OTA
+	  Texture TEKGREN2 size 128 128 grating comp OTA
 
-    ; Gratings
-    Texture SLADRIP1 size 128 128 grating comp CYB
+	  ; Colors (suitable for marking key-locked things)
+	  Texture HW510 size 8 128 red comp PRS comp OTA
+	  Texture HW511 size 8 128 yellow comp PRS comp OTA
+	  Texture HW512 size 8 128 blue comp PRS comp OTA
 
-    ; Colors (suitable for marking key-locked things)
-    Texture HW510 size 8 128 red comp CYB
-    Texture HW511 size 8 128 yellow comp CYB
-    Texture HW512 size 8 128 blue comp CYB
+	  ; Step kickplates
+	  Texture HW216 size 64 8 step comp PRS comp OTA
 
-    ; Step kickplates
-    Texture HW216 size 64 8 step comp CYB
+	  ; "Doorjambs"
+	  Texture HW513 size 16 128 jamb comp PRS comp OTA
 
-    ; "Doorjambs"
-    Texture HW513 size 16 128 jamb comp CYB
+	  ; Support textures, used in various places
+	  Texture BIGBRIK3 size 128 128 support comp PRS comp OTA
 
-    ; Support textures, used in various places
-    Texture BIGBRIK3 size 128 128 support comp CYB
+	  ; Bunch of things for outside patios (no themes applied here)
+	  Texture PANEL2 size 128 128 outside
+	  Texture PANEL3 size 128 128 outside
 
-    ; Bunch of things for outside patios (no themes applied here)
-	  Texture BRICK10 size 128 128 outside
+	  ; Misc
+	  Texture BROWNGRN size 128 128 error
 
-    ; Misc
-    Texture TANROCK2 size 128 128 error
+	  ; Now the flats.  Keywords should all be pretty obvious...   *8)
 
-    ; Now the flats.  Keywords should all be pretty obvious...   *8)
+	  ; Teleport-gate floors
+	  Flat BLOOD1 gate comp PRS comp OTA
 
-    ; Teleport-gate floors
-    Flat BLOOD1 gate comp CYB
+	  ; Prison floors and ceilings
+	  Flat FLOOR0_1 floor comp PRS
+	  Flat CEIL3_2 ceiling comp PRS
+	  Flat CEIL4_3 ceiling comp PRS
+	  Flat SFLR6_1 ceiling light comp PRS
+	  Flat SFLR6_4 ceiling light comp PRS
+	  Flat TLITE6_5 floor comp PRS
+	  Flat DEM1_3 floor comp PRS
+	  Flat FLOOR6_1 ceiling comp PRS
 
-    ; Cyb floors and ceilings
-    Flat FLOOR0_3 floor comp CYB
-    Flat FLOOR0_3 ceiling comp CYB
-    Flat FLOOR0_3 ceiling light comp CYB
-    Flat FLOOR4_5 floor comp CYB
-    Flat FLOOR4_5 ceiling comp CYB
-    Flat FLOOR4_5 ceiling light comp CYB
-    Flat COMP01 floor comp CYB
-    Flat COMP01 ceiling comp CYB
-    Flat CEIL1_2 floor comp CYB
-    Flat CEIL1_2 ceiling comp CYB
-    Flat CEIL3_6 floor comp CYB
-    Flat CEIL3_6 ceiling comp CYB
-    Flat FLAT1 floor comp CYB
-    Flat FLAT1 ceiling comp CYB
-    Flat SLIME05 floor outside comp CYB
-    Flat MFLR8_4 ceiling outside comp CYB
+	  ; Digi-Ota floors and ceilings
+	  Flat FLOOR5_2 floor comp OTA
+	  Flat FLOOR0_5 floor comp OTA
+	  Flat FLAT5_2 floor comp OTA
+	  Flat MFLR8_2 ceiling comp OTA
+	  Flat MFLR8_3 ceiling comp OTA
+	  Flat FLAT5_3 ceiling comp OTA
 
-    ; and nukage
-    Flat NUKAGE1 nukage comp CYB
-    Flat LAVA1 nukage red comp CYB
+	  ; and nukage
+	  Flat SLIME01 nukage comp PRS comp OTA
+	  Flat SLIME09 nukage comp PRS comp OTA
+	  Flat LAVA1 nukage red comp PRS comp OTA
 
-    ; Floors for outside areas not yet mentioned
-    Flat SLIME05 outside
+	  ; Floors for outside areas not yet mentioned
+	  Flat CONS1_7 outside
+	  Flat FLAT23 outside
 
-    ; These are the defaults, but we'll list them anyway.
-    Flat FWATER1 water
-    Flat F_SKY1 sky
+	  ; These are the defaults, but we'll list them anyway.
+	  Flat FWATER1 water
+	  Flat F_SKY1 sky
 
-    ; Constructs: computers and crates and stuff that stand around in rooms
-    ; This is pretty complex!  Fool with it at your peril.
+	  ; Constructs: computers and crates and stuff that stand around in rooms
+	  ; This is pretty complex!  Fool with it at your peril.
 
-    ; Family 1 is crates of various sizes and kinds
-    Construct family 1 height 128 comp CYB
-      top FLOOR0_2
-      Primary BLAKWAL2 width 128
+	  ; Family 1 is crates of various sizes and kinds
+	  Construct family 1 height 128 comp PRS comp OTA
+	  top FLOOR0_2
+	  Primary BRICK10 width 128
 
-    ; Load the hardwired monster and object and so on data (required in
-    ; this version of SLIGE; don't remove this!)
-    Hardwired1
+	  ; Load the hardwired monster and object and so on data (required in
+	  ; this version of SLIGE; don't remove this!)
+	  Hardwired1
 
-    ; Say which lamps we like in which themes, and where barrels are allowed
-    ; Information like which Doom version each object is in, and which ones
-    ; cast light, and which ones explode, is still hardwired.
-    Thing 2028 comp CYB ; floor lamp
+	  ; Say which lamps we like in which themes, and where barrels are allowed
+	  ; Information like which Doom version each object is in, and which ones
+	  ; cast light, and which ones explode, is still hardwired.
+	  Thing 2028 comp PRS comp OTA ; floor lamp
 
     ; and that's it!
     ]]

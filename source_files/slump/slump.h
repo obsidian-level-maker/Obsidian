@@ -256,6 +256,20 @@ typedef struct s_genus {
 #define ID_MAULOTAUR (0x09)
 #define ID_IRONLICH (0x06)
 #define ID_DSPARIL (0x07)
+/* The Hacx Monsters*/
+#define ID_THUG (0x0bbc)
+#define ID_ANDROID (0x0009)
+#define ID_BUZZER (0x0bba)
+#define ID_STEALTHBUZZER (0x003a)
+#define ID_HACXPHAGE (0x0043)
+#define ID_ICE (0x0bb9)
+#define ID_DMAN (0xbbe)
+#define ID_MAJONG7 (0x047)
+#define ID_MONSTRUCT (0x041)
+#define ID_TERMINATRIX (0x0bbb)
+#define ID_THORNTHING (0x044)
+#define ID_MECHAMANIAC (0x045)
+#define ID_ROAMINGMINE (0x054)
   short width;
   short height;
   int min_level; /* Minimum level to put monster in */
@@ -376,6 +390,10 @@ typedef struct s_genus {
 #define ID_SMSTALAGMITE (0x25)
 #define ID_LGSTALAGMITE (0x26)
 
+// Hacx decor
+#define ID_CEILINGLAMP (0x02c)
+#define ID_TALLCEILINGLAMP (0x02e)
+#define ID_FLOORLAMP (0x039)
 
 /* The style is the dynamic architectural knowledge and stuff. */
 /* It changes throughout the run.                              */
