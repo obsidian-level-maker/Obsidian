@@ -1792,6 +1792,20 @@ OBS_RESOURCE_PACK_MATERIALS = {
   SD_TBBWA = { t="SD_TBBWA", f="SD_TSGF3"},
   SD_TBBWB = { t="SD_TBBWB", f="SD_TSGF2"},
   SD_TBBWC = { t="SD_TBBWC", f="SD_TSGF1"},
+  -- floors
+  SD_TBBF1 = { t="SD_TBBW1", f="SD_TBBF1"},
+  SD_TBBF2 = { t="SD_TBBW2", f="SD_TBBF2"},
+  SD_TBBF3 = { t="SD_TBBW3", f="SD_TBBF3"},
+  SD_TBBF4 = { t="SD_TBBW4", f="SD_TBBF4"},
+  SD_TBBF5 = { t="SD_TBBW5", f="SD_TBBF5"},
+  SD_TBBF6 = { t="SD_TBBW6", f="SD_TBBF6"},
+  SD_TBBF7 = { t="SD_TBBW7", f="SD_TBBF7"},
+  SD_TBBF8 = { t="SD_TBBW8", f="SD_TBBF8"},
+  SD_TBBF9 = { t="SD_TBBW9", f="SD_TBBF9"},
+  SD_TBBFA = { t="SD_TBBWA", f="SD_TBBFA"},
+  SD_TBBFB = { t="SD_TBBWB", f="SD_TBBFB"},
+  SD_TBBFC = { t="SD_TBBWC", f="SD_TBBFC"},
+  SD_TBBFD = { t="SD_TBBW6", f="SD_TBBFD"},
 
   -- MSSP-URBAN --
   -- New Yorker art deco

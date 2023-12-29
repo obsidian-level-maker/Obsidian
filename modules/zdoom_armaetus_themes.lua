@@ -2402,6 +2402,20 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
 
     floors =
     {
+      SD_TBBF1 = 25,
+      SD_TBBF2 = 25,
+      SD_TBBF3 = 25,
+      SD_TBBF4 = 25,
+      SD_TBBF5 = 25,
+      SD_TBBF6 = 25,
+      SD_TBBF7 = 25,
+      SD_TBBF8 = 25,
+      SD_TBBF9 = 25,
+      SD_TBBFA = 25,
+      SD_TBBFB = 25,
+      SD_TBBFC = 25,
+      SD_TBBFD = 25,
+
       SD_TSGF1 = 20,
       SD_TSGF2 = 20,
       SD_TSGF3 = 20,
@@ -2432,6 +2446,20 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
 
     ceilings =
     {
+      SD_TBBF1 = 25,
+      SD_TBBF2 = 25,
+      SD_TBBF3 = 25,
+      SD_TBBF4 = 25,
+      SD_TBBF5 = 25,
+      SD_TBBF6 = 25,
+      SD_TBBF7 = 25,
+      SD_TBBF8 = 25,
+      SD_TBBF9 = 25,
+      SD_TBBFA = 25,
+      SD_TBBFB = 25,
+      SD_TBBFC = 25,
+      SD_TBBFD = 25,
+
       SD_TSGF1 = 20,
       SD_TSGF2 = 20,
       SD_TSGF3 = 20,
@@ -2582,7 +2610,21 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
       SD_TSGF9 = 15,
       SD_TSGFA = 15,
       SD_TSGFB = 15,
-      SD_TSGFC = 15
+      SD_TSGFC = 15,
+
+      SD_TBBF1 = 15,
+      SD_TBBF2 = 15,
+      SD_TBBF3 = 15,
+      SD_TBBF4 = 15,
+      SD_TBBF5 = 15,
+      SD_TBBF6 = 15,
+      SD_TBBF7 = 15,
+      SD_TBBF8 = 15,
+      SD_TBBF9 = 15,
+      SD_TBBFA = 15,
+      SD_TBBFB = 15,
+      SD_TBBFC = 15,
+      SD_TBBFD = 15
     },
 
     naturals =
@@ -2742,7 +2784,21 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
       SD_TSGF9 = 15,
       SD_TSGFA = 15,
       SD_TSGFB = 15,
-      SD_TSGFC = 15
+      SD_TSGFC = 15,
+
+      SD_TBBF1 = 12,
+      SD_TBBF2 = 12,
+      SD_TBBF3 = 12,
+      SD_TBBF4 = 12,
+      SD_TBBF5 = 12,
+      SD_TBBF6 = 12,
+      SD_TBBF7 = 12,
+      SD_TBBF8 = 12,
+      SD_TBBF9 = 12,
+      SD_TBBFA = 12,
+      SD_TBBFB = 12,
+      SD_TBBFC = 12,
+      SD_TBBFD = 12
     },
   },
 
