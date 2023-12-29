@@ -1302,7 +1302,7 @@ config *get_config(std::filesystem::path filename) {
         announce(VERBOSE, s);
     }
     answer->weapons_are_special =
-        SLUMP_TRUE;
+        SLUMP_FALSE;
     answer->recess_switches = rollpercent(95);
     answer->allow_boring_rooms = rollpercent(20);
     answer->both_doors = rollpercent(50);
