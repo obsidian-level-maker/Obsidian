@@ -242,7 +242,139 @@ HACX.THEMES =
   },
 
 
-  genemp =
+  prison =
+  {
+
+   style_list =
+    {
+      caves = { none=60, few=40, some=12, heaps=2 },
+      outdoors = { none=10, few=35, some=90, heaps=30 },
+      pictures = { few=20, some=80, heaps=30 },
+      hallways = { none=30, few=80, some=15, heaps=10 },
+      windows = { few=25, some=50, heaps=90 },
+      cages = { none=30, few=50, some=20, heaps=10 },
+      liquids = { none=45, few=30, some=20, heaps=5 },
+      doors = { few=20, some=70, heaps=30 },
+      steepness = { few=25, some=50, heaps=90 },
+      big_rooms = { none=25, few=40, some=25, heaps=15 },
+      ambushes = { none=5, few=20, some=75, heaps=30 },
+      teleporters = { none=20, few=30, some=65, heaps=10 },
+      keys = { none=15, few=50, some=50, heaps=20 },
+      symmetry = { none=40, few=30, some=35, heaps=25 },
+      switches = { none=20, few=60, some=40, heaps=10 },
+      secrets = { few=5, some=80, heaps=25 },
+      traps   = { none=10, few=40, some=70, heaps=25 },
+      barrels = { none=10, few=50, some=20, heaps=5 }
+    },
+
+    liquids =
+    {
+      water2 = 40,
+      water  = 50,
+      elec = 10
+    },
+
+    narrow_halls =
+    {
+
+    },
+
+    wide_halls =
+    {
+
+    },
+
+    floor_sinks =
+    {
+
+    },
+
+    ceiling_sinks =
+    {
+
+    },
+
+    fences =
+    {
+      BRICK8 = 30,
+    },
+
+    cage_mats =
+    {
+      MODWALL3 = 30,
+    },
+
+    facades =
+    {
+      MODWALL3 = 30,
+    },
+
+    fence_groups =
+    {
+      PLAIN = 50,
+    },
+
+    fence_posts =
+    {
+      Post = 50
+    },
+
+    beam_groups =
+    {
+      beam_metal = 50
+    },
+
+    window_groups = 
+    {
+      square = 40,
+      tall   = 80,
+    },
+
+    wall_groups =
+    {
+      PLAIN = 0.01,
+    },
+
+    cliff_trees =
+    {
+      tree = 50,
+    },
+
+    park_decor =
+    {
+      tree = 50,
+    },
+
+    cave_torches =
+    {
+      rock = 50
+    },
+
+    outdoor_torches =
+    {
+      standing_lamp = 50
+    },
+
+    ceil_light_prob = 70,
+
+    scenic_fences =
+    {
+      BRIDGE_RAIL = 80,
+    },
+
+    sink_style =
+    {
+      sharp = 1,
+      curved = 0.1
+    },
+
+    steps_mat = "CEIL5_1",
+
+    post_mat  = "HW209"
+
+  },
+
+  digi_ota =
   {
 
    style_list =
@@ -380,37 +512,34 @@ HACX.THEMES =
 HACX.ROOM_THEMES =
 {
 
-  genemp_Interior =
+  prison_Interior =
   {
     env  = "building",
     prob = 50,
 
     walls =
     {
-      PANEL9 = 30,
-      BRICK9 = 30,
-      BSTONE1 = 30,
-      BSTONE2 = 30,
-      BSTONE3 = 30,
-      COMPUTE1 = 30,
+      MIDSPACE = 30,
+      METAL6 = 30,
+      MIDBARS1 = 30,
     },
 
     floors =
     {
-      FLAT5_4 = 30,
-      CEIL4_3 = 30,
-      FLAT5_5 = 30,   
+      FLOOR0_1 = 30,
+      TLITE6_5 = 30,
+      DEM1_3 = 30,   
     },
 
     ceilings =
     {
-      MFLR8_2 = 30,
-      CEIL3_5 = 30,
-      CEIL1_1 = 30,
+      CEIL3_2 = 30,
+      CEIL4_3 = 30,
+      FLOOR6_1 = 30,
     }
   },
 
-  genemp_Outdoors =
+  prison_Outdoors =
   {
     env  = "outdoor",
     prob = 50,
@@ -422,8 +551,8 @@ HACX.ROOM_THEMES =
 
     naturals =
     {
-      TLITE6_1 = 50,
-      CEIL3_4 = 50,
+      CONS1_7 = 50,
+      FLAT23 = 50,
     },
 
     porch_floors =
@@ -433,7 +562,73 @@ HACX.ROOM_THEMES =
 
   },
 
-  genemp_Cave =
+  prison_Cave =
+  {
+    env  = "cave",
+    prob = 50,
+
+    floors =
+    {
+      FLOOR0_1 = 50
+    },
+
+    walls =
+    {
+      HW185 = 50
+    }
+  },
+
+  digi_ota_Interior =
+  {
+    env  = "building",
+    prob = 50,
+
+    walls =
+    {
+      HW165 = 30,
+      STUCCO2 = 30,
+      TANROCK2 = 30,
+    },
+
+    floors =
+    {
+      FLOOR5_2 = 30,
+      FLOOR0_5 = 30,
+      FLAT5_2 = 30,   
+    },
+
+    ceilings =
+    {
+      MFLR8_2 = 30,
+      MFLR8_3 = 30,
+      FLAT5_3 = 30,
+    }
+  },
+
+  digi_ota_Outdoors =
+  {
+    env  = "outdoor",
+    prob = 50,
+
+    floors =
+    {
+      FLOOR6_2 = 50,
+    },
+
+    naturals =
+    {
+      CONS1_7 = 50,
+      FLAT23 = 50,
+    },
+
+    porch_floors =
+    {
+      FLOOR6_2 = 50,
+    },
+
+  },
+
+  digi_ota_Cave =
   {
     env  = "cave",
     prob = 50,
@@ -473,11 +668,18 @@ end
 
 ------------------------------------------------------------------------
 
-OB_THEMES["genemp"] =
+OB_THEMES["prison"] =
 {
-  label = _("GenEmp Corp"),
+  label = _("Prison"),
   game = "hacx",
-  name_class = "GENEMP",
+  name_class = "PRISON",
   mixed_prob = 50
 }
 
+OB_THEMES["digi-ota"] =
+{
+  label = _("Digi-Ota"),
+  game = "hacx",
+  name_class = "DIGI_OTA",
+  mixed_prob = 50
+}

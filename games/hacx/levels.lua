@@ -25,7 +25,7 @@ HACX.EPISODES =
   {
     ep_index = 1,
 
-    theme = "genemp",
+    theme = "prison",
     sky_patch = "RSKY1",
     boss = "terminatrix",
     sky_light = 0.75,
@@ -36,7 +36,7 @@ HACX.EPISODES =
   {
     ep_index = 2,
 
-    theme = "genemp",
+    theme = "digi_ota",
     sky_patch = "RSKY2",
     boss = "thorn",
     sky_light = 0.75,
@@ -47,7 +47,7 @@ HACX.EPISODES =
   {
     ep_index = 3,
 
-    theme = "genemp",
+    theme = "prison",
     sky_patch = "RSKY3",
     boss = "mecha",
     sky_light = 0.75,
