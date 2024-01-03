@@ -5,6 +5,7 @@ PREFABS.Item_locker_bin =
 
   prob = 50,
   theme = "!hell",
+  env = "!cave",
 
   where = "point",
 
