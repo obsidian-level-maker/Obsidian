@@ -207,7 +207,7 @@ bool WAD_ReadData(int entry, int offset, int length, void *buffer) {
 
     raw_wad_lump_t *L = &wad_R_dir[entry];
 
-    if ((u32_t)offset + (u32_t)length > L->length) {  // EOF
+    if ((uint32_t)offset + (uint32_t)length > L->length) {  // EOF
         return false;
     }
 
@@ -332,7 +332,7 @@ void WAD_FinishLump(void) {
     int padding = ALIGN_LEN(len) - len;
 
     if (padding > 0) {
-        static u8_t zeros[4] = {0, 0, 0, 0};
+        static uint8_t zeros[4] = {0, 0, 0, 0};
 
         wad_W_fp.write(reinterpret_cast<const char *>(zeros), padding);
         wad_W_fp << std::flush;
@@ -523,7 +523,7 @@ bool WAD2_ReadData(int entry, int offset, int length, void *buffer) {
 
     raw_wad2_lump_t *L = &wad2_R_dir[entry];
 
-    if ((u32_t)offset + (u32_t)length > L->length) {  // EOF
+    if ((uint32_t)offset + (uint32_t)length > L->length) {  // EOF
         return false;
     }
 
@@ -542,7 +542,7 @@ bool WAD2_ReadData(int entry, int offset, int length, void *buffer) {
     return (res == 1);
 }
 
-static char LetterForType(u8_t type) {
+static char LetterForType(uint8_t type) {
     switch (type) {
         case TYP_NONE:
             return 'x';
@@ -645,7 +645,7 @@ void WAD2_NewLump(const char *name, int type) {
     strcpy(wad2_W_lump.name, name);
 
     wad2_W_lump.type = type;
-    wad2_W_lump.start = (u32_t)ftell(wad2_W_fp);
+    wad2_W_lump.start = (uint32_t)ftell(wad2_W_fp);
 }
 
 bool WAD2_AppendData(const void *data, int length) {
@@ -665,7 +665,7 @@ void WAD2_FinishLump(void) {
     int padding = ALIGN_LEN(len) - len;
 
     if (padding > 0) {
-        static u8_t zeros[4] = {0, 0, 0, 0};
+        static uint8_t zeros[4] = {0, 0, 0, 0};
 
         fwrite(zeros, padding, 1, wad2_W_fp);
     }

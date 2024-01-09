@@ -52,6 +52,7 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 #include <time.h>
 
 /* STL goodies */
@@ -67,7 +68,6 @@
 #include "sys_debug.h"
 #include "sys_endian.h"
 #include "sys_macro.h"
-#include "sys_type.h"
 
 #define HAVE_PHYSFS 1
 

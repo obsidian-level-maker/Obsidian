@@ -43,16 +43,16 @@ extern boolean ok_to_roll;  /* Stop breaking -seed...   */
 
 #ifdef ENDIAN_BIG
 unsigned int swap_32(unsigned int in) {
-	return ((in >> 24) & 0xff)  | /* hi byte (byte 1) becomes low byte */
+	return ((in >> 24) & 0xff)  | /* hi byte (byte 1) becomes low uint8_t */
 	       ((in >> 8) & 0xff00) | /* byte 2 becomes byte 3 */
                ((in & 0xff00) << 8) | /* byte 3 becomes byte 2 */
-	       ((in & 0xff) << 24)  ; /* low byte becomes hi byte */
+	       ((in & 0xff) << 24)  ; /* low byte becomes hi uint8_t */
 }
 int swap_32s(int in) {
-	return ((in >> 24) & 0xff)  | /* hi byte (byte 1) becomes low byte */
+	return ((in >> 24) & 0xff)  | /* hi byte (byte 1) becomes low uint8_t */
 	       ((in >> 8) & 0xff00) | /* byte 2 becomes byte 3 */
                ((in & 0xff00) << 8) | /* byte 3 becomes byte 2 */
-	       ((in & 0xff) << 24)  ; /* low byte becomes hi byte */
+	       ((in & 0xff) << 24)  ; /* low byte becomes hi uint8_t */
 }
 short swap_16(short in) {
 	return ((in >> 8) & 0xff) | 
@@ -159,7 +159,7 @@ void RegisterLmp(dumphandle dh,const char *s,unsigned int size)
 /* Given a dumphandle, a music header, a music buffer, a lump name, */
 /* and for some reason a config, do what's necessary to record it   */
 /* in the file and index and stuff. */
-void record_music(dumphandle dh,musheader *mh,byte *buf,const char *s,config *c)
+void record_music(dumphandle dh,musheader *mh,uint8_t *buf,const char *s,config *c)
 {
   unsigned int lsize;
 
@@ -443,7 +443,7 @@ void dump_texture_lmp(dumphandle dh,texture_lmp *tl)
   int lmpsize,isize,i;
   custom_texture *ct;
   patch *p;
-  byte *buf, *tbuf;
+  uint8_t *buf, *tbuf;
 
   /* First figure entire lmp size.  Four bytes of tcount... */
   lmpsize = 4;
@@ -456,7 +456,7 @@ void dump_texture_lmp(dumphandle dh,texture_lmp *tl)
   }
 
   /* Get storage for the lmp itself */
-  buf = (byte *)malloc(lmpsize);
+  buf = (uint8_t *)malloc(lmpsize);
   tbuf = buf;
 
   /* Write in the count */
@@ -751,7 +751,7 @@ void record_custom_flats(dumphandle dh, config *c, boolean even_unused)
 void record_custom_patches(dumphandle dh, config *c, boolean even_unused)
 {
   int rows, columns, i, j, lsize;
-  byte *p, thispel;
+  uint8_t *p, thispel;
   boolean started = SLUMP_FALSE;
 
 
@@ -947,7 +947,7 @@ void record_custom_patches(dumphandle dh, config *c, boolean even_unused)
 void make_music(dumphandle dh, config *c)
 {
   musheader mh;
-  byte *musbuf;
+  uint8_t *musbuf;
 
   /* Definitely a stub! */
   if (c->gamemask&DOOM1_BIT) {

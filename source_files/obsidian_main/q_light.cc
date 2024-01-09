@@ -187,7 +187,7 @@ void qLightmap_c::Fill(rgb_color_t value) {
     }
 }
 
-bool qLightmap_c::hasStyle(byte style) const {
+bool qLightmap_c::hasStyle(uint8_t style) const {
     if (style == 0) {
         return true;
     }
@@ -195,7 +195,7 @@ bool qLightmap_c::hasStyle(byte style) const {
     return (styles[1] == style) || (styles[2] == style) || (styles[3] == style);
 }
 
-bool qLightmap_c::AddStyle(byte style) {
+bool qLightmap_c::AddStyle(uint8_t style) {
     if (num_styles > 4) {
         return false;
     }
@@ -236,9 +236,9 @@ rgb_color_t qLightmap_c::CalcAverage() const {
     avg_g /= (float)(width * height);
     avg_b /= (float)(width * height);
 
-    byte new_r = CLAMP(0, I_ROUND(avg_r), 255);
-    byte new_g = CLAMP(0, I_ROUND(avg_g), 255);
-    byte new_b = CLAMP(0, I_ROUND(avg_b), 255);
+    uint8_t new_r = CLAMP(0, I_ROUND(avg_r), 255);
+    uint8_t new_g = CLAMP(0, I_ROUND(avg_g), 255);
+    uint8_t new_b = CLAMP(0, I_ROUND(avg_b), 255);
 
     return MAKE_RGBA(new_r, new_g, new_b, 255);
 }
@@ -272,12 +272,12 @@ void qLightmap_c::Write(qLump_c *lump) {
     for (int i = 0; i < total; i++) {
         const rgb_color_t col = samples[i];
 
-        byte r = RGB_RED(col);
-        byte g = RGB_GREEN(col);
-        byte b = RGB_BLUE(col);
+        uint8_t r = RGB_RED(col);
+        uint8_t g = RGB_GREEN(col);
+        uint8_t b = RGB_BLUE(col);
 
         if (q_mono_lighting) {
-            byte val = (r * 3 + g * 5 + b * 2) / 10;
+            uint8_t val = (r * 3 + g * 5 + b * 2) / 10;
 
             lump->Append(&val, 1);
         } else {
@@ -316,7 +316,7 @@ static qLightmap_c *QLIT_NewLightmap(int w, int h) {
 }
 
 static void WriteFlatBlock(int level, int count) {
-    byte datum = (byte)level;
+    uint8_t datum = (uint8_t)level;
 
     for (; count > 0; count--) {
         lightmap_lump->Append(&datum, 1);
@@ -620,9 +620,9 @@ void qLightmap_c::Store() {
                 b *= ity;
             }
 
-            byte r2 = r;
-            byte g2 = g;
-            byte b2 = b;
+            uint8_t r2 = r;
+            uint8_t g2 = g;
+            uint8_t b2 = b;
 
             *dest++ = MAKE_RGBA(r2, g2, b2, 0);
         }

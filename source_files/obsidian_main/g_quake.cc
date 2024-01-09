@@ -78,7 +78,7 @@ static std::map<std::string, int> q1_miptex_map;
 
 static int num_custom_tex = 0;
 
-s32_t Q1_AddMipTex(std::string name);
+int32_t Q1_AddMipTex(std::string name);
 
 static void Q1_ClearMipTex(void) {
     q1_miptexs.clear();
@@ -93,7 +93,7 @@ static void Q1_ClearMipTex(void) {
     num_custom_tex = 4;
 }
 
-s32_t Q1_AddMipTex(std::string name) {
+int32_t Q1_AddMipTex(std::string name) {
     if (q1_miptex_map.find(name) != q1_miptex_map.end()) {
         return q1_miptex_map[name];
     }
@@ -130,7 +130,7 @@ static void CreateDummyMip(qLump_c *lump, const char *name, int pix1,
 
     lump->Append(&mm_tex, sizeof(mm_tex));
 
-    std::array pixels = {(u8_t)pix1, (u8_t)pix2};
+    std::array pixels = {(uint8_t)pix1, (uint8_t)pix2};
 
     size = 64;
 
@@ -145,8 +145,8 @@ static void CreateDummyMip(qLump_c *lump, const char *name, int pix1,
     }
 }
 
-static void CreateLogoMip(qLump_c *lump, const char *name, const byte *data,
-                          const byte *colors) {
+static void CreateLogoMip(qLump_c *lump, const char *name, const uint8_t *data,
+                          const uint8_t *colors) {
     SYS_ASSERT(strlen(name) < 16);
 
     miptex_t mm_tex;
@@ -247,7 +247,7 @@ static void HL_WriteMipTex(qLump_c *lump) {
     // count
     int num_miptex = (int)q1_miptexs.size();
 
-    u32_t raw_count = LE_U32(num_miptex);
+    uint32_t raw_count = LE_U32(num_miptex);
 
     lump->Append(&raw_count, sizeof(raw_count));
 
@@ -255,7 +255,7 @@ static void HL_WriteMipTex(qLump_c *lump) {
     miptex_t raw_mip;
 
     for (int m = 0; m < num_miptex; m++) {
-        u32_t offset = 4 + 4 * num_miptex + m * sizeof(raw_mip);
+        uint32_t offset = 4 + 4 * num_miptex + m * sizeof(raw_mip);
 
         offset = LE_U32(offset);
 
@@ -292,15 +292,15 @@ static void Q1_WriteMipTex() {
         Main::FatalError("Missing wad file: %s\n", qk_texture_wad.c_str());
     }
 
-    u32_t num_miptex = q1_miptexs.size();
-    u32_t dir_size = 4 * num_miptex + 4;
+    uint32_t num_miptex = q1_miptexs.size();
+    uint32_t dir_size = 4 * num_miptex + 4;
 
     SYS_ASSERT(num_miptex > 0);
 
-    u32_t *offsets = new u32_t[num_miptex];
+    uint32_t *offsets = new uint32_t[num_miptex];
 
     for (unsigned int m = 0; m < num_miptex; m++) {
-        offsets[m] = dir_size + (u32_t)lump->GetSize();
+        offsets[m] = dir_size + (uint32_t)lump->GetSize();
         offsets[m] = LE_U32(offsets[m]);
 
         TransferOneMipTex(lump, m, q1_miptexs[m].c_str());
@@ -353,7 +353,7 @@ static void DummyMipTex(void)
         {
             mm_tex.offsets[i] = LE_U32(offset);
 
-            offset += (u32_t)(size * size);
+            offset += (uint32_t)(size * size);
 
             size = size / 2;
         }
@@ -361,7 +361,7 @@ static void DummyMipTex(void)
         lump->Append(&mm_tex, sizeof(mm_tex));
 
 
-        u8_t pixels[2];
+        uint8_t pixels[2];
 
         pixels[0] = (mt == 0) ? 210 : 4;
         pixels[1] = (mt == 0) ? 231 : 12;
@@ -399,7 +399,7 @@ static void Q1_ClearTexInfo(void) {
     }
 }
 
-u16_t Q1_AddTexInfo(std::string texture, int flags, float *s4, float *t4) {
+uint16_t Q1_AddTexInfo(std::string texture, int flags, float *s4, float *t4) {
     if (texture.empty()) {
         texture = "error";
     }
@@ -440,7 +440,7 @@ u16_t Q1_AddTexInfo(std::string texture, int flags, float *s4, float *t4) {
     }
 
     // not found, so add new one
-    u16_t new_index = q1_texinfos.size();
+    uint16_t new_index = q1_texinfos.size();
 
     q1_texinfos.push_back(raw_tex);
 
@@ -564,14 +564,14 @@ static void Q1_FreeStuff() {
 }
 
 static void Q1_WriteEdge(const quake_vertex_c &A, const quake_vertex_c &B) {
-    u16_t v1 = BSP_AddVertex(A.x, A.y, A.z);
-    u16_t v2 = BSP_AddVertex(B.x, B.y, B.z);
+    uint16_t v1 = BSP_AddVertex(A.x, A.y, A.z);
+    uint16_t v2 = BSP_AddVertex(B.x, B.y, B.z);
 
     if (v1 == v2) {
         Main::FatalError("INTERNAL ERROR: Q1 WriteEdge is zero length!\n");
     }
 
-    s32_t index = BSP_AddEdge(v1, v2);
+    int32_t index = BSP_AddEdge(v1, v2);
 
     // fix endianness
     index = LE_S32(index);
@@ -653,7 +653,7 @@ static void Q1_WriteMarkSurf(int index) {
     SYS_ASSERT(index >= 0);
 
     // fix endianness
-    u16_t raw_index = LE_U16(index);
+    uint16_t raw_index = LE_U16(index);
 
     q1_mark_surfs->Append(&raw_index, sizeof(raw_index));
 
@@ -761,15 +761,15 @@ static void Q1_WriteNode(quake_node_c *node) {
     raw_node.planenum = BSP_AddPlane(&node->plane, &flipped);
 
     if (node->front_N) {
-        raw_node.children[0] = (u16_t)node->front_N->index;
+        raw_node.children[0] = (uint16_t)node->front_N->index;
     } else {
-        raw_node.children[0] = (u16_t)(-1 - node->front_L->index);
+        raw_node.children[0] = (uint16_t)(-1 - node->front_L->index);
     }
 
     if (node->back_N) {
-        raw_node.children[1] = (u16_t)node->back_N->index;
+        raw_node.children[1] = (uint16_t)node->back_N->index;
     } else {
-        raw_node.children[1] = (u16_t)(-1 - node->back_L->index);
+        raw_node.children[1] = (uint16_t)(-1 - node->back_L->index);
     }
 
     if (flipped) {
@@ -856,10 +856,10 @@ typedef struct {
     std::array<float, 3> mins, maxs;
     std::array<float, 3> origin;
 
-    std::array<s32_t, H2_MAX_HULLS> headnode;
+    std::array<int32_t, H2_MAX_HULLS> headnode;
 
-    s32_t numleafs;
-    s32_t firstface, numfaces;
+    int32_t numleafs;
+    int32_t firstface, numfaces;
 } h2_dmodel_t;
 
 static void H2_WriteModel(quake_mapmodel_c *model) {
@@ -952,7 +952,7 @@ static void MapModel_TexCoord(float *scale, float *offset, double low,
     }
 }
 
-static void MapModel_Face(quake_mapmodel_c *model, int face, s16_t plane,
+static void MapModel_Face(quake_mapmodel_c *model, int face, int16_t plane,
                           bool flipped) {
     dface_t raw_face;
 

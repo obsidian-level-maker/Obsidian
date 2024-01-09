@@ -261,7 +261,7 @@ char *mem_gets(char *buf, int size, const char **str_ptr) {
 //------------------------------------------------------------------------
 
 /* Thomas Wang's 32-bit Mix function */
-u32_t IntHash(u32_t key) {
+uint32_t IntHash(uint32_t key) {
     key += ~(key << 15);
     key ^= (key >> 10);
     key += (key << 3);
@@ -272,17 +272,32 @@ u32_t IntHash(u32_t key) {
     return key;
 }
 
-u32_t StringHash(std::string str) {
-    u32_t hash = 0;
-    const char *pos = str.data();
+uint32_t StringHash(std::string str) {
+    uint32_t hash = 0;
 
     if (!str.empty()) {
-        while (pos) {
-            hash = (hash << 5) - hash + *pos++;
+        for (auto c : str) {
+            hash = (hash << 5) - hash + c;
         }
     }
 
     return hash;
+}
+
+uint64_t StringHash64(std::string str) {
+    uint32_t hash1 = 0;
+    uint32_t hash2 = 0;
+
+    if (!str.empty()) {
+        for (auto c : str) {
+            hash1 = (hash1 << 5) - hash1 + c;
+        }
+        for (size_t c = str.size()-1; c > 0; c--) {
+            hash2 = (hash2 << 5) - hash2 + str.at(c);
+        }
+    }
+
+    return (uint64_t)(((uint64_t)hash1 << 32) | hash2);
 }
 
 double PerpDist(double x, double y, double x1, double y1, double x2,
@@ -430,23 +445,23 @@ bool VectorSameDir(const double dx1, const double dy1, const double dx2,
 
 //------------------------------------------------------------------------
 
-u32_t TimeGetMillies() {
+uint32_t TimeGetMillies() {
     // Note: you *MUST* handle overflow (it *WILL* happen)
 
 #ifdef WIN32
 
-    return static_cast<u32_t>(GetTickCount());
+    return static_cast<uint32_t>(GetTickCount());
 
 #else  // UNIX or MacOSX
     struct timeval tm;
 
     gettimeofday(&tm, nullptr);
 
-    return static_cast<u32_t>((tm.tv_sec * 1000) + (tm.tv_usec / 1000));
+    return static_cast<uint32_t>((tm.tv_sec * 1000) + (tm.tv_usec / 1000));
 #endif
 }
 
-void TimeDelay(const u32_t millies) {
+void TimeDelay(const uint32_t millies) {
 #ifdef WIN32
     ::Sleep(millies);
 

@@ -44,18 +44,18 @@ tga_image_c::~tga_image_c() {
 }
 
 typedef struct {
-    u8_t id_length;
-    u8_t colormap_type;
-    u8_t image_type;
-    u16_t colormap_start;
-    u16_t colormap_length;
-    u8_t colormap_bits;
-    u16_t x_origin;
-    u16_t y_origin;
-    u16_t width;
-    u16_t height;
-    u8_t pixel_bits;
-    u8_t attributes;
+    uint8_t id_length;
+    uint8_t colormap_type;
+    uint8_t image_type;
+    uint16_t colormap_start;
+    uint16_t colormap_length;
+    uint8_t colormap_bits;
+    uint16_t x_origin;
+    uint16_t y_origin;
+    uint16_t width;
+    uint16_t height;
+    uint8_t pixel_bits;
+    uint8_t attributes;
 
 } targa_header_t;
 
@@ -75,14 +75,14 @@ tga_image_c *TGA_LoadImage(const char *path) {
 
     int length;
 
-    byte *buffer = VFS_LoadFile(path, &length);
+    uint8_t *buffer = VFS_LoadFile(path, &length);
 
     if (!buffer) {
         return NULL;
     }
 
-    byte *buf_p = buffer;
-    ///    byte * buf_end = buffer + length;
+    uint8_t *buf_p = buffer;
+    ///    uint8_t * buf_end = buffer + length;
 
     // decode the TGA header
 
@@ -159,10 +159,10 @@ tga_image_c *TGA_LoadImage(const char *path) {
         int cm_end = cm_start + targa_header.colormap_length;
 
         for (int n = cm_start; n < cm_end; n++) {
-            byte b = *buf_p++;
-            byte g = *buf_p++;
-            byte r = *buf_p++;
-            byte a = 255;
+            uint8_t b = *buf_p++;
+            uint8_t g = *buf_p++;
+            uint8_t r = *buf_p++;
+            uint8_t a = 255;
 
             if (targa_header.colormap_bits == 32) {
                 a = *buf_p++;
@@ -188,10 +188,10 @@ tga_image_c *TGA_LoadImage(const char *path) {
             p = dest + y * width;
 
             for (int x = 0; x < width; x++) {
-                byte b = *buf_p++;
-                byte g = *buf_p++;
-                byte r = *buf_p++;
-                byte a = 255;
+                uint8_t b = *buf_p++;
+                uint8_t g = *buf_p++;
+                uint8_t r = *buf_p++;
+                uint8_t a = 255;
 
                 if (targa_header.pixel_bits == 32) {
                     a = *buf_p++;
@@ -214,9 +214,9 @@ tga_image_c *TGA_LoadImage(const char *path) {
                 "Bad tga file: only 24 or 32 bit images supported\n");
         }
 
-        byte r = 0, g = 0, b = 0, a = 0;
+        uint8_t r = 0, g = 0, b = 0, a = 0;
 
-        byte packet_header, packet_size;
+        uint8_t packet_header, packet_size;
 
         for (int y = height - 1; y >= 0; y--) {
             p = dest + y * width;
@@ -308,7 +308,7 @@ tga_image_c *TGA_LoadImage(const char *path) {
 
                 *p++ = col;
 
-                byte a = RGB_ALPHA(col);
+                uint8_t a = RGB_ALPHA(col);
 
                 if (a == 0) {
                     is_masked = true;
@@ -320,7 +320,7 @@ tga_image_c *TGA_LoadImage(const char *path) {
     } else if (targa_header.image_type ==
                TGA_INDEXED_RLE)  // Runlength encoded colormapped image
     {
-        byte packet_header, packet_size;
+        uint8_t packet_header, packet_size;
 
         for (int y = height - 1; y >= 0; y--) {
             p = dest + y * width;
@@ -333,7 +333,7 @@ tga_image_c *TGA_LoadImage(const char *path) {
                 {
                     rgb_color_t col = palette[*buf_p++];
 
-                    byte a = RGB_ALPHA(col);
+                    uint8_t a = RGB_ALPHA(col);
 
                     if (a == 0) {
                         is_masked = true;
@@ -365,7 +365,7 @@ tga_image_c *TGA_LoadImage(const char *path) {
 
                         *p++ = col;
 
-                        byte a = RGB_ALPHA(col);
+                        uint8_t a = RGB_ALPHA(col);
 
                         if (a == 0) {
                             is_masked = true;

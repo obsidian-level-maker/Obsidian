@@ -26,8 +26,6 @@
 #include <filesystem>
 #include <vector>
 
-#include "sys_type.h"
-
 /* PAK reading */
 
 bool PAK_OpenRead(const char *filename);
@@ -57,8 +55,8 @@ void PAK_FinishLump(void);
 struct raw_pak_header_t {
     std::array<char, 4> magic;
 
-    u32_t dir_start;
-    u32_t entry_num;
+    uint32_t dir_start;
+    uint32_t entry_num;
 };
 #pragma pack(pop)
 
@@ -68,8 +66,8 @@ constexpr const char *PAK_MAGIC = "PACK";
 struct raw_pak_entry_t {
     std::array<char, 56> name;
 
-    u32_t offset;
-    u32_t length;
+    uint32_t offset;
+    uint32_t length;
 };
 #pragma pack(pop)
 

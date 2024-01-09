@@ -1182,7 +1182,7 @@ bool Wad_file::FinishLump(int final_size)
 
 int Wad_file::WritePadding(int count)
 {
-	static byte zeros[8] = { 0,0,0,0,0,0,0,0 };
+	static uint8_t zeros[8] = { 0,0,0,0,0,0,0,0 };
 
 	SYS_ASSERT(1 <= count && count <= 8);
 

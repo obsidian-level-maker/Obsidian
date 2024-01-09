@@ -19,7 +19,6 @@
 #ifndef __AJPOLY_MAP_H__
 #define __AJPOLY_MAP_H__
 
-#include "sys_type.h"
 #include "aj_poly.h"
 
 /* ----- OBJECTS --------------------------------- */

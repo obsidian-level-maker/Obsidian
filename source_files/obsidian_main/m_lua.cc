@@ -1233,8 +1233,8 @@ int gui_minimap_draw_line(lua_State *L) {
 
 #ifndef CONSOLE_ONLY
     if (main_win) {
-        main_win->build_box->mini_map->DrawLine(x1, y1, x2, y2, (u8_t)r,
-                                                (u8_t)g, (u8_t)b);
+        main_win->build_box->mini_map->DrawLine(x1, y1, x2, y2, (uint8_t)r,
+                                                (uint8_t)g, (uint8_t)b);
     }
 #endif
 
@@ -1258,8 +1258,8 @@ int gui_minimap_fill_box(lua_State *L) {
 
 #ifndef CONSOLE_ONLY
     if (main_win) {
-        main_win->build_box->mini_map->DrawBox(x1, y1, x2, y2, (u8_t)r, (u8_t)g,
-                                               (u8_t)b);
+        main_win->build_box->mini_map->DrawBox(x1, y1, x2, y2, (uint8_t)r, (uint8_t)g,
+                                               (uint8_t)b);
     }
 #endif
 

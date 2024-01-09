@@ -48,17 +48,17 @@ qLump_c::~qLump_c() {}
 
 int qLump_c::GetSize() const { return (int)buffer.size(); }
 
-const u8_t *qLump_c::GetBuffer() const {
+const uint8_t *qLump_c::GetBuffer() const {
     return buffer.empty() ? nullptr : &buffer[0];
 }
 
-void qLump_c::Append(const void *data, u32_t len) {
+void qLump_c::Append(const void *data, uint32_t len) {
     if (len == 0) {
         return;
     }
 
-    u32_t old_size = buffer.size();
-    u32_t new_size = old_size + len;
+    uint32_t old_size = buffer.size();
+    uint32_t new_size = old_size + len;
 
     buffer.resize(new_size);
 
@@ -71,13 +71,13 @@ void qLump_c::Append(qLump_c *other) {
     }
 }
 
-void qLump_c::Prepend(const void *data, u32_t len) {
+void qLump_c::Prepend(const void *data, uint32_t len) {
     if (len == 0) {
         return;
     }
 
-    u32_t old_size = buffer.size();
-    u32_t new_size = old_size + len;
+    uint32_t old_size = buffer.size();
+    uint32_t new_size = old_size + len;
 
     buffer.resize(new_size);
 
@@ -87,7 +87,7 @@ void qLump_c::Prepend(const void *data, u32_t len) {
     memcpy(&buffer[0], data, len);
 }
 
-void qLump_c::AddByte(byte value) { Append(&value, 1); }
+void qLump_c::AddByte(uint8_t value) { Append(&value, 1); }
 
 void qLump_c::RawPrintf(const char *str) {
     if (!crlf) {
@@ -164,7 +164,7 @@ static void BSP_ClearPlanes() {
 
 static void BSP_PreparePlanes() { BSP_ClearPlanes(); }
 
-static u16_t AddRawPlane(const dplane_t *plane, bool *was_new) {
+static uint16_t AddRawPlane(const dplane_t *plane, bool *was_new) {
     // copy it
     dplane_t raw_plane;
 
@@ -220,7 +220,7 @@ static u16_t AddRawPlane(const dplane_t *plane, bool *was_new) {
 
     // not found, so add new one...
 
-    u16_t new_index = bsp_planes.size();
+    uint16_t new_index = bsp_planes.size();
 
     bsp_planes.push_back(raw_plane);
 
@@ -229,11 +229,11 @@ static u16_t AddRawPlane(const dplane_t *plane, bool *was_new) {
 #if 0  // DEBUG
 fprintf(stderr, "ADDED PLANE #%d : %08x %08x %08x d:%08x tp:%08x\n",
 (int)new_index,
-*(u32_t *) &raw_plane.normal[0],
-*(u32_t *) &raw_plane.normal[1],
-*(u32_t *) &raw_plane.normal[2],
-*(u32_t *) &raw_plane.dist,
-(u32_t)     raw_plane.type);
+*(uint32_t *) &raw_plane.normal[0],
+*(uint32_t *) &raw_plane.normal[1],
+*(uint32_t *) &raw_plane.normal[2],
+*(uint32_t *) &raw_plane.dist,
+(uint32_t)     raw_plane.type);
 #endif
 
     *was_new = true;
@@ -241,7 +241,7 @@ fprintf(stderr, "ADDED PLANE #%d : %08x %08x %08x d:%08x tp:%08x\n",
     return new_index;
 }
 
-u16_t BSP_AddPlane(float x, float y, float z, float nx, float ny, float nz,
+uint16_t BSP_AddPlane(float x, float y, float z, float nx, float ny, float nz,
                    bool *flip_var) {
     // NOTE: flip_var is only needed for Quake 1 / Hexen 2
 
@@ -295,7 +295,7 @@ u16_t BSP_AddPlane(float x, float y, float z, float nx, float ny, float nz,
 
     bool was_new;
 
-    u16_t plane_idx = AddRawPlane(&raw_plane, &was_new);
+    uint16_t plane_idx = AddRawPlane(&raw_plane, &was_new);
 
     // Quake2 has pairs of planes (opposite directions)
 
@@ -316,7 +316,7 @@ u16_t BSP_AddPlane(float x, float y, float z, float nx, float ny, float nz,
     return plane_idx;
 }
 
-u16_t BSP_AddPlane(const quake_plane_c *P, bool *flip_var) {
+uint16_t BSP_AddPlane(const quake_plane_c *P, bool *flip_var) {
     // NOTE: flip_var is only needed for Quake 1 / Hexen 2
 
     return BSP_AddPlane(P->x, P->y, P->z, P->nx, P->ny, P->nz, flip_var);
@@ -362,7 +362,7 @@ static void BSP_PrepareVertices() {
     bsp_vertices.push_back(dummy);
 }
 
-u16_t BSP_AddVertex(float x, float y, float z) {
+uint16_t BSP_AddVertex(float x, float y, float z) {
     int hash = I_ROUND(x * 1.1);
 
     hash = hash & (VERTEX_HASH_SIZE - 1);
@@ -393,7 +393,7 @@ u16_t BSP_AddVertex(float x, float y, float z) {
 
     // not found, so add new one...
 
-    u16_t new_index = bsp_vertices.size();
+    uint16_t new_index = bsp_vertices.size();
 
     bsp_vertices.push_back(raw_vert);
 
@@ -402,7 +402,7 @@ u16_t BSP_AddVertex(float x, float y, float z) {
     return new_index;
 }
 
-u16_t BSP_AddVertex(const quake_vertex_c *V) {
+uint16_t BSP_AddVertex(const quake_vertex_c *V) {
     return BSP_AddVertex(V->x, V->y, V->z);
 }
 
@@ -423,7 +423,7 @@ void BSP_WriteVertices(int lump_num, int max_verts) {
 
 static std::vector<dedge_t> bsp_edges;
 
-static std::map<u32_t, s32_t> bsp_edge_map;
+static std::map<uint32_t, int32_t> bsp_edge_map;
 
 static void BSP_ClearEdges() {
     bsp_edges.clear();
@@ -440,7 +440,7 @@ static void BSP_PrepareEdges() {
     bsp_edges.push_back(dummy);
 }
 
-s32_t BSP_AddEdge(u16_t start, u16_t end) {
+int32_t BSP_AddEdge(uint16_t start, uint16_t end) {
     bool flipped = false;
 
     if (start > end) {
@@ -450,7 +450,7 @@ s32_t BSP_AddEdge(u16_t start, u16_t end) {
     }
 
     // find existing edge...
-    u32_t key = (u32_t)start + (u32_t)(end << 16);
+    uint32_t key = (uint32_t)start + (uint32_t)(end << 16);
 
     if (bsp_edge_map.find(key) != bsp_edge_map.end()) {
         return bsp_edge_map[key] * (flipped ? -1 : 1);
@@ -514,12 +514,12 @@ static void BSP_WriteLump(qLump_c *lump) {
     PAK_AppendData(lump->GetBuffer(), len);
 
     // pad lumps to a multiple of four bytes
-    u32_t padding = ALIGN_LEN(len) - len;
+    uint32_t padding = ALIGN_LEN(len) - len;
 
     SYS_ASSERT(0 <= padding && padding <= 3);
 
     if (padding > 0) {
-        static u8_t zeros[4] = {0, 0, 0, 0};
+        static uint8_t zeros[4] = {0, 0, 0, 0};
 
         PAK_AppendData(zeros, padding);
     }
@@ -562,14 +562,14 @@ bool BSP_OpenLevel(const char *entry_in_pak) {
 }
 
 static void BSP_WriteHeader() {
-    u32_t offset = 0;
+    uint32_t offset = 0;
 
     if (qk_game == 2) {
         PAK_AppendData(Q2_IDENT_MAGIC, 4);
         offset += 4;
     }
 
-    s32_t raw_version = LE_S32(bsp_version);
+    int32_t raw_version = LE_S32(bsp_version);
 
     PAK_AppendData(&raw_version, 4);
 
@@ -585,13 +585,13 @@ static void BSP_WriteHeader() {
             bsp_directory[i] = new qLump_c();
         }
 
-        u32_t length = bsp_directory[i]->GetSize();
+        uint32_t length = bsp_directory[i]->GetSize();
 
         raw_info.start = LE_U32(offset);
         raw_info.length = LE_U32(length);
 
         PAK_AppendData(&raw_info, sizeof(raw_info));
-        offset += (u32_t)ALIGN_LEN(length);
+        offset += (uint32_t)ALIGN_LEN(length);
     }
 }
 
@@ -684,7 +684,7 @@ void BSP_WriteEntities(int lump_num, const char *description) {
     }
 
     // add a trailing nul
-    u8_t zero = 0;
+    uint8_t zero = 0;
 
     lump->Append(&zero, 1);
 }
@@ -746,7 +746,7 @@ qLump_c *BSP_CreateInfoLump() {
     L->Printf("\n\n\n");
 
     // terminate lump with ^Z and a NUL character
-    static const byte terminator[2] = {26, 0};
+    static const uint8_t terminator[2] = {26, 0};
 
     L->Append(terminator, 2);
 

@@ -22,7 +22,6 @@
 #include <cstdio>
 #include <cstring>
 #include <vector>
-#include "sys_type.h"
 
 // directory entry
 
@@ -66,7 +65,7 @@ class wad_c {
     std::vector<lump_c *> lumps;
 
     // current data from ReadLump()
-    byte *data_block;
+    uint8_t *data_block;
     int data_len;
 
    public:
@@ -92,7 +91,7 @@ class wad_c {
     // the 'length' variable will be set to the lump's length.
     // when 'level' is >= 0, the lump is part of a particular level.
     // returns NULL if the lump cannot be found.
-    byte *ReadLump(const char *name, int *length, int level = -1);
+    uint8_t *ReadLump(const char *name, int *length, int level = -1);
 
    private:
     bool ReadDirectory();
@@ -100,7 +99,7 @@ class wad_c {
     void DetermineLevels();
 
     int FindLump(const char *name, int level = -1);
-    byte *AllocateData(int length);
+    uint8_t *AllocateData(int length);
     void FreeData();
 };
 

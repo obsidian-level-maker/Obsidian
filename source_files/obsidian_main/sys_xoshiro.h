@@ -4,9 +4,9 @@
 
 extern fastPRNG::fastXS64 xoshiro;
 
-void xoshiro_Reseed(unsigned long long newseed);
+void xoshiro_Reseed(uint64_t newseed);
 
-unsigned long long xoshiro_UInt();
+uint64_t xoshiro_UInt();
 
 double xoshiro_Double();
 

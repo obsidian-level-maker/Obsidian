@@ -59,7 +59,7 @@ static std::array<int, 5> q2_medium_table = {0 /* EMPTY */, CONTENTS_WATER,
 static std::vector<dbrush_t> q2_brushes;
 static std::vector<dbrushside_t> q2_brush_sides;
 
-static std::map<const csg_brush_c *, u16_t> brush_map;
+static std::map<const csg_brush_c *, uint16_t> brush_map;
 
 static void Q2_ClearBrushes() {
     q2_brushes.clear();
@@ -86,7 +86,7 @@ static void DoWriteBrush(dbrush_t &raw_brush) {
     q2_brushes.push_back(raw_brush);
 }
 
-static u16_t Q2_AddBrush(const csg_brush_c *A) {
+static uint16_t Q2_AddBrush(const csg_brush_c *A) {
     // find existing brush
     if (brush_map.find(A) != brush_map.end()) {
         return brush_map[A];
@@ -129,13 +129,13 @@ static u16_t Q2_AddBrush(const csg_brush_c *A) {
         raw_brush.numsides++;
     }
 
-    u16_t index = q2_brushes.size();
+    uint16_t index = q2_brushes.size();
 
     brush_map[A] = index;
 
     DoWriteBrush(raw_brush);
 
-    return (u16_t)index;
+    return (uint16_t)index;
 }
 
 static void Q2_WriteBrushes() {
@@ -167,7 +167,7 @@ static void Q2_ClearTexInfo(void) {
     }
 }
 
-u16_t Q2_AddTexInfo(std::string texture, int flags, int value, float *s4,
+uint16_t Q2_AddTexInfo(std::string texture, int flags, int value, float *s4,
                     float *t4) {
     if (!texture[0]) {
         texture = "error";
@@ -216,7 +216,7 @@ u16_t Q2_AddTexInfo(std::string texture, int flags, int value, float *s4,
     }
 
     // not found, so add new one
-    u16_t new_index = q2_texinfos.size();
+    uint16_t new_index = q2_texinfos.size();
 
     q2_texinfos.push_back(raw_tex);
 
@@ -352,14 +352,14 @@ static void Q2_FreeStuff() {
 }
 
 static void Q2_WriteEdge(const quake_vertex_c &A, const quake_vertex_c &B) {
-    u16_t v1 = BSP_AddVertex(A.x, A.y, A.z);
-    u16_t v2 = BSP_AddVertex(B.x, B.y, B.z);
+    uint16_t v1 = BSP_AddVertex(A.x, A.y, A.z);
+    uint16_t v2 = BSP_AddVertex(B.x, B.y, B.z);
 
     if (v1 == v2) {
         Main::FatalError("INTERNAL ERROR: Q2 WriteEdge is zero length!\n");
     }
 
-    s32_t index = BSP_AddEdge(v1, v2);
+    int32_t index = BSP_AddEdge(v1, v2);
 
     // fix endianness
     index = LE_S32(index);
@@ -370,7 +370,7 @@ static void Q2_WriteEdge(const quake_vertex_c &A, const quake_vertex_c &B) {
 }
 
 static void Q2_WriteLeafBrush(csg_brush_c *B) {
-    u16_t index = Q2_AddBrush(B);
+    uint16_t index = Q2_AddBrush(B);
 
     // fix endianness
     index = LE_U16(index);
@@ -454,7 +454,7 @@ static void Q2_WriteMarkSurf(int index) {
     SYS_ASSERT(index >= 0);
 
     // fix endianness
-    u16_t raw_index = LE_U16(index);
+    uint16_t raw_index = LE_U16(index);
 
     q2_mark_surfs->Append(&raw_index, sizeof(raw_index));
 
@@ -665,7 +665,7 @@ static void Q2_Model_Edge(float x1, float y1, float z1, float x2, float y2,
     Q2_WriteEdge(A, B);
 }
 
-static void Q2_Model_Face(quake_mapmodel_c *model, int face, s16_t plane,
+static void Q2_Model_Face(quake_mapmodel_c *model, int face, int16_t plane,
                           bool flipped) {
     dface_t raw_face;
 
@@ -843,7 +843,7 @@ static void Q2_Model_Nodes(quake_mapmodel_c *model, float *mins, float *maxs) {
     DoWriteLeaf(inner_leaf);
 
     // leaf brush reference
-    u16_t index = LE_U16(q2_brushes.size());
+    uint16_t index = LE_U16(q2_brushes.size());
 
     q2_leaf_brushes->Append(&index, sizeof(index));
 

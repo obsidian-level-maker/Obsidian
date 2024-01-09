@@ -2704,9 +2704,9 @@ sector *point_sector(level *l,int x, int y, int *dist, boolean *danger)
 /* Return a patch array followed by MUS-format pseudo-MIDI */
 /* for one piece of music, and fill in the given header */
 /* with the data it needs.  Return value is free()able. */
-byte *one_piece(musheader *pmh)
+uint8_t *one_piece(musheader *pmh)
 {
-  byte *answer;
+  uint8_t *answer;
   byte patch = roll(128);
 
   /* Now this is the very definition of "stub" */
@@ -2720,7 +2720,7 @@ byte *one_piece(musheader *pmh)
   pmh->patches = 1;
   pmh->headerlength = sizeof(musheader)+pmh->patches*sizeof(short);
   pmh->muslength = 16;
-  answer = (byte *)malloc( pmh->patches*sizeof(short)+pmh->muslength );
+  answer = (uint8_t *)malloc( pmh->patches*sizeof(short)+pmh->muslength );
   answer[0] = patch;  /* instrument */
   answer[1] = 0;
   answer[2] = 0x40;  /* Control change, channel zero */
@@ -2797,7 +2797,7 @@ void free_texture_lmp(texture_lmp *tl)
 }
 
 /* A primitive not-quite-random-field image-writing thing */
-void basic_background(byte *fbuf, byte bottom, int range)
+void basic_background(uint8_t *fbuf, byte bottom, int range)
 {
   int i,j;
   int above, below, left, right, total;
@@ -2825,7 +2825,7 @@ void basic_background(byte *fbuf, byte bottom, int range)
 }
 
 /* A primitive not-quite-random-field image-writing thing */
-void basic_background2(byte *fbuf, byte bottom, int range)
+void basic_background2(uint8_t *fbuf, byte bottom, int range)
 {
   int i,j;
   int above, below, left, right, total;
@@ -2871,7 +2871,7 @@ void basic_background2(byte *fbuf, byte bottom, int range)
 }
 
 /* A primitive not-quite-random-field image-writing thing */
-void basic_background3(byte *fbuf, byte bottom, int range)
+void basic_background3(uint8_t *fbuf, byte bottom, int range)
 {
   int i,j;
   int above, below, left, right, total;

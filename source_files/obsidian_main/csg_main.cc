@@ -91,7 +91,7 @@ int csg_property_set_c::getInt(std::string key, int def_val) const {
     return !str.empty() ? I_ROUND(StringToDouble(str)) : def_val;
 }
 
-void csg_property_set_c::getHexenArgs(u8_t *arg5) const {
+void csg_property_set_c::getHexenArgs(uint8_t *arg5) const {
     arg5[0] = getInt("arg1");
     arg5[1] = getInt("arg2");
     arg5[2] = getInt("arg3");

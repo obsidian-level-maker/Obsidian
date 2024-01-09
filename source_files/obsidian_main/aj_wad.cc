@@ -64,7 +64,7 @@ wad_c::~wad_c() {
     }
 }
 
-byte *wad_c::AllocateData(int length) {
+uint8_t *wad_c::AllocateData(int length) {
     if (data_block && length <= data_len) {
         return data_block;
     }
@@ -72,7 +72,7 @@ byte *wad_c::AllocateData(int length) {
     FreeData();
 
     data_len = length;
-    data_block = new byte[length + 1];
+    data_block = new uint8_t[length + 1];
 
     return data_block;
 }
@@ -292,7 +292,7 @@ int wad_c::FindLevel(const char *name) {
     return -1;  // NOT FOUND
 }
 
-byte *wad_c::ReadLump(const char *name, int *length, int level) {
+uint8_t *wad_c::ReadLump(const char *name, int *length, int level) {
     int index = FindLump(name, level);
 
     if (index < 0) {
@@ -310,7 +310,7 @@ byte *wad_c::ReadLump(const char *name, int *length, int level) {
         (*length) = L->length;
     }
 
-    byte *data = AllocateData(L->length);
+    uint8_t *data = AllocateData(L->length);
 
     if (L->length > 0) {
 #ifdef HAVE_PHYSFS

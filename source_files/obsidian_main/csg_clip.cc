@@ -1020,15 +1020,15 @@ static void WriteClipNodes(clip_node_c *node) {
     node->CheckValid();
 
     if (node->front->IsNode()) {
-        raw_clip.children[0] = (u16_t)node->front->index;
+        raw_clip.children[0] = (uint16_t)node->front->index;
     } else {
-        raw_clip.children[0] = (u16_t)node->front->contents;
+        raw_clip.children[0] = (uint16_t)node->front->contents;
     }
 
     if (node->back->IsNode()) {
-        raw_clip.children[1] = (u16_t)node->back->index;
+        raw_clip.children[1] = (uint16_t)node->back->index;
     } else {
-        raw_clip.children[1] = (u16_t)node->back->contents;
+        raw_clip.children[1] = (uint16_t)node->back->contents;
     }
 
     DoWriteClip(raw_clip, flipped);
@@ -1141,7 +1141,7 @@ static void Q1_ClipMapModel(quake_mapmodel_c *model, int hull, double pad_w,
             raw_clip.planenum = BSP_AddPlane(0, 0, v, 0, 0, dir, &flipped);
         }
 
-        raw_clip.children[0] = (u16_t)CONTENTS_EMPTY;
+        raw_clip.children[0] = (uint16_t)CONTENTS_EMPTY;
         raw_clip.children[1] = (face == 5) ? CONTENTS_SOLID : base + face + 1;
 
         DoWriteClip(raw_clip, flipped);

@@ -29,13 +29,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef Q2_STRUCTS_H_
 #define Q2_STRUCTS_H_
 
+#include "headers.h"
+
 /*
 ==============================================================================
   .BSP file format
 ==============================================================================
 */
-
-#include "sys_type.h"
 
 constexpr unsigned int IDBSPHEADER =
     'I' + ('B' << 8) + ('S' << 16) + ('P' << 24);
@@ -107,8 +107,8 @@ struct dmodel2_t {
     float mins[3], maxs[3];
     float origin[3];  // for sounds or lights
 
-    s32_t headnode;
-    s32_t firstface, numfaces;  // submodels just draw faces
+    int32_t headnode;
+    int32_t firstface, numfaces;  // submodels just draw faces
                                 // without walking the bsp tree
 };
 #pragma pack(pop)
@@ -162,14 +162,14 @@ constexpr unsigned int CONTENTS_LADDER = 0x20000000;
 
 #pragma pack(push, 1)
 struct dnode2_t {
-    s32_t planenum;
-    s32_t children[2];  // negative numbers are -(leafs+1), not nodes
+    int32_t planenum;
+    int32_t children[2];  // negative numbers are -(leafs+1), not nodes
 
-    s16_t mins[3];  // for frustom culling
-    s16_t maxs[3];
+    int16_t mins[3];  // for frustom culling
+    int16_t maxs[3];
 
-    u16_t firstface;
-    u16_t numfaces;  // counting both sides
+    uint16_t firstface;
+    uint16_t numfaces;  // counting both sides
 };
 #pragma pack(pop)
 
@@ -193,11 +193,11 @@ struct texinfo2_t {
     float s[4];  // x/y/z/offset
     float t[4];
 
-    u32_t flags;  // miptex flags + overrides
-    s32_t value;  // light emission, etc
+    uint32_t flags;  // miptex flags + overrides
+    int32_t value;  // light emission, etc
 
     char texture[32];  // texture name (textures/*.wal)
-    s32_t anim_next;   // for animations, -1 = end of chain
+    int32_t anim_next;   // for animations, -1 = end of chain
 };
 #pragma pack(pop)
 
@@ -207,35 +207,35 @@ struct texinfo2_t {
 
 #pragma pack(push, 1)
 struct dleaf2_t {
-    u32_t contents;  // OR of all brushes
+    uint32_t contents;  // OR of all brushes
 
-    s16_t cluster;
-    s16_t area;
+    int16_t cluster;
+    int16_t area;
 
-    s16_t mins[3];  // for frustum culling
-    s16_t maxs[3];
+    int16_t mins[3];  // for frustum culling
+    int16_t maxs[3];
 
-    u16_t first_leafface;
-    u16_t num_leaffaces;
+    uint16_t first_leafface;
+    uint16_t num_leaffaces;
 
-    u16_t first_leafbrush;
-    u16_t num_leafbrushes;
+    uint16_t first_leafbrush;
+    uint16_t num_leafbrushes;
 };
 #pragma pack(pop)
 
 #pragma pack(push, 1)
 struct dbrushside_t {
-    u16_t planenum;  // facing out of the leaf
-    s16_t texinfo;
+    uint16_t planenum;  // facing out of the leaf
+    int16_t texinfo;
 };
 #pragma pack(pop)
 
 #pragma pack(push, 1)
 struct dbrush_t {
-    s32_t firstside;
-    s32_t numsides;
+    int32_t firstside;
+    int32_t numsides;
 
-    u32_t contents;
+    uint32_t contents;
 };
 #pragma pack(pop)
 
@@ -244,15 +244,15 @@ constexpr int ANGLE_UP = -1;
 constexpr int ANGLE_DOWN = -2;
 
 // the visibility lump consists of a header with a count, then
-// byte offsets for the PVS and PHS of each cluster, then the raw
+// uint8_t offsets for the PVS and PHS of each cluster, then the raw
 // compressed bit vectors
 constexpr int DVIS_PVS = 0;
 constexpr int DVIS_PHS = 1;
 
 #pragma pack(push, 1)
 struct dvis_t {
-    s32_t numclusters;
-    s32_t offsets[1][2];  // [NUMCLUSTERS][2]
+    int32_t numclusters;
+    int32_t offsets[1][2];  // [NUMCLUSTERS][2]
 };
 #pragma pack(pop)
 
@@ -261,15 +261,15 @@ struct dvis_t {
 // hearable even if the vis info says that it could be.
 #pragma pack(push, 1)
 struct dareaportal_t {
-    s32_t portal_id;
-    s32_t otherarea;
+    int32_t portal_id;
+    int32_t otherarea;
 };
 #pragma pack(pop)
 
 #pragma pack(push, 1)
 struct darea_t {
-    s32_t num_portals;
-    s32_t first_portal;
+    int32_t num_portals;
+    int32_t first_portal;
 };
 #pragma pack(pop)
 

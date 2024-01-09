@@ -112,9 +112,9 @@ void NK_BeginLevel(const char *level_name) {
 void NK_EndLevel() {
     // write everything...
 
-    u16_t num_sectors = LE_U16(NK_NumSectors());
-    u16_t num_walls = LE_U16(NK_NumWalls());
-    u16_t num_sprites = LE_U16(NK_NumSprites());
+    uint16_t num_sectors = LE_U16(NK_NumSectors());
+    uint16_t num_walls = LE_U16(NK_NumWalls());
+    uint16_t num_sprites = LE_U16(NK_NumSprites());
 
     GRP_AppendData(&nk_header, (int)sizeof(nk_header));
 
@@ -256,16 +256,16 @@ class nukem_picture_c {
     int height;
     int anim;
 
-    byte *pixels;
+    uint8_t *pixels;
 
    public:
     nukem_picture_c(int _W, int _H) : width(_W), height(_H), anim(0) {
-        pixels = new byte[width * height];
+        pixels = new uint8_t[width * height];
     }
 
     ~nukem_picture_c() { delete[] pixels; }
 
-    byte &at(int x, int y) const { return pixels[y * width + x]; }
+    uint8_t &at(int x, int y) const { return pixels[y * width + x]; }
 
     void Clear() { memset(pixels, 0, width * height); }
 
@@ -340,12 +340,12 @@ int NK_grp_logo_gfx(lua_State *L) {
 
     nk_logos[index] = pic;
 
-    byte *pixels = pic->pixels;
-    byte *p_end = pixels + (logo->width * logo->height);
+    uint8_t *pixels = pic->pixels;
+    uint8_t *p_end = pixels + (logo->width * logo->height);
 
-    const byte *src = logo->data;
+    const uint8_t *src = logo->data;
 
-    for (byte *dest = pixels; dest < p_end; dest++, src++) {
+    for (uint8_t *dest = pixels; dest < p_end; dest++, src++) {
         int idx = ((*src) * map->size) >> 8;
 
         *dest = map->colors[idx];
@@ -377,17 +377,17 @@ void NK_WriteLogos() {
     GRP_AppendData(&header, sizeof(header));
 
     for (i = 0; i < MAX_LOGOS; i++) {
-        u16_t width = LE_U16(nk_logos[i]->width);
+        uint16_t width = LE_U16(nk_logos[i]->width);
         GRP_AppendData(&width, sizeof(width));
     }
 
     for (i = 0; i < MAX_LOGOS; i++) {
-        u16_t height = LE_U16(nk_logos[i]->height);
+        uint16_t height = LE_U16(nk_logos[i]->height);
         GRP_AppendData(&height, sizeof(height));
     }
 
     for (i = 0; i < MAX_LOGOS; i++) {
-        u32_t anim = LE_U32(nk_logos[i]->anim);
+        uint32_t anim = LE_U32(nk_logos[i]->anim);
         GRP_AppendData(&anim, sizeof(anim));
     }
 

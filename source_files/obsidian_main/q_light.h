@@ -27,7 +27,6 @@
 
 #include "lib_tga.h"  // for rgb_color_t
 #include "q_common.h"
-#include "sys_type.h"
 
 class quake_face_c;
 class uv_matrix_c;
@@ -44,7 +43,7 @@ class qLightmap_c {
     rgb_color_t *current_pos;
 
     // Q1 and Q2 only
-    std::array<byte, 4> styles;
+    std::array<uint8_t, 4> styles;
 
     // final offset in lightmap lump (if not flat)
     int offset;
@@ -58,10 +57,10 @@ class qLightmap_c {
 
     inline rgb_color_t &At(int s, int t) { return current_pos[t * width + s]; }
 
-    bool hasStyle(byte style) const;
+    bool hasStyle(uint8_t style) const;
 
     // returns false if too many styles
-    bool AddStyle(byte style);
+    bool AddStyle(uint8_t style);
 
     rgb_color_t CalcAverage() const;
 

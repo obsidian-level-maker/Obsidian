@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 3.12..3.20)
 
-include(cmake/CPM.cmake)
-
 add_subdirectory(source_files/ajbsp EXCLUDE_FROM_ALL)
 add_subdirectory(source_files/ajparse EXCLUDE_FROM_ALL)
 if(NOT CONSOLE_ONLY AND NOT HAIKU)
@@ -9,7 +7,6 @@ if(NOT CONSOLE_ONLY AND NOT HAIKU)
 endif()
 add_subdirectory(source_files/miniz EXCLUDE_FROM_ALL)
 add_subdirectory(source_files/physfs EXCLUDE_FROM_ALL)
-add_subdirectory(source_files/qsavetex EXCLUDE_FROM_ALL)
 add_subdirectory(source_files/slump EXCLUDE_FROM_ALL)
 
 project(
@@ -21,10 +18,6 @@ project(
 string(TIMESTAMP BUILD_TIMESTAMP "%Y.%m.%d" UTC)
 add_compile_definitions(OBSIDIAN_TIMESTAMP="${BUILD_TIMESTAMP}")
 
-if(NOT WIN32)
-  add_compile_definitions(OBSIDIAN_INSTALL_PREFIX="${CMAKE_INSTALL_PREFIX}")
-endif()
-
 if(CONSOLE_ONLY OR HAIKU)
   add_compile_definitions(CONSOLE_ONLY=1)
 endif()
@@ -32,16 +25,11 @@ endif()
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 if(MSVC)
-  if(OBSIDIAN_MSVC_DEBUG)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MDd /EHa")
-  else()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHa")
-  endif()
   # get the number of logical cores for parallel build
   cmake_host_system_information(RESULT LOGICAL_CORES QUERY NUMBER_OF_LOGICAL_CORES)
   math(EXPR COMPILE_CORES "${LOGICAL_CORES} - 1")
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP${COMPILE_CORES}")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP${COMPILE_CORES}")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHa /MP${COMPILE_CORES}")
   if(NOT CONSOLE_ONLY)
     set(CMAKE_EXE_LINKER_FLAGS "/SUBSYSTEM:WINDOWS")
   endif()
@@ -59,22 +47,6 @@ endif()
 if(${CMAKE_SYSTEM} MATCHES "OpenBSD")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -I /usr/X11R6/include")
 endif()
-
-if(OBSIDIAN_TIDY)
-  set(CMAKE_CXX_CLANG_TIDY clang-tidy)
-  file(GLOB ALL_SOURCES "source_files/obsidian_main/*.cc"
-       "source_files/obsidian_main/*.h"
-  )
-  add_custom_target(
-    clang-tidy COMMAND "${CMAKE_CXX_CLANG_TIDY}" -p "${CMAKE_BINARY_DIR}"
-                       ${ALL_SOURCES}
-  )
-endif()
-
-# cpmaddpackage( NAME Format.cmake VERSION 1.7.0 GITHUB_REPOSITORY
-# TheLartians/Format.cmake OPTIONS set to "yes" to skip CMake formatting
-# "FORMAT_SKIP_CMAKE NO" path to exclude from formatting (optional + regex)
-# "CMAKE_FORMAT_EXCLUDE cmake/CPM.cmake" )
 
 if(NOT CONSOLE_ONLY AND NOT HAIKU)
   add_executable(
@@ -198,30 +170,6 @@ target_include_directories(obsidian SYSTEM PRIVATE source_files/miniz)
 target_include_directories(obsidian SYSTEM PRIVATE source_files/physfs/src)
 target_include_directories(obsidian SYSTEM PRIVATE source_files/slump)
 
-if(MINGW
-   OR WIN32
-   OR MSYS
-)
-  target_compile_definitions(obsidian PRIVATE WIN32)
-  target_compile_definitions(obsidian PRIVATE NOMINMAX)
-  target_compile_definitions(obsidian PRIVATE _CRT_SECURE_NO_WARNINGS)
-else()
-  target_compile_definitions(obsidian PRIVATE UNIX)
-endif()
-
-if(OBSIDIAN_SANITIZE)
-  target_compile_options(obsidian PRIVATE -fsanitize=address,undefined)
-  target_link_options(obsidian PRIVATE -fsanitize=address,undefined)
-endif()
-
-if(OBSIDIAN_WARNINGS)
-  if(MSVC)
-    target_compile_options(obsidian PRIVATE -W4 -WX)
-  else()
-    target_compile_options(obsidian PRIVATE -Wall -Wextra -Wpedantic -Werror)
-  endif()
-endif()
-
 if(UNIX)
   if(NOT CONSOLE_ONLY
      AND NOT HAIKU
@@ -237,11 +185,7 @@ add_custom_command(
   POST_BUILD
   COMMAND "${CMAKE_COMMAND}" -E copy "$<TARGET_FILE:obsidian>"
           "${CMAKE_CURRENT_LIST_DIR}"
-  COMMAND "${CMAKE_COMMAND}" -E copy "$<TARGET_FILE:qsavetex>"
-          "${CMAKE_CURRENT_LIST_DIR}/tools"
 )
-
-add_dependencies(obsidian qsavetex)
 
 if(UNIX)
   if(APPLE)
@@ -341,33 +285,3 @@ else()
     )
   endif()
 endif()
-
-if(OBSIDIAN_INSTALL_STANDARD_LOCATION)
-  set(INSTALL_BASEDIR "${CMAKE_INSTALL_PREFIX}/share/obsidian")
-  install(FILES misc/obsidian.desktop
-          DESTINATION "${CMAKE_INSTALL_PREFIX}/share/applications"
-  )
-else()
-  set(INSTALL_BASEDIR "${CMAKE_INSTALL_PREFIX}")
-endif()
-
-install(TARGETS obsidian RUNTIME DESTINATION ${INSTALL_BASEDIR}
-                                 CONFIGURATIONS Release
-)
-install(TARGETS qsavetex RUNTIME DESTINATION ${INSTALL_BASEDIR}/tools
-                                 CONFIGURATIONS Release
-)
-install(
-  DIRECTORY addons
-            data
-            engines
-            games
-            language
-            modules
-            ports
-            scripts
-            theme
-            tools
-  DESTINATION ${INSTALL_BASEDIR}
-  CONFIGURATIONS Release
-)

@@ -25,7 +25,6 @@
 #include <string>
 #include <string_view>
 #include <codecvt>
-#include "sys_type.h"
 
 /* string utilities */
 
@@ -141,13 +140,14 @@ extern std::u32string StringToUTF32(const std::string& s);
 
 /* time utilities */
 
-u32_t TimeGetMillies();
-void TimeDelay(u32_t millies);
+uint32_t TimeGetMillies();
+void TimeDelay(uint32_t millies);
 
 /* math utilities */
 
-u32_t IntHash(u32_t key);
-u32_t StringHash(std::string str);
+uint32_t IntHash(uint32_t key);
+uint32_t StringHash(std::string str);
+uint64_t StringHash64(std::string str);
 
 #define ALIGN_LEN(x) (((x) + 3) & ~3)
 

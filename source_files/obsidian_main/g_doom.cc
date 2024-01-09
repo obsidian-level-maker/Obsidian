@@ -116,7 +116,7 @@ static const char *section_markers[NUM_SECTIONS][2] = {
 
 // Empty script numbers matching Korax requirements to prevent errors being
 // thrown
-std::array<byte, 128> empty_korax_behavior = {
+std::array<uint8_t, 128> empty_korax_behavior = {
     0x41, 0x43, 0x53, 0x00, 0x24, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00,
     0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00,
     0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00,
@@ -254,7 +254,7 @@ bool BuildNodes(std::filesystem::path filename) {
 //------------------------------------------------------------------------
 
 namespace Doom {
-void WriteLump(std::string name, const void *data, u32_t len) {
+void WriteLump(std::string name, const void *data, uint32_t len) {
     SYS_ASSERT(name.size() <= 8);
 
     WAD_NewLump(name);
@@ -368,7 +368,7 @@ bool Doom::StartWAD(std::filesystem::path filename) {
 
     qLump_c *info = BSP_CreateInfoLump();
     if (game_object->file_per_map) {
-        ZIPF_AddMem("OBSIDATA.txt", const_cast<byte *>(info->GetBuffer()), info->GetSize());
+        ZIPF_AddMem("OBSIDATA.txt", const_cast<uint8_t *>(info->GetBuffer()), info->GetSize());
     } else {
         WriteLump("OBSIDATA", info);
     }
@@ -443,7 +443,7 @@ int Doom::v094_begin_level(lua_State *L) {
 void Doom::EndLevel(std::string level_name) {
     // terminate header lump with trailing NUL
     if (header_lump->GetSize() > 0) {
-        const byte nuls[4] = {0, 0, 0, 0};
+        const uint8_t nuls[4] = {0, 0, 0, 0};
         header_lump->Append(nuls, 1);
     }
 
@@ -631,7 +631,7 @@ int Doom::v094_add_sidedef(lua_State *L) {
 }
 
 void Doom::AddLinedef(int vert1, int vert2, int side1, int side2, int type,
-                      int flags, int tag, const byte *args) {
+                      int flags, int tag, const uint8_t *args) {
     if (sub_format != SUBFMT_Hexen) {
         if (not UDMF_mode) {
             raw_linedef_t line;
@@ -791,7 +791,7 @@ void Doom::AddLinedef(int vert1, int vert2, int side1, int side2, int type,
     }
 }
 
-int v094_grab_args(lua_State *L, byte *args, int stack_pos) {
+int v094_grab_args(lua_State *L, uint8_t *args, int stack_pos) {
 
     int what = lua_type(L, stack_pos);
 
@@ -825,7 +825,7 @@ int Doom::v094_add_linedef(lua_State *L) {
     int type = luaL_checkinteger(L, 5);
     int flags = luaL_checkinteger(L, 6);
     int tag = luaL_checkinteger(L, 7);
-    byte *args = new byte[5];
+    uint8_t *args = new uint8_t[5];
     v094_grab_args(L, args, 8);
     AddLinedef(vert1, vert2, side1, side2, type, flags, tag, args);
     delete[] args;
@@ -833,7 +833,7 @@ int Doom::v094_add_linedef(lua_State *L) {
 }
 
 void Doom::AddThing(int x, int y, int h, int type, int angle, int options,
-                    int tid, byte special, const byte *args) {
+                    int tid, uint8_t special, const uint8_t *args) {
     if (dm_offset_map) {
         x += 32;
         y += 32;
@@ -995,8 +995,8 @@ int Doom::v094_add_thing(lua_State *L) {
     int angle = luaL_checkinteger(L, 5);
     int options = luaL_checkinteger(L, 6);
     int tid = luaL_checkinteger(L, 7);
-    byte special = luaL_checkinteger(L, 8);
-    byte *args = new byte[5];
+    uint8_t special = luaL_checkinteger(L, 8);
+    uint8_t *args = new uint8_t[5];
     v094_grab_args(L, args, 9);
     AddThing(x, y, h, type, angle, options, tid, special, args);
     delete[] args;

@@ -22,7 +22,7 @@
 #ifndef G_NUKEM_H_
 #define G_NUKEM_H_
 
-#include "sys_type.h"
+#include "headers.h"
 
 void NK_AddSector(int first_wall, int num_wall, int visibility, int f_h,
                   int f_pic, int c_h, int c_pic, int c_flags, int lo_tag = 0,
@@ -43,14 +43,14 @@ int NK_NumSprites();
 
 #pragma pack(push, 1)
 struct raw_nukem_map_t {
-    u32_t version;
+    uint32_t version;
 
-    s32_t pos_x;
-    s32_t pos_y;
-    s32_t pos_z;
+    int32_t pos_x;
+    int32_t pos_y;
+    int32_t pos_z;
 
-    u16_t angle;
-    u16_t sector;
+    uint16_t angle;
+    uint16_t sector;
 };
 #pragma pack(pop)
 
@@ -58,37 +58,37 @@ struct raw_nukem_map_t {
 
 #pragma pack(push, 1)
 struct raw_nukem_sector_t {
-    u16_t wall_ptr;
-    u16_t wall_num;
+    uint16_t wall_ptr;
+    uint16_t wall_num;
 
-    s32_t ceil_h;
-    s32_t floor_h;
+    int32_t ceil_h;
+    int32_t floor_h;
 
-    u16_t ceil_flags;
-    u16_t floor_flags;
+    uint16_t ceil_flags;
+    uint16_t floor_flags;
 
-    u16_t ceil_pic;
-    s16_t ceil_slope;
+    uint16_t ceil_pic;
+    int16_t ceil_slope;
 
-    s8_t ceil_shade;
-    u8_t ceil_palette;
-    u8_t ceil_xpan;
-    u8_t ceil_ypan;
+    int8_t ceil_shade;
+    uint8_t ceil_palette;
+    uint8_t ceil_xpan;
+    uint8_t ceil_ypan;
 
-    u16_t floor_pic;
-    s16_t floor_slope;
+    uint16_t floor_pic;
+    int16_t floor_slope;
 
-    s8_t floor_shade;
-    u8_t floor_palette;
-    u8_t floor_xpan;
-    u8_t floor_ypan;
+    int8_t floor_shade;
+    uint8_t floor_palette;
+    uint8_t floor_xpan;
+    uint8_t floor_ypan;
 
-    u8_t visibility;
-    u8_t _pad;
+    uint8_t visibility;
+    uint8_t _pad;
 
-    u16_t lo_tag;
-    u16_t hi_tag;
-    u16_t extra;
+    uint16_t lo_tag;
+    uint16_t hi_tag;
+    uint16_t extra;
 };
 #pragma pack(pop)
 
@@ -102,25 +102,25 @@ constexpr unsigned int SECTOR_F_RELATIVE = 1 << 6;
 
 #pragma pack(push, 1)
 struct raw_nukem_wall_t {
-    s32_t x, y;
+    int32_t x, y;
 
-    u16_t right_wall;
-    u16_t back_wall;
-    u16_t back_sec;
+    uint16_t right_wall;
+    uint16_t back_wall;
+    uint16_t back_sec;
 
-    u16_t flags;
+    uint16_t flags;
 
-    u16_t pic;
-    u16_t mask_pic;
+    uint16_t pic;
+    uint16_t mask_pic;
 
-    s8_t shade;
-    u8_t palette;
+    int8_t shade;
+    uint8_t palette;
 
-    u8_t xscale, yscale;
-    u8_t xpan, ypan;
+    uint8_t xscale, yscale;
+    uint8_t xpan, ypan;
 
-    u16_t lo_tag, hi_tag;
-    u16_t extra;
+    uint16_t lo_tag, hi_tag;
+    uint16_t extra;
 };
 #pragma pack(pop)
 
@@ -140,27 +140,27 @@ constexpr unsigned int WALL_F_TRANS66 = 1 << 9;
 
 #pragma pack(push, 1)
 struct raw_nukem_sprite_t {
-    s32_t x, y, z;
+    int32_t x, y, z;
 
-    u16_t flags;
-    u16_t pic;
+    uint16_t flags;
+    uint16_t pic;
 
-    s8_t shade;
-    u8_t palette;
-    u8_t clip_dist;
-    u8_t _pad;
+    int8_t shade;
+    uint8_t palette;
+    uint8_t clip_dist;
+    uint8_t _pad;
 
-    u8_t xscale, yscale;
-    s8_t xoffset, yoffset;
+    uint8_t xscale, yscale;
+    int8_t xoffset, yoffset;
 
-    u16_t sector;
-    u16_t status;
-    u16_t angle;
+    uint16_t sector;
+    uint16_t status;
+    uint16_t angle;
 
-    u16_t owner;
-    u16_t xvel, yvel, zvel;
-    u16_t lo_tag, hi_tag;
-    u16_t extra;
+    uint16_t owner;
+    uint16_t xvel, yvel, zvel;
+    uint16_t lo_tag, hi_tag;
+    uint16_t extra;
 };
 #pragma pack(pop)
 
@@ -182,15 +182,15 @@ struct raw_nukem_sprite_t {
 
 #pragma pack(push, 1)
 struct raw_art_header_t {
-    u32_t version;
+    uint32_t version;
 
-    u32_t num_pics;
-    u32_t first_pic;
-    u32_t last_pic;
+    uint32_t num_pics;
+    uint32_t first_pic;
+    uint32_t last_pic;
 
-    // s16_t width[NUM_PICS];
-    // s16_t height[NUM_PICS];
-    // s32_t anim[NUM_PICS];
+    // int16_t width[NUM_PICS];
+    // int16_t height[NUM_PICS];
+    // int32_t anim[NUM_PICS];
 
     // block_of_pixels_t pics[NUM_PICS];
 };

@@ -28,21 +28,21 @@
 #include "sys_xoshiro.h"
 #include "tx_forge.h"
 
-byte *SKY_GenGradient(int W, int H, std::vector<byte> &colors) {
+uint8_t *SKY_GenGradient(int W, int H, std::vector<uint8_t> &colors) {
     int numcol = (int)colors.size();
 
     SYS_ASSERT(numcol > 0);
 
-    byte *pixels = new byte[W * H];
+    uint8_t *pixels = new uint8_t[W * H];
 
     for (int y = 0; y < H; y++) {
         // we assume that (in general) top is light, bottom is dark
         int idx = (H - 1 - y) * numcol / H;
 
-        byte color = colors[idx];
+        uint8_t color = colors[idx];
 
-        byte *dest = &pixels[y * W];
-        byte *d_end = dest + W;
+        uint8_t *dest = &pixels[y * W];
+        uint8_t *d_end = dest + W;
 
         while (dest < d_end) {
             *dest++ = color;
@@ -52,7 +52,7 @@ byte *SKY_GenGradient(int W, int H, std::vector<byte> &colors) {
     return pixels;
 }
 
-void SKY_AddClouds(unsigned long long seed, byte *pixels, int W, int H,
+void SKY_AddClouds(unsigned long long seed, uint8_t *pixels, int W, int H,
                    color_mapping_t *map, double powscale, double thresh,
                    double fracdim, double squish) {
     // SYS_ASSERT(is_power_of_two(W))
@@ -72,8 +72,8 @@ void SKY_AddClouds(unsigned long long seed, byte *pixels, int W, int H,
 
         const float *src = &synth[sy * W];
 
-        byte *dest = &pixels[y * W];
-        byte *d_end = dest + W;
+        uint8_t *dest = &pixels[y * W];
+        uint8_t *d_end = dest + W;
 
         while (dest < d_end) {
             float v = *src++;
@@ -95,15 +95,15 @@ void SKY_AddClouds(unsigned long long seed, byte *pixels, int W, int H,
     delete[] synth;
 }
 
-void SKY_AddStars(unsigned long long seed, byte *pixels, int W, int H,
+void SKY_AddStars(unsigned long long seed, uint8_t *pixels, int W, int H,
                   color_mapping_t *map, double powscale, double thresh) {
     SYS_ASSERT(map->size >= 1);
     SYS_ASSERT(powscale > 0);
     SYS_ASSERT(thresh < 0.99);
 
     for (int y = 0; y < H; y++) {
-        byte *dest = &pixels[y * W];
-        byte *d_end = dest + W;
+        uint8_t *dest = &pixels[y * W];
+        uint8_t *d_end = dest + W;
 
         while (dest < d_end) {
             double v = xoshiro_Double();
@@ -127,7 +127,7 @@ void SKY_AddStars(unsigned long long seed, byte *pixels, int W, int H,
     }
 }
 
-void SKY_AddHills(unsigned long long seed, byte *pixels, int W, int H,
+void SKY_AddHills(unsigned long long seed, uint8_t *pixels, int W, int H,
                   color_mapping_t *map, double min_h, double max_h,
                   double powscale, double fracdim) {
     SYS_ASSERT(map->size >= 2);
@@ -218,7 +218,7 @@ void SKY_AddHills(unsigned long long seed, byte *pixels, int W, int H,
             int col_idx = (int)(ity * map->size);
             col_idx = CLAMP(0, col_idx, map->size - 1);
 
-            byte col = map->colors[col_idx];
+            uint8_t col = map->colors[col_idx];
 
             for (int y = high_span; y < span; y++) {
                 pixels[(H - 1 - y) * W + x] = col;
@@ -231,8 +231,8 @@ void SKY_AddHills(unsigned long long seed, byte *pixels, int W, int H,
     delete[] height_map;
 }
 
-void SKY_AddBuilding(unsigned long long seed, byte *pixels, int W, int H,
-                     std::vector<byte> &colors, int pos_x, int width,
+void SKY_AddBuilding(unsigned long long seed, uint8_t *pixels, int W, int H,
+                     std::vector<uint8_t> &colors, int pos_x, int width,
                      int base_h, int top_h, int win_prob, int win_w, int win_h,
                      int antenna) {
     int numcol = (int)colors.size();
@@ -245,7 +245,7 @@ void SKY_AddBuilding(unsigned long long seed, byte *pixels, int W, int H,
     int win_x;
     int win_y = 1 + win_h;
 
-    byte bg = colors[0];
+    uint8_t bg = colors[0];
 
     for (y = 0; y < base_h + top_h; y++) {
         if (y >= H) {
@@ -267,7 +267,7 @@ void SKY_AddBuilding(unsigned long long seed, byte *pixels, int W, int H,
         // Windows
         if (y == win_y && y < base_h + top_h - 2) {
             for (win_x = x1 + 2; win_x + win_w <= x2 - 2; win_x += win_w + 1) {
-                byte fg = colors[1];
+                uint8_t fg = colors[1];
 
                 if (((int)xoshiro_UInt() & 0xFFFF) > win_prob) {
                     fg = (numcol >= 3) ? colors[2] : bg;

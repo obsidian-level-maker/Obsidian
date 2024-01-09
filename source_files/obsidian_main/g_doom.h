@@ -24,7 +24,6 @@
 
 #include <filesystem>
 #include <array>
-#include "sys_type.h"
 #include "m_lua.h"
 
 class qLump_c;
@@ -67,10 +66,10 @@ void AddSidedef(int sector, std::string l_tex, std::string m_tex,
                 std::string u_tex, int x_offset, int y_offset);
 
 void AddLinedef(int vert1, int vert2, int side1, int side2, int type, int flags,
-                int tag, const byte *args);
+                int tag, const uint8_t *args);
 
 void AddThing(int x, int y, int h, int type, int angle, int options, int tid,
-              byte special, const byte *args);
+              uint8_t special, const uint8_t *args);
 
 // v094 stuff (Duh)
 int v094_begin_level(lua_State *L);
@@ -93,19 +92,19 @@ void Send_Prog_Nodes(int progress, int num_maps);
 
 #pragma pack(push, 1)
 struct raw_vertex_t {
-    s16_t x, y;
+    int16_t x, y;
 };
 #pragma pack(pop)
 
 #pragma pack(push, 1)
 struct raw_linedef_t {
-    u16_t start;     // from this vertex...
-    u16_t end;       // ... to this vertex
-    u16_t flags;     // linedef flags (impassible, etc)
-    u16_t type;      // linedef type (0 for none, 97 for teleporter, etc)
-    u16_t tag;       // this linedef activates the sector with same tag
-    u16_t sidedef1;  // right sidedef
-    u16_t sidedef2;  // left sidedef (only if this line adjoins 2 sectors)
+    uint16_t start;     // from this vertex...
+    uint16_t end;       // ... to this vertex
+    uint16_t flags;     // linedef flags (impassible, etc)
+    uint16_t type;      // linedef type (0 for none, 97 for teleporter, etc)
+    uint16_t tag;       // this linedef activates the sector with same tag
+    uint16_t sidedef1;  // right sidedef
+    uint16_t sidedef2;  // left sidedef (only if this line adjoins 2 sectors)
 };
 #pragma pack(pop)
 
@@ -120,49 +119,49 @@ enum lineflag_e {
 
 #pragma pack(push, 1)
 struct raw_hexen_linedef_t {
-    u16_t start;               // from this vertex...
-    u16_t end;                 // ... to this vertex
-    u16_t flags;               // linedef flags (impassible, etc)
-    u8_t special;              // special type
-    std::array<u8_t, 5> args;  // special arguments
-    u16_t sidedef1;            // right sidedef
-    u16_t sidedef2;            // left sidedef
+    uint16_t start;               // from this vertex...
+    uint16_t end;                 // ... to this vertex
+    uint16_t flags;               // linedef flags (impassible, etc)
+    uint8_t special;              // special type
+    std::array<uint8_t, 5> args;  // special arguments
+    uint16_t sidedef1;            // right sidedef
+    uint16_t sidedef2;            // left sidedef
 };
 #pragma pack(pop)
 
 #pragma pack(push, 1)
 struct raw_sidedef_t {
-    s16_t x_offset;  // X offset for texture
-    s16_t y_offset;  // Y offset for texture
+    int16_t x_offset;  // X offset for texture
+    int16_t y_offset;  // Y offset for texture
 
     std::array<char, 8> upper_tex;  // texture name for the part above
     std::array<char, 8> lower_tex;  // texture name for the part below
     std::array<char, 8> mid_tex;    // texture name for the regular part
 
-    u16_t sector;  // adjacent sector
+    uint16_t sector;  // adjacent sector
 };
 #pragma pack(pop)
 
 #pragma pack(push, 1)
 struct raw_sector_t {
-    s16_t floor_h;  // floor height
-    s16_t ceil_h;   // ceiling height
+    int16_t floor_h;  // floor height
+    int16_t ceil_h;   // ceiling height
 
     std::array<char, 8> floor_tex;  // floor texture
     std::array<char, 8> ceil_tex;   // ceiling texture
 
-    u16_t light;    // light level (0-255)
-    u16_t special;  // special behaviour (0 = normal, 9 = secret, ...)
-    s16_t tag;      // sector activated by a linedef with same tag
+    uint16_t light;    // light level (0-255)
+    uint16_t special;  // special behaviour (0 = normal, 9 = secret, ...)
+    int16_t tag;      // sector activated by a linedef with same tag
 };
 #pragma pack(pop)
 
 #pragma pack(push, 1)
 struct raw_thing_t {
-    s16_t x, y;     // position of thing
-    s16_t angle;    // angle thing faces (degrees)
-    u16_t type;     // type of thing
-    u16_t options;  // when appears, deaf, etc..
+    int16_t x, y;     // position of thing
+    int16_t angle;    // angle thing faces (degrees)
+    uint16_t type;     // type of thing
+    uint16_t options;  // when appears, deaf, etc..
 };
 #pragma pack(pop)
 
@@ -186,15 +185,15 @@ constexpr unsigned int MTF_EDGE_EXFLOOR_SHIFT = 10;
 
 #pragma pack(push, 1)
 struct raw_hexen_thing_t {
-    s16_t tid;      // thing tag id (for scripts/specials)
-    s16_t x, y;     // position
-    s16_t height;   // start height above floor
-    s16_t angle;    // angle thing faces
-    u16_t type;     // type of thing
-    u16_t options;  // when appears, deaf, dormant, etc..
+    int16_t tid;      // thing tag id (for scripts/specials)
+    int16_t x, y;     // position
+    int16_t height;   // start height above floor
+    int16_t angle;    // angle thing faces
+    uint16_t type;     // type of thing
+    uint16_t options;  // when appears, deaf, dormant, etc..
 
-    u8_t special;              // special type
-    std::array<u8_t, 5> args;  // special arguments
+    uint8_t special;              // special type
+    std::array<uint8_t, 5> args;  // special arguments
 };
 #pragma pack(pop)
 
@@ -202,10 +201,10 @@ struct raw_hexen_thing_t {
 struct raw_behavior_header_t {
     std::array<char, 4> marker;  // 'ACS' 0
 
-    u32_t offset;
+    uint32_t offset;
 
-    u32_t func_num;
-    u32_t str_num;
+    uint32_t func_num;
+    uint32_t str_num;
 };
 #pragma pack(pop)
 
@@ -213,27 +212,27 @@ struct raw_behavior_header_t {
 
 #pragma pack(push, 1)
 struct raw_patch_header_t {
-    u16_t width;
-    u16_t height;
+    uint16_t width;
+    uint16_t height;
 
-    s16_t x_offset;
-    s16_t y_offset;
+    int16_t x_offset;
+    int16_t y_offset;
 };
 #pragma pack(pop)
 
 #pragma pack(push, 1)
 struct raw_gl_vertex_t {
-    s32_t x, y;
+    int32_t x, y;
 };
 #pragma pack(pop)
 
 #pragma pack(push, 1)
 struct raw_gl_seg_t {
-    u16_t start;    // from this vertex...
-    u16_t end;      // ... to this vertex
-    u16_t linedef;  // linedef that this seg goes along, or -1
-    u16_t side;     // 0 if on right of linedef, 1 if on left
-    u16_t partner;  // partner seg number, or -1
+    uint16_t start;    // from this vertex...
+    uint16_t end;      // ... to this vertex
+    uint16_t linedef;  // linedef that this seg goes along, or -1
+    uint16_t side;     // 0 if on right of linedef, 1 if on left
+    uint16_t partner;  // partner seg number, or -1
 };
 #pragma pack(pop)
 
@@ -241,8 +240,8 @@ constexpr unsigned int IS_GL_VERT = 0x8000;
 
 #pragma pack(push, 1)
 struct raw_subsec_t {
-    u16_t num;    // number of Segs in this Sub-Sector
-    u16_t first;  // first Seg
+    uint16_t num;    // number of Segs in this Sub-Sector
+    uint16_t first;  // first Seg
 };
 #pragma pack(pop)
 

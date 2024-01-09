@@ -42,7 +42,7 @@
 #include "tx_forge.h"
 #include "tx_skies.h"
 
-static byte *sky_pixels;
+static uint8_t *sky_pixels;
 static int sky_W;
 static int sky_H;
 static int sky_final_W;
@@ -51,14 +51,14 @@ static int sky_final_W;
 
 #define CUR_PIXEL(py) (pixels[((py) % H) * W])
 
-static void AddPost(qLump_c *lump, int y, int len, const byte *pixels, int W,
+static void AddPost(qLump_c *lump, int y, int len, const uint8_t *pixels, int W,
                     int H) {
     if (len <= 0) {
         return;
     }
 
     byte buffer[512];
-    byte *dest = buffer;
+    uint8_t *dest = buffer;
 
     *dest++ = y;    // Y-OFFSET
     *dest++ = len;  // # PIXELS
@@ -82,16 +82,16 @@ static void EndOfPost(qLump_c *lump) {
 
 namespace Doom {
 qLump_c *CreatePatch(int new_W, int new_H, int ofs_X, int ofs_Y,
-                     const byte *pixels, int W, int H, int trans_p = -1) {
+                     const uint8_t *pixels, int W, int H, int trans_p = -1) {
     qLump_c *lump = new qLump_c();
 
     int x, y;
 
-    u32_t *offsets = new u32_t[new_W];
-    u32_t beginning = sizeof(raw_patch_header_t) + new_W * 4;
+    uint32_t *offsets = new uint32_t[new_W];
+    uint32_t beginning = sizeof(raw_patch_header_t) + new_W * 4;
 
     for (x = 0; x < W; x++, pixels++) {
-        offsets[x] = beginning + (u32_t)lump->GetSize();
+        offsets[x] = beginning + (uint32_t)lump->GetSize();
 
         for (y = 0; y < new_H;) {
             if (trans_p >= 0 && CUR_PIXEL(y) == trans_p) {
@@ -120,7 +120,7 @@ qLump_c *CreatePatch(int new_W, int new_H, int ofs_X, int ofs_Y,
         offsets[x] = offsets[x % W];
     }
 
-    lump->Prepend(offsets, new_W * sizeof(u32_t));
+    lump->Prepend(offsets, new_W * sizeof(uint32_t));
 
     delete[] offsets;
 
@@ -138,7 +138,7 @@ qLump_c *CreatePatch(int new_W, int new_H, int ofs_X, int ofs_Y,
 
 #undef CUR_PIXEL
 
-qLump_c *CreateFlat(int new_W, int new_H, const byte *pixels, int W, int H) {
+qLump_c *CreateFlat(int new_W, int new_H, const uint8_t *pixels, int W, int H) {
     qLump_c *lump = new qLump_c();
 
     // create a skewed but working flat when original is 128x32
@@ -168,9 +168,9 @@ qLump_c *CreateFlat(int new_W, int new_H, const byte *pixels, int W, int H) {
 }
 }  // namespace Doom
 
-static byte *Flat_Realign(const byte *pixels, int W, int H, int dx = 32,
+static uint8_t *Flat_Realign(const uint8_t *pixels, int W, int H, int dx = 32,
                           int dy = 32) {
-    byte *new_pix = new byte[W * H];
+    uint8_t *new_pix = new uint8_t[W * H];
 
     for (int y = 0; y < H; y++) {
         for (int x = 0; x < W; x++) {
@@ -244,19 +244,19 @@ int wad_logo_gfx(lua_State *L) {
         return luaL_error(L, "wad_logo_gfx: colormap too small");
     }
 
-    byte *pixels = new byte[logo->width * logo->height];
-    byte *p_end = pixels + (logo->width * logo->height);
+    uint8_t *pixels = new uint8_t[logo->width * logo->height];
+    uint8_t *p_end = pixels + (logo->width * logo->height);
 
-    const byte *src = logo->data;
+    const uint8_t *src = logo->data;
 
-    for (byte *dest = pixels; dest < p_end; dest++, src++) {
+    for (uint8_t *dest = pixels; dest < p_end; dest++, src++) {
         int idx = ((*src) * map->size) >> 8;
 
         *dest = map->colors[idx];
     }
 
     if (realign) {
-        byte *new_pix = Flat_Realign(pixels, logo->width, logo->height);
+        uint8_t *new_pix = Flat_Realign(pixels, logo->width, logo->height);
 
         delete[] pixels;
         pixels = new_pix;
@@ -307,7 +307,7 @@ int fsky_create(lua_State *L) {
         sky_W = W;
         sky_H = H;
 
-        sky_pixels = new byte[sky_W * sky_H];
+        sky_pixels = new uint8_t[sky_W * sky_H];
     }
 
     memset(sky_pixels, bg, sky_W * sky_H);
@@ -628,7 +628,7 @@ static int FontIndexForChar(char ch) {
     }
 }
 
-static void BlastFontChar(int index, int x, int y, byte *pixels, int W, int H,
+static void BlastFontChar(int index, int x, int y, uint8_t *pixels, int W, int H,
                           const logo_image_t *font, int fw, int fh,
                           const color_mapping_t *map, int thresh) {
     SYS_ASSERT(0 <= index && index < 44);
@@ -688,7 +688,7 @@ static void CreateNamePatch(const char *patch, const char *text,
     int W = font_w * length;
     int H = font_h;
 
-    byte *pixels = new byte[W * H];
+    uint8_t *pixels = new uint8_t[W * H];
 
     memset(pixels, 255, W * H);
 
@@ -766,7 +766,7 @@ int wad_add_text_lump(lua_State *L) {
     }
 
     if (game_object->file_per_map) {
-        ZIPF_AddMem(name, const_cast<byte *>(lump->GetBuffer()), lump->GetSize());
+        ZIPF_AddMem(name, const_cast<uint8_t *>(lump->GetBuffer()), lump->GetSize());
     } else {
         WriteLump(name, lump);
     }
@@ -860,7 +860,7 @@ static void TransferFILEtoWAD(PHYSFS_File *fp, const char *dest_lump) {
 
 static void TransferFILEtoPK3(PHYSFS_File *fp, const char *pk3filename) {
     PHYSFS_sint64 buf_size = PHYSFS_fileLength(fp);
-    byte *buffer = new byte[buf_size];
+    uint8_t *buffer = new uint8_t[buf_size];
     PHYSFS_readBytes(fp, buffer, buf_size);
 
     ZIPF_AddMem(pk3filename, buffer, buf_size);
@@ -1194,13 +1194,13 @@ int wad_read_text_lump(lua_State *L) {
     // create the table
     lua_newtable(L);
 
-    const byte *buf = lump->GetBuffer();
-    const byte *b_end = buf + lump->GetSize();
+    const uint8_t *buf = lump->GetBuffer();
+    const uint8_t *b_end = buf + lump->GetSize();
 
     int cur_pos = 1;
 
     while (buf < b_end) {
-        const byte *next = buf;
+        const uint8_t *next = buf;
         while (next < b_end && *next != '\n') {
             next++;
         }
@@ -1526,7 +1526,7 @@ static qLump_c *TitleCreateTGA() {
 static qLump_c *TitleCreatePatch() {
     // convert image to the palette  [ this is very slow! ]
 
-    byte *conv_pixels = new byte[title_W * title_H];
+    uint8_t *conv_pixels = new uint8_t[title_W * title_H];
 
     for (int y = 0; y < title_H; y++) {
         for (int x = 0; x < title_W; x++) {
@@ -1547,7 +1547,7 @@ static qLump_c *TitleCreatePatch() {
 static qLump_c *TitleCreateRaw() {
     // convert image to the palette  [ this is very slow! ]
 
-    byte *conv_pixels = new byte[title_W * title_H];
+    uint8_t *conv_pixels = new uint8_t[title_W * title_H];
 
     for (int y = 0; y < title_H; y++) {
         for (int x = 0; x < title_W; x++) {
@@ -1587,7 +1587,7 @@ int title_write(lua_State *L) {
     }
 
     if (game_object->file_per_map) {
-        ZIPF_AddMem(StringFormat("graphics/%s.%s", lumpname, format), const_cast<byte *>(lump->GetBuffer()), lump->GetSize());
+        ZIPF_AddMem(StringFormat("graphics/%s.%s", lumpname, format), const_cast<uint8_t *>(lump->GetBuffer()), lump->GetSize());
     } else {
         WriteLump(lumpname, lump);
     }

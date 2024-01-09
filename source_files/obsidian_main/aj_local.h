@@ -32,7 +32,6 @@
 #include "aj_poly.h"
 #include "sys_endian.h"
 #include "sys_macro.h"
-#include "sys_type.h"
 
 #define HAVE_PHYSFS 1
 #include "physfs.h"

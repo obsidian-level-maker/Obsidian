@@ -26,7 +26,6 @@
 
 #include <filesystem>
 #include <string_view>
-#include "sys_type.h"
 
 bool WAD_OpenRead(std::filesystem::path filename);
 void WAD_CloseRead();
@@ -75,15 +74,15 @@ void WAD2_FinishLump();
 struct raw_wad_header_t {
     char magic[4];
 
-    u32_t num_lumps;
-    u32_t dir_start;
+    uint32_t num_lumps;
+    uint32_t dir_start;
 };
 #pragma pack(pop)
 
 #pragma pack(push, 1)
 struct raw_wad_lump_t {
-    u32_t start;
-    u32_t length;
+    uint32_t start;
+    uint32_t length;
 
     char name[8];
 };
@@ -95,8 +94,8 @@ struct raw_wad_lump_t {
 struct raw_wad2_header_t {
     char magic[4];
 
-    u32_t num_lumps;
-    u32_t dir_start;
+    uint32_t num_lumps;
+    uint32_t dir_start;
 };
 #pragma pack(pop)
 
@@ -104,13 +103,13 @@ constexpr const char *WAD2_MAGIC = "WAD2";
 
 #pragma pack(push, 1)
 struct raw_wad2_lump_t {
-    u32_t start;
-    u32_t length;  // compressed
-    u32_t u_len;   // uncompressed
+    uint32_t start;
+    uint32_t length;  // compressed
+    uint32_t u_len;   // uncompressed
 
-    u8_t type;
-    u8_t compression;
-    u8_t _pad[2];
+    uint8_t type;
+    uint8_t compression;
+    uint8_t _pad[2];
 
     char name[16];  // must be null terminated
 };
