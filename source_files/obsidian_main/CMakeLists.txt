@@ -110,6 +110,7 @@ if(NOT CONSOLE_ONLY)
     PRIVATE ajbsp
             ajparse
             ${SDL2_LIBRARIES}
+            imgui
             miniz
             physfs-static
             obsidian_slump

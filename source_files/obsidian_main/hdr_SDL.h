@@ -27,6 +27,10 @@
 #include <SDL2/SDL.h>
 #endif
 
+#include "backends/imgui_impl_sdl2.h"
+#include "backends/imgui_impl_sdlrenderer2.h"
+#include "imgui.h"
+
 #endif /* __SDL_SYSTEM_INTERNAL_H__ */
 
 //--- editor settings ---

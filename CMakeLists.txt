@@ -52,6 +52,9 @@ if(NOT CONSOLE_ONLY)
   find_package(SDL2 REQUIRED)
 endif()
 
+if(NOT CONSOLE_ONLY)
+  include_directories(libraries/imgui)
+endif()
 include_directories(libraries/minilua)
 
 add_subdirectory(libraries)
