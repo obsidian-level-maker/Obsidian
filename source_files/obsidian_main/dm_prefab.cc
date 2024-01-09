@@ -64,8 +64,8 @@
 #include "csg_main.h"
 #include "g_doom.h"
 #ifndef CONSOLE_ONLY
-#include "hdr_fltk.h"
-#include "hdr_ui.h"
+
+
 #endif
 #include "hdr_lua.h"
 #include "headers.h"

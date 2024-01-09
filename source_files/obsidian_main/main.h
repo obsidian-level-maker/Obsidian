@@ -29,8 +29,6 @@
 #include <map>
 #include <filesystem>
 #ifndef CONSOLE_ONLY
-#include "hdr_fltk.h"
-#include "ui_window.h"
 #include "lib_util.h"
 #include "sys_debug.h"
 #endif
@@ -57,7 +55,7 @@ constexpr const char *LOG_FILENAME = "LOGS.txt";
 constexpr const char *REF_FILENAME = "REFERENCE.txt";
 
 #if !defined CONSOLE_ONLY && !defined __APPLE__
-extern int v_unload_private_font(const char *path);
+
 #endif
 
 extern std::filesystem::path home_dir;
@@ -88,51 +86,7 @@ extern int main_action;
 
 // Misc Options
 #ifndef CONSOLE_ONLY
-extern uchar text_red;
-extern uchar text_green;
-extern uchar text_blue;
-extern uchar text2_red;
-extern uchar text2_green;
-extern uchar text2_blue;
-extern uchar bg_red;
-extern uchar bg_green;
-extern uchar bg_blue;
-extern uchar bg2_red;
-extern uchar bg2_green;
-extern uchar bg2_blue;
-extern uchar button_red;
-extern uchar button_green;
-extern uchar button_blue;
-extern uchar gradient_red;
-extern uchar gradient_green;
-extern uchar gradient_blue;
-extern uchar border_red;
-extern uchar border_green;
-extern uchar border_blue;
-extern uchar gap_red;
-extern uchar gap_green;
-extern uchar gap_blue;
-extern Fl_Boxtype box_style;
-extern Fl_Boxtype button_style;
-extern Fl_Font font_style;
-extern Fl_Color FONT_COLOR;
-extern Fl_Color FONT2_COLOR;
-extern Fl_Color WINDOW_BG;
-extern Fl_Color SELECTION;
-extern Fl_Color GAP_COLOR;
-extern Fl_Color GRADIENT_COLOR;
-extern Fl_Color BUTTON_COLOR;
-extern Fl_Color BORDER_COLOR;
-extern int color_scheme;
-extern int font_theme;
-extern int box_theme;
-extern int button_theme;
-extern int widget_theme;
-extern int window_scaling;
-extern int font_scaling;
-extern int num_fonts;
-extern std::vector<std::pair<std::string, int>> font_menu_items;
-extern bool gui_simple_mode;
+
 #endif
 extern int filename_prefix;
 extern std::string custom_prefix;
@@ -159,11 +113,7 @@ extern std::string numeric_locale;
 extern std::vector<std::string> batch_randomize_groups;
 
 #ifndef CONSOLE_ONLY
-// Dialog Windows
-void DLG_ShowError(const char *msg, ...);
 
-std::filesystem::path DLG_OutputFilename(const char *ext,
-                                         const char *preset = nullptr);
 #endif
 
 extern std::filesystem::path default_output_path;
@@ -177,16 +127,7 @@ extern std::string selected_lang;
 
 // Clippy/program menu stuff
 #ifndef CONSOLE_ONLY
-extern Fl_Pixmap *clippy;
 
-void DLG_AboutText();
-void DLG_OptionsEditor();
-void DLG_ThemeEditor();
-
-void DLG_EditSeed();
-void DLG_ViewLogs();
-void DLG_ViewGlossary();
-void DLG_ManageConfig();
 #endif
 
 namespace Main {
@@ -198,8 +139,7 @@ void Shutdown(bool error);
 template <typename... Args>
 [[noreturn]] void FatalError(std::string_view msg, Args &&...args) {
 #ifndef CONSOLE_ONLY
-    auto buffer = StringFormat(msg, std::forward<Args>(args)...);
-    DLG_ShowError("%s", buffer.c_str());
+
 #endif
     Detail::Shutdown(true);
 
@@ -220,28 +160,18 @@ void ProgStatus(std::string_view msg, Args &&...args) {
     const std::string buffer = StringFormat(msg, std::forward<Args>(args)...);
 
 #ifndef CONSOLE_ONLY
-    if (main_win) {
-        main_win->build_box->SetStatus(buffer.c_str());
-    } else if (batch_mode) {
-        StdErrPrintf("%s\n", buffer.c_str());
-    }
+
 #else
     StdErrPrintf("%s\n", buffer.c_str());
 #endif
 }
 bool BackupFile(const std::filesystem::path &filename);
-#if defined WIN32 && !defined CONSOLE_ONLY
-void Blinker();
-#endif
 
 #if !defined(CONSOLE_ONLY) && !defined(__APPLE__)
-bool LoadInternalFont(const char *fontpath, int fontnum, const char *fontname);
+
 #endif
 #ifndef CONSOLE_ONLY
-void SetupFLTK();
-int  DetermineScaling();
-void PopulateFontMap();
-void Ticker();
+
 #endif
 
 }  // namespace Main

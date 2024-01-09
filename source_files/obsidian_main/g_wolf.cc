@@ -19,8 +19,8 @@
 //------------------------------------------------------------------------
 
 #ifndef CONSOLE_ONLY
-#include "hdr_fltk.h"
-#include "hdr_ui.h"
+
+
 #endif
 #include "hdr_lua.h"
 #include "headers.h"
@@ -348,47 +348,11 @@ bool wolf_game_interface_c::Start(const char *ext) {
         if (batch_output_file.is_absolute()) {
             wolf_output_dir = batch_output_file.remove_filename();
         } else {
-            wolf_output_dir = Resolve_DefaultOutputPath();
+            wolf_output_dir = std::filesystem::current_path();
         }
     } else {
 #ifndef CONSOLE_ONLY
-        int old_font_h = FL_NORMAL_SIZE;
-        FL_NORMAL_SIZE = 14 + KF;
-
-        Fl_Native_File_Chooser chooser;
-
-        chooser.title(_("Select output directory"));
-
-        chooser.directory(BestDirectory().generic_u8string().c_str());
-
-        chooser.type(Fl_Native_File_Chooser::BROWSE_DIRECTORY);
-
-        int result = chooser.show();
-
-        FL_NORMAL_SIZE = old_font_h;
-
-        switch (result) {
-            case -1:
-                LogPrintf(_("Error choosing directory:\n"));
-                LogPrintf("   %s\n", chooser.errmsg());
-                break;
-
-            case 1:
-                Main::ProgStatus(_("Cancelled"));
-                return false;
-
-            default:
-                break;  // OK
-        }
-
-        std::filesystem::path dir_name = std::filesystem::u8path(chooser.filename());
-
-        if (dir_name.empty()) {
-            LogPrintf(_("Empty directory provided???:\n"));
-            dir_name = Resolve_DefaultOutputPath();
-        }
-
-        wolf_output_dir = dir_name;
+        wolf_output_dir = std::filesystem::current_path();
 #endif
     }
 
@@ -430,9 +394,7 @@ bool wolf_game_interface_c::Start(const char *ext) {
     solid_plane = new uint16_t[64 * 64 + 8];  // extra space for compressor
     thing_plane = new uint16_t[64 * 64 + 8];
 #ifndef CONSOLE_ONLY
-    if (main_win) {
-        main_win->build_box->Prog_Init(0, "");
-    }
+
 #endif
     return true;
 }

@@ -2,9 +2,9 @@ cmake_minimum_required(VERSION 3.12..3.20)
 
 add_subdirectory(source_files/ajbsp EXCLUDE_FROM_ALL)
 add_subdirectory(source_files/ajparse EXCLUDE_FROM_ALL)
-if(NOT CONSOLE_ONLY AND NOT HAIKU)
-  add_subdirectory(source_files/fltk EXCLUDE_FROM_ALL)
-endif()
+#if(NOT CONSOLE_ONLY AND NOT HAIKU)
+#  add_subdirectory(source_files/fltk EXCLUDE_FROM_ALL)
+#endif()
 add_subdirectory(source_files/miniz EXCLUDE_FROM_ALL)
 add_subdirectory(source_files/physfs EXCLUDE_FROM_ALL)
 add_subdirectory(source_files/slump EXCLUDE_FROM_ALL)
@@ -30,9 +30,9 @@ if(MSVC)
   math(EXPR COMPILE_CORES "${LOGICAL_CORES} - 1")
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP${COMPILE_CORES}")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHa /MP${COMPILE_CORES}")
-  if(NOT CONSOLE_ONLY)
-    set(CMAKE_EXE_LINKER_FLAGS "/SUBSYSTEM:WINDOWS")
-  endif()
+  #if(NOT CONSOLE_ONLY)
+    #set(CMAKE_EXE_LINKER_FLAGS "/SUBSYSTEM:WINDOWS")
+  #endif()
 endif()
 if(MSYS OR MINGW)
   if(NOT CONSOLE_ONLY)
@@ -77,14 +77,10 @@ if(NOT CONSOLE_ONLY AND NOT HAIKU)
     source_files/obsidian_main/lib_util.cc
     source_files/obsidian_main/lib_wad.cc
     source_files/obsidian_main/lib_zip.cc
-    source_files/obsidian_main/m_about.cc
     source_files/obsidian_main/m_addons.cc
     source_files/obsidian_main/m_cookie.cc
-    source_files/obsidian_main/m_dialog.cc
     source_files/obsidian_main/m_lua.cc
-    source_files/obsidian_main/m_manage.cc
     source_files/obsidian_main/m_options.cc
-    source_files/obsidian_main/m_theme.cc
     source_files/obsidian_main/m_trans.cc
     source_files/obsidian_main/main.cc
     source_files/obsidian_main/obsidian.rc
@@ -97,14 +93,6 @@ if(NOT CONSOLE_ONLY AND NOT HAIKU)
     source_files/obsidian_main/sys_xoshiro.cc
     source_files/obsidian_main/tx_forge.cc
     source_files/obsidian_main/tx_skies.cc
-    source_files/obsidian_main/ui_boxes.cc
-    source_files/obsidian_main/ui_build.cc
-    source_files/obsidian_main/ui_game.cc
-    source_files/obsidian_main/ui_hyper.cc
-    source_files/obsidian_main/ui_map.cc
-    source_files/obsidian_main/ui_module.cc
-    source_files/obsidian_main/ui_widgets.cc
-    source_files/obsidian_main/ui_window.cc
     source_files/obsidian_main/vis_buffer.cc
   )
 else()
@@ -158,12 +146,12 @@ endif()
 
 target_include_directories(obsidian SYSTEM PRIVATE source_files/ajbsp)
 target_include_directories(obsidian SYSTEM PRIVATE source_files/ajparse)
-if(NOT CONSOLE_ONLY AND NOT HAIKU)
-  target_include_directories(obsidian SYSTEM PRIVATE source_files/fltk)
-  target_include_directories(
-    obsidian SYSTEM PRIVATE "${PROJECT_BINARY_DIR}/source_files/fltk"
-  ) # Hack for FLTK 1.4 (for now)
-endif()
+#if(NOT CONSOLE_ONLY AND NOT HAIKU)
+#  target_include_directories(obsidian SYSTEM PRIVATE source_files/fltk)
+#  target_include_directories(
+#    obsidian SYSTEM PRIVATE "${PROJECT_BINARY_DIR}/source_files/fltk"
+#  ) # Hack for FLTK 1.4 (for now)
+#endif()
 target_include_directories(obsidian SYSTEM PRIVATE source_files/gif-h)
 target_include_directories(obsidian SYSTEM PRIVATE source_files/minilua)
 target_include_directories(obsidian SYSTEM PRIVATE source_files/miniz)
@@ -194,8 +182,8 @@ if(UNIX)
         obsidian
         PRIVATE ajbsp
                 ajparse
-                fltk
-                fltk_images
+                #fltk
+                #fltk_images
                 miniz
                 physfs-static
                 obsidian_slump
@@ -216,8 +204,8 @@ if(UNIX)
         obsidian
         PRIVATE ajbsp
                 ajparse
-                fltk
-                fltk_images
+                #fltk
+                #fltk_images
                 miniz
                 physfs-static
                 obsidian_slump
@@ -246,8 +234,8 @@ if(UNIX)
         obsidian
         PRIVATE ajbsp
                 ajparse
-                fltk
-                fltk_images
+                #fltk
+                #fltk_images
                 miniz
                 physfs-static
                 obsidian_slump
@@ -272,8 +260,8 @@ else()
       obsidian
       PRIVATE ajbsp
               ajparse
-              fltk
-              fltk_images
+              #fltk
+              #fltk_images
               miniz
               physfs-static
               obsidian_slump

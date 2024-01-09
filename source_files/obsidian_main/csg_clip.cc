@@ -24,8 +24,8 @@
 #include "csg_main.h"
 #include "csg_quake.h"
 #ifndef CONSOLE_ONLY
-#include "hdr_fltk.h"
-#include "hdr_ui.h"
+
+
 #endif
 #include "hdr_lua.h"
 #include "headers.h"
@@ -1171,9 +1171,7 @@ void Q1_ClippingHull(int hull) {
     LogPrintf("\nClipping Hull %d...\n", hull);
 
 #ifndef CONSOLE_ONLY
-    if (main_win) {
-        main_win->build_box->Prog_Step("Hull");
-    }
+
 #endif
 
     ///???  FreeAll();

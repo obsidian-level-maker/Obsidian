@@ -768,7 +768,7 @@ static void Build_PVS() {
 
             if (done % 80 == 0) {
 #ifndef CONSOLE_ONLY
-                Main::Ticker();
+
 #endif
                 if (main_action >= MAIN_CANCEL) {
                     return;

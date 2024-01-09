@@ -27,7 +27,7 @@
 #include <string>
 
 #ifndef CONSOLE_ONLY
-#include "hdr_fltk.h"
+
 #endif
 
 #include "lib_util.h"
@@ -200,9 +200,7 @@ namespace Doom {
 
 void Send_Prog_Nodes(int progress, int num_maps) {
 #ifndef CONSOLE_ONLY
-    if (main_win) {
-        main_win->build_box->Prog_Nodes(progress, num_maps);
-    }
+
 #endif
 }
 
@@ -355,7 +353,7 @@ void Doom::AddSectionLump(char ch, std::string name, qLump_c *lump) {
 bool Doom::StartWAD(std::filesystem::path filename) {
     if (!WAD_OpenWrite(filename)) {
 #ifndef CONSOLE_ONLY
-        DLG_ShowError(_("Unable to create wad file:\n\n%s"), strerror(errno));
+
 #else
         StdOutPrintf(_("Unable to create wad file:\n\n%s"), strerror(errno));
 #endif
@@ -1104,16 +1102,14 @@ bool Doom::game_interface_c::Start(const char *preset) {
 #ifndef CONSOLE_ONLY
         if (compress_output) {
             if ((StringCaseCmp(current_port, "dsda") == 0)) {
-                filename = DLG_OutputFilename("zip", 
-                    std::filesystem::path{preset}.replace_extension("zip").u8string().c_str());
+                filename = std::filesystem::current_path().append(preset).replace_extension("zip").u8string().c_str();
                 zip_filename = filename;
             } else {
-                filename = DLG_OutputFilename("pk3", 
-                    std::filesystem::path{preset}.replace_extension("pk3").u8string().c_str());
+                filename = std::filesystem::current_path().append(preset).replace_extension("pk3").u8string().c_str();
                 zip_filename = filename;
             }
         } else {
-            filename = DLG_OutputFilename("wad", preset);
+            filename = std::filesystem::current_path().append(preset).replace_extension("wad").u8string().c_str();
         }
 #endif
     }
@@ -1143,9 +1139,7 @@ bool Doom::game_interface_c::Start(const char *preset) {
         map_format = FORMAT_BINARY;
         build_nodes = true;
 #ifndef CONSOLE_ONLY
-        if (main_win) {
-            main_win->build_box->Prog_Init(0, "");
-        }
+
 #endif
         return true;
     }
@@ -1171,9 +1165,7 @@ bool Doom::game_interface_c::Start(const char *preset) {
     }
 
 #ifndef CONSOLE_ONLY
-    if (main_win) {
-        main_win->build_box->Prog_Init(20, N_("CSG"));
-    }
+
 #endif
 
     if (StringCaseCmp(current_port, "zdoom") == 0) {
@@ -1281,9 +1273,7 @@ void Doom::game_interface_c::Property(std::string key, std::string value) {
     if (StringCaseCmp(key, "level_name") == 0) {
         level_name = value.c_str();
 #ifndef CONSOLE_ONLY
-    } else if (StringCaseCmp(key, "description") == 0 && main_win) {
-        main_win->build_box->name_disp->copy_label(value.c_str());
-        main_win->build_box->name_disp->redraw();
+
 #endif
     } else if (StringCaseCmp(key, "sub_format") == 0) {
         if (StringCaseCmp(value, "doom") == 0) {
@@ -1322,9 +1312,7 @@ void Doom::game_interface_c::EndLevel() {
     }
 
 #ifndef CONSOLE_ONLY
-    if (main_win) {
-        main_win->build_box->Prog_Step("CSG");
-    }
+
 #endif
 
     CSG_DOOM_Write();

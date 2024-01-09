@@ -22,8 +22,8 @@
 #include "csg_main.h"
 #include "csg_quake.h"
 #ifndef CONSOLE_ONLY
-#include "hdr_fltk.h"
-#include "hdr_ui.h"
+
+
 #endif
 #include "hdr_lua.h"
 #include "headers.h"
@@ -932,9 +932,7 @@ static void Q2_WriteModels() {
 
 static void Q2_LightWorld() {
 #ifndef CONSOLE_ONLY
-    if (main_win) {
-        main_win->build_box->Prog_Step("Light");
-    }
+
 #endif
 
     QLIT_LightAllFaces();
@@ -944,9 +942,7 @@ static void Q2_LightWorld() {
 
 static void Q2_VisWorld() {
 #ifndef CONSOLE_ONLY
-    if (main_win) {
-        main_win->build_box->Prog_Step("Vis");
-    }
+
 #endif
 
     // no need for numleafs, as Quake II uses clusters directly
@@ -1024,11 +1020,11 @@ bool quake2_game_interface_c::Start(const char *preset) {
         if (batch_output_file.is_absolute()) {
             filename = batch_output_file;
         } else {
-            filename = Resolve_DefaultOutputPath() / batch_output_file;
+            filename = std::filesystem::current_path().append(batch_output_file.string());
         }
     } else {
 #ifndef CONSOLE_ONLY
-        filename = DLG_OutputFilename("pak", preset);
+        filename = std::filesystem::current_path().append(preset).replace_extension("pak").u8string().c_str();
 #endif
     }
 
@@ -1049,9 +1045,7 @@ bool quake2_game_interface_c::Start(const char *preset) {
     BSP_AddInfoFile();
 
 #ifndef CONSOLE_ONLY
-    if (main_win) {
-        main_win->build_box->Prog_Init(0, "CSG,BSP,Vis,Light");
-    }
+
 #endif
 
     return true;

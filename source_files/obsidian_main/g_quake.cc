@@ -23,8 +23,8 @@
 #include "csg_main.h"
 #include "csg_quake.h"
 #ifndef CONSOLE_ONLY
-#include "hdr_fltk.h"
-#include "hdr_ui.h"
+
+
 #endif
 #include "hdr_lua.h"
 #include "headers.h"
@@ -1168,9 +1168,7 @@ static void Q1_WriteModels() {
 
 static void Q1_LightWorld() {
 #ifndef CONSOLE_ONLY
-    if (main_win) {
-        main_win->build_box->Prog_Step("Light");
-    }
+
 #endif
 
     QLIT_LightAllFaces();
@@ -1186,9 +1184,7 @@ static void Q1_LightWorld() {
 
 static void Q1_VisWorld(int base_leafs) {
 #ifndef CONSOLE_ONLY
-    if (main_win) {
-        main_win->build_box->Prog_Step("Vis");
-    }
+
 #endif
 
     // take the solid leaf into account
@@ -1316,11 +1312,11 @@ bool quake1_game_interface_c::Start(const char *preset) {
         if (batch_output_file.is_absolute()) {
             filename = batch_output_file;
         } else {
-            filename = Resolve_DefaultOutputPath() / batch_output_file;
+            filename = std::filesystem::current_path().append(batch_output_file.string());
         }
     } else {
 #ifndef CONSOLE_ONLY
-        filename = DLG_OutputFilename("pak", preset);
+        filename = std::filesystem::current_path().append(preset).replace_extension("pak").u8string().c_str();
 #endif
     }
 
@@ -1341,9 +1337,7 @@ bool quake1_game_interface_c::Start(const char *preset) {
     BSP_AddInfoFile();
 
 #ifndef CONSOLE_ONLY
-    if (main_win) {
-        main_win->build_box->Prog_Init(0, StepsForGame(0));
-    }
+
 #endif
 
     return true;
@@ -1389,10 +1383,7 @@ void quake1_game_interface_c::Property(std::string key, std::string value) {
         }
 
 #ifndef CONSOLE_ONLY
-        // this assumes the sub_format is only set once at the start
-        if (main_win) {
-            main_win->build_box->Prog_Init(0, StepsForGame(qk_sub_format));
-        }
+
 #endif
     } else if (StringCaseCmp(key, "worldtype") == 0) {
         qk_worldtype = StringToInt(value);

@@ -26,8 +26,8 @@
 #include "csg_local.h"
 #include "csg_main.h"
 #ifndef CONSOLE_ONLY
-#include "hdr_fltk.h"
-#include "hdr_ui.h"
+
+
 #endif
 #include "hdr_lua.h"
 #include "headers.h"
@@ -2364,17 +2364,13 @@ void CSG_QUAKE_Build() {
     LogPrintf("QUAKE CSG...\n");
 
 #ifndef CONSOLE_ONLY
-    if (main_win) {
-        main_win->build_box->Prog_Step("CSG");
-    }
+
 #endif
 
     CSG_BSP(1.0);
 
 #ifndef CONSOLE_ONLY
-    if (main_win) {
-        main_win->build_box->Prog_Step("BSP");
-    }
+
 #endif
 
     quake_group_c GROUP;

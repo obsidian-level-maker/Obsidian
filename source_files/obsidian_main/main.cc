@@ -26,8 +26,7 @@
 #include "csg_main.h"
 #include "g_nukem.h"
 #ifndef CONSOLE_ONLY
-#include "hdr_fltk.h"
-#include "hdr_ui.h"
+
 #endif
 #include "headers.h"
 #include "lib_argv.h"
@@ -40,11 +39,7 @@
 #include "physfs.h"
 #include "sys_xoshiro.h"
 #ifndef CONSOLE_ONLY
-#include "ui_window.h"
-#endif
 
-#ifdef WIN32
-#include "winuser.h"
 #endif
 
 /**
@@ -85,58 +80,7 @@ std::vector<std::string> batch_randomize_groups;
 
 // options
 #ifndef CONSOLE_ONLY
-uchar text_red = 225;
-uchar text_green = 225;
-uchar text_blue = 225;
-uchar text2_red = 225;
-uchar text2_green = 225;
-uchar text2_blue = 225;
-uchar bg_red = 56;
-uchar bg_green = 56;
-uchar bg_blue = 56;
-uchar bg2_red = 83;
-uchar bg2_green = 121;
-uchar bg2_blue = 180;
-uchar button_red = 89;
-uchar button_green = 89;
-uchar button_blue = 89;
-uchar gradient_red = 221;
-uchar gradient_green = 221;
-uchar gradient_blue = 221;
-uchar border_red = 62;
-uchar border_green = 61;
-uchar border_blue = 57;
-uchar gap_red = 35;
-uchar gap_green = 35;
-uchar gap_blue = 35;
-Fl_Color FONT_COLOR;
-Fl_Color FONT2_COLOR;
-Fl_Color SELECTION;
-Fl_Color WINDOW_BG;
-Fl_Color GAP_COLOR;
-Fl_Color GRADIENT_COLOR;
-Fl_Color BUTTON_COLOR;
-Fl_Color BORDER_COLOR;
-Fl_Font font_style = 0;
-Fl_Boxtype box_style = FL_FLAT_BOX;
-Fl_Boxtype button_style = FL_DOWN_BOX;
-int color_scheme = 0;
-int font_theme = 0;
-int box_theme = 0;
-int button_theme = 0;
-int widget_theme = 0;
-int window_scaling = 0;
-int font_scaling = 18;
-int num_fonts = 0;
-std::vector<std::pair<std::string, int>> font_menu_items;
-static int old_x = 0;
-static int old_y = 0;
-static int old_w = 0;
-static int old_h = 0;
-static std::string old_seed;
-static std::string old_name;
-static uint8_t *old_pixels;
-bool gui_simple_mode = true;
+
 #endif
 int filename_prefix = 0;
 std::string custom_prefix = "CUSTOM_";
@@ -168,117 +112,6 @@ game_interface_c *game_object = NULL;
 
 extern bool ExtractPresetData(FILE *fp, std::string &buf);
 
-#ifndef CONSOLE_ONLY
-Fl_Pixmap *clippy;
-
-#ifdef _WIN32
-#ifndef CONSOLE_ONLY
-static FLASHWINFO *blinker;
-static int i_load_private_font(const char *path) {
-    return AddFontResourceExW((LPCWSTR)StringToUTF16(path).data(), FR_PRIVATE, nullptr);
-}
-int v_unload_private_font(const char *path) {
-    return RemoveFontResourceExW((LPCWSTR)StringToUTF16(path).data(), FR_PRIVATE, nullptr);
-}
-#endif
-#else
-#ifndef CONSOLE_ONLY
-#ifndef __APPLE__
-#include <fontconfig/fontconfig.h>
-static int i_load_private_font(const char *path) {
-    return static_cast<int>(FcConfigAppFontAddFile(
-        nullptr, reinterpret_cast<const FcChar8 *>(path)));
-}
-int v_unload_private_font(const char *path) {
-    FcConfigAppFontClear(nullptr);
-    return 0;
-}
-#endif
-#endif
-#endif
-
-static void main_win_surprise_config_CB(Fl_Widget *w, void *data) {
-    Fl_Menu_Bar *menu = (Fl_Menu_Bar *)w;
-    const Fl_Menu_Item *checkbox = menu->find_item(main_win_surprise_config_CB);
-    preserve_old_config = (checkbox->value() != 0) ? true : false;
-}
-
-static void main_win_architecture_config_CB(Fl_Widget *w, void *data) {
-    Fl_Menu_Bar *menu = (Fl_Menu_Bar *)w;
-    const Fl_Menu_Item *checkbox =
-        menu->find_item(main_win_architecture_config_CB);
-    randomize_architecture = (checkbox->value() != 0) ? true : false;
-}
-
-static void main_win_monsters_config_CB(Fl_Widget *w, void *data) {
-    Fl_Menu_Bar *menu = (Fl_Menu_Bar *)w;
-    const Fl_Menu_Item *checkbox = menu->find_item(main_win_monsters_config_CB);
-    randomize_monsters = (checkbox->value() != 0) ? true : false;
-}
-
-static void main_win_pickups_config_CB(Fl_Widget *w, void *data) {
-    Fl_Menu_Bar *menu = (Fl_Menu_Bar *)w;
-    const Fl_Menu_Item *checkbox = menu->find_item(main_win_pickups_config_CB);
-    randomize_pickups = (checkbox->value() != 0) ? true : false;
-}
-
-static void main_win_misc_config_CB(Fl_Widget *w, void *data) {
-    Fl_Menu_Bar *menu = (Fl_Menu_Bar *)w;
-    const Fl_Menu_Item *checkbox = menu->find_item(main_win_misc_config_CB);
-    randomize_misc = (checkbox->value() != 0) ? true : false;
-}
-
-static void main_win_addon_CB(Fl_Widget *w, void *data) {
-    std::string menu_item = _("Addons/");
-    Fl_Menu_Bar *menu = (Fl_Menu_Bar *)w;
-    addon_info_t *addon = (addon_info_t *)data;
-    menu_item.append(addon->name.filename().string());
-    const Fl_Menu_Item *checkbox = menu->find_item(menu_item.c_str());
-    addon->enabled = (checkbox->value() != 0) ? true : false;
-}
-
-static void main_win_apply_addon_CB(Fl_Widget *w, void *data) {
-    Options_Save(options_file);
-
-    fl_alert("%s", _("OBSIDIAN will now restart and apply changes to addons."));
-
-    initial_enabled_addons.clear();
-
-    for (int j = 0; j < all_addons.size(); j++) {
-        if (all_addons[j].enabled) {
-            initial_enabled_addons[all_addons[j].name] = 1;
-        }
-    }
-
-    main_action = MAIN_HARD_RESTART;
-}
-
-static void main_win_preset_CB(Fl_Widget *w, void *data) {
-    std::filesystem::path *preset = (std::filesystem::path *)data;
-
-    // adapted from our Config Manager Load/Use callbacks
-    FILE *fp = fl_fopen(preset->generic_u8string().c_str(), "rb");
-    if (!fp) {
-        DLG_ShowError(_("Cannot open: %s\n\n%s"),
-                        preset->filename().u8string().c_str(),
-                        strerror(errno));
-        return;
-    }
-    std::string text_buf;
-    if (!ExtractPresetData(fp, text_buf)) {
-        DLG_ShowError(_("No config found in file."));
-        fclose(fp);
-        return;
-    }
-    fclose(fp);
-    Cookie_LoadString(text_buf, false /* keep_seed */);
-}
-
-static void main_win_clippy_CB(Fl_Widget *w, void *data) {
-    main_win->clippy->shape(clippy);
-    main_win->clippy->ShowAdvice();
-}
-#endif
 /* ----- user information ----------------------------- */
 
 static void ShowInfo() {
@@ -498,23 +331,6 @@ void Determine_OptionsFile() {
     }
 }
 
-#ifndef CONSOLE_ONLY
-void Determine_ThemeFile() {
-    if (const int themef_arg = argv::Find(0, "theme"); themef_arg >= 0) {
-        if (themef_arg + 1 >= argv::list.size() ||
-            argv::IsOption(themef_arg + 1)) {
-            StdErrPrintf("OBSIDIAN ERROR: missing path for --theme\n");
-            exit(EXIT_FAILURE);
-        }
-
-        theme_file = argv::list[themef_arg + 1];
-    } else {
-        theme_file /= home_dir;
-        theme_file /= THEME_FILENAME;
-    }
-}
-#endif
-
 void Determine_LoggingFile() {
     if (const int logf_arg = argv::Find(0, "log"); logf_arg >= 0) {
         if (logf_arg + 1 >= argv::list.size() || argv::IsOption(logf_arg + 1)) {
@@ -569,476 +385,11 @@ bool Main::BackupFile(const std::filesystem::path &filename) {
 
     return true;
 }
-#ifndef CONSOLE_ONLY
-int Main::DetermineScaling() {
-    /* computation of the Kromulent factor */
-
-    // command-line overrides
-    if (argv::Find(0, "tiny") >= 0) {
-        return -1;
-    }
-    if (argv::Find(0, "small") >= 0) {
-        return 0;
-    }
-    if (argv::Find(0, "medium") >= 0) {
-        return 1;
-    }
-    if (argv::Find(0, "large") >= 0) {
-        return 2;
-    }
-    if (argv::Find(0, "huge") >= 0) {
-        return 3;
-    }
-
-    // user option setting
-    if (window_scaling > 0) {
-        return window_scaling - 2;
-    }
-
-    // automatic selection
-    if (screen_w >= 1600 && screen_h >= 800) {
-        return 2;
-    }
-    if (screen_w >= 1200 && screen_h >= 672) {
-        return 1;
-    }
-    if (screen_w <= 640 && screen_h <= 480) {
-        return -1;
-    }
-
-    return 0;
-}
-#endif
-#if !defined(CONSOLE_ONLY) && !defined(__APPLE__)
-bool Main::LoadInternalFont(const char *fontpath, const int fontnum,
-                            const char *fontname) {
-    /* set the extra font */
-    if (i_load_private_font(fontpath)) {
-        Fl::set_font(fontnum, fontname);
-        return true;
-    }
-    return false;
-}
-#endif
-
-#ifndef CONSOLE_ONLY
-void Main::PopulateFontMap() {
-    if (font_menu_items.empty()) {
-
-#ifdef __APPLE__
-        font_menu_items.push_back({"Sans <Default>", 0});
-        font_menu_items.push_back({"Courier <Internal>", 4});
-        font_menu_items.push_back({"Times <Internal>", 8});
-        font_menu_items.push_back({"Screen <Internal>", 13});
-#else
-
-        // TODO - If feasible, find a better way to automate this/crawl for
-        // *.ttf files
-
-        // Load bundled fonts. Fonts without a bold variant are essentially
-        // loaded twice in a row so that calls for a bold variant don't
-        // accidentally change fonts
-
-        // Some custom fonts will have a different display name than that of
-        // their TTF fontname. This is because these fonts have been
-        // modified in some fashion, and the OFL 1.1 license dictates that
-        // modified versions cannot display their Reserved Name to users
-
-        int current_free_font = 16;
-
-        if (LoadInternalFont(
-                "./theme/fonts/SourceSansPro/SourceSansPro-Regular.ttf",
-                current_free_font, "Source Sans Pro")) {
-            if (LoadInternalFont(
-                    "./theme/fonts/SourceSansPro/SourceSansPro-Bold.ttf",
-                    current_free_font + 1, "Source Sans Pro Bold")) {
-                font_menu_items.push_back({"Sauce <Default>", current_free_font});
-                current_free_font += 2;
-            }
-        }
-
-        font_menu_items.push_back({"Sans <Internal>", 0});
-        font_menu_items.push_back({"Courier <Internal>", 4});
-        font_menu_items.push_back({"Times <Internal>", 8});
-        font_menu_items.push_back({"Screen <Internal>", 13});
-
-        if (LoadInternalFont("./theme/fonts/Avenixel/Avenixel-Regular.ttf",
-                                current_free_font, "Avenixel")) {
-            Fl::set_font(current_free_font + 1, "Avenixel");
-            font_menu_items.push_back({"Avenixel", current_free_font});
-            current_free_font += 2;
-        }
-
-        if (LoadInternalFont("./theme/fonts/TheNeueBlack/TheNeue-Black.ttf",
-                                current_free_font, "The Neue Black")) {
-            Fl::set_font(current_free_font + 1, "The Neue Black");
-            font_menu_items.push_back({"New Black", current_free_font});
-            current_free_font += 2;
-        }
-
-        if (LoadInternalFont("./theme/fonts/Teko/Teko-Regular.ttf",
-                                current_free_font, "Teko")) {
-            if (LoadInternalFont("./theme/fonts/Teko/Teko-Bold.ttf",
-                                    current_free_font + 1, "Teko Bold")) {
-                font_menu_items.push_back({"Teko", current_free_font});
-                current_free_font += 2;
-            }
-        }
-
-        if (LoadInternalFont("./theme/fonts/Kalam/Kalam-Regular.ttf",
-                                current_free_font, "Kalam")) {
-            if (LoadInternalFont("./theme/fonts/Kalam/Kalam-Bold.ttf",
-                                    current_free_font + 1, "Kalam Bold")) {
-                font_menu_items.push_back({"Kalam", current_free_font});
-                current_free_font += 2;
-            }
-        }
-
-        if (LoadInternalFont("./theme/fonts/3270/3270.ttf",
-                                current_free_font, "3270 Condensed")) {
-            Fl::set_font(current_free_font + 1, "3270 Condensed");
-            font_menu_items.push_back({"3270", current_free_font});
-            current_free_font += 2;
-        }
-
-        if (LoadInternalFont("./theme/fonts/Workbench/Workbench.ttf",
-                                current_free_font,
-                                "Workbench Light Regular")) {
-            if (LoadInternalFont("./theme/fonts/Workbench/Workbench.ttf",
-                                    current_free_font + 1,
-                                    "Workbench Regular")) {
-                font_menu_items.push_back({"Workbench", current_free_font});
-                current_free_font += 2;
-            }
-        }
-
-        if (LoadInternalFont(
-                "./theme/fonts/FPD-Pressure/FPDPressure-Light.otf",
-                current_free_font, "FPD Pressure Light")) {
-            if (LoadInternalFont(
-                    "./theme/fonts/FPD-Pressure/FPDPressure-Regular.otf",
-                    current_free_font + 1, "FPD Pressure")) {
-                font_menu_items.push_back({"FPD Pressure", current_free_font});
-                current_free_font += 2;
-            }
-        }
-
-        if (LoadInternalFont("./theme/fonts/DramaSans/DramaSans.ttf",
-                                current_free_font, "Drama Sans")) {
-            Fl::set_font(current_free_font + 1, "Drama Sans");
-            font_menu_items.push_back({"Drama Sans", current_free_font});
-            current_free_font += 2;
-        }
-
-        if (LoadInternalFont("./theme/fonts/SamIAm/MiniSmallCaps.ttf",
-                                current_free_font, "MiniSmallCaps")) {
-            Fl::set_font(current_free_font + 1, "MiniSmallCaps");
-            font_menu_items.push_back({"Sam I Am", current_free_font});
-            current_free_font += 2;
-        }
-#endif
-    }
-    // lossy conversion, size_t?
-    num_fonts = static_cast<int>(font_menu_items.size());
-}
-
-void Main::SetupFLTK() {
-
-    Main::PopulateFontMap();
-
-    Fl::visual(FL_DOUBLE | FL_RGB);
-    if (color_scheme ==
-        2) {  // "Custom" color selection used to be 2 in older configs
-        color_scheme = 1;
-    }
-    switch (color_scheme) {
-        case 0:
-            Fl::background(56, 56, 56);
-            Fl::background2(56, 56, 56);
-            Fl::foreground(225, 225, 225);
-            FONT_COLOR = fl_rgb_color(225, 225, 225);
-            FONT2_COLOR = fl_rgb_color(225, 225, 225);
-            SELECTION = fl_rgb_color(83, 121, 180);
-            WINDOW_BG = fl_rgb_color(56, 56, 56);
-            GAP_COLOR = fl_rgb_color(35, 35, 35);
-            BORDER_COLOR = fl_rgb_color(62, 61, 57);
-            GRADIENT_COLOR = fl_rgb_color(221, 221, 221);
-            BUTTON_COLOR = fl_rgb_color(89, 89, 89);
-            break;
-        case 1:
-            Fl::background(bg_red, bg_green, bg_blue);
-            Fl::background2(bg_red, bg_green, bg_blue);
-            Fl::foreground(text_red, text_green, text_blue);
-            FONT_COLOR = fl_rgb_color(text_red, text_green, text_blue);
-            FONT2_COLOR = fl_rgb_color(text2_red, text2_green, text2_blue);
-            SELECTION = fl_rgb_color(bg2_red, bg2_green, bg2_blue);
-            WINDOW_BG = fl_rgb_color(bg_red, bg_green, bg_blue);
-            GAP_COLOR = fl_rgb_color(gap_red, gap_green, gap_blue);
-            BORDER_COLOR = fl_rgb_color(border_red, border_green, border_blue);
-            GRADIENT_COLOR =
-                fl_rgb_color(gradient_red, gradient_green, gradient_blue);
-            BUTTON_COLOR = fl_rgb_color(button_red, button_green, button_blue);
-            break;
-        // Shouldn't be reached, but still
-        default:
-            Fl::background(56, 56, 56);
-            Fl::background2(56, 56, 56);
-            Fl::foreground(225, 225, 225);
-            FONT_COLOR = fl_rgb_color(225, 225, 225);
-            FONT2_COLOR = fl_rgb_color(225, 225, 225);
-            SELECTION = fl_rgb_color(83, 121, 180);
-            WINDOW_BG = fl_rgb_color(56, 56, 56);
-            GAP_COLOR = fl_rgb_color(35, 35, 35);
-            BORDER_COLOR = fl_rgb_color(62, 61, 57);
-            GRADIENT_COLOR = fl_rgb_color(221, 221, 221);
-            BUTTON_COLOR = fl_rgb_color(89, 89, 89);
-            break;
-    }
-    if (color_scheme == 1) {
-        Fl::get_color(FONT_COLOR, text_red, text_green, text_blue);
-        Fl::get_color(FONT2_COLOR, text2_red, text2_green, text2_blue);
-        Fl::get_color(WINDOW_BG, bg_red, bg_green, bg_blue);
-        Fl::get_color(SELECTION, bg2_red, bg2_green, bg2_blue);
-        Fl::get_color(GAP_COLOR, gap_red, gap_green, gap_blue);
-        Fl::get_color(BORDER_COLOR, border_red, border_green, border_blue);
-        Fl::get_color(GRADIENT_COLOR, gradient_red, gradient_green,
-                      gradient_blue);
-        Fl::get_color(BUTTON_COLOR, button_red, button_green, button_blue);
-    }
-    Fl::set_boxtype(FL_OXY_UP_BOX, coxy_up_box, 2, 2, 4, 4);
-    Fl::set_boxtype(FL_OXY_THIN_UP_BOX, coxy_up_box, 1, 1, 2, 2);
-    Fl::set_boxtype(FL_OXY_DOWN_BOX, coxy_down_box, 2, 2, 4, 4);
-    Fl::set_boxtype(FL_GLEAM_UP_BOX, cgleam_up_box, 2, 2, 4, 4);
-    Fl::set_boxtype(FL_GLEAM_THIN_UP_BOX, cgleam_thin_up_box, 2, 2, 4, 4);
-    Fl::set_boxtype(FL_GLEAM_DOWN_BOX, cgleam_down_box, 2, 2, 4, 4);
-    Fl::set_boxtype(FL_GTK_UP_BOX, cgtk_up_box, 2, 2, 4, 4);
-    Fl::set_boxtype(FL_GTK_THIN_UP_BOX, cgtk_thin_up_box, 2, 2, 4, 4);
-    Fl::set_boxtype(FL_GTK_DOWN_BOX, cgtk_down_box, 2, 2, 4, 4);
-    Fl::set_boxtype(FL_PLASTIC_UP_BOX, cplastic_up_box, 2, 2, 4, 4);
-    Fl::set_boxtype(FL_PLASTIC_THIN_UP_BOX, cplastic_thin_up_box, 2, 2, 4, 4);
-    Fl::set_boxtype(FL_PLASTIC_DOWN_BOX, cplastic_down_box, 2, 2, 4, 4);
-    Fl::set_boxtype(FL_SHADOW_BOX, cshadow_box, 1, 1, 5, 5);
-    Fl::set_boxtype(FL_FREE_BOXTYPE, crectbound, 1, 1, 2, 2);
-    Fl::set_boxtype(static_cast<Fl_Boxtype>(FL_FREE_BOXTYPE + 1), crectbound, 1,
-                    1, 2, 2);
-    Fl::set_boxtype(FL_THIN_UP_BOX, cthin_up_box, 1, 1, 2, 2);
-    Fl::set_boxtype(FL_EMBOSSED_BOX, cembossed_box, 2, 2, 4, 4);
-    Fl::set_boxtype(static_cast<Fl_Boxtype>(FL_FREE_BOXTYPE + 2), cengraved_box,
-                    2, 2, 4, 4);
-    Fl::set_boxtype(static_cast<Fl_Boxtype>(FL_FREE_BOXTYPE + 3), cengraved_box,
-                    2, 2, 4, 4);
-    Fl::set_boxtype(FL_DOWN_BOX, cdown_box, 2, 2, 4, 4);
-    Fl::set_boxtype(FL_UP_BOX, cup_box, 2, 2, 4, 4);
-    switch (widget_theme) {
-        case 0:
-            Fl::scheme("gtk+");
-            break;
-        case 1:
-            Fl::scheme("gleam");
-            break;
-        case 2:
-            Fl::scheme("base");
-            break;
-        case 3:
-            Fl::scheme("plastic");
-            break;
-        case 4:
-            Fl::scheme("oxy");
-            break;
-        // Shouldn't be reached, but still
-        default:
-            Fl::scheme("gtk+");
-            break;
-    }
-    switch (box_theme) {
-        case 0:
-            box_style = FL_FLAT_BOX;
-            break;
-        case 1:
-            box_style = FL_SHADOW_BOX;
-            break;
-        case 2:
-            box_style = FL_EMBOSSED_BOX;
-            break;
-        case 3:
-            box_style = FL_ENGRAVED_BOX;
-            break;
-        case 4:
-            switch (widget_theme) {
-                case 0:
-                    box_style = FL_GTK_DOWN_BOX;
-                    break;
-                case 1:
-                    box_style = FL_GLEAM_DOWN_BOX;
-                    break;
-                case 2:
-                    box_style = FL_DOWN_BOX;
-                    break;
-                case 3:
-                    box_style = FL_PLASTIC_DOWN_BOX;
-                    break;
-                case 4:
-                    box_style = FL_OXY_DOWN_BOX;
-                    break;
-                default:
-                    box_style = FL_GTK_DOWN_BOX;
-                    break;
-            }
-            break;
-        case 5:
-            switch (widget_theme) {
-                case 0:
-                    box_style = FL_GTK_THIN_UP_BOX;
-                    break;
-                case 1:
-                    box_style = FL_GLEAM_THIN_UP_BOX;
-                    break;
-                case 2:
-                    box_style = FL_THIN_UP_BOX;
-                    break;
-                case 3:
-                    box_style = FL_PLASTIC_THIN_UP_BOX;
-                    break;
-                case 4:
-                    box_style = FL_OXY_THIN_UP_BOX;
-                    break;
-                default:
-                    box_style = FL_GTK_THIN_UP_BOX;
-                    break;
-            }
-            break;
-        // Shouldn't be reached, but still
-        default:
-            box_style = FL_FLAT_BOX;
-            break;
-    }
-    switch (button_theme) {
-        case 0:
-            switch (widget_theme) {
-                case 0:
-                    button_style = FL_GTK_DOWN_BOX;
-                    break;
-                case 1:
-                    button_style = FL_GLEAM_DOWN_BOX;
-                    break;
-                case 2:
-                    button_style = FL_DOWN_BOX;
-                    break;
-                case 3:
-                    button_style = FL_PLASTIC_DOWN_BOX;
-                    break;
-                case 4:
-                    button_style = FL_OXY_DOWN_BOX;
-                    break;
-                default:
-                    button_style = FL_GTK_DOWN_BOX;
-                    break;
-            }
-            break;
-        case 1:
-            switch (widget_theme) {
-                case 0:
-                    button_style = FL_GTK_UP_BOX;
-                    break;
-                case 1:
-                    button_style = FL_GLEAM_UP_BOX;
-                    break;
-                case 2:
-                    button_style = FL_UP_BOX;
-                    break;
-                case 3:
-                    button_style = FL_PLASTIC_UP_BOX;
-                    break;
-                case 4:
-                    button_style = FL_OXY_UP_BOX;
-                    break;
-                default:
-                    button_style = FL_GTK_UP_BOX;
-                    break;
-            }
-            break;
-        case 2:
-            button_style = static_cast<Fl_Boxtype>(FL_FREE_BOXTYPE + 2);
-            break;
-        case 3:
-            button_style = FL_EMBOSSED_BOX;
-            break;
-        case 4:
-            button_style = FL_FREE_BOXTYPE;
-            break;
-        // Shouldn't be reached, but still
-        default:
-            button_style = FL_DOWN_BOX;
-            break;
-    }
-    if (font_theme < num_fonts) {  // In case the number of installed fonts is
-                                   // reduced between launches
-        font_style = font_menu_items.at(font_theme).second;
-    } else {
-        // Fallback
-        font_style = 0;
-    }
-    if (font_scaling < 6) {  // Values from old configs
-        font_scaling = 18;
-    }
-    FL_NORMAL_SIZE = font_scaling;
-    small_font_size = FL_NORMAL_SIZE - 2;
-    header_font_size = FL_NORMAL_SIZE + 2;
-    fl_message_font(font_style, FL_NORMAL_SIZE + 2);
-
-    screen_w = Fl::w();
-    screen_h = Fl::h();
-
-    KF = Main::DetermineScaling();
-    // load icons for file chooser
-#ifndef WIN32
-    Fl_File_Icon::load_system_icons();
-#endif
-
-    // translate some FLTK strings
-    fl_no = _("No");
-    fl_yes = _("Yes");
-    fl_ok = _("OK");
-    fl_cancel = _("Cancel");
-    fl_close = _("Close");
-}
-
-#ifdef WIN32
-void Main::Blinker() { FlashWindowEx(blinker); }
-#endif
-void Main::Ticker() {
-    // This function is called very frequently.
-    // To prevent a slow-down, we only call Fl::check()
-    // after a certain time has elapsed.
-
-    static uint32_t last_millis = 0;
-
-    if (const uint32_t cur_millis = TimeGetMillies();
-        (cur_millis - last_millis) >= TICKER_TIME) {
-        Fl::check();
-
-        last_millis = cur_millis;
-    }
-}
-#endif
 
 void Main::Detail::Shutdown(const bool error) {
 #ifndef CONSOLE_ONLY
-    if (main_win) {
-        // on fatal error we cannot risk calling into the Lua runtime
-        // (it's state may be compromised by a script error).
-        if (!config_file.empty() && !error) {
-            if (did_randomize) {
-                if (!preserve_old_config) {
-                    Cookie_Save(config_file);
-                }
-            } else {
-                Cookie_Save(config_file);
-            }
-        }
-
-        delete main_win;
-        main_win = nullptr;
+    if (!std::filesystem::exists(options_file)) {
+        Options_Save(options_file);
     }
 #else
     if (!std::filesystem::exists(options_file)) {
@@ -1048,32 +399,6 @@ void Main::Detail::Shutdown(const bool error) {
     Script_Close();
     LogClose();
 }
-
-#ifndef CONSOLE_ONLY
-int Main_key_handler(int event) {
-    if (event != FL_SHORTCUT) {
-        return 0;
-    }
-
-    switch (Fl::event_key()) {
-        case FL_Escape:
-            // if building is in progress, cancel it, otherwise quit
-            if (game_object && !Fl::modal()) {
-                main_action = MAIN_CANCEL;
-                return 1;
-            } else {
-                // let FLTK's default code kick in
-                // [we cannot mimic it because we lack the 'window' ref]
-                return 0;
-            }
-
-        default:
-            break;
-    }
-
-    return 0;
-}
-#endif
 
 void Main_CalcNewSeed() { next_rand_seed = xoshiro_UInt(); }
 
@@ -1097,11 +422,7 @@ void Main_SetSeed() {
     std::string seed = NumToString(next_rand_seed);
     ob_set_config("seed", seed.c_str());
 #ifndef CONSOLE_ONLY
-    if (!batch_mode) {
-        main_win->build_box->seed_disp->copy_label(
-            StringFormat("%s %s", _("Seed:"), seed.c_str()).c_str());
-        main_win->build_box->seed_disp->redraw();
-    }
+
 #endif
 }
 
@@ -1117,9 +438,6 @@ static void Module_Defaults() {
 bool Build_Cool_Shit() {
 #ifndef CONSOLE_ONLY
     // clear the map
-    if (main_win) {
-        main_win->build_box->mini_map->EmptyMap();
-    }
 #endif
 
     const std::string format = ob_game_format();
@@ -1149,21 +467,7 @@ bool Build_Cool_Shit() {
 
 #ifndef CONSOLE_ONLY
     // lock most widgets of user interface
-    if (main_win) {
-        std::string seed = NumToString(next_rand_seed);
-        if (!string_seed.empty()) {
-            main_win->build_box->seed_disp->copy_label(
-                StringFormat("%s %s", _("Seed:"), string_seed.c_str()).c_str());
-            main_win->build_box->seed_disp->redraw();
-        } else {
-            main_win->build_box->seed_disp->copy_label(
-                StringFormat("%s %s", _("Seed:"), seed.c_str()).c_str());
-            main_win->build_box->seed_disp->redraw();
-        }
-        main_win->game_box->SetAbortButton(true);
-        main_win->build_box->SetStatus(_("Preparing..."));
-        main_win->Locked(true);
-    }
+
 #endif
 
     const uint32_t start_time = TimeGetMillies();
@@ -1186,9 +490,7 @@ bool Build_Cool_Shit() {
 
 #ifndef CONSOLE_ONLY
     // coerce FLTK to redraw the main window
-    for (int r_loop = 0; r_loop < 6; r_loop++) {
-        Fl::wait(0.06);
-    }
+
 #endif
 
     if (was_ok) {
@@ -1206,41 +508,20 @@ bool Build_Cool_Shit() {
         LogPrintf("\nTOTAL TIME: %g seconds\n\n", total_time / 1000.0);
 
         string_seed.clear();
-
-#ifdef WIN32
-#ifndef CONSOLE_ONLY
-        if (main_win) Main::Blinker();
-#endif
-#endif
     } else {
         string_seed.clear();
 #ifndef CONSOLE_ONLY
-        if (main_win) {
-            main_win->build_box->seed_disp->copy_label(_("Seed: -"));
-            main_win->build_box->seed_disp->redraw();
-            main_win->build_box->name_disp->copy_label("");
-            main_win->build_box->name_disp->redraw();
-        }
+
 #endif
     }
 
 #ifndef CONSOLE_ONLY
-    if (main_win) {
-        main_win->build_box->Prog_Finish();
-        main_win->game_box->SetAbortButton(false);
-        main_win->Locked(false);
-    }
-#endif
 
+#endif
     if (main_action == MAIN_CANCEL) {
         main_action = 0;
 #ifndef CONSOLE_ONLY
-        if (main_win) {
-            main_win->label(StringFormat("%s %s \"%s\"", OBSIDIAN_TITLE.c_str(),
-                                        OBSIDIAN_SHORT_VERSION,
-                                        OBSIDIAN_CODE_NAME.c_str())
-                                .c_str());
-        }
+
 #endif
         Main::ProgStatus(_("Cancelled"));
     }
@@ -1431,7 +712,7 @@ hardrestart:;
     Determine_ConfigFile();
     Determine_OptionsFile();
 #ifndef CONSOLE_ONLY
-    Determine_ThemeFile();
+
 #endif
     Determine_LoggingFile();
     Determine_ReferenceFile();
@@ -1460,8 +741,7 @@ hardrestart:;
     LogPrintf("\n");
 
 #ifndef CONSOLE_ONLY
-    LogPrintf("Library versions: FLTK %d.%d.%d\n\n", FL_MAJOR_VERSION,
-              FL_MINOR_VERSION, FL_PATCH_VERSION);
+
 #endif
 
     LogPrintf("home_dir: %s\n", home_dir.u8string().c_str());
@@ -1472,13 +752,13 @@ hardrestart:;
 
     if (!batch_mode) {
 #ifndef CONSOLE_ONLY
-        Theme_Options_Load(theme_file);
+
 #endif
         Trans_SetLanguage();
         OBSIDIAN_TITLE = _("OBSIDIAN Level Maker");
         OBSIDIAN_CODE_NAME = _("Unstable");
 #ifndef CONSOLE_ONLY
-        Main::SetupFLTK();
+
 #endif
     }
 
@@ -1649,19 +929,9 @@ softrestart:;
 
 // create the main window
 #ifndef CONSOLE_ONLY
-        fl_register_images();  // Needed for Unix window icon and Clippy
 
-        if (!clippy) {
-            clippy = new Fl_Pixmap(clippy_xpm);
-        }
-
-        int main_w, main_h;
-        UI_MainWin::CalcWindowSize(&main_w, &main_h);
-
-        main_win = new UI_MainWin(main_w, main_h, main_title.c_str());
 #endif
     }
-
     Script_Open();
 
     ob_set_config("locale", selected_lang.c_str());
@@ -1689,120 +959,13 @@ softrestart:;
     Cookie_ParseArguments();
 
 #ifndef CONSOLE_ONLY
-    if (main_win) {
-        if (StringCaseCmp(main_win->game_box->engine->GetID(), "idtech_0") == 0) {
-            main_win->game_box->theme->deactivate();
-        } else {
-            main_win->game_box->theme->activate();
-        }
-    }
+
 #endif
 
     if (main_action != MAIN_SOFT_RESTART) {
 #ifndef CONSOLE_ONLY
-        // Have to add these after reading existing settings - Dasho
-        if (main_win) {
-            main_win->menu_bar->add(
-                _("Surprise Me/Preserve Old Config"), nullptr,
-                main_win_surprise_config_CB, nullptr,
-                FL_MENU_TOGGLE | (preserve_old_config ? FL_MENU_VALUE : 0));
-            main_win->menu_bar->add(
-                _("Surprise Me/Randomize Architecture"), nullptr,
-                main_win_architecture_config_CB, nullptr,
-                FL_MENU_TOGGLE | (randomize_architecture ? FL_MENU_VALUE : 0));
-            main_win->menu_bar->add(
-                _("Surprise Me/Randomize Combat"), nullptr,
-                main_win_monsters_config_CB, nullptr,
-                FL_MENU_TOGGLE | (randomize_monsters ? FL_MENU_VALUE : 0));
-            main_win->menu_bar->add(
-                _("Surprise Me/Randomize Pickups"), nullptr,
-                main_win_pickups_config_CB, nullptr,
-                FL_MENU_TOGGLE | (randomize_pickups ? FL_MENU_VALUE : 0));
-            main_win->menu_bar->add(
-                _("Surprise Me/Randomize Other"), nullptr, main_win_misc_config_CB,
-                nullptr, FL_MENU_TOGGLE | (randomize_misc ? FL_MENU_VALUE : 0));
-            if (all_addons.size() == 0) {
-                main_win->menu_bar->add(_("Addons/No folders or *.oaf files"), nullptr, nullptr, nullptr,
-                                        FL_MENU_INACTIVE);
-                main_win->menu_bar->add(_("Addons/found in the \\/addons directory!"), nullptr, nullptr, nullptr,
-                                        FL_MENU_INACTIVE);
-            } else {
-                main_win->menu_bar->add(_("Addons/Restart and Apply Changes"),
-                    nullptr, main_win_apply_addon_CB, nullptr, 0);
-                for (int i = 0; i < all_addons.size(); i++) {
-                    std::string addon_entry = _("Addons/");
-                    addon_entry.append(all_addons[i].name.filename().string());
-                    main_win->menu_bar->add(
-                        addon_entry.c_str(), nullptr, main_win_addon_CB,
-                        (void *)&all_addons[i],
-                        FL_MENU_TOGGLE |
-                            (all_addons[i].enabled ? FL_MENU_VALUE : 0));
-                }
-            }
-            if (all_presets.size() == 0) {
-                main_win->menu_bar->add(_("Presets/No *.txt preset files"), nullptr, nullptr, nullptr,
-                                        FL_MENU_INACTIVE);
-                main_win->menu_bar->add(_("Presets/found in the \\/presets directory!"), nullptr, nullptr, nullptr,
-                                        FL_MENU_INACTIVE);
-            } else {
-                main_win->menu_bar->add(_("Presets/Note: Selecting a Preset will immediately apply it!"),
-                        nullptr, nullptr, nullptr, FL_MENU_INACTIVE);
-                for (int i = 0; i < all_presets.size(); i++) {
-                    std::string preset_entry = _("Presets/");
-                    preset_entry.append(all_presets[i].stem().string());
-                    main_win->menu_bar->add(
-                        preset_entry.c_str(), nullptr, main_win_preset_CB,
-                        (void *)&all_presets[i], 0);
-                }
-            }
-            main_win->menu_bar->add(_("Summon Clippy"), nullptr, main_win_clippy_CB);
-        }
-
-#ifdef WIN32
-        main_win->icon((const void *)LoadIcon(fl_display, MAKEINTRESOURCE(1)));
-#else
-#ifdef UNIX
-        Fl_Pixmap program_icon(obsidian_icon);
-        Fl_RGB_Image rgb_icon(&program_icon, FL_BLACK);
-        UI_MainWin::default_icon(&rgb_icon);
-#endif
-#endif
-
         // show window (pass some dummy arguments)
-        {
-            char *fake_argv[2];
-            fake_argv[0] = strdup("Obsidian.exe");
-            fake_argv[1] = NULL;
-            main_win->show(1 /* argc */, fake_argv);
-            if (old_w > 0 && old_h > 0) {
-                main_win->resize(old_x, old_y, old_w, old_h);
-            }
-        }
 
-#ifdef WIN32  // Populate structure for taskbar/window flash. Must be done after
-              // main_win->show() function - Dasho
-        if (!blinker) {
-            blinker = new FLASHWINFO;
-            blinker->cbSize = sizeof(FLASHWINFO);
-            blinker->hwnd = fl_xid(main_win);
-            blinker->dwFlags = FLASHW_ALL | FLASHW_TIMERNOFG;
-            blinker->dwTimeout = 0;
-            blinker->uCount = 0;
-        } else {
-            blinker->hwnd = fl_xid(main_win);
-            if (!old_seed.empty() && !old_name.empty()) Main::Blinker();
-        }
-#endif
-
-        // kill the stupid bright background of the "plastic" scheme
-        if (widget_theme == 3) {
-            delete Fl::scheme_bg_;
-            Fl::scheme_bg_ = NULL;
-
-            main_win->image(NULL);
-        }
-
-        Fl::add_handler(Main_key_handler);
 #endif
     }
 
@@ -1840,31 +1003,6 @@ softrestart:;
 #ifndef CONSOLE_ONLY
         // draw an empty map (must be done after main window is
         // shown() because that is when FLTK finalises the colors).
-        main_win->build_box->mini_map->EmptyMap();
-
-        if (!old_seed.empty()) {
-            main_win->build_box->seed_disp->copy_label(
-                StringFormat("%s %s", _("Seed:"), old_seed.c_str()).c_str());
-            old_seed.clear();
-        }
-
-        if (!old_name.empty()) {
-            main_win->build_box->name_disp->copy_label(old_name.c_str());
-            old_name.clear();
-        }
-
-        if (old_pixels) {
-            if (main_win->build_box->mini_map->pixels) {
-                delete[] main_win->build_box->mini_map->pixels;
-            }
-            int map_size = main_win->build_box->mini_map->map_W *
-                           main_win->build_box->mini_map->map_H * 3;
-            main_win->build_box->mini_map->pixels = new uint8_t[map_size];
-            memcpy(main_win->build_box->mini_map->pixels, old_pixels, map_size);
-            delete[] old_pixels;
-            old_pixels = NULL;
-            main_win->build_box->mini_map->MapFinish();
-        }
 #endif
     }
 
@@ -1874,9 +1012,8 @@ softrestart:;
         // run the GUI until the user quits
         for (;;) {
 #ifndef CONSOLE_ONLY
-            Fl::wait(0.2);
-#endif
 
+#endif
             if (main_action == MAIN_QUIT || main_action == MAIN_HARD_RESTART ||
                 main_action == MAIN_SOFT_RESTART) {
                 break;
@@ -1902,29 +1039,13 @@ softrestart:;
                 did_specify_seed = false;
 
 #ifndef CONSOLE_ONLY
-                if (result) {
-                    old_seed = string_seed.empty() ? NumToString(next_rand_seed)
-                                                   : string_seed;
-                    if (main_win->build_box->name_disp->label()) {
-                        old_name = main_win->build_box->name_disp->label();
-                    }
-                    if (main_win->build_box->mini_map->pixels) {
-                        int map_size = main_win->build_box->mini_map->map_W *
-                                       main_win->build_box->mini_map->map_H * 3;
-                        old_pixels = new uint8_t[map_size];
-                        memcpy(old_pixels,
-                               main_win->build_box->mini_map->pixels, map_size);
-                    }
-                } else {
-                    old_seed.clear();
-                    old_name.clear();
-                }
-                main_win->build_box->alt_disp->label("");
+
 #endif
                 // regardless of success or fail, compute a new seed
                 Main_CalcNewSeed();
 
-                main_action = MAIN_SOFT_RESTART;
+                //main_action = MAIN_SOFT_RESTART;
+                main_action = MAIN_NONE;
             }
         }
     } catch (const assert_fail_c &err) {
@@ -1938,33 +1059,13 @@ softrestart:;
         LogPrintf("\nQuit......\n\n");
     }
 #ifndef CONSOLE_ONLY
-    Theme_Options_Save(theme_file);
+
 #endif
     Options_Save(options_file);
 
     if (main_action == MAIN_HARD_RESTART || main_action == MAIN_SOFT_RESTART) {
 #ifndef CONSOLE_ONLY
-        if (main_win) {
-            // on fatal error we cannot risk calling into the Lua runtime
-            // (it's state may be compromised by a script error).
-            if (!config_file.empty() && !preserve_old_config) {
-                if (did_randomize) {
-                    if (!preserve_old_config) {
-                        Cookie_Save(config_file);
-                    }
-                } else {
-                    Cookie_Save(config_file);
-                }
-            }
-            if (main_action == MAIN_HARD_RESTART) {
-                old_x = main_win->x();
-                old_y = main_win->y();
-                old_w = main_win->w();
-                old_h = main_win->h();
-                delete main_win;
-                main_win = nullptr;
-            }
-        }
+
 #endif
         Script_Close();
         if (main_action == MAIN_SOFT_RESTART) {

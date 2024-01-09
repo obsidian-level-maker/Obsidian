@@ -26,8 +26,8 @@
 #include <array>
 
 #ifndef CONSOLE_ONLY
-#include "hdr_fltk.h"
-#include "hdr_ui.h"
+#
+
 #endif
 #include "headers.h"
 
@@ -397,19 +397,7 @@ int gui_add_choice(lua_State *L) {
     SYS_ASSERT(!button.empty() && !id.empty() && !label.empty());
 
 #ifndef CONSOLE_ONLY
-    if (!main_win) {
-        return 0;
-    }
-
-    // only allowed during startup
-    if (has_added_buttons) {
-        Main::FatalError("Script problem: gui.add_choice called late.\n");
-    }
-
-    if (!main_win->game_box->AddChoice(button, id, label)) {
-        return luaL_error(L, "add_choice: unknown button '%s'\n",
-                          button.c_str());
-    }
+    return 0;
 #endif
     return 0;
 }
@@ -425,14 +413,7 @@ int gui_enable_choice(lua_State *L) {
     SYS_ASSERT(!button.empty() && !id.empty());
 
 #ifndef CONSOLE_ONLY
-    if (!main_win) {
-        return 0;
-    }
-
-    if (!main_win->game_box->EnableChoice(button, id, enable)) {
-        return luaL_error(L, "enable_choice: unknown button '%s'\n",
-                          button.c_str());
-    }
+    return 0;
 #endif
     return 0;
 }
@@ -446,14 +427,7 @@ int gui_set_button(lua_State *L) {
     SYS_ASSERT(!button.empty() && !id.empty());
 
 #ifndef CONSOLE_ONLY
-    if (!main_win) {
-        return 0;
-    }
-
-    if (!main_win->game_box->SetButton(button, id)) {
-        return luaL_error(L, "set_button: unknown button '%s'\n",
-                          button.c_str());
-    }
+    return 0;
 #endif
     return 0;
 }
@@ -462,8 +436,7 @@ int gui_set_button(lua_State *L) {
 //
 int gui_check_simple_mode(lua_State *L) {
 #ifndef CONSOLE_ONLY
-    int value = (gui_simple_mode) ? 1 : 0;
-    lua_pushboolean(L, value);
+    lua_pushboolean(L, 0);
 #else
     lua_pushboolean(L, 0);
 #endif
@@ -485,52 +458,7 @@ int gui_add_module(lua_State *L) {
     SYS_ASSERT(!where.empty() && !id.empty() && !label.empty());
 
 #ifndef CONSOLE_ONLY
-    if (!main_win) {
-        return 0;
-    }
-
-    // only allowed during startup
-    if (has_added_buttons) {
-        Main::FatalError("Script problem: gui.add_module called late.\n");
-    }
-
-    if (StringCaseCmp(where, "arch") == 0) {
-        if (!main_win->mod_tabs->arch_mods->FindID(id)) {
-            main_win->mod_tabs->arch_mods->AddModule(id, label, tip, red, green, blue,
-                                        suboptions);
-        }
-    } else if (StringCaseCmp(where, "combat") == 0) {
-        if (!main_win->mod_tabs->combat_mods->FindID(id)) {
-            main_win->mod_tabs->combat_mods->AddModule(id, label, tip, red, green, blue,
-                                        suboptions);
-        }
-    } else if (StringCaseCmp(where, "pickup") == 0) {
-        if (!main_win->mod_tabs->pickup_mods->FindID(id)) {
-            main_win->mod_tabs->pickup_mods->AddModule(id, label, tip, red, green, blue,
-                                        suboptions);
-        }
-    } else if (StringCaseCmp(where, "other") == 0) {
-        if (!main_win->mod_tabs->other_mods->FindID(id)) {
-            main_win->mod_tabs->other_mods->AddModule(id, label, tip, red, green, blue,
-                                        suboptions);
-        }
-    } else if (StringCaseCmp(where, "debug") == 0) {
-        if (!main_win->mod_tabs->debug_mods->FindID(id)) {
-            main_win->mod_tabs->debug_mods->AddModule(id, label, tip, red, green, blue,
-                                        suboptions);
-        }
-    } else if (StringCaseCmp(where, "experimental") == 0) {
-        if (!main_win->mod_tabs->experimental_mods->FindID(id)) {
-            main_win->mod_tabs->experimental_mods->AddModule(id, label, tip, red, green, blue,
-                                        suboptions);
-        }
-    } else if (StringCaseCmp(where, "links") == 0) {
-        if (!main_win->mod_tabs->links->FindID(id)) {
-            main_win->mod_tabs->links->AddModule(id, label, tip, red, green, blue,
-                                        suboptions);
-        }
-    }
-
+    return 0;
 #endif
     return 0;
 }
@@ -545,18 +473,7 @@ int gui_set_module(lua_State *L) {
     SYS_ASSERT(!module.empty());
 
 #ifndef CONSOLE_ONLY
-    if (!main_win) {
-        return 0;
-    }
-
-    // FIXME : error if module is unknown
-    for (int i=0; i < main_win->mod_tabs->children(); i++) {
-        UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(i);
-        if (tab->EnableMod(module, opt_val)) {
-            break;
-        }
-    }
-
+    return 0;
 #endif
     return 0;
 }
@@ -571,17 +488,7 @@ int gui_show_module(lua_State *L) {
     SYS_ASSERT(!module.empty());
 
 #ifndef CONSOLE_ONLY
-    if (!main_win) {
-        return 0;
-    }
-
-    // FIXME : error if module is unknown
-    for (int i=0; i < main_win->mod_tabs->children(); i++) {
-        UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(i);
-        if (tab->ShowModule(module, shown)) {
-            break;
-        }
-    }
+    return 0;
 #endif
     return 0;
 }
@@ -598,30 +505,7 @@ int gui_add_module_header(lua_State *L) {
 
     SYS_ASSERT(!module.empty() && !option.empty());
 #ifndef CONSOLE_ONLY
-    if (!main_win) {
-        return 0;
-    }
-
-    // only allowed during startup
-    if (has_added_buttons) {
-        Main::FatalError(
-            "Script problem: gui.add_module_header called late.\n");
-    }
-
-    for (int i=0; i < main_win->mod_tabs->children(); i++) {
-        UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(i);
-        UI_Module *mod = tab->FindID(module);
-        if (mod) {
-            if (!mod->FindHeaderOpt(option)) {
-                tab->AddHeader(module, option, label, gap);
-            }
-            return 0;
-        }
-    } 
-
-    Main::FatalError(
-        "Script problem: gui.add_module_header_option called for "
-        "non-existent module!\n");
+    return 0;
 #endif
     return 0;
 }
@@ -640,30 +524,7 @@ int gui_add_module_url(lua_State *L) {
 
     SYS_ASSERT(!module.empty() && !option.empty() && !url.empty());
 #ifndef CONSOLE_ONLY
-    if (!main_win) {
-        return 0;
-    }
-
-    // only allowed during startup
-    if (has_added_buttons) {
-        Main::FatalError(
-            "Script problem: gui.add_module_url called late.\n");
-    }
-
-    for (int i=0; i < main_win->mod_tabs->children(); i++) {
-        UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(i);
-        UI_Module *mod = tab->FindID(module);
-        if (mod) {
-            if (!mod->FindUrlOpt(option)) {
-                tab->AddUrl(module, option, label, url, gap);
-            }
-            return 0;
-        }
-    } 
-
-    Main::FatalError(
-        "Script problem: gui.add_module_url called for "
-        "non-existent module!\n");
+    return 0;
 #endif
     return 0;
 }
@@ -686,31 +547,7 @@ int gui_add_module_option(lua_State *L) {
 
     SYS_ASSERT(!module.empty() && !option.empty() && !default_value.empty());
 #ifndef CONSOLE_ONLY
-    if (!main_win) {
-        return 0;
-    }
-
-    // only allowed during startup
-    if (has_added_buttons) {
-        Main::FatalError(
-            "Script problem: gui.add_module_option called late.\n");
-    }
-
-    for (int i=0; i < main_win->mod_tabs->children(); i++) {
-        UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(i);
-        UI_Module *mod = tab->FindID(module);
-        if (mod) {
-            if (!mod->FindOpt(option)) {
-                tab->AddOption(module, option, label, tip, longtip, gap,
-                                        randomize_group, default_value);
-            }
-            return 0;
-        }
-    } 
-
-    Main::FatalError(
-        "Script problem: gui.add_module_option called for "
-        "non-existent module!\n");
+    return 0;
 #endif
     return 0;
 }
@@ -741,32 +578,7 @@ int gui_add_module_slider_option(lua_State *L) {
 
     SYS_ASSERT(!module.empty() && !option.empty() && !default_value.empty());
 #ifndef CONSOLE_ONLY
-    if (!main_win) {
-        return 0;
-    }
-
-    // only allowed during startup
-    if (has_added_buttons) {
-        Main::FatalError(
-            "Script problem: gui.add_module_option called late.\n");
-    }
-
-    for (int i=0; i < main_win->mod_tabs->children(); i++) {
-        UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(i);
-        UI_Module *mod = tab->FindID(module);
-        if (mod) {
-            if (!mod->FindSliderOpt(option)) {
-                tab->AddSliderOption(
-                    module, option, label, tip, longtip, gap, min, max, inc, units,
-                    presets, nan, randomize_group, default_value);
-            }
-            return 0;
-        }
-    } 
-
-    Main::FatalError(
-        "Script problem: gui.add_module_slider_option called for "
-        "non-existent module!\n");
+    return 0;
 #endif
     return 0;
 }
@@ -789,32 +601,7 @@ int gui_add_module_button_option(lua_State *L) {
 
     SYS_ASSERT(!module.empty() && !option.empty() && !default_value.empty());
 #ifndef CONSOLE_ONLY
-    if (!main_win) {
-        return 0;
-    }
-
-    // only allowed during startup
-    if (has_added_buttons) {
-        Main::FatalError(
-            "Script problem: gui.add_module_option called late.\n");
-    }
-
-    for (int i=0; i < main_win->mod_tabs->children(); i++) {
-        UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(i);
-        UI_Module *mod = tab->FindID(module);
-        if (mod) {
-            if (!mod->FindButtonOpt(option)) {
-                tab->AddButtonOption(module, option, label, tip,
-                                                longtip, gap, randomize_group,
-                                                default_value);
-            }
-            return 0;
-        }
-    } 
-
-    Main::FatalError(
-        "Script problem: gui.add_module_button_option called for "
-        "non-existent module!\n");
+    return 0;
 #endif
     return 0;
 }
@@ -831,22 +618,7 @@ int gui_add_option_choice(lua_State *L) {
     SYS_ASSERT(!module.empty() && !option.empty());
 
 #ifndef CONSOLE_ONLY
-    if (!main_win) {
-        return 0;
-    }
-
-    // only allowed during startup
-    if (has_added_buttons) {
-        Main::FatalError(
-            "Script problem: gui.add_option_choice called late.\n");
-    }
-
-    for (int i=0; i < main_win->mod_tabs->children(); i++) {
-        UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(i);
-        if (tab->AddOptionChoice(module, option, id, label)) {
-            break;
-        }
-    }
+    return 0;
 #endif
     return 0;
 }
@@ -861,24 +633,7 @@ int gui_set_module_option(lua_State *L) {
     SYS_ASSERT(!module.empty() && !option.empty() && !value.empty());
 
 #ifndef CONSOLE_ONLY
-    if (!main_win) {
-        return 0;
-    }
-
-    if (!StringCaseCmp(option, "self")) {
-        return luaL_error(L, "set_module_option: cannot use 'self' here\n",
-                          option.c_str());
-    }
-
-    for (int i=0; i < main_win->mod_tabs->children(); i++) {
-        UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(i);
-        if (tab->SetOption(module, option, value)) {
-            return 0;
-        }
-    }
-
-    return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
-                        module.c_str(), option.c_str());
+    return 0;
 #endif
     return 0;
 }
@@ -892,24 +647,7 @@ int gui_set_module_slider_option(lua_State *L) {
 
     SYS_ASSERT(!module.empty() && !option.empty() && !value.empty());
 #ifndef CONSOLE_ONLY
-    if (!main_win) {
-        return 0;
-    }
-
-    if (!StringCaseCmp(option, "self")) {
-        return luaL_error(L, "set_module_option: cannot use 'self' here\n",
-                          option.c_str());
-    }
-
-    for (int i=0; i < main_win->mod_tabs->children(); i++) {
-        UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(i);
-        if (tab->SetSliderOption(module, option, value)) {
-            return 0;
-        }
-    }
-
-    return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
-                        module.c_str(), option.c_str());
+    return 0;
 #endif
     return 0;
 }
@@ -923,24 +661,7 @@ int gui_set_module_button_option(lua_State *L) {
 
     SYS_ASSERT(!module.empty() && !option.empty());
 #ifndef CONSOLE_ONLY
-    if (!main_win) {
-        return 0;
-    }
-
-    if (!StringCaseCmp(option, "self")) {
-        return luaL_error(L, "set_module_option: cannot use 'self' here\n",
-                          option.c_str());
-    }
-
-    for (int i=0; i < main_win->mod_tabs->children(); i++) {
-        UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(i);
-        if (tab->SetButtonOption(module, option, value)) {
-            return 0;
-        }
-    }
-
-    return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
-                        module.c_str(), option.c_str());
+    return 0;
 #endif
     return 0;
 }
@@ -953,34 +674,7 @@ int gui_get_module_slider_value(lua_State *L) {
     SYS_ASSERT(!module.empty() && !option.empty());
 
 #ifndef CONSOLE_ONLY
-    if (!main_win) {
-        return 0;
-    }
-
-    for (int i=0; i < main_win->mod_tabs->children(); i++) {
-        UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(i);
-        UI_Module *mod = tab->FindID(module);
-        if (mod) {
-            UI_RSlide *slider = mod->FindSliderOpt(option);
-            if (slider) {
-                if (slider->nan_choices.size() > 0) {
-                    if (slider->nan_options->value() > 0) {
-                        lua_pushstring(L, slider->nan_options->text(
-                                        slider->nan_options->value()));
-                    } else {
-                        lua_pushnumber(L, slider->mod_slider->value());
-                    }
-                } else {
-                    lua_pushnumber(L, slider->mod_slider->value());
-                }
-                return 1;
-            }
-        }
-    } 
-
-    return luaL_error(L,
-                        "get_module_slider_value: unknown option '%s.%s'\n",
-                        module.c_str(), option.c_str());
+    return 0;
 #else
     return 0;
 #endif
@@ -994,25 +688,7 @@ int gui_get_module_button_value(lua_State *L) {
     SYS_ASSERT(!module.empty() && !option.empty());
 
 #ifndef CONSOLE_ONLY
-    if (!main_win) {
-        return 0;
-    }
-
-    for (int i=0; i < main_win->mod_tabs->children(); i++) {
-        UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(i);
-        UI_Module *mod = tab->FindID(module);
-        if (mod) {
-            UI_RButton *button = mod->FindButtonOpt(option);
-            if (button) {
-                lua_pushnumber(L, button->mod_check->value());
-                return 1;
-            }
-        }
-    } 
-
-    return luaL_error(L,
-                        "get_module_slider_value: unknown option '%s.%s'\n",
-                        module.c_str(), option.c_str());
+    return 0;
 #else
     return 0;
 #endif
@@ -1028,9 +704,7 @@ int gui_at_level(lua_State *L) {
 
     Main::ProgStatus("%s %s", _("Making"), name.c_str());
 #ifndef CONSOLE_ONLY
-    if (main_win) {
-        main_win->build_box->Prog_AtLevel(index, total);
-    }
+
 #endif
     return 0;
 }
@@ -1040,9 +714,7 @@ int gui_at_level(lua_State *L) {
 int gui_prog_step(lua_State *L) {
     const char *name = luaL_checkstring(L, 1);
 #ifndef CONSOLE_ONLY
-    if (main_win) {
-        main_win->build_box->Prog_Step(name);
-    }
+
 #endif
     return 0;
 }
@@ -1051,7 +723,7 @@ int gui_prog_step(lua_State *L) {
 //
 int gui_ticker(lua_State * /*L*/) {
 #ifndef CONSOLE_ONLY
-    Main::Ticker();
+
 #endif
     return 0;
 }
@@ -1061,7 +733,7 @@ int gui_ticker(lua_State * /*L*/) {
 int gui_abort(lua_State *L) {
     int value = (main_action >= MAIN_CANCEL) ? 1 : 0;
 #ifndef CONSOLE_ONLY
-    Main::Ticker();
+
 #endif
     lua_pushboolean(L, value);
     return 1;
@@ -1139,24 +811,14 @@ int gui_bit_not(lua_State *L) {
 
 int gui_minimap_enable(lua_State *L) {
 #ifndef CONSOLE_ONLY
-    if (main_win) {
-        main_win->build_box->alt_disp->label("");
-    }
+
 #endif
     return 0;
 }
 
 int gui_minimap_disable(lua_State *L) {
 #ifndef CONSOLE_ONLY
-    if (main_win) {
-        main_win->build_box->mini_map->EmptyMap();
-        std::string genny = luaL_checkstring(L, 1);
-        // clang-format off
-        main_win->build_box->alt_disp->copy_label(StringFormat("%s %s -\n%s", 
-            _("Using"),
-            genny.c_str(), _("Preview Not Available")).c_str());
-        // clang-format on
-    }
+
 #endif
     return 0;
 }
@@ -1166,12 +828,7 @@ int gui_minimap_begin(lua_State *L) {
     int map_W = 50;
     int map_H = 50;
 #ifndef CONSOLE_ONLY
-    if (main_win) {
-        map_W = main_win->build_box->mini_map->GetWidth();
-        map_H = main_win->build_box->mini_map->GetHeight();
 
-        main_win->build_box->mini_map->MapBegin();
-    }
 #endif
     lua_pushinteger(L, map_W);
     lua_pushinteger(L, map_H);
@@ -1181,9 +838,7 @@ int gui_minimap_begin(lua_State *L) {
 
 int gui_minimap_finish(lua_State *L) {
 #ifndef CONSOLE_ONLY
-    if (main_win) {
-        main_win->build_box->mini_map->MapFinish();
-    }
+
 #endif
     return 0;
 }
@@ -1191,27 +846,21 @@ int gui_minimap_finish(lua_State *L) {
 int gui_minimap_gif_start(lua_State *L) {
     int delay = luaL_optinteger(L, 1, 10);
 #ifndef CONSOLE_ONLY
-    if (main_win) {
-        main_win->build_box->mini_map->GifStart(gif_filename, delay);
-    }
+
 #endif
     return 0;
 }
 
 int gui_minimap_gif_frame(lua_State *L) {
 #ifndef CONSOLE_ONLY
-    if (main_win) {
-        main_win->build_box->mini_map->GifFrame();
-    }
+
 #endif
     return 0;
 }
 
 int gui_minimap_gif_finish(lua_State *L) {
 #ifndef CONSOLE_ONLY
-    if (main_win) {
-        main_win->build_box->mini_map->GifFinish();
-    }
+
 #endif
     return 0;
 }
@@ -1232,10 +881,7 @@ int gui_minimap_draw_line(lua_State *L) {
     sscanf(color_str, "#%2x%2x%2x", &r, &g, &b);
 
 #ifndef CONSOLE_ONLY
-    if (main_win) {
-        main_win->build_box->mini_map->DrawLine(x1, y1, x2, y2, (uint8_t)r,
-                                                (uint8_t)g, (uint8_t)b);
-    }
+
 #endif
 
     return 0;
@@ -1257,10 +903,7 @@ int gui_minimap_fill_box(lua_State *L) {
     sscanf(color_str, "#%2x%2x%2x", &r, &g, &b);
 
 #ifndef CONSOLE_ONLY
-    if (main_win) {
-        main_win->build_box->mini_map->DrawBox(x1, y1, x2, y2, (uint8_t)r, (uint8_t)g,
-                                               (uint8_t)b);
-    }
+
 #endif
 
     return 0;
@@ -1561,17 +1204,7 @@ static bool Script_CallFunc(std::string func_name, int nresult = 0,
 
 // this will appear in the log file too
 #ifndef CONSOLE_ONLY
-        if (main_win) {
-            main_win->label(StringFormat("%s %s %s \"%s\"", _("[ ERROR ]"),
-                                        OBSIDIAN_TITLE.c_str(), OBSIDIAN_SHORT_VERSION,
-                                        OBSIDIAN_CODE_NAME.c_str())
-                                .c_str());
-            DLG_ShowError("%s: %s", _("Script Error: "), err_msg);
-            main_win->label(StringFormat("%s %s \"%s\"", OBSIDIAN_TITLE.c_str(),
-                                        OBSIDIAN_SHORT_VERSION,
-                                        OBSIDIAN_CODE_NAME.c_str())
-                                .c_str());
-        }
+
 #endif
         lua_pop(LUA_ST, 2);  // ob_traceback, message
         return false;
@@ -1946,24 +1579,11 @@ void ob_invoke_hook(std::string hookname) {
 bool ob_build_cool_shit() {
     if (!Script_CallFunc("ob_build_cool_shit", 1)) {
 #ifndef CONSOLE_ONLY
-        if (main_win) {
-            main_win->label(StringFormat("%s %s %s \"%s\"", _("[ ERROR ]"),
-                                        OBSIDIAN_TITLE.c_str(), OBSIDIAN_SHORT_VERSION,
-                                        OBSIDIAN_CODE_NAME.c_str())
-                                .c_str());
-        }
+
 #endif
         Main::ProgStatus(_("Script Error"));
 #ifndef CONSOLE_ONLY
-        if (main_win) {
-            main_win->label(StringFormat("%s %s \"%s\"", OBSIDIAN_TITLE.c_str(),
-                                        OBSIDIAN_SHORT_VERSION,
-                                        OBSIDIAN_CODE_NAME.c_str())
-                                .c_str());
-#ifdef WIN32
-            Main::Blinker();
-#endif
-        }
+
 #endif
         return false;
     }
