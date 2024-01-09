@@ -5,6 +5,7 @@ PREFABS.Item_locker_cross_lowering =
 
   prob = 50,
   theme = "hell",
+  env = "!cave",
 
   where = "point",
   height = 128,

@@ -2978,7 +2978,9 @@ DOOM.THEMES =
       Skybox_garrett_city = 50
     },
 
-    streets_friendly = true
+    streets_friendly = true,
+
+    plan_wall_multiplier = 4
   },
 
   ------------------------------------

@@ -2082,7 +2082,12 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     end
 
     if PARAM.group_wall_prob and PARAM.group_wall_prob ~= "fab_default" then
-        prob = prob * (PREFAB_CONTROL.WALL_GROUP_ODDS[PARAM.group_wall_prob] or 1)
+      local mult = 1
+      if THEME.plain_wall_multiplier then
+        mult = THEME.plain_wall_multiplier
+      end
+      prob = prob * (PREFAB_CONTROL.WALL_GROUP_ODDS[PARAM.group_wall_prob] 
+      or 1) * mult
     end
 
     prob = math.clamp(0, prob, 100)
@@ -2090,7 +2095,9 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     for _,fg in pairs(R.floor_groups) do
       if rand.odds(prob) then
         fg.wall_group = rand.key_by_probs(tab)
-        if not PARAM.bool_avoid_wall_group_reuse or (PARAM.bool_avoid_wall_group_reuse and PARAM.bool_avoid_wall_group_reuse == 1) then
+        if not PARAM.bool_avoid_wall_group_reuse
+        or (PARAM.bool_avoid_wall_group_reuse
+        and PARAM.bool_avoid_wall_group_reuse == 1) then
           table.add_unique(SEEN_WALL_GROUPS, fg.wall_group.name)
         end
       end
