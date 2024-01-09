@@ -63,8 +63,10 @@ void Parse_Option(const std::string &name, const std::string &value) {
         randomize_misc = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "random_string_seeds") == 0) {
         random_string_seeds = StringToInt(value) ? true : false;
+#ifndef CONSOLE_ONLY
     } else if (StringCaseCmp(name, "gui_simple_mode") == 0) {
         gui_simple_mode = StringToInt(value) ? true : false;
+#endif
     } else if (StringCaseCmp(name, "password_mode") == 0) {
         password_mode = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "mature_word_lists") == 0) {
@@ -165,8 +167,10 @@ bool Options_Save(std::filesystem::path filename) {
     option_fp << "randomize_misc = " << (randomize_misc ? 1 : 0) << "\n";
     option_fp << "random_string_seeds = " << (random_string_seeds ? 1 : 0)
               << "\n";
+#ifndef CONSOLE_ONLY
     option_fp << "gui_simple_mode = " << (gui_simple_mode ? 1 : 0)
               << "\n";
+#endif
     option_fp << "password_mode = " << (password_mode ? 1 : 0) << "\n";
     option_fp << "mature_word_lists = " << (mature_word_lists ? 1 : 0) << "\n";
     option_fp << "filename_prefix = " << filename_prefix << "\n";

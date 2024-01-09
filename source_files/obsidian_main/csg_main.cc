@@ -58,7 +58,7 @@ int spot_high_h = 128;
 extern float q_light_scale;
 extern int q_low_light;
 
-extern void SPOT_FillPolygon(byte content, const int *shape, int count);
+extern void SPOT_FillPolygon(uint8_t content, const int *shape, int count);
 
 extern bool QLIT_ParseProperty(std::string key, std::string value);
 

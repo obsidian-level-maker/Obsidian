@@ -281,7 +281,7 @@ static bool scan_dir_process_name(const std::filesystem::path &name,
     // pretend that zero-length files do not exist
     // [ allows a PK3 to _remove_ a file ]
 
-    byte buffer[1];
+    uint8_t buffer[1];
 
     PHYSFS_File *fp = PHYSFS_openRead(temp_name.generic_u8string().c_str());
 

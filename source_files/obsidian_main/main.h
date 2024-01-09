@@ -197,15 +197,14 @@ void Shutdown(bool error);
 
 template <typename... Args>
 [[noreturn]] void FatalError(std::string_view msg, Args &&...args) {
-    auto buffer = StringFormat(msg, std::forward<Args>(args)...);
 #ifndef CONSOLE_ONLY
+    auto buffer = StringFormat(msg, std::forward<Args>(args)...);
     DLG_ShowError("%s", buffer.c_str());
 #endif
     Detail::Shutdown(true);
 
     if (batch_mode) {
-        StdErrPrintf("%s\n", buffer.c_str());
-        StdErrPrintf("ERROR!\n");
+        std::cout << "ERROR!\n";
 #ifdef WIN32
         std::cout << '\n' << "Close window when finished...";
         do {

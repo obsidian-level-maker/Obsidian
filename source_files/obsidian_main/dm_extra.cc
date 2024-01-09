@@ -57,7 +57,7 @@ static void AddPost(qLump_c *lump, int y, int len, const uint8_t *pixels, int W,
         return;
     }
 
-    byte buffer[512];
+    uint8_t buffer[512];
     uint8_t *dest = buffer;
 
     *dest++ = y;    // Y-OFFSET
@@ -75,7 +75,7 @@ static void AddPost(qLump_c *lump, int y, int len, const uint8_t *pixels, int W,
 }
 
 static void EndOfPost(qLump_c *lump) {
-    byte datum = 255;
+    uint8_t datum = 255;
 
     lump->Append(&datum, 1);
 }
@@ -644,7 +644,7 @@ static void BlastFontChar(int index, int x, int y, uint8_t *pixels, int W, int H
 
     for (int dy = 0; dy < fh; dy++) {
         for (int dx = 0; dx < fw; dx++) {
-            byte pix = font->data[(fy + dy) * font->width + (fx + dx)];
+            uint8_t pix = font->data[(fy + dy) * font->width + (fx + dx)];
 
             if (pix < thresh) {
                 continue;
@@ -777,15 +777,15 @@ int wad_add_text_lump(lua_State *L) {
 }
 
 int wad_add_binary_lump(lua_State *L) {
-    // LUA: wad_add_binary_lump(lump, bytes)
+    // LUA: wad_add_binary_lump(lump, uint8_ts)
     //
-    // The 'bytes' parameter is a table, which can contain numbers, strings,
-    // and booleans.  Each number ends up as a single byte.
+    // The 'uint8_ts' parameter is a table, which can contain numbers, strings,
+    // and booleans.  Each number ends up as a single uint8_t.
 
     const char *name = luaL_checkstring(L, 1);
 
     if (lua_type(L, 2) != LUA_TTABLE) {
-        return luaL_argerror(L, 2, "expected a table: bytes");
+        return luaL_argerror(L, 2, "expected a table: uint8_ts");
     }
 
     qLump_c *lump = new qLump_c();
@@ -802,7 +802,7 @@ int wad_add_binary_lump(lua_State *L) {
 
         int val_type = lua_type(L, -1);
 
-        byte value;
+        uint8_t value;
 
         switch (val_type) {
             case LUA_TNUMBER:
@@ -1160,7 +1160,7 @@ int wad_read_text_lump(lua_State *L) {
     //
     // Open the wad file and find the given lump.  If it exists, it is assumed
     // to be text, and a table is returned containing a string for each line.
-    // Certain characters (esp. zero bytes) will be silently removed.
+    // Certain characters (esp. zero uint8_ts) will be silently removed.
     //
     // If the lump does not exist, NIL is returned.
     // If the _file_ does not exist, an error is raised.
@@ -1289,7 +1289,7 @@ static rgb_color_t Grab_Color(lua_State *L, int stack_idx) {
     return MAKE_RGBA(0, 0, 0, 255); /* NOT REACHED */
 }
 
-static byte PaletteLookup(rgb_color_t col, const rgb_color_t *palette) {
+static uint8_t PaletteLookup(rgb_color_t col, const rgb_color_t *palette) {
     int r = RGB_RED(col);
     int g = RGB_GREEN(col);
     int b = RGB_BLUE(col);

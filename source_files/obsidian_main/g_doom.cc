@@ -1090,7 +1090,7 @@ bool Doom::game_interface_c::Start(const char *preset) {
         if (batch_output_file.is_absolute()) {
             filename = batch_output_file;
         } else {
-            filename = Resolve_DefaultOutputPath() / batch_output_file;
+            filename = std::filesystem::current_path().append(batch_output_file.generic_u8string());
         }
         if (compress_output) {
             zip_filename = filename;

@@ -1901,10 +1901,10 @@ softrestart:;
 
                 did_specify_seed = false;
 
+#ifndef CONSOLE_ONLY
                 if (result) {
                     old_seed = string_seed.empty() ? NumToString(next_rand_seed)
                                                    : string_seed;
-#ifndef CONSOLE_ONLY
                     if (main_win->build_box->name_disp->label()) {
                         old_name = main_win->build_box->name_disp->label();
                     }
@@ -1915,12 +1915,10 @@ softrestart:;
                         memcpy(old_pixels,
                                main_win->build_box->mini_map->pixels, map_size);
                     }
-#endif
                 } else {
                     old_seed.clear();
                     old_name.clear();
                 }
-#ifndef CONSOLE_ONLY
                 main_win->build_box->alt_disp->label("");
 #endif
                 // regardless of success or fail, compute a new seed

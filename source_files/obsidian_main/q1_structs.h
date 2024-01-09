@@ -25,6 +25,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef Q1_STRUCTS_H_
 #define Q1_STRUCTS_H_
 
+#include "headers.h"
+
 // upper design bounds
 
 constexpr int MAX_MAP_HULLS = 4;

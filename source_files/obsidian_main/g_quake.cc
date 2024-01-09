@@ -46,7 +46,7 @@
  *  ---------------------------------------
  *
  *   1. third clipping hull for crouching
- *   2. lighting is colored (3 bytes per luxel)
+ *   2. lighting is colored (3 uint8_ts per luxel)
  *   3. planes are paired (as per Quake II)
  *   4. miptex lump can omit the image data
  *   5. mip-textures have a palette appended (256 triples)
@@ -175,7 +175,7 @@ static void CreateLogoMip(qLump_c *lump, const char *name, const uint8_t *data,
     for (int i = 0; i < MIP_LEVELS; i++) {
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
-                byte pixel = colors[data[(y * scale) * 64 + x * scale] >> 5];
+                uint8_t pixel = colors[data[(y * scale) * 64 + x * scale] >> 5];
 
                 lump->Append(&pixel, 1);
             }
@@ -187,10 +187,10 @@ static void CreateLogoMip(qLump_c *lump, const char *name, const uint8_t *data,
 }
 
 static void TransferOneMipTex(qLump_c *lump, unsigned int m, const char *name) {
-    static std::array<byte, 8> relief_colors =  // yellow range
+    static std::array<uint8_t, 8> relief_colors =  // yellow range
         {207, 205, 203, 201, 199, 197, 195, 193};
 
-    static std::array<byte, 8> bolt_colors =  // blue range
+    static std::array<uint8_t, 8> bolt_colors =  // blue range
         {0, 223, 222, 221, 219, 217, 214, 211};
 
     if (strcmp(name, "error") == 0) {
@@ -218,7 +218,7 @@ static void TransferOneMipTex(qLump_c *lump, unsigned int m, const char *name) {
         int pos = 0;
         int length = WAD2_EntryLen(entry);
 
-        std::array<byte, 1024> buffer;
+        std::array<uint8_t, 1024> buffer;
 
         while (length > 0) {
             int actual = MIN(1024, length);
@@ -537,11 +537,11 @@ static std::array<int, 5> q1_medium_table = {CONTENTS_EMPTY, CONTENTS_WATER,
                                              CONTENTS_SLIME, CONTENTS_LAVA,
                                              CONTENTS_SOLID};
 
-static std::array<std::array<byte, 8>, 4> q1_ambient_levels = {
-    std::array<byte, 8>{255, 208, 176, 144, 112, 80, 48, 16},  // Water
-    std::array<byte, 8>{255, 160, 128, 96, 64, 32, 0, 0},      // Sky
-    std::array<byte, 8>{255, 208, 176, 144, 112, 80, 48, 16},  // Slime (unused)
-    std::array<byte, 8>{255, 208, 176, 144, 112, 80, 48, 16},  // Lava
+static std::array<std::array<uint8_t, 8>, 4> q1_ambient_levels = {
+    std::array<uint8_t, 8>{255, 208, 176, 144, 112, 80, 48, 16},  // Water
+    std::array<uint8_t, 8>{255, 160, 128, 96, 64, 32, 0, 0},      // Sky
+    std::array<uint8_t, 8>{255, 208, 176, 144, 112, 80, 48, 16},  // Slime (unused)
+    std::array<uint8_t, 8>{255, 208, 176, 144, 112, 80, 48, 16},  // Lava
 };
 
 static void Q1_FreeStuff() {

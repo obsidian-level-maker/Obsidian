@@ -2664,7 +2664,7 @@ static void WriteThing(sector_c *S, csg_entity_c *E) {
         }
     }
 
-    byte args[5] = {0, 0, 0, 0, 0};
+    uint8_t args[5] = {0, 0, 0, 0, 0};
 
     E->props.getHexenArgs(args);
 
