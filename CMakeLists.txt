@@ -1,14 +1,5 @@
 cmake_minimum_required(VERSION 3.12..3.20)
 
-add_subdirectory(source_files/ajbsp EXCLUDE_FROM_ALL)
-add_subdirectory(source_files/ajparse EXCLUDE_FROM_ALL)
-#if(NOT CONSOLE_ONLY AND NOT HAIKU)
-#  add_subdirectory(source_files/fltk EXCLUDE_FROM_ALL)
-#endif()
-add_subdirectory(source_files/miniz EXCLUDE_FROM_ALL)
-add_subdirectory(source_files/physfs EXCLUDE_FROM_ALL)
-add_subdirectory(source_files/slump EXCLUDE_FROM_ALL)
-
 project(
   obsidian
   LANGUAGES C CXX
@@ -30,9 +21,9 @@ if(MSVC)
   math(EXPR COMPILE_CORES "${LOGICAL_CORES} - 1")
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP${COMPILE_CORES}")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHa /MP${COMPILE_CORES}")
-  #if(NOT CONSOLE_ONLY)
-    #set(CMAKE_EXE_LINKER_FLAGS "/SUBSYSTEM:WINDOWS")
-  #endif()
+  if(NOT CONSOLE_ONLY)
+    set(CMAKE_EXE_LINKER_FLAGS "/SUBSYSTEM:WINDOWS")
+  endif()
 endif()
 if(MSYS OR MINGW)
   if(NOT CONSOLE_ONLY)
@@ -44,232 +35,18 @@ endif()
 if(APPLE OR ${CMAKE_SYSTEM} MATCHES "BSD")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -I /usr/local/include")
 endif()
-if(${CMAKE_SYSTEM} MATCHES "OpenBSD")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -I /usr/X11R6/include")
-endif()
 
-if(NOT CONSOLE_ONLY AND NOT HAIKU)
-  add_executable(
-    obsidian
-    source_files/obsidian_main/aj_map.cc
-    source_files/obsidian_main/aj_poly.cc
-    source_files/obsidian_main/aj_util.cc
-    source_files/obsidian_main/aj_wad.cc
-    source_files/obsidian_main/csg_bsp.cc
-    source_files/obsidian_main/csg_clip.cc
-    source_files/obsidian_main/csg_doom.cc
-    source_files/obsidian_main/csg_main.cc
-    source_files/obsidian_main/csg_nukem.cc
-    source_files/obsidian_main/csg_quake.cc
-    source_files/obsidian_main/csg_shade.cc
-    source_files/obsidian_main/csg_spots.cc
-    source_files/obsidian_main/dm_extra.cc
-    source_files/obsidian_main/dm_prefab.cc
-    source_files/obsidian_main/g_doom.cc
-    source_files/obsidian_main/g_nukem.cc
-    source_files/obsidian_main/g_quake.cc
-    source_files/obsidian_main/g_quake2.cc
-    source_files/obsidian_main/g_wolf.cc
-    source_files/obsidian_main/lib_argv.cc
-    source_files/obsidian_main/lib_grp.cc
-    source_files/obsidian_main/lib_pak.cc
-    source_files/obsidian_main/lib_tga.cc
-    source_files/obsidian_main/lib_util.cc
-    source_files/obsidian_main/lib_wad.cc
-    source_files/obsidian_main/lib_zip.cc
-    source_files/obsidian_main/m_addons.cc
-    source_files/obsidian_main/m_cookie.cc
-    source_files/obsidian_main/m_lua.cc
-    source_files/obsidian_main/m_options.cc
-    source_files/obsidian_main/m_trans.cc
-    source_files/obsidian_main/main.cc
-    source_files/obsidian_main/obsidian.rc
-    source_files/obsidian_main/q_common.cc
-    source_files/obsidian_main/q_light.cc
-    source_files/obsidian_main/q_tjuncs.cc
-    source_files/obsidian_main/q_vis.cc
-    source_files/obsidian_main/sys_assert.cc
-    source_files/obsidian_main/sys_debug.cc
-    source_files/obsidian_main/sys_xoshiro.cc
-    source_files/obsidian_main/tx_forge.cc
-    source_files/obsidian_main/tx_skies.cc
-    source_files/obsidian_main/vis_buffer.cc
-  )
-else()
-  add_executable(
-    obsidian
-    source_files/obsidian_main/aj_map.cc
-    source_files/obsidian_main/aj_poly.cc
-    source_files/obsidian_main/aj_util.cc
-    source_files/obsidian_main/aj_wad.cc
-    source_files/obsidian_main/csg_bsp.cc
-    source_files/obsidian_main/csg_clip.cc
-    source_files/obsidian_main/csg_doom.cc
-    source_files/obsidian_main/csg_main.cc
-    source_files/obsidian_main/csg_nukem.cc
-    source_files/obsidian_main/csg_quake.cc
-    source_files/obsidian_main/csg_shade.cc
-    source_files/obsidian_main/csg_spots.cc
-    source_files/obsidian_main/dm_extra.cc
-    source_files/obsidian_main/dm_prefab.cc
-    source_files/obsidian_main/g_doom.cc
-    source_files/obsidian_main/g_nukem.cc
-    source_files/obsidian_main/g_quake.cc
-    source_files/obsidian_main/g_quake2.cc
-    source_files/obsidian_main/g_wolf.cc
-    source_files/obsidian_main/lib_argv.cc
-    source_files/obsidian_main/lib_grp.cc
-    source_files/obsidian_main/lib_pak.cc
-    source_files/obsidian_main/lib_tga.cc
-    source_files/obsidian_main/lib_util.cc
-    source_files/obsidian_main/lib_wad.cc
-    source_files/obsidian_main/lib_zip.cc
-    source_files/obsidian_main/m_addons.cc
-    source_files/obsidian_main/m_cookie.cc
-    source_files/obsidian_main/m_lua.cc
-    source_files/obsidian_main/m_options.cc
-    source_files/obsidian_main/m_trans.cc
-    source_files/obsidian_main/main.cc
-    source_files/obsidian_main/obsidian.rc
-    source_files/obsidian_main/q_common.cc
-    source_files/obsidian_main/q_light.cc
-    source_files/obsidian_main/q_tjuncs.cc
-    source_files/obsidian_main/q_vis.cc
-    source_files/obsidian_main/sys_assert.cc
-    source_files/obsidian_main/sys_debug.cc
-    source_files/obsidian_main/sys_xoshiro.cc
-    source_files/obsidian_main/tx_forge.cc
-    source_files/obsidian_main/tx_skies.cc
-    source_files/obsidian_main/vis_buffer.cc
-  )
-endif()
+set(OBSIDIAN_LIB_DIR "${CMAKE_SOURCE_DIR}/libraries")
+set(OBSIDIAN_SOURCE_DIR "${CMAKE_SOURCE_DIR}/source_files")
 
-target_include_directories(obsidian SYSTEM PRIVATE source_files/ajbsp)
-target_include_directories(obsidian SYSTEM PRIVATE source_files/ajparse)
-#if(NOT CONSOLE_ONLY AND NOT HAIKU)
-#  target_include_directories(obsidian SYSTEM PRIVATE source_files/fltk)
-#  target_include_directories(
-#    obsidian SYSTEM PRIVATE "${PROJECT_BINARY_DIR}/source_files/fltk"
-#  ) # Hack for FLTK 1.4 (for now)
-#endif()
-target_include_directories(obsidian SYSTEM PRIVATE source_files/gif-h)
-target_include_directories(obsidian SYSTEM PRIVATE source_files/minilua)
-target_include_directories(obsidian SYSTEM PRIVATE source_files/miniz)
-target_include_directories(obsidian SYSTEM PRIVATE source_files/physfs/src)
-target_include_directories(obsidian SYSTEM PRIVATE source_files/slump)
-
-if(UNIX)
-  if(NOT CONSOLE_ONLY
-     AND NOT HAIKU
-     AND NOT APPLE
-  )
-    find_package(Fontconfig REQUIRED)
+if(NOT CONSOLE_ONLY)
+  if (WIN32)
+    set(SDL2_DIR "${OBSIDIAN_LIB_DIR}/sdl2")
   endif()
+  find_package(SDL2 REQUIRED)
 endif()
 
-# Copies executables to local install directory after build
-add_custom_command(
-  TARGET obsidian
-  POST_BUILD
-  COMMAND "${CMAKE_COMMAND}" -E copy "$<TARGET_FILE:obsidian>"
-          "${CMAKE_CURRENT_LIST_DIR}"
-)
+include_directories(libraries/minilua)
 
-if(UNIX)
-  if(APPLE)
-    if(NOT CONSOLE_ONLY)
-      target_link_libraries(
-        obsidian
-        PRIVATE ajbsp
-                ajparse
-                #fltk
-                #fltk_images
-                miniz
-                physfs-static
-                obsidian_slump
-                "-framework Cocoa"
-                "-framework CoreGraphics"
-                "-framework CoreText"
-                "-framework QuartzCore"
-      )
-    else()
-      target_link_libraries(
-        obsidian PRIVATE ajbsp ajparse miniz physfs-static
-                         obsidian_slump
-      )
-    endif()
-  elseif(${CMAKE_SYSTEM} MATCHES "BSD")
-    if(NOT CONSOLE_ONLY)
-      target_link_libraries(
-        obsidian
-        PRIVATE ajbsp
-                ajparse
-                #fltk
-                #fltk_images
-                miniz
-                physfs-static
-                obsidian_slump
-      )
-    else()
-      target_link_libraries(
-        obsidian PRIVATE ajbsp ajparse miniz physfs-static
-                         obsidian_slump
-      )
-    endif()
-  elseif(HAIKU)
-    target_link_libraries(
-      obsidian
-      PRIVATE ajbsp
-              ajparse
-              miniz
-              physfs-static
-              obsidian_slump
-              pthread
-              be
-              root
-    )
-  else()
-    if(NOT CONSOLE_ONLY)
-      target_link_libraries(
-        obsidian
-        PRIVATE ajbsp
-                ajparse
-                #fltk
-                #fltk_images
-                miniz
-                physfs-static
-                obsidian_slump
-                fontconfig
-                pthread
-      )
-    else()
-      target_link_libraries(
-        obsidian
-        PRIVATE ajbsp
-                ajparse
-                miniz
-                physfs-static
-                obsidian_slump
-                pthread
-      )
-    endif()
-  endif()
-else()
-  if(NOT CONSOLE_ONLY)
-    target_link_libraries(
-      obsidian
-      PRIVATE ajbsp
-              ajparse
-              #fltk
-              #fltk_images
-              miniz
-              physfs-static
-              obsidian_slump
-    )
-  else()
-    target_link_libraries(
-      obsidian PRIVATE ajbsp ajparse miniz physfs-static
-                       obsidian_slump
-    )
-  endif()
-endif()
+add_subdirectory(libraries)
+add_subdirectory(source_files)

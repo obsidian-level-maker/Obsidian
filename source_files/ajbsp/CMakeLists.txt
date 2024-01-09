@@ -15,5 +15,5 @@ add_library(ajbsp
 	wad.cc
 )
 
-target_include_directories(ajbsp PRIVATE ../ajparse)
-target_include_directories(ajbsp PRIVATE ../miniz)
+target_include_directories(ajbsp PRIVATE ${OBSIDIAN_SOURCE_DIR}/ajparse)
+target_include_directories(ajbsp PRIVATE ${OBSIDIAN_LIB_DIR}/miniz)

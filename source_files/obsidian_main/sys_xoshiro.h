@@ -1,8 +1,6 @@
 // Xoshiro256 Random Generator
 
-#include "../fastPRNG/fastPRNG.h"
-
-extern fastPRNG::fastXS64 xoshiro;
+#include <stdint.h>
 
 void xoshiro_Reseed(uint64_t newseed);
 

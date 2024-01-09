@@ -586,6 +586,9 @@ skiprest:;
 
 /* ----- main program ----------------------------- */
 
+#ifndef CONSOLE_ONLY
+#include "SDL.h"
+#endif
 int main(int argc, char **argv) {
     // initialise argument parser (skipping program name)
 
