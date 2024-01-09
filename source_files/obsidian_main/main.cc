@@ -22,12 +22,8 @@
 #include <array>
 #include "main.h"
 #include "images.h"
-
 #include "csg_main.h"
 #include "g_nukem.h"
-#ifndef CONSOLE_ONLY
-
-#endif
 #include "headers.h"
 #include "lib_argv.h"
 #include "lib_util.h"
@@ -39,7 +35,7 @@
 #include "physfs.h"
 #include "sys_xoshiro.h"
 #ifndef CONSOLE_ONLY
-
+#include "hdr_SDL.h"
 #endif
 
 /**
@@ -586,9 +582,6 @@ skiprest:;
 
 /* ----- main program ----------------------------- */
 
-#ifndef CONSOLE_ONLY
-#include "SDL.h"
-#endif
 int main(int argc, char **argv) {
     // initialise argument parser (skipping program name)
 

@@ -9,6 +9,12 @@ project(
 string(TIMESTAMP BUILD_TIMESTAMP "%Y.%m.%d" UTC)
 add_compile_definitions(OBSIDIAN_TIMESTAMP="${BUILD_TIMESTAMP}")
 
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
+  set(CLANG true)
+else()
+  set(CLANG false)
+endif()
+
 if(CONSOLE_ONLY OR HAIKU)
   add_compile_definitions(CONSOLE_ONLY=1)
 endif()
