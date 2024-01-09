@@ -4,7 +4,6 @@ include(cmake/CPM.cmake)
 
 add_subdirectory(source_files/ajbsp EXCLUDE_FROM_ALL)
 add_subdirectory(source_files/ajparse EXCLUDE_FROM_ALL)
-add_subdirectory(source_files/filename_formatter EXCLUDE_FROM_ALL)
 if(NOT CONSOLE_ONLY AND NOT HAIKU)
   add_subdirectory(source_files/fltk EXCLUDE_FROM_ALL)
 endif()
@@ -187,10 +186,6 @@ endif()
 
 target_include_directories(obsidian SYSTEM PRIVATE source_files/ajbsp)
 target_include_directories(obsidian SYSTEM PRIVATE source_files/ajparse)
-target_include_directories(
-  obsidian SYSTEM PRIVATE source_files/filename_formatter
-                          ${CMAKE_CURRENT_BINARY_DIR}/obsidian-include
-)
 if(NOT CONSOLE_ONLY AND NOT HAIKU)
   target_include_directories(obsidian SYSTEM PRIVATE source_files/fltk)
   target_include_directories(
@@ -255,7 +250,6 @@ if(UNIX)
         obsidian
         PRIVATE ajbsp
                 ajparse
-                filename_formatter
                 fltk
                 fltk_images
                 miniz
@@ -268,8 +262,8 @@ if(UNIX)
       )
     else()
       target_link_libraries(
-        obsidian PRIVATE filename_formatter miniz physfs-static
-                         obsidian_zdbsp obsidian_slump
+        obsidian PRIVATE ajbsp ajparse miniz physfs-static
+                         obsidian_slump
       )
     endif()
   elseif(${CMAKE_SYSTEM} MATCHES "BSD")
@@ -278,7 +272,6 @@ if(UNIX)
         obsidian
         PRIVATE ajbsp
                 ajparse
-                filename_formatter
                 fltk
                 fltk_images
                 miniz
@@ -287,8 +280,8 @@ if(UNIX)
       )
     else()
       target_link_libraries(
-        obsidian PRIVATE filename_formatter miniz physfs-static
-                         obsidian_zdbsp obsidian_slump
+        obsidian PRIVATE ajbsp ajparse miniz physfs-static
+                         obsidian_slump
       )
     endif()
   elseif(HAIKU)
@@ -296,7 +289,6 @@ if(UNIX)
       obsidian
       PRIVATE ajbsp
               ajparse
-              filename_formatter
               miniz
               physfs-static
               obsidian_slump
@@ -310,7 +302,6 @@ if(UNIX)
         obsidian
         PRIVATE ajbsp
                 ajparse
-                filename_formatter
                 fltk
                 fltk_images
                 miniz
@@ -324,7 +315,6 @@ if(UNIX)
         obsidian
         PRIVATE ajbsp
                 ajparse
-                filename_formatter
                 miniz
                 physfs-static
                 obsidian_slump
@@ -338,7 +328,6 @@ else()
       obsidian
       PRIVATE ajbsp
               ajparse
-              filename_formatter
               fltk
               fltk_images
               miniz
@@ -347,8 +336,8 @@ else()
     )
   else()
     target_link_libraries(
-      obsidian PRIVATE filename_formatter miniz physfs-static
-                       obsidian_zdbsp obsidian_slump
+      obsidian PRIVATE ajbsp ajparse miniz physfs-static
+                       obsidian_slump
     )
   endif()
 endif()
