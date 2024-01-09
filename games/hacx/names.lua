@@ -694,7 +694,7 @@ HACX.NAMES =
 
   --------------------------------------------------
 
-  GENEMP =
+  PRISON =
   {
     patterns =
     {
@@ -1538,9 +1538,855 @@ HACX.NAMES =
     }
   },
 
-  -- end of 'URBAN' theme
+  -- end of 'PRISON' theme
 
-  --------------------------------------------------
+--------------------------------------------------
+
+DIGI_OTA =
+{
+  patterns =
+  {
+    -- lexicon legend:
+    -- %e = Entity
+    -- %a = Adjectives
+    -- %n = Places
+    -- %h = Explicit description (e.g. I am Satan, "Arena of <Satan>")
+    -- %o = Implicit description (e.g. I am Satanic, "Arena of <the Satanic>")
+    -- %v = Prefixed phrase (as per COMMON table e.g. "<Scourge of the> Arena)
+    -- %r = Road suffix (St., Street, Road, Rd., etc.)
+
+       ["%a %n"] = 60,
+    ["%t %a %n"] = 15,
+    ["%t NOUNGENANGLICAN %n"] = 20,
+    ["%t NOUNGENEXOTIC %n"] = 7,
+
+    [   "%n of %h"] = 15,
+    ["%t %n of %h"] = 8,
+    ["%a %n of %h"] = 6,
+
+    [   "%n of the %o"] = 15,
+    ["%t %n of the %o"] = 8,
+    ["%a %n of the %o"] = 6,
+
+    ["%v %n"]    = 25,
+    ["%v %a %n"] = 25,
+
+    --["%a %n %x"] = 20,
+    --["%n of the %o %x"] = 3,
+    --["%v %n %x"] = 5,
+    --["%v %a %n %x"] = 5,
+
+    ["%s"] = 50,
+
+    -- Types of roads, useful when Streets Mode
+    -- kicks in.
+    ["NOUNGENANGLICAN %r"] = 25,
+    ["NOUNNUMBER NOUNGENANGLICAN %r"] = 40,
+
+    ["NOUNGENEXOTIC %r"] = 13,
+    ["NOUNNUMBER NOUNGENEXOTIC %r"] = 20,
+
+    -- Obsidian contributor names
+    ["NOUNMEMBERS %n"] = 5,
+
+    ["NOUNGENANGLICAN %n"] = 35,
+    ["NOUNGENEXOTIC %n"] = 10,
+  },
+
+  lexicon =
+  {
+    t =
+    {
+      The=50
+    },
+
+    r =
+    {
+      ["St."] = 7,
+      ["Rd."] = 7,
+      ["Ave."] = 7,
+      ["Dr."] = 4,
+      ["Pl."] = 4,
+      ["Ln."] = 4,
+      Street = 3,
+      Road = 3,
+      Avenue = 3,
+      Drive = 2,
+      Place = 2,
+      Lane = 2
+    },
+
+    a =
+    {
+      -- generics,
+      General=5, Generics=7,
+
+      -- size
+      Plethoric=7, Sprawling=10, Unending=7,
+      Serpentine=10, Hulking=3, Giant=2, Vast=7,
+      Monstrous=3, Colossal=4, Towering=3,
+
+      --+ supernatural
+      Arcane=5, Hidden=5, Ethereal=5, Nether_=5,
+      Esoteric=5,
+
+      --+ directional
+      Upper=5, Lower=10,
+      Northern=10, Southern=10, Eastern=10, Western=10,
+      Northeast=5, Northwest=5, Southeast=5, Southwest=5,
+      Inner=5, Innermost=3, Outer=5, Outermost=3,
+      Focal=5, Central=5,
+
+      --+ distance/inaccessibility
+      Furthest=5, Isolated=10, Remote=5, Obscure=10,
+      Lost=5,
+      Cordoned=5, Quarantined=5, Sequestered=5,
+      Confined=5, Secluded=5, Sealed=3,
+      Restricted=5, Blocked=3, Segregated=3,
+      Adjacent=5, Adjoining=5, Neighboring=5,
+      Inland=5, Outland=5,
+
+      --+ time
+      Old=10, Ancient=20, Eternal=7, Archaic=7, Aged=5,
+      Timeworn=5,
+
+      --+ state of repair/damage
+      Decrepid=20, Lost=10, Forgotten=10, Battered=5,
+      Ravished=10, Barren=20, Deadly=5, Rickety=5,
+      Flooded=5, Bombarded=2, Corrosive=2, Unsteady=3,
+      Ruined=3, Charred=10, Neglected=5, Decaying=5,
+      Deteriorated=5, Dilapidated=10, Frail=3, Flimsy=2,
+      Wrecked=7,
+
+      --+ decay
+      Decayed=5, Putrid=5, Noxious=5,
+      Stagnant=10, Rancid=5, Rotten=3,
+      Sunken=3, Toxic=2, Polluted=10, Mephitic=5,
+      Infected=10, Infested=10, Infective=5,
+      Contaminated=10, Fetid=5, Festering=5,
+
+      --+ weather
+      Windy=10, Hazy=3, Foggy=5, Misty=10,
+      Cloudy=5, Gray=5, Brackish=5, Overcast=10,
+      Humid=5, Torrid=5, Tropic=2,
+
+      --+ city
+      Urban=10, Metropolitan=10, Cosmopolitan=3,
+      Civic=3, Communal=5, Municipal=3,
+      Capital=5, Commercial=5, Trading=5,
+      Company=5, Administrative=5,
+
+      --+ supernatural/evil
+      Occult=5, Distraught=5, Malevolent=5,
+      Corrupted=15, Corrupt=15, Fateful=5,
+      Monster=15, Demonic=3, Demon=15,
+      Frightening=10, Creepy=5, Ominous=15,
+      Haunted=20, Menacing=15,
+      Cursed=20, Wretched=15, Bewitched=5,
+      Forbidden=20, Sinister=10, Mysterious=10,
+      Profligate=5, Depraved=5, Incorrigible=3,
+      Wanton=3, Dissolute=3,
+
+      --+ wilderness
+      Wild=5, Savage=10, Untamed=3,
+      Unexplored=7, Teeming=3, Lush=3,
+      Lupine=2,
+
+      --+ military/criminal possession
+      Invaded=5, Besieged=10, Swarmed=5,
+      Overtaken=5, Stolen=3, Blockaded=3,
+
+      --+ illumination
+      Dark=20, Darkest=7, Dismal=10, Cimmerian=3,
+      Murky=5, Dim=5, Aphotic=5, Caliginous=5,
+      Tenebrous=5, Gloomy=5,
+
+      --+ abandonment
+      Bleak=20, Abandoned=15, Forsaken=10,
+      Deserted=5, Vacated=5, Forgotten=12,
+      Derelict=15, Desolate=5, Forlorn=3,
+      Bereft=3, Stranded=2, Vacant=15, Empty=7,
+      Dead=15,
+
+      --+ aesthetic
+      Horrible=10, Exotic=5, Dreadful=10,
+
+      --+ temperature
+      Cold=7, Bitter=3, Frigid=5, Icy=3,
+      Algid=5, Polar=5, Gelid=3, Frozen=3,
+      Boreal=3, Hot=7, Chilly=3, Tepid=4,
+      Snowy=3, Wintry=5, Brisk=5, Mild=3,
+      Cool=5,
+
+      --+ emotion
+      Lonely=2, Desperate=2, Ugly=2,
+
+      --+ populated congestion
+      Crowded=3, Cramped=3, Congested=5,
+      Huddled=3, Compact=5, Crammed=2,
+
+      --+ level of danger
+      Catastrophic=5, Perilous=15, Hostile=10,
+      Dangerous=10, Precarious=5, Treacherous=5,
+      Formidable=3, Unsafe=5,
+
+      Unknown=5, Living=3,
+      Slaughter=5, Murder=5, Killing=5,
+      Whispering=10,
+    },
+
+    n =
+    {
+      -- castle and castle parts
+      Castle=20, Citadel=10,
+      Keep=3, Slough=3, Temple=3,
+      Gate=10, Prison=15, Dens=5,
+      Coliseum=2, Courtyard=10, Court=10,
+
+      -- territories
+      City=20, Town=20, Village=10,
+      --[[World=5, Country=10,]] Zone=10,
+      Square=5, --[[Kingdom=15,]]
+      District=10, Precinct=10,
+      Dominion=10, Domain=3, Trail=10,
+      Region=10, Territory=5, Path=5,
+      --[[Province=10,]] Jurisdiction=10,
+      Township=10, Municipality=7, Borough=7,
+
+      -- adventure
+      Trek=5, Venture=5,
+      Voyage=7, Odyssey=2,
+
+      -- watery
+      Harbor=10, Reserve=3, Ward=3,
+      Seabed=5, Embankment=3,
+      Oasis=2, Waterways=5,
+
+      -- dirt
+      Soil=10, Scum=5,
+      Remnants=10, Remains=5, Debris=5,
+      Refuse=5, Dust=5, Dirt=3,
+
+      -- destruction
+      Siege=5, Assault=5, Attack=5, Ambush=5,
+      Onslaught=5, Stampede=5, Encounter=5,
+      Conflict=5,
+
+      -- generic flatlands
+      Lands=10, Fields=10, Footprints=5,
+      Warrens=5, Outskirts=10, Lots=5,
+      Acreage=2, Block=10, Plots=5,
+      Tracts=3,
+
+      -- generic structures/locations
+      Towers=10, Quarters=10, Division=3,
+      Hub=5, Polestar=2, Post=5, Complex=15,
+      Campus=5, Compound=10, Venue=2,
+      Annex=5, Hallways=20, Halls=5, Corridors=7,
+      Promenade=5, Cubicles=5, Wing=5,
+      Building=20, Superstructure=10,
+      Substructure=10, Compartment=5,
+
+      -- pathways
+      Alleys=10, Backstreets=5, Lane=5,
+      Streets=10, Roads=5, Walk=3,
+      Passage=5, Avenues=3, Outlets=5,
+      Crossroads=5, Boulevards=3, Parkway=5,
+      Route=5, Thoroughfare=3, Access=5,
+      Drive=3, Junction=2, Course=5,
+      Bypass=2, Gap=5, Concourse=8,
+      Crossing=5, Exchange=5, Channels=5,
+      Row=5, Circuit=5,
+
+      -- military
+      Barracks=5, Depot=3, Outpost=5,
+      Fortress=20, Fort=5, Stronghold=5,
+      Camp=3, Berths=5, Garage=5,
+
+      -- weird ones
+      Echo=1, Dream=1, Nightmare=1, Bliss=1,
+
+      -- industrial
+      Mines=10, Quarry=5, Docks=10,
+      Warehouse=10, Port=10, Mineshaft=5,
+      Firm=5, Workrooms=2, Works=3,
+      Factory=10, Forge=3, Foundry=3,
+      Mint=3, Sweatshops=5, Mill=10,
+
+      -- commercial -MSSP
+      Mall=10, Strip=7, Market=8,
+      Mart=5, Bazaar=10, Bodega=5,
+      Souk=8, Fair=10, Stores=5,
+      Showrooms=5, Emporium=7,
+      Groceries=3, Stadium=5, Shops=5,
+      Agora=1, Marketplace=10, Offices=5,
+      Agency=3, Department=5, Bureau=3,
+      Suites=2, Workstation=7,
+
+      -- civic -MSSP
+      Hospital=5, Park=5, Commons=10,
+      Gardens=15, Plaza=10, Embassy=5,
+      Sewers=10, Asylum=10, Forum=5,
+      Assembly=5, Authority=5, Services=3,
+      Institution=5,
+
+      -- residential
+      Condominium=10, Condo=5, Chateau=2,
+      Projects=10, Housing=5, Coop=3,
+      Hive=5, Cooperative=5, Tenements=5,
+      Domicile=3, Habitations=3, Abode=5,
+      Settlement=7, Suburbs=10, Residences=5,
+      Shelter=10, Board=5, Bunk=3, Habitat=2,
+      Palace=15, Neighborhood=3, Environs=2,
+      Barrio=2, House=20, Mansion=10, Manor=10,
+      Estate=2, Slums=15, Refuge=5, Sanctuary=5,
+      Dwelling=3, Lofts=8, Stacks=5, Terrace=5,
+
+      -- architectural
+      Roofs=10, Piazza=5, Portico=5, Loggia=3,
+      Galleria=5, Arcade=5,
+
+      -- battleground
+      Battlefront=5, Battlezone=5, Warzone=5,
+      Battlegrounds=7, Front=5, Impasse=5,
+      Standoff=5, Deadlock=5, Stalemate=5,
+      Quandary=5, Quagmire=3, Imbroglio=5
+    },
+
+    h = -- explicit descriptors (e.g. "Arena of Doom")
+    {
+      -- feels
+      --+ negative
+      Doom=20, Gloom=15, Despair=10, Sorrow=15,
+      Horror=20, Terror=10, Death=10, Dolor=5,
+      Pain=15, Fear=7, Hate=5, Desolation=3,
+      Misery=10, Turmoil=5, Decay=5,
+      Insanity=5, Helplessness=2, Misfortune=5,
+      Voiceless=5,
+      --+ positive
+      Solace=10, Reparation=3, Consolation=3,
+      Assuagement=3,
+
+      -- descriptions of danger
+      Danger=10, Peril=10,
+      --+ elemental danger
+      Acid=5, Flames=5, Lava=3,
+
+      -- states of destruction
+      Ruin=10,
+
+      -- bodily objects
+      Bone=7, Blood=10, Claws=10,
+      Gore=7, Skulls=10, Tears=10,
+
+      -- time
+      Dusk=5, Twilight=5, Midnight=5, Dawn=5, Daybreak=5, Sunrise=5,
+      Nightfall=5, Sundown=5, Eventide=5, Sunset=5,
+
+      -- delusions
+      Dreams=2, Delirium=2, Delusion=2,
+      Doubt=5, Illusions=2, Bliss=2,
+
+      -- bad acts
+      Sabotage=5, Destruction=5,
+
+      -- material
+      Bronze=5, Iron=5, Steel=7,
+      Titanium=3, Aluminum=3,
+
+      -- residents
+      --+ ethereal things
+      Demigods=3, Ghosts=15, Gods=10, Spirits=5,
+      Spectres=5, Banshees=5, Phantoms=5,
+      Evil=5, Ghouls=5, Demons=5, Souls=5,
+
+      ["Hell Priests"]=3, -- Doom Eternal
+
+      --+ fantasy creatures
+      Ogres=5, Gargoyles=3,
+      --+ people
+      Addicts=3, Creeps=3, Fools=1,
+      Menace=15, Denizens=7, Murderers=3,
+      Pirates=3, Vagrants=7, Junkies=3,
+      Madmen=2, Mortals=10, Drifters=4,
+      --+ explicitly religious people
+      Martyrs=5, Prophets=5, Zealots=3, Fanatics=3,
+      Believers=3, Disciples=3,
+      --+ animals
+      Crows=5, Prey=5,
+      Vermin=5, Vultures=5,
+      Spiders=2, Snakes=5,
+
+      -- creepy furniture
+      Mirrors=5, Stakes=3
+    },
+
+    o = -- implicit descriptors (e.g. "Arena of the Doomed")
+    {
+      -- abandoned
+      Abandoned=5, Doomed=5, Damned=5,
+      Forgotten=5, Forsaken=5, Lost=5,
+
+      -- weird
+      Bizarre=5, Unreal=5, Strange=5,
+
+      -- damage
+      Decayed=5,
+
+      -- dirt
+      Filthy=5, Slime=5,
+
+      -- illusion
+      Mirage=5,
+
+      -- creatures and people
+      --+ wild
+      Pests=5, Vermin=5,
+      --+ paranormal
+      Ghosts=4, Phantasm=10, Poltergeist=10,
+      Wraith=10, Undead=5, Risen=5,
+      --+ occupational
+      Butcher=5, Executor=5, Fiend=5,
+      Slayer=5,
+
+      -- states of being
+      ---+ victimized
+      Afflicted=5, Desperate=5, Diseased=5,
+      Estranged=5, Faceless=5, Homeless=5,
+      Misbegotten=5, Missing=5, Hunted=5,
+      Sick=5, Sightless=5, Unwell=5,
+      Quarantined=5,
+      ---+ craycray
+      Deranged=5, Disturbed=3, Hysteric=5,
+      Insane=5, Mad=7,
+      ---+ pretty much dead
+      Dead=5, Deceased=5, Fallen=5,
+      ---+ good
+      Bold=5, Brave=5, Dauntless=5,
+      Interpid=3, Savior=5,
+      ---+ neutral
+      Adamant=5, Feral=5, Untamed=5,
+      Vicarious=5, Wild=5, Stray=5,
+      ---+ evil
+      Lawless=5, Unforgiving=5,
+
+      -- groups
+      Conclave=5, Sovereign=5, Kinship=5,
+      Brotherhood=5, Sisterhood=5, Guild=5,
+      Union=5, Fellowship=5,
+
+      -- age and time
+      Ancients=5, Eternal=5, Night=10
+    },
+
+    s =
+    {
+      -- single complete level names
+
+      ["Abandonment"]=10,
+      ["Afterhours"]=10,
+      ["Aftermath"]=10,
+      ["All is Lost"]=10,
+      ["Archipelago"]=10,
+      ["Armed to the Teeth"]=10,
+      ["Arson Anthem"]=10,
+      ["Atomized"]=10,
+      ["Awaiting Death"]=10,
+      ["A Monster Too Many"]=10,
+      ["Bad Company"]=10,
+      ["Behind Enemy Lines"]=10,
+      ["Black and Grey"]=10,
+      ["Bleak"]=10,
+      ["Blind Salvation"]=10,
+      ["Blizzard of Glass"]=10,
+      ["Blood Red Shadows"]=10,
+      ["Bullets and Fireballs"]=10,
+      ["Buried by Time and Ash"]=10,
+      ["Burndown"]=10,
+      ["Burnout"]=10,
+      ["Business District"]=10,
+      ["Cacophobia"]=10,
+      ["Carnival Bizarre"]=10,
+      ["Chasing Demomns"]=10,
+      ["Cisterne"]=10,
+      ["Cloak of Midnight"]=10,
+      ["Cold Comfort"]=10,
+      ["Cold Sweat"]=10,
+      ["Countdown to Death"]=10,
+      ["Course of Decadence"]=10,
+      ["Cross Attack"]=10,
+      ["Crumbled Nations"]=10,
+      ["Crystalline Chaos"]=10,
+      ["Darkness at Noon"]=10,
+      ["Dark Apparition"]=10,
+      ["Dark City"]=10,
+      ["Dark Horizon"]=10,
+      ["Darkened Waters"]=10,
+      ["Dead End"]=10,
+      ["Deadfall"]=10,
+      ["Deadlock"]=10,
+      ["Deadly Visions"]=10,
+      ["Dead Silent"]=10,
+      ["Dead Zone"]=10,
+      ["Demons On The Prey"]=10,
+      ["Destroy All Humans"]=10,
+      ["Devil's Rejects"]=10,
+      ["Doomed Society"]=10,
+      ["Dropoff"]=10,
+      ["Earth Scum"]=10,
+      ["Eight Floors Above"]=10,
+      ["Endoomed"]=10,
+      ["Enter Combat"]=10,
+      ["Evil or Dead"]=10,
+      ["Fading to Black"]=10,
+      ["Fallen into Shadows"]=10,
+      ["Famine"]=10,
+      ["Fatal Doom"]=10,
+      ["Fight to the End"]=10,
+      ["Fimbul Winter"]=10,
+      ["Forebearer of Grievance"]=10,
+      ["Forgotten"]=10,
+      ["Foul Ruin"]=10,
+      ["God's Little Acre"]=10,
+      ["Graveflower"]=10,
+      ["Graveyard Shift"]=10,
+      ["Gray Skies"]=10,
+      ["Greek Fire"]=10,
+      ["Hellbrigade"]=10,
+      ["Hell's Kitchen"]=10,
+      ["Hell's Triumph"]=10,
+      ["Hidden Screams"]=10,
+      ["Hiding the Secrets"]=10,
+      ["House of a Thousand Deaths"]=10,
+      ["Human Debris"]=10,
+      ["In Remembrance"]=10,
+      ["In Solitary Ruin"]=10,
+      ["In the Final Hour"]=10,
+      ["Irradiated"]=10,
+      ["Jailbird"]=10,
+      ["Judgement Day"]=10,
+      ["Kitchen Ace"]=10,
+      ["Left in the Cold"]=10,
+      ["Library of the Lost"]=10,
+      ["Lights Out!"]=10,
+      ["Long Gone"]=10,
+      ["Lucid Illusion"]=10,
+      ["Lucifer in Starlight"]=10,
+      ["Lunatic Fringe"]=10,
+      ["Mayhem"]=10,
+      ["March of the Zombies"]=10,
+      ["Nightfall"]=10,
+      ["Night Stalkers"]=10,
+      ["Night Terrors"]=10,
+      ["No Guts No Glory"]=10,
+      ["No Rest No Peace"]=10,
+      ["Nothing's There"]=10,
+      ["On the Hunt"]=10,
+      ["One Too Many"]=10,
+      ["Open Wound"]=10,
+      ["Organized Chaos"]=10,
+      ["Overtime"]=10,
+      ["Patron of Antipathy"]=10,
+      ["Population One"]=10,
+      ["Poison Society"]=10,
+      ["Polygraph"]=10,
+      ["Principle of War"]=10,
+      ["Pitch Black"]=10,
+      ["Primetime Killing"]=10,
+      ["Progression's Delay"]=10,
+      ["Punctured"]=10,
+      ["Quietus"]=10,
+      ["Riddled by Gunfire"]=10,
+      ["R.I.P Humanity"]=10,
+      ["Red Valhalla"]=10,
+      ["Realm of Chaos"]=10,
+      ["Remains of Humanity"]=10,
+      ["Retribution"]=10,
+      ["Roadkill"]=10,
+      ["Roctagon"]=10,
+      ["Rotten Roots"]=10,
+      ["Running of the Bulls"]=10,
+      ["Sanctuary"]=10,
+      ["Set the World on Fire"]=10,
+      ["Shellshock"]=10,
+      ["Shadowland"]=10,
+      ["Silent Might"]=10,
+      ["Sin City"]=10,
+      ["Solitude"]=10,
+      ["Stakeout"]=10,
+      ["Stille Nacht"]=10,
+      ["Stonegate"]=10,
+      ["Subjugated"]=10,
+      ["Suspense"]=10,
+      ["Terminal Fear"]=10,
+      ["Ten Degrees of Fate"]=10,
+      ["Terrorville"]=10,
+      ["The Blackest Day"]=10,
+      ["The Bones of Many"]=10,
+      ["The Fading Light"]=10,
+      ["The Fire Still Burns"]=10,
+      ["The Guns Fall Silent"]=10,
+      ["The Hook"]=10,
+      ["The Silenced Lamasery"]=10,
+      ["The Sun No Longer Rises"]=10,
+      ["The Trial"]=10,
+      ["The Winds Speak None"]=10,
+      ["This is The End"]=10,
+      ["Tombstone"]=10,
+      ["Under Ruins"]=10,
+      ["Unleashed Aggression"]=10,
+      ["Urban Horror"]=10,
+      ["Valley of the Dead"]=10,
+      ["Viscera"]=10,
+      ["Voice of the Voiceless"]=10,
+      ["Walk of Faith"]=10,
+      ["Warzone"]=10,
+      ["Watch it Burn"]=10,
+      ["Watch your Step"]=10,
+      ["Where Marines Dare"]=10,
+      ["Witch Parade"]=10,
+      ["Xenophobia"]=10,
+
+      ["Ambushed!"]=10,
+      ["Bullet Hole"]=10,
+      ["Civil Disobedience"]=10,
+      ["Disestablishment"]=10,
+      ["Eaten by the Furniture"]=10,
+      ["Escape is Futile"]=10,
+      ["Fight That!"]=10,
+      ["Forboding Signs"]=10,
+      ["Mindless Architecture"]=10,
+      ["Mow 'em Down!"]=10,
+      ["Nobody's Home"]=10,
+      ["No Comfort"]=10,
+      ["Out of Luck"]=10,
+      ["Passing Away"]=10,
+      ["Route to Death"]=10,
+      ["Stream of Unconsciousness"]=10,
+      ["Struggle No More"]=10,
+      ["Today You Die!"]=10,
+      ["Ups and Downs"]=10,
+      ["You Don't Belong Here"]=10,
+
+      -- Reisal adds more names
+      ["A Destructive Path"]=10,
+      ["A Doomsday Scenario"]=10,
+      ["Administrative Errors"]=10,
+      ["Black Hole"]=10,
+      ["Charred To The Bone"]=10,
+      ["Chaos Unfolds"]=10,
+      ["Crosses and Pikes Abound"]=10,
+      ["Deny the Narrative"]=10,
+      ["Diamond of Chaos"]=10,
+      ["Hell in Your Lap"]=10,
+      ["Industrial Architecture"]=10,
+      ["Forever Wandering"]=10,
+      ["Manor of Glass"]=10,
+      ["Multi Paths, Multi Deaths"]=10,
+      ["Nothing But A Husk"]=10,
+      ["Nuclear Annihilation"]=10,
+      ["Null and Void"]=10,
+      ["Planetary Destruction"]=10,
+      ["Scrounge"]=10,
+      ["Stand Your Ground"]=10,
+      ["Steel Scraps"]=10,
+      ["The Mysteries of Octothorp"]=10, -- Come on crowbars82, come and finish your mod lol
+      ["The No Go Zone"]=10,
+      ["The Twisted Abode"]=10,
+
+      -- Doom Eternal stuff. Would these be better under Hell?
+      ["Ardur"]=10,
+      ["Kher Lodur"]=10,
+      ["Neras"]=10,
+      ["Taras Nabad"]=10,
+
+      -- Reisal adds more names, 2020 edition
+      ["A Hobo's Paradise"]=10,
+      ["Bombardment"]=10,
+      ["Everlasting Ashstorm"]=10,
+      ["Expenditure of Munitions"]=10,
+      ["Fixation on Survival"]=10,
+      ["Howling Corridors"]=10,
+      ["The Smell of Plasma"]=10,
+      ["Vertical Drop"]=10,
+
+      -- 2021 naming convention by Reisal
+      ["A Clouded Sun"]=10,
+      ["A Cruel Fate"]=10,
+      ["A Fate No Worse"]=10,
+      ["Among the Abyss"]=10,
+      ["Art of Urban Decay"]=10,
+      ["Ashen Grip"]=10, -- Elder Scrolls Online stuff
+      ["Beyond the Mist"]=10,
+      ["Beyond Survival"]=10,
+      ["Blazing Skyscrapers"]=10,
+      ["Bleak Outlook"]=10,
+      ["Blessed Twilight"]=10,
+      ["Blood Among the Soot"]=10,
+      ["Body, Soul and Rifle"]=10,
+      ["Contemporary Silence"]=10,
+      ["Cold, Icy Winds"]=10,
+      ["Corporatis Infernus"]=10,
+      ["Crawling Through Glass"]=10,
+      ["Criteria of a Bum"]=10,
+      ["Darkened Nights"]=10,
+      ["Decay of Sunlight"]=10,
+      ["Desolation Deluxe"]=10,
+      ["Departure of Humanity"]=10,
+      ["Dumpsters and Demons"]=10,
+      ["Dwelling in the Shroud"]=10,
+      ["End of Seasons"]=10,
+      ["Exodus Unto Nowhere"]=10,
+      ["Fading Sun"]=10,
+      ["Firestorm"]=10,
+      ["Frontier of Dust"]=10,
+      ["Hymn of Solitude"]=10,
+      ["In Hiding"]=10,
+      ["Letting it all Go"]=10,
+      ["Long Forgotten"]=10,
+      ["Lost Forever"]=10,
+      ["Lurking Death"]=10,
+      ["Monoliths of Ruin"]=10,
+      ["No Go Zone"]=10,
+      ["No Peace Here"]=10,
+      ["No Return"]=10,
+      ["Northern Lights"]=10,
+      ["Nothing But Ash"]=10,
+      ["Peace Through Firepower"]=10, -- Command & Conquer reference
+      ["Rain"]=10,
+      ["Retirement of Man"]=10,
+      ["Ruined"]=10,
+      ["Shadows Among Us"]=10,
+      ["The Sawtooth Smile"]=10,
+      ["The Scent of Ash"]=10,
+      ["This Graveyard Earth"]=10,
+      ["Unspoken Stars"]=10,
+      ["Urban Megalths"]=10,
+      ["When All Hope is Lost"]=10,
+      ["Wicked Corridors"]=10,
+
+      -- MSSP adds more names as well
+      ["Damned Demon Destruction"]=10, -- Demios
+      ["Nothing Personnel"]=10,
+
+      -- End of 2021 additions by Reisal
+      ["A Weeping Statue"]=10,
+      ["As Shade Falls Upon Thee"]=10,
+      ["As The Candle Fades"]=10,
+      ["Ashes and Remembrance"]=10,
+      ["Ballad of Fog"]=10,
+      ["Bereavement of Earth"]=10,
+      ["Broken Future"]=10,
+      ["Cathedris Titanus Ruina"]=10,
+      ["Concrete and Twisted Metal"]=10,
+      ["Could it Get Worse?"]=10,
+      ["Dawn's Covenant"]=10,
+      ["Death Tally: Billions"]=10,
+      ["Discarded Kevlar"]=10,
+      ["Embracing Silent Death"]=10,
+      ["Empty Streets"]=10,
+      ["Fading From Existence"]=10,
+      ["Flatline Earth"]=10,
+      ["Her Silence is Telling Us"]=10,
+      ["Hunted Like Dogs"]=10,
+      ["Hunkered Down"]=10,
+      ["Induced Self-Destruction"]=10,
+      ["Lights That Lead"]=10,
+      ["Nameless Seeker"]=10,
+      ["Of Dust And Ash"]=10,
+      ["On Scorched Grounds"]=10,
+      ["Permanent Blackout"]=10,
+      ["Raindrops and Ashfall"]=10,
+      ["Reach For The Stars"]=10,
+      ["Requiem For The Planet"]=10,
+      ["Scattered To The Winds"]=10,
+      ["Seeing Dark Skies"]=10,
+      ["Shrouded Hopelessness"]=10,
+      ["Stardrifter"]=10,
+      ["Take Us Away"]=10,
+      ["That Special City.."]=10,
+      ["The Hobo's Den"]=10,
+      ["The Memories of Life"]=10,
+      ["The Ravens Come To Us"]=10,
+      ["The Skyward Gaze"]=10,
+      ["The Slow Death"]=10,
+      ["The Walls Whisper My Name"]=10,
+      ["Urban Hellscape"]=10,
+      ["Weaponized Despair"]=10,
+
+      -- New Year's Eve 2021 additions by Reisal!
+      ["Architects of Sadism"]=10,
+      ["Candlestick Bitch"]=10,
+      ["Chaotic Opportunism"]=10,
+      ["Cries of the Shadows"]=10,
+      ["Dusk Overture"]=10,
+      ["Fourthcoming Kingdoms"]=10,
+      ["Incense, Gore and Nihility"]=10,
+      ["Jump In The Acid"]=10, -- Play on Metallica's "Jump in the Fire" song
+      ["Liquid Blood Skies"]=10,
+      ["Lost in the Bloody Haze"]=10,
+      ["Nightmarish Fixation"]=10,
+      ["Nothingness Hereforth"]=10,
+      ["Our Evil Oaths"]=10,
+      ["The Wizards of Gore"]=10,
+      ["When the Skin Strand Pops"]=10,
+      ["Winds That Shred Skin"]=10,
+      
+      -- 2022 marker
+      ["A Handful of Glass"]=10,
+      ["A Not So Pretty Place"]=10,
+      ["Cage of Mirrors"]=10,
+      ["Casting Shade"]=10,
+      ["Corvus Corona"]=10,
+      ["Crisis of Life"]=10,
+      ["Damned to Extinction"]=10,
+      ["Dirty Outskirts"]=10,
+      ["Dry Water"]=10,
+      ["Dustman"]=10,
+      ["Esperandote"]=10,
+      ["Eternal Gloom"]=10,
+      ["Far From Rescue"]=10,
+      ["Fear Locked Away"]=10,
+      ["Flesh and Dust"]=10,
+      ["Fog Ensues"]=10,
+      ["From the Lost Days"]=10,
+      ["Ghosting"]=10,
+      ["Glory Hunter"]=10,
+      ["Ground Dawn"]=10,
+      ["Guns to Rust, Hearts to Dust"]=10,
+      ["Hear Nothing"]=10,
+      ["Innocent Moon"]=10,
+      ["Let Us Depart"]=10,
+      ["Liquid Dimensions Change"]=10,
+      ["Magical Mystical Marine"]=10,
+      ["Memories Remain"]=10,
+      ["Memory on the Waters"]=10,
+      ["Mutiny on the World"]=10,
+      ["Nightwind"]=10,
+      ["Neon Nights"]=10,
+      ["On The Razor's Edge"]=10,
+      ["Paleville"]=10,
+      ["The Beauty of Dust"]=10,
+      ["The Upper Art"]=10,
+      ["Thunder's Cannon"]=10,
+      ["Thundering Hooves"]=10,
+      ["Time Destroys It All"]=10,
+      ["To Die in the Dark"]=10,
+      ["Too Far Gone"]=10,
+      ["Tragedy and Weeds"]=10,
+      ["Turbulence"]=10,
+      ["Unseen"]=10,
+      ["Warped Mind"]=10,
+      ["We Shun the Light"]=10,
+      ["Without Fear"]=10,
+      ["White Roses, White Coffin"]=10,
+      ["Wrapped in Solitude"]=10,
+      ["Your Beauty Measures More"]=10 -- end marker
+    }
+  }
+},
+
+-- end of 'DIGI_OTA' theme
 
   BOSS =
   {
