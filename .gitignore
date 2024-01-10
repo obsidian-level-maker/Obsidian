@@ -3,6 +3,7 @@ obsidian
 Obsidian.exe
 obsidian.exe
 /SDL2.dll
+*.ini
 
 #Logs/configs (Windows version)
 CONFIG.txt

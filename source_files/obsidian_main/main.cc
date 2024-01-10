@@ -35,7 +35,8 @@
 #include "physfs.h"
 #include "sys_xoshiro.h"
 #ifndef CONSOLE_ONLY
-#include "hdr_SDL.h"
+#include "ui_app.h"
+UI_App *main_win = nullptr;
 #endif
 
 /**
@@ -584,6 +585,14 @@ skiprest:;
 
 int main(int argc, char **argv) {
     // initialise argument parser (skipping program name)
+
+#ifndef CONSOLE_ONLY
+    if (!main_win)
+    {
+        main_win = new UI_App;
+        main_win->run();
+    }
+#endif
 
     // these flags take at least one argument
     argv::short_flags.emplace('b');

@@ -43,6 +43,7 @@ if(NOT CONSOLE_ONLY AND NOT HAIKU)
     sys_xoshiro.cc
     tx_forge.cc
     tx_skies.cc
+    ui_app.cc
     vis_buffer.cc
   )
 else()
