@@ -554,6 +554,8 @@ function Mat_lookup_tex(LEVEL, name, missing_mats)
   end
   local mat = GAME.MATERIALS[name]
 
+  if mat.skip_psyche then return end
+
   -- special handling for DOOM switches
   if not mat and string.sub(name,1,3) == "SW2" then
     local sw1_name = "SW1" .. string.sub(name,4)
