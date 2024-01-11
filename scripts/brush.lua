@@ -528,7 +528,8 @@ function Mat_prepare_trip(LEVEL)
        not def.rail_h and
        not (string.sub(m,1,1) == "_") and
        not (string.sub(m,1,2) == "SW") and
-       not (string.sub(m,1,3) == "BUT")
+       not (string.sub(m,1,3) == "BUT") or
+       not def.skip_psyche
     then
       table.insert(m_before, m)
       table.insert(m_after,  m)
@@ -553,8 +554,6 @@ function Mat_lookup_tex(LEVEL, name, missing_mats)
     name = LEVEL.psycho_map[name]
   end
   local mat = GAME.MATERIALS[name]
-
-  if mat.skip_psyche then return end
 
   -- special handling for DOOM switches
   if not mat and string.sub(name,1,3) == "SW2" then
