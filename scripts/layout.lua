@@ -2172,17 +2172,12 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
   end
 
 
-  local function pick_floor_sinks(R)
+  local function pick_floor_sinks(R, LEVEL)
 
-    if R.is_cave or
-    (R.is_outdoor and not R.is_street) then
-      return
-    end
+    local function pick_sink(floor_group, room, LEVEL)
+      if floor_group.openness < 0.4 then return end
 
-    for _,fg in pairs(R.floor_groups) do
-      if fg.openness < 0.4 then goto continue end
-
-      local tab = grab_usable_sinks(R, fg, "floor")
+      local tab = grab_usable_sinks(room, floor_group, "floor")
       if tab == nil then return end
       if #tab == 0 then return end
 
@@ -2193,19 +2188,35 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
       if rand.odds(75) then name = "PLAIN" end
 
       if name ~= "PLAIN" then
-        fg.sink = GAME.SINKS[name]
-        assert(fg.sink)
+        floor_group.sink = GAME.SINKS[name]
+        assert(floor_group.sink)
       end
+    end
 
-      -- for streets
-      if fg.is_road then
+    local function pick_street_sink(floor_group, LEVEL)
+      if floor_group.is_road then
         if not GAME.THEMES[LEVEL.theme_name].street_sinks then
           gui.printf("WARNING! No street sinks for theme " .. LEVEL.theme_name .. ".\n")
           return
         end
-        fg.sink = GAME.SINKS[rand.key_by_probs(GAME.THEMES[LEVEL.theme_name].street_sinks)]
+        floor_group.sink = GAME.SINKS[rand.key_by_probs(GAME.THEMES[LEVEL.theme_name].street_sinks)]
       end
-      ::continue::
+    end
+
+    if R.is_cave or
+    (R.is_outdoor and not R.is_street) then
+      return
+    end
+
+    for _,fg in pairs(R.floor_groups) do
+      pick_sink(fg, R, LEVEL)
+    end
+
+    -- street sink code
+    if R.is_street then
+      for _,fg in pairs(R.floor_groups) do
+        pick_street_sink(fg, LEVEL)
+      end
     end
   end
 
@@ -2477,7 +2488,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     pick_posts(R)
     pick_wall_detail(R)
 
-    pick_floor_sinks(R)
+    pick_floor_sinks(R, LEVEL)
     pick_ceiling_sinks(R)
 
     unsink_importants(R)
