@@ -440,7 +440,7 @@ DOOM.RESOURCES.SKY_GEN_THEMES =
     }
   },
 
-  demimos =
+  deimos =
   {
     clouds =
     {
