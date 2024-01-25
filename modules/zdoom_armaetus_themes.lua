@@ -7667,17 +7667,6 @@ OBS_RESOURCE_PACK_SINK_DEFS =
     trim_light = 16,
   },
 
-  light_GLITE05_BLUE =
-  {
-    mat = "T_GLT5BL",
-    dz  = 8,
-    light = 32,
-
-    trim_mat = "METAL",
-    trim_dz  = -5,
-    trim_light = 16,
-  },
-
   light_GLITE05_GREEN =
   {
     mat = "T_GLT5GN",
@@ -8894,9 +8883,9 @@ OBS_RESOURCE_PACK_THEMES =
 
       ceiling_sink_TEKWALL8 = 8,
       ceiling_sink_TEKWALL9 = 8,
-      ceiling_sink_TEKWALLA = 8,
+      --ceiling_sink_TEKWALLA = 8,
       ceiling_sink_TEKWALLB = 8,
-      ceiling_sink_TEKWALLC = 8,
+      --ceiling_sink_TEKWALLC = 8,
       ceiling_sink_TEKWALLD = 8,
       ceiling_sink_TEKWALLE = 8,
 
@@ -9396,9 +9385,9 @@ OBS_RESOURCE_PACK_THEMES =
 
       ceiling_sink_TEKWALL8 = 7,
       ceiling_sink_TEKWALL9 = 7,
-      ceiling_sink_TEKWALLA = 7,
+      --ceiling_sink_TEKWALLA = 7,
       ceiling_sink_TEKWALLB = 7,
-      ceiling_sink_TEKWALLC = 7,
+      --ceiling_sink_TEKWALLC = 7,
       ceiling_sink_TEKWALLD = 7,
       ceiling_sink_TEKWALLE = 7,
 
