@@ -2107,10 +2107,46 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
 
   local function grab_usable_sinks(R, group, where)
+
+    local function filter_ceiling_sinks(sink_name, tab, LEVEL)
+      if sink_name == "PLAIN" then return end
+
+      local sink = GAME.SINKS[sink_name]
+
+      if not sink then
+        error("Unknown sink: " .. sink_name)
+      end
+
+      if sink.mat == "_LIQUID" or sink.trim_mat == "_LIQUID" then
+        if not LEVEL.liquid then
+          tab[sink_name] = 0
+        end
+        if PARAM.liquid_sinks then
+          if PARAM.liquid_sinks == "no" then
+            tab[sink_name] = 0
+          end
+          if LEVEL.liquid then
+            if LEVEL.liquid.damage
+            and PARAM.liquid_sinks == "not_damaging" then
+              tab[sink_name] = 0
+            end
+            if LEVEL.liquid.damage and LEVEL.is_procedural_gotcha then
+              tab[sink_name] = 0
+            end
+          end
+        end
+      end
+
+      if (sink.trim_mat and sink.trim_mat == R.main_tex)
+      then
+        tab[sink_name] = nil
+      end
+    end
     -- skip sinks whose texture(s) clash with the room or area
 
     local tab
     local theme = LEVEL.theme_name
+    assert(theme)
 
     if R.theme.theme_override then
       theme = ob_resolve_theme_keyword(R.theme.theme_override)
@@ -2133,39 +2169,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     end
 
     for _,name in pairs(table.keys(tab)) do
-      if name == "PLAIN" then goto continue end
-
-      local sink = GAME.SINKS[name]
-
-      if not sink then
-        error("Unknown sink: " .. name)
-      end
-
-      if sink.mat == "_LIQUID" or sink.trim_mat == "_LIQUID" then
-        if not LEVEL.liquid then
-          tab[name] = 0
-        end
-        if PARAM.liquid_sinks then
-          if PARAM.liquid_sinks == "no" then
-            tab[name] = 0
-          end
-          if LEVEL.liquid then
-            if LEVEL.liquid.damage
-            and PARAM.liquid_sinks == "not_damaging" then
-              tab[name] = 0
-            end
-            if LEVEL.liquid.damage and LEVEL.is_procedural_gotcha then
-              tab[name] = 0
-            end
-          end
-        end
-      end
-
-      if (sink.trim_mat and sink.trim_mat == R.main_tex)
-      then
-        tab[name] = nil
-      end
-      ::continue::
+      filter_ceiling_sinks(name, tab, LEVEL)
     end
 
     return tab
@@ -2179,7 +2183,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
       local tab = grab_usable_sinks(room, floor_group, "floor")
       if tab == nil then return end
-      if #tab == 0 then return end
+      if table.empty(tab) then return end
 
       local name = rand.key_by_probs(tab)
 
@@ -2221,7 +2225,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
   end
 
 
-  local function pick_ceiling_sinks(R)
+  local function pick_ceiling_sinks(R, LEVEL)
     if R.is_cave or R.is_outdoor then return end
 
     for _,cg in pairs(R.ceil_groups) do
@@ -2232,7 +2236,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
       local tab = grab_usable_sinks(R, cg, "ceiling")
       if tab == nil then return end
-      if #tab == 0 then return end
+      if table.empty(tab) then return end
 
       local name = rand.key_by_probs(tab)
 
@@ -2489,7 +2493,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     pick_wall_detail(R)
 
     pick_floor_sinks(R, LEVEL)
-    pick_ceiling_sinks(R)
+    pick_ceiling_sinks(R, LEVEL)
 
     unsink_importants(R)
 
