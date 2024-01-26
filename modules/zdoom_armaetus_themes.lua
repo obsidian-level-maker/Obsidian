@@ -8254,30 +8254,30 @@ OBS_RESOURCE_PACK_SINK_DEFS =
   },
 
   -- tech carpets
-  floor_sink_carpet_FLAT15 =
+  floor_sink_carpet_FLAT15 = --red
   {
     mat = "FLAT15",
     dz = 0,
 
-    trim_mat = "FASHBLU",
+    trim_mat = "CEIL5_2",
     trim_dz = 0,
   },
 
-  floor_sink_carpet_FLOOR1_1 =
+  floor_sink_carpet_FLOOR1_1 = --red with UAC logo
   {
     mat = "FLOOR1_1",
     dz = 0,
 
-    trim_mat = "FLAT15",
+    trim_mat = "CEIL5_2",
     trim_dz = 0,
   },
 
-  floor_sink_carpet_FLOOR1_2 =
+  floor_sink_carpet_FLOOR1_2 = --blue with UAC logo
   {
     mat = "FLOOR1_2",
     dz = 0,
 
-    trim_mat = "FASHBLU",
+    trim_mat = "CEIL5_1",
     trim_dz = 0,
   },
 
