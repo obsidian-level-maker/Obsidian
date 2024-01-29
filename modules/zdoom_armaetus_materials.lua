@@ -2001,8 +2001,15 @@ OBS_RESOURCE_PACK_MATERIALS = {
   ----------------------
   -- Special Textures --
   ----------------------
-  FINVSBLE = { t="FINVSBLE", f="FINVSBLE"}
+  FINVSBLE = { t="FINVSBLE", f="FINVSBLE"},
 
+  -- Flats as walls and vice versa, resource pack edition
+  XG19  = { t="G19", f="G19" },
+  X_COMPBL  = { t="COMPBLUE", f="COMPBLUE" },
+  X_ORANFL  = { t="ORANFLOR", f="ORANFLOR" },
+  X_BRICK4  = { t="BRICK4", f="BRICK4" },
+  X_FLOOR7  = { t="FLOOR7_3", f="FLOOR7_3" },
+  XCARPET5  = { t="CARPET5", f="CARPET5" }
 }
 
 OBS_RESOURCE_PACK_ANIMDEFS =

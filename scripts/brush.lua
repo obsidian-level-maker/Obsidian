@@ -528,7 +528,8 @@ function Mat_prepare_trip(LEVEL)
        not def.rail_h and
        not (string.sub(m,1,1) == "_") and
        not (string.sub(m,1,2) == "SW") and
-       not (string.sub(m,1,3) == "BUT")
+       not (string.sub(m,1,3) == "BUT") or
+       not def.skip_psyche
     then
       table.insert(m_before, m)
       table.insert(m_after,  m)
