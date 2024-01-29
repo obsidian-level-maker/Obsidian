@@ -1,5 +1,2 @@
-if (NOT CONSOLE_ONLY)
-  add_subdirectory(imgui)
-endif()
 add_subdirectory(miniz)
 add_subdirectory(physfs)

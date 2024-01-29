@@ -43,7 +43,6 @@ if(NOT CONSOLE_ONLY AND NOT HAIKU)
     sys_xoshiro.cc
     tx_forge.cc
     tx_skies.cc
-    ui_app.cc
     vis_buffer.cc
   )
 else()
@@ -100,9 +99,6 @@ target_include_directories(obsidian PRIVATE ${OBSIDIAN_SOURCE_DIR}/ajparse)
 target_include_directories(obsidian PRIVATE ${OBSIDIAN_LIB_DIR}/gif-h)
 target_include_directories(obsidian PRIVATE ${OBSIDIAN_LIB_DIR}/miniz)
 target_include_directories(obsidian PRIVATE ${OBSIDIAN_LIB_DIR}/physfs/src)
-if((WIN32 AND (MSVC OR CLANG)) AND NOT CONSOLE_ONLY)
-  target_include_directories(obsidian PRIVATE ${OBSIDIAN_LIB_DIR}/sdl2/include)
-endif()
 target_include_directories(obsidian PRIVATE ${OBSIDIAN_SOURCE_DIR}/slump)
 
 if(NOT CONSOLE_ONLY)
@@ -110,8 +106,6 @@ if(NOT CONSOLE_ONLY)
     obsidian
     PRIVATE ajbsp
             ajparse
-            ${SDL2_LIBRARIES}
-            imgui
             miniz
             physfs-static
             obsidian_slump
@@ -127,17 +121,6 @@ set(COPY_FILES "")
 
 set (DEST_DIR "${CMAKE_SOURCE_DIR}")
 list(APPEND COPY_FILES "$<TARGET_FILE:obsidian>")
-
-# Copy appropriate SDL2.dll to local install directory when built with MSVC/Clang
-if (WIN32 AND NOT CONSOLE_ONLY)
-  if(MSVC OR CLANG)
-    if (${CMAKE_SIZEOF_VOID_P} MATCHES 8)
-      list(APPEND COPY_FILES "${CMAKE_SOURCE_DIR}/libraries/sdl2/lib/x64/SDL2.dll")
-    else ()
-      list(APPEND COPY_FILES "${CMAKE_SOURCE_DIR}/libraries/sdl2/lib/x86/SDL2.dll")
-    endif ()
-  endif()
-endif()
 
 if (COPY_FILES)
   add_custom_command( TARGET obsidian POST_BUILD COMMAND_EXPAND_LISTS COMMAND ${CMAKE_COMMAND} -E copy_if_different ${COPY_FILES} ${DEST_DIR})

@@ -45,16 +45,6 @@ endif()
 set(OBSIDIAN_LIB_DIR "${CMAKE_SOURCE_DIR}/libraries")
 set(OBSIDIAN_SOURCE_DIR "${CMAKE_SOURCE_DIR}/source_files")
 
-if(NOT CONSOLE_ONLY)
-  if (WIN32)
-    set(SDL2_DIR "${OBSIDIAN_LIB_DIR}/sdl2")
-  endif()
-  find_package(SDL2 REQUIRED)
-endif()
-
-if(NOT CONSOLE_ONLY)
-  include_directories(libraries/imgui)
-endif()
 include_directories(libraries/minilua)
 
 add_subdirectory(libraries)
