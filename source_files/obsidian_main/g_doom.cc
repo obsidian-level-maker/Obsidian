@@ -1227,12 +1227,7 @@ bool Doom::game_interface_c::Finish(bool build_ok) {
         build_ok = Doom::BuildNodes(filename);
     }
 
-    if (!build_ok) {
-        // remove the WAD if an error occurred
-        if (!preserve_failures) {
-            std::filesystem::remove(filename);
-        }
-    } else {
+    if (build_ok) {
         Recent_AddFile(RECG_Output, filename);
     }
 

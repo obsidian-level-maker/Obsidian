@@ -7450,27 +7450,20 @@ end
   setup_borders_and_corners()
 
   make_chunks()
-  gui.ticker()
 
   show_chunks()
 
   build_rooms()
-  gui.ticker()
 
   build_borders()
-  gui.ticker()
 
   build_depots()
-  gui.ticker()
 
-  if gui.abort() then return end
- 
   if PLAN.deathmatch then
     deathmatch_through_level()
   else
     battle_through_level()
   end
 
-  if gui.abort() then return end
 end
 

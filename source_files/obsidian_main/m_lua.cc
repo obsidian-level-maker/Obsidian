@@ -42,7 +42,6 @@
 static lua_State *LUA_ST;
 
 static bool has_loaded = false;
-static bool has_added_buttons = false;
 
 static std::vector<std::string> *conf_line_buffer;
 
@@ -719,26 +718,6 @@ int gui_prog_step(lua_State *L) {
     return 0;
 }
 
-// LUA: ticker()
-//
-int gui_ticker(lua_State * /*L*/) {
-#ifndef CONSOLE_ONLY
-
-#endif
-    return 0;
-}
-
-// LUA: abort() --> boolean
-//
-int gui_abort(lua_State *L) {
-    int value = (main_action >= MAIN_CANCEL) ? 1 : 0;
-#ifndef CONSOLE_ONLY
-
-#endif
-    lua_pushboolean(L, value);
-    return 1;
-}
-
 // LUA: random() --> number
 //
 int gui_random(lua_State *L) {
@@ -1027,8 +1006,6 @@ static const luaL_Reg gui_script_funcs[] = {
 
     {"at_level", gui_at_level},
     {"prog_step", gui_prog_step},
-    {"ticker", gui_ticker},
-    {"abort", gui_abort},
     {"random", gui_random},
     {"random_int", gui_random_int},
     {"reseed_rng", gui_reseed_rng},
@@ -1317,9 +1294,8 @@ void Script_Load(std::filesystem::path script_name) {
 }
 
 void Script_Open() {
-    if (main_action != MAIN_SOFT_RESTART) {
-        LogPrintf("\n--- OPENING LUA VM ---\n\n");
-    }
+
+    LogPrintf("\n--- OPENING LUA VM ---\n\n");
 
     // create Lua state
 
@@ -1338,37 +1314,24 @@ void Script_Open() {
 
     import_dir = "scripts";
 
-    if (main_action != MAIN_SOFT_RESTART) {
-        LogPrintf("Loading initial script: init.lua\n");
-    }
+    LogPrintf("Loading initial script: init.lua\n");
 
     Script_Load("init.lua");
 
-    if (main_action != MAIN_SOFT_RESTART) {
-        LogPrintf("Loading main script: obsidian.lua\n");
-    }
+    LogPrintf("Loading main script: obsidian.lua\n");
 
     Script_Load("obsidian.lua");
 
     has_loaded = true;
-    if (main_action != MAIN_SOFT_RESTART) {
-        LogPrintf("DONE.\n\n");
-    }
+
+    LogPrintf("DONE.\n\n");
 
     // ob_init() will load all the game-specific scripts, engine scripts, and
     // module scripts.
 
-    if (main_action == MAIN_SOFT_RESTART) {
-        if (!Script_CallFunc("ob_restart")) {
-            Main::FatalError("The ob_init script failed.\n");
-        }
-    } else {
-        if (!Script_CallFunc("ob_init")) {
-            Main::FatalError("The ob_init script failed.\n");
-        }
+    if (!Script_CallFunc("ob_init")) {
+        Main::FatalError("The ob_init script failed.\n");
     }
-
-    has_added_buttons = true;
 }
 
 void Script_Close() {
@@ -1376,13 +1339,9 @@ void Script_Close() {
         lua_close(LUA_ST);
     }
 
-    if (main_action != MAIN_SOFT_RESTART) {
-        LogPrintf("\n--- CLOSED LUA VM ---\n\n");
-    }
+    LogPrintf("\n--- CLOSED LUA VM ---\n\n");
 
     LUA_ST = NULL;
-
-    has_added_buttons = false;  // Needed if doing live restart
 }
 
 //------------------------------------------------------------------------
@@ -1550,24 +1509,6 @@ std::string ob_random_advice() {
     return res;
 }
 
-void ob_print_reference() {
-    if (!Script_CallFunc("ob_print_reference", 1)) {
-        // clang-format off
-        StdOutPrintf(_("ob_print_reference: Error creating REFERENCE.txt!\n"));
-        // clang-format on
-    }
-    StdOutPrintf("\nA copy of this output can be found at %s\n",
-               reference_file.u8string().c_str());
-}
-
-void ob_print_reference_json() {
-    if (!Script_CallFunc("ob_print_reference_json", 1)) {
-        // clang-format off
-        StdOutPrintf(_("ob_print_reference_json: Error printing json reference!\n"));
-        // clang-format on
-    }
-}
-
 void ob_invoke_hook(std::string hookname) {
     std::array<std::string, 2> params = {hookname, ""};
 
@@ -1578,13 +1519,7 @@ void ob_invoke_hook(std::string hookname) {
 
 bool ob_build_cool_shit() {
     if (!Script_CallFunc("ob_build_cool_shit", 1)) {
-#ifndef CONSOLE_ONLY
-
-#endif
         Main::ProgStatus(_("Script Error"));
-#ifndef CONSOLE_ONLY
-
-#endif
         return false;
     }
 

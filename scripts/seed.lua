@@ -1054,7 +1054,6 @@ function Seed_draw_minimap(SEEDS, LEVEL)
     gui.minimap_gif_frame()
   end
   gui.minimap_finish()
-  gui.ticker()
 end
 
 

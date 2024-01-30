@@ -1047,13 +1047,7 @@ void QLIT_LightAllFaces() {
         lit_luxels += F->lmap->width * F->lmap->height;
 
         if (lit_faces % 400 == 0) {
-#ifndef CONSOLE_ONLY
-
-#endif
-
-            if (main_action >= MAIN_CANCEL) {
-                break;
-            }
+            break;
         }
     }
 

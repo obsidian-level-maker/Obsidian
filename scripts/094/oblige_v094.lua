@@ -42,8 +42,6 @@ function v094_create_LEVEL(level, index, total)
     plan_sp_level(level, OB_CONFIG.mode == "coop")
   end
 
-  if gui.abort() then return "abort" end
-
   if PARAM.bool_historical_oblige_v2_dm_mode == 1 then
     show_dm_links()
   else
@@ -53,15 +51,11 @@ function v094_create_LEVEL(level, index, total)
 
   build_level()
 
-  if gui.abort() then return "abort" end
-
   if GAME.FACTORY.wolf_format then
     write_wolf_level()
   else
     write_level(level.name)
   end
-
-  if gui.abort() then return "abort" end
 
   make_mini_map()
 

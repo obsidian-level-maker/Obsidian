@@ -167,9 +167,7 @@ bool Cookie_Load(std::filesystem::path filename) {
         return false;
     }
 
-    if (main_action != MAIN_SOFT_RESTART) {
-        LogPrintf("Loading config file: %s\n", filename.u8string().c_str());
-    }
+    LogPrintf("Loading config file: %s\n", filename.u8string().c_str());
 
     int error_count = 0;
 
@@ -179,12 +177,10 @@ bool Cookie_Load(std::filesystem::path filename) {
         }
     }
 
-    if (main_action != MAIN_SOFT_RESTART) {
-        if (error_count > 0) {
-            LogPrintf("DONE (found %d parse errors)\n\n", error_count);
-        } else {
-            LogPrintf("DONE.\n\n");
-        }
+    if (error_count > 0) {
+        LogPrintf("DONE (found %d parse errors)\n\n", error_count);
+    } else {
+        LogPrintf("DONE.\n\n");
     }
 #ifdef __APPLE__
         setlocale(LC_NUMERIC, numeric_locale.c_str());
@@ -243,9 +239,7 @@ bool Cookie_Save(std::filesystem::path filename) {
         return false;
     }
 
-    if (main_action == MAIN_HARD_RESTART || main_action == MAIN_QUIT) {
-        LogPrintf("Saving config file...\n");
-    }
+    LogPrintf("Saving config file...\n");
 
     // header...
     cookie_fp << "-- CONFIG FILE : OBSIDIAN " << OBSIDIAN_SHORT_VERSION << " \""
@@ -263,9 +257,7 @@ bool Cookie_Save(std::filesystem::path filename) {
         cookie_fp << lines[i] << "\n";
     }
 
-    if (main_action == MAIN_HARD_RESTART || main_action == MAIN_QUIT) {
-        LogPrintf("DONE.\n\n");
-    }
+    LogPrintf("DONE.\n\n");
 
     cookie_fp.close();
 #ifdef __APPLE__

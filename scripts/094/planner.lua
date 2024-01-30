@@ -621,8 +621,6 @@ gui.debugf("  CHANGING SIDE %d\n", dir)
     end
 
     if not modified then break end
-
-    gui.ticker()
   end
 end
 
@@ -2006,8 +2004,6 @@ gui.debugf("qlist now:\n%s\n\n", table.tostr(qlist,2))
     shuffle_main_quests(PLAN.quests)
 
     assign_sub_quests(PLAN.quests)
-
-    gui.ticker();
   end
 
   local function plot_quests()
@@ -2024,8 +2020,6 @@ gui.debugf("qlist now:\n%s\n\n", table.tostr(qlist,2))
         end
       end
     end
-
-    gui.ticker();
   end
 
   local function decide_themes()
@@ -2625,8 +2619,6 @@ gui.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
   
   shuffle_build_sites()
   add_scenic_cells()
-
-  gui.ticker();
 
   select_floor_heights()
   compute_height_minmax()

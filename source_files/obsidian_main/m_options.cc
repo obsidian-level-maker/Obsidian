@@ -136,9 +136,7 @@ bool Options_Save(std::filesystem::path filename) {
         return false;
     }
 
-    if (main_action != MAIN_SOFT_RESTART) {
-        LogPrintf("Saving options file...\n");
-    }
+    LogPrintf("Saving options file...\n");
 
     option_fp << "-- OPTIONS FILE : OBSIDIAN " << OBSIDIAN_SHORT_VERSION
               << " \"" << OBSIDIAN_CODE_NAME << "\"\n";
@@ -179,9 +177,7 @@ bool Options_Save(std::filesystem::path filename) {
 
     option_fp.close();
 
-    if (main_action != MAIN_SOFT_RESTART) {
-        LogPrintf("DONE.\n\n");
-    }
+    LogPrintf("DONE.\n\n");
 
     return true;
 }

@@ -554,13 +554,9 @@ function write_level(lev_name)
       end
 
       push_line()
-
-      gui.ticker()
     end
 
     gui.printf("TOTAL_GROUPS X = %d\n", total_group)
-
-    if gui.abort() then return end
 
     -- now do all vertical lines...
 
@@ -589,8 +585,6 @@ function write_level(lev_name)
       end
 
       push_line()
-
-      gui.ticker()
     end
 
     gui.printf("TOTAL_GROUPS Y = %d\n", total_group)
@@ -786,8 +780,6 @@ function write_level(lev_name)
   local function write_linedefs()
 
     for zzz,L in ipairs(line_list) do
-      gui.ticker()
-
       if not L.deleted then
         if not L.v1.index then write_vertex(L.v1) end
         if not L.v2.index then write_vertex(L.v2) end
@@ -839,15 +831,11 @@ function write_level(lev_name)
 
   construct_things()
   
-  if gui.abort() then return end
- 
   construct_linedefs()
   construct_sectors()
 
   adjust_vertices()
   delete_linedefs()
-
-  if gui.abort() then return end
 
   gui.v094_begin_level()
 
@@ -967,8 +955,6 @@ function write_wolf_level()
 
     gui.wolf_block(x, y, tile, obj)
   end
-
-  if gui.abort() then return end
 
   gui.v094_begin_wolf_level(lev_name);
 

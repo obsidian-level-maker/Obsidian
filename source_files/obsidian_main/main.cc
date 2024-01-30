@@ -34,10 +34,6 @@
 #include "m_trans.h"
 #include "physfs.h"
 #include "sys_xoshiro.h"
-#ifndef CONSOLE_ONLY
-#include "ui_app.h"
-UI_App *main_win = nullptr;
-#endif
 
 /**
  * \brief Ticker time in milliseconds
@@ -48,9 +44,7 @@ std::filesystem::path home_dir;
 std::filesystem::path install_dir;
 std::filesystem::path config_file;
 std::filesystem::path options_file;
-std::filesystem::path theme_file;
 std::filesystem::path logging_file;
-std::filesystem::path reference_file;
 
 struct UpdateKv {
     char section;
@@ -355,18 +349,6 @@ void Determine_LoggingFile() {
     }
 }
 
-void Determine_ReferenceFile() {
-    if (argv::Find('p', "printref") >= 0) {
-        if (!batch_mode) {
-            reference_file /= home_dir;
-            reference_file /= REF_FILENAME;
-        } else {
-            reference_file = std::filesystem::current_path();
-            reference_file /= REF_FILENAME;
-        }
-    }
-}
-
 bool Main::BackupFile(const std::filesystem::path &filename) {
     if (std::filesystem::exists(filename)) {
         std::filesystem::path backup_name = filename;
@@ -423,19 +405,9 @@ void Main_SetSeed() {
 #endif
 }
 
-static void Module_Defaults() {
-    ob_set_mod_option("sky_generator", "self", "1");
-    ob_set_mod_option("armaetus_epic_textures", "self", "1");
-    ob_set_mod_option("music_swapper", "self", "1");
-    ob_set_mod_option("compress_output", "self", "1");
-}
-
 //------------------------------------------------------------------------
 
 bool Build_Cool_Shit() {
-#ifndef CONSOLE_ONLY
-    // clear the map
-#endif
 
     const std::string format = ob_game_format();
 
@@ -462,11 +434,6 @@ bool Build_Cool_Shit() {
 
     const std::string def_filename = ob_default_filename();
 
-#ifndef CONSOLE_ONLY
-    // lock most widgets of user interface
-
-#endif
-
     const uint32_t start_time = TimeGetMillies();
     bool was_ok = false;
     // this will ask for output filename (among other things)
@@ -485,11 +452,6 @@ bool Build_Cool_Shit() {
         was_ok = game_object->Start(def_filename.c_str());
     }
 
-#ifndef CONSOLE_ONLY
-    // coerce FLTK to redraw the main window
-
-#endif
-
     if (was_ok) {
         // run the scripts Scotty!
         was_ok = ob_build_cool_shit();
@@ -507,20 +469,6 @@ bool Build_Cool_Shit() {
         string_seed.clear();
     } else {
         string_seed.clear();
-#ifndef CONSOLE_ONLY
-
-#endif
-    }
-
-#ifndef CONSOLE_ONLY
-
-#endif
-    if (main_action == MAIN_CANCEL) {
-        main_action = 0;
-#ifndef CONSOLE_ONLY
-
-#endif
-        Main::ProgStatus(_("Cancelled"));
     }
 
     // Insurance in case the build process errored/cancelled
@@ -585,14 +533,6 @@ skiprest:;
 
 int main(int argc, char **argv) {
     // initialise argument parser (skipping program name)
-
-#ifndef CONSOLE_ONLY
-    if (!main_win)
-    {
-        main_win = new UI_App;
-        main_win->run();
-    }
-#endif
 
     // these flags take at least one argument
     argv::short_flags.emplace('b');
@@ -716,11 +656,7 @@ hardrestart:;
 
     Determine_ConfigFile();
     Determine_OptionsFile();
-#ifndef CONSOLE_ONLY
-
-#endif
     Determine_LoggingFile();
-    Determine_ReferenceFile();
 
     Options_Load(options_file);
 
@@ -728,9 +664,6 @@ hardrestart:;
 
     LogInit(logging_file);
 
-    if (argv::Find('p', "printref") >= 0) {
-        RefInit(reference_file);
-    }
 
     // accept -t and --terminal for backwards compatibility
     if (argv::Find('v', "verbose") >= 0 || argv::Find('t', "terminal") >= 0) {
@@ -745,10 +678,6 @@ hardrestart:;
     LogPrintf("********************************************************\n");
     LogPrintf("\n");
 
-#ifndef CONSOLE_ONLY
-
-#endif
-
     LogPrintf("home_dir: %s\n", home_dir.u8string().c_str());
     LogPrintf("install_dir: %s\n", install_dir.u8string().c_str());
     LogPrintf("config_file: %s\n\n", config_file.u8string().c_str());
@@ -756,15 +685,9 @@ hardrestart:;
     Trans_Init();
 
     if (!batch_mode) {
-#ifndef CONSOLE_ONLY
-
-#endif
         Trans_SetLanguage();
         OBSIDIAN_TITLE = _("OBSIDIAN Level Maker");
         OBSIDIAN_CODE_NAME = _("Unstable");
-#ifndef CONSOLE_ONLY
-
-#endif
     }
 
     if (argv::Find('d', "debug") >= 0) {
@@ -789,27 +712,24 @@ hardrestart:;
 
     LogEnableDebug(debug_messages);
 
-softrestart:;
 
     Main_CalcNewSeed();
 
     std::string load_file;
 
-    //    TX_TestSynth(next_rand_seed); - Fractal testing stuff
+    //TX_TestSynth(next_rand_seed); - Fractal testing stuff
 
-    if (main_action != MAIN_SOFT_RESTART) {
-        VFS_InitAddons(install_dir);
+    VFS_InitAddons(install_dir);
 
-        if (const int load_arg = argv::Find('l', "load"); load_arg >= 0) {
-            if (load_arg + 1 >= argv::list.size() ||
-                argv::IsOption(load_arg + 1)) {
-                StdErrPrintf(
-                           "OBSIDIAN ERROR: missing filename for --load\n");
-                exit(EXIT_FAILURE);
-            }
-
-            load_file = argv::list[load_arg + 1];
+    if (const int load_arg = argv::Find('l', "load"); load_arg >= 0) {
+        if (load_arg + 1 >= argv::list.size() ||
+            argv::IsOption(load_arg + 1)) {
+            StdErrPrintf(
+                        "OBSIDIAN ERROR: missing filename for --load\n");
+            exit(EXIT_FAILURE);
         }
+
+        load_file = argv::list[load_arg + 1];
     }
 
     if (batch_mode) {
@@ -824,33 +744,6 @@ softrestart:;
             ob_set_config("mature_words", "yes");
         } else {
             ob_set_config("mature_words", "no");
-        }
-
-        Module_Defaults();
-
-        if (argv::Find('p', "printref") >= 0) {
-            ob_print_reference();
-            RefClose();
-#if defined WIN32 && !defined CONSOLE_ONLY
-            std::cout << '\n' << "Close window when finished...";
-
-            do {
-            } while (true);
-#endif
-            Main::Detail::Shutdown(false);
-            return 0;
-        }
-
-        if (argv::Find(0, "printref-json") >= 0) {
-            ob_print_reference_json();
-#if defined WIN32 && !defined CONSOLE_ONLY
-            std::cout << '\n' << "Close window when finished...";
-
-            do {
-            } while (true);
-#endif
-            Main::Detail::Shutdown(false);
-            return 0;
         }
 
         if (!load_file.empty()) {
@@ -923,20 +816,12 @@ softrestart:;
         StringFormat("%s %s \"%s\"", OBSIDIAN_TITLE.c_str(), OBSIDIAN_SHORT_VERSION,
                     OBSIDIAN_CODE_NAME.c_str());
 
-    if (main_action != MAIN_SOFT_RESTART) {
-        // this not only finds PK3 files, but also activates the ones specified
-        // in OPTIONS.txt
-        VFS_ScanForAddons();
+    // this not only finds PK3 files, but also activates the ones specified
+    // in OPTIONS.txt
+    VFS_ScanForAddons();
+    VFS_ParseCommandLine();
+    VFS_ScanForPresets();
 
-        VFS_ParseCommandLine();
-
-        VFS_ScanForPresets();
-
-// create the main window
-#ifndef CONSOLE_ONLY
-
-#endif
-    }
     Script_Open();
 
     ob_set_config("locale", selected_lang.c_str());
@@ -946,9 +831,6 @@ softrestart:;
     } else {
         ob_set_config("mature_words", "no");
     }
-
-    // enable certain modules by default
-    Module_Defaults();
 
     // load config after creating window (will set widget values)
     if (!Cookie_Load(config_file)) {
@@ -963,125 +845,9 @@ softrestart:;
 
     Cookie_ParseArguments();
 
-#ifndef CONSOLE_ONLY
+    ob_set_config("filename_prefix", "datetime");
 
-#endif
-
-    if (main_action != MAIN_SOFT_RESTART) {
-#ifndef CONSOLE_ONLY
-        // show window (pass some dummy arguments)
-
-#endif
-    }
-
-    switch (filename_prefix) {
-        case 0:
-            ob_set_config("filename_prefix", "datetime");
-            break;
-        case 1:
-            ob_set_config("filename_prefix", "numlevels");
-            break;
-        case 2:
-            ob_set_config("filename_prefix", "game");
-            break;
-        case 3:
-            ob_set_config("filename_prefix", "port");
-            break;
-        case 4:
-            ob_set_config("filename_prefix", "theme");
-            break;
-        case 5:
-            ob_set_config("filename_prefix", "version");
-            break;
-        case 6:
-            ob_set_config("filename_prefix", "custom");
-            break;
-        case 7:
-            ob_set_config("filename_prefix", "none");
-            break;
-        default:
-            ob_set_config("filename_prefix", "datetime");
-            break;
-    }
-
-    if (main_action != MAIN_SOFT_RESTART) {
-#ifndef CONSOLE_ONLY
-        // draw an empty map (must be done after main window is
-        // shown() because that is when FLTK finalises the colors).
-#endif
-    }
-
-    main_action = MAIN_NONE;
-
-    try {
-        // run the GUI until the user quits
-        for (;;) {
-#ifndef CONSOLE_ONLY
-
-#endif
-            if (main_action == MAIN_QUIT || main_action == MAIN_HARD_RESTART ||
-                main_action == MAIN_SOFT_RESTART) {
-                break;
-            }
-
-            if (main_action == MAIN_BUILD) {
-
-                main_action = 0;
-
-                Main_SetSeed();
-
-                // save config in case everything blows up
-                if (did_randomize) {
-                    if (!preserve_old_config) {
-                        Cookie_Save(config_file);
-                    }
-                } else {
-                    Cookie_Save(config_file);
-                }
-
-                bool result = Build_Cool_Shit();
-
-                did_specify_seed = false;
-
-#ifndef CONSOLE_ONLY
-
-#endif
-                // regardless of success or fail, compute a new seed
-                Main_CalcNewSeed();
-
-                //main_action = MAIN_SOFT_RESTART;
-                main_action = MAIN_NONE;
-            }
-        }
-    } catch (const assert_fail_c &err) {
-        Main::FatalError(_("Sorry, an internal error occurred:\n%s"),
-                         err.GetMessage());
-    } catch (std::exception &e) {
-        Main::FatalError(_("An exception occurred: \n%s"), e.what());
-    }
-
-    if (main_action != MAIN_SOFT_RESTART) {
-        LogPrintf("\nQuit......\n\n");
-    }
-#ifndef CONSOLE_ONLY
-
-#endif
-    Options_Save(options_file);
-
-    if (main_action == MAIN_HARD_RESTART || main_action == MAIN_SOFT_RESTART) {
-#ifndef CONSOLE_ONLY
-
-#endif
-        Script_Close();
-        if (main_action == MAIN_SOFT_RESTART) {
-            goto softrestart;
-        }
-        if (main_action == MAIN_HARD_RESTART) {
-            LogClose();
-            PHYSFS_deinit();
-            goto hardrestart;
-        }
-    }
+    // GUI goes here lol
 
     Main::Detail::Shutdown(false);
 

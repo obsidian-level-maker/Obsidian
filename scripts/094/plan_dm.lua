@@ -268,8 +268,6 @@ function plan_dm_arena(level)
     for pass = 1,(PLAN.w + PLAN.h + 10) do
       grow_dm_themes()
     end
-
-    gui.ticker();
   end
 
   local function assign_dm_roomtypes()
@@ -286,8 +284,6 @@ function plan_dm_arena(level)
         end
       end
     end
-
-    gui.ticker();
   end
 
   local function create_dm_links(min_links, max_links)
@@ -572,8 +568,6 @@ function plan_dm_arena(level)
   match_borders_and_corners()
 
   add_windows()
-
-  gui.ticker();
 
   -- guarantee at least 4 players (each corner)
   local pw = PLAN.w

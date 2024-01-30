@@ -50,51 +50,23 @@ constexpr const char *OBSIDIAN_WEBSITE =
 
 constexpr const char *CONFIG_FILENAME = "CONFIG.txt";
 constexpr const char *OPTIONS_FILENAME = "OPTIONS.txt";
-constexpr const char *THEME_FILENAME = "THEME.txt";
 constexpr const char *LOG_FILENAME = "LOGS.txt";
-constexpr const char *REF_FILENAME = "REFERENCE.txt";
-
-#if !defined CONSOLE_ONLY && !defined __APPLE__
-
-#endif
 
 extern std::filesystem::path home_dir;
 extern std::filesystem::path install_dir;
 extern std::filesystem::path config_file;
 extern std::filesystem::path options_file;
-extern std::filesystem::path theme_file;
 extern std::filesystem::path logging_file;
-extern std::filesystem::path reference_file;
-
 extern bool batch_mode;
-
 extern std::filesystem::path batch_output_file;
-
 extern unsigned long long next_rand_seed;
 
-// this records the user action, e.g. Cancel or Quit buttons
-enum main_action_kind_e {
-    MAIN_NONE = 0,
-    MAIN_BUILD,
-    MAIN_CANCEL,
-    MAIN_QUIT,
-    MAIN_HARD_RESTART,
-    MAIN_SOFT_RESTART
-};
-
-extern int main_action;
-
 // Misc Options
-#ifndef CONSOLE_ONLY
-
-#endif
 extern int filename_prefix;
-extern std::string custom_prefix;
 extern bool create_backups;
 extern bool overwrite_warning;
 extern bool debug_messages;
 extern bool limit_break;
-extern bool preserve_failures;
 extern bool preserve_old_config;
 extern bool did_randomize;
 extern bool randomize_architecture;
@@ -105,30 +77,15 @@ extern bool random_string_seeds;
 extern bool password_mode;
 extern bool mature_word_lists;
 extern bool did_specify_seed;
-
 extern std::string def_filename;
-
 extern std::filesystem::path last_directory;
 extern std::string numeric_locale;
 extern std::vector<std::string> batch_randomize_groups;
-
-#ifndef CONSOLE_ONLY
-
-#endif
-
 extern std::filesystem::path default_output_path;
-
 extern std::filesystem::path Resolve_DefaultOutputPath();
-
 extern std::filesystem::path gif_filename;
-
 extern std::string string_seed;
 extern std::string selected_lang;
-
-// Clippy/program menu stuff
-#ifndef CONSOLE_ONLY
-
-#endif
 
 namespace Main {
 
@@ -138,9 +95,6 @@ void Shutdown(bool error);
 
 template <typename... Args>
 [[noreturn]] void FatalError(std::string_view msg, Args &&...args) {
-#ifndef CONSOLE_ONLY
-
-#endif
     Detail::Shutdown(true);
 
     if (batch_mode) {
@@ -151,28 +105,15 @@ template <typename... Args>
         } while (true);
 #endif
     }
-
     std::exit(9);
 }
 
 template <typename... Args>
 void ProgStatus(std::string_view msg, Args &&...args) {
     const std::string buffer = StringFormat(msg, std::forward<Args>(args)...);
-
-#ifndef CONSOLE_ONLY
-
-#else
     StdErrPrintf("%s\n", buffer.c_str());
-#endif
 }
 bool BackupFile(const std::filesystem::path &filename);
-
-#if !defined(CONSOLE_ONLY) && !defined(__APPLE__)
-
-#endif
-#ifndef CONSOLE_ONLY
-
-#endif
 
 }  // namespace Main
 

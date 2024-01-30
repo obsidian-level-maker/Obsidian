@@ -1164,17 +1164,7 @@ void Q1_ClippingHull(int hull) {
         return;
     }
 
-    if (main_action >= MAIN_CANCEL) {
-        return;
-    }
-
     LogPrintf("\nClipping Hull %d...\n", hull);
-
-#ifndef CONSOLE_ONLY
-
-#endif
-
-    ///???  FreeAll();
 
     const double *pads;
 

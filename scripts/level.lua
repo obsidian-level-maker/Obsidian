@@ -2535,30 +2535,11 @@ end
 
 function Level_build_it(LEVEL, SEEDS)
   Level_init(LEVEL)
-
-  -- Can just uncomment and manuall set an ID to match if we really need this - Dasho
-
-  --[[if PARAM.float_build_levels then
-    if PARAM.float_build_levels ~= 0 then
-      if LEVEL.id ~= PARAM.float_build_levels then return "nope" end
-    end
-  end]]--
-
   Area_create_rooms(LEVEL, SEEDS)
-    if gui.abort() then return "abort" end
-
   Quest_make_quests(LEVEL)
-    if gui.abort() then return "abort" end
-
   Room_build_all(LEVEL, SEEDS)
-    if gui.abort() then return "abort" end
-
   Monster_make_battles(LEVEL, SEEDS)
-    if gui.abort() then return "abort" end
-
   Item_add_pickups(LEVEL)
-    if gui.abort() then return "abort" end
-
   return "ok"
 end
 
@@ -2763,8 +2744,6 @@ function Level_make_level(LEV)
 
   collectgarbage("collect")
   collectgarbage("collect")
-
-  if gui.abort() then return "abort" end
 
   return "ok"
 end

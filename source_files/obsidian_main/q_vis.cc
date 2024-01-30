@@ -767,12 +767,7 @@ static void Build_PVS() {
             }
 
             if (done % 80 == 0) {
-#ifndef CONSOLE_ONLY
-
-#endif
-                if (main_action >= MAIN_CANCEL) {
-                    return;
-                }
+                return;
             }
 
             done++;
@@ -865,20 +860,18 @@ void QVIS_Visibility(int lump, int max_size, int numleafs) {
 
     Build_PVS();
 
-    if (!(main_action >= MAIN_CANCEL)) {
-        ShowVisStats();
+    ShowVisStats();
 
-        if (qk_game == 2) {
-            Q2_PrependOffsets(num_clusters);
-        }
+    if (qk_game == 2) {
+        Q2_PrependOffsets(num_clusters);
+    }
 
-        // TODO: handle overflow: store visdata in memory, and "merge" the
-        //       clusters into pairs or 2x2 contiguous pieces.
+    // TODO: handle overflow: store visdata in memory, and "merge" the
+    //       clusters into pairs or 2x2 contiguous pieces.
 
-        if (q_visibility->GetSize() >= max_size) {
-            Main::FatalError(
-                "Quake build failure: exceeded VISIBILITY limit\n");
-        }
+    if (q_visibility->GetSize() >= max_size) {
+        Main::FatalError(
+            "Quake build failure: exceeded VISIBILITY limit\n");
     }
 
     delete[] v_row_buffer;
