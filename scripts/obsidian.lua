@@ -1870,23 +1870,6 @@ function ob_get_random_words()
   end
 end
 
-local last_Clippy_advice_index = -1       -- Like "static last_Clippy_advice_index = -1;"...
-function ob_random_advice()
-  if #HELPFUL_ADVICE == 0 then
-    return nil
-  end
-
-  if last_Clippy_advice_index < 0 then
-    -- Randomize first index:
-    last_Clippy_advice_index = rand.irange(1, #HELPFUL_ADVICE)
-  else
-    -- Avoiding previous advice index:
-    last_Clippy_advice_index = 1 + ( (last_Clippy_advice_index + rand.irange(1, #HELPFUL_ADVICE - 2)) % #HELPFUL_ADVICE )
-  end
-
-  return HELPFUL_ADVICE[ last_Clippy_advice_index ]
-end
-
 function ob_default_filename()
   -- create a default filename [ WITHOUT any extension ]
 
@@ -2206,9 +2189,6 @@ function ob_build_setup()
   table.merge_missing(PARAM, GLOBAL_PARAMETERS)
 
   -- load all the prefab definitions
-  if OB_CONFIG.batch == "yes" then
-    RANDOMIZE_GROUPS = gui.get_batch_randomize_groups()
-  end
 
   if not ob_match_game({game = {wolf=1,spear=1,noah=1}}) then
     Naming_init(GAME.NAMES)

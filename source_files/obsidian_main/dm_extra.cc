@@ -23,10 +23,6 @@
 
 #include "csg_main.h"
 #include "g_doom.h"
-#ifndef CONSOLE_ONLY
-
-
-#endif
 #include "hdr_lua.h"
 #include "headers.h"
 #include "images.h"
@@ -185,102 +181,6 @@ static uint8_t *Flat_Realign(const uint8_t *pixels, int W, int H, int dx = 32,
 }
 
 namespace Doom {
-int wad_logo_gfx(lua_State *L) {
-    // LUA: wad_logo_gfx(lump, kind, image, W, H, colmap)
-
-    const char *patch = luaL_checkstring(L, 1);
-    const char *kind = luaL_checkstring(L, 2);
-    const char *image = luaL_checkstring(L, 3);
-
-    bool is_flat = false;
-    bool realign = false;
-
-    if (strchr(kind, 'p')) {
-        is_flat = false;
-    } else if (strchr(kind, 'f')) {
-        is_flat = true;
-    } else {
-        return luaL_argerror(L, 2, "unknown kind");
-    }
-
-    if (strchr(kind, 'm')) {
-        realign = true;
-    }
-
-    int new_W = luaL_checkinteger(L, 4);
-    int new_H = luaL_checkinteger(L, 5);
-    int map_id = luaL_checkinteger(L, 6);
-
-    if (new_W < 1) {
-        return luaL_argerror(L, 4, "bad width");
-    }
-    if (new_H < 1) {
-        return luaL_argerror(L, 5, "bad height");
-    }
-
-    if (map_id < 1 || map_id > MAX_COLOR_MAPS) {
-        return luaL_argerror(L, 6, "colmap value out of range");
-    }
-
-    // find the requested image (TODO: look in a table)
-    const logo_image_t *logo = NULL;
-
-    if (StringCaseCmp(image, logo_BOLT.name) == 0) {
-        logo = &logo_BOLT;
-    } else if (StringCaseCmp(image, logo_PILL.name) == 0) {
-        logo = &logo_PILL;
-    } else if (StringCaseCmp(image, logo_CARVE.name) == 0) {
-        logo = &logo_CARVE;
-    } else if (StringCaseCmp(image, logo_RELIEF.name) == 0) {
-        logo = &logo_RELIEF;
-    } else {
-        return luaL_argerror(L, 3, "unknown image name");
-    }
-
-    // colorize logo
-    color_mapping_t *map = &color_mappings[map_id - 1];
-
-    if (map->size < 2) {
-        return luaL_error(L, "wad_logo_gfx: colormap too small");
-    }
-
-    uint8_t *pixels = new uint8_t[logo->width * logo->height];
-    uint8_t *p_end = pixels + (logo->width * logo->height);
-
-    const uint8_t *src = logo->data;
-
-    for (uint8_t *dest = pixels; dest < p_end; dest++, src++) {
-        int idx = ((*src) * map->size) >> 8;
-
-        *dest = map->colors[idx];
-    }
-
-    if (realign) {
-        uint8_t *new_pix = Flat_Realign(pixels, logo->width, logo->height);
-
-        delete[] pixels;
-        pixels = new_pix;
-    }
-
-    // splosh it into the wad
-    if (is_flat) {
-        qLump_c *lump =
-            CreateFlat(new_W, new_H, pixels, logo->width, logo->height);
-
-        AddSectionLump('F', patch, lump);
-    } else {
-        qLump_c *lump =
-            CreatePatch(new_W, new_H, 0, 0, pixels, logo->width, logo->height);
-
-        AddSectionLump('P', patch, lump);
-    }
-
-    delete[] pixels;
-
-    return 0;
-}
-
-//------------------------------------------------------------------------
 
 int fsky_create(lua_State *L) {
     // LUA: fsky_create(width, height, bg_col)

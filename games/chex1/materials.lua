@@ -492,16 +492,6 @@ CHEX1.MATERIALS =
 
   SKSPINE1 = { t="SKSPINE1", rail_h=128 },
   STARG1 = { t="STARG1",   rail_h=128 },
-
-
-  -- other --
-
-  O_BOLT   = { t="SP_ROCK1", f="O_BOLT",   sane=1 },
-  O_PILL   = { t="SP_ROCK2", f="O_PILL",   sane=1 },
-  O_RELIEF = { t="MIDBRN1",  f="O_RELIEF", sane=1 },
-  O_CARVE  = { t="NUKESLAD", f="O_CARVE",  sane=1 },
-  O_NEON   = { t="TEKWALL2", f="CEIL4_1",  sane=1 },
-
 }
 
 CHEX1.PREFAB_FIELDS = 

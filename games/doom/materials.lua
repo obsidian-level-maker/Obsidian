@@ -376,12 +376,6 @@ DOOM.MATERIALS =
 
   -- other --
 
-  O_PILL   = { t="CEMENT1",  f="O_PILL",   sane=1 },
-  O_BOLT   = { t="CEMENT2",  f="O_BOLT",   sane=1 },
-  O_RELIEF = { t="CEMENT3",  f="O_RELIEF", sane=1 },
-  O_CARVE  = { t="CEMENT4",  f="O_CARVE",  sane=1 },
-  O_NEON   = { t="CEMENT6",  f="O_NEON",  sane=1 },
-
   O_BLACK  = { t="CEMENT5",  f="O_BLACK",  sane=1 },
 
   O_INVIST = { t="ZZWOLF10",  f="O_INVIST", sane=1 },

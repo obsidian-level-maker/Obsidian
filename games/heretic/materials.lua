@@ -203,10 +203,6 @@ HERETIC.MATERIALS =
   FLTSLUD1 = { f="FLTSLUD1", t="LAVA1"    },
   FLTTELE1 = { f="FLTTELE1", t="CHAINSD"  },
   FLTWAWA1 = { f="FLTWAWA1", t="WATRWAL1" },
-
-  -- other --
-
-  O_BOLT   = { t="DOORWOOD", f="O_BOLT",  sane=1 },
 }
 
 

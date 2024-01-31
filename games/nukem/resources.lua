@@ -96,18 +96,6 @@ function NUKEM.make_cool_gfx()
   gui.set_colormap(2, colmaps[2])
   gui.set_colormap(3, colmaps[3])
   gui.set_colormap(4, colmaps[4])
-
-  -- patches : HW313, HW316, HW329, HW309
-  gui.wad_logo_gfx("RW23_1", "p", "PILL",   128,128, 1)
-  gui.wad_logo_gfx("RW25_3", "p", "BOLT",   128,128, 2)
-  gui.wad_logo_gfx("RW33_2", "p", "RELIEF", 128,128, 3)
-  gui.wad_logo_gfx("RW24_1", "p", "CARVE",  128,128, 4)
-
-  -- flats
-  gui.wad_logo_gfx("O_PILL",   "f", "PILL",   64,64, 1)
-  gui.wad_logo_gfx("O_BOLT",   "f", "BOLT",   64,64, 2)
-  gui.wad_logo_gfx("O_RELIEF", "f", "RELIEF", 64,64, 3)
-  gui.wad_logo_gfx("O_CARVE",  "f", "CARVE",  64,64, 4)
 end
 
 function NUKEM.all_done()

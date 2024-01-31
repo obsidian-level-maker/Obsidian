@@ -126,14 +126,6 @@ HARMONY.MATERIALS =
   NUKAGE  = { f="SLIME09", t="BFALL1"   },
 
   TELEPORT = { f="FLOOR5_3", t="PANEL8" }
-
-  -- other --
-
---FIXME:
---  O_PILL   = { t="HW313", f="O_PILL",   sane=1 }
---  O_BOLT   = { t="HW316", f="O_BOLT",   sane=1 }
---  O_RELIEF = { t="HW329", f="O_RELIEF", sane=1 }
---  O_CARVE  = { t="HW309", f="O_CARVE",  sane=1 }
 }
 
 HARMONY.PREFAB_FIELDS =

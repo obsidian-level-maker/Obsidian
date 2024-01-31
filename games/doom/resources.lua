@@ -881,20 +881,6 @@ function DOOM.make_cool_gfx()
   gui.set_colormap(3, colmaps[3])
   gui.set_colormap(4, DOOM.RESOURCES.LEVEL_GFX_COLORS.iron)
   gui.set_colormap(5, DOOM.RESOURCES.LEVEL_GFX_COLORS.black)
-
-  -- patches (CEMENT1 .. CEMENT4)
-  gui.wad_logo_gfx("WALL52_1", "p", "PILL",   128,128, 1)
-  gui.wad_logo_gfx("WALL53_1", "p", "BOLT",   128,128, 2)
-  gui.wad_logo_gfx("WALL55_1", "p", "RELIEF", 128,128, 3)
---gui.wad_logo_gfx("WALL54_1", "p", "CARVE",  128,128, 4)
-  gui.wad_logo_gfx("WALL52_2", "p", "CARVE",  128,128, 5) -- O_BLACK
-
-  -- flats
-  gui.wad_logo_gfx("O_PILL",   "f", "PILL",   64,64, 1)
-  gui.wad_logo_gfx("O_BOLT",   "f", "BOLT",   64,64, 2)
-  gui.wad_logo_gfx("O_RELIEF", "f", "RELIEF", 64,64, 3)
-  gui.wad_logo_gfx("O_CARVE",  "f", "CARVE",  64,64, 4)
-  gui.wad_logo_gfx("O_BLACK",  "f", "CARVE",  64,64, 5)
 end
 
 

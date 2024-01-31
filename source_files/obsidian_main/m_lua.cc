@@ -366,26 +366,6 @@ int gui_scan_directory(lua_State *L) {
     return 1;
 }
 
-// LUA: get_batch_randomize_groups() --> list
-//
-// Note: 'match' parameter must be of the form "*" or "*.xxx"
-//       or must be "DIRS" to return all the sub-directories
-//
-int gui_get_batch_randomize_groups(lua_State *L) {
-    lua_newtable(L);
-
-    if (!batch_randomize_groups.empty()) {
-        for (unsigned int k = 0; k < batch_randomize_groups.size(); k++) {
-            lua_pushstring(L, batch_randomize_groups[k].c_str());
-            lua_rawseti(L, -2, (int)(k + 1));
-        }
-    } else {
-        lua_pushnil(L);
-    }
-
-    return 1;
-}
-
 // LUA: add_choice(button, id, label)
 //
 int gui_add_choice(lua_State *L) {
@@ -492,7 +472,7 @@ int gui_show_module(lua_State *L) {
     return 0;
 }
 
-// LUA: add_module_option(module, option, label, tooltip, gap, randomize_group)
+// LUA: add_module_option(module, option, label, tooltip, gap)
 //
 int gui_add_module_header(lua_State *L) {
     std::string module = luaL_optstring(L, 1, "");
@@ -509,7 +489,7 @@ int gui_add_module_header(lua_State *L) {
     return 0;
 }
 
-// LUA: add_module_url(module, option, label, tooltip, gap, randomize_group)
+// LUA: add_module_url(module, option, label, tooltip, gap)
 //
 int gui_add_module_url(lua_State *L) {
     std::string module = luaL_optstring(L, 1, "");
@@ -528,7 +508,7 @@ int gui_add_module_url(lua_State *L) {
     return 0;
 }
 
-// LUA: add_module_option(module, option, label, tooltip, gap, randomize_group)
+// LUA: add_module_option(module, option, label, tooltip, gap)
 //
 int gui_add_module_option(lua_State *L) {
     std::string module = luaL_optstring(L, 1, "");
@@ -540,9 +520,7 @@ int gui_add_module_option(lua_State *L) {
 
     int gap = luaL_optinteger(L, 6, 0);
 
-    std::string randomize_group = luaL_optstring(L, 7, "");
-
-    std::string default_value = luaL_checkstring(L, 8);
+    std::string default_value = luaL_checkstring(L, 7);
 
     SYS_ASSERT(!module.empty() && !option.empty() && !default_value.empty());
 #ifndef CONSOLE_ONLY
@@ -571,9 +549,7 @@ int gui_add_module_slider_option(lua_State *L) {
     std::string presets = luaL_optstring(L, 11, "");
     std::string nan = luaL_optstring(L, 12, "");
 
-    std::string randomize_group = luaL_optstring(L, 13, "");
-
-    std::string default_value = luaL_checkstring(L, 14);
+    std::string default_value = luaL_checkstring(L, 13);
 
     SYS_ASSERT(!module.empty() && !option.empty() && !default_value.empty());
 #ifndef CONSOLE_ONLY
@@ -594,9 +570,7 @@ int gui_add_module_button_option(lua_State *L) {
 
     int gap = luaL_optinteger(L, 6, 0);
 
-    std::string randomize_group = luaL_optstring(L, 7, "");
-
-    std::string default_value = luaL_checkstring(L, 8);
+    std::string default_value = luaL_checkstring(L, 7);
 
     SYS_ASSERT(!module.empty() && !option.empty() && !default_value.empty());
 #ifndef CONSOLE_ONLY
@@ -915,7 +889,6 @@ extern int v094_end_wolf_level(lua_State *L);
 
 namespace Doom {
 extern int wad_name_gfx(lua_State *L);
-extern int wad_logo_gfx(lua_State *L);
 
 extern int wad_add_text_lump(lua_State *L);
 extern int wad_add_binary_lump(lua_State *L);
@@ -1002,8 +975,6 @@ static const luaL_Reg gui_script_funcs[] = {
     {"get_module_slider_value", gui_get_module_slider_value},
     {"get_module_button_value", gui_get_module_button_value},
 
-    {"get_batch_randomize_groups", gui_get_batch_randomize_groups},
-
     {"at_level", gui_at_level},
     {"prog_step", gui_prog_step},
     {"random", gui_random},
@@ -1048,7 +1019,6 @@ static const luaL_Reg gui_script_funcs[] = {
 
     // Doom/Heretic/Hexen functions
     {"wad_name_gfx", Doom::wad_name_gfx},
-    {"wad_logo_gfx", Doom::wad_logo_gfx},
     {"wad_add_text_lump", Doom::wad_add_text_lump},
     {"wad_add_binary_lump", Doom::wad_add_binary_lump},
 
@@ -1485,19 +1455,6 @@ bool ob_mod_enabled(std::string module_name) {
 
 std::string ob_default_filename() {
     if (!Script_CallFunc("ob_default_filename", 1)) {
-        return "";
-    }
-
-    std::string res = luaL_optlstring(LUA_ST, -1, "", NULL);
-
-    // remove result from lua stack
-    lua_pop(LUA_ST, 1);
-
-    return res;
-}
-
-std::string ob_random_advice() {
-    if (!Script_CallFunc("ob_random_advice", 1)) {
         return "";
     }
 

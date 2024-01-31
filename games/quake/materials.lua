@@ -529,11 +529,6 @@ QUAKE.MATERIALS =
 
   CLIP_RAIL = { t="clip", rail_h=64},
 
-  -- Oblige specific textures
-  O_CARVE    = { t="o_carve" },
-  O_BOLT     = { t="o_bolt"  },
-
-
   BUTTON = { t="+0button" },
 
   BUTNN  = { t="+0butnn" },

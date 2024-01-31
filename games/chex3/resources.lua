@@ -118,18 +118,6 @@ function CHEX3.make_cool_gfx()
   gui.set_colormap(2, colmaps[2])
   gui.set_colormap(3, colmaps[3])
   gui.set_colormap(4, colmaps[4])
-
-  -- patches : SP_ROCK1, SP_ROCK2, MIDBRN1, NUKESLAD
-  gui.wad_logo_gfx("WALL63_1", "p", "BOLT",   128,128, 2)
-  gui.wad_logo_gfx("WALL63_2", "p", "PILL",   128,128, 1)
-  gui.wad_logo_gfx("DOOR12_1", "p", "RELIEF",  64,128, 3)
-  gui.wad_logo_gfx("WALL57_1", "p", "CARVE",   64,128, 4)
-
-  -- flats
-  gui.wad_logo_gfx("O_PILL",   "f", "PILL",   64,64, 1)
-  gui.wad_logo_gfx("O_BOLT",   "f", "BOLT",   64,64, 2)
-  gui.wad_logo_gfx("O_RELIEF", "f", "RELIEF", 64,64, 3)
-  gui.wad_logo_gfx("O_CARVE",  "f", "CARVE",  64,64, 4)
 end
 
 

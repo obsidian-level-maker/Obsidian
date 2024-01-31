@@ -51,24 +51,12 @@ void Parse_Option(const std::string &name, const std::string &value) {
         debug_messages = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "limit_break") == 0) {
         limit_break = StringToInt(value) ? true : false;
-    } else if (StringCaseCmp(name, "preserve_old_config") == 0) {
-        preserve_old_config = StringToInt(value) ? true : false;
-    } else if (StringCaseCmp(name, "randomize_architecture") == 0) {
-        randomize_architecture = StringToInt(value) ? true : false;
-    } else if (StringCaseCmp(name, "randomize_monsters") == 0) {
-        randomize_monsters = StringToInt(value) ? true : false;
-    } else if (StringCaseCmp(name, "randomize_pickups") == 0) {
-        randomize_pickups = StringToInt(value) ? true : false;
-    } else if (StringCaseCmp(name, "randomize_misc") == 0) {
-        randomize_misc = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "random_string_seeds") == 0) {
         random_string_seeds = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "password_mode") == 0) {
         password_mode = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "mature_word_lists") == 0) {
         mature_word_lists = StringToInt(value) ? true : false;
-    } else if (StringCaseCmp(name, "filename_prefix") == 0) {
-        filename_prefix = StringToInt(value);
     } else if (StringCaseCmp(name, "default_output_path") == 0) {
         default_output_path = std::filesystem::u8path(value);
     } else {
@@ -151,19 +139,10 @@ bool Options_Save(std::filesystem::path filename) {
     option_fp << "overwrite_warning = " << (overwrite_warning ? 1 : 0) << "\n";
     option_fp << "debug_messages = " << (debug_messages ? 1 : 0) << "\n";
     option_fp << "limit_break = " << (limit_break ? 1 : 0) << "\n";
-    option_fp << "preserve_old_config = " << (preserve_old_config ? 1 : 0)
-              << "\n";
-    option_fp << "randomize_architecture = " << (randomize_architecture ? 1 : 0)
-              << "\n";
-    option_fp << "randomize_monsters = " << (randomize_monsters ? 1 : 0)
-              << "\n";
-    option_fp << "randomize_pickups = " << (randomize_pickups ? 1 : 0) << "\n";
-    option_fp << "randomize_misc = " << (randomize_misc ? 1 : 0) << "\n";
     option_fp << "random_string_seeds = " << (random_string_seeds ? 1 : 0)
               << "\n";
     option_fp << "password_mode = " << (password_mode ? 1 : 0) << "\n";
     option_fp << "mature_word_lists = " << (mature_word_lists ? 1 : 0) << "\n";
-    option_fp << "filename_prefix = " << filename_prefix << "\n";
     std::string dop = StringFormat(
         "default_output_path = %s\n",
         StringToUTF8(default_output_path.generic_u16string()).c_str());

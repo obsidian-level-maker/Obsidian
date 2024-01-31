@@ -67,25 +67,12 @@ unsigned long long next_rand_seed;
 bool batch_mode = false;
 std::filesystem::path batch_output_file;
 std::string numeric_locale;
-std::vector<std::string> batch_randomize_groups;
 
 // options
-#ifndef CONSOLE_ONLY
-
-#endif
-int filename_prefix = 0;
-std::string custom_prefix = "CUSTOM_";
 bool create_backups = true;
 bool overwrite_warning = true;
 bool debug_messages = false;
 bool limit_break = false;
-bool preserve_failures = false;
-bool preserve_old_config = false;
-bool did_randomize = false;
-bool randomize_architecture = false;
-bool randomize_monsters = false;
-bool randomize_pickups = false;
-bool randomize_misc = false;
 bool random_string_seeds = false;
 bool password_mode = false;
 bool mature_word_lists = false;
@@ -490,45 +477,6 @@ bool Build_Cool_Shit() {
     return was_ok;
 }
 
-void Options_ParseArguments() {
-
-    if (argv::Find(0, "randomize-all") >= 0) {
-        if (batch_mode) {
-            batch_randomize_groups.push_back("architecture");
-            batch_randomize_groups.push_back("monsters");
-            batch_randomize_groups.push_back("pickups");
-            batch_randomize_groups.push_back("misc");
-        }
-        goto skiprest;
-    }
-
-    if (argv::Find(0, "randomize-arch") >= 0) {
-        if (batch_mode) {
-            batch_randomize_groups.push_back("architecture");
-        }
-    }
-
-    if (argv::Find(0, "randomize-monsters") >= 0) {
-        if (batch_mode) {
-            batch_randomize_groups.push_back("monsters");
-        }
-    }
-
-    if (argv::Find(0, "randomize-pickups") >= 0) {
-        if (batch_mode) {
-            batch_randomize_groups.push_back("pickups");
-        }
-    }
-
-    if (argv::Find(0, "randomize-other") >= 0) {
-        if (batch_mode) {
-            batch_randomize_groups.push_back("misc");
-        }
-    }
-
-skiprest:;
-}
-
 /* ----- main program ----------------------------- */
 
 int main(int argc, char **argv) {
@@ -542,8 +490,6 @@ int main(int argc, char **argv) {
 
     // parse the flags
     argv::Init(argc, argv);
-
-hardrestart:;
 
     if (argv::Find('?', NULL) >= 0 || argv::Find('h', "help") >= 0) {
 #if defined WIN32 && !defined CONSOLE_ONLY
@@ -659,8 +605,6 @@ hardrestart:;
     Determine_LoggingFile();
 
     Options_Load(options_file);
-
-    Options_ParseArguments();
 
     LogInit(logging_file);
 

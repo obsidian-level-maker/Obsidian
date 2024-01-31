@@ -1,7 +1,5 @@
 HARMONY.VANILLA_MATS = 
 {
-    -- There are always added by Obsidian regardless of Engine selected
-    "O_BOLT",
     -- Vanilla Flats
     "BLOOD1",
     "BLOOD2",

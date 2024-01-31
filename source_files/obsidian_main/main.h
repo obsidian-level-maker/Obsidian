@@ -62,17 +62,10 @@ extern std::filesystem::path batch_output_file;
 extern unsigned long long next_rand_seed;
 
 // Misc Options
-extern int filename_prefix;
 extern bool create_backups;
 extern bool overwrite_warning;
 extern bool debug_messages;
 extern bool limit_break;
-extern bool preserve_old_config;
-extern bool did_randomize;
-extern bool randomize_architecture;
-extern bool randomize_monsters;
-extern bool randomize_pickups;
-extern bool randomize_misc;
 extern bool random_string_seeds;
 extern bool password_mode;
 extern bool mature_word_lists;
@@ -80,7 +73,6 @@ extern bool did_specify_seed;
 extern std::string def_filename;
 extern std::filesystem::path last_directory;
 extern std::string numeric_locale;
-extern std::vector<std::string> batch_randomize_groups;
 extern std::filesystem::path default_output_path;
 extern std::filesystem::path Resolve_DefaultOutputPath();
 extern std::filesystem::path gif_filename;
@@ -96,7 +88,6 @@ void Shutdown(bool error);
 template <typename... Args>
 [[noreturn]] void FatalError(std::string_view msg, Args &&...args) {
     Detail::Shutdown(true);
-
     if (batch_mode) {
         std::cout << "ERROR!\n";
 #ifdef WIN32

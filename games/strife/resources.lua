@@ -119,24 +119,6 @@ function STRIFE.make_cool_gfx()
   gui.set_colormap(2, colmaps[2])
   gui.set_colormap(3, colmaps[3])
   gui.set_colormap(4, WHITE)
-
-  local carve = "RELIEF"
-  local c_map = 3
-
-  if rand.odds(33) then
-    carve = "CARVE"
-    c_map = 4
-  end
-
-  -- patches : SEWER08, BRASS3, BRASS4,
-  gui.wad_logo_gfx("W_121", "p", "BOLT",  64,128, 1)
-  gui.wad_logo_gfx("W_320", "p", "PILL", 128,128, 2)
-  gui.wad_logo_gfx("W_321", "p", carve,  128,128, c_map)
-
-  -- flats
-  gui.wad_logo_gfx("O_BOLT",  "f", "BOLT",  64,64, 1)
-  gui.wad_logo_gfx("O_PILL",  "f", "PILL",  64,64, 2)
-  gui.wad_logo_gfx("O_CARVE", "f", carve,   64,64, c_map)
 end
 
 

@@ -437,12 +437,6 @@ HEXEN.MATERIALS =
   WEB3     = { t="WEB3",   rail_h=32 },
 
 
-  -- other --
-
-  O_BOLT   = { t="SEWER08", f="O_BOLT",  sane=1 },
-  O_PILL   = { t="BRASS3",  f="O_PILL",  sane=1 },
-  O_CARVE  = { t="BRASS4",  f="O_CARVE", sane=1 },
-
   -- FIXME: TEMP HACK!!
   STNGLS1  = { t="GLASS01",  f="F_081" },
 }

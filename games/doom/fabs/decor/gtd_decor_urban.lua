@@ -81,10 +81,6 @@ PREFABS.Decor_marquee_sign =
     MARBFACE = 16,
     MARBFAC2 = 16,
     MARBFAC3 = 16,
-    O_NEON   = 50,
-    O_BOLT   = 50,
-    O_PILL   = 50,
-    O_CARVE  = 50,
   }
 
 }

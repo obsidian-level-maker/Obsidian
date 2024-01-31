@@ -22,10 +22,6 @@
 #include "csg_local.h"
 #include "csg_main.h"
 #include "csg_quake.h"
-#ifndef CONSOLE_ONLY
-
-
-#endif
 #include "hdr_lua.h"
 #include "headers.h"
 #include "images.h"
@@ -87,10 +83,8 @@ static void Q1_ClearMipTex(void) {
     // built-in textures
     Q1_AddMipTex("error");    // #0
     Q1_AddMipTex("missing");  // #1
-    Q1_AddMipTex("o_carve");  // #2
-    Q1_AddMipTex("o_bolt");   // #3
 
-    num_custom_tex = 4;
+    num_custom_tex = 2;
 }
 
 int32_t Q1_AddMipTex(std::string name) {
@@ -145,47 +139,6 @@ static void CreateDummyMip(qLump_c *lump, const char *name, int pix1,
     }
 }
 
-static void CreateLogoMip(qLump_c *lump, const char *name, const uint8_t *data,
-                          const uint8_t *colors) {
-    SYS_ASSERT(strlen(name) < 16);
-
-    miptex_t mm_tex;
-
-    strcpy(mm_tex.name, name);
-
-    int size = 64;
-
-    mm_tex.width = LE_U32(size);
-    mm_tex.height = LE_U32(size);
-
-    int offset = sizeof(mm_tex);
-
-    for (int i = 0; i < MIP_LEVELS; i++) {
-        mm_tex.offsets[i] = LE_U32(offset);
-
-        offset += (size * size);
-        size /= 2;
-    }
-
-    lump->Append(&mm_tex, sizeof(mm_tex));
-
-    size = 64;
-    int scale = 1;
-
-    for (int i = 0; i < MIP_LEVELS; i++) {
-        for (int y = 0; y < size; y++) {
-            for (int x = 0; x < size; x++) {
-                uint8_t pixel = colors[data[(y * scale) * 64 + x * scale] >> 5];
-
-                lump->Append(&pixel, 1);
-            }
-        }
-
-        size /= 2;
-        scale *= 2;
-    }
-}
-
 static void TransferOneMipTex(qLump_c *lump, unsigned int m, const char *name) {
     static std::array<uint8_t, 8> relief_colors =  // yellow range
         {207, 205, 203, 201, 199, 197, 195, 193};
@@ -199,16 +152,6 @@ static void TransferOneMipTex(qLump_c *lump, unsigned int m, const char *name) {
     }
     if (strcmp(name, "missing") == 0) {
         CreateDummyMip(lump, name, 4, 12);
-        return;
-    }
-    if (strcmp(name, "o_carve") == 0)  // TEMP STUFF !!!!
-    {
-        CreateLogoMip(lump, name, logo_RELIEF.data, relief_colors.data());
-        return;
-    }
-    if (strcmp(name, "o_bolt") == 0)  // TEMP STUFF !!!!
-    {
-        CreateLogoMip(lump, name, logo_BOLT.data, bolt_colors.data());
         return;
     }
 

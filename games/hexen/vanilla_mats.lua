@@ -1,7 +1,5 @@
 HEXEN.VANILLA_MATS = 
 {
-    -- There are always added by Obsidian regardless of Engine selected
-    "O_BOLT",
     -- Vanilla Flats
     "F_001",
     "F_002",

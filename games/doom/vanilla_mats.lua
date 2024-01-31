@@ -2,12 +2,7 @@ DOOM.VANILLA_MATS =
 {
     -- There are always added by Obsidian regardless of Engine selected
     "LIFTFLAT",
-    "O_BOLT",
     "O_BLACK",
-    "O_PILL",
-    "O_RELIEF",
-    "O_CARVE",
-    "O_NEON",
     "O_INVIST",
     --SetLine special mats
     "13131C",
