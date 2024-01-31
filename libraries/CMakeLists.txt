@@ -1,2 +1,5 @@
+if(NOT CONSOLE_ONLY AND NOT HAIKU)
+    add_subdirectory(imgui)
+endif()
 add_subdirectory(miniz)
 add_subdirectory(physfs)
