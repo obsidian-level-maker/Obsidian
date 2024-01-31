@@ -59,7 +59,7 @@ OB_MODULES["historical_versions"] =
       tooltip = _("Sets chance of levels being generated using Oblige v2"),
       longtip = _("Gives levels a chance of being generated using an internal version of Oblige version 2.x. NOTE: Not all module settings will affect levels generated in this manner.\n\nWARNING! When using Hexen, you MUST set this to 100% and generate the entire WAD with v2 to use its level and hub progression!"),
       priority = 102,
-      randomize_group = "architecture",
+      
     },
 
     {

@@ -124,7 +124,7 @@ OB_MODULES["procedural_gotcha_edge"] =
       default="final",
       tooltip = _("Procedural Gotchas are two room maps, where the second is an immediate but immensely-sized exit room with gratitiously intensified monster strength. Essentially an arena - prepare for a tough, tough fight!\n\nNotes:\n\n5% of levels may create at least 1 or 2 gotcha maps in a standard full game."),
       priority = 106,
-      randomize_group="monsters",
+      
       gap = 1
     },
 
@@ -135,7 +135,7 @@ OB_MODULES["procedural_gotcha_edge"] =
       default = 1,
       tooltip = _("Attempts to guarantee a fight against a boss-type (nasty tier) monster in the procedural gotcha."),
       priority = 105,
-      randomize_group="monsters",
+      
       gap = 1
     },
 
@@ -150,7 +150,7 @@ OB_MODULES["procedural_gotcha_edge"] =
       default = 1.2,
       tooltip = _("Offset monster strength from your default quantity of choice plus the increasing level ramp. If your quantity choice is to reduce the monsters, the monster quantity will cap at a minimum of 0.1 (Scarce quantity setting)."),
       priority = 104,
-      randomize_group="monsters",
+      
     },
 
     {
@@ -164,7 +164,7 @@ OB_MODULES["procedural_gotcha_edge"] =
       presets = _("0:NONE,2:2 (Stronger),4:4 (Harder),6:6 (Tougher),8:8 (CRAZIER),16:16 (NIGHTMARISH)"),
       tooltip = _("Offset monster quantity from your default strength of choice plus the increasing level ramp."),
       priority = 103,
-      randomize_group="monsters",
+      
     },
 
 
@@ -175,7 +175,7 @@ OB_MODULES["procedural_gotcha_edge"] =
       default = "small",
       tooltip = _("Size of the procedural gotcha. Start and arena room sizes are relative to map size as well."),
       priority = 102,
-      randomize_group="monsters",
+      
       gap = 1
     },
 
@@ -201,7 +201,7 @@ OB_MODULES["procedural_gotcha_edge"] =
       tooltip = _("Influences steepness settings for boss arenas. Boss arena steepness is capped to be less intrusive to boss movement."),
       priority = 99,
       gap = 1,
-      randomize_group="monsters",
+      
     },
 
     {
@@ -211,7 +211,7 @@ OB_MODULES["procedural_gotcha_edge"] =
       default = "default",
       tooltip = _("Increases or reduces chances of boss being based off of a more powerful monster."),
       priority = 98,
-      randomize_group="monsters",
+      
     },
 
     {
@@ -225,7 +225,7 @@ OB_MODULES["procedural_gotcha_edge"] =
       increment = 0.25,
       default = 1,
       priority = 97,
-      randomize_group="monsters",
+      
     },
 
     {
@@ -235,7 +235,7 @@ OB_MODULES["procedural_gotcha_edge"] =
       default = "default",
       tooltip = _("Reduces chance of hitscan bosses spawning."),
       priority = 96,
-      randomize_group="monsters",
+      
     },
 
     {
@@ -247,7 +247,7 @@ OB_MODULES["procedural_gotcha_edge"] =
       tooltip = _("If enabled, monsters disabled in monster control module cant be chosen as a boss."),
       priorty = 91,
       gap = 1,
-      randomize_group="monsters",
+      
     },
 
     {
@@ -257,7 +257,7 @@ OB_MODULES["procedural_gotcha_edge"] =
       default = "softlimit",
       tooltip = _("Influences how boss difficulty and megawad progression affects the monster type of boss.\n\nHard Limit: Doesn't allow monster types outside of range to ever spawn.\n\nSoft Limit: Reduces the probability of spawning of monster types outside of range.\n\nNo Limit: Difficulty doesn't have effect on monster type selection."),
       priority = 90,
-      randomize_group="monsters",
+      
     },
 
 
@@ -269,7 +269,7 @@ OB_MODULES["procedural_gotcha_edge"] =
       tooltip = _("Influences weapon placement in boss arena."),
       priority = 89,
       gap = 1,
-      randomize_group="monsters",
+      
     },
 
     {
@@ -283,7 +283,7 @@ OB_MODULES["procedural_gotcha_edge"] =
       default = 3,
       tooltip = _("Changes multiplier of ammunition items on the boss arena(This is also affected by boss health multiplier)."),
       priority = 87,
-      randomize_group="monsters",
+      
     },
 
 
@@ -298,7 +298,7 @@ OB_MODULES["procedural_gotcha_edge"] =
       default = 3,
       tooltip = _("Changes multiplier of healing items on the boss arena."),
       priority = 86,
-      randomize_group="monsters",
+      
     },
   },
 }

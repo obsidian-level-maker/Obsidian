@@ -23,10 +23,6 @@
 #include "csg_local.h"
 #include "csg_main.h"
 #include "csg_quake.h"
-#ifndef CONSOLE_ONLY
-
-
-#endif
 #include "hdr_lua.h"
 #include "headers.h"
 #include "lib_util.h"

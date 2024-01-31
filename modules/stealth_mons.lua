@@ -303,7 +303,7 @@ OB_MODULES["stealth_mons"] =
     {
       label = _("Default Quantity"),
       choices = STEALTH.CHOICES,
-      randomize_group = "monsters",
+      
       tooltip = _("Control the appearance of stealth monster variants (GZDoom and EDGE-Classic only).")
     },
   },
@@ -381,7 +381,7 @@ OB_MODULES["stealth_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Stealth Zombiemen."), 
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group="monsters",
+      
     },
 
     {
@@ -395,7 +395,7 @@ OB_MODULES["stealth_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Stealth Shotgunners."),  
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group="monsters",
+      
     },
 
     {
@@ -409,7 +409,7 @@ OB_MODULES["stealth_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Stealth Imps."),  
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group="monsters",
+      
     },
 
     {
@@ -423,7 +423,7 @@ OB_MODULES["stealth_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Stealth Pinkies."),  
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group="monsters",
+      
     },
 
     {
@@ -437,7 +437,7 @@ OB_MODULES["stealth_mon_control"] =
       nan = _("Default"), 
       tooltip = _("Control the amount of Stealth Cacodemons."), 
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group="monsters",
+      
     },
 
     {
@@ -451,7 +451,7 @@ OB_MODULES["stealth_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Stealth Barons of Hell."),  
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group="monsters",
+      
     },
 
     {
@@ -465,7 +465,7 @@ OB_MODULES["stealth_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Stealth Chaingunners."),  
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group="monsters",
+      
     },
 
     {
@@ -479,7 +479,7 @@ OB_MODULES["stealth_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Stealth Hell Knights."),  
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group="monsters",
+      
     },
 
     {
@@ -493,7 +493,7 @@ OB_MODULES["stealth_mon_control"] =
       nan = _("Default"), 
       tooltip = _("Control the amount of Stealth Revenants."), 
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group="monsters",
+      
     },
 
     {
@@ -507,7 +507,7 @@ OB_MODULES["stealth_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Stealth Mancubi."),  
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group="monsters",
+      
     },
 
     {
@@ -521,7 +521,7 @@ OB_MODULES["stealth_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Stealth Arachnotrons."),  
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group="monsters",
+      
     },
 
     {
@@ -535,7 +535,7 @@ OB_MODULES["stealth_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Stealth Arch-Viles."),  
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group="monsters",
+      
     },
   },
 }

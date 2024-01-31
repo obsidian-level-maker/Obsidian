@@ -88,10 +88,6 @@ msgstr "values: "
 msgid "default: "
 msgstr "default: "
 
-#: scripts/obsidian.lua:2452
-msgid "randomize_group: "
-msgstr "randomize_group: "
-
 #: scripts/obsidian.lua:2486
 msgid "tooltip"
 msgstr "tooltip"
@@ -143,10 +139,6 @@ msgstr "boolean"
 #: scripts/obsidian.lua:2560
 msgid "choice"
 msgstr "choice"
-
-#: scripts/obsidian.lua:2572
-msgid "randomize_group"
-msgstr "randomize_group"
 
 #: scripts/obsidian.lua:2600
 msgid ""

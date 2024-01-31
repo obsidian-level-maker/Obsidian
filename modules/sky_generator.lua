@@ -366,7 +366,7 @@ OB_MODULES["sky_generator"] =
       priority = 9,
       tooltip = _("Influences whether the sky generator should generate terrain in the skybox."),
       default = "hs_random",
-      randomize_group = "misc",
+      
     },
 
 
@@ -378,7 +378,7 @@ OB_MODULES["sky_generator"] =
       tooltip = _("Changes the parameters of generated hills, if there are any. 'Cavernous' causes the terrain to nearly fill up most of the sky, making an impression of being inside a cave or crater."),
       default = "hp_random",
       gap = 1,
-      randomize_group = "misc",
+      
     },
 
 
@@ -389,7 +389,7 @@ OB_MODULES["sky_generator"] =
       priority= 7,
       tooltip = _("Picks the color of the sky if day. Default means random and theme-ish."),
       default = "default",
-      randomize_group = "misc",
+      
     },
 
 
@@ -400,7 +400,7 @@ OB_MODULES["sky_generator"] =
       priority = 6,
       tooltip = _("Picks the color of the terrain in the sky if available. Default means random and theme-ish."),
       default = "default",
-      randomize_group = "misc",
+      
     },
 
 
@@ -412,7 +412,7 @@ OB_MODULES["sky_generator"] =
       tooltip = _("Picks the color of nebula if sky is night. 'None' means just a plain starry night sky. Default means random and theme-ish."),
       default = "default",
       gap = 1,
-      randomize_group = "misc",
+      
     },
 
 

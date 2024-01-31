@@ -84,7 +84,7 @@ OB_MODULES["harmony_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Beastlings."), 
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group = "monsters"
+      
      },
 
      {
@@ -98,7 +98,7 @@ OB_MODULES["harmony_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Critters."), 
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group = "monsters"
+      
      },
 
      {
@@ -112,7 +112,7 @@ OB_MODULES["harmony_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Followers."), 
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group = "monsters"
+      
      },
 
      {
@@ -126,7 +126,7 @@ OB_MODULES["harmony_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Predators."), 
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group = "monsters"
+      
      },
 
      {
@@ -140,7 +140,7 @@ OB_MODULES["harmony_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Centaurs."), 
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group = "monsters"
+      
      },
 
      {
@@ -154,7 +154,7 @@ OB_MODULES["harmony_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Mutants."), 
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group = "monsters"
+      
      },
 
      {
@@ -168,7 +168,7 @@ OB_MODULES["harmony_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Phages."), 
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group = "monsters"
+      
      },
 
      {
@@ -182,7 +182,7 @@ OB_MODULES["harmony_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Echidnae."), 
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group = "monsters"
+      
      }
   },
 }
@@ -260,7 +260,7 @@ OB_MODULES["harmony_weapon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Miniguns."), 
       presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
-      randomize_group = "pickups"
+      
      },
 
      {
@@ -274,7 +274,7 @@ OB_MODULES["harmony_weapon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Compensators."), 
       presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
-      randomize_group = "pickups"
+      
      },
 
      {
@@ -288,7 +288,7 @@ OB_MODULES["harmony_weapon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Grenade Launchers."), 
       presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
-      randomize_group = "pickups"
+      
      },
 
      {
@@ -302,7 +302,7 @@ OB_MODULES["harmony_weapon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Entropy Throwers."), 
       presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
-      randomize_group = "pickups"
+      
      },
 
     {

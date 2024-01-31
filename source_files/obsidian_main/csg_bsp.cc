@@ -24,9 +24,6 @@
 #include "csg_local.h"
 #include "csg_main.h"
 #include "g_doom.h"  // for MLF_DontDraw
-#ifndef CONSOLE_ONLY
-
-#endif
 #include "hdr_lua.h"
 #include "headers.h"
 #include "lib_util.h"

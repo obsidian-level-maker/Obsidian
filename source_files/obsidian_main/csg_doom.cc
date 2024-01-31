@@ -26,10 +26,6 @@
 #include "csg_main.h"
 #include "dm_extra.h"
 #include "g_doom.h"
-#ifndef CONSOLE_ONLY
-
-  // ui_build.h
-#endif
 #include "headers.h"
 #include "lib_util.h"
 #include "main.h"

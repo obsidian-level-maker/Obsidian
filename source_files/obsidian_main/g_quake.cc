@@ -1110,10 +1110,6 @@ static void Q1_WriteModels() {
 //------------------------------------------------------------------------
 
 static void Q1_LightWorld() {
-#ifndef CONSOLE_ONLY
-
-#endif
-
     QLIT_LightAllFaces();
 
     int max_size = MAX_MAP_LIGHTING;
@@ -1126,10 +1122,6 @@ static void Q1_LightWorld() {
 }
 
 static void Q1_VisWorld(int base_leafs) {
-#ifndef CONSOLE_ONLY
-
-#endif
-
     // take the solid leaf into account
     int numleafs = 1 + base_leafs;
 
@@ -1279,10 +1271,6 @@ bool quake1_game_interface_c::Start(const char *preset) {
 
     BSP_AddInfoFile();
 
-#ifndef CONSOLE_ONLY
-
-#endif
-
     return true;
 }
 
@@ -1324,10 +1312,6 @@ void quake1_game_interface_c::Property(std::string key, std::string value) {
         } else {
             LogPrintf("WARNING: unknown QUAKE1 sub_format '%s'\n", value.c_str());
         }
-
-#ifndef CONSOLE_ONLY
-
-#endif
     } else if (StringCaseCmp(key, "worldtype") == 0) {
         qk_worldtype = StringToInt(value);
     } else {

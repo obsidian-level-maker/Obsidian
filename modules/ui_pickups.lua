@@ -85,31 +85,31 @@ OB_MODULES["ui_pickups"] =
   {
     { name="health",     
     label=_("Health"),    
-    choices=UI_PICKUPS.HEALTH_CHOICES, randomize_group="pickups", 
+    choices=UI_PICKUPS.HEALTH_CHOICES,  
     tooltip = _("Control the amount of health items.") 
     },
 
     { name="ammo",       
       label=_("Ammo"),      
-      choices=UI_PICKUPS.HEALTH_CHOICES,  gap=1, randomize_group="pickups", 
+      choices=UI_PICKUPS.HEALTH_CHOICES,  gap=1,  
       tooltip = _("Control the amount of ammunition.") 
     },
 
     { name="weapons",    
       label=_("Weapons"),   
-      choices=UI_PICKUPS.WEAPON_CHOICES, randomize_group="pickups", 
+      choices=UI_PICKUPS.WEAPON_CHOICES,  
       tooltip = _("Control the amount of weapons.") 
     },
 
     { name="items",      
       label=_("Items"),     
-      choices=UI_PICKUPS.ITEM_CHOICES, randomize_group="pickups", 
+      choices=UI_PICKUPS.ITEM_CHOICES,
       tooltip = _("Control the amount of armor and miscellaneous items.")
     },
 
     { name="secrets",    
       label=_("Secrets"),   
-      choices=STYLE_CHOICES, randomize_group="pickups", 
+      choices=STYLE_CHOICES,
       tooltip = _("Control the amount of secrets.")
     },
 
@@ -118,8 +118,6 @@ OB_MODULES["ui_pickups"] =
       choices=UI_PICKUPS.SECRET_ROOM_BONUS,
       tooltip=_("Adds extra content to secret rooms. Larger rooms offer more content. Default is NONE."),
       default="none",
-      randomize_group="pickups",
-      complex_mode = true
     },
   },
 }

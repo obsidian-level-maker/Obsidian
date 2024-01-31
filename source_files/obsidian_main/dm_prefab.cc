@@ -63,10 +63,6 @@
 #include "aj_poly.h"
 #include "csg_main.h"
 #include "g_doom.h"
-#ifndef CONSOLE_ONLY
-
-
-#endif
 #include "hdr_lua.h"
 #include "headers.h"
 

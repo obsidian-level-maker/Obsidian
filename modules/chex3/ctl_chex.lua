@@ -83,7 +83,7 @@ OB_MODULES["chex3_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Commoni."), 
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group = "monsters"
+      
      },
 
      {
@@ -97,7 +97,7 @@ OB_MODULES["chex3_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Bipedici."),  
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group = "monsters"
+      
      },
 
     {
@@ -111,7 +111,7 @@ OB_MODULES["chex3_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Armored Bipedici."),  
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group = "monsters"
+      
      },
 
      {
@@ -125,7 +125,7 @@ OB_MODULES["chex3_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Quadrumpi."),  
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group = "monsters"
+      
      },
 
      {
@@ -139,7 +139,7 @@ OB_MODULES["chex3_mon_control"] =
       nan = _("Default"), 
       tooltip = _("Control the amount of Cyclopti."), 
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group = "monsters"
+      
      },
 
      
@@ -154,7 +154,7 @@ OB_MODULES["chex3_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Larvae."),  
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group = "monsters"
+      
      },
 
      
@@ -169,7 +169,7 @@ OB_MODULES["chex3_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Flem Mines."),  
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group = "monsters"
+      
      },
 	 
      
@@ -184,7 +184,7 @@ OB_MODULES["chex3_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Stridici."),  
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group = "monsters"
+      
      },
 	 
      
@@ -199,7 +199,7 @@ OB_MODULES["chex3_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Super Cyclopti."),  
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group = "monsters"
+      
      }
   },
 }
@@ -277,7 +277,7 @@ OB_MODULES["chex3_weapon_control"] =
       nan = _("Default"),
       tooltip = _("Control the likelihood of finding the Super Bootspork."),  
       presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
-      randomize_group = "pickups"
+      
      },
 
      {
@@ -291,7 +291,7 @@ OB_MODULES["chex3_weapon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Large Zorchers."),  
       presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
-      randomize_group = "pickups"
+      
      },
 
      {
@@ -305,7 +305,7 @@ OB_MODULES["chex3_weapon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Rapid Zorchers."),  
       presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
-      randomize_group = "pickups"
+      
      },
 
      {
@@ -319,7 +319,7 @@ OB_MODULES["chex3_weapon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Zorch Propulsors."),  
       presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
-      randomize_group = "pickups"
+      
      },
 	 
      {
@@ -333,7 +333,7 @@ OB_MODULES["chex3_weapon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Phasing Zorchers."),  
       presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
-      randomize_group = "pickups"
+      
      },
 	 
      {
@@ -347,7 +347,7 @@ OB_MODULES["chex3_weapon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of LAZ Devices."),  
       presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
-      randomize_group = "pickups"
+      
      },
 
     {

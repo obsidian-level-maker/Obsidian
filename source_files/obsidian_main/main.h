@@ -28,10 +28,8 @@
 #include <string>
 #include <map>
 #include <filesystem>
-#ifndef CONSOLE_ONLY
 #include "lib_util.h"
 #include "sys_debug.h"
-#endif
 extern std::string OBSIDIAN_TITLE;
 
 #ifdef OBSIDIAN_TIMESTAMP
@@ -90,7 +88,7 @@ template <typename... Args>
     Detail::Shutdown(true);
     if (batch_mode) {
         std::cout << "ERROR!\n";
-#ifdef WIN32
+#if defined WIN32 && !defined CONSOLE_ONLY
         std::cout << '\n' << "Close window when finished...";
         do {
         } while (true);

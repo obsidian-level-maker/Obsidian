@@ -23,10 +23,6 @@
 
 #include "headers.h"
 
-#ifndef CONSOLE_ONLY
-#
-
-#endif
 #include "lib_argv.h"
 
 #include "lib_util.h"

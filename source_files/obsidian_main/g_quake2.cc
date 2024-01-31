@@ -21,10 +21,6 @@
 
 #include "csg_main.h"
 #include "csg_quake.h"
-#ifndef CONSOLE_ONLY
-
-
-#endif
 #include "hdr_lua.h"
 #include "headers.h"
 
@@ -931,20 +927,12 @@ static void Q2_WriteModels() {
 //------------------------------------------------------------------------
 
 static void Q2_LightWorld() {
-#ifndef CONSOLE_ONLY
-
-#endif
-
     QLIT_LightAllFaces();
 
     QLIT_BuildLightingLump(LUMP_LIGHTING, MAX_MAP_LIGHTING);
 }
 
 static void Q2_VisWorld() {
-#ifndef CONSOLE_ONLY
-
-#endif
-
     // no need for numleafs, as Quake II uses clusters directly
 
     QVIS_Visibility(LUMP_VISIBILITY, MAX_MAP_VISIBILITY, 0);
@@ -1043,10 +1031,6 @@ bool quake2_game_interface_c::Start(const char *preset) {
     }
 
     BSP_AddInfoFile();
-
-#ifndef CONSOLE_ONLY
-
-#endif
 
     return true;
 }

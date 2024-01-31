@@ -37,8 +37,6 @@ SHAPE_GRAMMAR = {}
 
 SHAPES = {}
 
-RANDOMIZE_GROUPS = {}
-
 AMBIENT_SOUND_DEFS = {}
 
 -- a place for unfinished stuff

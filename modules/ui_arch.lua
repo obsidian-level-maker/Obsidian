@@ -131,7 +131,6 @@ OB_MODULES["ui_arch"] =
       tooltip = _("Determines size of map (Width x Height) in grid squares."),
       longtip = _("If you are planning to generate Binary format maps at sizes of 50 and above, Autodetailing will be enabled by default. The stability of maps with sizes 60 and beyond is not predictable unless using UDMF map format (supported engines only)."),
       priority = 100,
-      randomize_group="architecture"
     },
 
 
@@ -172,8 +171,6 @@ OB_MODULES["ui_arch"] =
       choices = UI_ARCH.RAMP_FACTOR,
       default = "0.66",
       priority = 97,
-      randomize_group="architecture",
-      complex_mode = true
     },
 
 
@@ -185,8 +182,6 @@ OB_MODULES["ui_arch"] =
       choices = UI_ARCH.SIZE_BIAS,
       default = "default",
       priority = 96,
-      randomize_group="architecture",
-      complex_mode = true
     },
 
 
@@ -199,8 +194,6 @@ OB_MODULES["ui_arch"] =
       default = "none",
       priority = 88,
       gap = 1,
-      randomize_group="architecture",
-      complex_mode = true
     },
   
 
@@ -225,29 +218,28 @@ OB_MODULES["ui_arch"] =
       increment = .05,
       default = 1.0,
       priority = 80,
-      randomize_group="architecture",
       tooltip = _("Adjust overall map lighting"),
       longtip = _("This will apply a multiplier to the values in the default lighting tables when determining the brightness level of a room. If control over the minimum or maximum brightness values is desired, please use the Minimum/Maximum Brightness sliders in the Advanced Architecture module.")
     },
 
     { name="outdoors",     
-    label=_("Outdoors"),   choices=STYLE_CHOICES, priority = 78, randomize_group="architecture", 
+    label=_("Outdoors"),   choices=STYLE_CHOICES, priority = 78,
     tooltip = _("Control the amount of outdoor areas.")
     },
     { name="caves",        
-    label=_("Caves"),      choices=STYLE_CHOICES, priority = 77, randomize_group="architecture", 
+    label=_("Caves"),      choices=STYLE_CHOICES, priority = 77,
     tooltip = _("Control the amount of caves.") 
     },
     { name="liquids",      
-    label=_("Liquids"),    choices=STYLE_CHOICES, priority = 76, randomize_group="architecture", 
+    label=_("Liquids"),    choices=STYLE_CHOICES, priority = 76,
     tooltip = _("Control the amount of liquids.") 
     },
     { name="hallways",     
-    label=_("Hallways"),   choices=STYLE_CHOICES, priority = 75, randomize_group="architecture", 
+    label=_("Hallways"),   choices=STYLE_CHOICES, priority = 75,
     tooltip = _("Control the amount of hallways.")
     },
     { name="teleporters",  
-    label=_("Teleports"),  choices=STYLE_CHOICES, priority = 74, randomize_group="architecture", 
+    label=_("Teleports"),  choices=STYLE_CHOICES, priority = 74,
     tooltip = _("Control the amount of teleporters.") 
     },
     {
@@ -259,10 +251,9 @@ OB_MODULES["ui_arch"] =
       longtip = _("Teleporters are sometimes used when performing an emergency room break in order to continue level growth. With this setting disabled, teleports will never be used in an emergency break. This could result in truncated level growth or, in the worst case, a script error."),
       priority = 81,
       gap = 1,
-      complex_mode = true
     },
     { name="steepness",    
-    label=_("Steepness"),  choices=STYLE_CHOICES, gap=1, priority = 73, randomize_group="architecture", 
+    label=_("Steepness"),  choices=STYLE_CHOICES, gap=1, priority = 73,
     tooltip = _("Control the height difference of stairs, lifts, and joiners throughout levels.") 
     },
 
@@ -350,7 +341,6 @@ OB_MODULES["ui_arch_wolf_3d"] =
       tooltip = _("Determines size of map (Width x Height) in grid squares."),
       longtip = _("If you are planning to generate Binary format maps at sizes of 50 and above, Autodetailing will be enabled by default. The stability of maps with sizes 60 and beyond is not predictable unless using UDMF map format (supported engines only)."),
       priority = 100,
-      randomize_group="architecture"
     },
 
 
@@ -391,7 +381,6 @@ OB_MODULES["ui_arch_wolf_3d"] =
       choices = UI_ARCH_WOLF_3D.RAMP_FACTOR,
       default = "0.66",
       priority = 97,
-      randomize_group="architecture"
     },
 
 
@@ -403,7 +392,6 @@ OB_MODULES["ui_arch_wolf_3d"] =
       choices = UI_ARCH_WOLF_3D.SIZE_BIAS,
       default = "default",
       priority = 96,
-      randomize_group="architecture"
     },
   },
 }

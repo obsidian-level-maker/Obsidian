@@ -28,10 +28,6 @@
 
 #include "csg_main.h"
 #include "csg_quake.h"
-#ifndef CONSOLE_ONLY
-#
-
-#endif
 #include "headers.h"
 
 #include "lib_util.h"

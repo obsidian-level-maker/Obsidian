@@ -88,8 +88,6 @@ std::string selected_lang =
 
 game_interface_c *game_object = NULL;
 
-extern bool ExtractPresetData(FILE *fp, std::string &buf);
-
 /* ----- user information ----------------------------- */
 
 static void ShowInfo() {
@@ -119,19 +117,9 @@ static void ShowInfo() {
         "  -l --load     <file>      Load settings from a file\n"
         "  -k --keep                 Keep SEED from loaded settings\n"
         "\n"
-        "     --randomize-all        Randomize all options\n"
-        "     --randomize-arch       Randomize architecture settings\n"
-        "     --randomize-combat     Randomize combat-related settings\n"
-        "     --randomize-pickups    Randomize item/weapon settings\n"
-        "     --randomize-other      Randomize other settings\n"
-        "\n"
         "  -d --debug                Enable debugging\n"
         "  -v --verbose              Print log messages to stdout\n"
         "  -h --help                 Show this help message\n"
-        "  -p --printref             Print reference of all keys and values to "
-        "REFERENCE.txt\n"
-        "     --printref-json        Print reference of all keys and values in "
-        "JSON format\n"
         "  -u --update <section> <key> <value>\n"
         "                            Set a key in the config file\n"
         "                            (section should be 'c' or 'o')\n"
@@ -353,15 +341,9 @@ bool Main::BackupFile(const std::filesystem::path &filename) {
 }
 
 void Main::Detail::Shutdown(const bool error) {
-#ifndef CONSOLE_ONLY
     if (!std::filesystem::exists(options_file)) {
         Options_Save(options_file);
     }
-#else
-    if (!std::filesystem::exists(options_file)) {
-        Options_Save(options_file);
-    }
-#endif
     Script_Close();
     LogClose();
 }
@@ -387,9 +369,6 @@ void Main_SetSeed() {
     xoshiro_Reseed(next_rand_seed);
     std::string seed = NumToString(next_rand_seed);
     ob_set_config("seed", seed.c_str());
-#ifndef CONSOLE_ONLY
-
-#endif
 }
 
 //------------------------------------------------------------------------

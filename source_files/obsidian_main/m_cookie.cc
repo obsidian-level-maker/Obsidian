@@ -24,10 +24,6 @@
 #include <array>
 #include <iostream>
 
-#ifndef CONSOLE_ONLY
-#
-
-#endif
 #include "hdr_lua.h"
 #include "headers.h"
 #include "lib_argv.h"
@@ -128,7 +124,6 @@ static bool Cookie_ParseLine(std::string buf) {
     std::string value = buf.substr(pos + 1);
 
     if (name.empty() || value.empty()) {
-        LogPrintf("Name or value missing!\n");
         return false;
     }
 

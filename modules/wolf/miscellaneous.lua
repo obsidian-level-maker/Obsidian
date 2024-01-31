@@ -64,7 +64,7 @@ OB_MODULES["misc_wolf_3d"] =
       default = "1",
       tooltip = _("Alters the general size and ground coverage of rooms.\n\nMix It Up: All multiplier ranges are randomly used with highest and lowest multipliers being rarest."),
       priority = 94,
-      randomize_group="architecture",
+      
     },
   
   },

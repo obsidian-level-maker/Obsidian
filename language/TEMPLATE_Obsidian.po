@@ -77,10 +77,6 @@ msgstr ""
 msgid "default: "
 msgstr ""
 
-#: scripts/obsidian.lua:2535
-msgid "randomize_group: "
-msgstr ""
-
 #: scripts/obsidian.lua:2569
 msgid "tooltip"
 msgstr ""
@@ -131,10 +127,6 @@ msgstr ""
 
 #: scripts/obsidian.lua:2643
 msgid "choice"
-msgstr ""
-
-#: scripts/obsidian.lua:2655
-msgid "randomize_group"
 msgstr ""
 
 #: scripts/obsidian.lua:2684

@@ -1566,7 +1566,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       default = 100,
       tooltip = _("Chance per map of marine closets spawning at all. E.G. at 50% theres 50% chance of each map being empty of marine closets."),
       gap = 1,
-      randomize_group = "monsters"
+      
     },
 
 
@@ -1580,7 +1580,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       increment = 1,
       default = 1,
       tooltip = _("Sets least amount of closets that can spawn per map."),
-      randomize_group = "monsters"
+      
     },
 
 
@@ -1594,7 +1594,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       increment = 1,
       default = 2,
       tooltip = _("Sets most amount of closets that can spawn per map."),
-      randomize_group = "monsters"
+      
     },
 
 
@@ -1606,7 +1606,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       default = "default",
       tooltip = _("Affects how min and max work for closet count:\n\nRandom: Random range\nProgressive: Goes from min to max through entire game\nEpisodic: Goes from min to max through episode\nRegressive/Regressive episodic: Goes from max to min through game or episode"),
       gap = 1,
-      randomize_group = "monsters"
+      
     },
 
 
@@ -1620,7 +1620,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       increment = 1,
       default = 1,
       tooltip = _("Sets least amount of marines that can spawn per closet."),
-      randomize_group = "monsters"
+      
     },
 
 
@@ -1634,7 +1634,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       increment = 1,
       default = 5,
       tooltip = _("Sets most amount of marines that can spawn per closet."),
-      randomize_group = "monsters"
+      
     },
 
 
@@ -1648,7 +1648,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       increment = 25,
       default = 100,
       tooltip = _("Influences how much damage marines can take before dying."),
-      randomize_group = "monsters"
+      
     },
 
 
@@ -1659,7 +1659,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       choices = MARINE_CLOSET_TUNE.SCALING,
       default = "default",
       tooltip = _("Affects how min and max work for marine count:\n\nRandom: Random range\nProgressive: Goes from min to max through entire game\nEpisodic: Goes from min to max through episode\nRegressive/Regressive episodic: Goes from max to min through game or episode"),
-      randomize_group = "monsters"
+      
     },
 
 
@@ -1674,7 +1674,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       default = 0,
       tooltip = _("Affects how early in the level a closet can be found."),
       presets = _("0:0 (Start Room),1:1 (Exit Room)"),
-      randomize_group = "monsters"
+      
     },
 
 
@@ -1689,7 +1689,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       default = 1,
       tooltip = _("Affects how late in the level a closet can be found."),
       presets = _("0:0 (Start Room),1:1 (Exit Room)"),
-      randomize_group = "monsters"
+      
     },
 
 
@@ -1700,7 +1700,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       choices = MARINE_CLOSET_TUNE.TECH,
       default = "mid",
       tooltip = _("Influences weapons that marines spawn with:\n\nVery Low tech: Clearing demonic invasion with nothing but pistols and harsh language\nLow tech: Pistols, with some rare chainguns and shotguns\nMid tech: Shotguns/Chainguns with some rare pistols, super shotguns, rocket launchers and plasma rifles\nHigh tech: Rocket launchers/Plasma rifles with some rare BFGs, super shotguns and chainguns\nMix it up: Any weapon goes, let the dice decide!\nBFG Fiesta: BFG only, cyberdemons beware!\nProgressive: Marines start with pistols and get more powerful weapons through episode/megawad"),
-      randomize_group = "monsters"
+      
     },
 
 
@@ -1712,7 +1712,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       default = "sight",
       tooltip = _("Influences the trigger that activates marines.\n\nSight: Marine closet activates once it can 'see' the player.\nRange: Closet activates when player is close enough, even if behind wall.\nClose Range: same as range except requires player to be really really close.\nMap Start: Closets are active on map start."),
       gap = 1,
-      randomize_group = "monsters"
+      
     },
 
 
@@ -1723,7 +1723,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       choices = MARINE_CLOSET_TUNE.COLORS,
       default = "MarAI1",
       tooltip = _("Lets you choose the color of marines, including option for random color per marine."),
-      randomize_group = "monsters"
+      
     },
 
 
@@ -1734,7 +1734,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       choices = MARINE_CLOSET_TUNE.FRIENDLYFIRE,
       default = "no",
       tooltip = _("By default marines do no damage to player. However that means their use their own version of puffs and projectiles.\nIf this is enabled marines can damage player and original puffs and projectiles are used making them affected by mods that replace those.\nAdditionally if self damage variant is chosen marines can still get hurt by exploding barrels and such"),
-      randomize_group = "monsters"
+      
     },
 
 
@@ -1766,7 +1766,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       choices = MARINE_CLOSET_TUNE.QUANTITY,
       default = "default",
       tooltip = _("Influences amount of monsters in rooms with a marine closet."),
-      randomize_group = "monsters"
+      
     },
 
 
@@ -1778,7 +1778,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       default = "default",
       tooltip = _("If set, this strength setting is used in the room with marine closet instead of normal one."),
       gap = 1,
-      randomize_group = "monsters"
+      
     },
 
 
@@ -1789,7 +1789,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       valuator = "button",
       default = 1,
       tooltip = _("Influences whether marines are as accurate and rapid firing as player, or are weaker."),
-      randomize_group = "monsters"
+      
     },
 
 

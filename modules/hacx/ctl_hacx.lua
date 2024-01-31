@@ -83,7 +83,7 @@ OB_MODULES["hacx_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Thugs."),  
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group = "monsters"
+      
      },
 
      {
@@ -97,7 +97,7 @@ OB_MODULES["hacx_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Androids."),  
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group = "monsters"
+      
      },
 
      {
@@ -111,7 +111,7 @@ OB_MODULES["hacx_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Stealth Buzzers."), 
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group = "monsters"
+      
      },
 
      {
@@ -125,7 +125,7 @@ OB_MODULES["hacx_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Roaming Mines."), 
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group = "monsters"
+      
      },
 
      {
@@ -139,7 +139,7 @@ OB_MODULES["hacx_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Phages."), 
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group = "monsters"
+      
      },
 
      {
@@ -153,7 +153,7 @@ OB_MODULES["hacx_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Buzzers."), 
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group = "monsters"
+      
      },
 
      {
@@ -167,7 +167,7 @@ OB_MODULES["hacx_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of ICEs."), 
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group = "monsters"
+      
      },
 
      {
@@ -181,7 +181,7 @@ OB_MODULES["hacx_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of D-Men."), 
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group = "monsters"
+      
      },
 	 
      {
@@ -195,7 +195,7 @@ OB_MODULES["hacx_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Monstructs."), 
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group = "monsters"
+      
      },
 	 
      {
@@ -209,7 +209,7 @@ OB_MODULES["hacx_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Majong 7s."), 
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group = "monsters"
+      
      },
 	 
      {
@@ -223,7 +223,7 @@ OB_MODULES["hacx_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Terminatrixes."), 
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group = "monsters"
+      
      },
 	 
      {
@@ -237,7 +237,7 @@ OB_MODULES["hacx_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Thorns."), 
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group = "monsters"
+      
      },
 
      {
@@ -251,7 +251,7 @@ OB_MODULES["hacx_mon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Mecha Maniacs."), 
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group = "monsters"
+      
      }
   },
 }
@@ -349,7 +349,7 @@ OB_MODULES["hacx_weapon_control"] =
       nan = _("Default"),
       tooltip = _("Control the likelihood of finding the Hoig Reznator."), 
       presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
-      randomize_group = "pickups"
+      
      },
 
      {
@@ -363,7 +363,7 @@ OB_MODULES["hacx_weapon_control"] =
       nan = _("Default"), 
       tooltip = _("Control the amount of Tazers."),
       presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
-      randomize_group = "pickups"
+      
      },
 
      {
@@ -377,7 +377,7 @@ OB_MODULES["hacx_weapon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Cryoguns."), 
       presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
-      randomize_group = "pickups"
+      
      },
 
      {
@@ -391,7 +391,7 @@ OB_MODULES["hacx_weapon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Uzis."), 
       presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
-      randomize_group = "pickups"
+      
      },
 	 
      {
@@ -405,7 +405,7 @@ OB_MODULES["hacx_weapon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Photon 'Zookas."), 
       presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
-      randomize_group = "pickups"
+      
      },
 	 
      {
@@ -419,7 +419,7 @@ OB_MODULES["hacx_weapon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Anti-Guns."), 
       presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
-      randomize_group = "pickups"
+      
      },
 	 
      {
@@ -433,7 +433,7 @@ OB_MODULES["hacx_weapon_control"] =
       nan = _("Default"),
       tooltip = _("Control the amount of Nukers."), 
       presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
-      randomize_group = "pickups"
+      
      },
 
     {

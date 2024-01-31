@@ -59,7 +59,7 @@ OB_MODULES["alt_shape_grammars"] =
       tooltip = _("Sets chance of levels using the Boxes of Death shape grammar."),
       longtip = _("Gives levels a chance of being generated using Boxes of Death shape grammar. With this grammar, rooms are square shaped, with the occasional chunk taken out of one of the corners or sides. Room sizes are very consistent."),
       priority = 102,
-      randomize_group = "architecture",
+      
     },
 
     {
@@ -74,7 +74,7 @@ OB_MODULES["alt_shape_grammars"] =
       tooltip = _("Sets chance of levels using the shape grammar from Oblige v7.45."),
       longtip = _("Gives levels a chance of being generated using the shape grammar from Oblige v7.45. This is primarily to provide a simpler grammar for facilitating new game support, but is available for curious users as well."),
       priority = 102,
-      randomize_group = "architecture",
+      
     },
 
   },

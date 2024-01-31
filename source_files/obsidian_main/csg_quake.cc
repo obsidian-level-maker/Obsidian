@@ -25,13 +25,8 @@
 
 #include "csg_local.h"
 #include "csg_main.h"
-#ifndef CONSOLE_ONLY
-
-
-#endif
 #include "hdr_lua.h"
 #include "headers.h"
-
 #include "lib_util.h"
 #include "m_lua.h"
 #include "main.h"
@@ -2363,15 +2358,7 @@ static void Detail_CreateFaces(csg_brush_c *B, leaf_map_t *touched_leafs) {
 void CSG_QUAKE_Build() {
     LogPrintf("QUAKE CSG...\n");
 
-#ifndef CONSOLE_ONLY
-
-#endif
-
     CSG_BSP(1.0);
-
-#ifndef CONSOLE_ONLY
-
-#endif
 
     quake_group_c GROUP;
 

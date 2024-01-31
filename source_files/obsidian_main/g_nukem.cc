@@ -287,10 +287,6 @@ bool nukem_game_interface_c::Start(const char *preset) {
         return false;
     }
 
-#ifndef CONSOLE_ONLY
-
-#endif
-
     return true;
 }
 
@@ -334,10 +330,6 @@ void nukem_game_interface_c::EndLevel() {
     }
 
     NK_BeginLevel(level_name.c_str());
-
-#ifndef CONSOLE_ONLY
-
-#endif
 
     CSG_NUKEM_Write();
 

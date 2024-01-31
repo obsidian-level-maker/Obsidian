@@ -19,10 +19,6 @@
 //
 //----------------------------------------------------------------------
 
-#ifndef CONSOLE_ONLY
-
-
-#endif
 #include "headers.h"
 #include "lib_argv.h"
 #include "lib_util.h"
@@ -90,7 +86,6 @@ static bool Options_ParseLine(std::string buf) {
     std::string value = buf.substr(pos + 2);
 
     if (name.empty() || value.empty()) {
-        StdOutPrintf(_("Name or value missing!\n"));
         return false;
     }
 
@@ -161,9 +156,5 @@ bool Options_Save(std::filesystem::path filename) {
     return true;
 }
 
-//----------------------------------------------------------------------
-#ifndef CONSOLE_ONLY
-
-#endif
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

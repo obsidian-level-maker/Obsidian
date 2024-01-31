@@ -182,9 +182,6 @@ function ob_match_engine(T)
   local engine = T.engine
   local result = true
 
-  -- Compatibility stub for old "gzdoom" selection
-  if engine == "gzdoom" then engine = "zdoom" end
-
   -- negated check?
   if type(engine) == "string" and string.sub(engine, 1, 1) == '!' then
     engine = string.sub(engine, 2)
@@ -574,11 +571,7 @@ function ob_update_ports()
     if OB_CONFIG.engine == "idtech_0" then
       OB_CONFIG.port = "vanilla"
     elseif OB_CONFIG.engine == "idtech_1" then
-      if OB_CONFIG.game == "chex1" then  -- Ugh
-        OB_CONFIG.port = "limit_enforcing"
-      else
-        OB_CONFIG.port = "zdoom"
-      end
+      OB_CONFIG.port = "boom"
     elseif OB_CONFIG.engine == "idtech_2" then
       OB_CONFIG.port = "vanilla"
     else
@@ -1349,15 +1342,6 @@ function ob_restart()
           table.sort(list, button_sorter)
         end
 
-        ::keepkilling::
-
-        for _,opt in pairs(list) do
-          if opt.complex_mode and gui.check_simple_mode() then  
-            table.kill_elem(list, opt)
-            goto keepkilling
-          end
-        end
-
         for _,opt in pairs(list) do
           assert(opt.label)
           if string.match(opt.name, "header_") then
@@ -1378,14 +1362,14 @@ function ob_restart()
               if not opt.default then
                 opt.default = (opt.min + opt.max) / 2
               end
-              gui.add_module_slider_option(mod.name, opt.name, opt.label, opt.tooltip, opt.longtip, opt.gap, opt.min, opt.max, opt.increment, opt.units or "", opt.presets or "", opt.nan or "", opt.randomize_group or "", tostring(opt.default))
+              gui.add_module_slider_option(mod.name, opt.name, opt.label, opt.tooltip, opt.longtip, opt.gap, opt.min, opt.max, opt.increment, opt.units or "", opt.presets or "", opt.nan or "", opt. tostring(opt.default))
               opt.value = opt.default
               gui.set_module_slider_option(mod.name, opt.name, opt.value)
             elseif opt.valuator == "button" then
               if not opt.default then
                 opt.default = 0
               end
-              gui.add_module_button_option(mod.name, opt.name, opt.label, opt.tooltip, opt.longtip, opt.gap, opt.randomize_group or "", tostring(opt.default))
+              gui.add_module_button_option(mod.name, opt.name, opt.label, opt.tooltip, opt.longtip, opt.gap, opt. tostring(opt.default))
               opt.value = opt.default
               gui.set_module_button_option(mod.name, opt.name, opt.value)
             end
@@ -1399,7 +1383,7 @@ function ob_restart()
               else   opt.default = opt.choices[1]
               end
             end
-            gui.add_module_option(mod.name, opt.name, opt.label, opt.tooltip, opt.longtip, opt.gap, opt.randomize_group or "", opt.default)
+            gui.add_module_option(mod.name, opt.name, opt.label, opt.tooltip, opt.longtip, opt.gap, opt. opt.default)
             opt.avail_choices = {}
 
             for i = 1,#opt.choices,2 do
@@ -1640,15 +1624,6 @@ function ob_init()
           table.sort(list, button_sorter)
         end
 
-        ::keepkilling::
-
-        for _,opt in pairs(list) do
-          if opt.complex_mode and gui.check_simple_mode() then  
-            table.kill_elem(list, opt)
-            goto keepkilling
-          end
-        end
-
         for _,opt in pairs(list) do
           assert(opt.label)
           if string.match(opt.name, "header_") then
@@ -1669,14 +1644,14 @@ function ob_init()
               if not opt.default then
                 opt.default = (opt.min + opt.max) / 2
               end
-              gui.add_module_slider_option(mod.name, opt.name, opt.label, opt.tooltip, opt.longtip, opt.gap, opt.min, opt.max, opt.increment, opt.units or "", opt.presets or "", opt.nan or "", opt.randomize_group or "", tostring(opt.default))
+              gui.add_module_slider_option(mod.name, opt.name, opt.label, opt.tooltip, opt.longtip, opt.gap, opt.min, opt.max, opt.increment, opt.units or "", opt.presets or "", opt.nan or "", tostring(opt.default))
               opt.value = opt.default
               gui.set_module_slider_option(mod.name, opt.name, opt.value)
             elseif opt.valuator == "button" then
               if not opt.default then
                 opt.default = 0
               end
-              gui.add_module_button_option(mod.name, opt.name, opt.label, opt.tooltip, opt.longtip, opt.gap, opt.randomize_group or "", tostring(opt.default))
+              gui.add_module_button_option(mod.name, opt.name, opt.label, opt.tooltip, opt.longtip, opt.gap, tostring(opt.default))
               opt.value = opt.default
               gui.set_module_button_option(mod.name, opt.name, opt.value)
             end
@@ -1690,7 +1665,7 @@ function ob_init()
               else   opt.default = opt.choices[1]
               end
             end
-            gui.add_module_option(mod.name, opt.name, opt.label, opt.tooltip, opt.longtip, opt.gap, opt.randomize_group or "", opt.default)
+            gui.add_module_option(mod.name, opt.name, opt.label, opt.tooltip, opt.longtip, opt.gap, opt.default)
             opt.avail_choices = {}
 
             for i = 1,#opt.choices,2 do

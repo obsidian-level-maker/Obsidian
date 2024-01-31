@@ -18,10 +18,6 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef CONSOLE_ONLY
-
-
-#endif
 #include "hdr_lua.h"
 #include "headers.h"
 
@@ -393,9 +389,6 @@ bool wolf_game_interface_c::Start(const char *ext) {
 
     solid_plane = new uint16_t[64 * 64 + 8];  // extra space for compressor
     thing_plane = new uint16_t[64 * 64 + 8];
-#ifndef CONSOLE_ONLY
-
-#endif
     return true;
 }
 

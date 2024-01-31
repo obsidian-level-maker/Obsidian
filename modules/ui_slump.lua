@@ -63,7 +63,6 @@ OB_MODULES["ui_slump_arch"] =
       presets = _("10:10 (Microscopic),16:16 (Miniature),22:22 (Tiny),30:30 (Small),36:36 (Average),42:42 (Large),48:48 (Huge),58:58 (Colossal),66:66 (Gargantuan),75:75 (Transcendent)"),
       tooltip = _("Determines size of map in rooms."),
       priority = 100,
-      randomize_group="architecture"
     },
     { 
       name="float_minrooms_slump_ub",
@@ -77,7 +76,6 @@ OB_MODULES["ui_slump_arch"] =
       presets = _("10:10 (Microscopic),16:16 (Miniature),22:22 (Tiny),30:30 (Small),36:36 (Average),42:42 (Large),48:48 (Huge),58:58 (Colossal),66:66 (Gargantuan),75:75 (Transcendent)"),
       tooltip = _("Determines maximum map size when using Mix It Up."),
       priority = 99,
-      randomize_group="architecture"
     },
     { 
       name="float_minrooms_slump_lb",
@@ -91,7 +89,6 @@ OB_MODULES["ui_slump_arch"] =
       presets = _("10:10 (Microscopic),16:16 (Miniature),22:22 (Tiny),30:30 (Small),36:36 (Average),42:42 (Large),48:48 (Huge),58:58 (Colossal),66:66 (Gargantuan),75:75 (Transcendent)"),
       tooltip = _("Determines minimum room size when using Mix It Up."),
       priority = 98,
-      randomize_group="architecture"
     },
   }
 }
@@ -125,7 +122,7 @@ OB_MODULES["misc_slump"] =
       increment = 1,
       default = 50,
       tooltip = _("% chance that SLUMP will attempt to increase a room's size."),
-      randomize_group="architecture",
+      
     },
     
     {
@@ -139,7 +136,7 @@ OB_MODULES["misc_slump"] =
       default = 75,
       tooltip = _("% chance that a room will attempt to fork as the level grows."),
       longtip = _("0% should look like a bunch of murder hallways. Forking is not guaranteed to succeed, especially if the Room Bigification Chance is increased."),
-      randomize_group="architecture",
+      
     },
 
     {
@@ -157,7 +154,7 @@ OB_MODULES["misc_slump"] =
       default = 0,
       tooltip = _("Watch your step!"),
       longtip = _("Will fill most rooms with damaging liquids."),
-      randomize_group="architecture",
+      
     },
   
   },
@@ -188,7 +185,7 @@ OB_MODULES["ui_slump_mons"] =
       choices = UI_SLUMP.MON_VARIETY,
       default = "normal",
       tooltip = _("Control what types of monsters are available"),
-      randomize_group="monsters",
+      
     },
 
     {

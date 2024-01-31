@@ -26,10 +26,6 @@
 #include <bitset>
 #include <string>
 
-#ifndef CONSOLE_ONLY
-
-#endif
-
 #include "lib_util.h"
 #include "lib_wad.h"
 #include "lib_zip.h"
@@ -200,7 +196,7 @@ namespace Doom {
 
 void Send_Prog_Nodes(int progress, int num_maps) {
 #ifndef CONSOLE_ONLY
-
+// Placeholder for status bar update
 #endif
 }
 
@@ -353,7 +349,7 @@ void Doom::AddSectionLump(char ch, std::string name, qLump_c *lump) {
 bool Doom::StartWAD(std::filesystem::path filename) {
     if (!WAD_OpenWrite(filename)) {
 #ifndef CONSOLE_ONLY
-
+// Placeholder for error window
 #else
         StdOutPrintf(_("Unable to create wad file:\n\n%s"), strerror(errno));
 #endif
@@ -1138,9 +1134,6 @@ bool Doom::game_interface_c::Start(const char *preset) {
     if (StringCaseCmp(current_port, "limit_enforcing") == 0) {
         map_format = FORMAT_BINARY;
         build_nodes = true;
-#ifndef CONSOLE_ONLY
-
-#endif
         return true;
     }
 
@@ -1163,10 +1156,6 @@ bool Doom::game_interface_c::Start(const char *preset) {
         Main::ProgStatus(_("Error (create file)"));
         return false;
     }
-
-#ifndef CONSOLE_ONLY
-
-#endif
 
     if (StringCaseCmp(current_port, "zdoom") == 0) {
         map_format = FORMAT_UDMF;
@@ -1267,9 +1256,6 @@ void Doom::game_interface_c::BeginLevel() {
 void Doom::game_interface_c::Property(std::string key, std::string value) {
     if (StringCaseCmp(key, "level_name") == 0) {
         level_name = value.c_str();
-#ifndef CONSOLE_ONLY
-
-#endif
     } else if (StringCaseCmp(key, "sub_format") == 0) {
         if (StringCaseCmp(value, "doom") == 0) {
             sub_format = 0;
@@ -1305,10 +1291,6 @@ void Doom::game_interface_c::EndLevel() {
     if (level_name.empty()) {
         Main::FatalError("Script problem: did not set level name!\n");
     }
-
-#ifndef CONSOLE_ONLY
-
-#endif
 
     CSG_DOOM_Write();
 

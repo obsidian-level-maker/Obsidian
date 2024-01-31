@@ -241,7 +241,6 @@ OB_MODULES["misc"] =
       longtip = _("Layout consistency attempts to cause levels to overprefer specific shape rules from the ruleset in order to create odd but more consistent combinations of pieces to build the general layout. The effect will be more prominent in certain combinations and levels than others."),
       gap = 1,
       priority = 99,
-      randomize_group="architecture"
     },
 
     {
@@ -255,7 +254,6 @@ OB_MODULES["misc"] =
       default = 0,
       tooltip = _("Creates linear levels, where rooms are connected along a linear layout from start to exit."),
       longtip = _("Due to the nature of linear levels, you may encounter teleports even if you have teleports off. This is necessary in order for linear levels not to prematuraly terminate and therefore become stunted i.e. only have 2-5 rooms."),
-      randomize_group="architecture",
       priority = 98
     },
 
@@ -269,7 +267,6 @@ OB_MODULES["misc"] =
       increment = 1,
       default = 0,
       tooltip = _("Forces most of the map to be composed of naturalistic areas (parks and caves). The ratio is decided by Outdoors style setting while competing styles are ignored."),
-      randomize_group="architecture",
       priority = 97
     },
 
@@ -283,7 +280,6 @@ OB_MODULES["misc"] =
       increment = 1,
       default = 15,
       tooltip = _("Allows Obsidian to create large street-like outdoor rooms."),
-      randomize_group="architecture",
       priority = 96
     },
 
@@ -304,8 +300,6 @@ OB_MODULES["misc"] =
       default = "mixed",
       tooltip = _("Alters the general size and ground coverage of rooms.\n\nVanilla: No room size multipliers.\n\nMix It Up: All multiplier ranges are randomly used with highest and lowest multipliers being rarest."),
       priority = 94,
-      randomize_group="architecture",
-      complex_mode = true,
     },
     {
       name="room_area_multiplier", label=_("Area Count Multiplier"),
@@ -313,8 +307,6 @@ OB_MODULES["misc"] =
       default = "mixed",
       tooltip = _("Alters the amount of areas in a room. Influences the amount rooms are divided into different elevations or simply different ceilings if a level has no steepness.\n\nVanilla: No area quantity multipliers.\n\nMix It Up: All multiplier ranges are randomly used with highest and lowest multipliers being rarest."),
       priority = 93,
-      randomize_group="architecture",
-      complex_mode = true,
     },
     {
       name="room_size_consistency", 
@@ -323,8 +315,6 @@ OB_MODULES["misc"] =
       default = "mixed",
       tooltip = _("Changes whether rooms follow a strict single size or not. Can be paired with above choices for more enforced results.\n\nVanilla: Original behavior. Rooms in a level have vary in size from each other. Big Rooms options are respected.\n\nBounded: Rooms vary in size but not radically from each other.\n\nStrict: All rooms in the level have a single set size/coverage.\n\nMix It Up: A mixture of 75% Vanilla, 25% Strict."),
       priority = 92,
-      randomize_group="architecture",
-      complex_mode = true,
     },
     {
       name="room_size_mix_type", 
@@ -333,8 +323,6 @@ OB_MODULES["misc"] =
       default = "normal",
       tooltip = _("Alters the behavior of Mix It Up for Room Size Multiplier options.\n\nNormal: Mix it up uses a normal curve distribution. Traditional-sized rooms are common and smaller or larger sizes are slightly less so.\n\nSmall-ish: Only smaller room sizes, but biased towards normal sizes.\n\nSmall: Biased towards smaller room sizes with no larger room sizes.\n\nLarge: Biased towards large rooms sizes with no smaller room sizes..\n\nLarge-ish: Only larger room sizes, but biased towards normal sizes.\n\nConservative: Probability is biased more towards regular room sizes, making much smaller or much larger rooms significantly rarer.\n\nVery Conservative: Bias is even stronger towards regular and smaller rooms sizes, while larger rooms are very rare.\n\nRandom: No curve distribution - room sizes and room area counts are picked completely randomly."),
       priority = 91,
-      randomize_group="architecture",
-      complex_mode = true,
     },
     {
       name="room_area_mix_type", 
@@ -344,25 +332,22 @@ OB_MODULES["misc"] =
       tooltip = _("Alters the behavior of Mix It Up for Room Area Multiplier options.\n\nNormal: Mix it up uses a normal curve distribution.\n\nLess-ish: Only rooms with less floors and simple ceilings, but biased towards normal counts.\n\nLess: Biased towards rooms with less floors and simple ceilings.\n\nMore: Biased towards rooms with more floors and complex ceilings.\n\nMore-ish: Only rooms with more floors and complex ceilings, but biased towards normal counts.\n\nConservative: Biased towards normal area counts.\n\nVery Conservative: Further biased towards normal area counts.\n\nRandom: No curve distribution - room area counts are picked completely randomly."),
       priority = 90,
       gap = 1,
-      randomize_group="architecture",
-      complex_mode = true,
     },
 
     { name="big_rooms",   
       label=_("Big Rooms"), 
       tooltip=_("Raises upper limits on individual room growth"), 
-      choices=STYLE_CHOICES, priority = 89, randomize_group="architecture", 
+      choices=STYLE_CHOICES, priority = 89,
     },
     { name="big_outdoor_rooms", 
       label=_("Big Outdoors"), 
       tooltip=_("Raises upper limits on outdoor area growth"), 
-      choices=STYLE_CHOICES, priority = 88, randomize_group="architecture",
+      choices=STYLE_CHOICES, priority = 88,
     },
     { name="sub_rooms", 
       label=_("Sub Rooms"), 
       tooltip=_("Controls amount of small sub rooms. Actually controls the degree at which ungrown rooms are left instead of culled."), 
-      choices=STYLE_CHOICES, priority = 87.5, randomize_group="architecture",
-      complex_mode = true
+      choices=STYLE_CHOICES, priority = 87.5,
     },
     {
       name="room_heights",
@@ -372,14 +357,13 @@ OB_MODULES["misc"] =
       default="mixed",
       priority = 87,
       gap=1,
-      randomize_group="architecture",
     },
 
 
     { name="parks",       
     label=_("Parks"), 
     tooltip = _("Control the amount of parks."), 
-    choices=STYLE_CHOICES, priority = 86, randomize_group="architecture", },
+    choices=STYLE_CHOICES, priority = 86, },
     {
       name="natural_parks",
       label=_("Natural Cliffs"),
@@ -387,8 +371,6 @@ OB_MODULES["misc"] =
       choices=STYLE_CHOICES,
       default="none",
       priority = 85,
-      randomize_group="architecture",
-      complex_mode = true
     },
     { name="park_detail",
       label=_("Park Detail"),
@@ -396,14 +378,12 @@ OB_MODULES["misc"] =
       choices=STYLE_CHOICES,
       priority = 84,
       gap=1,
-      randomize_group="architecture",
-      complex_mode = true
     },
 
     { name="windows",     
     label=_("Windows"), 
     tooltip = _("Control the amount of windows."), 
-    choices=STYLE_CHOICES, priority = 83, randomize_group="architecture", },
+    choices=STYLE_CHOICES, priority = 83, },
     {
       name="passable_windows",
       label=_("Passable Windows"),
@@ -411,7 +391,6 @@ OB_MODULES["misc"] =
       tooltip=_("Sets the preferences for passability on certain windows. On Vistas Only means only windows that look out to vistas/map border scenics have a blocking line."),
       default="not_on_vistas",
       priority = 82,
-      complex_mode = true
     },
     {
       name="passable_railings",
@@ -421,40 +400,35 @@ OB_MODULES["misc"] =
       default="never",
       priority = 81,
       gap=1,
-      complex_mode = true
     },
 
     { name="symmetry",    
     label=_("Symmetry"), 
     tooltip = _("Affects amount of symmetry when growing levels."), 
-    choices=STYLE_CHOICES, priority = 80, randomize_group="architecture", },
+    choices=STYLE_CHOICES, priority = 80, },
     { name="beams",       
     label=_("Beams"),          
     choices=STYLE_CHOICES,
     tooltip = _("Allows the appearance of thin pillars to appear between the borders of different elevations."),
     priority = 79,
-    randomize_group="architecture",
     },
     { name="fences",      
     label=_("Fences"),         
     choices=STYLE_CHOICES,
     tooltip = _("Creates thick solid fences and fence posts between areas of varying height for outdoor rooms."),
     priority = 78,
-    randomize_group="architecture",
     },
     { name="porches",     
     label=_("Porches\\Gazebos"),        
     choices=STYLE_CHOICES,
     tooltip = _("Occasional outdoor areas with a lowered indoor-ish ceiling."),
     priority = 77,
-    randomize_group="architecture",
     },
     { name="pictures",     
     label=_("Pictures"),          
     choices=STYLE_CHOICES,
     tooltip = _("Controls the large wall setpieces in a map. Works on a chance per room basis."),
     priority = 76.5,
-    randomize_group="architecture",
     },
     { name="scenics",     
     label=_("Scenics"),          
@@ -462,7 +436,6 @@ OB_MODULES["misc"] =
     tooltip = _("Controls the amount of fancy scenics visible at room bordering the maps."),
     priority = 76,
     gap = 1,
-    randomize_group="architecture",
     },
 
     {
@@ -490,7 +463,6 @@ OB_MODULES["misc"] =
       default = 0,
       tooltip = _("Sets the minimum brightness for the map."),
       priority = 72,
-      complex_mode = true
     },
 
     { 
@@ -503,7 +475,6 @@ OB_MODULES["misc"] =
       default = 256,
       tooltip = _("Sets the maximum brightness for the map."),
       priority = 71,
-      complex_mode = true
     },
 
     { name="barrels",     
@@ -511,34 +482,30 @@ OB_MODULES["misc"] =
     choices=STYLE_CHOICES, gap=1,
     tooltip = _("Controls the presence of barrels, pods, canisters, etc."),
     priority = 70,
-    randomize_group="architecture",
     },
 
     { name="doors",       
     label=_("Doors"), 
     tooltip = _("Control the amount of doors."), 
-    choices=STYLE_CHOICES, priority = 69, randomize_group="architecture", },
+    choices=STYLE_CHOICES, priority = 69, },
     { name="keys",        
     label=_("Keyed Doors"), 
     tooltip = _("Control the amount of keyed doors."), 
-    choices=STYLE_CHOICES, priority = 68, randomize_group="architecture", },
+    choices=STYLE_CHOICES, priority = 68, },
     { name="trikeys",     
     label=_("Triple-Keyed Doors"),          
     choices=STYLE_CHOICES,
     tooltip = _("Controls the chance to get three key door whenever three keys are present."),
     priority = 67,
-    randomize_group="architecture",
     },
     { name="switches",    label=_("Switch Goals"), choices=STYLE_CHOICES, 
       tooltip = _("Controls the chance for long-distance switch and lock quests."),
       priority = 66,
-      randomize_group="architecture",
     },
     { name="local_switches",    label=_("Switch Rooms"), choices=STYLE_CHOICES, 
       tooltip = _("Controls the chance same-room switches and locks."),
       priority = 65,
       gap=1,
-      randomize_group="architecture",
     },
 
     {
@@ -548,7 +515,6 @@ OB_MODULES["misc"] =
       default = 1,
       tooltip = _("Adds street markings to roads."),
       priority = 64,
-      complex_mode = true
     },
     {
       name="street_traffic",
@@ -557,8 +523,6 @@ OB_MODULES["misc"] =
       tooltip = _("If Street Mode is enabled, changes the density of prefabs such as cars, barriers, crates, and relevant items on the roads."),
       priority = 63,
       gap = 1,
-      randomize_group="architecture",
-      complex_mode = true
     },
 
     {
@@ -578,7 +542,6 @@ OB_MODULES["misc"] =
       tooltip=_("Stops start rooms from having more than one external room connection. Can help reduce being overwhelmed by attacks from multiple directions when multiple neighboring rooms connect into the start room. Default means no control, and levels can have linear starts at random based on shape grammars as per original Oblige 7.7 behavior."),
       default = "default",
       priority = 61,
-      complex_mode = true
     },
     {
       name="outdoor_openness",
@@ -587,7 +550,6 @@ OB_MODULES["misc"] =
       tooltip=_("Disables shape rules that involve obstructive geometry such as pillars for outdoors based on theme."),
       default="none",
       priority = 60,
-      complex_mode = true
     },
     {
       name="dead_ends",
@@ -597,8 +559,6 @@ OB_MODULES["misc"] =
       default = "heaps",
       priority = 59,
       gap = 1,
-      randomize_group="architecture",
-      complex_mode = true
     },
 
 ---- PLANNED (UNFINISHED) STUFF ----
