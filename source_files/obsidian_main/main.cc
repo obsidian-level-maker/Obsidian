@@ -55,6 +55,7 @@
 #include "sokol_imgui.h"
 
 // Demo code for now, put these elsewhere
+static std::string main_title;
 
 static bool show_test_window = true;
 static bool show_another_window = false;
@@ -120,6 +121,7 @@ void frame(void) {
 }
 
 void cleanup(void) {
+    Main::Detail::Shutdown(false);
     simgui_shutdown();
     sg_shutdown();
 }
@@ -554,21 +556,6 @@ bool Build_Cool_Shit() {
 /* ----- main program ----------------------------- */
 #ifndef CONSOLE_ONLY
 sapp_desc sokol_main(int argc, char* argv[]) {
-    (void)argc; (void)argv;
-    sapp_desc desc = { };
-    desc.init_cb = init;
-    desc.frame_cb = frame;
-    desc.cleanup_cb = cleanup;
-    desc.event_cb = input;
-    desc.window_title = "Dear ImGui (sokol-app)";
-    desc.ios_keyboard_resizes_canvas = false;
-    desc.icon.sokol_default = true;
-    desc.enable_clipboard = true;
-    desc.logger.func = slog_func;
-    return desc;
-}
-#else
-int main(int argc, char **argv) {
     // initialise argument parser (skipping program name)
 
     // these flags take at least one argument
@@ -581,7 +568,7 @@ int main(int argc, char **argv) {
     argv::Init(argc, argv);
 
     if (argv::Find('?', NULL) >= 0 || argv::Find('h', "help") >= 0) {
-#if defined WIN32 && !defined CONSOLE_ONLY
+#ifdef _WIN32
         if (AllocConsole()) {
             freopen("CONOUT$", "r", stdin);
             freopen("CONOUT$", "w", stdout);
@@ -589,14 +576,14 @@ int main(int argc, char **argv) {
         }
 #endif
         ShowInfo();
-#if defined WIN32 && !defined CONSOLE_ONLY
+#ifdef _WIN32
         std::cout << '\n' << "Close window when finished...";
         do {
         } while (true);
 #endif
         exit(EXIT_SUCCESS);
     } else if (argv::Find(0, "version") >= 0) {
-#if defined WIN32 && !defined CONSOLE_ONLY
+#ifdef _WIN32
         if (AllocConsole()) {
             freopen("CONOUT$", "r", stdin);
             freopen("CONOUT$", "w", stdout);
@@ -604,48 +591,36 @@ int main(int argc, char **argv) {
         }
 #endif
         ShowVersion();
-#if defined WIN32 && !defined CONSOLE_ONLY
+#ifdef _WIN32
         std::cout << '\n' << "Close window when finished...";
         do {
         } while (true);
-
 #endif
         exit(EXIT_SUCCESS);
     }
-
-#ifdef CONSOLE_ONLY
-    batch_mode = true;
-#endif
 
     int batch_arg = argv::Find('b', "batch");
     if (batch_arg >= 0) {
         if (batch_arg + 1 >= argv::list.size() ||
             argv::IsOption(batch_arg + 1)) {
+#ifdef _WIN32
+            if (AllocConsole()) {
+                freopen("CONOUT$", "r", stdin);
+                freopen("CONOUT$", "w", stdout);
+                freopen("CONOUT$", "w", stderr);
+            }
+#endif
             StdErrPrintf(
                        "OBSIDIAN ERROR: missing filename for --batch\n");
+#ifdef _WIN32
+            std::cout << '\n' << "Close window when finished...";
+            do {
+            } while (true);
+#endif
             exit(EXIT_FAILURE);
         }
-
         batch_mode = true;
         batch_output_file = argv::list[batch_arg + 1];
-#if defined WIN32 && !defined CONSOLE_ONLY
-        if (AllocConsole()) {
-            freopen("CONOUT$", "r", stdin);
-            freopen("CONOUT$", "w", stdout);
-            freopen("CONOUT$", "w", stderr);
-        }
-#endif
-    }
-
-    if (argv::Find('p', "printref") >= 0) {
-        batch_mode = true;
-#if defined WIN32 && !defined CONSOLE_ONLY
-        if (AllocConsole()) {
-            freopen("CONOUT$", "r", stdin);
-            freopen("CONOUT$", "w", stdout);
-            freopen("CONOUT$", "w", stderr);
-        }
-#endif
     }
 
     if (int update_arg = argv::Find('u', "update"); update_arg >= 0) {
@@ -653,36 +628,61 @@ int main(int argc, char **argv) {
         if (update_arg + 3 >= argv::list.size() ||
             argv::IsOption(update_arg + 1) || argv::IsOption(update_arg + 2) ||
             argv::IsOption(update_arg + 3)) {
+#ifdef _WIN32
+            if (AllocConsole()) {
+                freopen("CONOUT$", "r", stdin);
+                freopen("CONOUT$", "w", stdout);
+                freopen("CONOUT$", "w", stderr);
+            }
+#endif
             StdErrPrintf(
                        "OBSIDIAN ERROR: missing one or more args for --update "
                        "<section> <key> <value>\n");
+#ifdef _WIN32
+            std::cout << '\n' << "Close window when finished...";
+            do {
+            } while (true);
+#endif
             exit(EXIT_FAILURE);
         }
         if (argv::list[update_arg + 1].length() > 1) {
+#ifdef _WIN32
+            if (AllocConsole()) {
+                freopen("CONOUT$", "r", stdin);
+                freopen("CONOUT$", "w", stdout);
+                freopen("CONOUT$", "w", stderr);
+            }
+#endif
             StdErrPrintf(
                        "OBSIDIAN ERROR: section name must be one character\n");
+#ifdef _WIN32
+            std::cout << '\n' << "Close window when finished...";
+            do {
+            } while (true);
+#endif
             exit(EXIT_FAILURE);
         }
         char section = argv::list[update_arg + 1][0];
         if (section != 'c' && section != 'o') {
+#ifdef _WIN32
+            if (AllocConsole()) {
+                freopen("CONOUT$", "r", stdin);
+                freopen("CONOUT$", "w", stdout);
+                freopen("CONOUT$", "w", stderr);
+            }
+#endif
             StdErrPrintf(
                        "OBSIDIAN ERROR: section name must be 'c' or 'o'\n");
+#ifdef _WIN32
+            std::cout << '\n' << "Close window when finished...";
+            do {
+            } while (true);
+#endif
             exit(EXIT_FAILURE);
         }
         update_kv.section = section;
         update_kv.key = argv::list[update_arg + 2];
         update_kv.value = argv::list[update_arg + 3];
-    }
-
-    if (argv::Find(0, "printref-json") >= 0) {
-        batch_mode = true;
-#if defined WIN32 && !defined CONSOLE_ONLY
-        if (AllocConsole()) {
-            freopen("CONOUT$", "r", stdin);
-            freopen("CONOUT$", "w", stdout);
-            freopen("CONOUT$", "w", stderr);
-        }
-#endif
     }
 
     std::filesystem::path path_check = std::filesystem::u8path(argv::list[0]);
@@ -696,7 +696,6 @@ int main(int argc, char **argv) {
     Options_Load(options_file);
 
     LogInit(logging_file);
-
 
     // accept -t and --terminal for backwards compatibility
     if (argv::Find('v', "verbose") >= 0 || argv::Find('t', "terminal") >= 0) {
@@ -745,20 +744,29 @@ int main(int argc, char **argv) {
 
     LogEnableDebug(debug_messages);
 
-
     Main_CalcNewSeed();
 
     std::string load_file;
-
-    //TX_TestSynth(next_rand_seed); - Fractal testing stuff
 
     VFS_InitAddons(install_dir);
 
     if (const int load_arg = argv::Find('l', "load"); load_arg >= 0) {
         if (load_arg + 1 >= argv::list.size() ||
             argv::IsOption(load_arg + 1)) {
+#ifdef _WIN32
+            if (AllocConsole()) {
+                freopen("CONOUT$", "r", stdin);
+                freopen("CONOUT$", "w", stdout);
+                freopen("CONOUT$", "w", stderr);
+            }
+#endif
             StdErrPrintf(
                         "OBSIDIAN ERROR: missing filename for --load\n");
+#ifdef _WIN32
+            std::cout << '\n' << "Close window when finished...";
+            do {
+            } while (true);
+#endif
             exit(EXIT_FAILURE);
         }
 
@@ -766,6 +774,13 @@ int main(int argc, char **argv) {
     }
 
     if (batch_mode) {
+#ifdef _WIN32
+        if (AllocConsole()) {
+            freopen("CONOUT$", "r", stdin);
+            freopen("CONOUT$", "w", stdout);
+            freopen("CONOUT$", "w", stderr);
+        }
+#endif
         VFS_ParseCommandLine();
 
         Script_Open();
@@ -806,7 +821,7 @@ int main(int argc, char **argv) {
             Options_Save(options_file);
             Cookie_Save(config_file);
             Main::Detail::Shutdown(false);
-            return 0;
+            exit(EXIT_SUCCESS);
         }
 
         if (batch_output_file.empty()) {
@@ -818,12 +833,12 @@ int main(int argc, char **argv) {
                 "parameter?\n");
 
             Main::Detail::Shutdown(false);
-#if defined WIN32 && !defined CONSOLE_ONLY
+#ifdef _WIN32
             std::cout << '\n' << "Close window when finished...";
             do {
             } while (true);
 #endif
-            return EXIT_FAILURE;
+            exit(EXIT_FAILURE);
         }
 
         Main_SetSeed();
@@ -832,20 +847,23 @@ int main(int argc, char **argv) {
             LogPrintf("FAILED!\n");
 
             Main::Detail::Shutdown(false);
-#if defined WIN32 && !defined CONSOLE_ONLY
+#ifdef _WIN32
             std::cout << '\n' << "Close window when finished...";
             do {
             } while (true);
 #endif
-            return EXIT_FAILURE;
+            exit(EXIT_FAILURE);
         }
         Main::Detail::Shutdown(false);
-        return 0;
+#ifdef _WIN32
+        std::cout << '\n' << "Close window when finished...";
+        do {
+        } while (true);
+#endif
+        exit(EXIT_SUCCESS);
     }
 
-    /* ---- normal GUI mode ---- */
-
-    std::string main_title =
+    main_title =
         StringFormat("%s %s \"%s\"", OBSIDIAN_TITLE.c_str(), OBSIDIAN_SHORT_VERSION,
                     OBSIDIAN_CODE_NAME.c_str());
 
@@ -853,7 +871,6 @@ int main(int argc, char **argv) {
     // in OPTIONS.txt
     VFS_ScanForAddons();
     VFS_ParseCommandLine();
-    VFS_ScanForPresets();
 
     Script_Open();
 
@@ -880,10 +897,210 @@ int main(int argc, char **argv) {
 
     ob_set_config("filename_prefix", "datetime");
 
-    // GUI goes here lol
+    sapp_desc desc = { };
+    desc.init_cb = init;
+    desc.frame_cb = frame;
+    desc.cleanup_cb = cleanup;
+    desc.event_cb = input;
+    desc.window_title = main_title.c_str();
+    desc.ios_keyboard_resizes_canvas = false;
+    desc.icon.sokol_default = true;
+    desc.enable_clipboard = true;
+    desc.win32_console_attach = true;
+    desc.logger.func = slog_func;
+    return desc;
+}
+#else
+int main(int argc, char **argv) {
+    // initialise argument parser (skipping program name)
 
+    // these flags take at least one argument
+    argv::short_flags.emplace('b');
+    argv::short_flags.emplace('a');
+    argv::short_flags.emplace('l');
+    argv::short_flags.emplace('u');
+
+    // parse the flags
+    argv::Init(argc, argv);
+
+    if (argv::Find('?', NULL) >= 0 || argv::Find('h', "help") >= 0) {
+        ShowInfo();
+        exit(EXIT_SUCCESS);
+    } else if (argv::Find(0, "version") >= 0) {
+        ShowVersion();
+        exit(EXIT_SUCCESS);
+    }
+
+    int batch_arg = argv::Find('b', "batch");
+    if (batch_arg >= 0) {
+        if (batch_arg + 1 >= argv::list.size() ||
+            argv::IsOption(batch_arg + 1)) {
+            StdErrPrintf(
+                       "OBSIDIAN ERROR: missing filename for --batch\n");
+            exit(EXIT_FAILURE);
+        }
+        batch_output_file = argv::list[batch_arg + 1];
+    }
+
+    if (int update_arg = argv::Find('u', "update"); update_arg >= 0) {
+        if (update_arg + 3 >= argv::list.size() ||
+            argv::IsOption(update_arg + 1) || argv::IsOption(update_arg + 2) ||
+            argv::IsOption(update_arg + 3)) {
+            StdErrPrintf(
+                       "OBSIDIAN ERROR: missing one or more args for --update "
+                       "<section> <key> <value>\n");
+            exit(EXIT_FAILURE);
+        }
+        if (argv::list[update_arg + 1].length() > 1) {
+            StdErrPrintf(
+                       "OBSIDIAN ERROR: section name must be one character\n");
+            exit(EXIT_FAILURE);
+        }
+        char section = argv::list[update_arg + 1][0];
+        if (section != 'c' && section != 'o') {
+            StdErrPrintf(
+                       "OBSIDIAN ERROR: section name must be 'c' or 'o'\n");
+            exit(EXIT_FAILURE);
+        }
+        update_kv.section = section;
+        update_kv.key = argv::list[update_arg + 2];
+        update_kv.value = argv::list[update_arg + 3];
+    }
+
+    std::filesystem::path path_check = std::filesystem::u8path(argv::list[0]);
+    Determine_WorkingPath(path_check);
+    Determine_InstallDir(path_check);
+
+    Determine_ConfigFile();
+    Determine_OptionsFile();
+    Determine_LoggingFile();
+
+    Options_Load(options_file);
+
+    LogInit(logging_file);
+
+    // accept -t and --terminal for backwards compatibility
+    if (argv::Find('v', "verbose") >= 0 || argv::Find('t', "terminal") >= 0) {
+        LogEnableTerminal(true);
+    }
+
+    LogPrintf("\n");
+    LogPrintf("********************************************************\n");
+    LogPrintf("** %s %s \"%s\" **\n", OBSIDIAN_TITLE.c_str(), OBSIDIAN_SHORT_VERSION,
+              OBSIDIAN_CODE_NAME.c_str());
+    LogPrintf("** Build %s **\n", OBSIDIAN_VERSION);
+    LogPrintf("********************************************************\n");
+    LogPrintf("\n");
+
+    LogPrintf("home_dir: %s\n", home_dir.u8string().c_str());
+    LogPrintf("install_dir: %s\n", install_dir.u8string().c_str());
+    LogPrintf("config_file: %s\n\n", config_file.u8string().c_str());
+
+    Trans_Init();
+
+    if (argv::Find('d', "debug") >= 0) {
+        debug_messages = true;
+    }
+// Grab current numeric locale
+#ifdef __APPLE__
+    numeric_locale =
+        setlocale(LC_NUMERIC, NULL);
+#elif __unix__
+#ifndef __linux__
+    numeric_locale =
+        setlocale(LC_NUMERIC, NULL);
+#else
+    numeric_locale =
+        std::setlocale(LC_NUMERIC, NULL);
+#endif
+#else
+    numeric_locale =
+        std::setlocale(LC_NUMERIC, NULL);
+#endif
+
+    LogEnableDebug(debug_messages);
+
+    Main_CalcNewSeed();
+
+    std::string load_file;
+
+    VFS_InitAddons(install_dir);
+
+    if (const int load_arg = argv::Find('l', "load"); load_arg >= 0) {
+        if (load_arg + 1 >= argv::list.size() ||
+            argv::IsOption(load_arg + 1)) {
+            StdErrPrintf(
+                        "OBSIDIAN ERROR: missing filename for --load\n");
+            exit(EXIT_FAILURE);
+        }
+
+        load_file = argv::list[load_arg + 1];
+    }
+
+    VFS_ParseCommandLine();
+
+    Script_Open();
+
+    // inform Lua code about batch mode
+    ob_set_config("batch", "yes");
+
+    if (mature_word_lists) {
+        ob_set_config("mature_words", "yes");
+    } else {
+        ob_set_config("mature_words", "no");
+    }
+
+    if (!load_file.empty()) {
+        if (!Cookie_Load(load_file)) {
+            Main::FatalError(_("No such config file: %s\n"), load_file.c_str());
+        }
+    } else {
+        if (!std::filesystem::exists(config_file)) {
+            Cookie_Save(config_file);
+        }
+        if (!Cookie_Load(config_file)) {
+            Main::FatalError(_("No such config file: %s\n"), config_file.c_str());
+        }
+    }
+
+    Cookie_ParseArguments();
+
+    if (argv::Find('u', "update") >= 0) {
+        switch (update_kv.section) {
+            case 'c':
+                ob_set_config(update_kv.key, update_kv.value);
+                break;
+            case 'o':
+                Parse_Option(update_kv.key, update_kv.value);
+                break;
+        }
+        Options_Save(options_file);
+        Cookie_Save(config_file);
+        Main::Detail::Shutdown(false);
+        return 0;
+    }
+
+    if (batch_output_file.empty()) {
+        StdErrPrintf(
+                    "\nNo output filename given! Did you forget the --batch "
+                    "parameter?\n");
+        LogPrintf(
+            "\nNo output filename given! Did you forget the --batch "
+            "parameter?\n");
+
+        Main::Detail::Shutdown(false);
+        return EXIT_FAILURE;
+    }
+
+    Main_SetSeed();
+    if (!Build_Cool_Shit()) {
+        StdErrPrintf("FAILED!\n");
+        LogPrintf("FAILED!\n");
+
+        Main::Detail::Shutdown(false);
+        return EXIT_FAILURE;
+    }
     Main::Detail::Shutdown(false);
-
     return 0;
 }
 #endif
