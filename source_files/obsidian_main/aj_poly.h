@@ -21,6 +21,7 @@
 
 // functions provided by the application
 
+#include <cstdint>
 #include <cstring>
 #include <string>
 #include <array>

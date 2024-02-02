@@ -25,6 +25,7 @@
 #include <string>
 #include <string_view>
 #include <codecvt>
+#include <cstdint>
 
 /* string utilities */
 

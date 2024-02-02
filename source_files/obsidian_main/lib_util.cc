@@ -23,6 +23,7 @@
 #include <algorithm>
 #include <cctype>
 #include <charconv>
+#include <cstdint>
 #include <functional>
 
 #include "headers.h"

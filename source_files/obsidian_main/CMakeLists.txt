@@ -105,7 +105,18 @@ if(NOT CONSOLE_ONLY AND NOT HAIKU)
   target_include_directories(obsidian PRIVATE ${OBSIDIAN_LIB_DIR}/sokol)
 endif()
 
+if(UNIX)
+  target_compile_definitions(obsidian PRIVATE UNIX=1)
+endif()
+target_compile_definitions(obsidian PRIVATE OBSIDIAN_INSTALL_PREFIX="${CMAKE_INSTALL_PREFIX}")
+
 if(NOT CONSOLE_ONLY AND NOT HAIKU)
+  find_package(X11)
+  if(X11_FOUND)
+    set(XLIBS X11::X11 X11::Xi X11::Xcursor)
+  endif()
+
+  find_package(OpenGL REQUIRED)
   target_link_libraries(
     obsidian
     PRIVATE ajbsp
@@ -114,6 +125,8 @@ if(NOT CONSOLE_ONLY AND NOT HAIKU)
             miniz
             physfs-static
             obsidian_slump
+            ${XLIBS}
+            OpenGL::OpenGL
   )
 else()
   target_link_libraries(
