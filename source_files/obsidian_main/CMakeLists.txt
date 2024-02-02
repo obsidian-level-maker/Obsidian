@@ -110,7 +110,17 @@ if(UNIX)
 endif()
 target_compile_definitions(obsidian PRIVATE OBSIDIAN_INSTALL_PREFIX="${CMAKE_INSTALL_PREFIX}")
 
-if(NOT CONSOLE_ONLY AND NOT HAIKU)
+if(WIN32)
+  target_link_libraries(
+      obsidian
+      PRIVATE ajbsp
+              ajparse
+              imgui
+              miniz
+              physfs-static
+              obsidian_slump
+    )
+elseif(NOT CONSOLE_ONLY AND NOT HAIKU)
   find_package(X11)
   if(X11_FOUND)
     set(XLIBS X11::X11 X11::Xi X11::Xcursor)
