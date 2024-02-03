@@ -33,7 +33,6 @@
 #include "sys_endian.h"
 #include "sys_macro.h"
 
-#define HAVE_PHYSFS 1
 #include "physfs.h"
 
 namespace ajpoly {

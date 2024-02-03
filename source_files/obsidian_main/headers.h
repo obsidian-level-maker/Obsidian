@@ -69,8 +69,6 @@
 #include "sys_endian.h"
 #include "sys_macro.h"
 
-#define HAVE_PHYSFS 1
-
 #define MSG_BUF_LEN 2000
 
 /* Internationalization / Localization */
