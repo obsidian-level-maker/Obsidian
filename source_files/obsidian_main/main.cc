@@ -51,14 +51,15 @@
 #include "sokol_log.h"
 #include "sokol_glue.h"
 #include "imgui.h"
+#include "imfilebrowser.h"
 #define SOKOL_IMGUI_IMPL
 #include "sokol_imgui.h"
 
 // Demo code for now, put these elsewhere
 static std::string main_title;
+static ImGui::FileBrowser fileDialog;
 
 static bool show_test_window = true;
-static bool show_another_window = false;
 
 static sg_pass_action pass_action;
 
@@ -92,19 +93,30 @@ void frame(void) {
     ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
     ImGui::ColorEdit3("clear color", &pass_action.colors[0].clear_value.r);
     if (ImGui::Button("Test Window")) show_test_window ^= 1;
-    if (ImGui::Button("Another Window")) show_another_window ^= 1;
+    if (ImGui::Button("File Browser Test"))
+    {
+        if (!fileDialog.IsOpened())
+        {
+            fileDialog.Open();
+            fileDialog.Display();
+        }
+    }
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
     ImGui::Text("w: %d, h: %d, dpi_scale: %.1f", sapp_width(), sapp_height(), sapp_dpi_scale());
     if (ImGui::Button(sapp_is_fullscreen() ? "Switch to windowed" : "Switch to fullscreen")) {
         sapp_toggle_fullscreen();
     }
 
-    // 2. Show another simple window, this time using an explicit Begin/End pair
-    if (show_another_window) {
-        ImGui::SetNextWindowSize(ImVec2(200,100), ImGuiCond_FirstUseEver);
-        ImGui::Begin("Another Window", &show_another_window);
-        ImGui::Text("Hello");
-        ImGui::End();
+
+    if (fileDialog.IsOpened())
+    {
+        fileDialog.Display();
+    }
+
+    if (fileDialog.HasSelected())
+    {
+        std::cout << "Selected filename" << fileDialog.GetSelected().string() << std::endl;
+        fileDialog.Close();
     }
 
     // 3. Show the ImGui test window. Most of the sample code is in ImGui::ShowDemoWindow()
