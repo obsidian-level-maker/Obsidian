@@ -1080,6 +1080,7 @@ bool Doom::game_interface_c::Start(const char *preset) {
 
     ob_invoke_hook("pre_setup");
 
+#ifndef CONSOLE_ONLY
     if (batch_mode) {
         if (batch_output_file.is_absolute()) {
             filename = batch_output_file;
@@ -1095,7 +1096,6 @@ bool Doom::game_interface_c::Start(const char *preset) {
             }
         }
     } else {
-#ifndef CONSOLE_ONLY
         if (compress_output) {
             if ((StringCaseCmp(current_port, "dsda") == 0)) {
                 filename = std::filesystem::current_path().append(preset).replace_extension("zip").u8string().c_str();
@@ -1107,11 +1107,25 @@ bool Doom::game_interface_c::Start(const char *preset) {
         } else {
             filename = std::filesystem::current_path().append(preset).replace_extension("wad").u8string().c_str();
         }
-#endif
     }
+#else
+    if (batch_output_file.is_absolute()) {
+        filename = batch_output_file;
+    } else {
+        filename = std::filesystem::current_path().append(batch_output_file.generic_u8string());
+    }
+    if (compress_output) {
+        zip_filename = filename;
+        if ((StringCaseCmp(current_port, "dsda") == 0)) {
+            zip_filename.replace_extension("zip");
+        } else {
+            zip_filename.replace_extension("pk3");
+        }
+    }
+#endif
 
     if (filename.empty()) {
-        Main::ProgStatus(_("Cancelled"));
+        Main::ProgStatus(_("Lol"));
         return false;
     }
 

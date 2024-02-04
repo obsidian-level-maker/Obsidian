@@ -1243,6 +1243,7 @@ bool quake1_game_interface_c::Start(const char *preset) {
 
     QLIT_InitProperties();
 
+#ifndef CONSOLE_ONLY
     if (batch_mode) {
         if (batch_output_file.is_absolute()) {
             filename = batch_output_file;
@@ -1250,10 +1251,15 @@ bool quake1_game_interface_c::Start(const char *preset) {
             filename = std::filesystem::current_path().append(batch_output_file.string());
         }
     } else {
-#ifndef CONSOLE_ONLY
         filename = std::filesystem::current_path().append(preset).replace_extension("pak").u8string().c_str();
-#endif
     }
+#else
+    if (batch_output_file.is_absolute()) {
+        filename = batch_output_file;
+    } else {
+        filename = std::filesystem::current_path().append(batch_output_file.string());
+    }
+#endif
 
     if (filename.empty()) {
         Main::ProgStatus(_("Cancelled"));

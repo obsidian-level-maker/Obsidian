@@ -340,6 +340,7 @@ bool wolf_game_interface_c::Start(const char *ext) {
 
     write_errors_seen = 0;
 
+#ifndef CONSOLE_ONLY
     if (batch_mode) {
         if (batch_output_file.is_absolute()) {
             wolf_output_dir = batch_output_file.remove_filename();
@@ -347,10 +348,15 @@ bool wolf_game_interface_c::Start(const char *ext) {
             wolf_output_dir = std::filesystem::current_path();
         }
     } else {
-#ifndef CONSOLE_ONLY
         wolf_output_dir = std::filesystem::current_path();
-#endif
     }
+#else
+    if (batch_output_file.is_absolute()) {
+        wolf_output_dir = batch_output_file.remove_filename();
+    } else {
+        wolf_output_dir = std::filesystem::current_path();
+    }
+#endif
 
     if (ext) {
         file_ext = ext;
