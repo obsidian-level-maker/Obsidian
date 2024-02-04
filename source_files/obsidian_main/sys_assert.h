@@ -22,27 +22,6 @@
 #ifndef __SYS_ASSERT__
 #define __SYS_ASSERT__
 
-#ifdef WIN32
-#undef GetMessage
-#endif
-
-class assert_fail_c {
-   public:
-    assert_fail_c(const char *_msg);
-    assert_fail_c(const assert_fail_c &other);
-    ~assert_fail_c();
-
-   private:
-    static const int MSG_MAX = 200;
-
-    char message[MSG_MAX];
-
-   public:
-    const char *GetMessage() const { return message; }
-
-    assert_fail_c &operator=(const assert_fail_c &other);
-};
-
 // -------- the macros --------
 
 #ifdef NDEBUG
@@ -69,7 +48,6 @@ class assert_fail_c {
 #endif
 
 #define SYS_NULL_CHECK(ptr) SYS_ASSERT((ptr) != NULL)
-#define SYS_ZERO_CHECK(value) SYS_ASSERT((value) != 0)
 
 // -------- the support code --------
 

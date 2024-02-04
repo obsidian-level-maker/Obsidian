@@ -22,27 +22,6 @@
 #include "headers.h"
 #include "main.h"
 
-assert_fail_c::assert_fail_c(const char *_msg) {
-    strncpy(message, _msg, sizeof(message));
-
-    message[sizeof(message) - 1] = 0;
-}
-
-assert_fail_c::~assert_fail_c() { /* nothing needed */
-}
-
-assert_fail_c::assert_fail_c(const assert_fail_c &other) {
-    strcpy(message, other.message);
-}
-
-assert_fail_c &assert_fail_c::operator=(const assert_fail_c &other) {
-    if (this != &other) {
-        strcpy(message, other.message);
-    }
-
-    return *this;
-}
-
 //----------------------------------------------------------------------------
 
 void AssertFail(const char *msg, ...) {

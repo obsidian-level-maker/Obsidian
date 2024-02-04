@@ -72,8 +72,6 @@ class csg_property_set_c {
 
     void getHexenArgs(uint8_t *arg5) const;
 
-    void DebugDump();
-
    public:
     typedef std::map<std::string, std::string>::iterator iterator;
 

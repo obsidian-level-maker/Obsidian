@@ -1125,7 +1125,7 @@ bool Doom::game_interface_c::Start(const char *preset) {
 #endif
 
     if (filename.empty()) {
-        Main::ProgStatus(_("Lol"));
+        Main::ProgStatus(_("Cancelled"));
         return false;
     }
 

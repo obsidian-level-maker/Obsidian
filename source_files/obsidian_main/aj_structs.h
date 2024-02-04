@@ -21,33 +21,34 @@
 
 #include <array>
 
-#ifdef __GNUC__
-#define PACKEDATTR __attribute__((packed))
-#else
-#define PACKEDATTR
-#endif
-
+#pragma pack(push, 1)
 typedef struct {
     char type[4];
 
     uint32_t num_entries;
     uint32_t dir_start;
 
-} PACKEDATTR raw_wad_header_t;
+} raw_wad_header_t;
+#pragma pack(pop)
 
+#pragma pack(push, 1)
 typedef struct {
     uint32_t start;
     uint32_t length;
 
     std::array<char, 8> name;
 
-} PACKEDATTR raw_wad_entry_t;
+} raw_wad_entry_t;
+#pragma pack(pop)
 
+#pragma pack(push, 1)
 typedef struct {
     int16_t x, y;
 
-} PACKEDATTR raw_vertex_t;
+} raw_vertex_t;
+#pragma pack(pop)
 
+#pragma pack(push, 1)
 typedef struct {
     uint16_t start;     // from this vertex...
     uint16_t end;       // ... to this vertex
@@ -57,8 +58,10 @@ typedef struct {
     uint16_t sidedef1;  // right sidedef
     uint16_t sidedef2;  // left sidedef (only if this line adjoins 2 sectors)
 
-} PACKEDATTR raw_linedef_t;
+} raw_linedef_t;
+#pragma pack(pop)
 
+#pragma pack(push, 1)
 typedef struct {
     uint16_t start;                   // from this vertex...
     uint16_t end;                     // ... to this vertex
@@ -68,8 +71,10 @@ typedef struct {
     uint16_t sidedef1;                // right sidedef
     uint16_t sidedef2;                // left sidedef
 
-} PACKEDATTR raw_hexen_linedef_t;
+} raw_hexen_linedef_t;
+#pragma pack(pop)
 
+#pragma pack(push, 1)
 typedef struct {
     int16_t x_offset;  // X offset for texture
     int16_t y_offset;  // Y offset for texture
@@ -80,8 +85,10 @@ typedef struct {
 
     uint16_t sector;  // adjacent sector
 
-} PACKEDATTR raw_sidedef_t;
+} raw_sidedef_t;
+#pragma pack(pop)
 
+#pragma pack(push, 1)
 typedef struct {
     int16_t floor_h;  // floor height
     int16_t ceil_h;   // ceiling height
@@ -93,16 +100,20 @@ typedef struct {
     uint16_t special;  // special behaviour (0 = normal, 9 = secret, ...)
     int16_t tag;      // sector activated by a linedef with same tag
 
-} PACKEDATTR raw_sector_t;
+} raw_sector_t;
+#pragma pack(pop)
 
+#pragma pack(push, 1)
 typedef struct {
     int16_t x, y;     // position of thing
     int16_t angle;    // angle thing faces (degrees)
     uint16_t type;     // type of thing
     uint16_t options;  // when appears, deaf, etc..
 
-} PACKEDATTR raw_thing_t;
+} raw_thing_t;
+#pragma pack(pop)
 
+#pragma pack(push, 1)
 typedef struct {
     int16_t tid;      // thing tag id (for scripts/specials)
     int16_t x, y;     // position
@@ -114,7 +125,8 @@ typedef struct {
     uint8_t special;             // special type
     std::array<uint8_t, 5> arg;  // special arguments
 
-} PACKEDATTR raw_hexen_thing_t;
+} raw_hexen_thing_t;
+#pragma pack(pop)
 
 #endif /* __AJPOLY_STRUCTS_H__ */
 

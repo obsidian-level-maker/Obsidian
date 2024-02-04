@@ -32,7 +32,6 @@
 void VFS_InitAddons(std::filesystem::path search_dir);
 void VFS_ParseCommandLine();
 void VFS_ScanForAddons();
-void VFS_ScanForPresets();
 
 void VFS_OptParse(std::string name);
 void VFS_OptWrite(std::ofstream &fp);
@@ -50,8 +49,6 @@ typedef struct {
 } addon_info_t;
 
 extern std::vector<addon_info_t> all_addons;
-
-extern std::vector<std::filesystem::path> all_presets;
 
 extern std::map<std::filesystem::path, int> initial_enabled_addons;
 

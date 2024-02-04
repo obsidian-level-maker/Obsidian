@@ -24,7 +24,6 @@
 
 #include "csg_local.h"
 #include "csg_main.h"
-#include "dm_extra.h"
 #include "g_doom.h"
 #include "headers.h"
 #include "lib_util.h"

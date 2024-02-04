@@ -1004,6 +1004,7 @@ bool quake2_game_interface_c::Start(const char *preset) {
 
     QLIT_InitProperties();
 
+#ifndef CONSOLE_ONLY
     if (batch_mode) {
         if (batch_output_file.is_absolute()) {
             filename = batch_output_file;
