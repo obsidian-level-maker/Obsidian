@@ -230,15 +230,15 @@ function ZDOOM_SPECIALS.shuffle_music()
 
   if OB_CONFIG.game == "doom1" then
     music_table = ZDOOM_SPECIALS.MUSIC_DOOM
-  elseif OB_CONFIG.game == "ultdoom" or OB_CONFIG.game == "plutonia"
-  or OB_CONFIG.game == "tnt" then
+  elseif OB_CONFIG.game == "ultdoom" then
     music_table = ZDOOM_SPECIALS.MUSIC_DOOM
     local i = 28
     while i <= 36 do
       music_table[i] = ZDOOM_SPECIALS.MUSIC_DOOM_THYFLESH[i]
       i = i + 1
     end
-  elseif OB_CONFIG.game == "doom2" then
+  elseif OB_CONFIG.game == "doom2" or OB_CONFIG.game == "plutonia"
+  or OB_CONFIG.game == "tnt" then
     music_table = ZDOOM_SPECIALS.MUSIC_DOOM2
   end
 
@@ -254,8 +254,7 @@ function ZDOOM_SPECIALS.shuffle_music()
     -- extra code for UltDoom music shuffling - replace the
     -- entries for the last episode with anything else to make sure
     -- there's no bias in picking songs
-    if OB_CONFIG.game == "ultdoom" or OB_CONFIG.game == "tnt"
-    or OB_CONFIG.game == "plutonia" then
+    if OB_CONFIG.game == "ultdoom" then
       local i = 28
       while i <= 36 do
         music_table[i] = rand.pick(ZDOOM_SPECIALS.MUSIC_DOOM)
@@ -594,7 +593,7 @@ function ZDOOM_SPECIALS.do_special_stuff()
     special_attributes = special_attributes .. '  ClipMidTextures\n'
 
     local mapinfo =
-      'map ' .. map_id .. ' lookup HUSTR_'.. name_string_map_id ..'\n' ..
+      'map ' .. map_id .. ' lookup ' .. PARAM.bex_map_prefix .. name_string_map_id ..'\n' ..
       '{\n' ..
       --'  cluster = 1\n'
       '  sky1 = "' .. sky_tex .. '"\n' ..
