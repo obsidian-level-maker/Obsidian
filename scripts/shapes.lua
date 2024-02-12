@@ -7666,6 +7666,80 @@ GROW_CAGE_ROUND_RAFTERS_ONE_SIDE =
   },
 },
 
+GROW_CAGE_JAGGED =
+{
+  prob = 10,
+  skip_prob = 90,
+
+  structure =
+  {
+    "11xx","11xx",
+    "....","11/C",
+    "....","11%C",
+    "....","111C",
+    "....","11/C",
+    "....","11%C",
+  },
+
+  diagonals =
+  {
+    "1C",
+    "1C",
+    "1C",
+    "1C"
+  }
+},
+
+GROW_CAGE_JAGGED_DOUBLE =
+{
+  prob = 8,
+  skip_prob = 90,
+
+  structure =
+  {
+    "xx11xx","xx11xx",
+    "......","C%11/C",
+    "......","C/11%C",
+    "......","C1111C",
+    "......","C%11/C",
+    "......","C/11%C"
+  },
+
+  diagonals =
+  {
+    "C1","1C",
+    "C1","1C",
+    "C1","1C",
+    "C1","1C"
+  }
+},
+
+GROW_CAGE_JAGGED_STAIRS =
+{
+  prob = 10,
+  skip_prob = 90,
+
+  structure =
+  {
+    "11xxxx","11xxxx",
+    "......","11>>AA",
+    "......","11/C%A",
+    "......","11%C/A",
+    "......","111CAA",
+    "......","11/C%A",
+    "......","11%C/A",
+    "......","11>>AA"
+  },
+
+  diagonals =
+  {
+    "1C","CA",
+    "1C","CA",
+    "1C","CA",
+    "1C","CA"
+  }
+},
+
 -- MSSP's elevated catwalks. [CATWALK]
 
 GROW_CATWALK_BIFUNNEL_SINK =
