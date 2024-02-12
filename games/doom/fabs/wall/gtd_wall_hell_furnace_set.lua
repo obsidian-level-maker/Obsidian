@@ -46,3 +46,27 @@ PREFABS.Wall_gtd_furnace_face_diag_1 =
 
   tex_FIRELAVA = "SP_FACE2"
 }
+
+--
+
+PREFABS.Wall_gtd_hell_aqueduct_1 =
+{
+  template = "Wall_gtd_furnace_1",
+
+  group = "gtd_furnace_water",
+
+  tex_FIRELAVA = "XFWATER",
+  tex_MIDGRATE = "MIDSPACE"
+}
+
+PREFABS.Wall_gtd_hell_aqueduct_diagonal =
+{
+  template = "Wall_gtd_furnace_1",
+  map = "MAP02",
+
+  where = "diagonal",
+  group = "gtd_furnace_water",
+
+  tex_FIRELAVA = "XFWATER",
+  tex_MIDGRATE = "MIDSPACE"
+}
