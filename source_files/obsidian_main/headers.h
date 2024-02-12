@@ -36,17 +36,17 @@
 
 /* C library */
 
-#include <cstdio>
-
 #include <ctype.h>
 #include <errno.h>
 #include <limits.h>
 #include <math.h>
 #include <stdarg.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdint.h>
 #include <time.h>
+
+#include <cstdio>
 
 /* STL goodies */
 
@@ -66,7 +66,7 @@
 
 /* Internationalization / Localization */
 
-#define _(s) ob_gettext(s)
+#define _(s)  ob_gettext(s)
 #define N_(s) (s)
 
 const char *ob_gettext(const char *s);

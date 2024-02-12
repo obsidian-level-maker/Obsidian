@@ -27,7 +27,8 @@
 /* ZIP writing */
 
 bool ZIPF_OpenWrite(const std::filesystem::path &filename);
-bool ZIPF_AddFile(const std::filesystem::path &filename, std::filesystem::path directory);
+bool ZIPF_AddFile(const std::filesystem::path &filename,
+                  std::filesystem::path        directory);
 bool ZIPF_AddMem(std::string name, uint8_t *data, size_t length);
 bool ZIPF_CloseWrite();
 

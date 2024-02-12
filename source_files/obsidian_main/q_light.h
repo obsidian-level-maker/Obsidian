@@ -22,8 +22,8 @@
 #ifndef Q_LIGHT_H_
 #define Q_LIGHT_H_
 
-#include <vector>
 #include <array>
+#include <vector>
 
 #include "lib_tga.h"  // for rgb_color_t
 #include "q_common.h"
@@ -34,7 +34,8 @@ class uv_matrix_c;
 // the maximum size of a face's lightmap in Quake I/II
 constexpr int FLAT_LIGHTMAP_SIZE = 17 * 17;
 
-class qLightmap_c {
+class qLightmap_c
+{
    public:
     int width, height;
     int num_styles;
@@ -73,12 +74,14 @@ class qLightmap_c {
     void Write(qLump_c *lump);
 };
 
-enum quake_light_kind_e {
+enum quake_light_kind_e
+{
     LTK_Normal = 0,
     LTK_Sun,
 };
 
-struct quake_light_t {
+struct quake_light_t
+{
     int kind;
 
     float x, y, z;
@@ -86,7 +89,7 @@ struct quake_light_t {
     float level;  // brightest level (at dist = 0)
 
     rgb_color_t color;
-    int style;
+    int         style;
 };
 
 /***** VARIABLES **********/

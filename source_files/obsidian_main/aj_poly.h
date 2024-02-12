@@ -21,15 +21,16 @@
 
 // functions provided by the application
 
+#include <array>
 #include <cstdint>
 #include <cstring>
 #include <string>
-#include <array>
 #include <unordered_map>
 void Appl_FatalError(const char *str, ...);
 void Appl_Printf(const char *str, ...);
 
-namespace ajpoly {
+namespace ajpoly
+{
 
 /* -------- OBJECTS ------------------------ */
 
@@ -38,7 +39,8 @@ class sector_c;
 class linedef_c;
 class edge_c;
 
-class vertex_c {
+class vertex_c
+{
    public:
     int index;
 
@@ -62,7 +64,8 @@ class vertex_c {
 // this bit in the index value differentiates normal vertices from split ones
 #define SPLIT_VERTEX (1 << 24)
 
-class sector_c {
+class sector_c
+{
    public:
     int index;
 
@@ -103,14 +106,17 @@ class sector_c {
           edge_list(),
           num_floors(),
           floor_start(),
-          is_dummy() {}
+          is_dummy()
+    {
+    }
 
     linedef_c *getExtraFloor(int index);
 };
 
 #define VOID_SECTOR_IDX 0xFFFF
 
-class sidedef_c {
+class sidedef_c
+{
    public:
     int index;
 
@@ -136,10 +142,13 @@ class sidedef_c {
           y_offset(),
           upper_tex(),
           lower_tex(),
-          mid_tex() {}
+          mid_tex()
+    {
+    }
 };
 
-class linedef_c {
+class linedef_c
+{
    public:
     int index;
 
@@ -172,10 +181,13 @@ class linedef_c {
           flags(),
           special(),
           tag(),
-          args() {}
+          args()
+    {
+    }
 };
 
-class thing_c {
+class thing_c
+{
    public:
     int index;
 
@@ -185,9 +197,9 @@ class thing_c {
     int angle;
 
     // Hexen support
-    int tid;
-    int height;
-    int special;
+    int                    tid;
+    int                    height;
+    int                    special;
     std::array<uint8_t, 5> args;
 
     // UDMF support
@@ -204,10 +216,13 @@ class thing_c {
           tid(),
           height(),
           special(),
-          args() {}
+          args()
+    {
+    }
 };
 
-class edge_c {
+class edge_c
+{
    public:
     int index;
 
@@ -258,7 +273,9 @@ class edge_c {
           sector(),
           side(),
           partner(),
-          source_line() {}
+          source_line()
+    {
+    }
 
     void Recompute();
 
@@ -268,7 +285,8 @@ class edge_c {
     void CopyInfo(const edge_c *other);
 };
 
-class polygon_c {
+class polygon_c
+{
    public:
     int index;
 
@@ -339,11 +357,11 @@ bool Polygonate(bool require_border);
 // the first group can be called after OpenMap().
 // the Polygon() function can only be called after Polygonate().
 
-vertex_c *Vertex(int index);
+vertex_c  *Vertex(int index);
 linedef_c *Linedef(int index);
 sidedef_c *Sidedef(int index);
-sector_c *Sector(int index);
-thing_c *Thing(int index);
+sector_c  *Sector(int index);
+thing_c   *Thing(int index);
 
 polygon_c *Polygon(int index);
 

@@ -23,11 +23,12 @@
 #define __OBSIDIAN_MAIN_H__
 
 #include <cstddef>
-#include <iostream>
-#include <vector>
-#include <string>
-#include <map>
 #include <filesystem>
+#include <iostream>
+#include <map>
+#include <string>
+#include <vector>
+
 #include "lib_util.h"
 #include "sys_debug.h"
 extern std::string OBSIDIAN_TITLE;
@@ -41,52 +42,56 @@ constexpr const char *OBSIDIAN_VERSION = __DATE__;
 #endif
 
 constexpr const char *OBSIDIAN_SHORT_VERSION = "21";
-extern std::string OBSIDIAN_CODE_NAME;
+extern std::string    OBSIDIAN_CODE_NAME;
 
 constexpr const char *OBSIDIAN_WEBSITE =
     "https://obsidian-level-maker.github.io";
 
-constexpr const char *CONFIG_FILENAME = "CONFIG.txt";
+constexpr const char *CONFIG_FILENAME  = "CONFIG.txt";
 constexpr const char *OPTIONS_FILENAME = "OPTIONS.txt";
-constexpr const char *LOG_FILENAME = "LOGS.txt";
+constexpr const char *LOG_FILENAME     = "LOGS.txt";
 
 extern std::filesystem::path home_dir;
 extern std::filesystem::path install_dir;
 extern std::filesystem::path config_file;
 extern std::filesystem::path options_file;
 extern std::filesystem::path logging_file;
-extern bool batch_mode;
+extern bool                  batch_mode;
 extern std::filesystem::path batch_output_file;
-extern unsigned long long next_rand_seed;
+extern unsigned long long    next_rand_seed;
 
 // Misc Options
-extern bool create_backups;
-extern bool overwrite_warning;
-extern bool debug_messages;
-extern bool limit_break;
-extern bool random_string_seeds;
-extern bool password_mode;
-extern bool mature_word_lists;
-extern bool did_specify_seed;
-extern std::string def_filename;
+extern bool                  create_backups;
+extern bool                  overwrite_warning;
+extern bool                  debug_messages;
+extern bool                  limit_break;
+extern bool                  random_string_seeds;
+extern bool                  password_mode;
+extern bool                  mature_word_lists;
+extern bool                  did_specify_seed;
+extern std::string           def_filename;
 extern std::filesystem::path last_directory;
-extern std::string numeric_locale;
+extern std::string           numeric_locale;
 extern std::filesystem::path default_output_path;
 extern std::filesystem::path Resolve_DefaultOutputPath();
 extern std::filesystem::path gif_filename;
-extern std::string string_seed;
-extern std::string selected_lang;
+extern std::string           string_seed;
+extern std::string           selected_lang;
 
-namespace Main {
+namespace Main
+{
 
-namespace Detail {
+namespace Detail
+{
 void Shutdown(bool error);
 }
 
 template <typename... Args>
-[[noreturn]] void FatalError(std::string_view msg, Args &&...args) {
+[[noreturn]] void FatalError(std::string_view msg, Args &&...args)
+{
     Detail::Shutdown(true);
-    if (batch_mode) {
+    if (batch_mode)
+    {
         std::cout << "ERROR!\n";
 #if defined WIN32 && !defined CONSOLE_ONLY
         std::cout << '\n' << "Close window when finished...";
@@ -98,7 +103,8 @@ template <typename... Args>
 }
 
 template <typename... Args>
-void ProgStatus(std::string_view msg, Args &&...args) {
+void ProgStatus(std::string_view msg, Args &&...args)
+{
     const std::string buffer = StringFormat(msg, std::forward<Args>(args)...);
     StdErrPrintf("%s\n", buffer.c_str());
 }
@@ -106,17 +112,18 @@ bool BackupFile(const std::filesystem::path &filename);
 
 }  // namespace Main
 
-class game_interface_c {
+class game_interface_c
+{
     /* this is an abstract base class */
 
    public:
     game_interface_c() = default;
 
-    virtual ~game_interface_c() = default;
-    game_interface_c(const game_interface_c &) = default;
+    virtual ~game_interface_c()                           = default;
+    game_interface_c(const game_interface_c &)            = default;
     game_interface_c &operator=(const game_interface_c &) = default;
-    game_interface_c(game_interface_c &&) = default;
-    game_interface_c &operator=(game_interface_c &&) = default;
+    game_interface_c(game_interface_c &&)                 = default;
+    game_interface_c &operator=(game_interface_c &&)      = default;
 
     /*** MAIN ***/
 
@@ -162,8 +169,8 @@ class game_interface_c {
 
     virtual std::filesystem::path ZIP_Filename() = 0;
 
-    // likely only useful for Doom, but informs the program if it needs to package
-    // each map in its own native format (WAD, etc)
+    // likely only useful for Doom, but informs the program if it needs to
+    // package each map in its own native format (WAD, etc)
     bool file_per_map = false;
 };
 

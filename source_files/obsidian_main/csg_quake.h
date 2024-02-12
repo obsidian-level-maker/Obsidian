@@ -35,7 +35,8 @@ class qLightmap_c;
 
 typedef std::map<quake_leaf_c *, int> leaf_map_t;
 
-typedef enum {
+typedef enum
+{
     MEDIUM_AIR = 0,
     MEDIUM_WATER,
     MEDIUM_SLIME,
@@ -43,16 +44,18 @@ typedef enum {
     MEDIUM_SOLID,
 } quake_medium_e;
 
-typedef enum {
-    FACE_F_Sky = (1 << 0),
+typedef enum
+{
+    FACE_F_Sky    = (1 << 0),
     FACE_F_Liquid = (1 << 1),
     FACE_F_Detail = (1 << 2),
-    FACE_F_Model = (1 << 3),
+    FACE_F_Model  = (1 << 3),
 
     FACE_F_NoShadow = (1 << 4),
 } quake_face_flags_e;
 
-class quake_vertex_c {
+class quake_vertex_c
+{
    public:
     float x, y, z;
 
@@ -64,7 +67,8 @@ class quake_vertex_c {
     ~quake_vertex_c() {}
 };
 
-class quake_plane_c {
+class quake_plane_c
+{
    public:
     float x, y, z;  // any point on the plane
 
@@ -97,7 +101,8 @@ class quake_plane_c {
     double CalcZ(double ax, double ay) const;
 };
 
-class quake_bbox_c {
+class quake_bbox_c
+{
    public:
     float mins[3];
     float maxs[3];
@@ -120,7 +125,8 @@ class quake_bbox_c {
     bool Touches(float x, float y, float z, float r) const;
 };
 
-class quake_face_c {
+class quake_face_c
+{
    public:
     // plane the face sits on (can be opposite of node plane)
     quake_plane_c plane;
@@ -156,7 +162,9 @@ class quake_face_c {
           texture(),
           flags(0),
           lmap(NULL),
-          index(-1) {}
+          index(-1)
+    {
+    }
 
     ~quake_face_c() {}
 
@@ -169,19 +177,23 @@ class quake_face_c {
 
     void GetBounds(quake_bbox_c *bbox) const;
 
-    inline float Calc_S(float x, float y, float z) const {
+    inline float Calc_S(float x, float y, float z) const
+    {
         return uv_mat.Calc_S(x, y, z);
     }
 
-    inline float Calc_T(float x, float y, float z) const {
+    inline float Calc_T(float x, float y, float z) const
+    {
         return uv_mat.Calc_T(x, y, z);
     }
 
-    inline float Calc_S(const quake_vertex_c *V) const {
+    inline float Calc_S(const quake_vertex_c *V) const
+    {
         return uv_mat.Calc_S(V->x, V->y, V->z);
     }
 
-    inline float Calc_T(const quake_vertex_c *V) const {
+    inline float Calc_T(const quake_vertex_c *V) const
+    {
         return uv_mat.Calc_T(V->x, V->y, V->z);
     }
 
@@ -196,7 +208,8 @@ class quake_face_c {
                       float z2);
 };
 
-class quake_leaf_c {
+class quake_leaf_c
+{
    public:
     int medium;
 
@@ -214,12 +227,9 @@ class quake_leaf_c {
 
    public:
     quake_leaf_c(int _m)
-        : medium(_m),
-          faces(),
-          cluster(NULL),
-          index(-1),
-          brushes()
-          {}
+        : medium(_m), faces(), cluster(NULL), index(-1), brushes()
+    {
+    }
 
     ~quake_leaf_c() {}
 
@@ -232,7 +242,8 @@ class quake_leaf_c {
     void FilterBrush(csg_brush_c *B, leaf_map_t *touched);
 };
 
-class quake_node_c {
+class quake_node_c
+{
    public:
     quake_plane_c plane;
 
@@ -266,7 +277,8 @@ class quake_node_c {
     void FilterBrush(csg_brush_c *B, leaf_map_t *touched);
 };
 
-class quake_mapmodel_c {
+class quake_mapmodel_c
+{
    public:
     // bounding box
     float x1, y1, z1;
@@ -300,7 +312,7 @@ extern quake_leaf_c *qk_solid_leaf;
 // this not used for Quake3 handling
 extern quake_mapmodel_c *qk_world_model;
 
-extern std::vector<quake_face_c *> qk_all_faces;
+extern std::vector<quake_face_c *>     qk_all_faces;
 extern std::vector<quake_mapmodel_c *> qk_all_mapmodels;
 
 /***** FUNCTIONS ****************/

@@ -31,11 +31,11 @@
 bool PAK_OpenRead(const char *filename);
 void PAK_CloseRead(void);
 
-int PAK_NumEntries(void);
-int PAK_FindEntry(const char *name);
+int  PAK_NumEntries(void);
+int  PAK_FindEntry(const char *name);
 void PAK_FindMaps(std::vector<int> &entries);
 
-int PAK_EntryLen(int entry);
+int         PAK_EntryLen(int entry);
 const char *PAK_EntryName(int entry);
 
 bool PAK_ReadData(int entry, int offset, int length, void *buffer);
@@ -52,7 +52,8 @@ void PAK_FinishLump(void);
 /* ----- PAK structures ---------------------- */
 
 #pragma pack(push, 1)
-struct raw_pak_header_t {
+struct raw_pak_header_t
+{
     std::array<char, 4> magic;
 
     uint32_t dir_start;
@@ -63,7 +64,8 @@ struct raw_pak_header_t {
 constexpr const char *PAK_MAGIC = "PACK";
 
 #pragma pack(push, 1)
-struct raw_pak_entry_t {
+struct raw_pak_entry_t
+{
     std::array<char, 56> name;
 
     uint32_t offset;

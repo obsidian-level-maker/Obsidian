@@ -19,16 +19,15 @@
 //
 //------------------------------------------------------------------------
 
+#include "lib_grp.h"
+
 #include <algorithm>
 #include <list>
 
 #include "headers.h"
-#include "main.h"
-
-#include "physfs.h"
-
-#include "lib_grp.h"
 #include "lib_util.h"
+#include "main.h"
+#include "physfs.h"
 
 // #define LogPrintf  printf
 
@@ -39,16 +38,18 @@
 static PHYSFS_File *grp_R_fp;
 
 static raw_grp_header_t grp_R_header;
-static raw_grp_lump_t *grp_R_dir;
-static uint32_t *grp_R_starts;
+static raw_grp_lump_t  *grp_R_dir;
+static uint32_t        *grp_R_starts;
 
 static const uint8_t grp_magic_data[GRP_MAGIC_LEN] = {
     0xb4, 0x9a, 0x91, 0xac, 0x96, 0x93, 0x89, 0x9a, 0x8d, 0x92, 0x9e, 0x91};
 
-bool GRP_OpenRead(const char *filename) {
+bool GRP_OpenRead(const char *filename)
+{
     grp_R_fp = PHYSFS_openRead(filename);
 
-    if (!grp_R_fp) {
+    if (!grp_R_fp)
+    {
         LogPrintf("GRP_OpenRead: no such file: %s\n", filename);
         return false;
     }
@@ -63,7 +64,8 @@ bool GRP_OpenRead(const char *filename) {
         return false;
     }
 
-    if (grp_R_header.magic[0] != 'K') {
+    if (grp_R_header.magic[0] != 'K')
+    {
         LogPrintf("GRP_OpenRead: not a GRP file!\n");
         PHYSFS_close(grp_R_fp);
         return false;
@@ -81,20 +83,22 @@ bool GRP_OpenRead(const char *filename) {
         return false;
     }
 
-    grp_R_dir = new raw_grp_lump_t[grp_R_header.num_lumps + 1];
+    grp_R_dir    = new raw_grp_lump_t[grp_R_header.num_lumps + 1];
     grp_R_starts = new uint32_t[grp_R_header.num_lumps + 1];
 
     uint32_t L_start = sizeof(raw_grp_header_t) +
-                    sizeof(raw_grp_lump_t) * grp_R_header.num_lumps;
+                       sizeof(raw_grp_lump_t) * grp_R_header.num_lumps;
 
-    for (int i = 0; i < (int)grp_R_header.num_lumps; i++) {
+    for (int i = 0; i < (int)grp_R_header.num_lumps; i++)
+    {
         raw_grp_lump_t *L = &grp_R_dir[i];
 
         size_t res = (PHYSFS_readBytes(grp_R_fp, L, sizeof(raw_grp_lump_t)) /
                       sizeof(raw_grp_lump_t));
         if (res != 1)
         {
-            if (i == 0) {
+            if (i == 0)
+            {
                 LogPrintf("GRP_OpenRead: could not read any dir-entries!\n");
                 GRP_CloseRead();
                 return false;
@@ -116,7 +120,8 @@ bool GRP_OpenRead(const char *filename) {
     return true;  // OK
 }
 
-void GRP_CloseRead(void) {
+void GRP_CloseRead(void)
+{
     PHYSFS_close(grp_R_fp);
 
     LogPrintf("Closed GRP file\n");
@@ -124,34 +129,36 @@ void GRP_CloseRead(void) {
     delete[] grp_R_dir;
     delete[] grp_R_starts;
 
-    grp_R_dir = NULL;
+    grp_R_dir    = NULL;
     grp_R_starts = NULL;
 }
 
 int GRP_NumEntries(void) { return (int)grp_R_header.num_lumps; }
 
-int GRP_FindEntry(const char *name) {
-    for (unsigned int i = 0; i < grp_R_header.num_lumps; i++) {
+int GRP_FindEntry(const char *name)
+{
+    for (unsigned int i = 0; i < grp_R_header.num_lumps; i++)
+    {
         char buffer[GRP_NAME_LEN + 4];
 
         strncpy(buffer, grp_R_dir[i].name.data(), GRP_NAME_LEN);
         buffer[GRP_NAME_LEN] = 0;
 
-        if (StringCaseCmp(name, buffer) == 0) {
-            return i;
-        }
+        if (StringCaseCmp(name, buffer) == 0) { return i; }
     }
 
     return -1;  // not found
 }
 
-int GRP_EntryLen(int entry) {
+int GRP_EntryLen(int entry)
+{
     SYS_ASSERT(entry >= 0 && entry < (int)grp_R_header.num_lumps);
 
     return grp_R_dir[entry].length;
 }
 
-const char *GRP_EntryName(int entry) {
+const char *GRP_EntryName(int entry)
+{
     static char name_buf[GRP_NAME_LEN + 4];
 
     SYS_ASSERT(entry >= 0 && entry < (int)grp_R_header.num_lumps);
@@ -163,20 +170,20 @@ const char *GRP_EntryName(int entry) {
     return name_buf;
 }
 
-bool GRP_ReadData(int entry, int offset, int length, void *buffer) {
+bool GRP_ReadData(int entry, int offset, int length, void *buffer)
+{
     SYS_ASSERT(entry >= 0 && entry < (int)grp_R_header.num_lumps);
     SYS_ASSERT(offset >= 0);
     SYS_ASSERT(length > 0);
 
     int L_start = grp_R_starts[entry];
 
-    if ((uint32_t)offset + (uint32_t)length > grp_R_dir[entry].length) {  // EOF
+    if ((uint32_t)offset + (uint32_t)length > grp_R_dir[entry].length)
+    {  // EOF
         return false;
     }
 
-    if (!PHYSFS_seek(grp_R_fp, L_start + offset)) {
-        return false;
-    }
+    if (!PHYSFS_seek(grp_R_fp, L_start + offset)) { return false; }
 
     size_t res = (PHYSFS_readBytes(grp_R_fp, buffer, length) / length);
 
@@ -197,11 +204,14 @@ static raw_grp_lump_t grp_W_lump;
 // directory before all the data files.
 #define GRP_MAX_LUMPS 200
 
-bool GRP_OpenWrite(const std::filesystem::path &filename) {
+bool GRP_OpenWrite(const std::filesystem::path &filename)
+{
     grp_W_fp.open(filename, std::ios::out | std::ios::binary);
 
-    if (!grp_W_fp.is_open()) {
-        LogPrintf("GRP_OpenWrite: cannot create file: %s\n", filename.u8string().c_str());
+    if (!grp_W_fp.is_open())
+    {
+        LogPrintf("GRP_OpenWrite: cannot create file: %s\n",
+                  filename.u8string().c_str());
         return false;
     }
 
@@ -216,7 +226,8 @@ bool GRP_OpenWrite(const std::filesystem::path &filename) {
     grp_W_fp << std::flush;
 
     // write out a dummy directory
-    for (int i = 0; i < GRP_MAX_LUMPS; i++) {
+    for (int i = 0; i < GRP_MAX_LUMPS; i++)
+    {
         raw_grp_lump_t entry;
         memset(&entry, 0, sizeof(entry));
 
@@ -233,7 +244,8 @@ bool GRP_OpenWrite(const std::filesystem::path &filename) {
     return true;
 }
 
-void GRP_CloseWrite(void) {
+void GRP_CloseWrite(void)
+{
     // add dummy data for the dummy entries
     uint8_t zero_buf[GRP_MAX_LUMPS];
     memset(zero_buf, 0, sizeof(zero_buf));
@@ -248,7 +260,8 @@ void GRP_CloseWrite(void) {
 
     raw_grp_header_t header;
 
-    for (unsigned int i = 0; i < GRP_MAGIC_LEN; i++) {
+    for (unsigned int i = 0; i < GRP_MAGIC_LEN; i++)
+    {
         header.magic[i] = ~grp_magic_data[i];
     }
 
@@ -263,7 +276,8 @@ void GRP_CloseWrite(void) {
 
     std::list<raw_grp_lump_t>::iterator WDI;
 
-    for (WDI = grp_W_directory.begin(); WDI != grp_W_directory.end(); ++WDI) {
+    for (WDI = grp_W_directory.begin(); WDI != grp_W_directory.end(); ++WDI)
+    {
         raw_grp_lump_t *L = &(*WDI);
 
         grp_W_fp.write(reinterpret_cast<const char *>(L),
@@ -278,12 +292,15 @@ void GRP_CloseWrite(void) {
     grp_W_directory.clear();
 }
 
-void GRP_NewLump(std::string name) {
-    if (grp_W_directory.size() >= GRP_MAX_LUMPS) {
+void GRP_NewLump(std::string name)
+{
+    if (grp_W_directory.size() >= GRP_MAX_LUMPS)
+    {
         Main::FatalError("GRP_NewLump: too many lumps (> %d)\n", GRP_MAX_LUMPS);
     }
 
-    if (name.size() > GRP_NAME_LEN) {
+    if (name.size() > GRP_NAME_LEN)
+    {
         Main::FatalError("GRP_NewLump: name too long: '%s'\n", name.c_str());
     }
 
@@ -292,14 +309,14 @@ void GRP_NewLump(std::string name) {
     std::copy(name.data(), name.data() + name.size(), grp_W_lump.name.begin());
 }
 
-bool GRP_AppendData(const void *data, int length) {
-    if (length == 0) {
-        return true;
-    }
+bool GRP_AppendData(const void *data, int length)
+{
+    if (length == 0) { return true; }
 
     SYS_ASSERT(length > 0);
 
-    if (!grp_W_fp.write(static_cast<const char *>(data), length)) {
+    if (!grp_W_fp.write(static_cast<const char *>(data), length))
+    {
         return false;
     }
 
@@ -307,7 +324,8 @@ bool GRP_AppendData(const void *data, int length) {
     return true;  // OK
 }
 
-void GRP_FinishLump(void) {
+void GRP_FinishLump(void)
+{
     // fix endianness
     grp_W_lump.length = LE_U32(grp_W_lump.length);
 

@@ -30,12 +30,12 @@
 #include <vector>
 
 #include "aj_poly.h"
+#include "physfs.h"
 #include "sys_endian.h"
 #include "sys_macro.h"
 
-#include "physfs.h"
-
-namespace ajpoly {
+namespace ajpoly
+{
 
 #include "aj_map.h"
 #include "aj_structs.h"

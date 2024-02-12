@@ -20,6 +20,7 @@
 //------------------------------------------------------------------------
 
 #include <array>
+
 #include "csg_local.h"
 #include "csg_main.h"
 #include "csg_quake.h"
@@ -57,7 +58,8 @@ static std::array HL_hull_sizes{
     std::array<double, 3>{16, 18, 18},  // crouching
 };
 
-class clip_side_c {
+class clip_side_c
+{
    public:
     snag_c *snag;
 
@@ -68,7 +70,9 @@ class clip_side_c {
 
    public:
     clip_side_c(snag_c *S)
-        : snag(S), on_node(false), x1(S->x1), y1(S->y1), x2(S->x2), y2(S->y2) {}
+        : snag(S), on_node(false), x1(S->x1), y1(S->y1), x2(S->x2), y2(S->y2)
+    {
+    }
 
     clip_side_c(const clip_side_c *other)
         : snag(other->snag),
@@ -76,53 +80,54 @@ class clip_side_c {
           x1(other->x1),
           y1(other->y1),
           x2(other->x2),
-          y2(other->y2) {}
+          y2(other->y2)
+    {
+    }
 
     ~clip_side_c() {}
 
    public:
     double Length() const { return ComputeDist(x1, y1, x2, y2); }
 
-    bool TwoSided() const {
-        if (!snag->partner) {
-            return false;
-        }
+    bool TwoSided() const
+    {
+        if (!snag->partner) { return false; }
 
-        if (!snag->partner->region) {
-            return false;
-        }
+        if (!snag->partner->region) { return false; }
 
-        if (snag->partner->region->index == 0) {
-            return false;
-        }
+        if (snag->partner->region->index == 0) { return false; }
 
         return true;
     }
 };
 
-class clip_flat_c {
+class clip_flat_c
+{
    public:
     gap_c *gap;
 
     double z, dz;
 
    public:
-    clip_flat_c(gap_c *G, bool _ceil) : gap(G) {
-        z = _ceil ? gap->top->b.z : gap->bottom->t.z;
+    clip_flat_c(gap_c *G, bool _ceil) : gap(G)
+    {
+        z  = _ceil ? gap->top->b.z : gap->bottom->t.z;
         dz = _ceil ? -1 : 1;
     }
 
     ~clip_flat_c() {}
 };
 
-typedef enum {
+typedef enum
+{
     PKIND_INVALID = 0,
 
     PKIND_SIDE = 1,
     PKIND_FLAT = 2
 } clip_partition_kind_e;
 
-class clip_partition_c {
+class clip_partition_c
+{
    public:
     int kind;
 
@@ -141,14 +146,19 @@ class clip_partition_c {
           x2(S->x2),
           y2(S->y2),
           z(),
-          dz() {}
+          dz()
+    {
+    }
 
     clip_partition_c(const clip_flat_c *F)
-        : kind(PKIND_FLAT), x1(), y1(), x2(), y2(), z(F->z), dz(F->dz) {}
+        : kind(PKIND_FLAT), x1(), y1(), x2(), y2(), z(F->z), dz(F->dz)
+    {
+    }
 
     clip_partition_c(const gap_c *G, bool is_ceil)
-        : kind(PKIND_FLAT), x1(), y1(), x2(), y2() {
-        z = is_ceil ? G->top->b.z : G->bottom->t.z;
+        : kind(PKIND_FLAT), x1(), y1(), x2(), y2()
+    {
+        z  = is_ceil ? G->top->b.z : G->bottom->t.z;
         dz = is_ceil ? -1 : 1;
     }
 
@@ -159,11 +169,14 @@ class clip_partition_c {
           x2(other->x2),
           y2(other->y2),
           z(other->z),
-          dz(other->dz) {}
+          dz(other->dz)
+    {
+    }
 
     ~clip_partition_c() {}
 
-    void Set(const clip_side_c *S) {
+    void Set(const clip_side_c *S)
+    {
         kind = PKIND_SIDE;
 
         x1 = S->x1;
@@ -172,14 +185,16 @@ class clip_partition_c {
         y2 = S->y2;
     }
 
-    void Set(const clip_flat_c *F) {
+    void Set(const clip_flat_c *F)
+    {
         kind = PKIND_FLAT;
 
-        z = F->z;
+        z  = F->z;
         dz = F->dz;
     }
 
-    void Set(const clip_partition_c *other) {
+    void Set(const clip_partition_c *other)
+    {
         kind = other->kind;
 
         x1 = other->x1;
@@ -187,21 +202,23 @@ class clip_partition_c {
         x2 = other->x2;
         y2 = other->y2;
 
-        z = other->z;
+        z  = other->z;
         dz = other->dz;
     }
 
-    void Flip() {
-        if (kind == PKIND_FLAT) {
-            dz = -dz;
-        } else {
+    void Flip()
+    {
+        if (kind == PKIND_FLAT) { dz = -dz; }
+        else
+        {
             std::swap(x1, x2);
             std::swap(y1, y2);
         }
     }
 };
 
-class clip_group_c {
+class clip_group_c
+{
    public:
     std::vector<clip_side_c *> sides;
 
@@ -214,14 +231,15 @@ class clip_group_c {
 
     bool IsEmpty() const { return sides.empty(); }
 
-    void GetGroupBounds(double *lo_x, double *lo_y, double *hi_x,
-                        double *hi_y) {
+    void GetGroupBounds(double *lo_x, double *lo_y, double *hi_x, double *hi_y)
+    {
         *lo_x = +9e9;
         *lo_y = +9e9;
         *hi_x = -9e9;
         *hi_y = -9e9;
 
-        for (unsigned int k = 0; k < sides.size(); k++) {
+        for (unsigned int k = 0; k < sides.size(); k++)
+        {
             clip_side_c *S = sides[k];
 
             *lo_x = MIN(*lo_x, MIN(S->x1, S->x2));
@@ -233,7 +251,8 @@ class clip_group_c {
     }
 };
 
-class clip_node_c {
+class clip_node_c
+{
    public:
     /* LEAF STUFF */
 
@@ -265,7 +284,9 @@ class clip_node_c {
           part(),
           front(NULL),
           back(NULL),
-          index(-1) {}
+          index(-1)
+    {
+    }
 
     clip_node_c(const clip_partition_c &_part)
         : contents(CONTENT__NODE),
@@ -275,7 +296,9 @@ class clip_node_c {
           part(_part),
           front(NULL),
           back(NULL),
-          index(-1) {}
+          index(-1)
+    {
+    }
 
     clip_node_c(const gap_c *G, bool is_ceil)
         : contents(CONTENT__NODE),
@@ -285,15 +308,14 @@ class clip_node_c {
           part(G, is_ceil),
           front(NULL),
           back(NULL),
-          index(-1) {}
+          index(-1)
+    {
+    }
 
-    ~clip_node_c() {
-        if (front) {
-            delete front;
-        }
-        if (back) {
-            delete back;
-        }
+    ~clip_node_c()
+    {
+        if (front) { delete front; }
+        if (back) { delete back; }
     }
 
     inline bool IsNode() const { return contents == CONTENT__NODE; }
@@ -302,11 +324,11 @@ class clip_node_c {
 
     inline bool HasFlat() const { return !flats.empty(); }
 
-    bool HasSide() const {
-        for (unsigned int i = 0; i < sides.size(); i++) {
-            if (!sides[i]->on_node) {
-                return true;
-            }
+    bool HasSide() const
+    {
+        for (unsigned int i = 0; i < sides.size(); i++)
+        {
+            if (!sides[i]->on_node) { return true; }
         }
 
         return false;
@@ -318,13 +340,16 @@ class clip_node_c {
 
     void NewSide(snag_c *S) { AddSide(new clip_side_c(S)); }
 
-    void CopySides(clip_node_c *other) {
-        for (unsigned int i = 0; i < other->sides.size(); i++) {
+    void CopySides(clip_node_c *other)
+    {
+        for (unsigned int i = 0; i < other->sides.size(); i++)
+        {
             AddSide(other->sides[i]);
         }
     }
 
-    void MakeNode(const clip_partition_c *_part) {
+    void MakeNode(const clip_partition_c *_part)
+    {
         contents = CONTENT__NODE;
 
         part.Set(_part);
@@ -335,15 +360,17 @@ class clip_node_c {
 
     void CheckValid() const { SYS_ASSERT(index >= 0); }
 
-    void CalcBounds(double *lx, double *ly, double *w, double *h) const {
+    void CalcBounds(double *lx, double *ly, double *w, double *h) const
+    {
         SYS_ASSERT(contents != CONTENT__NODE);
 
         double hx = -99999;
-        *lx = +99999;
+        *lx       = +99999;
         double hy = -99999;
-        *ly = +99999;
+        *ly       = +99999;
 
-        for (unsigned int i = 0; i < sides.size(); i++) {
+        for (unsigned int i = 0; i < sides.size(); i++)
+        {
             clip_side_c *S = sides[i];
 
             double x1 = MIN(S->x1, S->x2);
@@ -351,18 +378,10 @@ class clip_node_c {
             double x2 = MAX(S->x1, S->x2);
             double y2 = MAX(S->y1, S->y2);
 
-            if (x1 < *lx) {
-                *lx = x1;
-            }
-            if (y1 < *ly) {
-                *ly = y1;
-            }
-            if (x2 > hx) {
-                hx = x2;
-            }
-            if (y2 > hy) {
-                hy = y2;
-            }
+            if (x1 < *lx) { *lx = x1; }
+            if (y1 < *ly) { *ly = y1; }
+            if (x2 > hx) { hx = x2; }
+            if (y2 > hy) { hy = y2; }
         }
 
         *w = (*lx > hx) ? 0 : (hx - *lx);
@@ -371,16 +390,20 @@ class clip_node_c {
 
     void AddFlat(clip_flat_c *F) { flats.push_back(F); }
 
-    void CopyFlats(clip_node_c *other) {
-        for (unsigned int i = 0; i < other->flats.size(); i++) {
+    void CopyFlats(clip_node_c *other)
+    {
+        for (unsigned int i = 0; i < other->flats.size(); i++)
+        {
             AddFlat(other->flats[i]);
         }
     }
 
-    void CreateFlats() {
+    void CreateFlats()
+    {
         SYS_ASSERT(region->gaps.size() > 0);
 
-        for (unsigned int i = 0; i < region->gaps.size(); i++) {
+        for (unsigned int i = 0; i < region->gaps.size(); i++)
+        {
             gap_c *G = region->gaps[i];
 
             AddFlat(new clip_flat_c(G, false));
@@ -395,15 +418,18 @@ static std::vector<clip_side_c *> all_clip_sides;
 
 //------------------------------------------------------------------------
 
-static void SaveBrushes() {
+static void SaveBrushes()
+{
     saved_all_brushes.clear();
 
     std::swap(all_brushes, saved_all_brushes);
 }
 
-static void RestoreBrushes() {
+static void RestoreBrushes()
+{
     // free our modified ones
-    for (unsigned int i = 0; i < all_brushes.size(); i++) {
+    for (unsigned int i = 0; i < all_brushes.size(); i++)
+    {
         delete all_brushes[i];
     }
 
@@ -413,7 +439,8 @@ static void RestoreBrushes() {
 }
 
 static void CalcNormal(double x1, double y1, double x2, double y2, double *nx,
-                       double *ny) {
+                       double *ny)
+{
     *nx = (y2 - y1);
     *ny = (x1 - x2);
 
@@ -425,7 +452,8 @@ static void CalcNormal(double x1, double y1, double x2, double y2, double *nx,
 }
 
 static double CalcIntersect_Y(double nx1, double ny1, double nx2, double ny2,
-                              double x) {
+                              double x)
+{
     double a = nx1 - x;
     double b = nx2 - x;
 
@@ -439,7 +467,8 @@ static double CalcIntersect_Y(double nx1, double ny1, double nx2, double ny2,
 }
 
 static double CalcIntersect_X(double nx1, double ny1, double nx2, double ny2,
-                              double y) {
+                              double y)
+{
     double a = ny1 - y;
     double b = ny2 - y;
 
@@ -453,7 +482,8 @@ static double CalcIntersect_X(double nx1, double ny1, double nx2, double ny2,
 }
 
 static void FattenVertex3(const csg_brush_c *P, unsigned int k, csg_brush_c *P2,
-                          double pad) {
+                          double pad)
+{
     unsigned int total = P->verts.size();
 
     brush_vert_c *kv = P->verts[k];
@@ -465,7 +495,8 @@ static void FattenVertex3(const csg_brush_c *P, unsigned int k, csg_brush_c *P2,
     // can skip this vertex altogether.
 
     if (fabs(PerpDist(kv->x, kv->y, pv->x, pv->y, nv->x, nv->y)) <
-        4.0 * CLIP_EPSILON) {
+        4.0 * CLIP_EPSILON)
+    {
         return;
     }
 
@@ -481,38 +512,26 @@ static void FattenVertex3(const csg_brush_c *P, unsigned int k, csg_brush_c *P2,
     int px_side = 0, py_side = 0;
     int nx_side = 0, ny_side = 0;
 
-    if (fabs(pdx) * factor > fabs(pdy)) {
-        if (pv->x < kv->x) {
-            px_side = -1;
-        }
-        if (pv->x > kv->x) {
-            px_side = +1;
-        }
+    if (fabs(pdx) * factor > fabs(pdy))
+    {
+        if (pv->x < kv->x) { px_side = -1; }
+        if (pv->x > kv->x) { px_side = +1; }
     }
-    if (fabs(pdy) * factor > fabs(pdx)) {
-        if (pv->y < kv->y) {
-            py_side = -1;
-        }
-        if (pv->y > kv->y) {
-            py_side = +1;
-        }
+    if (fabs(pdy) * factor > fabs(pdx))
+    {
+        if (pv->y < kv->y) { py_side = -1; }
+        if (pv->y > kv->y) { py_side = +1; }
     }
 
-    if (fabs(ndx) * factor > fabs(ndy)) {
-        if (nv->x < kv->x) {
-            nx_side = -1;
-        }
-        if (nv->x > kv->x) {
-            nx_side = +1;
-        }
+    if (fabs(ndx) * factor > fabs(ndy))
+    {
+        if (nv->x < kv->x) { nx_side = -1; }
+        if (nv->x > kv->x) { nx_side = +1; }
     }
-    if (fabs(ndy) * factor > fabs(ndx)) {
-        if (nv->y < kv->y) {
-            ny_side = -1;
-        }
-        if (nv->y > kv->y) {
-            ny_side = +1;
-        }
+    if (fabs(ndy) * factor > fabs(ndx))
+    {
+        if (nv->y < kv->y) { ny_side = -1; }
+        if (nv->y > kv->y) { ny_side = +1; }
     }
 
     // NOTE: these normals face OUTWARDS (anti-normals?)
@@ -528,29 +547,31 @@ static void FattenVertex3(const csg_brush_c *P, unsigned int k, csg_brush_c *P2,
 
     double ix, iy;
 
-    if (x_side) {
-        ix = kv->x - x_side * pad;
-    }
-    if (y_side) {
-        iy = kv->y - y_side * pad;
-    }
+    if (x_side) { ix = kv->x - x_side * pad; }
+    if (y_side) { iy = kv->y - y_side * pad; }
 
-    if (x_side && y_side) {
+    if (x_side && y_side)
+    {
         // When both vertices are in the same quadrant,
         // then it's pretty easy: we get three new vertices
         // which form a small box.  Only interesting part is
         // what order to add them.
 
-        if (x_side == y_side) {
+        if (x_side == y_side)
+        {
             P2->verts.push_back(new brush_vert_c(P2, ix, kv->y));
             P2->verts.push_back(new brush_vert_c(P2, ix, iy));
             P2->verts.push_back(new brush_vert_c(P2, kv->x, iy));
-        } else {
+        }
+        else
+        {
             P2->verts.push_back(new brush_vert_c(P2, kv->x, iy));
             P2->verts.push_back(new brush_vert_c(P2, ix, iy));
             P2->verts.push_back(new brush_vert_c(P2, ix, kv->y));
         }
-    } else if (x_side) {
+    }
+    else if (x_side)
+    {
         // Lines form a < or > shape, and we need to clip the
         // fattened vertex along a vertical line.
         double py = CalcIntersect_Y(pv->x + pad * p_nx, pv->y + pad * p_ny,
@@ -561,7 +582,9 @@ static void FattenVertex3(const csg_brush_c *P, unsigned int k, csg_brush_c *P2,
 
         P2->verts.push_back(new brush_vert_c(P2, ix, py));
         P2->verts.push_back(new brush_vert_c(P2, ix, ny));
-    } else if (y_side) {
+    }
+    else if (y_side)
+    {
         // Lines form an ^ or v shape, and we need to clip the
         // fattened vertex along a horizontal line.
         double px = CalcIntersect_X(pv->x + pad * p_nx, pv->y + pad * p_ny,
@@ -572,7 +595,9 @@ static void FattenVertex3(const csg_brush_c *P, unsigned int k, csg_brush_c *P2,
 
         P2->verts.push_back(new brush_vert_c(P2, px, iy));
         P2->verts.push_back(new brush_vert_c(P2, nx, iy));
-    } else {
+    }
+    else
+    {
         // Lines must go between diagonally opposite quadrants
         // or one or both of them are purely horizontal or
         // vertical.  A simple intersection is all we need.
@@ -585,7 +610,8 @@ static void FattenVertex3(const csg_brush_c *P, unsigned int k, csg_brush_c *P2,
     }
 }
 
-static void AddFatBrush(csg_brush_c *P2) {
+static void AddFatBrush(csg_brush_c *P2)
+{
     P2->ComputeBBox();
     P2->Validate();
 
@@ -616,17 +642,15 @@ static void AdjustSlope(slope_info_c *slope, double pad_w, bool is_ceil)
 }
 #endif
 
-static void FattenBrushes(double pad_w, double pad_t, double pad_b) {
-    for (unsigned int i = 0; i < saved_all_brushes.size(); i++) {
+static void FattenBrushes(double pad_w, double pad_t, double pad_b)
+{
+    for (unsigned int i = 0; i < saved_all_brushes.size(); i++)
+    {
         csg_brush_c *P = saved_all_brushes[i];
 
-        if (P->bkind != BKIND_Solid) {
-            continue;
-        }
+        if (P->bkind != BKIND_Solid) { continue; }
 
-        if (P->bflags & BFLAG_NoClip) {
-            continue;
-        }
+        if (P->bflags & BFLAG_NoClip) { continue; }
 
         // clone it, except vertices or slopes
         csg_brush_c *P2 = new csg_brush_c(P);
@@ -636,7 +660,8 @@ static void FattenBrushes(double pad_w, double pad_t, double pad_b) {
         P2->b.z -= pad_b;
         P2->t.z += pad_t;
 
-        for (unsigned int k = 0; k < P->verts.size(); k++) {
+        for (unsigned int k = 0; k < P->verts.size(); k++)
+        {
             FattenVertex3(P, k, P2, pad_w);
         }
 
@@ -665,34 +690,28 @@ static void FattenBrushes(double pad_w, double pad_t, double pad_b) {
 
 //------------------------------------------------------------------------
 
-static bool ClipSameGaps(region_c *R, region_c *N) {
-    if (R->gaps.size() != N->gaps.size()) {
-        return false;
-    }
+static bool ClipSameGaps(region_c *R, region_c *N)
+{
+    if (R->gaps.size() != N->gaps.size()) { return false; }
 
-    for (unsigned int i = 0; i < R->gaps.size(); i++) {
+    for (unsigned int i = 0; i < R->gaps.size(); i++)
+    {
         gap_c *A = R->gaps[i];
         gap_c *B = N->gaps[i];
 
-        if (A->bottom != B->bottom) {
+        if (A->bottom != B->bottom)
+        {
             // slopes are deal breakers
-            if (A->bottom->t.slope) {
-                return false;
-            }
+            if (A->bottom->t.slope) { return false; }
 
-            if (fabs(A->bottom->t.z - B->bottom->t.z) > 0.01) {
-                return false;
-            }
+            if (fabs(A->bottom->t.z - B->bottom->t.z) > 0.01) { return false; }
         }
 
-        if (A->top != B->top) {
-            if (A->top->b.slope) {
-                return false;
-            }
+        if (A->top != B->top)
+        {
+            if (A->top->b.slope) { return false; }
 
-            if (fabs(A->top->b.z - B->top->b.z) > 0.01) {
-                return false;
-            }
+            if (fabs(A->top->b.z - B->top->b.z) > 0.01) { return false; }
         }
     }
 
@@ -700,27 +719,27 @@ static bool ClipSameGaps(region_c *R, region_c *N) {
     return true;
 }
 
-static int SpreadClipEquiv() {
+static int SpreadClipEquiv()
+{
     int changes = 0;
 
-    for (unsigned int i = 0; i < all_regions.size(); i++) {
+    for (unsigned int i = 0; i < all_regions.size(); i++)
+    {
         region_c *R = all_regions[i];
 
-        if (R->index == 0) {
-            continue;
-        }
+        if (R->index == 0) { continue; }
 
-        for (unsigned int k = 0; k < R->snags.size(); k++) {
+        for (unsigned int k = 0; k < R->snags.size(); k++)
+        {
             snag_c *S = R->snags[k];
 
             region_c *N = S->partner ? S->partner->region : NULL;
 
-            if (!N || N->index == 0) {
-                continue;
-            }
+            if (!N || N->index == 0) { continue; }
 
             // use '>' so that we only check the relationship once
-            if (N->index > R->index && ClipSameGaps(R, N)) {
+            if (N->index > R->index && ClipSameGaps(R, N))
+            {
                 N->index = R->index;
                 changes++;
             }
@@ -733,22 +752,24 @@ static int SpreadClipEquiv() {
     return changes;
 }
 
-static void CoalesceClipRegions() {
-    for (unsigned int i = 0; i < all_regions.size(); i++) {
+static void CoalesceClipRegions()
+{
+    for (unsigned int i = 0; i < all_regions.size(); i++)
+    {
         region_c *R = all_regions[i];
 
-        if (R->gaps.empty()) {
+        if (R->gaps.empty())
+        {
             R->index = 0;  // all solid regions become ZERO
-        } else {
-            R->index = 1 + (int)i;
         }
+        else { R->index = 1 + (int)i; }
     }
 
-    while (SpreadClipEquiv() > 0) {
-    }
+    while (SpreadClipEquiv() > 0) {}
 }
 
-static clip_side_c *SplitSideAt(clip_side_c *S, double new_x, double new_y) {
+static clip_side_c *SplitSideAt(clip_side_c *S, double new_x, double new_y)
+{
     clip_side_c *T = new clip_side_c(S);
 
     S->x2 = T->x1 = new_x;
@@ -758,12 +779,14 @@ static clip_side_c *SplitSideAt(clip_side_c *S, double new_x, double new_y) {
 }
 
 static void Split_XY(clip_group_c &group, const clip_partition_c *part,
-                     clip_group_c &front, clip_group_c &back) {
+                     clip_group_c &front, clip_group_c &back)
+{
     std::vector<clip_side_c *> local_sides;
 
     local_sides.swap(group.sides);
 
-    for (unsigned int k = 0; k < local_sides.size(); k++) {
+    for (unsigned int k = 0; k < local_sides.size(); k++)
+    {
         clip_side_c *S = local_sides[k];
 
         // get relationship of this side to the partition line
@@ -776,25 +799,28 @@ static void Split_XY(clip_group_c &group, const clip_partition_c *part,
         int a_side = (a < -CLIP_EPSILON) ? -1 : (a > CLIP_EPSILON) ? +1 : 0;
         int b_side = (b < -CLIP_EPSILON) ? -1 : (b > CLIP_EPSILON) ? +1 : 0;
 
-        if (a_side == 0 && b_side == 0) {
+        if (a_side == 0 && b_side == 0)
+        {
             // side sits on the partition
             S->on_node = true;
 
             if (VectorSameDir(part->x2 - part->x1, part->y2 - part->y1,
-                              S->x2 - S->x1, S->y2 - S->y1)) {
+                              S->x2 - S->x1, S->y2 - S->y1))
+            {
                 front.AddSide(S);
-            } else {
-                back.AddSide(S);
             }
+            else { back.AddSide(S); }
             continue;
         }
 
-        if (a_side >= 0 && b_side >= 0) {
+        if (a_side >= 0 && b_side >= 0)
+        {
             front.AddSide(S);
             continue;
         }
 
-        if (a_side <= 0 && b_side <= 0) {
+        if (a_side <= 0 && b_side <= 0)
+        {
             back.AddSide(S);
             continue;
         }
@@ -814,14 +840,15 @@ static void Split_XY(clip_group_c &group, const clip_partition_c *part,
     }
 }
 
-static clip_side_c *FindPartition_XY(clip_group_c &group) {
+static clip_side_c *FindPartition_XY(clip_group_c &group)
+{
     clip_side_c *poss1 = NULL;
     clip_side_c *poss2 = NULL;
 
     clip_side_c *best_V = NULL;
-    float dist_V = +9e9;
+    float        dist_V = +9e9;
     clip_side_c *best_H = NULL;
-    float dist_H = +9e9;
+    float        dist_H = +9e9;
 
     double lo_x, lo_y;
     double hi_x, hi_y;
@@ -831,19 +858,17 @@ static clip_side_c *FindPartition_XY(clip_group_c &group) {
     double mid_x = (lo_x + hi_x) / 2.0;
     double mid_y = (lo_y + hi_y) / 2.0;
 
-    for (unsigned int i = 0; i < group.sides.size(); i++) {
+    for (unsigned int i = 0; i < group.sides.size(); i++)
+    {
         clip_side_c *S = group.sides[i];
 
-        if (S->on_node) {
-            continue;
-        }
+        if (S->on_node) { continue; }
 
         // MUST choose 2-sided snag BEFORE any 1-sided snag
 
-        if (!S->TwoSided()) {
-            if (!poss1 || (S->x1 == S->x2) || (S->y1 == S->y2)) {
-                poss1 = S;
-            }
+        if (!S->TwoSided())
+        {
+            if (!poss1 || (S->x1 == S->x2) || (S->y1 == S->y2)) { poss1 = S; }
 
             continue;
         }
@@ -852,17 +877,22 @@ static clip_side_c *FindPartition_XY(clip_group_c &group) {
 
         // find the best purely horizontal or vertical partition
 
-        if (S->x1 == S->x2) {
+        if (S->x1 == S->x2)
+        {
             float d = fabs(S->x1 - mid_x);
 
-            if (!best_V || d < dist_V) {
+            if (!best_V || d < dist_V)
+            {
                 best_V = S;
                 dist_V = d;
             }
-        } else if (S->y1 == S->y2) {
+        }
+        else if (S->y1 == S->y2)
+        {
             float d = fabs(S->y1 - mid_y);
 
-            if (!best_H || d < dist_H) {
+            if (!best_H || d < dist_H)
+            {
                 best_H = S;
                 dist_H = d;
             }
@@ -871,28 +901,22 @@ static clip_side_c *FindPartition_XY(clip_group_c &group) {
 
     // finished checking the sides : select best
 
-    if (best_H && best_V) {
+    if (best_H && best_V)
+    {
         return ((hi_x - lo_x) > (hi_y - lo_y)) ? best_V : best_H;
     }
 
-    if (best_V) {
-        return best_V;
-    }
-    if (best_H) {
-        return best_H;
-    }
+    if (best_V) { return best_V; }
+    if (best_H) { return best_H; }
 
-    if (poss2) {
-        return poss2;
-    }
-    if (poss1) {
-        return poss1;
-    }
+    if (poss2) { return poss2; }
+    if (poss1) { return poss1; }
 
     return NULL;
 }
 
-static clip_node_c *Partition_Gap(gap_c *G, clip_node_c *prev_N) {
+static clip_node_c *Partition_Gap(gap_c *G, clip_node_c *prev_N)
+{
     clip_node_c *empty = new clip_node_c(CONTENTS_EMPTY);
     clip_node_c *solid = new clip_node_c(CONTENTS_SOLID);
 
@@ -900,20 +924,22 @@ static clip_node_c *Partition_Gap(gap_c *G, clip_node_c *prev_N) {
     clip_node_c *C_node = new clip_node_c(G, true);
 
     C_node->front = empty;
-    C_node->back = prev_N;
+    C_node->back  = prev_N;
 
     F_node->front = C_node;
-    F_node->back = solid;
+    F_node->back  = solid;
 
     return F_node;
 }
 
-static clip_node_c *Partition_Z(region_c *R) {
+static clip_node_c *Partition_Z(region_c *R)
+{
     SYS_ASSERT(R->gaps.size() > 0);
 
     clip_node_c *cur_node = new clip_node_c(CONTENTS_SOLID);
 
-    for (int i = (int)R->gaps.size() - 1; i >= 0; i--) {
+    for (int i = (int)R->gaps.size() - 1; i >= 0; i--)
+    {
         gap_c *G = R->gaps[i];
 
         cur_node = Partition_Gap(G, cur_node);
@@ -922,12 +948,14 @@ static clip_node_c *Partition_Z(region_c *R) {
     return cur_node;
 }
 
-static clip_node_c *PartitionGroup(clip_group_c &group) {
+static clip_node_c *PartitionGroup(clip_group_c &group)
+{
     SYS_ASSERT(!group.sides.empty());
 
     clip_side_c *divider = FindPartition_XY(group);
 
-    if (divider) {
+    if (divider)
+    {
         clip_partition_c part(divider);
 
         // divide the group
@@ -941,16 +969,18 @@ static clip_node_c *PartitionGroup(clip_group_c &group) {
         // the front should never be empty
         node->front = PartitionGroup(front);
 
-        if (back.sides.empty()) {
+        if (back.sides.empty())
+        {
             node->back = new clip_node_c(CONTENTS_SOLID);
-        } else {
-            node->back = PartitionGroup(back);
         }
+        else { node->back = PartitionGroup(back); }
 
         // input group has been consumed now
 
         return node;
-    } else {
+    }
+    else
+    {
         region_c *region = group.sides[0]->snag->region;
 
         SYS_ASSERT(region);
@@ -961,10 +991,9 @@ static clip_node_c *PartitionGroup(clip_group_c &group) {
 
 //------------------------------------------------------------------------
 
-static void AssignIndexes(clip_node_c *node, int *cur_index) {
-    if (!node->IsNode()) {
-        return;
-    }
+static void AssignIndexes(clip_node_c *node, int *cur_index)
+{
+    if (!node->IsNode()) { return; }
 
     node->index = *cur_index;
 
@@ -974,17 +1003,19 @@ static void AssignIndexes(clip_node_c *node, int *cur_index) {
     AssignIndexes(node->back, cur_index);
 }
 
-static void DoWriteClip(dclipnode_t &raw_clip, bool flip) {
-    if (flip) {
+static void DoWriteClip(dclipnode_t &raw_clip, bool flip)
+{
+    if (flip)
+    {
         short unsigned int clip0 = raw_clip.children[0];
         short unsigned int clip1 = raw_clip.children[1];
-        raw_clip.children[0] = clip1;
-        raw_clip.children[1] = clip0;
+        raw_clip.children[0]     = clip1;
+        raw_clip.children[1]     = clip0;
         //        std::swap(raw_clip.children[0], raw_clip.children[1]);
     }
 
     // fix endianness
-    raw_clip.planenum = LE_S32(raw_clip.planenum);
+    raw_clip.planenum    = LE_S32(raw_clip.planenum);
     raw_clip.children[0] = LE_U16(raw_clip.children[0]);
     raw_clip.children[1] = LE_U16(raw_clip.children[1]);
 
@@ -993,21 +1024,23 @@ static void DoWriteClip(dclipnode_t &raw_clip, bool flip) {
     q1_total_clip += 1;
 }
 
-static void WriteClipNodes(clip_node_c *node) {
-    if (!node->IsNode()) {
-        return;
-    }
+static void WriteClipNodes(clip_node_c *node)
+{
+    if (!node->IsNode()) { return; }
 
     dclipnode_t raw_clip;
 
     bool flipped;
 
-    if (node->part.kind == PKIND_FLAT) {
+    if (node->part.kind == PKIND_FLAT)
+    {
         // !!!! FIXME: support slopes
 
         raw_clip.planenum =
             BSP_AddPlane(0, 0, node->part.z, 0, 0, node->part.dz, &flipped);
-    } else {
+    }
+    else
+    {
         raw_clip.planenum = BSP_AddPlane(
             node->part.x1, node->part.y1, 0, node->part.y2 - node->part.y1,
             node->part.x1 - node->part.x2, 0, &flipped);
@@ -1015,17 +1048,17 @@ static void WriteClipNodes(clip_node_c *node) {
 
     node->CheckValid();
 
-    if (node->front->IsNode()) {
+    if (node->front->IsNode())
+    {
         raw_clip.children[0] = (uint16_t)node->front->index;
-    } else {
-        raw_clip.children[0] = (uint16_t)node->front->contents;
     }
+    else { raw_clip.children[0] = (uint16_t)node->front->contents; }
 
-    if (node->back->IsNode()) {
+    if (node->back->IsNode())
+    {
         raw_clip.children[1] = (uint16_t)node->back->index;
-    } else {
-        raw_clip.children[1] = (uint16_t)node->back->contents;
     }
+    else { raw_clip.children[1] = (uint16_t)node->back->contents; }
 
     DoWriteClip(raw_clip, flipped);
 
@@ -1035,22 +1068,21 @@ static void WriteClipNodes(clip_node_c *node) {
     WriteClipNodes(node->back);
 }
 
-static void CreateClipSides(clip_group_c &group) {
-    for (unsigned int i = 0; i < all_regions.size(); i++) {
+static void CreateClipSides(clip_group_c &group)
+{
+    for (unsigned int i = 0; i < all_regions.size(); i++)
+    {
         region_c *R = all_regions[i];
 
-        if (R->index == 0) {
-            continue;
-        }
+        if (R->index == 0) { continue; }
 
-        for (unsigned int k = 0; k < R->snags.size(); k++) {
+        for (unsigned int k = 0; k < R->snags.size(); k++)
+        {
             snag_c *S = R->snags[k];
 
             region_c *N = S->partner ? S->partner->region : NULL;
 
-            if (N && N->index == R->index) {
-                continue;
-            }
+            if (N && N->index == R->index) { continue; }
 
             clip_side_c *CS = new clip_side_c(S);
 
@@ -1078,7 +1110,8 @@ void CLIP_END()
 }
 #endif
 
-static void Q1_ClipWorld(int hull, const double *pads) {
+static void Q1_ClipWorld(int hull, const double *pads)
+{
     qk_world_model->nodes[hull] = q1_total_clip;
 
     SaveBrushes();
@@ -1108,31 +1141,35 @@ static void Q1_ClipWorld(int hull, const double *pads) {
 }
 
 static void Q1_ClipMapModel(quake_mapmodel_c *model, int hull, double pad_w,
-                            double pad_t, double pad_b) {
+                            double pad_t, double pad_b)
+{
     model->nodes[hull] = q1_total_clip;
 
     int base = q1_total_clip;
 
-    for (int face = 0; face < 6; face++) {
+    for (int face = 0; face < 6; face++)
+    {
         dclipnode_t raw_clip;
 
         double v;
         double dir;
-        bool flipped;
+        bool   flipped;
 
         if (face < 2)  // PLANE_X
         {
-            v = (face == 0) ? (model->x1 - pad_w) : (model->x2 + pad_w);
+            v   = (face == 0) ? (model->x1 - pad_w) : (model->x2 + pad_w);
             dir = (face == 0) ? -1 : 1;
             raw_clip.planenum = BSP_AddPlane(v, 0, 0, dir, 0, 0, &flipped);
-        } else if (face < 4)  // PLANE_Y
+        }
+        else if (face < 4)  // PLANE_Y
         {
-            v = (face == 2) ? (model->y1 - pad_w) : (model->y2 + pad_w);
+            v   = (face == 2) ? (model->y1 - pad_w) : (model->y2 + pad_w);
             dir = (face == 2) ? -1 : 1;
             raw_clip.planenum = BSP_AddPlane(0, v, 0, 0, dir, 0, &flipped);
-        } else  // PLANE_Z
+        }
+        else  // PLANE_Z
         {
-            v = (face == 5) ? (model->z1 - pad_b) : (model->z2 + pad_t);
+            v   = (face == 5) ? (model->z1 - pad_b) : (model->z2 + pad_t);
             dir = (face == 5) ? -1 : 1;
             raw_clip.planenum = BSP_AddPlane(0, 0, v, 0, 0, dir, &flipped);
         }
@@ -1144,43 +1181,42 @@ static void Q1_ClipMapModel(quake_mapmodel_c *model, int hull, double pad_w,
     }
 }
 
-void Q1_ClippingHull(int hull) {
+void Q1_ClippingHull(int hull)
+{
     int clip_hulls = 2;
 
-    if (qk_sub_format == SUBFMT_HalfLife) {
-        clip_hulls = 3;
-    }
-    if (qk_sub_format == SUBFMT_Hexen2) {
-        clip_hulls = 5;
-    }
+    if (qk_sub_format == SUBFMT_HalfLife) { clip_hulls = 3; }
+    if (qk_sub_format == SUBFMT_Hexen2) { clip_hulls = 5; }
 
     SYS_ASSERT(hull >= 1);
 
-    if (hull > clip_hulls) {
-        return;
-    }
+    if (hull > clip_hulls) { return; }
 
     LogPrintf("\nClipping Hull %d...\n", hull);
 
     const double *pads;
 
-    if (qk_sub_format == SUBFMT_Hexen2) {
+    if (qk_sub_format == SUBFMT_Hexen2)
+    {
         pads = H2_hull_sizes[hull - 1].data();
-    } else if (qk_sub_format == SUBFMT_HalfLife) {
-        pads = HL_hull_sizes[hull - 1].data();
-    } else {
-        pads = Q1_hull_sizes[hull - 1].data();
     }
+    else if (qk_sub_format == SUBFMT_HalfLife)
+    {
+        pads = HL_hull_sizes[hull - 1].data();
+    }
+    else { pads = Q1_hull_sizes[hull - 1].data(); }
 
     // first clip the world, then the map-models
 
     Q1_ClipWorld(hull, pads);
 
-    for (auto *qk_all_mapmodel : qk_all_mapmodels) {
+    for (auto *qk_all_mapmodel : qk_all_mapmodels)
+    {
         Q1_ClipMapModel(qk_all_mapmodel, hull, pads[0], pads[1], pads[2]);
     }
 
-    if (q1_total_clip >= MAX_MAP_CLIPNODES) {
+    if (q1_total_clip >= MAX_MAP_CLIPNODES)
+    {
         Main::FatalError(
             "Quake build failure: exceeded limit of %d CLIPNODES\n",
             MAX_MAP_CLIPNODES);

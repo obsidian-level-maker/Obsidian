@@ -20,7 +20,6 @@
 
 #include "hdr_lua.h"
 #include "headers.h"
-
 #include "lib_util.h"
 #include "m_lua.h"
 #include "main.h"
@@ -32,7 +31,7 @@
 #define RLEW_TAG 0xABCD
 
 #define NO_TILE 48
-#define NO_OBJ 0
+#define NO_OBJ  0
 
 /* private data */
 
@@ -51,41 +50,42 @@ static std::string level_name;
 
 #define PL_START 2
 
-std::filesystem::path wolf_output_dir;
+std::filesystem::path        wolf_output_dir;
 extern std::filesystem::path BestDirectory();
 
 //------------------------------------------------------------------------
 //  WOLF OUTPUT
 //------------------------------------------------------------------------
 
-static void WF_PutU16(uint16_t val, FILE *fp) {
+static void WF_PutU16(uint16_t val, FILE *fp)
+{
     fputc(val & 0xFF, fp);
     fputc((val >> 8) & 0xFF, fp);
 }
 
-static void WF_PutU32(uint32_t val, FILE *fp) {
+static void WF_PutU32(uint32_t val, FILE *fp)
+{
     fputc(val & 0xFF, fp);
     fputc((val >> 8) & 0xFF, fp);
     fputc((val >> 16) & 0xFF, fp);
     fputc((val >> 24) & 0xFF, fp);
 }
 
-static void WF_PutNString(const char *str, int max_len, FILE *fp) {
-    for (; *str && max_len > 0; max_len--) {
-        fputc(*str++, fp);
-    }
+static void WF_PutNString(const char *str, int max_len, FILE *fp)
+{
+    for (; *str && max_len > 0; max_len--) { fputc(*str++, fp); }
 
-    for (; max_len > 0; max_len--) {
-        fputc(0, fp);
-    }
+    for (; max_len > 0; max_len--) { fputc(0, fp); }
 }
 
-int rle_compress_plane(uint16_t *plane, int src_len) {
-    uint16_t *dest = plane + PL_START;
-    const uint16_t *src = plane + PL_START;
+int rle_compress_plane(uint16_t *plane, int src_len)
+{
+    uint16_t       *dest = plane + PL_START;
+    const uint16_t *src  = plane + PL_START;
     const uint16_t *endp = plane + PL_START + (src_len / 2);
 
-    while (src < endp) {
+    while (src < endp)
+    {
         // don't want no Carmackization...
         SYS_ASSERT((*src & 0xFF00) != 0xA700);
         SYS_ASSERT((*src & 0xFF00) != 0xA800);
@@ -96,11 +96,13 @@ int rle_compress_plane(uint16_t *plane, int src_len) {
         // determine longest run
         int run = 1;
 
-        while (src + run < endp && run < 100 && src[run - 1] == src[run]) {
+        while (src + run < endp && run < 100 && src[run - 1] == src[run])
+        {
             run++;
         }
 
-        if (run > 3) {
+        if (run > 3)
+        {
             // Note: use src[2] since src may == dest, hence src[0] and src[1]
             //       would get overwritten by the tag and count.
 
@@ -109,10 +111,10 @@ int rle_compress_plane(uint16_t *plane, int src_len) {
             *dest++ = src[2];    // value
 
             src += run;
-        } else {
-            for (; run > 0; run--) {
-                *dest++ = *src++;
-            }
+        }
+        else
+        {
+            for (; run > 0; run--) { *dest++ = *src++; }
         }
     }
 
@@ -126,20 +128,24 @@ int rle_compress_plane(uint16_t *plane, int src_len) {
 
 //------------------------------------------------------------------------
 
-static void WF_WritePlane(uint16_t *plane, int *offset, int *length) {
+static void WF_WritePlane(uint16_t *plane, int *offset, int *length)
+{
     *offset = (int)ftell(map_fp);
 
     *length = rle_compress_plane(plane, 64 * 64 * 2);
 
-    if (1 != fwrite(plane, *length, 1, map_fp)) {
-        if (write_errors_seen < 10) {
+    if (1 != fwrite(plane, *length, 1, map_fp))
+    {
+        if (write_errors_seen < 10)
+        {
             write_errors_seen += 1;
             LogPrintf("Failure writing to map file! (%d bytes)\n", *length);
         }
     }
 }
 
-static void WF_WriteBlankPlane(int *offset, int *length) {
+static void WF_WriteBlankPlane(int *offset, int *length)
+{
     *offset = (int)ftell(map_fp);
 
     WF_PutU16(3 * 2 + 2, map_fp);    // compressed size + 2
@@ -153,8 +159,10 @@ static void WF_WriteBlankPlane(int *offset, int *length) {
     *length -= *offset;
 }
 
-static void WF_WriteMap(void) {
-    const auto message = StringFormat("%s %s", OBSIDIAN_TITLE.c_str(), OBSIDIAN_VERSION);
+static void WF_WriteMap(void)
+{
+    const auto message =
+        StringFormat("%s %s", OBSIDIAN_TITLE.c_str(), OBSIDIAN_VERSION);
 
     WF_PutNString(message.c_str(), 64, map_fp);
 
@@ -186,7 +194,8 @@ static void WF_WriteMap(void) {
     WF_PutNString("!ID!", 4, map_fp);
 }
 
-static void WF_WriteHead(void) {
+static void WF_WriteHead(void)
+{
     // offset to map data (info struct)
     WF_PutU32(current_offset, head_fp);
 }
@@ -195,12 +204,13 @@ static void WF_WriteHead(void) {
 
 // LUA: wolf_block(x, y, plane, value)
 //
-int WF_wolf_block(lua_State *L) {
+int WF_wolf_block(lua_State *L)
+{
     int x = luaL_checkinteger(L, 1);
     int y = luaL_checkinteger(L, 2);
 
     int tile = luaL_checkinteger(L, 3);
-    int obj = luaL_checkinteger(L, 4);
+    int obj  = luaL_checkinteger(L, 4);
 
     // adjust and validate coords
     x = x - 1;
@@ -217,7 +227,8 @@ int WF_wolf_block(lua_State *L) {
 
 // LUA: wolf_read(x, y, plane)
 //
-int WF_wolf_read(lua_State *L) {
+int WF_wolf_read(lua_State *L)
+{
     int x = luaL_checkinteger(L, 1);
     int y = luaL_checkinteger(L, 2);
 
@@ -232,7 +243,8 @@ int WF_wolf_read(lua_State *L) {
 
     int value = 0;
 
-    switch (plane) {
+    switch (plane)
+    {
         case 1:
             value = solid_plane[PL_START + y * 64 + x];
             break;
@@ -250,7 +262,8 @@ int WF_wolf_read(lua_State *L) {
     return 1;
 }
 
-static void WF_DumpMap(void) {
+static void WF_DumpMap(void)
+{
     static const char *turning_points = ">/^\\</v\\";
     // static char *player_angles  = "^>v<";
 
@@ -258,38 +271,45 @@ static void WF_DumpMap(void) {
 
     char line_buf[80];
 
-    for (int y = 0; y < 64; y++) {
-        for (int x = 0; x < 64; x++) {
+    for (int y = 0; y < 64; y++)
+    {
+        for (int x = 0; x < 64; x++)
+        {
             int tile = solid_plane[PL_START + y * 64 + x];
-            int obj = thing_plane[PL_START + y * 64 + x];
+            int obj  = thing_plane[PL_START + y * 64 + x];
 
             int ch;
 
-            if (tile == NO_TILE) {
-                ch = '#';
-            } else if (obj >= 19 && obj <= 22) {
+            if (tile == NO_TILE) { ch = '#'; }
+            else if (obj >= 19 && obj <= 22)
+            {
                 ch = 'p';  // player_angles[obj-19];
-            } else if (tile < 52) {
-                ch = 'A' + (tile / 2);
-            } else if (tile < 64) {
-                ch = (show_floors ? 'A' : '1') + ((tile - 52) / 2);
-            } else if (90 <= tile && tile <= 101) {
-                ch = '+';
-            } else if (show_floors && 108 <= tile && tile <= 143) {
-                ch = '0' + ((tile - 108) % 10);
-            } else if (obj == NO_OBJ) {
-                ch = '.';
-            } else if ((obj >= 43 && obj <= 56) || obj == 29) {
-                ch = '$';  // pickup
-            } else if ((obj >= 23 && obj <= 71) || obj == 124) {
-                ch = '%';  // scenery
-            } else if (obj >= 108) {
-                ch = 'm';  // monster
-            } else if (90 <= obj && obj <= 97) {
-                ch = turning_points[obj - 90];
-            } else {
-                ch = '?';
             }
+            else if (tile < 52) { ch = 'A' + (tile / 2); }
+            else if (tile < 64)
+            {
+                ch = (show_floors ? 'A' : '1') + ((tile - 52) / 2);
+            }
+            else if (90 <= tile && tile <= 101) { ch = '+'; }
+            else if (show_floors && 108 <= tile && tile <= 143)
+            {
+                ch = '0' + ((tile - 108) % 10);
+            }
+            else if (obj == NO_OBJ) { ch = '.'; }
+            else if ((obj >= 43 && obj <= 56) || obj == 29)
+            {
+                ch = '$';  // pickup
+            }
+            else if ((obj >= 23 && obj <= 71) || obj == 124)
+            {
+                ch = '%';  // scenery
+            }
+            else if (obj >= 108)
+            {
+                ch = 'm';  // monster
+            }
+            else if (90 <= obj && obj <= 97) { ch = turning_points[obj - 90]; }
+            else { ch = '?'; }
 
             line_buf[x] = ch;
         }
@@ -300,7 +320,8 @@ static void WF_DumpMap(void) {
     }
 }
 
-static void WF_FreeStuff() {
+static void WF_FreeStuff()
+{
     delete[] solid_plane;
     solid_plane = NULL;
     delete[] thing_plane;
@@ -311,7 +332,8 @@ static void WF_FreeStuff() {
 //  PUBLIC INTERFACE
 //------------------------------------------------------------------------
 
-class wolf_game_interface_c : public game_interface_c {
+class wolf_game_interface_c : public game_interface_c
+{
    private:
     std::string file_ext;
 
@@ -335,40 +357,40 @@ class wolf_game_interface_c : public game_interface_c {
     void Tidy();
 };
 
-bool wolf_game_interface_c::Start(const char *ext) {
+bool wolf_game_interface_c::Start(const char *ext)
+{
     WF_FreeStuff();
 
     write_errors_seen = 0;
 
 #ifndef CONSOLE_ONLY
-    if (batch_mode) {
-        if (batch_output_file.is_absolute()) {
+    if (batch_mode)
+    {
+        if (batch_output_file.is_absolute())
+        {
             wolf_output_dir = batch_output_file.remove_filename();
-        } else {
-            wolf_output_dir = std::filesystem::current_path();
         }
-    } else {
-        wolf_output_dir = std::filesystem::current_path();
+        else { wolf_output_dir = std::filesystem::current_path(); }
     }
+    else { wolf_output_dir = std::filesystem::current_path(); }
 #else
-    if (batch_output_file.is_absolute()) {
+    if (batch_output_file.is_absolute())
+    {
         wolf_output_dir = batch_output_file.remove_filename();
-    } else {
-        wolf_output_dir = std::filesystem::current_path();
     }
+    else { wolf_output_dir = std::filesystem::current_path(); }
 #endif
 
-    if (ext) {
-        file_ext = ext;
-    }
+    if (ext) { file_ext = ext; }
 
-    if (StringCaseCmp(file_ext, "BS6") == 0) {
+    if (StringCaseCmp(file_ext, "BS6") == 0)
+    {
         map_fp = fopen(TEMP_MAPTEMP, "wb");
-    } else {
-        map_fp = fopen(TEMP_GAMEFILE, "wb");
     }
+    else { map_fp = fopen(TEMP_GAMEFILE, "wb"); }
 
-    if (!map_fp) {
+    if (!map_fp)
+    {
         LogPrintf("Unable to create map file:\n%s", strerror(errno));
 
         Main::ProgStatus(_("Error (create file)"));
@@ -377,7 +399,8 @@ bool wolf_game_interface_c::Start(const char *ext) {
 
     head_fp = fopen(TEMP_HEADFILE, "wb");
 
-    if (!head_fp) {
+    if (!head_fp)
+    {
         fclose(map_fp);
 
         LogPrintf("Unable to create %s:\n%s", TEMP_HEADFILE, strerror(errno));
@@ -390,7 +413,7 @@ bool wolf_game_interface_c::Start(const char *ext) {
     WF_PutU16(RLEW_TAG, head_fp);
 
     // setup local variables
-    current_map = 1;
+    current_map    = 1;
     current_offset = 0;
 
     solid_plane = new uint16_t[64 * 64 + 8];  // extra space for compressor
@@ -398,25 +421,26 @@ bool wolf_game_interface_c::Start(const char *ext) {
     return true;
 }
 
-bool wolf_game_interface_c::Finish(bool build_ok) {
+bool wolf_game_interface_c::Finish(bool build_ok)
+{
     WF_FreeStuff();
 
     // set remaining map offsets to zero (no map)
-    for (; current_map <= 100; current_map++) {
-        WF_PutU32(0, head_fp);
-    }
+    for (; current_map <= 100; current_map++) { WF_PutU32(0, head_fp); }
 
     fclose(map_fp);
     fclose(head_fp);
 
     map_fp = head_fp = NULL;
 
-    if (!build_ok) {
+    if (!build_ok)
+    {
         Tidy();
         return false;
     }
 
-    if (write_errors_seen > 0) {
+    if (write_errors_seen > 0)
+    {
         Main::ProgStatus(_("Error (write file)"));
         Tidy();
         return false;
@@ -427,13 +451,17 @@ bool wolf_game_interface_c::Finish(bool build_ok) {
     return true;  // OK!
 }
 
-void wolf_game_interface_c::Rename() {
+void wolf_game_interface_c::Rename()
+{
     std::filesystem::path gamemaps =
-        wolf_output_dir / (StringCaseCmp(file_ext, "BS6") == 0 ? StringFormat("MAPTEMP.%s", file_ext.c_str()) : StringFormat("GAMEMAPS.%s", file_ext.c_str()));
+        wolf_output_dir / (StringCaseCmp(file_ext, "BS6") == 0
+                               ? StringFormat("MAPTEMP.%s", file_ext.c_str())
+                               : StringFormat("GAMEMAPS.%s", file_ext.c_str()));
     std::filesystem::path maphead =
         wolf_output_dir / StringFormat("MAPHEAD.%s", file_ext.c_str());
 
-    if (create_backups) {
+    if (create_backups)
+    {
         Main::BackupFile(gamemaps);
         Main::BackupFile(maphead);
     }
@@ -441,22 +469,25 @@ void wolf_game_interface_c::Rename() {
     std::filesystem::remove(gamemaps);
     std::filesystem::remove(maphead);
 
-    if (StringCaseCmp(file_ext, "BS6") == 0) {
+    if (StringCaseCmp(file_ext, "BS6") == 0)
+    {
         std::filesystem::rename(TEMP_MAPTEMP, gamemaps);
-    } else {
-        std::filesystem::rename(TEMP_GAMEFILE, gamemaps);
     }
+    else { std::filesystem::rename(TEMP_GAMEFILE, gamemaps); }
     std::filesystem::rename(TEMP_HEADFILE, maphead);
 }
 
-void wolf_game_interface_c::Tidy() {
+void wolf_game_interface_c::Tidy()
+{
     std::filesystem::remove(TEMP_GAMEFILE);
     std::filesystem::remove(TEMP_HEADFILE);
 }
 
-void wolf_game_interface_c::BeginLevel() {
+void wolf_game_interface_c::BeginLevel()
+{
     // clear the planes before use
-    for (int i = 0; i < 64 * 64; i++) {
+    for (int i = 0; i < 64 * 64; i++)
+    {
         solid_plane[PL_START + i] = NO_TILE;
         thing_plane[PL_START + i] = NO_OBJ;
     }
@@ -464,12 +495,14 @@ void wolf_game_interface_c::BeginLevel() {
     SYS_ASSERT(current_map < 100);
 }
 
-int v094_begin_wolf_level(lua_State *L) {
+int v094_begin_wolf_level(lua_State *L)
+{
     game_object->BeginLevel();
     return 0;
 }
 
-void wolf_game_interface_c::EndLevel() {
+void wolf_game_interface_c::EndLevel()
+{
     WF_DumpMap();
 
     WF_WriteMap();
@@ -480,28 +513,26 @@ void wolf_game_interface_c::EndLevel() {
     level_name.clear();
 }
 
-int v094_end_wolf_level(lua_State *L) {
+int v094_end_wolf_level(lua_State *L)
+{
     game_object->EndLevel();
     return 0;
 }
 
-void wolf_game_interface_c::Property(std::string key, std::string value) {
-    if (StringCaseCmp(key, "level_name") == 0) {
-        level_name = value.c_str();
-    } else if (StringCaseCmp(key, "file_ext") == 0) {
-        file_ext = value.c_str();
-    } else {
-        LogPrintf("WARNING: unknown WOLF3D property: %s=%s\n", key.c_str(), value.c_str());
+void wolf_game_interface_c::Property(std::string key, std::string value)
+{
+    if (StringCaseCmp(key, "level_name") == 0) { level_name = value.c_str(); }
+    else if (StringCaseCmp(key, "file_ext") == 0) { file_ext = value.c_str(); }
+    else
+    {
+        LogPrintf("WARNING: unknown WOLF3D property: %s=%s\n", key.c_str(),
+                  value.c_str());
     }
 }
 
-std::filesystem::path wolf_game_interface_c::Filename() {
-    return "";
-}
+std::filesystem::path wolf_game_interface_c::Filename() { return ""; }
 
-std::filesystem::path wolf_game_interface_c::ZIP_Filename() {
-    return "";
-}
+std::filesystem::path wolf_game_interface_c::ZIP_Filename() { return ""; }
 
 game_interface_c *Wolf_GameObject() { return new wolf_game_interface_c(); }
 

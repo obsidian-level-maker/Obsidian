@@ -22,18 +22,21 @@
 #ifndef G_DOOM_H_
 #define G_DOOM_H_
 
-#include <filesystem>
 #include <array>
+#include <filesystem>
+
 #include "m_lua.h"
 
 class qLump_c;
 
 /***** VARIABLES ****************/
 
-namespace Doom {
+namespace Doom
+{
 
-enum subformat_e {
-    SUBFMT_Hexen = 1,
+enum subformat_e
+{
+    SUBFMT_Hexen  = 1,
     SUBFMT_Strife = 2,
 };
 
@@ -91,13 +94,15 @@ void Send_Prog_Nodes(int progress, int num_maps);
 /* ----- Level structures ---------------------- */
 
 #pragma pack(push, 1)
-struct raw_vertex_t {
+struct raw_vertex_t
+{
     int16_t x, y;
 };
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-struct raw_linedef_t {
+struct raw_linedef_t
+{
     uint16_t start;     // from this vertex...
     uint16_t end;       // ... to this vertex
     uint16_t flags;     // linedef flags (impassible, etc)
@@ -108,29 +113,32 @@ struct raw_linedef_t {
 };
 #pragma pack(pop)
 
-enum lineflag_e {
-    MLF_BlockAll = 0x0001,
-    MLF_TwoSided = 0x0004,
+enum lineflag_e
+{
+    MLF_BlockAll   = 0x0001,
+    MLF_TwoSided   = 0x0004,
     MLF_UpperUnpeg = 0x0008,
     MLF_LowerUnpeg = 0x0010,
     MLF_SoundBlock = 0x0040,
-    MLF_DontDraw = 0x0080,
+    MLF_DontDraw   = 0x0080,
 };
 
 #pragma pack(push, 1)
-struct raw_hexen_linedef_t {
-    uint16_t start;               // from this vertex...
-    uint16_t end;                 // ... to this vertex
-    uint16_t flags;               // linedef flags (impassible, etc)
-    uint8_t special;              // special type
-    std::array<uint8_t, 5> args;  // special arguments
-    uint16_t sidedef1;            // right sidedef
-    uint16_t sidedef2;            // left sidedef
+struct raw_hexen_linedef_t
+{
+    uint16_t               start;     // from this vertex...
+    uint16_t               end;       // ... to this vertex
+    uint16_t               flags;     // linedef flags (impassible, etc)
+    uint8_t                special;   // special type
+    std::array<uint8_t, 5> args;      // special arguments
+    uint16_t               sidedef1;  // right sidedef
+    uint16_t               sidedef2;  // left sidedef
 };
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-struct raw_sidedef_t {
+struct raw_sidedef_t
+{
     int16_t x_offset;  // X offset for texture
     int16_t y_offset;  // Y offset for texture
 
@@ -143,7 +151,8 @@ struct raw_sidedef_t {
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-struct raw_sector_t {
+struct raw_sector_t
+{
     int16_t floor_h;  // floor height
     int16_t ceil_h;   // ceiling height
 
@@ -152,53 +161,57 @@ struct raw_sector_t {
 
     uint16_t light;    // light level (0-255)
     uint16_t special;  // special behaviour (0 = normal, 9 = secret, ...)
-    int16_t tag;      // sector activated by a linedef with same tag
+    int16_t  tag;      // sector activated by a linedef with same tag
 };
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-struct raw_thing_t {
-    int16_t x, y;     // position of thing
-    int16_t angle;    // angle thing faces (degrees)
+struct raw_thing_t
+{
+    int16_t  x, y;     // position of thing
+    int16_t  angle;    // angle thing faces (degrees)
     uint16_t type;     // type of thing
     uint16_t options;  // when appears, deaf, etc..
 };
 #pragma pack(pop)
 
-enum thingflag_e {
-    MTF_Easy = 1,
+enum thingflag_e
+{
+    MTF_Easy   = 1,
     MTF_Medium = 2,
-    MTF_Hard = 4,
+    MTF_Hard   = 4,
     MTF_Ambush = 8,
 
-    MTF_NotSP = 16,
-    MTF_NotDM = 32,
+    MTF_NotSP   = 16,
+    MTF_NotDM   = 32,
     MTF_NotCOOP = 64,
 
-    MTF_Friend = 128,    // MBF
+    MTF_Friend   = 128,  // MBF
     MTF_Reserved = 256,  // BOOM
-    MTF_Dormant = 512,   // Eternity
+    MTF_Dormant  = 512,  // Eternity
 };
 
-constexpr unsigned int MTF_EDGE_EXFLOOR_MASK = 0x3C00;
+constexpr unsigned int MTF_EDGE_EXFLOOR_MASK  = 0x3C00;
 constexpr unsigned int MTF_EDGE_EXFLOOR_SHIFT = 10;
 
 #pragma pack(push, 1)
-struct raw_hexen_thing_t {
-    int16_t tid;      // thing tag id (for scripts/specials)
-    int16_t x, y;     // position
-    int16_t height;   // start height above floor
-    int16_t angle;    // angle thing faces
+struct raw_hexen_thing_t
+{
+    int16_t  tid;      // thing tag id (for scripts/specials)
+    int16_t  x, y;     // position
+    int16_t  height;   // start height above floor
+    int16_t  angle;    // angle thing faces
     uint16_t type;     // type of thing
     uint16_t options;  // when appears, deaf, dormant, etc..
 
-    uint8_t special;              // special type
-    std::array<uint8_t, 5> args;  // special arguments
+    uint8_t                special;  // special type
+    std::array<uint8_t, 5> args;     // special arguments
 };
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-struct raw_behavior_header_t {
+struct raw_behavior_header_t
+{
     std::array<char, 4> marker;  // 'ACS' 0
 
     uint32_t offset;
@@ -211,7 +224,8 @@ struct raw_behavior_header_t {
 /* ----- Other structures ---------------------- */
 
 #pragma pack(push, 1)
-struct raw_patch_header_t {
+struct raw_patch_header_t
+{
     uint16_t width;
     uint16_t height;
 
@@ -221,13 +235,15 @@ struct raw_patch_header_t {
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-struct raw_gl_vertex_t {
+struct raw_gl_vertex_t
+{
     int32_t x, y;
 };
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-struct raw_gl_seg_t {
+struct raw_gl_seg_t
+{
     uint16_t start;    // from this vertex...
     uint16_t end;      // ... to this vertex
     uint16_t linedef;  // linedef that this seg goes along, or -1
@@ -239,7 +255,8 @@ struct raw_gl_seg_t {
 constexpr unsigned int IS_GL_VERT = 0x8000;
 
 #pragma pack(push, 1)
-struct raw_subsec_t {
+struct raw_subsec_t
+{
     uint16_t num;    // number of Segs in this Sub-Sector
     uint16_t first;  // first Seg
 };

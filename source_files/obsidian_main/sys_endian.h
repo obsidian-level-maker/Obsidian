@@ -45,17 +45,20 @@
 // ---- the gruntwork of swapping ----
 
 #if defined(__GNUC__) && defined(__i386__)
-static inline uint16_t UT_Swap16(uint16_t x) {
+static inline uint16_t UT_Swap16(uint16_t x)
+{
     __asm__("xchgb %b0,%h0" : "=q"(x) : "0"(x));
     return x;
 }
 #elif defined(__GNUC__) && defined(__x86_64__)
-static inline uint16_t UT_Swap16(uint16_t x) {
+static inline uint16_t UT_Swap16(uint16_t x)
+{
     __asm__("xchgb %b0,%h0" : "=Q"(x) : "0"(x));
     return x;
 }
 #elif defined(__GNUC__) && (defined(__powerpc__) || defined(__ppc__))
-static inline uint16_t UT_Swap16(uint16_t x) {
+static inline uint16_t UT_Swap16(uint16_t x)
+{
     uint16_t result;
 
     __asm__("rlwimi %0,%2,8,16,23" : "=&r"(result) : "0"(x >> 8), "r"(x));
@@ -66,17 +69,20 @@ static inline uint16_t UT_Swap16(uint16_t x) { return ((x << 8) | (x >> 8)); }
 #endif
 
 #if defined(__GNUC__) && defined(__i386__)
-static inline uint32_t UT_Swap32(uint32_t x) {
+static inline uint32_t UT_Swap32(uint32_t x)
+{
     __asm__("bswap %0" : "=r"(x) : "0"(x));
     return x;
 }
 #elif defined(__GNUC__) && defined(__x86_64__)
-static inline uint32_t UT_Swap32(uint32_t x) {
+static inline uint32_t UT_Swap32(uint32_t x)
+{
     __asm__("bswapl %0" : "=r"(x) : "0"(x));
     return x;
 }
 #elif defined(__GNUC__) && (defined(__powerpc__) || defined(__ppc__))
-static inline uint32_t UT_Swap32(uint32_t x) {
+static inline uint32_t UT_Swap32(uint32_t x)
+{
     uint32_t result;
 
     __asm__("rlwimi %0,%2,24,16,23" : "=&r"(result) : "0"(x >> 24), "r"(x));
@@ -85,7 +91,8 @@ static inline uint32_t UT_Swap32(uint32_t x) {
     return result;
 }
 #else
-static inline uint32_t UT_Swap32(uint32_t x) {
+static inline uint32_t UT_Swap32(uint32_t x)
+{
     return ((x << 24) | ((x << 8) & 0x00FF0000) | ((x >> 8) & 0x0000FF00) |
             (x >> 24));
 }
@@ -113,12 +120,14 @@ static inline uint32_t UT_Swap32(uint32_t x) {
 
 // ---- floating point ----
 
-static inline float UT_SwapFloat(float x) {
-    union {
-        float f;
+static inline float UT_SwapFloat(float x)
+{
+    union
+    {
+        float    f;
         uint32_t u;
     } in, out;
-    in.f = x;
+    in.f  = x;
     out.u = UT_Swap32(in.u);
     return out.f;
 }

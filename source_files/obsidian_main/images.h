@@ -5,7 +5,8 @@
 
 #include "headers.h"
 
-typedef struct {
+typedef struct
+{
     const char *name;
 
     int width;

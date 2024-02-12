@@ -31,9 +31,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 constexpr int MAX_MAP_HULLS = 4;
 
-constexpr int MAX_MAP_MODELS = 256;
-constexpr int MAX_MAP_BRUSHED = 4096;
-constexpr int MAX_MAP_ENTITIES = 1024;
+constexpr int MAX_MAP_MODELS    = 256;
+constexpr int MAX_MAP_BRUSHED   = 4096;
+constexpr int MAX_MAP_ENTITIES  = 1024;
 constexpr int MAX_MAP_ENTSTRING = 65535;
 
 constexpr int MAX_MAP_PLANES = 65536;
@@ -41,32 +41,33 @@ constexpr int MAX_MAP_PLANES = 65536;
 constexpr int MAX_MAP_NODES = 65530;
 /* negative shorts are contents */
 constexpr int MAX_MAP_CLIPNODES = 65530;
-constexpr int MAX_MAP_LEAFS = 32768;
+constexpr int MAX_MAP_LEAFS     = 32768;
 
-constexpr int MAX_MAP_VERTS = 65535;
-constexpr int MAX_MAP_FACES = 65535;
+constexpr int MAX_MAP_VERTS        = 65535;
+constexpr int MAX_MAP_FACES        = 65535;
 constexpr int MAX_MAP_MARKSURFACES = 65535;
-constexpr int MAX_MAP_TEXINFO = 65536;
-constexpr int MAX_MAP_TEXTURES = 512;
+constexpr int MAX_MAP_TEXINFO      = 65536;
+constexpr int MAX_MAP_TEXTURES     = 512;
 
-constexpr int MAX_MAP_EDGES = 256000;
-constexpr int MAX_MAP_SURFEDGES = 512000;
-constexpr int MAX_MAP_MIPTEX = 0x200000;
-constexpr int MAX_MAP_LIGHTING = 0x100000;
+constexpr int MAX_MAP_EDGES      = 256000;
+constexpr int MAX_MAP_SURFEDGES  = 512000;
+constexpr int MAX_MAP_MIPTEX     = 0x200000;
+constexpr int MAX_MAP_LIGHTING   = 0x100000;
 constexpr int MAX_MAP_VISIBILITY = 0x100000;
 
 constexpr int MAX_MAP_PORTALS = 65535;
 
 // key / value pair sizes
 
-constexpr int MAX_KEY = 32;
+constexpr int MAX_KEY   = 32;
 constexpr int MAX_VALUE = 1024;
 
 //=============================================================================
 
 constexpr int BSPVERSION = 29;
 
-enum {
+enum
+{
     LUMP_ENTITIES,
     LUMP_PLANES,
     LUMP_TEXTURES,
@@ -88,7 +89,8 @@ enum {
 // AJA: moved lump_t and dheader_t to q_common.h
 
 #pragma pack(push, 1)
-struct dmodel_t {
+struct dmodel_t
+{
     float mins[3], maxs[3];
     float origin[3];
 
@@ -99,7 +101,8 @@ struct dmodel_t {
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-struct dmiptexlump_t {
+struct dmiptexlump_t
+{
     int32_t num_miptex;
     int32_t data_ofs[2];  // [nummiptex]
 };
@@ -107,8 +110,9 @@ struct dmiptexlump_t {
 
 constexpr int MIP_LEVELS = 4;
 #pragma pack(push, 1)
-struct miptex_t {
-    char name[16];
+struct miptex_t
+{
+    char     name[16];
     uint32_t width, height;
     uint32_t offsets[MIP_LEVELS];  // four mip maps stored
 };
@@ -116,7 +120,8 @@ struct miptex_t {
 
 // AJA: moved dplane_t to q_common.h
 
-enum {
+enum
+{
 
     CONTENTS_CURRENT_DOWN = -14,
     CONTENTS_CURRENT_UP,
@@ -137,7 +142,8 @@ enum {
 };
 
 #pragma pack(push, 1)
-struct dnode_t {
+struct dnode_t
+{
     int32_t planenum;
     int16_t children[2];  // negative numbers are -(leafs+1), not nodes
 
@@ -155,15 +161,17 @@ struct dnode_t {
  * values and can be read as the signed value to be compatible with the above
  * (i.e. simply subtract 65536).
  */
-struct dclipnode_t {
-    int32_t planenum;
+struct dclipnode_t
+{
+    int32_t  planenum;
     uint16_t children[2];
 };
 
 constexpr unsigned int CLIP_SPECIAL = 0xFFF0;
 
 #pragma pack(push, 1)
-struct texinfo_t {
+struct texinfo_t
+{
     float s[4];  // x/y/z/offset
     float t[4];
 
@@ -186,7 +194,8 @@ constexpr int NUM_AMBIENTS = 4;
 // leaf 0 is the generic CONTENTS_SOLID leaf, used for all solid areas
 // all other leafs need visibility info
 #pragma pack(push, 1)
-struct dleaf_t {
+struct dleaf_t
+{
     int32_t contents;
     int32_t visofs;  // -1 = no visibility info
 

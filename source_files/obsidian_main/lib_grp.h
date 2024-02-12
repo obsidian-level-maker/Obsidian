@@ -31,9 +31,9 @@
 bool GRP_OpenRead(const char *filename);
 void GRP_CloseRead(void);
 
-int GRP_NumEntries(void);
-int GRP_FindEntry(const char *name);
-int GRP_EntryLen(int entry);
+int         GRP_NumEntries(void);
+int         GRP_FindEntry(const char *name);
+int         GRP_EntryLen(int entry);
 const char *GRP_EntryName(int entry);
 
 bool GRP_ReadData(int entry, int offset, int length, void *buffer);
@@ -50,19 +50,21 @@ void GRP_FinishLump(void);
 /* ----- GRP structure ---------------------- */
 
 constexpr unsigned int GRP_MAGIC_LEN = 12;
-constexpr unsigned int GRP_NAME_LEN = 12;
+constexpr unsigned int GRP_NAME_LEN  = 12;
 
 #pragma pack(push, 1)
-struct raw_grp_header_t {
-    char magic[GRP_MAGIC_LEN];
+struct raw_grp_header_t
+{
+    char     magic[GRP_MAGIC_LEN];
     uint32_t num_lumps;
 };
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-struct raw_grp_lump_t {
+struct raw_grp_lump_t
+{
     std::array<char, GRP_NAME_LEN> name;
-    uint32_t length;
+    uint32_t                       length;
 };
 #pragma pack(pop)
 

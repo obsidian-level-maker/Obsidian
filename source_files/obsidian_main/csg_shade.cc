@@ -78,10 +78,9 @@ Lighting Model
 
 static int current_region_group;
 
-static int SHADE_CalcRegionGroup(region_c *R) {
-    if (R->gaps.empty()) {
-        return -1;
-    }
+static int SHADE_CalcRegionGroup(region_c *R)
+{
+    if (R->gaps.empty()) { return -1; }
 
     /* group regions with a tag and same floor height */
 
@@ -95,25 +94,20 @@ static int SHADE_CalcRegionGroup(region_c *R) {
     int base = ((int)B->t.z & 0x1FFF) << 16;
 
     std::string tag = f_face->getStr("tag");
-    if (!tag.empty()) {
-        return base + StringToInt(tag);
-    }
+    if (!tag.empty()) { return base + StringToInt(tag); }
 
     tag = c_face->getStr("tag");
-    if (!tag.empty()) {
-        return base + StringToInt(tag);
-    }
+    if (!tag.empty()) { return base + StringToInt(tag); }
 
     // closed sectors are usually doors
-    if (R->isClosed()) {
-        return base + 9999;
-    }
+    if (R->isClosed()) { return base + 9999; }
 
     /* otherwise keep separate */
 
     int xor_val = 0;
 
-    if (T->bflags & BFLAG_Sky) {  // separate sky sectors  [ why?? ]
+    if (T->bflags & BFLAG_Sky)
+    {  // separate sky sectors  [ why?? ]
         xor_val = 0x77777777;
     }
 
@@ -123,16 +117,20 @@ static int SHADE_CalcRegionGroup(region_c *R) {
     return result ^ xor_val;
 }
 
-struct region_index_Compare {
-    inline bool operator()(const region_c *A, const region_c *B) const {
+struct region_index_Compare
+{
+    inline bool operator()(const region_c *A, const region_c *B) const
+    {
         return A->index > B->index;
     }
 };
 
-static void SHADE_GroupRegions() {
+static void SHADE_GroupRegions()
+{
     current_region_group = 0x40000000;  // a value outside normal tag values
 
-    for (unsigned int i = 0; i < all_regions.size(); i++) {
+    for (unsigned int i = 0; i < all_regions.size(); i++)
+    {
         region_c *R = all_regions[i];
 
         R->index = SHADE_CalcRegionGroup(R);
@@ -144,32 +142,32 @@ static void SHADE_GroupRegions() {
     std::sort(all_regions.begin(), all_regions.end(), region_index_Compare());
 }
 
-static void SHADE_MergeResults() {
+static void SHADE_MergeResults()
+{
     unsigned int i, k, n;
 
     // ensure groups get same value in every region
 
-    for (i = 0; i < all_regions.size(); i = k + 1) {
-        if (all_regions[i]->index < 0) {
-            break;
-        }
+    for (i = 0; i < all_regions.size(); i = k + 1)
+    {
+        if (all_regions[i]->index < 0) { break; }
 
         k = i;
 
         for (k = i; k + 1 < all_regions.size() &&
                     all_regions[k + 1]->index == all_regions[i]->index;
-             k++) {
+             k++)
+        {
         }
 
         int result = 0;
 
-        for (n = i; n <= k; n++) {
+        for (n = i; n <= k; n++)
+        {
             result = MAX(result, all_regions[n]->shade);
         }
 
-        for (n = i; n <= k; n++) {
-            all_regions[n]->shade = result;
-        }
+        for (n = i; n <= k; n++) { all_regions[n]->shade = result; }
     }
 }
 
@@ -223,61 +221,57 @@ static int SHADE_CaveLighting(region_c *R, double z2)
 }
 #endif
 
-static void SHADE_VisitRegion(region_c *R) {
+static void SHADE_VisitRegion(region_c *R)
+{
     csg_brush_c *B = R->gaps.front()->bottom;
     csg_brush_c *T = R->gaps.back()->top;
 
     int ambient = -1;  // Unset
-    int light = -1;
-    int shadow = -1;
+    int light   = -1;
+    int shadow  = -1;
 
     // grab ambient value  [ should always be present ]
 
     ambient = T->props.getInt("ambient", -1);
 
-    if (ambient < 0) {
-        ambient = B->props.getInt("ambient", -1);
-    }
+    if (ambient < 0) { ambient = B->props.getInt("ambient", -1); }
 
-    if (ambient < 0) {
-        ambient = DEFAULT_AMBIENT_LEVEL;
-    }
+    if (ambient < 0) { ambient = DEFAULT_AMBIENT_LEVEL; }
 
     // process light brushes
 
-    for (unsigned int i = 0; i < R->brushes.size(); i++) {
+    for (unsigned int i = 0; i < R->brushes.size(); i++)
+    {
         csg_brush_c *LB = R->brushes[i];
 
-        if (LB->bkind != BKIND_Light) {
-            continue;
-        }
+        if (LB->bkind != BKIND_Light) { continue; }
 
-        if (LB->t.z < B->t.z + 1 || LB->b.z > T->b.z - 1) {
-            continue;
-        }
+        if (LB->t.z < B->t.z + 1 || LB->b.z > T->b.z - 1) { continue; }
 
-        int br_light = LB->props.getInt("light_add", -1);
+        int br_light  = LB->props.getInt("light_add", -1);
         int br_shadow = LB->props.getInt("shadow", -1);
 
-        light = MAX(light, br_light);
+        light  = MAX(light, br_light);
         shadow = MAX(shadow, br_shadow);
 
         int sky_shadow = LB->props.getInt("sky_shadow", -1);
 
-        if (sky_shadow > 0 && (T->bflags & BFLAG_Sky)) {
+        if (sky_shadow > 0 && (T->bflags & BFLAG_Sky))
+        {
             shadow = MAX(shadow, sky_shadow);
         }
     }
 
     // check brush faces
 
-    for (unsigned int pass = 0; pass < 2; pass++) {
+    for (unsigned int pass = 0; pass < 2; pass++)
+    {
         csg_property_set_c *P = (pass == 0) ? &B->t.face : &T->b.face;
 
-        int fc_light = P->getInt("light_add", -1);
+        int fc_light  = P->getInt("light_add", -1);
         int fc_shadow = P->getInt("shadow", -1);
 
-        light = MAX(light, fc_light);
+        light  = MAX(light, fc_light);
         shadow = MAX(shadow, fc_shadow);
     }
 
@@ -298,28 +292,24 @@ static void SHADE_VisitRegion(region_c *R) {
 
     R->shade = ambient;
 
-    if (light > 0) {
-        R->shade += light;
-    } else if (shadow > 0) {
-        R->shade -= shadow;
-    }
+    if (light > 0) { R->shade += light; }
+    else if (shadow > 0) { R->shade -= shadow; }
 }
 
-static void SHADE_LightWorld() {
+static void SHADE_LightWorld()
+{
     bool no_light = (argv::Find(0, "nolight") >= 0);
 
-    if (no_light) {
-        LogPrintf("LIGHTING DISABLED (-nolight specified)\n");
-    }
+    if (no_light) { LogPrintf("LIGHTING DISABLED (-nolight specified)\n"); }
 
-    for (unsigned int i = 0; i < all_regions.size(); i++) {
+    for (unsigned int i = 0; i < all_regions.size(); i++)
+    {
         region_c *R = all_regions[i];
 
-        if (R->gaps.empty()) {
-            continue;
-        }
+        if (R->gaps.empty()) { continue; }
 
-        if (no_light) {
+        if (no_light)
+        {
             R->shade = 192;
             continue;
         }
@@ -328,7 +318,8 @@ static void SHADE_LightWorld() {
     }
 }
 
-void CSG_Shade() {
+void CSG_Shade()
+{
     LogPrintf("Lighting level...\n");
 
     //    SHADE_CollectLights();

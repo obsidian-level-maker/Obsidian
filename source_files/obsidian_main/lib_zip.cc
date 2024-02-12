@@ -21,34 +21,34 @@
 
 #include "lib_zip.h"
 
-#include "lib_util.h"
-
 #include "headers.h"
-
+#include "lib_util.h"
 #include "miniz.h"
 
-static mz_zip_archive *zip_writer = nullptr;
+static mz_zip_archive       *zip_writer = nullptr;
 static std::filesystem::path current_zip;
 
 //------------------------------------------------------------------------
 //  ZIP WRITING
 //------------------------------------------------------------------------
 
-bool ZIPF_OpenWrite(const std::filesystem::path &filename) {
+bool ZIPF_OpenWrite(const std::filesystem::path &filename)
+{
     // Make sure the last ZIPF operation was closed properly and that
     // the target archive doesn't already exist (unlike our WAD stuff
     // there should only ever be one pk3 going on at a time)
-    if (std::filesystem::exists(filename)) {
-        return false;
-    }
-    if (zip_writer) {
+    if (std::filesystem::exists(filename)) { return false; }
+    if (zip_writer)
+    {
         mz_zip_writer_end(zip_writer);
         delete zip_writer;
         zip_writer = nullptr;
     }
     zip_writer = new mz_zip_archive;
     mz_zip_zero_struct(zip_writer);
-    if (!mz_zip_writer_init_file(zip_writer, filename.generic_u8string().c_str(), 0)) {
+    if (!mz_zip_writer_init_file(zip_writer,
+                                 filename.generic_u8string().c_str(), 0))
+    {
         mz_zip_writer_end(zip_writer);
         delete zip_writer;
         zip_writer = nullptr;
@@ -58,29 +58,30 @@ bool ZIPF_OpenWrite(const std::filesystem::path &filename) {
     return true;
 }
 
-bool ZIPF_AddFile(const std::filesystem::path &filename, std::filesystem::path directory) {
-    if (!zip_writer) {
-        return false;
-    }
-    return mz_zip_writer_add_file(zip_writer,
-            !directory.empty() ? (directory / filename.filename()).generic_u8string().c_str() : 
-            filename.filename().generic_u8string().c_str(), filename.generic_u8string().c_str(),
-             NULL, 0, MZ_DEFAULT_COMPRESSION);
+bool ZIPF_AddFile(const std::filesystem::path &filename,
+                  std::filesystem::path        directory)
+{
+    if (!zip_writer) { return false; }
+    return mz_zip_writer_add_file(
+        zip_writer,
+        !directory.empty()
+            ? (directory / filename.filename()).generic_u8string().c_str()
+            : filename.filename().generic_u8string().c_str(),
+        filename.generic_u8string().c_str(), NULL, 0, MZ_DEFAULT_COMPRESSION);
 }
 
 // Calling function is responsible for freeing *data
-bool ZIPF_AddMem(std::string name, uint8_t *data, size_t length) {
-    if (!zip_writer) {
-        return false;
-    }
-    return mz_zip_writer_add_mem(zip_writer, name.c_str(), data, length, MZ_DEFAULT_COMPRESSION);
+bool ZIPF_AddMem(std::string name, uint8_t *data, size_t length)
+{
+    if (!zip_writer) { return false; }
+    return mz_zip_writer_add_mem(zip_writer, name.c_str(), data, length,
+                                 MZ_DEFAULT_COMPRESSION);
 }
 
-bool ZIPF_CloseWrite(void) {
+bool ZIPF_CloseWrite(void)
+{
     current_zip.clear();
-    if (!zip_writer) {
-        return false;
-    }
+    if (!zip_writer) { return false; }
     bool zip_status = mz_zip_writer_finalize_archive(zip_writer);
     mz_zip_writer_end(zip_writer);
     delete zip_writer;

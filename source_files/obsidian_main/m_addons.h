@@ -23,10 +23,10 @@
 #define __OBLIGE_ADDONS_H__
 
 #include <cstdio>
-#include <string>
-#include <fstream>
 #include <filesystem>
+#include <fstream>
 #include <map>
+#include <string>
 #include <vector>
 
 void VFS_InitAddons(std::filesystem::path search_dir);
@@ -37,11 +37,12 @@ void VFS_OptParse(std::string name);
 void VFS_OptWrite(std::ofstream &fp);
 
 // util functions
-bool VFS_CopyFile(const char *src_name, const char *dest_name);
+bool     VFS_CopyFile(const char *src_name, const char *dest_name);
 uint8_t *VFS_LoadFile(const char *filename, int *length);
-void VFS_FreeFile(const uint8_t *mem);
+void     VFS_FreeFile(const uint8_t *mem);
 
-typedef struct {
+typedef struct
+{
     std::filesystem::path name;  // base filename, includes ".pk3" extension
 
     bool enabled;

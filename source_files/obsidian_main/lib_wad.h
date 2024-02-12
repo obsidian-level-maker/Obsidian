@@ -30,9 +30,9 @@
 bool WAD_OpenRead(std::filesystem::path filename);
 void WAD_CloseRead();
 
-int WAD_NumEntries();
-int WAD_FindEntry(const char *name);
-int WAD_EntryLen(int entry);
+int         WAD_NumEntries();
+int         WAD_FindEntry(const char *name);
+int         WAD_EntryLen(int entry);
 const char *WAD_EntryName(int entry);
 
 bool WAD_ReadData(int entry, int offset, int length, void *buffer);
@@ -51,10 +51,10 @@ void WAD_FinishLump();
 bool WAD2_OpenRead(const char *filename);
 void WAD2_CloseRead();
 
-int WAD2_NumEntries();
-int WAD2_FindEntry(const char *name);
-int WAD2_EntryLen(int entry);
-int WAD2_EntryType(int entry);
+int         WAD2_NumEntries();
+int         WAD2_FindEntry(const char *name);
+int         WAD2_EntryLen(int entry);
+int         WAD2_EntryType(int entry);
 const char *WAD2_EntryName(int entry);
 
 bool WAD2_ReadData(int entry, int offset, int length, void *buffer);
@@ -71,7 +71,8 @@ void WAD2_FinishLump();
 /* ----- WAD structure (Doom) ---------------------- */
 
 #pragma pack(push, 1)
-struct raw_wad_header_t {
+struct raw_wad_header_t
+{
     char magic[4];
 
     uint32_t num_lumps;
@@ -80,7 +81,8 @@ struct raw_wad_header_t {
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-struct raw_wad_lump_t {
+struct raw_wad_lump_t
+{
     uint32_t start;
     uint32_t length;
 
@@ -91,7 +93,8 @@ struct raw_wad_lump_t {
 /* ----- WAD2 structures (Quake) ---------------------- */
 
 #pragma pack(push, 1)
-struct raw_wad2_header_t {
+struct raw_wad2_header_t
+{
     char magic[4];
 
     uint32_t num_lumps;
@@ -102,7 +105,8 @@ struct raw_wad2_header_t {
 constexpr const char *WAD2_MAGIC = "WAD2";
 
 #pragma pack(push, 1)
-struct raw_wad2_lump_t {
+struct raw_wad2_lump_t
+{
     uint32_t start;
     uint32_t length;  // compressed
     uint32_t u_len;   // uncompressed
@@ -116,13 +120,15 @@ struct raw_wad2_lump_t {
 #pragma pack(pop)
 
 // compression method (from Quake1 source)
-enum {
+enum
+{
     CMP_NONE,
     CMP_LZSS,
 };
 
 // lump types (from Quake1 source)
-enum {
+enum
+{
     TYP_NONE,
     TYP_LABEL,
     TYP_PALETTE = 64,

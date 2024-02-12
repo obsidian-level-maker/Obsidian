@@ -34,7 +34,8 @@ class partition_c;
 class region_c;
 class gap_c;
 
-class snag_c {
+class snag_c
+{
    public:
     double x1, y1;
     double x2, y2;
@@ -89,7 +90,8 @@ class snag_c {
     brush_vert_c *FindBrushVert(const csg_brush_c *B);
 };
 
-class region_c {
+class region_c
+{
    public:
     std::vector<snag_c *> snags;
 
@@ -141,7 +143,7 @@ class region_c {
 
     void GetBounds(double *x1, double *y1, double *x2, double *y2) const;
 
-    bool ContainsPoint(double x, double y) const;
+    bool   ContainsPoint(double x, double y) const;
     double DistanceToPoint(float x, float y) const;
     double SquareDistance(float x, float y) const;
 
@@ -159,7 +161,8 @@ class region_c {
     void ClockwiseSnags();  // requires CalcMidPoint()
 };
 
-class gap_c {
+class gap_c
+{
    public:
     csg_brush_c *bottom;
     csg_brush_c *top;
@@ -180,18 +183,19 @@ class gap_c {
     bool HasNeighbor(gap_c *N) const;
 };
 
-class bsp_node_c {
+class bsp_node_c
+{
    public:
     // partition
     double x1, y1, x2, y2;
 
     // front : one of these should be non-NULL
     bsp_node_c *front_node;
-    region_c *front_leaf;
+    region_c   *front_leaf;
 
     // back : one of these should be non-NULL
     bsp_node_c *back_node;
-    region_c *back_leaf;
+    region_c   *back_leaf;
 
     // bounding box of this node
     float bb_x1, bb_y1;

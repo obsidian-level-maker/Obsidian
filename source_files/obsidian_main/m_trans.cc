@@ -26,11 +26,11 @@
 //----------------------------------------------------------------------
 
 #include "m_trans.h"
+
 #include <filesystem>
 
 #include "hdr_lua.h"
 #include "headers.h"
-
 #include "lib_util.h"
 #include "main.h"
 
@@ -393,8 +393,10 @@ std::string t_language = _("AUTO");
 #endif
 #endif
 
-static std::string remove_codeset(std::string langcode) {
-    if (langcode.find('.') != std::string::npos) {
+static std::string remove_codeset(std::string langcode)
+{
+    if (langcode.find('.') != std::string::npos)
+    {
         auto p = std::find(langcode.begin(), langcode.end(), '.');
         langcode.resize(p - langcode.begin());
     }
@@ -402,8 +404,10 @@ static std::string remove_codeset(std::string langcode) {
     return langcode;
 }
 
-static std::string remove_territory(std::string langcode) {
-    if (langcode.find('_') != std::string::npos) {
+static std::string remove_territory(std::string langcode)
+{
+    if (langcode.find('_') != std::string::npos)
+    {
         langcode.resize(std::find(langcode.begin(), langcode.end(), '_') -
                         langcode.begin());
     }
@@ -413,7 +417,8 @@ static std::string remove_territory(std::string langcode) {
 
 /* DETERMINE CURRENT LANGUAGE */
 
-static std::string Trans_GetUserLanguage() {
+static std::string Trans_GetUserLanguage()
+{
 #ifdef WIN32
     /* Use native Windows API locale ID. */
     LCID lcid = GetThreadLocale();
@@ -427,16 +432,18 @@ static std::string Trans_GetUserLanguage() {
 
     /* Split into language and territory part. */
     int primary = PRIMARYLANGID(langid);
-    int sub = SUBLANGID(langid);
+    int sub     = SUBLANGID(langid);
 
     // andrewj: special check for traditional Chinese characters
     if (primary == LANG_CHINESE &&
         (sub == 0x1f || sub == SUBLANG_CHINESE_TRADITIONAL ||
-         sub == SUBLANG_CHINESE_HONGKONG || sub == SUBLANG_CHINESE_MACAU)) {
+         sub == SUBLANG_CHINESE_HONGKONG || sub == SUBLANG_CHINESE_MACAU))
+    {
         return "zh_TW";
     }
 
-    switch (primary) {
+    switch (primary)
+    {
         case LANG_AFRIKAANS:
             return "af";
         case LANG_ALBANIAN:
@@ -722,21 +729,15 @@ static std::string Trans_GetUserLanguage() {
 
     res = setlocale(LC_ALL, NULL /* query only */);
 
-    if (res && res[0] && res[0] != 'C') {
-        return remove_codeset(res);
-    }
+    if (res && res[0] && res[0] != 'C') { return remove_codeset(res); }
 
     // check the LC_ALL and LANG environment variables
 
     res = getenv("LC_ALL");
-    if (res && res[0] && res[0] != 'C') {
-        return remove_codeset(res);
-    }
+    if (res && res[0] && res[0] != 'C') { return remove_codeset(res); }
 
     res = getenv("LANG");
-    if (res && res[0] && res[0] != 'C') {
-        return remove_codeset(res);
-    }
+    if (res && res[0] && res[0] != 'C') { return remove_codeset(res); }
 
     return "UNKNOWN";
 #endif
@@ -744,7 +745,8 @@ static std::string Trans_GetUserLanguage() {
 
 //----------------------------------------------------------------------
 
-typedef struct {
+typedef struct
+{
     std::string langcode;
     std::string fullname;
 
@@ -752,41 +754,39 @@ typedef struct {
 
 static std::vector<available_language_t> available_langs;
 
-void Trans_ParseLangLine(char *line) {
+void Trans_ParseLangLine(char *line)
+{
     char *pos;
 
     // skip any BOM (can occur at very start of file)
     if ((uint8_t)(line[0]) == 0xEF && (uint8_t)(line[1]) == 0xBB &&
-        (uint8_t)(line[2]) == 0xBF) {
+        (uint8_t)(line[2]) == 0xBF)
+    {
         line += 3;
     }
 
     // remove CR/LF line ending
     pos = (char *)strchr(line, '\r');
-    if (pos) {
-        pos[0] = 0;
-    }
+    if (pos) { pos[0] = 0; }
 
     pos = (char *)strchr(line, '\n');
-    if (pos) {
-        pos[0] = 0;
-    }
+    if (pos) { pos[0] = 0; }
 
     // ignore blank lines and comments
-    if (line[0] == 0 || line[0] == '#') {
-        return;
-    }
+    if (line[0] == 0 || line[0] == '#') { return; }
 
     // find separator
     pos = (char *)strchr(line, '=');
 
-    if (!pos) {
+    if (!pos)
+    {
         return;  // uh oh
     }
 
     *pos++ = 0;
 
-    if (strlen(line) < 2 || strlen(pos) < 2) {
+    if (strlen(line) < 2 || strlen(pos) < 2)
+    {
         return;  // uh oh
     }
 
@@ -800,25 +800,23 @@ void Trans_ParseLangLine(char *line) {
     available_langs.push_back(lang);
 }
 
-void Trans_AddMessage(const char *before, const char *after) {
+void Trans_AddMessage(const char *before, const char *after)
+{
     // an empty before string has special meaning in a PO file,
     // providing a bunch of meta-information (which we ignore).
 
-    if (before[0] == 0) {
-        return;
-    }
+    if (before[0] == 0) { return; }
 
     // an empty after string means the translator has not yet
     // provided a translation.  hence we ignore that too.
 
-    if (after[0] == 0) {
-        return;
-    }
+    if (after[0] == 0) { return; }
 
     trans_store[before] = std::string(after);
 }
 
-struct po_parse_state_t {
+struct po_parse_state_t
+{
     char id[MAX_TRANS_STRING];
     char str[MAX_TRANS_STRING];
     char ctx[256];
@@ -829,52 +827,59 @@ struct po_parse_state_t {
 
     int line_number;
 
-    void Clear() {
-        id[0] = 0;
-        has_id = false;
-        str[0] = 0;
+    void Clear()
+    {
+        id[0]   = 0;
+        has_id  = false;
+        str[0]  = 0;
         has_str = false;
-        ctx[0] = 0;
+        ctx[0]  = 0;
         has_ctx = false;
     }
 
     // store the message pair if valid
-    void Push() {
-        if (has_id && has_str) {
+    void Push()
+    {
+        if (has_id && has_str)
+        {
             Trans_AddMessage(id, str);
             Clear();
         }
     }
 
-    void ParseString(const char *p, char *dest, size_t dest_size) {
+    void ParseString(const char *p, char *dest, size_t dest_size)
+    {
         size_t d_len = strlen(dest);
 
         char *dest_end = dest + (dest_size - d_len - 4 /* space for NUL */);
 
         dest = dest + d_len;
 
-        while (*p && isspace(*p)) {
-            p++;
-        }
+        while (*p && isspace(*p)) { p++; }
 
-        if (*p++ != '"') {
+        if (*p++ != '"')
+        {
             LogPrintf("WARNING: missing string on line %d\n", line_number);
             return;
         }
 
-        while (*p != '"') {
-            if (*p == 0) {
+        while (*p != '"')
+        {
+            if (*p == 0)
+            {
                 LogPrintf("WARNING: unterminated string on line %d\n",
                           line_number);
                 break;
             }
 
-            if (dest >= dest_end) {
+            if (dest >= dest_end)
+            {
                 LogPrintf("WARNING: string too long on line %d\n", line_number);
                 break;
             }
 
-            if (*p != '\\') {
+            if (*p != '\\')
+            {
                 *dest++ = *p++;
                 continue;
             }
@@ -882,13 +887,15 @@ struct po_parse_state_t {
             // handle escape sequences
             p++;
 
-            if (*p == 0) {
+            if (*p == 0)
+            {
                 LogPrintf("WARNING: unterminated string on line %d\n",
                           line_number);
                 break;
             }
 
-            switch (*p++) {
+            switch (*p++)
+            {
                 case '\\':
                     *dest++ = '\\';
                     break;
@@ -930,36 +937,40 @@ struct po_parse_state_t {
         *dest = 0;
     }
 
-    void Append(const char *p) {
-        if (has_str) {
-            ParseString(p, str, sizeof(str));
-        } else if (has_id) {
-            ParseString(p, id, sizeof(id));
-        } else {
+    void Append(const char *p)
+    {
+        if (has_str) { ParseString(p, str, sizeof(str)); }
+        else if (has_id) { ParseString(p, id, sizeof(id)); }
+        else
+        {
             LogPrintf("WARNING: unexpected string on line %d\n", line_number);
         }
     }
 
-    void SetContext(const char *p) {
+    void SetContext(const char *p)
+    {
         ctx[0] = 0;
         ParseString(p, ctx, sizeof(ctx));
         has_ctx = true;
     }
 
-    void SetId(const char *p) {
+    void SetId(const char *p)
+    {
         id[0] = 0;
         ParseString(p, id, sizeof(id));
         has_id = true;
     }
 
-    void SetString(const char *p) {
+    void SetString(const char *p)
+    {
         str[0] = 0;
         ParseString(p, str, sizeof(str));
         has_str = true;
     }
 };
 
-void Trans_Read_PO_File(FILE *fp) {
+void Trans_Read_PO_File(FILE *fp)
+{
     // the currently read message (not yet added)
     static po_parse_state_t po_state;
 
@@ -971,25 +982,26 @@ void Trans_Read_PO_File(FILE *fp) {
 
     po_state.line_number = 0;
 
-    while (fgets(line, sizeof(line), fp) != NULL) {
+    while (fgets(line, sizeof(line), fp) != NULL)
+    {
         po_state.line_number += 1;
 
         char *p = line;
 
         // skip any BOM (can occur at very start of file)
         if ((uint8_t)(p[0]) == 0xEF && (uint8_t)(p[1]) == 0xBB &&
-            (uint8_t)(p[2]) == 0xBF) {
+            (uint8_t)(p[2]) == 0xBF)
+        {
             p += 3;
         }
 
         // NOTE: I assume whitespace at start of line is not valid
 
-        if (isspace(*p) || *p == '#') {
-            continue;
-        }
+        if (isspace(*p) || *p == '#') { continue; }
 
         // extension string?
-        if (*p == '"') {
+        if (*p == '"')
+        {
             po_state.Append(p);
             continue;
         }
@@ -997,13 +1009,11 @@ void Trans_Read_PO_File(FILE *fp) {
         // if we have a pending translation, add it now
         po_state.Push();
 
-        if (strncmp(p, "msgctxt ", 8) == 0) {
-            po_state.SetContext(p + 8);
-        } else if (strncmp(p, "msgid ", 6) == 0) {
-            po_state.SetId(p + 6);
-        } else if (strncmp(p, "msgstr ", 7) == 0) {
-            po_state.SetString(p + 7);
-        } else {
+        if (strncmp(p, "msgctxt ", 8) == 0) { po_state.SetContext(p + 8); }
+        else if (strncmp(p, "msgid ", 6) == 0) { po_state.SetId(p + 6); }
+        else if (strncmp(p, "msgstr ", 7) == 0) { po_state.SetString(p + 7); }
+        else
+        {
             LogPrintf("WARNING: unsupported keyword on line %d\n",
                       po_state.line_number);
         }
@@ -1014,9 +1024,11 @@ void Trans_Read_PO_File(FILE *fp) {
     po_state.Push();
 }
 
-void Trans_Init() {
+void Trans_Init()
+{
 #ifndef WIN32
-    if (!setlocale(LC_ALL, "")) {
+    if (!setlocale(LC_ALL, ""))
+    {
         LogPrintf("WARNING : failed to initialize locale (check localdef)\n\n");
     }
 #endif
@@ -1026,33 +1038,38 @@ void Trans_Init() {
     std::filesystem::path path = install_dir;
     path /= "language/LANGS.txt";
 
-    if (!std::filesystem::exists(path)) {
+    if (!std::filesystem::exists(path))
+    {
         LogPrintf("WARNING: missing language/LANGS.txt file\n");
         return;
     }
 
     std::ifstream trans_fp(path);
 
-    if (!trans_fp.is_open()) {
+    if (!trans_fp.is_open())
+    {
         LogPrintf("WARNING: Error opening LANGS.txt!\n");
         return;
     }
 
     LogPrintf("Loading language list: %s\n", path.u8string().c_str());
 
-    for (std::string line; std::getline(trans_fp, line);) {
+    for (std::string line; std::getline(trans_fp, line);)
+    {
         Trans_ParseLangLine((char *)line.c_str());
     }
 
     LogPrintf("DONE.\n\n");
 }
 
-void Trans_SetLanguage() {
+void Trans_SetLanguage()
+{
     // this is called *once*, after user options are read
 
     std::string langcode = t_language;
 
-    if (langcode.empty() || langcode == "AUTO") {
+    if (langcode.empty() || langcode == "AUTO")
+    {
         langcode = Trans_GetUserLanguage();
 
         LogPrintf("Detected user language: '%s'\n", langcode.c_str());
@@ -1062,26 +1079,31 @@ void Trans_SetLanguage() {
 
     // English is the default language, nothing else needed
 
-    if (lang_plain == "UNKNOWN" || lang_plain == "en") {
+    if (lang_plain == "UNKNOWN" || lang_plain == "en")
+    {
         LogPrintf("Using the default language (English)\n\n");
         selected_lang = "en";
         return;
     }
 
     // see if the translation file exists
-    std::filesystem::path path =
-        std::filesystem::u8path(StringFormat("%s/language/%s.po", install_dir.generic_u8string().c_str(), langcode.c_str()));
+    std::filesystem::path path = std::filesystem::u8path(
+        StringFormat("%s/language/%s.po",
+                     install_dir.generic_u8string().c_str(), langcode.c_str()));
 
-    if (!std::filesystem::exists(path)) {
+    if (!std::filesystem::exists(path))
+    {
         // if language has a territory field (like zh_TW or en_AU) then
         // try again with the plain language code.
 
-        path =
-            std::filesystem::u8path(StringFormat("%s/language/%s.po", install_dir.generic_u8string().c_str(), lang_plain.c_str()));
+        path = std::filesystem::u8path(StringFormat(
+            "%s/language/%s.po", install_dir.generic_u8string().c_str(),
+            lang_plain.c_str()));
     }
 
     FILE *fp = fopen(path.generic_u8string().c_str(), "rb");
-    if (!fp) {
+    if (!fp)
+    {
         LogPrintf("No translation file: language/%s.po\n", lang_plain.c_str());
         LogPrintf("Using the default language (English)\n\n");
         selected_lang = "en";
@@ -1099,24 +1121,22 @@ void Trans_SetLanguage() {
     LogPrintf("DONE.\n\n");
 }
 
-std::string Trans_GetAvailCode(int idx) {
+std::string Trans_GetAvailCode(int idx)
+{
     SYS_ASSERT(idx >= 0);
 
     // end of list?
-    if (idx >= (int)available_langs.size()) {
-        return "";
-    }
+    if (idx >= (int)available_langs.size()) { return ""; }
 
     return available_langs[idx].langcode;
 }
 
-std::string Trans_GetAvailLanguage(int idx) {
+std::string Trans_GetAvailLanguage(int idx)
+{
     SYS_ASSERT(idx >= 0);
 
     // end of list?
-    if (idx >= (int)available_langs.size()) {
-        return "";
-    }
+    if (idx >= (int)available_langs.size()) { return ""; }
 
     return available_langs[idx].fullname;
 }
@@ -1126,23 +1146,24 @@ void Trans_UnInit() { trans_store.clear(); }
 //----------------------------------------------------------------------
 
 // debugging crud
-std::string mucked_up_string(std::string_view s) {
+std::string mucked_up_string(std::string_view s)
+{
     std::string buffer;
     buffer.resize(s.size());
     int p, q;
-    for (p = s.size() - 1, q = 0; p >= 0 && q < 250; p--, q++) {
+    for (p = s.size() - 1, q = 0; p >= 0 && q < 250; p--, q++)
+    {
         int ch = s[p];
-        if (ch == '%') {
-            ch = '#';
-        }
-        ch = (isupper(ch) ? tolower(ch) : toupper(ch));
+        if (ch == '%') { ch = '#'; }
+        ch        = (isupper(ch) ? tolower(ch) : toupper(ch));
         buffer[q] = ch;
     }
     buffer[q] = 0;
     return buffer;
 }
 
-const char *ob_gettext(const char *s) {
+const char *ob_gettext(const char *s)
+{
 #if 0  // DEBUGGING CRUD
     return mucked_up_string(s);
 #endif
@@ -1151,9 +1172,7 @@ const char *ob_gettext(const char *s) {
 
     IT = trans_store.find(s);
 
-    if (IT != trans_store.end()) {
-        return IT->second.c_str();
-    }
+    if (IT != trans_store.end()) { return IT->second.c_str(); }
 
     return s;
 }

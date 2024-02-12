@@ -30,20 +30,21 @@
 
 // Properties
 
-#define NK_WALL_MUL 10
+#define NK_WALL_MUL   10
 #define NK_HEIGHT_MUL -200
 
 #define VOID_INDEX -2
 
-#define SEC_IS_SKY (0x1 << 16)
+#define SEC_IS_SKY      (0x1 << 16)
 #define SEC_PRIMARY_LIT (0x2 << 16)
-#define SEC_SHADOW (0x4 << 16)
+#define SEC_SHADOW      (0x4 << 16)
 
 #define light_dist_factor 800.0
 
 class nukem_sector_c;
 
-class nukem_wall_c {
+class nukem_wall_c
+{
    public:
     int x1, y1;
     int x2, y2;
@@ -71,14 +72,17 @@ class nukem_wall_c {
           partner(NULL),
           index(-1),
           pic(0),
-          flags(0) {}
+          flags(0)
+    {
+    }
 
     ~nukem_wall_c() {}
 
     void Write();
 };
 
-class nukem_plane_c {
+class nukem_plane_c
+{
    public:
     float h;
 
@@ -91,7 +95,8 @@ class nukem_plane_c {
     ~nukem_plane_c() {}
 };
 
-class nukem_sector_c {
+class nukem_sector_c
+{
    public:
     nukem_plane_c floor;
     nukem_plane_c ceil;
@@ -125,11 +130,14 @@ class nukem_sector_c {
           lotag(0),
           hitag(0),
           first_wall(-1),
-          num_walls(-1) {}
+          num_walls(-1)
+    {
+    }
 
     ~nukem_sector_c() {}
 
-    void AddWall(nukem_wall_c *W) {
+    void AddWall(nukem_wall_c *W)
+    {
         W->sector = this;
 
         walls.push_back(W);
@@ -176,13 +184,13 @@ class nukem_sector_c {
     }
 #endif
 
-    nukem_wall_c *FindSnagWall(snag_c *snag) {
-        for (unsigned int i = 0; i < walls.size(); i++) {
+    nukem_wall_c *FindSnagWall(snag_c *snag)
+    {
+        for (unsigned int i = 0; i < walls.size(); i++)
+        {
             nukem_wall_c *W = walls[i];
 
-            if (W->snag == snag) {
-                return W;
-            }
+            if (W->snag == snag) { return W; }
         }
 
         return NULL;
@@ -195,37 +203,33 @@ class nukem_sector_c {
     void WriteWalls();
 };
 
-static std::vector<nukem_wall_c *> nk_all_walls;
+static std::vector<nukem_wall_c *>   nk_all_walls;
 static std::vector<nukem_sector_c *> nk_all_sectors;
 
 static int nk_current_wall;
 
 //------------------------------------------------------------------------
 
-void NK_FreeStuff() {
+void NK_FreeStuff()
+{
     unsigned int i;
 
-    for (i = 0; i < nk_all_walls.size(); i++) {
-        delete nk_all_walls[i];
-    }
-    for (i = 0; i < nk_all_sectors.size(); i++) {
-        delete nk_all_sectors[i];
-    }
+    for (i = 0; i < nk_all_walls.size(); i++) { delete nk_all_walls[i]; }
+    for (i = 0; i < nk_all_sectors.size(); i++) { delete nk_all_sectors[i]; }
 
     nk_all_walls.clear();
     nk_all_sectors.clear();
 }
 
-static void NK_MakeBasicWall(nukem_sector_c *S, snag_c *snag) {
+static void NK_MakeBasicWall(nukem_sector_c *S, snag_c *snag)
+{
     int x1 = I_ROUND(snag->x1 * NK_WALL_MUL);
     int y1 = I_ROUND(-snag->y1 * NK_WALL_MUL);
 
     int x2 = I_ROUND(snag->x2 * NK_WALL_MUL);
     int y2 = I_ROUND(-snag->y2 * NK_WALL_MUL);
 
-    if (x1 == x2 && y1 == y2) {
-        return;
-    }
+    if (x1 == x2 && y1 == y2) { return; }
 
     nukem_wall_c *W = new nukem_wall_c(x1, y1, x2, y2);
 
@@ -236,13 +240,15 @@ static void NK_MakeBasicWall(nukem_sector_c *S, snag_c *snag) {
     S->AddWall(W);
 }
 
-static void NK_GetPlaneInfo(nukem_plane_c *P, csg_property_set_c *face) {
+static void NK_GetPlaneInfo(nukem_plane_c *P, csg_property_set_c *face)
+{
     P->pic = StringToInt(face->getStr("tex", dummy_plane_tex));
 
     // FIXME: other floor / ceiling stuff
 }
 
-static void NK_DoLightingBrush(...) {
+static void NK_DoLightingBrush(...)
+{
 #if 0
     for (unsigned int i = 0; i < R->brushes.size(); i++)
     {
@@ -277,11 +283,13 @@ static void NK_DoLightingBrush(...) {
 #endif
 }
 
-static void NK_MakeSector(region_c *R) {
+static void NK_MakeSector(region_c *R)
+{
     unsigned int i;
 
     // completely solid (no gaps) ?
-    if (R->gaps.size() == 0) {
+    if (R->gaps.size() == 0)
+    {
         R->index = -1;
         return;
     }
@@ -309,11 +317,9 @@ static void NK_MakeSector(region_c *R) {
     double c_delta = c_face->getDouble("delta_z");
 
     S->floor.h = B->t.z + f_delta;
-    S->ceil.h = T->b.z + c_delta;
+    S->ceil.h  = T->b.z + c_delta;
 
-    if (S->ceil.h < S->floor.h) {
-        S->ceil.h = S->floor.h;
-    }
+    if (S->ceil.h < S->floor.h) { S->ceil.h = S->floor.h; }
 
     NK_GetPlaneInfo(&S->floor, f_face);
     NK_GetPlaneInfo(&S->ceil, c_face);
@@ -328,9 +334,7 @@ static void NK_MakeSector(region_c *R) {
 
     S->lotag = f_lotag ? f_lotag : c_lotag;
 
-    if (T->bflags & BFLAG_Sky) {
-        S->ceil.flags |= SECTOR_F_PARALLAX;
-    }
+    if (T->bflags & BFLAG_Sky) { S->ceil.flags |= SECTOR_F_PARALLAX; }
 
     // handle Lighting brushes
 
@@ -338,19 +342,17 @@ static void NK_MakeSector(region_c *R) {
 
     // create walls
 
-    for (i = 0; i < R->snags.size(); i++) {
-        NK_MakeBasicWall(S, R->snags[i]);
-    }
+    for (i = 0; i < R->snags.size(); i++) { NK_MakeBasicWall(S, R->snags[i]); }
 
     // grab entities
 
-    for (i = 0; i < R->entities.size(); i++) {
-        S->AddEntity(R->entities[i]);
-    }
+    for (i = 0; i < R->entities.size(); i++) { S->AddEntity(R->entities[i]); }
 }
 
-static void NK_CreateSectors() {
-    for (unsigned int i = 0; i < all_regions.size(); i++) {
+static void NK_CreateSectors()
+{
+    for (unsigned int i = 0; i < all_regions.size(); i++)
+    {
         NK_MakeSector(all_regions[i]);
     }
 }
@@ -467,10 +469,12 @@ static void LightingFloodFill(void)
 
 //------------------------------------------------------------------------
 
-static void NK_GetFaceProps(nukem_wall_c *W, csg_property_set_c *face) {
+static void NK_GetFaceProps(nukem_wall_c *W, csg_property_set_c *face)
+{
     std::string tex_name = dummy_wall_tex;
 
-    if (face) {
+    if (face)
+    {
         tex_name = face->getStr("tex", tex_name);
 
         // FIXME  offsets, shade  etc...
@@ -479,47 +483,43 @@ static void NK_GetFaceProps(nukem_wall_c *W, csg_property_set_c *face) {
     W->pic = StringToInt(tex_name);
 }
 
-static void NK_TextureSolidWall(nukem_wall_c *W) {
+static void NK_TextureSolidWall(nukem_wall_c *W)
+{
     csg_property_set_c *face = NULL;
 
-    if (W->snag->partner) {
+    if (W->snag->partner)
+    {
         float f_h = W->sector->floor.h;
         float c_h = W->sector->ceil.h;
 
         brush_vert_c *bvert =
             W->snag->partner->FindOneSidedVert((f_h + c_h) / 2.0);
 
-        if (bvert) {
-            face = &bvert->face;
-        }
+        if (bvert) { face = &bvert->face; }
     }
 
     NK_GetFaceProps(W, face);
 }
 
-static void NK_TextureTwoSider(nukem_wall_c *W, csg_brush_c *B) {
+static void NK_TextureTwoSider(nukem_wall_c *W, csg_brush_c *B)
+{
     SYS_ASSERT(B);
 
     brush_vert_c *bvert = NULL;
 
-    if (W->snag->partner) {
-        bvert = W->snag->partner->FindBrushVert(B);
-    }
+    if (W->snag->partner) { bvert = W->snag->partner->FindBrushVert(B); }
 
     // try other side (important but hacky)
-    if (!bvert) {
-        bvert = W->snag->FindBrushVert(B);
-    }
+    if (!bvert) { bvert = W->snag->FindBrushVert(B); }
 
     // fallback to something safe
-    if (!bvert) {
-        bvert = B->verts[0];
-    }
+    if (!bvert) { bvert = B->verts[0]; }
 
     NK_GetFaceProps(W, &bvert->face);
 }
 
-static void NK_TextureWallPair(nukem_wall_c *W1, nukem_wall_c *W2) {
+static void NK_TextureWallPair(nukem_wall_c *W1, nukem_wall_c *W2)
+{
     W1->flags |= WALL_F_PEGGED;
     W2->flags |= WALL_F_PEGGED;
 
@@ -540,21 +540,14 @@ static void NK_TextureWallPair(nukem_wall_c *W1, nukem_wall_c *W2) {
     int what1 = 0;
     int what2 = 0;
 
-    if (c1 > c2) {
-        what1 = 1;
-    }
-    if (c1 < c2) {
-        what2 = 1;
-    }
+    if (c1 > c2) { what1 = 1; }
+    if (c1 < c2) { what2 = 1; }
 
-    if (c1 > c2 && f1 < f2) {
-        what2 = 2;
-    }
-    if (c1 < c2 && f1 > f2) {
-        what1 = 2;
-    }
+    if (c1 > c2 && f1 < f2) { what2 = 2; }
+    if (c1 < c2 && f1 > f2) { what1 = 2; }
 
-    if (what1 == 2 || what2 == 2) {
+    if (what1 == 2 || what2 == 2)
+    {
         W1->flags |= WALL_F_SWAP_LOWER;
         W2->flags |= WALL_F_SWAP_LOWER;
     }
@@ -577,51 +570,51 @@ static void NK_TextureWallPair(nukem_wall_c *W1, nukem_wall_c *W2) {
     NK_TextureTwoSider(W2, brushes[1][what2]);
 }
 
-static void NK_PartnerWalls() {
-    for (unsigned int i = 0; i < nk_all_sectors.size(); i++) {
+static void NK_PartnerWalls()
+{
+    for (unsigned int i = 0; i < nk_all_sectors.size(); i++)
+    {
         nukem_sector_c *S = nk_all_sectors[i];
 
-        for (unsigned int k = 0; k < S->walls.size(); k++) {
+        for (unsigned int k = 0; k < S->walls.size(); k++)
+        {
             nukem_wall_c *W = S->walls[k];
 
-            if (W->partner) {  // already done
+            if (W->partner)
+            {  // already done
                 continue;
             }
 
             region_c *N = W->snag->partner ? W->snag->partner->region : NULL;
 
-            if (N && N->index >= 0) {
+            if (N && N->index >= 0)
+            {
                 nukem_sector_c *T = nk_all_sectors[N->index];
 
                 W->partner = T->FindSnagWall(W->snag->partner);
 
-                if (W->partner) {
-                    W->partner->partner = W;
-                }
+                if (W->partner) { W->partner->partner = W; }
             }
 
-            if (W->partner) {
-                NK_TextureWallPair(W, W->partner);
-            } else {
-                NK_TextureSolidWall(W);
-            }
+            if (W->partner) { NK_TextureWallPair(W, W->partner); }
+            else { NK_TextureSolidWall(W); }
         }
     }
 }
 
 //----------------------------------------------------------------------
 
-void nukem_wall_c::Write() {
+void nukem_wall_c::Write()
+{
     int point2 = index + 1;
 
-    if (point2 >= sector->first_wall + sector->num_walls) {
+    if (point2 >= sector->first_wall + sector->num_walls)
+    {
         point2 = sector->first_wall;
     }
 
     int xscale = 8;  // FIXME  1 + (int)line->length / 16;
-    if (xscale > 255) {
-        xscale = 255;
-    }
+    if (xscale > 255) { xscale = 255; }
 
     int lo_tag = 0;  // FIXME
     int hi_tag = 0;
@@ -631,8 +624,10 @@ void nukem_wall_c::Write() {
                0, 0, lo_tag, hi_tag);
 }
 
-void nukem_sector_c::WriteSprites() {
-    for (unsigned int i = 0; i < entities.size(); i++) {
+void nukem_sector_c::WriteSprites()
+{
+    for (unsigned int i = 0; i < entities.size(); i++)
+    {
         csg_entity_c *E = entities[i];
 
         int x = I_ROUND(E->x * NK_WALL_MUL);
@@ -642,8 +637,8 @@ void nukem_sector_c::WriteSprites() {
         int type = atoi(E->id.c_str());
 
         // parse entity properties
-        int flags = E->props.getInt("flags");
-        int angle = E->props.getInt("angle");
+        int flags  = E->props.getInt("flags");
+        int angle  = E->props.getInt("angle");
         int lo_tag = E->props.getInt("lo_tag");
         int hi_tag = E->props.getInt("hi_tag");
 
@@ -654,24 +649,26 @@ void nukem_sector_c::WriteSprites() {
     }
 }
 
-void nukem_sector_c::AssignWallIndices() {
+void nukem_sector_c::AssignWallIndices()
+{
     first_wall = nk_current_wall;
-    num_walls = (int)walls.size();
+    num_walls  = (int)walls.size();
 
-    for (unsigned int i = 0; i < walls.size(); i++) {
+    for (unsigned int i = 0; i < walls.size(); i++)
+    {
         walls[i]->index = nk_current_wall;
 
         nk_current_wall++;
     }
 }
 
-void nukem_sector_c::WriteWalls() {
-    for (unsigned int k = 0; k < walls.size(); k++) {
-        walls[k]->Write();
-    }
+void nukem_sector_c::WriteWalls()
+{
+    for (unsigned int k = 0; k < walls.size(); k++) { walls[k]->Write(); }
 }
 
-void nukem_sector_c::Write() {
+void nukem_sector_c::Write()
+{
     int visibility = 1;
 
     int f_h = I_ROUND(floor.h * NK_HEIGHT_MUL);
@@ -681,10 +678,12 @@ void nukem_sector_c::Write() {
                  ceil.pic, ceil.flags, lotag, hitag);
 }
 
-static void NK_WriteSectors() {
+static void NK_WriteSectors()
+{
     nk_current_wall = 0;
 
-    for (unsigned int i = 0; i < nk_all_sectors.size(); i++) {
+    for (unsigned int i = 0; i < nk_all_sectors.size(); i++)
+    {
         nukem_sector_c *S = nk_all_sectors[i];
 
         ///    if (! S->used)
@@ -699,8 +698,10 @@ static void NK_WriteSectors() {
     }
 }
 
-static void NK_WriteWalls() {
-    for (unsigned int i = 0; i < nk_all_sectors.size(); i++) {
+static void NK_WriteWalls()
+{
+    for (unsigned int i = 0; i < nk_all_sectors.size(); i++)
+    {
         nukem_sector_c *S = nk_all_sectors[i];
 
         ///    if (! S->used)
@@ -712,7 +713,8 @@ static void NK_WriteWalls() {
 
 //------------------------------------------------------------------------
 
-void CSG_NUKEM_Write() {
+void CSG_NUKEM_Write()
+{
     LogPrintf("NUKEM CSG...\n");
 
     nk_all_sectors.clear();

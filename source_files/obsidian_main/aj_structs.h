@@ -22,7 +22,8 @@
 #include <array>
 
 #pragma pack(push, 1)
-typedef struct {
+typedef struct
+{
     char type[4];
 
     uint32_t num_entries;
@@ -32,7 +33,8 @@ typedef struct {
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-typedef struct {
+typedef struct
+{
     uint32_t start;
     uint32_t length;
 
@@ -42,14 +44,16 @@ typedef struct {
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-typedef struct {
+typedef struct
+{
     int16_t x, y;
 
 } raw_vertex_t;
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-typedef struct {
+typedef struct
+{
     uint16_t start;     // from this vertex...
     uint16_t end;       // ... to this vertex
     uint16_t flags;     // linedef flags (impassible, etc)
@@ -62,20 +66,22 @@ typedef struct {
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-typedef struct {
-    uint16_t start;                   // from this vertex...
-    uint16_t end;                     // ... to this vertex
-    uint16_t flags;                   // linedef flags (impassible, etc)
-    uint8_t type;                     // linedef type
+typedef struct
+{
+    uint16_t               start;     // from this vertex...
+    uint16_t               end;       // ... to this vertex
+    uint16_t               flags;     // linedef flags (impassible, etc)
+    uint8_t                type;      // linedef type
     std::array<uint8_t, 5> specials;  // hexen specials
-    uint16_t sidedef1;                // right sidedef
-    uint16_t sidedef2;                // left sidedef
+    uint16_t               sidedef1;  // right sidedef
+    uint16_t               sidedef2;  // left sidedef
 
 } raw_hexen_linedef_t;
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-typedef struct {
+typedef struct
+{
     int16_t x_offset;  // X offset for texture
     int16_t y_offset;  // Y offset for texture
 
@@ -89,7 +95,8 @@ typedef struct {
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-typedef struct {
+typedef struct
+{
     int16_t floor_h;  // floor height
     int16_t ceil_h;   // ceiling height
 
@@ -98,15 +105,16 @@ typedef struct {
 
     uint16_t light;    // light level (0-255)
     uint16_t special;  // special behaviour (0 = normal, 9 = secret, ...)
-    int16_t tag;      // sector activated by a linedef with same tag
+    int16_t  tag;      // sector activated by a linedef with same tag
 
 } raw_sector_t;
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-typedef struct {
-    int16_t x, y;     // position of thing
-    int16_t angle;    // angle thing faces (degrees)
+typedef struct
+{
+    int16_t  x, y;     // position of thing
+    int16_t  angle;    // angle thing faces (degrees)
     uint16_t type;     // type of thing
     uint16_t options;  // when appears, deaf, etc..
 
@@ -114,16 +122,17 @@ typedef struct {
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-typedef struct {
-    int16_t tid;      // thing tag id (for scripts/specials)
-    int16_t x, y;     // position
-    int16_t height;   // start height above floor
-    int16_t angle;    // angle thing faces
+typedef struct
+{
+    int16_t  tid;      // thing tag id (for scripts/specials)
+    int16_t  x, y;     // position
+    int16_t  height;   // start height above floor
+    int16_t  angle;    // angle thing faces
     uint16_t type;     // type of thing
     uint16_t options;  // when appears, deaf, dormant, etc..
 
-    uint8_t special;             // special type
-    std::array<uint8_t, 5> arg;  // special arguments
+    uint8_t                special;  // special type
+    std::array<uint8_t, 5> arg;      // special arguments
 
 } raw_hexen_thing_t;
 #pragma pack(pop)

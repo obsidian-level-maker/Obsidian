@@ -19,15 +19,14 @@
 //
 //------------------------------------------------------------------------
 
+#include "lib_pak.h"
+
 #include <list>
 
 #include "headers.h"
-#include "main.h"
-
-#include "physfs.h"
-
-#include "lib_pak.h"
 #include "lib_util.h"
+#include "main.h"
+#include "physfs.h"
 
 // #define LogPrintf  printf
 
@@ -41,10 +40,12 @@ static raw_pak_header_t r_header;
 
 static raw_pak_entry_t *r_directory;
 
-bool PAK_OpenRead(const char *filename) {
+bool PAK_OpenRead(const char *filename)
+{
     r_pak_fp = PHYSFS_openRead(filename);
 
-    if (!r_pak_fp) {
+    if (!r_pak_fp)
+    {
         LogPrintf("PAK_OpenRead: no such file: %s\n", filename);
         return false;
     }
@@ -59,7 +60,8 @@ bool PAK_OpenRead(const char *filename) {
         return false;
     }
 
-    if (memcmp(r_header.magic.data(), PAK_MAGIC, 4) != 0) {
+    if (memcmp(r_header.magic.data(), PAK_MAGIC, 4) != 0)
+    {
         LogPrintf("PAK_OpenRead: not a PAK file!\n");
         PHYSFS_close(r_pak_fp);
         return false;
@@ -91,14 +93,16 @@ bool PAK_OpenRead(const char *filename) {
 
     r_directory = new raw_pak_entry_t[r_header.entry_num + 1];
 
-    for (int i = 0; i < (int)r_header.entry_num; i++) {
+    for (int i = 0; i < (int)r_header.entry_num; i++)
+    {
         raw_pak_entry_t *E = &r_directory[i];
 
         size_t res = (PHYSFS_readBytes(r_pak_fp, E, sizeof(raw_pak_entry_t)) /
                       sizeof(raw_pak_entry_t));
         if (res != 1)
         {
-            if (i == 0) {
+            if (i == 0)
+            {
                 LogPrintf("PAK_OpenRead: could not read any dir-entries!\n");
                 PAK_CloseRead();
                 return false;
@@ -121,7 +125,8 @@ bool PAK_OpenRead(const char *filename) {
     return true;  // OK
 }
 
-void PAK_CloseRead(void) {
+void PAK_CloseRead(void)
+{
     PHYSFS_close(r_pak_fp);
     LogPrintf("Closed PAK file\n");
 
@@ -131,71 +136,67 @@ void PAK_CloseRead(void) {
 
 int PAK_NumEntries(void) { return (int)r_header.entry_num; }
 
-int PAK_FindEntry(const char *name) {
-    for (unsigned int i = 0; i < r_header.entry_num; i++) {
-        if (StringCaseCmp(name, r_directory[i].name.data()) == 0) {
-            return i;
-        }
+int PAK_FindEntry(const char *name)
+{
+    for (unsigned int i = 0; i < r_header.entry_num; i++)
+    {
+        if (StringCaseCmp(name, r_directory[i].name.data()) == 0) { return i; }
     }
 
     return -1;  // not found
 }
 
-int PAK_EntryLen(int entry) {
+int PAK_EntryLen(int entry)
+{
     SYS_ASSERT(entry >= 0 && entry < (int)r_header.entry_num);
 
     return r_directory[entry].length;
 }
 
-const char *PAK_EntryName(int entry) {
+const char *PAK_EntryName(int entry)
+{
     SYS_ASSERT(entry >= 0 && entry < (int)r_header.entry_num);
 
     return r_directory[entry].name.data();
 }
 
-void PAK_FindMaps(std::vector<int> &entries) {
+void PAK_FindMaps(std::vector<int> &entries)
+{
     entries.resize(0);
 
-    for (int i = 0; i < (int)r_header.entry_num; i++) {
+    for (int i = 0; i < (int)r_header.entry_num; i++)
+    {
         raw_pak_entry_t *E = &r_directory[i];
 
         const char *name = E->name.data();
 
-        if (strncmp(name, "maps/", 5) != 0) {
-            continue;
-        }
+        if (strncmp(name, "maps/", 5) != 0) { continue; }
 
         name += 5;
 
         // ignore the ammo boxes
-        if (strncmp(name, "b_", 2) == 0) {
-            continue;
-        }
+        if (strncmp(name, "b_", 2) == 0) { continue; }
 
-        while (*name && *name != '/' && *name != '.') {
-            name++;
-        }
+        while (*name && *name != '/' && *name != '.') { name++; }
 
-        if (strcmp(name, ".bsp") == 0) {
-            entries.push_back(i);
-        }
+        if (strcmp(name, ".bsp") == 0) { entries.push_back(i); }
     }
 }
 
-bool PAK_ReadData(int entry, int offset, int length, void *buffer) {
+bool PAK_ReadData(int entry, int offset, int length, void *buffer)
+{
     SYS_ASSERT(entry >= 0 && entry < (int)r_header.entry_num);
     SYS_ASSERT(offset >= 0);
     SYS_ASSERT(length > 0);
 
     raw_pak_entry_t *E = &r_directory[entry];
 
-    if ((uint32_t)offset + (uint32_t)length > E->length) {  // EOF
+    if ((uint32_t)offset + (uint32_t)length > E->length)
+    {  // EOF
         return false;
     }
 
-    if (!PHYSFS_seek(r_pak_fp, E->offset + offset)) {
-        return false;
-    }
+    if (!PHYSFS_seek(r_pak_fp, E->offset + offset)) { return false; }
 
     size_t res = (PHYSFS_readBytes(r_pak_fp, buffer, length) / length);
 
@@ -212,11 +213,14 @@ static std::list<raw_pak_entry_t> w_pak_dir;
 
 static raw_pak_entry_t w_pak_entry;
 
-bool PAK_OpenWrite(const std::filesystem::path &filename) {
+bool PAK_OpenWrite(const std::filesystem::path &filename)
+{
     w_pak_fp.open(filename, std::ios::out | std::ios::binary);
 
-    if (!w_pak_fp) {
-        LogPrintf("PAK_OpenWrite: cannot create file: %s\n", filename.u8string().c_str());
+    if (!w_pak_fp)
+    {
+        LogPrintf("PAK_OpenWrite: cannot create file: %s\n",
+                  filename.u8string().c_str());
         return false;
     }
 
@@ -233,7 +237,8 @@ bool PAK_OpenWrite(const std::filesystem::path &filename) {
     return true;
 }
 
-void PAK_CloseWrite(void) {
+void PAK_CloseWrite(void)
+{
     w_pak_fp << std::flush;
 
     // write the directory
@@ -249,7 +254,8 @@ void PAK_CloseWrite(void) {
 
     std::list<raw_pak_entry_t>::iterator PDI;
 
-    for (PDI = w_pak_dir.begin(); PDI != w_pak_dir.end(); PDI++) {
+    for (PDI = w_pak_dir.begin(); PDI != w_pak_dir.end(); PDI++)
+    {
         raw_pak_entry_t *E = &(*PDI);
 
         w_pak_fp.write(reinterpret_cast<const char *>(E),
@@ -278,7 +284,8 @@ void PAK_CloseWrite(void) {
     w_pak_dir.clear();
 }
 
-void PAK_NewLump(const char *name) {
+void PAK_NewLump(const char *name)
+{
     SYS_ASSERT(strlen(name) <= 55);
 
     memset(&w_pak_entry, 0, sizeof(w_pak_entry));
@@ -288,10 +295,9 @@ void PAK_NewLump(const char *name) {
     w_pak_entry.offset = w_pak_fp.tellp();
 }
 
-bool PAK_AppendData(const void *data, int length) {
-    if (length == 0) {
-        return true;
-    }
+bool PAK_AppendData(const void *data, int length)
+{
+    if (length == 0) { return true; }
 
     SYS_ASSERT(length > 0);
 
@@ -299,14 +305,16 @@ bool PAK_AppendData(const void *data, int length) {
         w_pak_fp.write(static_cast<const char *>(data), length));
 }
 
-void PAK_FinishLump(void) {
+void PAK_FinishLump(void)
+{
     const int len = static_cast<int>(w_pak_fp.tellp()) -
                     static_cast<int>(w_pak_entry.offset);
 
     // pad lumps to a multiple of four bytes
     int padding = ALIGN_LEN(len) - len;
 
-    if (padding > 0) {
+    if (padding > 0)
+    {
         constexpr std::array<char, 4> zeros = {0, 0, 0, 0};
 
         w_pak_fp.write(zeros.data(), padding);

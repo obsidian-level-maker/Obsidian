@@ -25,7 +25,8 @@
 
 // directory entry
 
-class lump_c {
+class lump_c
+{
    public:
     // name of lump
     char name[10];
@@ -44,7 +45,8 @@ class lump_c {
 
    public:
     lump_c(const char *_name, int _start, int _len)
-        : start(_start), length(_len), flags(0), children(0) {
+        : start(_start), length(_len), flags(0), children(0)
+    {
         strcpy(name, _name);
     }
 
@@ -53,9 +55,9 @@ class lump_c {
 
 // wad header
 
-class wad_c {
+class wad_c
+{
    private:
-
     PHYSFS_File *fp;
 
     // directory entries
@@ -63,7 +65,7 @@ class wad_c {
 
     // current data from ReadLump()
     uint8_t *data_block;
-    int data_len;
+    int      data_len;
 
    public:
     wad_c() : fp(NULL), lumps(), data_block(NULL), data_len() {}
@@ -95,9 +97,9 @@ class wad_c {
     bool ReadDirEntry();
     void DetermineLevels();
 
-    int FindLump(const char *name, int level = -1);
+    int      FindLump(const char *name, int level = -1);
     uint8_t *AllocateData(int length);
-    void FreeData();
+    void     FreeData();
 };
 
 extern wad_c *the_wad;

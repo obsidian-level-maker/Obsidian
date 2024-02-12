@@ -24,47 +24,63 @@
 #include "lib_util.h"
 #include "m_addons.h"
 #include "m_cookie.h"
-#include "m_trans.h"
 #include "m_lua.h"
+#include "m_trans.h"
 #include "main.h"
 
 extern std::filesystem::path BestDirectory();
 
-void Parse_Option(const std::string &name, const std::string &value) {
-    if (StringCaseCmpPartial(name, "recent") == 0) {
+void Parse_Option(const std::string &name, const std::string &value)
+{
+    if (StringCaseCmpPartial(name, "recent") == 0)
+    {
         Recent_Parse(name, value);
         return;
     }
-    if (StringCaseCmp(name, "addon") == 0) {
-        VFS_OptParse(value);
-    } else if (StringCaseCmp(name, "language") == 0) {
-        t_language = value;
-    } else if (StringCaseCmp(name, "create_backups") == 0) {
+    if (StringCaseCmp(name, "addon") == 0) { VFS_OptParse(value); }
+    else if (StringCaseCmp(name, "language") == 0) { t_language = value; }
+    else if (StringCaseCmp(name, "create_backups") == 0)
+    {
         create_backups = StringToInt(value) ? true : false;
-    } else if (StringCaseCmp(name, "overwrite_warning") == 0) {
-        overwrite_warning = StringToInt(value) ? true : false;
-    } else if (StringCaseCmp(name, "debug_messages") == 0) {
-        debug_messages = StringToInt(value) ? true : false;
-    } else if (StringCaseCmp(name, "limit_break") == 0) {
-        limit_break = StringToInt(value) ? true : false;
-    } else if (StringCaseCmp(name, "random_string_seeds") == 0) {
-        random_string_seeds = StringToInt(value) ? true : false;
-    } else if (StringCaseCmp(name, "password_mode") == 0) {
-        password_mode = StringToInt(value) ? true : false;
-    } else if (StringCaseCmp(name, "mature_word_lists") == 0) {
-        mature_word_lists = StringToInt(value) ? true : false;
-    } else if (StringCaseCmp(name, "default_output_path") == 0) {
-        default_output_path = std::filesystem::u8path(value);
-    } else {
-        LogPrintf("%s '%s'\n", _("Unknown option: "), name.c_str());
     }
+    else if (StringCaseCmp(name, "overwrite_warning") == 0)
+    {
+        overwrite_warning = StringToInt(value) ? true : false;
+    }
+    else if (StringCaseCmp(name, "debug_messages") == 0)
+    {
+        debug_messages = StringToInt(value) ? true : false;
+    }
+    else if (StringCaseCmp(name, "limit_break") == 0)
+    {
+        limit_break = StringToInt(value) ? true : false;
+    }
+    else if (StringCaseCmp(name, "random_string_seeds") == 0)
+    {
+        random_string_seeds = StringToInt(value) ? true : false;
+    }
+    else if (StringCaseCmp(name, "password_mode") == 0)
+    {
+        password_mode = StringToInt(value) ? true : false;
+    }
+    else if (StringCaseCmp(name, "mature_word_lists") == 0)
+    {
+        mature_word_lists = StringToInt(value) ? true : false;
+    }
+    else if (StringCaseCmp(name, "default_output_path") == 0)
+    {
+        default_output_path = std::filesystem::u8path(value);
+    }
+    else { LogPrintf("%s '%s'\n", _("Unknown option: "), name.c_str()); }
 }
 
-static bool Options_ParseLine(std::string buf) {
+static bool Options_ParseLine(std::string buf)
+{
     std::string::size_type pos = 0;
 
     pos = buf.find('=', 0);
-    if (pos == std::string::npos) {
+    if (pos == std::string::npos)
+    {
         // Skip blank lines, comments, etc
         return true;
     }
@@ -76,32 +92,34 @@ static bool Options_ParseLine(std::string buf) {
         buf.erase(std::find(buf.begin(), buf.end(), ' '));
     }*/
 
-    if (!isalpha(buf.front())) {
+    if (!isalpha(buf.front()))
+    {
         StdOutPrintf("%s [%s]\n", _("Weird option line: "), buf.c_str());
         return false;
     }
 
     // pos = buf.find('=', 0);  // Fix pos after whitespace deletion
-    std::string name = buf.substr(0, pos - 1);
+    std::string name  = buf.substr(0, pos - 1);
     std::string value = buf.substr(pos + 2);
 
-    if (name.empty() || value.empty()) {
-        return false;
-    }
+    if (name.empty() || value.empty()) { return false; }
 
     Parse_Option(name, value);
     return true;
 }
 
-bool Options_Load(std::filesystem::path filename) {
+bool Options_Load(std::filesystem::path filename)
+{
     std::ifstream option_fp(filename, std::ios::in);
 
-    if (!option_fp.is_open()) {
+    if (!option_fp.is_open())
+    {
         StdOutPrintf(_("Missing Options file -- using defaults.\n\n"));
         return false;
     }
 
-    for (std::string line; std::getline(option_fp, line);) {
+    for (std::string line; std::getline(option_fp, line);)
+    {
         Options_ParseLine(line);
     }
 
@@ -110,10 +128,12 @@ bool Options_Load(std::filesystem::path filename) {
     return true;
 }
 
-bool Options_Save(std::filesystem::path filename) {
+bool Options_Save(std::filesystem::path filename)
+{
     std::ofstream option_fp(filename, std::ios::out);
 
-    if (!option_fp.is_open()) {
+    if (!option_fp.is_open())
+    {
         LogPrintf("Error: unable to create file: %s\n(%s)\n\n",
                   filename.u8string().c_str(), strerror(errno));
         return false;

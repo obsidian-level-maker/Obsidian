@@ -32,14 +32,16 @@ constexpr double Q_EPSILON = 0.02;
 class quake_plane_c;
 class quake_vertex_c;
 
-enum quake_subformat_e {
-    SUBFMT_Hexen2 = 1,
+enum quake_subformat_e
+{
+    SUBFMT_Hexen2   = 1,
     SUBFMT_HalfLife = 2,
 };
 
 /***** CLASSES ****************/
 
-class qLump_c {
+class qLump_c
+{
    public:
     std::string name;
 
@@ -64,7 +66,7 @@ class qLump_c {
     void KeyPair(const char *key, const char *val, ...);
     void SetCRLF(bool enable);
 
-    int GetSize() const;
+    int            GetSize() const;
     const uint8_t *GetBuffer() const;
 
    private:
@@ -84,11 +86,11 @@ bool BSP_CloseLevel();
 
 qLump_c *BSP_NewLump(int entry);
 
-void BSP_AddInfoFile();
+void     BSP_AddInfoFile();
 qLump_c *BSP_CreateInfoLump();
 
 uint16_t BSP_AddPlane(float x, float y, float z, float nx, float ny, float nz,
-                   bool *flip_var = NULL);
+                      bool *flip_var = NULL);
 uint16_t BSP_AddPlane(const quake_plane_c *P, bool *flip_var = NULL);
 
 uint16_t BSP_AddVertex(float x, float y, float z);
@@ -111,29 +113,32 @@ void QCOM_Fix_T_Junctions();
 /* ----- BSP lump directory ------------------------- */
 
 constexpr int Q1_HEADER_LUMPS = 15;
-constexpr int Q1_BSP_VERSION = 29;
+constexpr int Q1_BSP_VERSION  = 29;
 
-constexpr int Q2_HEADER_LUMPS = 19;
-constexpr int Q2_BSP_VERSION = 38;
-constexpr const char *Q2_IDENT_MAGIC = "IBSP";
+constexpr int         Q2_HEADER_LUMPS = 19;
+constexpr int         Q2_BSP_VERSION  = 38;
+constexpr const char *Q2_IDENT_MAGIC  = "IBSP";
 
 #pragma pack(push, 1)
-struct lump_t {
+struct lump_t
+{
     uint32_t start;
     uint32_t length;
 };
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-struct dheader_t {
+struct dheader_t
+{
     int32_t version;
-    lump_t lumps[Q1_HEADER_LUMPS];
+    lump_t  lumps[Q1_HEADER_LUMPS];
 };
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-struct dheader2_t {
-    char ident[4];
+struct dheader2_t
+{
+    char    ident[4];
     int32_t version;
 
     lump_t lumps[Q2_HEADER_LUMPS];
@@ -141,7 +146,8 @@ struct dheader2_t {
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-struct dvertex_t {
+struct dvertex_t
+{
     float x, y, z;
 };
 #pragma pack(pop)
@@ -149,20 +155,23 @@ struct dvertex_t {
 // note that edge 0 is never used, because negative edge nums are used for
 // counterclockwise use of the edge in a face
 #pragma pack(push, 1)
-struct dedge_t {
+struct dedge_t
+{
     uint16_t v[2];  // vertex numbers
 };
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-struct dplane_t {
-    float normal[3];
-    float dist;
+struct dplane_t
+{
+    float   normal[3];
+    float   dist;
     int32_t type;  // PLANE_X - PLANE_ANYZ
 };
 #pragma pack(pop)
 
-enum {
+enum
+{
     // 0-2 are axial planes
     PLANE_X,
     PLANE_Y,
@@ -177,7 +186,8 @@ enum {
 constexpr int NUM_STYLES = 4;
 
 #pragma pack(push, 1)
-struct dface_t {
+struct dface_t
+{
     int16_t planenum;
     int16_t side;
 

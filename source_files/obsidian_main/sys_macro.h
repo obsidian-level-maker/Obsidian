@@ -39,10 +39,9 @@ constexpr double M_PI = 3.14159265358979323846;
 #ifndef MAX
 template <typename A, typename B,
           typename = std::enable_if_t<std::is_convertible_v<B, A>>>
-constexpr A MAX(A a, B b) {
-    if (a > b) {
-        return a;
-    }
+constexpr A MAX(A a, B b)
+{
+    if (a > b) { return a; }
     return static_cast<A>(b);
 }
 #endif
@@ -50,43 +49,37 @@ constexpr A MAX(A a, B b) {
 #ifndef MIN
 template <typename A, typename B,
           typename = std::enable_if_t<std::is_convertible_v<B, A>>>
-constexpr A MIN(A a, B b) {
-    if (a < b) {
-        return a;
-    }
+constexpr A MIN(A a, B b)
+{
+    if (a < b) { return a; }
     return static_cast<A>(b);
 }
 #endif
 
 #ifndef ABS
 template <typename T>
-constexpr T ABS(T a) {
-    if (a < 0) {
-        return -a;
-    }
+constexpr T ABS(T a)
+{
+    if (a < 0) { return -a; }
     return a;
 }
 #endif
 
 #ifndef SGN
 template <typename T>
-constexpr auto SGN(T x) {
-    if (x < 0) {
-        return -1;
-    }
-    if (x > 0) {
-        return 1;
-    }
+constexpr auto SGN(T x)
+{
+    if (x < 0) { return -1; }
+    if (x > 0) { return 1; }
     return 0;
 }
 #endif
 
 #ifndef I_ROUND
 template <typename T>
-constexpr int I_ROUND(T x) {
-    if (x < 0) {
-        return x - 0.5;
-    }
+constexpr int I_ROUND(T x)
+{
+    if (x < 0) { return x - 0.5; }
     return x + 0.5;
 }
 #endif
@@ -95,13 +88,10 @@ constexpr int I_ROUND(T x) {
 template <typename T, typename L, typename U,
           typename = std::enable_if_t<std::conjunction_v<
               std::is_convertible<L, T>, std::is_convertible<U, T>>>>
-constexpr T CLAMP(L low, T x, U high) {
-    if (x < low) {
-        return static_cast<T>(low);
-    }
-    if (x > high) {
-        return static_cast<T>(high);
-    }
+constexpr T CLAMP(L low, T x, U high)
+{
+    if (x < low) { return static_cast<T>(low); }
+    if (x > high) { return static_cast<T>(high); }
     return x;
 }
 #endif

@@ -27,13 +27,14 @@
 
 // Quake 1 ambient sounds
 #define AMBIENT_WATER 0
-#define AMBIENT_SKY 1
+#define AMBIENT_SKY   1
 #define AMBIENT_SLIME 2
-#define AMBIENT_LAVA 3
+#define AMBIENT_LAVA  3
 
 class quake_leaf_c;
 
-class qCluster_c {
+class qCluster_c
+{
    public:
     // cluster coordinate (starts at 0)
     int cx, cy;

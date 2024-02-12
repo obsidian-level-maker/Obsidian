@@ -1,0 +1,13 @@
+BasedOnStyle: Google
+AlignConsecutiveAssignments: true
+AlignConsecutiveBitFields: true
+AlignConsecutiveDeclarations: true
+AlignConsecutiveMacros: true
+AllowShortBlocksOnASingleLine: true
+AllowShortIfStatementsOnASingleLine: WithoutElse
+AlignTrailingComments: true
+SortIncludes: true
+BreakBeforeBraces: Allman
+EmptyLineBeforeAccessModifier: LogicalBlock
+IndentWidth: 4
+UseTab: Never

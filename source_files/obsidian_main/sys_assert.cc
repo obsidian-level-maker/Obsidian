@@ -24,7 +24,8 @@
 
 //----------------------------------------------------------------------------
 
-void AssertFail(const char *msg, ...) {
+void AssertFail(const char *msg, ...)
+{
     static char buffer[MSG_BUF_LEN];
 
     va_list argptr;

@@ -21,57 +21,54 @@
 
 #include <fstream>
 #include <iostream>
+
 #include "headers.h"
 #include "lib_util.h"
-#include "main.h"
 #include "m_lua.h"
+#include "main.h"
 
 #define DEBUG_BUF_LEN 20000
 
-std::fstream log_file;
+std::fstream          log_file;
 std::filesystem::path log_filename;
 
 bool debugging = false;
-bool terminal = false;
+bool terminal  = false;
 
-bool LogInit(const std::filesystem::path &filename) {
-    if (!filename.empty()) {
+bool LogInit(const std::filesystem::path &filename)
+{
+    if (!filename.empty())
+    {
         log_filename = filename;
 
         log_file.open(log_filename, std::ios::out);
 
-        if (!log_file.is_open()) {
-            return false;
-        }
+        if (!log_file.is_open()) { return false; }
     }
 
     std::time_t result = std::time(nullptr);
 
     LogPrintf("====== START OF OBSIDIAN LOGS ======\n\n");
 
-    LogPrintf("Initialized on %s",
-        std::ctime(&result));
+    LogPrintf("Initialized on %s", std::ctime(&result));
 
     return true;
 }
 
-void LogEnableDebug(bool enable) {
-    if (debugging == enable) {
-        return;
-    }
+void LogEnableDebug(bool enable)
+{
+    if (debugging == enable) { return; }
 
     debugging = enable;
 
-    if (debugging) {
-        LogPrintf("===  DEBUGGING ENABLED  ===\n\n");
-    } else {
-        LogPrintf("===  DEBUGGING DISABLED  ===\n\n");
-    }
+    if (debugging) { LogPrintf("===  DEBUGGING ENABLED  ===\n\n"); }
+    else { LogPrintf("===  DEBUGGING DISABLED  ===\n\n"); }
 }
 
 void LogEnableTerminal(bool enable) { terminal = enable; }
 
-void LogClose(void) {
+void LogClose(void)
+{
     LogPrintf("\n====== END OF OBSIDIAN LOGS ======\n\n");
 
     log_file.close();
@@ -79,11 +76,9 @@ void LogClose(void) {
     log_filename.clear();
 }
 
-void LogReadLines(log_display_func_t display_func, void *priv_data) {
-
-    if (!log_file) {
-        return;
-    }
+void LogReadLines(log_display_func_t display_func, void *priv_data)
+{
+    if (!log_file) { return; }
 
     // we close the log file so we can read it, and then open it
     // again when finished.  That is because Windows OSes can be
@@ -95,12 +90,11 @@ void LogReadLines(log_display_func_t display_func, void *priv_data) {
     log_file.open(log_filename, std::ios::in);
 
     // this is very unlikely to happen, but check anyway
-    if (!log_file.is_open()) {
-        return;
-    }
+    if (!log_file.is_open()) { return; }
 
     std::string buffer;
-    while (std::getline(log_file, buffer)) {
+    while (std::getline(log_file, buffer))
+    {
         // remove any newline at the end (LF or CR/LF)
         StringRemoveCRLF(&buffer);
 

@@ -49,17 +49,17 @@ color_mapping_t color_mappings[MAX_COLOR_MAPS];
 
 // LUA: console_print(str)
 //
-int gui_console_print(lua_State *L) {
+int gui_console_print(lua_State *L)
+{
     int nargs = lua_gettop(L);
 
-    if (nargs >= 1) {
+    if (nargs >= 1)
+    {
         const char *res = luaL_checkstring(L, 1);
         SYS_ASSERT(res);
 
         // strip off colorizations
-        if (res[0] == '@' && isdigit(res[1])) {
-            res += 2;
-        }
+        if (res[0] == '@' && isdigit(res[1])) { res += 2; }
 
         StdOutPrintf("%s", res);
     }
@@ -69,17 +69,17 @@ int gui_console_print(lua_State *L) {
 
 // LUA: raw_log_print(str)
 //
-int gui_raw_log_print(lua_State *L) {
+int gui_raw_log_print(lua_State *L)
+{
     int nargs = lua_gettop(L);
 
-    if (nargs >= 1) {
+    if (nargs >= 1)
+    {
         const char *res = luaL_checkstring(L, 1);
         SYS_ASSERT(res);
 
         // strip off colorizations
-        if (res[0] == '@' && isdigit(res[1])) {
-            res += 2;
-        }
+        if (res[0] == '@' && isdigit(res[1])) { res += 2; }
 
         LogPrintf("%s", res);
     }
@@ -89,10 +89,12 @@ int gui_raw_log_print(lua_State *L) {
 
 // LUA: raw_debug_print(str)
 //
-int gui_raw_debug_print(lua_State *L) {
+int gui_raw_debug_print(lua_State *L)
+{
     int nargs = lua_gettop(L);
 
-    if (nargs >= 1) {
+    if (nargs >= 1)
+    {
         const char *res = luaL_checkstring(L, 1);
         SYS_ASSERT(res);
 
@@ -104,7 +106,8 @@ int gui_raw_debug_print(lua_State *L) {
 
 // LUA: gettext(str)
 //
-int gui_gettext(lua_State *L) {
+int gui_gettext(lua_State *L)
+{
     const char *s = luaL_checkstring(L, 1);
 
     lua_pushstring(L, ob_gettext(s));
@@ -113,7 +116,8 @@ int gui_gettext(lua_State *L) {
 
 // LUA: config_line(str)
 //
-int gui_config_line(lua_State *L) {
+int gui_config_line(lua_State *L)
+{
     const char *res = luaL_checkstring(L, 1);
 
     SYS_ASSERT(conf_line_buffer);
@@ -125,7 +129,8 @@ int gui_config_line(lua_State *L) {
 
 // LUA: mkdir(dir_name)
 //
-int gui_mkdir(lua_State *L) {
+int gui_mkdir(lua_State *L)
+{
     const char *name = luaL_checkstring(L, 1);
 
     bool result = std::filesystem::create_directory(name);
@@ -136,7 +141,8 @@ int gui_mkdir(lua_State *L) {
 
 // LUA: get_filename_base()
 //
-int gui_get_filename_base(lua_State *L) {
+int gui_get_filename_base(lua_State *L)
+{
     std::filesystem::path base = game_object->Filename();
     lua_pushstring(L, base.stem().generic_u8string().c_str());
     return 1;
@@ -144,7 +150,8 @@ int gui_get_filename_base(lua_State *L) {
 
 // LUA: get_file_extension()
 //
-int gui_get_file_extension(lua_State *L) {
+int gui_get_file_extension(lua_State *L)
+{
     std::filesystem::path base = luaL_checkstring(L, 1);
     lua_pushstring(L, base.extension().generic_u8string().c_str());
     return 1;
@@ -152,7 +159,8 @@ int gui_get_file_extension(lua_State *L) {
 
 // LUA: get_save_path()
 //
-int gui_get_save_path(lua_State *L) {
+int gui_get_save_path(lua_State *L)
+{
     std::filesystem::path path = game_object->Filename();
     lua_pushstring(L, path.remove_filename().generic_u8string().c_str());
     return 1;
@@ -160,14 +168,17 @@ int gui_get_save_path(lua_State *L) {
 
 // LUA: set_colormap(map, colors)
 //
-int gui_set_colormap(lua_State *L) {
+int gui_set_colormap(lua_State *L)
+{
     int map_id = luaL_checkinteger(L, 1);
 
-    if (map_id < 1 || map_id > MAX_COLOR_MAPS) {
+    if (map_id < 1 || map_id > MAX_COLOR_MAPS)
+    {
         return luaL_argerror(L, 1, "colmap value out of range");
     }
 
-    if (lua_type(L, 2) != LUA_TTABLE) {
+    if (lua_type(L, 2) != LUA_TTABLE)
+    {
         return luaL_argerror(L, 2, "expected a table: colors");
     }
 
@@ -175,17 +186,19 @@ int gui_set_colormap(lua_State *L) {
 
     map->size = 0;
 
-    for (int i = 0; i < MAX_COLORS_PER_MAP; i++) {
+    for (int i = 0; i < MAX_COLORS_PER_MAP; i++)
+    {
         lua_pushinteger(L, 1 + i);
         lua_gettable(L, 2);
 
-        if (lua_isnil(L, -1)) {
+        if (lua_isnil(L, -1))
+        {
             lua_pop(L, 1);
             break;
         }
 
         map->colors[i] = luaL_checkinteger(L, -1);
-        map->size = i + 1;
+        map->size      = i + 1;
 
         lua_pop(L, 1);
     }
@@ -195,8 +208,10 @@ int gui_set_colormap(lua_State *L) {
 
 // LUA: import(script_name)
 //
-int gui_import(lua_State *L) {
-    if (import_dir.empty()) {
+int gui_import(lua_State *L)
+{
+    if (import_dir.empty())
+    {
         return luaL_error(L, "gui.import: no directory set!");
     }
 
@@ -209,7 +224,8 @@ int gui_import(lua_State *L) {
 
 // LUA: set_import_dir(dir_name)
 //
-int gui_set_import_dir(lua_State *L) {
+int gui_set_import_dir(lua_State *L)
+{
     const char *dir_name = luaL_checkstring(L, 1);
 
     import_dir = dir_name;
@@ -219,17 +235,17 @@ int gui_set_import_dir(lua_State *L) {
 
 // LUA: get_install_dir() --> string
 //
-int gui_get_install_dir(lua_State *L) {
+int gui_get_install_dir(lua_State *L)
+{
     lua_pushstring(L, install_dir.generic_u8string().c_str());
     return 1;
 }
 
 static bool scan_dir_process_name(const std::filesystem::path &name,
                                   const std::filesystem::path &parent,
-                                  std::string match) {
-    if (name.native()[0] == '.') {
-        return false;
-    }
+                                  std::string                  match)
+{
+    if (name.native()[0] == '.') { return false; }
 
     // fprintf(stderr, "scan_dir_process_name: '%s'\n", name);
 
@@ -244,13 +260,9 @@ static bool scan_dir_process_name(const std::filesystem::path &name,
 
     bool is_it_dir = (dir_checker.filetype == PHYSFS_FILETYPE_DIRECTORY);
 
-    if (match == "DIRS") {
-        return is_it_dir;
-    }
+    if (match == "DIRS") { return is_it_dir; }
 
-    if (is_it_dir) {
-        return false;
-    }
+    if (is_it_dir) { return false; }
 
     // pretend that zero-length files do not exist
     // [ allows a PK3 to _remove_ a file ]
@@ -259,11 +271,10 @@ static bool scan_dir_process_name(const std::filesystem::path &name,
 
     PHYSFS_File *fp = PHYSFS_openRead(temp_name.generic_u8string().c_str());
 
-    if (!fp) {
-        return false;
-    }
+    if (!fp) { return false; }
 
-    if (PHYSFS_readBytes(fp, buffer, 1) < 1) {
+    if (PHYSFS_readBytes(fp, buffer, 1) < 1)
+    {
         PHYSFS_close(fp);
         return false;
     }
@@ -271,9 +282,9 @@ static bool scan_dir_process_name(const std::filesystem::path &name,
     PHYSFS_close(fp);
 
     // lastly, check match
-    if (match == "*") {
-        return true;
-    } else if (match[0] == '*' && match[1] == '.' && isalnum(match[2])) {
+    if (match == "*") { return true; }
+    else if (match[0] == '*' && match[1] == '.' && isalnum(match[2]))
+    {
         return name.extension().string() ==
                "." + std::string{match.begin() + 2, match.end()};
     }
@@ -283,8 +294,10 @@ static bool scan_dir_process_name(const std::filesystem::path &name,
     return false; /* NOT REACHED */
 }
 
-struct scan_dir_nocase_CMP {
-    inline bool operator()(std::string_view A, std::string_view B) const {
+struct scan_dir_nocase_CMP
+{
+    inline bool operator()(std::string_view A, std::string_view B) const
+    {
         return StringCaseCmp(A, B) < 0;
     }
 };
@@ -294,10 +307,12 @@ struct scan_dir_nocase_CMP {
 // Note: 'match' parameter must be of the form "*" or "*.xxx"
 //       or must be "DIRS" to return all the sub-directories
 //
-int gui_scan_directory(lua_State *L) {
+int gui_scan_directory(lua_State *L)
+{
     const char *dir_name = luaL_checkstring(L, 1);
-    const char *match = luaL_checkstring(L, 2);
-    if (!PHYSFS_exists(dir_name)) {
+    const char *match    = luaL_checkstring(L, 2);
+    if (!PHYSFS_exists(dir_name))
+    {
         lua_pushnil(L);
         lua_pushstring(L, "No such directory");
         return 2;
@@ -306,7 +321,8 @@ int gui_scan_directory(lua_State *L) {
     char **got_names = PHYSFS_enumerateFiles(dir_name);
 
     // seems this only happens on out-of-memory error
-    if (!got_names) {
+    if (!got_names)
+    {
         return luaL_error(L, "gui.scan_directory: %s",
                           PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
     }
@@ -317,10 +333,9 @@ int gui_scan_directory(lua_State *L) {
 
     char **p;
 
-    for (p = got_names; *p; p++) {
-        if (scan_dir_process_name(*p, dir_name, match)) {
-            list.push_back(*p);
-        }
+    for (p = got_names; *p; p++)
+    {
+        if (scan_dir_process_name(*p, dir_name, match)) { list.push_back(*p); }
     }
 
     PHYSFS_freeList(got_names);
@@ -333,7 +348,8 @@ int gui_scan_directory(lua_State *L) {
 
     lua_newtable(L);
 
-    for (unsigned int k = 0; k < list.size(); k++) {
+    for (unsigned int k = 0; k < list.size(); k++)
+    {
         lua_pushstring(L, list[k].c_str());
         lua_rawseti(L, -2, (int)(k + 1));
     }
@@ -343,10 +359,11 @@ int gui_scan_directory(lua_State *L) {
 
 // LUA: add_choice(button, id, label)
 //
-int gui_add_choice(lua_State *L) {
+int gui_add_choice(lua_State *L)
+{
     std::string button = luaL_optstring(L, 1, "");
-    std::string id = luaL_optstring(L, 2, "");
-    std::string label = luaL_optstring(L, 3, "");
+    std::string id     = luaL_optstring(L, 2, "");
+    std::string label  = luaL_optstring(L, 3, "");
 
     SYS_ASSERT(!button.empty() && !id.empty() && !label.empty());
 
@@ -355,9 +372,10 @@ int gui_add_choice(lua_State *L) {
 
 // LUA: enable_choice(what, id, shown)
 //
-int gui_enable_choice(lua_State *L) {
+int gui_enable_choice(lua_State *L)
+{
     std::string button = luaL_optstring(L, 1, "");
-    std::string id = luaL_optstring(L, 2, "");
+    std::string id     = luaL_optstring(L, 2, "");
 
     int enable = lua_toboolean(L, 3) ? 1 : 0;
 
@@ -368,9 +386,10 @@ int gui_enable_choice(lua_State *L) {
 
 // LUA: set_button(button, id)
 //
-int gui_set_button(lua_State *L) {
+int gui_set_button(lua_State *L)
+{
     std::string button = luaL_optstring(L, 1, "");
-    std::string id = luaL_optstring(L, 2, "");
+    std::string id     = luaL_optstring(L, 2, "");
 
     SYS_ASSERT(!button.empty() && !id.empty());
 
@@ -379,15 +398,16 @@ int gui_set_button(lua_State *L) {
 
 // LUA: add_module(where, id, label, tooltip)
 //
-int gui_add_module(lua_State *L) {
-    std::string where = luaL_optstring(L, 1, "");
-    std::string id = luaL_optstring(L, 2, "");
-    std::string label = luaL_optstring(L, 3, "");
-    std::string tip = luaL_optstring(L, 4, "");
-    int red = luaL_optinteger(L, 5, -1);
-    int green = luaL_optinteger(L, 6, -1);
-    int blue = luaL_optinteger(L, 7, -1);
-    bool suboptions = luaL_checkinteger(L, 8);
+int gui_add_module(lua_State *L)
+{
+    std::string where      = luaL_optstring(L, 1, "");
+    std::string id         = luaL_optstring(L, 2, "");
+    std::string label      = luaL_optstring(L, 3, "");
+    std::string tip        = luaL_optstring(L, 4, "");
+    int         red        = luaL_optinteger(L, 5, -1);
+    int         green      = luaL_optinteger(L, 6, -1);
+    int         blue       = luaL_optinteger(L, 7, -1);
+    bool        suboptions = luaL_checkinteger(L, 8);
 
     SYS_ASSERT(!where.empty() && !id.empty() && !label.empty());
 
@@ -396,7 +416,8 @@ int gui_add_module(lua_State *L) {
 
 // LUA: set_module(id, bool)
 //
-int gui_set_module(lua_State *L) {
+int gui_set_module(lua_State *L)
+{
     std::string module = luaL_optstring(L, 1, "");
 
     int opt_val = lua_toboolean(L, 2) ? 1 : 0;
@@ -408,7 +429,8 @@ int gui_set_module(lua_State *L) {
 
 // LUA: show_module(module, shown)
 //
-int gui_show_module(lua_State *L) {
+int gui_show_module(lua_State *L)
+{
     std::string module = luaL_optstring(L, 1, "");
 
     int shown = lua_toboolean(L, 2) ? 1 : 0;
@@ -420,7 +442,8 @@ int gui_show_module(lua_State *L) {
 
 // LUA: add_module_option(module, option, label, tooltip, gap)
 //
-int gui_add_module_header(lua_State *L) {
+int gui_add_module_header(lua_State *L)
+{
     std::string module = luaL_optstring(L, 1, "");
     std::string option = luaL_optstring(L, 2, "");
 
@@ -435,7 +458,8 @@ int gui_add_module_header(lua_State *L) {
 
 // LUA: add_module_url(module, option, label, tooltip, gap)
 //
-int gui_add_module_url(lua_State *L) {
+int gui_add_module_url(lua_State *L)
+{
     std::string module = luaL_optstring(L, 1, "");
     std::string option = luaL_optstring(L, 2, "");
 
@@ -452,12 +476,13 @@ int gui_add_module_url(lua_State *L) {
 
 // LUA: add_module_option(module, option, label, tooltip, gap)
 //
-int gui_add_module_option(lua_State *L) {
+int gui_add_module_option(lua_State *L)
+{
     std::string module = luaL_optstring(L, 1, "");
     std::string option = luaL_optstring(L, 2, "");
 
-    std::string label = luaL_optstring(L, 3, "");
-    std::string tip = luaL_optstring(L, 4, "");
+    std::string label   = luaL_optstring(L, 3, "");
+    std::string tip     = luaL_optstring(L, 4, "");
     std::string longtip = luaL_optstring(L, 5, "");
 
     int gap = luaL_optinteger(L, 6, 0);
@@ -471,12 +496,13 @@ int gui_add_module_option(lua_State *L) {
 
 // LUA: add_module_option(module, option, label, tooltip, gap)
 //
-int gui_add_module_slider_option(lua_State *L) {
+int gui_add_module_slider_option(lua_State *L)
+{
     std::string module = luaL_optstring(L, 1, "");
     std::string option = luaL_optstring(L, 2, "");
 
-    std::string label = luaL_optstring(L, 3, "");
-    std::string tip = luaL_optstring(L, 4, "");
+    std::string label   = luaL_optstring(L, 3, "");
+    std::string tip     = luaL_optstring(L, 4, "");
     std::string longtip = luaL_optstring(L, 5, "");
 
     int gap = luaL_optinteger(L, 6, 0);
@@ -485,9 +511,9 @@ int gui_add_module_slider_option(lua_State *L) {
     double max = luaL_checknumber(L, 8);
     double inc = luaL_checknumber(L, 9);
 
-    std::string units = luaL_optstring(L, 10, "");
+    std::string units   = luaL_optstring(L, 10, "");
     std::string presets = luaL_optstring(L, 11, "");
-    std::string nan = luaL_optstring(L, 12, "");
+    std::string nan     = luaL_optstring(L, 12, "");
 
     std::string default_value = luaL_checkstring(L, 13);
 
@@ -498,12 +524,13 @@ int gui_add_module_slider_option(lua_State *L) {
 
 // LUA: add_module_button_option(module, option, label, tooltip, gap)
 //
-int gui_add_module_button_option(lua_State *L) {
+int gui_add_module_button_option(lua_State *L)
+{
     std::string module = luaL_optstring(L, 1, "");
     std::string option = luaL_optstring(L, 2, "");
 
-    std::string label = luaL_optstring(L, 3, "");
-    std::string tip = luaL_optstring(L, 4, "");
+    std::string label   = luaL_optstring(L, 3, "");
+    std::string tip     = luaL_optstring(L, 4, "");
     std::string longtip = luaL_optstring(L, 5, "");
 
     int gap = luaL_optinteger(L, 6, 0);
@@ -517,11 +544,12 @@ int gui_add_module_button_option(lua_State *L) {
 
 // LUA: add_option_choice(module, option, id, label)
 //
-int gui_add_option_choice(lua_State *L) {
+int gui_add_option_choice(lua_State *L)
+{
     std::string module = luaL_optstring(L, 1, "");
     std::string option = luaL_optstring(L, 2, "");
 
-    std::string id = luaL_optstring(L, 3, "");
+    std::string id    = luaL_optstring(L, 3, "");
     std::string label = luaL_optstring(L, 4, "");
 
     SYS_ASSERT(!module.empty() && !option.empty());
@@ -531,10 +559,11 @@ int gui_add_option_choice(lua_State *L) {
 
 // LUA: set_module_option(module, option, value)
 //
-int gui_set_module_option(lua_State *L) {
+int gui_set_module_option(lua_State *L)
+{
     std::string module = luaL_optstring(L, 1, "");
     std::string option = luaL_optstring(L, 2, "");
-    std::string value = luaL_optstring(L, 3, "");
+    std::string value  = luaL_optstring(L, 3, "");
 
     SYS_ASSERT(!module.empty() && !option.empty() && !value.empty());
 
@@ -543,10 +572,11 @@ int gui_set_module_option(lua_State *L) {
 
 // LUA: set_module_option(module, option, value)
 //
-int gui_set_module_slider_option(lua_State *L) {
+int gui_set_module_slider_option(lua_State *L)
+{
     std::string module = luaL_optstring(L, 1, "");
     std::string option = luaL_optstring(L, 2, "");
-    std::string value = luaL_optstring(L, 3, "");
+    std::string value  = luaL_optstring(L, 3, "");
 
     SYS_ASSERT(!module.empty() && !option.empty() && !value.empty());
 
@@ -555,10 +585,11 @@ int gui_set_module_slider_option(lua_State *L) {
 
 // LUA: set_module_option(module, option, value)
 //
-int gui_set_module_button_option(lua_State *L) {
+int gui_set_module_button_option(lua_State *L)
+{
     std::string module = luaL_optstring(L, 1, "");
     std::string option = luaL_optstring(L, 2, "");
-    int value = luaL_checkinteger(L, 3);
+    int         value  = luaL_checkinteger(L, 3);
 
     SYS_ASSERT(!module.empty() && !option.empty());
 
@@ -566,18 +597,19 @@ int gui_set_module_button_option(lua_State *L) {
 }
 
 // LUA: get_module_slider_value(module, option)
-int gui_get_module_slider_value(lua_State *L) {
+int gui_get_module_slider_value(lua_State *L)
+{
     std::string module = luaL_optstring(L, 1, "");
     std::string option = luaL_optstring(L, 2, "");
 
     SYS_ASSERT(!module.empty() && !option.empty());
 
-
     return 0;
 }
 
 // LUA: get_module_button_value(module, option)
-int gui_get_module_button_value(lua_State *L) {
+int gui_get_module_button_value(lua_State *L)
+{
     std::string module = luaL_optstring(L, 1, "");
     std::string option = luaL_optstring(L, 2, "");
 
@@ -588,7 +620,8 @@ int gui_get_module_button_value(lua_State *L) {
 
 // LUA: at_level(name, idx, total)
 //
-int gui_at_level(lua_State *L) {
+int gui_at_level(lua_State *L)
+{
     std::string name = luaL_optstring(L, 1, "");
 
     int index = luaL_checkinteger(L, 2);
@@ -601,7 +634,8 @@ int gui_at_level(lua_State *L) {
 
 // LUA: prog_step(step_name)
 //
-int gui_prog_step(lua_State *L) {
+int gui_prog_step(lua_State *L)
+{
     const char *name = luaL_checkstring(L, 1);
 
     return 0;
@@ -609,19 +643,22 @@ int gui_prog_step(lua_State *L) {
 
 // LUA: random() --> number
 //
-int gui_random(lua_State *L) {
+int gui_random(lua_State *L)
+{
     lua_Number value = xoshiro_Double();
     lua_pushnumber(L, value);
     return 1;
 }
 
-int gui_random_int(lua_State *L) {
+int gui_random_int(lua_State *L)
+{
     lua_Integer value = xoshiro_UInt();
     lua_pushnumber(L, value);
     return 1;
 }
 
-int gui_reseed_rng(lua_State *L) {
+int gui_reseed_rng(lua_State *L)
+{
     int seed = luaL_checkinteger(L, 1);
     xoshiro_Reseed(seed);
     return 0;
@@ -629,7 +666,8 @@ int gui_reseed_rng(lua_State *L) {
 
 // LUA: bit_and(A, B) --> number
 //
-int gui_bit_and(lua_State *L) {
+int gui_bit_and(lua_State *L)
+{
     int A = luaL_checkinteger(L, 1);
     int B = luaL_checkinteger(L, 2);
 
@@ -639,7 +677,8 @@ int gui_bit_and(lua_State *L) {
 
 // LUA: bit_test(val) --> boolean
 //
-int gui_bit_test(lua_State *L) {
+int gui_bit_test(lua_State *L)
+{
     int A = luaL_checkinteger(L, 1);
     int B = luaL_checkinteger(L, 2);
 
@@ -649,7 +688,8 @@ int gui_bit_test(lua_State *L) {
 
 // LUA: bit_or(A, B) --> number
 //
-int gui_bit_or(lua_State *L) {
+int gui_bit_or(lua_State *L)
+{
     int A = luaL_checkinteger(L, 1);
     int B = luaL_checkinteger(L, 2);
 
@@ -659,7 +699,8 @@ int gui_bit_or(lua_State *L) {
 
 // LUA: bit_xor(A, B) --> number
 //
-int gui_bit_xor(lua_State *L) {
+int gui_bit_xor(lua_State *L)
+{
     int A = luaL_checkinteger(L, 1);
     int B = luaL_checkinteger(L, 2);
 
@@ -669,7 +710,8 @@ int gui_bit_xor(lua_State *L) {
 
 // LUA: bit_not(val) --> number
 //
-int gui_bit_not(lua_State *L) {
+int gui_bit_not(lua_State *L)
+{
     int A = luaL_checkinteger(L, 1);
 
     // do not make the result negative
@@ -677,15 +719,12 @@ int gui_bit_not(lua_State *L) {
     return 1;
 }
 
-int gui_minimap_enable(lua_State *L) {
-    return 0;
-}
+int gui_minimap_enable(lua_State *L) { return 0; }
 
-int gui_minimap_disable(lua_State *L) {
-    return 0;
-}
+int gui_minimap_disable(lua_State *L) { return 0; }
 
-int gui_minimap_begin(lua_State *L) {
+int gui_minimap_begin(lua_State *L)
+{
     // dummy size when running in batch mode
     int map_W = 50;
     int map_H = 50;
@@ -696,24 +735,20 @@ int gui_minimap_begin(lua_State *L) {
     return 2;
 }
 
-int gui_minimap_finish(lua_State *L) {
-    return 0;
-}
+int gui_minimap_finish(lua_State *L) { return 0; }
 
-int gui_minimap_gif_start(lua_State *L) {
+int gui_minimap_gif_start(lua_State *L)
+{
     int delay = luaL_optinteger(L, 1, 10);
     return 0;
 }
 
-int gui_minimap_gif_frame(lua_State *L) {
-    return 0;
-}
+int gui_minimap_gif_frame(lua_State *L) { return 0; }
 
-int gui_minimap_gif_finish(lua_State *L) {
-    return 0;
-}
+int gui_minimap_gif_finish(lua_State *L) { return 0; }
 
-int gui_minimap_draw_line(lua_State *L) {
+int gui_minimap_draw_line(lua_State *L)
+{
     int x1 = luaL_checkinteger(L, 1);
     int y1 = luaL_checkinteger(L, 2);
 
@@ -731,7 +766,8 @@ int gui_minimap_draw_line(lua_State *L) {
     return 0;
 }
 
-int gui_minimap_fill_box(lua_State *L) {
+int gui_minimap_fill_box(lua_State *L)
+{
     int x1 = luaL_checkinteger(L, 1);
     int y1 = luaL_checkinteger(L, 2);
 
@@ -774,7 +810,8 @@ extern int WF_wolf_read(lua_State *L);
 extern int v094_begin_wolf_level(lua_State *L);
 extern int v094_end_wolf_level(lua_State *L);
 
-namespace Doom {
+namespace Doom
+{
 extern int wad_name_gfx(lua_State *L);
 
 extern int wad_add_text_lump(lua_State *L);
@@ -979,7 +1016,8 @@ static const luaL_Reg bit_functions[] = {
     {NULL, NULL}  // the end
 };
 
-static int p_init_lua(lua_State *L) {
+static int p_init_lua(lua_State *L)
+{
     /* stop collector during initialization */
     lua_gc(L, LUA_GCSTOP, 0);
     {
@@ -995,43 +1033,45 @@ static int p_init_lua(lua_State *L) {
 }
 
 static bool Script_CallFunc(std::string func_name, int nresult = 0,
-                            std::string *params = NULL) {
+                            std::string *params = NULL)
+{
     // Note: the results of the function will be on the Lua stack
 
     lua_getglobal(LUA_ST, "ob_traceback");
 
-    if (lua_type(LUA_ST, -1) == LUA_TNIL) {
+    if (lua_type(LUA_ST, -1) == LUA_TNIL)
+    {
         Main::FatalError("Script problem: missing function 'ob_traceback'");
     }
 
     lua_getglobal(LUA_ST, func_name.c_str());
 
-    if (lua_type(LUA_ST, -1) == LUA_TNIL) {
-        Main::FatalError("Script problem: missing function '%s'", func_name.c_str());
+    if (lua_type(LUA_ST, -1) == LUA_TNIL)
+    {
+        Main::FatalError("Script problem: missing function '%s'",
+                         func_name.c_str());
     }
 
     int nargs = 0;
-    if (params) {
-        for (; !params->empty(); params++, nargs++) {
+    if (params)
+    {
+        for (; !params->empty(); params++, nargs++)
+        {
             lua_pushstring(LUA_ST, params->c_str());
         }
     }
 
     int status = lua_pcall(LUA_ST, nargs, nresult, -2 - nargs);
-    if (status != 0) {
+    if (status != 0)
+    {
         const char *msg = lua_tolstring(LUA_ST, -1, NULL);
 
         // skip the filename
         const char *err_msg = strstr(msg, ": ");
-        if (err_msg) {
-            err_msg += 2;
-        } else {
-            err_msg = msg;
-        }
+        if (err_msg) { err_msg += 2; }
+        else { err_msg = msg; }
 
-        if (batch_mode) {
-            LogPrintf("ERROR MESSAGE: %s\n", err_msg);
-        }
+        if (batch_mode) { LogPrintf("ERROR MESSAGE: %s\n", err_msg); }
 
 // this will appear in the log file too
 #ifndef CONSOLE_ONLY
@@ -1047,41 +1087,41 @@ static bool Script_CallFunc(std::string func_name, int nresult = 0,
     return true;
 }
 
-typedef struct load_info_t {
+typedef struct load_info_t
+{
     PHYSFS_File *fp;
-    std::string error_msg;
-    char buffer[2048];
+    std::string  error_msg;
+    char         buffer[2048];
 
 } load_info_t;
 
-static const char *my_reader(lua_State *L, void *ud, size_t *size) {
+static const char *my_reader(lua_State *L, void *ud, size_t *size)
+{
     (void)L;
 
     load_info_t *info = (load_info_t *)ud;
 
-    if (PHYSFS_eof(info->fp)) {
-        return NULL;
-    }
+    if (PHYSFS_eof(info->fp)) { return NULL; }
 
     PHYSFS_sint64 len =
         PHYSFS_readBytes(info->fp, info->buffer, sizeof(info->buffer));
 
     // negative result indicates a "complete failure"
-    if (len < 0) {
+    if (len < 0)
+    {
         info->error_msg = PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode());
-        len = 0;
+        len             = 0;
     }
 
     *size = (size_t)len;
 
-    if (!size) {
-        return NULL;
-    }
+    if (!size) { return NULL; }
 
     return info->buffer;  // OK
 }
 
-static int my_loadfile(lua_State *L, const std::filesystem::path &filename) {
+static int my_loadfile(lua_State *L, const std::filesystem::path &filename)
+{
     /* index of filename on the stack */
     int fnameindex = lua_gettop(L) + 1;
 
@@ -1092,7 +1132,8 @@ static int my_loadfile(lua_State *L, const std::filesystem::path &filename) {
     info.fp = PHYSFS_openRead(filename.generic_u8string().c_str());
     info.error_msg.clear();
 
-    if (!info.fp) {
+    if (!info.fp)
+    {
         lua_pushfstring(L, "file open error: %s",
                         PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         lua_remove(L, fnameindex);
@@ -1102,18 +1143,20 @@ static int my_loadfile(lua_State *L, const std::filesystem::path &filename) {
 
     int status = lua_load(L, my_reader, &info, lua_tostring(L, -1), "bt");
 
-    //int status = lua_load(L, my_reader, &info, lua_tostring(L, -1));
+    // int status = lua_load(L, my_reader, &info, lua_tostring(L, -1));
 
     /* close file (even in case of errors) */
     PHYSFS_close(info.fp);
 
-    if (!info.error_msg.empty()) {
+    if (!info.error_msg.empty())
+    {
         /* ignore results from 'lua_load' */
         lua_settop(L, fnameindex);
         status = LUA_ERRFILE;
 
         lua_pushstring(
-            L, StringFormat("file read error: %s", info.error_msg.c_str()).c_str());
+            L, StringFormat("file read error: %s", info.error_msg.c_str())
+                   .c_str());
     }
 
     lua_remove(L, fnameindex);
@@ -1121,11 +1164,13 @@ static int my_loadfile(lua_State *L, const std::filesystem::path &filename) {
     return status;
 }
 
-void Script_Load(std::filesystem::path script_name) {
+void Script_Load(std::filesystem::path script_name)
+{
     SYS_ASSERT(!import_dir.empty());
 
     // add extension if missing
-    if (script_name.extension().empty()) {
+    if (script_name.extension().empty())
+    {
         script_name.replace_extension("lua");
     }
 
@@ -1136,30 +1181,32 @@ void Script_Load(std::filesystem::path script_name) {
 
     int status = my_loadfile(LUA_ST, filename);
 
-    if (status == 0) {
-        status = lua_pcall(LUA_ST, 0, 0, 0);
-    }
+    if (status == 0) { status = lua_pcall(LUA_ST, 0, 0, 0); }
 
-    if (status != 0) {
+    if (status != 0)
+    {
         const char *msg = lua_tolstring(LUA_ST, -1, NULL);
 
-        Main::FatalError("Unable to load script '%s'\n%s", filename.u8string().c_str(), msg);
+        Main::FatalError("Unable to load script '%s'\n%s",
+                         filename.u8string().c_str(), msg);
     }
 }
 
-void Script_Open() {
-
+void Script_Open()
+{
     LogPrintf("\n--- OPENING LUA VM ---\n\n");
 
     // create Lua state
 
     LUA_ST = luaL_newstate();
-    if (!LUA_ST) {
+    if (!LUA_ST)
+    {
         Main::FatalError("LUA Init failed: cannot create new state");
     }
 
     int status = p_init_lua(LUA_ST);
-    if (status != 0) {
+    if (status != 0)
+    {
         Main::FatalError("LUA Init failed: cannot load standard libs (%d)",
                          status);
     }
@@ -1183,15 +1230,15 @@ void Script_Open() {
     // ob_init() will load all the game-specific scripts, engine scripts, and
     // module scripts.
 
-    if (!Script_CallFunc("ob_init")) {
+    if (!Script_CallFunc("ob_init"))
+    {
         Main::FatalError("The ob_init script failed.\n");
     }
 }
 
-void Script_Close() {
-    if (LUA_ST) {
-        lua_close(LUA_ST);
-    }
+void Script_Close()
+{
+    if (LUA_ST) { lua_close(LUA_ST); }
 
     LogPrintf("\n--- CLOSED LUA VM ---\n\n");
 
@@ -1202,12 +1249,14 @@ void Script_Close() {
 // WRAPPERS TO LUA FUNCTIONS
 //------------------------------------------------------------------------
 
-bool ob_set_config(std::string key, std::string value) {
+bool ob_set_config(std::string key, std::string value)
+{
     // See the document 'doc/Config_Flow.txt' for a good
     // description of the flow of configuration values
     // between the C++ GUI and the Lua scripts.
 
-    if (!has_loaded) {
+    if (!has_loaded)
+    {
         DebugPrintf("ob_set_config(%s) called before loaded!\n", key.c_str());
         return false;
     }
@@ -1222,8 +1271,10 @@ bool ob_set_config(std::string key, std::string value) {
 }
 
 bool ob_set_mod_option(std::string module, std::string option,
-                       std::string value) {
-    if (!has_loaded) {
+                       std::string value)
+{
+    if (!has_loaded)
+    {
         DebugPrintf("ob_set_mod_option() called before loaded!\n");
         return false;
     }
@@ -1233,8 +1284,10 @@ bool ob_set_mod_option(std::string module, std::string option,
     return Script_CallFunc("ob_set_mod_option", 0, params.data());
 }
 
-bool ob_read_all_config(std::vector<std::string> *lines, bool need_full) {
-    if (!has_loaded) {
+bool ob_read_all_config(std::vector<std::string> *lines, bool need_full)
+{
+    if (!has_loaded)
+    {
         DebugPrintf("ob_read_all_config() called before loaded!\n");
         return false;
     }
@@ -1253,10 +1306,9 @@ bool ob_read_all_config(std::vector<std::string> *lines, bool need_full) {
     return result;
 }
 
-std::string ob_get_password() {
-    if (!Script_CallFunc("ob_get_password", 1)) {
-        return "";
-    }
+std::string ob_get_password()
+{
+    if (!Script_CallFunc("ob_get_password", 1)) { return ""; }
 
     std::string res = luaL_optlstring(LUA_ST, -1, "", NULL);
 
@@ -1266,10 +1318,9 @@ std::string ob_get_password() {
     return res;
 }
 
-std::string ob_get_random_words() {
-    if (!Script_CallFunc("ob_get_random_words", 1)) {
-        return "";
-    }
+std::string ob_get_random_words()
+{
+    if (!Script_CallFunc("ob_get_random_words", 1)) { return ""; }
 
     std::string res = luaL_optlstring(LUA_ST, -1, "", NULL);
 
@@ -1279,10 +1330,9 @@ std::string ob_get_random_words() {
     return res;
 }
 
-std::string ob_game_format() {
-    if (!Script_CallFunc("ob_game_format", 1)) {
-        return "";
-    }
+std::string ob_game_format()
+{
+    if (!Script_CallFunc("ob_game_format", 1)) { return ""; }
 
     std::string res = luaL_optlstring(LUA_ST, -1, "", NULL);
 
@@ -1292,12 +1342,11 @@ std::string ob_game_format() {
     return res;
 }
 
-std::string ob_get_param(std::string parameter) {
+std::string ob_get_param(std::string parameter)
+{
     std::array<std::string, 2> params = {parameter, ""};
 
-    if (!Script_CallFunc("ob_get_param", 1, params.data())) {
-        return "";
-    }
+    if (!Script_CallFunc("ob_get_param", 1, params.data())) { return ""; }
 
     std::string param = luaL_optlstring(LUA_ST, -1, "", NULL);
 
@@ -1307,10 +1356,12 @@ std::string ob_get_param(std::string parameter) {
     return param;
 }
 
-bool ob_hexen_ceiling_check(int thing_id) {
+bool ob_hexen_ceiling_check(int thing_id)
+{
     std::array<std::string, 2> params = {NumToString(thing_id), ""};
 
-    if (!Script_CallFunc("ob_hexen_ceiling_check", 1, params.data())) {
+    if (!Script_CallFunc("ob_hexen_ceiling_check", 1, params.data()))
+    {
         return false;
     }
 
@@ -1322,12 +1373,11 @@ bool ob_hexen_ceiling_check(int thing_id) {
     return StringToInt(param);
 }
 
-bool ob_mod_enabled(std::string module_name) {
+bool ob_mod_enabled(std::string module_name)
+{
     std::array<std::string, 2> params = {module_name, ""};
 
-    if (!Script_CallFunc("ob_mod_enabled", 1, params.data())) {
-        return false;
-    }
+    if (!Script_CallFunc("ob_mod_enabled", 1, params.data())) { return false; }
 
     int param = luaL_optinteger(LUA_ST, -1, 0);
 
@@ -1337,10 +1387,9 @@ bool ob_mod_enabled(std::string module_name) {
     return param;
 }
 
-std::string ob_default_filename() {
-    if (!Script_CallFunc("ob_default_filename", 1)) {
-        return "";
-    }
+std::string ob_default_filename()
+{
+    if (!Script_CallFunc("ob_default_filename", 1)) { return ""; }
 
     std::string res = luaL_optlstring(LUA_ST, -1, "", NULL);
 
@@ -1350,16 +1399,20 @@ std::string ob_default_filename() {
     return res;
 }
 
-void ob_invoke_hook(std::string hookname) {
+void ob_invoke_hook(std::string hookname)
+{
     std::array<std::string, 2> params = {hookname, ""};
 
-    if (!Script_CallFunc("ob_invoke_hook", 0, params.data())) {
+    if (!Script_CallFunc("ob_invoke_hook", 0, params.data()))
+    {
         Main::ProgStatus(_("Script Error"));
     }
 }
 
-bool ob_build_cool_shit() {
-    if (!Script_CallFunc("ob_build_cool_shit", 1)) {
+bool ob_build_cool_shit()
+{
+    if (!Script_CallFunc("ob_build_cool_shit", 1))
+    {
         Main::ProgStatus(_("Script Error"));
         return false;
     }
@@ -1369,9 +1422,7 @@ bool ob_build_cool_shit() {
     // remove result from lua stack
     lua_pop(LUA_ST, 1);
 
-    if (res && strcmp(res, "ok") == 0) {
-        return true;
-    }
+    if (res && strcmp(res, "ok") == 0) { return true; }
 
     Main::ProgStatus(_("Cancelled"));
     return false;

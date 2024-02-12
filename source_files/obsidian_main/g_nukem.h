@@ -42,7 +42,8 @@ int NK_NumSprites();
 /* ----- MAP structures ---------------------- */
 
 #pragma pack(push, 1)
-struct raw_nukem_map_t {
+struct raw_nukem_map_t
+{
     uint32_t version;
 
     int32_t pos_x;
@@ -57,7 +58,8 @@ struct raw_nukem_map_t {
 #define DUKE_MAP_VERSION 7
 
 #pragma pack(push, 1)
-struct raw_nukem_sector_t {
+struct raw_nukem_sector_t
+{
     uint16_t wall_ptr;
     uint16_t wall_num;
 
@@ -68,17 +70,17 @@ struct raw_nukem_sector_t {
     uint16_t floor_flags;
 
     uint16_t ceil_pic;
-    int16_t ceil_slope;
+    int16_t  ceil_slope;
 
-    int8_t ceil_shade;
+    int8_t  ceil_shade;
     uint8_t ceil_palette;
     uint8_t ceil_xpan;
     uint8_t ceil_ypan;
 
     uint16_t floor_pic;
-    int16_t floor_slope;
+    int16_t  floor_slope;
 
-    int8_t floor_shade;
+    int8_t  floor_shade;
     uint8_t floor_palette;
     uint8_t floor_xpan;
     uint8_t floor_ypan;
@@ -93,15 +95,16 @@ struct raw_nukem_sector_t {
 #pragma pack(pop)
 
 constexpr unsigned int SECTOR_F_PARALLAX = 1 << 0;
-constexpr unsigned int SECTOR_F_SLOPED = 1 << 1;
-constexpr unsigned int SECTOR_F_SWAP_XY = 1 << 2;
-constexpr unsigned int SECTOR_F_DOUBLED = 1 << 3;
-constexpr unsigned int SECTOR_F_FLIP_X = 1 << 4;
-constexpr unsigned int SECTOR_F_FLIP_Y = 1 << 5;
+constexpr unsigned int SECTOR_F_SLOPED   = 1 << 1;
+constexpr unsigned int SECTOR_F_SWAP_XY  = 1 << 2;
+constexpr unsigned int SECTOR_F_DOUBLED  = 1 << 3;
+constexpr unsigned int SECTOR_F_FLIP_X   = 1 << 4;
+constexpr unsigned int SECTOR_F_FLIP_Y   = 1 << 5;
 constexpr unsigned int SECTOR_F_RELATIVE = 1 << 6;
 
 #pragma pack(push, 1)
-struct raw_nukem_wall_t {
+struct raw_nukem_wall_t
+{
     int32_t x, y;
 
     uint16_t right_wall;
@@ -113,7 +116,7 @@ struct raw_nukem_wall_t {
     uint16_t pic;
     uint16_t mask_pic;
 
-    int8_t shade;
+    int8_t  shade;
     uint8_t palette;
 
     uint8_t xscale, yscale;
@@ -124,34 +127,35 @@ struct raw_nukem_wall_t {
 };
 #pragma pack(pop)
 
-constexpr unsigned int WALL_F_BLOCKING = 1 << 0;
+constexpr unsigned int WALL_F_BLOCKING   = 1 << 0;
 constexpr unsigned int WALL_F_SWAP_LOWER = 1 << 1;
-constexpr unsigned int WALL_F_PEGGED = 1 << 2;
-constexpr unsigned int WALL_F_FLIP_X = 1 << 3;
-constexpr unsigned int WALL_F_MASKED = 1 << 4;
-constexpr unsigned int WALL_F_ONE_WAY = 1 << 5;
-constexpr unsigned int WALL_F_GUN_BLOCK = 1 << 6;
-constexpr unsigned int WALL_F_TRANS33 = 1 << 7;
-constexpr unsigned int WALL_F_FLIP_Y = 1 << 8;
+constexpr unsigned int WALL_F_PEGGED     = 1 << 2;
+constexpr unsigned int WALL_F_FLIP_X     = 1 << 3;
+constexpr unsigned int WALL_F_MASKED     = 1 << 4;
+constexpr unsigned int WALL_F_ONE_WAY    = 1 << 5;
+constexpr unsigned int WALL_F_GUN_BLOCK  = 1 << 6;
+constexpr unsigned int WALL_F_TRANS33    = 1 << 7;
+constexpr unsigned int WALL_F_FLIP_Y     = 1 << 8;
 /**
  * \brief requires TRANS33 too
  */
 constexpr unsigned int WALL_F_TRANS66 = 1 << 9;
 
 #pragma pack(push, 1)
-struct raw_nukem_sprite_t {
+struct raw_nukem_sprite_t
+{
     int32_t x, y, z;
 
     uint16_t flags;
     uint16_t pic;
 
-    int8_t shade;
+    int8_t  shade;
     uint8_t palette;
     uint8_t clip_dist;
     uint8_t _pad;
 
     uint8_t xscale, yscale;
-    int8_t xoffset, yoffset;
+    int8_t  xoffset, yoffset;
 
     uint16_t sector;
     uint16_t status;
@@ -164,24 +168,25 @@ struct raw_nukem_sprite_t {
 };
 #pragma pack(pop)
 
-#define SPRITE_F_BLOCKING (1 << 0)
+#define SPRITE_F_BLOCKING  (1 << 0)
 #define SPRITE_F_SUBMERGED (1 << 7)
 #define SPRITE_F_GUN_BLOCK (1 << 8)
 
-#define SPRITE_F_TRANS33 (1 << 1)
-#define SPRITE_F_TRANS66 (1 << 9)  // requires TRANS33 too
+#define SPRITE_F_TRANS33   (1 << 1)
+#define SPRITE_F_TRANS66   (1 << 9)  // requires TRANS33 too
 #define SPRITE_F_ONE_SIDED (1 << 6)
 #define SPRITE_F_INVISIBLE (1 << 15)
 
-#define SPRITE_F_IS_WALL (1 << 4)
+#define SPRITE_F_IS_WALL  (1 << 4)
 #define SPRITE_F_IS_FLOOR (1 << 5)
-#define SPRITE_F_FLIP_X (1 << 2)
-#define SPRITE_F_FLIP_Y (1 << 3)
+#define SPRITE_F_FLIP_X   (1 << 2)
+#define SPRITE_F_FLIP_Y   (1 << 3)
 
 /* ----- ART structures ---------------------- */
 
 #pragma pack(push, 1)
-struct raw_art_header_t {
+struct raw_art_header_t
+{
     uint32_t version;
 
     uint32_t num_pics;

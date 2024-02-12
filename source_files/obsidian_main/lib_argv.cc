@@ -25,14 +25,15 @@
 #include "lib_util.h"
 
 #ifdef _WIN32
-#include <shellapi.h>
 #include <processenv.h>
+#include <shellapi.h>
 #endif
 
 std::vector<std::string> argv::list;
 std::unordered_set<char> argv::short_flags;
 
-static void Parse_LongArg(std::string_view arg) {
+static void Parse_LongArg(std::string_view arg)
+{
     // long argument, e.g. --foo=bar
 
     // keep first hyphen
@@ -40,31 +41,33 @@ static void Parse_LongArg(std::string_view arg) {
 
     std::string_view value;
 
-    if (auto pos = name.find('='); pos != std::string_view::npos) {
+    if (auto pos = name.find('='); pos != std::string_view::npos)
+    {
         value = name.substr(pos + 1);
-        name = name.substr(0, pos);
+        name  = name.substr(0, pos);
     }
 
     argv::list.emplace_back(name);
-    if (!value.empty()) {
-        argv::list.emplace_back(value);
-    }
+    if (!value.empty()) { argv::list.emplace_back(value); }
 }
 
-static void Parse_ShortArgs(std::string_view arg) {
-    for (std::size_t i = 1; i < arg.size(); ++i) {
+static void Parse_ShortArgs(std::string_view arg)
+{
+    for (std::size_t i = 1; i < arg.size(); ++i)
+    {
         char ch = arg[i];
 
-        if (argv::short_flags.find(ch) != argv::short_flags.end()) {
+        if (argv::short_flags.find(ch) != argv::short_flags.end())
+        {
             // argument
             argv::list.emplace_back(std::string{"-"} + std::string{&ch, 1});
             std::string_view argument = arg.substr(i + 1);
-            if (!argument.empty()) {
-                argv::list.emplace_back(argument);
-            }
+            if (!argument.empty()) { argv::list.emplace_back(argument); }
             // no more to parse
             break;
-        } else {
+        }
+        else
+        {
             // no argument
             argv::list.emplace_back(std::string{"-"} + std::string{&ch, 1});
         }
@@ -81,14 +84,14 @@ static void Parse_ShortArgs(std::string_view arg) {
 //       using ArgvFind() will only return the first usage.
 //
 #ifdef _WIN32
-void argv::Init(const int argc, const char *const *argv) {
-    
+void argv::Init(const int argc, const char *const *argv)
+{
     (void)argc;
-	(void)argv;    
-    
-    int win_argc = 0;
-	size_t i;
-	wchar_t **win_argv = CommandLineToArgvW(GetCommandLineW(), &win_argc);
+    (void)argv;
+
+    int       win_argc = 0;
+    size_t    i;
+    wchar_t **win_argv = CommandLineToArgvW(GetCommandLineW(), &win_argc);
 
     SYS_NULL_CHECK(win_argv);
 
@@ -97,110 +100,107 @@ void argv::Init(const int argc, const char *const *argv) {
 
     std::vector<std::string> argv_block;
 
-    for (i = 0; i < win_argc; i++) {
+    for (i = 0; i < win_argc; i++)
+    {
         SYS_NULL_CHECK(win_argv[i]);
-		std::u16string arg = reinterpret_cast<char16_t *>(win_argv[i]);
-		argv_block.push_back(StringToUTF8(arg));
+        std::u16string arg = reinterpret_cast<char16_t *>(win_argv[i]);
+        argv_block.push_back(StringToUTF8(arg));
     }
 
-	LocalFree(win_argv);
+    LocalFree(win_argv);
 
-    for (int i = 0; i < argv_block.size(); i++) {
-
+    for (int i = 0; i < argv_block.size(); i++)
+    {
         std::string_view cur = argv_block[i];
 
         // support GNU-style long and short options
-        if (cur[0] == '-') {
-            if (cur[1] == '-') {
-                Parse_LongArg(cur);
-            } else {
-                Parse_ShortArgs(cur);
-            }
-        } else {
-            list.emplace_back(cur);
+        if (cur[0] == '-')
+        {
+            if (cur[1] == '-') { Parse_LongArg(cur); }
+            else { Parse_ShortArgs(cur); }
         }
+        else { list.emplace_back(cur); }
 
         // support DOS-style short options
         if (cur[0] == '/' && (isalnum(cur[1]) || cur[1] == '?') &&
-            cur[2] == '\0') {
+            cur[2] == '\0')
+        {
             list.emplace_back(std::string{"-"} + std::string{&cur[1], 1});
         }
     }
 }
 #else
-void argv::Init(const int argc, const char *const *argv) {
+void argv::Init(const int argc, const char *const *argv)
+{
     list.reserve(argc);
     SYS_ASSERT(argv::list.size() >= 0);
 
-    for (int i = 0; i < argc; i++) {
+    for (int i = 0; i < argc; i++)
+    {
         SYS_NULL_CHECK(argv[i]);
         std::string_view cur = argv[i];
 
 #ifdef __APPLE__
         // ignore MacOS X rubbish
-        if (cur == "-psn") {
-            continue;
-        }
+        if (cur == "-psn") { continue; }
 #endif
 
         // support GNU-style long and short options
-        if (cur[0] == '-') {
-            if (cur[1] == '-') {
-                Parse_LongArg(cur);
-            } else {
-                Parse_ShortArgs(cur);
-            }
-        } else {
-            list.emplace_back(cur);
+        if (cur[0] == '-')
+        {
+            if (cur[1] == '-') { Parse_LongArg(cur); }
+            else { Parse_ShortArgs(cur); }
         }
+        else { list.emplace_back(cur); }
 
         // support DOS-style short options
         if (cur[0] == '/' && (isalnum(cur[1]) || cur[1] == '?') &&
-            cur[2] == '\0') {
+            cur[2] == '\0')
+        {
             list.emplace_back(std::string{"-"} + std::string{&cur[1], 1});
         }
     }
 }
 #endif
 
-int argv::Find(const char shortName, const char *longName, int *numParams) {
+int argv::Find(const char shortName, const char *longName, int *numParams)
+{
     SYS_ASSERT(shortName || longName);
 
-    if (numParams) {
-        *numParams = 0;
-    }
+    if (numParams) { *numParams = 0; }
 
     size_t p = 0;
 
-    for (; p < list.size(); ++p) {
-        if (!IsOption(p)) {
-            continue;
-        }
+    for (; p < list.size(); ++p)
+    {
+        if (!IsOption(p)) { continue; }
 
         const std::string &str = list[p];
 
-        if (shortName && (shortName == tolower(str[1])) && str[2] == 0) {
+        if (shortName && (shortName == tolower(str[1])) && str[2] == 0)
+        {
             break;
         }
 
         if (longName &&
             StringCaseCmp(longName,
-                          std::string_view{&str[1], (str.size() - 1)}) == 0) {
+                          std::string_view{&str[1], (str.size() - 1)}) == 0)
+        {
             break;
         }
     }
 
-    if (p == list.size()) {
+    if (p == list.size())
+    {
         // NOT FOUND
         return -1;
     }
 
-    if (numParams) {
+    if (numParams)
+    {
         size_t q = p + 1;
 
-        while (q < list.size() && !IsOption(q)) {
-            ++q;
-        }
+        while (q < list.size() && !IsOption(q)) { ++q; }
 
         *numParams = q - p - 1;
     }

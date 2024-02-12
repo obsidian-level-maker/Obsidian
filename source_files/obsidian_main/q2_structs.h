@@ -45,37 +45,38 @@ constexpr int BSPVERSION = 38;
 // upper design bounds
 // leaffaces, leafbrushes, planes, and verts are still bounded by
 // 16 bit short limits
-constexpr int MAX_MAP_MODELS = 1024;
-constexpr int MAX_MAP_BRUSHES = 8192;
+constexpr int MAX_MAP_MODELS   = 1024;
+constexpr int MAX_MAP_BRUSHES  = 8192;
 constexpr int MAX_MAP_ENTITIES = 2048;
-constexpr int MAX_MAP_TEXINFO = 8192;
+constexpr int MAX_MAP_TEXINFO  = 8192;
 
-constexpr int MAX_MAP_PLANES = 65535;
-constexpr int MAX_MAP_NODES = 65535;
-constexpr int MAX_MAP_BRUSHSIDES = 65535;
-constexpr int MAX_MAP_LEAFS = 65535;
-constexpr int MAX_MAP_VERTS = 65535;
-constexpr int MAX_MAP_FACES = 65535;
-constexpr int MAX_MAP_LEAFFACES = 65535;
+constexpr int MAX_MAP_PLANES      = 65535;
+constexpr int MAX_MAP_NODES       = 65535;
+constexpr int MAX_MAP_BRUSHSIDES  = 65535;
+constexpr int MAX_MAP_LEAFS       = 65535;
+constexpr int MAX_MAP_VERTS       = 65535;
+constexpr int MAX_MAP_FACES       = 65535;
+constexpr int MAX_MAP_LEAFFACES   = 65535;
 constexpr int MAX_MAP_LEAFBRUSHES = 65535;
-constexpr int MAX_MAP_PORTALS = 65535;
+constexpr int MAX_MAP_PORTALS     = 65535;
 
-constexpr int MAX_MAP_AREAS = 256;
+constexpr int MAX_MAP_AREAS       = 256;
 constexpr int MAX_MAP_AREAPORTALS = 1024;
-constexpr int MAX_MAP_EDGES = 128000;
-constexpr int MAX_MAP_SURFEDGES = 256000;
-constexpr int MAX_MAP_LIGHTING = 0x200000;
-constexpr int MAX_MAP_VISIBILITY = 0x100000;
-constexpr int MAX_MAP_ENTSTRING = 0x40000;
+constexpr int MAX_MAP_EDGES       = 128000;
+constexpr int MAX_MAP_SURFEDGES   = 256000;
+constexpr int MAX_MAP_LIGHTING    = 0x200000;
+constexpr int MAX_MAP_VISIBILITY  = 0x100000;
+constexpr int MAX_MAP_ENTSTRING   = 0x40000;
 
 // key / value pair sizes
 
-constexpr int MAX_KEY = 32;
+constexpr int MAX_KEY   = 32;
 constexpr int MAX_VALUE = 1024;
 
 //=============================================================================
 
-enum {
+enum
+{
     LUMP_ENTITIES,
     LUMP_PLANES,
     LUMP_VERTEXES,
@@ -103,13 +104,14 @@ enum {
 // AJA: moved dheader_t to q_common.h
 
 #pragma pack(push, 1)
-struct dmodel2_t {
+struct dmodel2_t
+{
     float mins[3], maxs[3];
     float origin[3];  // for sounds or lights
 
     int32_t headnode;
     int32_t firstface, numfaces;  // submodels just draw faces
-                                // without walking the bsp tree
+                                  // without walking the bsp tree
 };
 #pragma pack(pop)
 
@@ -126,42 +128,43 @@ struct dmodel2_t {
 // these definitions also need to be in q_shared.h!
 
 // lower bits are stronger, and will eat weaker brushes completely
-constexpr unsigned int CONTENTS_SOLID = 1;   // an eye is never valid in a solid
+constexpr unsigned int CONTENTS_SOLID  = 1;  // an eye is never valid in a solid
 constexpr unsigned int CONTENTS_WINDOW = 2;  // translucent, but not watery
-constexpr unsigned int CONTENTS_AUX = 4;
-constexpr unsigned int CONTENTS_LAVA = 8;
-constexpr unsigned int CONTENTS_SLIME = 16;
-constexpr unsigned int CONTENTS_WATER = 32;
-constexpr unsigned int CONTENTS_MIST = 64;
+constexpr unsigned int CONTENTS_AUX    = 4;
+constexpr unsigned int CONTENTS_LAVA   = 8;
+constexpr unsigned int CONTENTS_SLIME  = 16;
+constexpr unsigned int CONTENTS_WATER  = 32;
+constexpr unsigned int CONTENTS_MIST   = 64;
 
 // remaining contents are non-visible, and don't eat brushes
 constexpr unsigned int LAST_VISIBLE_CONTENTS = 64;
 
-constexpr unsigned int CONTENTS_AREAPORTAL = 0x8000;
-constexpr unsigned int CONTENTS_PLAYERCLIP = 0x10000;
+constexpr unsigned int CONTENTS_AREAPORTAL  = 0x8000;
+constexpr unsigned int CONTENTS_PLAYERCLIP  = 0x10000;
 constexpr unsigned int CONTENTS_MONSTERCLIP = 0x20000;
 
 // currents can be added to any other contents, and may be mixed
-constexpr unsigned int CONTENTS_CURRENT_EAST = 0x40000;
+constexpr unsigned int CONTENTS_CURRENT_EAST  = 0x40000;
 constexpr unsigned int CONTENTS_CURRENT_NORTH = 0x80000;
-constexpr unsigned int CONTENTS_CURRENT_WEST = 0x100000;
+constexpr unsigned int CONTENTS_CURRENT_WEST  = 0x100000;
 constexpr unsigned int CONTENTS_CURRENT_SOUTH = 0x200000;
-constexpr unsigned int CONTENTS_CURRENT_UP = 0x400000;
-constexpr unsigned int CONTENTS_CURRENT_DOWN = 0x800000;
+constexpr unsigned int CONTENTS_CURRENT_UP    = 0x400000;
+constexpr unsigned int CONTENTS_CURRENT_DOWN  = 0x800000;
 
 // removed before bsping an entity
 constexpr unsigned int CONTENTS_ORIGIN = 0x1000000;
 // should never be on a brush, only in game
-constexpr unsigned int CONTENTS_MONSTER = 0x2000000;
+constexpr unsigned int CONTENTS_MONSTER     = 0x2000000;
 constexpr unsigned int CONTENTS_DEADMONSTER = 0x4000000;
 // brushes to be added after vis leafs
 constexpr unsigned int CONTENTS_DETAIL = 0x8000000;
 // auto set if any surface has trans
 constexpr unsigned int CONTENTS_TRANSLUCENT = 0x10000000;
-constexpr unsigned int CONTENTS_LADDER = 0x20000000;
+constexpr unsigned int CONTENTS_LADDER      = 0x20000000;
 
 #pragma pack(push, 1)
-struct dnode2_t {
+struct dnode2_t
+{
     int32_t planenum;
     int32_t children[2];  // negative numbers are -(leafs+1), not nodes
 
@@ -180,7 +183,7 @@ constexpr unsigned int SURF_SLICK = 0x2;
 // don't draw, but add to skybox
 constexpr unsigned int SURF_SKY = 0x4;
 // turbulent water warp
-constexpr unsigned int SURF_WARP = 0x8;
+constexpr unsigned int SURF_WARP    = 0x8;
 constexpr unsigned int SURF_TRANS33 = 0x10;
 constexpr unsigned int SURF_TRANS66 = 0x20;
 // scroll towards angle
@@ -189,15 +192,16 @@ constexpr unsigned int SURF_FLOWING = 0x40;
 constexpr unsigned int SURF_NODRAW = 0x80;
 
 #pragma pack(push, 1)
-struct texinfo2_t {
+struct texinfo2_t
+{
     float s[4];  // x/y/z/offset
     float t[4];
 
     uint32_t flags;  // miptex flags + overrides
-    int32_t value;  // light emission, etc
+    int32_t  value;  // light emission, etc
 
-    char texture[32];  // texture name (textures/*.wal)
-    int32_t anim_next;   // for animations, -1 = end of chain
+    char    texture[32];  // texture name (textures/*.wal)
+    int32_t anim_next;    // for animations, -1 = end of chain
 };
 #pragma pack(pop)
 
@@ -206,7 +210,8 @@ struct texinfo2_t {
 // AJA: dface2_t also moved to q_common.h
 
 #pragma pack(push, 1)
-struct dleaf2_t {
+struct dleaf2_t
+{
     uint32_t contents;  // OR of all brushes
 
     int16_t cluster;
@@ -224,14 +229,16 @@ struct dleaf2_t {
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-struct dbrushside_t {
+struct dbrushside_t
+{
     uint16_t planenum;  // facing out of the leaf
-    int16_t texinfo;
+    int16_t  texinfo;
 };
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-struct dbrush_t {
+struct dbrush_t
+{
     int32_t firstside;
     int32_t numsides;
 
@@ -240,7 +247,7 @@ struct dbrush_t {
 #pragma pack(pop)
 
 // special yaw angles which orient entities up or down
-constexpr int ANGLE_UP = -1;
+constexpr int ANGLE_UP   = -1;
 constexpr int ANGLE_DOWN = -2;
 
 // the visibility lump consists of a header with a count, then
@@ -250,7 +257,8 @@ constexpr int DVIS_PVS = 0;
 constexpr int DVIS_PHS = 1;
 
 #pragma pack(push, 1)
-struct dvis_t {
+struct dvis_t
+{
     int32_t numclusters;
     int32_t offsets[1][2];  // [NUMCLUSTERS][2]
 };
@@ -260,14 +268,16 @@ struct dvis_t {
 // when portals are closed, other areas may not be visible or
 // hearable even if the vis info says that it could be.
 #pragma pack(push, 1)
-struct dareaportal_t {
+struct dareaportal_t
+{
     int32_t portal_id;
     int32_t otherarea;
 };
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-struct darea_t {
+struct darea_t
+{
     int32_t num_portals;
     int32_t first_portal;
 };
