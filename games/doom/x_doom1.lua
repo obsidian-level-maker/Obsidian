@@ -2389,8 +2389,9 @@ ULTDOOM.THEMES =
       gtd_writhing_mass = 50,
       gtd_library = 50,
       --
-      gtd_furnace = 25,
-      gtd_furnace_face = 25,
+      gtd_furnace = 20,
+      gtd_furnace_face = 20,
+      gtd_furnace_water = 20,
       --
       gtd_wall_marbface = 50,
       gtd_wall_quakish_insets = 50,
@@ -2832,8 +2833,9 @@ ULTDOOM.THEMES =
       gtd_writhing_mass = 50,
       gtd_library = 50,
       --
-      gtd_furnace = 25,
-      gtd_furnace_face = 25,
+      gtd_furnace = 20,
+      gtd_furnace_face = 20,
+      gtd_furnace_water = 20,
       --
       gtd_wall_marbface = 50,
       gtd_wall_quakish_insets = 50,
@@ -3273,8 +3275,9 @@ ULTDOOM.THEMES =
       gtd_writhing_mass = 50,
       gtd_library = 50,
       --
-      gtd_furnace = 25,
-      gtd_furnace_face = 25,
+      gtd_furnace = 20,
+      gtd_furnace_face = 20,
+      gtd_furnace_water = 20,
       --
       gtd_wall_marbface = 50,
       gtd_wall_quakish_insets = 50,

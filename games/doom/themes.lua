@@ -2801,7 +2801,9 @@ DOOM.THEMES =
       gtd_wall_lit_h_window_tall_gray = 25,
       gtd_wall_lit_h_window_tall_brown = 40,
       --
-      gtd_prison_A = 50
+      gtd_prison_A = 50,
+      --
+      gtd_furnace_water = 15,
     },
 
     window_groups =
@@ -3228,8 +3230,9 @@ DOOM.THEMES =
       gtd_writhing_mass = 50,
       gtd_library = 50,
       --
-      gtd_furnace = 25,
-      gtd_furnace_face = 25,
+      gtd_furnace = 20,
+      gtd_furnace_face = 20,
+      gtd_furnace_water = 20,
       --
       gtd_wall_marbface = 50,
       gtd_wall_quakish_insets = 50,
