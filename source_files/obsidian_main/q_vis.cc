@@ -29,11 +29,13 @@
 
 #include "csg_main.h"
 #include "csg_quake.h"
-#include "headers.h"
 #include "lib_util.h"
 #include "main.h"
 #include "q_common.h"
 #include "q_light.h"
+#include "sys_debug.h"
+#include "sys_endian.h"
+#include "sys_macro.h"
 #include "vis_buffer.h"
 
 //------------------------------------------------------------------------

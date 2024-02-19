@@ -31,9 +31,8 @@
  */
 
 #include <assert.h>
+#include <stdlib.h>
 #include <string.h>
-
-#include <cstdlib>
 
 #include "lib_util.h"
 #include "slump.h"
@@ -75,8 +74,7 @@ dumphandle OpenDump(config *c)
 
     answer = (dumphandle)malloc(sizeof(*answer));
 #ifdef _WIN32
-    answer->f = _wfopen(std::filesystem::u8path(c->outfile).c_str(),
-                        (const wchar_t *)StringToUTF16("wb").c_str());
+    answer->f = _wfopen(std::filesystem::u8path(c->outfile).c_str(), L"wb");
 #else
     answer->f = fopen(c->outfile, "wb");
 #endif

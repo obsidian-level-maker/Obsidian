@@ -25,10 +25,11 @@
 #endif
 #include <array>
 
-#include "headers.h"
 #include "lib_util.h"
 #include "main.h"
 #include "physfs.h"
+#include "sys_debug.h"
+#include "sys_macro.h"
 #include "sys_xoshiro.h"
 
 #define LUA_IMPL
@@ -290,7 +291,7 @@ static bool scan_dir_process_name(const std::filesystem::path &name,
     }
 
     ErrorPrintf("gui.scan_directory: unsupported match expression: %s\n",
-                     match.c_str());
+                match.c_str());
     return false; /* NOT REACHED */
 }
 
@@ -1048,8 +1049,7 @@ static bool Script_CallFunc(std::string func_name, int nresult = 0,
 
     if (lua_type(LUA_ST, -1) == LUA_TNIL)
     {
-        ErrorPrintf("Script problem: missing function '%s'",
-                         func_name.c_str());
+        ErrorPrintf("Script problem: missing function '%s'", func_name.c_str());
     }
 
     int nargs = 0;
@@ -1188,7 +1188,7 @@ void Script_Load(std::filesystem::path script_name)
         const char *msg = lua_tolstring(LUA_ST, -1, NULL);
 
         ErrorPrintf("Unable to load script '%s'\n%s",
-                         filename.u8string().c_str(), msg);
+                    filename.u8string().c_str(), msg);
     }
 }
 
@@ -1199,16 +1199,12 @@ void Script_Open()
     // create Lua state
 
     LUA_ST = luaL_newstate();
-    if (!LUA_ST)
-    {
-        ErrorPrintf("LUA Init failed: cannot create new state");
-    }
+    if (!LUA_ST) { ErrorPrintf("LUA Init failed: cannot create new state"); }
 
     int status = p_init_lua(LUA_ST);
     if (status != 0)
     {
-        ErrorPrintf("LUA Init failed: cannot load standard libs (%d)",
-                         status);
+        ErrorPrintf("LUA Init failed: cannot load standard libs (%d)", status);
     }
 
     // load main scripts

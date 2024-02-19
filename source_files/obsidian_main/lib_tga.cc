@@ -26,9 +26,9 @@
 
 #include "lib_tga.h"
 
-#include "headers.h"
 #include "m_addons.h"
 #include "main.h"
+#include "sys_debug.h"
 
 tga_image_c::tga_image_c(int W, int H)
     : width(W), height(H), opacity(OPAC_UNKNOWN)
@@ -119,7 +119,7 @@ tga_image_c *TGA_LoadImage(const char *path)
         targa_header.image_type != TGA_RGB_RLE)
     {
         ErrorPrintf("Bad tga file: type {} is not supported\n",
-                         targa_header.image_type);
+                    targa_header.image_type);
     }
 
     int width  = targa_header.width;
@@ -187,8 +187,7 @@ tga_image_c *TGA_LoadImage(const char *path)
     {
         if (targa_header.pixel_bits != 24 && targa_header.pixel_bits != 32)
         {
-            ErrorPrintf(
-                "Bad tga file: only 24 or 32 bit images supported\n");
+            ErrorPrintf("Bad tga file: only 24 or 32 bit images supported\n");
         }
 
         for (int y = height - 1; y >= 0; y--)
@@ -216,8 +215,7 @@ tga_image_c *TGA_LoadImage(const char *path)
     {
         if (targa_header.pixel_bits != 24 && targa_header.pixel_bits != 32)
         {
-            ErrorPrintf(
-                "Bad tga file: only 24 or 32 bit images supported\n");
+            ErrorPrintf("Bad tga file: only 24 or 32 bit images supported\n");
         }
 
         uint8_t r = 0, g = 0, b = 0, a = 0;

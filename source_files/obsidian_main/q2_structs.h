@@ -29,8 +29,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef Q2_STRUCTS_H_
 #define Q2_STRUCTS_H_
 
-#include "headers.h"
-
 /*
 ==============================================================================
   .BSP file format

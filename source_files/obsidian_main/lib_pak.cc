@@ -24,9 +24,10 @@
 #include <fstream>
 #include <list>
 
-#include "headers.h"
 #include "lib_util.h"
 #include "physfs.h"
+#include "sys_debug.h"
+#include "sys_endian.h"
 
 // #define LogPrintf  printf
 

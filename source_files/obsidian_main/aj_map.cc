@@ -70,8 +70,7 @@ int num_wall_tips;
 
 static vertex_c *SafeLookupVertex(int num)
 {
-    if (num >= num_vertices)
-        ErrorPrintf("illegal vertex number #%d\n", num);
+    if (num >= num_vertices) ErrorPrintf("illegal vertex number #%d\n", num);
 
     return all_vertices[num];
 }
@@ -474,7 +473,7 @@ vertex_c *Vertex(int index)
 {
     if (index < 0 || index >= num_vertices)
     {
-        Appl_FatalError("No such vertex: #%d\n", index);
+        ErrorPrintf("No such vertex: #%d\n", index);
     }
 
     return all_vertices[index];
@@ -484,7 +483,7 @@ linedef_c *Linedef(int index)
 {
     if (index < 0 || index >= num_linedefs)
     {
-        Appl_FatalError("No such linedef: #%d\n", index);
+        ErrorPrintf("No such linedef: #%d\n", index);
     }
 
     return all_linedefs[index];
@@ -494,7 +493,7 @@ sidedef_c *Sidedef(int index)
 {
     if (index < 0 || index >= num_sidedefs)
     {
-        Appl_FatalError("No such sidedef: #%d\n", index);
+        ErrorPrintf("No such sidedef: #%d\n", index);
     }
 
     return all_sidedefs[index];
@@ -504,7 +503,7 @@ sector_c *Sector(int index)
 {
     if (index < 0 || index >= num_sectors)
     {
-        Appl_FatalError("No such sector: #%d\n", index);
+        ErrorPrintf("No such sector: #%d\n", index);
     }
 
     return all_sectors[index];
@@ -514,7 +513,7 @@ thing_c *Thing(int index)
 {
     if (index < 0 || index >= num_things)
     {
-        Appl_FatalError("No such thing: #%d\n", index);
+        ErrorPrintf("No such thing: #%d\n", index);
     }
 
     return all_things[index];
@@ -524,7 +523,7 @@ edge_c *Edge(int index)
 {
     if (index < 0 || index >= num_edges)
     {
-        Appl_FatalError("No such edge: #%d\n", index);
+        ErrorPrintf("No such edge: #%d\n", index);
     }
 
     return all_edges[index];
@@ -534,7 +533,7 @@ polygon_c *Polygon(int index)
 {
     if (index < 0 || index >= num_polygons)
     {
-        Appl_FatalError("No such polygon: #%d\n", index);
+        ErrorPrintf("No such polygon: #%d\n", index);
     }
 
     return all_polygons[index];
@@ -657,7 +656,7 @@ bool LoadVertices()
     int count = length / sizeof(raw_vertex_t);
 
 #if DEBUG_LOAD
-    Appl_Printf("LoadVertices: num = %d\n", count);
+    DebugPrintf("LoadVertices: num = %d\n", count);
 #endif
 
     raw_vertex_t *raw = (raw_vertex_t *)data;
@@ -688,7 +687,7 @@ bool LoadSectors()
     int count = length / sizeof(raw_sector_t);
 
 #if DEBUG_LOAD
-    Appl_Printf("LoadSectors: num = %d\n", count);
+    DebugPrintf("LoadSectors: num = %d\n", count);
 #endif
 
     raw_sector_t *raw = (raw_sector_t *)data;
@@ -733,7 +732,7 @@ bool LoadThings()
     int count = length / sizeof(raw_thing_t);
 
 #if DEBUG_LOAD
-    Appl_Printf("LoadThings: num = %d\n", count);
+    DebugPrintf("LoadThings: num = %d\n", count);
 #endif
 
     raw_thing_t *raw = (raw_thing_t *)data;
@@ -768,7 +767,7 @@ bool LoadThingsHexen()
     int count = length / sizeof(raw_hexen_thing_t);
 
 #if DEBUG_LOAD
-    Appl_Printf("LoadThingsHexen: num = %d\n", count);
+    DebugPrintf("LoadThingsHexen: num = %d\n", count);
 #endif
 
     raw_hexen_thing_t *raw = (raw_hexen_thing_t *)data;
@@ -810,7 +809,7 @@ bool LoadSidedefs()
     int count = length / sizeof(raw_sidedef_t);
 
 #if DEBUG_LOAD
-    Appl_Printf("LoadSidedefs: num = %d\n", count);
+    DebugPrintf("LoadSidedefs: num = %d\n", count);
 #endif
 
     raw_sidedef_t *raw = (raw_sidedef_t *)data;
@@ -856,7 +855,7 @@ bool LoadLinedefs()
     int count = length / sizeof(raw_linedef_t);
 
 #if DEBUG_LOAD
-    Appl_Printf("LoadLinedefs: num = %d\n", count);
+    DebugPrintf("LoadLinedefs: num = %d\n", count);
 #endif
 
     raw_linedef_t *raw = (raw_linedef_t *)data;
@@ -878,7 +877,7 @@ bool LoadLinedefs()
         if ((fabs(start->x - end->x) < DIST_EPSILON) &&
             (fabs(start->y - end->y) < DIST_EPSILON))
         {
-            Appl_FatalError("Linedef #%d has zero length.\n", i);
+            ErrorPrintf("Linedef #%d has zero length.\n", i);
         }
 
         line->flags   = LE_U16(raw->flags);
@@ -907,7 +906,7 @@ bool LoadLinedefsHexen()
     int count = length / sizeof(raw_hexen_linedef_t);
 
 #if DEBUG_LOAD
-    Appl_Printf("LoadLinedefsHexen: num = %d\n", count);
+    DebugPrintf("LoadLinedefsHexen: num = %d\n", count);
 #endif
 
     raw_hexen_linedef_t *raw = (raw_hexen_linedef_t *)data;
@@ -929,7 +928,7 @@ bool LoadLinedefsHexen()
         if ((fabs(start->x - end->x) < DIST_EPSILON) &&
             (fabs(start->y - end->y) < DIST_EPSILON))
         {
-            Appl_FatalError("Linedef #%d has zero length.\n", i);
+            ErrorPrintf("Linedef #%d has zero length.\n", i);
         }
 
         line->flags   = LE_U16(raw->flags);
@@ -983,7 +982,7 @@ void DetermineMapLimits()
         limit_y2 = MAX(limit_y2, MAX(y1, y2));
     }
 
-    Appl_Printf("Map goes from (%d,%d) to (%d,%d)\n", limit_x1, limit_y1,
+    DebugPrintf("Map goes from (%d,%d) to (%d,%d)\n", limit_x1, limit_y1,
                 limit_x2, limit_y2);
 }
 
@@ -1330,14 +1329,14 @@ bool ValidateWallTip(const vertex_c *vert)
 
     if (!vert->tip_set)
     {
-        Appl_FatalError("INTERNAL ERROR: vertex #%d got no wall tips\n",
-                        vert->index);
+        ErrorPrintf("INTERNAL ERROR: vertex #%d got no wall tips\n",
+                    vert->index);
     }
 
     if (!vert->tip_set->next)
     {
-        Appl_FatalError("INTERNAL ERROR: vertex #%d only has one linedef\n",
-                        vert->index);
+        ErrorPrintf("INTERNAL ERROR: vertex #%d only has one linedef\n",
+                    vert->index);
     }
 
     first_right = vert->tip_set->right;
@@ -1348,22 +1347,22 @@ bool ValidateWallTip(const vertex_c *vert)
         {
             if (tip->left != tip->next->right)
             {
-                Appl_FatalError("Sector #%d not closed at vertex #%d\n",
-                                tip->left    ? tip->left->index
-                                : tip->right ? tip->right->index
-                                             : -1,
-                                vert->index);
+                ErrorPrintf("Sector #%d not closed at vertex #%d\n",
+                            tip->left    ? tip->left->index
+                            : tip->right ? tip->right->index
+                                         : -1,
+                            vert->index);
             }
         }
         else
         {
             if (tip->left != first_right)
             {
-                Appl_FatalError("Sector #%d not closed at vertex #%d\n",
-                                tip->left    ? tip->left->index
-                                : tip->right ? tip->right->index
-                                             : -1,
-                                vert->index);
+                ErrorPrintf("Sector #%d not closed at vertex #%d\n",
+                            tip->left    ? tip->left->index
+                            : tip->right ? tip->right->index
+                                         : -1,
+                            vert->index);
             }
         }
     }
@@ -1410,11 +1409,11 @@ bool CalculateWallTips()
         vertex_c   *vert = Vertex(i);
         wall_tip_c *tip;
 
-        Appl_Printf("WallTips for vertex #%d :\n", i);
+        DebugPrintf("WallTips for vertex #%d :\n", i);
 
         for (tip = vert->tip_set; tip; tip = tip->next)
         {
-            Appl_Printf("  angle=%1.1f left=%d right=%d\n", tip->angle,
+            DebugPrintf("  angle=%1.1f left=%d right=%d\n", tip->angle,
                         tip->left ? tip->left->index : -1,
                         tip->right ? tip->right->index : -1);
         }
@@ -1483,7 +1482,7 @@ sector_c *vertex_c::CheckOpen(double dx, double dy) const
 
     /* cannot get here (in theory) */
 
-    Appl_FatalError("INTERNAL ERROR: Bad wall tips at vertex #%d\n", index);
+    ErrorPrintf("INTERNAL ERROR: Bad wall tips at vertex #%d\n", index);
     return NULL;
 }
 
@@ -1593,7 +1592,7 @@ bool OpenMap(const char *level_name)
         }
     }
 
-    Appl_Printf(
+    DebugPrintf(
         "Loaded %d vertices, %d sectors, %d sides, %d lines, %d things\n",
         num_vertices, num_sectors, num_sidedefs, num_linedefs, num_things);
 

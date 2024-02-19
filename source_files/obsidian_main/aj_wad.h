@@ -19,8 +19,9 @@
 #ifndef __AJPOLY_WAD_H__
 #define __AJPOLY_WAD_H__
 
-#include <cstdio>
-#include <cstring>
+#include <stdio.h>
+#include <string.h>
+
 #include <vector>
 
 // directory entry

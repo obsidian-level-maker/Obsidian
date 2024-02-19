@@ -22,7 +22,6 @@
 #include "csg_main.h"
 #include "csg_quake.h"
 #include "hdr_lua.h"
-#include "headers.h"
 #include "lib_pak.h"
 #include "lib_util.h"
 #include "m_cookie.h"
@@ -32,6 +31,8 @@
 #include "q_light.h"
 #include "q_vis.h"
 #include "sys_debug.h"
+#include "sys_endian.h"
+#include "sys_macro.h"
 
 #define LEAF_PADDING  4
 #define NODE_PADDING  16
@@ -233,9 +234,8 @@ static void Q2_WriteTexInfo()
 {
     if (q2_texinfos.size() >= MAX_MAP_TEXINFO)
     {
-        ErrorPrintf(
-            "Quake2 build failure: exceeded limit of %d TEXINFOS\n",
-            MAX_MAP_TEXINFO);
+        ErrorPrintf("Quake2 build failure: exceeded limit of %d TEXINFOS\n",
+                    MAX_MAP_TEXINFO);
     }
 
     qLump_c *lump = BSP_NewLump(LUMP_TEXINFO);
@@ -659,19 +659,19 @@ static void Q2_WriteBSP()
     if (q2_total_faces >= MAX_MAP_FACES)
     {
         ErrorPrintf("Quake2 build failure: exceeded limit of %d FACES\n",
-                         MAX_MAP_FACES);
+                    MAX_MAP_FACES);
     }
 
     if (q2_total_leafs >= MAX_MAP_LEAFS)
     {
         ErrorPrintf("Quake2 build failure: exceeded limit of %d LEAFS\n",
-                         MAX_MAP_LEAFS);
+                    MAX_MAP_LEAFS);
     }
 
     if (q2_total_nodes >= MAX_MAP_NODES)
     {
         ErrorPrintf("Quake2 build failure: exceeded limit of %d NODES\n",
-                         MAX_MAP_NODES);
+                    MAX_MAP_NODES);
     }
 }
 
@@ -1149,7 +1149,7 @@ void quake2_game_interface_c::EndLevel()
     if (level_name.size() >= 32)
     {
         ErrorPrintf("Script problem: level name too long: %s\n",
-                         level_name.c_str());
+                    level_name.c_str());
     }
 
     std::string entry_in_pak = StringFormat("maps/%s.bsp", level_name.c_str());

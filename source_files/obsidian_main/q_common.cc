@@ -26,7 +26,6 @@
 #include "csg_main.h"
 #include "csg_quake.h"
 #include "hdr_lua.h"
-#include "headers.h"
 #include "lib_pak.h"
 #include "lib_util.h"
 #include "lib_zip.h"
@@ -34,6 +33,9 @@
 #include "main.h"
 #include "q_light.h"
 #include "q_vis.h"
+#include "sys_debug.h"
+#include "sys_endian.h"
+#include "sys_macro.h"
 
 #define HL_BSP_VERSION 30
 
@@ -322,7 +324,7 @@ void BSP_WritePlanes(int lump_num, int max_planes)
     if (lump->GetSize() >= max_planes)
     {
         ErrorPrintf("Quake build failure: exceeded limit of {} PLANES\n",
-                         max_planes);
+                    max_planes);
     }
 
     BSP_ClearPlanes();
@@ -409,7 +411,7 @@ void BSP_WriteVertices(int lump_num, int max_verts)
     if ((int)bsp_vertices.size() >= max_verts)
     {
         ErrorPrintf("Quake build failure: exceeded limit of {} VERTEXES\n",
-                         max_verts);
+                    max_verts);
     }
 
     qLump_c *lump = BSP_NewLump(lump_num);
@@ -481,7 +483,7 @@ void BSP_WriteEdges(int lump_num, int max_edges)
     if ((int)bsp_edges.size() >= max_edges)
     {
         ErrorPrintf("Quake build failure: exceeded limit of {} EDGES\n",
-                         max_edges);
+                    max_edges);
     }
 
     qLump_c *lump = BSP_NewLump(lump_num);
@@ -728,8 +730,8 @@ qLump_c *BSP_NewLump(int entry)
 
     if (bsp_directory[entry] != NULL)
     {
-        ErrorPrintf(
-            "INTERNAL ERROR: BSP_NewLump: already created entry [{}]\n", entry);
+        ErrorPrintf("INTERNAL ERROR: BSP_NewLump: already created entry [{}]\n",
+                    entry);
     }
 
     bsp_directory[entry] = new qLump_c;

@@ -30,7 +30,7 @@
  * - Please do not call any derivative of this program SLIGE.
  */
 
-#include <cstdio>
+#include <stdio.h>
 #include <filesystem>
 #include <vector>
 

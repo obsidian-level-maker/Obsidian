@@ -21,12 +21,12 @@
 
 #include "m_addons.h"
 
-#include "headers.h"
 #include "lib_argv.h"
 #include "lib_util.h"
 #include "m_cookie.h"
 #include "main.h"
 #include "physfs.h"
+#include "sys_debug.h"
 
 // need this because the OPTIONS file is loaded *before* the addons
 // folder is scanned for valid archives, so remember enabled ones here.
@@ -43,8 +43,8 @@ void VFS_AddFolder(std::string name)
     if (!PHYSFS_mount(path.generic_u8string().c_str(), mount.c_str(), 0))
     {
         ErrorPrintf("Failed to mount '%s' folder in PhysFS:\n%s\n",
-                         name.c_str(),
-                         PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+                    name.c_str(),
+                    PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         return; /* NOT REACHED */
     }
 
@@ -83,8 +83,8 @@ bool VFS_AddArchive(std::filesystem::path filename, bool options_file)
         else
         {
             ErrorPrintf("Failed to mount '%s' archive in PhysFS:\n%s\n",
-                             filename.u8string().c_str(),
-                             PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+                        filename.u8string().c_str(),
+                        PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         }
 
         return false;
@@ -100,7 +100,7 @@ void VFS_InitAddons(std::filesystem::path search_dir)
     if (!PHYSFS_init(search_dir.generic_u8string().c_str()))
     {
         ErrorPrintf("Failed to init PhysFS:\n%s\n",
-                         PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+                    PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
     }
 
     VFS_AddFolder("scripts");

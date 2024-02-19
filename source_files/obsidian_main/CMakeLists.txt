@@ -38,7 +38,6 @@ if(NOT CONSOLE_ONLY AND NOT HAIKU)
     q_light.cc
     q_tjuncs.cc
     q_vis.cc
-    sys_assert.cc
     sys_debug.cc
     sys_xoshiro.cc
     tx_forge.cc
@@ -85,7 +84,6 @@ else()
     q_light.cc
     q_tjuncs.cc
     q_vis.cc
-    sys_assert.cc
     sys_debug.cc
     sys_xoshiro.cc
     tx_forge.cc

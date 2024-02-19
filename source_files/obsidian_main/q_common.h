@@ -22,7 +22,8 @@
 #ifndef Q_COMMON_H_
 #define Q_COMMON_H_
 
-#include <cstdint>
+#include <stdint.h>
+
 #include <string>
 #include <vector>
 

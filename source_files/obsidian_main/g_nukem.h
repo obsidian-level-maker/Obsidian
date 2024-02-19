@@ -22,7 +22,7 @@
 #ifndef G_NUKEM_H_
 #define G_NUKEM_H_
 
-#include "headers.h"
+#include <stdint.h>
 
 void NK_AddSector(int first_wall, int num_wall, int visibility, int f_h,
                   int f_pic, int c_h, int c_pic, int c_flags, int lo_tag = 0,

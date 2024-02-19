@@ -45,6 +45,22 @@ void              DebugPrintf(const char *message, ...);
 [[noreturn]] void ErrorPrintf(const char *message, ...);
 #endif
 
+#if defined(__GNUC__)
+#define SYS_ASSERT(cond)                                                     \
+    ((cond) ? (void)0                                                        \
+            : ErrorPrintf("Assertion (%s) failed\nIn function %s (%s:%d)\n", \
+                          #cond, __func__, __FILE__, __LINE__))
+
+#else
+#define SYS_ASSERT(cond)                                                   \
+    ((cond) ? (void)0                                                      \
+            : ErrorPrintf("Assertion (%s) failed\nIn file %s:%d\n", #cond, \
+                          __FILE__, __LINE__))
+
+#endif
+
+#define SYS_NULL_CHECK(ptr) SYS_ASSERT((ptr) != NULL)
+
 #endif /* __SYS_DEBUG_H__ */
 
 //--- editor settings ---

@@ -33,7 +33,7 @@
 #include <assert.h>
 #include <string.h>
 
-#include <cstdlib>
+#include <stdlib.h>
 
 #include "lib_util.h"
 #include "m_lua.h"

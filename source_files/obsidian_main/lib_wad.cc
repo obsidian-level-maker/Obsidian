@@ -24,11 +24,10 @@
 #include <fstream>
 #include <list>
 
-#include "headers.h"
 #include "lib_util.h"
 #include "physfs.h"
-
-// #define LogPrintf  printf
+#include "sys_debug.h"
+#include "sys_endian.h"
 
 //------------------------------------------------------------------------
 //  WAD READING

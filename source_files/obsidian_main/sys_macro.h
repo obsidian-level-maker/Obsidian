@@ -26,6 +26,15 @@
 
 // basic macros
 
+#define MSG_BUF_LEN 2000
+
+/* Internationalization / Localization */
+
+#define _(s)  ob_gettext(s)
+#define N_(s) (s)
+
+const char *ob_gettext(const char *s);
+
 // smallest distance between two points before being considered equal
 #define DIST_EPSILON (1.0 / 128.0)
 

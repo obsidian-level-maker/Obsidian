@@ -26,10 +26,11 @@
 #include "csg_local.h"
 #include "csg_quake.h"  // for quake_plane_c
 #include "hdr_lua.h"
-#include "headers.h"
 #include "lib_util.h"
 #include "m_lua.h"
 #include "main.h"
+#include "sys_debug.h"
+#include "sys_macro.h"
 
 #define EPSILON 0.001
 

@@ -22,7 +22,7 @@
 #ifndef __OBLIGE_TX_SKIES_H__
 #define __OBLIGE_TX_SKIES_H__
 
-#include <cstdint>
+#include <stdint.h>
 
 #include "m_lua.h"
 

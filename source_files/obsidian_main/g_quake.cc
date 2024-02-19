@@ -25,7 +25,6 @@
 #include "csg_main.h"
 #include "csg_quake.h"
 #include "hdr_lua.h"
-#include "headers.h"
 #include "images.h"
 #include "lib_pak.h"
 #include "lib_util.h"
@@ -36,6 +35,9 @@
 #include "q_common.h"
 #include "q_light.h"
 #include "q_vis.h"
+#include "sys_debug.h"
+#include "sys_endian.h"
+#include "sys_macro.h"
 
 /*
  *  Differences between HALF-LIFE and QUAKE
@@ -423,7 +425,7 @@ static void Q1_WriteTexInfo(void)
     if (q1_texinfos.size() >= MAX_MAP_TEXINFO)
     {
         ErrorPrintf("Quake build failure: exceeded limit of %d TEXINFOS\n",
-                         MAX_MAP_TEXINFO);
+                    MAX_MAP_TEXINFO);
     }
 
     qLump_c *lump = BSP_NewLump(LUMP_TEXINFO);
@@ -820,19 +822,19 @@ static void Q1_WriteBSP()
     if (q1_total_faces >= MAX_MAP_FACES)
     {
         ErrorPrintf("Quake1 build failure: exceeded limit of %d FACES\n",
-                         MAX_MAP_FACES);
+                    MAX_MAP_FACES);
     }
 
     if (q1_total_leafs >= MAX_MAP_LEAFS)
     {
         ErrorPrintf("Quake1 build failure: exceeded limit of %d LEAFS\n",
-                         MAX_MAP_LEAFS);
+                    MAX_MAP_LEAFS);
     }
 
     if (q1_total_nodes >= MAX_MAP_NODES)
     {
         ErrorPrintf("Quake1 build failure: exceeded limit of %d NODES\n",
-                         MAX_MAP_NODES);
+                    MAX_MAP_NODES);
     }
 }
 
@@ -1431,7 +1433,7 @@ void quake1_game_interface_c::EndLevel()
     if (level_name.size() >= 32)
     {
         ErrorPrintf("Script problem: level name too long: %s\n",
-                         level_name.c_str());
+                    level_name.c_str());
     }
 
     std::string entry_in_pak = StringFormat("maps/%s.bsp", level_name.c_str());

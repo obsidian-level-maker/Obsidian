@@ -19,7 +19,6 @@
 //
 //----------------------------------------------------------------------
 
-#include "headers.h"
 #include "lib_argv.h"
 #include "lib_util.h"
 #include "m_addons.h"
@@ -27,6 +26,8 @@
 #include "m_lua.h"
 #include "m_trans.h"
 #include "main.h"
+#include "sys_debug.h"
+#include "sys_macro.h"
 
 extern std::filesystem::path BestDirectory();
 

@@ -22,14 +22,9 @@
 #ifndef __OBSIDIAN_MAIN_H__
 #define __OBSIDIAN_MAIN_H__
 
-#include <cstddef>
 #include <filesystem>
-#include <iostream>
-#include <map>
 #include <string>
-#include <vector>
 
-#include "lib_util.h"
 extern std::string OBSIDIAN_TITLE;
 
 #ifdef OBSIDIAN_TIMESTAMP
@@ -85,8 +80,9 @@ void Shutdown(void);
 template <typename... Args>
 void ProgStatus(std::string_view msg, Args &&...args)
 {
-    // const std::string buffer = StringFormat(msg, std::forward<Args>(args)...);
-    // Update UI somewhere maybe or just ditch this altogether; not sure yet
+    // const std::string buffer = StringFormat(msg,
+    // std::forward<Args>(args)...); Update UI somewhere maybe or just ditch
+    // this altogether; not sure yet
 }
 bool BackupFile(const std::filesystem::path &filename);
 

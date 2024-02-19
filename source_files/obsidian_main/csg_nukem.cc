@@ -24,9 +24,10 @@
 #include "csg_local.h"
 #include "csg_main.h"
 #include "g_nukem.h"
-#include "headers.h"
 #include "lib_util.h"
 #include "main.h"
+#include "sys_debug.h"
+#include "sys_macro.h"
 
 // Properties
 

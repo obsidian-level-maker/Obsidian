@@ -34,9 +34,10 @@
 
 #include "tx_forge.h"
 
-#include "headers.h"
 #include "lib_util.h"
 #include "main.h"
+#include "sys_debug.h"
+#include "sys_macro.h"
 #include "sys_xoshiro.h"
 
 /* Definitions used to address real and imaginary parts in a two-dimensional
@@ -316,8 +317,8 @@ void TX_SpectralSynth(unsigned long long seed, float *buf, int width,
     {
         if (test & 1)
         {
-            ErrorPrintf(
-                "TX_SpectralSynth: width '%d' is not a power of two\n", width);
+            ErrorPrintf("TX_SpectralSynth: width '%d' is not a power of two\n",
+                        width);
         }
     }
 
@@ -332,29 +333,6 @@ void TX_SpectralSynth(unsigned long long seed, float *buf, int width,
     if (fabs(powscale - 1.0) > 0.01) { power_law_scale(buf, powscale); }
 
     free_mesh();
-}
-
-void TX_TestSynth(unsigned long long seed)
-{
-    float *buf = new float[128 * 128];
-
-    TX_SpectralSynth(seed, buf, 128);
-
-    LogPrintf("P6\n128 128 255\n");
-
-    for (int y = 0; y < 128; y++)
-    {
-        for (int x = 0; x < 128; x++)
-        {
-            float f = buf[y * 128 + x];
-
-            int ity = (int)(1 + f * 253);
-
-            LogPrintf("ITY: %d\n", ity);
-        }
-    }
-
-    delete[] buf;
 }
 
 //--- editor settings ---

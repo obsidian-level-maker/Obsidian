@@ -24,12 +24,13 @@
 #include "csg_local.h"
 #include "csg_main.h"
 #include "hdr_lua.h"
-#include "headers.h"
 #include "lib_argv.h"
 #include "lib_util.h"
 #include "main.h"
 #include "q_common.h"
 #include "q_light.h"
+#include "sys_debug.h"
+#include "sys_macro.h"
 
 /*
 

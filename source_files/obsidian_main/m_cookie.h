@@ -22,7 +22,8 @@
 #ifndef __OBLIGE_COOKIE_H__
 #define __OBLIGE_COOKIE_H__
 
-#include <cstdio>
+#include <stdio.h>
+
 #include <filesystem>
 #include <string>
 

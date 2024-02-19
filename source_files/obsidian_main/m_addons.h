@@ -22,7 +22,8 @@
 #ifndef __OBLIGE_ADDONS_H__
 #define __OBLIGE_ADDONS_H__
 
-#include <cstdio>
+#include <stdio.h>
+
 #include <filesystem>
 #include <fstream>
 #include <map>

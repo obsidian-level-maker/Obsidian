@@ -27,17 +27,21 @@
 
 #include "m_trans.h"
 
+#ifndef _WIN32
+#include <locale.h>
+#else
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#endif
+
 #include <filesystem>
 #include <fstream>
 
 #include "hdr_lua.h"
-#include "headers.h"
 #include "lib_util.h"
 #include "main.h"
-
-#ifndef WIN32
-#include <locale.h>
-#endif
+#include "sys_debug.h"
+#include "sys_macro.h"
 
 //
 // NOTE :

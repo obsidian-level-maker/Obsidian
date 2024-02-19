@@ -3,8 +3,6 @@
 #ifndef __OBSIDIAN_LOGOS_H__
 #define __OBSIDIAN_LOGOS_H__
 
-#include "headers.h"
-
 typedef struct
 {
     const char *name;

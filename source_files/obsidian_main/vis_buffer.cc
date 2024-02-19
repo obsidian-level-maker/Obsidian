@@ -19,8 +19,8 @@
 
 #include "vis_buffer.h"
 
-#include "headers.h"
 #include "main.h"
+#include "sys_macro.h"
 
 #define MAX_RECURSION 4
 

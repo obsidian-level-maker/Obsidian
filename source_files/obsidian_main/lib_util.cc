@@ -21,19 +21,17 @@
 
 #include "lib_util.h"
 
+#include <ctype.h>
+#include <stdarg.h>
+#include <stdint.h>
+
 #include <algorithm>
-#include <cctype>
 #include <charconv>
-#include <cstdint>
+#include <chrono>
 #include <functional>
 
-#include "headers.h"
-
-#ifdef UNIX
-#include <sys/time.h>
-#include <time.h>
-#include <unistd.h>  // usleep()
-#endif
+#include "sys_debug.h"
+#include "sys_macro.h"
 
 int StringCaseCmp(std::string_view a, std::string_view b)
 {
@@ -458,30 +456,9 @@ bool VectorSameDir(const double dx1, const double dy1, const double dx2,
 
 uint32_t TimeGetMillies()
 {
-    // Note: you *MUST* handle overflow (it *WILL* happen)
-
-#ifdef WIN32
-
-    return static_cast<uint32_t>(GetTickCount());
-
-#else  // UNIX or MacOSX
-    struct timeval tm;
-
-    gettimeofday(&tm, nullptr);
-
-    return static_cast<uint32_t>((tm.tv_sec * 1000) + (tm.tv_usec / 1000));
-#endif
-}
-
-void TimeDelay(const uint32_t millies)
-{
-#ifdef WIN32
-    ::Sleep(millies);
-
-#else  // LINUX or MacOSX
-
-    usleep(millies * 1000);
-#endif
+    return (uint32_t)std::chrono::duration_cast<std::chrono::milliseconds>(
+               std::chrono::system_clock::now().time_since_epoch())
+        .count();
 }
 
 //--- editor settings ---

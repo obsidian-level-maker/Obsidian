@@ -25,7 +25,6 @@
 
 #include "csg_main.h"
 #include "hdr_lua.h"
-#include "headers.h"
 #include "images.h"
 #include "lib_grp.h"
 #include "lib_util.h"
@@ -33,6 +32,9 @@
 #include "m_lua.h"
 #include "main.h"
 #include "q_common.h"  // qLump_c
+#include "sys_debug.h"
+#include "sys_endian.h"
+#include "sys_macro.h"
 
 extern void                  CSG_NUKEM_Write();
 extern std::filesystem::path BestDirectory();

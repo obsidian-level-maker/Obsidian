@@ -21,13 +21,12 @@
 
 // functions provided by the application
 
+#include <stdint.h>
+#include <string.h>
+
 #include <array>
-#include <cstdint>
-#include <cstring>
 #include <string>
 #include <unordered_map>
-void Appl_FatalError(const char *str, ...);
-void Appl_Printf(const char *str, ...);
 
 namespace ajpoly
 {

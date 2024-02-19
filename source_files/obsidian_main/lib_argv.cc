@@ -21,13 +21,18 @@
 
 #include "lib_argv.h"
 
-#include "headers.h"
 #include "lib_util.h"
 
+// clang-format off
 #ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
 #include <processenv.h>
 #include <shellapi.h>
 #endif
+// clang-format on
+
+#include "sys_debug.h"
 
 std::vector<std::string> argv::list;
 std::unordered_set<char> argv::short_flags;

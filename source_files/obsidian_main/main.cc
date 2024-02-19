@@ -25,7 +25,6 @@
 
 #include "csg_main.h"
 #include "g_nukem.h"
-#include "headers.h"
 #include "images.h"
 #include "lib_argv.h"
 #include "lib_util.h"
@@ -35,6 +34,8 @@
 #include "m_lua.h"
 #include "m_trans.h"
 #include "physfs.h"
+#include "sys_debug.h"
+#include "sys_macro.h"
 #include "sys_xoshiro.h"
 
 #ifndef CONSOLE_ONLY
@@ -122,8 +123,8 @@ void frame(void)
 
     if (fileDialog.HasSelected())
     {
-        std::cout << "Selected filename" << fileDialog.GetSelected().string()
-                  << std::endl;
+        LogPrintf("Selected filename: %s\n",
+                  fileDialog.GetSelected().u8string().c_str());
         fileDialog.Close();
     }
 
@@ -265,8 +266,8 @@ static void ShowInfo()
 static void ShowVersion()
 {
     printf("%s %s \"%s\" Build %s\n", OBSIDIAN_TITLE.c_str(),
-                 OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str(),
-                 OBSIDIAN_VERSION);
+           OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str(),
+           OBSIDIAN_VERSION);
 
     fflush(stdout);
 }
@@ -457,7 +458,7 @@ void Determine_LoggingFile()
         if (!fp.is_open())
         {
             ErrorPrintf("Cannot create log file: %s\n",
-                             logging_file.u8string().c_str());
+                        logging_file.u8string().c_str());
         }
 
         fp.close();
@@ -560,10 +561,7 @@ bool Build_Cool_Shit()
         {
             game_object = Quake2_GameObject();
         }
-        else
-        {
-            ErrorPrintf("ERROR: unknown format: '%s'\n", format.c_str());
-        }
+        else { ErrorPrintf("ERROR: unknown format: '%s'\n", format.c_str()); }
     }
 
     const std::string def_filename = ob_default_filename();
@@ -661,7 +659,7 @@ sapp_desc sokol_main(int argc, char *argv[])
 #endif
         ShowInfo();
 #ifdef _WIN32
-        std::cout << '\n' << "Close window when finished...";
+        printf("\nClose window when finished...");
         do {
         } while (true);
 #endif
@@ -679,7 +677,7 @@ sapp_desc sokol_main(int argc, char *argv[])
 #endif
         ShowVersion();
 #ifdef _WIN32
-        std::cout << '\n' << "Close window when finished...";
+        printf("\nClose window when finished...");
         do {
         } while (true);
 #endif
@@ -701,7 +699,7 @@ sapp_desc sokol_main(int argc, char *argv[])
 #endif
             fprintf(stderr, "OBSIDIAN ERROR: missing filename for --batch\n");
 #ifdef _WIN32
-            std::cout << '\n' << "Close window when finished...";
+            printf("\nClose window when finished...");
             do {
             } while (true);
 #endif
@@ -726,11 +724,11 @@ sapp_desc sokol_main(int argc, char *argv[])
                 freopen("CONOUT$", "w", stderr);
             }
 #endif
-            fprintf(stderr, 
-                "OBSIDIAN ERROR: missing one or more args for --update "
-                "<section> <key> <value>\n");
+            fprintf(stderr,
+                    "OBSIDIAN ERROR: missing one or more args for --update "
+                    "<section> <key> <value>\n");
 #ifdef _WIN32
-            std::cout << '\n' << "Close window when finished...";
+            printf("\nClose window when finished...");
             do {
             } while (true);
 #endif
@@ -746,10 +744,10 @@ sapp_desc sokol_main(int argc, char *argv[])
                 freopen("CONOUT$", "w", stderr);
             }
 #endif
-            fprintf(stderr, 
-                "OBSIDIAN ERROR: section name must be one character\n");
+            fprintf(stderr,
+                    "OBSIDIAN ERROR: section name must be one character\n");
 #ifdef _WIN32
-            std::cout << '\n' << "Close window when finished...";
+            printf("\nClose window when finished...");
             do {
             } while (true);
 #endif
@@ -766,9 +764,10 @@ sapp_desc sokol_main(int argc, char *argv[])
                 freopen("CONOUT$", "w", stderr);
             }
 #endif
-            fprintf(stderr, "OBSIDIAN ERROR: section name must be 'c' or 'o'\n");
+            fprintf(stderr,
+                    "OBSIDIAN ERROR: section name must be 'c' or 'o'\n");
 #ifdef _WIN32
-            std::cout << '\n' << "Close window when finished...";
+            printf("\nClose window when finished...");
             do {
             } while (true);
 #endif
@@ -854,7 +853,7 @@ sapp_desc sokol_main(int argc, char *argv[])
 #endif
             fprintf(stderr, "OBSIDIAN ERROR: missing filename for --load\n");
 #ifdef _WIN32
-            std::cout << '\n' << "Close window when finished...";
+            printf("\nClose window when finished...");
             do {
             } while (true);
 #endif
@@ -888,8 +887,7 @@ sapp_desc sokol_main(int argc, char *argv[])
         {
             if (!Cookie_Load(load_file))
             {
-                ErrorPrintf(_("No such config file: %s\n"),
-                                 load_file.c_str());
+                ErrorPrintf(_("No such config file: %s\n"), load_file.c_str());
             }
         }
         else
@@ -901,7 +899,7 @@ sapp_desc sokol_main(int argc, char *argv[])
             if (!Cookie_Load(config_file))
             {
                 ErrorPrintf(_("No such config file: %s\n"),
-                                 config_file.c_str());
+                            config_file.c_str());
             }
         }
 
@@ -926,16 +924,16 @@ sapp_desc sokol_main(int argc, char *argv[])
 
         if (batch_output_file.empty())
         {
-            fprintf(stderr, 
-                "\nNo output filename given! Did you forget the --batch "
-                "parameter?\n");
+            fprintf(stderr,
+                    "\nNo output filename given! Did you forget the --batch "
+                    "parameter?\n");
             LogPrintf(
                 "\nNo output filename given! Did you forget the --batch "
                 "parameter?\n");
 
             Main::Shutdown();
 #ifdef _WIN32
-            std::cout << '\n' << "Close window when finished...";
+            printf("\nClose window when finished...");
             do {
             } while (true);
 #endif
@@ -950,7 +948,7 @@ sapp_desc sokol_main(int argc, char *argv[])
 
             Main::Shutdown();
 #ifdef _WIN32
-            std::cout << '\n' << "Close window when finished...";
+            printf("\nClose window when finished...");
             do {
             } while (true);
 #endif
@@ -958,7 +956,7 @@ sapp_desc sokol_main(int argc, char *argv[])
         }
         Main::Shutdown();
 #ifdef _WIN32
-        std::cout << '\n' << "Close window when finished...";
+        printf("\nClose window when finished...");
         do {
         } while (true);
 #endif
@@ -1054,21 +1052,22 @@ int main(int argc, char **argv)
             argv::IsOption(update_arg + 1) || argv::IsOption(update_arg + 2) ||
             argv::IsOption(update_arg + 3))
         {
-            fprintf(stderr, 
-                "OBSIDIAN ERROR: missing one or more args for --update "
-                "<section> <key> <value>\n");
+            fprintf(stderr,
+                    "OBSIDIAN ERROR: missing one or more args for --update "
+                    "<section> <key> <value>\n");
             exit(EXIT_FAILURE);
         }
         if (argv::list[update_arg + 1].length() > 1)
         {
-            fprintf(stderr, 
-                "OBSIDIAN ERROR: section name must be one character\n");
+            fprintf(stderr,
+                    "OBSIDIAN ERROR: section name must be one character\n");
             exit(EXIT_FAILURE);
         }
         char section = argv::list[update_arg + 1][0];
         if (section != 'c' && section != 'o')
         {
-            fprintf(stderr, "OBSIDIAN ERROR: section name must be 'c' or 'o'\n");
+            fprintf(stderr,
+                    "OBSIDIAN ERROR: section name must be 'c' or 'o'\n");
             exit(EXIT_FAILURE);
         }
         update_kv.section = section;
@@ -1163,8 +1162,7 @@ int main(int argc, char **argv)
         if (!std::filesystem::exists(config_file)) { Cookie_Save(config_file); }
         if (!Cookie_Load(config_file))
         {
-            ErrorPrintf(_("No such config file: %s\n"),
-                             config_file.c_str());
+            ErrorPrintf(_("No such config file: %s\n"), config_file.c_str());
         }
     }
 
@@ -1189,9 +1187,9 @@ int main(int argc, char **argv)
 
     if (batch_output_file.empty())
     {
-        fprintf(stderr, 
-            "\nNo output filename given! Did you forget the --batch "
-            "parameter?\n");
+        fprintf(stderr,
+                "\nNo output filename given! Did you forget the --batch "
+                "parameter?\n");
         LogPrintf(
             "\nNo output filename given! Did you forget the --batch "
             "parameter?\n");

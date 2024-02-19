@@ -25,13 +25,15 @@
 #include "csg_main.h"
 #include "csg_quake.h"
 #include "hdr_lua.h"
-#include "headers.h"
 #include "lib_util.h"
 #include "m_lua.h"
 #include "main.h"
 #include "q1_structs.h"
 #include "q_common.h"
 #include "q_light.h"
+#include "sys_debug.h"
+#include "sys_endian.h"
+#include "sys_macro.h"
 
 #define CLIP_EPSILON 0.01
 
@@ -1217,9 +1219,8 @@ void Q1_ClippingHull(int hull)
 
     if (q1_total_clip >= MAX_MAP_CLIPNODES)
     {
-        ErrorPrintf(
-            "Quake build failure: exceeded limit of %d CLIPNODES\n",
-            MAX_MAP_CLIPNODES);
+        ErrorPrintf("Quake build failure: exceeded limit of %d CLIPNODES\n",
+                    MAX_MAP_CLIPNODES);
     }
 }
 

@@ -18,9 +18,9 @@
 
 #include "aj_parse.h"
 
-#include <cassert>
-#include <cctype>
-#include <cstdlib>
+#include <assert.h>
+#include <ctype.h>
+#include <stdlib.h>
 
 namespace ajparse
 {

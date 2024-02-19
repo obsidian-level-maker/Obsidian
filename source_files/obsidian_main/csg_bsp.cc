@@ -25,10 +25,11 @@
 #include "csg_main.h"
 #include "g_doom.h"  // for MLF_DontDraw
 #include "hdr_lua.h"
-#include "headers.h"
 #include "lib_util.h"
 #include "m_lua.h"
 #include "main.h"
+#include "sys_debug.h"
+#include "sys_macro.h"
 
 double QUANTIZE_GRID;
 
@@ -106,8 +107,8 @@ snag_c::snag_c(brush_vert_c *side, double _x1, double _y1, double _x2,
 {
     if (Length() < SNAG_EPSILON)
     {
-        ErrorPrintf("Line loop contains zero-length line! (%1.2f %1.2f)\n",
-                         x1, y1);
+        ErrorPrintf("Line loop contains zero-length line! (%1.2f %1.2f)\n", x1,
+                    y1);
     }
 
     sides.push_back(side);

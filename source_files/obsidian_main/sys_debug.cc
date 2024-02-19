@@ -19,9 +19,9 @@
 //
 //------------------------------------------------------------------------
 
-#include "headers.h"
+#include "sys_debug.h"
+
 #include "lib_util.h"
-#include "main.h"
 #include "m_lua.h"
 #include "main.h"
 
@@ -35,8 +35,7 @@ bool terminal  = false;
 
 void LogPrintf(const char *message, ...)
 {
-    if (!log_file && !terminal)
-        return;
+    if (!log_file && !terminal) return;
 
     char message_buf[4096];
 
@@ -67,8 +66,7 @@ void LogPrintf(const char *message, ...)
 
 void DebugPrintf(const char *message, ...)
 {
-    if (!debugging || (!log_file && !terminal))
-        return;
+    if (!debugging || (!log_file && !terminal)) return;
 
     char message_buf[4096];
 
@@ -90,7 +88,7 @@ void DebugPrintf(const char *message, ...)
         fflush(log_file);
     }
 
-    if (terminal) 
+    if (terminal)
     {
         printf("DEBUG: %s", message_buf);
         fflush(stdout);

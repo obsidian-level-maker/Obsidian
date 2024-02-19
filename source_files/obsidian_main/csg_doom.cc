@@ -25,9 +25,10 @@
 #include "csg_local.h"
 #include "csg_main.h"
 #include "g_doom.h"
-#include "headers.h"
 #include "lib_util.h"
 #include "main.h"
+#include "sys_debug.h"
+#include "sys_macro.h"
 
 // Properties
 int ef_solid_type;
@@ -594,7 +595,9 @@ class linedef_c
             int ax = front->x_offset;
             int bx = B_front->x_offset;
 
-            if (bx == IVAL_NONE) { /* OK */ }
+            if (bx == IVAL_NONE)
+            { /* OK */
+            }
             else if (ax == IVAL_NONE) { return false; }
             else
             {
@@ -610,7 +613,9 @@ class linedef_c
             int ax = back->x_offset;
             int bx = B_back->x_offset;
 
-            if (bx == IVAL_NONE) { /* OK */ }
+            if (bx == IVAL_NONE)
+            { /* OK */
+            }
             else if (ax == IVAL_NONE) { return false; }
             else
             {
@@ -1692,7 +1697,9 @@ static int TryRoundAtVertex(Doom::vertex_c *V)
     SYS_ASSERT(LX->start == V || LX->end == V);
     SYS_ASSERT(LY->start == V || LY->end == V);
 
-    if (LX->isHoriz() && LY->isVert()) { /* OK */ }
+    if (LX->isHoriz() && LY->isVert())
+    { /* OK */
+    }
     else if (LX->isVert() && LY->isHoriz()) { std::swap(LX, LY); }
     else
     {

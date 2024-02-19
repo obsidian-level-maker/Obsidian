@@ -24,7 +24,6 @@
 #include <bitset>
 #include <string>
 
-#include "headers.h"
 #include "lib_util.h"
 #include "lib_wad.h"
 #include "lib_zip.h"
@@ -32,6 +31,9 @@
 #include "m_lua.h"
 #include "main.h"
 #include "q_common.h"  // qLump_c
+#include "sys_debug.h"
+#include "sys_endian.h"
+#include "sys_macro.h"
 #include "sys_xoshiro.h"
 
 #ifdef WIN32
@@ -524,7 +526,7 @@ void Doom::EndLevel(std::string level_name)
             std::filesystem::remove(game_object->ZIP_Filename());
             std::filesystem::remove(game_object->Filename());
             ErrorPrintf(_("Error writing map WAD to %s\n"),
-                             game_object->ZIP_Filename().u8string().c_str());
+                        game_object->ZIP_Filename().u8string().c_str());
         }
         else { std::filesystem::remove(level_wad); }
         WAD_OpenWrite(game_object->Filename());

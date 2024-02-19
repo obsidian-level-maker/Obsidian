@@ -22,7 +22,6 @@
 #include "csg_main.h"
 #include "g_doom.h"
 #include "hdr_lua.h"
-#include "headers.h"
 #include "images.h"
 #include "lib_tga.h"
 #include "lib_util.h"
@@ -32,6 +31,9 @@
 #include "main.h"
 #include "physfs.h"
 #include "q_common.h"  // qLump_c
+#include "sys_debug.h"
+#include "sys_endian.h"
+#include "sys_macro.h"
 #include "tx_forge.h"
 #include "tx_skies.h"
 
