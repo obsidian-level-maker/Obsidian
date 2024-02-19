@@ -108,7 +108,7 @@ void argv::Init(const int argc, const char *const *argv)
     for (i = 0; i < win_argc; i++)
     {
         SYS_NULL_CHECK(win_argv[i]);
-        std::u16string arg = reinterpret_cast<char16_t *>(win_argv[i]);
+        std::u16string arg = (char16_t *)win_argv[i];
         argv_block.push_back(StringToUTF8(arg));
     }
 

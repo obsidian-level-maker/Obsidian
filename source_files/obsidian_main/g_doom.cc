@@ -365,7 +365,7 @@ bool Doom::StartWAD(std::filesystem::path filename)
     qLump_c *info = BSP_CreateInfoLump();
     if (game_object->file_per_map)
     {
-        ZIPF_AddMem("OBSIDATA.txt", const_cast<uint8_t *>(info->GetBuffer()),
+        ZIPF_AddMem("OBSIDATA.txt", info->GetBuffer(),
                     info->GetSize());
     }
     else { WriteLump("OBSIDATA", info); }

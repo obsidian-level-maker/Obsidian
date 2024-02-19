@@ -78,7 +78,7 @@ bool PAK_OpenRead(const char *filename)
     if (r_header.entry_num >= 5000)  // sanity check
     {
         LogPrintf("PAK_OpenRead: bad header (%u entries?)\n",
-                  static_cast<unsigned int>(r_header.entry_num));
+                  r_header.entry_num);
         PHYSFS_close(r_pak_fp);
         return false;
     }
@@ -86,7 +86,7 @@ bool PAK_OpenRead(const char *filename)
     if (!PHYSFS_seek(r_pak_fp, r_header.dir_start))
     {
         LogPrintf("PAK_OpenRead: cannot seek to directory (at 0x%u)\n",
-                  static_cast<unsigned int>(r_header.dir_start));
+                  r_header.dir_start);
         PHYSFS_close(r_pak_fp);
         return false;
     }
@@ -308,8 +308,7 @@ bool PAK_AppendData(const void *data, int length)
 
 void PAK_FinishLump(void)
 {
-    const int len = static_cast<int>(ftell(w_pak_fp)) -
-                    static_cast<int>(w_pak_entry.offset);
+    const int len = ftell(w_pak_fp) - w_pak_entry.offset;
 
     // pad lumps to a multiple of four bytes
     int padding = ALIGN_LEN(len) - len;

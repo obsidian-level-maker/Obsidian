@@ -51,7 +51,7 @@ template <typename A, typename B,
 constexpr A MAX(A a, B b)
 {
     if (a > b) { return a; }
-    return static_cast<A>(b);
+    return (A)b;
 }
 #endif
 
@@ -61,7 +61,7 @@ template <typename A, typename B,
 constexpr A MIN(A a, B b)
 {
     if (a < b) { return a; }
-    return static_cast<A>(b);
+    return (A)b;
 }
 #endif
 
@@ -99,8 +99,8 @@ template <typename T, typename L, typename U,
               std::is_convertible<L, T>, std::is_convertible<U, T>>>>
 constexpr T CLAMP(L low, T x, U high)
 {
-    if (x < low) { return static_cast<T>(low); }
-    if (x > high) { return static_cast<T>(high); }
+    if (x < low) { return (T)low; }
+    if (x > high) { return (T)high; }
     return x;
 }
 #endif

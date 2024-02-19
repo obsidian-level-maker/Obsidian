@@ -191,8 +191,8 @@ std::string NumToString(unsigned long long int value)
 {
     std::string num_string;
     num_string.resize(50, ' ');
-    static_cast<void>(std::to_chars(
-        num_string.data(), num_string.data() + num_string.size(), value));
+    (void)std::to_chars(
+        num_string.data(), num_string.data() + num_string.size(), value);
     return num_string;
 }
 
@@ -200,43 +200,30 @@ std::string NumToString(int value)
 {
     std::string num_string;
     num_string.resize(50, ' ');
-    static_cast<void>(std::to_chars(
-        num_string.data(), num_string.data() + num_string.size(), value));
+    (void)std::to_chars(
+        num_string.data(), num_string.data() + num_string.size(), value);
     return num_string;
 }
 
 std::string NumToString(double value) { return std::to_string(value); }
 
-/* This can be used instead when Mingw's GCC can use charconv with floating
-point numbers - Dasho std::string NumToString(double value) { std::string
-num_string; num_string.resize(50, ' '); static_cast<void>(std::to_chars(
-        num_string.data(), num_string.data() + num_string.size(), value));
-    return num_string;
-}*/
-
 int StringToInt(std::string value)
 {
     int actual_number;
-    static_cast<void>(std::from_chars(value.data(), value.data() + value.size(),
-                                      actual_number));
+    (void)std::from_chars(value.data(), value.data() + value.size(),
+                                      actual_number);
     return actual_number;
 }
 
 int StringToHex(std::string value)
 {
     int actual_number;
-    static_cast<void>(std::from_chars(value.data(), value.data() + value.size(),
-                                      actual_number, 16));
+    (void)std::from_chars(value.data(), value.data() + value.size(),
+                                      actual_number, 16);
     return actual_number;
 }
 
 double StringToDouble(std::string value) { return stod(value); }
-
-/* This can be used instead when Mingw's GCC can use charconv with floating
-point numbers - Dasho double StringToDouble(std::string value) { double
-actual_number; static_cast<void>(std::from_chars(value.data(), value.data() +
-value.size(), actual_number)); return actual_number;
-}*/
 
 char *mem_gets(char *buf, int size, const char **str_ptr)
 {

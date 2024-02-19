@@ -72,7 +72,7 @@ bool WAD_OpenRead(std::filesystem::path filename)
     if (wad_R_header.num_lumps >= 5000)  // sanity check
     {
         LogPrintf("WAD_OpenRead: bad header (%u entries?)\n",
-                  static_cast<unsigned int>(wad_R_header.num_lumps));
+                  wad_R_header.num_lumps);
         PHYSFS_close(wad_R_fp);
         return false;
     }
@@ -80,7 +80,7 @@ bool WAD_OpenRead(std::filesystem::path filename)
     if (!PHYSFS_seek(wad_R_fp, wad_R_header.dir_start))
     {
         LogPrintf("WAD_OpenRead: cannot seek to directory (at 0x%u)\n",
-                  static_cast<unsigned int>(wad_R_header.dir_start));
+                  wad_R_header.dir_start);
         PHYSFS_close(wad_R_fp);
         return false;
     }
@@ -290,7 +290,7 @@ bool WAD_AppendData(const void *data, int length)
 void WAD_FinishLump(void)
 {
     const int len =
-        static_cast<int>(ftell(wad_W_fp)) - static_cast<int>(wad_W_lump.start);
+        ftell(wad_W_fp) - wad_W_lump.start;
 
     // pad lumps to a multiple of four bytes
     int padding = ALIGN_LEN(len) - len;
@@ -353,7 +353,7 @@ bool WAD2_OpenRead(const char *filename)
     if (wad2_R_header.num_lumps >= 5000)  // sanity check
     {
         LogPrintf("WAD2_OpenRead: bad header (%u entries?)\n",
-                  static_cast<unsigned int>(wad2_R_header.num_lumps));
+                  wad2_R_header.num_lumps);
         PHYSFS_close(wad2_R_fp);
         return false;
     }
@@ -361,7 +361,7 @@ bool WAD2_OpenRead(const char *filename)
     if (!PHYSFS_seek(wad2_R_fp, wad2_R_header.dir_start))
     {
         LogPrintf("WAD2_OpenRead: cannot seek to directory (at 0x&u)\n",
-                  static_cast<unsigned int>(wad2_R_header.dir_start));
+                  wad2_R_header.dir_start);
         PHYSFS_close(wad2_R_fp);
         return false;
     }

@@ -76,7 +76,7 @@ bool GRP_OpenRead(const char *filename)
     if (grp_R_header.num_lumps >= 5000)  // sanity check
     {
         LogPrintf("GRP_OpenRead: bad header (%u entries?)\n",
-                  static_cast<unsigned int>(grp_R_header.num_lumps));
+                  grp_R_header.num_lumps);
         PHYSFS_close(grp_R_fp);
         return false;
     }

@@ -663,7 +663,7 @@ int wad_add_text_lump(lua_State *L)
 
     if (game_object->file_per_map)
     {
-        ZIPF_AddMem(name, const_cast<uint8_t *>(lump->GetBuffer()),
+        ZIPF_AddMem(name, lump->GetBuffer(),
                     lump->GetSize());
     }
     else { WriteLump(name, lump); }
@@ -1536,7 +1536,7 @@ int title_write(lua_State *L)
     if (game_object->file_per_map)
     {
         ZIPF_AddMem(StringFormat("graphics/%s.%s", lumpname, format),
-                    const_cast<uint8_t *>(lump->GetBuffer()), lump->GetSize());
+                    lump->GetBuffer(), lump->GetSize());
     }
     else { WriteLump(lumpname, lump); }
 
