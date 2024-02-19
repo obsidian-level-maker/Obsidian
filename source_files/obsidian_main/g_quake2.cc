@@ -31,6 +31,7 @@
 #include "q_common.h"
 #include "q_light.h"
 #include "q_vis.h"
+#include "sys_debug.h"
 
 #define LEAF_PADDING  4
 #define NODE_PADDING  16
@@ -178,8 +179,7 @@ uint16_t Q2_AddTexInfo(std::string texture, int flags, int value, float *s4,
 
     if (texture.size() + 1 >= sizeof(raw_tex.texture))
     {
-        Main::FatalError("Quake2 texture name too long: '%s'\n",
-                         texture.c_str());
+        ErrorPrintf("Quake2 texture name too long: '%s'\n", texture.c_str());
     }
 
     std::copy(texture.data(), texture.data() + texture.size(), raw_tex.texture);
@@ -233,7 +233,7 @@ static void Q2_WriteTexInfo()
 {
     if (q2_texinfos.size() >= MAX_MAP_TEXINFO)
     {
-        Main::FatalError(
+        ErrorPrintf(
             "Quake2 build failure: exceeded limit of %d TEXINFOS\n",
             MAX_MAP_TEXINFO);
     }
@@ -366,7 +366,7 @@ static void Q2_WriteEdge(const quake_vertex_c &A, const quake_vertex_c &B)
 
     if (v1 == v2)
     {
-        Main::FatalError("INTERNAL ERROR: Q2 WriteEdge is zero length!\n");
+        ErrorPrintf("INTERNAL ERROR: Q2 WriteEdge is zero length!\n");
     }
 
     int32_t index = BSP_AddEdge(v1, v2);
@@ -658,19 +658,19 @@ static void Q2_WriteBSP()
 
     if (q2_total_faces >= MAX_MAP_FACES)
     {
-        Main::FatalError("Quake2 build failure: exceeded limit of %d FACES\n",
+        ErrorPrintf("Quake2 build failure: exceeded limit of %d FACES\n",
                          MAX_MAP_FACES);
     }
 
     if (q2_total_leafs >= MAX_MAP_LEAFS)
     {
-        Main::FatalError("Quake2 build failure: exceeded limit of %d LEAFS\n",
+        ErrorPrintf("Quake2 build failure: exceeded limit of %d LEAFS\n",
                          MAX_MAP_LEAFS);
     }
 
     if (q2_total_nodes >= MAX_MAP_NODES)
     {
-        Main::FatalError("Quake2 build failure: exceeded limit of %d NODES\n",
+        ErrorPrintf("Quake2 build failure: exceeded limit of %d NODES\n",
                          MAX_MAP_NODES);
     }
 }
@@ -1143,12 +1143,12 @@ void quake2_game_interface_c::EndLevel()
 {
     if (level_name.empty())
     {
-        Main::FatalError("Script problem: did not set level name!\n");
+        ErrorPrintf("Script problem: did not set level name!\n");
     }
 
     if (level_name.size() >= 32)
     {
-        Main::FatalError("Script problem: level name too long: %s\n",
+        ErrorPrintf("Script problem: level name too long: %s\n",
                          level_name.c_str());
     }
 

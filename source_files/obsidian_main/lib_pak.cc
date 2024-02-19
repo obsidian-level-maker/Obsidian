@@ -21,11 +21,11 @@
 
 #include "lib_pak.h"
 
+#include <fstream>
 #include <list>
 
 #include "headers.h"
 #include "lib_util.h"
-#include "main.h"
 #include "physfs.h"
 
 // #define LogPrintf  printf

@@ -94,7 +94,7 @@ static bool Options_ParseLine(std::string buf)
 
     if (!isalpha(buf.front()))
     {
-        StdOutPrintf("%s [%s]\n", _("Weird option line: "), buf.c_str());
+        printf("%s [%s]\n", _("Weird option line: "), buf.c_str());
         return false;
     }
 
@@ -114,7 +114,7 @@ bool Options_Load(std::filesystem::path filename)
 
     if (!option_fp.is_open())
     {
-        StdOutPrintf(_("Missing Options file -- using defaults.\n\n"));
+        printf(_("Missing Options file -- using defaults.\n\n"));
         return false;
     }
 

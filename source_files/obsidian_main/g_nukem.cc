@@ -351,7 +351,7 @@ void nukem_game_interface_c::EndLevel()
 {
     if (level_name.empty())
     {
-        Main::FatalError("Script problem: did not set level name!\n");
+        ErrorPrintf("Script problem: did not set level name!\n");
     }
 
     NK_BeginLevel(level_name.c_str());

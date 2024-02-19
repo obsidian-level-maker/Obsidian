@@ -144,7 +144,7 @@ void frame(void)
 
 void cleanup(void)
 {
-    Main::Detail::Shutdown(false);
+    Main::Shutdown();
     simgui_shutdown();
     sg_shutdown();
 }
@@ -211,7 +211,7 @@ game_interface_c *game_object = NULL;
 
 static void ShowInfo()
 {
-    StdOutPrintf(
+    printf(
         "\n"
         "** %s %s \"%s\"\n"
         "** Build %s **\n"
@@ -220,7 +220,7 @@ static void ShowInfo()
         OBSIDIAN_TITLE.c_str(), OBSIDIAN_SHORT_VERSION,
         OBSIDIAN_CODE_NAME.c_str(), OBSIDIAN_VERSION);
 
-    StdOutPrintf(
+    printf(
         "Usage: Obsidian [options...] [key=value...]\n"
         "\n"
         "Available options:\n"
@@ -245,13 +245,13 @@ static void ShowInfo()
         "                            (section should be 'c' or 'o')\n"
         "\n");
 
-    StdOutPrintf(
+    printf(
         "Please visit the web site for complete information:\n"
         "  %s \n"
         "\n",
         OBSIDIAN_WEBSITE);
 
-    StdOutPrintf(
+    printf(
         "This program is free software, under the terms of the GNU General "
         "Public\n"
         "License, and comes with ABSOLUTELY NO WARRANTY.  See the "
@@ -264,7 +264,7 @@ static void ShowInfo()
 
 static void ShowVersion()
 {
-    StdOutPrintf("%s %s \"%s\" Build %s\n", OBSIDIAN_TITLE.c_str(),
+    printf("%s %s \"%s\" Build %s\n", OBSIDIAN_TITLE.c_str(),
                  OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str(),
                  OBSIDIAN_VERSION);
 
@@ -280,7 +280,7 @@ void Determine_WorkingPath(std::filesystem::path &path_check)
     {
         if (home_arg + 1 >= argv::list.size() || argv::IsOption(home_arg + 1))
         {
-            StdErrPrintf("OBSIDIAN ERROR: missing path for --home\n");
+            fprintf(stderr, "OBSIDIAN ERROR: missing path for --home\n");
             exit(EXIT_FAILURE);
         }
 
@@ -312,7 +312,7 @@ void Determine_WorkingPath(std::filesystem::path &path_check)
 
         if (!home_dir.is_absolute())
         {
-            Main::FatalError("Unable to find $HOME directory!\n");
+            ErrorPrintf("Unable to find $HOME directory!\n");
         }
     }
 // FLTK is going to want a ~/.config directory as well I think - Dasho
@@ -362,7 +362,7 @@ void Determine_InstallDir(std::filesystem::path &path_check)
     {
         if (inst_arg + 1 >= argv::list.size() || argv::IsOption(inst_arg + 1))
         {
-            StdErrPrintf("OBSIDIAN ERROR: missing path for --install\n");
+            fprintf(stderr, "OBSIDIAN ERROR: missing path for --install\n");
             exit(EXIT_FAILURE);
         }
 
@@ -370,7 +370,7 @@ void Determine_InstallDir(std::filesystem::path &path_check)
 
         if (Verify_InstallDir(install_dir)) { return; }
 
-        Main::FatalError("Bad install directory specified!\n");
+        ErrorPrintf("Bad install directory specified!\n");
     }
 
     // if run from current directory, look there
@@ -397,7 +397,7 @@ void Determine_InstallDir(std::filesystem::path &path_check)
 
     if (install_dir.empty())
     {
-        Main::FatalError("Unable to find Obsidian's install directory!\n");
+        ErrorPrintf("Unable to find Obsidian's install directory!\n");
     }
 }
 
@@ -407,7 +407,7 @@ void Determine_ConfigFile()
     {
         if (conf_arg + 1 >= argv::list.size() || argv::IsOption(conf_arg + 1))
         {
-            StdErrPrintf("OBSIDIAN ERROR: missing path for --config\n");
+            fprintf(stderr, "OBSIDIAN ERROR: missing path for --config\n");
             exit(EXIT_FAILURE);
         }
 
@@ -426,7 +426,7 @@ void Determine_OptionsFile()
     {
         if (optf_arg + 1 >= argv::list.size() || argv::IsOption(optf_arg + 1))
         {
-            StdErrPrintf("OBSIDIAN ERROR: missing path for --options\n");
+            fprintf(stderr, "OBSIDIAN ERROR: missing path for --options\n");
             exit(EXIT_FAILURE);
         }
 
@@ -445,7 +445,7 @@ void Determine_LoggingFile()
     {
         if (logf_arg + 1 >= argv::list.size() || argv::IsOption(logf_arg + 1))
         {
-            StdErrPrintf("OBSIDIAN ERROR: missing path for --log\n");
+            fprintf(stderr, "OBSIDIAN ERROR: missing path for --log\n");
             exit(EXIT_FAILURE);
         }
 
@@ -456,7 +456,7 @@ void Determine_LoggingFile()
 
         if (!fp.is_open())
         {
-            Main::FatalError("Cannot create log file: %s\n",
+            ErrorPrintf("Cannot create log file: %s\n",
                              logging_file.u8string().c_str());
         }
 
@@ -494,7 +494,7 @@ bool Main::BackupFile(const std::filesystem::path &filename)
     return true;
 }
 
-void Main::Detail::Shutdown(const bool error)
+void Main::Shutdown()
 {
     if (!std::filesystem::exists(options_file)) { Options_Save(options_file); }
     Script_Close();
@@ -535,7 +535,7 @@ bool Build_Cool_Shit()
 
     if (format.empty())
     {
-        Main::FatalError("ERROR: missing 'format' for game?!?\n");
+        ErrorPrintf("ERROR: missing 'format' for game?!?\n");
     }
 
     // create game object
@@ -562,7 +562,7 @@ bool Build_Cool_Shit()
         }
         else
         {
-            Main::FatalError("ERROR: unknown format: '%s'\n", format.c_str());
+            ErrorPrintf("ERROR: unknown format: '%s'\n", format.c_str());
         }
     }
 
@@ -699,7 +699,7 @@ sapp_desc sokol_main(int argc, char *argv[])
                 freopen("CONOUT$", "w", stderr);
             }
 #endif
-            StdErrPrintf("OBSIDIAN ERROR: missing filename for --batch\n");
+            fprintf(stderr, "OBSIDIAN ERROR: missing filename for --batch\n");
 #ifdef _WIN32
             std::cout << '\n' << "Close window when finished...";
             do {
@@ -726,7 +726,7 @@ sapp_desc sokol_main(int argc, char *argv[])
                 freopen("CONOUT$", "w", stderr);
             }
 #endif
-            StdErrPrintf(
+            fprintf(stderr, 
                 "OBSIDIAN ERROR: missing one or more args for --update "
                 "<section> <key> <value>\n");
 #ifdef _WIN32
@@ -746,7 +746,7 @@ sapp_desc sokol_main(int argc, char *argv[])
                 freopen("CONOUT$", "w", stderr);
             }
 #endif
-            StdErrPrintf(
+            fprintf(stderr, 
                 "OBSIDIAN ERROR: section name must be one character\n");
 #ifdef _WIN32
             std::cout << '\n' << "Close window when finished...";
@@ -766,7 +766,7 @@ sapp_desc sokol_main(int argc, char *argv[])
                 freopen("CONOUT$", "w", stderr);
             }
 #endif
-            StdErrPrintf("OBSIDIAN ERROR: section name must be 'c' or 'o'\n");
+            fprintf(stderr, "OBSIDIAN ERROR: section name must be 'c' or 'o'\n");
 #ifdef _WIN32
             std::cout << '\n' << "Close window when finished...";
             do {
@@ -852,7 +852,7 @@ sapp_desc sokol_main(int argc, char *argv[])
                 freopen("CONOUT$", "w", stderr);
             }
 #endif
-            StdErrPrintf("OBSIDIAN ERROR: missing filename for --load\n");
+            fprintf(stderr, "OBSIDIAN ERROR: missing filename for --load\n");
 #ifdef _WIN32
             std::cout << '\n' << "Close window when finished...";
             do {
@@ -888,7 +888,7 @@ sapp_desc sokol_main(int argc, char *argv[])
         {
             if (!Cookie_Load(load_file))
             {
-                Main::FatalError(_("No such config file: %s\n"),
+                ErrorPrintf(_("No such config file: %s\n"),
                                  load_file.c_str());
             }
         }
@@ -900,7 +900,7 @@ sapp_desc sokol_main(int argc, char *argv[])
             }
             if (!Cookie_Load(config_file))
             {
-                Main::FatalError(_("No such config file: %s\n"),
+                ErrorPrintf(_("No such config file: %s\n"),
                                  config_file.c_str());
             }
         }
@@ -920,20 +920,20 @@ sapp_desc sokol_main(int argc, char *argv[])
             }
             Options_Save(options_file);
             Cookie_Save(config_file);
-            Main::Detail::Shutdown(false);
+            Main::Shutdown();
             exit(EXIT_SUCCESS);
         }
 
         if (batch_output_file.empty())
         {
-            StdErrPrintf(
+            fprintf(stderr, 
                 "\nNo output filename given! Did you forget the --batch "
                 "parameter?\n");
             LogPrintf(
                 "\nNo output filename given! Did you forget the --batch "
                 "parameter?\n");
 
-            Main::Detail::Shutdown(false);
+            Main::Shutdown();
 #ifdef _WIN32
             std::cout << '\n' << "Close window when finished...";
             do {
@@ -945,10 +945,10 @@ sapp_desc sokol_main(int argc, char *argv[])
         Main_SetSeed();
         if (!Build_Cool_Shit())
         {
-            StdErrPrintf("FAILED!\n");
+            fprintf(stderr, "FAILED!\n");
             LogPrintf("FAILED!\n");
 
-            Main::Detail::Shutdown(false);
+            Main::Shutdown();
 #ifdef _WIN32
             std::cout << '\n' << "Close window when finished...";
             do {
@@ -956,7 +956,7 @@ sapp_desc sokol_main(int argc, char *argv[])
 #endif
             exit(EXIT_FAILURE);
         }
-        Main::Detail::Shutdown(false);
+        Main::Shutdown();
 #ifdef _WIN32
         std::cout << '\n' << "Close window when finished...";
         do {
@@ -991,7 +991,7 @@ sapp_desc sokol_main(int argc, char *argv[])
     {
         if (!Cookie_Load(load_file))
         {
-            Main::FatalError(_("No such config file: %s\n"), load_file.c_str());
+            ErrorPrintf(_("No such config file: %s\n"), load_file.c_str());
         }
     }
 
@@ -1042,7 +1042,7 @@ int main(int argc, char **argv)
     {
         if (batch_arg + 1 >= argv::list.size() || argv::IsOption(batch_arg + 1))
         {
-            StdErrPrintf("OBSIDIAN ERROR: missing filename for --batch\n");
+            fprintf(stderr, "OBSIDIAN ERROR: missing filename for --batch\n");
             exit(EXIT_FAILURE);
         }
         batch_output_file = argv::list[batch_arg + 1];
@@ -1054,21 +1054,21 @@ int main(int argc, char **argv)
             argv::IsOption(update_arg + 1) || argv::IsOption(update_arg + 2) ||
             argv::IsOption(update_arg + 3))
         {
-            StdErrPrintf(
+            fprintf(stderr, 
                 "OBSIDIAN ERROR: missing one or more args for --update "
                 "<section> <key> <value>\n");
             exit(EXIT_FAILURE);
         }
         if (argv::list[update_arg + 1].length() > 1)
         {
-            StdErrPrintf(
+            fprintf(stderr, 
                 "OBSIDIAN ERROR: section name must be one character\n");
             exit(EXIT_FAILURE);
         }
         char section = argv::list[update_arg + 1][0];
         if (section != 'c' && section != 'o')
         {
-            StdErrPrintf("OBSIDIAN ERROR: section name must be 'c' or 'o'\n");
+            fprintf(stderr, "OBSIDIAN ERROR: section name must be 'c' or 'o'\n");
             exit(EXIT_FAILURE);
         }
         update_kv.section = section;
@@ -1134,7 +1134,7 @@ int main(int argc, char **argv)
     {
         if (load_arg + 1 >= argv::list.size() || argv::IsOption(load_arg + 1))
         {
-            StdErrPrintf("OBSIDIAN ERROR: missing filename for --load\n");
+            fprintf(stderr, "OBSIDIAN ERROR: missing filename for --load\n");
             exit(EXIT_FAILURE);
         }
 
@@ -1155,7 +1155,7 @@ int main(int argc, char **argv)
     {
         if (!Cookie_Load(load_file))
         {
-            Main::FatalError(_("No such config file: %s\n"), load_file.c_str());
+            ErrorPrintf(_("No such config file: %s\n"), load_file.c_str());
         }
     }
     else
@@ -1163,7 +1163,7 @@ int main(int argc, char **argv)
         if (!std::filesystem::exists(config_file)) { Cookie_Save(config_file); }
         if (!Cookie_Load(config_file))
         {
-            Main::FatalError(_("No such config file: %s\n"),
+            ErrorPrintf(_("No such config file: %s\n"),
                              config_file.c_str());
         }
     }
@@ -1183,33 +1183,33 @@ int main(int argc, char **argv)
         }
         Options_Save(options_file);
         Cookie_Save(config_file);
-        Main::Detail::Shutdown(false);
+        Main::Shutdown();
         return 0;
     }
 
     if (batch_output_file.empty())
     {
-        StdErrPrintf(
+        fprintf(stderr, 
             "\nNo output filename given! Did you forget the --batch "
             "parameter?\n");
         LogPrintf(
             "\nNo output filename given! Did you forget the --batch "
             "parameter?\n");
 
-        Main::Detail::Shutdown(false);
+        Main::Shutdown();
         return EXIT_FAILURE;
     }
 
     Main_SetSeed();
     if (!Build_Cool_Shit())
     {
-        StdErrPrintf("FAILED!\n");
+        fprintf(stderr, "FAILED!\n");
         LogPrintf("FAILED!\n");
 
-        Main::Detail::Shutdown(false);
+        Main::Shutdown();
         return EXIT_FAILURE;
     }
-    Main::Detail::Shutdown(false);
+    Main::Shutdown();
     return 0;
 }
 #endif

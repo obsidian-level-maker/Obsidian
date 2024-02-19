@@ -28,6 +28,7 @@
 #include "m_trans.h"
 
 #include <filesystem>
+#include <fstream>
 
 #include "hdr_lua.h"
 #include "headers.h"

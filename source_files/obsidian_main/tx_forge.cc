@@ -316,7 +316,7 @@ void TX_SpectralSynth(unsigned long long seed, float *buf, int width,
     {
         if (test & 1)
         {
-            Main::FatalError(
+            ErrorPrintf(
                 "TX_SpectralSynth: width '%d' is not a power of two\n", width);
         }
     }

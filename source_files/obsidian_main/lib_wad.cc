@@ -21,11 +21,11 @@
 
 #include "lib_wad.h"
 
+#include <fstream>
 #include <list>
 
 #include "headers.h"
 #include "lib_util.h"
-#include "main.h"
 #include "physfs.h"
 
 // #define LogPrintf  printf
@@ -267,7 +267,7 @@ void WAD_NewLump(std::string name)
 {
     if (name.size() > 8)
     {
-        Main::FatalError("WAD_NewLump: name too long: '%s'\n", name.c_str());
+        ErrorPrintf("WAD_NewLump: name too long: '%s'\n", name.c_str());
     }
 
     memset(&wad_W_lump, 0, sizeof(wad_W_lump));

@@ -19,21 +19,119 @@
 //
 //------------------------------------------------------------------------
 
-#include <fstream>
-#include <iostream>
-
 #include "headers.h"
 #include "lib_util.h"
+#include "main.h"
 #include "m_lua.h"
 #include "main.h"
 
 #define DEBUG_BUF_LEN 20000
 
-std::fstream          log_file;
+FILE                 *log_file = nullptr;
 std::filesystem::path log_filename;
 
 bool debugging = false;
 bool terminal  = false;
+
+void LogPrintf(const char *message, ...)
+{
+    if (!log_file && !terminal)
+        return;
+
+    char message_buf[4096];
+
+    message_buf[4095] = 0;
+
+    // Print the message into a text string
+    va_list argptr;
+
+    va_start(argptr, message);
+    vsprintf(message_buf, message, argptr);
+    va_end(argptr);
+
+    // I hope nobody is printing strings longer than 4096 chars...
+    SYS_ASSERT(message_buf[4095] == 0);
+
+    if (log_file)
+    {
+        fprintf(log_file, "%s", message_buf);
+        fflush(log_file);
+    }
+
+    if (terminal)
+    {
+        printf("%s", message_buf);
+        fflush(stdout);
+    }
+}
+
+void DebugPrintf(const char *message, ...)
+{
+    if (!debugging || (!log_file && !terminal))
+        return;
+
+    char message_buf[4096];
+
+    message_buf[4095] = 0;
+
+    // Print the message into a text string
+    va_list argptr;
+
+    va_start(argptr, message);
+    vsprintf(message_buf, message, argptr);
+    va_end(argptr);
+
+    // I hope nobody is printing strings longer than 4096 chars...
+    SYS_ASSERT(message_buf[4095] == 0);
+
+    if (log_file)
+    {
+        fprintf(log_file, "DEBUG: %s", message_buf);
+        fflush(log_file);
+    }
+
+    if (terminal) 
+    {
+        printf("DEBUG: %s", message_buf);
+        fflush(stdout);
+    }
+}
+
+[[noreturn]] void ErrorPrintf(const char *message, ...)
+{
+    char message_buf[4096];
+
+    message_buf[4095] = 0;
+
+    // Print the message into a text string
+    va_list argptr;
+
+    va_start(argptr, message);
+    vsprintf(message_buf, message, argptr);
+    va_end(argptr);
+
+    // I hope nobody is printing strings longer than 4096 chars...
+    SYS_ASSERT(message_buf[4095] == 0);
+
+    if (log_file)
+    {
+        fprintf(log_file, "ERROR: %s", message_buf);
+        fflush(log_file);
+    }
+
+    if (terminal) printf("ERROR: %s", message_buf);
+
+    Main::Shutdown();
+#if defined WIN32 && !defined CONSOLE_ONLY
+    if (batch_mode)
+    {
+        printf("\nClose window when finished...");
+        do {
+        } while (true);
+    }
+#endif
+    std::exit(9);
+}
 
 bool LogInit(const std::filesystem::path &filename)
 {
@@ -41,9 +139,13 @@ bool LogInit(const std::filesystem::path &filename)
     {
         log_filename = filename;
 
-        log_file.open(log_filename, std::ios::out);
+#ifdef _WIN32
+        log_file = _wfopen(log_filename.c_str(), L"w");
+#else
+        log_file = fopen(log_filename.generic_u8string().c_str(), "w");
+#endif
 
-        if (!log_file.is_open()) { return false; }
+        if (!log_file) { return false; }
     }
 
     std::time_t result = std::time(nullptr);
@@ -71,46 +173,9 @@ void LogClose(void)
 {
     LogPrintf("\n====== END OF OBSIDIAN LOGS ======\n\n");
 
-    log_file.close();
+    if (log_file) fclose(log_file);
 
     log_filename.clear();
-}
-
-void LogReadLines(log_display_func_t display_func, void *priv_data)
-{
-    if (!log_file) { return; }
-
-    // we close the log file so we can read it, and then open it
-    // again when finished.  That is because Windows OSes can be
-    // fussy about opening already open files (in Linux it would
-    // not be an issue).
-
-    log_file.close();
-
-    log_file.open(log_filename, std::ios::in);
-
-    // this is very unlikely to happen, but check anyway
-    if (!log_file.is_open()) { return; }
-
-    std::string buffer;
-    while (std::getline(log_file, buffer))
-    {
-        // remove any newline at the end (LF or CR/LF)
-        StringRemoveCRLF(&buffer);
-
-        // remove any DEL characters (mainly to workaround an FLTK bug)
-        StringReplaceChar(&buffer, 0x7f, 0);
-
-        std::cout << buffer << std::endl;
-
-        display_func(buffer, priv_data);
-    }
-
-    // close the log file after current contents are read
-    log_file.close();
-
-    // open the log file for writing again
-    log_file.open(log_filename, std::ios::app);
 }
 
 //--- editor settings ---

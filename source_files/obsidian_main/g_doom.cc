@@ -177,7 +177,7 @@ class obbuildinfo_t : public buildinfo_t
 
         ajbsp::CloseWad();
 
-        Main::FatalError("'%s'\n", buffer);
+        ErrorPrintf("'%s'\n", buffer);
     }
 
     // Update status bar with nodebuilding progress
@@ -349,7 +349,7 @@ void Doom::AddSectionLump(char ch, std::string name, qLump_c *lump)
             break;
 
         default:
-            Main::FatalError("DM_AddSectionLump: bad section '%c'\n", ch);
+            ErrorPrintf("DM_AddSectionLump: bad section '%c'\n", ch);
     }
 
     lump->name = name;
@@ -523,7 +523,7 @@ void Doom::EndLevel(std::string level_name)
             ZIPF_CloseWrite();
             std::filesystem::remove(game_object->ZIP_Filename());
             std::filesystem::remove(game_object->Filename());
-            Main::FatalError(_("Error writing map WAD to %s\n"),
+            ErrorPrintf(_("Error writing map WAD to %s\n"),
                              game_object->ZIP_Filename().u8string().c_str());
         }
         else { std::filesystem::remove(level_wad); }
@@ -1467,7 +1467,7 @@ void Doom::game_interface_c::EndLevel()
 {
     if (level_name.empty())
     {
-        Main::FatalError("Script problem: did not set level name!\n");
+        ErrorPrintf("Script problem: did not set level name!\n");
     }
 
     CSG_DOOM_Write();

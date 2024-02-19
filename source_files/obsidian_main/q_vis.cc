@@ -885,7 +885,7 @@ void QVIS_Visibility(int lump, int max_size, int numleafs)
 
     if (q_visibility->GetSize() >= max_size)
     {
-        Main::FatalError("Quake build failure: exceeded VISIBILITY limit\n");
+        ErrorPrintf("Quake build failure: exceeded VISIBILITY limit\n");
     }
 
     delete[] v_row_buffer;

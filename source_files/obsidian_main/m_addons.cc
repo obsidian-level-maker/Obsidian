@@ -42,7 +42,7 @@ void VFS_AddFolder(std::string name)
 
     if (!PHYSFS_mount(path.generic_u8string().c_str(), mount.c_str(), 0))
     {
-        Main::FatalError("Failed to mount '%s' folder in PhysFS:\n%s\n",
+        ErrorPrintf("Failed to mount '%s' folder in PhysFS:\n%s\n",
                          name.c_str(),
                          PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         return; /* NOT REACHED */
@@ -82,7 +82,7 @@ bool VFS_AddArchive(std::filesystem::path filename, bool options_file)
         }
         else
         {
-            Main::FatalError("Failed to mount '%s' archive in PhysFS:\n%s\n",
+            ErrorPrintf("Failed to mount '%s' archive in PhysFS:\n%s\n",
                              filename.u8string().c_str(),
                              PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         }
@@ -99,7 +99,7 @@ void VFS_InitAddons(std::filesystem::path search_dir)
 
     if (!PHYSFS_init(search_dir.generic_u8string().c_str()))
     {
-        Main::FatalError("Failed to init PhysFS:\n%s\n",
+        ErrorPrintf("Failed to init PhysFS:\n%s\n",
                          PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
     }
 
@@ -130,7 +130,7 @@ void VFS_ParseCommandLine()
                        false /* options_file */);
     }
 
-    if (!count) { Main::FatalError("Missing filename for --addon option\n"); }
+    if (!count) { ErrorPrintf("Missing filename for --addon option\n"); }
 
     LogPrintf("DONE\n\n");
 }

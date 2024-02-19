@@ -106,7 +106,7 @@ snag_c::snag_c(brush_vert_c *side, double _x1, double _y1, double _x2,
 {
     if (Length() < SNAG_EPSILON)
     {
-        Main::FatalError("Line loop contains zero-length line! (%1.2f %1.2f)\n",
+        ErrorPrintf("Line loop contains zero-length line! (%1.2f %1.2f)\n",
                          x1, y1);
     }
 
@@ -1847,7 +1847,7 @@ static void RemoveUnusedGaps()
 
     if (filled == total)
     {
-        Main::FatalError("CSG: all gaps were unreachable (no entities?)\n");
+        ErrorPrintf("CSG: all gaps were unreachable (no entities?)\n");
     }
 
     LogPrintf("Filled %d gaps (of %d total)\n", filled, total);

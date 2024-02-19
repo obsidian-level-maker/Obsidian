@@ -68,7 +68,7 @@ class infinite_line_c
 
         if (len < 0.0001)
         {
-            Main::FatalError("Fix TJunc: face has zero length edge!\n");
+            ErrorPrintf("Fix TJunc: face has zero length edge!\n");
         }
 
         nx /= len;

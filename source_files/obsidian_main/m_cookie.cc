@@ -22,14 +22,15 @@
 #include "m_cookie.h"
 
 #include <array>
+#include <fstream>
 #include <iostream>
 
 #include "hdr_lua.h"
 #include "headers.h"
 #include "lib_argv.h"
 #include "lib_util.h"
-#include "m_lua.h"
 #include "main.h"
+#include "m_lua.h"
 
 enum struct cookie_context_e
 {
@@ -340,7 +341,7 @@ void Cookie_ParseArguments(void)
 
         if (name[0] == 0 || value[0] == 0)
         {
-            Main::FatalError("Bad setting on command line: '%s'\n",
+            ErrorPrintf("Bad setting on command line: '%s'\n",
                              arg.c_str());
         }
 

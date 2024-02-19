@@ -22,11 +22,11 @@
 #include "lib_grp.h"
 
 #include <algorithm>
+#include <fstream>
 #include <list>
 
 #include "headers.h"
 #include "lib_util.h"
-#include "main.h"
 #include "physfs.h"
 
 // #define LogPrintf  printf
@@ -296,12 +296,12 @@ void GRP_NewLump(std::string name)
 {
     if (grp_W_directory.size() >= GRP_MAX_LUMPS)
     {
-        Main::FatalError("GRP_NewLump: too many lumps (> %d)\n", GRP_MAX_LUMPS);
+        ErrorPrintf("GRP_NewLump: too many lumps (> %d)\n", GRP_MAX_LUMPS);
     }
 
     if (name.size() > GRP_NAME_LEN)
     {
-        Main::FatalError("GRP_NewLump: name too long: '%s'\n", name.c_str());
+        ErrorPrintf("GRP_NewLump: name too long: '%s'\n", name.c_str());
     }
 
     memset(&grp_W_lump, 0, sizeof(grp_W_lump));

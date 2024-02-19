@@ -180,7 +180,7 @@ static void TransferOneMipTex(qLump_c *lump, unsigned int m, const char *name)
 
             if (!WAD2_ReadData(entry, pos, actual, buffer.data()))
             {
-                Main::FatalError("Error reading texture data in wad!");
+                ErrorPrintf("Error reading texture data in wad!");
             }
 
             lump->Append(buffer.data(), actual);
@@ -246,13 +246,13 @@ static void Q1_WriteMipTex()
 
     if (qk_texture_wad.empty())
     {
-        Main::FatalError("Lua code failed to set the texture wad\n");
+        ErrorPrintf("Lua code failed to set the texture wad\n");
     }
 
     if (!WAD2_OpenRead(qk_texture_wad.c_str()))
     {
         // should not happen, Lua code has checked that the file exists
-        Main::FatalError("Missing wad file: %s\n", qk_texture_wad.c_str());
+        ErrorPrintf("Missing wad file: %s\n", qk_texture_wad.c_str());
     }
 
     uint32_t num_miptex = q1_miptexs.size();
@@ -422,7 +422,7 @@ static void Q1_WriteTexInfo(void)
 {
     if (q1_texinfos.size() >= MAX_MAP_TEXINFO)
     {
-        Main::FatalError("Quake build failure: exceeded limit of %d TEXINFOS\n",
+        ErrorPrintf("Quake build failure: exceeded limit of %d TEXINFOS\n",
                          MAX_MAP_TEXINFO);
     }
 
@@ -543,7 +543,7 @@ static void Q1_WriteEdge(const quake_vertex_c &A, const quake_vertex_c &B)
 
     if (v1 == v2)
     {
-        Main::FatalError("INTERNAL ERROR: Q1 WriteEdge is zero length!\n");
+        ErrorPrintf("INTERNAL ERROR: Q1 WriteEdge is zero length!\n");
     }
 
     int32_t index = BSP_AddEdge(v1, v2);
@@ -819,19 +819,19 @@ static void Q1_WriteBSP()
 
     if (q1_total_faces >= MAX_MAP_FACES)
     {
-        Main::FatalError("Quake1 build failure: exceeded limit of %d FACES\n",
+        ErrorPrintf("Quake1 build failure: exceeded limit of %d FACES\n",
                          MAX_MAP_FACES);
     }
 
     if (q1_total_leafs >= MAX_MAP_LEAFS)
     {
-        Main::FatalError("Quake1 build failure: exceeded limit of %d LEAFS\n",
+        ErrorPrintf("Quake1 build failure: exceeded limit of %d LEAFS\n",
                          MAX_MAP_LEAFS);
     }
 
     if (q1_total_nodes >= MAX_MAP_NODES)
     {
-        Main::FatalError("Quake1 build failure: exceeded limit of %d NODES\n",
+        ErrorPrintf("Quake1 build failure: exceeded limit of %d NODES\n",
                          MAX_MAP_NODES);
     }
 }
@@ -1425,12 +1425,12 @@ void quake1_game_interface_c::EndLevel()
 {
     if (level_name.empty())
     {
-        Main::FatalError("Script problem: did not set level name!\n");
+        ErrorPrintf("Script problem: did not set level name!\n");
     }
 
     if (level_name.size() >= 32)
     {
-        Main::FatalError("Script problem: level name too long: %s\n",
+        ErrorPrintf("Script problem: level name too long: %s\n",
                          level_name.c_str());
     }
 

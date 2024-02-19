@@ -18,7 +18,7 @@
 
 #include "aj_local.h"
 #include "aj_parse.h"
-#include "main.h"
+#include "sys_debug.h"
 
 #define DEBUG_LOAD 0
 
@@ -71,7 +71,7 @@ int num_wall_tips;
 static vertex_c *SafeLookupVertex(int num)
 {
     if (num >= num_vertices)
-        Main::FatalError("illegal vertex number #%d\n", num);
+        ErrorPrintf("illegal vertex number #%d\n", num);
 
     return all_vertices[num];
 }
@@ -81,7 +81,7 @@ static sector_c *SafeLookupSector(uint16_t num)
     if (num == 0xFFFF) return NULL;
 
     if (num >= num_sectors)
-        Main::FatalError("illegal sector number #%d\n", (int)num);
+        ErrorPrintf("illegal sector number #%d\n", (int)num);
 
     return all_sectors[num];
 }
@@ -218,7 +218,7 @@ void ParseSidedefField(sidedef_c *side, const std::string &key,
         int num = ajparse::LEX_Double(value);
 
         if (num < 0 || num >= num_sectors)
-            Main::FatalError("AJ_Poly: illegal sector number #%d\n", (int)num);
+            ErrorPrintf("AJ_Poly: illegal sector number #%d\n", (int)num);
 
         side->sector = all_sectors[num];
     }
@@ -337,22 +337,22 @@ void ParseUDMF_Block(ajparse::lexer_c &lex, int cur_type)
         ajparse::token_kind_e tok = lex.Next(key);
 
         if (tok == ajparse::TOK_EOF)
-            Main::FatalError("Malformed TEXTMAP lump: unclosed block\n");
+            ErrorPrintf("Malformed TEXTMAP lump: unclosed block\n");
 
         if (tok != ajparse::TOK_Ident)
-            Main::FatalError("Malformed TEXTMAP lump: missing key\n");
+            ErrorPrintf("Malformed TEXTMAP lump: missing key\n");
 
         if (!lex.Match("="))
-            Main::FatalError("Malformed TEXTMAP lump: missing '='\n");
+            ErrorPrintf("Malformed TEXTMAP lump: missing '='\n");
 
         tok = lex.Next(value);
 
         if (tok == ajparse::TOK_EOF || tok == ajparse::TOK_ERROR ||
             value == "}")
-            Main::FatalError("Malformed TEXTMAP lump: missing value\n");
+            ErrorPrintf("Malformed TEXTMAP lump: missing value\n");
 
         if (!lex.Match(";"))
-            Main::FatalError("Malformed TEXTMAP lump: missing ';'\n");
+            ErrorPrintf("Malformed TEXTMAP lump: missing ';'\n");
 
         switch (cur_type)
         {
@@ -382,7 +382,7 @@ void ParseUDMF_Block(ajparse::lexer_c &lex, int cur_type)
     if (line != NULL)
     {
         if (line->start == NULL || line->end == NULL)
-            Main::FatalError("Linedef #%d is missing a vertex!\n", line->index);
+            ErrorPrintf("Linedef #%d is missing a vertex!\n", line->index);
     }
 }
 
@@ -403,7 +403,7 @@ void ParseUDMF_Pass(const std::string &data, int pass)
 
         if (tok != ajparse::TOK_Ident)
         {
-            Main::FatalError("Malformed TEXTMAP lump.\n");
+            ErrorPrintf("Malformed TEXTMAP lump.\n");
             return;
         }
 
@@ -412,12 +412,12 @@ void ParseUDMF_Pass(const std::string &data, int pass)
         {
             lex.Next(section);
             if (!lex.Match(";"))
-                Main::FatalError("Malformed TEXTMAP lump: missing ;\n");
+                ErrorPrintf("Malformed TEXTMAP lump: missing ;\n");
             continue;
         }
 
         if (!lex.Match("{"))
-            Main::FatalError(
+            ErrorPrintf(
                 "Malformed TEXTMAP lump: missing opening bracket, instead %s\n",
                 section.c_str());
 
@@ -451,7 +451,7 @@ void ParseUDMF_Pass(const std::string &data, int pass)
 
 void ParseUDMF(uint8_t *lump, int length)
 {
-    if (!lump || length <= 0) Main::FatalError("Error parsing TEXTMAP lump.\n");
+    if (!lump || length <= 0) ErrorPrintf("Error parsing TEXTMAP lump.\n");
 
     // load the lump into this string
     std::string data;

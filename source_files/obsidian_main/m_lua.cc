@@ -61,7 +61,7 @@ int gui_console_print(lua_State *L)
         // strip off colorizations
         if (res[0] == '@' && isdigit(res[1])) { res += 2; }
 
-        StdOutPrintf("%s", res);
+        printf("%s", res);
     }
 
     return 0;
@@ -289,7 +289,7 @@ static bool scan_dir_process_name(const std::filesystem::path &name,
                "." + std::string{match.begin() + 2, match.end()};
     }
 
-    Main::FatalError("gui.scan_directory: unsupported match expression: %s\n",
+    ErrorPrintf("gui.scan_directory: unsupported match expression: %s\n",
                      match.c_str());
     return false; /* NOT REACHED */
 }
@@ -1041,14 +1041,14 @@ static bool Script_CallFunc(std::string func_name, int nresult = 0,
 
     if (lua_type(LUA_ST, -1) == LUA_TNIL)
     {
-        Main::FatalError("Script problem: missing function 'ob_traceback'");
+        ErrorPrintf("Script problem: missing function 'ob_traceback'");
     }
 
     lua_getglobal(LUA_ST, func_name.c_str());
 
     if (lua_type(LUA_ST, -1) == LUA_TNIL)
     {
-        Main::FatalError("Script problem: missing function '%s'",
+        ErrorPrintf("Script problem: missing function '%s'",
                          func_name.c_str());
     }
 
@@ -1187,7 +1187,7 @@ void Script_Load(std::filesystem::path script_name)
     {
         const char *msg = lua_tolstring(LUA_ST, -1, NULL);
 
-        Main::FatalError("Unable to load script '%s'\n%s",
+        ErrorPrintf("Unable to load script '%s'\n%s",
                          filename.u8string().c_str(), msg);
     }
 }
@@ -1201,13 +1201,13 @@ void Script_Open()
     LUA_ST = luaL_newstate();
     if (!LUA_ST)
     {
-        Main::FatalError("LUA Init failed: cannot create new state");
+        ErrorPrintf("LUA Init failed: cannot create new state");
     }
 
     int status = p_init_lua(LUA_ST);
     if (status != 0)
     {
-        Main::FatalError("LUA Init failed: cannot load standard libs (%d)",
+        ErrorPrintf("LUA Init failed: cannot load standard libs (%d)",
                          status);
     }
 
@@ -1232,7 +1232,7 @@ void Script_Open()
 
     if (!Script_CallFunc("ob_init"))
     {
-        Main::FatalError("The ob_init script failed.\n");
+        ErrorPrintf("The ob_init script failed.\n");
     }
 }
 

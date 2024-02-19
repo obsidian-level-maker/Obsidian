@@ -321,7 +321,7 @@ void BSP_WritePlanes(int lump_num, int max_planes)
 
     if (lump->GetSize() >= max_planes)
     {
-        Main::FatalError("Quake build failure: exceeded limit of {} PLANES\n",
+        ErrorPrintf("Quake build failure: exceeded limit of {} PLANES\n",
                          max_planes);
     }
 
@@ -408,7 +408,7 @@ void BSP_WriteVertices(int lump_num, int max_verts)
 {
     if ((int)bsp_vertices.size() >= max_verts)
     {
-        Main::FatalError("Quake build failure: exceeded limit of {} VERTEXES\n",
+        ErrorPrintf("Quake build failure: exceeded limit of {} VERTEXES\n",
                          max_verts);
     }
 
@@ -480,7 +480,7 @@ void BSP_WriteEdges(int lump_num, int max_edges)
 {
     if ((int)bsp_edges.size() >= max_edges)
     {
-        Main::FatalError("Quake build failure: exceeded limit of {} EDGES\n",
+        ErrorPrintf("Quake build failure: exceeded limit of {} EDGES\n",
                          max_edges);
     }
 
@@ -560,7 +560,7 @@ bool BSP_OpenLevel(const char *entry_in_pak)
             break;
 
         default:
-            Main::FatalError("INTERNAL ERROR: invalid qk_game {}\n", qk_game);
+            ErrorPrintf("INTERNAL ERROR: invalid qk_game {}\n", qk_game);
     }
 
     BSP_ClearLumps();
@@ -728,7 +728,7 @@ qLump_c *BSP_NewLump(int entry)
 
     if (bsp_directory[entry] != NULL)
     {
-        Main::FatalError(
+        ErrorPrintf(
             "INTERNAL ERROR: BSP_NewLump: already created entry [{}]\n", entry);
     }
 

@@ -30,7 +30,6 @@
 #include <vector>
 
 #include "lib_util.h"
-#include "sys_debug.h"
 extern std::string OBSIDIAN_TITLE;
 
 #ifdef OBSIDIAN_TIMESTAMP
@@ -81,32 +80,13 @@ extern std::string           selected_lang;
 namespace Main
 {
 
-namespace Detail
-{
-void Shutdown(bool error);
-}
-
-template <typename... Args>
-[[noreturn]] void FatalError(std::string_view msg, Args &&...args)
-{
-    Detail::Shutdown(true);
-    if (batch_mode)
-    {
-        std::cout << "ERROR!\n";
-#if defined WIN32 && !defined CONSOLE_ONLY
-        std::cout << '\n' << "Close window when finished...";
-        do {
-        } while (true);
-#endif
-    }
-    std::exit(9);
-}
+void Shutdown(void);
 
 template <typename... Args>
 void ProgStatus(std::string_view msg, Args &&...args)
 {
-    const std::string buffer = StringFormat(msg, std::forward<Args>(args)...);
-    StdErrPrintf("%s\n", buffer.c_str());
+    // const std::string buffer = StringFormat(msg, std::forward<Args>(args)...);
+    // Update UI somewhere maybe or just ditch this altogether; not sure yet
 }
 bool BackupFile(const std::filesystem::path &filename);
 
