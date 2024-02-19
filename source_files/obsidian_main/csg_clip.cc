@@ -19,8 +19,6 @@
 //
 //------------------------------------------------------------------------
 
-#include <array>
-
 #include "csg_local.h"
 #include "csg_main.h"
 #include "csg_quake.h"
@@ -41,23 +39,23 @@ extern qLump_c *q1_clip;
 
 extern int q1_total_clip;
 
-static std::array Q1_hull_sizes{
-    std::array<double, 3>{16, 24, 32},  // player
-    std::array<double, 3>{32, 24, 64},  // big monsters
+static double Q1_hull_sizes[2][3]{
+    {16, 24, 32},  // player
+    {32, 24, 64},  // big monsters
 };
 
-static std::array H2_hull_sizes{
-    std::array<double, 3>{16, 24, 32},  // player
-    std::array<double, 3>{24, 20, 20},  // scorpion
-    std::array<double, 3>{16, 12, 16},  // crouch
-    std::array<double, 3>{8, 8, 8},     // pentacles
-    std::array<double, 3>{28, 40, 40},  // yak
+static double H2_hull_sizes[5][3]{
+    {16, 24, 32},  // player
+    {24, 20, 20},  // scorpion
+    {16, 12, 16},  // crouch
+    {8, 8, 8},     // pentacles
+    {28, 40, 40},  // yak
 };
 
-static std::array HL_hull_sizes{
-    std::array<double, 3>{16, 36, 36},  // player
-    std::array<double, 3>{32, 32, 32},  // fat monsters
-    std::array<double, 3>{16, 18, 18},  // crouching
+static double HL_hull_sizes[3][3]{
+    {16, 36, 36},  // player
+    {32, 32, 32},  // fat monsters
+    {16, 18, 18},  // crouching
 };
 
 class clip_side_c
@@ -1200,13 +1198,13 @@ void Q1_ClippingHull(int hull)
 
     if (qk_sub_format == SUBFMT_Hexen2)
     {
-        pads = H2_hull_sizes[hull - 1].data();
+        pads = H2_hull_sizes[hull - 1];
     }
     else if (qk_sub_format == SUBFMT_HalfLife)
     {
-        pads = HL_hull_sizes[hull - 1].data();
+        pads = HL_hull_sizes[hull - 1];
     }
-    else { pads = Q1_hull_sizes[hull - 1].data(); }
+    else { pads = Q1_hull_sizes[hull - 1]; }
 
     // first clip the world, then the map-models
 

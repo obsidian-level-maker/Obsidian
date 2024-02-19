@@ -25,7 +25,6 @@
 #include <stdio.h>
 
 #include <filesystem>
-#include <fstream>
 #include <map>
 #include <string>
 #include <vector>
@@ -35,7 +34,7 @@ void VFS_ParseCommandLine();
 void VFS_ScanForAddons();
 
 void VFS_OptParse(std::string name);
-void VFS_OptWrite(std::ofstream &fp);
+void VFS_OptWrite(FILE *fp);
 
 // util functions
 bool     VFS_CopyFile(const char *src_name, const char *dest_name);

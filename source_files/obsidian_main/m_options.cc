@@ -111,29 +111,43 @@ static bool Options_ParseLine(std::string buf)
 
 bool Options_Load(std::filesystem::path filename)
 {
-    std::ifstream option_fp(filename, std::ios::in);
+#ifdef _WIN32
+    FILE *option_fp = _wfopen(filename.c_str(), L"r");
+#else
+    FILE *option_fp = fopen(filename.generic_u8string().c_str(), "r");
+#endif
 
-    if (!option_fp.is_open())
+    if (!option_fp)
     {
         printf(_("Missing Options file -- using defaults.\n\n"));
         return false;
     }
 
-    for (std::string line; std::getline(option_fp, line);)
+    std::string line;
+    line.reserve(4096);
+    line.clear();
+
+    for (fgets(line.data(), 4096, option_fp); !line.empty();)
     {
         Options_ParseLine(line);
+        line.clear();
+        fgets(line.data(), 4096, option_fp);
     }
 
-    option_fp.close();
+    fclose(option_fp);
 
     return true;
 }
 
 bool Options_Save(std::filesystem::path filename)
 {
-    std::ofstream option_fp(filename, std::ios::out);
+#ifdef _WIN32
+    FILE *option_fp = _wfopen(filename.c_str(), L"w");
+#else
+    FILE *option_fp = fopen(filename.generic_u8string().c_str(), "w");
+#endif
 
-    if (!option_fp.is_open())
+    if (!option_fp)
     {
         LogPrintf("Error: unable to create file: %s\n(%s)\n\n",
                   filename.u8string().c_str(), strerror(errno));
@@ -142,35 +156,29 @@ bool Options_Save(std::filesystem::path filename)
 
     LogPrintf("Saving options file...\n");
 
-    option_fp << "-- OPTIONS FILE : OBSIDIAN " << OBSIDIAN_SHORT_VERSION
-              << " \"" << OBSIDIAN_CODE_NAME << "\"\n";
-    option_fp << "-- Build " << OBSIDIAN_VERSION << "\n";
-    option_fp << "-- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n";
-    option_fp << "-- " << OBSIDIAN_WEBSITE << "\n\n";
+    fprintf(option_fp, "-- OPTIONS FILE : OBSIDIAN %s \"%s\"\n", OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str());
 
-    option_fp << "language = " << t_language << "\n";
-    option_fp << "\n";
+    fprintf(option_fp, "-- Build %s\n", OBSIDIAN_VERSION);
+    fprintf(option_fp, "-- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n");
+    fprintf(option_fp, "-- %s\n\n", OBSIDIAN_WEBSITE);
 
-    option_fp << "create_backups = " << (create_backups ? 1 : 0) << "\n";
-    option_fp << "overwrite_warning = " << (overwrite_warning ? 1 : 0) << "\n";
-    option_fp << "debug_messages = " << (debug_messages ? 1 : 0) << "\n";
-    option_fp << "limit_break = " << (limit_break ? 1 : 0) << "\n";
-    option_fp << "random_string_seeds = " << (random_string_seeds ? 1 : 0)
-              << "\n";
-    option_fp << "password_mode = " << (password_mode ? 1 : 0) << "\n";
-    option_fp << "mature_word_lists = " << (mature_word_lists ? 1 : 0) << "\n";
-    std::string dop = StringFormat(
-        "default_output_path = %s\n",
-        StringToUTF8(default_output_path.generic_u16string()).c_str());
-    option_fp.write(dop.c_str(), dop.size());
+    fprintf(option_fp, "language = %s\n\n", t_language.c_str());
 
-    option_fp << "\n";
+    fprintf(option_fp, "create_backups = %d\n", (create_backups ? 1 : 0));
+    fprintf(option_fp, "overwrite_warning = %d\n", (overwrite_warning ? 1 : 0));
+    fprintf(option_fp, "debug_messages = %d\n", (debug_messages ? 1 : 0));
+    fprintf(option_fp, "limit_break = %d\n", (limit_break ? 1 : 0));
+    fprintf(option_fp, "random_string_seeds = %d\n", (random_string_seeds ? 1 : 0));
+    fprintf(option_fp, "password_mode = %d\n", (password_mode ? 1 : 0));
+    fprintf(option_fp, "mature_word_lists = %d\n", (mature_word_lists ? 1 : 0));
+    fprintf(option_fp, "default_output_path = %s\n\n",
+        default_output_path.generic_u8string().c_str());
 
     VFS_OptWrite(option_fp);
 
     Recent_Write(option_fp);
 
-    option_fp.close();
+    fclose(option_fp);
 
     LogPrintf("DONE.\n\n");
 

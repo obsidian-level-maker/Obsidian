@@ -21,7 +21,6 @@
 
 #include "lib_pak.h"
 
-#include <fstream>
 #include <list>
 
 #include "lib_util.h"
@@ -61,7 +60,7 @@ bool PAK_OpenRead(const char *filename)
         return false;
     }
 
-    if (memcmp(r_header.magic.data(), PAK_MAGIC, 4) != 0)
+    if (memcmp(r_header.magic, PAK_MAGIC, 4) != 0)
     {
         LogPrintf("PAK_OpenRead: not a PAK file!\n");
         PHYSFS_close(r_pak_fp);
@@ -141,7 +140,7 @@ int PAK_FindEntry(const char *name)
 {
     for (unsigned int i = 0; i < r_header.entry_num; i++)
     {
-        if (StringCaseCmp(name, r_directory[i].name.data()) == 0) { return i; }
+        if (StringCaseCmp(name, r_directory[i].name) == 0) { return i; }
     }
 
     return -1;  // not found
@@ -158,7 +157,7 @@ const char *PAK_EntryName(int entry)
 {
     SYS_ASSERT(entry >= 0 && entry < (int)r_header.entry_num);
 
-    return r_directory[entry].name.data();
+    return r_directory[entry].name;
 }
 
 void PAK_FindMaps(std::vector<int> &entries)
@@ -169,7 +168,7 @@ void PAK_FindMaps(std::vector<int> &entries)
     {
         raw_pak_entry_t *E = &r_directory[i];
 
-        const char *name = E->name.data();
+        const char *name = E->name;
 
         if (strncmp(name, "maps/", 5) != 0) { continue; }
 
@@ -208,7 +207,7 @@ bool PAK_ReadData(int entry, int offset, int length, void *buffer)
 //  PAK WRITING
 //------------------------------------------------------------------------
 
-static std::ofstream w_pak_fp;
+static FILE *w_pak_fp = nullptr;
 
 static std::list<raw_pak_entry_t> w_pak_dir;
 
@@ -216,7 +215,11 @@ static raw_pak_entry_t w_pak_entry;
 
 bool PAK_OpenWrite(const std::filesystem::path &filename)
 {
-    w_pak_fp.open(filename, std::ios::out | std::ios::binary);
+#ifdef _WIN32
+    w_pak_fp = _wfopen(filename.c_str(), L"wb");
+#else
+    w_pak_fp = fopen(filename.generic_u8string().c_str(), "wb");
+#endif
 
     if (!w_pak_fp)
     {
@@ -230,17 +233,15 @@ bool PAK_OpenWrite(const std::filesystem::path &filename)
     // write out a dummy header
     raw_pak_header_t header;
     memset(&header, 0, sizeof(header));
-
-    w_pak_fp.write(reinterpret_cast<const char *>(&header),
-                   sizeof(raw_pak_header_t));
-    w_pak_fp << std::flush;
+    fwrite(&header, sizeof(raw_pak_header_t), 1, w_pak_fp);
+    fflush(w_pak_fp);
 
     return true;
 }
 
 void PAK_CloseWrite(void)
 {
-    w_pak_fp << std::flush;
+    fflush(w_pak_fp);
 
     // write the directory
 
@@ -248,9 +249,9 @@ void PAK_CloseWrite(void)
 
     raw_pak_header_t header;
 
-    memcpy(header.magic.data(), PAK_MAGIC, 4);
+    memcpy(header.magic, PAK_MAGIC, 4);
 
-    header.dir_start = w_pak_fp.tellp();
+    header.dir_start = ftell(w_pak_fp);
     header.entry_num = 0;
 
     std::list<raw_pak_entry_t>::iterator PDI;
@@ -259,13 +260,12 @@ void PAK_CloseWrite(void)
     {
         raw_pak_entry_t *E = &(*PDI);
 
-        w_pak_fp.write(reinterpret_cast<const char *>(E),
-                       sizeof(raw_pak_entry_t));
+        fwrite(E, sizeof(raw_pak_entry_t), 1, w_pak_fp);
 
         header.entry_num++;
     }
 
-    w_pak_fp << std::flush;
+    fflush(w_pak_fp);
 
     // finally write the _real_ PAK header
     header.entry_num *= sizeof(raw_pak_entry_t);
@@ -273,12 +273,13 @@ void PAK_CloseWrite(void)
     header.dir_start = LE_U32(header.dir_start);
     header.entry_num = LE_U32(header.entry_num);
 
-    w_pak_fp.seekp(0, std::ios::beg);
+    fseek(w_pak_fp, 0, SEEK_SET);
 
-    w_pak_fp.write(reinterpret_cast<const char *>(&header), sizeof(header));
+    fwrite(&header, sizeof(header), 1, w_pak_fp);
 
-    w_pak_fp << std::flush;
-    w_pak_fp.close();
+    fflush(w_pak_fp);
+    fclose(w_pak_fp);
+    w_pak_fp = nullptr;
 
     LogPrintf("Closed PAK file\n");
 
@@ -291,9 +292,9 @@ void PAK_NewLump(const char *name)
 
     memset(&w_pak_entry, 0, sizeof(w_pak_entry));
 
-    strcpy(w_pak_entry.name.data(), name);
+    strcpy(w_pak_entry.name, name);
 
-    w_pak_entry.offset = w_pak_fp.tellp();
+    w_pak_entry.offset = ftell(w_pak_fp);
 }
 
 bool PAK_AppendData(const void *data, int length)
@@ -302,13 +303,12 @@ bool PAK_AppendData(const void *data, int length)
 
     SYS_ASSERT(length > 0);
 
-    return static_cast<bool>(
-        w_pak_fp.write(static_cast<const char *>(data), length));
+    return fwrite(data, length, 1, w_pak_fp);
 }
 
 void PAK_FinishLump(void)
 {
-    const int len = static_cast<int>(w_pak_fp.tellp()) -
+    const int len = static_cast<int>(ftell(w_pak_fp)) -
                     static_cast<int>(w_pak_entry.offset);
 
     // pad lumps to a multiple of four bytes
@@ -316,9 +316,9 @@ void PAK_FinishLump(void)
 
     if (padding > 0)
     {
-        constexpr std::array<char, 4> zeros = {0, 0, 0, 0};
+        constexpr char zeros[4] = {0, 0, 0, 0};
 
-        w_pak_fp.write(zeros.data(), padding);
+        fwrite(&zeros, padding, 1, w_pak_fp);
     }
 
     // fix endianness

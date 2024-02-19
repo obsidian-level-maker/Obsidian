@@ -22,7 +22,6 @@
 #ifndef Q_LIGHT_H_
 #define Q_LIGHT_H_
 
-#include <array>
 #include <vector>
 
 #include "lib_tga.h"  // for rgb_color_t
@@ -44,7 +43,7 @@ class qLightmap_c
     rgb_color_t *current_pos;
 
     // Q1 and Q2 only
-    std::array<uint8_t, 4> styles;
+    uint8_t styles[4];
 
     // final offset in lightmap lump (if not flat)
     int offset;

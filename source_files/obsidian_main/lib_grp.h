@@ -24,7 +24,6 @@
 
 /* GRP reading */
 
-#include <array>
 #include <filesystem>
 #include <string>
 
@@ -63,7 +62,7 @@ struct raw_grp_header_t
 #pragma pack(push, 1)
 struct raw_grp_lump_t
 {
-    std::array<char, GRP_NAME_LEN> name;
+    char name[GRP_NAME_LEN];
     uint32_t                       length;
 };
 #pragma pack(pop)

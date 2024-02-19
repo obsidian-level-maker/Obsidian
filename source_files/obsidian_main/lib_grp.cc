@@ -22,15 +22,12 @@
 #include "lib_grp.h"
 
 #include <algorithm>
-#include <fstream>
 #include <list>
 
 #include "lib_util.h"
 #include "physfs.h"
 #include "sys_debug.h"
 #include "sys_endian.h"
-
-// #define LogPrintf  printf
 
 //------------------------------------------------------------------------
 //  GRP READING
@@ -142,7 +139,7 @@ int GRP_FindEntry(const char *name)
     {
         char buffer[GRP_NAME_LEN + 4];
 
-        strncpy(buffer, grp_R_dir[i].name.data(), GRP_NAME_LEN);
+        strncpy(buffer, grp_R_dir[i].name, GRP_NAME_LEN);
         buffer[GRP_NAME_LEN] = 0;
 
         if (StringCaseCmp(name, buffer) == 0) { return i; }
@@ -165,7 +162,7 @@ const char *GRP_EntryName(int entry)
     SYS_ASSERT(entry >= 0 && entry < (int)grp_R_header.num_lumps);
 
     // entries are often not NUL terminated, hence return a static copy
-    strncpy(name_buf, grp_R_dir[entry].name.data(), GRP_NAME_LEN);
+    strncpy(name_buf, grp_R_dir[entry].name, GRP_NAME_LEN);
     name_buf[GRP_NAME_LEN] = 0;
 
     return name_buf;
@@ -195,7 +192,7 @@ bool GRP_ReadData(int entry, int offset, int length, void *buffer)
 //  GRP WRITING
 //------------------------------------------------------------------------
 
-static std::fstream grp_W_fp;
+static FILE *grp_W_fp = nullptr;
 
 static std::list<raw_grp_lump_t> grp_W_directory;
 
@@ -207,9 +204,13 @@ static raw_grp_lump_t grp_W_lump;
 
 bool GRP_OpenWrite(const std::filesystem::path &filename)
 {
-    grp_W_fp.open(filename, std::ios::out | std::ios::binary);
+#ifdef _WIN32
+    grp_W_fp = _wfopen(filename.c_str(), L"wb");
+#else
+    grp_W_fp = fopen(filename.generic_u8string().c_str(), "wb");
+#endif
 
-    if (!grp_W_fp.is_open())
+    if (!grp_W_fp)
     {
         LogPrintf("GRP_OpenWrite: cannot create file: %s\n",
                   filename.u8string().c_str());
@@ -222,9 +223,8 @@ bool GRP_OpenWrite(const std::filesystem::path &filename)
     raw_grp_header_t header;
     memset(&header, 0, sizeof(header));
 
-    grp_W_fp.write(reinterpret_cast<const char *>(&header),
-                   sizeof(raw_grp_header_t));
-    grp_W_fp << std::flush;
+    fwrite(&header, sizeof(raw_grp_header_t), 1, grp_W_fp);
+    fflush(grp_W_fp);
 
     // write out a dummy directory
     for (int i = 0; i < GRP_MAX_LUMPS; i++)
@@ -233,14 +233,14 @@ bool GRP_OpenWrite(const std::filesystem::path &filename)
         memset(&entry, 0, sizeof(entry));
 
         std::string name = StringFormat("__%03d.ZZZ", i + 1);
-        std::copy(name.data(), name.data() + name.size(), entry.name.begin());
+        std::copy(name.data(), name.data() + name.size(), entry.name);
 
         entry.length = LE_U32(1);
 
-        grp_W_fp.write(reinterpret_cast<const char *>(&entry), sizeof(entry));
+        fwrite(&entry, sizeof(entry), 1, grp_W_fp);
     }
 
-    grp_W_fp << std::flush;
+    fflush(grp_W_fp);
 
     return true;
 }
@@ -251,13 +251,13 @@ void GRP_CloseWrite(void)
     uint8_t zero_buf[GRP_MAX_LUMPS];
     memset(zero_buf, 0, sizeof(zero_buf));
 
-    grp_W_fp.write(reinterpret_cast<const char *>(zero_buf), sizeof(zero_buf));
+    fwrite(zero_buf, sizeof(zero_buf), 1, grp_W_fp);
 
-    grp_W_fp << std::flush;
+    fflush(grp_W_fp);
 
     // write the _real_ GRP header
 
-    grp_W_fp.seekg(0, std::ios::beg);
+    fseek(grp_W_fp, 0, SEEK_SET);
 
     raw_grp_header_t header;
 
@@ -268,8 +268,8 @@ void GRP_CloseWrite(void)
 
     header.num_lumps = LE_U32(GRP_MAX_LUMPS);
 
-    grp_W_fp.write(reinterpret_cast<const char *>(&header), sizeof(header));
-    grp_W_fp << std::flush;
+    fwrite(&header, sizeof(header), 1, grp_W_fp);
+    fflush(grp_W_fp);
 
     // write the _real_ directory
 
@@ -281,12 +281,12 @@ void GRP_CloseWrite(void)
     {
         raw_grp_lump_t *L = &(*WDI);
 
-        grp_W_fp.write(reinterpret_cast<const char *>(L),
-                       sizeof(raw_grp_lump_t));
+        fwrite(L, sizeof(raw_grp_lump_t), 1, grp_W_fp);
     }
 
-    grp_W_fp << std::flush;
-    grp_W_fp.close();
+    fflush(grp_W_fp);
+    fclose(grp_W_fp);
+    grp_W_fp = nullptr;
 
     LogPrintf("Closed GRP file\n");
 
@@ -307,7 +307,7 @@ void GRP_NewLump(std::string name)
 
     memset(&grp_W_lump, 0, sizeof(grp_W_lump));
 
-    std::copy(name.data(), name.data() + name.size(), grp_W_lump.name.begin());
+    std::copy(name.data(), name.data() + name.size(), grp_W_lump.name);
 }
 
 bool GRP_AppendData(const void *data, int length)
@@ -316,7 +316,7 @@ bool GRP_AppendData(const void *data, int length)
 
     SYS_ASSERT(length > 0);
 
-    if (!grp_W_fp.write(static_cast<const char *>(data), length))
+    if (!fwrite(data, length, 1, grp_W_fp))
     {
         return false;
     }

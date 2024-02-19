@@ -726,7 +726,7 @@ void polygon_c::ClockwiseOrder()
 {
     edge_c                                *cur;
     edge_c                               **array;
-    std::array<edge_c *, EDGE_BUFFER_SIZE> edge_buffer;
+    edge_c                                *edge_buffer[EDGE_BUFFER_SIZE];
 
     int i;
     int total = 0;
@@ -740,7 +740,7 @@ void polygon_c::ClockwiseOrder()
     for (cur = edge_list; cur; cur = cur->next) { total++; }
 
     // use local array if small enough
-    if (total <= EDGE_BUFFER_SIZE) { array = edge_buffer.data(); }
+    if (total <= EDGE_BUFFER_SIZE) { array = edge_buffer; }
     else { array = new edge_c *[total]; }
 
     for (cur = edge_list, i = 0; cur; cur = cur->next, i++) { array[i] = cur; }
@@ -1001,7 +1001,7 @@ void CreateOuterEdges()
     limit_x2 += 64;
     limit_y2 += 64;
 
-    std::array<vertex_c *, 4> v;
+    vertex_c *v[4];
 
     v[0]    = NewSplit();
     v[0]->x = limit_x1;

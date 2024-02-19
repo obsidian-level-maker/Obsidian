@@ -24,7 +24,6 @@
 #include <stdint.h>
 #include <string.h>
 
-#include <array>
 #include <string>
 #include <unordered_map>
 
@@ -72,8 +71,8 @@ class sector_c
     int floor_h, ceil_h;
 
     // textures
-    std::array<char, 10> floor_tex;
-    std::array<char, 10> ceil_tex;
+    char floor_tex[10];
+    char ceil_tex[10];
 
     // attributes
     int light;
@@ -126,9 +125,9 @@ class sidedef_c
     int x_offset, y_offset;
 
     // texture names
-    std::array<char, 10> upper_tex;
-    std::array<char, 10> lower_tex;
-    std::array<char, 10> mid_tex;
+    char upper_tex[10];
+    char lower_tex[10];
+    char mid_tex[10];
 
     // UDMF support
     std::unordered_map<std::string, std::string> misc_vals;
@@ -164,7 +163,7 @@ class linedef_c
     int tag;
 
     // Hexen support
-    std::array<uint8_t, 5> args;
+    uint8_t args[5];
 
     // UDMF support
     std::unordered_map<std::string, std::string> misc_vals;
@@ -199,7 +198,7 @@ class thing_c
     int                    tid;
     int                    height;
     int                    special;
-    std::array<uint8_t, 5> args;
+    uint8_t args[5];
 
     // UDMF support
     std::unordered_map<std::string, std::string> misc_vals;

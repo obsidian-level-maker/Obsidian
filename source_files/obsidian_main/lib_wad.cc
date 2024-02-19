@@ -21,7 +21,6 @@
 
 #include "lib_wad.h"
 
-#include <fstream>
 #include <list>
 
 #include "lib_util.h"
@@ -185,7 +184,7 @@ bool WAD_ReadData(int entry, int offset, int length, void *buffer)
 //  WAD WRITING
 //------------------------------------------------------------------------
 
-static std::ofstream wad_W_fp;
+static FILE *wad_W_fp = nullptr;
 
 static std::list<raw_wad_lump_t> wad_W_directory;
 
@@ -193,9 +192,13 @@ static raw_wad_lump_t wad_W_lump;
 
 bool WAD_OpenWrite(std::filesystem::path filename)
 {
-    wad_W_fp.open(filename, std::ios::out | std::ios::binary);
+#ifdef _WIN32
+    wad_W_fp = _wfopen(filename.c_str(), L"wb");
+#else
+    wad_W_fp = fopen(filename.generic_u8string().c_str(), "wb");
+#endif
 
-    if (!wad_W_fp.is_open())
+    if (!wad_W_fp)
     {
         LogPrintf("WAD_OpenWrite: cannot create file: %s\n",
                   filename.u8string().c_str());
@@ -208,16 +211,15 @@ bool WAD_OpenWrite(std::filesystem::path filename)
     raw_wad_header_t header;
     memset(&header, 0, sizeof(header));
 
-    wad_W_fp.write(reinterpret_cast<const char *>(&header),
-                   sizeof(raw_wad_header_t));
-    wad_W_fp << std::flush;
+    fwrite(&header, sizeof(raw_wad_header_t), 1, wad_W_fp);
+    fflush(wad_W_fp);
 
     return true;
 }
 
 void WAD_CloseWrite(void)
 {
-    wad_W_fp << std::flush;
+    fflush(wad_W_fp);
 
     // write the directory
 
@@ -227,7 +229,7 @@ void WAD_CloseWrite(void)
 
     memcpy(header.magic, "PWAD", sizeof(header.magic));
 
-    header.dir_start = wad_W_fp.tellp();
+    header.dir_start = ftell(wad_W_fp);
     header.num_lumps = 0;
 
     std::list<raw_wad_lump_t>::iterator WDI;
@@ -236,26 +238,26 @@ void WAD_CloseWrite(void)
     {
         raw_wad_lump_t *L = &(*WDI);
 
-        wad_W_fp.write(reinterpret_cast<const char *>(L),
-                       sizeof(raw_wad_lump_t));
-        wad_W_fp << std::flush;
+        fwrite(L, sizeof(raw_wad_lump_t), 1, wad_W_fp);
+        fflush(wad_W_fp);
 
         header.num_lumps++;
     }
 
-    wad_W_fp << std::flush;
+    fflush(wad_W_fp);
 
     // finally write the _real_ WAD header
 
     header.dir_start = LE_U32(header.dir_start);
     header.num_lumps = LE_U32(header.num_lumps);
 
-    wad_W_fp.seekp(0, std::ios::beg);
+    fseek(wad_W_fp, 0, SEEK_SET);
 
-    wad_W_fp.write(reinterpret_cast<const char *>(&header), sizeof(header));
+    fwrite(&header, sizeof(header), 1, wad_W_fp);
 
-    wad_W_fp << std::flush;
-    wad_W_fp.close();
+    fflush(wad_W_fp);
+    fclose(wad_W_fp);
+    wad_W_fp = nullptr;
 
     LogPrintf("Closed WAD file\n");
 
@@ -273,7 +275,7 @@ void WAD_NewLump(std::string name)
 
     std::copy(name.data(), name.data() + name.size(), wad_W_lump.name);
 
-    wad_W_lump.start = wad_W_fp.tellp();
+    wad_W_lump.start = ftell(wad_W_fp);
 }
 
 bool WAD_AppendData(const void *data, int length)
@@ -282,14 +284,13 @@ bool WAD_AppendData(const void *data, int length)
 
     SYS_ASSERT(length > 0);
 
-    return static_cast<bool>(
-        wad_W_fp.write(static_cast<const char *>(data), length));
+    return fwrite(data, length, 1, wad_W_fp);
 }
 
 void WAD_FinishLump(void)
 {
     const int len =
-        static_cast<int>(wad_W_fp.tellp()) - static_cast<int>(wad_W_lump.start);
+        static_cast<int>(ftell(wad_W_fp)) - static_cast<int>(wad_W_lump.start);
 
     // pad lumps to a multiple of four bytes
     int padding = ALIGN_LEN(len) - len;
@@ -297,9 +298,8 @@ void WAD_FinishLump(void)
     if (padding > 0)
     {
         static uint8_t zeros[4] = {0, 0, 0, 0};
-
-        wad_W_fp.write(reinterpret_cast<const char *>(zeros), padding);
-        wad_W_fp << std::flush;
+        fwrite(zeros, padding, 1, wad_W_fp);
+        fflush(wad_W_fp);
     }
 
     // fix endianness

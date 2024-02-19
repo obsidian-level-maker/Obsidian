@@ -22,7 +22,6 @@
 #ifndef PAK_FILES_H_
 #define PAK_FILES_H_
 
-#include <array>
 #include <filesystem>
 #include <vector>
 
@@ -54,7 +53,7 @@ void PAK_FinishLump(void);
 #pragma pack(push, 1)
 struct raw_pak_header_t
 {
-    std::array<char, 4> magic;
+    char magic[4];
 
     uint32_t dir_start;
     uint32_t entry_num;
@@ -66,7 +65,7 @@ constexpr const char *PAK_MAGIC = "PACK";
 #pragma pack(push, 1)
 struct raw_pak_entry_t
 {
-    std::array<char, 56> name;
+    char name[56];
 
     uint32_t offset;
     uint32_t length;

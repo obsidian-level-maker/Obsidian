@@ -35,7 +35,6 @@
 #endif
 
 #include <filesystem>
-#include <fstream>
 
 #include "hdr_lua.h"
 #include "lib_util.h"
@@ -1049,9 +1048,13 @@ void Trans_Init()
         return;
     }
 
-    std::ifstream trans_fp(path);
+#ifdef _WIN32
+    FILE *trans_fp = _wfopen(path.c_str(), L"r");
+#else
+    FILE *trans_fp = fopen(path.generic_u8string().c_str(), "r");
+#endif
 
-    if (!trans_fp.is_open())
+    if (!trans_fp)
     {
         LogPrintf("WARNING: Error opening LANGS.txt!\n");
         return;
@@ -1059,10 +1062,18 @@ void Trans_Init()
 
     LogPrintf("Loading language list: %s\n", path.u8string().c_str());
 
-    for (std::string line; std::getline(trans_fp, line);)
+    std::string line;
+    line.reserve(4096);
+    line.clear();
+
+    for (fgets(line.data(), 4096, trans_fp); !line.empty();)
     {
         Trans_ParseLangLine((char *)line.c_str());
+        line.clear();
+        fgets(line.data(), 4096, trans_fp);
     }
+
+    fclose(trans_fp);
 
     LogPrintf("DONE.\n\n");
 }

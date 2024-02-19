@@ -21,10 +21,6 @@
 
 #include "m_cookie.h"
 
-#include <array>
-#include <fstream>
-#include <iostream>
-
 #include "hdr_lua.h"
 #include "lib_argv.h"
 #include "lib_util.h"
@@ -176,18 +172,31 @@ bool Cookie_Load(std::filesystem::path filename)
 #else
     std::setlocale(LC_NUMERIC, "C");
 #endif
-    std::ifstream cookie_fp(filename, std::ios::in);
 
-    if (!cookie_fp.is_open()) { return false; }
+#ifdef _WIN32
+    FILE *cookie_fp = _wfopen(filename.c_str(), L"r");
+#else
+    FILE *cookie_fp = fopen(filename.generic_u8string().c_str(), "r");
+#endif
+
+    if (!cookie_fp) { return false; }
 
     LogPrintf("Loading config file: %s\n", filename.u8string().c_str());
 
     int error_count = 0;
 
-    for (std::string line; std::getline(cookie_fp, line);)
+    std::string line;
+    line.reserve(4096);
+    line.clear();
+
+    for (fgets(line.data(), 4096, cookie_fp); !line.empty();)
     {
         if (!Cookie_ParseLine(line)) { error_count += 1; }
+        line.clear();
+        fgets(line.data(), 4096, cookie_fp);
     }
+
+    fclose(cookie_fp);
 
     if (error_count > 0)
     {
@@ -247,9 +256,14 @@ bool Cookie_Save(std::filesystem::path filename)
 #else
     std::setlocale(LC_NUMERIC, "C");
 #endif
-    std::ofstream cookie_fp(filename, std::ios::out);
 
-    if (!cookie_fp.is_open())
+#ifdef _WIN32
+    FILE *cookie_fp = _wfopen(filename.c_str(), L"w");
+#else
+    FILE *cookie_fp = fopen(filename.generic_u8string().c_str(), "w");
+#endif
+
+    if (!cookie_fp)
     {
         LogPrintf("Error: unable to create file: %s\n(%s)\n\n",
                   filename.u8string().c_str(), strerror(errno));
@@ -259,11 +273,10 @@ bool Cookie_Save(std::filesystem::path filename)
     LogPrintf("Saving config file...\n");
 
     // header...
-    cookie_fp << "-- CONFIG FILE : OBSIDIAN " << OBSIDIAN_SHORT_VERSION << " \""
-              << OBSIDIAN_CODE_NAME << "\"\n";
-    cookie_fp << "-- Build " << OBSIDIAN_VERSION << "\n";
-    cookie_fp << "-- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n";
-    cookie_fp << "-- " << OBSIDIAN_WEBSITE << "\n\n";
+    fprintf(cookie_fp, "-- CONFIG FILE : OBSIDIAN %s \"%s\"\n", OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str());
+    fprintf(cookie_fp, "-- Build %s\n", OBSIDIAN_VERSION);
+    fprintf(cookie_fp, "-- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n");
+    fprintf(cookie_fp, "-- %s\n\n", OBSIDIAN_WEBSITE);
 
     // settings...
     std::vector<std::string> lines;
@@ -272,12 +285,13 @@ bool Cookie_Save(std::filesystem::path filename)
 
     for (unsigned int i = 0; i < lines.size(); i++)
     {
-        cookie_fp << lines[i] << "\n";
+        fprintf(cookie_fp, "%s\n", lines[i].c_str());
     }
 
     LogPrintf("DONE.\n\n");
 
-    cookie_fp.close();
+    fclose(cookie_fp);
+
 #ifdef __APPLE__
     setlocale(LC_NUMERIC, numeric_locale.c_str());
 #elif __unix__
@@ -360,7 +374,7 @@ class RecentFiles_c
     int size;
 
     // newest is at index [0]
-    std::array<std::filesystem::path, MAX_RECENT> filenames;
+    std::filesystem::path filenames[MAX_RECENT];
 
    public:
     RecentFiles_c() : size(0)
@@ -439,7 +453,7 @@ class RecentFiles_c
         if (f >= 0) { erase(f); }
     }
 
-    void write_all(std::ofstream &fp, std::string keyword) const
+    void write_all(FILE *fp, std::string keyword) const
     {
         // Files are written in opposite order, newest at the end.
         // This allows the parser to merely insert() items in the
@@ -447,13 +461,10 @@ class RecentFiles_c
 
         for (int k = size - 1; k >= 0; k--)
         {
-            std::string fn = StringFormat(
-                "%s = %s\n", keyword.c_str(),
-                StringToUTF8(filenames[k].generic_u16string()).c_str());
-            fp.write(fn.c_str(), fn.size());
+            fprintf(fp, "%s = %s\n", keyword.c_str(), filenames[k].generic_u8string().c_str());
         }
 
-        if (size > 0) { fp << "\n"; }
+        if (size > 0) { fprintf(fp, "\n"); }
     }
 
     bool get_name(int index, std::filesystem::path buffer, bool for_menu) const
@@ -487,10 +498,9 @@ void Recent_Parse(std::string name, std::string value)
     }
 }
 
-void Recent_Write(std::ofstream &fp)
+void Recent_Write(FILE *fp)
 {
-    fp << "---- Recent Files ----\n\n";
-
+    fprintf(fp, "---- Recent Files ----\n\n");
     recent_wads.write_all(fp, "recent_wad");
     recent_configs.write_all(fp, "recent_config");
 }

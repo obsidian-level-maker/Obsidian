@@ -21,8 +21,6 @@
 
 #include "main.h"
 
-#include <array>
-
 #include "csg_main.h"
 #include "g_nukem.h"
 #include "images.h"
@@ -453,15 +451,19 @@ void Determine_LoggingFile()
         logging_file = std::filesystem::u8path(argv::list[logf_arg + 1]);
 
         // test that it can be created
-        std::ofstream fp{logging_file};
+#ifdef _WIN32
+        FILE *fp = _wfopen(logging_file.c_str(), L"w");
+#else
+        FILE *fp = fopen(logging_file.generic_u8string().c_str(), "w");
+#endif
 
-        if (!fp.is_open())
+        if (!fp)
         {
             ErrorPrintf("Cannot create log file: %s\n",
                         logging_file.u8string().c_str());
         }
 
-        fp.close();
+        fclose(fp);
     }
     else if (!batch_mode)
     {

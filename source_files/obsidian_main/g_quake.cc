@@ -130,7 +130,7 @@ static void CreateDummyMip(qLump_c *lump, const char *name, int pix1, int pix2)
 
     lump->Append(&mm_tex, sizeof(mm_tex));
 
-    std::array pixels = {(uint8_t)pix1, (uint8_t)pix2};
+    uint8_t pixels[2] = {(uint8_t)pix1, (uint8_t)pix2};
 
     size = 64;
 
@@ -150,10 +150,10 @@ static void CreateDummyMip(qLump_c *lump, const char *name, int pix1, int pix2)
 
 static void TransferOneMipTex(qLump_c *lump, unsigned int m, const char *name)
 {
-    static std::array<uint8_t, 8> relief_colors =  // yellow range
+    static uint8_t relief_colors[8] =  // yellow range
         {207, 205, 203, 201, 199, 197, 195, 193};
 
-    static std::array<uint8_t, 8> bolt_colors =  // blue range
+    static uint8_t bolt_colors[8] =  // blue range
         {0, 223, 222, 221, 219, 217, 214, 211};
 
     if (strcmp(name, "error") == 0)
@@ -174,18 +174,18 @@ static void TransferOneMipTex(qLump_c *lump, unsigned int m, const char *name)
         int pos    = 0;
         int length = WAD2_EntryLen(entry);
 
-        std::array<uint8_t, 1024> buffer;
+        uint8_t buffer[1024];
 
         while (length > 0)
         {
             int actual = MIN(1024, length);
 
-            if (!WAD2_ReadData(entry, pos, actual, buffer.data()))
+            if (!WAD2_ReadData(entry, pos, actual, buffer))
             {
                 ErrorPrintf("Error reading texture data in wad!");
             }
 
-            lump->Append(buffer.data(), actual);
+            lump->Append(buffer, actual);
 
             pos += actual;
             length -= actual;
@@ -354,7 +354,7 @@ static void DummyMipTex(void)
 
 static std::vector<texinfo_t> q1_texinfos;
 
-static std::array<std::vector<int> *, TEXINFO_HASH_SIZE> texinfo_hashtab;
+static std::vector<int>* texinfo_hashtab[TEXINFO_HASH_SIZE];
 
 static void Q1_ClearTexInfo(void)
 {
@@ -506,16 +506,16 @@ qLump_c *q1_clip;
 
 int q1_total_clip;
 
-static std::array<int, 5> q1_medium_table = {CONTENTS_EMPTY, CONTENTS_WATER,
+static int q1_medium_table[5] = {CONTENTS_EMPTY, CONTENTS_WATER,
                                              CONTENTS_SLIME, CONTENTS_LAVA,
                                              CONTENTS_SOLID};
 
-static std::array<std::array<uint8_t, 8>, 4> q1_ambient_levels = {
-    std::array<uint8_t, 8>{255, 208, 176, 144, 112, 80, 48, 16},  // Water
-    std::array<uint8_t, 8>{255, 160, 128, 96, 64, 32, 0, 0},      // Sky
-    std::array<uint8_t, 8>{255, 208, 176, 144, 112, 80, 48,
+static uint8_t q1_ambient_levels[4][8] = {
+    {255, 208, 176, 144, 112, 80, 48, 16},  // Water
+    {255, 160, 128, 96, 64, 32, 0, 0},      // Sky
+    {255, 208, 176, 144, 112, 80, 48,
                            16},  // Slime (unused)
-    std::array<uint8_t, 8>{255, 208, 176, 144, 112, 80, 48, 16},  // Lava
+    {255, 208, 176, 144, 112, 80, 48, 16},  // Lava
 };
 
 static void Q1_FreeStuff()
@@ -846,10 +846,10 @@ static void Q1_WriteBSP()
 
 typedef struct
 {
-    std::array<float, 3> mins, maxs;
-    std::array<float, 3> origin;
+    float mins[3], maxs[3];
+    float origin[3];
 
-    std::array<int32_t, H2_MAX_HULLS> headnode;
+    int32_t headnode[H2_MAX_HULLS];
 
     int32_t numleafs;
     int32_t firstface, numfaces;
@@ -965,8 +965,8 @@ static void MapModel_Face(quake_mapmodel_c *model, int face, int16_t plane,
 
     std::string texture = "error";
 
-    std::array<float, 4> s = {0.0, 0.0, 0.0, 0.0};
-    std::array<float, 4> t = {0.0, 0.0, 0.0, 0.0};
+    float s[4] = {0.0, 0.0, 0.0, 0.0};
+    float t[4] = {0.0, 0.0, 0.0, 0.0};
 
     // add the edges
 
@@ -1035,7 +1035,7 @@ static void MapModel_Face(quake_mapmodel_c *model, int face, int16_t plane,
 
     if (texture.find("trigger") != std::string::npos) { flags |= TEX_SPECIAL; }
 
-    raw_face.texinfo = Q1_AddTexInfo(texture, flags, s.data(), t.data());
+    raw_face.texinfo = Q1_AddTexInfo(texture, flags, s, t);
 
     raw_face.styles[0] = 0;
     raw_face.styles[1] = 0xFF;
@@ -1159,7 +1159,7 @@ static void Q1_WriteModels()
         model->numfaces  = 6;
         model->numleafs  = 6;
 
-        std::array<float, 3> mins, maxs;
+        float mins[3], maxs[3];
 
         mins[0] = model->x1;
         mins[1] = model->y1;
@@ -1169,7 +1169,7 @@ static void Q1_WriteModels()
         maxs[1] = model->y2;
         maxs[2] = model->z2;
 
-        MapModel_Nodes(model, mins.data(), maxs.data());
+        MapModel_Nodes(model, mins, maxs);
 
         Q1_WriteModel(model);
     }

@@ -43,7 +43,7 @@ bool Options_Save(std::filesystem::path filename);
 /* recent file stuff */
 
 void Recent_Parse(std::string name, std::string value);
-void Recent_Write(std::ofstream &fp);
+void Recent_Write(FILE *fp);
 
 typedef enum
 {

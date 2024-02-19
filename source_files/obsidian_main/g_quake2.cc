@@ -47,7 +47,7 @@ static std::string description;
 
 // IMPORTANT!! Quake II assumes axis-aligned node planes are positive
 
-static std::array<int, 5> q2_medium_table = {0 /* EMPTY */, CONTENTS_WATER,
+static int q2_medium_table[5] = {0 /* EMPTY */, CONTENTS_WATER,
                                              CONTENTS_SLIME, CONTENTS_LAVA,
                                              CONTENTS_SOLID};
 
@@ -155,7 +155,7 @@ static void Q2_WriteBrushes()
 static std::vector<texinfo2_t> q2_texinfos;
 
 #define NUM_TEXINFO_HASH 128
-static std::array<std::vector<int> *, NUM_TEXINFO_HASH> texinfo_hashtab;
+static std::vector<int>* texinfo_hashtab[NUM_TEXINFO_HASH];
 
 static void Q2_ClearTexInfo(void)
 {
@@ -698,8 +698,8 @@ static void Q2_Model_Face(quake_mapmodel_c *model, int face, int16_t plane,
 
     std::string texture = "error";
 
-    std::array<float, 4> s = {0.0, 0.0, 0.0, 0.0};
-    std::array<float, 4> t = {0.0, 0.0, 0.0, 0.0};
+    float s[4] = {0.0, 0.0, 0.0, 0.0};
+    float t[4] = {0.0, 0.0, 0.0, 0.0};
 
     // add the edges
 
@@ -768,7 +768,7 @@ static void Q2_Model_Face(quake_mapmodel_c *model, int face, int16_t plane,
         flags |= SURF_NODRAW | SURF_WARP;
     }
 
-    raw_face.texinfo = Q2_AddTexInfo(texture, flags, 0, s.data(), t.data());
+    raw_face.texinfo = Q2_AddTexInfo(texture, flags, 0, s, t);
 
     raw_face.styles[0] = 0;
     raw_face.styles[1] = 0xFF;
@@ -951,7 +951,7 @@ static void Q2_WriteModels()
         model->numfaces  = 6;
         model->numleafs  = 6;
 
-        std::array<float, 3> mins, maxs;
+        float mins[3], maxs[3];
 
         mins[0] = model->x1;
         mins[1] = model->y1;
@@ -961,7 +961,7 @@ static void Q2_WriteModels()
         maxs[1] = model->y2;
         maxs[2] = model->z2;
 
-        Q2_Model_Nodes(model, mins.data(), maxs.data());
+        Q2_Model_Nodes(model, mins, maxs);
 
         Q2_WriteModel(model);
     }
