@@ -165,7 +165,7 @@ static void SHADE_MergeResults()
 
         for (n = i; n <= k; n++)
         {
-            result = MAX(result, all_regions[n]->shade);
+            result = OBSIDIAN_MAX(result, all_regions[n]->shade);
         }
 
         for (n = i; n <= k; n++) { all_regions[n]->shade = result; }
@@ -252,14 +252,14 @@ static void SHADE_VisitRegion(region_c *R)
         int br_light  = LB->props.getInt("light_add", -1);
         int br_shadow = LB->props.getInt("shadow", -1);
 
-        light  = MAX(light, br_light);
-        shadow = MAX(shadow, br_shadow);
+        light  = OBSIDIAN_MAX(light, br_light);
+        shadow = OBSIDIAN_MAX(shadow, br_shadow);
 
         int sky_shadow = LB->props.getInt("sky_shadow", -1);
 
         if (sky_shadow > 0 && (T->bflags & BFLAG_Sky))
         {
-            shadow = MAX(shadow, sky_shadow);
+            shadow = OBSIDIAN_MAX(shadow, sky_shadow);
         }
     }
 
@@ -272,8 +272,8 @@ static void SHADE_VisitRegion(region_c *R)
         int fc_light  = P->getInt("light_add", -1);
         int fc_shadow = P->getInt("shadow", -1);
 
-        light  = MAX(light, fc_light);
-        shadow = MAX(shadow, fc_shadow);
+        light  = OBSIDIAN_MAX(light, fc_light);
+        shadow = OBSIDIAN_MAX(shadow, fc_shadow);
     }
 
 #if 0  // DISABLED, WE DO THIS IN LUA CODE NOW
@@ -285,7 +285,7 @@ static void SHADE_VisitRegion(region_c *R)
         int cave = SHADE_CaveLighting(R, z2);
 
         if (cave > 0)
-            light = MAX(light, cave);
+            light = OBSIDIAN_MAX(light, cave);
     }
 #endif
 

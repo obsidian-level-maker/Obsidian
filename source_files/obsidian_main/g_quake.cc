@@ -178,7 +178,7 @@ static void TransferOneMipTex(qLump_c *lump, unsigned int m, const char *name)
 
         while (length > 0)
         {
-            int actual = MIN(1024, length);
+            int actual = OBSIDIAN_MIN(1024, length);
 
             if (!WAD2_ReadData(entry, pos, actual, buffer))
             {
@@ -706,8 +706,8 @@ static void Q1_WriteLeaf(quake_leaf_c *leaf)
 
     for (int b = 0; b < 3; b++)
     {
-        raw_leaf.mins[b] = I_ROUND(leaf->bbox.mins[b]);
-        raw_leaf.maxs[b] = I_ROUND(leaf->bbox.maxs[b]);
+        raw_leaf.mins[b] = RoundToInteger(leaf->bbox.mins[b]);
+        raw_leaf.maxs[b] = RoundToInteger(leaf->bbox.maxs[b]);
     }
 
     DoWriteLeaf(raw_leaf);
@@ -784,8 +784,8 @@ static void Q1_WriteNode(quake_node_c *node)
 
     for (int b = 0; b < 3; b++)
     {
-        raw_node.mins[b] = I_ROUND(node->bbox.mins[b]);
-        raw_node.maxs[b] = I_ROUND(node->bbox.maxs[b]);
+        raw_node.mins[b] = RoundToInteger(node->bbox.mins[b]);
+        raw_node.maxs[b] = RoundToInteger(node->bbox.maxs[b]);
     }
 
     DoWriteNode(raw_node);
@@ -1267,11 +1267,11 @@ int Q1_add_tex_wad(lua_State *L)
 //------------------------------------------------------------------------
 
 // progress step names, only here for xgettext to find
-#define stepword_CSG   N_("CSG")
-#define stepword_BSP   N_("BSP")
-#define stepword_Vis   N_("Vis")
-#define stepword_Light N_("Light")
-#define stepword_Hull  N_("Hull")
+#define stepword_CSG   _("CSG")
+#define stepword_BSP   _("BSP")
+#define stepword_Vis   _("Vis")
+#define stepword_Light _("Light")
+#define stepword_Hull  _("Hull")
 
 class quake1_game_interface_c : public game_interface_c
 {

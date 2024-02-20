@@ -307,8 +307,8 @@ int EvalPartition(edge_c *part, edge_c *edge_list)
         double fa = fabs(a);
         double fb = fabs(b);
 
-        int a_side = (fa <= DIST_EPSILON) ? 0 : (a < 0) ? -1 : +1;
-        int b_side = (fb <= DIST_EPSILON) ? 0 : (b < 0) ? -1 : +1;
+        int a_side = (fa <= kDistanceEpsilon) ? 0 : (a < 0) ? -1 : +1;
+        int b_side = (fb <= kDistanceEpsilon) ? 0 : (b < 0) ? -1 : +1;
 
         // check for being on the same line
         if (a_side == 0 && b_side == 0)
@@ -378,8 +378,8 @@ int EvalPartition(edge_c *part, edge_c *edge_list)
     }
 
     // increase cost by the difference between left and right
-    cost += 100 * ABS(real_left - real_right);
-    cost += 30 * ABS(mini_left - mini_right);
+    cost += 100 * OBSIDIAN_ABS(real_left - real_right);
+    cost += 30 * OBSIDIAN_ABS(mini_left - mini_right);
 
     // show a slight preference for purely horizontally or vertical
     // partition lines.
@@ -410,8 +410,8 @@ void DivideAnEdge(edge_c *cur, edge_c *part, edge_c **left_list,
         a = b = 0;
     }
 
-    int a_side = (fabs(a) <= DIST_EPSILON) ? 0 : (a < 0) ? -1 : +1;
-    int b_side = (fabs(b) <= DIST_EPSILON) ? 0 : (b < 0) ? -1 : +1;
+    int a_side = (fabs(a) <= kDistanceEpsilon) ? 0 : (a < 0) ? -1 : +1;
+    int b_side = (fabs(b) <= kDistanceEpsilon) ? 0 : (b < 0) ? -1 : +1;
 
     // check for being on the same line
     if (a_side == 0 && b_side == 0)
@@ -763,7 +763,7 @@ void polygon_c::ClockwiseOrder()
         double angle1 = ComputeAngle(A->start->x - mid_x, A->start->y - mid_y);
         double angle2 = ComputeAngle(B->start->x - mid_x, B->start->y - mid_y);
 
-        if (angle1 + ANG_EPSILON < angle2)
+        if (angle1 + kAngleEpsilon < angle2)
         {
             // swap 'em
             array[i]     = B;

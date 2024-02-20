@@ -244,9 +244,9 @@ rgb_color_t qLightmap_c::CalcAverage() const
     avg_g /= (float)(width * height);
     avg_b /= (float)(width * height);
 
-    uint8_t new_r = CLAMP(0, I_ROUND(avg_r), 255);
-    uint8_t new_g = CLAMP(0, I_ROUND(avg_g), 255);
-    uint8_t new_b = CLAMP(0, I_ROUND(avg_b), 255);
+    uint8_t new_r = OBSIDIAN_CLAMP(0, RoundToInteger(avg_r), 255);
+    uint8_t new_g = OBSIDIAN_CLAMP(0, RoundToInteger(avg_g), 255);
+    uint8_t new_b = OBSIDIAN_CLAMP(0, RoundToInteger(avg_b), 255);
 
     return MAKE_RGBA(new_r, new_g, new_b, 255);
 }
@@ -507,8 +507,8 @@ static void Q1_CalcFaceStuff(quake_face_c *F)
     lt_tex_mins[0] = bmin_s;
     lt_tex_mins[1] = bmin_t;
 
-    lt_W = MAX(2, bmax_s - bmin_s + 1);
-    lt_H = MAX(2, bmax_t - bmin_t + 1);
+    lt_W = OBSIDIAN_MAX(2, bmax_s - bmin_s + 1);
+    lt_H = OBSIDIAN_MAX(2, bmax_t - bmin_t + 1);
 
     /// fprintf(stderr, "FACE %p  EXTENTS %d %d\n", F, lt_W, lt_H);
 
@@ -598,7 +598,7 @@ static bool CheckLightPoint(light_point_t &P, quake_face_c *F, double s,
         double liq_depth = -1;
 
         P.medium       = CSG_BrushContents(P.x, P.y, P.z, &liq_depth);
-        P.liquid_depth = CLAMP(-7, liq_depth, 8190.0);
+        P.liquid_depth = OBSIDIAN_CLAMP(-7, liq_depth, 8190.0);
     }
 
     return !(P.medium == MEDIUM_OFF_FACE || P.medium == MEDIUM_SOLID);
@@ -633,7 +633,7 @@ void qLightmap_c::Store()
             float g = blocklights[s][t][1] * scale;
             float b = blocklights[s][t][2] * scale;
 
-            float ity = MAX(r, MAX(g, b));
+            float ity = OBSIDIAN_MAX(r, OBSIDIAN_MAX(g, b));
 
             if (ity > limit)
             {
@@ -1036,7 +1036,7 @@ void QLIT_LightMapModel(quake_mapmodel_c *model)
         }
     }
 
-    model->light = CLAMP(0, I_ROUND(value), 255);
+    model->light = OBSIDIAN_CLAMP(0, RoundToInteger(value), 255);
 }
 #endif
 

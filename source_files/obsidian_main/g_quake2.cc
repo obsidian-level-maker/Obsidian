@@ -544,8 +544,8 @@ static void Q2_WriteLeaf(quake_leaf_c *leaf)
 
     for (int b = 0; b < 3; b++)
     {
-        raw_leaf.mins[b] = I_ROUND(leaf->bbox.mins[b]);
-        raw_leaf.maxs[b] = I_ROUND(leaf->bbox.maxs[b]);
+        raw_leaf.mins[b] = RoundToInteger(leaf->bbox.mins[b]);
+        raw_leaf.maxs[b] = RoundToInteger(leaf->bbox.maxs[b]);
     }
 
     DoWriteLeaf(raw_leaf);
@@ -619,8 +619,8 @@ static void Q2_WriteNode(quake_node_c *node)
 
     for (int b = 0; b < 3; b++)
     {
-        raw_node.mins[b] = I_ROUND(node->bbox.mins[b]);
-        raw_node.maxs[b] = I_ROUND(node->bbox.maxs[b]);
+        raw_node.mins[b] = RoundToInteger(node->bbox.mins[b]);
+        raw_node.maxs[b] = RoundToInteger(node->bbox.maxs[b]);
     }
 
     DoWriteNode(raw_node);

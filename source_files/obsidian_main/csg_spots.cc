@@ -122,7 +122,7 @@ void SPOT_DumpGrid(const char *info)
     {
         char buffer[MAX_WIDTH + 2];
 
-        int width = MIN(MAX_WIDTH, grid_W);
+        int width = OBSIDIAN_MIN(MAX_WIDTH, grid_W);
 
         for (int x = 0; x < width; x++)
         {
@@ -511,18 +511,18 @@ static void raw_pixel(int gx, int gy)
 {
     if (gy < 0 || gy >= grid_H) { return; }
 
-    grid_lefties[gy]  = MIN(grid_lefties[gy], gx);
-    grid_righties[gy] = MAX(grid_righties[gy], gx);
+    grid_lefties[gy]  = OBSIDIAN_MIN(grid_lefties[gy], gx);
+    grid_righties[gy] = OBSIDIAN_MAX(grid_righties[gy], gx);
 
-    grid_botty = MIN(grid_botty, gy);
-    grid_toppy = MAX(grid_toppy, gy);
+    grid_botty = OBSIDIAN_MIN(grid_botty, gy);
+    grid_toppy = OBSIDIAN_MAX(grid_toppy, gy);
 }
 
 static void draw_line(int x1, int y1, int x2, int y2)
 {
     // basic cull, Y only
     // (doing X messes up polygons which overlap the sides)
-    if (MAX(y1, y2) < grid_min_y || MIN(y1, y2) > grid_max_y) { return; }
+    if (OBSIDIAN_MAX(y1, y2) < grid_min_y || OBSIDIAN_MIN(y1, y2) > grid_max_y) { return; }
 
     x1 -= grid_min_x;
     y1 -= grid_min_y;
@@ -579,8 +579,8 @@ static void draw_line(int x1, int y1, int x2, int y2)
     int orig_py1 = py1;
     int orig_py2 = py2;
 
-    py1 = MAX(0, py1);
-    py2 = MIN(h2, py2);
+    py1 = OBSIDIAN_MAX(0, py1);
+    py2 = OBSIDIAN_MIN(h2, py2);
 
     // same column ?
     if (px1 == px2)
@@ -635,8 +635,8 @@ static void fill_rows(uint8_t content)
     {
         if (grid_righties[y] < 0) { continue; }
 
-        int low_x  = MAX(0, grid_lefties[y]);
-        int high_x = MIN(w2, grid_righties[y]);
+        int low_x  = OBSIDIAN_MAX(0, grid_lefties[y]);
+        int high_x = OBSIDIAN_MIN(w2, grid_righties[y]);
 
         for (int x = low_x; x <= high_x; x++) { replace_cell(x, y, content); }
     }
@@ -717,10 +717,10 @@ int SPOT_begin(lua_State *L)
 //
 int SPOT_draw_line(lua_State *L)
 {
-    int x1 = I_ROUND(luaL_checknumber(L, 1));
-    int y1 = I_ROUND(luaL_checknumber(L, 2));
-    int x2 = I_ROUND(luaL_checknumber(L, 3));
-    int y2 = I_ROUND(luaL_checknumber(L, 4));
+    int x1 = RoundToInteger(luaL_checknumber(L, 1));
+    int y1 = RoundToInteger(luaL_checknumber(L, 2));
+    int x2 = RoundToInteger(luaL_checknumber(L, 3));
+    int y2 = RoundToInteger(luaL_checknumber(L, 4));
 
     int content = luaL_checkinteger(L, 5);
 
@@ -746,8 +746,8 @@ static int polygon_coord(lua_State *L, int stack_pos,
 
     if (!lua_isnil(L, -2))
     {
-        int x = I_ROUND(luaL_checknumber(L, -2));
-        int y = I_ROUND(luaL_checknumber(L, -1));
+        int x = RoundToInteger(luaL_checknumber(L, -2));
+        int y = RoundToInteger(luaL_checknumber(L, -1));
 
         points.push_back(grid_point_c(x, y));
     }
@@ -840,10 +840,10 @@ static void store_mon_or_item(lua_State *L, int stack_pos, unsigned int index,
     int ceil_h = grid_floor_h + (low_ceil ? spot_low_h : spot_high_h);
 
     // clip rectangle to the original room/chunk boundaries
-    x1 = MAX(x1, grid_min_x);
-    y1 = MAX(y1, grid_min_y);
-    x2 = MIN(x2, grid_max_x);
-    y2 = MIN(y2, grid_max_y);
+    x1 = OBSIDIAN_MAX(x1, grid_min_x);
+    y1 = OBSIDIAN_MAX(y1, grid_min_y);
+    x2 = OBSIDIAN_MIN(x2, grid_max_x);
+    y2 = OBSIDIAN_MIN(y2, grid_max_y);
 
     if ((x2 - x1) < 8 || (y2 - y1) < 8) { return; }
 

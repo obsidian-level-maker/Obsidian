@@ -242,11 +242,11 @@ class clip_group_c
         {
             clip_side_c *S = sides[k];
 
-            *lo_x = MIN(*lo_x, MIN(S->x1, S->x2));
-            *lo_y = MIN(*lo_y, MIN(S->y1, S->y2));
+            *lo_x = OBSIDIAN_MIN(*lo_x, OBSIDIAN_MIN(S->x1, S->x2));
+            *lo_y = OBSIDIAN_MIN(*lo_y, OBSIDIAN_MIN(S->y1, S->y2));
 
-            *hi_x = MAX(*hi_x, MAX(S->x1, S->x2));
-            *hi_y = MAX(*hi_y, MAX(S->y1, S->y2));
+            *hi_x = OBSIDIAN_MAX(*hi_x, OBSIDIAN_MAX(S->x1, S->x2));
+            *hi_y = OBSIDIAN_MAX(*hi_y, OBSIDIAN_MAX(S->y1, S->y2));
         }
     }
 };
@@ -373,10 +373,10 @@ class clip_node_c
         {
             clip_side_c *S = sides[i];
 
-            double x1 = MIN(S->x1, S->x2);
-            double y1 = MIN(S->y1, S->y2);
-            double x2 = MAX(S->x1, S->x2);
-            double y2 = MAX(S->y1, S->y2);
+            double x1 = OBSIDIAN_MIN(S->x1, S->x2);
+            double y1 = OBSIDIAN_MIN(S->y1, S->y2);
+            double x2 = OBSIDIAN_MAX(S->x1, S->x2);
+            double y2 = OBSIDIAN_MAX(S->y1, S->y2);
 
             if (x1 < *lx) { *lx = x1; }
             if (y1 < *ly) { *ly = y1; }

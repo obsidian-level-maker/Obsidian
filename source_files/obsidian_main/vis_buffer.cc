@@ -250,7 +250,7 @@ void Vis_Buffer::MarkSteps(const Stair_Steps &steps)
             y1       = (int)ceil(z);
         }
 
-        if (nx < lx + ww) { y1 = MAX(y1, ly + hh); }
+        if (nx < lx + ww) { y1 = OBSIDIAN_MAX(y1, ly + hh); }
 
         for (int ny = y1; ny <= y2 && isValid(nx, ny); ny++)
         {

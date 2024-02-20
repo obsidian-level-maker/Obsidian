@@ -88,7 +88,7 @@ int csg_property_set_c::getInt(std::string key, int def_val) const
 {
     std::string str = getStr(key);
 
-    return !str.empty() ? I_ROUND(StringToDouble(str)) : def_val;
+    return !str.empty() ? RoundToInteger(StringToDouble(str)) : def_val;
 }
 
 void csg_property_set_c::getHexenArgs(uint8_t *arg5) const
@@ -419,8 +419,8 @@ bool csg_brush_c::IntersectRay(float x1, float y1, float z1, float x2, float y2,
     double bz = b.CalcZ(x1, y1);
     double tz = t.CalcZ(x1, y1);
 
-    if (MAX(z1, z2) < bz - 0.1) { return false; }
-    if (MIN(z1, z2) > tz + 0.1) { return false; }
+    if (OBSIDIAN_MAX(z1, z2) < bz - 0.1) { return false; }
+    if (OBSIDIAN_MIN(z1, z2) > tz + 0.1) { return false; }
 
     return true;
 }
@@ -559,11 +559,11 @@ class brush_quad_node_c
 
     bool BoxTouchesThis(double x1, double y1, double x2, double y2) const
     {
-        if (MAX(x1, x2) < lo_x) { return false; }
-        if (MAX(y1, y2) < lo_y) { return false; }
+        if (OBSIDIAN_MAX(x1, x2) < lo_x) { return false; }
+        if (OBSIDIAN_MAX(y1, y2) < lo_y) { return false; }
 
-        if (MIN(x1, x2) > hi_x()) { return false; }
-        if (MIN(y1, y2) > hi_y()) { return false; }
+        if (OBSIDIAN_MIN(x1, x2) > hi_x()) { return false; }
+        if (OBSIDIAN_MIN(y1, y2) > hi_y()) { return false; }
 
         return true;
     }
@@ -626,8 +626,8 @@ class brush_quad_node_c
         double t_delta = B->t.face.getDouble("delta_z", 0);
         double b_delta = B->b.face.getDouble("delta_z", 0);
 
-        int t_z = I_ROUND(B->t.z + t_delta);
-        int b_z = I_ROUND(B->b.z + b_delta);
+        int t_z = RoundToInteger(B->t.z + t_delta);
+        int b_z = RoundToInteger(B->b.z + b_delta);
 
         // skip brushes underneath the floor (or the floor itself)
         if (t_z < floor_h + 1) { return; }
@@ -656,8 +656,8 @@ class brush_quad_node_c
 
             // rounding to integer here, I don't think it is any problem,
             // as the spot polygon-drawing code is fairly robust.
-            shape.push_back(I_ROUND(V->x));
-            shape.push_back(I_ROUND(V->y));
+            shape.push_back(RoundToInteger(V->x));
+            shape.push_back(RoundToInteger(V->y));
         }
 
         SPOT_FillPolygon(content, &shape[0], num_vert);

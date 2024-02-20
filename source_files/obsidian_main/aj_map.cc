@@ -172,12 +172,12 @@ void ParseSectorField(sector_c *sector, const std::string &key,
     }
     else if (key == "texturefloor")
     {
-        std::copy(value.data(), value.data() + MIN(8, value.size()),
+        std::copy(value.data(), value.data() + OBSIDIAN_MIN(8, value.size()),
                   sector->floor_tex);
     }
     else if (key == "textureceiling")
     {
-        std::copy(value.data(), value.data() + MIN(8, value.size()),
+        std::copy(value.data(), value.data() + OBSIDIAN_MIN(8, value.size()),
                   sector->ceil_tex);
     }
     else if (key == "lightlevel")
@@ -199,17 +199,17 @@ void ParseSidedefField(sidedef_c *side, const std::string &key,
     else if (key == "offsety") { side->y_offset = ajparse::LEX_Double(value); }
     else if (key == "texturetop")
     {
-        std::copy(value.data(), value.data() + MIN(8, value.size()),
+        std::copy(value.data(), value.data() + OBSIDIAN_MIN(8, value.size()),
                   side->upper_tex);
     }
     else if (key == "texturebottom")
     {
-        std::copy(value.data(), value.data() + MIN(8, value.size()),
+        std::copy(value.data(), value.data() + OBSIDIAN_MIN(8, value.size()),
                   side->lower_tex);
     }
     else if (key == "texturemiddle")
     {
-        std::copy(value.data(), value.data() + MIN(8, value.size()),
+        std::copy(value.data(), value.data() + OBSIDIAN_MIN(8, value.size()),
                   side->mid_tex);
     }
     else if (key == "sector")
@@ -874,8 +874,8 @@ bool LoadLinedefs()
         end->ref_count++;
 
         /* check for zero-length line */
-        if ((fabs(start->x - end->x) < DIST_EPSILON) &&
-            (fabs(start->y - end->y) < DIST_EPSILON))
+        if ((fabs(start->x - end->x) < kDistanceEpsilon) &&
+            (fabs(start->y - end->y) < kDistanceEpsilon))
         {
             ErrorPrintf("Linedef #%d has zero length.\n", i);
         }
@@ -925,8 +925,8 @@ bool LoadLinedefsHexen()
         end->ref_count++;
 
         /* check for zero-length line */
-        if ((fabs(start->x - end->x) < DIST_EPSILON) &&
-            (fabs(start->y - end->y) < DIST_EPSILON))
+        if ((fabs(start->x - end->x) < kDistanceEpsilon) &&
+            (fabs(start->y - end->y) < kDistanceEpsilon))
         {
             ErrorPrintf("Linedef #%d has zero length.\n", i);
         }
@@ -975,11 +975,11 @@ void DetermineMapLimits()
         int x2 = (int)L->end->x;
         int y2 = (int)L->end->y;
 
-        limit_x1 = MIN(limit_x1, MIN(x1, x2));
-        limit_y1 = MIN(limit_y1, MIN(y1, y2));
+        limit_x1 = OBSIDIAN_MIN(limit_x1, OBSIDIAN_MIN(x1, x2));
+        limit_y1 = OBSIDIAN_MIN(limit_y1, OBSIDIAN_MIN(y1, y2));
 
-        limit_x2 = MAX(limit_x2, MAX(x1, x2));
-        limit_y2 = MAX(limit_y2, MAX(y1, y2));
+        limit_x2 = OBSIDIAN_MAX(limit_x2, OBSIDIAN_MAX(x1, x2));
+        limit_y2 = OBSIDIAN_MAX(limit_y2, OBSIDIAN_MAX(y1, y2));
     }
 
     DebugPrintf("Map goes from (%d,%d) to (%d,%d)\n", limit_x1, limit_y1,
@@ -1018,11 +1018,11 @@ void CheckSectorIsDummy(sector_c *sec)
             int x = pass ? line->end->x : line->start->x;
             int y = pass ? line->end->y : line->start->y;
 
-            bound_x1 = MIN(bound_x1, x);
-            bound_y1 = MIN(bound_y1, y);
+            bound_x1 = OBSIDIAN_MIN(bound_x1, x);
+            bound_y1 = OBSIDIAN_MIN(bound_y1, y);
 
-            bound_x2 = MAX(bound_x2, x);
-            bound_y2 = MAX(bound_y2, y);
+            bound_x2 = OBSIDIAN_MAX(bound_x2, x);
+            bound_y2 = OBSIDIAN_MAX(bound_y2, y);
         }
     }
 
@@ -1299,7 +1299,7 @@ void vertex_c::AddTip(double dx, double dy, sector_c *left, sector_c *right)
 
     for (after = tip_set; after && after->next; after = after->next) {}
 
-    while (after && tip->angle + ANG_EPSILON < after->angle)
+    while (after && tip->angle + kAngleEpsilon < after->angle)
     {
         after = after->prev;
     }
@@ -1451,8 +1451,8 @@ sector_c *vertex_c::CheckOpen(double dx, double dy) const
 
     for (tip = tip_set; tip; tip = tip->next)
     {
-        if (fabs(tip->angle - angle) < ANG_EPSILON ||
-            fabs(tip->angle - angle) > (360.0 - ANG_EPSILON))
+        if (fabs(tip->angle - angle) < kAngleEpsilon ||
+            fabs(tip->angle - angle) > (360.0 - kAngleEpsilon))
         {
             // hit a line -- hence not open
             return NULL;
@@ -1465,7 +1465,7 @@ sector_c *vertex_c::CheckOpen(double dx, double dy) const
 
     for (tip = tip_set; tip; tip = tip->next)
     {
-        if (angle + ANG_EPSILON < tip->angle)
+        if (angle + kAngleEpsilon < tip->angle)
         {
             // found it
             return tip->right;

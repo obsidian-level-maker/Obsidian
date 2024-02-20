@@ -104,7 +104,7 @@ static int ConvertTraceNode(quake_node_c *node, int &index_var)
     int side = 0;
 
     // ensure tnode planes are positive
-    if ((-nx >= MAX(fy, fz)) || (-ny >= MAX(fx, fz)) || (-nz >= MAX(fx, fy)))
+    if ((-nx >= OBSIDIAN_MAX(fy, fz)) || (-ny >= OBSIDIAN_MAX(fx, fz)) || (-nz >= OBSIDIAN_MAX(fx, fy)))
     {
         side = 1;
 
@@ -560,7 +560,7 @@ static void FloodAmbientSounds()
 
                         src++;
 
-                        N->ambient_dists[k] = MIN(src, dest);
+                        N->ambient_dists[k] = OBSIDIAN_MIN(src, dest);
                     }
                 }
             }
@@ -621,7 +621,7 @@ struct vis_statistics_t
     {
         int saved = (uncompressed - compressed);
 
-        return MAX(0, saved) * 100.0 / (float)MAX(1, uncompressed);
+        return OBSIDIAN_MAX(0, saved) * 100.0 / (float)OBSIDIAN_MAX(1, uncompressed);
     }
 };
 
@@ -742,7 +742,7 @@ static void CollectRowData(int src_x, int src_y, bool PHS)
 #endif
 
     // update statistics
-    float perc = (v_row_bits - blocked) * 100.0 / (float)MAX(1, v_row_bits);
+    float perc = (v_row_bits - blocked) * 100.0 / (float)OBSIDIAN_MAX(1, v_row_bits);
 
     if (PHS) { phs_stats.AddValue(perc); }
     else { pvs_stats.AddValue(perc); }

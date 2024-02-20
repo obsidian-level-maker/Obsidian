@@ -224,11 +224,11 @@ void NK_FreeStuff()
 
 static void NK_MakeBasicWall(nukem_sector_c *S, snag_c *snag)
 {
-    int x1 = I_ROUND(snag->x1 * NK_WALL_MUL);
-    int y1 = I_ROUND(-snag->y1 * NK_WALL_MUL);
+    int x1 = RoundToInteger(snag->x1 * NK_WALL_MUL);
+    int y1 = RoundToInteger(-snag->y1 * NK_WALL_MUL);
 
-    int x2 = I_ROUND(snag->x2 * NK_WALL_MUL);
-    int y2 = I_ROUND(-snag->y2 * NK_WALL_MUL);
+    int x2 = RoundToInteger(snag->x2 * NK_WALL_MUL);
+    int y2 = RoundToInteger(-snag->y2 * NK_WALL_MUL);
 
     if (x1 == x2 && y1 == y2) { return; }
 
@@ -265,7 +265,7 @@ static void NK_DoLightingBrush(...)
         csg_property_set_c *b_face = &B->b.face;
 
         double raw = b_face->getInt("light", t_face->getInt("light"));
-        int light = I_ROUND(raw * 256);
+        int light = RoundToInteger(raw * 256);
 
         if (light < 0)
         {
@@ -631,9 +631,9 @@ void nukem_sector_c::WriteSprites()
     {
         csg_entity_c *E = entities[i];
 
-        int x = I_ROUND(E->x * NK_WALL_MUL);
-        int y = I_ROUND(-E->y * NK_WALL_MUL);
-        int z = I_ROUND(E->z * NK_HEIGHT_MUL);
+        int x = RoundToInteger(E->x * NK_WALL_MUL);
+        int y = RoundToInteger(-E->y * NK_WALL_MUL);
+        int z = RoundToInteger(E->z * NK_HEIGHT_MUL);
 
         int type = atoi(E->id.c_str());
 
@@ -672,8 +672,8 @@ void nukem_sector_c::Write()
 {
     int visibility = 1;
 
-    int f_h = I_ROUND(floor.h * NK_HEIGHT_MUL);
-    int c_h = I_ROUND(ceil.h * NK_HEIGHT_MUL);
+    int f_h = RoundToInteger(floor.h * NK_HEIGHT_MUL);
+    int c_h = RoundToInteger(ceil.h * NK_HEIGHT_MUL);
 
     NK_AddSector(first_wall, num_walls, visibility, f_h, floor.pic, c_h,
                  ceil.pic, ceil.flags, lotag, hitag);

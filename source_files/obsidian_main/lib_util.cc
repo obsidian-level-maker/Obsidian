@@ -342,7 +342,7 @@ double CalcAngle(double sx, double sy, double ex, double ey)
 
     if (fabs(ey) < 0.0001) { return (ex > 0) ? 0.0 : 180.0; }
 
-    double angle = atan2(ey, ex) * 180.0 / M_PI;
+    double angle = atan2(ey, ex) * 180.0 / kPiApproximate;
 
     if (angle < 0) { angle += 360.0; }
 

@@ -131,9 +131,9 @@ class infinite_line_c
     {
         int hash;
 
-        hash = IntHash(I_ROUND(x * 1.4));
-        hash = IntHash(I_ROUND(y * 1.4) ^ hash);
-        hash = IntHash(I_ROUND(z * 1.4) ^ hash);
+        hash = IntHash(RoundToInteger(x * 1.4));
+        hash = IntHash(RoundToInteger(y * 1.4) ^ hash);
+        hash = IntHash(RoundToInteger(z * 1.4) ^ hash);
 
         return hash;
     }

@@ -141,7 +141,7 @@ static void fourn(float data[], int nn[], int ndim, int isign)
         while (ifp1 < ip2)
         {
             ifp2  = ifp1 << 1;
-            theta = isign * (M_PI * 2) / (ifp2 / ip1);
+            theta = isign * (kPiApproximate * 2) / (ifp2 / ip1);
             wtemp = sin(0.5 * theta);
             wpr   = -2.0 * wtemp * wtemp;
             wpi   = sin(theta);
@@ -198,7 +198,7 @@ static double rand_gauss(void)
     return sum * gauss_mul - gauss_add;
 }
 
-static double rand_phase(void) { return 2 * M_PI * xoshiro_Double(); }
+static double rand_phase(void) { return 2 * kPiApproximate * xoshiro_Double(); }
 
 /*  SPECTRALSYNTH  --  Spectrally  synthesized  fractal  motion in two
                        dimensions.  This algorithm is given under  the
@@ -279,8 +279,8 @@ static void copy_and_scale(float *buf)
         {
             double r = Real(i, j);
 
-            rmin = MIN(rmin, r);
-            rmax = MAX(rmax, r);
+            rmin = OBSIDIAN_MIN(rmin, r);
+            rmax = OBSIDIAN_MAX(rmax, r);
         }
     }
 

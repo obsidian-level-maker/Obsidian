@@ -138,20 +138,20 @@ class obbuildinfo_t : public buildinfo_t
 
         va_list arg_ptr;
 
-        static char buffer[MSG_BUF_LEN];
+        static char buffer[kMessageBufferLength];
 
         va_start(arg_ptr, fmt);
-        vsnprintf(buffer, MSG_BUF_LEN - 1, fmt, arg_ptr);
+        vsnprintf(buffer, kMessageBufferLength - 1, fmt, arg_ptr);
         va_end(arg_ptr);
 
-        buffer[MSG_BUF_LEN - 1] = 0;
+        buffer[kMessageBufferLength - 1] = 0;
 
         LogPrintf("%s\n", buffer);
     }
 
     void Debug(const char *fmt, ...)
     {
-        static char buffer[MSG_BUF_LEN];
+        static char buffer[kMessageBufferLength];
 
         va_list args;
 
@@ -169,13 +169,13 @@ class obbuildinfo_t : public buildinfo_t
     {
         va_list arg_ptr;
 
-        static char buffer[MSG_BUF_LEN];
+        static char buffer[kMessageBufferLength];
 
         va_start(arg_ptr, fmt);
-        vsnprintf(buffer, MSG_BUF_LEN - 1, fmt, arg_ptr);
+        vsnprintf(buffer, kMessageBufferLength - 1, fmt, arg_ptr);
         va_end(arg_ptr);
 
-        buffer[MSG_BUF_LEN - 1] = 0;
+        buffer[kMessageBufferLength - 1] = 0;
 
         ajbsp::CloseWad();
 
@@ -531,15 +531,15 @@ int Doom::v094_end_level(lua_State *L)
 
 void Doom::HeaderPrintf(const char *str, ...)
 {
-    static char message_buf[MSG_BUF_LEN];
+    static char message_buf[kMessageBufferLength];
 
     va_list args;
 
     va_start(args, str);
-    vsnprintf(message_buf, MSG_BUF_LEN, str, args);
+    vsnprintf(message_buf, kMessageBufferLength, str, args);
     va_end(args);
 
-    message_buf[MSG_BUF_LEN - 1] = 0;
+    message_buf[kMessageBufferLength - 1] = 0;
 
     header_lump->Append(message_buf, strlen(message_buf));
 }

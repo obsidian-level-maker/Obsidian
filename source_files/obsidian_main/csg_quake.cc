@@ -181,15 +181,15 @@ class quake_group_c
         {
             const quake_side_c *S = sides[i];
 
-            double x1 = MIN(S->x1, S->x2);
-            double y1 = MIN(S->y1, S->y2);
-            double x2 = MAX(S->x1, S->x2);
-            double y2 = MAX(S->y1, S->y2);
+            double x1 = OBSIDIAN_MIN(S->x1, S->x2);
+            double y1 = OBSIDIAN_MIN(S->y1, S->y2);
+            double x2 = OBSIDIAN_MAX(S->x1, S->x2);
+            double y2 = OBSIDIAN_MAX(S->y1, S->y2);
 
-            *min_x = MIN(*min_x, x1);
-            *min_y = MIN(*min_y, y1);
-            *max_x = MAX(*max_x, x2);
-            *max_y = MAX(*max_y, y2);
+            *min_x = OBSIDIAN_MIN(*min_x, x1);
+            *min_y = OBSIDIAN_MIN(*min_y, y1);
+            *max_x = OBSIDIAN_MAX(*max_x, x2);
+            *max_y = OBSIDIAN_MAX(*max_y, y2);
         }
     }
 
@@ -274,8 +274,8 @@ int quake_plane_c::BrushSide(csg_brush_c *B, float epsilon) const
 
             float d = PointDist(x, y, z);
 
-            min_d = MIN(min_d, d);
-            max_d = MAX(max_d, d);
+            min_d = OBSIDIAN_MIN(min_d, d);
+            max_d = OBSIDIAN_MAX(max_d, d);
         }
     }
 
@@ -491,7 +491,7 @@ static void AddIntersection(std::vector<intersect_t> &cut_list, double along,
     intersect_t new_cut;
 
     new_cut.along  = along;
-    new_cut.q_dist = I_ROUND(along * 21.6f);
+    new_cut.q_dist = RoundToInteger(along * 21.6f);
 
     new_cut.dir   = dir;
     new_cut.kind  = kind;
@@ -566,7 +566,7 @@ static bool TestIntersectionOpen(std::vector<intersect_t> &cuts, int first,
             else { angle = 180 - angle; }
         }
 
-        if (fabs(angle) + ANG_EPSILON < fabs(cl_angle))
+        if (fabs(angle) + kAngleEpsilon < fabs(cl_angle))
         {
             closest  = i;
             cl_angle = angle;
@@ -575,7 +575,7 @@ static bool TestIntersectionOpen(std::vector<intersect_t> &cuts, int first,
         // it is normal for two segs to touch at a partition at the same
         // place but facing opposite directions.  The _vital_ thing here
         // is to pick the OPEN one.
-        else if (fabs(angle - cl_angle) < ANG_EPSILON && cuts[i].dir == dir)
+        else if (fabs(angle - cl_angle) < kAngleEpsilon && cuts[i].dir == dir)
         {
             closest = i;
         }
@@ -673,11 +673,11 @@ static void CheckClusterEdges(quake_group_c &group, int cx, int cy)
 
         if (S->snag && !S->TwoSided()) { continue; }
 
-        if (MAX(S->y1, S->y2) > y2 - 2) { closed_N = false; }
-        if (MIN(S->y1, S->y2) < y1 + 2) { closed_S = false; }
+        if (OBSIDIAN_MAX(S->y1, S->y2) > y2 - 2) { closed_N = false; }
+        if (OBSIDIAN_MIN(S->y1, S->y2) < y1 + 2) { closed_S = false; }
 
-        if (MAX(S->x1, S->x2) > x2 - 2) { closed_E = false; }
-        if (MIN(S->x1, S->x2) < x1 + 2) { closed_W = false; }
+        if (OBSIDIAN_MAX(S->x1, S->x2) > x2 - 2) { closed_E = false; }
+        if (OBSIDIAN_MIN(S->x1, S->x2) < x1 + 2) { closed_W = false; }
     }
 
     // send data to vis code
@@ -698,8 +698,8 @@ static int XY_BrushSide(const csg_brush_c *B, const quake_side_c *part)
 
         float d = PerpDist(V->x, V->y, part->x1, part->y1, part->x2, part->y2);
 
-        min_d = MIN(min_d, d);
-        max_d = MAX(max_d, d);
+        min_d = OBSIDIAN_MIN(min_d, d);
+        max_d = OBSIDIAN_MAX(max_d, d);
     }
 
     if (min_d > -Q_EPSILON) { return +1; }
@@ -868,13 +868,13 @@ static bool FindPartition_XY(quake_group_c &group, quake_side_c *part,
                 part->x1 = (sx1 + sw / 2) * CLUSTER_SIZE;
                 part->y1 = gy1;
                 part->x2 = part->x1;
-                part->y2 = MAX(gy2, gy1 + 4);
+                part->y2 = OBSIDIAN_MAX(gy2, gy1 + 4);
             }
             else
             {
                 part->x1 = gx1;
                 part->y1 = (sy1 + sh / 2) * CLUSTER_SIZE;
-                part->x2 = MAX(gx2, gx1 + 4);
+                part->x2 = OBSIDIAN_MAX(gx2, gx1 + 4);
                 part->y2 = part->y1;
             }
 
@@ -1100,10 +1100,10 @@ void quake_face_c::ST_Bounds(double *min_s, double *min_t, double *max_s,
         double ss = Calc_S(&verts[i]);
         double tt = Calc_T(&verts[i]);
 
-        *min_s = MIN(*min_s, ss);
-        *max_s = MAX(*max_s, ss);
-        *min_t = MIN(*min_t, tt);
-        *max_t = MAX(*max_t, tt);
+        *min_s = OBSIDIAN_MIN(*min_s, ss);
+        *max_s = OBSIDIAN_MAX(*max_s, ss);
+        *min_t = OBSIDIAN_MIN(*min_t, tt);
+        *max_t = OBSIDIAN_MAX(*max_t, tt);
     }
 
     if (*min_s > *max_s) { *min_s = *max_s = 0; }
@@ -1344,10 +1344,10 @@ static void ClipWallFace(quake_node_c *node, quake_leaf_c *leaf,
     if ((f_Lz2 < g_Lz1 + Z_EPSILON) && (f_Rz2 < g_Rz1 + Z_EPSILON)) { return; }
 
     // subdivide faces which are too tall  [ recursively... ]
-    float len1 = MIN(f_Lz2, g_Lz2) - MAX(f_Lz1, g_Lz1);
-    float len2 = MIN(f_Rz2, g_Rz2) - MAX(f_Rz1, g_Rz1);
+    float len1 = OBSIDIAN_MIN(f_Lz2, g_Lz2) - OBSIDIAN_MAX(f_Lz1, g_Lz1);
+    float len2 = OBSIDIAN_MIN(f_Rz2, g_Rz2) - OBSIDIAN_MAX(f_Rz1, g_Rz1);
 
-    if (MAX(len1, len2) > FACE_MAX_SIZE)
+    if (OBSIDIAN_MAX(len1, len2) > FACE_MAX_SIZE)
     {
         double f_Lmz = (f_Lz1 + f_Lz2) * 0.5;
         double f_Rmz = (f_Rz1 + f_Rz2) * 0.5;
@@ -1409,8 +1409,8 @@ static void ClipWallFace(quake_node_c *node, quake_leaf_c *leaf,
     }
     else
     {
-        double z1 = MAX(f_Lz1, g_Lz1);
-        double z2 = MIN(f_Lz2, g_Lz2);
+        double z1 = OBSIDIAN_MAX(f_Lz1, g_Lz1);
+        double z2 = OBSIDIAN_MIN(f_Lz2, g_Lz2);
 
         F->AddVert(S->x1, S->y1, z1);
 
@@ -1442,8 +1442,8 @@ static void ClipWallFace(quake_node_c *node, quake_leaf_c *leaf,
     }
     else
     {
-        double z1 = MAX(f_Rz1, g_Rz1);
-        double z2 = MIN(f_Rz2, g_Rz2);
+        double z1 = OBSIDIAN_MAX(f_Rz1, g_Rz1);
+        double z2 = OBSIDIAN_MIN(f_Rz2, g_Rz2);
 
         F->AddVert(S->x2, S->y2, z2);
 
@@ -1598,11 +1598,11 @@ static void Potface_TryMerge(potential_face_t *A, potential_face_t *B)
 
     B->bvert = NULL;
 
-    A->Lz1 = MIN(A->Lz1, B->Lz1);
-    A->Lz2 = MAX(A->Lz2, B->Lz2);
+    A->Lz1 = OBSIDIAN_MIN(A->Lz1, B->Lz1);
+    A->Lz2 = OBSIDIAN_MAX(A->Lz2, B->Lz2);
 
-    A->Rz1 = MIN(A->Rz1, B->Rz1);
-    A->Rz2 = MAX(A->Rz2, B->Rz2);
+    A->Rz1 = OBSIDIAN_MIN(A->Rz1, B->Rz1);
+    A->Rz2 = OBSIDIAN_MAX(A->Rz2, B->Rz2);
 }
 
 static void CreateWallFaces(quake_group_c &group, quake_leaf_c *leaf,
@@ -2053,8 +2053,8 @@ void quake_bbox_c::Merge(const quake_bbox_c &other)
 {
     for (int b = 0; b < 3; b++)
     {
-        mins[b] = MIN(mins[b], other.mins[b]);
-        maxs[b] = MAX(maxs[b], other.maxs[b]);
+        mins[b] = OBSIDIAN_MIN(mins[b], other.mins[b]);
+        maxs[b] = OBSIDIAN_MAX(maxs[b], other.maxs[b]);
     }
 }
 

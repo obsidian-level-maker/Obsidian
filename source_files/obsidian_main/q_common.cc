@@ -114,30 +114,30 @@ void qLump_c::RawPrintf(const char *str)
 
 void qLump_c::Printf(const char *str, ...)
 {
-    static char msg_buf[MSG_BUF_LEN];
+    static char msg_buf[kMessageBufferLength];
 
     va_list args;
 
     va_start(args, str);
-    vsnprintf(msg_buf, MSG_BUF_LEN - 1, str, args);
+    vsnprintf(msg_buf, kMessageBufferLength - 1, str, args);
     va_end(args);
 
-    msg_buf[MSG_BUF_LEN - 2] = 0;
+    msg_buf[kMessageBufferLength - 2] = 0;
 
     RawPrintf(msg_buf);
 }
 
 void qLump_c::KeyPair(const char *key, const char *val, ...)
 {
-    static char v_buffer[MSG_BUF_LEN];
+    static char v_buffer[kMessageBufferLength];
 
     va_list args;
 
     va_start(args, val);
-    vsnprintf(v_buffer, MSG_BUF_LEN - 1, val, args);
+    vsnprintf(v_buffer, kMessageBufferLength - 1, val, args);
     va_end(args);
 
-    v_buffer[MSG_BUF_LEN - 2] = 0;
+    v_buffer[kMessageBufferLength - 2] = 0;
 
     RawPrintf("\"");
     RawPrintf(key);
@@ -184,7 +184,7 @@ static uint16_t AddRawPlane(const dplane_t *plane, bool *was_new)
 
     if (raw_plane.dist == -0.0f) { raw_plane.dist = +0.0f; }
 
-    int hash = I_ROUND(raw_plane.dist * 1.1);
+    int hash = RoundToInteger(raw_plane.dist * 1.1);
 
     hash = hash & (PLANE_HASH_SIZE - 1);
 
@@ -259,7 +259,7 @@ uint16_t BSP_AddPlane(float x, float y, float z, float nx, float ny, float nz,
     float az = fabs(nz);
 
     // flip plane to make major axis positive
-    if ((-nx >= MAX(ay, az)) || (-ny >= MAX(ax, az)) || (-nz >= MAX(ax, ay)))
+    if ((-nx >= OBSIDIAN_MAX(ay, az)) || (-ny >= OBSIDIAN_MAX(ax, az)) || (-nz >= OBSIDIAN_MAX(ax, ay)))
     {
         did_flip = true;
 
@@ -282,8 +282,8 @@ uint16_t BSP_AddPlane(float x, float y, float z, float nx, float ny, float nz,
     if (ax > 0.999) { raw_plane.type = PLANE_X; }
     else if (ay > 0.999) { raw_plane.type = PLANE_Y; }
     else if (az > 0.999) { raw_plane.type = PLANE_Z; }
-    else if (ax >= MAX(ay, az)) { raw_plane.type = PLANE_ANYX; }
-    else if (ay >= MAX(ax, az)) { raw_plane.type = PLANE_ANYY; }
+    else if (ax >= OBSIDIAN_MAX(ay, az)) { raw_plane.type = PLANE_ANYX; }
+    else if (ay >= OBSIDIAN_MAX(ax, az)) { raw_plane.type = PLANE_ANYY; }
     else { raw_plane.type = PLANE_ANYZ; }
 
     bool was_new;
@@ -362,7 +362,7 @@ static void BSP_PrepareVertices()
 
 uint16_t BSP_AddVertex(float x, float y, float z)
 {
-    int hash = I_ROUND(x * 1.1);
+    int hash = RoundToInteger(x * 1.1);
 
     hash = hash & (VERTEX_HASH_SIZE - 1);
 
@@ -690,7 +690,7 @@ void BSP_WriteEntities(int lump_num, const char *description)
         }
 
         // skip origin when same as default value
-        if ((I_ROUND(E->x) | I_ROUND(E->y) | I_ROUND(E->z)) != 0)
+        if ((RoundToInteger(E->x) | RoundToInteger(E->y) | RoundToInteger(E->z)) != 0)
         {
             lump->KeyPair("origin", "%1.1f %1.1f %1.1f", E->x, E->y, E->z);
         }
@@ -792,7 +792,7 @@ int BSP_NiceMidwayPoint(float low, float extent)
 
     while (pow2 < extent / 7) { pow2 = pow2 << 1; }
 
-    int mid = I_ROUND((low + extent / 2.0f) / pow2) * pow2;
+    int mid = RoundToInteger((low + extent / 2.0f) / pow2) * pow2;
 
     return mid;
 }

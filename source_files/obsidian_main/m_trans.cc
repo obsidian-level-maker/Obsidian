@@ -982,7 +982,7 @@ void Trans_Read_PO_File(FILE *fp)
     po_state.Clear();
 
     // process one line on each iteration
-    static char line[MSG_BUF_LEN];
+    static char line[kMessageBufferLength];
 
     po_state.line_number = 0;
 
