@@ -102,52 +102,52 @@ static inline sidedef_c *SafeLookupSidedef(uint16_t num)
 #define UDMF_LINEDEF 5
 
 void ParseThingField(thing_c *thing, const std::string &key,
-                     ajparse::token_kind_e kind, const std::string &value)
+                     ajparse::TokenKind kind, const std::string &value)
 {
-    if (key == "x") { thing->x = ajparse::LEX_Double(value); }
-    else if (key == "y") { thing->y = ajparse::LEX_Double(value); }
-    else if (key == "height") { thing->height = ajparse::LEX_Double(value); }
-    else if (key == "angle") { thing->angle = ajparse::LEX_Double(value); }
-    else if (key == "type") { thing->type = ajparse::LEX_Double(value); }
+    if (key == "x") { thing->x = ajparse::LexDouble(value); }
+    else if (key == "y") { thing->y = ajparse::LexDouble(value); }
+    else if (key == "height") { thing->height = ajparse::LexDouble(value); }
+    else if (key == "angle") { thing->angle = ajparse::LexDouble(value); }
+    else if (key == "type") { thing->type = ajparse::LexDouble(value); }
     else if (key == "skill1")
     {
-        if (ajparse::LEX_Boolean(value)) { thing->options |= 1; }
+        if (ajparse::LexBoolean(value)) { thing->options |= 1; }
     }
     else if (key == "skill2")
     {
-        if (ajparse::LEX_Boolean(value)) { thing->options |= 1; }
+        if (ajparse::LexBoolean(value)) { thing->options |= 1; }
     }
     else if (key == "skill3")
     {
-        if (ajparse::LEX_Boolean(value)) { thing->options |= 2; }
+        if (ajparse::LexBoolean(value)) { thing->options |= 2; }
     }
     else if (key == "skill4")
     {
-        if (ajparse::LEX_Boolean(value)) { thing->options |= 4; }
+        if (ajparse::LexBoolean(value)) { thing->options |= 4; }
     }
     else if (key == "skill5")
     {
-        if (ajparse::LEX_Boolean(value)) { thing->options |= 4; }
+        if (ajparse::LexBoolean(value)) { thing->options |= 4; }
     }
     else if (key == "ambush")
     {
-        if (ajparse::LEX_Boolean(value)) { thing->options |= 8; }
+        if (ajparse::LexBoolean(value)) { thing->options |= 8; }
     }
     else if (key == "single")
     {
-        if (ajparse::LEX_Boolean(value)) { thing->options &= ~16; }
+        if (ajparse::LexBoolean(value)) { thing->options &= ~16; }
     }
     else if (key == "dm")
     {
-        if (ajparse::LEX_Boolean(value)) { thing->options &= ~32; }
+        if (ajparse::LexBoolean(value)) { thing->options &= ~32; }
     }
     else if (key == "coop")
     {
-        if (ajparse::LEX_Boolean(value)) { thing->options &= ~64; }
+        if (ajparse::LexBoolean(value)) { thing->options &= ~64; }
     }
     else if (key == "friend")
     {
-        if (ajparse::LEX_Boolean(value)) { thing->options |= 128; }
+        if (ajparse::LexBoolean(value)) { thing->options |= 128; }
     }
     else  // Non-vanilla spec values? - Dasho
     {
@@ -156,19 +156,19 @@ void ParseThingField(thing_c *thing, const std::string &key,
 }
 
 void ParseVertexField(vertex_c *vertex, const std::string &key,
-                      ajparse::token_kind_e kind, const std::string &value)
+                      ajparse::TokenKind kind, const std::string &value)
 {
-    if (key == "x") { vertex->x = ajparse::LEX_Double(value); }
-    else if (key == "y") { vertex->y = ajparse::LEX_Double(value); }
+    if (key == "x") { vertex->x = ajparse::LexDouble(value); }
+    else if (key == "y") { vertex->y = ajparse::LexDouble(value); }
 }
 
 void ParseSectorField(sector_c *sector, const std::string &key,
-                      ajparse::token_kind_e kind, const std::string &value)
+                      ajparse::TokenKind kind, const std::string &value)
 {
-    if (key == "heightfloor") { sector->floor_h = ajparse::LEX_Double(value); }
+    if (key == "heightfloor") { sector->floor_h = ajparse::LexDouble(value); }
     else if (key == "heightceiling")
     {
-        sector->ceil_h = ajparse::LEX_Double(value);
+        sector->ceil_h = ajparse::LexDouble(value);
     }
     else if (key == "texturefloor")
     {
@@ -182,10 +182,10 @@ void ParseSectorField(sector_c *sector, const std::string &key,
     }
     else if (key == "lightlevel")
     {
-        sector->light = ajparse::LEX_Double(value);
+        sector->light = ajparse::LexDouble(value);
     }
-    else if (key == "special") { sector->special = ajparse::LEX_Double(value); }
-    else if (key == "id") { sector->tag = ajparse::LEX_Double(value); }
+    else if (key == "special") { sector->special = ajparse::LexDouble(value); }
+    else if (key == "id") { sector->tag = ajparse::LexDouble(value); }
     else  // Non-vanilla spec values? - Dasho
     {
         sector->misc_vals.try_emplace({key.c_str(), value.c_str()});
@@ -193,10 +193,10 @@ void ParseSectorField(sector_c *sector, const std::string &key,
 }
 
 void ParseSidedefField(sidedef_c *side, const std::string &key,
-                       ajparse::token_kind_e kind, const std::string &value)
+                       ajparse::TokenKind kind, const std::string &value)
 {
-    if (key == "offsetx") { side->x_offset = ajparse::LEX_Double(value); }
-    else if (key == "offsety") { side->y_offset = ajparse::LEX_Double(value); }
+    if (key == "offsetx") { side->x_offset = ajparse::LexDouble(value); }
+    else if (key == "offsety") { side->y_offset = ajparse::LexDouble(value); }
     else if (key == "texturetop")
     {
         std::copy(value.data(), value.data() + OBSIDIAN_MIN(8, value.size()),
@@ -214,7 +214,7 @@ void ParseSidedefField(sidedef_c *side, const std::string &key,
     }
     else if (key == "sector")
     {
-        int num = ajparse::LEX_Double(value);
+        int num = ajparse::LexDouble(value);
 
         if (num < 0 || num >= num_sectors)
             ErrorPrintf("AJ_Poly: illegal sector number #%d\n", (int)num);
@@ -225,60 +225,60 @@ void ParseSidedefField(sidedef_c *side, const std::string &key,
 }
 
 void ParseLinedefField(linedef_c *line, const std::string &key,
-                       ajparse::token_kind_e kind, const std::string &value)
+                       ajparse::TokenKind kind, const std::string &value)
 {
     if (key == "v1")
     {
-        line->start = SafeLookupVertex(ajparse::LEX_Double(value));
+        line->start = SafeLookupVertex(ajparse::LexDouble(value));
     }
     else if (key == "v2")
     {
-        line->end = SafeLookupVertex(ajparse::LEX_Double(value));
+        line->end = SafeLookupVertex(ajparse::LexDouble(value));
     }
-    else if (key == "special") { line->special = ajparse::LEX_Double(value); }
+    else if (key == "special") { line->special = ajparse::LexDouble(value); }
     else if (key == "blocking")
     {
-        if (ajparse::LEX_Boolean(value)) { line->flags |= 0x0001; }
+        if (ajparse::LexBoolean(value)) { line->flags |= 0x0001; }
     }
     else if (key == "blockmonsters")
     {
-        if (ajparse::LEX_Boolean(value)) { line->flags |= 0x0002; }
+        if (ajparse::LexBoolean(value)) { line->flags |= 0x0002; }
     }
     else if (key == "twosided")
     {
-        if (ajparse::LEX_Boolean(value)) { line->flags |= 0x0004; }
+        if (ajparse::LexBoolean(value)) { line->flags |= 0x0004; }
     }
     else if (key == "dontpegtop")
     {
-        if (ajparse::LEX_Boolean(value)) { line->flags |= 0x0008; }
+        if (ajparse::LexBoolean(value)) { line->flags |= 0x0008; }
     }
     else if (key == "dontpegbottom")
     {
-        if (ajparse::LEX_Boolean(value)) { line->flags |= 0x0010; }
+        if (ajparse::LexBoolean(value)) { line->flags |= 0x0010; }
     }
     else if (key == "secret")
     {
-        if (ajparse::LEX_Boolean(value)) { line->flags |= 0x0020; }
+        if (ajparse::LexBoolean(value)) { line->flags |= 0x0020; }
     }
     else if (key == "blocksound")
     {
-        if (ajparse::LEX_Boolean(value)) { line->flags |= 0x0040; }
+        if (ajparse::LexBoolean(value)) { line->flags |= 0x0040; }
     }
     else if (key == "dontdraw")
     {
-        if (ajparse::LEX_Boolean(value)) { line->flags |= 0x0080; }
+        if (ajparse::LexBoolean(value)) { line->flags |= 0x0080; }
     }
     else if (key == "mapped")
     {
-        if (ajparse::LEX_Boolean(value)) { line->flags |= 0x0100; }
+        if (ajparse::LexBoolean(value)) { line->flags |= 0x0100; }
     }
     else if (key == "passuse")
     {
-        if (ajparse::LEX_Boolean(value)) { line->flags |= 0x0200; }
+        if (ajparse::LexBoolean(value)) { line->flags |= 0x0200; }
     }
     else if (key == "sidefront")
     {
-        int num = ajparse::LEX_Double(value);
+        int num = ajparse::LexDouble(value);
 
         if (num < 0 || num >= (int)num_sidedefs)
             line->right = NULL;
@@ -287,7 +287,7 @@ void ParseLinedefField(linedef_c *line, const std::string &key,
     }
     else if (key == "sideback")
     {
-        int num = ajparse::LEX_Double(value);
+        int num = ajparse::LexDouble(value);
 
         if (num < 0 || num >= (int)num_sidedefs)
             line->left = NULL;
@@ -297,7 +297,7 @@ void ParseLinedefField(linedef_c *line, const std::string &key,
     else { line->misc_vals.try_emplace({key.c_str(), value.c_str()}); }
 }
 
-void ParseUDMF_Block(ajparse::lexer_c &lex, int cur_type)
+void ParseUDMF_Block(ajparse::Lexer &lex, int cur_type)
 {
     vertex_c  *vertex = NULL;
     thing_c   *thing  = NULL;
@@ -333,12 +333,12 @@ void ParseUDMF_Block(ajparse::lexer_c &lex, int cur_type)
         std::string key;
         std::string value;
 
-        ajparse::token_kind_e tok = lex.Next(key);
+        ajparse::TokenKind tok = lex.Next(key);
 
-        if (tok == ajparse::TOK_EOF)
+        if (tok == ajparse::kTokenEOF)
             ErrorPrintf("Malformed TEXTMAP lump: unclosed block\n");
 
-        if (tok != ajparse::TOK_Ident)
+        if (tok != ajparse::kTokenIdentifier)
             ErrorPrintf("Malformed TEXTMAP lump: missing key\n");
 
         if (!lex.Match("="))
@@ -346,7 +346,7 @@ void ParseUDMF_Block(ajparse::lexer_c &lex, int cur_type)
 
         tok = lex.Next(value);
 
-        if (tok == ajparse::TOK_EOF || tok == ajparse::TOK_ERROR ||
+        if (tok == ajparse::kTokenEOF || tok == ajparse::kTokenError ||
             value == "}")
             ErrorPrintf("Malformed TEXTMAP lump: missing value\n");
 
@@ -391,16 +391,16 @@ void ParseUDMF_Pass(const std::string &data, int pass)
     // pass = 2 : sidedefs
     // pass = 3 : linedefs
 
-    ajparse::lexer_c lex(data);
+    ajparse::Lexer lex(data);
 
     for (;;)
     {
         std::string           section;
-        ajparse::token_kind_e tok = lex.Next(section);
+        ajparse::TokenKind tok = lex.Next(section);
 
-        if (tok == ajparse::TOK_EOF) return;
+        if (tok == ajparse::kTokenEOF) return;
 
-        if (tok != ajparse::TOK_Ident)
+        if (tok != ajparse::kTokenIdentifier)
         {
             ErrorPrintf("Malformed TEXTMAP lump.\n");
             return;

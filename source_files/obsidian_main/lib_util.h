@@ -23,6 +23,60 @@
 
 #include <string>
 
+/* character utilities */
+
+inline bool IsUpperASCII(int character)
+{
+    return (character > '@' && character < '[');
+}
+inline bool IsLowerASCII(int character)
+{
+    return (character > '`' && character < '{');
+}
+inline bool IsAlphaASCII(int character)
+{
+    return ((character > '@' && character < '[') ||
+            (character > '`' && character < '{'));
+}
+inline bool IsAlphanumericASCII(int character)
+{
+    return ((character > '@' && character < '[') ||
+            (character > '`' && character < '{') ||
+            (character > '/' && character < ':'));
+}
+inline bool IsDigitASCII(int character)
+{
+    return (character > '/' && character < ':');
+}
+inline bool IsXDigitASCII(int character)
+{
+    return ((character > '@' && character < 'G') ||
+            (character > '`' && character < 'g') ||
+            (character > '/' && character < ':'));
+}
+inline bool IsPrintASCII(int character)
+{
+    return (character > 0x1F && character < 0x7F);
+}
+inline bool IsSpaceASCII(int character)
+{
+    return ((character > 0x8 && character < 0xE) || character == 0x20);
+}
+inline int ToLowerASCII(int character)
+{
+    if (character > '@' && character < '[')
+        return character ^ 0x20;
+    else
+        return character;
+}
+inline int ToUpperASCII(int character)
+{
+    if (character > '`' && character < '{')
+        return character ^ 0x20;
+    else
+        return character;
+}
+
 /* string utilities */
 
 #ifdef _WIN32

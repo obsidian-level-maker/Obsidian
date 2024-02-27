@@ -1266,35 +1266,35 @@ static inline int VanillaSegAngle(const seg_t *seg)
 #define UDMF_LINEDEF 5
 
 void ParseThingField(thing_t *thing, const std::string &key,
-                     ajparse::token_kind_e kind, const std::string &value)
+                     ajparse::TokenKind kind, const std::string &value)
 {
-    if (key == "x") thing->x = ajparse::LEX_Double(value);
+    if (key == "x") thing->x = ajparse::LexDouble(value);
 
-    if (key == "y") thing->y = ajparse::LEX_Double(value);
+    if (key == "y") thing->y = ajparse::LexDouble(value);
 
-    if (key == "type") thing->type = ajparse::LEX_Double(value);
+    if (key == "type") thing->type = ajparse::LexDouble(value);
 }
 
 void ParseVertexField(vertex_t *vertex, const std::string &key,
-                      ajparse::token_kind_e kind, const std::string &value)
+                      ajparse::TokenKind kind, const std::string &value)
 {
-    if (key == "x") vertex->x = ajparse::LEX_Double(value);
+    if (key == "x") vertex->x = ajparse::LexDouble(value);
 
-    if (key == "y") vertex->y = ajparse::LEX_Double(value);
+    if (key == "y") vertex->y = ajparse::LexDouble(value);
 }
 
 void ParseSectorField(sector_t *sector, const std::string &key,
-                      ajparse::token_kind_e kind, const std::string &value)
+                      ajparse::TokenKind kind, const std::string &value)
 {
     // nothing actually needed
 }
 
 void ParseSidedefField(sidedef_t *side, const std::string &key,
-                       ajparse::token_kind_e kind, const std::string &value)
+                       ajparse::TokenKind kind, const std::string &value)
 {
     if (key == "sector")
     {
-        int num = ajparse::LEX_Int(value);
+        int num = ajparse::LexInteger(value);
 
         if (num < 0 || num >= num_sectors)
             cur_info->FatalError("illegal sector number #%d\n", (int)num);
@@ -1304,19 +1304,19 @@ void ParseSidedefField(sidedef_t *side, const std::string &key,
 }
 
 void ParseLinedefField(linedef_t *line, const std::string &key,
-                       ajparse::token_kind_e kind, const std::string &value)
+                       ajparse::TokenKind kind, const std::string &value)
 {
-    if (key == "v1") line->start = SafeLookupVertex(ajparse::LEX_Int(value));
+    if (key == "v1") line->start = SafeLookupVertex(ajparse::LexInteger(value));
 
-    if (key == "v2") line->end = SafeLookupVertex(ajparse::LEX_Int(value));
+    if (key == "v2") line->end = SafeLookupVertex(ajparse::LexInteger(value));
 
-    if (key == "special") line->type = ajparse::LEX_Int(value);
+    if (key == "special") line->type = ajparse::LexInteger(value);
 
-    if (key == "twosided") line->two_sided = ajparse::LEX_Boolean(value);
+    if (key == "twosided") line->two_sided = ajparse::LexBoolean(value);
 
     if (key == "sidefront")
     {
-        int num = ajparse::LEX_Int(value);
+        int num = ajparse::LexInteger(value);
 
         if (num < 0 || num >= (int)num_sidedefs)
             line->right = NULL;
@@ -1326,7 +1326,7 @@ void ParseLinedefField(linedef_t *line, const std::string &key,
 
     if (key == "sideback")
     {
-        int num = ajparse::LEX_Int(value);
+        int num = ajparse::LexInteger(value);
 
         if (num < 0 || num >= (int)num_sidedefs)
             line->left = NULL;
@@ -1335,7 +1335,7 @@ void ParseLinedefField(linedef_t *line, const std::string &key,
     }
 }
 
-void ParseUDMF_Block(ajparse::lexer_c &lex, int cur_type)
+void ParseUDMF_Block(ajparse::Lexer &lex, int cur_type)
 {
     vertex_t  *vertex = NULL;
     thing_t   *thing  = NULL;
@@ -1371,12 +1371,12 @@ void ParseUDMF_Block(ajparse::lexer_c &lex, int cur_type)
         std::string key;
         std::string value;
 
-        ajparse::token_kind_e tok = lex.Next(key);
+        ajparse::TokenKind tok = lex.Next(key);
 
-        if (tok == ajparse::TOK_EOF)
+        if (tok == ajparse::kTokenEOF)
             cur_info->FatalError("Malformed TEXTMAP lump: unclosed block\n");
 
-        if (tok != ajparse::TOK_Ident)
+        if (tok != ajparse::kTokenIdentifier)
             cur_info->FatalError("Malformed TEXTMAP lump: missing key\n");
 
         if (!lex.Match("="))
@@ -1384,7 +1384,7 @@ void ParseUDMF_Block(ajparse::lexer_c &lex, int cur_type)
 
         tok = lex.Next(value);
 
-        if (tok == ajparse::TOK_EOF || tok == ajparse::TOK_ERROR ||
+        if (tok == ajparse::kTokenEOF || tok == ajparse::kTokenError ||
             value == "}")
             cur_info->FatalError("Malformed TEXTMAP lump: missing value\n");
 
@@ -1435,16 +1435,16 @@ void ParseUDMF_Pass(const std::string &data, int pass)
     // pass = 2 : sidedefs
     // pass = 3 : linedefs
 
-    ajparse::lexer_c lex(data);
+    ajparse::Lexer lex(data);
 
     for (;;)
     {
         std::string           section;
-        ajparse::token_kind_e tok = lex.Next(section);
+        ajparse::TokenKind tok = lex.Next(section);
 
-        if (tok == ajparse::TOK_EOF) return;
+        if (tok == ajparse::kTokenEOF) return;
 
-        if (tok != ajparse::TOK_Ident)
+        if (tok != ajparse::kTokenIdentifier)
         {
             cur_info->FatalError("Malformed TEXTMAP lump.\n");
             return;
