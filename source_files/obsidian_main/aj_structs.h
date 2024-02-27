@@ -16,8 +16,9 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __AJPOLY_STRUCTS_H__
-#define __AJPOLY_STRUCTS_H__
+#pragma once
+
+#include <stdint.h>
 
 #pragma pack(push, 1)
 typedef struct
@@ -66,13 +67,13 @@ typedef struct
 #pragma pack(push, 1)
 typedef struct
 {
-    uint16_t               start;     // from this vertex...
-    uint16_t               end;       // ... to this vertex
-    uint16_t               flags;     // linedef flags (impassible, etc)
-    uint8_t                type;      // linedef type
-    uint8_t specials[5];  // hexen specials
-    uint16_t               sidedef1;  // right sidedef
-    uint16_t               sidedef2;  // left sidedef
+    uint16_t start;        // from this vertex...
+    uint16_t end;          // ... to this vertex
+    uint16_t flags;        // linedef flags (impassible, etc)
+    uint8_t  type;         // linedef type
+    uint8_t  specials[5];  // hexen specials
+    uint16_t sidedef1;     // right sidedef
+    uint16_t sidedef2;     // left sidedef
 
 } raw_hexen_linedef_t;
 #pragma pack(pop)
@@ -99,7 +100,7 @@ typedef struct
     int16_t ceil_h;   // ceiling height
 
     char floor_tex[8];  // floor texture
-    char  ceil_tex[8];   // ceiling texture
+    char ceil_tex[8];   // ceiling texture
 
     uint16_t light;    // light level (0-255)
     uint16_t special;  // special behaviour (0 = normal, 9 = secret, ...)
@@ -129,13 +130,11 @@ typedef struct
     uint16_t type;     // type of thing
     uint16_t options;  // when appears, deaf, dormant, etc..
 
-    uint8_t                special;  // special type
-    uint8_t arg[5];      // special arguments
+    uint8_t special;  // special type
+    uint8_t arg[5];   // special arguments
 
 } raw_hexen_thing_t;
 #pragma pack(pop)
-
-#endif /* __AJPOLY_STRUCTS_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

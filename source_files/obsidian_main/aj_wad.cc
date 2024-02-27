@@ -16,8 +16,13 @@
 //
 //------------------------------------------------------------------------
 
-#include "aj_local.h"
+#include "aj_wad.h"
+
+#include "aj_poly.h"
+#include "aj_structs.h"
+#include "aj_util.h"
 #include "sys_debug.h"
+#include "sys_endian.h"
 
 #define DEBUG_WAD 0
 

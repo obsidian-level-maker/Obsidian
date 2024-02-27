@@ -16,10 +16,14 @@
 //
 //------------------------------------------------------------------------
 
+#include "aj_poly.h"
+
 #include <stddef.h>
 
-#include "aj_local.h"
+#include "aj_map.h"
+#include "aj_util.h"
 #include "sys_debug.h"
+#include "sys_macro.h"
 
 #define DEBUG_POLY 0
 
@@ -724,9 +728,9 @@ static constexpr std::size_t EDGE_BUFFER_SIZE = 32;
 
 void polygon_c::ClockwiseOrder()
 {
-    edge_c                                *cur;
-    edge_c                               **array;
-    edge_c                                *edge_buffer[EDGE_BUFFER_SIZE];
+    edge_c  *cur;
+    edge_c **array;
+    edge_c  *edge_buffer[EDGE_BUFFER_SIZE];
 
     int i;
     int total = 0;

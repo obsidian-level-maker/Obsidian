@@ -16,8 +16,10 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __AJPOLY_UTIL_H__
-#define __AJPOLY_UTIL_H__
+#pragma once
+
+namespace ajpoly
+{
 
 /* ----- FUNCTIONS ---------------------------------- */
 
@@ -27,7 +29,7 @@ void SetErrorMsg(const char *str, ...);
 // compute angle for a 2D vector
 double ComputeAngle(double dx, double dy);
 
-#endif /* __AJPOLY_UTIL_H__ */
+}  // namespace ajpoly
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

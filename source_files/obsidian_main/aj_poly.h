@@ -16,8 +16,7 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __AJPOLY_API_H__
-#define __AJPOLY_API_H__
+#pragma once
 
 // functions provided by the application
 
@@ -195,9 +194,9 @@ class thing_c
     int angle;
 
     // Hexen support
-    int                    tid;
-    int                    height;
-    int                    special;
+    int     tid;
+    int     height;
+    int     special;
     uint8_t args[5];
 
     // UDMF support
@@ -364,8 +363,6 @@ thing_c   *Thing(int index);
 polygon_c *Polygon(int index);
 
 }  // namespace ajpoly
-
-#endif /* __AJPOLY_API_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

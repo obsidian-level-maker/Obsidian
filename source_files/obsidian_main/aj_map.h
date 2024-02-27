@@ -16,10 +16,12 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __AJPOLY_MAP_H__
-#define __AJPOLY_MAP_H__
+#pragma once
 
 #include "aj_poly.h"
+
+namespace ajpoly
+{
 
 /* ----- OBJECTS --------------------------------- */
 
@@ -70,7 +72,7 @@ ajpoly::vertex_c *NewVertexFromSplit(ajpoly::edge_c *E, double x, double y);
 
 bool VerifyOuterLines();
 
-#endif /* __AJPOLY_MAP_H__ */
+}  // namespace ajpoly
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

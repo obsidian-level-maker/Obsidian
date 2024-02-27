@@ -16,9 +16,16 @@
 //
 //------------------------------------------------------------------------
 
-#include "aj_local.h"
+#include "aj_map.h"
+
 #include "aj_parse.h"
+#include "aj_poly.h"
+#include "aj_structs.h"
+#include "aj_util.h"
+#include "aj_wad.h"
 #include "sys_debug.h"
+#include "sys_endian.h"
+#include "sys_macro.h"
 
 #define DEBUG_LOAD 0
 
@@ -180,10 +187,7 @@ void ParseSectorField(sector_c *sector, const std::string &key,
         std::copy(value.data(), value.data() + OBSIDIAN_MIN(8, value.size()),
                   sector->ceil_tex);
     }
-    else if (key == "lightlevel")
-    {
-        sector->light = ajparse::LexDouble(value);
-    }
+    else if (key == "lightlevel") { sector->light = ajparse::LexDouble(value); }
     else if (key == "special") { sector->special = ajparse::LexDouble(value); }
     else if (key == "id") { sector->tag = ajparse::LexDouble(value); }
     else  // Non-vanilla spec values? - Dasho
@@ -395,7 +399,7 @@ void ParseUDMF_Pass(const std::string &data, int pass)
 
     for (;;)
     {
-        std::string           section;
+        std::string        section;
         ajparse::TokenKind tok = lex.Next(section);
 
         if (tok == ajparse::kTokenEOF) return;
@@ -699,10 +703,8 @@ bool LoadSectors()
         sector->floor_h = AlignedLittleEndianS16(raw->floor_h);
         sector->ceil_h  = AlignedLittleEndianS16(raw->ceil_h);
 
-        std::copy(raw->floor_tex, raw->floor_tex + 8,
-                  sector->floor_tex);
-        std::copy(raw->ceil_tex, raw->ceil_tex + 8,
-                  sector->ceil_tex);
+        std::copy(raw->floor_tex, raw->floor_tex + 8, sector->floor_tex);
+        std::copy(raw->ceil_tex, raw->ceil_tex + 8, sector->ceil_tex);
 
         sector->light   = AlignedLittleEndianU16(raw->light);
         sector->special = AlignedLittleEndianU16(raw->special);
@@ -829,12 +831,9 @@ bool LoadSidedefs()
         side->x_offset = AlignedLittleEndianS16(raw->x_offset);
         side->y_offset = AlignedLittleEndianS16(raw->y_offset);
 
-        std::copy(raw->upper_tex, raw->upper_tex + 8,
-                  side->upper_tex);
-        std::copy(raw->mid_tex, raw->mid_tex + 8,
-                  side->mid_tex);
-        std::copy(raw->lower_tex, raw->lower_tex + 8,
-                  side->lower_tex);
+        std::copy(raw->upper_tex, raw->upper_tex + 8, side->upper_tex);
+        std::copy(raw->mid_tex, raw->mid_tex + 8, side->mid_tex);
+        std::copy(raw->lower_tex, raw->lower_tex + 8, side->lower_tex);
     }
 
     return true;  // OK

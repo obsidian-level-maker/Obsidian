@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include <stdint.h>
+
 // basic constants
 constexpr uint16_t kMessageBufferLength = 2000;
 constexpr double   kDistanceEpsilon     = (1.0 / 128.0);

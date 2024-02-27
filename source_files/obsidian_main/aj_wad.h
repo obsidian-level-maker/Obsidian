@@ -16,16 +16,20 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __AJPOLY_WAD_H__
-#define __AJPOLY_WAD_H__
+#pragma once
 
 #include <stdio.h>
 #include <string.h>
 
+#include <string>
 #include <vector>
 
-// directory entry
+#include "physfs.h"
 
+namespace ajpoly
+{
+
+// directory entry
 class lump_c
 {
    public:
@@ -105,7 +109,7 @@ class wad_c
 
 extern wad_c *the_wad;
 
-#endif /* __AJPOLY_WAD_H__ */
+}  // namespace ajpoly
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

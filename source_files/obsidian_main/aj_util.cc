@@ -16,7 +16,11 @@
 //
 //------------------------------------------------------------------------
 
-#include "aj_local.h"
+#include <math.h>
+#include <stdarg.h>
+#include <stdio.h>
+
+#include "sys_macro.h"
 
 namespace ajpoly
 {
