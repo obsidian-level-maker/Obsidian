@@ -37,6 +37,9 @@ void Trans_UnInit();
 std::string Trans_GetAvailCode(int idx);
 std::string Trans_GetAvailLanguage(int idx);
 
+// Internationalization / Localization
+const char *GetTranslatedText(const char *s);
+
 #endif /* __OBLIGE_I18N_H__ */
 
 //--- editor settings ---

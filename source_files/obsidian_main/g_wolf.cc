@@ -21,6 +21,7 @@
 #include "hdr_lua.h"
 #include "lib_util.h"
 #include "m_lua.h"
+#include "m_trans.h"
 #include "main.h"
 #include "sys_debug.h"
 #include "sys_macro.h"
@@ -394,7 +395,7 @@ bool wolf_game_interface_c::Start(const char *ext)
     {
         LogPrintf("Unable to create map file:\n%s", strerror(errno));
 
-        Main::ProgStatus(_("Error (create file)"));
+        Main::ProgStatus(GetTranslatedText("Error (create file)"));
         return false;
     }
 
@@ -406,7 +407,7 @@ bool wolf_game_interface_c::Start(const char *ext)
 
         LogPrintf("Unable to create %s:\n%s", TEMP_HEADFILE, strerror(errno));
 
-        Main::ProgStatus(_("Error (create file)"));
+        Main::ProgStatus(GetTranslatedText("Error (create file)"));
         return false;
     }
 
@@ -442,7 +443,7 @@ bool wolf_game_interface_c::Finish(bool build_ok)
 
     if (write_errors_seen > 0)
     {
-        Main::ProgStatus(_("Error (write file)"));
+        Main::ProgStatus(GetTranslatedText("Error (write file)"));
         Tidy();
         return false;
     }

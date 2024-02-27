@@ -29,6 +29,7 @@
 #include "lib_zip.h"
 #include "m_cookie.h"
 #include "m_lua.h"
+#include "m_trans.h"
 #include "main.h"
 #include "q_common.h"  // qLump_c
 #include "sys_debug.h"
@@ -240,7 +241,7 @@ bool BuildNodes(std::filesystem::path filename)
 
     if (AJBSP_BuildNodes(filename, build_info) != 0)
     {
-        Main::ProgStatus(_("AJBSP Error!"));
+        Main::ProgStatus(GetTranslatedText("AJBSP Error!"));
         delete build_info;
         return false;
     }
@@ -353,7 +354,7 @@ bool Doom::StartWAD(std::filesystem::path filename)
 #ifndef CONSOLE_ONLY
 // Placeholder for error window
 #else
-        StdOutPrintf(_("Unable to create wad file:\n\n%s"), strerror(errno));
+        StdOutPrintf(GetTranslatedText("Unable to create wad file:\n\n%s"), strerror(errno));
 #endif
         return false;
     }
@@ -512,7 +513,7 @@ void Doom::EndLevel(std::string level_name)
             ZIPF_CloseWrite();
             std::filesystem::remove(game_object->ZIP_Filename());
             std::filesystem::remove(game_object->Filename());
-            ErrorPrintf(_("Error writing map WAD to %s\n"),
+            ErrorPrintf(GetTranslatedText("Error writing map WAD to %s\n"),
                         game_object->ZIP_Filename().u8string().c_str());
         }
         else { std::filesystem::remove(level_wad); }
@@ -1251,7 +1252,7 @@ bool Doom::game_interface_c::Start(const char *preset)
 
     if (filename.empty())
     {
-        Main::ProgStatus(_("Cancelled"));
+        Main::ProgStatus(GetTranslatedText("Cancelled"));
         return false;
     }
 
@@ -1286,7 +1287,7 @@ bool Doom::game_interface_c::Start(const char *preset)
         }
         if (!ZIPF_OpenWrite(zip_filename))
         {
-            Main::ProgStatus(_("Error (create PK3/ZIP)"),
+            Main::ProgStatus(GetTranslatedText("Error (create PK3/ZIP)"),
                              zip_filename.u8string().c_str());
             return false;
         }
@@ -1294,7 +1295,7 @@ bool Doom::game_interface_c::Start(const char *preset)
 
     if (!StartWAD(filename))
     {
-        Main::ProgStatus(_("Error (create file)"));
+        Main::ProgStatus(GetTranslatedText("Error (create file)"));
         return false;
     }
 

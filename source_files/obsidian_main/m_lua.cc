@@ -26,6 +26,7 @@
 
 #include "lib_util.h"
 #include "main.h"
+#include "m_trans.h"
 #include "physfs.h"
 #include "sys_debug.h"
 #include "sys_macro.h"
@@ -110,7 +111,7 @@ int gui_gettext(lua_State *L)
 {
     const char *s = luaL_checkstring(L, 1);
 
-    lua_pushstring(L, ob_gettext(s));
+    lua_pushstring(L, GetTranslatedText(s));
     return 1;
 }
 
@@ -627,7 +628,7 @@ int gui_at_level(lua_State *L)
     int index = luaL_checkinteger(L, 2);
     int total = luaL_checkinteger(L, 3);
 
-    Main::ProgStatus("%s %s", _("Making"), name.c_str());
+    Main::ProgStatus("%s %s", GetTranslatedText("Making"), name.c_str());
 
     return 0;
 }
@@ -645,14 +646,14 @@ int gui_prog_step(lua_State *L)
 //
 int gui_random(lua_State *L)
 {
-    lua_Number value = xoshiro_Double();
+    lua_Number value = XoshiroDouble();
     lua_pushnumber(L, value);
     return 1;
 }
 
 int gui_random_int(lua_State *L)
 {
-    lua_Integer value = xoshiro_UInt();
+    lua_Integer value = XoshiroInt();
     lua_pushnumber(L, value);
     return 1;
 }
@@ -660,7 +661,7 @@ int gui_random_int(lua_State *L)
 int gui_reseed_rng(lua_State *L)
 {
     int seed = luaL_checkinteger(L, 1);
-    xoshiro_Reseed(seed);
+    XoshiroReseed(seed);
     return 0;
 }
 
@@ -1400,7 +1401,7 @@ void ob_invoke_hook(std::string hookname)
 
     if (!Script_CallFunc("ob_invoke_hook", 0, params))
     {
-        Main::ProgStatus(_("Script Error"));
+        Main::ProgStatus(GetTranslatedText("Script Error"));
     }
 }
 
@@ -1408,7 +1409,7 @@ bool ob_build_cool_shit()
 {
     if (!Script_CallFunc("ob_build_cool_shit", 1))
     {
-        Main::ProgStatus(_("Script Error"));
+        Main::ProgStatus(GetTranslatedText("Script Error"));
         return false;
     }
 
@@ -1419,7 +1420,7 @@ bool ob_build_cool_shit()
 
     if (res && strcmp(res, "ok") == 0) { return true; }
 
-    Main::ProgStatus(_("Cancelled"));
+    Main::ProgStatus(GetTranslatedText("Cancelled"));
     return false;
 }
 

@@ -53,7 +53,7 @@
 static std::map<std::string, std::string> trans_store;
 
 // current Options setting
-std::string t_language = _("AUTO");
+std::string t_language = GetTranslatedText("AUTO");
 
 //----------------------------------------------------------------------
 
@@ -1178,7 +1178,7 @@ std::string mucked_up_string(std::string_view s)
     return buffer;
 }
 
-const char *ob_gettext(const char *s)
+const char *GetTranslatedText(const char *s)
 {
 #if 0  // DEBUGGING CRUD
     return mucked_up_string(s);

@@ -504,7 +504,7 @@ void Main::Shutdown()
     LogClose();
 }
 
-void Main_CalcNewSeed() { next_rand_seed = xoshiro_UInt(); }
+void Main_CalcNewSeed() { next_rand_seed = XoshiroInt(); }
 
 void Main_SetSeed()
 {
@@ -525,7 +525,7 @@ void Main_SetSeed()
             next_rand_seed = StringHash64(string_seed);
         }
     }
-    xoshiro_Reseed(next_rand_seed);
+    XoshiroReseed(next_rand_seed);
     std::string seed = NumToString(next_rand_seed);
     ob_set_config("seed", seed.c_str());
 }
@@ -602,7 +602,7 @@ bool Build_Cool_Shit()
     }
     if (was_ok)
     {
-        Main::ProgStatus(_("Success"));
+        Main::ProgStatus(GetTranslatedText("Success"));
 
         const uint32_t end_time   = TimeGetMillies();
         const uint32_t total_time = end_time - start_time;
@@ -815,8 +815,8 @@ sapp_desc sokol_main(int argc, char *argv[])
     if (!batch_mode)
     {
         Trans_SetLanguage();
-        OBSIDIAN_TITLE     = _("OBSIDIAN Level Maker");
-        OBSIDIAN_CODE_NAME = _("Unstable");
+        OBSIDIAN_TITLE     = GetTranslatedText("OBSIDIAN Level Maker");
+        OBSIDIAN_CODE_NAME = GetTranslatedText("Unstable");
     }
 
     if (argv::Find('d', "debug") >= 0) { debug_messages = true; }
@@ -889,7 +889,7 @@ sapp_desc sokol_main(int argc, char *argv[])
         {
             if (!Cookie_Load(load_file))
             {
-                ErrorPrintf(_("No such config file: %s\n"), load_file.c_str());
+                ErrorPrintf(GetTranslatedText("No such config file: %s\n"), load_file.c_str());
             }
         }
         else
@@ -900,7 +900,7 @@ sapp_desc sokol_main(int argc, char *argv[])
             }
             if (!Cookie_Load(config_file))
             {
-                ErrorPrintf(_("No such config file: %s\n"),
+                ErrorPrintf(GetTranslatedText("No such config file: %s\n"),
                             config_file.c_str());
             }
         }
@@ -991,7 +991,7 @@ sapp_desc sokol_main(int argc, char *argv[])
     {
         if (!Cookie_Load(load_file))
         {
-            ErrorPrintf(_("No such config file: %s\n"), load_file.c_str());
+            ErrorPrintf(GetTranslatedText("No such config file: %s\n"), load_file.c_str());
         }
     }
 
@@ -1156,7 +1156,7 @@ int main(int argc, char **argv)
     {
         if (!Cookie_Load(load_file))
         {
-            ErrorPrintf(_("No such config file: %s\n"), load_file.c_str());
+            ErrorPrintf(GetTranslatedText("No such config file: %s\n"), load_file.c_str());
         }
     }
     else
@@ -1164,7 +1164,7 @@ int main(int argc, char **argv)
         if (!std::filesystem::exists(config_file)) { Cookie_Save(config_file); }
         if (!Cookie_Load(config_file))
         {
-            ErrorPrintf(_("No such config file: %s\n"), config_file.c_str());
+            ErrorPrintf(GetTranslatedText("No such config file: %s\n"), config_file.c_str());
         }
     }
 

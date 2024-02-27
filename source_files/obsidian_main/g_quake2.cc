@@ -25,6 +25,7 @@
 #include "lib_pak.h"
 #include "lib_util.h"
 #include "m_cookie.h"
+#include "m_trans.h"
 #include "main.h"
 #include "q2_structs.h"
 #include "q_common.h"
@@ -1081,7 +1082,7 @@ bool quake2_game_interface_c::Start(const char *preset)
 
     if (filename.empty())
     {
-        Main::ProgStatus(_("Cancelled"));
+        Main::ProgStatus(GetTranslatedText("Cancelled"));
         return false;
     }
 
@@ -1089,7 +1090,7 @@ bool quake2_game_interface_c::Start(const char *preset)
 
     if (!PAK_OpenWrite(filename))
     {
-        Main::ProgStatus(_("Error (create file)"));
+        Main::ProgStatus(GetTranslatedText("Error (create file)"));
         return false;
     }
 

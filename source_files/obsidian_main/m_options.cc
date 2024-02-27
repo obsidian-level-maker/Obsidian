@@ -72,7 +72,7 @@ void Parse_Option(const std::string &name, const std::string &value)
     {
         default_output_path = std::filesystem::u8path(value);
     }
-    else { LogPrintf("%s '%s'\n", _("Unknown option: "), name.c_str()); }
+    else { LogPrintf("%s '%s'\n", GetTranslatedText("Unknown option: "), name.c_str()); }
 }
 
 static bool Options_ParseLine(std::string buf)
@@ -95,7 +95,7 @@ static bool Options_ParseLine(std::string buf)
 
     if (!isalpha(buf.front()))
     {
-        printf("%s [%s]\n", _("Weird option line: "), buf.c_str());
+        printf("%s [%s]\n", GetTranslatedText("Weird option line: "), buf.c_str());
         return false;
     }
 
@@ -119,7 +119,7 @@ bool Options_Load(std::filesystem::path filename)
 
     if (!option_fp)
     {
-        printf(_("Missing Options file -- using defaults.\n\n"));
+        printf(GetTranslatedText("Missing Options file -- using defaults.\n\n"));
         return false;
     }
 

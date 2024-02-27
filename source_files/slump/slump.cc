@@ -43,7 +43,7 @@
 int roll(int n)
 {
     if (n < 1) { return 0; }
-    return (xoshiro_UInt() % n);
+    return (XoshiroInt() % n);
 }
 
 boolean rollpercent(int n) { return (roll(100) < n); }
@@ -1330,7 +1330,7 @@ config *get_config(std::filesystem::path filename)
         int low  = StringToInt(ob_get_param("float_minrooms_slump_lb"));
         int high = StringToInt(ob_get_param("float_minrooms_slump_ub"));
         answer->minrooms =
-            xoshiro_Between(std::min(low, high), std::max(low, high));
+            XoshiroBetween(std::min(low, high), std::max(low, high));
     }
     else { answer->minrooms = StringToInt(levelsize); }
     std::string current_game = ob_get_param("game");

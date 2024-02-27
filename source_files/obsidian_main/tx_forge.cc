@@ -193,12 +193,12 @@ static double rand_gauss(void)
 {
     double sum = 0.0;
 
-    for (int i = 0; i < NRAND; i++) { sum += (xoshiro_UInt() & 0xFFFF); }
+    for (int i = 0; i < NRAND; i++) { sum += (XoshiroInt() & 0xFFFF); }
 
     return sum * gauss_mul - gauss_add;
 }
 
-static double rand_phase(void) { return 2 * kPiApproximate * xoshiro_Double(); }
+static double rand_phase(void) { return 2 * kPiApproximate * XoshiroDouble(); }
 
 /*  SPECTRALSYNTH  --  Spectrally  synthesized  fractal  motion in two
                        dimensions.  This algorithm is given under  the

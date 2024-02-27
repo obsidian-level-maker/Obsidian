@@ -30,6 +30,7 @@
 #include "lib_util.h"
 #include "lib_wad.h"
 #include "m_cookie.h"
+#include "m_trans.h"
 #include "main.h"
 #include "q1_structs.h"
 #include "q_common.h"
@@ -1267,11 +1268,11 @@ int Q1_add_tex_wad(lua_State *L)
 //------------------------------------------------------------------------
 
 // progress step names, only here for xgettext to find
-#define stepword_CSG   _("CSG")
-#define stepword_BSP   _("BSP")
-#define stepword_Vis   _("Vis")
-#define stepword_Light _("Light")
-#define stepword_Hull  _("Hull")
+#define stepword_CSG   GetTranslatedText("CSG")
+#define stepword_BSP   GetTranslatedText("BSP")
+#define stepword_Vis   GetTranslatedText("Vis")
+#define stepword_Light GetTranslatedText("Light")
+#define stepword_Hull  GetTranslatedText("Hull")
 
 class quake1_game_interface_c : public game_interface_c
 {
@@ -1345,7 +1346,7 @@ bool quake1_game_interface_c::Start(const char *preset)
 
     if (filename.empty())
     {
-        Main::ProgStatus(_("Cancelled"));
+        Main::ProgStatus(GetTranslatedText("Cancelled"));
         return false;
     }
 
@@ -1353,7 +1354,7 @@ bool quake1_game_interface_c::Start(const char *preset)
 
     if (!PAK_OpenWrite(filename))
     {
-        Main::ProgStatus(_("Error (create file)"));
+        Main::ProgStatus(GetTranslatedText("Error (create file)"));
         return false;
     }
 

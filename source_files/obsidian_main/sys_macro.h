@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------
-//  Macros
+//  Constants/Macros/Inlines
 //------------------------------------------------------------------------
 //
 //  OBSIDIAN Level Maker
@@ -34,10 +34,6 @@ constexpr double   kPiApproximate       = 3.14159265358979323846;
 #define OBSIDIAN_CLAMP(low, x, high) ((x < low) ? low : ((x > high) ? high : x))
 inline int RoundToInteger(float x) { return (int)roundf(x); }
 inline int RoundToInteger(double x) { return (int)round(x); }
-
-// Internationalization / Localization
-const char *ob_gettext(const char *s);
-#define _(s) ob_gettext(s)
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

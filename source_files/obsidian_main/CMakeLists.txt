@@ -94,6 +94,7 @@ endif()
 
 target_include_directories(obsidian PRIVATE ${OBSIDIAN_SOURCE_DIR}/ajbsp)
 target_include_directories(obsidian PRIVATE ${OBSIDIAN_SOURCE_DIR}/ajparse)
+target_include_directories(obsidian PRIVATE ${OBSIDIAN_LIB_DIR}/fastPRNG)
 target_include_directories(obsidian PRIVATE ${OBSIDIAN_LIB_DIR}/gif-h)
 target_include_directories(obsidian PRIVATE ${OBSIDIAN_LIB_DIR}/miniz)
 target_include_directories(obsidian PRIVATE ${OBSIDIAN_LIB_DIR}/physfs/src)

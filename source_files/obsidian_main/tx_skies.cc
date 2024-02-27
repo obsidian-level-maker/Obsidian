@@ -114,9 +114,9 @@ void SKY_AddStars(unsigned long long seed, uint8_t *pixels, int W, int H,
 
         while (dest < d_end)
         {
-            double v = xoshiro_Double();
-            v *= xoshiro_Double();
-            v *= xoshiro_Double();
+            double v = XoshiroDouble();
+            v *= XoshiroDouble();
+            v *= XoshiroDouble();
 
             v = pow(v, powscale);
 
@@ -148,7 +148,7 @@ void SKY_AddHills(unsigned long long seed, uint8_t *pixels, int W, int H,
 
     TX_SpectralSynth(seed, height_map, W, fracdim, powscale);
 
-    bool use_slope_z = (xoshiro_UInt() & 255) < 20;
+    bool use_slope_z = (XoshiroInt() & 255) < 20;
 
     // convert range from 0.0 .. 1.0 to min_h . max_h
     int x, z;
@@ -277,7 +277,7 @@ void SKY_AddBuilding(unsigned long long seed, uint8_t *pixels, int W, int H,
             {
                 uint8_t fg = colors[1];
 
-                if (((int)xoshiro_UInt() & 0xFFFF) > win_prob)
+                if (((int)XoshiroInt() & 0xFFFF) > win_prob)
                 {
                     fg = (numcol >= 3) ? colors[2] : bg;
                 }

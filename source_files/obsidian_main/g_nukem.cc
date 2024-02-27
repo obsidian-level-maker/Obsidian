@@ -30,6 +30,7 @@
 #include "lib_util.h"
 #include "m_cookie.h"
 #include "m_lua.h"
+#include "m_trans.h"
 #include "main.h"
 #include "q_common.h"  // qLump_c
 #include "sys_debug.h"
@@ -302,7 +303,7 @@ bool nukem_game_interface_c::Start(const char *preset)
 
     if (filename.empty())
     {
-        Main::ProgStatus(_("Cancelled"));
+        Main::ProgStatus(GetTranslatedText("Cancelled"));
         return false;
     }
 
@@ -310,7 +311,7 @@ bool nukem_game_interface_c::Start(const char *preset)
 
     if (!NK_StartGRP(filename.c_str()))
     {
-        Main::ProgStatus(_("Error (create file)"));
+        Main::ProgStatus(GetTranslatedText("Error (create file)"));
         return false;
     }
 
