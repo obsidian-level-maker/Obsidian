@@ -121,10 +121,10 @@ qLump_c *CreatePatch(int new_W, int new_H, int ofs_X, int ofs_Y,
 
     raw_patch_header_t header;
 
-    header.width    = LE_U16(new_W);
-    header.height   = LE_U16(new_H);
-    header.x_offset = LE_U16(ofs_X);
-    header.y_offset = LE_U16(ofs_Y);
+    header.width    = AlignedLittleEndianU16(new_W);
+    header.height   = AlignedLittleEndianU16(new_H);
+    header.x_offset = AlignedLittleEndianU16(ofs_X);
+    header.y_offset = AlignedLittleEndianU16(ofs_Y);
 
     lump->Prepend(&header, sizeof(header));
 
@@ -1525,8 +1525,8 @@ int title_write(lua_State *L)
 
     qLump_c *lump;
 
-    if (StringCaseCmp(format, "tga") == 0) { lump = TitleCreateTGA(); }
-    else if (StringCaseCmp(format, "raw") == 0) { lump = TitleCreateRaw(); }
+    if (StringCaseCompareASCII(format, "tga") == 0) { lump = TitleCreateTGA(); }
+    else if (StringCaseCompareASCII(format, "raw") == 0) { lump = TitleCreateRaw(); }
     else
     {
         lump   = TitleCreatePatch();

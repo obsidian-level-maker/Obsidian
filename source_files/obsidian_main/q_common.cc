@@ -189,12 +189,12 @@ static uint16_t AddRawPlane(const dplane_t *plane, bool *was_new)
     hash = hash & (PLANE_HASH_SIZE - 1);
 
     // fix endianness
-    raw_plane.normal[0] = LE_Float32(raw_plane.normal[0]);
-    raw_plane.normal[1] = LE_Float32(raw_plane.normal[1]);
-    raw_plane.normal[2] = LE_Float32(raw_plane.normal[2]);
+    raw_plane.normal[0] = AlignedLittleEndianFloat(raw_plane.normal[0]);
+    raw_plane.normal[1] = AlignedLittleEndianFloat(raw_plane.normal[1]);
+    raw_plane.normal[2] = AlignedLittleEndianFloat(raw_plane.normal[2]);
 
-    raw_plane.dist = LE_Float32(raw_plane.dist);
-    raw_plane.type = LE_S32(raw_plane.type);
+    raw_plane.dist = AlignedLittleEndianFloat(raw_plane.dist);
+    raw_plane.type = AlignedLittleEndianS32(raw_plane.type);
 
     // look for it in hash table...
 
@@ -369,9 +369,9 @@ uint16_t BSP_AddVertex(float x, float y, float z)
     // create on-disk vertex, fixing endianness
     dvertex_t raw_vert;
 
-    raw_vert.x = LE_Float32(x);
-    raw_vert.y = LE_Float32(y);
-    raw_vert.z = LE_Float32(z);
+    raw_vert.x = AlignedLittleEndianFloat(x);
+    raw_vert.y = AlignedLittleEndianFloat(y);
+    raw_vert.z = AlignedLittleEndianFloat(z);
 
     // find existing vertex...
     // for speed we use a hash-table
@@ -466,8 +466,8 @@ int32_t BSP_AddEdge(uint16_t start, uint16_t end)
     // not found, so add new one...
     dedge_t raw_edge;
 
-    raw_edge.v[0] = LE_U16(start);
-    raw_edge.v[1] = LE_U16(end);
+    raw_edge.v[0] = AlignedLittleEndianU16(start);
+    raw_edge.v[1] = AlignedLittleEndianU16(end);
 
     int new_index = (int)bsp_edges.size();
 
@@ -525,7 +525,7 @@ static void BSP_WriteLump(qLump_c *lump)
     PAK_AppendData(lump->GetBuffer(), len);
 
     // pad lumps to a multiple of four bytes
-    uint32_t padding = ALIGN_LEN(len) - len;
+    uint32_t padding = OBSIDIAN_ALIGN_LENGTH(len) - len;
 
     SYS_ASSERT(0 <= padding && padding <= 3);
 
@@ -586,7 +586,7 @@ static void BSP_WriteHeader()
         offset += 4;
     }
 
-    int32_t raw_version = LE_S32(bsp_version);
+    int32_t raw_version = AlignedLittleEndianS32(bsp_version);
 
     PAK_AppendData(&raw_version, 4);
 
@@ -603,11 +603,11 @@ static void BSP_WriteHeader()
 
         uint32_t length = bsp_directory[i]->GetSize();
 
-        raw_info.start  = LE_U32(offset);
-        raw_info.length = LE_U32(length);
+        raw_info.start  = AlignedLittleEndianU32(offset);
+        raw_info.length = AlignedLittleEndianU32(length);
 
         PAK_AppendData(&raw_info, sizeof(raw_info));
-        offset += (uint32_t)ALIGN_LEN(length);
+        offset += (uint32_t)OBSIDIAN_ALIGN_LENGTH(length);
     }
 }
 

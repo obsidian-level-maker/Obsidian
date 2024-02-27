@@ -1015,9 +1015,9 @@ static void DoWriteClip(dclipnode_t &raw_clip, bool flip)
     }
 
     // fix endianness
-    raw_clip.planenum    = LE_S32(raw_clip.planenum);
-    raw_clip.children[0] = LE_U16(raw_clip.children[0]);
-    raw_clip.children[1] = LE_U16(raw_clip.children[1]);
+    raw_clip.planenum    = AlignedLittleEndianS32(raw_clip.planenum);
+    raw_clip.children[0] = AlignedLittleEndianU16(raw_clip.children[0]);
+    raw_clip.children[1] = AlignedLittleEndianU16(raw_clip.children[1]);
 
     q1_clip->Append(&raw_clip, sizeof(raw_clip));
 

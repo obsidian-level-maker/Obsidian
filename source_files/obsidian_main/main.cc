@@ -526,7 +526,7 @@ void Main_SetSeed()
         }
     }
     XoshiroReseed(next_rand_seed);
-    std::string seed = NumToString(next_rand_seed);
+    std::string seed = NumberToString(next_rand_seed);
     ob_set_config("seed", seed.c_str());
 }
 
@@ -543,23 +543,23 @@ bool Build_Cool_Shit()
 
     // create game object
     {
-        if (StringCaseCmp(format, "doom") == 0)
+        if (StringCaseCompareASCII(format, "doom") == 0)
         {
             game_object = Doom_GameObject();
         }
-        else if (StringCaseCmp(format, "nukem") == 0)
+        else if (StringCaseCompareASCII(format, "nukem") == 0)
         {
             game_object = Nukem_GameObject();
         }
-        else if (StringCaseCmp(format, "wolf3d") == 0)
+        else if (StringCaseCompareASCII(format, "wolf3d") == 0)
         {
             game_object = Wolf_GameObject();
         }
-        else if (StringCaseCmp(format, "quake") == 0)
+        else if (StringCaseCompareASCII(format, "quake") == 0)
         {
             game_object = Quake1_GameObject();
         }
-        else if (StringCaseCmp(format, "quake2") == 0)
+        else if (StringCaseCompareASCII(format, "quake2") == 0)
         {
             game_object = Quake2_GameObject();
         }
@@ -571,18 +571,18 @@ bool Build_Cool_Shit()
     const uint32_t start_time = TimeGetMillies();
     bool           was_ok     = false;
     // this will ask for output filename (among other things)
-    if (StringCaseCmp(format, "wolf3d") == 0)
+    if (StringCaseCompareASCII(format, "wolf3d") == 0)
     {
         std::string current_game = ob_get_param("game");
-        if (StringCaseCmp(current_game, "wolf") == 0)
+        if (StringCaseCompareASCII(current_game, "wolf") == 0)
         {
             was_ok = game_object->Start("WL6");
         }
-        else if (StringCaseCmp(current_game, "spear") == 0)
+        else if (StringCaseCompareASCII(current_game, "spear") == 0)
         {
             was_ok = game_object->Start("SOD");
         }
-        else if (StringCaseCmp(current_game, "noah") == 0)
+        else if (StringCaseCompareASCII(current_game, "noah") == 0)
         {
             was_ok = game_object->Start("N3D");
         }

@@ -52,12 +52,12 @@ int    RoundPOW2(int x);
 double ComputeAngle(double dx, double dy);
 
 // string utilities
-int StringCaseCmp(const char *s1, const char *s2);
-int StringCaseCmpMax(const char *s1, const char *s2, size_t len);
+int StringCaseCompareASCII(const char *s1, const char *s2);
+int StringCaseCompareASCIIMax(const char *s1, const char *s2, size_t len);
 
 char *StringNew(int length);
 char *StringDup(const char *orig, int limit = -1);
-char *StringUpper(const char *name);
+char *StringUpperASCII(const char *name);
 char *StringPrintf(const char *str, ...);
 void  StringFree(const char *str);
 

@@ -64,17 +64,17 @@ struct liquid_coloring_t
 
     bool ParseProp(std::string key, std::string value)
     {
-        if (StringCaseCmp(key, "color") == 0)
+        if (StringCaseCompareASCII(key, "color") == 0)
         {
             color = QLIT_ParseColorString(value);
             return true;
         }
-        else if (StringCaseCmp(key, "intensity") == 0)
+        else if (StringCaseCompareASCII(key, "intensity") == 0)
         {
             intensity = StringToDouble(value);
             return true;
         }
-        else if (StringCaseCmp(key, "dropoff") == 0)
+        else if (StringCaseCompareASCII(key, "dropoff") == 0)
         {
             dropoff = StringToDouble(value);
             return true;
@@ -138,33 +138,33 @@ rgb_color_t QLIT_ParseColorString(std::string name)
 
 bool QLIT_ParseProperty(std::string key, std::string value)
 {
-    if (StringCaseCmp(key, "q_light_quality") == 0)
+    if (StringCaseCompareASCII(key, "q_light_quality") == 0)
     {
-        if (StringCaseCmp(value, "low") == 0) { q_light_quality = -1; }
-        else if (StringCaseCmp(value, "high") == 0) { q_light_quality = +1; }
+        if (StringCaseCompareASCII(value, "low") == 0) { q_light_quality = -1; }
+        else if (StringCaseCompareASCII(value, "high") == 0) { q_light_quality = +1; }
         else { q_light_quality = 0; }
 
         return true;
     }
-    else if (StringCaseCmp(key, "q_light_scale") == 0)
+    else if (StringCaseCompareASCII(key, "q_light_scale") == 0)
     {
         q_light_scale = StringToDouble(value);
         return true;
     }
-    else if (StringCaseCmp(key, "q_low_light") == 0)
+    else if (StringCaseCompareASCII(key, "q_low_light") == 0)
     {
         q_low_light = StringToInt(value);
         return true;
     }
-    else if (StringCaseCmp(key.substr(0, 6), "water_") == 0)
+    else if (StringCaseCompareASCII(key.substr(0, 6), "water_") == 0)
     {
         return q_water.ParseProp(key.substr(6), value);
     }
-    else if (StringCaseCmp(key.substr(0, 6), "slime_") == 0)
+    else if (StringCaseCompareASCII(key.substr(0, 6), "slime_") == 0)
     {
         return q_slime.ParseProp(key.substr(6), value);
     }
-    else if (StringCaseCmp(key.substr(0, 5), "lava_") == 0)
+    else if (StringCaseCompareASCII(key.substr(0, 5), "lava_") == 0)
     {
         return q_lava.ParseProp(key.substr(5), value);
     }

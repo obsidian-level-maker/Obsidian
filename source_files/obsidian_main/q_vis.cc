@@ -802,7 +802,7 @@ static void Q2_PrependOffsets(int num_clusters)
 
     int32_t *header = new int32_t[1 + num_clusters * 2];
 
-    header[0] = LE_S32(num_clusters);
+    header[0] = AlignedLittleEndianS32(num_clusters);
 
     for (int i = 0; i < num_clusters; i++)
     {
@@ -814,8 +814,8 @@ static void Q2_PrependOffsets(int num_clusters)
 
         // fix endianness too
 
-        header[i * 2 + 1] = LE_S32(header_size + cluster->visofs);
-        header[i * 2 + 2] = LE_S32(header_size + cluster->hearofs);
+        header[i * 2 + 1] = AlignedLittleEndianS32(header_size + cluster->visofs);
+        header[i * 2 + 2] = AlignedLittleEndianS32(header_size + cluster->hearofs);
     }
 
     q_visibility->Prepend(header, header_size);

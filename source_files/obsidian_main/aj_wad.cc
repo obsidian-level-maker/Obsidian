@@ -95,8 +95,8 @@ bool wad_c::ReadDirEntry()
         return false;
     }
 
-    int start  = LE_U32(entry.start);
-    int length = LE_U32(entry.length);
+    int start  = AlignedLittleEndianU32(entry.start);
+    int length = AlignedLittleEndianU32(entry.length);
 
     // ensure name gets NUL terminated
     char name_buf[10];
@@ -133,8 +133,8 @@ bool wad_c::ReadDirectory()
         return false;
     }
 
-    int num_entries = LE_U32(header.num_entries);
-    int dir_start   = LE_U32(header.dir_start);
+    int num_entries = AlignedLittleEndianU32(header.num_entries);
+    int dir_start   = AlignedLittleEndianU32(header.dir_start);
 
     DebugPrintf("Reading %d dir entries at 0x%X\n", num_entries, dir_start);
 

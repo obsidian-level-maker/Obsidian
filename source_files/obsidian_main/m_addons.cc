@@ -174,7 +174,7 @@ void VFS_ScanForAddons()
     for (auto &file : std::filesystem::directory_iterator(dir_name))
     {
         if (file.is_directory() ||
-            StringCaseCmp(file.path().extension().string(), ".oaf") == 0)
+            StringCaseCompareASCII(file.path().extension().string(), ".oaf") == 0)
         {
             if (PHYSFS_mount(file.path().generic_u8string().c_str(), nullptr,
                              0))
@@ -203,7 +203,7 @@ void VFS_ScanForAddons()
         for (auto &file : std::filesystem::directory_iterator(dir_name))
         {
             if (file.is_directory() ||
-                StringCaseCmp(file.path().extension().string(), ".oaf") == 0)
+                StringCaseCompareASCII(file.path().extension().string(), ".oaf") == 0)
             {
                 if (PHYSFS_mount(file.path().generic_u8string().c_str(),
                                  nullptr, 0))

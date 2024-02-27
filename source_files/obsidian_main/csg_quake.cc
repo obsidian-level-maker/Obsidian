@@ -1701,11 +1701,11 @@ static int ParseLiquidMedium(csg_property_set_c *props)
 
     if (!str.empty())
     {
-        if (StringCaseCmp(str, "water") == 0) { return MEDIUM_WATER; }
+        if (StringCaseCompareASCII(str, "water") == 0) { return MEDIUM_WATER; }
 
-        if (StringCaseCmp(str, "slime") == 0) { return MEDIUM_SLIME; }
+        if (StringCaseCompareASCII(str, "slime") == 0) { return MEDIUM_SLIME; }
 
-        if (StringCaseCmp(str, "lava") == 0) { return MEDIUM_LAVA; }
+        if (StringCaseCompareASCII(str, "lava") == 0) { return MEDIUM_LAVA; }
 
         LogPrintf("WARNING: unknown liquid medium '%s'\n", str.c_str());
     }

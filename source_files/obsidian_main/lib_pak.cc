@@ -67,8 +67,8 @@ bool PAK_OpenRead(const char *filename)
         return false;
     }
 
-    r_header.dir_start = LE_U32(r_header.dir_start);
-    r_header.entry_num = LE_U32(r_header.entry_num);
+    r_header.dir_start = AlignedLittleEndianU32(r_header.dir_start);
+    r_header.entry_num = AlignedLittleEndianU32(r_header.entry_num);
 
     // convert directory length to entry count
     r_header.entry_num /= sizeof(raw_pak_entry_t);
@@ -118,8 +118,8 @@ bool PAK_OpenRead(const char *filename)
         // make sure name is NUL terminated.
         E->name[55] = 0;
 
-        E->offset = LE_U32(E->offset);
-        E->length = LE_U32(E->length);
+        E->offset = AlignedLittleEndianU32(E->offset);
+        E->length = AlignedLittleEndianU32(E->length);
     }
 
     return true;  // OK
@@ -140,7 +140,7 @@ int PAK_FindEntry(const char *name)
 {
     for (unsigned int i = 0; i < r_header.entry_num; i++)
     {
-        if (StringCaseCmp(name, r_directory[i].name) == 0) { return i; }
+        if (StringCaseCompareASCII(name, r_directory[i].name) == 0) { return i; }
     }
 
     return -1;  // not found
@@ -270,8 +270,8 @@ void PAK_CloseWrite(void)
     // finally write the _real_ PAK header
     header.entry_num *= sizeof(raw_pak_entry_t);
 
-    header.dir_start = LE_U32(header.dir_start);
-    header.entry_num = LE_U32(header.entry_num);
+    header.dir_start = AlignedLittleEndianU32(header.dir_start);
+    header.entry_num = AlignedLittleEndianU32(header.entry_num);
 
     fseek(w_pak_fp, 0, SEEK_SET);
 
@@ -311,7 +311,7 @@ void PAK_FinishLump(void)
     const int len = ftell(w_pak_fp) - w_pak_entry.offset;
 
     // pad lumps to a multiple of four bytes
-    int padding = ALIGN_LEN(len) - len;
+    int padding = OBSIDIAN_ALIGN_LENGTH(len) - len;
 
     if (padding > 0)
     {
@@ -321,8 +321,8 @@ void PAK_FinishLump(void)
     }
 
     // fix endianness
-    w_pak_entry.offset = LE_U32(w_pak_entry.offset);
-    w_pak_entry.length = LE_U32(len);
+    w_pak_entry.offset = AlignedLittleEndianU32(w_pak_entry.offset);
+    w_pak_entry.length = AlignedLittleEndianU32(len);
 
     w_pak_dir.push_back(w_pak_entry);
 }

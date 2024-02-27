@@ -69,7 +69,7 @@ bool GRP_OpenRead(const char *filename)
         return false;
     }
 
-    grp_R_header.num_lumps = LE_U32(grp_R_header.num_lumps);
+    grp_R_header.num_lumps = AlignedLittleEndianU32(grp_R_header.num_lumps);
 
     /* read directory */
 
@@ -109,7 +109,7 @@ bool GRP_OpenRead(const char *filename)
             break;
         }
 
-        L->length = LE_U32(L->length);
+        L->length = AlignedLittleEndianU32(L->length);
 
         grp_R_starts[i] = L_start;
         L_start += L->length;
@@ -142,7 +142,7 @@ int GRP_FindEntry(const char *name)
         strncpy(buffer, grp_R_dir[i].name, GRP_NAME_LEN);
         buffer[GRP_NAME_LEN] = 0;
 
-        if (StringCaseCmp(name, buffer) == 0) { return i; }
+        if (StringCaseCompareASCII(name, buffer) == 0) { return i; }
     }
 
     return -1;  // not found
@@ -235,7 +235,7 @@ bool GRP_OpenWrite(const std::filesystem::path &filename)
         std::string name = StringFormat("__%03d.ZZZ", i + 1);
         std::copy(name.data(), name.data() + name.size(), entry.name);
 
-        entry.length = LE_U32(1);
+        entry.length = AlignedLittleEndianU32(1);
 
         fwrite(&entry, sizeof(entry), 1, grp_W_fp);
     }
@@ -266,7 +266,7 @@ void GRP_CloseWrite(void)
         header.magic[i] = ~grp_magic_data[i];
     }
 
-    header.num_lumps = LE_U32(GRP_MAX_LUMPS);
+    header.num_lumps = AlignedLittleEndianU32(GRP_MAX_LUMPS);
 
     fwrite(&header, sizeof(header), 1, grp_W_fp);
     fflush(grp_W_fp);
@@ -328,7 +328,7 @@ bool GRP_AppendData(const void *data, int length)
 void GRP_FinishLump(void)
 {
     // fix endianness
-    grp_W_lump.length = LE_U32(grp_W_lump.length);
+    grp_W_lump.length = AlignedLittleEndianU32(grp_W_lump.length);
 
     grp_W_directory.push_back(grp_W_lump);
 }

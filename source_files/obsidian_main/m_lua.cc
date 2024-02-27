@@ -299,7 +299,7 @@ struct scan_dir_nocase_CMP
 {
     inline bool operator()(std::string_view A, std::string_view B) const
     {
-        return StringCaseCmp(A, B) < 0;
+        return StringCaseCompareASCII(A, B) < 0;
     }
 };
 
@@ -1354,7 +1354,7 @@ std::string ob_get_param(std::string parameter)
 
 bool ob_hexen_ceiling_check(int thing_id)
 {
-    std::string params[2] = {NumToString(thing_id), ""};
+    std::string params[2] = {NumberToString(thing_id), ""};
 
     if (!Script_CallFunc("ob_hexen_ceiling_check", 1, params))
     {

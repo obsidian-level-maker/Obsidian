@@ -176,7 +176,7 @@ bool FileExists(std::filesystem::path filename)
 //
 // a case-insensitive strcmp()
 //
-int StringCaseCmp(const char *s1, const char *s2)
+int StringCaseCompareASCII(const char *s1, const char *s2)
 {
     for (;;)
     {
@@ -192,7 +192,7 @@ int StringCaseCmp(const char *s1, const char *s2)
 //
 // a case-insensitive strncmp()
 //
-int StringCaseCmpMax(const char *s1, const char *s2, size_t len)
+int StringCaseCompareASCIIMax(const char *s1, const char *s2, size_t len)
 {
     SYS_ASSERT(len != 0);
 
@@ -243,7 +243,7 @@ char *StringDup(const char *orig, int limit)
     return s;
 }
 
-char *StringUpper(const char *name)
+char *StringUpperASCII(const char *name)
 {
     char *copy = StringDup(name);
 

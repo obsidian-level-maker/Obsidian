@@ -33,42 +33,42 @@ extern std::filesystem::path BestDirectory();
 
 void Parse_Option(const std::string &name, const std::string &value)
 {
-    if (StringCaseCmpPartial(name, "recent") == 0)
+    if (StringPrefixCaseCompareASCII(name, "recent") == 0)
     {
         Recent_Parse(name, value);
         return;
     }
-    if (StringCaseCmp(name, "addon") == 0) { VFS_OptParse(value); }
-    else if (StringCaseCmp(name, "language") == 0) { t_language = value; }
-    else if (StringCaseCmp(name, "create_backups") == 0)
+    if (StringCaseCompareASCII(name, "addon") == 0) { VFS_OptParse(value); }
+    else if (StringCaseCompareASCII(name, "language") == 0) { t_language = value; }
+    else if (StringCaseCompareASCII(name, "create_backups") == 0)
     {
         create_backups = StringToInt(value) ? true : false;
     }
-    else if (StringCaseCmp(name, "overwrite_warning") == 0)
+    else if (StringCaseCompareASCII(name, "overwrite_warning") == 0)
     {
         overwrite_warning = StringToInt(value) ? true : false;
     }
-    else if (StringCaseCmp(name, "debug_messages") == 0)
+    else if (StringCaseCompareASCII(name, "debug_messages") == 0)
     {
         debug_messages = StringToInt(value) ? true : false;
     }
-    else if (StringCaseCmp(name, "limit_break") == 0)
+    else if (StringCaseCompareASCII(name, "limit_break") == 0)
     {
         limit_break = StringToInt(value) ? true : false;
     }
-    else if (StringCaseCmp(name, "random_string_seeds") == 0)
+    else if (StringCaseCompareASCII(name, "random_string_seeds") == 0)
     {
         random_string_seeds = StringToInt(value) ? true : false;
     }
-    else if (StringCaseCmp(name, "password_mode") == 0)
+    else if (StringCaseCompareASCII(name, "password_mode") == 0)
     {
         password_mode = StringToInt(value) ? true : false;
     }
-    else if (StringCaseCmp(name, "mature_word_lists") == 0)
+    else if (StringCaseCompareASCII(name, "mature_word_lists") == 0)
     {
         mature_word_lists = StringToInt(value) ? true : false;
     }
-    else if (StringCaseCmp(name, "default_output_path") == 0)
+    else if (StringCaseCompareASCII(name, "default_output_path") == 0)
     {
         default_output_path = std::filesystem::u8path(value);
     }

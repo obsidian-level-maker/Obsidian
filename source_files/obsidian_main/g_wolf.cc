@@ -385,7 +385,7 @@ bool wolf_game_interface_c::Start(const char *ext)
 
     if (ext) { file_ext = ext; }
 
-    if (StringCaseCmp(file_ext, "BS6") == 0)
+    if (StringCaseCompareASCII(file_ext, "BS6") == 0)
     {
         map_fp = fopen(TEMP_MAPTEMP, "wb");
     }
@@ -456,7 +456,7 @@ bool wolf_game_interface_c::Finish(bool build_ok)
 void wolf_game_interface_c::Rename()
 {
     std::filesystem::path gamemaps =
-        wolf_output_dir / (StringCaseCmp(file_ext, "BS6") == 0
+        wolf_output_dir / (StringCaseCompareASCII(file_ext, "BS6") == 0
                                ? StringFormat("MAPTEMP.%s", file_ext.c_str())
                                : StringFormat("GAMEMAPS.%s", file_ext.c_str()));
     std::filesystem::path maphead =
@@ -471,7 +471,7 @@ void wolf_game_interface_c::Rename()
     std::filesystem::remove(gamemaps);
     std::filesystem::remove(maphead);
 
-    if (StringCaseCmp(file_ext, "BS6") == 0)
+    if (StringCaseCompareASCII(file_ext, "BS6") == 0)
     {
         std::filesystem::rename(TEMP_MAPTEMP, gamemaps);
     }
@@ -523,8 +523,8 @@ int v094_end_wolf_level(lua_State *L)
 
 void wolf_game_interface_c::Property(std::string key, std::string value)
 {
-    if (StringCaseCmp(key, "level_name") == 0) { level_name = value.c_str(); }
-    else if (StringCaseCmp(key, "file_ext") == 0) { file_ext = value.c_str(); }
+    if (StringCaseCompareASCII(key, "level_name") == 0) { level_name = value.c_str(); }
+    else if (StringCaseCompareASCII(key, "file_ext") == 0) { file_ext = value.c_str(); }
     else
     {
         LogPrintf("WARNING: unknown WOLF3D property: %s=%s\n", key.c_str(),

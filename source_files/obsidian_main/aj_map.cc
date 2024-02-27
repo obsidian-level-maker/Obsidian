@@ -665,8 +665,8 @@ bool LoadVertices()
     {
         vertex_c *vert = NewVertex();
 
-        vert->x = (double)LE_S16(raw->x);
-        vert->y = (double)LE_S16(raw->y);
+        vert->x = (double)AlignedLittleEndianS16(raw->x);
+        vert->y = (double)AlignedLittleEndianS16(raw->y);
     }
 
     return true;  // OK
@@ -696,17 +696,17 @@ bool LoadSectors()
     {
         sector_c *sector = NewSector();
 
-        sector->floor_h = LE_S16(raw->floor_h);
-        sector->ceil_h  = LE_S16(raw->ceil_h);
+        sector->floor_h = AlignedLittleEndianS16(raw->floor_h);
+        sector->ceil_h  = AlignedLittleEndianS16(raw->ceil_h);
 
         std::copy(raw->floor_tex, raw->floor_tex + 8,
                   sector->floor_tex);
         std::copy(raw->ceil_tex, raw->ceil_tex + 8,
                   sector->ceil_tex);
 
-        sector->light   = LE_U16(raw->light);
-        sector->special = LE_U16(raw->special);
-        sector->tag     = LE_S16(raw->tag);
+        sector->light   = AlignedLittleEndianU16(raw->light);
+        sector->special = AlignedLittleEndianU16(raw->special);
+        sector->tag     = AlignedLittleEndianS16(raw->tag);
     }
 
     // create a fake sector to represent VOID space
@@ -741,12 +741,12 @@ bool LoadThings()
     {
         thing_c *thing = NewThing();
 
-        thing->x = LE_S16(raw->x);
-        thing->y = LE_S16(raw->y);
+        thing->x = AlignedLittleEndianS16(raw->x);
+        thing->y = AlignedLittleEndianS16(raw->y);
 
-        thing->type    = LE_U16(raw->type);
-        thing->options = LE_U16(raw->options);
-        thing->angle   = LE_S16(raw->angle);
+        thing->type    = AlignedLittleEndianU16(raw->type);
+        thing->options = AlignedLittleEndianU16(raw->options);
+        thing->angle   = AlignedLittleEndianS16(raw->angle);
     }
 
     return true;  // OK
@@ -776,17 +776,17 @@ bool LoadThingsHexen()
     {
         thing_c *thing = NewThing();
 
-        thing->tid = LE_U16(raw->tid);
+        thing->tid = AlignedLittleEndianU16(raw->tid);
 
-        thing->x      = LE_S16(raw->x);
-        thing->y      = LE_S16(raw->y);
-        thing->height = LE_S16(raw->height);
+        thing->x      = AlignedLittleEndianS16(raw->x);
+        thing->y      = AlignedLittleEndianS16(raw->y);
+        thing->height = AlignedLittleEndianS16(raw->height);
 
-        thing->type    = LE_U16(raw->type);
-        thing->options = LE_U16(raw->options);
-        thing->angle   = LE_S16(raw->angle);
+        thing->type    = AlignedLittleEndianU16(raw->type);
+        thing->options = AlignedLittleEndianU16(raw->options);
+        thing->angle   = AlignedLittleEndianS16(raw->angle);
 
-        thing->special = LE_U16(raw->special);
+        thing->special = AlignedLittleEndianU16(raw->special);
 
         memcpy(thing->args, raw->arg, 5);
     }
@@ -818,16 +818,16 @@ bool LoadSidedefs()
     {
         sidedef_c *side = NewSidedef();
 
-        if (LE_S16(raw->sector) == -1)
+        if (AlignedLittleEndianS16(raw->sector) == -1)
         {
             SetErrorMsg("Bad sector ref in sidedef #%d", i);
             return false;
         }
 
-        side->sector = Sector(LE_U16(raw->sector));
+        side->sector = Sector(AlignedLittleEndianU16(raw->sector));
 
-        side->x_offset = LE_S16(raw->x_offset);
-        side->y_offset = LE_S16(raw->y_offset);
+        side->x_offset = AlignedLittleEndianS16(raw->x_offset);
+        side->y_offset = AlignedLittleEndianS16(raw->y_offset);
 
         std::copy(raw->upper_tex, raw->upper_tex + 8,
                   side->upper_tex);
@@ -864,8 +864,8 @@ bool LoadLinedefs()
     {
         linedef_c *line = NewLinedef();
 
-        vertex_c *start = Vertex(LE_U16(raw->start));
-        vertex_c *end   = Vertex(LE_U16(raw->end));
+        vertex_c *start = Vertex(AlignedLittleEndianU16(raw->start));
+        vertex_c *end   = Vertex(AlignedLittleEndianU16(raw->end));
 
         line->start = start;
         line->end   = end;
@@ -880,12 +880,12 @@ bool LoadLinedefs()
             ErrorPrintf("Linedef #%d has zero length.\n", i);
         }
 
-        line->flags   = LE_U16(raw->flags);
-        line->special = LE_U16(raw->type);
-        line->tag     = LE_S16(raw->tag);
+        line->flags   = AlignedLittleEndianU16(raw->flags);
+        line->special = AlignedLittleEndianU16(raw->type);
+        line->tag     = AlignedLittleEndianS16(raw->tag);
 
-        line->right = SafeSidedef(LE_U16(raw->sidedef1));
-        line->left  = SafeSidedef(LE_U16(raw->sidedef2));
+        line->right = SafeSidedef(AlignedLittleEndianU16(raw->sidedef1));
+        line->left  = SafeSidedef(AlignedLittleEndianU16(raw->sidedef2));
     }
 
     return true;  // OK
@@ -915,8 +915,8 @@ bool LoadLinedefsHexen()
     {
         linedef_c *line = NewLinedef();
 
-        vertex_c *start = Vertex(LE_U16(raw->start));
-        vertex_c *end   = Vertex(LE_U16(raw->end));
+        vertex_c *start = Vertex(AlignedLittleEndianU16(raw->start));
+        vertex_c *end   = Vertex(AlignedLittleEndianU16(raw->end));
 
         line->start = start;
         line->end   = end;
@@ -931,12 +931,12 @@ bool LoadLinedefsHexen()
             ErrorPrintf("Linedef #%d has zero length.\n", i);
         }
 
-        line->flags   = LE_U16(raw->flags);
+        line->flags   = AlignedLittleEndianU16(raw->flags);
         line->special = raw->type;
         line->tag     = 0;
 
-        line->right = SafeSidedef(LE_U16(raw->sidedef1));
-        line->left  = SafeSidedef(LE_U16(raw->sidedef2));
+        line->right = SafeSidedef(AlignedLittleEndianU16(raw->sidedef1));
+        line->left  = SafeSidedef(AlignedLittleEndianU16(raw->sidedef2));
 
         for (int k = 0; k < 5; k++) { line->args[k] = raw->specials[k]; }
     }

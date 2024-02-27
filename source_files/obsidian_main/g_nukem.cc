@@ -94,14 +94,14 @@ void NK_EndGRP(void) { GRP_CloseWrite(); }
 void NK_BeginLevel(const char *level_name)
 {
     std::string lump_name = StringFormat("%s.MAP", level_name);
-    lump_name             = StringUpper(lump_name.c_str());
+    lump_name             = StringUpperASCII(lump_name.c_str());
 
     GRP_NewLump(lump_name.c_str());
 
     // initialise the header
     memset(&nk_header, 0, sizeof(nk_header));
 
-    nk_header.version = LE_U32(DUKE_MAP_VERSION);
+    nk_header.version = AlignedLittleEndianU32(DUKE_MAP_VERSION);
 
     // create the lumps
     NK_FreeLumps();
@@ -115,9 +115,9 @@ void NK_EndLevel()
 {
     // write everything...
 
-    uint16_t num_sectors = LE_U16(NK_NumSectors());
-    uint16_t num_walls   = LE_U16(NK_NumWalls());
-    uint16_t num_sprites = LE_U16(NK_NumSprites());
+    uint16_t num_sectors = AlignedLittleEndianU16(NK_NumSectors());
+    uint16_t num_walls   = AlignedLittleEndianU16(NK_NumWalls());
+    uint16_t num_sprites = AlignedLittleEndianU16(NK_NumSprites());
 
     GRP_AppendData(&nk_header, (int)sizeof(nk_header));
 
@@ -143,25 +143,25 @@ void NK_AddSector(int first_wall, int num_wall, int visibility, int f_h,
 
     memset(&raw, 0, sizeof(raw));
 
-    raw.wall_ptr = LE_U16(first_wall);
-    raw.wall_num = LE_U16(num_wall);
+    raw.wall_ptr = AlignedLittleEndianU16(first_wall);
+    raw.wall_num = AlignedLittleEndianU16(num_wall);
 
-    raw.floor_h = LE_S32(f_h);
-    raw.ceil_h  = LE_S32(c_h);
+    raw.floor_h = AlignedLittleEndianS32(f_h);
+    raw.ceil_h  = AlignedLittleEndianS32(c_h);
 
-    raw.floor_pic = LE_U16(f_pic);
-    raw.ceil_pic  = LE_U16(c_pic);
+    raw.floor_pic = AlignedLittleEndianU16(f_pic);
+    raw.ceil_pic  = AlignedLittleEndianU16(c_pic);
 
-    raw.ceil_flags = LE_U16(c_flags);
+    raw.ceil_flags = AlignedLittleEndianU16(c_flags);
 
     // preven the space skies from killing the player
     if (c_flags & SECTOR_F_PARALLAX) { raw.ceil_palette = 3; }
 
     raw.visibility = visibility;
 
-    raw.lo_tag = LE_U16(lo_tag);
-    raw.hi_tag = LE_U16(hi_tag);
-    raw.extra  = LE_U16(-1);
+    raw.lo_tag = AlignedLittleEndianU16(lo_tag);
+    raw.hi_tag = AlignedLittleEndianU16(hi_tag);
+    raw.extra  = AlignedLittleEndianU16(-1);
 
     nk_sectors->Append(&raw, sizeof(raw));
 }
@@ -174,26 +174,26 @@ void NK_AddWall(int x, int y, int right, int back, int back_sec, int flags,
 
     memset(&raw, 0, sizeof(raw));
 
-    raw.x = LE_S32(x);
-    raw.y = LE_S32(y);
+    raw.x = AlignedLittleEndianS32(x);
+    raw.y = AlignedLittleEndianS32(y);
 
-    raw.right_wall = LE_U16(right);
+    raw.right_wall = AlignedLittleEndianU16(right);
 
-    raw.back_wall = LE_U16(back);
-    raw.back_sec  = LE_U16(back_sec);
+    raw.back_wall = AlignedLittleEndianU16(back);
+    raw.back_sec  = AlignedLittleEndianU16(back_sec);
 
-    raw.pic      = LE_U16(pic);
-    raw.mask_pic = LE_U16(mask_pic);
-    raw.flags    = LE_U16(flags);
+    raw.pic      = AlignedLittleEndianU16(pic);
+    raw.mask_pic = AlignedLittleEndianU16(mask_pic);
+    raw.flags    = AlignedLittleEndianU16(flags);
 
     raw.xscale = xscale;
     raw.xpan   = xpan;
     raw.yscale = yscale;
     raw.ypan   = ypan;
 
-    raw.lo_tag = LE_U16(lo_tag);
-    raw.hi_tag = LE_U16(hi_tag);
-    raw.extra  = LE_U16(-1);
+    raw.lo_tag = AlignedLittleEndianU16(lo_tag);
+    raw.hi_tag = AlignedLittleEndianU16(hi_tag);
+    raw.extra  = AlignedLittleEndianU16(-1);
 
     nk_walls->Append(&raw, sizeof(raw));
 }
@@ -205,22 +205,22 @@ void NK_AddSprite(int x, int y, int z, int sec, int flags, int pic, int angle,
 
     memset(&raw, 0, sizeof(raw));
 
-    raw.x = LE_S32(x);
-    raw.y = LE_S32(y);
-    raw.z = LE_S32(z);
+    raw.x = AlignedLittleEndianS32(x);
+    raw.y = AlignedLittleEndianS32(y);
+    raw.z = AlignedLittleEndianS32(z);
 
-    raw.flags  = LE_U16(flags);
-    raw.pic    = LE_U16(pic);
-    raw.angle  = LE_U16(angle);
-    raw.sector = LE_U16(sec);
+    raw.flags  = AlignedLittleEndianU16(flags);
+    raw.pic    = AlignedLittleEndianU16(pic);
+    raw.angle  = AlignedLittleEndianU16(angle);
+    raw.sector = AlignedLittleEndianU16(sec);
 
     raw.xscale    = 40;
     raw.yscale    = 40;
     raw.clip_dist = 32;
 
-    raw.lo_tag = LE_U16(lo_tag);
-    raw.hi_tag = LE_U16(hi_tag);
-    raw.extra  = LE_U16(-1);
+    raw.lo_tag = AlignedLittleEndianU16(lo_tag);
+    raw.hi_tag = AlignedLittleEndianU16(hi_tag);
+    raw.extra  = AlignedLittleEndianU16(-1);
 
     raw.owner = -1;
 
@@ -333,8 +333,8 @@ void nukem_game_interface_c::BeginLevel() {}
 
 void nukem_game_interface_c::Property(std::string key, std::string value)
 {
-    if (StringCaseCmp(key, "level_name") == 0) { level_name = value.c_str(); }
-    else if (StringCaseCmp(key, "description") == 0)
+    if (StringCaseCompareASCII(key, "level_name") == 0) { level_name = value.c_str(); }
+    else if (StringCaseCompareASCII(key, "description") == 0)
     {
         // ignored (for now)
         // [another mechanism sets the description via BEX/DDF]

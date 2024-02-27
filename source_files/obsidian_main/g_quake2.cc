@@ -71,18 +71,18 @@ static void DoWriteBrushSide(int plane, int texinfo)
 {
     dbrushside_t side;
 
-    side.planenum = LE_U16(plane);
-    side.texinfo  = LE_U16(texinfo);
+    side.planenum = AlignedLittleEndianU16(plane);
+    side.texinfo  = AlignedLittleEndianU16(texinfo);
 
     q2_brush_sides.push_back(side);
 }
 
 static void DoWriteBrush(dbrush_t &raw_brush)
 {
-    raw_brush.firstside = LE_S32(raw_brush.firstside);
-    raw_brush.numsides  = LE_S32(raw_brush.numsides);
+    raw_brush.firstside = AlignedLittleEndianS32(raw_brush.firstside);
+    raw_brush.numsides  = AlignedLittleEndianS32(raw_brush.numsides);
 
-    raw_brush.contents = LE_U32(raw_brush.contents);
+    raw_brush.contents = AlignedLittleEndianU32(raw_brush.contents);
 
     q2_brushes.push_back(raw_brush);
 }
@@ -188,14 +188,14 @@ uint16_t Q2_AddTexInfo(std::string texture, int flags, int value, float *s4,
 
     for (int k = 0; k < 4; k++)
     {
-        raw_tex.s[k] = LE_Float32(s4[k]);
-        raw_tex.t[k] = LE_Float32(t4[k]);
+        raw_tex.s[k] = AlignedLittleEndianFloat(s4[k]);
+        raw_tex.t[k] = AlignedLittleEndianFloat(t4[k]);
     }
 
-    raw_tex.flags = LE_S32(flags);
-    raw_tex.value = LE_S32(value);
+    raw_tex.flags = AlignedLittleEndianS32(flags);
+    raw_tex.value = AlignedLittleEndianS32(value);
 
-    raw_tex.anim_next = LE_S32(0);  // TODO
+    raw_tex.anim_next = AlignedLittleEndianS32(0);  // TODO
 
     // find an existing texinfo in the hash table
     int hash = (int)StringHash(texture) & (NUM_TEXINFO_HASH - 1);
@@ -254,8 +254,8 @@ static void Q2_DummyArea()
 
     darea_t area;
 
-    area.num_portals  = LE_U32(0);
-    area.first_portal = LE_U32(0);
+    area.num_portals  = AlignedLittleEndianU32(0);
+    area.first_portal = AlignedLittleEndianU32(0);
 
     lump->Append(&area, sizeof(area));
     lump->Append(&area, sizeof(area));
@@ -268,10 +268,10 @@ static void Q2_DummyVis()
 
     dvis_t vis;
 
-    vis.numclusters = LE_U32(1);
+    vis.numclusters = AlignedLittleEndianU32(1);
 
-    vis.offsets[0][0] = LE_U32(sizeof(vis));
-    vis.offsets[0][1] = LE_U32(sizeof(vis));
+    vis.offsets[0][0] = AlignedLittleEndianU32(sizeof(vis));
+    vis.offsets[0][1] = AlignedLittleEndianU32(sizeof(vis));
 
     lump->Append(&vis, sizeof(vis));
 
@@ -373,7 +373,7 @@ static void Q2_WriteEdge(const quake_vertex_c &A, const quake_vertex_c &B)
     int32_t index = BSP_AddEdge(v1, v2);
 
     // fix endianness
-    index = LE_S32(index);
+    index = AlignedLittleEndianS32(index);
 
     q2_surf_edges->Append(&index, sizeof(index));
 
@@ -385,7 +385,7 @@ static void Q2_WriteLeafBrush(csg_brush_c *B)
     uint16_t index = Q2_AddBrush(B);
 
     // fix endianness
-    index = LE_U16(index);
+    index = AlignedLittleEndianU16(index);
 
     q2_leaf_brushes->Append(&index, sizeof(index));
 
@@ -395,12 +395,12 @@ static void Q2_WriteLeafBrush(csg_brush_c *B)
 static inline void DoWriteFace(dface_t &raw_face)
 {
     // fix endianness
-    raw_face.planenum  = LE_S16(raw_face.planenum);
-    raw_face.side      = LE_S16(raw_face.side);
-    raw_face.firstedge = LE_S32(raw_face.firstedge);
-    raw_face.numedges  = LE_S16(raw_face.numedges);
-    raw_face.texinfo   = LE_S16(raw_face.texinfo);
-    raw_face.lightofs  = LE_S32(raw_face.lightofs);
+    raw_face.planenum  = AlignedLittleEndianS16(raw_face.planenum);
+    raw_face.side      = AlignedLittleEndianS16(raw_face.side);
+    raw_face.firstedge = AlignedLittleEndianS32(raw_face.firstedge);
+    raw_face.numedges  = AlignedLittleEndianS16(raw_face.numedges);
+    raw_face.texinfo   = AlignedLittleEndianS16(raw_face.texinfo);
+    raw_face.lightofs  = AlignedLittleEndianS32(raw_face.lightofs);
 
     q2_faces->Append(&raw_face, sizeof(raw_face));
 
@@ -468,7 +468,7 @@ static void Q2_WriteMarkSurf(int index)
     SYS_ASSERT(index >= 0);
 
     // fix endianness
-    uint16_t raw_index = LE_U16(index);
+    uint16_t raw_index = AlignedLittleEndianU16(index);
 
     q2_mark_surfs->Append(&raw_index, sizeof(raw_index));
 
@@ -478,19 +478,19 @@ static void Q2_WriteMarkSurf(int index)
 static void DoWriteLeaf(dleaf2_t &raw_leaf)
 {
     // fix endianness
-    raw_leaf.contents = LE_S32(raw_leaf.contents);
-    raw_leaf.cluster  = LE_S16(raw_leaf.cluster);
-    raw_leaf.area     = LE_S16(raw_leaf.area);
+    raw_leaf.contents = AlignedLittleEndianS32(raw_leaf.contents);
+    raw_leaf.cluster  = AlignedLittleEndianS16(raw_leaf.cluster);
+    raw_leaf.area     = AlignedLittleEndianS16(raw_leaf.area);
 
-    raw_leaf.first_leafface  = LE_U16(raw_leaf.first_leafface);
-    raw_leaf.first_leafbrush = LE_U16(raw_leaf.first_leafbrush);
-    raw_leaf.num_leaffaces   = LE_U16(raw_leaf.num_leaffaces);
-    raw_leaf.num_leafbrushes = LE_U16(raw_leaf.num_leafbrushes);
+    raw_leaf.first_leafface  = AlignedLittleEndianU16(raw_leaf.first_leafface);
+    raw_leaf.first_leafbrush = AlignedLittleEndianU16(raw_leaf.first_leafbrush);
+    raw_leaf.num_leaffaces   = AlignedLittleEndianU16(raw_leaf.num_leaffaces);
+    raw_leaf.num_leafbrushes = AlignedLittleEndianU16(raw_leaf.num_leafbrushes);
 
     for (int b = 0; b < 3; b++)
     {
-        raw_leaf.mins[b] = LE_S16(raw_leaf.mins[b] - LEAF_PADDING);
-        raw_leaf.maxs[b] = LE_S16(raw_leaf.maxs[b] + LEAF_PADDING);
+        raw_leaf.mins[b] = AlignedLittleEndianS16(raw_leaf.mins[b] - LEAF_PADDING);
+        raw_leaf.maxs[b] = AlignedLittleEndianS16(raw_leaf.maxs[b] + LEAF_PADDING);
     }
 
     q2_leafs->Append(&raw_leaf, sizeof(raw_leaf));
@@ -558,8 +558,8 @@ static void Q2_WriteSolidLeaf(void)
 
     memset(&raw_leaf, 0, sizeof(raw_leaf));
 
-    raw_leaf.contents = LE_S32(CONTENTS_SOLID);
-    raw_leaf.cluster  = LE_S32(-1);
+    raw_leaf.contents = AlignedLittleEndianS32(CONTENTS_SOLID);
+    raw_leaf.cluster  = AlignedLittleEndianS32(-1);
 
     q2_leafs->Append(&raw_leaf, sizeof(raw_leaf));
 }
@@ -567,16 +567,16 @@ static void Q2_WriteSolidLeaf(void)
 static void DoWriteNode(dnode2_t &raw_node)
 {
     // fix endianness
-    raw_node.planenum    = LE_S32(raw_node.planenum);
-    raw_node.children[0] = LE_S32(raw_node.children[0]);
-    raw_node.children[1] = LE_S32(raw_node.children[1]);
-    raw_node.firstface   = LE_U16(raw_node.firstface);
-    raw_node.numfaces    = LE_U16(raw_node.numfaces);
+    raw_node.planenum    = AlignedLittleEndianS32(raw_node.planenum);
+    raw_node.children[0] = AlignedLittleEndianS32(raw_node.children[0]);
+    raw_node.children[1] = AlignedLittleEndianS32(raw_node.children[1]);
+    raw_node.firstface   = AlignedLittleEndianU16(raw_node.firstface);
+    raw_node.numfaces    = AlignedLittleEndianU16(raw_node.numfaces);
 
     for (int b = 0; b < 3; b++)
     {
-        raw_node.mins[b] = LE_S16(raw_node.mins[b] - NODE_PADDING);
-        raw_node.maxs[b] = LE_S16(raw_node.maxs[b] + NODE_PADDING);
+        raw_node.mins[b] = AlignedLittleEndianS16(raw_node.mins[b] - NODE_PADDING);
+        raw_node.maxs[b] = AlignedLittleEndianS16(raw_node.maxs[b] + NODE_PADDING);
     }
 
     q2_nodes->Append(&raw_node, sizeof(raw_node));
@@ -880,7 +880,7 @@ static void Q2_Model_Nodes(quake_mapmodel_c *model, float *mins, float *maxs)
     DoWriteLeaf(inner_leaf);
 
     // leaf brush reference
-    uint16_t index = LE_U16(q2_brushes.size());
+    uint16_t index = AlignedLittleEndianU16(q2_brushes.size());
 
     q2_leaf_brushes->Append(&index, sizeof(index));
 
@@ -902,20 +902,20 @@ static void Q2_WriteModel(quake_mapmodel_c *model)
 
     memset(&raw_model, 0, sizeof(raw_model));
 
-    raw_model.mins[0] = LE_Float32(model->x1 - MODEL_PADDING);
-    raw_model.mins[1] = LE_Float32(model->y1 - MODEL_PADDING);
-    raw_model.mins[2] = LE_Float32(model->z1 - MODEL_PADDING);
+    raw_model.mins[0] = AlignedLittleEndianFloat(model->x1 - MODEL_PADDING);
+    raw_model.mins[1] = AlignedLittleEndianFloat(model->y1 - MODEL_PADDING);
+    raw_model.mins[2] = AlignedLittleEndianFloat(model->z1 - MODEL_PADDING);
 
-    raw_model.maxs[0] = LE_Float32(model->x2 + MODEL_PADDING);
-    raw_model.maxs[1] = LE_Float32(model->y2 + MODEL_PADDING);
-    raw_model.maxs[2] = LE_Float32(model->z2 + MODEL_PADDING);
+    raw_model.maxs[0] = AlignedLittleEndianFloat(model->x2 + MODEL_PADDING);
+    raw_model.maxs[1] = AlignedLittleEndianFloat(model->y2 + MODEL_PADDING);
+    raw_model.maxs[2] = AlignedLittleEndianFloat(model->z2 + MODEL_PADDING);
 
     // raw_model.origin stays zero
 
-    raw_model.headnode = LE_S32(model->nodes[0]);
+    raw_model.headnode = AlignedLittleEndianS32(model->nodes[0]);
 
-    raw_model.firstface = LE_S32(model->firstface);
-    raw_model.numfaces  = LE_S32(model->numfaces);
+    raw_model.firstface = AlignedLittleEndianS32(model->firstface);
+    raw_model.numfaces  = AlignedLittleEndianS32(model->numfaces);
 
     q2_models->Append(&raw_model, sizeof(raw_model));
 }
@@ -1121,11 +1121,11 @@ void quake2_game_interface_c::BeginLevel()
 
 void quake2_game_interface_c::Property(std::string key, std::string value)
 {
-    if (StringCaseCmp(key, "level_name") == 0)
+    if (StringCaseCompareASCII(key, "level_name") == 0)
     {
         level_name = !value.empty() ? value.c_str() : "";
     }
-    else if (StringCaseCmp(key, "description") == 0)
+    else if (StringCaseCompareASCII(key, "description") == 0)
     {
         description = !value.empty() ? value.c_str() : "";
     }

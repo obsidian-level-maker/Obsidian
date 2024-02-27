@@ -69,7 +69,7 @@ static void Cookie_SetValue(std::string name, std::string value)
     }
 
     // need special handling for the 'seed' value
-    if (StringCaseCmp(name, "seed") == 0)
+    if (StringCaseCompareASCII(name, "seed") == 0)
     {
         // ignore seed when loading a config file
         // unless the -k / --keep option is given.
@@ -145,7 +145,7 @@ static bool Cookie_ParseLine(std::string buf)
     if (name.empty() || value.empty()) { return false; }
 
     // FIXME: Can't remember if this is needed anymore.
-    if (StringCaseCmp(value, "MixItUp") == 0) { value = "Mix It Up"; }
+    if (StringCaseCompareASCII(value, "MixItUp") == 0) { value = "Mix It Up"; }
 
     Cookie_SetValue(name, value);
     return true;
@@ -488,11 +488,11 @@ static RecentFiles_c recent_configs;
 
 void Recent_Parse(std::string name, std::string value)
 {
-    if (StringCaseCmp(name, "recent_wad") == 0)
+    if (StringCaseCompareASCII(name, "recent_wad") == 0)
     {
         recent_wads.insert(std::filesystem::u8path(value));
     }
-    else if (StringCaseCmp(name, "recent_config") == 0)
+    else if (StringCaseCompareASCII(name, "recent_config") == 0)
     {
         recent_configs.insert(std::filesystem::u8path(value));
     }

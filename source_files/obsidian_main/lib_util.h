@@ -19,129 +19,28 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __LIB_UTIL_H__
-#define __LIB_UTIL_H__
+#pragma once
 
-#include <stdint.h>
-
-#include <codecvt>
 #include <string>
-#include <string_view>
 
 /* string utilities */
 
-int  StringCaseCmp(std::string_view a, std::string_view b);
-int  StringCaseCmpPartial(std::string_view a, std::string_view b);
-bool StringCaseEquals(std::string_view a, std::string_view b);
-bool StringCaseEqualsPartial(std::string_view a, std::string_view b);
-
-std::string StringUpper(std::string_view name);
-
-void StringRemoveCRLF(std::string* str);
-void StringReplaceChar(std::string* str, char old_ch, char new_ch);
-
-std::string StringFormat(std::string_view fmt, ...);
-
-std::string NumToString(int value);
-std::string NumToString(unsigned long long int value);
-std::string NumToString(double value);
-int         StringToInt(std::string value);
-int         StringToHex(std::string value);
-double      StringToDouble(std::string value);
-
-char* mem_gets(char* buf, int size, const char** str_ptr);
-
-// The following string conversion classes/code are adapted from public domain
-// code by Andrew Choi originally found at
-// https://web.archive.org/web/20151209032329/http://members.shaw.ca/akochoi/articles/unicode-processing-c++0x/
-
-struct UTF8
-{
-    typedef char        storage_type;
-    typedef std::string string_type;
-};
-
-struct UTF16
-{
-    typedef char16_t       storage_type;
-    typedef std::u16string string_type;
-};
-
-struct UTF32
-{
-    typedef char32_t       storage_type;
-    typedef std::u32string string_type;
-};
-
-template <class T, class F>
-int storageMultiplier();
-
-template <class T, class F, class I>
-class str_converter
-{
-   private:
-    typedef typename F::storage_type from_storage_type;
-    typedef typename T::storage_type to_storage_type;
-    typedef typename I::storage_type intern_storage_type;
-
-    typedef std::codecvt<intern_storage_type, UTF8::storage_type,
-                         std::mbstate_t>
-        codecvt_type;
-
-   public:
-    typedef typename F::string_type from_string_type;
-    typedef typename T::string_type to_string_type;
-
-    to_string_type out(const from_string_type& s)
-    {
-        if (s.empty()) return to_string_type();
-
-        static std::locale    loc(std::locale::classic(), new codecvt_type);
-        static std::mbstate_t state;
-        static const codecvt_type& cvt = std::use_facet<codecvt_type>(loc);
-
-        const from_storage_type* enx;
-
-        int              len = s.length() * storageMultiplier<T, F>();
-        to_storage_type* i   = new to_storage_type[len];
-        to_storage_type* inx;
-
-        typename codecvt_type::result r = cvt.out(
-            state, s.c_str(), s.c_str() + s.length(), enx, i, i + len, inx);
-
-        if (r != codecvt_type::ok) return to_string_type();
-
-        return to_string_type(i, inx - i);
-    }
-
-    to_string_type in(const from_string_type& s)
-    {
-        if (s.empty()) return to_string_type();
-
-        static std::locale    loc(std::locale::classic(), new codecvt_type);
-        static std::mbstate_t state;
-        static const codecvt_type& cvt = std::use_facet<codecvt_type>(loc);
-
-        const from_storage_type* enx;
-
-        int              len = s.length() * storageMultiplier<T, F>();
-        to_storage_type* i   = new to_storage_type[len];
-        to_storage_type* inx;
-
-        typename codecvt_type::result r = cvt.in(
-            state, s.c_str(), s.c_str() + s.length(), enx, i, i + len, inx);
-
-        if (r != codecvt_type::ok) return to_string_type();
-
-        return to_string_type(i, inx - i);
-    }
-};
-
-extern std::string    StringToUTF8(const std::string& s);
-extern std::string    StringToUTF8(const std::u16string& s);
-extern std::string    StringToUTF8(const std::u32string& s);
-extern std::u16string StringToUTF16(const std::string& s);
-extern std::u32string StringToUTF32(const std::string& s);
+#ifdef _WIN32
+// Technically these are to and from UTF-16, but since these are only for
+// Windows "wide" APIs I think we'll be ok - Dasho
+std::string  WStringToUTF8(std::wstring_view instring);
+std::wstring UTF8ToWString(std::string_view instring);
+#endif
+int StringCaseCompareASCII(std::string_view A, std::string_view B);
+int StringPrefixCaseCompareASCII(std::string_view A, std::string_view B);
+std::string StringUpperASCII(std::string_view instring);
+std::string StringFormat(const char* fmt, ...);
+std::string NumberToString(int value);
+std::string NumberToString(unsigned long long int value);
+std::string NumberToString(double value);
+int         StringToInt(std::string_view value);
+int         StringToHex(std::string_view value);
+double      StringToDouble(std::string_view value);
 
 /* time utilities */
 
@@ -150,10 +49,10 @@ uint32_t TimeGetMillies();
 /* math utilities */
 
 uint32_t IntHash(uint32_t key);
-uint32_t StringHash(std::string str);
-uint64_t StringHash64(std::string str);
+uint32_t StringHash(std::string_view str);
+uint64_t StringHash64(std::string_view str);
 
-#define ALIGN_LEN(x) (((x) + 3) & ~3)
+#define OBSIDIAN_ALIGN_LENGTH(x) (((x) + 3) & ~3)
 
 double PerpDist(double x, double y, double x1, double y1, double x2, double y2);
 double AlongDist(double x, double y, double x1, double y1, double x2,
@@ -177,8 +76,6 @@ std::pair<double, double> AlongCoord(double along, double px1, double py1,
                                      double px2, double py2);
 
 bool VectorSameDir(double dx1, double dy1, double dx2, double dy2);
-
-#endif /* __LIB_UTIL_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

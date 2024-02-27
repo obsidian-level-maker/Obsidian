@@ -103,6 +103,7 @@ if(NOT CONSOLE_ONLY AND NOT HAIKU)
   target_include_directories(obsidian PRIVATE ${OBSIDIAN_LIB_DIR}/imgui)
   target_include_directories(obsidian PRIVATE ${OBSIDIAN_LIB_DIR}/sokol)
 endif()
+target_include_directories(obsidian PRIVATE ${OBSIDIAN_LIB_DIR}/utf8proc)
 
 if(UNIX)
   target_compile_definitions(obsidian PRIVATE UNIX=1)
@@ -118,6 +119,7 @@ if(WIN32)
               miniz
               physfs-static
               obsidian_slump
+              utf8proc
     )
 elseif(NOT CONSOLE_ONLY AND NOT HAIKU)
   find_package(X11)
@@ -136,11 +138,12 @@ elseif(NOT CONSOLE_ONLY AND NOT HAIKU)
             obsidian_slump
             ${XLIBS}
             OpenGL::OpenGL
+            utf8proc
   )
 else()
   target_link_libraries(
     obsidian PRIVATE ajbsp ajparse miniz physfs-static
-                      obsidian_slump
+                      obsidian_slump utf8proc
   )
 endif()
 

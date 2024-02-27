@@ -213,8 +213,8 @@ bool BuildNodes(std::filesystem::path filename)
     // Prep AJBSP parameters
     obbuildinfo_t *build_info = new obbuildinfo_t;
     build_info->fast          = true;
-    if (StringCaseCmp(current_port, "limit_enforcing") == 0 ||
-        StringCaseCmp(current_port, "boom") == 0)
+    if (StringCaseCompareASCII(current_port, "limit_enforcing") == 0 ||
+        StringCaseCompareASCII(current_port, "boom") == 0)
     {
         build_info->gl_nodes    = false;
         build_info->force_v5    = false;
@@ -222,7 +222,7 @@ bool BuildNodes(std::filesystem::path filename)
         build_info->do_blockmap = true;
         build_info->do_reject   = true;
     }
-    else if (StringCaseCmp(current_port, "eternity") == 0)
+    else if (StringCaseCompareASCII(current_port, "eternity") == 0)
     {  // Eternity
         build_info->gl_nodes       = true;
         build_info->do_reject      = false;
@@ -436,7 +436,7 @@ void Doom::BeginLevel()
         }
         else
         {
-            if (StringCaseCmp(current_port, "eternity") == 0)
+            if (StringCaseCompareASCII(current_port, "eternity") == 0)
             {
                 textmap_lump->Printf("namespace = \"Doom\";\n\n");
             }
@@ -557,8 +557,8 @@ void Doom::AddVertex(int x, int y)
     {
         raw_vertex_t vert;
 
-        vert.x = LE_S16(x);
-        vert.y = LE_S16(y);
+        vert.x = AlignedLittleEndianS16(x);
+        vert.y = AlignedLittleEndianS16(y);
         vertex_lump->Append(&vert, sizeof(vert));
     }
     else
@@ -586,15 +586,15 @@ void Doom::AddSector(int f_h, std::string f_tex, int c_h, std::string c_tex,
     {
         raw_sector_t sec;
 
-        sec.floor_h = LE_S16(f_h);
-        sec.ceil_h  = LE_S16(c_h);
+        sec.floor_h = AlignedLittleEndianS16(f_h);
+        sec.ceil_h  = AlignedLittleEndianS16(c_h);
 
         std::copy(f_tex.data(), f_tex.data() + 8, sec.floor_tex);
         std::copy(c_tex.data(), c_tex.data() + 8, sec.ceil_tex);
 
-        sec.light   = LE_U16(light);
-        sec.special = LE_U16(special);
-        sec.tag     = LE_S16(tag);
+        sec.light   = AlignedLittleEndianU16(light);
+        sec.special = AlignedLittleEndianU16(special);
+        sec.tag     = AlignedLittleEndianS16(tag);
         sector_lump->Append(&sec, sizeof(sec));
     }
     else
@@ -632,14 +632,14 @@ void Doom::AddSidedef(int sector, std::string l_tex, std::string m_tex,
     {
         raw_sidedef_t side;
 
-        side.sector = LE_S16(sector);
+        side.sector = AlignedLittleEndianS16(sector);
 
         std::copy(l_tex.data(), l_tex.data() + 8, side.lower_tex);
         std::copy(m_tex.data(), m_tex.data() + 8, side.mid_tex);
         std::copy(u_tex.data(), u_tex.data() + 8, side.upper_tex);
 
-        side.x_offset = LE_S16(x_offset);
-        side.y_offset = LE_S16(y_offset);
+        side.x_offset = AlignedLittleEndianS16(x_offset);
+        side.y_offset = AlignedLittleEndianS16(y_offset);
         sidedef_lump->Append(&side, sizeof(side));
     }
     else
@@ -677,15 +677,15 @@ void Doom::AddLinedef(int vert1, int vert2, int side1, int side2, int type,
         {
             raw_linedef_t line;
 
-            line.start = LE_U16(vert1);
-            line.end   = LE_U16(vert2);
+            line.start = AlignedLittleEndianU16(vert1);
+            line.end   = AlignedLittleEndianU16(vert2);
 
-            line.sidedef1 = side1 < 0 ? 0xFFFF : LE_U16(side1);
-            line.sidedef2 = side2 < 0 ? 0xFFFF : LE_U16(side2);
+            line.sidedef1 = side1 < 0 ? 0xFFFF : AlignedLittleEndianU16(side1);
+            line.sidedef2 = side2 < 0 ? 0xFFFF : AlignedLittleEndianU16(side2);
 
-            line.type  = LE_U16(type);
-            line.flags = LE_U16(flags);
-            line.tag   = LE_U16(tag);
+            line.type  = AlignedLittleEndianU16(type);
+            line.flags = AlignedLittleEndianU16(flags);
+            line.tag   = AlignedLittleEndianU16(tag);
             linedef_lump->Append(&line, sizeof(line));
         }
         else
@@ -752,14 +752,14 @@ void Doom::AddLinedef(int vert1, int vert2, int side1, int side2, int type,
             // clear unused fields (esp. arguments)
             memset(&line, 0, sizeof(line));
 
-            line.start = LE_U16(vert1);
-            line.end   = LE_U16(vert2);
+            line.start = AlignedLittleEndianU16(vert1);
+            line.end   = AlignedLittleEndianU16(vert2);
 
-            line.sidedef1 = side1 < 0 ? 0xffff : LE_U16(side1);
-            line.sidedef2 = side2 < 0 ? 0xffff : LE_U16(side2);
+            line.sidedef1 = side1 < 0 ? 0xffff : AlignedLittleEndianU16(side1);
+            line.sidedef2 = side2 < 0 ? 0xffff : AlignedLittleEndianU16(side2);
 
             line.special = type;  // 8 bits
-            line.flags   = LE_U16(flags);
+            line.flags   = AlignedLittleEndianU16(flags);
 
             // tag value is UNUSED
 
@@ -916,12 +916,12 @@ void Doom::AddThing(int x, int y, int h, int type, int angle, int options,
         {
             raw_thing_t thing;
 
-            thing.x = LE_S16(x);
-            thing.y = LE_S16(y);
+            thing.x = AlignedLittleEndianS16(x);
+            thing.y = AlignedLittleEndianS16(y);
 
-            thing.type    = LE_U16(type);
-            thing.angle   = LE_S16(angle);
-            thing.options = LE_U16(options);
+            thing.type    = AlignedLittleEndianU16(type);
+            thing.angle   = AlignedLittleEndianS16(angle);
+            thing.options = AlignedLittleEndianU16(options);
             thing_lump->Append(&thing, sizeof(thing));
         }
         else
@@ -984,16 +984,16 @@ void Doom::AddThing(int x, int y, int h, int type, int angle, int options,
             // clear unused fields (esp. arguments)
             memset(&thing, 0, sizeof(thing));
 
-            thing.x = LE_S16(x);
-            thing.y = LE_S16(y);
+            thing.x = AlignedLittleEndianS16(x);
+            thing.y = AlignedLittleEndianS16(y);
 
             if (ob_hexen_ceiling_check(type)) { thing.height = 0; }
-            else { thing.height = LE_S16(h); }
-            thing.type    = LE_U16(type);
-            thing.angle   = LE_S16(angle);
-            thing.options = LE_U16(options);
+            else { thing.height = AlignedLittleEndianS16(h); }
+            thing.type    = AlignedLittleEndianU16(type);
+            thing.angle   = AlignedLittleEndianS16(angle);
+            thing.options = AlignedLittleEndianU16(options);
 
-            thing.tid     = LE_S16(tid);
+            thing.tid     = AlignedLittleEndianS16(tid);
             thing.special = special;
 
             if (args) { std::copy(args, args + 5, thing.args); }
@@ -1176,8 +1176,8 @@ bool Doom::game_interface_c::Start(const char *preset)
     current_port    = ob_get_param("port");
     compress_output = ob_mod_enabled("compress_output");
     file_per_map    = (compress_output &&
-                    !(StringCaseCmp(current_port, "dsda") == 0 ||
-                      (StringCaseCmp(current_port, "limit_enforcing") == 0)));
+                    !(StringCaseCompareASCII(current_port, "dsda") == 0 ||
+                      (StringCaseCompareASCII(current_port, "limit_enforcing") == 0)));
 
     ob_invoke_hook("pre_setup");
 
@@ -1193,7 +1193,7 @@ bool Doom::game_interface_c::Start(const char *preset)
         if (compress_output)
         {
             zip_filename = filename;
-            if ((StringCaseCmp(current_port, "dsda") == 0))
+            if ((StringCaseCompareASCII(current_port, "dsda") == 0))
             {
                 zip_filename.replace_extension("zip");
             }
@@ -1204,7 +1204,7 @@ bool Doom::game_interface_c::Start(const char *preset)
     {
         if (compress_output)
         {
-            if ((StringCaseCmp(current_port, "dsda") == 0))
+            if ((StringCaseCompareASCII(current_port, "dsda") == 0))
             {
                 filename = std::filesystem::current_path()
                                .append(preset)
@@ -1242,7 +1242,7 @@ bool Doom::game_interface_c::Start(const char *preset)
     if (compress_output)
     {
         zip_filename = filename;
-        if ((StringCaseCmp(current_port, "dsda") == 0))
+        if ((StringCaseCompareASCII(current_port, "dsda") == 0))
         {
             zip_filename.replace_extension("zip");
         }
@@ -1271,7 +1271,7 @@ bool Doom::game_interface_c::Start(const char *preset)
 
     // Need to preempt the rest of this process for now if we are using Vanilla
     // Doom
-    if (StringCaseCmp(current_port, "limit_enforcing") == 0)
+    if (StringCaseCompareASCII(current_port, "limit_enforcing") == 0)
     {
         map_format  = FORMAT_BINARY;
         build_nodes = true;
@@ -1299,17 +1299,17 @@ bool Doom::game_interface_c::Start(const char *preset)
         return false;
     }
 
-    if (StringCaseCmp(current_port, "zdoom") == 0)
+    if (StringCaseCompareASCII(current_port, "zdoom") == 0)
     {
         map_format  = FORMAT_UDMF;
         build_nodes = ob_mod_enabled("build_nodes");
     }
-    else if (StringCaseCmp(current_port, "eternity") == 0)
+    else if (StringCaseCompareASCII(current_port, "eternity") == 0)
     {
         map_format  = FORMAT_UDMF;
         build_nodes = true;
     }
-    else if (StringCaseCmp(current_port, "edge") == 0)
+    else if (StringCaseCompareASCII(current_port, "edge") == 0)
     {
         map_format  = FORMAT_UDMF;
         build_nodes = false;
@@ -1341,7 +1341,7 @@ bool Doom::game_interface_c::Start(const char *preset)
 bool Doom::game_interface_c::Finish(bool build_ok)
 {
     // Skip DM_EndWAD if using Vanilla Doom
-    if (StringCaseCmp(current_port, "limit_enforcing") != 0)
+    if (StringCaseCompareASCII(current_port, "limit_enforcing") != 0)
     {
         // TODO: handle write errors
         EndWAD();
@@ -1406,15 +1406,15 @@ void Doom::game_interface_c::BeginLevel()
 
 void Doom::game_interface_c::Property(std::string key, std::string value)
 {
-    if (StringCaseCmp(key, "level_name") == 0) { level_name = value.c_str(); }
-    else if (StringCaseCmp(key, "sub_format") == 0)
+    if (StringCaseCompareASCII(key, "level_name") == 0) { level_name = value.c_str(); }
+    else if (StringCaseCompareASCII(key, "sub_format") == 0)
     {
-        if (StringCaseCmp(value, "doom") == 0) { sub_format = 0; }
-        else if (StringCaseCmp(value, "hexen") == 0)
+        if (StringCaseCompareASCII(value, "doom") == 0) { sub_format = 0; }
+        else if (StringCaseCompareASCII(value, "hexen") == 0)
         {
             sub_format = SUBFMT_Hexen;
         }
-        else if (StringCaseCmp(value, "strife") == 0)
+        else if (StringCaseCompareASCII(value, "strife") == 0)
         {
             sub_format = SUBFMT_Strife;
         }
@@ -1423,19 +1423,19 @@ void Doom::game_interface_c::Property(std::string key, std::string value)
             LogPrintf("WARNING: unknown DOOM sub_format '%s'\n", value.c_str());
         }
     }
-    else if (StringCaseCmp(key, "offset_map") == 0)
+    else if (StringCaseCompareASCII(key, "offset_map") == 0)
     {
         dm_offset_map = StringToInt(value);
     }
-    else if (StringCaseCmp(key, "ef_solid_type") == 0)
+    else if (StringCaseCompareASCII(key, "ef_solid_type") == 0)
     {
         ef_solid_type = StringToInt(value);
     }
-    else if (StringCaseCmp(key, "ef_liquid_type") == 0)
+    else if (StringCaseCompareASCII(key, "ef_liquid_type") == 0)
     {
         ef_liquid_type = StringToInt(value);
     }
-    else if (StringCaseCmp(key, "ef_thing_mode") == 0)
+    else if (StringCaseCompareASCII(key, "ef_thing_mode") == 0)
     {
         ef_thing_mode = StringToInt(value);
     }

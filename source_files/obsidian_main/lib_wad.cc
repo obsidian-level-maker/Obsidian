@@ -64,8 +64,8 @@ bool WAD_OpenRead(std::filesystem::path filename)
         return false;
     }
 
-    wad_R_header.num_lumps = LE_U32(wad_R_header.num_lumps);
-    wad_R_header.dir_start = LE_U32(wad_R_header.dir_start);
+    wad_R_header.num_lumps = AlignedLittleEndianU32(wad_R_header.num_lumps);
+    wad_R_header.dir_start = AlignedLittleEndianU32(wad_R_header.dir_start);
 
     /* read directory */
 
@@ -109,8 +109,8 @@ bool WAD_OpenRead(std::filesystem::path filename)
             break;
         }
 
-        L->start  = LE_U32(L->start);
-        L->length = LE_U32(L->length);
+        L->start  = AlignedLittleEndianU32(L->start);
+        L->length = AlignedLittleEndianU32(L->length);
     }
 
     return true;  // OK
@@ -136,7 +136,7 @@ int WAD_FindEntry(const char *name)
         strncpy(buffer, wad_R_dir[i].name, 8);
         buffer[8] = 0;
 
-        if (StringCaseCmp(name, buffer) == 0) { return i; }
+        if (StringCaseCompareASCII(name, buffer) == 0) { return i; }
     }
 
     return -1;  // not found
@@ -248,8 +248,8 @@ void WAD_CloseWrite(void)
 
     // finally write the _real_ WAD header
 
-    header.dir_start = LE_U32(header.dir_start);
-    header.num_lumps = LE_U32(header.num_lumps);
+    header.dir_start = AlignedLittleEndianU32(header.dir_start);
+    header.num_lumps = AlignedLittleEndianU32(header.num_lumps);
 
     fseek(wad_W_fp, 0, SEEK_SET);
 
@@ -293,7 +293,7 @@ void WAD_FinishLump(void)
         ftell(wad_W_fp) - wad_W_lump.start;
 
     // pad lumps to a multiple of four bytes
-    int padding = ALIGN_LEN(len) - len;
+    int padding = OBSIDIAN_ALIGN_LENGTH(len) - len;
 
     if (padding > 0)
     {
@@ -303,8 +303,8 @@ void WAD_FinishLump(void)
     }
 
     // fix endianness
-    wad_W_lump.start  = LE_U32(wad_W_lump.start);
-    wad_W_lump.length = LE_U32(len);
+    wad_W_lump.start  = AlignedLittleEndianU32(wad_W_lump.start);
+    wad_W_lump.length = AlignedLittleEndianU32(len);
 
     wad_W_directory.push_back(wad_W_lump);
 }
@@ -345,8 +345,8 @@ bool WAD2_OpenRead(const char *filename)
         return false;
     }
 
-    wad2_R_header.num_lumps = LE_U32(wad2_R_header.num_lumps);
-    wad2_R_header.dir_start = LE_U32(wad2_R_header.dir_start);
+    wad2_R_header.num_lumps = AlignedLittleEndianU32(wad2_R_header.num_lumps);
+    wad2_R_header.dir_start = AlignedLittleEndianU32(wad2_R_header.dir_start);
 
     /* read directory */
 
@@ -393,9 +393,9 @@ bool WAD2_OpenRead(const char *filename)
         // make sure name is NUL terminated.
         L->name[15] = 0;
 
-        L->start  = LE_U32(L->start);
-        L->length = LE_U32(L->length);
-        L->u_len  = LE_U32(L->u_len);
+        L->start  = AlignedLittleEndianU32(L->start);
+        L->length = AlignedLittleEndianU32(L->length);
+        L->u_len  = AlignedLittleEndianU32(L->u_len);
     }
 
     return true;  // OK
@@ -417,7 +417,7 @@ int WAD2_FindEntry(const char *name)
 {
     for (unsigned int i = 0; i < wad2_R_header.num_lumps; i++)
     {
-        if (StringCaseCmp(name, wad2_R_dir[i].name) == 0) { return i; }
+        if (StringCaseCompareASCII(name, wad2_R_dir[i].name) == 0) { return i; }
     }
 
     return -1;  // not found
@@ -552,8 +552,8 @@ void WAD2_CloseWrite(void)
 
     // finally write the _real_ WAD2 header
 
-    header.dir_start = LE_U32(header.dir_start);
-    header.num_lumps = LE_U32(header.num_lumps);
+    header.dir_start = AlignedLittleEndianU32(header.dir_start);
+    header.num_lumps = AlignedLittleEndianU32(header.num_lumps);
 
     fseek(wad2_W_fp, 0, SEEK_SET);
 
@@ -593,7 +593,7 @@ void WAD2_FinishLump(void)
     int len = (int)ftell(wad2_W_fp) - (int)wad2_W_lump.start;
 
     // pad lumps to a multiple of four bytes
-    int padding = ALIGN_LEN(len) - len;
+    int padding = OBSIDIAN_ALIGN_LENGTH(len) - len;
 
     if (padding > 0)
     {
@@ -603,9 +603,9 @@ void WAD2_FinishLump(void)
     }
 
     // fix endianness
-    wad2_W_lump.start  = LE_U32(wad2_W_lump.start);
-    wad2_W_lump.length = LE_U32(len);
-    wad2_W_lump.u_len  = LE_U32(len);
+    wad2_W_lump.start  = AlignedLittleEndianU32(wad2_W_lump.start);
+    wad2_W_lump.length = AlignedLittleEndianU32(len);
+    wad2_W_lump.u_len  = AlignedLittleEndianU32(len);
 
     wad2_W_directory.push_back(wad2_W_lump);
 }
