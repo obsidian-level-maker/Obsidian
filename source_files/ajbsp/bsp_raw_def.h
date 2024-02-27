@@ -1,10 +1,10 @@
 //------------------------------------------------------------------------
 //
-//  AJ-BSP  Copyright (C) 2007-2018  Andrew Apted
+//  AJ-BSP  Copyright (C) 2007-2023  Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
-//  as published by the Free Software Foundation; either version 2
+//  as published by the Free Software Foundation; either version 3
 //  of the License, or (at your option) any later version.
 //
 //  This program is distributed in the hope that it will be useful,
@@ -14,79 +14,69 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __AJBSP_RAW_DEF_H__
-#define __AJBSP_RAW_DEF_H__
+#pragma once
+
+#include <stdint.h>
 
 /* ----- The wad structures ---------------------- */
 
-namespace ajbsp
-{
-
-#define WAD_TEX_NAME  8
-#define WAD_FLAT_NAME 8
-
 // wad header
 #pragma pack(push, 1)
-typedef struct raw_wad_header_s
+struct RawWadHeader
 {
     char ident[4];
 
     uint32_t num_entries;
     uint32_t dir_start;
-
-} raw_wad_header_t;
+};
 #pragma pack(pop)
 
 // directory entry
 #pragma pack(push, 1)
-typedef struct raw_wad_entry_s
+struct RawWadEntry
 {
     uint32_t pos;
     uint32_t size;
 
     char name[8];
-
-} raw_wad_entry_t;
+};
 #pragma pack(pop)
 
 // Lump order in a map WAD: each map needs a couple of lumps
 // to provide a complete scene geometry description.
-typedef enum
+enum LumpOrder
 {
-    LL_LABEL = 0,  // A separator name, ExMx or MAPxx
-    LL_THINGS,     // Monsters, items..
-    LL_LINEDEFS,   // LineDefs, from editing
-    LL_SIDEDEFS,   // SideDefs, from editing
-    LL_VERTEXES,   // Vertices, edited and BSP splits generated
-    LL_SEGS,       // LineSegs, from LineDefs split by BSP
-    LL_SSECTORS,   // SubSectors, list of LineSegs
-    LL_NODES,      // BSP nodes
-    LL_SECTORS,    // Sectors, from editing
-    LL_REJECT,     // LUT, sector-sector visibility
-    LL_BLOCKMAP,   // LUT, motion clipping, walls/grid element
-    LL_BEHAVIOR    // Hexen scripting stuff
-} lump_order_e;
+    kLumpLabel = 0,   // A separator name, ExMx or MAPxx
+    kLumpThings,      // Monsters, items..
+    kLumpLinedefs,    // LineDefs, from editing
+    kLumpSidedefs,    // SideDefs, from editing
+    kLumpVertexes,    // Vertices, edited and BSP splits generated
+    kLumpSegs,        // LineSegs, from LineDefs split by BSP
+    kLumpSubSectors,  // SubSectors, list of LineSegs
+    kLumpNodes,       // BSP nodes
+    kLumpSectors,     // Sectors, from editing
+    kLumpReject,      // LUT, sector-sector visibility
+    kLumpBlockmap,    // LUT, motion clipping, walls/grid element
+    kLumpBehavior     // Hexen scripting stuff
+};
 
 /* ----- The level structures ---------------------- */
-
 #pragma pack(push, 1)
-typedef struct raw_vertex_s
+struct RawVertex
 {
     int16_t x, y;
-
-} raw_vertex_t;
+};
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-typedef struct raw_v2_vertex_s
+struct RawV2Vertex
 {
     int32_t x, y;
-
-} raw_v2_vertex_t;
+};
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-typedef struct raw_linedef_s
+struct RawLinedef
 {
     uint16_t start;  // from this vertex...
     uint16_t end;    // ... to this vertex
@@ -95,12 +85,11 @@ typedef struct raw_linedef_s
     int16_t  tag;    // this linedef activates the sector with same tag
     uint16_t right;  // right sidedef
     uint16_t left;   // left sidedef (only if this line adjoins 2 sectors)
-
-} raw_linedef_t;
+};
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-typedef struct raw_hexen_linedef_s
+struct RawHexenLinedef
 {
     uint16_t start;    // from this vertex...
     uint16_t end;      // ... to this vertex
@@ -109,12 +98,11 @@ typedef struct raw_hexen_linedef_s
     uint8_t  args[5];  // special arguments
     uint16_t right;    // right sidedef
     uint16_t left;     // left sidedef
-
-} raw_hexen_linedef_t;
+};
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-typedef struct raw_sidedef_s
+struct RawSidedef
 {
     int16_t x_offset;  // X offset for texture
     int16_t y_offset;  // Y offset for texture
@@ -124,12 +112,11 @@ typedef struct raw_sidedef_s
     char mid_tex[8];    // texture name for the regular part
 
     uint16_t sector;  // adjacent sector
-
-} raw_sidedef_t;
+};
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-typedef struct raw_sector_s
+struct RawSector
 {
     int16_t floorh;  // floor height
     int16_t ceilh;   // ceiling height
@@ -140,24 +127,22 @@ typedef struct raw_sector_s
     uint16_t light;  // light level (0-255)
     uint16_t type;   // special type (0 = normal, 9 = secret, ...)
     int16_t  tag;    // sector activated by a linedef with same tag
-
-} raw_sector_t;
+};
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-typedef struct raw_thing_s
+struct RawThing
 {
     int16_t  x, y;     // position of thing
     int16_t  angle;    // angle thing faces (degrees)
     uint16_t type;     // type of thing
     uint16_t options;  // when appears, deaf, etc..
-
-} raw_thing_t;
+};
 #pragma pack(pop)
 
 #pragma pack(push, 1)
 // -JL- Hexen thing definition
-typedef struct raw_hexen_thing_s
+struct RawHexenThing
 {
     int16_t  tid;      // tag id (for scripts/specials)
     int16_t  x, y;     // position
@@ -168,14 +153,12 @@ typedef struct raw_hexen_thing_s
 
     uint8_t special;  // special type
     uint8_t args[5];  // special arguments
-
-} raw_hexen_thing_t;
+};
 #pragma pack(pop)
 
 /* ----- The BSP tree structures ----------------------- */
-
 #pragma pack(push, 1)
-typedef struct raw_seg_s
+struct RawSeg
 {
     uint16_t start;    // from this vertex...
     uint16_t end;      // ... to this vertex
@@ -183,85 +166,77 @@ typedef struct raw_seg_s
     uint16_t linedef;  // linedef that this seg goes along
     uint16_t flip;     // true if not the same direction as linedef
     uint16_t dist;     // distance from starting point
-
-} raw_seg_t;
+};
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-typedef struct raw_gl_seg_s
+struct RawGLSeg
 {
     uint16_t start;    // from this vertex...
     uint16_t end;      // ... to this vertex
     uint16_t linedef;  // linedef that this seg goes along, or -1
     uint16_t side;     // 0 if on right of linedef, 1 if on left
     uint16_t partner;  // partner seg number, or -1
-
-} raw_gl_seg_t;
+};
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-typedef struct raw_v5_seg_s
+struct RawV5Seg
 {
     uint32_t start;    // from this vertex...
     uint32_t end;      // ... to this vertex
     uint16_t linedef;  // linedef that this seg goes along, or -1
     uint16_t side;     // 0 if on right of linedef, 1 if on left
     uint32_t partner;  // partner seg number, or -1
-
-} raw_v5_seg_t;
+};
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-typedef struct raw_zdoom_seg_s
+struct RawZDoomSeg
 {
     uint32_t start;    // from this vertex...
     uint32_t end;      // ... to this vertex
     uint16_t linedef;  // linedef that this seg goes along, or -1
     uint8_t  side;     // 0 if on right of linedef, 1 if on left
-
-} raw_zdoom_seg_t;
+};
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-typedef struct raw_bbox_s
+struct RawBoundingBox
 {
     int16_t maxy, miny;
     int16_t minx, maxx;
-
-} raw_bbox_t;
+};
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-typedef struct raw_node_s
+struct RawNode
 {
-    int16_t    x, y;         // starting point
-    int16_t    dx, dy;       // offset to ending point
-    raw_bbox_t b1, b2;       // bounding rectangles
-    uint16_t   right, left;  // children: Node or SSector (if high bit is set)
-
-} raw_node_t;
+    int16_t        x, y;    // starting point
+    int16_t        dx, dy;  // offset to ending point
+    RawBoundingBox b1, b2;  // bounding rectangles
+    uint16_t right, left;   // children: Node or SSector (if high bit is set)
+};
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-typedef struct raw_subsec_s
+struct RawSubsector
 {
     uint16_t num;    // number of Segs in this Sub-Sector
     uint16_t first;  // first Seg
-
-} raw_subsec_t;
+};
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-typedef struct raw_v5_subsec_s
+struct RawV5Subsector
 {
     uint32_t num;    // number of Segs in this Sub-Sector
     uint32_t first;  // first Seg
-
-} raw_v5_subsec_t;
+};
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-typedef struct raw_zdoom_subsec_s
+struct RawZDoomSubsector
 {
     uint32_t segnum;
 
@@ -269,36 +244,32 @@ typedef struct raw_zdoom_subsec_s
     //        in an order dictated by the subsector list, e.g. all
     //        segs of the second subsector must appear directly after
     //        all segs of the first subsector.
-
-} raw_zdoom_subsec_t;
+};
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-typedef struct raw_v5_node_s
+struct RawV5Node
 {
     // this structure used by ZDoom nodes too
 
-    int16_t    x, y;         // starting point
-    int16_t    dx, dy;       // offset to ending point
-    raw_bbox_t b1, b2;       // bounding rectangles
-    uint32_t   right, left;  // children: Node or SSector (if high bit is set)
-
-} raw_v5_node_t;
+    int16_t        x, y;    // starting point
+    int16_t        dx, dy;  // offset to ending point
+    RawBoundingBox b1, b2;  // bounding rectangles
+    uint32_t right, left;   // children: Node or SSector (if high bit is set)
+};
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-typedef struct raw_blockmap_header_s
+struct RawBlockmapHeader
 {
     int16_t x_origin, y_origin;
     int16_t x_blocks, y_blocks;
-
-} raw_blockmap_header_t;
+};
 #pragma pack(pop)
 
 /* ----- Graphical structures ---------------------- */
-
 #pragma pack(push, 1)
-typedef struct
+struct RawPatchDefinition
 {
     int16_t x_origin;
     int16_t y_origin;
@@ -306,18 +277,16 @@ typedef struct
     uint16_t pname;     // index into PNAMES
     uint16_t stepdir;   // NOT USED
     uint16_t colormap;  // NOT USED
-
-} raw_patchdef_t;
+};
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-typedef struct
+struct RawStrifePatchDefinition
 {
     int16_t  x_origin;
     int16_t  y_origin;
     uint16_t pname;  // index into PNAMES
-
-} raw_strife_patchdef_t;
+};
 #pragma pack(pop)
 
 // Texture definition.
@@ -326,7 +295,7 @@ typedef struct
 // with patches being lumps stored in the WAD.
 //
 #pragma pack(push, 1)
-typedef struct
+struct RawTexture
 {
     char name[8];
 
@@ -336,13 +305,12 @@ typedef struct
     uint16_t column_dir[2];  // NOT USED
     uint16_t patch_count;
 
-    raw_patchdef_t patches[1];
-
-} raw_texture_t;
+    RawPatchDefinition patches[1];
+};
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-typedef struct
+struct RawStrifeTexture
 {
     char name[8];
 
@@ -351,9 +319,8 @@ typedef struct
     uint16_t height;
     uint16_t patch_count;
 
-    raw_strife_patchdef_t patches[1];
-
-} raw_strife_texture_t;
+    RawStrifePatchDefinition patches[1];
+};
 #pragma pack(pop)
 
 // Patches.
@@ -364,7 +331,7 @@ typedef struct
 // of patches.
 //
 #pragma pack(push, 1)
-typedef struct patch_s
+struct Patch
 {
     // bounding box size
     int16_t width;
@@ -377,24 +344,23 @@ typedef struct patch_s
     int16_t topoffset;
 
     uint32_t columnofs[1];  // only [width] used
-
-} patch_t;
+};
 #pragma pack(pop)
 
 //
 // LineDef attributes.
 //
 
-typedef enum
+enum LineFlag
 {
     // solid, is an obstacle
-    MLF_Blocking = 0x0001,
+    kLineFlagBlocking = 0x0001,
 
     // blocks monsters only
-    MLF_BlockMonsters = 0x0002,
+    kLineFlagBlockMonsters = 0x0002,
 
     // backside will not be present at all if not two sided
-    MLF_TwoSided = 0x0004,
+    kLineFlagTwoSided = 0x0004,
 
     // If a texture is pegged, the texture will have
     // the end exposed to air held constant at the
@@ -407,145 +373,140 @@ typedef enum
     // top and bottom textures (use next to windows).
 
     // upper texture unpegged
-    MLF_UpperUnpegged = 0x0008,
+    kLineFlagUpperUnpegged = 0x0008,
 
     // lower texture unpegged
-    MLF_LowerUnpegged = 0x0010,
+    kLineFlagLowerUnpegged = 0x0010,
 
     // in AutoMap: don't map as two sided: IT'S A SECRET!
-    MLF_Secret = 0x0020,
+    kLineFlagSecret = 0x0020,
 
     // sound rendering: don't let sound cross two of these
-    MLF_SoundBlock = 0x0040,
+    kLineFlagSoundBlock = 0x0040,
 
     // don't draw on the automap at all
-    MLF_DontDraw = 0x0080,
+    kLineFlagDontDraw = 0x0080,
 
     // set as if already seen, thus drawn in automap
-    MLF_Mapped = 0x0100,
+    kLineFlagMapped = 0x0100,
 
     // -AJA- this one is from Boom. Allows multiple lines to
     //       be pushed simultaneously.
-    MLF_Boom_PassThru = 0x0200,
-} lineflag_e;
+    kLineFlagBoomPassThrough = 0x0200,
+};
 
-typedef enum
+enum LineFlagEternity
 {
-    MLF_Eternity_3DMidTex = 0x0400,
-} eternity_lineflag_e;
+    kLineFlagEternity3DMidTex = 0x0400,
+};
 
-typedef enum
+enum LineFlagXDoom
 {
     // -AJA- these three are from XDoom
-    MLF_XDoom_Translucent = 0x0400,
-    MLF_XDoom_ShootBlock  = 0x0800,
-    MLF_XDoom_SightBlock  = 0x1000,
-} xdoom_lineflag_e;
+    kLineFlagXDoomTranslucent = 0x0400,
+    kLineFlagXDoomShootBlock  = 0x0800,
+    kLineFlagXDoomSightBlock  = 0x1000,
+};
 
-typedef enum
+enum LineFlagHexen
 {
     // flags 0x001 .. 0x200 are same as DOOM above
 
-    MLF_Repeatable = 0x0200,
-    MLF_Activation = 0x1c00,
-} hexen_lineflag_e;
+    kLineFlagHexenRepeatable = 0x0200,
+    kLineFlagHexenActivation = 0x1c00,
+};
 
-typedef enum
+enum LineFlagZDoom
 {
     // these are supported by ZDoom (and derived ports)
-    MLF_ZDoom_MonCanActivate  = 0x2000,
-    MLF_ZDoom_BlockPlayers    = 0x4000,
-    MLF_ZDoom_BlockEverything = 0x8000,
-} zdoom_lineflag_e;
+    kLineFlagZDoomMonstersCanActivate = 0x2000,
+    kLineFlagZDoomBlockPlayers        = 0x4000,
+    kLineFlagZDoomBlockEverything     = 0x8000,
+};
 
-#define BOOM_GENLINE_FIRST 0x2f80
-#define BOOM_GENLINE_LAST  0x7fff
+constexpr int16_t kBoomGeneralizedLineFirst = 0x2f80;
+constexpr int16_t kBoomGeneralizedLineLast  = 0x7fff;
 
-#define is_genline(tp) ((tp) >= BOOM_GENLINE_FIRST && (tp) <= BOOM_GENLINE_LAST)
-
-typedef enum
+inline bool IsBoomGeneralizedLine(int16_t line)
 {
-    SPAC_Cross   = 0,  // when line is crossed (W1 / WR)
-    SPAC_Use     = 1,  // when line is used    (S1 / SR)
-    SPAC_Monster = 2,  // when monster walks over line
-    SPAC_Impact  = 3,  // when bullet/projectile hits line (G1 / GR)
-    SPAC_Push    = 4,  // when line is bumped (player is stopped)
-    SPAC_PCross  = 5,  // when projectile crosses the line
-} hexen_activation_e;
+    return (line >= kBoomGeneralizedLineFirst &&
+            line <= kBoomGeneralizedLineLast);
+}
+
+enum HexenActivation
+{
+    kSpecialActivationCross   = 0,  // when line is crossed (W1 / WR)
+    kSpecialActivationUse     = 1,  // when line is used    (S1 / SR)
+    kSpecialActivationMonster = 2,  // when monster walks over line
+    kSpecialActivationImpact = 3,  // when bullet/projectile hits line (G1 / GR)
+    kSpecialActivationPush   = 4,  // when line is bumped (player is stopped)
+    kSpecialActivationPCross = 5,  // when projectile crosses the line
+};
 
 //
 // Sector attributes.
 //
 
-typedef enum
+enum BoomSectorFlag
 {
-    BoomSF_TypeMask   = 0x001F,
-    BoomSF_DamageMask = 0x0060,
+    kBoomSectorFlagTypeMask   = 0x001F,
+    kBoomSectorFlagDamageMask = 0x0060,
+    kBoomSectorFlagSecret     = 0x0080,
+    kBoomSectorFlagFriction   = 0x0100,
+    kBoomSectorFlagWind       = 0x0200,
+    kBoomSectorFlagNoSounds   = 0x0400,
+    kBoomSectorFlagQuietPlane = 0x0800
+};
 
-    BoomSF_Secret     = 0x0080,
-    BoomSF_Friction   = 0x0100,
-    BoomSF_Wind       = 0x0200,
-    BoomSF_NoSounds   = 0x0400,
-    BoomSF_QuietPlane = 0x0800
-} boom_sectorflag_e;
-
-#define MSF_BoomFlags 0x0FE0
+constexpr int16_t kBoomFlagBits = 0x0FE0;
 
 //
 // Thing attributes.
 //
 
-typedef enum
+enum ThingOption
 {
     // these four used in Hexen too
-    MTF_Easy   = 1,
-    MTF_Medium = 2,
-    MTF_Hard   = 4,
-    MTF_Ambush = 8,
+    kThingEasy            = 1,
+    kThingMedium          = 2,
+    kThingHard            = 4,
+    kThingAmbush          = 8,
+    kThingNotSinglePlayer = 16,
+    kThingNotDeathmatch   = 32,
+    kThingNotCooperative  = 64,
+    kThingFriend          = 128,
+    kThingReserved        = 256,
+};
 
-    MTF_Not_SP   = 16,
-    MTF_Not_DM   = 32,
-    MTF_Not_COOP = 64,
+constexpr int16_t kExtraFloorMask     = 0x3C00;
+constexpr uint8_t kExtraFloorBitShift = 10;
 
-    MTF_Friend   = 128,
-    MTF_Reserved = 256,
-} thing_option_e;
-
-#define MTF_EXFLOOR_MASK  0x3C00
-#define MTF_EXFLOOR_SHIFT 10
-
-typedef enum
+enum HexenOption
 {
-    MTF_Hexen_Dormant = 16,
-
-    MTF_Hexen_Fighter = 32,
-    MTF_Hexen_Cleric  = 64,
-    MTF_Hexen_Mage    = 128,
-
-    MTF_Hexen_SP   = 256,
-    MTF_Hexen_COOP = 512,
-    MTF_Hexen_DM   = 1024,
-} hexen_option_e;
+    kThingHexenDormant      = 16,
+    kThingHexenFighter      = 32,
+    kThingHexenCleric       = 64,
+    kThingHexenMage         = 128,
+    kThingHexenSinglePlayer = 256,
+    kThingHexenCooperative  = 512,
+    kThingHexenDeathmatch   = 1024,
+};
 
 //
 // Polyobject stuff
 //
-#define HEXTYPE_POLY_START    1
-#define HEXTYPE_POLY_EXPLICIT 5
+constexpr uint8_t kHexenPolyobjectStart    = 1;
+constexpr uint8_t kHexenPolyobjectExplicit = 5;
 
 // -JL- Hexen polyobj thing types
-#define PO_ANCHOR_TYPE     3000
-#define PO_SPAWN_TYPE      3001
-#define PO_SPAWNCRUSH_TYPE 3002
+constexpr int16_t kPolyobjectAnchorType     = 3000;
+constexpr int16_t kPolyobjectSpawnType      = 3001;
+constexpr int16_t kPolyobjectSpawnCrushType = 3002;
 
 // -JL- ZDoom polyobj thing types
-#define ZDOOM_PO_ANCHOR_TYPE     9300
-#define ZDOOM_PO_SPAWN_TYPE      9301
-#define ZDOOM_PO_SPAWNCRUSH_TYPE 9302
-
-}  // namespace ajbsp
-
-#endif /* __AJBSP_RAW_DEF_H__ */
+constexpr int16_t kZDoomPolyobjectAnchorType     = 9300;
+constexpr int16_t kZDoomPolyobjectSpawnType      = 9301;
+constexpr int16_t kZDoomPolyobjectSpawnCrushType = 9302;
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

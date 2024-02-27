@@ -85,7 +85,9 @@ inline int ToUpperASCII(int character)
 std::string  WStringToUTF8(std::wstring_view instring);
 std::wstring UTF8ToWString(std::string_view instring);
 #endif
+int StringCompare(std::string_view A, std::string_view B);
 int StringCaseCompareASCII(std::string_view A, std::string_view B);
+int StringCaseCompareMaxASCII(std::string_view A, std::string_view B, size_t n);
 int StringPrefixCaseCompareASCII(std::string_view A, std::string_view B);
 std::string StringUpperASCII(std::string_view instring);
 std::string StringFormat(const char* fmt, ...);

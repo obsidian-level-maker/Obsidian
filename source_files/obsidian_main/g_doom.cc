@@ -37,11 +37,7 @@
 #include "sys_macro.h"
 #include "sys_xoshiro.h"
 
-#ifdef WIN32
-#include <iso646.h>
-#endif
-
-#include "aj_bsp.h"
+#include "bsp.h"
 
 // SLUMP for Vanilla Doom
 #include "slump_main.h"
@@ -129,67 +125,6 @@ uint8_t empty_korax_behavior[128] = {
     0x00, 0x00, 0x00, 0x00, 0xFF, 0x00, 0x00, 0x00, 0x20, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
-// AJBSP Build Info Class
-class obbuildinfo_t : public buildinfo_t
-{
-   public:
-    void Print(int level, const char *fmt, ...)
-    {
-        if (level > verbosity) return;
-
-        va_list arg_ptr;
-
-        static char buffer[kMessageBufferLength];
-
-        va_start(arg_ptr, fmt);
-        vsnprintf(buffer, kMessageBufferLength - 1, fmt, arg_ptr);
-        va_end(arg_ptr);
-
-        buffer[kMessageBufferLength - 1] = 0;
-
-        LogPrintf("%s\n", buffer);
-    }
-
-    void Debug(const char *fmt, ...)
-    {
-        static char buffer[kMessageBufferLength];
-
-        va_list args;
-
-        va_start(args, fmt);
-        vsnprintf(buffer, sizeof(buffer), fmt, args);
-        va_end(args);
-
-        DebugPrintf("%s\n", buffer);
-    }
-
-    //
-    //  show an error message and terminate the program
-    //
-    void FatalError(const char *fmt, ...)
-    {
-        va_list arg_ptr;
-
-        static char buffer[kMessageBufferLength];
-
-        va_start(arg_ptr, fmt);
-        vsnprintf(buffer, kMessageBufferLength - 1, fmt, arg_ptr);
-        va_end(arg_ptr);
-
-        buffer[kMessageBufferLength - 1] = 0;
-
-        ajbsp::CloseWad();
-
-        ErrorPrintf("'%s'\n", buffer);
-    }
-
-    // Update status bar with nodebuilding progress
-    void ProgressUpdate(int current, int total)
-    {
-        Doom::Send_Prog_Nodes(current, total);
-    }
-};
-
 //----------------------------------------------------------------------------
 //  AJBSP NODE BUILDING
 //----------------------------------------------------------------------------
@@ -211,42 +146,43 @@ bool BuildNodes(std::filesystem::path filename)
     if (!build_nodes) { return true; }
 
     // Prep AJBSP parameters
-    obbuildinfo_t *build_info = new obbuildinfo_t;
-    build_info->fast          = true;
+    ajbsp::BuildInfo build_info;
     if (StringCaseCompareASCII(current_port, "limit_enforcing") == 0 ||
         StringCaseCompareASCII(current_port, "boom") == 0)
     {
-        build_info->gl_nodes    = false;
-        build_info->force_v5    = false;
-        build_info->force_xnod  = false;
-        build_info->do_blockmap = true;
-        build_info->do_reject   = true;
+        build_info.build_gl_nodes    = false;
+        build_info.force_v5_nodes    = false;
+        build_info.force_xnod_format  = false;
+        build_info.do_blockmap = true;
+        build_info.do_reject  = true;
+        build_info.compress_nodes = false;
     }
     else if (StringCaseCompareASCII(current_port, "eternity") == 0)
     {  // Eternity
-        build_info->gl_nodes       = true;
-        build_info->do_reject      = false;
-        build_info->do_blockmap    = false;
-        build_info->force_xnod     = true;
-        build_info->force_compress = false;
+        build_info.build_gl_nodes      = true;
+        build_info.do_reject      = false;
+        build_info.do_blockmap    = false;
+        build_info.force_xnod_format    = true;
+        build_info.compress_nodes = false;
     }
     else
     {  // DSDA/ZDoom
-        build_info->gl_nodes       = true;
-        build_info->do_reject      = false;
-        build_info->do_blockmap    = false;
-        build_info->force_xnod     = true;
-        build_info->force_compress = true;
+        build_info.build_gl_nodes       = true;
+        build_info.do_reject     = false;
+        build_info.do_blockmap   = false;
+        build_info.force_xnod_format     = true;
+        build_info.compress_nodes = true;
     }
 
-    if (AJBSP_BuildNodes(filename, build_info) != 0)
-    {
-        Main::ProgStatus(GetTranslatedText("AJBSP Error!"));
-        delete build_info;
-        return false;
-    }
+    ajbsp::SetInfo(build_info);
 
-    delete build_info;
+    ajbsp::OpenWad(filename);
+
+    for (int i = 0; i < ajbsp::LevelsInWad(); i++)
+        ajbsp::BuildLevel(i);
+
+    ajbsp::CloseWad();
+
     return true;
 }
 
@@ -391,7 +327,7 @@ static void FreeLumps()
 {
     delete header_lump;
     header_lump = nullptr;
-    if (not UDMF_mode)
+    if (!UDMF_mode)
     {
         delete thing_lump;
         thing_lump = nullptr;
@@ -419,7 +355,7 @@ void Doom::BeginLevel()
     FreeLumps();
 
     header_lump = new qLump_c();
-    if (not UDMF_mode)
+    if (!UDMF_mode)
     {
         thing_lump   = new qLump_c();
         vertex_lump  = new qLump_c();
@@ -482,7 +418,7 @@ void Doom::EndLevel(std::string level_name)
 
     if (UDMF_mode) { WriteLump("TEXTMAP", textmap_lump); }
 
-    if (not UDMF_mode)
+    if (!UDMF_mode)
     {
         WriteLump("THINGS", thing_lump);
         WriteLump("LINEDEFS", linedef_lump);
@@ -553,7 +489,7 @@ void Doom::AddVertex(int x, int y)
         y += 32;
     }
 
-    if (not UDMF_mode)
+    if (!UDMF_mode)
     {
         raw_vertex_t vert;
 
@@ -582,7 +518,7 @@ int Doom::v094_add_vertex(lua_State *L)
 void Doom::AddSector(int f_h, std::string f_tex, int c_h, std::string c_tex,
                      int light, int special, int tag)
 {
-    if (not UDMF_mode)
+    if (!UDMF_mode)
     {
         raw_sector_t sec;
 
@@ -628,7 +564,7 @@ int Doom::v094_add_sector(lua_State *L)
 void Doom::AddSidedef(int sector, std::string l_tex, std::string m_tex,
                       std::string u_tex, int x_offset, int y_offset)
 {
-    if (not UDMF_mode)
+    if (!UDMF_mode)
     {
         raw_sidedef_t side;
 
@@ -673,7 +609,7 @@ void Doom::AddLinedef(int vert1, int vert2, int side1, int side2, int type,
 {
     if (sub_format != SUBFMT_Hexen)
     {
-        if (not UDMF_mode)
+        if (!UDMF_mode)
         {
             raw_linedef_t line;
 
@@ -745,7 +681,7 @@ void Doom::AddLinedef(int vert1, int vert2, int side1, int side2, int type,
     }
     else  // Hexen format
     {
-        if (not UDMF_mode)
+        if (!UDMF_mode)
         {
             raw_hexen_linedef_t line;
 
@@ -912,7 +848,7 @@ void Doom::AddThing(int x, int y, int h, int type, int angle, int options,
 
     if (sub_format != SUBFMT_Hexen)
     {
-        if (not UDMF_mode)
+        if (!UDMF_mode)
         {
             raw_thing_t thing;
 
@@ -977,7 +913,7 @@ void Doom::AddThing(int x, int y, int h, int type, int angle, int options,
     }
     else  // Hexen format
     {
-        if (not UDMF_mode)
+        if (!UDMF_mode)
         {
             raw_hexen_thing_t thing;
 
@@ -1091,19 +1027,19 @@ int Doom::v094_add_thing(lua_State *L)
 
 int Doom::NumVertexes()
 {
-    if (not UDMF_mode) { return vertex_lump->GetSize() / sizeof(raw_vertex_t); }
+    if (!UDMF_mode) { return vertex_lump->GetSize() / sizeof(raw_vertex_t); }
     return udmf_vertexes;
 }
 
 int Doom::NumSectors()
 {
-    if (not UDMF_mode) { return sector_lump->GetSize() / sizeof(raw_sector_t); }
+    if (!UDMF_mode) { return sector_lump->GetSize() / sizeof(raw_sector_t); }
     return udmf_sectors;
 }
 
 int Doom::NumSidedefs()
 {
-    if (not UDMF_mode)
+    if (!UDMF_mode)
     {
         return sidedef_lump->GetSize() / sizeof(raw_sidedef_t);
     }
@@ -1112,7 +1048,7 @@ int Doom::NumSidedefs()
 
 int Doom::NumLinedefs()
 {
-    if (not UDMF_mode)
+    if (!UDMF_mode)
     {
         if (sub_format == SUBFMT_Hexen)
         {
@@ -1126,7 +1062,7 @@ int Doom::NumLinedefs()
 
 int Doom::NumThings()
 {
-    if (not UDMF_mode)
+    if (!UDMF_mode)
     {
         if (sub_format == SUBFMT_Hexen)
         {

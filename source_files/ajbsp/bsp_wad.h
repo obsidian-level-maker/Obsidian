@@ -2,11 +2,11 @@
 //  WAD Reading / Writing
 //------------------------------------------------------------------------
 //
-//  AJ-BSP  Copyright (C) 2001-2018  Andrew Apted
+//  AJ-BSP  Copyright (C) 2001-2023  Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
-//  as published by the Free Software Foundation; either version 2
+//  as published by the Free Software Foundation; either version 3
 //  of the License, or (at your option) any later version.
 //
 //  This program is distributed in the hope that it will be useful,
@@ -16,53 +16,53 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __AJBSP_WAD_H__
-#define __AJBSP_WAD_H__
+#pragma once
 
-#include <stdio.h>
-
+#include <filesystem>
+#include <string>
 #include <vector>
+
+#include "bsp_raw_def.h"
+#include "lib_util.h"
 
 namespace ajbsp
 {
 
-class Wad_file;
+class WadFile;
 
-typedef enum
+enum MapFormat
 {
-    MAPF_INVALID = 0,
+    kMapFormatInvalid = 0,
+    kMapFormatDoom,
+    kMapFormatHexen,
+    kMapFormatUDMF
+};
 
-    MAPF_Doom,
-    MAPF_Hexen,
-    MAPF_UDMF
-
-} map_format_e;
-
-class Lump_c
+class Lump
 {
-    friend class Wad_file;
+    friend class WadFile;
 
    private:
-    Wad_file *parent;
+    WadFile *parent_;
 
-    const char *name;
+    const char *name_;
 
-    int l_start;
-    int l_length;
+    int lump_start_;
+    int lump_length_;
 
     // constructor is private
-    Lump_c(Wad_file *_par, const char *_name, int _start, int _len);
-    Lump_c(Wad_file *_par, const struct raw_wad_entry_s *entry);
+    Lump(WadFile *parent, const char *name, int start, int length);
+    Lump(WadFile *parent, const struct RawWadEntry *entry);
 
-    void MakeEntry(struct raw_wad_entry_s *entry);
+    void MakeEntry(struct RawWadEntry *entry);
 
    public:
-    ~Lump_c();
+    ~Lump();
 
-    const char *Name() const { return name; }
-    int         Length() const { return l_length; }
+    const char *Name() const { return name_; }
+    int         Length() const { return lump_length_; }
 
-    // do not call this directly, use Wad_file::RenameLump()
+    // do not call this directly, use WadFile::RenameLump()
     void Rename(const char *new_name);
 
     // attempt to seek to a position within the lump (default is
@@ -70,82 +70,81 @@ class Lump_c
     bool Seek(int offset);
 
     // read some data from the lump, returning true if OK.
-    bool Read(void *data, int len);
+    bool Read(void *data, size_t length);
 
     // read a line of text, returns true if OK, false on EOF
-    bool GetLine(char *buffer, size_t buf_size);
+    bool GetLine(char *buffer, size_t buffer_size);
 
     // write some data to the lump.  Only the lump which had just
-    // been created with Wad_file::AddLump() or RecreateLump() can be
+    // been created with WadFile::AddLump() or RecreateLump() can be
     // written to.
-    bool Write(const void *data, int len);
+    bool Write(const void *data, int length);
 
     // write some text to the lump
-    void Printf(const char *msg, ...);
+    void Printf(const char *message, ...);
 
     // mark the lump as finished (after writing data to it).
     bool Finish();
 
     // predicate for std::sort()
-    struct offset_CMP_pred
+    class OffsetComparisonPredicate
     {
-        inline bool operator()(const Lump_c *A, const Lump_c *B) const
+       public:
+        inline bool operator()(const Lump *A, const Lump *B) const
         {
-            return A->l_start < B->l_start;
+            return A->lump_start_ < B->lump_start_;
         }
     };
 
    private:
     // deliberately don't implement these
-    Lump_c(const Lump_c &other);
-    Lump_c &operator=(const Lump_c &other);
+    Lump(const Lump &other);
+    Lump &operator=(const Lump &other);
 };
 
 //------------------------------------------------------------------------
 
-class Wad_file
+class WadFile
 {
-    friend class Lump_c;
-    friend void W_LoadFlats();
-    friend void W_LoadTextures_TX_START(Wad_file *wf);
+    friend class Lump;
 
    private:
-    const char *filename;
+    std::filesystem::path filename_;
 
-    char mode;  // mode value passed to ::Open()
+    char mode_;  // mode value passed to ::Open()
 
-    FILE *fp;
+    FILE *file_pointer_;
 
-    char kind;  // 'P' for PWAD, 'I' for IWAD
+    char kind_;  // 'P' for PWAD, 'I' for IWAD
 
     // zero means "currently unknown", which only occurs after a
     // call to BeginWrite() and before any call to AddLump() or
     // the finalizing EndWrite().
-    int total_size;
+    int total_size_;
 
-    std::vector<Lump_c *> directory;
+    std::vector<Lump *> directory_;
 
-    int dir_start;
-    int dir_count;
+    int directory_start_;
+    int directory_count_;
 
     // these are lump indices (into 'directory' vector)
-    std::vector<int> levels;
-    std::vector<int> patches;
-    std::vector<int> sprites;
-    std::vector<int> flats;
-    std::vector<int> tx_tex;
+    std::vector<int> levels_;
+    std::vector<int> patches_;
+    std::vector<int> sprites_;
+    std::vector<int> flats_;
+    std::vector<int> tx_textures_;
 
-    bool begun_write;
-    int  begun_max_size;
+    bool begun_write_;
+    int  begun_max_size_;
 
     // when >= 0, the next added lump is placed _before_ this
-    int insert_point;
+    int insert_point_;
 
     // constructor is private
-    Wad_file(const char *_name, char _mode, FILE *_fp);
+    WadFile(std::filesystem::path name, char mode, FILE *file_pointer);
 
    public:
-    ~Wad_file();
+    ~WadFile();
 
     // open a wad file.
     //
@@ -157,26 +156,22 @@ class Wad_file
     // Note: if 'a' is used and the file is read-only, it will be
     //       silently opened in 'r' mode instead.
     //
-    static Wad_file *Open(const char *filename, char mode = 'a');
+    static WadFile *Open(std::filesystem::path filename, char mode = 'a');
 
-    // check the given wad file exists and is a WAD file
-    static bool Validate(const char *filename);
+    bool IsReadOnly() const { return mode_ == 'r'; }
 
-    const char *PathName() const { return filename; }
-    bool        IsReadOnly() const { return mode == 'r'; }
+    int TotalSize() const { return total_size_; }
 
-    int TotalSize() const { return total_size; }
+    int   NumLumps() const { return (int)directory_.size(); }
+    Lump *GetLump(int index);
+    Lump *FindLump(const char *name);
+    int   FindLumpNumber(const char *name);
 
-    int     NumLumps() const { return (int)directory.size(); }
-    Lump_c *GetLump(int index);
-    Lump_c *FindLump(const char *name);
-    int     FindLumpNum(const char *name);
+    Lump *FindLumpInNamespace(const char *name, char group);
 
-    Lump_c *FindLumpInNamespace(const char *name, char group);
-
-    int LevelCount() const { return (int)levels.size(); }
-    int LevelHeader(int lev_num);
-    int LevelLastLump(int lev_num);
+    int LevelCount() const { return (int)levels_.size(); }
+    int LevelHeader(int level_number);
+    int LevelLastLump(int level_number);
 
     // these return a level number (0 .. count-1)
     int LevelFind(const char *name);
@@ -184,17 +179,11 @@ class Wad_file
     int LevelFindFirst();
 
     // returns a lump index, -1 if not found
-    int LevelLookupLump(int lev_num, const char *name);
+    int LevelLookupLump(int level_number, const char *name);
 
-    map_format_e LevelFormat(int lev_num);
+    MapFormat LevelFormat(int level_number);
 
     void SortLevels();
-
-    // check whether another program has modified this WAD, and return
-    // either true or false.  We test for change in file size, change
-    // in directory size or location, and directory contents (CRC).
-    // [ NOT USED YET.... ]
-    bool WasExternallyModified();
 
     // all changes to the wad must occur between calls to BeginWrite()
     // and EndWrite() methods.  the on-disk wad directory may be trashed
@@ -202,35 +191,29 @@ class Wad_file
     void BeginWrite();
     void EndWrite();
 
-    // change name of a lump (can be a level marker too)
-    void RenameLump(int index, const char *new_name);
-
     // remove the given lump(s)
     // this will change index numbers on existing lumps
     // (previous results of FindLumpNum or LevelHeader are invalidated).
     void RemoveLumps(int index, int count = 1);
 
-    // this removes the level marker PLUS all associated level lumps
-    // which follow it.
-    void RemoveLevel(int lev_num);
-
     // removes any GL-Nodes lumps that are associated with the given level.
-    void RemoveGLNodes(int lev_num);
+    void RemoveGLNodes(int level_number);
 
-    // removes any ZNODES lump from a UDMF level.
-    void RemoveZNodes(int lev_num);
+    // removes any ZDoom node lumps that are associated with the given level.
+    void RemoveZNodes(int level_number);
 
     // insert a new lump.
     // The second form is for a level marker.
     // The 'max_size' parameter (if >= 0) specifies the most data
     // you will write into the lump -- writing more will corrupt
     // something else in the WAD.
-    Lump_c *AddLump(const char *name, int max_size = -1);
-    Lump_c *AddLevel(const char *name, int max_size = -1, int *lev_num = NULL);
+    Lump *AddLump(const char *name, int max_size = -1);
+    Lump *AddLevel(const char *name, int max_size = -1,
+                   int *level_number = nullptr);
 
     // setup lump to write new data to it.
     // the old contents are lost.
-    void RecreateLump(Lump_c *lump, int max_size = -1);
+    void RecreateLump(Lump *lump, int max_size = -1);
 
     // set the insertion point -- the next lump will be added *before*
     // this index, and it will be incremented so that a sequence of
@@ -242,7 +225,7 @@ class Wad_file
     void InsertPoint(int index = -1);
 
    private:
-    static Wad_file *Create(const char *filename, char mode);
+    static WadFile *Create(std::filesystem::path filename, char mode);
 
     // read the existing directory.
     void ReadDirectory();
@@ -274,37 +257,35 @@ class Wad_file
     // (including the CRC).
     void WriteDirectory();
 
-    void FixGroup(std::vector<int> &group, int index, int num_added,
-                  int num_removed);
+    void FixGroup(std::vector<int> &group, int index, int number_added,
+                  int number_removed);
 
    private:
     // deliberately don't implement these
-    Wad_file(const Wad_file &other);
-    Wad_file &operator=(const Wad_file &other);
+    WadFile(const WadFile &other);
+    WadFile &operator=(const WadFile &other);
 
    private:
     // predicate for sorting the levels[] vector
-    struct level_name_CMP_pred
+    class LevelNameComparisonPredicate
     {
        private:
-        Wad_file *wad;
+        WadFile *wad_;
 
        public:
-        level_name_CMP_pred(Wad_file *_w) : wad(_w) {}
+        LevelNameComparisonPredicate(WadFile *w) : wad_(w) {}
 
         inline bool operator()(const int A, const int B) const
         {
-            const Lump_c *L1 = wad->directory[A];
-            const Lump_c *L2 = wad->directory[B];
+            const Lump *L1 = wad_->directory_[A];
+            const Lump *L2 = wad_->directory_[B];
 
-            return (strcmp(L1->Name(), L2->Name()) < 0);
+            return (StringCompare(L1->Name(), L2->Name()) < 0);
         }
     };
 };
 
 }  // namespace ajbsp
-
-#endif /* __AJBSP_WAD_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab
