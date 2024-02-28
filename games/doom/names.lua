@@ -3378,6 +3378,10 @@ DOOM.NAMES =
 
         -- MSSP adds more names as well
         ["Damned Demon Destruction"]=10, -- Demios
+        ["Don't Forget You're Here Forever"]=10,
+        ["Disorganized Labor"]=10,
+        ["Humans Resourced"]=10,
+        ["Pizza Cafe by Alfredo"]=10,
         ["Nothing Personnel"]=10,
 
         -- End of 2021 additions by Reisal
@@ -3667,6 +3671,7 @@ DOOM.NAMES =
         ["Hardboiled"]=10,
         ["Hardcore"]=10,
         ["Heavy Metal Mayhem"]=10,
+        ["Haha Emoji"]=10,
         ["He Comes"]=10,
         ["Hellraiser"]=10,
         ["Here Comes the Night Train"]=10,
