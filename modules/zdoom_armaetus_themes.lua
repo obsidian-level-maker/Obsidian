@@ -8810,8 +8810,8 @@ OBS_RESOURCE_PACK_THEMES =
       --
       gtd_comp_grntek_blue = 26,
       --
-      gtd_wall_lit_h_window_tall_collite_blue = 35,
-      gtd_wall_lit_h_window_tall_collite_orange = 15,
+      gtd_wall_lit_h_window_tall_collite_blue = 25,
+      gtd_wall_lit_h_window_tall_collite_orange = 10,
       --
       wall_collite_flat_green = 25,
       wall_collite_flat_blue = 25,
@@ -8829,7 +8829,8 @@ OBS_RESOURCE_PACK_THEMES =
       gtd_tekwoodlite_3 = 25,
       gtd_tekwoodlite_pillar = 25,
       --
-      gtd_bathwater = 50
+      gtd_bathwater = 30,
+      gtd_mscottpaper = 30
     },
 
     window_groups =
@@ -9314,8 +9315,8 @@ OBS_RESOURCE_PACK_THEMES =
       --
       gtd_comp_grntek_blue = 20,
       --
-      gtd_wall_lit_h_window_tall_collite_blue = 15,
-      gtd_wall_lit_h_window_tall_collite_orange = 35,
+      gtd_wall_lit_h_window_tall_collite_blue = 10,
+      gtd_wall_lit_h_window_tall_collite_orange = 25,
       --
       gtd_green_shipping_containers = 50,
       --
@@ -9330,7 +9331,8 @@ OBS_RESOURCE_PACK_THEMES =
       gtd_tekwoodlite_3 = 25,
       gtd_tekwoodlite_pillar = 25,
       --
-      gtd_bathwater = 50
+      gtd_bathwater = 30,
+      gtd_mscottpaper = 30
     },
 
     window_groups =

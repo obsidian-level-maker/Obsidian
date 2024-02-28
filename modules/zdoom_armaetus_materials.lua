@@ -1988,6 +1988,12 @@ OBS_RESOURCE_PACK_MATERIALS = {
   SD_HCCF7 = { t="SD_HCCWD", f="SD_HCCF7"},
   SD_HCCF8 = { t="SD_HCCWE", f="SD_HCCF8"},
 
+  --
+  TOFFBOX1 = {t="TOFFBOX1", f="FLAT23"},
+  TOFFBOX2 = {t="TOFFBOX2", f="FLAT23"},
+  TOFFPSW1 = {t="TOFFPSW1", f="FLAT5_5"},
+  TOFFPSW2 = {t="TOFFPSW2", f="FLAT5_5"},
+
   -- 256-wide doors
   G8_SVDR3 = { t="G8_SVDR3", f="FLAT23"},
 
