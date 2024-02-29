@@ -157,7 +157,8 @@ function PREFAB_CONTROL.fine_tune_filters()
     --
     gtd_prison_A = 1.25,
     --
-    gtd_bathwater = 1.25
+    gtd_bathwater = 1.25,
+    gtd_mscottpaper = 2
   }
   local new_themes_multipliers =
   {
