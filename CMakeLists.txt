@@ -43,9 +43,8 @@ if(APPLE OR ${CMAKE_SYSTEM} MATCHES "BSD")
 endif()
 
 set(OBSIDIAN_LIB_DIR "${CMAKE_SOURCE_DIR}/libraries")
-set(OBSIDIAN_SOURCE_DIR "${CMAKE_SOURCE_DIR}/source_files")
 
 include_directories(libraries/minilua)
 
 add_subdirectory(libraries)
-add_subdirectory(source_files)
+add_subdirectory(source)
