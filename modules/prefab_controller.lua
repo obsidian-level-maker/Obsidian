@@ -155,9 +155,6 @@ function PREFAB_CONTROL.fine_tune_filters()
     tech_o_letter_P = 3,
     tech_o_letter_Q = 3,
     --
-    gtd_prison_A = 1.25,
-    --
-    gtd_bathwater = 1.25,
     gtd_mscottpaper = 2
   }
   local new_themes_multipliers =
