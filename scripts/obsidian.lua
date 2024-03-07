@@ -2231,7 +2231,7 @@ function ob_clean_up()
   SCRIPTS = {}
   SEEN_ROOM_THEMES = {}
   SEEN_WALL_GROUPS = {}
-  if OB_MODULES["sky_generator"].enabled and OB_MODULES["sky_generator"].visible then
+  if OB_MODULES["sky_generator"] and OB_MODULES["sky_generator"].enabled and OB_MODULES["sky_generator"].visible then
     gui.fsky_free()
   end
   AMBIENT_SOUND_DEFS = {}
