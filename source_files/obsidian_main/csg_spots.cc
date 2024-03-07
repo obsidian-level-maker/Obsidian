@@ -54,7 +54,7 @@ extern int spot_high_h;
 // number of grid squares
 static int grid_W, grid_H;
 
-static byte **spot_grid;
+static uint8_t **spot_grid;
 
 static int *grid_lefties;
 static int *grid_righties;
@@ -62,7 +62,7 @@ static int *grid_righties;
 // declare this here (don't pull in all CSG headers)
 extern void CSG_spot_processing(int x1, int y1, int x2, int y2, int floor_h);
 
-void SPOT_CreateGrid(byte content, int min_x, int min_y, int max_x, int max_y) {
+void SPOT_CreateGrid(uint8_t content, int min_x, int min_y, int max_x, int max_y) {
     grid_min_x = min_x;
     grid_min_y = min_y;
 
@@ -80,10 +80,10 @@ void SPOT_CreateGrid(byte content, int min_x, int min_y, int max_x, int max_y) {
     grid_H += 2;
 #endif
 
-    spot_grid = new byte *[grid_W];
+    spot_grid = new uint8_t *[grid_W];
 
     for (int x = 0; x < grid_W; x++) {
-        spot_grid[x] = new byte[grid_H];
+        spot_grid[x] = new uint8_t[grid_H];
 
         memset(spot_grid[x], content, grid_H);
     }
@@ -123,7 +123,7 @@ void SPOT_DumpGrid(const char *info) {
         int width = MIN(MAX_WIDTH, grid_W);
 
         for (int x = 0; x < width; x++) {
-            byte content = spot_grid[x][y];
+            uint8_t content = spot_grid[x][y];
 
             if (content & HAS_MON) {
                 buffer[x] = 'm';
@@ -167,7 +167,7 @@ static void test_item_spot(int x, int y, std::vector<grid_point_c> &spots) {
 
     for (int dx = 0; dx < 2; dx++) {
         for (int dy = 0; dy < 2; dy++) {
-            byte content = spot_grid[x + dx][y + dy];
+            uint8_t content = spot_grid[x + dx][y + dy];
 
             if (content & (7 | HAS_ITEM)) {
                 return;  // no good, something in the way
@@ -264,7 +264,7 @@ static bool test_mon_area(int x1, int y1, int x2, int y2, int want) {
 
     for (int x = x1; x <= x2; x++) {
         for (int y = y1; y <= y2; y++) {
-            byte content = spot_grid[x][y];
+            uint8_t content = spot_grid[x][y];
 
             if (content & (HAS_MON | IS_DUD)) {
                 return false;
@@ -422,7 +422,7 @@ static bool grow_spot(int &x1, int &y1, int &x2, int &y2, int want) {
     return false;
 }
 
-static void mark_monster(int x1, int y1, int x2, int y2, byte flag) {
+static void mark_monster(int x1, int y1, int x2, int y2, uint8_t flag) {
     for (int x = x1; x <= x2; x++) {
         for (int y = y1; y <= y2; y++) {
             spot_grid[x][y] |= flag;
@@ -605,8 +605,8 @@ static void draw_line(int x1, int y1, int x2, int y2) {
     }
 }
 
-static inline void replace_cell(int x, int y, byte content) {
-    byte &target = spot_grid[x][y];
+static inline void replace_cell(int x, int y, uint8_t content) {
+    uint8_t &target = spot_grid[x][y];
 
     // Note : we allow SPOT_CLEAR to replace anything, though
     //        generally it is only used to initialize the grid.
@@ -624,7 +624,7 @@ static inline void replace_cell(int x, int y, byte content) {
     target = content;
 }
 
-static void fill_rows(byte content) {
+static void fill_rows(uint8_t content) {
     int w2 = grid_W - 1;
 
     for (int y = grid_botty; y <= grid_toppy; y++) {
@@ -641,7 +641,7 @@ static void fill_rows(byte content) {
     }
 }
 
-void SPOT_DrawLine(byte content, int x1, int y1, int x2, int y2) {
+void SPOT_DrawLine(uint8_t content, int x1, int y1, int x2, int y2) {
     clear_rows();
 
     draw_line(x1, y1, x2, y2);
@@ -649,7 +649,7 @@ void SPOT_DrawLine(byte content, int x1, int y1, int x2, int y2) {
     fill_rows(content);
 }
 
-void SPOT_FillPolygon(byte content, std::vector<grid_point_c> &points) {
+void SPOT_FillPolygon(uint8_t content, std::vector<grid_point_c> &points) {
     // Algorithm:
     //   rather simplistic, draw each edge of the polygon and keep
     //   track of the minimum and maximum X coordinates on each row.
@@ -671,7 +671,7 @@ void SPOT_FillPolygon(byte content, std::vector<grid_point_c> &points) {
     fill_rows(content);
 }
 
-void SPOT_FillPolygon(byte content, const int *shape, int count) {
+void SPOT_FillPolygon(uint8_t content, const int *shape, int count) {
     std::vector<grid_point_c> points;
 
     for (int i = 0; i < count; i++) {

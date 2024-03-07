@@ -355,7 +355,7 @@ bool VFS_CopyFile(const char *src_name, const char *dest_name) {
     return was_OK;
 }
 
-byte *VFS_LoadFile(const char *filename, int *length) {
+uint8_t *VFS_LoadFile(const char *filename, int *length) {
     *length = 0;
 
     PHYSFS_File *fp = PHYSFS_openRead(filename);
@@ -371,7 +371,7 @@ byte *VFS_LoadFile(const char *filename, int *length) {
         return NULL;
     }
 
-    byte *data = new byte[*length + 1];
+    uint8_t *data = new uint8_t[*length + 1];
 
     // ensure buffer is NUL-terminated
     data[*length] = 0;
@@ -387,7 +387,7 @@ byte *VFS_LoadFile(const char *filename, int *length) {
     return data;
 }
 
-void VFS_FreeFile(const byte *mem) {
+void VFS_FreeFile(const uint8_t *mem) {
     if (mem) {
         delete[] mem;
     }

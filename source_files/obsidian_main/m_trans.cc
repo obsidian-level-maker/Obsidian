@@ -756,8 +756,8 @@ void Trans_ParseLangLine(char *line) {
     char *pos;
 
     // skip any BOM (can occur at very start of file)
-    if ((u8_t)(line[0]) == 0xEF && (u8_t)(line[1]) == 0xBB &&
-        (u8_t)(line[2]) == 0xBF) {
+    if ((uint8_t)(line[0]) == 0xEF && (uint8_t)(line[1]) == 0xBB &&
+        (uint8_t)(line[2]) == 0xBF) {
         line += 3;
     }
 
@@ -977,8 +977,8 @@ void Trans_Read_PO_File(FILE *fp) {
         char *p = line;
 
         // skip any BOM (can occur at very start of file)
-        if ((u8_t)(p[0]) == 0xEF && (u8_t)(p[1]) == 0xBB &&
-            (u8_t)(p[2]) == 0xBF) {
+        if ((uint8_t)(p[0]) == 0xEF && (uint8_t)(p[1]) == 0xBB &&
+            (uint8_t)(p[2]) == 0xBF) {
             p += 3;
         }
 

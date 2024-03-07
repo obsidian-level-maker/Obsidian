@@ -276,7 +276,7 @@ class quake_mapmodel_c {
     csg_property_set_c y_face;
     csg_property_set_c z_face;
 
-    s32_t nodes[6];
+    int32_t nodes[6];
 
     int firstface;
     int numfaces;

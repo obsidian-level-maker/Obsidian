@@ -348,20 +348,7 @@ void DLG_EditSeed(void) {
     }
     string_seed = word;
     ob_set_config("string_seed", word.c_str());
-    unsigned long long split_limit =
-        (std::numeric_limits<long long>::max() /
-         127);  // It is intentional that I am using the max for signed long long - Dasho
-    next_rand_seed = split_limit;
-    for (size_t i = 0; i < word.size(); i++) {
-        char character = word.at(i);
-        if (!std::iscntrl(character)) {
-            if (next_rand_seed < split_limit) {
-                next_rand_seed *= abs(int(character));
-            } else {
-                next_rand_seed /= abs(int(character));
-            }
-        }
-    }
+    next_rand_seed = StringHash64(string_seed);
     did_specify_seed = true;
     return;
 }

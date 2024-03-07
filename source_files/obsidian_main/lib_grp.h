@@ -27,7 +27,6 @@
 #include <array>
 #include <filesystem>
 #include <string>
-#include "sys_type.h"
 
 bool GRP_OpenRead(const char *filename);
 void GRP_CloseRead(void);
@@ -56,14 +55,14 @@ constexpr unsigned int GRP_NAME_LEN = 12;
 #pragma pack(push, 1)
 struct raw_grp_header_t {
     char magic[GRP_MAGIC_LEN];
-    u32_t num_lumps;
+    uint32_t num_lumps;
 };
 #pragma pack(pop)
 
 #pragma pack(push, 1)
 struct raw_grp_lump_t {
     std::array<char, GRP_NAME_LEN> name;
-    u32_t length;
+    uint32_t length;
 };
 #pragma pack(pop)
 

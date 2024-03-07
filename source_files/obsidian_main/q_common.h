@@ -25,8 +25,6 @@
 #include <string>
 #include <vector>
 
-#include "sys_type.h"
-
 // perhaps this should be elsewhere
 constexpr double Q_EPSILON = 0.02;
 
@@ -45,7 +43,7 @@ class qLump_c {
     std::string name;
 
    private:
-    std::vector<u8_t> buffer;
+    std::vector<uint8_t> buffer;
 
     // when true Printf() converts '\n' to CR/LF pair
     bool crlf;
@@ -54,19 +52,19 @@ class qLump_c {
     qLump_c();
     ~qLump_c();
 
-    void Append(const void *data, u32_t len);
+    void Append(const void *data, uint32_t len);
     void Append(qLump_c *other);
 
-    void Prepend(const void *data, u32_t len);
+    void Prepend(const void *data, uint32_t len);
 
-    void AddByte(byte value);
+    void AddByte(uint8_t value);
 
     void Printf(const char *str, ...);
     void KeyPair(const char *key, const char *val, ...);
     void SetCRLF(bool enable);
 
     int GetSize() const;
-    const u8_t *GetBuffer() const;
+    const uint8_t *GetBuffer() const;
 
    private:
     void RawPrintf(const char *str);
@@ -88,14 +86,14 @@ qLump_c *BSP_NewLump(int entry);
 void BSP_AddInfoFile();
 qLump_c *BSP_CreateInfoLump();
 
-u16_t BSP_AddPlane(float x, float y, float z, float nx, float ny, float nz,
+uint16_t BSP_AddPlane(float x, float y, float z, float nx, float ny, float nz,
                    bool *flip_var = NULL);
-u16_t BSP_AddPlane(const quake_plane_c *P, bool *flip_var = NULL);
+uint16_t BSP_AddPlane(const quake_plane_c *P, bool *flip_var = NULL);
 
-u16_t BSP_AddVertex(float x, float y, float z);
-u16_t BSP_AddVertex(const quake_vertex_c *V);
+uint16_t BSP_AddVertex(float x, float y, float z);
+uint16_t BSP_AddVertex(const quake_vertex_c *V);
 
-s32_t BSP_AddEdge(u16_t start, u16_t end);
+int32_t BSP_AddEdge(uint16_t start, uint16_t end);
 
 void BSP_WritePlanes(int lump_num, int max_planes);
 void BSP_WriteVertices(int lump_num, int max_verts);
@@ -120,14 +118,14 @@ constexpr const char *Q2_IDENT_MAGIC = "IBSP";
 
 #pragma pack(push, 1)
 struct lump_t {
-    u32_t start;
-    u32_t length;
+    uint32_t start;
+    uint32_t length;
 };
 #pragma pack(pop)
 
 #pragma pack(push, 1)
 struct dheader_t {
-    s32_t version;
+    int32_t version;
     lump_t lumps[Q1_HEADER_LUMPS];
 };
 #pragma pack(pop)
@@ -135,7 +133,7 @@ struct dheader_t {
 #pragma pack(push, 1)
 struct dheader2_t {
     char ident[4];
-    s32_t version;
+    int32_t version;
 
     lump_t lumps[Q2_HEADER_LUMPS];
 };
@@ -151,7 +149,7 @@ struct dvertex_t {
 // counterclockwise use of the edge in a face
 #pragma pack(push, 1)
 struct dedge_t {
-    u16_t v[2];  // vertex numbers
+    uint16_t v[2];  // vertex numbers
 };
 #pragma pack(pop)
 
@@ -159,7 +157,7 @@ struct dedge_t {
 struct dplane_t {
     float normal[3];
     float dist;
-    s32_t type;  // PLANE_X - PLANE_ANYZ
+    int32_t type;  // PLANE_X - PLANE_ANYZ
 };
 #pragma pack(pop)
 
@@ -179,17 +177,17 @@ constexpr int NUM_STYLES = 4;
 
 #pragma pack(push, 1)
 struct dface_t {
-    s16_t planenum;
-    s16_t side;
+    int16_t planenum;
+    int16_t side;
 
-    s32_t firstedge;  // we must support > 64k edges
-    s16_t numedges;
-    s16_t texinfo;
+    int32_t firstedge;  // we must support > 64k edges
+    int16_t numedges;
+    int16_t texinfo;
 
     // lighting info
-    u8_t styles[NUM_STYLES];
+    uint8_t styles[NUM_STYLES];
 
-    s32_t lightofs;  // start of [numstyles*surfsize] samples
+    int32_t lightofs;  // start of [numstyles*surfsize] samples
 };
 #pragma pack(pop)
 

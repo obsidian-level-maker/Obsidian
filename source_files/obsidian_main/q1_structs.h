@@ -25,9 +25,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef Q1_STRUCTS_H_
 #define Q1_STRUCTS_H_
 
-// upper design bounds
+#include "headers.h"
 
-#include "sys_type.h"
+// upper design bounds
 
 constexpr int MAX_MAP_HULLS = 4;
 
@@ -92,16 +92,16 @@ struct dmodel_t {
     float mins[3], maxs[3];
     float origin[3];
 
-    s32_t headnode[MAX_MAP_HULLS];
-    s32_t numleafs;  // not including the solid leaf 0
-    s32_t firstface, numfaces;
+    int32_t headnode[MAX_MAP_HULLS];
+    int32_t numleafs;  // not including the solid leaf 0
+    int32_t firstface, numfaces;
 };
 #pragma pack(pop)
 
 #pragma pack(push, 1)
 struct dmiptexlump_t {
-    s32_t num_miptex;
-    s32_t data_ofs[2];  // [nummiptex]
+    int32_t num_miptex;
+    int32_t data_ofs[2];  // [nummiptex]
 };
 #pragma pack(pop)
 
@@ -109,8 +109,8 @@ constexpr int MIP_LEVELS = 4;
 #pragma pack(push, 1)
 struct miptex_t {
     char name[16];
-    u32_t width, height;
-    u32_t offsets[MIP_LEVELS];  // four mip maps stored
+    uint32_t width, height;
+    uint32_t offsets[MIP_LEVELS];  // four mip maps stored
 };
 #pragma pack(pop)
 
@@ -138,14 +138,14 @@ enum {
 
 #pragma pack(push, 1)
 struct dnode_t {
-    s32_t planenum;
-    s16_t children[2];  // negative numbers are -(leafs+1), not nodes
+    int32_t planenum;
+    int16_t children[2];  // negative numbers are -(leafs+1), not nodes
 
-    s16_t mins[3];  // for sphere culling
-    s16_t maxs[3];
+    int16_t mins[3];  // for sphere culling
+    int16_t maxs[3];
 
-    u16_t firstface;
-    u16_t numfaces;  // counting both sides
+    uint16_t firstface;
+    uint16_t numfaces;  // counting both sides
 };
 #pragma pack(pop)
 
@@ -156,8 +156,8 @@ struct dnode_t {
  * (i.e. simply subtract 65536).
  */
 struct dclipnode_t {
-    s32_t planenum;
-    u16_t children[2];
+    int32_t planenum;
+    uint16_t children[2];
 };
 
 constexpr unsigned int CLIP_SPECIAL = 0xFFF0;
@@ -167,8 +167,8 @@ struct texinfo_t {
     float s[4];  // x/y/z/offset
     float t[4];
 
-    s32_t miptex;
-    s32_t flags;
+    int32_t miptex;
+    int32_t flags;
 };
 #pragma pack(pop)
 
@@ -187,16 +187,16 @@ constexpr int NUM_AMBIENTS = 4;
 // all other leafs need visibility info
 #pragma pack(push, 1)
 struct dleaf_t {
-    s32_t contents;
-    s32_t visofs;  // -1 = no visibility info
+    int32_t contents;
+    int32_t visofs;  // -1 = no visibility info
 
-    s16_t mins[3];  // for frustum culling
-    s16_t maxs[3];
+    int16_t mins[3];  // for frustum culling
+    int16_t maxs[3];
 
-    u16_t first_marksurf;
-    u16_t num_marksurf;
+    uint16_t first_marksurf;
+    uint16_t num_marksurf;
 
-    u8_t ambient_level[NUM_AMBIENTS];
+    uint8_t ambient_level[NUM_AMBIENTS];
 };
 #pragma pack(pop)
 

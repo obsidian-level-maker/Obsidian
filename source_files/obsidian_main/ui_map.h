@@ -24,7 +24,6 @@
 
 #include "FL/Fl_Box.H"
 #include "FL/Fl_Image.H"
-#include "sys_type.h"
 #include <filesystem>
 
 class UI_MiniMap : public Fl_Box {
@@ -34,7 +33,7 @@ class UI_MiniMap : public Fl_Box {
    public:
     int map_W, map_H;
 
-    u8_t *pixels;
+    uint8_t *pixels;
 
    public:
     UI_MiniMap(int x, int y, int w, int h, const char *label = NULL);
@@ -49,10 +48,10 @@ class UI_MiniMap : public Fl_Box {
     void MapBegin();
     void MapFinish();
 
-    void DrawPixel(int x, int y, byte r, byte g, byte b);
-    void DrawBox(int x1, int y1, int x2, int y2, byte r, byte g, byte b);
-    void DrawLine(int x1, int y1, int x2, int y2, byte r, byte g, byte b);
-    void DrawEntity(int x, int y, byte r, byte g, byte b);
+    void DrawPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b);
+    void DrawBox(int x1, int y1, int x2, int y2, uint8_t r, uint8_t g, uint8_t b);
+    void DrawLine(int x1, int y1, int x2, int y2, uint8_t r, uint8_t g, uint8_t b);
+    void DrawEntity(int x, int y, uint8_t r, uint8_t g, uint8_t b);
 
     void MapClear();
 
@@ -61,8 +60,8 @@ class UI_MiniMap : public Fl_Box {
     void GifFinish();
 
    private:
-    inline void RawPixel(int x, int y, byte r, byte g, byte b) {
-        u8_t *pos = pixels + ((map_H - 1 - y) * map_W + x) * 3;
+    inline void RawPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b) {
+        uint8_t *pos = pixels + ((map_H - 1 - y) * map_W + x) * 3;
 
         *pos++ = r;
         *pos++ = g;

@@ -26,8 +26,6 @@
 #include <string>
 #include <vector>
 
-#include "sys_type.h"
-
 class csg_brush_c;
 class csg_entity_c;
 class quake_plane_c;
@@ -71,7 +69,7 @@ class csg_property_set_c {
     double getDouble(std::string key, double def_val = 0) const;
     int getInt(std::string key, int def_val = 0) const;
 
-    void getHexenArgs(u8_t *arg5) const;
+    void getHexenArgs(uint8_t *arg5) const;
 
     void DebugDump();
 
@@ -216,7 +214,7 @@ class csg_entity_c {
 
     double x, y, z;
 
-    u16_t flags;
+    uint16_t flags;
 
     csg_property_set_c props;
 

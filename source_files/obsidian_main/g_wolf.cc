@@ -48,8 +48,8 @@ static int write_errors_seen;
 static int current_map;  // 1 to 60
 static int current_offset;
 
-static u16_t *solid_plane;
-static u16_t *thing_plane;
+static uint16_t *solid_plane;
+static uint16_t *thing_plane;
 
 static std::string level_name;
 
@@ -62,12 +62,12 @@ extern std::filesystem::path BestDirectory();
 //  WOLF OUTPUT
 //------------------------------------------------------------------------
 
-static void WF_PutU16(u16_t val, FILE *fp) {
+static void WF_PutU16(uint16_t val, FILE *fp) {
     fputc(val & 0xFF, fp);
     fputc((val >> 8) & 0xFF, fp);
 }
 
-static void WF_PutU32(u32_t val, FILE *fp) {
+static void WF_PutU32(uint32_t val, FILE *fp) {
     fputc(val & 0xFF, fp);
     fputc((val >> 8) & 0xFF, fp);
     fputc((val >> 16) & 0xFF, fp);
@@ -84,10 +84,10 @@ static void WF_PutNString(const char *str, int max_len, FILE *fp) {
     }
 }
 
-int rle_compress_plane(u16_t *plane, int src_len) {
-    u16_t *dest = plane + PL_START;
-    const u16_t *src = plane + PL_START;
-    const u16_t *endp = plane + PL_START + (src_len / 2);
+int rle_compress_plane(uint16_t *plane, int src_len) {
+    uint16_t *dest = plane + PL_START;
+    const uint16_t *src = plane + PL_START;
+    const uint16_t *endp = plane + PL_START + (src_len / 2);
 
     while (src < endp) {
         // don't want no Carmackization...
@@ -130,7 +130,7 @@ int rle_compress_plane(u16_t *plane, int src_len) {
 
 //------------------------------------------------------------------------
 
-static void WF_WritePlane(u16_t *plane, int *offset, int *length) {
+static void WF_WritePlane(uint16_t *plane, int *offset, int *length) {
     *offset = (int)ftell(map_fp);
 
     *length = rle_compress_plane(plane, 64 * 64 * 2);
@@ -427,8 +427,8 @@ bool wolf_game_interface_c::Start(const char *ext) {
     current_map = 1;
     current_offset = 0;
 
-    solid_plane = new u16_t[64 * 64 + 8];  // extra space for compressor
-    thing_plane = new u16_t[64 * 64 + 8];
+    solid_plane = new uint16_t[64 * 64 + 8];  // extra space for compressor
+    thing_plane = new uint16_t[64 * 64 + 8];
 #ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->Prog_Init(0, "");

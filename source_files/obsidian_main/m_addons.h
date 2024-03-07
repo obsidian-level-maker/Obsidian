@@ -29,8 +29,6 @@
 #include <map>
 #include <vector>
 
-#include "sys_type.h"
-
 void VFS_InitAddons(std::filesystem::path search_dir);
 void VFS_ParseCommandLine();
 void VFS_ScanForAddons();
@@ -41,8 +39,8 @@ void VFS_OptWrite(std::ofstream &fp);
 
 // util functions
 bool VFS_CopyFile(const char *src_name, const char *dest_name);
-byte *VFS_LoadFile(const char *filename, int *length);
-void VFS_FreeFile(const byte *mem);
+uint8_t *VFS_LoadFile(const char *filename, int *length);
+void VFS_FreeFile(const uint8_t *mem);
 
 typedef struct {
     std::filesystem::path name;  // base filename, includes ".pk3" extension

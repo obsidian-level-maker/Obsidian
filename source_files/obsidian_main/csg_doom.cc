@@ -389,7 +389,7 @@ class linedef_c {
     int special;
     int tag;
 
-    std::array<u8_t, 5> args;
+    std::array<uint8_t, 5> args;
 
     double length;
 
@@ -2664,7 +2664,7 @@ static void WriteThing(sector_c *S, csg_entity_c *E) {
         }
     }
 
-    byte args[5] = {0, 0, 0, 0, 0};
+    uint8_t args[5] = {0, 0, 0, 0, 0};
 
     E->props.getHexenArgs(args);
 

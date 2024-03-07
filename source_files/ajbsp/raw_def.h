@@ -28,8 +28,8 @@ typedef struct raw_wad_header_s
 {
 	char ident[4];
 
-	u32_t num_entries;
-	u32_t dir_start;
+	uint32_t num_entries;
+	uint32_t dir_start;
 
 } PACKEDATTR raw_wad_header_t;
 
@@ -37,8 +37,8 @@ typedef struct raw_wad_header_s
 // directory entry
 typedef struct raw_wad_entry_s
 {
-	u32_t pos;
-	u32_t size;
+	uint32_t pos;
+	uint32_t size;
 
 	char name[8];
 
@@ -70,77 +70,77 @@ lump_order_e;
 
 typedef struct raw_vertex_s
 {
-	s16_t x, y;
+	int16_t x, y;
 
 } PACKEDATTR raw_vertex_t;
 
 typedef struct raw_v2_vertex_s
 {
-	s32_t x, y;
+	int32_t x, y;
 
 } PACKEDATTR raw_v2_vertex_t;
 
 
 typedef struct raw_linedef_s
 {
-	u16_t start;    // from this vertex...
-	u16_t end;      // ... to this vertex
-	u16_t flags;    // linedef flags (impassible, etc)
-	u16_t type;     // special type (0 for none, 97 for teleporter, etc)
-	s16_t tag;      // this linedef activates the sector with same tag
-	u16_t right;    // right sidedef
-	u16_t left;     // left sidedef (only if this line adjoins 2 sectors)
+	uint16_t start;    // from this vertex...
+	uint16_t end;      // ... to this vertex
+	uint16_t flags;    // linedef flags (impassible, etc)
+	uint16_t type;     // special type (0 for none, 97 for teleporter, etc)
+	int16_t tag;      // this linedef activates the sector with same tag
+	uint16_t right;    // right sidedef
+	uint16_t left;     // left sidedef (only if this line adjoins 2 sectors)
 
 } PACKEDATTR raw_linedef_t;
 
 typedef struct raw_hexen_linedef_s
 {
-	u16_t start;      // from this vertex...
-	u16_t end;        // ... to this vertex
-	u16_t flags;      // linedef flags (impassible, etc)
-	u8_t  type;       // special type
-	u8_t  args[5];    // special arguments
-	u16_t right;      // right sidedef
-	u16_t left;       // left sidedef
+	uint16_t start;      // from this vertex...
+	uint16_t end;        // ... to this vertex
+	uint16_t flags;      // linedef flags (impassible, etc)
+	uint8_t  type;       // special type
+	uint8_t  args[5];    // special arguments
+	uint16_t right;      // right sidedef
+	uint16_t left;       // left sidedef
 
 } PACKEDATTR raw_hexen_linedef_t;
 
 
 typedef struct raw_sidedef_s
 {
-	s16_t x_offset;  // X offset for texture
-	s16_t y_offset;  // Y offset for texture
+	int16_t x_offset;  // X offset for texture
+	int16_t y_offset;  // Y offset for texture
 
 	char upper_tex[8];  // texture name for the part above
 	char lower_tex[8];  // texture name for the part below
 	char mid_tex[8];    // texture name for the regular part
 
-	u16_t sector;    // adjacent sector
+	uint16_t sector;    // adjacent sector
 
 } PACKEDATTR raw_sidedef_t;
 
 
 typedef struct raw_sector_s
 {
-	s16_t floorh;   // floor height
-	s16_t ceilh;    // ceiling height
+	int16_t floorh;   // floor height
+	int16_t ceilh;    // ceiling height
 
 	char floor_tex[8];  // floor texture
 	char ceil_tex[8];   // ceiling texture
 
-	u16_t light;     // light level (0-255)
-	u16_t type;      // special type (0 = normal, 9 = secret, ...)
-	s16_t tag;       // sector activated by a linedef with same tag
+	uint16_t light;     // light level (0-255)
+	uint16_t type;      // special type (0 = normal, 9 = secret, ...)
+	int16_t tag;       // sector activated by a linedef with same tag
 
 } PACKEDATTR raw_sector_t;
 
 
 typedef struct raw_thing_s
 {
-	s16_t x, y;      // position of thing
-	s16_t angle;     // angle thing faces (degrees)
-	u16_t type;      // type of thing
-	u16_t options;   // when appears, deaf, etc..
+	int16_t x, y;      // position of thing
+	int16_t angle;     // angle thing faces (degrees)
+	uint16_t type;      // type of thing
+	uint16_t options;   // when appears, deaf, etc..
 
 } PACKEDATTR raw_thing_t;
 
@@ -148,15 +148,15 @@ typedef struct raw_thing_s
 // -JL- Hexen thing definition
 typedef struct raw_hexen_thing_s
 {
-	s16_t tid;       // tag id (for scripts/specials)
-	s16_t x, y;      // position
-	s16_t height;    // start height above floor
-	s16_t angle;     // angle thing faces
-	u16_t type;      // type of thing
-	u16_t options;   // when appears, deaf, dormant, etc..
+	int16_t tid;       // tag id (for scripts/specials)
+	int16_t x, y;      // position
+	int16_t height;    // start height above floor
+	int16_t angle;     // angle thing faces
+	uint16_t type;      // type of thing
+	uint16_t options;   // when appears, deaf, dormant, etc..
 
-	u8_t special;    // special type
-	u8_t args[5];    // special arguments
+	uint8_t special;    // special type
+	uint8_t args[5];    // special arguments
 
 } PACKEDATTR raw_hexen_thing_t;
 
@@ -165,85 +165,85 @@ typedef struct raw_hexen_thing_s
 
 typedef struct raw_seg_s
 {
-	u16_t start;     // from this vertex...
-	u16_t end;       // ... to this vertex
-	u16_t angle;     // angle (0 = east, 16384 = north, ...)
-	u16_t linedef;   // linedef that this seg goes along
-	u16_t flip;      // true if not the same direction as linedef
-	u16_t dist;      // distance from starting point
+	uint16_t start;     // from this vertex...
+	uint16_t end;       // ... to this vertex
+	uint16_t angle;     // angle (0 = east, 16384 = north, ...)
+	uint16_t linedef;   // linedef that this seg goes along
+	uint16_t flip;      // true if not the same direction as linedef
+	uint16_t dist;      // distance from starting point
 
 } PACKEDATTR raw_seg_t;
 
 
 typedef struct raw_gl_seg_s
 {
-	u16_t start;      // from this vertex...
-	u16_t end;        // ... to this vertex
-	u16_t linedef;    // linedef that this seg goes along, or -1
-	u16_t side;       // 0 if on right of linedef, 1 if on left
-	u16_t partner;    // partner seg number, or -1
+	uint16_t start;      // from this vertex...
+	uint16_t end;        // ... to this vertex
+	uint16_t linedef;    // linedef that this seg goes along, or -1
+	uint16_t side;       // 0 if on right of linedef, 1 if on left
+	uint16_t partner;    // partner seg number, or -1
 
 } PACKEDATTR raw_gl_seg_t;
 
 
 typedef struct raw_v5_seg_s
 {
-	u32_t start;      // from this vertex...
-	u32_t end;        // ... to this vertex
-	u16_t linedef;    // linedef that this seg goes along, or -1
-	u16_t side;       // 0 if on right of linedef, 1 if on left
-	u32_t partner;    // partner seg number, or -1
+	uint32_t start;      // from this vertex...
+	uint32_t end;        // ... to this vertex
+	uint16_t linedef;    // linedef that this seg goes along, or -1
+	uint16_t side;       // 0 if on right of linedef, 1 if on left
+	uint32_t partner;    // partner seg number, or -1
 
 } PACKEDATTR raw_v5_seg_t;
 
 
 typedef struct raw_zdoom_seg_s
 {
-	u32_t start;      // from this vertex...
-	u32_t end;        // ... to this vertex
-	u16_t linedef;    // linedef that this seg goes along, or -1
-	 u8_t side;       // 0 if on right of linedef, 1 if on left
+	uint32_t start;      // from this vertex...
+	uint32_t end;        // ... to this vertex
+	uint16_t linedef;    // linedef that this seg goes along, or -1
+	 uint8_t side;       // 0 if on right of linedef, 1 if on left
 
 } PACKEDATTR raw_zdoom_seg_t;
 
 
 typedef struct raw_bbox_s
 {
-	s16_t maxy, miny;
-	s16_t minx, maxx;
+	int16_t maxy, miny;
+	int16_t minx, maxx;
 
 } PACKEDATTR raw_bbox_t;
 
 
 typedef struct raw_node_s
 {
-	s16_t x, y;         // starting point
-	s16_t dx, dy;       // offset to ending point
+	int16_t x, y;         // starting point
+	int16_t dx, dy;       // offset to ending point
 	raw_bbox_t b1, b2;  // bounding rectangles
-	u16_t right, left;  // children: Node or SSector (if high bit is set)
+	uint16_t right, left;  // children: Node or SSector (if high bit is set)
 
 } PACKEDATTR raw_node_t;
 
 
 typedef struct raw_subsec_s
 {
-	u16_t num;     // number of Segs in this Sub-Sector
-	u16_t first;   // first Seg
+	uint16_t num;     // number of Segs in this Sub-Sector
+	uint16_t first;   // first Seg
 
 } PACKEDATTR raw_subsec_t;
 
 
 typedef struct raw_v5_subsec_s
 {
-	u32_t num;     // number of Segs in this Sub-Sector
-	u32_t first;   // first Seg
+	uint32_t num;     // number of Segs in this Sub-Sector
+	uint32_t first;   // first Seg
 
 } PACKEDATTR raw_v5_subsec_t;
 
 
 typedef struct raw_zdoom_subsec_s
 {
-	u32_t segnum;
+	uint32_t segnum;
 
 	// NOTE : no "first" value, segs must be contiguous and appear
 	//        in an order dictated by the subsector list, e.g. all
@@ -257,18 +257,18 @@ typedef struct raw_v5_node_s
 {
 	// this structure used by ZDoom nodes too
 
-	s16_t x, y;         // starting point
-	s16_t dx, dy;       // offset to ending point
+	int16_t x, y;         // starting point
+	int16_t dx, dy;       // offset to ending point
 	raw_bbox_t b1, b2;  // bounding rectangles
-	u32_t right, left;  // children: Node or SSector (if high bit is set)
+	uint32_t right, left;  // children: Node or SSector (if high bit is set)
 
 } PACKEDATTR raw_v5_node_t;
 
 
 typedef struct raw_blockmap_header_s
 {
-	s16_t x_origin, y_origin;
-	s16_t x_blocks, y_blocks;
+	int16_t x_origin, y_origin;
+	int16_t x_blocks, y_blocks;
 
 } PACKEDATTR raw_blockmap_header_t;
 
@@ -277,21 +277,21 @@ typedef struct raw_blockmap_header_s
 
 typedef struct
 {
-	s16_t x_origin;
-	s16_t y_origin;
+	int16_t x_origin;
+	int16_t y_origin;
 
-	u16_t pname;    // index into PNAMES
-	u16_t stepdir;  // NOT USED
-	u16_t colormap; // NOT USED
+	uint16_t pname;    // index into PNAMES
+	uint16_t stepdir;  // NOT USED
+	uint16_t colormap; // NOT USED
 
 } PACKEDATTR raw_patchdef_t;
 
 
 typedef struct
 {
-	s16_t x_origin;
-	s16_t y_origin;
-	u16_t pname;    // index into PNAMES
+	int16_t x_origin;
+	int16_t y_origin;
+	uint16_t pname;    // index into PNAMES
 
 } PACKEDATTR raw_strife_patchdef_t;
 
@@ -305,11 +305,11 @@ typedef struct
 {
 	char name[8];
 
-	u32_t masked;      // NOT USED
-	u16_t width;
-	u16_t height;
-	u16_t column_dir[2];  // NOT USED
-	u16_t patch_count;
+	uint32_t masked;      // NOT USED
+	uint16_t width;
+	uint16_t height;
+	uint16_t column_dir[2];  // NOT USED
+	uint16_t patch_count;
 
 	raw_patchdef_t patches[1];
 
@@ -320,10 +320,10 @@ typedef struct
 {
 	char name[8];
 
-	u32_t masked;      // NOT USED
-	u16_t width;
-	u16_t height;
-	u16_t patch_count;
+	uint32_t masked;      // NOT USED
+	uint16_t width;
+	uint16_t height;
+	uint16_t patch_count;
 
 	raw_strife_patchdef_t patches[1];
 
@@ -340,16 +340,16 @@ typedef struct
 typedef struct patch_s
 {
 	// bounding box size
-	s16_t width;
-	s16_t height;
+	int16_t width;
+	int16_t height;
 
 	// pixels to the left of origin
-	s16_t leftoffset;
+	int16_t leftoffset;
 
 	// pixels below the origin
-	s16_t topoffset;
+	int16_t topoffset;
 
-	u32_t columnofs[1];  // only [width] used
+	uint32_t columnofs[1];  // only [width] used
 
 } PACKEDATTR patch_t;
 

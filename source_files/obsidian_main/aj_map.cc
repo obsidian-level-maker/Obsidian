@@ -75,7 +75,7 @@ static vertex_c *SafeLookupVertex(int num)
 	return all_vertices[num];
 }
 
-static sector_c *SafeLookupSector(u16_t num)
+static sector_c *SafeLookupSector(uint16_t num)
 {
 	if (num == 0xFFFF)
 		return NULL;
@@ -86,7 +86,7 @@ static sector_c *SafeLookupSector(u16_t num)
 	return all_sectors[num];
 }
 
-static inline sidedef_c *SafeLookupSidedef(u16_t num)
+static inline sidedef_c *SafeLookupSidedef(uint16_t num)
 {
 	if (num == 0xFFFF)
 		return NULL;
@@ -540,7 +540,7 @@ void ParseUDMF_Pass(const std::string& data, int pass)
 }
 
 
-void ParseUDMF(byte *lump, int length)
+void ParseUDMF(uint8_t *lump, int length)
 {
 	if (!lump || length <= 0)
 		Main::FatalError("Error parsing TEXTMAP lump.\n");
@@ -618,12 +618,12 @@ polygon_c *Polygon(int index) {
     return all_polygons[index];
 }
 
-inline sidedef_c *SafeSidedef(u16_t num) {
+inline sidedef_c *SafeSidedef(uint16_t num) {
     if (num == 0xFFFF) {
         return NULL;
     }
 
-    if ((int)num >= num_sidedefs && (s16_t)(num) < 0) {
+    if ((int)num >= num_sidedefs && (int16_t)(num) < 0) {
         return NULL;
     }
 
@@ -718,7 +718,7 @@ int load_level;
 bool LoadVertices() {
     int length;
 
-    byte *data = the_wad->ReadLump("VERTEXES", &length, load_level);
+    uint8_t *data = the_wad->ReadLump("VERTEXES", &length, load_level);
 
     if (!data) {
         SetErrorMsg("Failed to load VERTEXES lump");
@@ -746,7 +746,7 @@ bool LoadVertices() {
 bool LoadSectors() {
     int length;
 
-    byte *data = the_wad->ReadLump("SECTORS", &length, load_level);
+    uint8_t *data = the_wad->ReadLump("SECTORS", &length, load_level);
 
     if (!data) {
         SetErrorMsg("Failed to load SECTORS lump");
@@ -788,7 +788,7 @@ bool LoadSectors() {
 bool LoadThings() {
     int length;
 
-    byte *data = the_wad->ReadLump("THINGS", &length, load_level);
+    uint8_t *data = the_wad->ReadLump("THINGS", &length, load_level);
 
     if (!data) {
         SetErrorMsg("Failed to load THINGS lump");
@@ -820,7 +820,7 @@ bool LoadThings() {
 bool LoadThingsHexen() {
     int length;
 
-    byte *data = the_wad->ReadLump("THINGS", &length, load_level);
+    uint8_t *data = the_wad->ReadLump("THINGS", &length, load_level);
 
     if (!data) {
         SetErrorMsg("Failed to load THINGS lump");
@@ -859,7 +859,7 @@ bool LoadThingsHexen() {
 bool LoadSidedefs() {
     int length;
 
-    byte *data = the_wad->ReadLump("SIDEDEFS", &length, load_level);
+    uint8_t *data = the_wad->ReadLump("SIDEDEFS", &length, load_level);
 
     if (!data) {
         SetErrorMsg("Failed to load SIDEDEFS lump");
@@ -901,7 +901,7 @@ bool LoadSidedefs() {
 bool LoadLinedefs() {
     int length;
 
-    byte *data = the_wad->ReadLump("LINEDEFS", &length, load_level);
+    uint8_t *data = the_wad->ReadLump("LINEDEFS", &length, load_level);
 
     if (!data) {
         SetErrorMsg("Failed to load LINEDEFS lump");
@@ -948,7 +948,7 @@ bool LoadLinedefs() {
 bool LoadLinedefsHexen() {
     int length;
 
-    byte *data = the_wad->ReadLump("LINEDEFS", &length, load_level);
+    uint8_t *data = the_wad->ReadLump("LINEDEFS", &length, load_level);
 
     if (!data) {
         SetErrorMsg("Failed to load LINEDEFS lump");
@@ -1113,7 +1113,7 @@ void FindDummySectors() {
         return;
     }
 
-    byte *joined_secs = new byte[num_sectors];
+    uint8_t *joined_secs = new uint8_t[num_sectors];
 
     memset(joined_secs, 0, num_sectors);
 
@@ -1629,7 +1629,7 @@ bool OpenMap(const char *level_name) {
 
     // identify UDMF mode by presence of BEHAVIOR lump
     int textmap_length = 0;
-    byte *textmap_lump = the_wad->ReadLump("TEXTMAP", &textmap_length, load_level);
+    uint8_t *textmap_lump = the_wad->ReadLump("TEXTMAP", &textmap_length, load_level);
 
     if (textmap_lump) {
         ParseUDMF(textmap_lump, textmap_length);

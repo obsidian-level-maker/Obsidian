@@ -26,7 +26,6 @@
 #include <vector>
 
 #include "hdr_lua.h"
-#include "sys_type.h"
 
 typedef struct lua_State lua_State;
 
@@ -37,7 +36,7 @@ void Script_Close();
 #define MAX_COLORS_PER_MAP 260
 
 typedef struct {
-    byte colors[MAX_COLORS_PER_MAP];
+    uint8_t colors[MAX_COLORS_PER_MAP];
     int size;
 } color_mapping_t;
 

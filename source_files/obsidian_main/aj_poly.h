@@ -24,7 +24,6 @@
 #include <cstring>
 #include <string>
 #include <array>
-#include "sys_type.h"
 #include <unordered_map>
 void Appl_FatalError(const char *str, ...);
 void Appl_Printf(const char *str, ...);
@@ -156,7 +155,7 @@ class linedef_c {
     int tag;
 
     // Hexen support
-    std::array<u8_t, 5> args;
+    std::array<uint8_t, 5> args;
 
     // UDMF support
     std::unordered_map<std::string, std::string> misc_vals;
@@ -188,7 +187,7 @@ class thing_c {
     int tid;
     int height;
     int special;
-    std::array<u8_t, 5> args;
+    std::array<uint8_t, 5> args;
 
     // UDMF support
     std::unordered_map<std::string, std::string> misc_vals;

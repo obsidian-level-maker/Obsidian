@@ -69,7 +69,7 @@ bool ZIPF_AddFile(const std::filesystem::path &filename, std::filesystem::path d
 }
 
 // Calling function is responsible for freeing *data
-bool ZIPF_AddMem(std::string name, byte *data, size_t length) {
+bool ZIPF_AddMem(std::string name, uint8_t *data, size_t length) {
     if (!zip_writer) {
         return false;
     }

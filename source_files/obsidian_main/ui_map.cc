@@ -60,7 +60,7 @@ void UI_MiniMap::MapBegin() {
         delete[] pixels;
     }
 
-    pixels = new u8_t[map_W * map_H * 3];
+    pixels = new uint8_t[map_W * map_H * 3];
 
     MapClear();
 }
@@ -72,7 +72,7 @@ void UI_MiniMap::MapClear() {
 
     for (int py = 0; py < map_H; py++) {
         for (int px = 0; px < map_W; px++) {
-            u8_t *pix = pixels + (py * map_W + px) * 3;
+            uint8_t *pix = pixels + (py * map_W + px) * 3;
 
             if ((px % 10) == 5 || (py % 10) == 5) {
                 // if (have_an_addon) pix[1] = 144; else
@@ -310,7 +310,7 @@ void UI_MiniMap::GifStart(std::filesystem::path filename, int delay) {
 }
 
 void UI_MiniMap::GifFrame() {
-    std::vector<u8_t> frame_pixels;
+    std::vector<uint8_t> frame_pixels;
     int rgb_counter = 0;
     // Sloppy RGB->RGBA conversion for Gif-H - Dasho
     for (int i = 0; i < map_W * map_H * 3; i++) {

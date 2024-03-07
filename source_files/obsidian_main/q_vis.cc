@@ -540,8 +540,8 @@ static void FloodAmbientSounds() {
                     qCluster_c *N = qk_clusters[ny * cluster_W + nx];
 
                     for (int k = 0; k < 4; k++) {
-                        byte src = S->ambient_dists[k];
-                        byte dest = N->ambient_dists[k];
+                        uint8_t src = S->ambient_dists[k];
+                        uint8_t dest = N->ambient_dists[k];
 
                         if (src == 255) {
                             continue;
@@ -563,8 +563,8 @@ static void FloodAmbientSounds() {
 
 static qLump_c *q_visibility;
 
-static byte *v_row_buffer;
-static byte *v_compress_buffer;
+static uint8_t *v_row_buffer;
+static uint8_t *v_compress_buffer;
 
 static int v_row_bits;  // number of leafs or clusters
 static int v_bytes_per_row;
@@ -622,10 +622,10 @@ static int WriteCompressedRow(bool PHS) {
     // returns offset for the written data block
     int visofs = (int)q_visibility->GetSize();
 
-    const byte *src = v_row_buffer;
-    const byte *s_end = src + v_bytes_per_row;
+    const uint8_t *src = v_row_buffer;
+    const uint8_t *s_end = src + v_bytes_per_row;
 
-    byte *dest = v_compress_buffer;
+    uint8_t *dest = v_compress_buffer;
 
     while (src < s_end) {
         if (*src) {
@@ -635,7 +635,7 @@ static int WriteCompressedRow(bool PHS) {
 
         *dest++ = *src++;
 
-        byte repeat = 1;
+        uint8_t repeat = 1;
 
         while (src < s_end && *src == 0 && repeat != 255) {
             src++;
@@ -783,7 +783,7 @@ static void Build_PVS() {
 static void Q2_PrependOffsets(int num_clusters) {
     int header_size = 4 + 8 * num_clusters;
 
-    s32_t *header = new s32_t[1 + num_clusters * 2];
+    int32_t *header = new int32_t[1 + num_clusters * 2];
 
     header[0] = LE_S32(num_clusters);
 
@@ -856,10 +856,10 @@ void QVIS_Visibility(int lump, int max_size, int numleafs) {
 
     LogPrintf("bits per row: %d --> bytes: %d\n", v_row_bits, v_bytes_per_row);
 
-    v_row_buffer = new byte[1 + v_bytes_per_row];
+    v_row_buffer = new uint8_t[1 + v_bytes_per_row];
 
     // the worst case scenario for compression is 50% larger
-    v_compress_buffer = new byte[1 + 2 * v_bytes_per_row];
+    v_compress_buffer = new uint8_t[1 + 2 * v_bytes_per_row];
 
     q_visibility = BSP_NewLump(lump);
 

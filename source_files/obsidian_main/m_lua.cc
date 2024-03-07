@@ -36,8 +36,6 @@
 #include "physfs.h"
 #include "sys_xoshiro.h"
 
-#include "ff_main.h"
-
 #define LUA_IMPL
 #include "m_lua.h"
 
@@ -54,36 +52,6 @@ void Script_Load(std::filesystem::path script_name);
 
 // color maps
 color_mapping_t color_mappings[MAX_COLOR_MAPS];
-
-// LUA: format_prefix(levelcount, OB_CONFIG.game, OB_CONFIG.theme, formatstring)
-//
-int gui_format_prefix(lua_State *L) {
-    const char *levelcount = luaL_checkstring(L, 1);
-    const char *game = luaL_checkstring(L, 2);
-    const char *port = luaL_checkstring(L, 3);
-    const char *theme = luaL_checkstring(L, 4);
-    std::string format = luaL_checkstring(L, 5);
-
-    SYS_ASSERT(levelcount && game && theme && (!format.empty()));
-
-    if (StringCaseCmp(format, "custom") == 0) {
-        format = custom_prefix.c_str();
-    }
-
-    const char *result = ff_main(levelcount, game, port, theme,
-                                 OBSIDIAN_SHORT_VERSION, format.c_str());
-
-    if (!result) {
-        lua_pushstring(L, "FF_ERROR_");  // Will help people notice issues
-        return 1;
-    } else {
-        lua_pushstring(L, result);
-        return 1;
-    }
-
-    // Hopefully we don't get here
-    return 0;
-}
 
 // LUA: console_print(str)
 //
@@ -313,7 +281,7 @@ static bool scan_dir_process_name(const std::filesystem::path &name,
     // pretend that zero-length files do not exist
     // [ allows a PK3 to _remove_ a file ]
 
-    byte buffer[1];
+    uint8_t buffer[1];
 
     PHYSFS_File *fp = PHYSFS_openRead(temp_name.generic_u8string().c_str());
 
@@ -1265,8 +1233,8 @@ int gui_minimap_draw_line(lua_State *L) {
 
 #ifndef CONSOLE_ONLY
     if (main_win) {
-        main_win->build_box->mini_map->DrawLine(x1, y1, x2, y2, (u8_t)r,
-                                                (u8_t)g, (u8_t)b);
+        main_win->build_box->mini_map->DrawLine(x1, y1, x2, y2, (uint8_t)r,
+                                                (uint8_t)g, (uint8_t)b);
     }
 #endif
 
@@ -1290,8 +1258,8 @@ int gui_minimap_fill_box(lua_State *L) {
 
 #ifndef CONSOLE_ONLY
     if (main_win) {
-        main_win->build_box->mini_map->DrawBox(x1, y1, x2, y2, (u8_t)r, (u8_t)g,
-                                               (u8_t)b);
+        main_win->build_box->mini_map->DrawBox(x1, y1, x2, y2, (uint8_t)r, (uint8_t)g,
+                                               (uint8_t)b);
     }
 #endif
 
@@ -1380,8 +1348,6 @@ extern int Q1_add_mapmodel(lua_State *L);
 extern int Q1_add_tex_wad(lua_State *L);
 
 static const luaL_Reg gui_script_funcs[] = {
-
-    {"format_prefix", gui_format_prefix},
 
     {"console_print", gui_console_print},
     {"ref_print", gui_ref_print},

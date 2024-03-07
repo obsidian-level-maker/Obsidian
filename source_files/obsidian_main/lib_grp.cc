@@ -46,9 +46,9 @@ static FILE *grp_R_fp;
 
 static raw_grp_header_t grp_R_header;
 static raw_grp_lump_t *grp_R_dir;
-static u32_t *grp_R_starts;
+static uint32_t *grp_R_starts;
 
-static const byte grp_magic_data[GRP_MAGIC_LEN] = {
+static const uint8_t grp_magic_data[GRP_MAGIC_LEN] = {
     0xb4, 0x9a, 0x91, 0xac, 0x96, 0x93, 0x89, 0x9a, 0x8d, 0x92, 0x9e, 0x91};
 
 bool GRP_OpenRead(const char *filename) {
@@ -108,9 +108,9 @@ bool GRP_OpenRead(const char *filename) {
     }
 
     grp_R_dir = new raw_grp_lump_t[grp_R_header.num_lumps + 1];
-    grp_R_starts = new u32_t[grp_R_header.num_lumps + 1];
+    grp_R_starts = new uint32_t[grp_R_header.num_lumps + 1];
 
-    u32_t L_start = sizeof(raw_grp_header_t) +
+    uint32_t L_start = sizeof(raw_grp_header_t) +
                     sizeof(raw_grp_lump_t) * grp_R_header.num_lumps;
 
     for (int i = 0; i < (int)grp_R_header.num_lumps; i++) {
@@ -205,7 +205,7 @@ bool GRP_ReadData(int entry, int offset, int length, void *buffer) {
 
     int L_start = grp_R_starts[entry];
 
-    if ((u32_t)offset + (u32_t)length > grp_R_dir[entry].length) {  // EOF
+    if ((uint32_t)offset + (uint32_t)length > grp_R_dir[entry].length) {  // EOF
         return false;
     }
 
@@ -277,7 +277,7 @@ bool GRP_OpenWrite(const std::filesystem::path &filename) {
 
 void GRP_CloseWrite(void) {
     // add dummy data for the dummy entries
-    byte zero_buf[GRP_MAX_LUMPS];
+    uint8_t zero_buf[GRP_MAX_LUMPS];
     memset(zero_buf, 0, sizeof(zero_buf));
 
     grp_W_fp.write(reinterpret_cast<const char *>(zero_buf), sizeof(zero_buf));
@@ -345,7 +345,7 @@ bool GRP_AppendData(const void *data, int length) {
         return false;
     }
 
-    grp_W_lump.length += (u32_t)length;
+    grp_W_lump.length += (uint32_t)length;
     return true;  // OK
 }
 

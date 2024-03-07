@@ -233,7 +233,7 @@ bool PAK_ReadData(int entry, int offset, int length, void *buffer) {
 
     raw_pak_entry_t *E = &r_directory[entry];
 
-    if ((u32_t)offset + (u32_t)length > E->length) {  // EOF
+    if ((uint32_t)offset + (uint32_t)length > E->length) {  // EOF
         return false;
     }
 

@@ -1125,8 +1125,8 @@ void global_align_group_backbone_backward(level *l,linedef *ld);
 void global_align_group_etc_forward(level *l,linedef *ld);
 void global_align_group_etc_backward(level *l,linedef *ld);
 
-void basic_background2(byte *fbuf, byte bottom, int range);
-byte *one_piece(musheader *pmh);
+void basic_background2(uint8_t *fbuf, byte bottom, int range);
+uint8_t *one_piece(musheader *pmh);
 texture_lmp *new_texture_lmp(const char *name);
 void free_texture_lmp(texture_lmp *tl);
 custom_texture *new_custom_texture(texture_lmp *tl,const char *name,

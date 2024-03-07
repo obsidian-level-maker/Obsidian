@@ -135,7 +135,7 @@ static int old_w = 0;
 static int old_h = 0;
 static std::string old_seed;
 static std::string old_name;
-static u8_t *old_pixels;
+static uint8_t *old_pixels;
 bool gui_simple_mode = true;
 #endif
 int filename_prefix = 0;
@@ -1011,9 +1011,9 @@ void Main::Ticker() {
     // To prevent a slow-down, we only call Fl::check()
     // after a certain time has elapsed.
 
-    static u32_t last_millis = 0;
+    static uint32_t last_millis = 0;
 
-    if (const u32_t cur_millis = TimeGetMillies();
+    if (const uint32_t cur_millis = TimeGetMillies();
         (cur_millis - last_millis) >= TICKER_TIME) {
         Fl::check();
 
@@ -1090,21 +1090,7 @@ void Main_SetSeed() {
                 string_seed = ob_get_random_words();
             }
             ob_set_config("string_seed", string_seed.c_str());
-            unsigned long long split_limit =
-                (std::numeric_limits<long long>::max() /
-                 127);  // It is intentional that I am using the max for signed long long
-                        // - Dasho
-            next_rand_seed = split_limit;
-            for (size_t i = 0; i < string_seed.size(); i++) {
-                char character = string_seed.at(i);
-                if (!std::iscntrl(character)) {
-                    if (next_rand_seed < split_limit) {
-                        next_rand_seed *= abs(int(character));
-                    } else {
-                        next_rand_seed /= abs(int(character));
-                    }
-                }
-            }
+            next_rand_seed = StringHash64(string_seed);
         }
     }
     xoshiro_Reseed(next_rand_seed);
@@ -1180,7 +1166,7 @@ bool Build_Cool_Shit() {
     }
 #endif
 
-    const u32_t start_time = TimeGetMillies();
+    const uint32_t start_time = TimeGetMillies();
     bool was_ok = false;
     // this will ask for output filename (among other things)
     if (StringCaseCmp(format, "wolf3d") == 0) {
@@ -1214,8 +1200,8 @@ bool Build_Cool_Shit() {
     if (was_ok) {
         Main::ProgStatus(_("Success"));
 
-        const u32_t end_time = TimeGetMillies();
-        const u32_t total_time = end_time - start_time;
+        const uint32_t end_time = TimeGetMillies();
+        const uint32_t total_time = end_time - start_time;
 
         LogPrintf("\nTOTAL TIME: %g seconds\n\n", total_time / 1000.0);
 
@@ -1873,7 +1859,7 @@ softrestart:;
             }
             int map_size = main_win->build_box->mini_map->map_W *
                            main_win->build_box->mini_map->map_H * 3;
-            main_win->build_box->mini_map->pixels = new u8_t[map_size];
+            main_win->build_box->mini_map->pixels = new uint8_t[map_size];
             memcpy(main_win->build_box->mini_map->pixels, old_pixels, map_size);
             delete[] old_pixels;
             old_pixels = NULL;
@@ -1915,26 +1901,24 @@ softrestart:;
 
                 did_specify_seed = false;
 
+#ifndef CONSOLE_ONLY
                 if (result) {
                     old_seed = string_seed.empty() ? NumToString(next_rand_seed)
                                                    : string_seed;
-#ifndef CONSOLE_ONLY
                     if (main_win->build_box->name_disp->label()) {
                         old_name = main_win->build_box->name_disp->label();
                     }
                     if (main_win->build_box->mini_map->pixels) {
                         int map_size = main_win->build_box->mini_map->map_W *
                                        main_win->build_box->mini_map->map_H * 3;
-                        old_pixels = new u8_t[map_size];
+                        old_pixels = new uint8_t[map_size];
                         memcpy(old_pixels,
                                main_win->build_box->mini_map->pixels, map_size);
                     }
-#endif
                 } else {
                     old_seed.clear();
                     old_name.clear();
                 }
-#ifndef CONSOLE_ONLY
                 main_win->build_box->alt_disp->label("");
 #endif
                 // regardless of success or fail, compute a new seed

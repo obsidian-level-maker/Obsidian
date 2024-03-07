@@ -13,10 +13,10 @@ changes in other sections of code.
 
 fastPRNG::fastXS64 xoshiro;
 
-void xoshiro_Reseed(unsigned long long newseed) { xoshiro.seed(newseed); }
+void xoshiro_Reseed(uint64_t newseed) { xoshiro.seed(newseed); }
 
-unsigned long long xoshiro_UInt() {
-    long long rand_num = (long long)(xoshiro.xoshiro256p());
+uint64_t xoshiro_UInt() {
+    int64_t rand_num = (int64_t)(xoshiro.xoshiro256p());
     if (rand_num >= 0) {
         return rand_num;
     }

@@ -48,10 +48,10 @@ static int block_count;
 static int block_mid_x = 0;
 static int block_mid_y = 0;
 
-static u16_t ** block_lines;
+static uint16_t ** block_lines;
 
-static u16_t *block_ptrs;
-static u16_t *block_dups;
+static uint16_t *block_ptrs;
+static uint16_t *block_dups;
 
 static int block_compression;
 static int block_overflowed;
@@ -150,7 +150,7 @@ int CheckLinedefInsideBox(int xmin, int ymin, int xmax, int ymax,
 
 static void BlockAdd(int blk_num, int line_index)
 {
-	u16_t *cur = block_lines[blk_num];
+	uint16_t *cur = block_lines[blk_num];
 
 #if DEBUG_BLOCKMAP
 	cur_info->Debug("Block %d has line %d\n", blk_num, line_index);
@@ -162,7 +162,7 @@ static void BlockAdd(int blk_num, int line_index)
 	if (! cur)
 	{
 		// create empty block
-		block_lines[blk_num] = cur = (u16_t *)UtilCalloc(BK_QUANTUM * sizeof(u16_t));
+		block_lines[blk_num] = cur = (uint16_t *)UtilCalloc(BK_QUANTUM * sizeof(uint16_t));
 		cur[BK_NUM] = 0;
 		cur[BK_MAX] = BK_QUANTUM;
 		cur[BK_XOR] = 0x1234;
@@ -173,11 +173,11 @@ static void BlockAdd(int blk_num, int line_index)
 		// no more room, so allocate some more...
 		cur[BK_MAX] += BK_QUANTUM;
 
-		block_lines[blk_num] = cur = (u16_t *)UtilRealloc(cur, cur[BK_MAX] * sizeof(u16_t));
+		block_lines[blk_num] = cur = (uint16_t *)UtilRealloc(cur, cur[BK_MAX] * sizeof(uint16_t));
 	}
 
 	// compute new checksum
-	cur[BK_XOR] = (u16_t) (((cur[BK_XOR] << 4) | (cur[BK_XOR] >> 12)) ^ line_index);
+	cur[BK_XOR] = (uint16_t) (((cur[BK_XOR] << 4) | (cur[BK_XOR] >> 12)) ^ line_index);
 
 	cur[BK_FIRST + cur[BK_NUM]] = LE_U16(line_index);
 	cur[BK_NUM]++;
@@ -257,7 +257,7 @@ static void BlockAddLine(const linedef_t *L)
 
 static void CreateBlockmap(void)
 {
-	block_lines = (u16_t **) UtilCalloc(block_count * sizeof(u16_t *));
+	block_lines = (uint16_t **) UtilCalloc(block_count * sizeof(uint16_t *));
 
 	for (int i=0 ; i < num_linedefs ; i++)
 	{
@@ -274,11 +274,11 @@ static void CreateBlockmap(void)
 
 static int BlockCompare(const void *p1, const void *p2)
 {
-	int blk_num1 = ((const u16_t *) p1)[0];
-	int blk_num2 = ((const u16_t *) p2)[0];
+	int blk_num1 = ((const uint16_t *) p1)[0];
+	int blk_num2 = ((const uint16_t *) p2)[0];
 
-	const u16_t *A = block_lines[blk_num1];
-	const u16_t *B = block_lines[blk_num2];
+	const uint16_t *A = block_lines[blk_num1];
+	const uint16_t *B = block_lines[blk_num2];
 
 	if (A == B)
 		return 0;
@@ -296,7 +296,7 @@ static int BlockCompare(const void *p1, const void *p2)
 		return A[BK_XOR] - B[BK_XOR];
 	}
 
-	return memcmp(A+BK_FIRST, B+BK_FIRST, A[BK_NUM] * sizeof(u16_t));
+	return memcmp(A+BK_FIRST, B+BK_FIRST, A[BK_NUM] * sizeof(uint16_t));
 }
 
 
@@ -308,17 +308,17 @@ static void CompressBlockmap(void)
 
 	int orig_size, new_size;
 
-	block_ptrs = (u16_t *)UtilCalloc(block_count * sizeof(u16_t));
-	block_dups = (u16_t *)UtilCalloc(block_count * sizeof(u16_t));
+	block_ptrs = (uint16_t *)UtilCalloc(block_count * sizeof(uint16_t));
+	block_dups = (uint16_t *)UtilCalloc(block_count * sizeof(uint16_t));
 
 	// sort duplicate-detecting array.  After the sort, all duplicates
 	// will be next to each other.  The duplicate array gives the order
 	// of the blocklists in the BLOCKMAP lump.
 
 	for (i=0 ; i < block_count ; i++)
-		block_dups[i] = (u16_t) i;
+		block_dups[i] = (uint16_t) i;
 
-	qsort(block_dups, block_count, sizeof(u16_t), BlockCompare);
+	qsort(block_dups, block_count, sizeof(uint16_t), BlockCompare);
 
 	// scan duplicate array and build up offset array
 
@@ -335,7 +335,7 @@ static void CompressBlockmap(void)
 		// empty block ?
 		if (block_lines[blk_num] == NULL)
 		{
-			block_ptrs[blk_num] = (u16_t) (4 + block_count);
+			block_ptrs[blk_num] = (uint16_t) (4 + block_count);
 			block_dups[i] = DUMMY_DUP;
 
 			orig_size += 2;
@@ -349,7 +349,7 @@ static void CompressBlockmap(void)
 
 		if (i+1 < block_count && BlockCompare(block_dups + i, block_dups + i+1) == 0)
 		{
-			block_ptrs[blk_num] = (u16_t) cur_offset;
+			block_ptrs[blk_num] = (uint16_t) cur_offset;
 			block_dups[i] = DUMMY_DUP;
 
 			// free the memory of the duplicated block
@@ -365,7 +365,7 @@ static void CompressBlockmap(void)
 		// OK, this block is either the last of a series of duplicates, or
 		// just a singleton.
 
-		block_ptrs[blk_num] = (u16_t) cur_offset;
+		block_ptrs[blk_num] = (uint16_t) cur_offset;
 
 		cur_offset += count;
 
@@ -413,7 +413,7 @@ static int CalcBlockmapSize()
 		if (blk_num == DUMMY_DUP)
 			continue;
 
-		u16_t *blk = block_lines[blk_num];
+		uint16_t *blk = block_lines[blk_num];
 		SYS_ASSERT(blk);
 
 		size += (1 + (int)(blk[BK_NUM]) + 1) * 2;
@@ -431,9 +431,9 @@ static void WriteBlockmap(void)
 
 	Lump_c *lump = CreateLevelLump("BLOCKMAP", max_size);
 
-	u16_t null_block[2] = { 0x0000, 0xFFFF };
-	u16_t m_zero = 0x0000;
-	u16_t m_neg1 = 0xFFFF;
+	uint16_t null_block[2] = { 0x0000, 0xFFFF };
+	uint16_t m_zero = 0x0000;
+	uint16_t m_neg1 = 0xFFFF;
 
 	// fill in header
 	raw_blockmap_header_t header;
@@ -448,12 +448,12 @@ static void WriteBlockmap(void)
 	// handle pointers
 	for (i=0 ; i < block_count ; i++)
 	{
-		u16_t ptr = LE_U16(block_ptrs[i]);
+		uint16_t ptr = LE_U16(block_ptrs[i]);
 
 		if (ptr == 0)
 			BugError("WriteBlockmap: offset %d not set.\n", i);
 
-		lump->Write(&ptr, sizeof(u16_t));
+		lump->Write(&ptr, sizeof(uint16_t));
 	}
 
 	// add the null block which *all* empty blocks will use
@@ -468,12 +468,12 @@ static void WriteBlockmap(void)
 		if (blk_num == DUMMY_DUP)
 			continue;
 
-		u16_t *blk = block_lines[blk_num];
+		uint16_t *blk = block_lines[blk_num];
 		SYS_ASSERT(blk);
 
-		lump->Write(&m_zero, sizeof(u16_t));
-		lump->Write(blk + BK_FIRST, blk[BK_NUM] * sizeof(u16_t));
-		lump->Write(&m_neg1, sizeof(u16_t));
+		lump->Write(&m_zero, sizeof(uint16_t));
+		lump->Write(blk + BK_FIRST, blk[BK_NUM] * sizeof(uint16_t));
+		lump->Write(&m_neg1, sizeof(uint16_t));
 	}
 
 	lump->Finish();
@@ -610,7 +610,7 @@ void PutBlockmap()
 //------------------------------------------------------------------------
 
 
-static u8_t *rej_matrix;
+static uint8_t *rej_matrix;
 static int   rej_total_size;	// in bytes
 
 
@@ -621,7 +621,7 @@ static void Reject_Init()
 {
 	rej_total_size = (num_sectors * num_sectors + 7) / 8;
 
-	rej_matrix = new u8_t[rej_total_size];
+	rej_matrix = new uint8_t[rej_total_size];
 	memset(rej_matrix, 0, rej_total_size);
 
 	for (int i=0 ; i < num_sectors ; i++)
@@ -986,7 +986,7 @@ static vertex_t *SafeLookupVertex(int num)
 	return lev_vertices[num];
 }
 
-static sector_t *SafeLookupSector(u16_t num)
+static sector_t *SafeLookupSector(uint16_t num)
 {
 	if (num == 0xFFFF)
 		return NULL;
@@ -997,7 +997,7 @@ static sector_t *SafeLookupSector(u16_t num)
 	return lev_sectors[num];
 }
 
-static inline sidedef_t *SafeLookupSidedef(u16_t num)
+static inline sidedef_t *SafeLookupSidedef(uint16_t num)
 {
 	if (num == 0xFFFF)
 		return NULL;
@@ -1227,8 +1227,8 @@ void GetLinedefs()
 			(fabs(start->y - end->y) < DIST_EPSILON);
 
 		line->type  = LE_U16(raw.type);
-		u16_t flags = LE_U16(raw.flags);
-		s16_t tag   = LE_S16(raw.tag);
+		uint16_t flags = LE_U16(raw.flags);
+		int16_t tag   = LE_S16(raw.tag);
 
 		line->two_sided   = (flags & MLF_TwoSided) != 0;
 		line->is_precious = (tag >= 900 && tag < 1000);
@@ -1289,8 +1289,8 @@ void GetLinedefsHexen()
 			(fabs(start->x - end->x) < DIST_EPSILON) &&
 			(fabs(start->y - end->y) < DIST_EPSILON);
 
-		line->type  = (u8_t) raw.type;
-		u16_t flags = LE_U16(raw.flags);
+		line->type  = (uint8_t) raw.type;
+		uint16_t flags = LE_U16(raw.flags);
 
 		// -JL- Added missing twosided flag handling that caused a broken reject
 		line->two_sided = (flags & MLF_TwoSided) != 0;
@@ -1606,8 +1606,8 @@ void ParseUDMF()
 
 /* ----- writing routines ------------------------------ */
 
-static const u8_t *lev_v2_magic = (u8_t *) "gNd2";
-static const u8_t *lev_v5_magic = (u8_t *) "gNd5";
+static const uint8_t *lev_v2_magic = (uint8_t *) "gNd2";
+static const uint8_t *lev_v5_magic = (uint8_t *) "gNd5";
 
 
 void MarkOverflow(int flags)
@@ -1698,30 +1698,30 @@ void PutGLVertices(int do_v5)
 }
 
 
-static inline u16_t VertexIndex16Bit(const vertex_t *v)
+static inline uint16_t VertexIndex16Bit(const vertex_t *v)
 {
 	if (v->is_new)
-		return (u16_t) (v->index | 0x8000U);
+		return (uint16_t) (v->index | 0x8000U);
 
-	return (u16_t) v->index;
+	return (uint16_t) v->index;
 }
 
 
-static inline u32_t VertexIndex_V5(const vertex_t *v)
+static inline uint32_t VertexIndex_V5(const vertex_t *v)
 {
 	if (v->is_new)
-		return (u32_t) (v->index | 0x80000000U);
+		return (uint32_t) (v->index | 0x80000000U);
 
-	return (u32_t) v->index;
+	return (uint32_t) v->index;
 }
 
 
-static inline u32_t VertexIndex_XNOD(const vertex_t *v)
+static inline uint32_t VertexIndex_XNOD(const vertex_t *v)
 {
 	if (v->is_new)
-		return (u32_t) (num_old_vert + v->index);
+		return (uint32_t) (num_old_vert + v->index);
 
-	return (u32_t) v->index;
+	return (uint32_t) v->index;
 }
 
 
@@ -2131,17 +2131,17 @@ void SortSegs()
 
 /* ----- ZDoom format writing --------------------------- */
 
-static const u8_t *lev_XNOD_magic = (u8_t *) "XNOD";
-static const u8_t *lev_XGL3_magic = (u8_t *) "XGL3";
-static const u8_t *lev_ZGL3_magic = (u8_t *) "ZGL3";
-static const u8_t *lev_ZNOD_magic = (u8_t *) "ZNOD";
+static const uint8_t *lev_XNOD_magic = (uint8_t *) "XNOD";
+static const uint8_t *lev_XGL3_magic = (uint8_t *) "XGL3";
+static const uint8_t *lev_ZGL3_magic = (uint8_t *) "ZGL3";
+static const uint8_t *lev_ZNOD_magic = (uint8_t *) "ZNOD";
 
 void PutZVertices()
 {
 	int count, i;
 
-	u32_t orgverts = LE_U32(num_old_vert);
-	u32_t newverts = LE_U32(num_new_vert);
+	uint32_t orgverts = LE_U32(num_old_vert);
+	uint32_t newverts = LE_U32(num_new_vert);
 
 	ZLibAppendLump(&orgverts, 4);
 	ZLibAppendLump(&newverts, 4);
@@ -2170,7 +2170,7 @@ void PutZVertices()
 
 void PutZSubsecs()
 {
-	u32_t raw_num = LE_U32(num_subsecs);
+	uint32_t raw_num = LE_U32(num_subsecs);
 	ZLibAppendLump(&raw_num, 4);
 
 	int cur_seg_index = 0;
@@ -2205,7 +2205,7 @@ void PutZSubsecs()
 
 void PutZSegs()
 {
-	u32_t raw_num = LE_U32(num_segs);
+	uint32_t raw_num = LE_U32(num_segs);
 	ZLibAppendLump(&raw_num, 4);
 
 	for (int i=0 ; i < num_segs ; i++)
@@ -2215,11 +2215,11 @@ void PutZSegs()
 		if (seg->index != i)
 			BugError("PutZSegs: seg index mismatch (%d != %d)\n", seg->index, i);
 
-		u32_t v1 = LE_U32(VertexIndex_XNOD(seg->start));
-		u32_t v2 = LE_U32(VertexIndex_XNOD(seg->end));
+		uint32_t v1 = LE_U32(VertexIndex_XNOD(seg->start));
+		uint32_t v2 = LE_U32(VertexIndex_XNOD(seg->end));
 
-		u16_t line = LE_U16(seg->linedef->index);
-		u8_t  side = (u8_t) seg->side;
+		uint16_t line = LE_U16(seg->linedef->index);
+		uint8_t  side = (uint8_t) seg->side;
 
 		ZLibAppendLump(&v1,   4);
 		ZLibAppendLump(&v2,   4);
@@ -2231,7 +2231,7 @@ void PutZSegs()
 
 void PutXGL3Segs()
 {
-	u32_t raw_num = LE_U32(num_segs);
+	uint32_t raw_num = LE_U32(num_segs);
 	ZLibAppendLump(&raw_num, 4);
 
 	for (int i=0 ; i < num_segs ; i++)
@@ -2241,10 +2241,10 @@ void PutXGL3Segs()
 		if (seg->index != i)
 			BugError("PutXGL3Segs: seg index mismatch (%d != %d)\n", seg->index, i);
 
-		u32_t v1      = LE_U32(VertexIndex_XNOD(seg->start));
-		u32_t partner = LE_U32(seg->partner ? seg->partner->index : -1);
-		u32_t line    = LE_U32(seg->linedef ? seg->linedef->index : -1);
-		u8_t  side    = (u8_t) seg->side;
+		uint32_t v1      = LE_U32(VertexIndex_XNOD(seg->start));
+		uint32_t partner = LE_U32(seg->partner ? seg->partner->index : -1);
+		uint32_t line    = LE_U32(seg->linedef ? seg->linedef->index : -1);
+		uint8_t  side    = (uint8_t) seg->side;
 
 		ZLibAppendLump(&v1,      4);
 		ZLibAppendLump(&partner, 4);
@@ -2272,10 +2272,10 @@ static void PutOneZNode(node_t *node, bool do_xgl3)
 
 	if (do_xgl3)
 	{
-		u32_t x  = LE_S32(I_ROUND(node->x  * 65536.0));
-		u32_t y  = LE_S32(I_ROUND(node->y  * 65536.0));
-		u32_t dx = LE_S32(I_ROUND(node->dx * 65536.0));
-		u32_t dy = LE_S32(I_ROUND(node->dy * 65536.0));
+		uint32_t x  = LE_S32(I_ROUND(node->x  * 65536.0));
+		uint32_t y  = LE_S32(I_ROUND(node->y  * 65536.0));
+		uint32_t dx = LE_S32(I_ROUND(node->dx * 65536.0));
+		uint32_t dy = LE_S32(I_ROUND(node->dy * 65536.0));
 
 		ZLibAppendLump(&x,  4);
 		ZLibAppendLump(&y,  4);
@@ -2336,7 +2336,7 @@ static void PutOneZNode(node_t *node, bool do_xgl3)
 
 void PutZNodes(node_t *root, bool do_xgl3)
 {
-	u32_t raw_num = LE_U32(num_nodes);
+	uint32_t raw_num = LE_U32(num_nodes);
 	ZLibAppendLump(&raw_num, 4);
 
 	node_cur_index = 0;
@@ -2495,9 +2495,9 @@ void FreeLevel()
 }
 
 
-static u32_t CalcGLChecksum(void)
+static uint32_t CalcGLChecksum(void)
 {
-	u32_t crc;
+	uint32_t crc;
 
 	Adler32_Begin(&crc);
 
@@ -2505,7 +2505,7 @@ static u32_t CalcGLChecksum(void)
 
 	if (lump && lump->Length() > 0)
 	{
-		u8_t *data = new u8_t[lump->Length()];
+		uint8_t *data = new uint8_t[lump->Length()];
 
 		if (! lump->Seek(0) ||
 		    ! lump->Read(data, lump->Length()))
@@ -2519,7 +2519,7 @@ static u32_t CalcGLChecksum(void)
 
 	if (lump && lump->Length() > 0)
 	{
-		u8_t *data = new u8_t[lump->Length()];
+		uint8_t *data = new uint8_t[lump->Length()];
 
 		if (! lump->Seek(0) ||
 		    ! lump->Read(data, lump->Length()))
@@ -2542,7 +2542,7 @@ void UpdateGLMarker(Lump_c *marker)
 
 	// we *must* compute the checksum BEFORE (re)creating the lump
 	// [ otherwise we write data into the wrong part of the file ]
-	u32_t crc = CalcGLChecksum();
+	uint32_t crc = CalcGLChecksum();
 
 	cur_wad->RecreateLump(marker, max_size);
 

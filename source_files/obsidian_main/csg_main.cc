@@ -58,7 +58,7 @@ int spot_high_h = 128;
 extern float q_light_scale;
 extern int q_low_light;
 
-extern void SPOT_FillPolygon(byte content, const int *shape, int count);
+extern void SPOT_FillPolygon(uint8_t content, const int *shape, int count);
 
 extern bool QLIT_ParseProperty(std::string key, std::string value);
 
@@ -91,7 +91,7 @@ int csg_property_set_c::getInt(std::string key, int def_val) const {
     return !str.empty() ? I_ROUND(StringToDouble(str)) : def_val;
 }
 
-void csg_property_set_c::getHexenArgs(u8_t *arg5) const {
+void csg_property_set_c::getHexenArgs(uint8_t *arg5) const {
     arg5[0] = getInt("arg1");
     arg5[1] = getInt("arg2");
     arg5[2] = getInt("arg3");

@@ -61,22 +61,6 @@
 #undef min
 #undef max
 
-
-// sized types
-
-typedef int8_t  s8_t;
-typedef int16_t s16_t;
-typedef int32_t s32_t;
-typedef int64_t s64_t;
-
-typedef uint8_t  u8_t;
-typedef uint16_t u16_t;
-typedef uint32_t u32_t;
-typedef uint64_t u64_t;
-
-typedef u8_t byte;
-
-
 // misc constants
 
 #define MSG_BUF_LEN  1024
@@ -158,12 +142,12 @@ static inline uint64_t __Swap64(uint64_t n) {
 #define LE_U16(x)  __Swap16(x)
 #define LE_U32(x)  __Swap32(x)
 #define LE_U64(x)  __Swap64(x)
-#define BE_U16(x)  ((u16_t)(x))
-#define BE_U32(x)  ((u32_t)(x))
+#define BE_U16(x)  ((uint16_t)(x))
+#define BE_U32(x)  ((uint32_t)(x))
 #define BE_U64(x)  ((u64_t)(x))
 #else
-#define LE_U16(x)  ((u16_t)(x))
-#define LE_U32(x)  ((u32_t)(x))
+#define LE_U16(x)  ((uint16_t)(x))
+#define LE_U32(x)  ((uint32_t)(x))
 #define LE_U64(x)  ((u64_t)(x))
 #define BE_U16(x)  __Swap16(x)
 #define BE_U32(x)  __Swap32(x)
@@ -171,12 +155,12 @@ static inline uint64_t __Swap64(uint64_t n) {
 #endif
 
 // signed versions of the above
-#define LE_S16(x)  ((s16_t) LE_U16((u16_t) (x)))
-#define LE_S32(x)  ((s32_t) LE_U32((u32_t) (x)))
+#define LE_S16(x)  ((int16_t) LE_U16((uint16_t) (x)))
+#define LE_S32(x)  ((int32_t) LE_U32((uint32_t) (x)))
 #define LE_S64(x)  ((s64_t) LE_U64((u64_t) (x)))
 
-#define BE_S16(x)  ((s16_t) BE_U16((u16_t) (x)))
-#define BE_S32(x)  ((s32_t) BE_U32((u32_t) (x)))
+#define BE_S16(x)  ((int16_t) BE_U16((uint16_t) (x)))
+#define BE_S32(x)  ((int32_t) BE_U32((uint32_t) (x)))
 #define BE_S64(x)  ((s64_t) BE_U64((u64_t) (x)))
 
 

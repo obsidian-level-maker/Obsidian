@@ -24,8 +24,6 @@
 
 #include <vector>
 
-#include "sys_type.h"
-
 // Quake 1 ambient sounds
 #define AMBIENT_WATER 0
 #define AMBIENT_SKY 1
@@ -41,7 +39,7 @@ class qCluster_c {
 
     std::vector<quake_leaf_c *> leafs;
 
-    byte ambient_dists[4];
+    uint8_t ambient_dists[4];
 
     // offset into LUMP_VISIBILITY
     int visofs;
