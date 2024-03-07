@@ -22,6 +22,7 @@
 #ifndef __QUAKE_VIS_H__
 #define __QUAKE_VIS_H__
 
+#include <stdint.h>
 #include <vector>
 
 // Quake 1 ambient sounds

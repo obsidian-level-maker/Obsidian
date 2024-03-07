@@ -1,7 +1,7 @@
 //
 // Interface with the libdecor library for the Fast Light Tool Kit (FLTK).
 //
-// Copyright 2022 by Bill Spitzak and others.
+// Copyright 2022-2023 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
@@ -31,15 +31,13 @@
 #  define HAVE_GTK 0
 #endif
 
-#if USE_SYSTEM_LIBDECOR
-#include "../src/libdecor-plugin.h"
-enum zxdg_toplevel_decoration_v1_mode {
-  ZXDG_TOPLEVEL_DECORATION_V1_MODE_CLIENT_SIDE = 1,
-  ZXDG_TOPLEVEL_DECORATION_V1_MODE_SERVER_SIDE = 2,
-};
+enum plugin_kind { UNKNOWN, SSD, CAIRO, GTK3 };
 
-enum component {NONE};
-enum decoration_type {DECORATION_TYPE_NONE};
+#if USE_SYSTEM_LIBDECOR
+#  include "../src/libdecor-plugin.h"
+
+enum component {NONE}; /* details are not necessary*/
+enum decoration_type {DECORATION_TYPE_NONE}; /* details are not necessary*/
 
 struct buffer { // identical in libdecor-cairo.c and libdecor-gtk.c
   struct wl_buffer *wl_buffer;
@@ -60,11 +58,9 @@ struct buffer { // identical in libdecor-cairo.c and libdecor-gtk.c
 const struct libdecor_plugin_description *fl_libdecor_plugin_description = NULL;
 
 #  if HAVE_GTK
-#    include <gtk/gtk.h>
 #    include "../src/plugins/gtk/libdecor-gtk.c"
 #  else
 #    include "../src/plugins/cairo/libdecor-cairo.c"
-#    undef libdecor_frame_set_min_content_size
 #  endif // HAVE_GTK
 
 #endif // USE_SYSTEM_LIBDECOR
@@ -73,36 +69,7 @@ const struct libdecor_plugin_description *fl_libdecor_plugin_description = NULL;
 #if USE_SYSTEM_LIBDECOR || HAVE_GTK
 /* these definitions derive from libdecor/src/plugins/cairo/libdecor-cairo.c */
 
-struct libdecor_plugin_cairo {
-  struct libdecor_plugin plugin;
-
-  struct wl_callback *globals_callback;
-  struct wl_callback *globals_callback_shm;
-
-  struct libdecor *context;
-
-  struct wl_registry *wl_registry;
-  struct wl_subcompositor *wl_subcompositor;
-  struct wl_compositor *wl_compositor;
-
-  struct wl_shm *wl_shm;
-  struct wl_callback *shm_callback;
-  bool has_argb;
-
-  struct wl_list visible_frame_list;
-  struct wl_list seat_list;
-  struct wl_list output_list;
-
-  char *cursor_theme_name;
-  int cursor_size;
-
-  PangoFontDescription *font;
-};
-
-enum composite_mode {
-  COMPOSITE_SERVER,
-  COMPOSITE_CLIENT,
-};
+enum composite_mode {COMPOSITE_SERVER}; /* details are not necessary*/
 
 struct border_component_cairo {
   enum component type;
@@ -163,15 +130,35 @@ struct libdecor_frame_cairo {
 
   struct wl_list link;
 };
-#endif
+#endif // USE_SYSTEM_LIBDECOR || HAVE_GTK
 
 
 #if USE_SYSTEM_LIBDECOR || !HAVE_GTK
 
 /* Definitions derived from libdecor-gtk.c */
 
+struct libdecor_plugin_gtk {
+  struct libdecor_plugin plugin;
+  struct wl_callback *globals_callback;
+  struct wl_callback *globals_callback_shm;
+  struct libdecor *context;
+  struct wl_registry *wl_registry;
+  struct wl_subcompositor *wl_subcompositor;
+  struct wl_compositor *wl_compositor;
+  struct wl_shm *wl_shm;
+  struct wl_callback *shm_callback;
+  bool has_argb;
+  struct wl_list visible_frame_list;
+  struct wl_list seat_list;
+  struct wl_list output_list;
+  char *cursor_theme_name;
+  int cursor_size;
+  int double_click_time_ms;
+};
+
 typedef struct _GtkWidget GtkWidget;
-enum header_element { HDR_NONE };
+enum header_element { HEADER_NONE }; /* details are not needed */
+
 typedef enum { GTK_STATE_FLAG_NORMAL = 0 } GtkStateFlags;
 
 struct border_component_gtk {
@@ -203,6 +190,7 @@ struct libdecor_frame_gtk {
   char *title;
   enum libdecor_capabilities capabilities;
   struct border_component_gtk *active;
+  struct border_component_gtk *touch_active;
   struct border_component_gtk *focus;
   struct border_component_gtk *grab;
   bool shadow_showing;
@@ -222,13 +210,7 @@ static unsigned char *gtk_titlebar_buffer(struct libdecor_frame *frame,
                                           int *width, int *height, int *stride)
 {
   struct libdecor_frame_gtk *lfg = (struct libdecor_frame_gtk *)frame;
-#if USE_SYSTEM_LIBDECOR || !HAVE_GTK
-  struct border_component_gtk *bc;
-#else
-  struct border_component *bc;
-#endif
-  bc = &lfg->headerbar;
-  struct buffer *buffer = bc->buffer;
+  struct buffer *buffer = lfg->headerbar.buffer;
   *width = buffer->buffer_width;
   *height = buffer->buffer_height;
   *stride = cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, buffer->buffer_width);
@@ -240,12 +222,7 @@ static unsigned char *cairo_titlebar_buffer(struct libdecor_frame *frame,
                                                  int *width, int *height, int *stride)
 {
   struct libdecor_frame_cairo *lfc = (struct libdecor_frame_cairo *)frame;
-#if USE_SYSTEM_LIBDECOR || HAVE_GTK
-  struct border_component_cairo *bc = &lfc->title_bar.title;
-#else
-  struct border_component *bc = &lfc->title_bar.title;
-#endif
-  struct buffer *buffer = bc->server.buffer;
+  struct buffer *buffer = lfc->title_bar.title.server.buffer;
   *width = buffer->buffer_width;
   *height = buffer->buffer_height;
   *stride = cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, buffer->buffer_width);
@@ -269,13 +246,8 @@ static unsigned char *cairo_titlebar_buffer(struct libdecor_frame *frame,
  A plugin is loaded also if SSD.
  KWin has its own size limit, similar to that of GDK plugin
  */
-static const char *get_libdecor_plugin_description(struct libdecor_frame *frame) {
+static const char *get_libdecor_plugin_description() {
   static const struct libdecor_plugin_description *plugin_description = NULL;
-  int X, Y = 0;
-  libdecor_frame_translate_coordinate(frame, 0, 0, &X, &Y);
-  if (Y == 0) {
-    return "Server-Side Decoration";
-  }
   if (!plugin_description) {
 #if USE_SYSTEM_LIBDECOR
      char fname[PATH_MAX];
@@ -299,6 +271,23 @@ static const char *get_libdecor_plugin_description(struct libdecor_frame *frame)
 }
 
 
+static enum plugin_kind get_plugin_kind(struct libdecor_frame *frame) {
+  static enum plugin_kind kind = UNKNOWN;
+  if (kind == UNKNOWN) {
+    if (frame) {
+      int X, Y = 0;
+      libdecor_frame_translate_coordinate(frame, 0, 0, &X, &Y);
+      if (Y == 0) {
+        return SSD;
+      }
+    }
+    const char *name = get_libdecor_plugin_description();
+    if (name && !strcmp(name, "GTK3 plugin")) kind = GTK3;
+    else if (name && !strcmp(name, "libdecor plugin using Cairo")) kind = CAIRO;
+  }
+  return kind;
+}
+
 /*
  FLTK-added utility function to give access to the pixel array representing
  the titlebar of a window decorated by the cairo plugin of libdecor.
@@ -310,183 +299,41 @@ static const char *get_libdecor_plugin_description(struct libdecor_frame *frame)
 unsigned char *fl_libdecor_titlebar_buffer(struct libdecor_frame *frame,
                                                  int *width, int *height, int *stride)
 {
-  static const char *my_plugin = NULL;
-  if (!my_plugin) my_plugin = get_libdecor_plugin_description(frame);
-  if (my_plugin && !strcmp(my_plugin, "GTK3 plugin")) {
+  enum plugin_kind kind = get_plugin_kind(frame);
+  if (kind == GTK3) {
     return gtk_titlebar_buffer(frame, width, height, stride);
   }
-  else if (my_plugin && !strcmp(my_plugin, "libdecor plugin using Cairo")) {
+  else if (kind == CAIRO) {
     return cairo_titlebar_buffer(frame, width, height, stride);
   }
   return NULL;
 }
 
 
-/* === Beginning of code to add support of GTK Shell to libdecor-gtk === */
-#if HAVE_GTK && !USE_SYSTEM_LIBDECOR
-
-#  include "gtk-shell-client-protocol.h"
-
-static struct gtk_shell1 *gtk_shell = NULL;
-static uint32_t doubleclick_time = 250;
-
-// libdecor's button member of wl_pointer_listener objects
-static void (*decor_pointer_button)(void*, struct wl_pointer *,
-                                    uint32_t ,
-                                    uint32_t ,
-                                    uint32_t ,
-                                    uint32_t);
-
-// FLTK's replacement for button member of wl_pointer_listener objects
-static void fltk_pointer_button(void *data,
-                                struct wl_pointer *wl_pointer,
-                                uint32_t serial,
-                                uint32_t time,
-                                uint32_t button,
-                                uint32_t state) {
-  struct seat *seat = data;
-  struct libdecor_frame_gtk *frame_gtk;
-  if (!seat->pointer_focus || !own_surface(seat->pointer_focus))
-    return;
-
-  frame_gtk = wl_surface_get_user_data(seat->pointer_focus);
-  if (!frame_gtk)
-    return;
-
-  if (button == BTN_MIDDLE && state == WL_POINTER_BUTTON_STATE_PRESSED) {
-    struct gtk_surface1 *gtk_surface = gtk_shell1_get_gtk_surface(gtk_shell,
-                                                  frame_gtk->headerbar.wl_surface);
-    gtk_surface1_titlebar_gesture(gtk_surface, serial,
-                                  seat->wl_seat, GTK_SURFACE1_GESTURE_MIDDLE_CLICK);
-    gtk_surface1_release(gtk_surface);
-    return;
-  } else if (button == BTN_RIGHT && state == WL_POINTER_BUTTON_STATE_PRESSED) {
-    struct gtk_surface1 *gtk_surface = gtk_shell1_get_gtk_surface(gtk_shell,
-                                                  frame_gtk->headerbar.wl_surface);
-    gtk_surface1_titlebar_gesture(gtk_surface, serial,
-                                  seat->wl_seat, GTK_SURFACE1_GESTURE_RIGHT_CLICK);
-    gtk_surface1_release(gtk_surface);
-    return;
-  } else if (button == BTN_LEFT && state == WL_POINTER_BUTTON_STATE_PRESSED) {
-    if (time - seat->pointer_button_time_stamp < doubleclick_time) {
-      seat->pointer_button_time_stamp = 0;
-      struct gtk_surface1 *gtk_surface = gtk_shell1_get_gtk_surface(gtk_shell,
-                                                    frame_gtk->headerbar.wl_surface);
-      gtk_surface1_titlebar_gesture(gtk_surface, serial,
-                                    seat->wl_seat, GTK_SURFACE1_GESTURE_DOUBLE_CLICK);
-      gtk_surface1_release(gtk_surface);
-      return;
-    }
-  }
-  decor_pointer_button(data, wl_pointer, serial, time, button, state);
-}
-
-
-// libdecor's touch_down member of wl_touch_listener objects
-void (*decor_touch_down)(void *data, struct wl_touch *wl_touch, uint32_t serial,
-                         uint32_t time, struct wl_surface *surface, int32_t id,
-                         wl_fixed_t x, wl_fixed_t y);
-
-
-// FLTK's replacement for touch_down member of wl_touch_listener objects
-static void fltk_touch_down(void *data, struct wl_touch *wl_touch, uint32_t serial,
-     uint32_t time, struct wl_surface *surface, int32_t id, wl_fixed_t x, wl_fixed_t y)
-{
-  struct seat *seat = data;
-  struct libdecor_frame_gtk *frame_gtk;
-  if (!surface || !own_surface(surface)) return;
-  frame_gtk = wl_surface_get_user_data(surface);
-  if (!frame_gtk) return;
-  seat->touch_focus = surface;
-  frame_gtk->touch_active = get_component_for_surface(frame_gtk, surface);
-  if (!frame_gtk->touch_active) return;
-  
-  if (frame_gtk->touch_active->type == HEADER &&
-      frame_gtk->hdr_focus.type < HEADER_MIN &&
-      time - seat->touch_down_time_stamp <
-        (uint32_t)frame_gtk->plugin_gtk->double_click_time_ms
-      ) {
-    struct gtk_surface1 *gtk_surface = gtk_shell1_get_gtk_surface(
-                                            gtk_shell, surface);
-    gtk_surface1_titlebar_gesture(gtk_surface, serial, seat->wl_seat,
-                                  GTK_SURFACE1_GESTURE_DOUBLE_CLICK);
-    gtk_surface1_release(gtk_surface);
-  } else {
-    decor_touch_down(data, wl_touch, serial, time, surface, id, x, y);
-  }
-}
-
-
-struct wl_object { // copied from wayland-private.h
-  const struct wl_interface *interface;
-  const void *implementation;
-  uint32_t id;
+struct libdecor { // copied from libdecor.c
+  int ref_count;
+  struct libdecor_interface *iface;
+  struct libdecor_plugin *plugin;
+  bool plugin_ready;
+  struct wl_display *wl_display;
+  struct wl_registry *wl_registry;
+  struct xdg_wm_base *xdg_wm_base;
+  struct zxdg_decoration_manager_v1 *decoration_manager;
+  struct wl_callback *init_callback;
+  bool init_done;
+  bool has_error;
+  struct wl_list frames;
 };
 
-#endif // HAVE_GTK && !USE_SYSTEM_LIBDECOR
 
-
-// replace libdecor's pointer_button by FLTK's
-void use_FLTK_pointer_button(struct libdecor_frame *frame) {
-#if HAVE_GTK && !USE_SYSTEM_LIBDECOR
-  static struct wl_pointer_listener *fltk_listener = NULL;
-  if (!gtk_shell || fltk_listener) return;
-  struct libdecor_frame_gtk *lfg = (struct libdecor_frame_gtk *)frame;
-  if (wl_list_empty(&lfg->plugin_gtk->seat_list)) return;
-  struct seat *seat;
-  wl_list_for_each(seat, &lfg->plugin_gtk->seat_list, link) {
-    break;
+/* Returns whether surface is a GTK-titlebar created by libdecor-gtk */
+bool fl_is_surface_gtk_titlebar(struct wl_surface *surface, struct libdecor *context) {
+  if (!context || get_plugin_kind(NULL) != GTK3) return false;
+  // loop over all decorations created by libdecor-gtk
+  struct libdecor_frame *frame;
+  wl_list_for_each(frame, &context->frames, link) {
+    struct libdecor_frame_gtk *frame_gtk = (struct libdecor_frame_gtk*)frame;
+    if (frame_gtk->headerbar.wl_surface == surface) return true;
   }
-  
-  struct wl_surface *surface = lfg->headerbar.wl_surface;
-  if (surface && !own_surface(surface)) {
-    // occurs if libdecor-gtk.so was dynamically loaded via LIBDECOR_PLUGIN_DIR
-    gtk_shell = NULL;
-    return;
-  }
-  
-  struct wl_object *object = (struct wl_object *)seat->wl_pointer;
-  if (!object) return;
-  struct wl_pointer_listener *decor_listener =
-      (struct wl_pointer_listener*)object->implementation;
-  fltk_listener =
-      (struct wl_pointer_listener*)malloc(sizeof(struct wl_pointer_listener));
-  // initialize FLTK's listener with libdecor's values
-  *fltk_listener = *decor_listener;
-  // memorize libdecor's button cb
-  decor_pointer_button = decor_listener->button;
-  // replace libdecor's button by FLTK's
-  fltk_listener->button = fltk_pointer_button;
-  // replace the pointer listener by a copy whose button member is FLTK's
-  object->implementation = fltk_listener;
-  
-  object = (struct wl_object *)seat->wl_touch;
-  if (object) {
-    struct wl_touch_listener *decor_touch_listener =
-      (struct wl_touch_listener*)object->implementation;
-    struct wl_touch_listener *fltk_touch_listener =
-      (struct wl_touch_listener*)malloc(sizeof(struct wl_touch_listener));
-    // initialize FLTK's touch listener with libdecor's values
-    *fltk_touch_listener = *decor_touch_listener;
-    // memorize libdecor's down cb
-    decor_touch_down = decor_touch_listener->down;
-    // replace libdecor's down by FLTK's
-    fltk_touch_listener->down = fltk_touch_down;
-    // replace the touch listener by a copy whose down member is FLTK's
-    object->implementation = fltk_touch_listener;
-  }
-  
-  // get gnome's double_click_time_ms value
-  doubleclick_time = lfg->plugin_gtk->double_click_time_ms;
-#endif // HAVE_GTK && !USE_SYSTEM_LIBDECOR
+  return false;
 }
-
-
-void bind_to_gtk_shell(struct wl_registry *wl_registry, uint32_t id) {
-#if HAVE_GTK && !USE_SYSTEM_LIBDECOR
-  gtk_shell = (struct gtk_shell1*)wl_registry_bind(wl_registry, id,
-                                              &gtk_shell1_interface, 5);
-#endif // HAVE_GTK && !USE_SYSTEM_LIBDECOR
-}
-
-/* === End of code to add support of GTK Shell to libdecor-gtk === */

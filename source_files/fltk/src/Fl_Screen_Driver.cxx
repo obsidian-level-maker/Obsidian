@@ -23,6 +23,7 @@
 #include "Fl_Screen_Driver.H"
 #include <FL/Fl_Image.H>
 #include <FL/Fl.H>
+#include <FL/platform.H>
 #include <FL/Fl_Group.H>
 #include <FL/Fl_Window.H>
 #include <FL/Fl_Input.H>
@@ -31,6 +32,12 @@
 #include <FL/Fl_Box.H>
 #include <FL/Fl_Tooltip.H>
 #include <string.h> // for memchr
+
+// these are set by Fl::args() and override any system colors: from Fl_get_system_colors.cxx
+extern const char *fl_fg;
+extern const char *fl_bg;
+extern const char *fl_bg2;
+// end of extern additions workaround
 
 char Fl_Screen_Driver::bg_set = 0;
 char Fl_Screen_Driver::bg2_set = 0;
@@ -181,6 +188,29 @@ int Fl_Screen_Driver::screen_num(int x, int y, int w, int h)
   return best_screen;
 }
 
+static void getsyscolor(const char* arg, void (*func)(uchar,uchar,uchar))
+{
+  if (arg && *arg) {
+    uchar r,g,b;
+    if (!fl_parse_color(arg, r,g,b))
+      Fl::error("Unknown color: %s", arg);
+    else
+      func(r,g,b);
+  }
+}
+
+static void set_selection_color(uchar r, uchar g, uchar b)
+{
+  Fl::set_color(FL_SELECTION_COLOR,r,g,b);
+}
+
+void Fl_Screen_Driver::get_system_colors()
+{
+  if (!bg2_set) getsyscolor(fl_bg2, Fl::background2);
+  if (!fg_set)  getsyscolor(fl_fg, Fl::foreground);
+  if (!bg_set)  getsyscolor(fl_bg, Fl::background);
+  getsyscolor(0, set_selection_color);
+}
 
 const char *Fl_Screen_Driver::get_system_scheme()
 {
@@ -346,18 +376,15 @@ int Fl_Screen_Driver::input_widget_handle_key(int key, unsigned mods, unsigned s
 }
 
 
-void Fl_Screen_Driver::rescale_all_windows_from_screen(int screen, float f)
+void Fl_Screen_Driver::rescale_all_windows_from_screen(int screen, float f, float old_f)
 {
-  float old_f = this->scale(screen);
-  //if (f == old_f) return;
   this->scale(screen, f);
   Fl_Graphics_Driver *d = Fl_Display_Device::display_device()->driver();
   d->scale(f);
   int i = 0, count = 0; // count top-level windows, except transient scale-displaying window
   Fl_Window *win = Fl::first_window();
   while (win) {
-    if (!win->parent() &&
-        (Fl_Window_Driver::driver(win)->screen_num() == screen || rescalable() == SYSTEMWIDE_APP_SCALING) &&
+    if (!win->parent() && (Fl_Window_Driver::driver(win)->screen_num() == screen) &&
         win->user_data() != &Fl_Screen_Driver::transient_scale_display) {
       count++;
     }
@@ -368,8 +395,7 @@ void Fl_Screen_Driver::rescale_all_windows_from_screen(int screen, float f)
   Fl_Window **win_array = new Fl_Window*[count];
   win = Fl::first_window(); // memorize all top-level windows
   while (win) {
-    if (!win->parent() &&
-        (Fl_Window_Driver::driver(win)->screen_num() == screen || rescalable() == SYSTEMWIDE_APP_SCALING) &&
+    if (!win->parent() && (Fl_Window_Driver::driver(win)->screen_num() == screen) &&
         win->user_data() != &Fl_Screen_Driver::transient_scale_display) {
       win_array[i++] = win;
     }
@@ -450,16 +476,36 @@ void Fl_Screen_Driver::transient_scale_display(float f, int nscreen)
 int Fl_Screen_Driver::scale_handler(int event)
 {
   if (!keyboard_screen_scaling) return 0;
-  if ( event != FL_SHORTCUT || (!Fl::event_command()) ) return 0;
-  int key = Fl::event_key() & ~(FL_SHIFT+FL_COMMAND);
-  if (key == '=' || key == '-' || key == '+' || key == '0' || key == 0xE0/* for '0' on Fr keyboard */) {
+  if ( event != FL_SHORTCUT || !Fl::event_command() ) return 0;
+  enum {none, zoom_in, zoom_out, zoom_reset} zoom = none;
+  if (Fl::test_shortcut(FL_COMMAND+'+')) zoom = zoom_in;
+  else if (Fl::test_shortcut(FL_COMMAND+'-')) zoom = zoom_out;
+  else if (Fl::test_shortcut(FL_COMMAND+'0')) zoom = zoom_reset;
+  if (Fl::option(Fl::OPTION_SIMPLE_ZOOM_SHORTCUT)) {
+    // kludge to recognize shortcut FL_COMMAND+'+' without pressing SHIFT
+    if ((Fl::event_state()&(FL_META|FL_ALT|FL_CTRL|FL_SHIFT)) == FL_COMMAND &&
+           Fl::event_key() == '=') zoom = zoom_in;
+  }
+  if (zoom != none) {
     int i, count;
     if (Fl::grab()) return 0; // don't rescale when menu windows are on
     Fl_Widget *wid = Fl::focus();
     if (!wid) return 0;
-    int screen = Fl_Window_Driver::driver(wid->top_window())->screen_num();
+    Fl_Window *top = wid->top_window();
+    int screen = Fl_Window_Driver::driver(top)->screen_num();
     Fl_Screen_Driver *screen_dr = Fl::screen_driver();
-    static float initial_scale = screen_dr->scale(screen);
+    // don't rescale when any top window on same screen as
+    // focus window is fullscreen or maximized
+    top = Fl::first_window();
+    while (top) {
+      if (!top->parent() &&
+          (Fl_Window_Driver::driver(top)->screen_num() == screen ||
+           screen_dr->rescalable() == SYSTEMWIDE_APP_SCALING)) {
+        if (top->fullscreen_active() || top->maximize_active()) return 0;
+      }
+      top = Fl::next_window(top);
+    }
+    float initial_scale = screen_dr->base_scale(screen);
 #if defined(TEST_SCALING)
     // test scaling factors: lots of values from 0.3 to 8.0
     static float scaling_values[] = {
@@ -479,7 +525,7 @@ int Fl_Screen_Driver::scale_handler(int event)
       2.0f, 2.4f, 3.0f};
 #endif
     float f, old_f = screen_dr->scale(screen)/initial_scale;
-    if (key == '0' || key == 0xE0) f = 1;
+    if (zoom == zoom_reset) f = 1;
     else {
       count = sizeof(scaling_values)/sizeof(float);
       for (i = 0; i < count; i++) {
@@ -487,13 +533,20 @@ int Fl_Screen_Driver::scale_handler(int event)
           break;
         }
       }
-      if (key == '-') i--; else i++;
+      if (zoom == zoom_out) i--; else i++;
       if (i < 0) i = 0;
       else if (i >= count) i = count - 1;
       f = scaling_values[i];
     }
     if (f == old_f) return 1;
-    screen_dr->rescale_all_windows_from_screen(screen, f * initial_scale);
+    if (screen_dr->rescalable() == SYSTEMWIDE_APP_SCALING) {
+      float old_f = screen_dr->scale(0);
+      for (int i = 0; i < Fl::screen_count(); i++) {
+        screen_dr->rescale_all_windows_from_screen(i, f * initial_scale, old_f);
+      }
+    } else {
+      screen_dr->rescale_all_windows_from_screen(screen, f * initial_scale, screen_dr->scale(screen));
+    }
     Fl_Screen_Driver::transient_scale_display(f, screen);
     Fl::handle(FL_ZOOM_EVENT, NULL);
     return 1;
@@ -518,14 +571,20 @@ void Fl_Screen_Driver::use_startup_scale_factor()
 
 void Fl_Screen_Driver::open_display()
 {
-  open_display_platform();
   static bool been_here = false;
   if (!been_here) {
     been_here = true;
+    open_display_platform();
+    // Memorize the most recently added handler. It may have been
+    // added by open_display_platform()
+    Fl_Event_Handler last_added = Fl::last_handler();
     if (rescalable()) {
       use_startup_scale_factor();
-      if (keyboard_screen_scaling && rescalable())
-        Fl::add_handler(Fl_Screen_Driver::scale_handler);
+      if (keyboard_screen_scaling && rescalable()) {
+        // Add scale_handler after memorized one in linked list
+        // so it has less priority
+        Fl::add_handler(Fl_Screen_Driver::scale_handler, last_added);
+      }
       int mx, my;
       int ns = Fl::screen_driver()->get_mouse(mx, my);
       Fl_Graphics_Driver::default_driver().scale(scale(ns));
@@ -732,6 +791,13 @@ size_t Fl_Screen_Driver::convert_crlf(char *s, size_t len) {
   }
   return len;
 }
+
+
+float Fl_Screen_Driver::base_scale(int numscreen) {
+  static float base = scale(numscreen);
+  return base;
+}
+
 
 /**
  \}

@@ -22,6 +22,7 @@
 #ifndef __LIB_UTIL_H__
 #define __LIB_UTIL_H__
 
+#include <stdint.h>
 #include <string>
 #include <string_view>
 #include <codecvt>

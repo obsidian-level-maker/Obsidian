@@ -106,6 +106,7 @@ Fl_Cairo_Graphics_Driver::Fl_Cairo_Graphics_Driver() : Fl_Graphics_Driver() {
   linestyle_ = FL_SOLID;
   clip_ = NULL;
   scale_x = scale_y = 1;
+  wld_scale = 1;
   angle = 0;
   left_margin = top_margin = 0;
   needs_commit_tag_ = NULL;
@@ -782,7 +783,7 @@ void Fl_Cairo_Graphics_Driver::overlay_rect(int x, int y, int w , int h) {
 }
 
 
-void Fl_Cairo_Graphics_Driver::draw_cached_pattern_(Fl_Image *img, cairo_pattern_t *pat, int X, int Y, int W, int H, int cx, int cy) {
+void Fl_Cairo_Graphics_Driver::draw_cached_pattern_(Fl_Image *img, cairo_pattern_t *pat, int X, int Y, int W, int H, int cx, int cy, int cache_w, int cache_h) {
   // compute size of output image in drawing units
   cairo_matrix_t matrix;
   cairo_get_matrix(cairo_, &matrix);
@@ -793,7 +794,7 @@ void Fl_Cairo_Graphics_Driver::draw_cached_pattern_(Fl_Image *img, cairo_pattern
   int Hs = Fl_Scalable_Graphics_Driver::floor(Y - cy + img->h(), s) - Ys;
   if (Ws == 0 || Hs == 0) return;
   cairo_save(cairo_);
-  bool need_extend = (img->data_w() != Ws || img->data_h() != Hs || (W >= 2 && H >= 2));
+  bool need_extend = (cache_w != Ws || cache_h != Hs || (W >= 2 && H >= 2));
   if (need_extend || cx || cy || W < img->w() || H < img->h()) { // clip when necessary
     cairo_rectangle(cairo_, X - 0.5, Y - 0.5, W + 0.5, H + 0.5);
     cairo_clip(cairo_);
@@ -804,11 +805,12 @@ void Fl_Cairo_Graphics_Driver::draw_cached_pattern_(Fl_Image *img, cairo_pattern
   cairo_set_matrix(cairo_, &matrix);
   if (img->d() >= 1) cairo_set_source(cairo_, pat);
   if (need_extend) {
-    cairo_pattern_set_filter(pat, Fl_RGB_Image::scaling_algorithm() == FL_RGB_SCALING_BILINEAR ?
-                           CAIRO_FILTER_GOOD : CAIRO_FILTER_FAST);
+    bool condition = Fl_RGB_Image::scaling_algorithm() == FL_RGB_SCALING_BILINEAR &&
+      (fabs(Ws/float(cache_w) - 1) > 0.02 || fabs(Hs/float(cache_h) - 1) > 0.02);
+    cairo_pattern_set_filter(pat, condition ? CAIRO_FILTER_GOOD : CAIRO_FILTER_FAST);
     cairo_pattern_set_extend(pat, CAIRO_EXTEND_PAD);
   }
-  cairo_matrix_init_scale(&matrix, double(img->data_w())/Ws, double(img->data_h())/Hs);
+  cairo_matrix_init_scale(&matrix, double(cache_w)/Ws, double(cache_h)/Hs);
   cairo_matrix_translate(&matrix, -Xs , -Ys );
   cairo_pattern_set_matrix(pat, &matrix);
   if (img->d() > 1) cairo_paint(cairo_);
@@ -833,7 +835,7 @@ void Fl_Cairo_Graphics_Driver::draw_rgb(Fl_RGB_Image *rgb,int XP, int YP, int WP
     cache(rgb);
     pat = (cairo_pattern_t*)*Fl_Graphics_Driver::id(rgb);
   }
-  draw_cached_pattern_(rgb, pat, X, Y, W, H, cx, cy);
+  draw_cached_pattern_(rgb, pat, X, Y, W, H, cx, cy, rgb->cache_w(), rgb->cache_h());
 }
 
 
@@ -892,6 +894,10 @@ void Fl_Cairo_Graphics_Driver::cache(Fl_RGB_Image *rgb) {
   cairo_pattern_t *pat = cairo_pattern_create_for_surface(surf);
   cairo_surface_destroy(surf);
   *Fl_Graphics_Driver::id(rgb) = (fl_uintptr_t)pat;
+  int *pw, *ph;
+  cache_w_h(rgb, pw, ph);
+  *pw = rgb->data_w();
+  *ph = rgb->data_h();
 }
 
 
@@ -904,21 +910,30 @@ void Fl_Cairo_Graphics_Driver::uncache(Fl_RGB_Image *img, fl_uintptr_t &id_, fl_
 }
 
 
-void Fl_Cairo_Graphics_Driver::draw_bitmap(Fl_Bitmap *bm,int XP, int YP, int WP, int HP, int cx, int cy) {
-  int X, Y, W, H;
+void Fl_Cairo_Graphics_Driver::draw_fixed(Fl_Bitmap *bm,int XP, int YP, int WP, int HP,
+                                          int cx, int cy) {
+  cairo_pattern_t *pat = NULL;
+  float s = wld_scale * scale();
+  XP = Fl_Scalable_Graphics_Driver::floor(XP, s);
+  YP = Fl_Scalable_Graphics_Driver::floor(YP, s);
+  cache_size(bm, WP, HP);
+  cx *= s; cy *= s;
+  cairo_matrix_t matrix; // temporarily remove scaling
+  cairo_get_matrix(cairo_, &matrix);
+  cairo_translate(cairo_, -0.5, -0.5);
+  cairo_scale(cairo_, 1./s, 1/s);
+  cairo_translate(cairo_, 0.5, 0.5);
   if (!bm->array) {
     draw_empty(bm, XP, YP);
-    return;
-  }
-  if (start_image(bm, XP,YP,WP,HP,cx,cy,X,Y,W,H)) return;
-  cairo_pattern_t *pat = (cairo_pattern_t*)*Fl_Graphics_Driver::id(bm);
-  if (!pat) {
-    cache(bm);
+  } else {
     pat = (cairo_pattern_t*)*Fl_Graphics_Driver::id(bm);
+    color(color());
+    int old_w = bm->w(), old_h = bm->h();
+    bm->scale(bm->cache_w(), bm->cache_h(), 0, 1); // transiently
+    draw_cached_pattern_(bm, pat, XP, YP, WP, HP, cx, cy, bm->cache_w(), bm->cache_h());
+    bm->scale(old_w, old_h, 0, 1); // back
   }
-  if (pat) {
-    draw_cached_pattern_(bm, pat, X, Y, W, H, cx, cy);
-  }
+  cairo_set_matrix(cairo_, &matrix);
 }
 
 
@@ -977,25 +992,37 @@ void Fl_Cairo_Graphics_Driver::cache(Fl_Bitmap *bm) {
   (void)cairo_surface_set_user_data(surf, &data_key_for_surface, BGRA, dealloc_surface_data);
   cairo_surface_destroy(surf);
   *Fl_Graphics_Driver::id(bm) = (fl_uintptr_t)pattern;
+  int *pw, *ph;
+  cache_w_h(bm, pw, ph);
+  *pw = bm->data_w();
+  *ph = bm->data_h();
 }
 
 
-void Fl_Cairo_Graphics_Driver::draw_pixmap(Fl_Pixmap *pxm,int XP, int YP, int WP, int HP, int cx, int cy) {
-  int X, Y, W, H;
+void Fl_Cairo_Graphics_Driver::draw_fixed(Fl_Pixmap *pxm,int XP, int YP, int WP, int HP,
+                                          int cx, int cy) {
+  cairo_pattern_t *pat = NULL;
+  float s = wld_scale * scale();
+  XP = Fl_Scalable_Graphics_Driver::floor(XP, s);
+  YP = Fl_Scalable_Graphics_Driver::floor(YP, s);
+  cache_size(pxm, WP, HP);
+  cx *= s; cy *= s;
+  cairo_matrix_t matrix; // temporarily remove scaling
+  cairo_get_matrix(cairo_, &matrix);
+  cairo_translate(cairo_, -0.5, -0.5);
+  cairo_scale(cairo_, 1/s, 1/s);
+  cairo_translate(cairo_, 0.5, 0.5);
   // Don't draw an empty image...
   if (!pxm->data() || !pxm->w()) {
     Fl_Graphics_Driver::draw_empty(pxm, XP, YP);
-    return;
-  }
-  if (start_image(pxm, XP, YP, WP, HP, cx, cy, X, Y, W, H)) {
-    return;
-  }
-  cairo_pattern_t *pat = (cairo_pattern_t*)*Fl_Graphics_Driver::id(pxm);
-  if (!pat) {
-    cache(pxm);
+  } else {
     pat = (cairo_pattern_t*)*Fl_Graphics_Driver::id(pxm);
+    int old_w = pxm->w(), old_h = pxm->h();
+    pxm->scale(pxm->cache_w(), pxm->cache_h(), 0, 1); // transiently
+    draw_cached_pattern_(pxm, pat, XP, YP, WP, HP, cx, cy, pxm->cache_w(), pxm->cache_h());
+    pxm->scale(old_w, old_h, 0, 1); // back
   }
-  draw_cached_pattern_(pxm, pat, X, Y, W, H, cx, cy);
+  cairo_set_matrix(cairo_, &matrix);
 }
 
 
@@ -1005,6 +1032,10 @@ void Fl_Cairo_Graphics_Driver::cache(Fl_Pixmap *pxm) {
   *Fl_Graphics_Driver::id(pxm) = *Fl_Graphics_Driver::id(rgb);
   *Fl_Graphics_Driver::id(rgb) = 0;
   delete rgb;
+  int *pw, *ph;
+  cache_w_h(pxm, pw, ph);
+  *pw = pxm->data_w();
+  *ph = pxm->data_h();
 }
 
 
@@ -1438,14 +1469,6 @@ void Fl_Cairo_Graphics_Driver::restore_clip() {
 }
 
 
-void Fl_Cairo_Graphics_Driver::cache_size(Fl_Image *unused, int &width, int &height) {
-  cairo_matrix_t matrix;
-  cairo_get_matrix(cairo_, &matrix);
-  width *= matrix.xx;
-  height *= matrix.xx;
-}
-
-
 char Fl_Cairo_Graphics_Driver::can_do_alpha_blending() {
   return 1;
 }
@@ -1492,6 +1515,43 @@ void Fl_Cairo_Graphics_Driver::focus_rect(int x, int y, int w, int h)
   cairo_stroke(cairo_);
   cairo_restore(cairo_);
   surface_needs_commit();
+}
+
+
+cairo_pattern_t *Fl_Cairo_Graphics_Driver::calc_cairo_mask(const Fl_RGB_Image *rgb) {
+  int i, j, d = rgb->d(), w = rgb->data_w(), h = rgb->data_h(), ld = rgb->ld();
+  int bytesperrow = cairo_format_stride_for_width(CAIRO_FORMAT_A1, w);
+  if (!ld) ld = d * w;
+  unsigned u;
+  uchar byte, onebit;
+  // build a CAIRO_FORMAT_A1 surface covering the non-black part of the image
+  uchar* bits = new uchar[h*bytesperrow]; // to store the surface data
+  for (i = 0; i < h; i++) {
+    const uchar* alpha = (const uchar*)*rgb->data() + i * ld;
+    uchar *p = (uchar*)bits + i * bytesperrow;
+    byte = 0;
+    onebit = 1;
+    for (j = 0; j < w; j++) {
+      u = *alpha;
+      u += *(alpha+1);
+      u += *(alpha+2);
+      if (u > 0) { // if the pixel is not black
+        byte |= onebit; // turn on the corresponding bit of the bitmap
+      }
+      onebit = onebit << 1; // move the single set bit one position to the left
+      if (onebit == 0 || j == w-1) {
+        onebit = 1;
+        *p++ = byte; // store in bitmap one pack of bits
+        byte = 0;
+      }
+      alpha += d; // point to next rgb pixel
+    }
+  }
+  cairo_surface_t *mask_surf = cairo_image_surface_create_for_data(bits,
+    CAIRO_FORMAT_A1, w, h, bytesperrow);
+  cairo_pattern_t *mask_pattern = cairo_pattern_create_for_surface(mask_surf);
+  cairo_surface_destroy(mask_surf);
+  return mask_pattern;
 }
 
 #endif // USE_PANGO

@@ -2,7 +2,7 @@
 // Definition of the Wayland Screen interface
 // for the Fast Light Tool Kit (FLTK).
 //
-// Copyright 2010-2023 by Bill Spitzak and others.
+// Copyright 2010-2024 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
@@ -88,7 +88,8 @@ public:
   static void insertion_point_location(int x, int y, int height);
   static bool insertion_point_location(int *px, int *py, int *pwidth, int *pheight);
   static bool own_output(struct wl_output *output);
-
+  static void do_set_cursor(struct Fl_Wayland_Screen_Driver::seat *,
+                            struct wl_cursor *wl_cursor = NULL);
 // member variables
   struct wl_cursor *xc_arrow;
   struct wl_cursor *xc_ns;
@@ -169,6 +170,8 @@ public:
   int get_key(int k) FL_OVERRIDE;
   void enable_im() FL_OVERRIDE;
   void disable_im() FL_OVERRIDE;
+  bool screen_boundaries_known() FL_OVERRIDE { return false; }
+  float base_scale(int numscreen) FL_OVERRIDE;
 
   // overridden functions from parent class Fl_Unix_Screen_Driver
   int poll_or_select_with_delay(double time_to_wait) FL_OVERRIDE;

@@ -162,7 +162,7 @@ const char *_c_check(const char * & c, int type) {
  \note This function checks every conceivable line of code, which is not
     always wanted. It can't differentiate characters in comments, and the
     user may well intend to leave a curly bracket open
-    (i.e. namesapece { ... } ). We should make this option user selectable.
+    (i.e. namespace { ... } ). We should make this option user selectable.
  */
 const char *c_check(const char *c, int type) {
   return _c_check(c,type);
@@ -447,9 +447,9 @@ void Fl_Function_Type::write_code1(Fd_Code_Writer& f) {
 
     const char* k = class_name(0);
     if (k) {
+      f.write_public(public_);
       if (havechildren)
         write_comment_c(f);
-      f.write_public(public_);
       if (name()[0] == '~')
         constructor = 1;
       else {
@@ -779,7 +779,7 @@ void Fl_CodeBlock_Type::write_properties(Fd_Project_Writer &f) {
 }
 
 /**
- Read the node specifc properties.
+ Read the node specific properties.
  */
 void Fl_CodeBlock_Type::read_property(Fd_Project_Reader &f, const char *c) {
   if (!strcmp(c,"after")) {
@@ -940,7 +940,7 @@ void Fl_Decl_Type::read_property(Fd_Project_Reader &f, const char *c) {
  */
 void Fl_Decl_Type::open() {
   if (!decl_panel) make_decl_panel();
-  decl_input->value(name());
+  decl_input->buffer()->text(name());
   if (is_in_class()) {
     decl_class_choice->value(public_);
     decl_class_choice->show();
@@ -963,7 +963,7 @@ void Fl_Decl_Type::open() {
       else if (!w) Fl::wait();
     }
     // check values
-    const char*c = decl_input->value();
+    const char*c = decl_input->buffer()->text();
     while (isspace(*c)) c++;
     message = c_check(c&&c[0]=='#' ? c+1 : c);
     // alert user
@@ -1018,6 +1018,7 @@ void Fl_Decl_Type::write_code1(Fd_Code_Writer& f) {
                         || (!strncmp(c,"typedef",7) && isspace(c[7]))
                         || (!strncmp(c,"FL_EXPORT",9) && isspace(c[9]))
                         || (!strncmp(c,"struct",6) && isspace(c[6]))
+                        || (!strncmp(c,"enum",4) && isspace(c[4]))
                         ) ) {
     f.write_public(public_);
     write_comment_h(f, f.indent(1));
@@ -1440,7 +1441,7 @@ int Fl_DeclBlock_Type::is_public() const {return public_;}
 /**
  Create a new declaration block.
  \param[in] strategy add after current or as last child
- \return new Declaration Blocknode
+ \return new Declaration Block node
  */
 Fl_Type *Fl_DeclBlock_Type::make(Strategy strategy) {
   Fl_Type *p = Fl_Type::current;
@@ -1585,7 +1586,6 @@ Fl_Type *Fl_Comment_Type::make(Strategy strategy) {
   o->name("my comment");
   o->add(p, strategy);
   o->factory = this;
-  o->title_buf[0] = 0;
   return o;
 }
 
@@ -1755,32 +1755,7 @@ void Fl_Comment_Type::open() {
     break;
   }
 BREAK2:
-  title_buf[0] = 0;
   comment_panel->hide();
-}
-
-/**
- Create a title for the Widget Browser by extracting the first 50 characters of the comment.
- */
-const char *Fl_Comment_Type::title() {
-  const char* n = name();
-  if (!n || !*n) return type_name();
-  if (title_buf[0]==0) {
-    const char *s = n;
-    char *d = title_buf;
-    int i = 50;
-    while (--i > 0) {
-      char n = *s++;
-      if (n==0) break;
-      if (n=='\r') { *d++ = '\\'; *d++ = 'r'; i--; }
-      else if (n=='\n') { *d++ = '\\'; *d++ = 'n'; i--; }
-      else if (n<32) { *d++ = '^'; *d++ = 'A'+n; i--; }
-      else *d++ = n;
-    }
-    if (i<=0) { *d++ = '.'; *d++ = '.'; *d++ = '.'; }
-    *d++ = 0;
-  }
-  return title_buf;
 }
 
 /**

@@ -773,7 +773,7 @@ void Fl_Window::default_size_range() {
 
   // Clip the resizable() widget to the window
 
-  int L = r->x();
+  int L = (r == this ? 0 : r->x());
   int R = L + r->w();
   if (R < 0 || L > w()) R = L; // outside the window
   else {
@@ -782,7 +782,7 @@ void Fl_Window::default_size_range() {
   }
   int rw = R - L;
 
-  int T = r->y();
+  int T = (r == this ? 0 : r->y());
   int B = T + r->h();
   if (B < 0 || T > h()) B = T; // outside the window
   else {
@@ -931,7 +931,7 @@ fl_uintptr_t Fl_Window::os_id() { return pWindowDriver->os_id();}
  \see Fl_Window::un_maximize(), Fl_Window::maximize_active()
  */
 void Fl_Window::maximize() {
-  if (!shown() || parent() || !resizable() || maximize_active()) return;
+  if (!shown() || parent() || !is_resizable() || maximize_active()) return;
   set_flag(MAXIMIZED);
   if (border()) pWindowDriver->maximize();
   else pWindowDriver->Fl_Window_Driver::maximize();
@@ -942,7 +942,7 @@ void Fl_Window::maximize() {
  \see Fl_Window::maximize()
 */
 void Fl_Window::un_maximize() {
-  if (!shown() || parent() || !resizable() || !maximize_active()) return;
+  if (!shown() || parent() || !is_resizable() || !maximize_active()) return;
   clear_flag(MAXIMIZED);
   if (border()) pWindowDriver->un_maximize();
   else pWindowDriver->Fl_Window_Driver::un_maximize();

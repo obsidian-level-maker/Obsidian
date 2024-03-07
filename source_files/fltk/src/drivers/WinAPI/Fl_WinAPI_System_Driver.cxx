@@ -299,6 +299,56 @@ int Fl_WinAPI_System_Driver::rename(const char *fnam, const char *newnam) {
   return _wrename(wbuf, wbuf1);
 }
 
+// See Fl::args_to_utf8()
+int Fl_WinAPI_System_Driver::args_to_utf8(int argc, char ** &argv) {
+  int i;
+
+  // Convert the command line arguments to UTF-8
+  LPWSTR *wideArgv = CommandLineToArgvW(GetCommandLineW(), &argc);
+  argv = (char **)malloc((argc + 1) * sizeof(char *));
+  for (i = 0; i < argc; i++) {
+    // find the required size of the buffer
+    int u8size = WideCharToMultiByte(CP_UTF8,     // CodePage
+                                  0,              // dwFlags
+                                  wideArgv[i],    // lpWideCharStr
+                                  -1,             // cchWideChar
+                                  NULL,           // lpMultiByteStr
+                                  0,              // cbMultiByte
+                                  NULL,           // lpDefaultChar
+                                  NULL);          // lpUsedDefaultChar
+    if (u8size > 0) {
+      char *strbuf = (char*)::malloc(u8size);
+      int ret = WideCharToMultiByte(CP_UTF8,        // CodePage
+                                    0,              // dwFlags
+                                    wideArgv[i],    // lpWideCharStr
+                                    -1,             // cchWideChar
+                                    strbuf,         // lpMultiByteStr
+                                    u8size,         // cbMultiByte
+                                    NULL,           // lpDefaultChar
+                                    NULL);          // lpUsedDefaultChar
+
+      if (ret) {
+        argv[i] = strbuf;
+      } else {
+        argv[i] = _strdup("");
+        ::free(strbuf);
+      }
+    } else {
+      argv[i] = _strdup("");
+    }
+  }
+  argv[argc] = NULL; // required NULL pointer at end of list
+
+  // Free the wide character string array
+  LocalFree(wideArgv);
+
+  // Note: the allocated memory or argv[] will not be free'd by the system
+  // on exit. This does not constitute a memory leak.
+
+  return argc;
+}
+
+
 // Two Windows-specific functions fl_utf8_to_locale() and fl_locale_to_utf8()
 // from file fl_utf8.cxx are put here for API compatibility
 

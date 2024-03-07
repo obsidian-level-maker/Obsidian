@@ -277,6 +277,12 @@ public:
     /// Meaningful for the Wayland/X11 platform only. When switched on (default), the library uses a Zenity-based file dialog.
     /// When switched off, the GTK file dialog is used instead.
     OPTION_FNFC_USES_ZENITY,
+    /// When switched on and when the keyboard in use has '+' in the shifted position of its key,
+    /// pressing that key and ctrl triggers the zoom-in operation.
+    /// When switched off (default), the zoom-in operation requires that also the shift key is pressed.
+    /// Under macOS, this option has no effect because the OS itself generates ⌘= followed
+    /// by ⌘+ when pressing ⌘ and the '=|+' key without pressing shift.
+    OPTION_SIMPLE_ZOOM_SHORTCUT,
       // don't change this, leave it always as the last element
       /// For internal use only.
     OPTION_LAST
@@ -851,7 +857,9 @@ public:
   /** Gets the current Fl::focus() widget. \sa Fl::focus(Fl_Widget*) */
   static Fl_Widget* focus()     {return focus_;}
   static void focus(Fl_Widget*);
-  static void add_handler(Fl_Event_Handler h);
+  static void add_handler(Fl_Event_Handler ha);
+  static void add_handler(Fl_Event_Handler ha, Fl_Event_Handler before);
+  static Fl_Event_Handler last_handler();
   static void remove_handler(Fl_Event_Handler h);
   static void add_system_handler(Fl_System_Handler h, void *data);
   static void remove_system_handler(Fl_System_Handler h);
@@ -1078,11 +1086,8 @@ public:
  can be set to a value FLTK will multiply to the OS-given value.
  The 2 variants of functions Fl::screen_scale() allow to programmatically get and set
  scaling factor values. The scaling factor value can be further changed at runtime
- by typing ctrl-/+/-/0/ (cmd-/+/-/0/ under macOS). FLTK sends the
- \ref FL_ZOOM_EVENT when the factor value is changed, to which a
- callback can be associated with Fl::add_handler().
- By default, FLTK displays the new scaling factor value in a yellow, transient window.
- This can be changed with option Fl::OPTION_SHOW_SCALING.
+ by typing \c Ctrl/+/-/0/ (\c Cmd/+/-/0/ under macOS).
+ See \ref events_fl_shortcut for more details about these shortcuts.
      @{ */
   static int x(); // via screen driver
   static int y(); // via screen driver
@@ -1398,6 +1403,9 @@ public:
 
   static int system(const char *command);
 
+  // Convert Windows commandline arguments to UTF-8 (documented in src/Fl.cxx)
+  static int args_to_utf8(int argc, char ** &argv);
+
 #ifdef FLTK_HAVE_CAIRO
   /** \defgroup group_cairo Cairo Support Functions and Classes
       @{
@@ -1470,8 +1478,8 @@ public:
     \endcode
 
     If you configure FLTK with \c '--enable-cairo' or CMake option
-    \c 'OPTION_CAIRO' (i.e. without \c '--enable-cairoext' or CMake option
-    \c 'OPTION_CAIROEXT') or if you don't enable the \c 'autolink' Cairo
+    \c 'FLTK_OPTION_CAIRO_WINDOW' (i.e. without \c '--enable-cairoext' or CMake option
+    \c 'FLTK_OPTION_CAIRO_EXT') or if you don't enable the \c 'autolink' Cairo
     context you may do the equivalent to use Cairo drawings in an
     overridden draw() method of derived classes by using
     \code

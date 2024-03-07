@@ -137,7 +137,8 @@ Fl_String &Fl_String::replace_(int at, int n_del, const char *ins, int n_ins) {
     ::memmove(buffer_+at, ins, n_ins);
   }
   size_ = new_size;
-  buffer_[size_] = 0;
+  if (buffer_)
+    buffer_[size_] = 0;
   return *this;
 }
 
@@ -641,6 +642,19 @@ bool operator==(const Fl_String &lhs, const Fl_String &rhs) {
     if (sz == 0) return true;
     if (memcmp(lhs.data(), rhs.data(), sz) == 0) return true;
   }
+  return false;
+}
+
+/**
+ Compare two strings for inequality.
+ \param[in] lhs first string
+ \param[in] rhs second string
+ \return true if strings differ in size or content
+ */
+bool operator!=(const Fl_String &lhs, const Fl_String &rhs) {
+  if (lhs.size() != rhs.size()) return true;
+  int sz = lhs.size();  // same size for both
+  if (memcmp(lhs.data(), rhs.data(), sz) != 0) return true;
   return false;
 }
 

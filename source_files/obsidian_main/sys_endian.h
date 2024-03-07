@@ -27,6 +27,8 @@
 #ifndef __SYS_ENDIAN_H__
 #define __SYS_ENDIAN_H__
 
+#include <stdint.h>
+
 // ---- determine byte order ----
 
 #define UT_LIL_ENDIAN 1234

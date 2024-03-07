@@ -37,7 +37,7 @@ const int FO_GAP = 10;
 const int FO_BROWSER_W = 200;
 const int FO_SCROLL_W = 16 + 4; //Fl::scrollbar_size() + Fl::box_dw(FL_DOWN_BOX);
 const int FO_CHOICE_W = 75;
-const int FO_OPTIONS_W = 380;
+const int FO_OPTIONS_W = 420;
 const int FO_BUTTON_W = 75;
 const int FO_WINDOW_W = FO_GAP + FO_BROWSER_W + FO_GAP + FO_SCROLL_W + FO_OPTIONS_W + FO_SCROLL_W + FO_GAP;
 const int FO_SYSTEM_X = FO_OPTIONS_W - 2*FO_GAP - 2*FO_CHOICE_W;
@@ -156,6 +156,13 @@ Fo_Option_Descr g_option_list[] = {
     "If 'Transiently show scaling factor' is enabled, the library shows in a "
     "transient popup window the display scaling factor value when it is "
     "changed. If disabled, no such transient window is used." },
+  { FO_OPTION_BOOL, "Allow simple zoom-in shortcut:",
+    Fl::OPTION_SIMPLE_ZOOM_SHORTCUT, "OPTION_SIMPLE_ZOOM_SHORTCUT", "SimpleZoomShortcut", false,
+    "Fine tune the shortcut that triggers the zoom-in operation.",
+    "When the keyboard in use has '+' in the shifted position of its key, "
+    "pressing that key and ctrl triggers the zoom-in operation. "
+    "If disabled, the zoom-in operation requires the shift key to be pressed also "
+    "with such a keyboard." },
   // -- When adding new options here, please make sure that you also update
   // --   documentation.src/fltk-options.dox
   // -- and
@@ -644,6 +651,7 @@ Fl_Window* build_ui() {
                                            "Groups");
   g_headline_browser->align(FL_ALIGN_TOP);
   g_headline_browser->textsize(FL_NORMAL_SIZE+1);
+  g_headline_browser->linespacing(4);
   add_headlines(g_headline_browser);
   // -- scrollable area for all options inside a group
   g_option_scroll = new Fl_Scroll(FO_GAP + FO_BROWSER_W + FO_GAP, FO_GAP + FO_TITLE_H,
@@ -675,6 +683,7 @@ int main(int argc,char **argv) {
   check_write_permissions(g_system_write_ok, g_user_write_ok);
 
   int i = 1;
+  Fl::args_to_utf8(argc, argv); // for MSYS2/MinGW
   int args_processed = Fl::args(argc, argv, i, read_command_line_args);
   if (args_processed < argc) {
     fprintf(stderr, "ERROR: Unrecognized command line option \"%s\".\n", argv[i]);

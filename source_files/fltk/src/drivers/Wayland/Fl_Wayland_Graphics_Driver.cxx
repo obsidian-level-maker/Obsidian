@@ -118,15 +118,13 @@ struct Fl_Wayland_Graphics_Driver::wld_buffer *
 }
 
 
-// used to support both normal and progressive drawing
+// used to support both normal and progressive drawing and for top-level GL windows
 static void surface_frame_done(void *data, struct wl_callback *cb, uint32_t time) {
   struct wld_window *window = (struct wld_window *)data;
   wl_callback_destroy(cb);
-  if (window->buffer) { // fix for issue #712
-    window->buffer->cb = NULL;
-    if (window->buffer->draw_buffer_needs_commit) {
-      Fl_Wayland_Graphics_Driver::buffer_commit(window);
-    }
+  window->frame_cb = NULL;
+  if (window->buffer && window->buffer->draw_buffer_needs_commit) {
+    Fl_Wayland_Graphics_Driver::buffer_commit(window);
   }
 }
 
@@ -134,6 +132,10 @@ static void surface_frame_done(void *data, struct wl_callback *cb, uint32_t time
 static const struct wl_callback_listener surface_frame_listener = {
   .done = surface_frame_done,
 };
+
+
+const struct wl_callback_listener *Fl_Wayland_Graphics_Driver::p_surface_frame_listener =
+  &surface_frame_listener;
 
 
 // copy pixels in region r from the Cairo surface to the Wayland buffer
@@ -176,8 +178,10 @@ void Fl_Wayland_Graphics_Driver::buffer_commit(struct wld_window *window, struct
   wl_surface_attach(window->wl_surface, window->buffer->wl_buffer, 0, 0);
   wl_surface_set_buffer_scale( window->wl_surface,
       Fl_Wayland_Window_Driver::driver(window->fl_win)->wld_scale() );
-  window->buffer->cb = wl_surface_frame(window->wl_surface);
-  wl_callback_add_listener(window->buffer->cb, &surface_frame_listener, window);
+  if (!window->covered) { // see issue #878
+    window->frame_cb = wl_surface_frame(window->wl_surface);
+    wl_callback_add_listener(window->frame_cb, p_surface_frame_listener, window);
+  }
   wl_surface_commit(window->wl_surface);
   window->buffer->draw_buffer_needs_commit = false;
 }
@@ -235,7 +239,7 @@ void Fl_Wayland_Graphics_Driver::buffer_release(struct wld_window *window)
 {
   if (window->buffer && !window->buffer->released) {
     window->buffer->released = true;
-    if (window->buffer->cb) wl_callback_destroy(window->buffer->cb);
+    if (window->frame_cb) { wl_callback_destroy(window->frame_cb); window->frame_cb = NULL; }
     delete[] window->buffer->draw_buffer.buffer;
     window->buffer->draw_buffer.buffer = NULL;
     cairo_destroy(window->buffer->draw_buffer.cairo_);
@@ -286,4 +290,11 @@ Fl_Image_Surface *Fl_Wayland_Graphics_Driver::custom_offscreen(int w, int h,
   *p_off = off;
   cairo_set_user_data(off->draw_buffer.cairo_, &key, &off->draw_buffer, NULL);
   return new Fl_Image_Surface(w, h, 0, (Fl_Offscreen)off->draw_buffer.cairo_);
+}
+
+
+void Fl_Wayland_Graphics_Driver::cache_size(Fl_Image *img, int &width, int &height) {
+  Fl_Graphics_Driver::cache_size(img, width, height);
+  width *= wld_scale;
+  height *=  wld_scale;
 }

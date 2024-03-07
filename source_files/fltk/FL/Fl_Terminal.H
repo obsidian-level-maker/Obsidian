@@ -1,8 +1,8 @@
 //
-// Fl_Terminal.cxx - A terminal widget for Fast Light Tool Kit (FLTK).
+// Fl_Terminal - A terminal widget for Fast Light Tool Kit (FLTK).
 //
 // Copyright 2022 by Greg Ercolano.
-// Copyright 2023 by Bill Spitzak and others.
+// Copyright 2024 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
@@ -81,6 +81,15 @@
   Many commonly used API functions are public, such as textfgcolor() for setting
   text colors. Others, such as cursor_up() are protected to prevent common misuse, and are
   available only to subclasses.
+
+  Some common operations:
+  - Set the terminal's background color, see color(Fl_Color)
+  - Set the terminal's default text color, see textfgcolor_default(Fl_Color)
+  - Printing text to the terminal, see Fl_Terminal::printf() and Fl_Terminal::append()
+  - Clearing the screen, see clear()
+  - Getting the terminal's buffer contents, see text()
+  - Getting single utf8 characters by row/col from the terminal display, see utf8_char_at_disp()
+  - Getting the text from a text selection, see get_selection()
 
   For applications that need input support, the widget can be subclassed to provide
   keyboard input, and advanced features like pseudo ttys, termio, serial port I/O, etc.,
@@ -279,16 +288,16 @@
                              ░░░░░░:::::::::::::░░░░░◉
                              ░░░░░░::##:::::##:◉░░░░░░╲
                              ░░░░░░::###:::###::╲░░░░░ ╲
-                             ░░░░░░::####:####::░╲░░░░  color()
+                             ░░░░░░::####:####::░╲░░░░  Fl_Terminal::color()
                              ░░░░░░::##:###:##::░░╲░░░
                              ░░░░░░::##::#::##::░░░╲░░
                              ░░░░░░::##:.:::##::░░░░╲░
                              ░░░░░░::##:::::#◉::░░░░░╲
                              ░░░░░░:::::::::::╲:░░░░░░╲
-                             ░░░░░░░░░░░░░░░░░░╲░░░░░░ textbgcolor()
+                             ░░░░░░░░░░░░░░░░░░╲░░░░░░ Fl_Terminal::textbgcolor()
                              ░░░░░░░░░░░░░░░░░░░╲░░░░░
                                                  ╲
-                                                  textfgcolor()
+                                                  Fl_Terminal::textfgcolor()
 ·
   \endcode
 
@@ -353,7 +362,7 @@ public:
   enum CharFlags {
     FG_XTERM   = 0x01,    ///< this char's fg color is an XTERM color; can be affected by Dim+Bold
     BG_XTERM   = 0x02,    ///< this char's bg color is an XTERM color; can be affected by Dim+Bold
-    EOL        = 0x04,    ///< this char at end of line, used for line wrap during screen resizing
+    EOL        = 0x04,    ///< TODO: char at EOL, used for line re-wrap during screen resizing
     RESV_A     = 0x08,
     RESV_B     = 0x10,
     RESV_C     = 0x20,
@@ -371,6 +380,16 @@ public:
     CR_TO_LF   = 0x01,     ///< carriage return generates a vertical line-feed (\\r -> \\n)
     LF_TO_CR   = 0x02,     ///< line-feed generates a carriage return (\\n -> \\r)
     LF_TO_CRLF = 0x04      ///< line-feed generates a carriage return line-feed (\\n -> \\r\\n)
+  };
+
+  /**
+    \enum ScrollbarStyle
+    Behavior of scrollbars
+  */
+  enum ScrollbarStyle {
+    SCROLLBAR_OFF  = 0x00, ///< scrollbar always invisible
+    SCROLLBAR_AUTO = 0x01, ///< scrollbar visible if widget resized in a way that hides columns (default)
+    SCROLLBAR_ON   = 0x02  ///< scrollbar always visible
   };
 
   ///////////////////////////////////////////////////////////////
@@ -405,7 +424,7 @@ protected:
   //
   class FL_EXPORT CharStyle {
     uchar       attrib_;           // bold, underline..
-    uchar       flags_;            // CharFlags
+    uchar       charflags_;        // CharFlags (xterm color management)
     Fl_Color    fgcolor_;          // foreground color for text
     Fl_Color    bgcolor_;          // background color for text
     Fl_Color    defaultfgcolor_;   // default fg color used by ESC[0m
@@ -417,37 +436,51 @@ protected:
     int         charwidth_;        // width of a fixed width ASCII character
   public:
     CharStyle(bool fontsize_defer);
+    uchar attrib(void) const            { return attrib_; }
+    uchar charflags(void) const         { return charflags_; }
+    // Colors - All access to colors are by Fl_Color only.
+    //          There are three ways to SET colors: Fl_Color, rgb, xterm(uchar)
+    //
+    Fl_Color fltk_fg_color(uchar ci);
+    Fl_Color fltk_bg_color(uchar ci);
     Fl_Color fgcolor(void) const;
     Fl_Color bgcolor(void) const;
     Fl_Color defaultfgcolor(void) const { return defaultfgcolor_; }
     Fl_Color defaultbgcolor(void) const { return defaultbgcolor_; }
-    uchar attrib(void) const            { return attrib_; }
     Fl_Font fontface(void) const        { return fontface_; }
     Fl_Fontsize fontsize(void) const    { return fontsize_; }
     int  fontheight(void) const         { return fontheight_; }
     int  fontdescent(void) const        { return fontdescent_; }
     int  charwidth(void) const          { return charwidth_; }
     uchar colorbits_only(uchar inflags) const;
-    void attrib(uchar val)            { attrib_  = val; }
-    void set_flag(uchar val)          { flags_ |= val; }
-    void clr_flag(uchar val)          { flags_ &= ~val; }
-    void fgcolor_uchar(uchar val);
-    void bgcolor_uchar(uchar val);
-    void fgcolor(int r,int g,int b)   { fgcolor_ = (r<<24) | (g<<16) | (b<<8); clr_flag(FG_XTERM); }
-    void bgcolor(int r,int g,int b)   { bgcolor_ = (r<<24) | (g<<16) | (b<<8); clr_flag(BG_XTERM); }
-    void fgcolor(Fl_Color val)        { fgcolor_ = val;                        clr_flag(FG_XTERM); }
-    void bgcolor(Fl_Color val)        { bgcolor_ = val;                        clr_flag(BG_XTERM); }
-    void defaultfgcolor(Fl_Color val) { defaultfgcolor_ = val; }
-    void defaultbgcolor(Fl_Color val) { defaultbgcolor_ = val; }
-    void fontface(Fl_Font val)        { fontface_ = val; update(); }
-    void fontsize(Fl_Fontsize val)    { fontsize_ = val; update(); }
+    void attrib(uchar val)              { attrib_    = val; }
+    void charflags(uchar val)           { charflags_ = val; }
+    void set_charflag(uchar val)        { charflags_ |= val; }
+    void clr_charflag(uchar val)        { charflags_ &= ~val; }
+    // Non-xterm colors
+    void fgcolor(int r,int g,int b)     { fgcolor_ = (r<<24) | (g<<16) | (b<<8); clr_charflag(FG_XTERM); }
+    void bgcolor(int r,int g,int b)     { bgcolor_ = (r<<24) | (g<<16) | (b<<8); clr_charflag(BG_XTERM); }
+    void fgcolor(Fl_Color val)          { fgcolor_ = val;                        clr_charflag(FG_XTERM); }
+    void bgcolor(Fl_Color val)          { bgcolor_ = val;                        clr_charflag(BG_XTERM); }
+    // Xterm colors
+    void fgcolor_xterm(Fl_Color val)    { fgcolor_ = val;                        set_charflag(FG_XTERM); }
+    void bgcolor_xterm(Fl_Color val)    { bgcolor_ = val;                        set_charflag(BG_XTERM); }
+    void fgcolor_xterm(uchar val);
+    void bgcolor_xterm(uchar val);
+    //
+    void defaultfgcolor(Fl_Color val)   { defaultfgcolor_ = val; }
+    void defaultbgcolor(Fl_Color val)   { defaultbgcolor_ = val; }
+    void fontface(Fl_Font val)          { fontface_ = val; update(); }
+    void fontsize(Fl_Fontsize val)      { fontsize_ = val; update(); }
     void update(void);
     void update_fake(void);
     // SGR MODES: Set Graphics Rendition
     void sgr_reset(void) {                         // e.g. ESC[0m
       attrib(Fl_Terminal::NORMAL);
-      fgcolor(defaultfgcolor_);
-      bgcolor(defaultbgcolor_);
+      if (charflags() & FG_XTERM) fgcolor_xterm(defaultfgcolor_);
+      else                        fgcolor(defaultfgcolor_);
+      if (charflags() & BG_XTERM) bgcolor_xterm(defaultbgcolor_);
+      else                        bgcolor(defaultbgcolor_);
     }
     int  onoff(bool flag, Attrib a) { return (flag ? (attrib_ | a) : (attrib_ & ~a)); }
     void sgr_bold(bool val)      { attrib_ = onoff(val, Fl_Terminal::BOLD);      } // e.g. ESC[1m
@@ -455,7 +488,7 @@ protected:
     void sgr_italic(bool val)    { attrib_ = onoff(val, Fl_Terminal::ITALIC);    } // e.g. ESC[3m
     void sgr_underline(bool val) { attrib_ = onoff(val, Fl_Terminal::UNDERLINE); } // e.g. ESC[3m
     void sgr_dbl_under(bool val) { attrib_ = onoff(val, Fl_Terminal::UNDERLINE); } // e.g. ESC[21m (TODO!)
-    void sgr_blink(bool val)     { /* NOT IMPLEMENTED */                         } // e.g. ESC[5m
+    void sgr_blink(bool val)     { (void)val; /* NOT IMPLEMENTED */              } // e.g. ESC[5m
     void sgr_inverse(bool val)   { attrib_ = onoff(val, Fl_Terminal::INVERSE);   } // e.g. ESC[7m
     void sgr_strike(bool val)    { attrib_ = onoff(val, Fl_Terminal::STRIKEOUT); } // e.g. ESC[9m
   };
@@ -506,13 +539,14 @@ protected:
   class FL_EXPORT Utf8Char {
     static const int max_utf8_ = 4; // RFC 3629 paraphrased: In UTF-8, chars are encoded with 1 to 4 octets
     char     text_[max_utf8_];      // memory for actual ASCII or UTF-8 byte contents
-    uchar    len_;      // length of bytes in text_[] buffer; 1 for ASCII, >1 for UTF-8
-    uchar    attrib_;   // attribute bits for this char (bold, underline..)
-    uchar    flags_;    // CharFlags bits
-    Fl_Color fgcolor_;  // fltk fg color (supports 8color or 24bit color set w/ESC[37;<r>;<g>;<b>m)
-    Fl_Color bgcolor_;  // fltk bg color (supports 8color or 24bit color set w/ESC[47;<r>;<g>;<b>m)
+    uchar    len_;                  // length of bytes in text_[] buffer; 1 for ASCII, >1 for UTF-8
+    uchar    attrib_;               // attribute bits for this char (bold, underline..)
+    uchar    charflags_;            // CharFlags (xterm colors management)
+    Fl_Color fgcolor_;              // fltk fg color (supports 8color or 24bit color set w/ESC[37;<r>;<g>;<b>m)
+    Fl_Color bgcolor_;              // fltk bg color (supports 8color or 24bit color set w/ESC[47;<r>;<g>;<b>m)
     // Private methods
     void text_utf8_(const char *text, int len);
+    Fl_Color attr_color_(Fl_Color col, const Fl_Widget *grp) const;
   public:
     // Public methods
     Utf8Char(void);                             // ctor
@@ -529,8 +563,8 @@ protected:
     //
     const char* text_utf8(void) const { return text_; }
     // Return the attribute for this char
-    uchar attrib(void) const { return attrib_; }
-    uchar flags(void) const { return flags_; }
+    uchar attrib(void)    const { return attrib_; }
+    uchar charflags(void) const { return charflags_; }
     Fl_Color fgcolor(void) const;
     Fl_Color bgcolor(void) const;
     // Return the length of this character in bytes (UTF-8 can be multibyte..)
@@ -538,12 +572,10 @@ protected:
     double pwidth(void) const;
     int pwidth_int(void) const;
     // Clear the character to a 'space'
-    void clear(const CharStyle& style) { text_ascii(' ', style); }
+    void clear(const CharStyle& style) { text_utf8(" ", 1, style); charflags_ = 0; attrib_ = 0; }
     bool is_char(char c) const { return *text_ == c; }
     void show_char(void) const { ::printf("%.*s", len_, text_); }
     void show_char_info(void) const { ::fprintf(stderr, "UTF-8('%.*s', len=%d)\n", len_, text_, len_); }
-
-    Fl_Color attr_color(Fl_Color col, const Fl_Widget *grp) const;
     Fl_Color attr_fg_color(const Fl_Widget *grp) const;
     Fl_Color attr_bg_color(const Fl_Widget *grp) const;
   };
@@ -614,6 +646,10 @@ private:
     inline int disp_srow(void) const { return((offset_ + hist_rows_) % ring_rows_); }
     inline int disp_erow(void) const { return((offset_ + hist_rows_ + disp_rows_ - 1) % ring_rows_); }
     inline int offset(void)    const { return offset_; }
+    void offset_adjust(int rows);
+    void hist_rows(int val) { hist_rows_ = val; }
+    void disp_rows(int val) { disp_rows_ = val; }
+
     // History use
     inline int  hist_use(void)  const       { return hist_use_; }
     inline void hist_use(int val)           { hist_use_ = val; }
@@ -625,7 +661,7 @@ private:
     bool is_disp_ring_row(int grow) const;
     //DEBUG void show_ring_info(void) const;
     void move_disp_row(int src_row, int dst_row);
-    void clear_disp_row(int drow, const CharStyle& style);
+    void clear_disp_rows(int sdrow, int edrow, const CharStyle& style);
     void scroll(int rows, const CharStyle& style);
 
     const Utf8Char* u8c_ring_row(int row) const;
@@ -652,30 +688,34 @@ private:
   // Class to manage mouse selection
   //
   class FL_EXPORT Selection {
+    Fl_Terminal *terminal_;
     int srow_, scol_, erow_, ecol_;     // selection start/end. NOTE: start *might* be > end
     int push_row_, push_col_;           // global row/col for last FL_PUSH
+    bool push_char_right_;
     Fl_Color selectionbgcolor_;
     Fl_Color selectionfgcolor_;
     int state_ ;                        // 0=none, 1=started, 2=extended, 3=done
     bool is_selection_;                 // false: no selection
   public:
-    Selection(void);
+    Selection(Fl_Terminal *terminal);
     int srow(void) const { return srow_; }
     int scol(void) const { return scol_; }
     int erow(void) const { return erow_; }
     int ecol(void) const { return ecol_; }
-    void push_clear() { push_row_ = push_col_ = -1; }
-    void push_rowcol(int row,int col) { push_row_ = row; push_col_ = col; }
-    void start_push() { start(push_row_, push_col_); }
-    bool dragged_off(int row,int col) { return (push_row_ != row) || (push_col_ != col); }
+    void push_clear() { push_row_ = push_col_ = -1; push_char_right_ = false; }
+    void push_rowcol(int row,int col,bool char_right) {
+      push_row_ = row; push_col_ = col; push_char_right_ = char_right; }
+    void start_push() { start(push_row_, push_col_, push_char_right_); }
+    bool dragged_off(int row,int col,bool char_right) {
+      return (push_row_ != row) || (push_col_+push_char_right_ != col+char_right); }
     void selectionfgcolor(Fl_Color val) { selectionfgcolor_ = val; }
     void selectionbgcolor(Fl_Color val) { selectionbgcolor_ = val; }
     Fl_Color selectionfgcolor(void) const { return selectionfgcolor_; }
     Fl_Color selectionbgcolor(void) const { return selectionbgcolor_; }
     bool is_selection(void) const { return is_selection_; }
     bool get_selection(int &srow,int &scol,int &erow,int &ecol) const; // guarantees return (start < end)
-    bool start(int row, int col);
-    bool extend(int row, int col);
+    bool start(int row, int col, bool char_right);
+    bool extend(int row, int col, bool char_right);
     void end(void);
     void select(int srow, int scol, int erow, int ecol);
     bool clear(void);
@@ -785,12 +825,38 @@ private:
   ////// Fl_Terminal members + methods
   //////
   ///////////////////////////////////////////////////////////////
+public:
+  /**
+    Vertical scrollbar. This is public so it can be accessed directly, e.g.
+
+    - \ref Fl_Scrollbar::value(void) "scrollbar->value(void)" returns the row offset
+      from the bottom of the display, 0 being the bottom (default).
+    - \ref Fl_Scrollbar::value(int) "scrollbar->value(int)" similarly sets the row offset,
+      which should be in the range [0 .. Fl_Scrollbar::maximum()].
+    - \ref Fl_Scrollbar::step(double) "scrollbar->step(double)" sets the smoothness
+      of scrolling, default is 0.25 for 4 steps of motion per column.
+
+    \todo Support scrollbar_left/right() - See Fl_Browser_::scrollbar docs
+    \todo Support new ScrollbarStyle
+   */
+  Fl_Scrollbar  *scrollbar;         // vertical scrollbar (value: rows above disp_chars[])
+  /**
+    Horizontal scrollbar. This is public so it can be accessed directly, e.g.
+
+    - \ref Fl_Scrollbar::value(void) "hscrollbar->value(void)" returns the column offset
+      position from the left edge of the display; 0 being the left edge (default).
+    - \ref Fl_Scrollbar::value(int) "hscrollbar->value(int)" similarly sets the column offset,
+      which should be in the range [0 .. Fl_Scrollbar::maximum()].
+    - \ref Fl_Scrollbar::step(double) "hscrollbar->step(double)" sets the smoothness
+      of scrolling, default is 0.25 for 4 steps of motion per column.
+   */
+  Fl_Scrollbar  *hscrollbar;        // horizontal scrollbar
 private:
-  bool          fontsize_defer_; // flag defers font calcs until first draw() (issue 837)
-  Fl_Scrollbar *vscroll_;        // vertical scrollbar (value: rows above disp_chars[])
-  int           scrollbar_size_; // local preference for scrollbar size
-  CharStyle     *current_style_; // current font, attrib, color..
-  OutFlags      oflags_;         // output translation flags (CR_TO_LF, LF_TO_CR, LF_TO_CRLF)
+  bool           fontsize_defer_;   // flag defers font calcs until first draw() (issue 837)
+  int            scrollbar_size_;   // local preference for scrollbar size
+  ScrollbarStyle hscrollbar_style_;
+  CharStyle     *current_style_;    // current font, attrib, color..
+  OutFlags       oflags_;           // output translation flags (CR_TO_LF, LF_TO_CR, LF_TO_CRLF)
 
   // A ring buffer is used for the terminal's history (hist) and display (disp) buffer.
   //    See README-Fl_Terminal.txt, section "RING BUFFER DESCRIPTION" for diagrams/info.
@@ -805,7 +871,7 @@ private:
   bool           ansi_;             // if true, parse ansi codes (default on)
   char          *tabstops_;         // array of tab stops (0|1)   \__ TODO: This should probably
   int            tabstops_size_;    // size of tabstops[] array   /         be a class "TabStops".
-  Fl_Rect        scrn_;             // terminal screen xywh inside box(), margins, and vscroll
+  Fl_Rect        scrn_;             // terminal screen xywh inside box(), margins, and scrollbar
   int            autoscroll_dir_;   // 0=autoscroll timer off, 3=scrolling up, 4=scrolling down
   int            autoscroll_amt_;   // #pixels above or below edge, used for autoscroll speed
   RedrawStyle    redraw_style_;     // NO_REDRAW, RATE_LIMITED, PER_WRITE
@@ -831,8 +897,6 @@ protected:
 private:
   void create_ring(int drows, int dcols, int hrows);
   void init_(int X,int Y,int W,int H,const char*L,int rows,int cols,int hist,bool fontsize_defer);
-protected:
-  int  vscroll_width(void) const;
 private:
   // Tabstops
   void init_tabstops(int newsize);
@@ -843,6 +907,7 @@ private:
   // Updates
   void update_screen_xywh(void);
   void update_screen(bool font_changed);
+  void set_scrollbar_params(Fl_Scrollbar* scroll, int min, int max);
   void update_scrollbar(void);
   // Resize
   void resize_display_rows(int drows);
@@ -857,11 +922,11 @@ private:
 
   // Screen management
 protected:
-  const CharStyle& current_style(void) const;
+  CharStyle& current_style(void) const;
   void current_style(const CharStyle& sty);
 private:
-  int  x_to_glob_col(int X, int grow, int &gcol) const;
-  int  xy_to_glob_rowcol(int X, int Y, int &grow, int &gcol) const;
+  int  x_to_glob_col(int X, int grow, int &gcol, bool &gcr) const;
+  int  xy_to_glob_rowcol(int X, int Y, int &grow, int &gcol, bool &gcr) const;
 protected:
   int  w_to_col(int W) const;
   int  h_to_row(int H) const;
@@ -884,6 +949,8 @@ protected:
   const char* selection_text(void) const;
   void clear_mouse_selection(void);
   bool selection_extend(int X,int Y);
+  void select_word(int grow, int gcol);
+  void select_line(int grow);
   void scroll(int rows);
   void insert_rows(int count);
   void delete_rows(int count);
@@ -928,11 +995,10 @@ protected:
 public:
   void output_translate(Fl_Terminal::OutFlags val);
   Fl_Terminal::OutFlags output_translate(void) const;
-protected:
+private:
   void handle_lf(void);
   void handle_cr(void);
   // Printing
-private:
   void handle_ctrl(char c);
   bool is_printable(char c);
   bool is_ctrl(char c);
@@ -972,6 +1038,7 @@ public:
   void draw(void) FL_OVERRIDE;
   void resize(int X,int Y,int W,int H) FL_OVERRIDE;
   int  handle(int e) FL_OVERRIDE;
+  const char* text(bool lines_below_cursor=false) const;
 
 protected:
   // Internal short names
@@ -1018,6 +1085,8 @@ public:
   int   scrollbar_size(void) const;
   void  scrollbar_size(int val);
   int   scrollbar_actual_size(void) const;
+  void  hscrollbar_style(ScrollbarStyle val);
+  ScrollbarStyle hscrollbar_style(void) const;
   // API: History
   int   history_rows(void) const;
   void  history_rows(int val);
@@ -1088,6 +1157,7 @@ public:
   Fl_Color selectionbgcolor(void) const { return select_.selectionbgcolor(); }
   // API: Text attrib
   void textattrib(uchar val);
+  uchar textattrib() const;
   // API: Redraw style/rate
   RedrawStyle redraw_style(void) const;
   void  redraw_style(RedrawStyle val);

@@ -22,6 +22,7 @@
 #ifndef __OBLIGE_TX_SKIES_H__
 #define __OBLIGE_TX_SKIES_H__
 
+#include <stdint.h>
 #include "m_lua.h"
 
 void SKY_AddStars(unsigned long long seed, uint8_t *pixels, int W, int H,

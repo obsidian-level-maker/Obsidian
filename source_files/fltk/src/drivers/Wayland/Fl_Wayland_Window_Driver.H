@@ -1,7 +1,7 @@
 //
 // Definition of Wayland window driver for the Fast Light Tool Kit (FLTK).
 //
-// Copyright 2010-2023 by Bill Spitzak and others.
+// Copyright 2010-2024 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
@@ -59,8 +59,8 @@ private:
   cairo_rectangle_int_t *subRect_;   // makes sure subwindow remains inside its parent window
   static bool in_flush_; // useful for progressive window drawing
   Fl_Cursor standard_cursor_; // window's standard custom kind
-  void delete_cursor_(struct wld_window *, bool delete_rgb = true);
   struct gl_start_support *gl_start_support_; // for support of gl_start/gl_finish
+  bool is_popup_window_;
 public:
   inline Fl_Cursor standard_cursor() { return standard_cursor_; };
   bool in_handle_configure; // distinguish OS and user window resize
@@ -73,11 +73,17 @@ public:
     struct Fl_Wayland_Screen_Driver::output *output;
     struct wl_list link;
   };
+  struct custom_cursor {
+    struct wl_cursor *wl_cursor;
+    const Fl_RGB_Image *rgb;
+    int hotx, hoty;
+  };
+  static void delete_cursor(struct custom_cursor *custom, bool delete_rgb = true);
   static type_for_resize_window_between_screens data_for_resize_window_between_screens_;
   void decorated_win_size(int &w, int &h);
   void shape_bitmap_(Fl_Image* b);
   void shape_alpha_(Fl_Image* img, int offset) FL_OVERRIDE;
-  int wld_scale();
+  FL_EXPORT int wld_scale(); // used by class Fl_Wayland_Gl_Window_Driver
   cairo_rectangle_int_t *subRect() { return subRect_; } // getter
   void subRect(cairo_rectangle_int_t *r); // setter
   void checkSubwindowFrame();
@@ -144,6 +150,7 @@ struct wld_window {
   Fl_Window *fl_win;
   struct wl_list outputs; // linked list of displays where part or whole of window maps
   struct wl_surface *wl_surface;
+  struct wl_callback *frame_cb;
   struct Fl_Wayland_Graphics_Driver::wld_buffer *buffer;
   struct xdg_surface *xdg_surface;
   enum Fl_Wayland_Window_Driver::kind kind;
@@ -153,16 +160,14 @@ struct wld_window {
     struct xdg_popup *xdg_popup;
     struct xdg_toplevel *xdg_toplevel;
   };
-  struct custom_cursor_ {
-    struct wl_cursor *wl_cursor;
-    const Fl_RGB_Image *rgb;
-    int hotx, hoty;
-  } *custom_cursor; // non-null when using custom cursor
+  // non-null when using custom cursor
+  struct Fl_Wayland_Window_Driver::custom_cursor *custom_cursor;
   int configured_width;
   int configured_height;
   int floating_width;
   int floating_height;
   int state;
+  bool covered; // specially for Mutter and issue #878
 };
 
 

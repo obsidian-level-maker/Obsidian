@@ -129,18 +129,21 @@ Then, Obsidian can be launched (in Windows) with:
 > obsidian.exe
 ```
 
-## Windows Compilation using Visual Studio
+## Windows Compilation using MSVC Build Tools and VSCode
 
-Obsidian now supports compilation on native Windows. You will need Visual
-Studio 2022 installed to perform the build.
+Download the Visual Studio Build Tools Installer and install the 'Desktop Development with C++' Workload
+  - Also select the "C++ CMake tools for Windows" optional component
 
-* Clone and open the repository using Visual Studio.
-* Ensure the "msvc" CMake preset is selected.
-* Hit "Build" (F7 by default) and wait for the magic to happen.
-* DO NOT run Obsidian from within Visual Studio! It won't work properly.
-  Instead, open the Obsidian folder in the file explorer and run your brand new
-  `obsidian.exe`.
+Install VSCode as well as the C/C++ and CMake Tools Extensions
 
-# INSTALLING Obsidian
+After opening the project folder in VSCode, select the 'Visual Studio Build Tools (version) Release - x86_amd64' kit for 64-bit, or the x86 kit for 32-bit
 
-This is a work-in-progress; needs to be revisited after the CMake conversion is finalized
+Select the Release CMake build variant
+
+Click Build
+
+Then, Obsidian can be launched with:
+
+```
+> obsidian.exe
+```

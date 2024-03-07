@@ -93,7 +93,7 @@ AS_IF([test x$enable_cp936 = xyes], [
     CFLAGS="$CFLAGS -DCP936"
 ])
 
-AC_ARG_ENABLE([cygwin], AS_HELP_STRING([--enable-cygwin], [use the Cygwin libraries (default=no)]))
+AC_ARG_ENABLE([cygwin], AS_HELP_STRING([--enable-cygwin], [use the Cygwin DLL (default=no)]))
 
 AC_ARG_ENABLE([debug], AS_HELP_STRING([--enable-debug], [turn on debugging]))
 AS_IF([test x$enable_debug = xyes], [
@@ -101,6 +101,8 @@ AS_IF([test x$enable_debug = xyes], [
 ], [
     DEBUGFLAG=""
 ])
+
+AC_ARG_ENABLE([forms], AS_HELP_STRING([--disable-forms], [build Forms compatibility library (default=yes)]))
 
 AC_ARG_ENABLE([gl], AS_HELP_STRING([--disable-gl], [turn off OpenGL support]))
 
@@ -145,9 +147,9 @@ AC_ARG_ENABLE([xrender], AS_HELP_STRING([--disable-xrender], [turn off Xrender s
 AC_ARG_ENABLE([fluid], AS_HELP_STRING([--disable-fluid], [turn off fluid building]))
 
 AS_CASE([$host_os], [cygwin* | mingw*], [
-  AC_ARG_ENABLE([gdiplus], AS_HELP_STRING([--disable-gdiplus], [don't use GDI+ for antialiased graphics]))
+    AC_ARG_ENABLE([gdiplus], AS_HELP_STRING([--disable-gdiplus], [don't use GDI+ for antialiased graphics]))
 
- gdiplus_found=no
+    gdiplus_found=no
     AS_IF([test x$enable_gdiplus != xno], [
         AC_CHECK_HEADERS([wtypes.h gdiplus.h], [
             AC_DEFINE([USE_GDIPLUS])
@@ -169,7 +171,6 @@ dnl So --with-archflags option is used during "checking size of long"
 AS_IF([test "x$with_archflags" != x], [
     CFLAGS="$CFLAGS $with_archflags"
 ])
-
 
 dnl FLTK build options to be used in Makefiles (defined in makeinclude)
 BUILD=""
@@ -200,23 +201,36 @@ AS_CASE([$host_os], [cygwin*], [
 
 dnl Define the libraries and link options we will need.
 LINKFLTK="../lib/libfltk.a"
-LINKFLTKFORMS="../lib/libfltk_forms.a"
 LINKFLTKGL="../lib/libfltk_gl.a"
 LINKFLTKIMG="../lib/libfltk_images.a"
 GLDEMOS="gldemos"
 
 LIBEXT=".a"
 LIBNAME="../lib/libfltk.a"
-FLLIBNAME="../lib/libfltk_forms.a"
 GLLIBNAME="../lib/libfltk_gl.a"
 IMGLIBNAME="../lib/libfltk_images.a"
 CAIROLIBNAME="../lib/libfltk_cairo.a"
 
 LIBBASENAME="libfltk.a"
-FLLIBBASENAME="libfltk_forms.a"
 GLLIBBASENAME="libfltk_gl.a"
 IMGLIBBASENAME="libfltk_images.a"
 CAIROLIBBASENAME="libfltk_cairo.a"
+
+dnl set library names etc. for the optional forms library and set 'build_forms'
+dnl to make conditional code independent of the default value of 'enable_forms'
+dnl which is 'yes' (enabled) in 1.4.0 (default may be changed later)
+AS_IF([test x$enable_forms != xno], [
+    build_forms="yes"
+    LINKFLTKFORMS="../lib/libfltk_forms.a"
+    FLLIBNAME="../lib/libfltk_forms.a"
+    FLLIBBASENAME="libfltk_forms.a"
+    AC_DEFINE([FLTK_HAVE_FORMS])
+], [
+    build_forms="no"
+    LINKFLTKFORMS=""
+    FLLIBNAME=""
+    FLLIBBASENAME=""
+])
 
 
 dnl Check for Cairo library unless disabled...
@@ -261,7 +275,6 @@ AC_SUBST(CAIROLIBS)
 AC_SUBST(LINKFLTKCAIRO)
 AC_SUBST(FLTKCAIROOPTION)
 
-AC_SUBST(FLLIBNAME)
 AC_SUBST(GLDEMOS)
 AC_SUBST(GLLIBNAME)
 AC_SUBST(IMGLIBNAME)
@@ -269,12 +282,10 @@ AC_SUBST(CAIROLIBNAME)
 AC_SUBST(LIBEXT)
 AC_SUBST(LIBNAME)
 AC_SUBST(LINKFLTK)
-AC_SUBST(LINKFLTKFORMS)
 AC_SUBST(LINKFLTKGL)
 AC_SUBST(LINKFLTKIMG)
 
 AC_SUBST(LIBBASENAME)
-AC_SUBST(FLLIBBASENAME)
 AC_SUBST(GLLIBBASENAME)
 AC_SUBST(IMGLIBBASENAME)
 AC_SUBST(CAIROLIBBASENAME)
@@ -432,7 +443,7 @@ AS_IF([test "x$enable_shared" = xyes], [
         DSOCOMMAND="\$(CXX) \$(DSOFLAGS) -Wl,-soname,\$@ \$(LDLIBS) -shared $DEBUGFLAG -o"
     ])
 
-    LINKSHARED="-L../src $FLTKCAIROOPTION -lfltk_images$SHAREDSUFFIX -lfltk_forms$SHAREDSUFFIX -lfltk$SHAREDSUFFIX"
+    LINKSHARED="-L../src $FLTKCAIROOPTION -lfltk_images$SHAREDSUFFIX -lfltk$SHAREDSUFFIX"
 ], [
     DSOCOMMAND="echo"
     DSOLINK=""
@@ -445,8 +456,20 @@ AS_IF([test "x$enable_shared" = xyes], [
     SHAREDSUFFIX=""
     FLUID="fluid"
     FLTK_OPTIONS="fltk-options"
-    LINKSHARED="$LINKFLTKCAIRO ../lib/libfltk_images.a ../lib/libfltk_forms.a ../lib/libfltk.a"
+    LINKSHARED="$LINKFLTKCAIRO ../lib/libfltk_images.a ../lib/libfltk.a"
 ])
+
+dnl reset FLDSONAME if the Forms compatibility library is disabled (not built):
+dnl overwrite the variable because this is easier than adding conditional code above
+AS_IF([test x$build_forms = xno], [
+    FLDSONAME=""
+])
+
+AC_SUBST([FLLIBNAME])
+AC_SUBST([FLLIBBASENAME])
+AC_SUBST([FLDSONAME])
+AC_SUBST([LINKFLTKFORMS])
+AC_SUBST([LINKSHARED])
 
 
 dnl Define the fluid executable used when building the test programs.
@@ -463,12 +486,10 @@ AC_SUBST([DSOCOMMAND])
 AC_SUBST([DSOFLAGS])
 AC_SUBST([DSOLINK])
 AC_SUBST([DSONAME])
-AC_SUBST([FLDSONAME])
 AC_SUBST([GLDSONAME])
 AC_SUBST([IMGDSONAME])
 AC_SUBST([CAIRODSONAME])
 AC_SUBST([SHAREDSUFFIX])
-AC_SUBST([LINKSHARED])
 AC_SUBST([FLUID])
 AC_SUBST([FLUID_BUILD])
 AC_SUBST([FLTK_OPTIONS])
@@ -932,8 +953,6 @@ AS_CASE([$host_os_gui], [cygwin* | mingw*], [
     # but never used, see STR #2147)
     # CFLAGS="-mwindows -D_WIN32 -DUSE_OPENGL32 $CFLAGS"
     # CXXFLAGS="-mwindows -D_WIN32 -DUSE_OPENGL32 $CXXFLAGS"
-    CFLAGS="-mwindows $CFLAGS"
-    CXXFLAGS="-mwindows $CXXFLAGS"
     LDFLAGS="-mwindows $LDFLAGS"
     DSOFLAGS="-mwindows $DSOFLAGS"
     LIBS="$LIBS -lole32 -luuid -lcomctl32 -lws2_32"
@@ -1055,12 +1074,18 @@ AS_CASE([$host_os_gui], [cygwin* | mingw*], [
        BUILD="WAYLANDX11"
        graphics="Wayland or X11 with cairo"
        ])
-#     CFLAGS="$CFLAGS -DUSE_SYSTEM_LIBDECOR=0"
-#     CXXFLAGS="$CXXFLAGS -DUSE_SYSTEM_LIBDECOR=0"
+      AS_IF([$PKGCONFIG --exists 'libdecor-0 >= 0.2.0'],
+      [
+        plugin_dir="$($PKGCONFIG --variable=libdir libdecor-0)/libdecor/plugins-1"
+        CFLAGS="$CFLAGS -DUSE_SYSTEM_LIBDECOR"
+        CFLAGS="$CFLAGS -DLIBDECOR_PLUGIN_DIR=\\\"$plugin_dir\\\" "
+        LIBS="$LIBS $($PKGCONFIG --libs libdecor-0)"
+      ],
+      [CFLAGS="$CFLAGS -DUSE_SYSTEM_LIBDECOR=0 -DLIBDECOR_PLUGIN_DIR=\\\"\\\" "]
+      )
       LIBS="$LIBS $($PKGCONFIG --libs wayland-cursor) $($PKGCONFIG --libs wayland-client) $($PKGCONFIG --libs xkbcommon) $($PKGCONFIG --libs pangocairo) "
       AS_IF([test x$enable_x11 != xno], [LIBS="$LIBS $($PKGCONFIG --libs x11)"] )
       LIBS="$LIBS -ldl"
-#     CXXFLAGS="$CXXFLAGS -I../libdecor/src"
       DSOFLAGS="$LIBS $DSOFLAGS"
       enable_pango=yes
       LIBDECORDIR="libdecor/build"
@@ -1787,12 +1812,13 @@ AS_IF([test x$enable_fluid != xno], [
     echo "    Build fluid: NO"
     ])
 
-dnl
-echo "Cross-compiling: $fltk_cross_compiling"
 AS_IF([test "$fltk_cross_compiling" = "yes"], [
+    echo "Cross-compiling: YES"
     echo "          Build: $build -> Host: $host"
+], [
+    echo "Cross-compiling: NO"
 ])
-dnl
+
 echo "       Graphics: $graphics"
 dnl
 AS_IF([test x$JPEG = x], [
@@ -1810,6 +1836,13 @@ AS_IF([test x$ZLIB = x], [
 ], [
     echo "                 ZLIB=Builtin"
 ])
+
+AS_IF([test x$build_forms = xyes], [
+    echo "Forms library:   YES"
+], [
+    echo "Forms library:   NO"
+])
+
 AS_IF([test x$enable_cairo = xyes], [
     echo "                 CAIRO=lib"
 ])

@@ -105,7 +105,12 @@
 static Fl_String fltk_config_cmd;
 static Fl_Process s_proc;
 
-
+/**
+ See if shell command is running (public)
+ */
+bool shell_command_running() {
+  return s_proc.desc() ? true : false;
+}
 
 /**
  Reads an entry from the group. A default value must be
@@ -285,6 +290,7 @@ void Fl_Process::clean_close(HANDLE& h) {
 
 #endif
 
+
 /**
  Prepare FLUID for running a shell command according to the command flags.
 
@@ -378,6 +384,22 @@ static void expand_macros(Fl_String &cmd) {
 }
 
 /**
+ Show the terminal window where it was last positioned.
+ */
+void show_terminal_window() {
+  Fl_Preferences pos(fluid_prefs, "shell_run_Window_pos");
+  int x, y, w, h;
+  pos.get("x", x, -1);
+  pos.get("y", y, 0);
+  pos.get("w", w, 640);
+  pos.get("h", h, 480);
+  if (x!=-1) {
+    shell_run_window->resize(x, y, w, h);
+  }
+  shell_run_window->show();
+}
+
+/**
  Prepare for and run a shell command.
 
  \param[in] cmd the command that is sent to `/bin/sh -c ...` or `cmd.exe` on Windows machines
@@ -394,20 +416,18 @@ void run_shell_command(const Fl_String &cmd, int flags) {
   Fl_String expanded_cmd = cmd;
   expand_macros(expanded_cmd);
 
-  if (!shell_run_window->visible()) {
-    Fl_Preferences pos(fluid_prefs, "shell_run_Window_pos");
-    int x, y, w, h;
-    pos.get("x", x, -1);
-    pos.get("y", y, 0);
-    pos.get("w", w, 640);
-    pos.get("h", h, 480);
-    if (x!=-1) {
-      shell_run_window->resize(x, y, w, h);
-    }
-    shell_run_window->show();
+  if (   ((flags & Fd_Shell_Command::DONT_SHOW_TERMINAL) == 0)
+      && (!shell_run_window->visible()))
+  {
+    show_terminal_window();
   }
 
   // Show the output window and clear things...
+  if (flags & Fd_Shell_Command::CLEAR_TERMINAL)
+    shell_run_terminal->printf("\033[2J\033[H");
+  if (flags & Fd_Shell_Command::CLEAR_HISTORY)
+    shell_run_terminal->printf("\033[3J");
+  shell_run_terminal->scrollbar->value(0);
   shell_run_terminal->printf("\033[0;32m%s\033[0m\n", expanded_cmd.c_str());
   shell_run_window->label(expanded_cmd.c_str());
 
@@ -789,7 +809,7 @@ void Fd_Shell_Command_List::write(Fd_Project_Writer *out) {
 void Fd_Shell_Command_List::add(Fd_Shell_Command *cmd) {
   if (list_size == list_capacity) {
     list_capacity += 16;
-    list = (Fd_Shell_Command**)::realloc(list, list_capacity * sizeof(Fd_Shell_Command**));
+    list = (Fd_Shell_Command**)::realloc(list, list_capacity * sizeof(Fd_Shell_Command*));
   }
   list[list_size++] = cmd;
 }
@@ -803,7 +823,7 @@ void Fd_Shell_Command_List::add(Fd_Shell_Command *cmd) {
 void Fd_Shell_Command_List::insert(int index, Fd_Shell_Command *cmd) {
   if (list_size == list_capacity) {
     list_capacity += 16;
-    list = (Fd_Shell_Command**)::realloc(list, list_capacity * sizeof(Fd_Shell_Command**));
+    list = (Fd_Shell_Command**)::realloc(list, list_capacity * sizeof(Fd_Shell_Command*));
   }
   ::memmove(list+index+1, list+index, (list_size-index)*sizeof(Fd_Shell_Command**));
   list_size++;

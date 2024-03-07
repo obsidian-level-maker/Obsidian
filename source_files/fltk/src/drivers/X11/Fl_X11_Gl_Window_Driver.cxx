@@ -321,16 +321,16 @@ GLContext Fl_X11_Gl_Window_Driver::create_gl_context(XVisualInfo *vis) {
 }*/
 
 void Fl_X11_Gl_Window_Driver::set_gl_context(Fl_Window* w, GLContext context) {
-  if (context != cached_context || w != cached_window) {
-    cached_context = context;
+  GLContext current_context = glXGetCurrentContext();
+  if (context != current_context || w != cached_window) {
     cached_window = w;
     glXMakeCurrent(fl_display, fl_xid(w), (GLXContext)context);
   }
 }
 
 void Fl_X11_Gl_Window_Driver::delete_gl_context(GLContext context) {
-  if (cached_context == context) {
-    cached_context = 0;
+  GLContext current_context = glXGetCurrentContext();
+  if (current_context == context) {
     cached_window = 0;
     glXMakeCurrent(fl_display, 0, 0);
   }
@@ -393,13 +393,97 @@ void Fl_X11_Gl_Window_Driver::swap_buffers() {
   glXSwapBuffers(fl_display, fl_xid(pWindow));
 }
 
+char Fl_X11_Gl_Window_Driver::swap_type() {
+  return copy;
+}
 
-char Fl_X11_Gl_Window_Driver::swap_type() {return copy;}
+
+// Start of swap_interval implementation in the three possibel ways for X11
+
+// -1 = not yet initialized, 0 = none found, 1 = GLX, 2 = MESA, 3 = SGI
+static signed char swap_interval_type = -1;
+
+typedef void (*Fl_GLX_Set_Swap_Iterval_Proc) (Display *dpy, GLXDrawable drawable, int interval);
+typedef int (*Fl_MESA_Set_Swap_Iterval_Proc) (unsigned int interval);
+typedef int (*Fl_MESA_Get_Swap_Iterval_Proc) ();
+typedef int (*Fl_SGI_Set_Swap_Iterval_Proc) (int interval);
+
+static union {
+  Fl_GLX_Set_Swap_Iterval_Proc EXT;
+  Fl_MESA_Set_Swap_Iterval_Proc MESA;
+  Fl_SGI_Set_Swap_Iterval_Proc SGI;
+} fl_glXSwapInterval = { NULL };
+
+static Fl_MESA_Get_Swap_Iterval_Proc fl_glXGetSwapIntervalMESA = NULL;
+
+static void init_swap_interval() {
+  if (swap_interval_type != -1) return;
+  int major = 1, minor = 0;
+  glXQueryVersion(fl_display, &major, &minor);
+  swap_interval_type = 0;
+  const char *extensions = glXQueryExtensionsString(fl_display, fl_screen);
+  if (strstr(extensions, "GLX_EXT_swap_control") && ((major > 1) || (minor >= 3))) {
+    fl_glXSwapInterval.EXT = (Fl_GLX_Set_Swap_Iterval_Proc)glXGetProcAddressARB((const GLubyte*)"glXSwapIntervalEXT");
+    swap_interval_type = 1;
+  } else if (strstr(extensions, "GLX_MESA_swap_control")) {
+    fl_glXSwapInterval.MESA = (Fl_MESA_Set_Swap_Iterval_Proc)glXGetProcAddressARB((const GLubyte*)"glXSwapIntervalMESA");
+    fl_glXGetSwapIntervalMESA = (Fl_MESA_Get_Swap_Iterval_Proc)glXGetProcAddressARB((const GLubyte*)"glXGetSwapIntervalMESA");
+    swap_interval_type = 2;
+  } else if (strstr(extensions, "GLX_SGI_swap_control")) {
+    fl_glXSwapInterval.SGI = (Fl_SGI_Set_Swap_Iterval_Proc)glXGetProcAddressARB((const GLubyte*)"glXSwapIntervalSGI");
+    swap_interval_type = 3;
+  }
+}
+
+void Fl_X11_Gl_Window_Driver::swap_interval(int interval) {
+  if (!fl_xid(pWindow))
+    return;
+  if (swap_interval_type == -1)
+    init_swap_interval();
+  switch (swap_interval_type) {
+    case 1:
+      if (fl_glXSwapInterval.EXT)
+        fl_glXSwapInterval.EXT(fl_display, fl_xid(pWindow), interval);
+      break;
+    case 2:
+      if (fl_glXSwapInterval.MESA)
+        fl_glXSwapInterval.MESA((unsigned int)interval);
+      break;
+    case 3:
+      if (fl_glXSwapInterval.SGI)
+        fl_glXSwapInterval.SGI(interval);
+      break;
+  }
+}
+
+int Fl_X11_Gl_Window_Driver::swap_interval() const {
+  if (!fl_xid(pWindow))
+    return -1;
+  if (swap_interval_type == -1)
+    init_swap_interval();
+  int interval = -1;
+  switch (swap_interval_type) {
+    case 1: {
+      unsigned int val = 0;
+      glXQueryDrawable(fl_display, fl_xid(pWindow), 0x20F1 /*GLX_SWAP_INTERVAL_EXT*/, &val);
+      interval = (int)val;
+      break; }
+    case 2:
+      if (fl_glXGetSwapIntervalMESA)
+        interval = fl_glXGetSwapIntervalMESA();
+      break;
+    case 3:
+      // not available
+      break;
+  }
+  return interval;
+}
+
+// end of swap_interval implementation
 
 void Fl_X11_Gl_Window_Driver::waitGL() {
   glXWaitGL();
 }
-
 
 void Fl_X11_Gl_Window_Driver::gl_visual(Fl_Gl_Choice *c) {
   Fl_Gl_Window_Driver::gl_visual(c);

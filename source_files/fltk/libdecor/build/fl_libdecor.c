@@ -15,6 +15,7 @@
 //
 
 /* Improvements to libdecor.c without modifying libdecor.c itself */
+#if ! USE_SYSTEM_LIBDECOR
 
 #include "xdg-shell-client-protocol.h"
 #ifdef XDG_TOPLEVEL_STATE_SUSPENDED_SINCE_VERSION
@@ -95,12 +96,12 @@ LIBDECOR_EXPORT void libdecor_frame_set_minimized(struct libdecor_frame *frame)
     * if FLTK was built with package libgtk-3-dev, the GTK plugin is used
     * if FLTK was built without package libgtk-3-dev, the Cairo plugin is used
  
- If FLTK was built with OPTION_USE_SYSTEM_LIBDECOR turned ON, the present modification
+ If FLTK was built with FLTK_USE_SYSTEM_LIBDECOR turned ON, the present modification
  isn't compiled, so the plugin-searching algorithm of libdecor_new() in libdecor-0.so is used.
  This corresponds to step 1) above and to use no titlebar is no plugin is found.
  
  N.B.: only the system package is built with a meaningful value of -DLIBDECOR_PLUGIN_DIR=
- so a plugin may be loaded that way only if FLTK was built with OPTION_USE_SYSTEM_LIBDECOR turned ON.
+ so a plugin may be loaded that way only if FLTK was built with FLTK_USE_SYSTEM_LIBDECOR turned ON.
  
  */
 LIBDECOR_EXPORT struct libdecor *libdecor_new(struct wl_display *wl_display, struct libdecor_interface *iface)
@@ -126,3 +127,5 @@ LIBDECOR_EXPORT struct libdecor *libdecor_new(struct wl_display *wl_display, str
   wl_display_flush(wl_display);
   return context;
 }
+
+#endif //! USE_SYSTEM_LIBDECOR

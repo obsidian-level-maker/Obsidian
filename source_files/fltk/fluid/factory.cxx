@@ -868,7 +868,7 @@ public:
   int tsize_;
   Fl_Color tcolor_;
   Fl_Batchmode_Terminal(int x, int y, int w, int h, const char *l=NULL)
-  : Fl_Group(x, y, w, h, l) 
+  : Fl_Group(x, y, w, h, l)
   { // set the defaults that Fl_Terminal would set
     box(FL_DOWN_BOX);
     color(FL_FOREGROUND_COLOR);
@@ -889,9 +889,9 @@ public:
 /**
  \brief Manage a terminal widget.
  */
-class Fl_Terminal_Type : public Fl_Group_Type
+class Fl_Terminal_Type : public Fl_Widget_Type
 {
-  typedef Fl_Group_Type super;
+  typedef Fl_Widget_Type super;
 public:
   const char *type_name() FL_OVERRIDE { return "Fl_Terminal"; }
   // Older .fl files with Fl_Simple_Terminal will create a Fl_Terminal instead.
@@ -929,7 +929,6 @@ public:
     return 1;
   }
   Fl_Widget_Type *_make() FL_OVERRIDE {return new Fl_Terminal_Type();}
-  int is_parent() const FL_OVERRIDE { return 0; }
   ID id() const FL_OVERRIDE { return ID_Terminal; }
   bool is_a(ID inID) const FL_OVERRIDE { return (inID==ID_Terminal) ? true : super::is_a(inID); }
 };
@@ -1243,7 +1242,8 @@ Fl_Type *add_new_widget_from_user(Fl_Type *inPrototype, Strategy strategy) {
       if (changed && t->is_a(ID_Menu_Item)) {
         Fl_Type * tt = t->parent;
         while (tt && !tt->is_a(ID_Menu_Manager_)) tt = tt->parent;
-        ((Fl_Menu_Manager_Type*)tt)->build_menu();
+        if (tt)
+          ((Fl_Menu_Manager_Type*)tt)->build_menu();
       }
     }
     if (t->is_true_widget() && !t->is_a(ID_Window)) {

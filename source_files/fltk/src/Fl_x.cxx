@@ -531,7 +531,8 @@ void Fl_X11_Screen_Driver::disable_im() {
 }
 
 void Fl_X11_Screen_Driver::open_display_platform() {
-  if (fl_display) return;
+  static Display *d = NULL;
+  if (d) return;
 
   setlocale(LC_CTYPE, "");
   XSetLocaleModifiers("");
@@ -539,7 +540,7 @@ void Fl_X11_Screen_Driver::open_display_platform() {
   XSetIOErrorHandler(io_error_handler);
   XSetErrorHandler(xerror_handler);
 
-  Display *d = XOpenDisplay(0);
+  d = (fl_display ? fl_display : XOpenDisplay(0));
   if (!d) {
     Fl::fatal("Can't open display: %s", XDisplayName(0)); // does not return
     return; // silence static code analyzer
@@ -1204,7 +1205,7 @@ static void react_to_screen_reconfiguration() {
     float new_scale = Fl::screen_driver()->scale(0);
     for (int screen = 0; screen < Fl::screen_count(); screen++) {
       Fl::screen_driver()->scale(screen, 1);
-      Fl::screen_driver()->rescale_all_windows_from_screen(screen, new_scale);
+      Fl::screen_driver()->rescale_all_windows_from_screen(screen, new_scale, 1);
     }
   }
   delete[] scales;
@@ -1226,7 +1227,7 @@ static void after_display_rescale(float *p_current_xft_dpi) {
         *p_current_xft_dpi = dpi;
         float f = dpi/96.;
         for (int i = 0; i < Fl::screen_count(); i++)
-          Fl::screen_driver()->rescale_all_windows_from_screen(i, f);
+          Fl::screen_driver()->rescale_all_windows_from_screen(i, f, f);
       }
     }
     break;
@@ -2068,8 +2069,11 @@ int fl_handle(const XEvent& thisevent)
         // resize_after_screen_change() works also if called here, but calling it
         // a second later gives a more pleasant user experience when moving windows between distinct screens
         Fl::add_timeout(1, Fl_X11_Window_Driver::resize_after_screen_change, window);
-      }
-      wd->screen_num(num);
+      } else if (!Fl_X11_Window_Driver::data_for_resize_window_between_screens_.busy)
+        wd->screen_num(num);
+    } else if (Fl_X11_Window_Driver::data_for_resize_window_between_screens_.busy) {
+      Fl::remove_timeout(Fl_X11_Window_Driver::resize_after_screen_change, window);
+      Fl_X11_Window_Driver::data_for_resize_window_between_screens_.busy = false;
     }
 #else // ! USE_XFT
     Fl_Window_Driver::driver(window)->screen_num( Fl::screen_num(X, Y, W, H) );
@@ -2181,7 +2185,7 @@ void Fl_X11_Window_Driver::resize(int X,int Y,int W,int H) {
   if (resize_from_program && shown()) {
     float s = Fl::screen_driver()->scale(screen_num());
     if (is_a_resize) {
-      if (!pWindow->resizable()) pWindow->size_range(w(),h(),w(),h());
+      if (!is_resizable()) pWindow->size_range(w(),h(),w(),h());
       if (is_a_move) {
         XMoveResizeWindow(fl_display, fl_xid(pWindow), rint(X*s), rint(Y*s), W>0 ? W*s : 1, H>0 ? H*s : 1);
       } else {
@@ -2280,8 +2284,10 @@ void Fl_X11_Window_Driver::activate_window() {
     prev = x->xid;
   }
 
-  send_wm_event(w, fl_NET_ACTIVE_WINDOW, 1 /* application */,
-                0 /* timestamp */, prev /* previously active window */);
+  send_wm_event(w, fl_NET_ACTIVE_WINDOW,
+                1,              // source: 1 = application
+                fl_event_time,  // time of client's last user activity (STR 3396)
+                prev);          // previously active window
 }
 
 /* Change an existing window to fullscreen */
