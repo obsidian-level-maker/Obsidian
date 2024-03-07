@@ -691,13 +691,7 @@ DOOM.MATERIALS =
   XCEIL3_3 = { t="CEIL3_3", f="CEIL3_3" },
   XMIDVINE  = { t="MIDVINE1", f="MIDVINE1" },
   XFLAT3  = { t="FLAT3", f="FLAT3" },
-  XG19  = { t="G19", f="G19" },
   XGRAY1  = { t="GRAY1", f="GRAY1" },
-  X_COMPBL  = { t="COMPBLUE", f="COMPBLUE" },
-  X_ORANFL  = { t="ORANFLOR", f="ORANFLOR" },
-  X_BRICK4  = { t="BRICK4", f="BRICK4" },
-  X_FLOOR7  = { t="FLOOR7_3", f="FLOOR7_3" },
-  XCARPET5  = { t="CARPET5", f="CARPET5" },
 
   XFWATER = { t="FWATER1", f="FWATER1" },
   XNUKAGE = { t="NUKAGE1", f="NUKAGE1" },
@@ -708,12 +702,12 @@ DOOM.MATERIALS =
 
   -- hex colors used in some Set Line specials - these are NOT actually usable materials
   -- and are just here to suppress warnings regarding them
-  ["13131C"] = { t="13131C", f="13131C" },
-  ["4548BA"] = { t="4548BA", f="4548BA" },
-  ["041C08"] = { t="041C08", f="041C08" },
-  ["1F4525"] = { t="1F4525", f="1F4525" },
-  ["281F11"] = { t="281F11", f="281F11" },
-  ["473618"] = { t="473618", f="473618" },
+  ["13131C"] = { t="13131C", f="13131C", skip_psyche = true },
+  ["4548BA"] = { t="4548BA", f="4548BA", skip_psyche = true },
+  ["041C08"] = { t="041C08", f="041C08", skip_psyche = true },
+  ["1F4525"] = { t="1F4525", f="1F4525", skip_psyche = true },
+  ["281F11"] = { t="281F11", f="281F11", skip_psyche = true },
+  ["473618"] = { t="473618", f="473618", skip_psyche = true },
 }
 
 

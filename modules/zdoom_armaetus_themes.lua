@@ -7667,17 +7667,6 @@ OBS_RESOURCE_PACK_SINK_DEFS =
     trim_light = 16,
   },
 
-  light_GLITE05_BLUE =
-  {
-    mat = "T_GLT5BL",
-    dz  = 8,
-    light = 32,
-
-    trim_mat = "METAL",
-    trim_dz  = -5,
-    trim_light = 16,
-  },
-
   light_GLITE05_GREEN =
   {
     mat = "T_GLT5GN",
@@ -8265,30 +8254,30 @@ OBS_RESOURCE_PACK_SINK_DEFS =
   },
 
   -- tech carpets
-  floor_sink_carpet_FLAT15 =
+  floor_sink_carpet_FLAT15 = --red
   {
     mat = "FLAT15",
     dz = 0,
 
-    trim_mat = "FASHBLU",
+    trim_mat = "CEIL5_2",
     trim_dz = 0,
   },
 
-  floor_sink_carpet_FLOOR1_1 =
+  floor_sink_carpet_FLOOR1_1 = --red with UAC logo
   {
     mat = "FLOOR1_1",
     dz = 0,
 
-    trim_mat = "FLAT15",
+    trim_mat = "CEIL5_2",
     trim_dz = 0,
   },
 
-  floor_sink_carpet_FLOOR1_2 =
+  floor_sink_carpet_FLOOR1_2 = --blue with UAC logo
   {
     mat = "FLOOR1_2",
     dz = 0,
 
-    trim_mat = "FASHBLU",
+    trim_mat = "CEIL5_1",
     trim_dz = 0,
   },
 
@@ -8821,8 +8810,8 @@ OBS_RESOURCE_PACK_THEMES =
       --
       gtd_comp_grntek_blue = 26,
       --
-      gtd_wall_lit_h_window_tall_collite_blue = 35,
-      gtd_wall_lit_h_window_tall_collite_orange = 15,
+      gtd_wall_lit_h_window_tall_collite_blue = 25,
+      gtd_wall_lit_h_window_tall_collite_orange = 10,
       --
       wall_collite_flat_green = 25,
       wall_collite_flat_blue = 25,
@@ -8840,7 +8829,8 @@ OBS_RESOURCE_PACK_THEMES =
       gtd_tekwoodlite_3 = 25,
       gtd_tekwoodlite_pillar = 25,
       --
-      gtd_bathwater = 50
+      gtd_bathwater = 30,
+      gtd_mscottpaper = 30
     },
 
     window_groups =
@@ -8894,9 +8884,9 @@ OBS_RESOURCE_PACK_THEMES =
 
       ceiling_sink_TEKWALL8 = 8,
       ceiling_sink_TEKWALL9 = 8,
-      ceiling_sink_TEKWALLA = 8,
+      --ceiling_sink_TEKWALLA = 8,
       ceiling_sink_TEKWALLB = 8,
-      ceiling_sink_TEKWALLC = 8,
+      --ceiling_sink_TEKWALLC = 8,
       ceiling_sink_TEKWALLD = 8,
       ceiling_sink_TEKWALLE = 8,
 
@@ -9325,8 +9315,8 @@ OBS_RESOURCE_PACK_THEMES =
       --
       gtd_comp_grntek_blue = 20,
       --
-      gtd_wall_lit_h_window_tall_collite_blue = 15,
-      gtd_wall_lit_h_window_tall_collite_orange = 35,
+      gtd_wall_lit_h_window_tall_collite_blue = 10,
+      gtd_wall_lit_h_window_tall_collite_orange = 25,
       --
       gtd_green_shipping_containers = 50,
       --
@@ -9341,7 +9331,8 @@ OBS_RESOURCE_PACK_THEMES =
       gtd_tekwoodlite_3 = 25,
       gtd_tekwoodlite_pillar = 25,
       --
-      gtd_bathwater = 50
+      gtd_bathwater = 30,
+      gtd_mscottpaper = 30
     },
 
     window_groups =
@@ -9396,9 +9387,9 @@ OBS_RESOURCE_PACK_THEMES =
 
       ceiling_sink_TEKWALL8 = 7,
       ceiling_sink_TEKWALL9 = 7,
-      ceiling_sink_TEKWALLA = 7,
+      --ceiling_sink_TEKWALLA = 7,
       ceiling_sink_TEKWALLB = 7,
-      ceiling_sink_TEKWALLC = 7,
+      --ceiling_sink_TEKWALLC = 7,
       ceiling_sink_TEKWALLD = 7,
       ceiling_sink_TEKWALLE = 7,
 

@@ -4833,7 +4833,7 @@ GROW_LIQUID_POOL_WIDE_COLONNADED_DOUBLE =
     ".........","AA%~~~/AA",
     ".........","AA#~~~#AA",
     ".........","AA/~~~%AA",
-    ".........","A11~~~1%A",
+    ".........","A/1~~~1%A",
     ".........","111111111",
     ".........","111111111"
   },
@@ -7664,6 +7664,80 @@ GROW_CAGE_ROUND_RAFTERS_ONE_SIDE =
     ".C",
     "C1",
   },
+},
+
+GROW_CAGE_JAGGED =
+{
+  prob = 10,
+  skip_prob = 90,
+
+  structure =
+  {
+    "11xx","11xx",
+    "....","11/C",
+    "....","11%C",
+    "....","111C",
+    "....","11/C",
+    "....","11%C",
+  },
+
+  diagonals =
+  {
+    "1C",
+    "1C",
+    "1C",
+    "1C"
+  }
+},
+
+GROW_CAGE_JAGGED_DOUBLE =
+{
+  prob = 8,
+  skip_prob = 90,
+
+  structure =
+  {
+    "xx11xx","xx11xx",
+    "......","C%11/C",
+    "......","C/11%C",
+    "......","C1111C",
+    "......","C%11/C",
+    "......","C/11%C"
+  },
+
+  diagonals =
+  {
+    "C1","1C",
+    "C1","1C",
+    "C1","1C",
+    "C1","1C"
+  }
+},
+
+GROW_CAGE_JAGGED_STAIRS =
+{
+  prob = 10,
+  skip_prob = 90,
+
+  structure =
+  {
+    "11xxxx","11xxxx",
+    "......","11>>AA",
+    "......","11/C%A",
+    "......","11%C/A",
+    "......","111CAA",
+    "......","11/C%A",
+    "......","11%C/A",
+    "......","11>>AA"
+  },
+
+  diagonals =
+  {
+    "1C","CA",
+    "1C","CA",
+    "1C","CA",
+    "1C","CA"
+  }
 },
 
 -- MSSP's elevated catwalks. [CATWALK]
@@ -10535,6 +10609,63 @@ GROW_PILLAR_STUPID_BRIDGE_CAGE =
   }
 },
 
+GROW_WATER_STRIPES_SIDE =
+{
+  prob = 10,
+  skip_prob = 85,
+
+  structure =
+  {
+    "11xxxx","11xxxx",
+    "......","11~~~~",
+    "......","111111",
+    "......","11~~~~",
+    "......","111111",
+    "......","11~~~~",
+    "......","111111",
+    "......","11~~~~",
+    "......","111111"
+  }
+},
+
+GROW_WATER_STRIPES_SIDE_SLOPE =
+{
+  prob = 5,
+  skip_prob = 90,
+
+  structure =
+  {
+    "11xxxxxxxx","11xxxxxxxx",
+    "..........","11~~~~~~AA",
+    "..........","11111AAAAA",
+    "..........","11~~~~~~AA",
+    "..........","11111AAAAA",
+    "..........","11~~~~~~AA",
+    "..........","11111AAAAA",
+    "..........","11~~~~~~AA",
+    "..........","1111>>AAAA"
+  }
+},
+
+
+GROW_WATER_STRIPES_SIDE_SLOPE_CAGED =
+{
+  prob = 5,
+  skip_prob = 92,
+
+  structure =
+  {
+    "11xxxxxxxx","11xxxxxxxx",
+    "..........","11~~~~~CAA",
+    "..........","11111AAAAA",
+    "..........","11~~~~~CAA",
+    "..........","11111AAAAA",
+    "..........","11~~~~~CAA",
+    "..........","11111AAAAA",
+    "..........","11~~~~~CAA",
+    "..........","1111>>AAAA"
+  }
+},
 --
 
 GROW_CHAMFER_WIDE_ROOM_CORNER =

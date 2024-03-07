@@ -22,9 +22,9 @@ PREFABS.Decor_urban_storage_huge_boxes_2 =
 
   size = 96,
 
-  height = 128,
+  height = 129,
 
-  bound_z2 = 128
+  bound_z2 = 129
 }
 
 PREFABS.Decor_urban_storage_huge_boxes_3 =
@@ -34,7 +34,7 @@ PREFABS.Decor_urban_storage_huge_boxes_3 =
 
   size = 96,
 
-  height = 128,
+  height = 129,
 
-  bound_z2 = 128
+  bound_z2 = 129
 }

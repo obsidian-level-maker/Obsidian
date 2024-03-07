@@ -949,6 +949,12 @@ DOOM.NAMES =
         Quark=5, Boson=5, Neutrino=5,
         Electron=7,
 
+        -- descriptive: biotechnology
+        Pathogen=5, Biomech=5, Biohazards=5,
+        Metamaterials=5, Neurotoxin=5, Transgenics=5,
+        Microbiotics=5, Bioprocessing=5, Proteomics=5,
+        Pharmacology=5, Instrumentations=5,
+
         Baryonic=5, Mesonic=5,
 
         ["I/O"]=5,
@@ -3372,6 +3378,10 @@ DOOM.NAMES =
 
         -- MSSP adds more names as well
         ["Damned Demon Destruction"]=10, -- Demios
+        ["Don't Forget You're Here Forever"]=10,
+        ["Disorganized Labor"]=10,
+        ["Humans Resourced"]=10,
+        ["Pizza Cafe by Alfredo"]=10,
         ["Nothing Personnel"]=10,
 
         -- End of 2021 additions by Reisal
@@ -3661,6 +3671,7 @@ DOOM.NAMES =
         ["Hardboiled"]=10,
         ["Hardcore"]=10,
         ["Heavy Metal Mayhem"]=10,
+        ["Haha Emoji"]=10,
         ["He Comes"]=10,
         ["Hellraiser"]=10,
         ["Here Comes the Night Train"]=10,
