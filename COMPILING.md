@@ -38,35 +38,10 @@ The C++ compiler/toolchain should already be present on a typical BSD install
    * Wayland support for FLTK 1.4 is in a state of flux; instructions and
      dependencies can be found in the source_files/fltk/README.Wayland.txt file
 
-5. FLEX
-   * package: `flex`
-
-### Optional
-
-6. Code formatting tools
-   * package: `clang-tidy`
-   * python package (install with pip): `cmakelang`
-
 ## Linux/BSD/Haiku OS Compilation
 
 Assuming all those dependencies are met, then the following steps
 will build the Obsidian binary.
-
-* Before you run any other command, please check the output of the following
-command. (The '>' is just the prompt)
-
-```
-> cmake --version
-```
-
-* If you see a version that is at least 3.19.0, then follow that up with these commands:
-
-```
-> cmake --preset dist
-> cmake --build --preset dist (-j# optional, with # being the number of cores you'd like to use)
-```
-
-* Otherwise, use these commands:
 
 ```
 > cmake -B build -DCMAKE_BUILD_TYPE=Release
@@ -84,22 +59,6 @@ Then, Obsidian can be launched with:
 
 You will need the `mingw-w64` package as well (or your distro's equivalent).
 
-* Before you run any other command, please check the output of the following
-command. (The '>' is just the prompt)
-
-```
-> cmake --version
-```
-
-* If you see a version that is at least 3.19.0, then follow that up with these commands:
-
-```
-> cmake --preset cross64 (use cross32 for a 32-bit build)
-> cmake --build --preset cross64 (-j# optional, with # being the number of cores you'd like to use)
-```
-
-* Otherwise, use these commands:
-
 ```
 > cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=./Toolchain_mingw64.cmake (use Toolchain_mingw32.cmake for a 32-bit build)
 > cmake --build build (-j# optional, with # being the number of cores you'd like to use)
@@ -112,8 +71,8 @@ Then, Obsidian can be launched (in Windows, or with Wine) with:
 ```
 
 ## Windows Cross-Compilation using MSYS
+
 You will need to install the following on top of the regular MSYS Mingw64 install:
-   * package: `mingw-w64-(arch)-clang-tools-extra`
    * package: `mingw-w64-(arch)-cmake`
 
 Similar to the above directions:
