@@ -142,7 +142,6 @@ extern std::u32string StringToUTF32(const std::string& s);
 /* time utilities */
 
 uint32_t TimeGetMillies();
-void TimeDelay(uint32_t millies);
 
 /* math utilities */
 

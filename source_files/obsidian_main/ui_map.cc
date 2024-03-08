@@ -99,7 +99,7 @@ void UI_MiniMap::MapFinish() {
     redraw();
 }
 
-void UI_MiniMap::DrawPixel(int x, int y, byte r, byte g, byte b) {
+void UI_MiniMap::DrawPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b) {
     if (x < 0 || x >= map_W || y < 0 || y >= map_H) {
         return;
     }
@@ -107,8 +107,8 @@ void UI_MiniMap::DrawPixel(int x, int y, byte r, byte g, byte b) {
     RawPixel(x, y, r, g, b);
 }
 
-void UI_MiniMap::DrawBox(int x1, int y1, int x2, int y2, byte r, byte g,
-                         byte b) {
+void UI_MiniMap::DrawBox(int x1, int y1, int x2, int y2, uint8_t r, uint8_t g,
+                         uint8_t b) {
     if (x1 < 0) {
         x1 = 0;
     }
@@ -135,8 +135,8 @@ void UI_MiniMap::DrawBox(int x1, int y1, int x2, int y2, byte r, byte g,
     }
 }
 
-void UI_MiniMap::DrawLine(int x1, int y1, int x2, int y2, byte r, byte g,
-                          byte b) {
+void UI_MiniMap::DrawLine(int x1, int y1, int x2, int y2, uint8_t r, uint8_t g,
+                          uint8_t b) {
     int out1 = Calc_Outcode(x1, y1);
     int out2 = Calc_Outcode(x2, y2);
 
@@ -286,7 +286,7 @@ void UI_MiniMap::DrawLine(int x1, int y1, int x2, int y2, byte r, byte g,
     }
 }
 
-void UI_MiniMap::DrawEntity(int x, int y, byte r, byte g, byte b) {
+void UI_MiniMap::DrawEntity(int x, int y, uint8_t r, uint8_t g, uint8_t b) {
     if (x < 1 || x > map_W - 2 || y < 1 || y > map_H - 2) {
         return;
     }
