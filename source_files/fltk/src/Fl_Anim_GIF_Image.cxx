@@ -266,6 +266,7 @@ void Fl_Anim_GIF_Image::FrameInfo::dispose(int frame) {
 bool Fl_Anim_GIF_Image::FrameInfo::load(const char *name, const unsigned char *data, size_t length) {
   // decode using FLTK
   valid = false;
+  anim->ld(0);
   if (data) {
     anim->Fl_GIF_Image::load(name, data, length, true); // calls on_frame_data() for each frame
   } else {
@@ -506,7 +507,7 @@ bool Fl_Anim_GIF_Image::loop = true;
 
 /** Load an animated GIF image from a file.
 
- This constructor creates an animated image form a GIF-formatted file.
+ This constructor creates an animated image from a GIF-formatted file.
  Optionally it applies the \ref canvas() method after successful load.
  If \ref DONT_START is not specified in the \p flags parameter it calls
  \ref start() after successful load.
@@ -550,7 +551,7 @@ Fl_Anim_GIF_Image::Fl_Anim_GIF_Image(const char *filename,
 
 /** Load an animated GIF image from memory.
 
- This constructor creates an animated image form a GIF-formatted block in
+ This constructor creates an animated image from a GIF-formatted block in
  memory. Optionally it applies the \ref canvas() method after successful load.
  If \ref DONT_START is not specified in the \p flags parameter it calls
  \ref start() after successful load.
@@ -1040,8 +1041,16 @@ bool Fl_GIF_Image::is_animated(const char *name) {
 bool Fl_Anim_GIF_Image::load(const char *name, const unsigned char *imgdata /* =NULL */, size_t imglength /* =0 */) {
   DEBUG(("\nFl_Anim_GIF_Image::load '%s'\n", name));
   clear_frames();
-  free(name_);
-  name_ = name ? fl_strdup(name) : 0;
+  if (name_ != name) {
+    if (name_) {
+      ::free(name_);
+    }
+    if (name) {
+      name_ = fl_strdup(name);
+    } else {
+      name_  = NULL;
+    }
+  }
 
   // as load() can be called multiple times
   // we have to replicate the actions of the pixmap destructor here
@@ -1054,7 +1063,7 @@ bool Fl_Anim_GIF_Image::load(const char *name, const unsigned char *imgdata /* =
   w(0);
   h(0);
 
-  if (name_) {
+  if (name_ || imgdata) {
     fi_->load(name, imgdata, imglength);
   }
 

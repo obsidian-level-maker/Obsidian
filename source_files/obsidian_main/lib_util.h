@@ -22,6 +22,7 @@
 #ifndef __LIB_UTIL_H__
 #define __LIB_UTIL_H__
 
+#include <stdint.h>
 #include <string>
 #include <string_view>
 #include <codecvt>
@@ -141,7 +142,6 @@ extern std::u32string StringToUTF32(const std::string& s);
 /* time utilities */
 
 uint32_t TimeGetMillies();
-void TimeDelay(uint32_t millies);
 
 /* math utilities */
 

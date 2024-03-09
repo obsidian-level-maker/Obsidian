@@ -1,7 +1,7 @@
 //
 // Menu code for the Fast Light Tool Kit (FLTK).
 //
-// Copyright 1998-2023 by Bill Spitzak and others.
+// Copyright 1998-2024 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
@@ -115,6 +115,7 @@ protected:
     Fl_Menu_Window(X, Y, W, H, 0) {
       menu = m;
       set_menu_window();
+      Fl_Window_Driver::driver(this)->set_popup_window();
       end();
       set_modal();
       clear_border();
@@ -183,14 +184,8 @@ Fl_Window *Fl_Window_Driver::menu_parent(int *display_height) {
 }
 
 static menuwindow *to_menuwindow(Fl_Window *win) {
-  if (!win->menu_window()) return NULL;
+  if (!Fl_Window_Driver::driver(win)->popup_window() || !win->menu_window()) return NULL;
   return ((window_with_items*)win)->as_menuwindow();
-}
-
-/** Returns whether win is a menutitle window */
-bool Fl_Window_Driver::is_menutitle(Fl_Window *win) {
-  if (!win->menu_window()) return false;
-  return (((window_with_items*)win)->as_menuwindow() == NULL);
 }
 
 /** Accessor to the "origin" member variable of class menuwindow.
@@ -233,7 +228,7 @@ int *Fl_Window_Driver::menu_offset_y(Fl_Window *win) {
 
 /** Returns whether win is a non-menubar menutitle */
 bool Fl_Window_Driver::is_floating_title(Fl_Window *win) {
-  if (!win->menu_window()) return false;
+  if (!Fl_Window_Driver::driver(win)->popup_window() || !win->menu_window()) return false;
   Fl_Window *mwin = ((window_with_items*)win)->as_menuwindow();
   return !mwin && !((menutitle*)win)->in_menubar;
 }
@@ -290,7 +285,7 @@ void Fl_Menu_Item::draw(int x, int y, int w, int h, const Fl_Menu_* m,
   if (selected) {
     Fl_Color r = m ? m->selection_color() : FL_SELECTION_COLOR;
     Fl_Boxtype b = m && m->down_box() ? m->down_box() : FL_FLAT_BOX;
-    if (fl_contrast(r,color)!=r) { // back compatibility boxtypes
+    if (fl_contrast(r, color) != r) { // back compatibility boxtypes
       if (selected == 2) { // menu title
         r = color;
         b = m ? m->box() : FL_UP_BOX;
@@ -314,45 +309,26 @@ void Fl_Menu_Item::draw(int x, int y, int w, int h, const Fl_Menu_* m,
     int d = (h - FL_NORMAL_SIZE + 1) / 2;
     int W = h - 2 * d;
 
+    Fl_Color check_color = labelcolor_;
+    if (Fl::is_scheme("gtk+"))
+      check_color = FL_SELECTION_COLOR;
+    check_color = fl_contrast(check_color, FL_BACKGROUND2_COLOR);
+
     if (flags & FL_MENU_RADIO) {
+
       fl_draw_box(FL_ROUND_DOWN_BOX, x+2, y+d, W, W, FL_BACKGROUND2_COLOR);
       if (value()) {
         int tW = (W - Fl::box_dw(FL_ROUND_DOWN_BOX)) / 2 + 1;
         if ((W - tW) & 1) tW++; // Make sure difference is even to center
         int td = (W - tW) / 2;
-        if (Fl::is_scheme("gtk+")) {
-          fl_color(FL_SELECTION_COLOR);
-          tW --;
-          fl_pie(x + td + 1, y + d + td - 1, tW + 3, tW + 3, 0.0, 360.0);
-          fl_color(fl_color_average(FL_WHITE, FL_SELECTION_COLOR, 0.2f));
-        } else {
-          fl_color(labelcolor_);
-        }
+        fl_draw_radio(x + td + 1, y + d + td - 1, tW + 2, check_color);
+      } // FL_MENU_RADIO && value()
 
-        fl_draw_circle(x + td + 2, y + d + td, tW, fl_color());
+    } else { // FL_MENU_TOGGLE && ! FL_MENU_RADIO
 
-        if (Fl::is_scheme("gtk+")) {
-          fl_color(fl_color_average(FL_WHITE, FL_SELECTION_COLOR, 0.5));
-          fl_arc(x + td + 2, y + d + td, tW + 1, tW + 1, 60.0, 180.0);
-        }
-      }
-    } else {
       fl_draw_box(FL_DOWN_BOX, x+2, y+d, W, W, FL_BACKGROUND2_COLOR);
       if (value()) {
-        if (Fl::is_scheme("gtk+")) {
-          fl_color(FL_SELECTION_COLOR);
-        } else {
-          fl_color(labelcolor_);
-        }
-        int tx = x + 5;
-        int tw = W - 6;
-        int d1 = tw/3;
-        int d2 = tw-d1;
-        int ty = y + d + (W+d2)/2-d1-2;
-        for (int n = 0; n < 3; n++, ty++) {
-          fl_line(tx, ty, tx+d1, ty+d1);
-          fl_line(tx+d1, ty+d1, tx+tw-1, ty+d1-d2+1);
-        }
+        fl_draw_check(Fl_Rect(x+3, y+d+1, W-2, W-2), check_color);
       }
     }
     x += W + 3;
@@ -993,10 +969,14 @@ const Fl_Menu_Item* Fl_Menu_Item::pulldown(
     Y += Fl::event_y_root()-Fl::event_y();
     menuwindow::parent_ = Fl::first_window();
   }
+
   int XX, YY, WW;
   Fl::screen_xywh(XX, YY, WW, menuwindow::display_height_, menuwindow::parent_->screen_num());
   menuwindow mw(this, X, Y, W, H, initial_item, title, menubar);
   Fl::grab(mw);
+  // If we grab the mouse pointer, we should also make sure that it is visible.
+  if (menuwindow::parent_)
+    menuwindow::parent_->cursor(FL_CURSOR_DEFAULT);
   menustate pp; p = &pp;
   pp.p[0] = &mw;
   pp.nummenus = 1;

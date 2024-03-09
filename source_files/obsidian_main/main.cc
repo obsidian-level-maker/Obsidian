@@ -455,11 +455,6 @@ void Determine_InstallDir(std::filesystem::path &path_check) {
 #ifdef WIN32
     install_dir = home_dir;
 #else
-    if (Verify_InstallDir(OBSIDIAN_INSTALL_PREFIX "/share/obsidian")) {
-        return;
-    }
-
-    // Last resort
     if (Verify_InstallDir(std::filesystem::canonical("."))) {
         install_dir = std::filesystem::canonical(".");
     }

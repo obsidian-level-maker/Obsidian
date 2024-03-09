@@ -1,7 +1,7 @@
 #
 # CMakeLists.txt to build fluid for the FLTK project using CMake (www.cmake.org)
 #
-# Copyright 1998-2023 by Bill Spitzak and others.
+# Copyright 1998-2024 by Bill Spitzak and others.
 #
 # This library is free software. Distribution and use rights are outlined in
 # the file "COPYING" which should have been included with this file.  If this
@@ -14,9 +14,15 @@
 #     https://www.fltk.org/bugs.php
 #
 
-# Source files for 'fluid-lib' = all source files except fluid.cxx
+# Targets that will be built: fluid and fluid-cmd (Windows)
+set(TARGETS fluid)
 
-set (CPPFILES
+# Source files for 'fluid-lib' = all source files except the main files
+# (fluid.cxx and fluid.h)
+# Note: macOS (Xcode) needs at least one source file (fluid.cxx) to link the main
+# program fluid properly
+
+set(CPPFILES
   CodeEditor.cxx
   StyleParse.cxx
   Fd_Snap_Action.cxx
@@ -50,7 +56,7 @@ set (CPPFILES
 
 # List header files in Apple's Xcode IDE
 
-set (HEADERFILES
+set(HEADERFILES
   CodeEditor.h
   Fd_Snap_Action.h
   Fl_Function_Type.h
@@ -71,6 +77,7 @@ set (HEADERFILES
   custom_widgets.h
   factory.h
   file.h
+  fluid.h
   function_panel.h
   mergeback.h
   print_panel.h
@@ -85,187 +92,123 @@ set (HEADERFILES
 
 # Add ExternalCodeEditor: platform specific files
 
-if (WIN32)
-  list (APPEND CPPFILES ExternalCodeEditor_WIN32.cxx)
-  list (APPEND HEADERFILES ExternalCodeEditor_WIN32.h)
-else ()
-  list (APPEND CPPFILES ExternalCodeEditor_UNIX.cxx)
-  list (APPEND HEADERFILES ExternalCodeEditor_UNIX.h)
-endif (WIN32)
+if(WIN32)
+  list(APPEND CPPFILES ExternalCodeEditor_WIN32.cxx)
+  list(APPEND HEADERFILES ExternalCodeEditor_WIN32.h)
+else()
+  list(APPEND CPPFILES ExternalCodeEditor_UNIX.cxx)
+  list(APPEND HEADERFILES ExternalCodeEditor_UNIX.h)
+endif(WIN32)
 
 source_group("Header Files" FILES ${HEADERFILES})
 
-# make a group in the IDE for easy access to documentation files
-
-set ( USER_DOC_FILES
-  Doxyfile
-  documentation/src/index.dox
-  documentation/src/page_introduction.dox
-  documentation/src/page_getting_started.dox
-  documentation/src/page_ui_overview.dox
-  documentation/src/page_basics.dox
-  documentation/src/page_widget_types.dox
-  documentation/src/page_layout.dox
-  documentation/src/page_code_integration.dox
-  documentation/src/page_build_integration.dox
-  documentation/src/page_advanced.dox
-  documentation/src/page_shortcuts.dox
-  documentation/src/page_faqs.dox
-  documentation/src/page_glossary.dox
-  documentation/src/page_appendices.dox
-  documentation/src/page_index.dox
-  documentation/src/page_legal.dox
-  documentation/src/page_conclusion.dox
-)
-source_group("Documentation: User" FILES ${USER_DOC_FILES})
-
-set ( DEV_DOC_FILES
-  Doxyfile-dev
-  documentation/src-dev/index.dox
-  documentation/src-dev/page_introduction.dox
-)
-source_group("Documentation: Developer" FILES ${DEV_DOC_FILES})
-
 # Build a local object library to avoid compiling all source files
-# for all fluid targets (fluid, fluid-cmd, fluid-shared). This
-# library includes everything except the main program (fluid.cxx).
+# multiple times for all fluid targets on Windows (fluid + fluid-cmd).
 
-add_library (fluid-lib OBJECT EXCLUDE_FROM_ALL ${CPPFILES} ${HEADERFILES} ${USER_DOC_FILES} ${DEV_DOC_FILES})
+add_library(fluid-lib OBJECT EXCLUDE_FROM_ALL)
+target_sources(fluid-lib PRIVATE ${CPPFILES} ${HEADERFILES})
+target_link_libraries(fluid-lib PUBLIC fltk::images)
 
-# Build fluid with all its variants (fluid-cmd, fluid-shared) ...
+# Build targets
 
-set (FLUID_TARGETS fluid)                   # fluid and optional fluid-cmd target
-set (FLUID_LIBS fluid-lib fltk fltk_images) # libraries used to link fluid executables
-
-if (APPLE AND (NOT OPTION_APPLE_X11))
+if(APPLE AND NOT FLTK_BACKEND_X11)
 
   # macOS
 
-  set (ICON_NAME fluid.icns)
-  set (ICON_PATH "${CMAKE_CURRENT_SOURCE_DIR}/icons/${ICON_NAME}")
-  add_executable (fluid MACOSX_BUNDLE fluid.cxx fluid.h ${ICON_PATH})
+  set(ICON_NAME fluid.icns)
+  set(ICON_PATH "${CMAKE_CURRENT_SOURCE_DIR}/icons/${ICON_NAME}")
+  add_executable(fluid MACOSX_BUNDLE fluid.cxx fluid.h ${ICON_PATH})
 
   # create macOS bundle wrapper script
 
-  set (WRAPPER "${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/fluid")
-  add_custom_command (
+  set(WRAPPER "${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/fluid")
+  add_custom_command(
     TARGET fluid POST_BUILD
     COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/../CMake/macOS-bundle-wrapper.in ${WRAPPER}
     COMMAND chmod u+x,g+x,o+x ${WRAPPER}
     BYPRODUCTS ${WRAPPER}
     VERBATIM
   )
-  unset (WRAPPER)
-
-else ()
-
-  # Option 'WIN32' builds a Windows GUI program, ignored on other platforms
-  add_executable (fluid WIN32 fluid.cxx fluid.h)
-
-endif ()
-
-# Link fluid with Cairo if OPTION_CAIRO is enabled
-if (FLTK_HAVE_CAIRO)
-  target_include_directories (fluid PRIVATE ${PKG_CAIRO_INCLUDE_DIRS})
-  if (PKG_CAIRO_LIBRARY_DIRS)
-    target_link_directories (fluid PRIVATE ${PKG_CAIRO_LIBRARY_DIRS})
-  endif ()
-endif (FLTK_HAVE_CAIRO)
-
-if (USE_GDIPLUS)        # can only be true on Windows
-  list (APPEND FLUID_LIBS gdiplus)
-endif (USE_GDIPLUS)
-
-target_link_libraries (fluid ${FLUID_LIBS})
-
-# Add fluid-cmd console app (Windows only) for converting .fl to .cxx/.h files.
-# This is done for all Windows targets, even if cross-compiling.
-
-if (WIN32)
-  list (APPEND FLUID_TARGETS fluid-cmd)
-  add_executable (fluid-cmd fluid.cxx fluid.h)
-  target_link_libraries (fluid-cmd ${FLUID_LIBS})
-
-  # Link fluid-cmd with Cairo if OPTION_CAIRO is enabled (same as above)
-
-  if (FLTK_HAVE_CAIRO)
-    target_include_directories (fluid-cmd PRIVATE ${PKG_CAIRO_INCLUDE_DIRS})
-    if (PKG_CAIRO_LIBRARY_DIRS)
-      target_link_directories (fluid-cmd PRIVATE ${PKG_CAIRO_LIBRARY_DIRS})
-    endif ()
-  endif (FLTK_HAVE_CAIRO)
-endif (WIN32)
-
-# Build fluid-shared (experimental)
-
-if (OPTION_BUILD_SHARED_LIBS)
-  list (APPEND FLUID_TARGETS fluid-shared)
-  add_executable (fluid-shared fluid.cxx fluid.h)
-  if (MSVC)
-    # Todo: this should link against fltk_SHARED rather than fltk_images but for an unknown
-    # reason this would issue link errors (about 25 undefined symbols). Needs investigation.
-    # AlbrechtS: Sep. 12, 2023
-    target_link_libraries (fluid-shared PRIVATE fluid-lib fltk_images) # should be: fltk_SHARED)
-  else ()
-    target_link_libraries (fluid-shared PRIVATE fluid-lib fltk_images_SHARED)
-  endif (MSVC)
-endif ()
-
-# Install fluid GUI and commandline tool
-
-if (APPLE AND (NOT OPTION_APPLE_X11))
-
-  # On macOS, Fluid must be installed twice. The bundled version of Fluid needs
-  # to go into the /Applications folder to make it visible as a user App with
-  # full GUI. The binary without bundle should go into ${FLTK_BINDIR}, usually
-  # /usr/local/bin, so it will be picked up as a command line tool by
-  # the build process of other apps.
-  # On macOS the command line tool is the same target ('fluid') as the one
-  # included in the bundle.
-
-  # create bundle
-  set_target_properties (fluid PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/fluid.plist")
-  set_target_properties (fluid PROPERTIES MACOSX_BUNDLE_ICON_FILE ${ICON_NAME})
-  set_target_properties (fluid PROPERTIES XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "org.fltk.fluid")
-
-  # The line below would wrongly install /Applications/fluid.icns
-  # ## set_target_properties (fluid PROPERTIES RESOURCE ${ICON_PATH})
-
-  # install fluid GUI and commandline tools
-  # install (TARGETS fluid DESTINATION "/Applications")
-
-  # install command line tool
-  install (PROGRAMS $<TARGET_FILE:fluid> DESTINATION ${FLTK_BINDIR})
+  unset(WRAPPER)
 
 else()
 
-  # install Fluid GUI and optional commandline tool 'fluid-cmd' (only on Windows)
+  # Option 'WIN32' builds a Windows GUI program, ignored on other platforms
+  add_executable(fluid WIN32 fluid.cxx fluid.h)
 
-  install (TARGETS ${FLUID_TARGETS}
-    EXPORT FLTK-Targets
-    RUNTIME DESTINATION ${FLTK_BINDIR}
-    LIBRARY DESTINATION ${FLTK_LIBDIR}
-    ARCHIVE DESTINATION ${FLTK_LIBDIR}
-  )
+endif()
 
-endif (APPLE AND (NOT OPTION_APPLE_X11))
+target_link_libraries(fluid PRIVATE fluid-lib)
+
+# Build the console app on Windows
+# This is done for all Windows targets, even if cross-compiling.
+
+if(WIN32)
+  list(APPEND TARGETS fluid-cmd)
+  add_executable(fluid-cmd fluid.cxx fluid.h)
+  target_link_libraries(fluid-cmd PRIVATE fluid-lib)
+  set(FLTK_FLUID_EXECUTABLE fltk::fluid-cmd)
+else()
+  set(FLTK_FLUID_EXECUTABLE fltk::fluid)
+endif()
+
+set(FLTK_FLUID_EXECUTABLE "${FLTK_FLUID_EXECUTABLE}" PARENT_SCOPE)
+
+# Create aliases for all targets
+
+foreach(tgt ${TARGETS})
+  add_executable(fltk::${tgt} ALIAS ${tgt})
+endforeach()
+
+# Install fluid GUI and commandline tool
+
+if(APPLE AND NOT FLTK_BACKEND_X11)
+
+  # On macOS, fluid will be installed twice:
+  # - The bundled version of Fluid goes into the destination folder ${FLTK_BINDIR}.
+  # - The binary without bundle goes into ${FLTK_BINDIR} as well.
+  # The command line tool is the same executable as the one included in the bundle.
+  # Note:
+  #   Both the bundle and the commandline tool are currently installed side by side.
+  #   This may be changed in the future.
+
+  # Set bundle properties
+  set_target_properties(fluid PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/fluid.plist")
+  set_target_properties(fluid PROPERTIES MACOSX_BUNDLE_ICON_FILE ${ICON_NAME})
+  set_target_properties(fluid PROPERTIES XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "org.fltk.fluid")
+
+  # Install command line tool
+  install(PROGRAMS $<TARGET_FILE:fluid>
+          DESTINATION ${FLTK_BINDIR})
+
+endif(APPLE AND NOT FLTK_BACKEND_X11)
+
+# Install the GUI and (on Windows only) the commandline tool 'fluid-cmd'
+
+install(TARGETS ${TARGETS}
+        EXPORT  FLTK-Targets
+        RUNTIME DESTINATION ${FLTK_BINDIR}
+        LIBRARY DESTINATION ${FLTK_LIBDIR}
+        ARCHIVE DESTINATION ${FLTK_LIBDIR}
+        BUNDLE  DESTINATION ${FLTK_BINDIR} # macOS: bundles
+)
 
 # Install desktop files
 
-if (UNIX)
-  install (FILES fluid.desktop
+if(UNIX)
+  install(FILES fluid.desktop
     DESTINATION ${FLTK_DATADIR}/applications
   )
-  # Install mime-type file (x-fluid.desktop method is deprecated)
-  install (FILES fluid.xml
+  # Install mime-type file(x-fluid.desktop method is deprecated)
+  install(FILES fluid.xml
     DESTINATION ${FLTK_DATADIR}/mime/packages
   )
 
   # Install desktop icons
-  foreach (icon 32 48 64 128)
-    install (FILES icons/fluid-${icon}.png
+  foreach(icon 32 48 64 128)
+    install(FILES icons/fluid-${icon}.png
       DESTINATION ${FLTK_DATADIR}/icons/hicolor/${icon}x${icon}/apps
       RENAME fluid.png
     )
   endforeach()
-endif (UNIX)
+endif(UNIX)

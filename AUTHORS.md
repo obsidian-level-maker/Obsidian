@@ -74,14 +74,13 @@ Tapwave
 ## GUI/MAIN PROGRAM DEVELOPERS
 
 Dashodanger
-  - ZDBSP and UDMF support
+  - AJBSP and UDMF support
   - SLUMP integration for Vanilla Doom
   - GUI overhaul
   - Restoration of Hexen baseline functions
   - Restoration of previously supported games
 
 Phytolizer
-  - Created Filename Formatter to parse custom prefixes
   - Conversion from Makefiles to CMake build system
   - MSVC support for compiling source on Windows
   - Many, many optimizations and updates of the codebase
@@ -91,7 +90,7 @@ Simon-v
   - Fixing Date/Time filename prefixes to be ISO-conformant
 
 HugLifeTiZ 
-  - XDG compliance and Flatpak compatibility prep work (Linux builds)
+  - XDG compliance work (Linux builds)
   - Zenity File Picker patch for bundled FLTK 1.4
 
 ## COMMUNITY CONTRIBUTORS:
@@ -102,6 +101,7 @@ Cubebert
   - Chex Quest 3 skyboxes
   - Heretic skyboxes
   - XBox Dashboard, ZDoom Forums, and ZDoom Forums Submerged program themes
+  - Improved HacX themes and SLUMP compatibility fixes
 
 Morthimer McMare
   - Current Russian translation team lead
@@ -150,6 +150,9 @@ Xenamta
 
 Swedra
   - Naming table contributions
+
+KadKad1
+  - D1, D2, and Half-Life themes
 
 # OBLIGE
 

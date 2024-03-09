@@ -827,6 +827,34 @@ void Fl::add_handler(Fl_Event_Handler ha) {
 }
 
 
+/** Returns the last function installed by a call to Fl::add_handler() */
+Fl_Event_Handler Fl::last_handler() {
+  return handlers ? handlers->handle : NULL;
+}
+
+
+/** Install a function to parse unrecognized events with less priority than another function.
+ Install function \p ha to handle unrecognized events
+ giving it the priority just lower than that of function \p before
+ which was previously installed.
+ \see Fl::add_handler(Fl_Event_Handler)
+ \see Fl::last_handler()
+ */
+void Fl::add_handler(Fl_Event_Handler ha, Fl_Event_Handler before) {
+  if (!before) return Fl::add_handler(ha);
+  handler_link *l = handlers;
+  while (l) {
+    if (l->handle == before) {
+      handler_link *p = l->next, *q = new handler_link;
+      q->handle = ha;
+      q->next = p;
+      l->next = q;
+      return;
+    }
+    l = l->next;
+  }
+}
+
 /**
  Removes a previously added event handler.
  \see Fl::handle(int, Fl_Window*)
@@ -1982,6 +2010,8 @@ bool Fl::option(Fl_Option opt)
       options_[OPTION_SHOW_SCALING] = tmp;
       opt_prefs.get("UseZenity", tmp, 1);                      // default: on
       options_[OPTION_FNFC_USES_ZENITY] = tmp;
+      opt_prefs.get("SimpleZoomShortcut", tmp, 0);              // default: off
+      options_[OPTION_SIMPLE_ZOOM_SHORTCUT] = tmp;
     }
     { // next, check the user preferences
       // override system options only, if the option is set ( >= 0 )
@@ -2008,6 +2038,8 @@ bool Fl::option(Fl_Option opt)
       if (tmp >= 0) options_[OPTION_SHOW_SCALING] = tmp;
       opt_prefs.get("UseZenity", tmp, -1);
       if (tmp >= 0) options_[OPTION_FNFC_USES_ZENITY] = tmp;
+      opt_prefs.get("SimpleZoomShortcut", tmp, -1);
+      if (tmp >= 0) options_[OPTION_SIMPLE_ZOOM_SHORTCUT] = tmp;
     }
     { // now, if the developer has registered this app, we could ask for per-application preferences
     }
@@ -2238,8 +2270,13 @@ float Fl::screen_scale(int n) {
  Also sets the scale factor value of all windows mapped to screen number \p n, if any.
  */
 void Fl::screen_scale(int n, float factor) {
-  if (!Fl::screen_scaling_supported() || n < 0 || n >= Fl::screen_count()) return;
-  Fl::screen_driver()->rescale_all_windows_from_screen(n, factor);
+  Fl_Screen_Driver::APP_SCALING_CAPABILITY capability = Fl::screen_driver()->rescalable();
+  if (!capability || n < 0 || n >= Fl::screen_count()) return;
+  if (capability == Fl_Screen_Driver::SYSTEMWIDE_APP_SCALING) {
+    for (int s = 0; s < Fl::screen_count(); s++) {
+      Fl::screen_driver()->rescale_all_windows_from_screen(s, factor, factor);
+    }
+  } else Fl::screen_driver()->rescale_all_windows_from_screen(n, factor, factor);
 }
 
 /**
@@ -2281,3 +2318,76 @@ FL_EXPORT const char* fl_local_shift = Fl::system_driver()->shift_name();
 FL_EXPORT const char* fl_local_meta  = Fl::system_driver()->meta_name();
 FL_EXPORT const char* fl_local_alt   = Fl::system_driver()->alt_name();
 FL_EXPORT const char* fl_local_ctrl  = Fl::system_driver()->control_name();
+
+/**
+  Convert Windows commandline arguments to UTF-8.
+
+  \note This function does nothing on other (non-Windows) platforms, hence
+    you may call it on all platforms or only on Windows by using platform
+    specific code like <tt>'\#ifdef _WIN32'</tt> etc. - it's your choice.
+    Calling it on other platforms returns quickly w/o wasting much CPU time.
+
+  This function <i>must be called <b>on Windows platforms</b></i> in \c main()
+  before the array \c argv is used if your program uses any commandline
+  argument strings (these should be UTF-8 encoded).
+  This applies also to standard FLTK commandline arguments like
+  "-name" (class name) and "-title" (window title in the title bar).
+
+  Unfortunately Windows \b neither provides commandline arguments in UTF-8
+  encoding \b nor as Windows "Wide Character" strings in the standard
+  \c main() and/or the Windows specific \c WinMain() function.
+
+  On Windows platforms (no matter which build system) this function calls
+  a Windows specific function to retrieve commandline arguments as Windows
+  "Wide Character" strings, converts these strings to an internally allocated
+  buffer (or multiple buffers) and returns the result in \c argv.
+  For implementation details please refer to the source code; however these
+  details may be changed in the future.
+
+  Note that \c argv is provided by reference so it can be overwritten.
+
+  In the recommended simple form the function overwrites the variable
+  \c argv and allocates a new array of strings pointed to by \c argv.
+  You may use this form on all platforms and it is as simple as adding
+  one line to old programs to make them work with international (UTF-8)
+  commandline arguments.
+
+  \code
+    int main(int argc, char **argv) {
+      Fl::args_to_utf8(argc, argv);   // add this line
+      // ... use argc and argv, e.g. for commandline parsing
+      window->show(argc, argv);
+      return Fl::run();
+    }
+  \endcode
+
+  For an example see 'examples/howto-parse-args.cxx' in the FLTK sources.
+
+  If you want to retain the original \c argc and \c argv variables the
+  following slightly longer and more complicated code works as well on
+  all platforms.
+
+  \code
+    int main(int argc, char **argv) {
+      char **argvn = argv;            // must copy argv to work on all platforms
+      int argcn = Fl::args_to_utf8(argc, argvn);
+      // ... use argcn and argvn, e.g. for commandline parsing
+      window->show(argcn, argvn);
+      return Fl::run();
+    }
+  \endcode
+
+  \param[in]    argc    used only on non-Windows platforms
+  \param[out]   argv    modified only on Windows platforms
+  \returns  argument count (always the same as argc)
+
+  \since 1.4.0
+
+  \internal This function must not open the display, otherwise
+    commandline processing (e.g. by fluid) would open the display.
+    OTOH calling it when the display is opened wouldn't work either
+    for the same reasons ('fluid -c' doesn't open the display).
+*/
+int Fl::args_to_utf8(int argc, char ** &argv) {
+  return Fl::system_driver()->args_to_utf8(argc, argv);
+}

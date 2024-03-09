@@ -446,6 +446,8 @@ static int process_sys_menu_shortcuts(int event)
 
 Fl_MacOS_Sys_Menu_Bar_Driver::Fl_MacOS_Sys_Menu_Bar_Driver() : Fl_Sys_Menu_Bar_Driver()
 {
+  window_menu_items = NULL;
+  first_window_menu_item = 0;
   Fl::add_handler(process_sys_menu_shortcuts);
 }
 
@@ -567,6 +569,8 @@ static void minimize_win_cb(Fl_Widget *, void *data)
 
 static void window_menu_cb(Fl_Widget *, void *data)
 {
+  Fl_Window *top = Fl::first_window();
+  if (top && top->fullscreen_active()) return;
   if (data) ((Fl_Window*)data)->show();
 }
 
@@ -599,6 +603,7 @@ static void merge_all_windows_cb(Fl_Widget *, void *)
 
 
 static bool window_menu_installed = false;
+static int window_menu_items_count = 0;
 
 void Fl_MacOS_Sys_Menu_Bar_Driver::create_window_menu(void)
 {
@@ -621,61 +626,81 @@ void Fl_MacOS_Sys_Menu_Bar_Driver::create_window_menu(void)
     fl_open_display();
     new Fl_Sys_Menu_Bar(0,0,0,0);
   }
-  rank = fl_sys_menu_bar->Fl_Menu_::insert(rank, "Window", 0, NULL, 0, FL_SUBMENU);
+  if (!window_menu_items_count) {
+    window_menu_items_count = 6;
+    window_menu_items = (Fl_Menu_Item*)calloc(window_menu_items_count, sizeof(Fl_Menu_Item));
+  }
+  rank = fl_sys_menu_bar->Fl_Menu_::insert(rank, "Window", 0, NULL, window_menu_items, FL_SUBMENU_POINTER);
   localized_Window = NSLocalizedString(@"Window", nil);
-
-  fl_sys_menu_bar->Fl_Menu_::insert(++rank, "Minimize", FL_COMMAND+'m', minimize_win_cb, 0, FL_MENU_DIVIDER);
+  window_menu_items[0].label("Minimize");
+  window_menu_items[0].callback(minimize_win_cb);
+  window_menu_items[0].shortcut(FL_COMMAND+'m');
+  window_menu_items[0].flags = FL_MENU_DIVIDER;
+  first_window_menu_item = 1;
 #if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_12
   if (fl_mac_os_version >= 101200 && window_menu_style() != Fl_Sys_Menu_Bar::tabbing_mode_none) {
-    fl_sys_menu_bar->Fl_Menu_::insert(++rank, "Show Previous Tab", FL_SHIFT+FL_CTRL+0x9, previous_tab_cb, 0, 0);
-    fl_sys_menu_bar->Fl_Menu_::insert(++rank, "Show Next Tab", FL_CTRL+0x9, next_tab_cb, 0, 0);
-    fl_sys_menu_bar->Fl_Menu_::insert(++rank, "Move Tab To New Window", 0, move_tab_cb, 0, 0);
-    fl_sys_menu_bar->Fl_Menu_::insert(++rank, "Merge All Windows", 0, merge_all_windows_cb, 0, FL_MENU_DIVIDER);
+    window_menu_items[1].label("Show Previous Tab");
+    window_menu_items[1].callback(previous_tab_cb);
+    window_menu_items[1].shortcut(FL_SHIFT+FL_CTRL+0x9);
+    window_menu_items[2].label("Show Next Tab");
+    window_menu_items[2].callback(next_tab_cb);
+    window_menu_items[2].shortcut(FL_CTRL+0x9);
+    window_menu_items[3].label("Move Tab To New Window");
+    window_menu_items[3].callback(move_tab_cb);
+    window_menu_items[4].label("Merge All Windows");
+    window_menu_items[4].callback(merge_all_windows_cb);
+    window_menu_items[4].flags = FL_MENU_DIVIDER;
+    first_window_menu_item = 5;
   }
 #endif
-  ((Fl_Menu_Item*)fl_sys_menu_bar->menu()+rank)->user_data(&window_menu_style_);
+  fl_sys_menu_bar->menu_end();
   fl_sys_menu_bar->update();
 }
 
-int Fl_MacOS_Sys_Menu_Bar_Driver::find_first_window()
-{
-  int count = bar->size(), i;
-  for (i = 0; i < count; i++) {
-    if (bar->menu()[i].user_data() == &window_menu_style_) break;
-  }
-  return i < count ? i : -1;
-}
 
 void Fl_MacOS_Sys_Menu_Bar_Driver::new_window(Fl_Window *win)
 {
   if (!window_menu_style() || !win->label()) return;
-  int index = find_first_window();
-  if (index < 0) return;
-  while ((bar->menu()+index+1)->label()) index++;
+  int index = window_menu_items->size() - 1;
+  if (index >= window_menu_items_count - 1) {
+    window_menu_items_count += 5;
+    window_menu_items = (Fl_Menu_Item*)realloc(window_menu_items, 
+                                    window_menu_items_count * sizeof(Fl_Menu_Item));
+    Fl_Menu_Item *item = (Fl_Menu_Item*)fl_sys_menu_bar->find_item("Window");
+    item->user_data(window_menu_items);
+  }
   const char *p = win->iconlabel() ? win->iconlabel() : win->label();
-  int index2 = bar->Fl_Menu_::insert(index+1, p, 0, window_menu_cb, win, FL_MENU_RADIO);
-  setonly((Fl_Menu_Item*)bar->menu()+index2);
+  window_menu_items[index].label(p);
+  window_menu_items[index].callback(window_menu_cb);
+  window_menu_items[index].user_data(win);
+  window_menu_items[index].flags = FL_MENU_RADIO;
+  window_menu_items[index+1].label(NULL);
+  window_menu_items[index].setonly();
+  fl_sys_menu_bar->update();
 }
 
 void Fl_MacOS_Sys_Menu_Bar_Driver::remove_window(Fl_Window *win)
 {
   if (!window_menu_style()) return;
-  int index = find_first_window() + 1;
+  int index = first_window_menu_item;
   if (index < 1) return;
   while (true) {
-    Fl_Menu_Item *item = (Fl_Menu_Item*)bar->menu() + index;
+    Fl_Menu_Item *item = window_menu_items + index;
     if (!item->label()) return;
     if (item->user_data() == win) {
       bool doit = item->value();
-      remove(index);
+      int count = window_menu_items->size();
+      if (count - index - 1 > 0) memmove(item, item + 1, (count - index - 1)*sizeof(Fl_Menu_Item));
+      memset(window_menu_items + count - 2, 0, sizeof(Fl_Menu_Item));
       if (doit) { // select Fl::first_window() in Window menu
-        item = (Fl_Menu_Item*)bar->menu() + find_first_window() + 1;
+        item = window_menu_items + first_window_menu_item;
         while (item->label() && item->user_data() != Fl::first_window()) item++;
         if (item->label()) {
           ((Fl_Window*)item->user_data())->show();
-          setonly(item);
+          item->setonly();
         }
       }
+      bar->update();
       break;
     }
     index++;
@@ -685,13 +710,14 @@ void Fl_MacOS_Sys_Menu_Bar_Driver::remove_window(Fl_Window *win)
 void Fl_MacOS_Sys_Menu_Bar_Driver::rename_window(Fl_Window *win)
 {
   if (!window_menu_style()) return;
-  int index = find_first_window() + 1;
+  int index = first_window_menu_item;
   if (index < 1) return;
   while (true) {
-    Fl_Menu_Item *item = (Fl_Menu_Item*)bar->menu() + index;
+    Fl_Menu_Item *item = window_menu_items + index;
     if (!item->label()) return;
     if (item->user_data() == win) {
-      replace(index, win->iconlabel() ? win->iconlabel() : win->label());
+      item->label(win->iconlabel() ? win->iconlabel() : win->label());
+      bar->update();
       return;
     }
     index++;

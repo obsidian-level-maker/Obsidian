@@ -21,6 +21,7 @@
 
 // functions provided by the application
 
+#include <stdint.h>
 #include <cstring>
 #include <string>
 #include <array>

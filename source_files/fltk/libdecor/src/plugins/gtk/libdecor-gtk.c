@@ -330,6 +330,9 @@ static const char *libdecor_gtk_proxy_tag = "libdecor-gtk";
 static bool
 own_proxy(struct wl_proxy *proxy)
 {
+	if (!proxy)
+		return false;
+
 	return (wl_proxy_get_tag(proxy) == &libdecor_gtk_proxy_tag);
 }
 
@@ -418,12 +421,17 @@ libdecor_plugin_gtk_destroy(struct libdecor_plugin *plugin)
 			free(cursor_output);
 		}
 
+		free(seat->name);
 		free(seat);
 	}
 
 	wl_list_for_each_safe(output, output_tmp,
 			      &plugin_gtk->output_list, link) {
-		wl_output_destroy(output->wl_output);
+		if (wl_output_get_version (output->wl_output) >=
+		    WL_OUTPUT_RELEASE_SINCE_VERSION)
+			wl_output_release(output->wl_output);
+		else
+			wl_output_destroy(output->wl_output);
 		free(output);
 	}
 
@@ -442,7 +450,7 @@ libdecor_plugin_gtk_destroy(struct libdecor_plugin *plugin)
 	if (plugin_gtk->wl_subcompositor)
 		wl_subcompositor_destroy(plugin_gtk->wl_subcompositor);
 
-
+	libdecor_plugin_release(&plugin_gtk->plugin);
 	free(plugin_gtk);
 }
 
@@ -666,24 +674,16 @@ libdecor_plugin_gtk_frame_free(struct libdecor_plugin *plugin,
 	struct libdecor_frame_gtk *frame_gtk =
 		(struct libdecor_frame_gtk *) frame;
 
-	/* when in SSD mode, frame_gtk->header is not a proper GTK widget */
-	if (!GTK_IS_WIDGET(frame_gtk->header)) return;
-	gtk_widget_destroy(frame_gtk->header);
-	frame_gtk->header = NULL;
-	if (!GTK_IS_WIDGET(frame_gtk->window)) return;
-	gtk_widget_destroy(frame_gtk->window);
-	frame_gtk->window = NULL;
+	g_clear_pointer (&frame_gtk->header, gtk_widget_destroy);
+	g_clear_pointer (&frame_gtk->window, gtk_widget_destroy);
 
 	free_border_component(&frame_gtk->headerbar);
 	free_border_component(&frame_gtk->shadow);
 	frame_gtk->shadow_showing = false;
-	if (frame_gtk->shadow_blur != NULL) {
-		cairo_surface_destroy(frame_gtk->shadow_blur);
-		frame_gtk->shadow_blur = NULL;
-	}
 
-	free(frame_gtk->title);
-	frame_gtk->title = NULL;
+	g_clear_pointer (&frame_gtk->shadow_blur, cairo_surface_destroy);
+
+	g_clear_pointer (&frame_gtk->title, free);
 
 	frame_gtk->decoration_type = DECORATION_TYPE_NONE;
 
@@ -1959,10 +1959,10 @@ component_edge(const struct border_component *cmpnt,
 	       const int pointer_y,
 	       const int margin)
 {
-	const bool top = pointer_y < margin;
-	const bool bottom = pointer_y > (cmpnt->buffer->height - margin);
-	const bool left = pointer_x < margin;
-	const bool right = pointer_x > (cmpnt->buffer->width - margin);
+	const bool top = pointer_y < margin * 2;
+	const bool bottom = pointer_y > (cmpnt->buffer->height - margin * 2);
+	const bool left = pointer_x < margin * 2;
+	const bool right = pointer_x > (cmpnt->buffer->width - margin * 2);
 
 	if (top) {
 		if (left)
@@ -2651,7 +2651,8 @@ init_wl_output(struct libdecor_plugin_gtk *plugin_gtk,
 	output->id = id;
 	output->wl_output =
 		wl_registry_bind(plugin_gtk->wl_registry,
-				 id, &wl_output_interface, 2);
+				 id, &wl_output_interface,
+				 MIN (version, 3));
 	wl_proxy_set_tag((struct wl_proxy *) output->wl_output,
 			 &libdecor_gtk_proxy_tag);
 	wl_output_add_listener(output->wl_output, &output_listener, output);
@@ -2811,10 +2812,8 @@ libdecor_plugin_new(struct libdecor *context)
 	gtk_disable_setlocale();
 
 	if (!gtk_init_check(NULL, NULL)) {
-		libdecor_notify_plugin_error(
-				plugin_gtk->context,
-				LIBDECOR_ERROR_COMPOSITOR_INCOMPATIBLE,
-				"GTK cannot connect to Wayland compositor");
+		fprintf(stderr, "libdecor-gtk-WARNING: Failed to initialize GTK\n");
+		libdecor_plugin_gtk_destroy(&plugin_gtk->plugin);
 		return NULL;
 	}
 

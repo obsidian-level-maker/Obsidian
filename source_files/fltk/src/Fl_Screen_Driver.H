@@ -1,7 +1,7 @@
 //
 // All screen related calls in a driver style class.
 //
-// Copyright 1998-2022 by Bill Spitzak and others.
+// Copyright 1998-2024 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
@@ -123,6 +123,7 @@ public:
     H = 600;
   }
   void screen_xywh(int &X, int &Y, int &W, int &H, int mx, int my, int mw, int mh);
+  virtual bool screen_boundaries_known() { return true; }
   virtual int screen_num(int x, int y);
   virtual int screen_num(int x, int y, int w, int h);
   virtual void screen_dpi(float &h, float &v, int n = 0) { // FL_OVERRIDE in driver!
@@ -142,7 +143,7 @@ public:
   // --- global colors
   /* the default implementation of parse_color() may be enough */
   virtual int parse_color(const char *p, uchar &r, uchar &g, uchar &b);
-  virtual void get_system_colors() {}
+  virtual void get_system_colors();
   /* the default implementation of get_system_scheme() may be enough */
   virtual const char *get_system_scheme();
 
@@ -218,7 +219,7 @@ public:
   // compute dimensions of an Fl_Offscreen
   virtual void offscreen_size(Fl_Offscreen, int &/*width*/, int &/*height*/) {}
 
-  void rescale_all_windows_from_screen(int screen, float f);
+  void rescale_all_windows_from_screen(int screen, float f, float old_f);
   static void transient_scale_display(float f, int nscreen);
   // need export to fltk_gl.so because used in glut_compatibility.cxx
   static FL_EXPORT int scale_handler(int event);
@@ -246,6 +247,7 @@ public:
   virtual void set_spot(int font, int size, int X, int Y, int W, int H, Fl_Window *win);
   virtual void reset_spot();
   virtual void set_status(int X, int Y, int W, int H);
+  virtual float base_scale(int numscreen);
 };
 
 #endif // !FL_SCREEN_DRIVER_H

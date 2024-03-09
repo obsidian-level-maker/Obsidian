@@ -22,6 +22,7 @@
 #ifndef __OBLIGE_CSG_MAIN_H__
 #define __OBLIGE_CSG_MAIN_H__
 
+#include <stdint.h>
 #include <map>
 #include <string>
 #include <vector>
