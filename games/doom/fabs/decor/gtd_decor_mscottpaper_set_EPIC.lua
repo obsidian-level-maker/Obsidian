@@ -12,13 +12,15 @@ PREFABS.Decor_mscott_1 =
   height = 65,
 
   bound_z1 = 0,
-  bound_z2 = 64,
+  bound_z2 = 65,
 
   tex_TOFFBOX2 =
   {
     TOFFBOX1 = 4,
     TOFFBOX2 = 1
-  }
+  },
+
+  z_fit = "top"
 }
 
 PREFABS.Decor_mscott_2 =
@@ -27,7 +29,7 @@ PREFABS.Decor_mscott_2 =
   map = "MAP02",
 
   height = 57,
-  bound_z2 = 56
+  bound_z2 = 57
 }
 
 PREFABS.Decor_mscott_3 =
@@ -36,7 +38,7 @@ PREFABS.Decor_mscott_3 =
   map = "MAP03",
 
   height = 48,
-  bound_z2 = 48
+  bound_z2 = 49
 }
 
 PREFABS.Decor_mscott_4 =
@@ -49,7 +51,7 @@ PREFABS.Decor_mscott_4 =
   size = 96,
 
   height = 89,
-  bound_z2 = 88
+  bound_z2 = 89
 }
 
 PREFABS.Decor_mscott_5 =
@@ -62,7 +64,7 @@ PREFABS.Decor_mscott_5 =
   size = 96,
 
   height = 129,
-  bound_z2 = 128 
+  bound_z2 = 129
 }
 
 PREFABS.Decor_mscott_6 =
@@ -75,7 +77,7 @@ PREFABS.Decor_mscott_6 =
   size = 96,
 
   height = {129, 256},
-  bound_z2 = 128 
+  bound_z2 = 129
 }
 
 PREFABS.Decor_mscott_7 =
@@ -88,5 +90,5 @@ PREFABS.Decor_mscott_7 =
   size = 96,
 
   height = {129, 256},
-  bound_z2 = 128 
+  bound_z2 = 129
 }

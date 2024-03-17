@@ -1702,7 +1702,22 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
       SD_GTHW9 = 2,
       SD_GTHWA = 2,
       SD_GTHWB = 2,
-      SD_GTHWC = 2
+      SD_GTHWC = 2,
+
+      S_W2WAL1 = 2,
+      S_W2WAL2 = 2,
+      S_W2WAL3 = 2,
+      S_W2WAL4 = 2,
+      S_W2WAL5 = 2,
+      S_W2WAL6 = 2,
+      S_W2WAL7 = 2,
+      S_W2WAL8 = 2,
+      S_W2WAL9 = 2,
+      S_W2WALA = 2,
+      S_W2WALB = 2,
+      S_W2WALC = 2,
+      S_W2WALD = 2,
+      S_W2WALE = 2
     },
 
     floors =
@@ -2379,10 +2394,10 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
     }
   },
 
-  tech_bumblebee = --50
+  tech_bumblebee = --40
   {
     env = "building",
-    prob = 50,
+    prob = 40,
 
     walls =
     {
@@ -2494,6 +2509,99 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
       FLOOR0_3 = 6,
       FLOOR0_5 = 6,
       SLIME14 = 6
+    }
+  },
+
+  tech_aww2 = --50
+  {
+    env = "building",
+    prob = 50,
+
+    walls =
+    {
+      S_W2WAL1 = 50,
+      S_W2WAL2 = 50,
+      S_W2WAL3 = 50,
+      S_W2WAL4 = 50,
+      S_W2WAL5 = 50,
+      S_W2WAL6 = 50,
+      S_W2WAL7 = 50,
+      S_W2WAL8 = 50,
+      S_W2WAL9 = 50,
+      S_W2WALA = 50,
+      S_W2WALB = 50,
+      S_W2WALC = 50,
+      S_W2WALD = 50,
+      S_W2WALE = 50
+    },
+
+    floors =
+    {
+      S_W2WFR1 = 50,
+      S_W2WFR2 = 50,
+      S_W2WFR3 = 50,
+      S_W2WFR4 = 50,
+      S_W2WFR5 = 50,
+      S_W2WFR6 = 50,
+      S_W2WFR7 = 50,
+      S_W2WFR8 = 50,
+
+      CEIL3_5 = 25,
+      FLAT1 = 25,
+      MFLR8_1 = 25,
+      SLIME14 = 25,
+
+      DARKF03 = 30,
+      DARKM01 = 30,
+      G15 = 30,
+      GMET01 = 20,
+      GMET02 = 20,
+      GMET03 = 20,
+      GMET04 = 20,
+      GMET05 = 20,
+      GMET06 = 20,
+      GRATE1 = 20,
+      GRATE2 = 20,
+      GRATE3 = 20,
+      GRATE4 = 20,
+      GRATE5 = 20,
+      GRATE6 = 20,
+      GRATE7 = 20,
+    },
+
+    ceilings =
+    {
+      S_W2WFR1 = 50,
+      S_W2WFR2 = 50,
+      S_W2WFR3 = 50,
+      S_W2WFR4 = 50,
+      S_W2WFR5 = 50,
+      S_W2WFR6 = 50,
+      S_W2WFR7 = 50,
+      S_W2WFR8 = 50,
+
+      
+      CEIL3_5 = 25,
+      FLAT1 = 25,
+      MFLR8_1 = 25,
+      SLIME14 = 25,
+
+      DARKF03 = 30,
+      DARKM01 = 30,
+      G15 = 30,
+      GMET01 = 20,
+      GMET02 = 20,
+      GMET03 = 20,
+      GMET04 = 20,
+      GMET05 = 20,
+      GMET06 = 20,
+      GRATE1 = 20,
+      GRATE2 = 20,
+      GRATE3 = 20,
+      GRATE4 = 20,
+      GRATE5 = 20,
+      GRATE6 = 20,
+      GRATE7 = 20,
     }
   },
 
@@ -2624,7 +2732,18 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
       SD_TBBFA = 15,
       SD_TBBFB = 15,
       SD_TBBFC = 15,
-      SD_TBBFD = 15
+      SD_TBBFD = 15,
+
+      --
+
+      S_W2WFR1 = 15,
+      S_W2WFR2 = 15,
+      S_W2WFR3 = 15,
+      S_W2WFR4 = 15,
+      S_W2WFR5 = 15,
+      S_W2WFR6 = 15,
+      S_W2WFR7 = 15,
+      S_W2WFR8 = 15
     },
 
     naturals =
@@ -2798,7 +2917,18 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
       SD_TBBFA = 12,
       SD_TBBFB = 12,
       SD_TBBFC = 12,
-      SD_TBBFD = 12
+      SD_TBBFD = 12,
+
+      --
+
+      S_W2WFR1 = 15,
+      S_W2WFR2 = 15,
+      S_W2WFR3 = 15,
+      S_W2WFR4 = 15,
+      S_W2WFR5 = 15,
+      S_W2WFR6 = 15,
+      S_W2WFR7 = 15,
+      S_W2WFR8 = 15
     },
   },
 
@@ -8657,7 +8787,17 @@ OBS_RESOURCE_PACK_THEMES =
       SD_TBBW7 = 20,
       SD_TBBW9 = 20,
       SD_TBBWB = 20,
-      SD_TBBWC = 20
+      SD_TBBWC = 20,
+
+      S_W2WAL1 = 20,
+      S_W2WAL2 = 20,
+      S_W2WAL3 = 20,
+      S_W2WAL8 = 20,
+      S_W2WAL9 = 20,
+      S_W2WALA = 20,
+      S_W2WALC = 20,
+      S_W2WALD = 20,
+      S_W2WALE = 20,
     },
 
     fences =

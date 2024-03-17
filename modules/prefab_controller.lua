@@ -155,40 +155,32 @@ function PREFAB_CONTROL.fine_tune_filters()
     tech_o_letter_P = 3,
     tech_o_letter_Q = 3,
     --
-    gtd_mscottpaper = 2
+    gtd_mscottpaper = 3
   }
   local new_themes_multipliers =
   {
     any_copperRust = 2,
 
-    tech_AITextures = 1.25,
     tech_goth_tech = 1.25,
+    tech_wood_lab = 1.25,
+    tech_dk_green_tech = 1.25,
+    tech_copper_steampunk = 1.25,
     tech_wood_lab = 1.5,
-    tech_dk_green_tech = 1.5,
-    tech_copper_steampunk = 1.5,
-    tech_wood_lab = 1.75,
-    tech_wood_comp = 1.75,
+    tech_wood_comp = 1.5,
     tech_silver_grate = 1.75,
-    tech_bumblebee = 2,
+    tech_bumblebee = 1.5,
+    tech_aww2 = 2.25,
 
-    urban_dk_green_tech = 1.25,
-    urban_wood_lab = 1.25,
-    urban_wood_comp = 1.5,
-    urban_silver_grate = 1.5,
-    urban_evil_mansion = 1.75,
-    urban_kievan_rus = 2,
-    urban_new_york_art_deco = 2,
-    urban_computerCatacombs = 2,
+    urban_evil_mansion = 1.25,
+    urban_kievan_rus = 1.5,
+    urban_new_york_art_deco = 1.5,
+    urban_computerCatacombs = 1.75,
 
-    hell_gilded_bricks = 1.2,
-    hell_copper_steampunk = 1.2,
-    hell_AztecClay = 1.25,
-    hell_babylonian = 1.25,
     hell_green_tk = 1.25,
-    hell_evil_mansion = 1.75,
-    hell_kievan_rus = 2,
-    hell_new_york_art_deco = 2,
-    hell_computerCatacombs = 2
+    hell_evil_mansion = 1.5,
+    hell_kievan_rus = 1.5,
+    hell_new_york_art_deco = 1.5,
+    hell_computerCatacombs = 1.75,
   }
   local themes =
   {

@@ -1994,6 +1994,32 @@ OBS_RESOURCE_PACK_MATERIALS = {
   TOFFPSW1 = {t="TOFFPSW1", f="FLAT5_5"},
   TOFFPSW2 = {t="TOFFPSW2", f="FLAT5_5"},
 
+  -- aww2 tech
+  -- walls
+  S_W2WAL1 = {t="S_W2WAL1", f="S_W2WFR1"},
+  S_W2WAL2 = {t="S_W2WAL2", f="S_W2WFR2"},
+  S_W2WAL3 = {t="S_W2WAL3", f="S_W2WFR3"},
+  S_W2WAL4 = {t="S_W2WAL4", f="S_W2WFR4"},
+  S_W2WAL5 = {t="S_W2WAL5", f="S_W2WFR5"},
+  S_W2WAL6 = {t="S_W2WAL6", f="S_W2WFR6"},
+  S_W2WAL7 = {t="S_W2WAL7", f="S_W2WFR7"},
+  S_W2WAL8 = {t="S_W2WAL8", f="S_W2WFR8"},
+  S_W2WAL9 = {t="S_W2WAL9", f="S_W2WFR1"},
+  S_W2WALA = {t="S_W2WALA", f="S_W2WFR2"},
+  S_W2WALB = {t="S_W2WALB", f="S_W2WFR3"},
+  S_W2WALC = {t="S_W2WALC", f="S_W2WFR5"},
+  S_W2WALD = {t="S_W2WALD", f="S_W2WFR6"},
+  S_W2WALE = {t="S_W2WALE", f="S_W2WFR8"},
+  -- flats
+  S_W2WFR1 = {t="S_W2WAL1", f="S_W2WFR1"},
+  S_W2WFR2 = {t="S_W2WAL3", f="S_W2WFR1"},
+  S_W2WFR3 = {t="S_W2WAL5", f="S_W2WFR1"},
+  S_W2WFR4 = {t="S_W2WAL7", f="S_W2WFR1"},
+  S_W2WFR5 = {t="S_W2WAL9", f="S_W2WFR1"},
+  S_W2WFR6 = {t="S_W2WALA", f="S_W2WFR1"},
+  S_W2WFR7 = {t="S_W2WALC", f="S_W2WFR1"},
+  S_W2WFR8 = {t="S_W2WALE", f="S_W2WFR1"},
+
   -- 256-wide doors
   G8_SVDR3 = { t="G8_SVDR3", f="FLAT23"},
 
