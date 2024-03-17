@@ -89,28 +89,28 @@ function ob_datetime_format_string()
   local formatstring
 
   if current_date.month < 10 then
-    formatstring = "0" .. current_date.month
+    formatstring = "0%M"
   else
-    formatstring = current_date.month
+    formatstring = "%M"
   end
   if current_date.day < 10 then
-    formatstring = formatstring .. "-0" .. current_date.day
+    formatstring = formatstring .. "-0%D"
   else
-    formatstring = formatstring .. "-" .. current_date.day
+    formatstring = formatstring .. "-%D"
   end
   
-  formatstring = current_date.year .. "-" .. formatstring .. "-"
+  formatstring = "%Y-" .. formatstring .. "-"
 
   if current_date.hour < 10 then
-    formatstring = formatstring .. "0" .. current_date.hour
+    formatstring = formatstring .. "0%h"
   else
-    formatstring = formatstring .. current_date.hour
+    formatstring = formatstring .. "%h"
   end
 
   if current_date.min < 10 then
-    formatstring = formatstring .. "0" .. current_date.min
+    formatstring = formatstring .. "0%m"
   else
-    formatstring = formatstring .. current_date.min
+    formatstring = formatstring .. "%m"
   end
 
   return formatstring
@@ -1968,10 +1968,14 @@ function ob_default_filename()
     elseif OB_CONFIG.filename_prefix == "port" then
       formatstring = OB_CONFIG.port .. "_"
     elseif OB_CONFIG.filename_prefix == "theme" then
-      formatstring = OB_CONFIG.theme .. "_"  
+      formatstring = OB_CONFIG.theme .. "_"   
+    elseif OB_CONFIG.filename_prefix == "version" then
+      formatstring = "%v_"
+    elseif OB_CONFIG.filename_prefix == "custom" then
+      formatstring = "custom"
    end
    
-   return formatstring .. str .. ".wad"
+   return gui.format_prefix(levelcount, OB_CONFIG.game, OB_CONFIG.port, OB_CONFIG.theme, formatstring) .. str .. ".wad"
    
  end
  
