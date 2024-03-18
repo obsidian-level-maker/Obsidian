@@ -98,7 +98,8 @@ void frame(void)
     ImGui::Text("Hello, world!");
     ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
     ImGui::ColorEdit3("clear color", &pass_action.colors[0].clear_value.r);
-    if (ImGui::Button("Test Window")) show_test_window ^= 1;
+    if (ImGui::Button("Test Window"))
+        show_test_window ^= 1;
     if (ImGui::Button("File Browser Test"))
     {
         if (!fileDialog.IsOpened())
@@ -107,22 +108,22 @@ void frame(void)
             fileDialog.Display();
         }
     }
-    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
-                1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-    ImGui::Text("w: %d, h: %d, dpi_scale: %.1f", sapp_width(), sapp_height(),
-                sapp_dpi_scale());
-    if (ImGui::Button(sapp_is_fullscreen() ? "Switch to windowed"
-                                           : "Switch to fullscreen"))
+    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate,
+                ImGui::GetIO().Framerate);
+    ImGui::Text("w: %d, h: %d, dpi_scale: %.1f", sapp_width(), sapp_height(), sapp_dpi_scale());
+    if (ImGui::Button(sapp_is_fullscreen() ? "Switch to windowed" : "Switch to fullscreen"))
     {
         sapp_toggle_fullscreen();
     }
 
-    if (fileDialog.IsOpened()) { fileDialog.Display(); }
+    if (fileDialog.IsOpened())
+    {
+        fileDialog.Display();
+    }
 
     if (fileDialog.HasSelected())
     {
-        LogPrintf("Selected filename: %s\n",
-                  fileDialog.GetSelected().u8string().c_str());
+        LogPrintf("Selected filename: %s\n", fileDialog.GetSelected().u8string().c_str());
         fileDialog.Close();
     }
 
@@ -135,8 +136,8 @@ void frame(void)
     }
 
     // the sokol_gfx draw pass
-    sg_pass pass = {};
-    pass.action = pass_action;
+    sg_pass pass   = {};
+    pass.action    = pass_action;
     pass.swapchain = sglue_swapchain();
     sg_begin_pass(&pass);
     simgui_render();
@@ -151,7 +152,10 @@ void cleanup(void)
     sg_shutdown();
 }
 
-void input(const sapp_event *event) { simgui_handle_event(event); }
+void input(const sapp_event *event)
+{
+    simgui_handle_event(event);
+}
 
 #endif
 
@@ -204,8 +208,7 @@ std::filesystem::path default_output_path;
 
 std::string string_seed;
 
-std::string selected_lang =
-    "en";  // Have a default just in case the translation stuff borks
+std::string selected_lang = "en"; // Have a default just in case the translation stuff borks
 
 game_interface_c *game_object = NULL;
 
@@ -213,61 +216,55 @@ game_interface_c *game_object = NULL;
 
 static void ShowInfo()
 {
-    printf(
-        "\n"
-        "** %s %s \"%s\"\n"
-        "** Build %s **\n"
-        "** Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted **\n"
-        "\n",
-        OBSIDIAN_TITLE.c_str(), OBSIDIAN_SHORT_VERSION,
-        OBSIDIAN_CODE_NAME.c_str(), OBSIDIAN_VERSION);
+    printf("\n"
+           "** %s %s \"%s\"\n"
+           "** Build %s **\n"
+           "** Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted **\n"
+           "\n",
+           OBSIDIAN_TITLE.c_str(), OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str(), OBSIDIAN_VERSION);
 
-    printf(
-        "Usage: Obsidian [options...] [key=value...]\n"
-        "\n"
-        "Available options:\n"
-        "     --version              Display build information\n"
-        "     --home     <dir>       Home directory\n"
-        "     --install  <dir>       Installation directory\n"
-        "\n"
-        "     --config   <file>      Config file for GUI\n"
-        "     --options  <file>      Options file for GUI\n"
-        "     --log      <file>      Log file to create\n"
-        "\n"
-        "  -b --batch    <output>    Batch mode (no GUI)\n"
-        "  -a --addon    <file>...   Addon(s) to use\n"
-        "  -l --load     <file>      Load settings from a file\n"
-        "  -k --keep                 Keep SEED from loaded settings\n"
-        "\n"
-        "  -d --debug                Enable debugging\n"
-        "  -v --verbose              Print log messages to stdout\n"
-        "  -h --help                 Show this help message\n"
-        "  -u --update <section> <key> <value>\n"
-        "                            Set a key in the config file\n"
-        "                            (section should be 'c' or 'o')\n"
-        "\n");
+    printf("Usage: Obsidian [options...] [key=value...]\n"
+           "\n"
+           "Available options:\n"
+           "     --version              Display build information\n"
+           "     --home     <dir>       Home directory\n"
+           "     --install  <dir>       Installation directory\n"
+           "\n"
+           "     --config   <file>      Config file for GUI\n"
+           "     --options  <file>      Options file for GUI\n"
+           "     --log      <file>      Log file to create\n"
+           "\n"
+           "  -b --batch    <output>    Batch mode (no GUI)\n"
+           "  -a --addon    <file>...   Addon(s) to use\n"
+           "  -l --load     <file>      Load settings from a file\n"
+           "  -k --keep                 Keep SEED from loaded settings\n"
+           "\n"
+           "  -d --debug                Enable debugging\n"
+           "  -v --verbose              Print log messages to stdout\n"
+           "  -h --help                 Show this help message\n"
+           "  -u --update <section> <key> <value>\n"
+           "                            Set a key in the config file\n"
+           "                            (section should be 'c' or 'o')\n"
+           "\n");
 
-    printf(
-        "Please visit the web site for complete information:\n"
-        "  %s \n"
-        "\n",
-        OBSIDIAN_WEBSITE);
+    printf("Please visit the web site for complete information:\n"
+           "  %s \n"
+           "\n",
+           OBSIDIAN_WEBSITE);
 
-    printf(
-        "This program is free software, under the terms of the GNU General "
-        "Public\n"
-        "License, and comes with ABSOLUTELY NO WARRANTY.  See the "
-        "documentation\n"
-        "for more details, or visit http://www.gnu.org/licenses/gpl-2.0.txt\n"
-        "\n");
+    printf("This program is free software, under the terms of the GNU General "
+           "Public\n"
+           "License, and comes with ABSOLUTELY NO WARRANTY.  See the "
+           "documentation\n"
+           "for more details, or visit http://www.gnu.org/licenses/gpl-2.0.txt\n"
+           "\n");
 
     fflush(stdout);
 }
 
 static void ShowVersion()
 {
-    printf("%s %s \"%s\" Build %s\n", OBSIDIAN_TITLE.c_str(),
-           OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str(),
+    printf("%s %s \"%s\" Build %s\n", OBSIDIAN_TITLE.c_str(), OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str(),
            OBSIDIAN_VERSION);
 
     fflush(stdout);
@@ -298,14 +295,20 @@ void Determine_WorkingPath(std::filesystem::path &path_check)
     if (xdg_config_home == nullptr)
     {
         xdg_config_home = std::getenv("HOME");
-        if (xdg_config_home == nullptr) { home_dir = "."; }
+        if (xdg_config_home == nullptr)
+        {
+            home_dir = ".";
+        }
         else
         {
             home_dir = xdg_config_home;
             home_dir /= ".config";
         }
     }
-    else { home_dir = xdg_config_home; }
+    else
+    {
+        home_dir = xdg_config_home;
+    }
     home_dir /= "obsidian";
     if (!home_dir.is_absolute())
     {
@@ -332,17 +335,25 @@ void Determine_WorkingPath(std::filesystem::path &path_check)
         std::filesystem::create_directory(home_dir);
     }
 #endif
-    if (home_dir.empty()) { home_dir = std::filesystem::canonical("."); }
+    if (home_dir.empty())
+    {
+        home_dir = std::filesystem::canonical(".");
+    }
 }
 
 std::filesystem::path Resolve_DefaultOutputPath()
 {
-    if (default_output_path.empty()) { default_output_path = install_dir; }
+    if (default_output_path.empty())
+    {
+        default_output_path = install_dir;
+    }
     if (default_output_path.generic_u8string()[0] == '$')
     {
-        const char *var =
-            getenv(default_output_path.generic_u8string().c_str() + 1);
-        if (var != nullptr) { return var; }
+        const char *var = getenv(default_output_path.generic_u8string().c_str() + 1);
+        if (var != nullptr)
+        {
+            return var;
+        }
     }
     return default_output_path;
 }
@@ -370,7 +381,10 @@ void Determine_InstallDir(std::filesystem::path &path_check)
 
         install_dir = std::filesystem::u8path(argv::list[inst_arg + 1]);
 
-        if (Verify_InstallDir(install_dir)) { return; }
+        if (Verify_InstallDir(install_dir))
+        {
+            return;
+        }
 
         ErrorPrintf("Bad install directory specified!\n");
     }
@@ -462,8 +476,7 @@ void Determine_LoggingFile()
 
         if (!fp)
         {
-            ErrorPrintf("Cannot create log file: %s\n",
-                        logging_file.u8string().c_str());
+            ErrorPrintf("Cannot create log file: %s\n", logging_file.u8string().c_str());
         }
 
         fclose(fp);
@@ -486,12 +499,10 @@ bool Main::BackupFile(const std::filesystem::path &filename)
     {
         std::filesystem::path backup_name = filename;
 
-        backup_name.replace_extension(StringFormat(
-            "%s.%s", backup_name.filename().extension().string().c_str(),
-            "bak"));
+        backup_name.replace_extension(
+            StringFormat("%s.%s", backup_name.filename().extension().string().c_str(), "bak"));
 
-        LogPrintf("Backing up existing file to: %s\n",
-                  backup_name.u8string().c_str());
+        LogPrintf("Backing up existing file to: %s\n", backup_name.u8string().c_str());
 
         std::filesystem::remove(backup_name);
         std::filesystem::rename(filename, backup_name);
@@ -502,12 +513,18 @@ bool Main::BackupFile(const std::filesystem::path &filename)
 
 void Main::Shutdown()
 {
-    if (!std::filesystem::exists(options_file)) { Options_Save(options_file); }
+    if (!std::filesystem::exists(options_file))
+    {
+        Options_Save(options_file);
+    }
     Script_Close();
     LogClose();
 }
 
-void Main_CalcNewSeed() { next_rand_seed = XoshiroInt(); }
+void Main_CalcNewSeed()
+{
+    next_rand_seed = XoshiroInt();
+}
 
 void Main_SetSeed()
 {
@@ -521,9 +538,15 @@ void Main_SetSeed()
                 {
                     string_seed = ob_get_password();
                 }
-                else { string_seed = ob_get_random_words(); }
+                else
+                {
+                    string_seed = ob_get_random_words();
+                }
             }
-            else { string_seed = ob_get_random_words(); }
+            else
+            {
+                string_seed = ob_get_random_words();
+            }
             ob_set_config("string_seed", string_seed.c_str());
             next_rand_seed = StringHash64(string_seed);
         }
@@ -566,7 +589,10 @@ bool Build_Cool_Shit()
         {
             game_object = Quake2_GameObject();
         }
-        else { ErrorPrintf("ERROR: unknown format: '%s'\n", format.c_str()); }
+        else
+        {
+            ErrorPrintf("ERROR: unknown format: '%s'\n", format.c_str());
+        }
     }
 
     const std::string def_filename = ob_default_filename();
@@ -591,10 +617,13 @@ bool Build_Cool_Shit()
         }
         else
         {
-            was_ok = game_object->Start("BS6");  // Blake Stone: Aliens of Gold
+            was_ok = game_object->Start("BS6"); // Blake Stone: Aliens of Gold
         }
     }
-    else { was_ok = game_object->Start(def_filename.c_str()); }
+    else
+    {
+        was_ok = game_object->Start(def_filename.c_str());
+    }
 
     if (was_ok)
     {
@@ -614,7 +643,10 @@ bool Build_Cool_Shit()
 
         string_seed.clear();
     }
-    else { string_seed.clear(); }
+    else
+    {
+        string_seed.clear();
+    }
 
     // Insurance in case the build process errored/cancelled
     ZIPF_CloseWrite();
@@ -665,7 +697,8 @@ sapp_desc sokol_main(int argc, char *argv[])
         ShowInfo();
 #ifdef _WIN32
         printf("\nClose window when finished...");
-        do {
+        do
+        {
         } while (true);
 #endif
         exit(EXIT_SUCCESS);
@@ -683,7 +716,8 @@ sapp_desc sokol_main(int argc, char *argv[])
         ShowVersion();
 #ifdef _WIN32
         printf("\nClose window when finished...");
-        do {
+        do
+        {
         } while (true);
 #endif
         exit(EXIT_SUCCESS);
@@ -705,7 +739,8 @@ sapp_desc sokol_main(int argc, char *argv[])
             fprintf(stderr, "OBSIDIAN ERROR: missing filename for --batch\n");
 #ifdef _WIN32
             printf("\nClose window when finished...");
-            do {
+            do
+            {
             } while (true);
 #endif
             exit(EXIT_FAILURE);
@@ -717,8 +752,7 @@ sapp_desc sokol_main(int argc, char *argv[])
     if (int update_arg = argv::Find('u', "update"); update_arg >= 0)
     {
         batch_mode = true;
-        if (update_arg + 3 >= argv::list.size() ||
-            argv::IsOption(update_arg + 1) || argv::IsOption(update_arg + 2) ||
+        if (update_arg + 3 >= argv::list.size() || argv::IsOption(update_arg + 1) || argv::IsOption(update_arg + 2) ||
             argv::IsOption(update_arg + 3))
         {
 #ifdef _WIN32
@@ -729,12 +763,12 @@ sapp_desc sokol_main(int argc, char *argv[])
                 freopen("CONOUT$", "w", stderr);
             }
 #endif
-            fprintf(stderr,
-                    "OBSIDIAN ERROR: missing one or more args for --update "
-                    "<section> <key> <value>\n");
+            fprintf(stderr, "OBSIDIAN ERROR: missing one or more args for --update "
+                            "<section> <key> <value>\n");
 #ifdef _WIN32
             printf("\nClose window when finished...");
-            do {
+            do
+            {
             } while (true);
 #endif
             exit(EXIT_FAILURE);
@@ -749,11 +783,11 @@ sapp_desc sokol_main(int argc, char *argv[])
                 freopen("CONOUT$", "w", stderr);
             }
 #endif
-            fprintf(stderr,
-                    "OBSIDIAN ERROR: section name must be one character\n");
+            fprintf(stderr, "OBSIDIAN ERROR: section name must be one character\n");
 #ifdef _WIN32
             printf("\nClose window when finished...");
-            do {
+            do
+            {
             } while (true);
 #endif
             exit(EXIT_FAILURE);
@@ -769,11 +803,11 @@ sapp_desc sokol_main(int argc, char *argv[])
                 freopen("CONOUT$", "w", stderr);
             }
 #endif
-            fprintf(stderr,
-                    "OBSIDIAN ERROR: section name must be 'c' or 'o'\n");
+            fprintf(stderr, "OBSIDIAN ERROR: section name must be 'c' or 'o'\n");
 #ifdef _WIN32
             printf("\nClose window when finished...");
-            do {
+            do
+            {
             } while (true);
 #endif
             exit(EXIT_FAILURE);
@@ -803,8 +837,7 @@ sapp_desc sokol_main(int argc, char *argv[])
 
     LogPrintf("\n");
     LogPrintf("********************************************************\n");
-    LogPrintf("** %s %s \"%s\" **\n", OBSIDIAN_TITLE.c_str(),
-              OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str());
+    LogPrintf("** %s %s \"%s\" **\n", OBSIDIAN_TITLE.c_str(), OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str());
     LogPrintf("** Build %s **\n", OBSIDIAN_VERSION);
     LogPrintf("********************************************************\n");
     LogPrintf("\n");
@@ -822,7 +855,10 @@ sapp_desc sokol_main(int argc, char *argv[])
         OBSIDIAN_CODE_NAME = GetTranslatedText("Unstable");
     }
 
-    if (argv::Find('d', "debug") >= 0) { debug_messages = true; }
+    if (argv::Find('d', "debug") >= 0)
+    {
+        debug_messages = true;
+    }
 // Grab current numeric locale
 #ifdef __APPLE__
     numeric_locale = setlocale(LC_NUMERIC, NULL);
@@ -859,7 +895,8 @@ sapp_desc sokol_main(int argc, char *argv[])
             fprintf(stderr, "OBSIDIAN ERROR: missing filename for --load\n");
 #ifdef _WIN32
             printf("\nClose window when finished...");
-            do {
+            do
+            {
             } while (true);
 #endif
             exit(EXIT_FAILURE);
@@ -885,15 +922,20 @@ sapp_desc sokol_main(int argc, char *argv[])
         // inform Lua code about batch mode
         ob_set_config("batch", "yes");
 
-        if (mature_word_lists) { ob_set_config("mature_words", "yes"); }
-        else { ob_set_config("mature_words", "no"); }
+        if (mature_word_lists)
+        {
+            ob_set_config("mature_words", "yes");
+        }
+        else
+        {
+            ob_set_config("mature_words", "no");
+        }
 
         if (!load_file.empty())
         {
             if (!Cookie_Load(load_file))
             {
-                ErrorPrintf(GetTranslatedText("No such config file: %s\n"),
-                            load_file.c_str());
+                ErrorPrintf(GetTranslatedText("No such config file: %s\n"), load_file.c_str());
             }
         }
         else
@@ -904,8 +946,7 @@ sapp_desc sokol_main(int argc, char *argv[])
             }
             if (!Cookie_Load(config_file))
             {
-                ErrorPrintf(GetTranslatedText("No such config file: %s\n"),
-                            config_file.c_str());
+                ErrorPrintf(GetTranslatedText("No such config file: %s\n"), config_file.c_str());
             }
         }
 
@@ -915,12 +956,12 @@ sapp_desc sokol_main(int argc, char *argv[])
         {
             switch (update_kv.section)
             {
-                case 'c':
-                    ob_set_config(update_kv.key, update_kv.value);
-                    break;
-                case 'o':
-                    Parse_Option(update_kv.key, update_kv.value);
-                    break;
+            case 'c':
+                ob_set_config(update_kv.key, update_kv.value);
+                break;
+            case 'o':
+                Parse_Option(update_kv.key, update_kv.value);
+                break;
             }
             Options_Save(options_file);
             Cookie_Save(config_file);
@@ -930,17 +971,16 @@ sapp_desc sokol_main(int argc, char *argv[])
 
         if (batch_output_file.empty())
         {
-            fprintf(stderr,
-                    "\nNo output filename given! Did you forget the --batch "
-                    "parameter?\n");
-            LogPrintf(
-                "\nNo output filename given! Did you forget the --batch "
-                "parameter?\n");
+            fprintf(stderr, "\nNo output filename given! Did you forget the --batch "
+                            "parameter?\n");
+            LogPrintf("\nNo output filename given! Did you forget the --batch "
+                      "parameter?\n");
 
             Main::Shutdown();
 #ifdef _WIN32
             printf("\nClose window when finished...");
-            do {
+            do
+            {
             } while (true);
 #endif
             exit(EXIT_FAILURE);
@@ -955,7 +995,8 @@ sapp_desc sokol_main(int argc, char *argv[])
             Main::Shutdown();
 #ifdef _WIN32
             printf("\nClose window when finished...");
-            do {
+            do
+            {
             } while (true);
 #endif
             exit(EXIT_FAILURE);
@@ -963,15 +1004,15 @@ sapp_desc sokol_main(int argc, char *argv[])
         Main::Shutdown();
 #ifdef _WIN32
         printf("\nClose window when finished...");
-        do {
+        do
+        {
         } while (true);
 #endif
         exit(EXIT_SUCCESS);
     }
 
     main_title =
-        StringFormat("%s %s \"%s\"", OBSIDIAN_TITLE.c_str(),
-                     OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str());
+        StringFormat("%s %s \"%s\"", OBSIDIAN_TITLE.c_str(), OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str());
 
     // this not only finds PK3 files, but also activates the ones specified
     // in OPTIONS.txt
@@ -982,8 +1023,14 @@ sapp_desc sokol_main(int argc, char *argv[])
 
     ob_set_config("locale", selected_lang.c_str());
 
-    if (mature_word_lists) { ob_set_config("mature_words", "yes"); }
-    else { ob_set_config("mature_words", "no"); }
+    if (mature_word_lists)
+    {
+        ob_set_config("mature_words", "yes");
+    }
+    else
+    {
+        ob_set_config("mature_words", "no");
+    }
 
     // load config after creating window (will set widget values)
     if (!Cookie_Load(config_file))
@@ -995,8 +1042,7 @@ sapp_desc sokol_main(int argc, char *argv[])
     {
         if (!Cookie_Load(load_file))
         {
-            ErrorPrintf(GetTranslatedText("No such config file: %s\n"),
-                        load_file.c_str());
+            ErrorPrintf(GetTranslatedText("No such config file: %s\n"), load_file.c_str());
         }
     }
 
@@ -1055,26 +1101,22 @@ int main(int argc, char **argv)
 
     if (int update_arg = argv::Find('u', "update"); update_arg >= 0)
     {
-        if (update_arg + 3 >= argv::list.size() ||
-            argv::IsOption(update_arg + 1) || argv::IsOption(update_arg + 2) ||
+        if (update_arg + 3 >= argv::list.size() || argv::IsOption(update_arg + 1) || argv::IsOption(update_arg + 2) ||
             argv::IsOption(update_arg + 3))
         {
-            fprintf(stderr,
-                    "OBSIDIAN ERROR: missing one or more args for --update "
-                    "<section> <key> <value>\n");
+            fprintf(stderr, "OBSIDIAN ERROR: missing one or more args for --update "
+                            "<section> <key> <value>\n");
             exit(EXIT_FAILURE);
         }
         if (argv::list[update_arg + 1].length() > 1)
         {
-            fprintf(stderr,
-                    "OBSIDIAN ERROR: section name must be one character\n");
+            fprintf(stderr, "OBSIDIAN ERROR: section name must be one character\n");
             exit(EXIT_FAILURE);
         }
         char section = argv::list[update_arg + 1][0];
         if (section != 'c' && section != 'o')
         {
-            fprintf(stderr,
-                    "OBSIDIAN ERROR: section name must be 'c' or 'o'\n");
+            fprintf(stderr, "OBSIDIAN ERROR: section name must be 'c' or 'o'\n");
             exit(EXIT_FAILURE);
         }
         update_kv.section = section;
@@ -1102,8 +1144,7 @@ int main(int argc, char **argv)
 
     LogPrintf("\n");
     LogPrintf("********************************************************\n");
-    LogPrintf("** %s %s \"%s\" **\n", OBSIDIAN_TITLE.c_str(),
-              OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str());
+    LogPrintf("** %s %s \"%s\" **\n", OBSIDIAN_TITLE.c_str(), OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str());
     LogPrintf("** Build %s **\n", OBSIDIAN_VERSION);
     LogPrintf("********************************************************\n");
     LogPrintf("\n");
@@ -1114,7 +1155,10 @@ int main(int argc, char **argv)
 
     Trans_Init();
 
-    if (argv::Find('d', "debug") >= 0) { debug_messages = true; }
+    if (argv::Find('d', "debug") >= 0)
+    {
+        debug_messages = true;
+    }
 // Grab current numeric locale
 #ifdef __APPLE__
     numeric_locale = setlocale(LC_NUMERIC, NULL);
@@ -1154,24 +1198,31 @@ int main(int argc, char **argv)
     // inform Lua code about batch mode
     ob_set_config("batch", "yes");
 
-    if (mature_word_lists) { ob_set_config("mature_words", "yes"); }
-    else { ob_set_config("mature_words", "no"); }
+    if (mature_word_lists)
+    {
+        ob_set_config("mature_words", "yes");
+    }
+    else
+    {
+        ob_set_config("mature_words", "no");
+    }
 
     if (!load_file.empty())
     {
         if (!Cookie_Load(load_file))
         {
-            ErrorPrintf(GetTranslatedText("No such config file: %s\n"),
-                        load_file.c_str());
+            ErrorPrintf(GetTranslatedText("No such config file: %s\n"), load_file.c_str());
         }
     }
     else
     {
-        if (!std::filesystem::exists(config_file)) { Cookie_Save(config_file); }
+        if (!std::filesystem::exists(config_file))
+        {
+            Cookie_Save(config_file);
+        }
         if (!Cookie_Load(config_file))
         {
-            ErrorPrintf(GetTranslatedText("No such config file: %s\n"),
-                        config_file.c_str());
+            ErrorPrintf(GetTranslatedText("No such config file: %s\n"), config_file.c_str());
         }
     }
 
@@ -1181,12 +1232,12 @@ int main(int argc, char **argv)
     {
         switch (update_kv.section)
         {
-            case 'c':
-                ob_set_config(update_kv.key, update_kv.value);
-                break;
-            case 'o':
-                Parse_Option(update_kv.key, update_kv.value);
-                break;
+        case 'c':
+            ob_set_config(update_kv.key, update_kv.value);
+            break;
+        case 'o':
+            Parse_Option(update_kv.key, update_kv.value);
+            break;
         }
         Options_Save(options_file);
         Cookie_Save(config_file);
@@ -1196,12 +1247,10 @@ int main(int argc, char **argv)
 
     if (batch_output_file.empty())
     {
-        fprintf(stderr,
-                "\nNo output filename given! Did you forget the --batch "
-                "parameter?\n");
-        LogPrintf(
-            "\nNo output filename given! Did you forget the --batch "
-            "parameter?\n");
+        fprintf(stderr, "\nNo output filename given! Did you forget the --batch "
+                        "parameter?\n");
+        LogPrintf("\nNo output filename given! Did you forget the --batch "
+                  "parameter?\n");
 
         Main::Shutdown();
         return EXIT_FAILURE;

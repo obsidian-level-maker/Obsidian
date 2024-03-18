@@ -24,16 +24,13 @@
 
 #include <stdint.h>
 
-void NK_AddSector(int first_wall, int num_wall, int visibility, int f_h,
-                  int f_pic, int c_h, int c_pic, int c_flags, int lo_tag = 0,
-                  int hi_tag = 0);
-
-void NK_AddWall(int x, int y, int right, int back, int back_sec, int flags,
-                int pic, int mask_pic, int xscale, int yscale, int xpan,
-                int ypan, int lo_tag = 0, int hi_tag = 0);
-
-void NK_AddSprite(int x, int y, int z, int sec, int flags, int pic, int angle,
+void NK_AddSector(int first_wall, int num_wall, int visibility, int f_h, int f_pic, int c_h, int c_pic, int c_flags,
                   int lo_tag = 0, int hi_tag = 0);
+
+void NK_AddWall(int x, int y, int right, int back, int back_sec, int flags, int pic, int mask_pic, int xscale,
+                int yscale, int xpan, int ypan, int lo_tag = 0, int hi_tag = 0);
+
+void NK_AddSprite(int x, int y, int z, int sec, int flags, int pic, int angle, int lo_tag = 0, int hi_tag = 0);
 
 int NK_NumSectors();
 int NK_NumWalls();
@@ -173,7 +170,7 @@ struct raw_nukem_sprite_t
 #define SPRITE_F_GUN_BLOCK (1 << 8)
 
 #define SPRITE_F_TRANS33   (1 << 1)
-#define SPRITE_F_TRANS66   (1 << 9)  // requires TRANS33 too
+#define SPRITE_F_TRANS66   (1 << 9) // requires TRANS33 too
 #define SPRITE_F_ONE_SIDED (1 << 6)
 #define SPRITE_F_INVISIBLE (1 << 15)
 

@@ -78,29 +78,10 @@ int num_wall_tips;
 
 static vertex_c *SafeLookupVertex(int num)
 {
-    if (num >= num_vertices) ErrorPrintf("illegal vertex number #%d\n", num);
+    if (num >= num_vertices)
+        ErrorPrintf("illegal vertex number #%d\n", num);
 
     return all_vertices[num];
-}
-
-static sector_c *SafeLookupSector(uint16_t num)
-{
-    if (num == 0xFFFF) return NULL;
-
-    if (num >= num_sectors)
-        ErrorPrintf("illegal sector number #%d\n", (int)num);
-
-    return all_sectors[num];
-}
-
-static inline sidedef_c *SafeLookupSidedef(uint16_t num)
-{
-    if (num == 0xFFFF) return NULL;
-
-    // silently ignore illegal sidedef numbers
-    if (num >= (unsigned int)num_sidedefs) return NULL;
-
-    return all_sidedefs[num];
 }
 
 #define UDMF_THING   1
@@ -109,113 +90,173 @@ static inline sidedef_c *SafeLookupSidedef(uint16_t num)
 #define UDMF_SIDEDEF 4
 #define UDMF_LINEDEF 5
 
-void ParseThingField(thing_c *thing, const std::string &key,
-                     ajparse::TokenKind kind, const std::string &value)
+void ParseThingField(thing_c *thing, const std::string &key, ajparse::TokenKind kind, const std::string &value)
 {
-    if (key == "x") { thing->x = ajparse::LexDouble(value); }
-    else if (key == "y") { thing->y = ajparse::LexDouble(value); }
-    else if (key == "height") { thing->height = ajparse::LexDouble(value); }
-    else if (key == "angle") { thing->angle = ajparse::LexDouble(value); }
-    else if (key == "type") { thing->type = ajparse::LexDouble(value); }
+    if (key == "x")
+    {
+        thing->x = ajparse::LexDouble(value);
+    }
+    else if (key == "y")
+    {
+        thing->y = ajparse::LexDouble(value);
+    }
+    else if (key == "height")
+    {
+        thing->height = ajparse::LexDouble(value);
+    }
+    else if (key == "angle")
+    {
+        thing->angle = ajparse::LexDouble(value);
+    }
+    else if (key == "type")
+    {
+        thing->type = ajparse::LexDouble(value);
+    }
     else if (key == "skill1")
     {
-        if (ajparse::LexBoolean(value)) { thing->options |= 1; }
+        if (ajparse::LexBoolean(value))
+        {
+            thing->options |= 1;
+        }
     }
     else if (key == "skill2")
     {
-        if (ajparse::LexBoolean(value)) { thing->options |= 1; }
+        if (ajparse::LexBoolean(value))
+        {
+            thing->options |= 1;
+        }
     }
     else if (key == "skill3")
     {
-        if (ajparse::LexBoolean(value)) { thing->options |= 2; }
+        if (ajparse::LexBoolean(value))
+        {
+            thing->options |= 2;
+        }
     }
     else if (key == "skill4")
     {
-        if (ajparse::LexBoolean(value)) { thing->options |= 4; }
+        if (ajparse::LexBoolean(value))
+        {
+            thing->options |= 4;
+        }
     }
     else if (key == "skill5")
     {
-        if (ajparse::LexBoolean(value)) { thing->options |= 4; }
+        if (ajparse::LexBoolean(value))
+        {
+            thing->options |= 4;
+        }
     }
     else if (key == "ambush")
     {
-        if (ajparse::LexBoolean(value)) { thing->options |= 8; }
+        if (ajparse::LexBoolean(value))
+        {
+            thing->options |= 8;
+        }
     }
     else if (key == "single")
     {
-        if (ajparse::LexBoolean(value)) { thing->options &= ~16; }
+        if (ajparse::LexBoolean(value))
+        {
+            thing->options &= ~16;
+        }
     }
     else if (key == "dm")
     {
-        if (ajparse::LexBoolean(value)) { thing->options &= ~32; }
+        if (ajparse::LexBoolean(value))
+        {
+            thing->options &= ~32;
+        }
     }
     else if (key == "coop")
     {
-        if (ajparse::LexBoolean(value)) { thing->options &= ~64; }
+        if (ajparse::LexBoolean(value))
+        {
+            thing->options &= ~64;
+        }
     }
     else if (key == "friend")
     {
-        if (ajparse::LexBoolean(value)) { thing->options |= 128; }
+        if (ajparse::LexBoolean(value))
+        {
+            thing->options |= 128;
+        }
     }
-    else  // Non-vanilla spec values? - Dasho
+    else // Non-vanilla spec values? - Dasho
     {
         thing->misc_vals.try_emplace({key.c_str(), value.c_str()});
     }
 }
 
-void ParseVertexField(vertex_c *vertex, const std::string &key,
-                      ajparse::TokenKind kind, const std::string &value)
+void ParseVertexField(vertex_c *vertex, const std::string &key, ajparse::TokenKind kind, const std::string &value)
 {
-    if (key == "x") { vertex->x = ajparse::LexDouble(value); }
-    else if (key == "y") { vertex->y = ajparse::LexDouble(value); }
+    if (key == "x")
+    {
+        vertex->x = ajparse::LexDouble(value);
+    }
+    else if (key == "y")
+    {
+        vertex->y = ajparse::LexDouble(value);
+    }
 }
 
-void ParseSectorField(sector_c *sector, const std::string &key,
-                      ajparse::TokenKind kind, const std::string &value)
+void ParseSectorField(sector_c *sector, const std::string &key, ajparse::TokenKind kind, const std::string &value)
 {
-    if (key == "heightfloor") { sector->floor_h = ajparse::LexDouble(value); }
+    if (key == "heightfloor")
+    {
+        sector->floor_h = ajparse::LexDouble(value);
+    }
     else if (key == "heightceiling")
     {
         sector->ceil_h = ajparse::LexDouble(value);
     }
     else if (key == "texturefloor")
     {
-        std::copy(value.data(), value.data() + OBSIDIAN_MIN(8, value.size()),
-                  sector->floor_tex);
+        std::copy(value.data(), value.data() + OBSIDIAN_MIN(8, value.size()), sector->floor_tex);
     }
     else if (key == "textureceiling")
     {
-        std::copy(value.data(), value.data() + OBSIDIAN_MIN(8, value.size()),
-                  sector->ceil_tex);
+        std::copy(value.data(), value.data() + OBSIDIAN_MIN(8, value.size()), sector->ceil_tex);
     }
-    else if (key == "lightlevel") { sector->light = ajparse::LexDouble(value); }
-    else if (key == "special") { sector->special = ajparse::LexDouble(value); }
-    else if (key == "id") { sector->tag = ajparse::LexDouble(value); }
-    else  // Non-vanilla spec values? - Dasho
+    else if (key == "lightlevel")
+    {
+        sector->light = ajparse::LexDouble(value);
+    }
+    else if (key == "special")
+    {
+        sector->special = ajparse::LexDouble(value);
+    }
+    else if (key == "id")
+    {
+        sector->tag = ajparse::LexDouble(value);
+    }
+    else // Non-vanilla spec values? - Dasho
     {
         sector->misc_vals.try_emplace({key.c_str(), value.c_str()});
     }
 }
 
-void ParseSidedefField(sidedef_c *side, const std::string &key,
-                       ajparse::TokenKind kind, const std::string &value)
+void ParseSidedefField(sidedef_c *side, const std::string &key, ajparse::TokenKind kind, const std::string &value)
 {
-    if (key == "offsetx") { side->x_offset = ajparse::LexDouble(value); }
-    else if (key == "offsety") { side->y_offset = ajparse::LexDouble(value); }
+    if (key == "offsetx")
+    {
+        side->x_offset = ajparse::LexDouble(value);
+    }
+    else if (key == "offsety")
+    {
+        side->y_offset = ajparse::LexDouble(value);
+    }
     else if (key == "texturetop")
     {
-        std::copy(value.data(), value.data() + OBSIDIAN_MIN(8, value.size()),
-                  side->upper_tex);
+        std::copy(value.data(), value.data() + OBSIDIAN_MIN(8, value.size()), side->upper_tex);
     }
     else if (key == "texturebottom")
     {
-        std::copy(value.data(), value.data() + OBSIDIAN_MIN(8, value.size()),
-                  side->lower_tex);
+        std::copy(value.data(), value.data() + OBSIDIAN_MIN(8, value.size()), side->lower_tex);
     }
     else if (key == "texturemiddle")
     {
-        std::copy(value.data(), value.data() + OBSIDIAN_MIN(8, value.size()),
-                  side->mid_tex);
+        std::copy(value.data(), value.data() + OBSIDIAN_MIN(8, value.size()), side->mid_tex);
     }
     else if (key == "sector")
     {
@@ -226,11 +267,13 @@ void ParseSidedefField(sidedef_c *side, const std::string &key,
 
         side->sector = all_sectors[num];
     }
-    else { side->misc_vals.try_emplace({key.c_str(), value.c_str()}); }
+    else
+    {
+        side->misc_vals.try_emplace({key.c_str(), value.c_str()});
+    }
 }
 
-void ParseLinedefField(linedef_c *line, const std::string &key,
-                       ajparse::TokenKind kind, const std::string &value)
+void ParseLinedefField(linedef_c *line, const std::string &key, ajparse::TokenKind kind, const std::string &value)
 {
     if (key == "v1")
     {
@@ -240,46 +283,79 @@ void ParseLinedefField(linedef_c *line, const std::string &key,
     {
         line->end = SafeLookupVertex(ajparse::LexDouble(value));
     }
-    else if (key == "special") { line->special = ajparse::LexDouble(value); }
+    else if (key == "special")
+    {
+        line->special = ajparse::LexDouble(value);
+    }
     else if (key == "blocking")
     {
-        if (ajparse::LexBoolean(value)) { line->flags |= 0x0001; }
+        if (ajparse::LexBoolean(value))
+        {
+            line->flags |= 0x0001;
+        }
     }
     else if (key == "blockmonsters")
     {
-        if (ajparse::LexBoolean(value)) { line->flags |= 0x0002; }
+        if (ajparse::LexBoolean(value))
+        {
+            line->flags |= 0x0002;
+        }
     }
     else if (key == "twosided")
     {
-        if (ajparse::LexBoolean(value)) { line->flags |= 0x0004; }
+        if (ajparse::LexBoolean(value))
+        {
+            line->flags |= 0x0004;
+        }
     }
     else if (key == "dontpegtop")
     {
-        if (ajparse::LexBoolean(value)) { line->flags |= 0x0008; }
+        if (ajparse::LexBoolean(value))
+        {
+            line->flags |= 0x0008;
+        }
     }
     else if (key == "dontpegbottom")
     {
-        if (ajparse::LexBoolean(value)) { line->flags |= 0x0010; }
+        if (ajparse::LexBoolean(value))
+        {
+            line->flags |= 0x0010;
+        }
     }
     else if (key == "secret")
     {
-        if (ajparse::LexBoolean(value)) { line->flags |= 0x0020; }
+        if (ajparse::LexBoolean(value))
+        {
+            line->flags |= 0x0020;
+        }
     }
     else if (key == "blocksound")
     {
-        if (ajparse::LexBoolean(value)) { line->flags |= 0x0040; }
+        if (ajparse::LexBoolean(value))
+        {
+            line->flags |= 0x0040;
+        }
     }
     else if (key == "dontdraw")
     {
-        if (ajparse::LexBoolean(value)) { line->flags |= 0x0080; }
+        if (ajparse::LexBoolean(value))
+        {
+            line->flags |= 0x0080;
+        }
     }
     else if (key == "mapped")
     {
-        if (ajparse::LexBoolean(value)) { line->flags |= 0x0100; }
+        if (ajparse::LexBoolean(value))
+        {
+            line->flags |= 0x0100;
+        }
     }
     else if (key == "passuse")
     {
-        if (ajparse::LexBoolean(value)) { line->flags |= 0x0200; }
+        if (ajparse::LexBoolean(value))
+        {
+            line->flags |= 0x0200;
+        }
     }
     else if (key == "sidefront")
     {
@@ -299,7 +375,10 @@ void ParseLinedefField(linedef_c *line, const std::string &key,
         else
             line->left = all_sidedefs[num];
     }
-    else { line->misc_vals.try_emplace({key.c_str(), value.c_str()}); }
+    else
+    {
+        line->misc_vals.try_emplace({key.c_str(), value.c_str()});
+    }
 }
 
 void ParseUDMF_Block(ajparse::Lexer &lex, int cur_type)
@@ -312,28 +391,29 @@ void ParseUDMF_Block(ajparse::Lexer &lex, int cur_type)
 
     switch (cur_type)
     {
-        case UDMF_VERTEX:
-            vertex = NewVertex();
-            break;
-        case UDMF_THING:
-            thing = NewThing();
-            break;
-        case UDMF_SECTOR:
-            sector = NewSector();
-            break;
-        case UDMF_SIDEDEF:
-            side = NewSidedef();
-            break;
-        case UDMF_LINEDEF:
-            line = NewLinedef();
-            break;
-        default:
-            break;
+    case UDMF_VERTEX:
+        vertex = NewVertex();
+        break;
+    case UDMF_THING:
+        thing = NewThing();
+        break;
+    case UDMF_SECTOR:
+        sector = NewSector();
+        break;
+    case UDMF_SIDEDEF:
+        side = NewSidedef();
+        break;
+    case UDMF_LINEDEF:
+        line = NewLinedef();
+        break;
+    default:
+        break;
     }
 
     for (;;)
     {
-        if (lex.Match("}")) break;
+        if (lex.Match("}"))
+            break;
 
         std::string key;
         std::string value;
@@ -351,8 +431,7 @@ void ParseUDMF_Block(ajparse::Lexer &lex, int cur_type)
 
         tok = lex.Next(value);
 
-        if (tok == ajparse::kTokenEOF || tok == ajparse::kTokenError ||
-            value == "}")
+        if (tok == ajparse::kTokenEOF || tok == ajparse::kTokenError || value == "}")
             ErrorPrintf("Malformed TEXTMAP lump: missing value\n");
 
         if (!lex.Match(";"))
@@ -360,24 +439,24 @@ void ParseUDMF_Block(ajparse::Lexer &lex, int cur_type)
 
         switch (cur_type)
         {
-            case UDMF_VERTEX:
-                ParseVertexField(vertex, key, tok, value);
-                break;
-            case UDMF_THING:
-                ParseThingField(thing, key, tok, value);
-                break;
-            case UDMF_SECTOR:
-                ParseSectorField(sector, key, tok, value);
-                break;
-            case UDMF_SIDEDEF:
-                ParseSidedefField(side, key, tok, value);
-                break;
-            case UDMF_LINEDEF:
-                ParseLinedefField(line, key, tok, value);
-                break;
+        case UDMF_VERTEX:
+            ParseVertexField(vertex, key, tok, value);
+            break;
+        case UDMF_THING:
+            ParseThingField(thing, key, tok, value);
+            break;
+        case UDMF_SECTOR:
+            ParseSectorField(sector, key, tok, value);
+            break;
+        case UDMF_SIDEDEF:
+            ParseSidedefField(side, key, tok, value);
+            break;
+        case UDMF_LINEDEF:
+            ParseLinedefField(line, key, tok, value);
+            break;
 
-            default: /* just skip it */
-                break;
+        default: /* just skip it */
+            break;
         }
     }
 
@@ -403,7 +482,8 @@ void ParseUDMF_Pass(const std::string &data, int pass)
         std::string        section;
         ajparse::TokenKind tok = lex.Next(section);
 
-        if (tok == ajparse::kTokenEOF) return;
+        if (tok == ajparse::kTokenEOF)
+            return;
 
         if (tok != ajparse::kTokenIdentifier)
         {
@@ -421,31 +501,34 @@ void ParseUDMF_Pass(const std::string &data, int pass)
         }
 
         if (!lex.Match("{"))
-            ErrorPrintf(
-                "Malformed TEXTMAP lump: missing opening bracket, instead %s\n",
-                section.c_str());
+            ErrorPrintf("Malformed TEXTMAP lump: missing opening bracket, instead %s\n", section.c_str());
 
         int cur_type = 0;
 
         if (section == "thing")
         {
-            if (pass == 1) cur_type = UDMF_THING;
+            if (pass == 1)
+                cur_type = UDMF_THING;
         }
         else if (section == "vertex")
         {
-            if (pass == 1) cur_type = UDMF_VERTEX;
+            if (pass == 1)
+                cur_type = UDMF_VERTEX;
         }
         else if (section == "sector")
         {
-            if (pass == 1) cur_type = UDMF_SECTOR;
+            if (pass == 1)
+                cur_type = UDMF_SECTOR;
         }
         else if (section == "sidedef")
         {
-            if (pass == 2) cur_type = UDMF_SIDEDEF;
+            if (pass == 2)
+                cur_type = UDMF_SIDEDEF;
         }
         else if (section == "linedef")
         {
-            if (pass == 3) cur_type = UDMF_LINEDEF;
+            if (pass == 3)
+                cur_type = UDMF_LINEDEF;
         }
 
         // process the block
@@ -455,7 +538,8 @@ void ParseUDMF_Pass(const std::string &data, int pass)
 
 void ParseUDMF(uint8_t *lump, int length)
 {
-    if (!lump || length <= 0) ErrorPrintf("Error parsing TEXTMAP lump.\n");
+    if (!lump || length <= 0)
+        ErrorPrintf("Error parsing TEXTMAP lump.\n");
 
     // load the lump into this string
     std::string data;
@@ -546,16 +630,25 @@ polygon_c *Polygon(int index)
 
 inline sidedef_c *SafeSidedef(uint16_t num)
 {
-    if (num == 0xFFFF) { return NULL; }
+    if (num == 0xFFFF)
+    {
+        return NULL;
+    }
 
-    if ((int)num >= num_sidedefs && (int16_t)(num) < 0) { return NULL; }
+    if ((int)num >= num_sidedefs && (int16_t)(num) < 0)
+    {
+        return NULL;
+    }
 
     return Sidedef(num);
 }
 
 linedef_c *sector_c::getExtraFloor(int index)
 {
-    if (index < 0 || index >= num_floors) { return NULL; }
+    if (index < 0 || index >= num_floors)
+    {
+        return NULL;
+    }
 
     return all_ex_floors[floor_start + index];
 }
@@ -674,7 +767,7 @@ bool LoadVertices()
         vert->y = (double)AlignedLittleEndianS16(raw->y);
     }
 
-    return true;  // OK
+    return true; // OK
 }
 
 bool LoadSectors()
@@ -717,7 +810,7 @@ bool LoadSectors()
 
     void_sector->index = VOID_SECTOR_IDX;
 
-    return true;  // OK
+    return true; // OK
 }
 
 bool LoadThings()
@@ -752,7 +845,7 @@ bool LoadThings()
         thing->angle   = AlignedLittleEndianS16(raw->angle);
     }
 
-    return true;  // OK
+    return true; // OK
 }
 
 bool LoadThingsHexen()
@@ -794,7 +887,7 @@ bool LoadThingsHexen()
         memcpy(thing->args, raw->args, 5);
     }
 
-    return true;  // OK
+    return true; // OK
 }
 
 bool LoadSidedefs()
@@ -837,7 +930,7 @@ bool LoadSidedefs()
         std::copy(raw->lower_tex, raw->lower_tex + 8, side->lower_tex);
     }
 
-    return true;  // OK
+    return true; // OK
 }
 
 bool LoadLinedefs()
@@ -874,8 +967,7 @@ bool LoadLinedefs()
         end->ref_count++;
 
         /* check for zero-length line */
-        if ((fabs(start->x - end->x) < kDistanceEpsilon) &&
-            (fabs(start->y - end->y) < kDistanceEpsilon))
+        if ((fabs(start->x - end->x) < kDistanceEpsilon) && (fabs(start->y - end->y) < kDistanceEpsilon))
         {
             ErrorPrintf("Linedef #%d has zero length.\n", i);
         }
@@ -888,7 +980,7 @@ bool LoadLinedefs()
         line->left  = SafeSidedef(AlignedLittleEndianU16(raw->left));
     }
 
-    return true;  // OK
+    return true; // OK
 }
 
 bool LoadLinedefsHexen()
@@ -925,8 +1017,7 @@ bool LoadLinedefsHexen()
         end->ref_count++;
 
         /* check for zero-length line */
-        if ((fabs(start->x - end->x) < kDistanceEpsilon) &&
-            (fabs(start->y - end->y) < kDistanceEpsilon))
+        if ((fabs(start->x - end->x) < kDistanceEpsilon) && (fabs(start->y - end->y) < kDistanceEpsilon))
         {
             ErrorPrintf("Linedef #%d has zero length.\n", i);
         }
@@ -938,10 +1029,13 @@ bool LoadLinedefsHexen()
         line->right = SafeSidedef(AlignedLittleEndianU16(raw->right));
         line->left  = SafeSidedef(AlignedLittleEndianU16(raw->left));
 
-        for (int k = 0; k < 5; k++) { line->args[k] = raw->args[k]; }
+        for (int k = 0; k < 5; k++)
+        {
+            line->args[k] = raw->args[k];
+        }
     }
 
-    return true;  // OK
+    return true; // OK
 }
 
 //------------------------------------------------------------------------
@@ -982,13 +1076,15 @@ void DetermineMapLimits()
         limit_y2 = OBSIDIAN_MAX(limit_y2, OBSIDIAN_MAX(y1, y2));
     }
 
-    DebugPrintf("Map goes from (%d,%d) to (%d,%d)\n", limit_x1, limit_y1,
-                limit_x2, limit_y2);
+    DebugPrintf("Map goes from (%d,%d) to (%d,%d)\n", limit_x1, limit_y1, limit_x2, limit_y2);
 }
 
 void CheckSectorIsDummy(sector_c *sec)
 {
-    if (sec->index < 0 || sec->index == VOID_SECTOR_IDX) { return; }
+    if (sec->index < 0 || sec->index == VOID_SECTOR_IDX)
+    {
+        return;
+    }
 
     int line_count = 0;
 
@@ -1002,14 +1098,26 @@ void CheckSectorIsDummy(sector_c *sec)
         linedef_c *line = all_linedefs[k];
 
         // sector exists on back of a line?  disqualify...
-        if (line->left && line->left->sector == sec) { return; }
+        if (line->left && line->left->sector == sec)
+        {
+            return;
+        }
 
-        if (!line->right) { continue; }
+        if (!line->right)
+        {
+            continue;
+        }
 
-        if (line->right->sector != sec) { continue; }
+        if (line->right->sector != sec)
+        {
+            continue;
+        }
 
         // disqualify if sector contains a two-sided line
-        if (line->left) { return; }
+        if (line->left)
+        {
+            return;
+        }
 
         line_count++;
 
@@ -1026,10 +1134,19 @@ void CheckSectorIsDummy(sector_c *sec)
         }
     }
 
-    if (line_count < 3 || line_count > 4) { return; }
+    if (line_count < 3 || line_count > 4)
+    {
+        return;
+    }
 
-    if (bound_x2 - bound_x1 > 32) { return; }
-    if (bound_y2 - bound_y1 > 32) { return; }
+    if (bound_x2 - bound_x1 > 32)
+    {
+        return;
+    }
+    if (bound_y2 - bound_y1 > 32)
+    {
+        return;
+    }
 
     // OK found one
 
@@ -1048,7 +1165,10 @@ void FindDummySectors()
 
     int i;
 
-    if (num_sectors <= 1) { return; }
+    if (num_sectors <= 1)
+    {
+        return;
+    }
 
     uint8_t *joined_secs = new uint8_t[num_sectors];
 
@@ -1058,7 +1178,10 @@ void FindDummySectors()
     {
         linedef_c *line = all_linedefs[i];
 
-        if (!(line->left && line->right)) { continue; }
+        if (!(line->left && line->right))
+        {
+            continue;
+        }
 
         // this line straddles two sectors
         // (or possible a single one -- that too rules it out)
@@ -1078,7 +1201,10 @@ void FindDummySectors()
 
     for (i = 0; i < num_sectors; i++)
     {
-        if (!joined_secs[i]) { CheckSectorIsDummy(all_sectors[i]); }
+        if (!joined_secs[i])
+        {
+            CheckSectorIsDummy(all_sectors[i]);
+        }
     }
 
     delete[] joined_secs;
@@ -1093,25 +1219,29 @@ int CollectFloorsAtSector(sector_c *sec, bool count_only)
         linedef_c *line = all_linedefs[i];
 
         // line must be in a dummy sector
-        if (!(line->right && line->right->sector &&
-              line->right->sector->is_dummy))
+        if (!(line->right && line->right->sector && line->right->sector->is_dummy))
         {
             continue;
         }
 
         // special must be an extrafloor
-        if (!(line->special == SOLID_EXTRA_FLOOR ||
-              line->special == LIQUID_EXTRA_FLOOR))
+        if (!(line->special == SOLID_EXTRA_FLOOR || line->special == LIQUID_EXTRA_FLOOR))
         {
             continue;
         }
 
         // tag must match this sector
-        if (line->tag != sec->tag) { continue; }
+        if (line->tag != sec->tag)
+        {
+            continue;
+        }
 
         total++;
 
-        if (!count_only) { all_ex_floors.push_back(line); }
+        if (!count_only)
+        {
+            all_ex_floors.push_back(line);
+        }
     }
 
     return total;
@@ -1123,16 +1253,28 @@ void ProcessExtraFloors()
     {
         sector_c *sec = all_sectors[k];
 
-        if (sec->index < 0 || sec->index == VOID_SECTOR_IDX) { continue; }
+        if (sec->index < 0 || sec->index == VOID_SECTOR_IDX)
+        {
+            continue;
+        }
 
-        if (sec->tag <= 0) { continue; }
+        if (sec->tag <= 0)
+        {
+            continue;
+        }
 
         // skip dummy sectors too
-        if (sec->is_dummy) { continue; }
+        if (sec->is_dummy)
+        {
+            continue;
+        }
 
         int total = CollectFloorsAtSector(sec, true /* count_only */);
 
-        if (total == 0) { continue; }
+        if (total == 0)
+        {
+            continue;
+        }
 
         sec->num_floors  = total;
         sec->floor_start = (int)all_ex_floors.size();
@@ -1152,9 +1294,15 @@ int VertexCompare(const void *p1, const void *p2)
     vertex_c *A = all_vertices[vert1];
     vertex_c *B = all_vertices[vert2];
 
-    if (vert1 == vert2) { return 0; }
+    if (vert1 == vert2)
+    {
+        return 0;
+    }
 
-    if ((int)A->x != (int)B->x) { return (int)A->x - (int)B->x; }
+    if ((int)A->x != (int)B->x)
+    {
+        return (int)A->x - (int)B->x;
+    }
 
     return (int)A->y - (int)B->y;
 }
@@ -1166,14 +1314,20 @@ bool DetectDuplicateVertices()
 
     // sort array of indices
     // FIXME: exclude unused vertices
-    for (i = 0; i < num_vertices; i++) { array[i] = i; }
+    for (i = 0; i < num_vertices; i++)
+    {
+        array[i] = i;
+    }
 
     qsort(array, num_vertices, sizeof(int), VertexCompare);
 
     // now mark them off
     for (i = 0; i < num_vertices - 1; i++)
     {
-        if (VertexCompare(array + i, array + i + 1) != 0) { continue; }
+        if (VertexCompare(array + i, array + i + 1) != 0)
+        {
+            continue;
+        }
 
         // found a duplicate !
 
@@ -1182,7 +1336,10 @@ bool DetectDuplicateVertices()
             vertex_c *B = all_vertices[array[i + 1]];
 
             // we only care if the vertices both belong to a linedef
-            if (A->ref_count == 0 || B->ref_count == 0) { continue; }
+            if (A->ref_count == 0 || B->ref_count == 0)
+            {
+                continue;
+            }
 
             SetErrorMsg("Vertices #%d and #%d overlap", array[i], array[i + 1]);
             return false;
@@ -1200,8 +1357,7 @@ inline bool LineVertexLowest(const linedef_c *L)
     // line is vertical, then the bottom-most) => 0 for start, 1 for end.
 
     return ((int)L->start->x < (int)L->end->x ||
-            ((int)L->start->x == (int)L->end->x &&
-             (int)L->start->y < (int)L->end->y));
+            ((int)L->start->x == (int)L->end->x && (int)L->start->y < (int)L->end->y));
 }
 
 int LineStartCompare(const void *p1, const void *p2)
@@ -1215,14 +1371,23 @@ int LineStartCompare(const void *p1, const void *p2)
     vertex_c *C;
     vertex_c *D;
 
-    if (line1 == line2) { return 0; }
+    if (line1 == line2)
+    {
+        return 0;
+    }
 
     // determine left-most vertex of each line
     C = LineVertexLowest(A) ? A->end : A->start;
     D = LineVertexLowest(B) ? B->end : B->start;
 
-    if ((int)C->x != (int)D->x) { return (int)C->x - (int)D->x; }
-    else { return (int)C->y - (int)D->y; }
+    if ((int)C->x != (int)D->x)
+    {
+        return (int)C->x - (int)D->x;
+    }
+    else
+    {
+        return (int)C->y - (int)D->y;
+    }
 }
 
 int LineEndCompare(const void *p1, const void *p2)
@@ -1236,14 +1401,23 @@ int LineEndCompare(const void *p1, const void *p2)
     vertex_c *C;
     vertex_c *D;
 
-    if (line1 == line2) { return 0; }
+    if (line1 == line2)
+    {
+        return 0;
+    }
 
     // determine right-most vertex of each line
     C = LineVertexLowest(A) ? A->start : A->end;
     D = LineVertexLowest(B) ? B->start : B->end;
 
-    if ((int)C->x != (int)D->x) { return (int)C->x - (int)D->x; }
-    else { return (int)C->y - (int)D->y; }
+    if ((int)C->x != (int)D->x)
+    {
+        return (int)C->x - (int)D->x;
+    }
+    else
+    {
+        return (int)C->y - (int)D->y;
+    }
 }
 
 bool DetectOverlappingLines()
@@ -1258,7 +1432,10 @@ bool DetectOverlappingLines()
     int *array = new int[num_linedefs + 1];
 
     // sort array of indices
-    for (i = 0; i < num_linedefs; i++) { array[i] = i; }
+    for (i = 0; i < num_linedefs; i++)
+    {
+        array[i] = i;
+    }
 
     qsort(array, num_linedefs, sizeof(int), LineStartCompare);
 
@@ -1268,7 +1445,10 @@ bool DetectOverlappingLines()
 
         for (k = i + 1; k < num_linedefs; k++)
         {
-            if (LineStartCompare(array + i, array + k) != 0) { break; }
+            if (LineStartCompare(array + i, array + k) != 0)
+            {
+                break;
+            }
 
             if (LineEndCompare(array + i, array + k) == 0)
             {
@@ -1281,7 +1461,7 @@ bool DetectOverlappingLines()
 
     delete[] array;
 
-    return true;  // OK
+    return true; // OK
 }
 
 /* ----- wall tip functions ------------------------------- */
@@ -1297,7 +1477,9 @@ void vertex_c::AddTip(double dx, double dy, sector_c *left, sector_c *right)
     // find the correct place (order is increasing angle)
     wall_tip_c *after;
 
-    for (after = tip_set; after && after->next; after = after->next) {}
+    for (after = tip_set; after && after->next; after = after->next)
+    {
+    }
 
     while (after && tip->angle + kAngleEpsilon < after->angle)
     {
@@ -1310,13 +1492,19 @@ void vertex_c::AddTip(double dx, double dy, sector_c *left, sector_c *right)
 
     if (after)
     {
-        if (after->next) { after->next->prev = tip; }
+        if (after->next)
+        {
+            after->next->prev = tip;
+        }
 
         after->next = tip;
     }
     else
     {
-        if (tip_set) { tip_set->prev = tip; }
+        if (tip_set)
+        {
+            tip_set->prev = tip;
+        }
 
         tip_set = tip;
     }
@@ -1329,14 +1517,12 @@ bool ValidateWallTip(const vertex_c *vert)
 
     if (!vert->tip_set)
     {
-        ErrorPrintf("INTERNAL ERROR: vertex #%d got no wall tips\n",
-                    vert->index);
+        ErrorPrintf("INTERNAL ERROR: vertex #%d got no wall tips\n", vert->index);
     }
 
     if (!vert->tip_set->next)
     {
-        ErrorPrintf("INTERNAL ERROR: vertex #%d only has one linedef\n",
-                    vert->index);
+        ErrorPrintf("INTERNAL ERROR: vertex #%d only has one linedef\n", vert->index);
     }
 
     first_right = vert->tip_set->right;
@@ -1367,7 +1553,7 @@ bool ValidateWallTip(const vertex_c *vert)
         }
     }
 
-    return true;  // OK
+    return true; // OK
 }
 
 bool CalculateWallTips()
@@ -1386,8 +1572,7 @@ bool CalculateWallTips()
         double y2 = line->end->y;
 
         sector_c *right = (line->right) ? line->right->sector : void_sector;
-        sector_c *left  = (line->left) ? line->left->sector
-                                       : (line->is_border ? NULL : void_sector);
+        sector_c *left  = (line->left) ? line->left->sector : (line->is_border ? NULL : void_sector);
 
         line->start->AddTip(x2 - x1, y2 - y1, left, right);
         line->end->AddTip(x1 - x2, y1 - y2, right, left);
@@ -1399,8 +1584,14 @@ bool CalculateWallTips()
     {
         const linedef_c *line = all_linedefs[i];
 
-        if (!ValidateWallTip(line->start)) { return false; }
-        if (!ValidateWallTip(line->end)) { return false; }
+        if (!ValidateWallTip(line->start))
+        {
+            return false;
+        }
+        if (!ValidateWallTip(line->end))
+        {
+            return false;
+        }
     }
 
 #if DEBUG_LOAD
@@ -1413,14 +1604,13 @@ bool CalculateWallTips()
 
         for (tip = vert->tip_set; tip; tip = tip->next)
         {
-            DebugPrintf("  angle=%1.1f left=%d right=%d\n", tip->angle,
-                        tip->left ? tip->left->index : -1,
+            DebugPrintf("  angle=%1.1f left=%d right=%d\n", tip->angle, tip->left ? tip->left->index : -1,
                         tip->right ? tip->right->index : -1);
         }
     }
 #endif
 
-    return true;  // OK
+    return true; // OK
 }
 
 vertex_c *NewVertexFromSplit(edge_c *E, double x, double y)
@@ -1432,11 +1622,9 @@ vertex_c *NewVertexFromSplit(edge_c *E, double x, double y)
 
     // compute wall_tip info
 
-    vert->AddTip(-E->pdx, -E->pdy, E->sector,
-                 E->partner ? E->partner->sector : NULL);
+    vert->AddTip(-E->pdx, -E->pdy, E->sector, E->partner ? E->partner->sector : NULL);
 
-    vert->AddTip(E->pdx, E->pdy, E->partner ? E->partner->sector : NULL,
-                 E->sector);
+    vert->AddTip(E->pdx, E->pdy, E->partner ? E->partner->sector : NULL, E->sector);
 
     // create a duplex vertex if needed
 
@@ -1451,8 +1639,7 @@ sector_c *vertex_c::CheckOpen(double dx, double dy) const
 
     for (tip = tip_set; tip; tip = tip->next)
     {
-        if (fabs(tip->angle - angle) < kAngleEpsilon ||
-            fabs(tip->angle - angle) > (360.0 - kAngleEpsilon))
+        if (fabs(tip->angle - angle) < kAngleEpsilon || fabs(tip->angle - angle) > (360.0 - kAngleEpsilon))
         {
             // hit a line -- hence not open
             return NULL;
@@ -1499,7 +1686,10 @@ bool VerifyOuterLines()
         int x2 = (int)L->end->x;
         int y2 = (int)L->end->y;
 
-        if (L->left && L->right) { continue; }
+        if (L->left && L->right)
+        {
+            continue;
+        }
 
         // ignore lines of dummy sectors
         if (L->right && L->right->sector && L->right->sector->is_dummy)
@@ -1553,11 +1743,13 @@ bool OpenMap(const char *level_name)
 
     if (load_level < 0)
     {
-        if (level_name[0] == '*') { SetErrorMsg("No levels found in the wad"); }
+        if (level_name[0] == '*')
+        {
+            SetErrorMsg("No levels found in the wad");
+        }
         else
         {
-            SetErrorMsg("Level '%s' not found in %s", level_name,
-                        the_wad->the_file.c_str());
+            SetErrorMsg("Level '%s' not found in %s", level_name, the_wad->the_file.c_str());
         }
 
         return false;
@@ -1566,48 +1758,82 @@ bool OpenMap(const char *level_name)
     // identify hexen mode by presence of BEHAVIOR lump
     bool doing_hexen = false;
 
-    if (the_wad->ReadLump("BEHAVIOR", NULL, load_level)) { doing_hexen = true; }
+    if (the_wad->ReadLump("BEHAVIOR", NULL, load_level))
+    {
+        doing_hexen = true;
+    }
 
     // identify UDMF mode by presence of BEHAVIOR lump
     int      textmap_length = 0;
-    uint8_t *textmap_lump =
-        the_wad->ReadLump("TEXTMAP", &textmap_length, load_level);
+    uint8_t *textmap_lump   = the_wad->ReadLump("TEXTMAP", &textmap_length, load_level);
 
-    if (textmap_lump) { ParseUDMF(textmap_lump, textmap_length); }
+    if (textmap_lump)
+    {
+        ParseUDMF(textmap_lump, textmap_length);
+    }
     else
     {
-        if (!LoadVertices()) { return false; }
-        if (!LoadSectors()) { return false; }
-        if (!LoadSidedefs()) { return false; }
+        if (!LoadVertices())
+        {
+            return false;
+        }
+        if (!LoadSectors())
+        {
+            return false;
+        }
+        if (!LoadSidedefs())
+        {
+            return false;
+        }
 
         if (doing_hexen)
         {
-            if (!LoadLinedefsHexen()) { return false; }
-            if (!LoadThingsHexen()) { return false; }
+            if (!LoadLinedefsHexen())
+            {
+                return false;
+            }
+            if (!LoadThingsHexen())
+            {
+                return false;
+            }
         }
         else
         {
-            if (!LoadLinedefs()) { return false; }
-            if (!LoadThings()) { return false; }
+            if (!LoadLinedefs())
+            {
+                return false;
+            }
+            if (!LoadThings())
+            {
+                return false;
+            }
         }
     }
 
-    DebugPrintf(
-        "Loaded %d vertices, %d sectors, %d sides, %d lines, %d things\n",
-        num_vertices, num_sectors, num_sidedefs, num_linedefs, num_things);
+    DebugPrintf("Loaded %d vertices, %d sectors, %d sides, %d lines, %d things\n", num_vertices, num_sectors,
+                num_sidedefs, num_linedefs, num_things);
 
     FindDummySectors();
 
     DetermineMapLimits();
 
-    if (!DetectOverlappingLines()) { return false; }
-    if (!DetectDuplicateVertices()) { return false; }
+    if (!DetectOverlappingLines())
+    {
+        return false;
+    }
+    if (!DetectDuplicateVertices())
+    {
+        return false;
+    }
 
-    if (!CalculateWallTips()) { return false; }
+    if (!CalculateWallTips())
+    {
+        return false;
+    }
 
     ProcessExtraFloors();
 
-    return true;  // OK
+    return true; // OK
 }
 
 void CloseMap()
@@ -1680,57 +1906,87 @@ void FreeMap()
     int i;
     for (i = 0; i < doomed_vertices.size(); i++)
     {
-        if (doomed_vertices[i]) { delete doomed_vertices[i]; }
+        if (doomed_vertices[i])
+        {
+            delete doomed_vertices[i];
+        }
     }
     doomed_vertices.clear();
     for (i = 0; i < doomed_linedefs.size(); i++)
     {
-        if (doomed_linedefs[i]) { delete doomed_linedefs[i]; }
+        if (doomed_linedefs[i])
+        {
+            delete doomed_linedefs[i];
+        }
     }
     doomed_linedefs.clear();
     for (i = 0; i < doomed_sidedefs.size(); i++)
     {
-        if (doomed_sidedefs[i]) { delete doomed_sidedefs[i]; }
+        if (doomed_sidedefs[i])
+        {
+            delete doomed_sidedefs[i];
+        }
     }
     doomed_sidedefs.clear();
     for (i = 0; i < doomed_sectors.size(); i++)
     {
-        if (doomed_sectors[i]) { delete doomed_sectors[i]; }
+        if (doomed_sectors[i])
+        {
+            delete doomed_sectors[i];
+        }
     }
     doomed_sectors.clear();
     for (i = 0; i < doomed_things.size(); i++)
     {
-        if (doomed_things[i]) { delete doomed_things[i]; }
+        if (doomed_things[i])
+        {
+            delete doomed_things[i];
+        }
     }
     doomed_things.clear();
     for (i = 0; i < doomed_splits.size(); i++)
     {
-        if (doomed_splits[i]) { delete doomed_splits[i]; }
+        if (doomed_splits[i])
+        {
+            delete doomed_splits[i];
+        }
     }
     doomed_splits.clear();
     for (i = 0; i < doomed_edges.size(); i++)
     {
-        if (doomed_edges[i]) { delete doomed_edges[i]; }
+        if (doomed_edges[i])
+        {
+            delete doomed_edges[i];
+        }
     }
     doomed_edges.clear();
     for (i = 0; i < doomed_polygons.size(); i++)
     {
-        if (doomed_polygons[i]) { delete doomed_polygons[i]; }
+        if (doomed_polygons[i])
+        {
+            delete doomed_polygons[i];
+        }
     }
     doomed_polygons.clear();
     for (i = 0; i < doomed_wall_tips.size(); i++)
     {
-        if (doomed_wall_tips[i]) { delete doomed_wall_tips[i]; }
+        if (doomed_wall_tips[i])
+        {
+            delete doomed_wall_tips[i];
+        }
     }
     doomed_wall_tips.clear();
     for (i = 0; i < doomed_ex_floors.size(); i++)
     {
-        if (doomed_ex_floors[i]) { delete doomed_ex_floors[i]; }
+        if (doomed_ex_floors[i])
+        {
+            delete doomed_ex_floors[i];
+        }
     }
     doomed_ex_floors.clear();
 }
 
-}  // namespace ajpoly
+} // namespace ajpoly
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

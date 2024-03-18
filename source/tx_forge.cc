@@ -99,13 +99,16 @@ static void fourn(float data[], int nn[], int ndim, int isign)
     float  tempi, tempr;
     double theta, wi, wpi, wpr, wr, wtemp;
 
-#define FN_SWAP(a, b) \
-    tempr = (a);      \
-    (a)   = (b);      \
+#define FN_SWAP(a, b)                                                                                                  \
+    tempr = (a);                                                                                                       \
+    (a)   = (b);                                                                                                       \
     (b)   = tempr
 
     ntot = 1;
-    for (idim = 1; idim <= ndim; idim++) { ntot *= nn[idim]; }
+    for (idim = 1; idim <= ndim; idim++)
+    {
+        ntot *= nn[idim];
+    }
     nprev = 1;
     for (idim = ndim; idim >= 1; idim--)
     {
@@ -176,7 +179,7 @@ static void fourn(float data[], int nn[], int ndim, int isign)
 /*  INITGAUSS  --  Initialize random number generators.  As given in
                    Peitgen & Saupe, page 77.
 */
-#define NRAND 4 /* Gauss() sample count */
+#define NRAND 4                     /* Gauss() sample count */
 
 static double gauss_add, gauss_mul; /* Gaussian random parameters */
 
@@ -193,12 +196,18 @@ static double rand_gauss(void)
 {
     double sum = 0.0;
 
-    for (int i = 0; i < NRAND; i++) { sum += (XoshiroInt() & 0xFFFF); }
+    for (int i = 0; i < NRAND; i++)
+    {
+        sum += (XoshiroInt() & 0xFFFF);
+    }
 
     return sum * gauss_mul - gauss_add;
 }
 
-static double rand_phase(void) { return 2 * kPiApproximate * XoshiroDouble(); }
+static double rand_phase(void)
+{
+    return 2 * kPiApproximate * XoshiroDouble();
+}
 
 /*  SPECTRALSYNTH  --  Spectrally  synthesized  fractal  motion in two
                        dimensions.  This algorithm is given under  the
@@ -216,7 +225,10 @@ static void spectral_synth(int n, double h)
             double phase = rand_phase();
             double rad;
 
-            if (i == 0 && j == 0) { rad = 0; }
+            if (i == 0 && j == 0)
+            {
+                rad = 0;
+            }
             else
             {
                 rad = pow((double)(i * i + j * j), -(h + 1) / 2) * rand_gauss();
@@ -244,8 +256,7 @@ static void spectral_synth(int n, double h)
         for (j = 1; j <= n / 2 - 1; j++)
         {
             double phase = rand_phase();
-            double rad =
-                pow((double)(i * i + j * j), -(h + 1) / 2) * rand_gauss();
+            double rad   = pow((double)(i * i + j * j), -(h + 1) / 2) * rand_gauss();
 
             double rcos = rad * cos(phase);
             double rsin = rad * sin(phase);
@@ -260,7 +271,7 @@ static void spectral_synth(int n, double h)
     int nsize[3];
 
     nsize[0] = 0;
-    nsize[1] = nsize[2] = n; /* Dimension of frequency domain array */
+    nsize[1] = nsize[2] = n;     /* Dimension of frequency domain array */
 
     fourn(mesh_a, nsize, 2, -1); /* Take inverse 2D Fourier transform */
 }
@@ -288,11 +299,17 @@ static void copy_and_scale(float *buf)
 
     double range = (rmax - rmin);
 
-    if (fabs(range) < 0.0001) { range = 0.0001; }
+    if (fabs(range) < 0.0001)
+    {
+        range = 0.0001;
+    }
 
     for (i = 0; i < meshsize; i++)
     {
-        for (j = 0; j < meshsize; j++) { *buf++ = (Real(i, j) - rmin) / range; }
+        for (j = 0; j < meshsize; j++)
+        {
+            *buf++ = (Real(i, j) - rmin) / range;
+        }
     }
 }
 
@@ -302,11 +319,13 @@ static void power_law_scale(float *buf, double powscale)
 
     float *buf_end = buf + (meshsize * meshsize);
 
-    for (; buf < buf_end; buf++) { *buf = pow(*buf, powscale); }
+    for (; buf < buf_end; buf++)
+    {
+        *buf = pow(*buf, powscale);
+    }
 }
 
-void TX_SpectralSynth(unsigned long long seed, float *buf, int width,
-                      double fracdim, double powscale)
+void TX_SpectralSynth(unsigned long long seed, float *buf, int width, double fracdim, double powscale)
 {
     SYS_ASSERT(width > 0 && (width & 1) == 0);
     SYS_ASSERT(0 < fracdim && fracdim < 4.0);
@@ -317,8 +336,7 @@ void TX_SpectralSynth(unsigned long long seed, float *buf, int width,
     {
         if (test & 1)
         {
-            ErrorPrintf("TX_SpectralSynth: width '%d' is not a power of two\n",
-                        width);
+            ErrorPrintf("TX_SpectralSynth: width '%d' is not a power of two\n", width);
         }
     }
 
@@ -330,7 +348,10 @@ void TX_SpectralSynth(unsigned long long seed, float *buf, int width,
 
     copy_and_scale(buf);
 
-    if (fabs(powscale - 1.0) > 0.01) { power_law_scale(buf, powscale); }
+    if (fabs(powscale - 1.0) > 0.01)
+    {
+        power_law_scale(buf, powscale);
+    }
 
     free_mesh();
 }

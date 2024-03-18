@@ -34,8 +34,14 @@ constexpr double   kPiApproximate       = 3.14159265358979323846;
 #define OBSIDIAN_MIN(a, b)           ((a < b) ? a : b)
 #define OBSIDIAN_ABS(a)              ((a < 0) ? -a : a)
 #define OBSIDIAN_CLAMP(low, x, high) ((x < low) ? low : ((x > high) ? high : x))
-inline int RoundToInteger(float x) { return (int)roundf(x); }
-inline int RoundToInteger(double x) { return (int)round(x); }
+inline int RoundToInteger(float x)
+{
+    return (int)roundf(x);
+}
+inline int RoundToInteger(double x)
+{
+    return (int)round(x);
+}
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

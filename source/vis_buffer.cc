@@ -25,23 +25,27 @@
 #define MAX_RECURSION 4
 
 Vis_Buffer::Vis_Buffer(int width, int height)
-    : W(width),
-      H(height),
-      quick_mode(false),
-      flip_x(0),
-      flip_y(0),
-      saved_cells()
+    : W(width), H(height), quick_mode(false), flip_x(0), flip_y(0), saved_cells()
 {
     data = new short[W * H];
 
     Clear();
 }
 
-Vis_Buffer::~Vis_Buffer() { delete[] data; }
+Vis_Buffer::~Vis_Buffer()
+{
+    delete[] data;
+}
 
-void Vis_Buffer::Clear() { memset(data, 0, sizeof(short) * W * H); }
+void Vis_Buffer::Clear()
+{
+    memset(data, 0, sizeof(short) * W * H);
+}
 
-void Vis_Buffer::SetQuickMode(bool enable) { quick_mode = enable; }
+void Vis_Buffer::SetQuickMode(bool enable)
+{
+    quick_mode = enable;
+}
 
 void Vis_Buffer::AddWall(int x, int y, int side)
 {
@@ -57,10 +61,19 @@ void Vis_Buffer::AddWall(int x, int y, int side)
         side = 2;
     }
 
-    if (!isValid(x, y)) { return; }
+    if (!isValid(x, y))
+    {
+        return;
+    }
 
-    if (side == 2) { at(x, y) |= V_BOTTOM; }
-    else { at(x, y) |= V_LEFT; }
+    if (side == 2)
+    {
+        at(x, y) |= V_BOTTOM;
+    }
+    else
+    {
+        at(x, y) |= V_LEFT;
+    }
 }
 
 bool Vis_Buffer::TestWall(int x, int y, int side)
@@ -69,30 +82,60 @@ bool Vis_Buffer::TestWall(int x, int y, int side)
 
     if (side == 6)
     {
-        if (flip_x) { x--; }
-        else { x++; }
+        if (flip_x)
+        {
+            x--;
+        }
+        else
+        {
+            x++;
+        }
         side = 4;
     }
 
     if (side == 8)
     {
-        if (flip_y) { y--; }
-        else { y++; }
+        if (flip_y)
+        {
+            y--;
+        }
+        else
+        {
+            y++;
+        }
         side = 2;
     }
 
-    if (!isValid(x, y)) { return true; }
+    if (!isValid(x, y))
+    {
+        return true;
+    }
 
-    if (side == 2) { return (at(x, y) & V_BOTTOM) ? true : false; }
-    else { return (at(x, y) & V_LEFT) ? true : false; }
+    if (side == 2)
+    {
+        return (at(x, y) & V_BOTTOM) ? true : false;
+    }
+    else
+    {
+        return (at(x, y) & V_LEFT) ? true : false;
+    }
 }
 
 void Vis_Buffer::AddDiagonal(int x, int y, int dir)
 {
-    if (!isValid(x, y)) { return; }
+    if (!isValid(x, y))
+    {
+        return;
+    }
 
-    if (dir == 1 || dir == 9) { at(x, y) |= V_DIAG_NE; }
-    else { at(x, y) |= V_DIAG_SE; }
+    if (dir == 1 || dir == 9)
+    {
+        at(x, y) |= V_DIAG_NE;
+    }
+    else
+    {
+        at(x, y) |= V_DIAG_SE;
+    }
 }
 
 //------------------------------------------------------------------------
@@ -106,9 +149,15 @@ void Vis_Buffer::DoBasic(int dx, int dy, int side)
 
     for (;;)
     {
-        if (!isValid(x, y)) { return; }
+        if (!isValid(x, y))
+        {
+            return;
+        }
 
-        if (TestWall(x, y, side)) { break; }
+        if (TestWall(x, y, side))
+        {
+            break;
+        }
 
         x += dx;
         y += dy;
@@ -116,14 +165,12 @@ void Vis_Buffer::DoBasic(int dx, int dy, int side)
 
     for (;;)
     {
-        while (isValid(x + dy * (L + 1), y + dx * (L + 1)) &&
-               TestWall(x + dy * (L + 1), y + dx * (L + 1), side))
+        while (isValid(x + dy * (L + 1), y + dx * (L + 1)) && TestWall(x + dy * (L + 1), y + dx * (L + 1), side))
         {
             L++;
         }
 
-        while (isValid(x - dy * (R + 1), y - dx * (R + 1)) &&
-               TestWall(x - dy * (R + 1), y - dx * (R + 1), side))
+        while (isValid(x - dy * (R + 1), y - dx * (R + 1)) && TestWall(x - dy * (R + 1), y - dx * (R + 1), side))
         {
             R++;
         }
@@ -131,9 +178,15 @@ void Vis_Buffer::DoBasic(int dx, int dy, int side)
         x += dx;
         y += dy;
 
-        if (!isValid(x, y)) { return; }
+        if (!isValid(x, y))
+        {
+            return;
+        }
 
-        for (int j = -R; j <= L; j++) { at(x + dy * j, y + dx * j) |= V_BASIC; }
+        for (int j = -R; j <= L; j++)
+        {
+            at(x + dy * j, y + dx * j) |= V_BASIC;
+        }
     }
 }
 
@@ -151,11 +204,16 @@ void Vis_Buffer::DoFill()
             int sx = loc_x + dx;
             int sy = loc_y + dy;
 
-            if (!isValid(loc_x, sy + 1)) { return; }
-            if (!isValid(sx + 1, loc_y)) { break; }
+            if (!isValid(loc_x, sy + 1))
+            {
+                return;
+            }
+            if (!isValid(sx + 1, loc_y))
+            {
+                break;
+            }
 
-            if (!(at(sx + 1, sy + 1) & V_ANY) &&
-                ((at(sx + 1, sy) & V_ANY) || TestWall(sx + 1, sy, 8)) &&
+            if (!(at(sx + 1, sy + 1) & V_ANY) && ((at(sx + 1, sy) & V_ANY) || TestWall(sx + 1, sy, 8)) &&
                 ((at(sx, sy + 1) & V_ANY) || TestWall(sx, sy + 1, 6)))
             {
                 at(sx + 1, sy + 1) |= V_FILL;
@@ -177,12 +235,18 @@ void Vis_Buffer::AddStep(Stair_Steps &dest, int x, int y, int side)
 
 void Vis_Buffer::CopySteps(Stair_Steps &dest, const Stair_Steps &src)
 {
-    for (unsigned int i = 0; i < src.size(); i++) { dest.push_back(src[i]); }
+    for (unsigned int i = 0; i < src.size(); i++)
+    {
+        dest.push_back(src[i]);
+    }
 }
 
 void Vis_Buffer::MarkSteps(const Stair_Steps &steps)
 {
-    if (steps.size() < 2) { return; }
+    if (steps.size() < 2)
+    {
+        return;
+    }
 
     // determine bounding box
     int lx = steps.front().x;
@@ -191,12 +255,21 @@ void Vis_Buffer::MarkSteps(const Stair_Steps &steps)
     int ww = steps.back().x - lx;
     int hh = steps.front().y - ly;
 
-    if (steps.back().side == 2) { ww++; }
+    if (steps.back().side == 2)
+    {
+        ww++;
+    }
 
-    if (steps.front().side == 4) { hh++; }
+    if (steps.front().side == 4)
+    {
+        hh++;
+    }
 
     // skip if too small
-    if (lx > loc_x && ww <= 1 && ly > loc_y && hh <= 1) { return; }
+    if (lx > loc_x && ww <= 1 && ly > loc_y && hh <= 1)
+    {
+        return;
+    }
 
     // fill in the "gaps" inside the bbox (behind the stair-step)
     for (unsigned int i = 0; i < steps.size(); i++)
@@ -218,7 +291,10 @@ void Vis_Buffer::MarkSteps(const Stair_Steps &steps)
         limit_y = ly + hh;
     }
 
-    if (quick_mode) { return; }
+    if (quick_mode)
+    {
+        return;
+    }
 
     // normal case : mark all squares in the quadrant which lie
     // in the shadow area cast by the stair-step's bounding box.
@@ -229,11 +305,17 @@ void Vis_Buffer::MarkSteps(const Stair_Steps &steps)
     double bx = lx - loc_x + ww - 1;
     double by = ly - loc_y;
 
-    if (bx == 0 && ly > loc_y) { return; }
+    if (bx == 0 && ly > loc_y)
+    {
+        return;
+    }
 
     for (int nx = loc_x; nx < loc_x + W; nx++)
     {
-        if (!isValid(nx, loc_y)) { return; }
+        if (!isValid(nx, loc_y))
+        {
+            return;
+        }
 
         int y1 = loc_y;
         int y2 = loc_y + H;
@@ -250,7 +332,10 @@ void Vis_Buffer::MarkSteps(const Stair_Steps &steps)
             y1       = (int)ceil(z);
         }
 
-        if (nx < lx + ww) { y1 = OBSIDIAN_MAX(y1, ly + hh); }
+        if (nx < lx + ww)
+        {
+            y1 = OBSIDIAN_MAX(y1, ly + hh);
+        }
 
         for (int ny = y1; ny <= y2 && isValid(nx, ny); ny++)
         {
@@ -259,8 +344,7 @@ void Vis_Buffer::MarkSteps(const Stair_Steps &steps)
     }
 }
 
-void Vis_Buffer::FollowStair(Stair_Steps &steps, int sx, int sy, int side,
-                             int recursion)
+void Vis_Buffer::FollowStair(Stair_Steps &steps, int sx, int sy, int side, int recursion)
 {
     AddStep(steps, sx, sy, side);
 
@@ -269,7 +353,10 @@ void Vis_Buffer::FollowStair(Stair_Steps &steps, int sx, int sy, int side,
         if (side == 2)
         {
             sx++;
-            if (!isValid(sx, sy)) { break; }
+            if (!isValid(sx, sy))
+            {
+                break;
+            }
 
             bool go_right = TestWall(sx, sy, 2);
             bool go_down  = (sy - 1 >= loc_y) && TestWall(sx, sy - 1, 4);
@@ -290,16 +377,22 @@ void Vis_Buffer::FollowStair(Stair_Steps &steps, int sx, int sy, int side,
             }
             else if (go_down)
             {
-                sy--;  // OK
+                sy--; // OK
                 side = 4;
             }
-            else { break; }
+            else
+            {
+                break;
+            }
         }
         else
         {
             /// assert(side == 4);
 
-            if (sy <= loc_y) { break; }
+            if (sy <= loc_y)
+            {
+                break;
+            }
 
             bool go_right = TestWall(sx, sy, 2);
             bool go_down  = (sy - 1 >= loc_y) && TestWall(sx, sy - 1, 4);
@@ -315,12 +408,18 @@ void Vis_Buffer::FollowStair(Stair_Steps &steps, int sx, int sy, int side,
                 go_right = false;
             }
 
-            if (go_right) { side = 2; }
+            if (go_right)
+            {
+                side = 2;
+            }
             else if (go_down)
             {
-                sy--;  // OK
+                sy--; // OK
             }
-            else { break; }
+            else
+            {
+                break;
+            }
         }
 
         AddStep(steps, sx, sy, side);
@@ -344,11 +443,16 @@ void Vis_Buffer::DoSteps(int quadrant)
             int sx = loc_x + dx;
             int sy = loc_y + dy;
 
-            if (!isValid(loc_x, sy)) { return; }
-            if (!isValid(sx, sy)) { break; }
+            if (!isValid(loc_x, sy))
+            {
+                return;
+            }
+            if (!isValid(sx, sy))
+            {
+                break;
+            }
 
-            if ((dy > 0 && TestWall(sx, sy, 2)) &&
-                !(dx > 0 && TestWall(sx - 1, sy, 2)) &&
+            if ((dy > 0 && TestWall(sx, sy, 2)) && !(dx > 0 && TestWall(sx - 1, sy, 2)) &&
                 !(dx > 0 && TestWall(sx, sy, 4)))
             {
                 Stair_Steps base;
@@ -379,15 +483,17 @@ void Vis_Buffer::FloodEmpties()
     {
         for (int x = 0; x < W; x++)
         {
-            if (at(x, y) & V_ANY) { continue; }
+            if (at(x, y) & V_ANY)
+            {
+                continue;
+            }
 
             for (int side = 2; side <= 8; side += 2)
             {
                 int nx = x + ((side == 4) ? -1 : (side == 6) ? +1 : 0);
                 int ny = y + ((side == 2) ? -1 : (side == 8) ? +1 : 0);
 
-                if (isValid(nx, ny) && (at(nx, ny) & V_ANY) &&
-                    !TestWall(x, y, side))
+                if (isValid(nx, ny) && (at(nx, ny) & V_ANY) && !TestWall(x, y, side))
                 {
                     at(nx, ny) |= V_UNLOCK;
                 }
@@ -401,7 +507,7 @@ void Vis_Buffer::FloodEmpties()
         {
             if (at(x, y) & V_UNLOCK)
             {
-                at(x, y) &= ~V_ANY;  // clears V_UNLOCK too
+                at(x, y) &= ~V_ANY; // clears V_UNLOCK too
             }
         }
     }
@@ -409,7 +515,10 @@ void Vis_Buffer::FloodEmpties()
 
 void Vis_Buffer::FloodFill(int passes)
 {
-    for (; passes > 0; passes--) { FloodEmpties(); }
+    for (; passes > 0; passes--)
+    {
+        FloodEmpties();
+    }
 }
 
 void Vis_Buffer::Truncate(int dist)
@@ -421,7 +530,10 @@ void Vis_Buffer::Truncate(int dist)
             int dx = abs(x - loc_x);
             int dy = abs(y - loc_y);
 
-            if (dx * dx + dy * dy >= dist * dist) { at(x, y) |= V_FILL; }
+            if (dx * dx + dy * dy >= dist * dist)
+            {
+                at(x, y) |= V_FILL;
+            }
         }
     }
 }
@@ -442,7 +554,10 @@ void Vis_Buffer::AddWallSave(int x, int y, int side)
         side = 2;
     }
 
-    if (!isValid(x, y)) { return; }
+    if (!isValid(x, y))
+    {
+        return;
+    }
 
     // save original contents (mask out vis results)
     Stair_Pos pos;
@@ -453,8 +568,14 @@ void Vis_Buffer::AddWallSave(int x, int y, int side)
 
     saved_cells.push_back(pos);
 
-    if (side == 2) { at(x, y) |= V_BOTTOM; }
-    else { at(x, y) |= V_LEFT; }
+    if (side == 2)
+    {
+        at(x, y) |= V_BOTTOM;
+    }
+    else
+    {
+        at(x, y) |= V_LEFT;
+    }
 }
 
 void Vis_Buffer::ConvertDiagonals()
@@ -467,7 +588,10 @@ void Vis_Buffer::ConvertDiagonals()
     {
         for (int x = 0; x < W; x++)
         {
-            if (x == loc_x && y == loc_y) { continue; }
+            if (x == loc_x && y == loc_y)
+            {
+                continue;
+            }
 
             short se = (at(x, y) & V_DIAG_SE);
             short ne = (at(x, y) & V_DIAG_NE);
@@ -525,8 +649,7 @@ void Vis_Buffer::SimplifySolid()
         {
             at(x, y) &= ~V_BASIC;
 
-            if (TestWall(x, y, 2) && TestWall(x, y, 4) && TestWall(x, y, 6) &&
-                TestWall(x, y, 8))
+            if (TestWall(x, y, 2) && TestWall(x, y, 4) && TestWall(x, y, 6) && TestWall(x, y, 8))
             {
                 at(x, y) |= V_BASIC;
             }
@@ -537,16 +660,17 @@ void Vis_Buffer::SimplifySolid()
     {
         for (int x = 0; x < W; x++)
         {
-            if (!(at(x, y) & V_BASIC)) { continue; }
+            if (!(at(x, y) & V_BASIC))
+            {
+                continue;
+            }
 
-            if (x < (W - 1) && (at(x + 1, y) & V_LEFT) &&
-                (at(x + 1, y) & V_BASIC))
+            if (x < (W - 1) && (at(x + 1, y) & V_LEFT) && (at(x + 1, y) & V_BASIC))
             {
                 at(x + 1, y) &= ~V_LEFT;
             }
 
-            if (y < (H - 1) && (at(x, y + 1) & V_BOTTOM) &&
-                (at(x, y + 1) & V_BASIC))
+            if (y < (H - 1) && (at(x, y + 1) & V_BOTTOM) && (at(x, y + 1) & V_BASIC))
             {
                 at(x, y + 1) &= ~V_BOTTOM;
             }
@@ -558,7 +682,10 @@ void Vis_Buffer::ClearVis()
 {
     int len = W * H;
 
-    for (int i = 0; i < len; i++) { data[i] &= ~V_ANY; }
+    for (int i = 0; i < len; i++)
+    {
+        data[i] &= ~V_ANY;
+    }
 }
 
 void Vis_Buffer::ProcessVis(int x, int y)

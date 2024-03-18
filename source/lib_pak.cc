@@ -52,8 +52,7 @@ bool PAK_OpenRead(const char *filename)
 
     LogPrintf("Opened PAK file: %s\n", filename);
 
-    if ((PHYSFS_readBytes(r_pak_fp, &r_header, sizeof(r_header)) /
-         sizeof(r_header)) != 1)
+    if ((PHYSFS_readBytes(r_pak_fp, &r_header, sizeof(r_header)) / sizeof(r_header)) != 1)
     {
         LogPrintf("PAK_OpenRead: failed reading header\n");
         PHYSFS_close(r_pak_fp);
@@ -75,18 +74,16 @@ bool PAK_OpenRead(const char *filename)
 
     /* read directory */
 
-    if (r_header.entry_num >= 5000)  // sanity check
+    if (r_header.entry_num >= 5000) // sanity check
     {
-        LogPrintf("PAK_OpenRead: bad header (%u entries?)\n",
-                  r_header.entry_num);
+        LogPrintf("PAK_OpenRead: bad header (%u entries?)\n", r_header.entry_num);
         PHYSFS_close(r_pak_fp);
         return false;
     }
 
     if (!PHYSFS_seek(r_pak_fp, r_header.dir_start))
     {
-        LogPrintf("PAK_OpenRead: cannot seek to directory (at 0x%u)\n",
-                  r_header.dir_start);
+        LogPrintf("PAK_OpenRead: cannot seek to directory (at 0x%u)\n", r_header.dir_start);
         PHYSFS_close(r_pak_fp);
         return false;
     }
@@ -97,8 +94,7 @@ bool PAK_OpenRead(const char *filename)
     {
         raw_pak_entry_t *E = &r_directory[i];
 
-        size_t res = (PHYSFS_readBytes(r_pak_fp, E, sizeof(raw_pak_entry_t)) /
-                      sizeof(raw_pak_entry_t));
+        size_t res = (PHYSFS_readBytes(r_pak_fp, E, sizeof(raw_pak_entry_t)) / sizeof(raw_pak_entry_t));
         if (res != 1)
         {
             if (i == 0)
@@ -122,7 +118,7 @@ bool PAK_OpenRead(const char *filename)
         E->length = AlignedLittleEndianU32(E->length);
     }
 
-    return true;  // OK
+    return true; // OK
 }
 
 void PAK_CloseRead(void)
@@ -134,7 +130,10 @@ void PAK_CloseRead(void)
     r_directory = NULL;
 }
 
-int PAK_NumEntries(void) { return (int)r_header.entry_num; }
+int PAK_NumEntries(void)
+{
+    return (int)r_header.entry_num;
+}
 
 int PAK_FindEntry(const char *name)
 {
@@ -146,7 +145,7 @@ int PAK_FindEntry(const char *name)
         }
     }
 
-    return -1;  // not found
+    return -1; // not found
 }
 
 int PAK_EntryLen(int entry)
@@ -173,16 +172,28 @@ void PAK_FindMaps(std::vector<int> &entries)
 
         const char *name = E->name;
 
-        if (strncmp(name, "maps/", 5) != 0) { continue; }
+        if (strncmp(name, "maps/", 5) != 0)
+        {
+            continue;
+        }
 
         name += 5;
 
         // ignore the ammo boxes
-        if (strncmp(name, "b_", 2) == 0) { continue; }
+        if (strncmp(name, "b_", 2) == 0)
+        {
+            continue;
+        }
 
-        while (*name && *name != '/' && *name != '.') { name++; }
+        while (*name && *name != '/' && *name != '.')
+        {
+            name++;
+        }
 
-        if (strcmp(name, ".bsp") == 0) { entries.push_back(i); }
+        if (strcmp(name, ".bsp") == 0)
+        {
+            entries.push_back(i);
+        }
     }
 }
 
@@ -195,11 +206,14 @@ bool PAK_ReadData(int entry, int offset, int length, void *buffer)
     raw_pak_entry_t *E = &r_directory[entry];
 
     if ((uint32_t)offset + (uint32_t)length > E->length)
-    {  // EOF
+    { // EOF
         return false;
     }
 
-    if (!PHYSFS_seek(r_pak_fp, E->offset + offset)) { return false; }
+    if (!PHYSFS_seek(r_pak_fp, E->offset + offset))
+    {
+        return false;
+    }
 
     size_t res = (PHYSFS_readBytes(r_pak_fp, buffer, length) / length);
 
@@ -226,8 +240,7 @@ bool PAK_OpenWrite(const std::filesystem::path &filename)
 
     if (!w_pak_fp)
     {
-        LogPrintf("PAK_OpenWrite: cannot create file: %s\n",
-                  filename.u8string().c_str());
+        LogPrintf("PAK_OpenWrite: cannot create file: %s\n", filename.u8string().c_str());
         return false;
     }
 
@@ -302,7 +315,10 @@ void PAK_NewLump(const char *name)
 
 bool PAK_AppendData(const void *data, int length)
 {
-    if (length == 0) { return true; }
+    if (length == 0)
+    {
+        return true;
+    }
 
     SYS_ASSERT(length > 0);
 

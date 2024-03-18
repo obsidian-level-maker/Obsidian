@@ -25,13 +25,13 @@
 // map data
 #define V_BOTTOM  0x01
 #define V_LEFT    0x02
-#define V_DIAG_NE 0x04  // diagonal like '/'
-#define V_DIAG_SE 0x08  // diagonal like '\'
+#define V_DIAG_NE 0x04 // diagonal like '/'
+#define V_DIAG_SE 0x08 // diagonal like '\'
 
 // vis results
-#define V_BASIC  0x0100  // ultra basic
-#define V_SPAN   0x0200  // long spans
-#define V_LSHAPE 0x0400  // L shape testing
+#define V_BASIC  0x0100 // ultra basic
+#define V_SPAN   0x0200 // long spans
+#define V_LSHAPE 0x0400 // L shape testing
 #define V_FILL   0x0800
 
 #define V_ANY 0x7F00
@@ -45,8 +45,8 @@ typedef std::vector<Stair_Pos> Stair_Steps;
 
 class Vis_Buffer
 {
-   private:
-    int W, H;  // size
+  private:
+    int W, H; // size
 
     short *data;
 
@@ -63,19 +63,24 @@ class Vis_Buffer
 
     std::vector<Stair_Pos> saved_cells;
 
-   public:
+  public:
     Vis_Buffer(int width, int height);
     ~Vis_Buffer();
 
-   public:
-    inline int Trans_X(int x) { return flip_x ? (loc_x * 2 - x) : x; }
+  public:
+    inline int Trans_X(int x)
+    {
+        return flip_x ? (loc_x * 2 - x) : x;
+    }
 
-    inline int Trans_Y(int y) { return flip_y ? (loc_y * 2 - y) : y; }
+    inline int Trans_Y(int y)
+    {
+        return flip_y ? (loc_y * 2 - y) : y;
+    }
 
     inline int Trans_Side(int side)
     {
-        if ((flip_x && (side == 4 || side == 6)) ||
-            (flip_y && (side == 2 || side == 8)))
+        if ((flip_x && (side == 4 || side == 6)) || (flip_y && (side == 2 || side == 8)))
         {
             return 10 - side;
         }
@@ -103,7 +108,7 @@ class Vis_Buffer
         return ((data[y * W + x] & V_ANY) == 0);
     }
 
-   public:
+  public:
     void Clear();
     void SetQuickMode(bool enable);
 
@@ -120,12 +125,11 @@ class Vis_Buffer
     void Truncate(int dist);
     void FloodFill(int passes);
 
-   private:
+  private:
     void AddStep(Stair_Steps &dest, int x, int y, int side);
     void CopySteps(Stair_Steps &dest, const Stair_Steps &src);
     void MarkSteps(const Stair_Steps &steps);
-    void FollowStair(Stair_Steps &steps, int sx, int sy, int side,
-                     int recursion);
+    void FollowStair(Stair_Steps &steps, int sx, int sy, int side, int recursion);
 
     void ConvertDiagonals();
     void RestoreDiagonals();

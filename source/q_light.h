@@ -24,7 +24,7 @@
 
 #include <vector>
 
-#include "lib_tga.h"  // for rgb_color_t
+#include "lib_tga.h" // for rgb_color_t
 #include "q_common.h"
 
 class quake_face_c;
@@ -35,7 +35,7 @@ constexpr int FLAT_LIGHTMAP_SIZE = 17 * 17;
 
 class qLightmap_c
 {
-   public:
+  public:
     int width, height;
     int num_styles;
 
@@ -48,14 +48,17 @@ class qLightmap_c
     // final offset in lightmap lump (if not flat)
     int offset;
 
-   public:
+  public:
     qLightmap_c(int w, int h, int value = -1);
 
     ~qLightmap_c();
 
     void Fill(rgb_color_t value);
 
-    inline rgb_color_t &At(int s, int t) { return current_pos[t * width + s]; }
+    inline rgb_color_t &At(int s, int t)
+    {
+        return current_pos[t * width + s];
+    }
 
     bool hasStyle(uint8_t style) const;
 
@@ -85,7 +88,7 @@ struct quake_light_t
 
     float x, y, z;
     float radius;
-    float level;  // brightest level (at dist = 0)
+    float level; // brightest level (at dist = 0)
 
     rgb_color_t color;
     int         style;

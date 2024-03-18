@@ -45,17 +45,15 @@ std::wstring UTF8ToWString(std::string_view instring)
     utf8proc_int32_t        u32c;
     while (utf8pos < utf8len)
     {
-        u32c = 0;
-        size_t res =
-            utf8proc_iterate(utf8ptr + utf8pos, utf8len - utf8pos, &u32c);
+        u32c       = 0;
+        size_t res = utf8proc_iterate(utf8ptr + utf8pos, utf8len - utf8pos, &u32c);
         if (res < 0)
-            ErrorPrintf("Failed to convert %s to a wide string!\n",
-                        std::string(instring).c_str());
+            ErrorPrintf("Failed to convert %s to a wide string!\n", std::string(instring).c_str());
         else
             utf8pos += res;
         if (u32c < 0x10000)
             outstring.push_back((wchar_t)u32c);
-        else  // Make into surrogate pair if needed
+        else // Make into surrogate pair if needed
         {
             u32c -= 0x10000;
             outstring.push_back((wchar_t)(u32c >> 10) + 0xD800);
@@ -74,21 +72,18 @@ std::string WStringToUTF8(std::wstring_view instring)
     while (inpos < inlen)
     {
         utf8proc_int32_t u32c = 0;
-        if ((*(inptr + inpos) & 0xD800) == 0xD800)  // High surrogate
+        if ((*(inptr + inpos) & 0xD800) == 0xD800)                              // High surrogate
         {
-            if (inpos + 1 < inlen &&
-                (*(inptr + inpos + 1) & 0xDC00) == 0xDC00)  // Low surrogate
+            if (inpos + 1 < inlen && (*(inptr + inpos + 1) & 0xDC00) == 0xDC00) // Low surrogate
             {
-                u32c = ((*(inptr + inpos) - 0xD800) * 0x400) +
-                       (*(inptr + inpos + 1) - 0xDC00) + 0x10000;
+                u32c = ((*(inptr + inpos) - 0xD800) * 0x400) + (*(inptr + inpos + 1) - 0xDC00) + 0x10000;
                 inpos += 2;
             }
-            else  // Assume an unpaired surrogate is malformed
+            else // Assume an unpaired surrogate is malformed
             {
                 // print what was safely converted if present
                 if (!outstring.empty())
-                    ErrorPrintf("Failure to convert %s from a wide string!\n",
-                                outstring.c_str());
+                    ErrorPrintf("Failure to convert %s from a wide string!\n", outstring.c_str());
                 else
                     ErrorPrintf("Wide string to UTF-8 conversion failure!\n");
             }
@@ -103,15 +98,18 @@ std::string WStringToUTF8(std::wstring_view instring)
         {
             // print what was safely converted if present
             if (!outstring.empty())
-                ErrorPrintf("Failure to convert %s from a wide string!\n",
-                            outstring.c_str());
+                ErrorPrintf("Failure to convert %s from a wide string!\n", outstring.c_str());
             else
                 ErrorPrintf("Wide string to UTF-8 conversion failure!\n");
         }
-        if (u8c[0]) outstring.push_back(u8c[0]);
-        if (u8c[1]) outstring.push_back(u8c[1]);
-        if (u8c[2]) outstring.push_back(u8c[2]);
-        if (u8c[3]) outstring.push_back(u8c[3]);
+        if (u8c[0])
+            outstring.push_back(u8c[0]);
+        if (u8c[1])
+            outstring.push_back(u8c[1]);
+        if (u8c[2])
+            outstring.push_back(u8c[2]);
+        if (u8c[3])
+            outstring.push_back(u8c[3]);
     }
     return outstring;
 }
@@ -137,9 +135,11 @@ int StringCompare(std::string_view A, std::string_view B)
         else
             BC = (int)(unsigned char)B[B_pos];
 
-        if (AC != BC) return AC - BC;
+        if (AC != BC)
+            return AC - BC;
 
-        if (A_pos == A_end) return 0;
+        if (A_pos == A_end)
+            return 0;
     }
 }
 
@@ -159,19 +159,23 @@ int StringCaseCompareASCII(std::string_view A, std::string_view B)
         else
         {
             AC = (int)(unsigned char)A[A_pos];
-            if (AC > '@' && AC < '[') AC ^= 0x20;
+            if (AC > '@' && AC < '[')
+                AC ^= 0x20;
         }
         if (B_pos >= B_end)
             BC = 0;
         else
         {
             BC = (int)(unsigned char)B[B_pos];
-            if (BC > '@' && BC < '[') BC ^= 0x20;
+            if (BC > '@' && BC < '[')
+                BC ^= 0x20;
         }
 
-        if (AC != BC) return AC - BC;
+        if (AC != BC)
+            return AC - BC;
 
-        if (A_pos == A_end) return 0;
+        if (A_pos == A_end)
+            return 0;
     }
 }
 
@@ -187,26 +191,31 @@ int StringCaseCompareMaxASCII(std::string_view A, std::string_view B, size_t n)
 
     for (;; A_pos++, B_pos++)
     {
-        if (n == 0) return 0;
+        if (n == 0)
+            return 0;
 
         if (A_pos >= A_end)
             AC = 0;
         else
         {
             AC = (int)(unsigned char)A[A_pos];
-            if (AC > '@' && AC < '[') AC ^= 0x20;
+            if (AC > '@' && AC < '[')
+                AC ^= 0x20;
         }
         if (B_pos >= B_end)
             BC = 0;
         else
         {
             BC = (int)(unsigned char)B[B_pos];
-            if (BC > '@' && BC < '[') BC ^= 0x20;
+            if (BC > '@' && BC < '[')
+                BC ^= 0x20;
         }
 
-        if (AC != BC) return AC - BC;
+        if (AC != BC)
+            return AC - BC;
 
-        if (A_pos == A_end) return 0;
+        if (A_pos == A_end)
+            return 0;
 
         n--;
     }
@@ -228,19 +237,23 @@ int StringPrefixCaseCompareASCII(std::string_view A, std::string_view B)
         else
         {
             AC = (int)(unsigned char)A[A_pos];
-            if (AC > '@' && AC < '[') AC ^= 0x20;
+            if (AC > '@' && AC < '[')
+                AC ^= 0x20;
         }
         if (B_pos >= B_end)
             BC = 0;
         else
         {
             BC = (int)(unsigned char)B[B_pos];
-            if (BC > '@' && BC < '[') BC ^= 0x20;
+            if (BC > '@' && BC < '[')
+                BC ^= 0x20;
         }
 
-        if (B_pos == B_end) return 0;
+        if (B_pos == B_end)
+            return 0;
 
-        if (AC != BC) return AC - BC;
+        if (AC != BC)
+            return AC - BC;
     }
 }
 
@@ -294,8 +307,7 @@ std::string NumberToString(unsigned long long int value)
 {
     std::string num_string;
     num_string.resize(snprintf(nullptr, 0, "%llu", value));
-    (void)std::to_chars(num_string.data(),
-                        num_string.data() + num_string.size(), value);
+    (void)std::to_chars(num_string.data(), num_string.data() + num_string.size(), value);
     return num_string;
 }
 
@@ -303,8 +315,7 @@ std::string NumberToString(int value)
 {
     std::string num_string;
     num_string.resize(snprintf(nullptr, 0, "%d", value));
-    (void)std::to_chars(num_string.data(),
-                        num_string.data() + num_string.size(), value);
+    (void)std::to_chars(num_string.data(), num_string.data() + num_string.size(), value);
     return num_string;
 }
 
@@ -312,32 +323,28 @@ std::string NumberToString(double value)
 {
     std::string num_string;
     num_string.resize(snprintf(nullptr, 0, "%f", value));
-    (void)std::to_chars(num_string.data(),
-                        num_string.data() + num_string.size(), value);
+    (void)std::to_chars(num_string.data(), num_string.data() + num_string.size(), value);
     return num_string;
 }
 
 int StringToInt(std::string_view value)
 {
     int actual_number;
-    (void)std::from_chars(value.data(), value.data() + value.size(),
-                          actual_number);
+    (void)std::from_chars(value.data(), value.data() + value.size(), actual_number);
     return actual_number;
 }
 
 int StringToHex(std::string_view value)
 {
     int actual_number;
-    (void)std::from_chars(value.data(), value.data() + value.size(),
-                          actual_number, 16);
+    (void)std::from_chars(value.data(), value.data() + value.size(), actual_number, 16);
     return actual_number;
 }
 
 double StringToDouble(std::string_view value)
 {
     double actual_number;
-    (void)std::from_chars(value.data(), value.data() + value.size(),
-                          actual_number);
+    (void)std::from_chars(value.data(), value.data() + value.size(), actual_number);
     return actual_number;
 }
 
@@ -362,7 +369,10 @@ uint32_t StringHash(std::string_view str)
 
     if (!str.empty())
     {
-        for (const char &c : str) { hash = (hash << 5) - hash + c; }
+        for (const char &c : str)
+        {
+            hash = (hash << 5) - hash + c;
+        }
     }
 
     return hash;
@@ -375,7 +385,10 @@ uint64_t StringHash64(std::string_view str)
 
     if (!str.empty())
     {
-        for (const char &c : str) { hash1 = (hash1 << 5) - hash1 + c; }
+        for (const char &c : str)
+        {
+            hash1 = (hash1 << 5) - hash1 + c;
+        }
         for (size_t c = str.size() - 1; c > 0; c--)
         {
             hash2 = (hash2 << 5) - hash2 + str.at(c);
@@ -422,13 +435,22 @@ double CalcAngle(double sx, double sy, double ex, double ey)
     ex -= sx;
     ey -= sy;
 
-    if (fabs(ex) < 0.0001) { return (ey > 0) ? 90.0 : 270.0; }
+    if (fabs(ex) < 0.0001)
+    {
+        return (ey > 0) ? 90.0 : 270.0;
+    }
 
-    if (fabs(ey) < 0.0001) { return (ex > 0) ? 0.0 : 180.0; }
+    if (fabs(ey) < 0.0001)
+    {
+        return (ex > 0) ? 0.0 : 180.0;
+    }
 
     double angle = atan2(ey, ex) * 180.0 / kPiApproximate;
 
-    if (angle < 0) { angle += 360.0; }
+    if (angle < 0)
+    {
+        angle += 360.0;
+    }
 
     return angle;
 }
@@ -440,8 +462,14 @@ double DiffAngle(double A, double B)
 
     double D = B - A;
 
-    while (D > 180.0) { D = D - 360.0; }
-    while (D < -180.0) { D = D + 360.0; }
+    while (D > 180.0)
+    {
+        D = D - 360.0;
+    }
+    while (D < -180.0)
+    {
+        D = D + 360.0;
+    }
 
     return D;
 }
@@ -454,11 +482,13 @@ double ComputeAngle(double dx, double dy)
 {
     double angle;
 
-    if (AlmostEquals(dx, 0.0)) return (dy > 0) ? 90.0 : 270.0;
+    if (AlmostEquals(dx, 0.0))
+        return (dy > 0) ? 90.0 : 270.0;
 
     angle = atan2((double)dy, (double)dx) * 180.0 / kPiApproximate;
 
-    if (angle < 0) angle += 360.0;
+    if (angle < 0)
+        angle += 360.0;
 
     return angle;
 }
@@ -468,15 +498,12 @@ double ComputeDist(double sx, double sy, double ex, double ey)
     return sqrt((ex - sx) * (ex - sx) + (ey - sy) * (ey - sy));
 }
 
-double ComputeDist(double sx, double sy, double sz, double ex, double ey,
-                   double ez)
+double ComputeDist(double sx, double sy, double sz, double ex, double ey, double ez)
 {
-    return sqrt((ex - sx) * (ex - sx) + (ey - sy) * (ey - sy) +
-                (ez - sz) * (ez - sz));
+    return sqrt((ex - sx) * (ex - sx) + (ey - sy) * (ey - sy) + (ez - sz) * (ez - sz));
 }
 
-double PointLineDist(double x, double y, double x1, double y1, double x2,
-                     double y2)
+double PointLineDist(double x, double y, double x1, double y1, double x2, double y2)
 {
     x -= x1;
     y -= y1;
@@ -494,8 +521,14 @@ double PointLineDist(double x, double y, double x1, double y1, double x2,
     //   (b) off the "right" side (closest to end point)
     //   (c) in-between : use the perpendicular distance
 
-    if (along_frac <= 0) { return sqrt(x * x + y * y); }
-    else if (along_frac >= 1) { return ComputeDist(x, y, x2, y2); }
+    if (along_frac <= 0)
+    {
+        return sqrt(x * x + y * y);
+    }
+    else if (along_frac >= 1)
+    {
+        return ComputeDist(x, y, x2, y2);
+    }
     else
     {
         // perp dist
@@ -503,9 +536,8 @@ double PointLineDist(double x, double y, double x1, double y1, double x2,
     }
 }
 
-void CalcIntersection(double nx1, double ny1, double nx2, double ny2,
-                      double px1, double py1, double px2, double py2, double *x,
-                      double *y)
+void CalcIntersection(double nx1, double ny1, double nx2, double ny2, double px1, double py1, double px2, double py2,
+                      double *x, double *y)
 {
     // NOTE: lines are extended to infinity to find the intersection
 
@@ -522,8 +554,7 @@ void CalcIntersection(double nx1, double ny1, double nx2, double ny2,
     *y = ny1 + along * (ny2 - ny1);
 }
 
-std::pair<double, double> AlongCoord(const double along, const double px1,
-                                     const double py1, const double px2,
+std::pair<double, double> AlongCoord(const double along, const double px1, const double py1, const double px2,
                                      const double py2)
 {
     const double len = ComputeDist(px1, py1, px2, py2);
@@ -534,8 +565,7 @@ std::pair<double, double> AlongCoord(const double along, const double px1,
     };
 }
 
-bool VectorSameDir(const double dx1, const double dy1, const double dx2,
-                   const double dy2)
+bool VectorSameDir(const double dx1, const double dy1, const double dx2, const double dy2)
 {
     return dx1 * dx2 + dy1 * dy2 >= 0;
 }

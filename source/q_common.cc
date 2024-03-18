@@ -43,11 +43,18 @@ int qk_game;
 int qk_sub_format;
 int qk_worldtype;
 
-qLump_c::qLump_c() : buffer(), crlf(false) {}
+qLump_c::qLump_c() : buffer(), crlf(false)
+{
+}
 
-qLump_c::~qLump_c() {}
+qLump_c::~qLump_c()
+{
+}
 
-int qLump_c::GetSize() const { return (int)buffer.size(); }
+int qLump_c::GetSize() const
+{
+    return (int)buffer.size();
+}
 
 const uint8_t *qLump_c::GetBuffer() const
 {
@@ -56,7 +63,10 @@ const uint8_t *qLump_c::GetBuffer() const
 
 void qLump_c::Append(const void *data, uint32_t len)
 {
-    if (len == 0) { return; }
+    if (len == 0)
+    {
+        return;
+    }
 
     uint32_t old_size = buffer.size();
     uint32_t new_size = old_size + len;
@@ -76,18 +86,27 @@ void qLump_c::Append(qLump_c *other)
 
 void qLump_c::Prepend(const void *data, uint32_t len)
 {
-    if (len == 0) { return; }
+    if (len == 0)
+    {
+        return;
+    }
 
     uint32_t old_size = buffer.size();
     uint32_t new_size = old_size + len;
 
     buffer.resize(new_size);
 
-    if (old_size > 0) { memmove(&buffer[len], &buffer[0], old_size); }
+    if (old_size > 0)
+    {
+        memmove(&buffer[len], &buffer[0], old_size);
+    }
     memcpy(&buffer[0], data, len);
 }
 
-void qLump_c::AddByte(uint8_t value) { Append(&value, 1); }
+void qLump_c::AddByte(uint8_t value)
+{
+    Append(&value, 1);
+}
 
 void qLump_c::RawPrintf(const char *str)
 {
@@ -104,7 +123,10 @@ void qLump_c::RawPrintf(const char *str)
 
         Append(str, next ? (next - str) : strlen(str));
 
-        if (!next) { break; }
+        if (!next)
+        {
+            break;
+        }
 
         Append("\r\n", 2);
 
@@ -146,7 +168,10 @@ void qLump_c::KeyPair(const char *key, const char *val, ...)
     RawPrintf("\"\n");
 }
 
-void qLump_c::SetCRLF(bool enable) { crlf = enable; }
+void qLump_c::SetCRLF(bool enable)
+{
+    crlf = enable;
+}
 
 //------------------------------------------------------------------------
 
@@ -167,7 +192,10 @@ static void BSP_ClearPlanes()
     }
 }
 
-static void BSP_PreparePlanes() { BSP_ClearPlanes(); }
+static void BSP_PreparePlanes()
+{
+    BSP_ClearPlanes();
+}
 
 static uint16_t AddRawPlane(const dplane_t *plane, bool *was_new)
 {
@@ -178,11 +206,23 @@ static uint16_t AddRawPlane(const dplane_t *plane, bool *was_new)
 
     // never use negative zero (minus zero) in normals
     // [ this prevents duplicate planes ]
-    if (raw_plane.normal[0] == -0.0f) { raw_plane.normal[0] = +0.0f; }
-    if (raw_plane.normal[1] == -0.0f) { raw_plane.normal[1] = +0.0f; }
-    if (raw_plane.normal[2] == -0.0f) { raw_plane.normal[2] = +0.0f; }
+    if (raw_plane.normal[0] == -0.0f)
+    {
+        raw_plane.normal[0] = +0.0f;
+    }
+    if (raw_plane.normal[1] == -0.0f)
+    {
+        raw_plane.normal[1] = +0.0f;
+    }
+    if (raw_plane.normal[2] == -0.0f)
+    {
+        raw_plane.normal[2] = +0.0f;
+    }
 
-    if (raw_plane.dist == -0.0f) { raw_plane.dist = +0.0f; }
+    if (raw_plane.dist == -0.0f)
+    {
+        raw_plane.dist = +0.0f;
+    }
 
     int hash = RoundToInteger(raw_plane.dist * 1.1);
 
@@ -200,7 +240,10 @@ static uint16_t AddRawPlane(const dplane_t *plane, bool *was_new)
 
     *was_new = false;
 
-    if (!plane_hashtab[hash]) { plane_hashtab[hash] = new std::vector<int>; }
+    if (!plane_hashtab[hash])
+    {
+        plane_hashtab[hash] = new std::vector<int>;
+    }
 
     std::vector<int> *hashtab = plane_hashtab[hash];
 
@@ -212,7 +255,7 @@ static uint16_t AddRawPlane(const dplane_t *plane, bool *was_new)
 
         if (memcmp(&raw_plane, &bsp_planes[index], sizeof(raw_plane)) == 0)
         {
-            return index;  // found it
+            return index; // found it
         }
     }
 
@@ -224,7 +267,7 @@ static uint16_t AddRawPlane(const dplane_t *plane, bool *was_new)
 
     hashtab->push_back(new_index);
 
-#if 0  // DEBUG
+#if 0 // DEBUG
 fprintf(stderr, "ADDED PLANE #%d : %08x %08x %08x d:%08x tp:%08x\n",
 (int)new_index,
 *(uint32_t *) &raw_plane.normal[0],
@@ -239,8 +282,7 @@ fprintf(stderr, "ADDED PLANE #%d : %08x %08x %08x d:%08x tp:%08x\n",
     return new_index;
 }
 
-uint16_t BSP_AddPlane(float x, float y, float z, float nx, float ny, float nz,
-                      bool *flip_var)
+uint16_t BSP_AddPlane(float x, float y, float z, float nx, float ny, float nz, bool *flip_var)
 {
     // NOTE: flip_var is only needed for Quake 1 / Hexen 2
 
@@ -259,8 +301,7 @@ uint16_t BSP_AddPlane(float x, float y, float z, float nx, float ny, float nz,
     float az = fabs(nz);
 
     // flip plane to make major axis positive
-    if ((-nx >= OBSIDIAN_MAX(ay, az)) || (-ny >= OBSIDIAN_MAX(ax, az)) ||
-        (-nz >= OBSIDIAN_MAX(ax, ay)))
+    if ((-nx >= OBSIDIAN_MAX(ay, az)) || (-ny >= OBSIDIAN_MAX(ax, az)) || (-nz >= OBSIDIAN_MAX(ax, ay)))
     {
         did_flip = true;
 
@@ -280,12 +321,30 @@ uint16_t BSP_AddPlane(float x, float y, float z, float nx, float ny, float nz,
     raw_plane.dist = (x * nx + y * ny + z * nz);
 
     // determine 'type' field
-    if (ax > 0.999) { raw_plane.type = PLANE_X; }
-    else if (ay > 0.999) { raw_plane.type = PLANE_Y; }
-    else if (az > 0.999) { raw_plane.type = PLANE_Z; }
-    else if (ax >= OBSIDIAN_MAX(ay, az)) { raw_plane.type = PLANE_ANYX; }
-    else if (ay >= OBSIDIAN_MAX(ax, az)) { raw_plane.type = PLANE_ANYY; }
-    else { raw_plane.type = PLANE_ANYZ; }
+    if (ax > 0.999)
+    {
+        raw_plane.type = PLANE_X;
+    }
+    else if (ay > 0.999)
+    {
+        raw_plane.type = PLANE_Y;
+    }
+    else if (az > 0.999)
+    {
+        raw_plane.type = PLANE_Z;
+    }
+    else if (ax >= OBSIDIAN_MAX(ay, az))
+    {
+        raw_plane.type = PLANE_ANYX;
+    }
+    else if (ay >= OBSIDIAN_MAX(ax, az))
+    {
+        raw_plane.type = PLANE_ANYY;
+    }
+    else
+    {
+        raw_plane.type = PLANE_ANYZ;
+    }
 
     bool was_new;
 
@@ -304,7 +363,10 @@ uint16_t BSP_AddPlane(float x, float y, float z, float nx, float ny, float nz,
         AddRawPlane(&raw_plane, &was_new);
     }
 
-    if (flip_var) { *flip_var = did_flip; }
+    if (flip_var)
+    {
+        *flip_var = did_flip;
+    }
 
     return plane_idx;
 }
@@ -324,8 +386,7 @@ void BSP_WritePlanes(int lump_num, int max_planes)
 
     if (lump->GetSize() >= max_planes)
     {
-        ErrorPrintf("Quake build failure: exceeded limit of {} PLANES\n",
-                    max_planes);
+        ErrorPrintf("Quake build failure: exceeded limit of {} PLANES\n", max_planes);
     }
 
     BSP_ClearPlanes();
@@ -377,7 +438,10 @@ uint16_t BSP_AddVertex(float x, float y, float z)
     // find existing vertex...
     // for speed we use a hash-table
 
-    if (!vert_hashtab[hash]) { vert_hashtab[hash] = new std::vector<int>; }
+    if (!vert_hashtab[hash])
+    {
+        vert_hashtab[hash] = new std::vector<int>;
+    }
 
     std::vector<int> *hashtab = vert_hashtab[hash];
 
@@ -387,7 +451,7 @@ uint16_t BSP_AddVertex(float x, float y, float z)
 
         if (memcmp(&raw_vert, &bsp_vertices[index], sizeof(raw_vert)) == 0)
         {
-            return index;  // found it!
+            return index; // found it!
         }
     }
 
@@ -411,8 +475,7 @@ void BSP_WriteVertices(int lump_num, int max_verts)
 {
     if ((int)bsp_vertices.size() >= max_verts)
     {
-        ErrorPrintf("Quake build failure: exceeded limit of {} VERTEXES\n",
-                    max_verts);
+        ErrorPrintf("Quake build failure: exceeded limit of {} VERTEXES\n", max_verts);
     }
 
     qLump_c *lump = BSP_NewLump(lump_num);
@@ -483,8 +546,7 @@ void BSP_WriteEdges(int lump_num, int max_edges)
 {
     if ((int)bsp_edges.size() >= max_edges)
     {
-        ErrorPrintf("Quake build failure: exceeded limit of {} EDGES\n",
-                    max_edges);
+        ErrorPrintf("Quake build failure: exceeded limit of {} EDGES\n", max_edges);
     }
 
     qLump_c *lump = BSP_NewLump(lump_num);
@@ -521,7 +583,10 @@ static void BSP_WriteLump(qLump_c *lump)
 
     int len = lump->GetSize();
 
-    if (len == 0) { return; }
+    if (len == 0)
+    {
+        return;
+    }
 
     PAK_AppendData(lump->GetBuffer(), len);
 
@@ -547,23 +612,23 @@ bool BSP_OpenLevel(const char *entry_in_pak)
 
     switch (qk_game)
     {
-        case 1:
-            bsp_version  = Q1_BSP_VERSION;
-            bsp_numlumps = Q1_HEADER_LUMPS;
+    case 1:
+        bsp_version  = Q1_BSP_VERSION;
+        bsp_numlumps = Q1_HEADER_LUMPS;
 
-            if (qk_sub_format == SUBFMT_HalfLife)
-            {
-                bsp_version = HL_BSP_VERSION;
-            }
-            break;
+        if (qk_sub_format == SUBFMT_HalfLife)
+        {
+            bsp_version = HL_BSP_VERSION;
+        }
+        break;
 
-        case 2:
-            bsp_version  = Q2_BSP_VERSION;
-            bsp_numlumps = Q2_HEADER_LUMPS;
-            break;
+    case 2:
+        bsp_version  = Q2_BSP_VERSION;
+        bsp_numlumps = Q2_HEADER_LUMPS;
+        break;
 
-        default:
-            ErrorPrintf("INTERNAL ERROR: invalid qk_game {}\n", qk_game);
+    default:
+        ErrorPrintf("INTERNAL ERROR: invalid qk_game {}\n", qk_game);
     }
 
     BSP_ClearLumps();
@@ -600,7 +665,10 @@ static void BSP_WriteHeader()
         lump_t raw_info;
 
         // handle missing lumps : create an empty one
-        if (!bsp_directory[i]) { bsp_directory[i] = new qLump_c(); }
+        if (!bsp_directory[i])
+        {
+            bsp_directory[i] = new qLump_c();
+        }
 
         uint32_t length = bsp_directory[i]->GetSize();
 
@@ -618,7 +686,10 @@ static csg_entity_c *FindObligeWorldspawn()
     {
         csg_entity_c *E = all_entities[k];
 
-        if (strcmp(E->id.c_str(), "oblige_worldspawn") == 0) { return E; }
+        if (strcmp(E->id.c_str(), "oblige_worldspawn") == 0)
+        {
+            return E;
+        }
     }
 
     return NULL;
@@ -632,7 +703,10 @@ void BSP_WriteEntities(int lump_num, const char *description)
 
     lump->Printf("{\n");
 
-    if (description) { lump->KeyPair("message", description); }
+    if (description)
+    {
+        lump->KeyPair("message", description);
+    }
 
     // TODO : do this via oblige_worldspawn entity
     if (qk_game == 1)
@@ -642,7 +716,7 @@ void BSP_WriteEntities(int lump_num, const char *description)
         lump->KeyPair("worldtype", buffer.c_str());
     }
 
-#if 0  // REMOVE THIS, let Lua code supply these values
+#if 0 // REMOVE THIS, let Lua code supply these values
     if (qk_sub_format == SUBFMT_HalfLife)
     {
         lump->KeyPair("wad", "\\sierra\\half-life\\valve\\halflife.wad;");
@@ -677,10 +751,16 @@ void BSP_WriteEntities(int lump_num, const char *description)
         const char *name = E->id.c_str();
 
         // this is mainly to skip broken map-models
-        if (strcmp(name, "nothing") == 0) { continue; }
+        if (strcmp(name, "nothing") == 0)
+        {
+            continue;
+        }
 
         // skip special (Oblige only) entities
-        if (strncmp(name, "oblige_", 7) == 0) { continue; }
+        if (strncmp(name, "oblige_", 7) == 0)
+        {
+            continue;
+        }
 
         lump->Printf("{\n");
 
@@ -691,8 +771,7 @@ void BSP_WriteEntities(int lump_num, const char *description)
         }
 
         // skip origin when same as default value
-        if ((RoundToInteger(E->x) | RoundToInteger(E->y) |
-             RoundToInteger(E->z)) != 0)
+        if ((RoundToInteger(E->x) | RoundToInteger(E->y) | RoundToInteger(E->z)) != 0)
         {
             lump->KeyPair("origin", "%1.1f %1.1f %1.1f", E->x, E->y, E->z);
         }
@@ -712,7 +791,10 @@ bool BSP_CloseLevel()
 {
     BSP_WriteHeader();
 
-    for (int i = 0; i < bsp_numlumps; i++) { BSP_WriteLump(bsp_directory[i]); }
+    for (int i = 0; i < bsp_numlumps; i++)
+    {
+        BSP_WriteLump(bsp_directory[i]);
+    }
 
     // finish the .BSP file
     PAK_FinishLump();
@@ -732,8 +814,7 @@ qLump_c *BSP_NewLump(int entry)
 
     if (bsp_directory[entry] != NULL)
     {
-        ErrorPrintf("INTERNAL ERROR: BSP_NewLump: already created entry [{}]\n",
-                    entry);
+        ErrorPrintf("INTERNAL ERROR: BSP_NewLump: already created entry [{}]\n", entry);
     }
 
     bsp_directory[entry] = new qLump_c;
@@ -748,11 +829,9 @@ qLump_c *BSP_CreateInfoLump()
     L->SetCRLF(true);
 
     L->Printf("\n");
-    L->Printf("-- Levels created by OBSIDIAN %s \"%s\"\n",
-              OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str());
+    L->Printf("-- Levels created by OBSIDIAN %s \"%s\"\n", OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str());
     L->Printf("-- Build %s\n", OBSIDIAN_VERSION);
-    L->Printf(
-        "-- Based on the OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n");
+    L->Printf("-- Based on the OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n");
     L->Printf("-- %s\n", OBSIDIAN_WEBSITE);
     L->Printf("\n");
 
@@ -792,7 +871,10 @@ int BSP_NiceMidwayPoint(float low, float extent)
 {
     int pow2 = 1;
 
-    while (pow2 < extent / 7) { pow2 = pow2 << 1; }
+    while (pow2 < extent / 7)
+    {
+        pow2 = pow2 << 1;
+    }
 
     int mid = RoundToInteger((low + extent / 2.0f) / pow2) * pow2;
 

@@ -46,18 +46,18 @@ struct RawWadEntry
 // to provide a complete scene geometry description.
 enum LumpOrder
 {
-    kLumpLabel = 0,   // A separator name, ExMx or MAPxx
-    kLumpThings,      // Monsters, items..
-    kLumpLinedefs,    // LineDefs, from editing
-    kLumpSidedefs,    // SideDefs, from editing
-    kLumpVertexes,    // Vertices, edited and BSP splits generated
-    kLumpSegs,        // LineSegs, from LineDefs split by BSP
-    kLumpSubSectors,  // SubSectors, list of LineSegs
-    kLumpNodes,       // BSP nodes
-    kLumpSectors,     // Sectors, from editing
-    kLumpReject,      // LUT, sector-sector visibility
-    kLumpBlockmap,    // LUT, motion clipping, walls/grid element
-    kLumpBehavior     // Hexen scripting stuff
+    kLumpLabel = 0,  // A separator name, ExMx or MAPxx
+    kLumpThings,     // Monsters, items..
+    kLumpLinedefs,   // LineDefs, from editing
+    kLumpSidedefs,   // SideDefs, from editing
+    kLumpVertexes,   // Vertices, edited and BSP splits generated
+    kLumpSegs,       // LineSegs, from LineDefs split by BSP
+    kLumpSubSectors, // SubSectors, list of LineSegs
+    kLumpNodes,      // BSP nodes
+    kLumpSectors,    // Sectors, from editing
+    kLumpReject,     // LUT, sector-sector visibility
+    kLumpBlockmap,   // LUT, motion clipping, walls/grid element
+    kLumpBehavior    // Hexen scripting stuff
 };
 
 /* ----- The level structures ---------------------- */
@@ -78,26 +78,26 @@ struct RawV2Vertex
 #pragma pack(push, 1)
 struct RawLinedef
 {
-    uint16_t start;  // from this vertex...
-    uint16_t end;    // ... to this vertex
-    uint16_t flags;  // linedef flags (impassible, etc)
-    uint16_t type;   // special type (0 for none, 97 for teleporter, etc)
-    int16_t  tag;    // this linedef activates the sector with same tag
-    uint16_t right;  // right sidedef
-    uint16_t left;   // left sidedef (only if this line adjoins 2 sectors)
+    uint16_t start; // from this vertex...
+    uint16_t end;   // ... to this vertex
+    uint16_t flags; // linedef flags (impassible, etc)
+    uint16_t type;  // special type (0 for none, 97 for teleporter, etc)
+    int16_t  tag;   // this linedef activates the sector with same tag
+    uint16_t right; // right sidedef
+    uint16_t left;  // left sidedef (only if this line adjoins 2 sectors)
 };
 #pragma pack(pop)
 
 #pragma pack(push, 1)
 struct RawHexenLinedef
 {
-    uint16_t start;    // from this vertex...
-    uint16_t end;      // ... to this vertex
-    uint16_t flags;    // linedef flags (impassible, etc)
-    uint8_t  type;     // special type
-    uint8_t  args[5];  // special arguments
-    uint16_t right;    // right sidedef
-    uint16_t left;     // left sidedef
+    uint16_t start;   // from this vertex...
+    uint16_t end;     // ... to this vertex
+    uint16_t flags;   // linedef flags (impassible, etc)
+    uint8_t  type;    // special type
+    uint8_t  args[5]; // special arguments
+    uint16_t right;   // right sidedef
+    uint16_t left;    // left sidedef
 };
 #pragma pack(pop)
 
@@ -107,36 +107,36 @@ struct RawSidedef
     int16_t x_offset;  // X offset for texture
     int16_t y_offset;  // Y offset for texture
 
-    char upper_tex[8];  // texture name for the part above
-    char lower_tex[8];  // texture name for the part below
-    char mid_tex[8];    // texture name for the regular part
+    char upper_tex[8]; // texture name for the part above
+    char lower_tex[8]; // texture name for the part below
+    char mid_tex[8];   // texture name for the regular part
 
-    uint16_t sector;  // adjacent sector
+    uint16_t sector;   // adjacent sector
 };
 #pragma pack(pop)
 
 #pragma pack(push, 1)
 struct RawSector
 {
-    int16_t floorh;  // floor height
-    int16_t ceilh;   // ceiling height
+    int16_t floorh;    // floor height
+    int16_t ceilh;     // ceiling height
 
-    char floor_tex[8];  // floor texture
-    char ceil_tex[8];   // ceiling texture
+    char floor_tex[8]; // floor texture
+    char ceil_tex[8];  // ceiling texture
 
-    uint16_t light;  // light level (0-255)
-    uint16_t type;   // special type (0 = normal, 9 = secret, ...)
-    int16_t  tag;    // sector activated by a linedef with same tag
+    uint16_t light;    // light level (0-255)
+    uint16_t type;     // special type (0 = normal, 9 = secret, ...)
+    int16_t  tag;      // sector activated by a linedef with same tag
 };
 #pragma pack(pop)
 
 #pragma pack(push, 1)
 struct RawThing
 {
-    int16_t  x, y;     // position of thing
-    int16_t  angle;    // angle thing faces (degrees)
-    uint16_t type;     // type of thing
-    uint16_t options;  // when appears, deaf, etc..
+    int16_t  x, y;    // position of thing
+    int16_t  angle;   // angle thing faces (degrees)
+    uint16_t type;    // type of thing
+    uint16_t options; // when appears, deaf, etc..
 };
 #pragma pack(pop)
 
@@ -144,12 +144,12 @@ struct RawThing
 // -JL- Hexen thing definition
 struct RawHexenThing
 {
-    int16_t  tid;      // tag id (for scripts/specials)
-    int16_t  x, y;     // position
-    int16_t  height;   // start height above floor
-    int16_t  angle;    // angle thing faces
-    uint16_t type;     // type of thing
-    uint16_t options;  // when appears, deaf, dormant, etc..
+    int16_t  tid;     // tag id (for scripts/specials)
+    int16_t  x, y;    // position
+    int16_t  height;  // start height above floor
+    int16_t  angle;   // angle thing faces
+    uint16_t type;    // type of thing
+    uint16_t options; // when appears, deaf, dormant, etc..
 
     uint8_t special;  // special type
     uint8_t args[5];  // special arguments
@@ -160,44 +160,44 @@ struct RawHexenThing
 #pragma pack(push, 1)
 struct RawSeg
 {
-    uint16_t start;    // from this vertex...
-    uint16_t end;      // ... to this vertex
-    uint16_t angle;    // angle (0 = east, 16384 = north, ...)
-    uint16_t linedef;  // linedef that this seg goes along
-    uint16_t flip;     // true if not the same direction as linedef
-    uint16_t dist;     // distance from starting point
+    uint16_t start;   // from this vertex...
+    uint16_t end;     // ... to this vertex
+    uint16_t angle;   // angle (0 = east, 16384 = north, ...)
+    uint16_t linedef; // linedef that this seg goes along
+    uint16_t flip;    // true if not the same direction as linedef
+    uint16_t dist;    // distance from starting point
 };
 #pragma pack(pop)
 
 #pragma pack(push, 1)
 struct RawGLSeg
 {
-    uint16_t start;    // from this vertex...
-    uint16_t end;      // ... to this vertex
-    uint16_t linedef;  // linedef that this seg goes along, or -1
-    uint16_t side;     // 0 if on right of linedef, 1 if on left
-    uint16_t partner;  // partner seg number, or -1
+    uint16_t start;   // from this vertex...
+    uint16_t end;     // ... to this vertex
+    uint16_t linedef; // linedef that this seg goes along, or -1
+    uint16_t side;    // 0 if on right of linedef, 1 if on left
+    uint16_t partner; // partner seg number, or -1
 };
 #pragma pack(pop)
 
 #pragma pack(push, 1)
 struct RawV5Seg
 {
-    uint32_t start;    // from this vertex...
-    uint32_t end;      // ... to this vertex
-    uint16_t linedef;  // linedef that this seg goes along, or -1
-    uint16_t side;     // 0 if on right of linedef, 1 if on left
-    uint32_t partner;  // partner seg number, or -1
+    uint32_t start;   // from this vertex...
+    uint32_t end;     // ... to this vertex
+    uint16_t linedef; // linedef that this seg goes along, or -1
+    uint16_t side;    // 0 if on right of linedef, 1 if on left
+    uint32_t partner; // partner seg number, or -1
 };
 #pragma pack(pop)
 
 #pragma pack(push, 1)
 struct RawZDoomSeg
 {
-    uint32_t start;    // from this vertex...
-    uint32_t end;      // ... to this vertex
-    uint16_t linedef;  // linedef that this seg goes along, or -1
-    uint8_t  side;     // 0 if on right of linedef, 1 if on left
+    uint32_t start;   // from this vertex...
+    uint32_t end;     // ... to this vertex
+    uint16_t linedef; // linedef that this seg goes along, or -1
+    uint8_t  side;    // 0 if on right of linedef, 1 if on left
 };
 #pragma pack(pop)
 
@@ -212,26 +212,26 @@ struct RawBoundingBox
 #pragma pack(push, 1)
 struct RawNode
 {
-    int16_t        x, y;    // starting point
-    int16_t        dx, dy;  // offset to ending point
-    RawBoundingBox b1, b2;  // bounding rectangles
-    uint16_t right, left;   // children: Node or SSector (if high bit is set)
+    int16_t        x, y;        // starting point
+    int16_t        dx, dy;      // offset to ending point
+    RawBoundingBox b1, b2;      // bounding rectangles
+    uint16_t       right, left; // children: Node or SSector (if high bit is set)
 };
 #pragma pack(pop)
 
 #pragma pack(push, 1)
 struct RawSubsector
 {
-    uint16_t num;    // number of Segs in this Sub-Sector
-    uint16_t first;  // first Seg
+    uint16_t num;   // number of Segs in this Sub-Sector
+    uint16_t first; // first Seg
 };
 #pragma pack(pop)
 
 #pragma pack(push, 1)
 struct RawV5Subsector
 {
-    uint32_t num;    // number of Segs in this Sub-Sector
-    uint32_t first;  // first Seg
+    uint32_t num;   // number of Segs in this Sub-Sector
+    uint32_t first; // first Seg
 };
 #pragma pack(pop)
 
@@ -252,10 +252,10 @@ struct RawV5Node
 {
     // this structure used by ZDoom nodes too
 
-    int16_t        x, y;    // starting point
-    int16_t        dx, dy;  // offset to ending point
-    RawBoundingBox b1, b2;  // bounding rectangles
-    uint32_t right, left;   // children: Node or SSector (if high bit is set)
+    int16_t        x, y;        // starting point
+    int16_t        dx, dy;      // offset to ending point
+    RawBoundingBox b1, b2;      // bounding rectangles
+    uint32_t       right, left; // children: Node or SSector (if high bit is set)
 };
 #pragma pack(pop)
 
@@ -274,9 +274,9 @@ struct RawPatchDefinition
     int16_t x_origin;
     int16_t y_origin;
 
-    uint16_t pname;     // index into PNAMES
-    uint16_t stepdir;   // NOT USED
-    uint16_t colormap;  // NOT USED
+    uint16_t pname;    // index into PNAMES
+    uint16_t stepdir;  // NOT USED
+    uint16_t colormap; // NOT USED
 };
 #pragma pack(pop)
 
@@ -285,7 +285,7 @@ struct RawStrifePatchDefinition
 {
     int16_t  x_origin;
     int16_t  y_origin;
-    uint16_t pname;  // index into PNAMES
+    uint16_t pname; // index into PNAMES
 };
 #pragma pack(pop)
 
@@ -299,10 +299,10 @@ struct RawTexture
 {
     char name[8];
 
-    uint32_t masked;  // NOT USED
+    uint32_t masked;        // NOT USED
     uint16_t width;
     uint16_t height;
-    uint16_t column_dir[2];  // NOT USED
+    uint16_t column_dir[2]; // NOT USED
     uint16_t patch_count;
 
     RawPatchDefinition patches[1];
@@ -314,7 +314,7 @@ struct RawStrifeTexture
 {
     char name[8];
 
-    uint32_t masked;  // NOT USED
+    uint32_t masked; // NOT USED
     uint16_t width;
     uint16_t height;
     uint16_t patch_count;
@@ -343,7 +343,7 @@ struct Patch
     // pixels below the origin
     int16_t topoffset;
 
-    uint32_t columnofs[1];  // only [width] used
+    uint32_t columnofs[1]; // only [width] used
 };
 #pragma pack(pop)
 
@@ -429,18 +429,17 @@ constexpr int16_t kBoomGeneralizedLineLast  = 0x7fff;
 
 inline bool IsBoomGeneralizedLine(int16_t line)
 {
-    return (line >= kBoomGeneralizedLineFirst &&
-            line <= kBoomGeneralizedLineLast);
+    return (line >= kBoomGeneralizedLineFirst && line <= kBoomGeneralizedLineLast);
 }
 
 enum HexenActivation
 {
-    kSpecialActivationCross   = 0,  // when line is crossed (W1 / WR)
-    kSpecialActivationUse     = 1,  // when line is used    (S1 / SR)
-    kSpecialActivationMonster = 2,  // when monster walks over line
-    kSpecialActivationImpact = 3,  // when bullet/projectile hits line (G1 / GR)
-    kSpecialActivationPush   = 4,  // when line is bumped (player is stopped)
-    kSpecialActivationPCross = 5,  // when projectile crosses the line
+    kSpecialActivationCross   = 0, // when line is crossed (W1 / WR)
+    kSpecialActivationUse     = 1, // when line is used    (S1 / SR)
+    kSpecialActivationMonster = 2, // when monster walks over line
+    kSpecialActivationImpact  = 3, // when bullet/projectile hits line (G1 / GR)
+    kSpecialActivationPush    = 4, // when line is bumped (player is stopped)
+    kSpecialActivationPCross  = 5, // when projectile crosses the line
 };
 
 //

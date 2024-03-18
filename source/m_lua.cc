@@ -60,7 +60,10 @@ int gui_console_print(lua_State *L)
         SYS_ASSERT(res);
 
         // strip off colorizations
-        if (res[0] == '@' && isdigit(res[1])) { res += 2; }
+        if (res[0] == '@' && isdigit(res[1]))
+        {
+            res += 2;
+        }
 
         printf("%s", res);
     }
@@ -80,7 +83,10 @@ int gui_raw_log_print(lua_State *L)
         SYS_ASSERT(res);
 
         // strip off colorizations
-        if (res[0] == '@' && isdigit(res[1])) { res += 2; }
+        if (res[0] == '@' && isdigit(res[1]))
+        {
+            res += 2;
+        }
 
         LogPrintf("%s", res);
     }
@@ -242,11 +248,13 @@ int gui_get_install_dir(lua_State *L)
     return 1;
 }
 
-static bool scan_dir_process_name(const std::filesystem::path &name,
-                                  const std::filesystem::path &parent,
-                                  std::string                  match)
+static bool scan_dir_process_name(const std::filesystem::path &name, const std::filesystem::path &parent,
+                                  std::string match)
 {
-    if (name.native()[0] == '.') { return false; }
+    if (name.native()[0] == '.')
+    {
+        return false;
+    }
 
     // fprintf(stderr, "scan_dir_process_name: '%s'\n", name);
 
@@ -261,9 +269,15 @@ static bool scan_dir_process_name(const std::filesystem::path &name,
 
     bool is_it_dir = (dir_checker.filetype == PHYSFS_FILETYPE_DIRECTORY);
 
-    if (match == "DIRS") { return is_it_dir; }
+    if (match == "DIRS")
+    {
+        return is_it_dir;
+    }
 
-    if (is_it_dir) { return false; }
+    if (is_it_dir)
+    {
+        return false;
+    }
 
     // pretend that zero-length files do not exist
     // [ allows a PK3 to _remove_ a file ]
@@ -272,7 +286,10 @@ static bool scan_dir_process_name(const std::filesystem::path &name,
 
     PHYSFS_File *fp = PHYSFS_openRead(temp_name.generic_u8string().c_str());
 
-    if (!fp) { return false; }
+    if (!fp)
+    {
+        return false;
+    }
 
     if (PHYSFS_readBytes(fp, buffer, 1) < 1)
     {
@@ -283,15 +300,16 @@ static bool scan_dir_process_name(const std::filesystem::path &name,
     PHYSFS_close(fp);
 
     // lastly, check match
-    if (match == "*") { return true; }
+    if (match == "*")
+    {
+        return true;
+    }
     else if (match[0] == '*' && match[1] == '.' && isalnum(match[2]))
     {
-        return name.extension().string() ==
-               "." + std::string{match.begin() + 2, match.end()};
+        return name.extension().string() == "." + std::string{match.begin() + 2, match.end()};
     }
 
-    ErrorPrintf("gui.scan_directory: unsupported match expression: %s\n",
-                match.c_str());
+    ErrorPrintf("gui.scan_directory: unsupported match expression: %s\n", match.c_str());
     return false; /* NOT REACHED */
 }
 
@@ -324,8 +342,7 @@ int gui_scan_directory(lua_State *L)
     // seems this only happens on out-of-memory error
     if (!got_names)
     {
-        return luaL_error(L, "gui.scan_directory: %s",
-                          PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+        return luaL_error(L, "gui.scan_directory: %s", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
     }
 
     // transfer matching names into another list
@@ -336,7 +353,10 @@ int gui_scan_directory(lua_State *L)
 
     for (p = got_names; *p; p++)
     {
-        if (scan_dir_process_name(*p, dir_name, match)) { list.push_back(*p); }
+        if (scan_dir_process_name(*p, dir_name, match))
+        {
+            list.push_back(*p);
+        }
     }
 
     PHYSFS_freeList(got_names);
@@ -720,9 +740,15 @@ int gui_bit_not(lua_State *L)
     return 1;
 }
 
-int gui_minimap_enable(lua_State *L) { return 0; }
+int gui_minimap_enable(lua_State *L)
+{
+    return 0;
+}
 
-int gui_minimap_disable(lua_State *L) { return 0; }
+int gui_minimap_disable(lua_State *L)
+{
+    return 0;
+}
 
 int gui_minimap_begin(lua_State *L)
 {
@@ -736,7 +762,10 @@ int gui_minimap_begin(lua_State *L)
     return 2;
 }
 
-int gui_minimap_finish(lua_State *L) { return 0; }
+int gui_minimap_finish(lua_State *L)
+{
+    return 0;
+}
 
 int gui_minimap_gif_start(lua_State *L)
 {
@@ -744,9 +773,15 @@ int gui_minimap_gif_start(lua_State *L)
     return 0;
 }
 
-int gui_minimap_gif_frame(lua_State *L) { return 0; }
+int gui_minimap_gif_frame(lua_State *L)
+{
+    return 0;
+}
 
-int gui_minimap_gif_finish(lua_State *L) { return 0; }
+int gui_minimap_gif_finish(lua_State *L)
+{
+    return 0;
+}
 
 int gui_minimap_draw_line(lua_State *L)
 {
@@ -851,7 +886,7 @@ extern int v094_add_vertex(lua_State *L);
 extern int v094_add_linedef(lua_State *L);
 extern int v094_add_sidedef(lua_State *L);
 extern int v094_add_sector(lua_State *L);
-}  // namespace Doom
+} // namespace Doom
 
 extern int wadfab_load(lua_State *L);
 extern int wadfab_free(lua_State *L);
@@ -1007,14 +1042,13 @@ static const luaL_Reg gui_script_funcs[] = {
     {"v094_add_sidedef", Doom::v094_add_sidedef},
     {"v094_add_sector", Doom::v094_add_sector},
 
-    {NULL, NULL}  // the end
+    {NULL, NULL} // the end
 };
 
 static const luaL_Reg bit_functions[] = {
-    {"band", gui_bit_and}, {"btest", gui_bit_test}, {"bor", gui_bit_or},
-    {"bxor", gui_bit_xor}, {"bnot", gui_bit_not},
+    {"band", gui_bit_and}, {"btest", gui_bit_test}, {"bor", gui_bit_or}, {"bxor", gui_bit_xor}, {"bnot", gui_bit_not},
 
-    {NULL, NULL}  // the end
+    {NULL, NULL} // the end
 };
 
 static int p_init_lua(lua_State *L)
@@ -1033,8 +1067,7 @@ static int p_init_lua(lua_State *L)
     return 0;
 }
 
-static bool Script_CallFunc(std::string func_name, int nresult = 0,
-                            std::string *params = NULL)
+static bool Script_CallFunc(std::string func_name, int nresult = 0, std::string *params = NULL)
 {
     // Note: the results of the function will be on the Lua stack
 
@@ -1068,16 +1101,25 @@ static bool Script_CallFunc(std::string func_name, int nresult = 0,
 
         // skip the filename
         const char *err_msg = strstr(msg, ": ");
-        if (err_msg) { err_msg += 2; }
-        else { err_msg = msg; }
+        if (err_msg)
+        {
+            err_msg += 2;
+        }
+        else
+        {
+            err_msg = msg;
+        }
 
-        if (batch_mode) { LogPrintf("ERROR MESSAGE: %s\n", err_msg); }
+        if (batch_mode)
+        {
+            LogPrintf("ERROR MESSAGE: %s\n", err_msg);
+        }
 
 // this will appear in the log file too
 #ifndef CONSOLE_ONLY
 // Placeholder for error window
 #endif
-        lua_pop(LUA_ST, 2);  // ob_traceback, message
+        lua_pop(LUA_ST, 2); // ob_traceback, message
         return false;
     }
 
@@ -1101,10 +1143,12 @@ static const char *my_reader(lua_State *L, void *ud, size_t *size)
 
     load_info_t *info = (load_info_t *)ud;
 
-    if (PHYSFS_eof(info->fp)) { return NULL; }
+    if (PHYSFS_eof(info->fp))
+    {
+        return NULL;
+    }
 
-    PHYSFS_sint64 len =
-        PHYSFS_readBytes(info->fp, info->buffer, sizeof(info->buffer));
+    PHYSFS_sint64 len = PHYSFS_readBytes(info->fp, info->buffer, sizeof(info->buffer));
 
     // negative result indicates a "complete failure"
     if (len < 0)
@@ -1115,9 +1159,12 @@ static const char *my_reader(lua_State *L, void *ud, size_t *size)
 
     *size = (size_t)len;
 
-    if (!size) { return NULL; }
+    if (!size)
+    {
+        return NULL;
+    }
 
-    return info->buffer;  // OK
+    return info->buffer; // OK
 }
 
 static int my_loadfile(lua_State *L, const std::filesystem::path &filename)
@@ -1134,8 +1181,7 @@ static int my_loadfile(lua_State *L, const std::filesystem::path &filename)
 
     if (!info.fp)
     {
-        lua_pushfstring(L, "file open error: %s",
-                        PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+        lua_pushfstring(L, "file open error: %s", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         lua_remove(L, fnameindex);
 
         return LUA_ERRFILE;
@@ -1154,9 +1200,7 @@ static int my_loadfile(lua_State *L, const std::filesystem::path &filename)
         lua_settop(L, fnameindex);
         status = LUA_ERRFILE;
 
-        lua_pushstring(
-            L, StringFormat("file read error: %s", info.error_msg.c_str())
-                   .c_str());
+        lua_pushstring(L, StringFormat("file read error: %s", info.error_msg.c_str()).c_str());
     }
 
     lua_remove(L, fnameindex);
@@ -1174,21 +1218,22 @@ void Script_Load(std::filesystem::path script_name)
         script_name.replace_extension("lua");
     }
 
-    std::filesystem::path filename =
-        std::filesystem::path{import_dir} / script_name;
+    std::filesystem::path filename = std::filesystem::path{import_dir} / script_name;
 
     DebugPrintf("  loading script: '%s'\n", filename.u8string().c_str());
 
     int status = my_loadfile(LUA_ST, filename);
 
-    if (status == 0) { status = lua_pcall(LUA_ST, 0, 0, 0); }
+    if (status == 0)
+    {
+        status = lua_pcall(LUA_ST, 0, 0, 0);
+    }
 
     if (status != 0)
     {
         const char *msg = lua_tolstring(LUA_ST, -1, NULL);
 
-        ErrorPrintf("Unable to load script '%s'\n%s",
-                    filename.u8string().c_str(), msg);
+        ErrorPrintf("Unable to load script '%s'\n%s", filename.u8string().c_str(), msg);
     }
 }
 
@@ -1199,7 +1244,10 @@ void Script_Open()
     // create Lua state
 
     LUA_ST = luaL_newstate();
-    if (!LUA_ST) { ErrorPrintf("LUA Init failed: cannot create new state"); }
+    if (!LUA_ST)
+    {
+        ErrorPrintf("LUA Init failed: cannot create new state");
+    }
 
     int status = p_init_lua(LUA_ST);
     if (status != 0)
@@ -1234,7 +1282,10 @@ void Script_Open()
 
 void Script_Close()
 {
-    if (LUA_ST) { lua_close(LUA_ST); }
+    if (LUA_ST)
+    {
+        lua_close(LUA_ST);
+    }
 
     LogPrintf("\n--- CLOSED LUA VM ---\n\n");
 
@@ -1266,8 +1317,7 @@ bool ob_set_config(std::string key, std::string value)
     return Script_CallFunc("ob_set_config", 0, params);
 }
 
-bool ob_set_mod_option(std::string module, std::string option,
-                       std::string value)
+bool ob_set_mod_option(std::string module, std::string option, std::string value)
 {
     if (!has_loaded)
     {
@@ -1293,7 +1343,7 @@ bool ob_read_all_config(std::vector<std::string> *lines, bool need_full)
     std::string params[2];
 
     params[0] = need_full ? "need_full" : "";
-    params[1] = "";  // end of list
+    params[1] = ""; // end of list
 
     bool result = Script_CallFunc("ob_read_all_config", 0, params);
 
@@ -1304,7 +1354,10 @@ bool ob_read_all_config(std::vector<std::string> *lines, bool need_full)
 
 std::string ob_get_password()
 {
-    if (!Script_CallFunc("ob_get_password", 1)) { return ""; }
+    if (!Script_CallFunc("ob_get_password", 1))
+    {
+        return "";
+    }
 
     std::string res = luaL_optlstring(LUA_ST, -1, "", NULL);
 
@@ -1316,7 +1369,10 @@ std::string ob_get_password()
 
 std::string ob_get_random_words()
 {
-    if (!Script_CallFunc("ob_get_random_words", 1)) { return ""; }
+    if (!Script_CallFunc("ob_get_random_words", 1))
+    {
+        return "";
+    }
 
     std::string res = luaL_optlstring(LUA_ST, -1, "", NULL);
 
@@ -1328,7 +1384,10 @@ std::string ob_get_random_words()
 
 std::string ob_game_format()
 {
-    if (!Script_CallFunc("ob_game_format", 1)) { return ""; }
+    if (!Script_CallFunc("ob_game_format", 1))
+    {
+        return "";
+    }
 
     std::string res = luaL_optlstring(LUA_ST, -1, "", NULL);
 
@@ -1342,7 +1401,10 @@ std::string ob_get_param(std::string parameter)
 {
     std::string params[2] = {parameter, ""};
 
-    if (!Script_CallFunc("ob_get_param", 1, params)) { return ""; }
+    if (!Script_CallFunc("ob_get_param", 1, params))
+    {
+        return "";
+    }
 
     std::string param = luaL_optlstring(LUA_ST, -1, "", NULL);
 
@@ -1356,7 +1418,10 @@ bool ob_hexen_ceiling_check(int thing_id)
 {
     std::string params[2] = {NumberToString(thing_id), ""};
 
-    if (!Script_CallFunc("ob_hexen_ceiling_check", 1, params)) { return false; }
+    if (!Script_CallFunc("ob_hexen_ceiling_check", 1, params))
+    {
+        return false;
+    }
 
     std::string param = luaL_optlstring(LUA_ST, -1, "", NULL);
 
@@ -1370,7 +1435,10 @@ bool ob_mod_enabled(std::string module_name)
 {
     std::string params[2] = {module_name, ""};
 
-    if (!Script_CallFunc("ob_mod_enabled", 1, params)) { return false; }
+    if (!Script_CallFunc("ob_mod_enabled", 1, params))
+    {
+        return false;
+    }
 
     int param = luaL_optinteger(LUA_ST, -1, 0);
 
@@ -1382,7 +1450,10 @@ bool ob_mod_enabled(std::string module_name)
 
 std::string ob_default_filename()
 {
-    if (!Script_CallFunc("ob_default_filename", 1)) { return ""; }
+    if (!Script_CallFunc("ob_default_filename", 1))
+    {
+        return "";
+    }
 
     std::string res = luaL_optlstring(LUA_ST, -1, "", NULL);
 
@@ -1415,7 +1486,10 @@ bool ob_build_cool_shit()
     // remove result from lua stack
     lua_pop(LUA_ST, 1);
 
-    if (res && strcmp(res, "ok") == 0) { return true; }
+    if (res && strcmp(res, "ok") == 0)
+    {
+        return true;
+    }
 
     Main::ProgStatus(GetTranslatedText("Cancelled"));
     return false;

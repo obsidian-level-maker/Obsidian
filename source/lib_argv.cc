@@ -53,7 +53,10 @@ static void Parse_LongArg(std::string_view arg)
     }
 
     argv::list.emplace_back(name);
-    if (!value.empty()) { argv::list.emplace_back(value); }
+    if (!value.empty())
+    {
+        argv::list.emplace_back(value);
+    }
 }
 
 static void Parse_ShortArgs(std::string_view arg)
@@ -67,7 +70,10 @@ static void Parse_ShortArgs(std::string_view arg)
             // argument
             argv::list.emplace_back(std::string{"-"} + std::string{&ch, 1});
             std::string_view argument = arg.substr(i + 1);
-            if (!argument.empty()) { argv::list.emplace_back(argument); }
+            if (!argument.empty())
+            {
+                argv::list.emplace_back(argument);
+            }
             // no more to parse
             break;
         }
@@ -120,14 +126,22 @@ void argv::Init(const int argc, const char *const *argv)
         // support GNU-style long and short options
         if (cur[0] == '-')
         {
-            if (cur[1] == '-') { Parse_LongArg(cur); }
-            else { Parse_ShortArgs(cur); }
+            if (cur[1] == '-')
+            {
+                Parse_LongArg(cur);
+            }
+            else
+            {
+                Parse_ShortArgs(cur);
+            }
         }
-        else { list.emplace_back(cur); }
+        else
+        {
+            list.emplace_back(cur);
+        }
 
         // support DOS-style short options
-        if (cur[0] == '/' && (isalnum(cur[1]) || cur[1] == '?') &&
-            cur[2] == '\0')
+        if (cur[0] == '/' && (isalnum(cur[1]) || cur[1] == '?') && cur[2] == '\0')
         {
             list.emplace_back(std::string{"-"} + std::string{&cur[1], 1});
         }
@@ -146,20 +160,31 @@ void argv::Init(const int argc, const char *const *argv)
 
 #ifdef __APPLE__
         // ignore MacOS X rubbish
-        if (cur == "-psn") { continue; }
+        if (cur == "-psn")
+        {
+            continue;
+        }
 #endif
 
         // support GNU-style long and short options
         if (cur[0] == '-')
         {
-            if (cur[1] == '-') { Parse_LongArg(cur); }
-            else { Parse_ShortArgs(cur); }
+            if (cur[1] == '-')
+            {
+                Parse_LongArg(cur);
+            }
+            else
+            {
+                Parse_ShortArgs(cur);
+            }
         }
-        else { list.emplace_back(cur); }
+        else
+        {
+            list.emplace_back(cur);
+        }
 
         // support DOS-style short options
-        if (cur[0] == '/' && (isalnum(cur[1]) || cur[1] == '?') &&
-            cur[2] == '\0')
+        if (cur[0] == '/' && (isalnum(cur[1]) || cur[1] == '?') && cur[2] == '\0')
         {
             list.emplace_back(std::string{"-"} + std::string{&cur[1], 1});
         }
@@ -171,13 +196,19 @@ int argv::Find(const char shortName, const char *longName, int *numParams)
 {
     SYS_ASSERT(shortName || longName);
 
-    if (numParams) { *numParams = 0; }
+    if (numParams)
+    {
+        *numParams = 0;
+    }
 
     size_t p = 0;
 
     for (; p < list.size(); ++p)
     {
-        if (!IsOption(p)) { continue; }
+        if (!IsOption(p))
+        {
+            continue;
+        }
 
         const std::string &str = list[p];
 
@@ -186,9 +217,7 @@ int argv::Find(const char shortName, const char *longName, int *numParams)
             break;
         }
 
-        if (longName &&
-            StringCaseCompareASCII(
-                longName, std::string_view{&str[1], (str.size() - 1)}) == 0)
+        if (longName && StringCaseCompareASCII(longName, std::string_view{&str[1], (str.size() - 1)}) == 0)
         {
             break;
         }
@@ -204,7 +233,10 @@ int argv::Find(const char shortName, const char *longName, int *numParams)
     {
         size_t q = p + 1;
 
-        while (q < list.size() && !IsOption(q)) { ++q; }
+        while (q < list.size() && !IsOption(q))
+        {
+            ++q;
+        }
 
         *numParams = q - p - 1;
     }
@@ -212,7 +244,10 @@ int argv::Find(const char shortName, const char *longName, int *numParams)
     return p;
 }
 
-bool argv::IsOption(const int index) { return list.at(index)[0] == '-'; }
+bool argv::IsOption(const int index)
+{
+    return list.at(index)[0] == '-';
+}
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

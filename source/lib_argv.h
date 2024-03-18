@@ -38,7 +38,7 @@ void Init(int argc, const char *const *argv);
 int  Find(char shortName, const char *longName, int *numParams = nullptr);
 bool IsOption(int index);
 
-}  // namespace argv
+} // namespace argv
 
 #endif /* __LIB_ARGV_H__ */
 

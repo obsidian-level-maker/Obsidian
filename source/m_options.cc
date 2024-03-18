@@ -36,7 +36,10 @@ void Parse_Option(const std::string &name, const std::string &value)
         Recent_Parse(name, value);
         return;
     }
-    if (StringCaseCompareASCII(name, "addon") == 0) { VFS_OptParse(value); }
+    if (StringCaseCompareASCII(name, "addon") == 0)
+    {
+        VFS_OptParse(value);
+    }
     else if (StringCaseCompareASCII(name, "language") == 0)
     {
         t_language = value;
@@ -75,8 +78,7 @@ void Parse_Option(const std::string &name, const std::string &value)
     }
     else
     {
-        LogPrintf("%s '%s'\n", GetTranslatedText("Unknown option: "),
-                  name.c_str());
+        LogPrintf("%s '%s'\n", GetTranslatedText("Unknown option: "), name.c_str());
     }
 }
 
@@ -100,8 +102,7 @@ static bool Options_ParseLine(std::string buf)
 
     if (!isalpha(buf.front()))
     {
-        printf("%s [%s]\n", GetTranslatedText("Weird option line: "),
-               buf.c_str());
+        printf("%s [%s]\n", GetTranslatedText("Weird option line: "), buf.c_str());
         return false;
     }
 
@@ -109,7 +110,10 @@ static bool Options_ParseLine(std::string buf)
     std::string name  = buf.substr(0, pos - 1);
     std::string value = buf.substr(pos + 2);
 
-    if (name.empty() || value.empty()) { return false; }
+    if (name.empty() || value.empty())
+    {
+        return false;
+    }
 
     Parse_Option(name, value);
     return true;
@@ -125,8 +129,7 @@ bool Options_Load(std::filesystem::path filename)
 
     if (!option_fp)
     {
-        printf(
-            GetTranslatedText("Missing Options file -- using defaults.\n\n"));
+        printf(GetTranslatedText("Missing Options file -- using defaults.\n\n"));
         return false;
     }
 
@@ -156,19 +159,16 @@ bool Options_Save(std::filesystem::path filename)
 
     if (!option_fp)
     {
-        LogPrintf("Error: unable to create file: %s\n(%s)\n\n",
-                  filename.u8string().c_str(), strerror(errno));
+        LogPrintf("Error: unable to create file: %s\n(%s)\n\n", filename.u8string().c_str(), strerror(errno));
         return false;
     }
 
     LogPrintf("Saving options file...\n");
 
-    fprintf(option_fp, "-- OPTIONS FILE : OBSIDIAN %s \"%s\"\n",
-            OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str());
+    fprintf(option_fp, "-- OPTIONS FILE : OBSIDIAN %s \"%s\"\n", OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str());
 
     fprintf(option_fp, "-- Build %s\n", OBSIDIAN_VERSION);
-    fprintf(option_fp,
-            "-- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n");
+    fprintf(option_fp, "-- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n");
     fprintf(option_fp, "-- %s\n\n", OBSIDIAN_WEBSITE);
 
     fprintf(option_fp, "language = %s\n\n", t_language.c_str());
@@ -177,12 +177,10 @@ bool Options_Save(std::filesystem::path filename)
     fprintf(option_fp, "overwrite_warning = %d\n", (overwrite_warning ? 1 : 0));
     fprintf(option_fp, "debug_messages = %d\n", (debug_messages ? 1 : 0));
     fprintf(option_fp, "limit_break = %d\n", (limit_break ? 1 : 0));
-    fprintf(option_fp, "random_string_seeds = %d\n",
-            (random_string_seeds ? 1 : 0));
+    fprintf(option_fp, "random_string_seeds = %d\n", (random_string_seeds ? 1 : 0));
     fprintf(option_fp, "password_mode = %d\n", (password_mode ? 1 : 0));
     fprintf(option_fp, "mature_word_lists = %d\n", (mature_word_lists ? 1 : 0));
-    fprintf(option_fp, "default_output_path = %s\n\n",
-            default_output_path.generic_u8string().c_str());
+    fprintf(option_fp, "default_output_path = %s\n\n", default_output_path.generic_u8string().c_str());
 
     VFS_OptWrite(option_fp);
 

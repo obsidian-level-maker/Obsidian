@@ -45,7 +45,7 @@ const double NEAR_MISS_LEN = 8.0;
  */
 class intersect_c
 {
-   public:
+  public:
     // link in list
     intersect_c *next;
     intersect_c *prev;
@@ -76,7 +76,10 @@ intersect_c *NewIntersection()
 
         quick_alloc_cuts = cut->next;
     }
-    else { cut = new intersect_c; }
+    else
+    {
+        cut = new intersect_c;
+    }
 
     return cut;
 }
@@ -104,10 +107,9 @@ void DumpEdges(edge_c *edge_list)
 {
     for (edge_c *cur = edge_list; cur; cur = cur->next)
     {
-        DebugPrintf(
-            "  edge #%d (%s)  sector=%d  (%1.1f %1.1f) -> (%1.1f %1.1f)\n",
-            cur->index, cur->linedef ? "LINE" : "mini", cur->sector->index,
-            cur->start->x, cur->start->y, cur->end->x, cur->end->y);
+        DebugPrintf("  edge #%d (%s)  sector=%d  (%1.1f %1.1f) -> (%1.1f %1.1f)\n", cur->index,
+                    cur->linedef ? "LINE" : "mini", cur->sector->index, cur->start->x, cur->start->y, cur->end->x,
+                    cur->end->y);
     }
 }
 #endif
@@ -156,8 +158,7 @@ void edge_c::CopyInfo(const edge_c *other)
 edge_c *SplitEdge(edge_c *old_edge, double x, double y)
 {
 #if DEBUG_POLY
-    DebugPrintf("Splitting Edge #%d (line #%d) at (%1.1f,%1.1f)\n",
-                old_edge->index,
+    DebugPrintf("Splitting Edge #%d (line #%d) at (%1.1f,%1.1f)\n", old_edge->index,
                 old_edge->linedef ? old_edge->linedef->index : -1, x, y);
 #endif
 
@@ -174,8 +175,7 @@ edge_c *SplitEdge(edge_c *old_edge, double x, double y)
     new_edge->Recompute();
 
 #if DEBUG_POLY
-    DebugPrintf("Splitting Vertex is %04X at (%1.1f,%1.1f)\n", vert->index,
-                vert->x, vert->y);
+    DebugPrintf("Splitting Vertex is %04X at (%1.1f,%1.1f)\n", vert->index, vert->x, vert->y);
 #endif
 
     // handle partners
@@ -207,17 +207,28 @@ edge_c *SplitEdge(edge_c *old_edge, double x, double y)
     return new_edge;
 }
 
-inline void CalcIntersection(edge_c *cur, edge_c *part, double perp_c,
-                             double perp_d, double *x, double *y)
+inline void CalcIntersection(edge_c *cur, edge_c *part, double perp_c, double perp_d, double *x, double *y)
 {
     // 0 = start, 1 = end
     double ds = perp_c / (perp_c - perp_d);
 
-    if (cur->pdx == 0) { *x = cur->psx; }
-    else { *x = cur->psx + (cur->pdx * ds); }
+    if (cur->pdx == 0)
+    {
+        *x = cur->psx;
+    }
+    else
+    {
+        *x = cur->psx + (cur->pdx * ds);
+    }
 
-    if (cur->pdy == 0) { *y = cur->psy; }
-    else { *y = cur->psy + (cur->pdy * ds); }
+    if (cur->pdy == 0)
+    {
+        *y = cur->psy;
+    }
+    else
+    {
+        *y = cur->psy + (cur->pdy * ds);
+    }
 }
 
 void AddIntersection(intersect_c **cut_list, vertex_c *vert, edge_c *part)
@@ -227,7 +238,10 @@ void AddIntersection(intersect_c **cut_list, vertex_c *vert, edge_c *part)
     // check if vertex already present
     for (cut = (*cut_list); cut; cut = cut->next)
     {
-        if (vert == cut->vertex) { return; }
+        if (vert == cut->vertex)
+        {
+            return;
+        }
     }
 
     // create new intersection
@@ -245,22 +259,33 @@ void AddIntersection(intersect_c **cut_list, vertex_c *vert, edge_c *part)
     // find place for new intersection, and link it in...
     intersect_c *next;
 
-    for (next = (*cut_list); next && next->next; next = next->next) {}
+    for (next = (*cut_list); next && next->next; next = next->next)
+    {
+    }
 
-    while (next && cut->along_dist < next->along_dist) { next = next->prev; }
+    while (next && cut->along_dist < next->along_dist)
+    {
+        next = next->prev;
+    }
 
     cut->next = next ? next->next : (*cut_list);
     cut->prev = next;
 
     if (next)
     {
-        if (next->next) { next->next->prev = cut; }
+        if (next->next)
+        {
+            next->next->prev = cut;
+        }
 
         next->next = cut;
     }
     else
     {
-        if (*cut_list) { (*cut_list)->prev = cut; }
+        if (*cut_list)
+        {
+            (*cut_list)->prev = cut;
+        }
 
         (*cut_list) = cut;
     }
@@ -280,20 +305,22 @@ int EvalPartition(edge_c *part, edge_c *edge_list)
 
     double qnty;
 
-#define ADD_LEFT()          \
-    do {                    \
-        if (check->linedef) \
-            real_left += 1; \
-        else                \
-            mini_left += 1; \
+#define ADD_LEFT()                                                                                                     \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        if (check->linedef)                                                                                            \
+            real_left += 1;                                                                                            \
+        else                                                                                                           \
+            mini_left += 1;                                                                                            \
     } while (0)
 
-#define ADD_RIGHT()          \
-    do {                     \
-        if (check->linedef)  \
-            real_right += 1; \
-        else                 \
-            mini_right += 1; \
+#define ADD_RIGHT()                                                                                                    \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        if (check->linedef)                                                                                            \
+            real_right += 1;                                                                                           \
+        else                                                                                                           \
+            mini_right += 1;                                                                                           \
     } while (0)
 
     /* check partition against all the edges */
@@ -322,7 +349,10 @@ int EvalPartition(edge_c *part, edge_c *edge_list)
             {
                 ADD_LEFT();
             }
-            else { ADD_RIGHT(); }
+            else
+            {
+                ADD_RIGHT();
+            }
 
             continue;
         }
@@ -375,8 +405,7 @@ int EvalPartition(edge_c *part, edge_c *edge_list)
     if (real_left == 0 || real_right == 0)
     {
 #if DEBUG_POLY
-        DebugPrintf("Eval : No linedefs on %s%sside\n",
-                    real_left ? "" : "left ", real_right ? "" : "right ");
+        DebugPrintf("Eval : No linedefs on %s%sside\n", real_left ? "" : "left ", real_right ? "" : "right ");
 #endif
 
         return -1;
@@ -388,21 +417,21 @@ int EvalPartition(edge_c *part, edge_c *edge_list)
 
     // show a slight preference for purely horizontally or vertical
     // partition lines.
-    if (part->pdx != 0 && part->pdy != 0) { cost += 60; }
+    if (part->pdx != 0 && part->pdy != 0)
+    {
+        cost += 60;
+    }
 
 #if DEBUG_POLY
-    DebugPrintf(
-        "Eval %p: splits=%d near_miss=%d left=%d+%d right=%d+%d "
-        "cost=%d.%02d\n",
-        part, splits, near_miss, real_left, mini_left, real_right, mini_right,
-        cost / 100, cost % 100);
+    DebugPrintf("Eval %p: splits=%d near_miss=%d left=%d+%d right=%d+%d "
+                "cost=%d.%02d\n",
+                part, splits, near_miss, real_left, mini_left, real_right, mini_right, cost / 100, cost % 100);
 #endif
 
     return cost;
 }
 
-void DivideAnEdge(edge_c *cur, edge_c *part, edge_c **left_list,
-                  edge_c **right_list, intersect_c **cut_list)
+void DivideAnEdge(edge_c *cur, edge_c *part, edge_c **left_list, edge_c **right_list, intersect_c **cut_list)
 {
     /* edge will either move left, move right, or be split */
 
@@ -431,7 +460,10 @@ void DivideAnEdge(edge_c *cur, edge_c *part, edge_c **left_list,
         {
             InsertEdge(left_list, cur);
         }
-        else { InsertEdge(right_list, cur); }
+        else
+        {
+            InsertEdge(right_list, cur);
+        }
 
         return;
     }
@@ -439,8 +471,14 @@ void DivideAnEdge(edge_c *cur, edge_c *part, edge_c **left_list,
     // check for right side
     if (a_side >= 0 && b_side >= 0)
     {
-        if (a_side == 0) { AddIntersection(cut_list, cur->start, part); }
-        if (b_side == 0) { AddIntersection(cut_list, cur->end, part); }
+        if (a_side == 0)
+        {
+            AddIntersection(cut_list, cur->start, part);
+        }
+        if (b_side == 0)
+        {
+            AddIntersection(cut_list, cur->end, part);
+        }
 
         InsertEdge(right_list, cur);
         return;
@@ -449,8 +487,14 @@ void DivideAnEdge(edge_c *cur, edge_c *part, edge_c **left_list,
     // check for left side
     if (a_side <= 0 && b_side <= 0)
     {
-        if (a_side == 0) { AddIntersection(cut_list, cur->start, part); }
-        if (b_side == 0) { AddIntersection(cut_list, cur->end, part); }
+        if (a_side == 0)
+        {
+            AddIntersection(cut_list, cur->start, part);
+        }
+        if (b_side == 0)
+        {
+            AddIntersection(cut_list, cur->end, part);
+        }
 
         InsertEdge(left_list, cur);
         return;
@@ -492,34 +536,39 @@ edge_c *ChoosePartition(edge_c *edge_list, int depth)
     for (edge_c *part = edge_list; part; part = part->next)
     {
         // ignore edges which are not from a linedef
-        if (!part->linedef) { continue; }
+        if (!part->linedef)
+        {
+            continue;
+        }
 
         int cost = EvalPartition(part, edge_list);
 
 #if DEBUG_POLY
-        DebugPrintf(
-            "ChoosePartition: EDGE #%d -> cost:%d  | sector:%d  (%1.1f %1.1f) "
-            "-> (%1.1f %1.1f)\n",
-            part->index, cost, part->sector->index, part->start->x,
-            part->start->y, part->end->x, part->end->y);
+        DebugPrintf("ChoosePartition: EDGE #%d -> cost:%d  | sector:%d  (%1.1f %1.1f) "
+                    "-> (%1.1f %1.1f)\n",
+                    part->index, cost, part->sector->index, part->start->x, part->start->y, part->end->x, part->end->y);
 #endif
 
         // unsuitable or too costly?
-        if (cost < 0 || cost >= best_cost) { continue; }
+        if (cost < 0 || cost >= best_cost)
+        {
+            continue;
+        }
 
         best      = part;
         best_cost = cost;
     }
 
 #if DEBUG_POLY
-    if (!best) { DebugPrintf("ChoosePartition: NO BEST FOUND\n"); }
+    if (!best)
+    {
+        DebugPrintf("ChoosePartition: NO BEST FOUND\n");
+    }
     else
     {
-        DebugPrintf(
-            "ChoosePartition: Best has score %d.%02d  (%1.1f %1.1f) -> (%1.1f "
-            "%1.1f)\n",
-            best_cost / 100, best_cost % 100, best->start->x, best->start->y,
-            best->end->x, best->end->y);
+        DebugPrintf("ChoosePartition: Best has score %d.%02d  (%1.1f %1.1f) -> (%1.1f "
+                    "%1.1f)\n",
+                    best_cost / 100, best_cost % 100, best->start->x, best->start->y, best->end->x, best->end->y);
     }
 #endif
 
@@ -530,8 +579,7 @@ edge_c *ChoosePartition(edge_c *edge_list, int depth)
 // or right lists based on the given partition line (may get split too).
 // adds any intersections onto the intersection list as it goes.
 //
-void DivideEdges(edge_c *edge_list, edge_c *part, edge_c **left_list,
-                 edge_c **right_list, intersect_c **cut_list)
+void DivideEdges(edge_c *edge_list, edge_c *part, edge_c **left_list, edge_c **right_list, intersect_c **cut_list)
 {
     while (edge_list)
     {
@@ -542,21 +590,21 @@ void DivideEdges(edge_c *edge_list, edge_c *part, edge_c **left_list,
     }
 }
 
-void EdgesAlongPartition(edge_c *part, edge_c **left_list, edge_c **right_list,
-                         intersect_c *cut_list)
+void EdgesAlongPartition(edge_c *part, edge_c **left_list, edge_c **right_list, intersect_c *cut_list)
 {
-    if (!cut_list) { return; }
+    if (!cut_list)
+    {
+        return;
+    }
 
 #if DEBUG_POLY
     DebugPrintf("CUT LIST:\n");
-    DebugPrintf("PARTITION: (%1.1f %1.1f) += (%1.1f %1.1f)\n", part->psx,
-                part->psy, part->pdx, part->pdy);
+    DebugPrintf("PARTITION: (%1.1f %1.1f) += (%1.1f %1.1f)\n", part->psx, part->psy, part->pdx, part->pdy);
 
     for (intersect_c *I = cut_list; I; I = I->next)
     {
-        DebugPrintf("  Vertex %8X (%1.1f,%1.1f)  Along %1.2f  [%d/%d]\n",
-                    I->vertex->index, I->vertex->x, I->vertex->y, I->along_dist,
-                    I->before, I->after);
+        DebugPrintf("  Vertex %8X (%1.1f,%1.1f)  Along %1.2f  [%d/%d]\n", I->vertex->index, I->vertex->x, I->vertex->y,
+                    I->along_dist, I->before, I->after);
     }
 #endif
 
@@ -584,20 +632,22 @@ void EdgesAlongPartition(edge_c *part, edge_c **left_list, edge_c **right_list,
         // merge the two intersections into one
 
 #if DEBUG_POLY
-        DebugPrintf(
-            "Merging cut (%1.0f,%1.0f) [%d/%d] with %p (%1.0f,%1.0f) [%d/%d]\n",
-            cur->vertex->x, cur->vertex->y, cur->before, cur->after,
-            next->vertex, next->vertex->x, next->vertex->y, next->before,
-            next->after);
+        DebugPrintf("Merging cut (%1.0f,%1.0f) [%d/%d] with %p (%1.0f,%1.0f) [%d/%d]\n", cur->vertex->x, cur->vertex->y,
+                    cur->before, cur->after, next->vertex, next->vertex->x, next->vertex->y, next->before, next->after);
 #endif
 
-        if (!cur->before && next->before) { cur->before = next->before; }
+        if (!cur->before && next->before)
+        {
+            cur->before = next->before;
+        }
 
-        if (!cur->after && next->after) { cur->after = next->after; }
+        if (!cur->after && next->after)
+        {
+            cur->after = next->after;
+        }
 
 #if DEBUG_POLY
-        DebugPrintf("---> merged (%1.0f,%1.0f) [%d/%d]\n", cur->vertex->x,
-                    cur->vertex->y, cur->before, cur->after);
+        DebugPrintf("---> merged (%1.0f,%1.0f) [%d/%d]\n", cur->vertex->x, cur->vertex->y, cur->before, cur->after);
 #endif
 
         // free the unused cut
@@ -616,7 +666,10 @@ void EdgesAlongPartition(edge_c *part, edge_c **left_list, edge_c **right_list,
     {
         next = cur->next;
 
-        if (!cur->after && !next->before) { continue; }
+        if (!cur->after && !next->before)
+        {
+            continue;
+        }
 
         // check for some nasty OPEN/CLOSED or CLOSED/OPEN cases
         if ((cur->after && !next->before) || (!cur->after && next->before))
@@ -655,17 +708,15 @@ void EdgesAlongPartition(edge_c *part, edge_c **left_list, edge_c **right_list,
         InsertEdge(left_list, buddy);
 
 #if DEBUG_POLY
-        DebugPrintf(
-            "EdgesAlongPartition: %p RIGHT  sector %d  (%1.1f %1.1f) -> (%1.1f "
-            "%1.1f)\n",
-            edge, edge->sector ? edge->sector->index : -1, edge->start->x,
-            edge->start->y, edge->end->x, edge->end->y);
+        DebugPrintf("EdgesAlongPartition: %p RIGHT  sector %d  (%1.1f %1.1f) -> (%1.1f "
+                    "%1.1f)\n",
+                    edge, edge->sector ? edge->sector->index : -1, edge->start->x, edge->start->y, edge->end->x,
+                    edge->end->y);
 
-        DebugPrintf(
-            "EdgesAlongPartition: %p LEFT   sector %d  (%1.1f %1.1f) -> (%1.1f "
-            "%1.1f)\n",
-            buddy, buddy->sector ? buddy->sector->index : -1, buddy->start->x,
-            buddy->start->y, buddy->end->x, buddy->end->y);
+        DebugPrintf("EdgesAlongPartition: %p LEFT   sector %d  (%1.1f %1.1f) -> (%1.1f "
+                    "%1.1f)\n",
+                    buddy, buddy->sector ? buddy->sector->index : -1, buddy->start->x, buddy->start->y, buddy->end->x,
+                    buddy->end->y);
 #endif
     }
 
@@ -686,7 +737,10 @@ int polygon_c::CountEdges() const
 {
     int count = 0;
 
-    for (edge_c *cur = edge_list; cur; cur = cur->next) { count++; }
+    for (edge_c *cur = edge_list; cur; cur = cur->next)
+    {
+        count++;
+    }
 
     return count;
 }
@@ -719,7 +773,10 @@ bool polygon_c::ContainsPoint(double x, double y) const
     {
         double d = E->PerpDist(x, y);
 
-        if (d < -epsilon) { return false; }
+        if (d < -epsilon)
+        {
+            return false;
+        }
     }
 
     return true;
@@ -737,18 +794,29 @@ void polygon_c::ClockwiseOrder()
     int total = 0;
 
 #if DEBUG_POLY
-    DebugPrintf("Polygon: Clockwising #%d (sector #%d)\n", index,
-                sector->index);
+    DebugPrintf("Polygon: Clockwising #%d (sector #%d)\n", index, sector->index);
 #endif
 
     // count edges and create an array to manipulate them
-    for (cur = edge_list; cur; cur = cur->next) { total++; }
+    for (cur = edge_list; cur; cur = cur->next)
+    {
+        total++;
+    }
 
     // use local array if small enough
-    if (total <= EDGE_BUFFER_SIZE) { array = edge_buffer; }
-    else { array = new edge_c *[total]; }
+    if (total <= EDGE_BUFFER_SIZE)
+    {
+        array = edge_buffer;
+    }
+    else
+    {
+        array = new edge_c *[total];
+    }
 
-    for (cur = edge_list, i = 0; cur; cur = cur->next, i++) { array[i] = cur; }
+    for (cur = edge_list, i = 0; cur; cur = cur->next, i++)
+    {
+        array[i] = cur;
+    }
 
     if (i != total)
     {
@@ -775,7 +843,10 @@ void polygon_c::ClockwiseOrder()
             array[i + 1] = A;
 
             // bubble down
-            if (i > 0) { i--; }
+            if (i > 0)
+            {
+                i--;
+            }
         }
         else
         {
@@ -793,9 +864,12 @@ void polygon_c::ClockwiseOrder()
         edge_list      = array[i];
     }
 
-    if (total > EDGE_BUFFER_SIZE) { delete[] array; }
+    if (total > EDGE_BUFFER_SIZE)
+    {
+        delete[] array;
+    }
 
-#if 0  // DEBUGGING
+#if 0 // DEBUGGING
     DebugPrintf("Sorted edges around (%1.1f %1.1f)\n", poly->mid_x, poly->mid_y);
 
     for (cur = edge_list ; cur ; cur = cur->next)
@@ -820,8 +894,7 @@ polygon_c *CreatePolygon(edge_c *edge_list)
     poly->CalcMiddle();
 
 #if DEBUG_POLY
-    DebugPrintf("Created Polygon #%d @ (%1.1f %1.1f)\n", poly->index,
-                poly->mid_x, poly->mid_y);
+    DebugPrintf("Created Polygon #%d @ (%1.1f %1.1f)\n", poly->index, poly->mid_x, poly->mid_y);
     DumpEdges(edge_list);
 #endif
 
@@ -846,12 +919,12 @@ bool RecursiveDivideEdges(edge_c *edge_list, int depth)
         DebugPrintf("Build: CONVEX\n");
 #endif
         CreatePolygon(edge_list);
-        return true;  // OK
+        return true; // OK
     }
 
 #if DEBUG_POLY
-    DebugPrintf("Build: PARTITION %p (%1.0f,%1.0f) -> (%1.0f,%1.0f)\n", part,
-                part->start->x, part->start->y, part->end->x, part->end->y);
+    DebugPrintf("Build: PARTITION %p (%1.0f,%1.0f) -> (%1.0f,%1.0f)\n", part, part->start->x, part->start->y,
+                part->end->x, part->end->y);
 #endif
 
     // divide the edges between left and right
@@ -880,19 +953,25 @@ bool RecursiveDivideEdges(edge_c *edge_list, int depth)
     DebugPrintf("Build: Going LEFT\n");
 #endif
 
-    if (!RecursiveDivideEdges(lefts, depth + 1)) { return false; }
+    if (!RecursiveDivideEdges(lefts, depth + 1))
+    {
+        return false;
+    }
 
 #if DEBUG_POLY
     DebugPrintf("Build: Going RIGHT\n");
 #endif
 
-    if (!RecursiveDivideEdges(rights, depth + 1)) { return false; }
+    if (!RecursiveDivideEdges(rights, depth + 1))
+    {
+        return false;
+    }
 
 #if DEBUG_POLY
     DebugPrintf("Build: DONE\n");
 #endif
 
-    return true;  // OK
+    return true; // OK
 }
 
 bool ProcessOneSector(sector_c *sec)
@@ -911,10 +990,16 @@ bool ProcessSectors()
         sector_c *sec = Sector(i);
 
         // skip unused sectors
-        if (!sec->edge_list) { continue; }
+        if (!sec->edge_list)
+        {
+            continue;
+        }
 
         // skip dummy sectors
-        if (sec->is_dummy) { continue; }
+        if (sec->is_dummy)
+        {
+            continue;
+        }
 
 #if DEBUG_POLY
         DebugPrintf("-------------------------------\n");
@@ -922,10 +1007,13 @@ bool ProcessSectors()
         DebugPrintf("-------------------------------\n");
 #endif
 
-        if (!ProcessOneSector(sec)) { return false; }
+        if (!ProcessOneSector(sec))
+        {
+            return false;
+        }
     }
 
-    return true;  // OK
+    return true; // OK
 }
 
 void ClockwisePolygons()
@@ -938,8 +1026,7 @@ void ClockwisePolygons()
     }
 }
 
-edge_c *CreateAnEdge(linedef_c *line, vertex_c *start, vertex_c *end,
-                     sidedef_c *side, int side_num)
+edge_c *CreateAnEdge(linedef_c *line, vertex_c *start, vertex_c *end, sidedef_c *side, int side_num)
 {
     edge_c *E = NewEdge();
 
@@ -982,7 +1069,10 @@ void CreateEdges()
 
         right = CreateAnEdge(line, line->start, line->end, line->right, 0);
 
-        if (line->is_border) { left = NULL; }
+        if (line->is_border)
+        {
+            left = NULL;
+        }
         else
         {
             left = CreateAnEdge(line, line->end, line->start, line->left, 1);
@@ -1065,7 +1155,10 @@ bool Polygonate(bool require_border)
 
     CreateEdges();
 
-    if (need_outer) { CreateOuterEdges(); }
+    if (need_outer)
+    {
+        CreateOuterEdges();
+    }
 
     bool was_ok = ProcessSectors();
 
@@ -1073,8 +1166,7 @@ bool Polygonate(bool require_border)
     {
         ClockwisePolygons();
 
-        DebugPrintf("Built %d POLYGONS, %d EDGES, %d SPLIT-VERTS\n",
-                    num_polygons, num_edges, num_splits);
+        DebugPrintf("Built %d POLYGONS, %d EDGES, %d SPLIT-VERTS\n", num_polygons, num_edges, num_splits);
 
         DebugPrintf("\n");
     }
@@ -1084,7 +1176,7 @@ bool Polygonate(bool require_border)
     return was_ok;
 }
 
-}  // namespace ajpoly
+} // namespace ajpoly
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

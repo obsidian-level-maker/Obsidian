@@ -51,8 +51,7 @@ void *UtilRealloc(void *old, int size)
     void *ret = realloc(old, size);
 
     if (!ret)
-        ErrorPrintf("AJBSP: Out of memory (cannot reallocate %d bytes)\n",
-                    size);
+        ErrorPrintf("AJBSP: Out of memory (cannot reallocate %d bytes)\n", size);
 
     return ret;
 }
@@ -72,7 +71,10 @@ void UtilFree(void *data)
 //  Adler-32 CHECKSUM Code
 //------------------------------------------------------------------------
 
-void Adler32Begin(uint32_t *crc) { *crc = 1; }
+void Adler32Begin(uint32_t *crc)
+{
+    *crc = 1;
+}
 
 void Adler32AddBlock(uint32_t *crc, const uint8_t *data, int length)
 {
@@ -88,7 +90,7 @@ void Adler32AddBlock(uint32_t *crc, const uint8_t *data, int length)
     *crc = (s2 << 16) | s1;
 }
 
-}  // namespace ajbsp
+} // namespace ajbsp
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

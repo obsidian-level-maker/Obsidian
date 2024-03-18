@@ -38,8 +38,7 @@ constexpr const char *OBSIDIAN_VERSION = __DATE__;
 constexpr const char *OBSIDIAN_SHORT_VERSION = "21";
 extern std::string    OBSIDIAN_CODE_NAME;
 
-constexpr const char *OBSIDIAN_WEBSITE =
-    "https://obsidian-level-maker.github.io";
+constexpr const char *OBSIDIAN_WEBSITE = "https://obsidian-level-maker.github.io";
 
 constexpr const char *CONFIG_FILENAME  = "CONFIG.txt";
 constexpr const char *OPTIONS_FILENAME = "OPTIONS.txt";
@@ -77,8 +76,7 @@ namespace Main
 
 void Shutdown(void);
 
-template <typename... Args>
-void ProgStatus(std::string_view msg, Args &&...args)
+template <typename... Args> void ProgStatus(std::string_view msg, Args &&...args)
 {
     // const std::string buffer = StringFormat(msg,
     // std::forward<Args>(args)...); Update UI somewhere maybe or just ditch
@@ -86,13 +84,13 @@ void ProgStatus(std::string_view msg, Args &&...args)
 }
 bool BackupFile(const std::filesystem::path &filename);
 
-}  // namespace Main
+} // namespace Main
 
 class game_interface_c
 {
     /* this is an abstract base class */
 
-   public:
+  public:
     game_interface_c() = default;
 
     virtual ~game_interface_c()                           = default;

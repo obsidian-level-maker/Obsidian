@@ -84,8 +84,8 @@ static void Q1_ClearMipTex(void)
     q1_miptex_map.clear();
 
     // built-in textures
-    Q1_AddMipTex("error");    // #0
-    Q1_AddMipTex("missing");  // #1
+    Q1_AddMipTex("error");   // #0
+    Q1_AddMipTex("missing"); // #1
 
     num_custom_tex = 2;
 }
@@ -150,10 +150,10 @@ static void CreateDummyMip(qLump_c *lump, const char *name, int pix1, int pix2)
 
 static void TransferOneMipTex(qLump_c *lump, unsigned int m, const char *name)
 {
-    static uint8_t relief_colors[8] =  // yellow range
+    static uint8_t relief_colors[8] = // yellow range
         {207, 205, 203, 201, 199, 197, 195, 193};
 
-    static uint8_t bolt_colors[8] =  // blue range
+    static uint8_t bolt_colors[8] =   // blue range
         {0, 223, 222, 221, 219, 217, 214, 211};
 
     if (strcmp(name, "error") == 0)
@@ -227,7 +227,7 @@ static void HL_WriteMipTex(qLump_c *lump)
     {
         memset(&raw_mip, 0, sizeof(raw_mip));
 
-        raw_mip.width  = AlignedLittleEndianU32(128);  ///!!!!!!! FIXME
+        raw_mip.width  = AlignedLittleEndianU32(128); ///!!!!!!! FIXME
         raw_mip.height = AlignedLittleEndianU32(128);
 
         strcpy(raw_mip.name, q1_miptexs[m].c_str());
@@ -369,7 +369,10 @@ static void Q1_ClearTexInfo(void)
 
 uint16_t Q1_AddTexInfo(std::string texture, int flags, float *s4, float *t4)
 {
-    if (texture.empty()) { texture = "error"; }
+    if (texture.empty())
+    {
+        texture = "error";
+    }
 
     int miptex = Q1_AddMipTex(texture);
 
@@ -406,7 +409,7 @@ uint16_t Q1_AddTexInfo(std::string texture, int flags, float *s4, float *t4)
 
         if (memcmp(&raw_tex, &q1_texinfos[index], sizeof(raw_tex)) == 0)
         {
-            return index;  // found it
+            return index; // found it
         }
     }
 
@@ -424,8 +427,7 @@ static void Q1_WriteTexInfo(void)
 {
     if (q1_texinfos.size() >= MAX_MAP_TEXINFO)
     {
-        ErrorPrintf("Quake build failure: exceeded limit of %d TEXINFOS\n",
-                    MAX_MAP_TEXINFO);
+        ErrorPrintf("Quake build failure: exceeded limit of %d TEXINFOS\n", MAX_MAP_TEXINFO);
     }
 
     qLump_c *lump = BSP_NewLump(LUMP_TEXINFO);
@@ -506,14 +508,13 @@ qLump_c *q1_clip;
 
 int q1_total_clip;
 
-static int q1_medium_table[5] = {CONTENTS_EMPTY, CONTENTS_WATER, CONTENTS_SLIME,
-                                 CONTENTS_LAVA, CONTENTS_SOLID};
+static int q1_medium_table[5] = {CONTENTS_EMPTY, CONTENTS_WATER, CONTENTS_SLIME, CONTENTS_LAVA, CONTENTS_SOLID};
 
 static uint8_t q1_ambient_levels[4][8] = {
-    {255, 208, 176, 144, 112, 80, 48, 16},  // Water
-    {255, 160, 128, 96, 64, 32, 0, 0},      // Sky
-    {255, 208, 176, 144, 112, 80, 48, 16},  // Slime (unused)
-    {255, 208, 176, 144, 112, 80, 48, 16},  // Lava
+    {255, 208, 176, 144, 112, 80, 48, 16}, // Water
+    {255, 160, 128, 96, 64, 32, 0, 0},     // Sky
+    {255, 208, 176, 144, 112, 80, 48, 16}, // Slime (unused)
+    {255, 208, 176, 144, 112, 80, 48, 16}, // Lava
 };
 
 static void Q1_FreeStuff()
@@ -618,14 +619,12 @@ static void Q1_WriteFace(quake_face_c *face)
 
     int flags = 0;
 
-    if ((face->flags & (FACE_F_Sky | FACE_F_Liquid)) || texture[0] == '*' ||
-        raw_face.lightofs < 0)
+    if ((face->flags & (FACE_F_Sky | FACE_F_Liquid)) || texture[0] == '*' || raw_face.lightofs < 0)
     {
         flags |= TEX_SPECIAL;
     }
 
-    raw_face.texinfo =
-        Q1_AddTexInfo(texture, flags, face->uv_mat.s, face->uv_mat.t);
+    raw_face.texinfo = Q1_AddTexInfo(texture, flags, face->uv_mat.s, face->uv_mat.t);
 
     DoWriteFace(raw_face);
 }
@@ -653,10 +652,8 @@ static void DoWriteLeaf(dleaf_t &raw_leaf)
 
     for (int b = 0; b < 3; b++)
     {
-        raw_leaf.mins[b] =
-            AlignedLittleEndianS16(raw_leaf.mins[b] - LEAF_PADDING);
-        raw_leaf.maxs[b] =
-            AlignedLittleEndianS16(raw_leaf.maxs[b] + LEAF_PADDING);
+        raw_leaf.mins[b] = AlignedLittleEndianS16(raw_leaf.mins[b] - LEAF_PADDING);
+        raw_leaf.maxs[b] = AlignedLittleEndianS16(raw_leaf.maxs[b] + LEAF_PADDING);
     }
 
     q1_leafs->Append(&raw_leaf, sizeof(raw_leaf));
@@ -669,7 +666,10 @@ static void Q1_WriteLeaf(quake_leaf_c *leaf)
     SYS_ASSERT(leaf->medium >= 0);
     SYS_ASSERT(leaf->medium <= MEDIUM_SOLID);
 
-    if (leaf == qk_solid_leaf) { return; }
+    if (leaf == qk_solid_leaf)
+    {
+        return;
+    }
 
     dleaf_t raw_leaf;
 
@@ -688,8 +688,7 @@ static void Q1_WriteLeaf(quake_leaf_c *leaf)
         {
             int dist = leaf->cluster->ambient_dists[k];
 
-            raw_leaf.ambient_level[k] =
-                (dist < 8) ? q1_ambient_levels[k][dist] : 0;
+            raw_leaf.ambient_level[k] = (dist < 8) ? q1_ambient_levels[k][dist] : 0;
         }
     }
 
@@ -720,7 +719,7 @@ static void Q1_WriteSolidLeaf(void)
     memset(&raw_leaf, 0, sizeof(raw_leaf));
 
     raw_leaf.contents = AlignedLittleEndianS32(CONTENTS_SOLID);
-    raw_leaf.visofs   = AlignedLittleEndianS32(-1);  // no visibility info
+    raw_leaf.visofs   = AlignedLittleEndianS32(-1); // no visibility info
 
     q1_leafs->Append(&raw_leaf, sizeof(raw_leaf));
 }
@@ -736,10 +735,8 @@ static void DoWriteNode(dnode_t &raw_node)
 
     for (int b = 0; b < 3; b++)
     {
-        raw_node.mins[b] =
-            AlignedLittleEndianS16(raw_node.mins[b] - NODE_PADDING);
-        raw_node.maxs[b] =
-            AlignedLittleEndianS16(raw_node.maxs[b] + NODE_PADDING);
+        raw_node.mins[b] = AlignedLittleEndianS16(raw_node.mins[b] - NODE_PADDING);
+        raw_node.maxs[b] = AlignedLittleEndianS16(raw_node.maxs[b] + NODE_PADDING);
     }
 
     q1_nodes->Append(&raw_node, sizeof(raw_node));
@@ -759,10 +756,19 @@ static void Q1_WriteNode(quake_node_c *node)
     {
         raw_node.children[0] = (uint16_t)node->front_N->index;
     }
-    else { raw_node.children[0] = (uint16_t)(-1 - node->front_L->index); }
+    else
+    {
+        raw_node.children[0] = (uint16_t)(-1 - node->front_L->index);
+    }
 
-    if (node->back_N) { raw_node.children[1] = (uint16_t)node->back_N->index; }
-    else { raw_node.children[1] = (uint16_t)(-1 - node->back_L->index); }
+    if (node->back_N)
+    {
+        raw_node.children[1] = (uint16_t)node->back_N->index;
+    }
+    else
+    {
+        raw_node.children[1] = (uint16_t)(-1 - node->back_L->index);
+    }
 
     if (flipped)
     {
@@ -794,17 +800,29 @@ static void Q1_WriteNode(quake_node_c *node)
 
     // recurse now, AFTER adding the current node
 
-    if (node->front_N) { Q1_WriteNode(node->front_N); }
-    else { Q1_WriteLeaf(node->front_L); }
+    if (node->front_N)
+    {
+        Q1_WriteNode(node->front_N);
+    }
+    else
+    {
+        Q1_WriteLeaf(node->front_L);
+    }
 
-    if (node->back_N) { Q1_WriteNode(node->back_N); }
-    else { Q1_WriteLeaf(node->back_L); }
+    if (node->back_N)
+    {
+        Q1_WriteNode(node->back_N);
+    }
+    else
+    {
+        Q1_WriteLeaf(node->back_L);
+    }
 }
 
 static void Q1_WriteBSP()
 {
     q1_total_nodes = 0;
-    q1_total_leafs = 0;  // not including the solid leaf
+    q1_total_leafs = 0; // not including the solid leaf
     q1_total_faces = 0;
 
     q1_total_mark_surfs = 0;
@@ -823,20 +841,17 @@ static void Q1_WriteBSP()
 
     if (q1_total_faces >= MAX_MAP_FACES)
     {
-        ErrorPrintf("Quake1 build failure: exceeded limit of %d FACES\n",
-                    MAX_MAP_FACES);
+        ErrorPrintf("Quake1 build failure: exceeded limit of %d FACES\n", MAX_MAP_FACES);
     }
 
     if (q1_total_leafs >= MAX_MAP_LEAFS)
     {
-        ErrorPrintf("Quake1 build failure: exceeded limit of %d LEAFS\n",
-                    MAX_MAP_LEAFS);
+        ErrorPrintf("Quake1 build failure: exceeded limit of %d LEAFS\n", MAX_MAP_LEAFS);
     }
 
     if (q1_total_nodes >= MAX_MAP_NODES)
     {
-        ErrorPrintf("Quake1 build failure: exceeded limit of %d NODES\n",
-                    MAX_MAP_NODES);
+        ErrorPrintf("Quake1 build failure: exceeded limit of %d NODES\n", MAX_MAP_NODES);
     }
 }
 
@@ -919,8 +934,7 @@ static void Q1_WriteModel(quake_mapmodel_c *model)
     q1_models->Append(&raw_model, sizeof(raw_model));
 }
 
-static void MapModel_Edge(float x1, float y1, float z1, float x2, float y2,
-                          float z2)
+static void MapModel_Edge(float x1, float y1, float z1, float x2, float y2, float z2)
 {
     quake_vertex_c A(x1, y1, z1);
     quake_vertex_c B(x2, y2, z2);
@@ -928,10 +942,8 @@ static void MapModel_Edge(float x1, float y1, float z1, float x2, float y2,
     Q1_WriteEdge(A, B);
 }
 
-static void MapModel_TexCoord(float *scale, float *offset, double low,
-                              double high, csg_property_set_c &face,
-                              const char *l_field, const char *h_field,
-                              bool invert)
+static void MapModel_TexCoord(float *scale, float *offset, double low, double high, csg_property_set_c &face,
+                              const char *l_field, const char *h_field, bool invert)
 {
     *scale  = 1;
     *offset = 0;
@@ -957,8 +969,7 @@ static void MapModel_TexCoord(float *scale, float *offset, double low,
     }
 }
 
-static void MapModel_Face(quake_mapmodel_c *model, int face, int16_t plane,
-                          bool flipped)
+static void MapModel_Face(quake_mapmodel_c *model, int face, int16_t plane, bool flipped)
 {
     dface_t raw_face;
 
@@ -975,7 +986,7 @@ static void MapModel_Face(quake_mapmodel_c *model, int face, int16_t plane,
     raw_face.firstedge = q1_total_surf_edges;
     raw_face.numedges  = 4;
 
-    if (face < 2)  // PLANE_X
+    if (face < 2) // PLANE_X
     {
         texture = model->x_face.getStr("tex", "missing");
 
@@ -989,12 +1000,10 @@ static void MapModel_Face(quake_mapmodel_c *model, int face, int16_t plane,
         MapModel_Edge(x, y2, model->z2, x, y2, model->z1);
         MapModel_Edge(x, y2, model->z1, x, y1, model->z1);
 
-        MapModel_TexCoord(&s[1], &s[3], model->y1, model->y2, model->x_face,
-                          "u1", "u2", false);
-        MapModel_TexCoord(&t[2], &t[3], model->z1, model->z2, model->x_face,
-                          "v1", "v2", true);
+        MapModel_TexCoord(&s[1], &s[3], model->y1, model->y2, model->x_face, "u1", "u2", false);
+        MapModel_TexCoord(&t[2], &t[3], model->z1, model->z2, model->x_face, "v1", "v2", true);
     }
-    else if (face < 4)  // PLANE_Y
+    else if (face < 4) // PLANE_Y
     {
         texture = model->y_face.getStr("tex", "missing");
 
@@ -1007,12 +1016,10 @@ static void MapModel_Face(quake_mapmodel_c *model, int face, int16_t plane,
         MapModel_Edge(x2, y, model->z2, x2, y, model->z1);
         MapModel_Edge(x2, y, model->z1, x1, y, model->z1);
 
-        MapModel_TexCoord(&s[0], &s[3], model->x1, model->x2, model->y_face,
-                          "u1", "u2", false);
-        MapModel_TexCoord(&t[2], &t[3], model->z1, model->z2, model->y_face,
-                          "v1", "v2", true);
+        MapModel_TexCoord(&s[0], &s[3], model->x1, model->x2, model->y_face, "u1", "u2", false);
+        MapModel_TexCoord(&t[2], &t[3], model->z1, model->z2, model->y_face, "v1", "v2", true);
     }
-    else  // PLANE_Z
+    else // PLANE_Z
     {
         texture = model->z_face.getStr("tex", "missing");
 
@@ -1025,17 +1032,18 @@ static void MapModel_Face(quake_mapmodel_c *model, int face, int16_t plane,
         MapModel_Edge(x2, model->y2, z, x2, model->y1, z);
         MapModel_Edge(x2, model->y1, z, x1, model->y1, z);
 
-        MapModel_TexCoord(&s[0], &s[3], model->x1, model->x2, model->z_face,
-                          "u1", "u2", false);
-        MapModel_TexCoord(&t[1], &t[3], model->y1, model->y2, model->z_face,
-                          "v1", "v2", false);
+        MapModel_TexCoord(&s[0], &s[3], model->x1, model->x2, model->z_face, "u1", "u2", false);
+        MapModel_TexCoord(&t[1], &t[3], model->y1, model->y2, model->z_face, "v1", "v2", false);
     }
 
     // texture and lighting
 
     int flags = 0;
 
-    if (texture.find("trigger") != std::string::npos) { flags |= TEX_SPECIAL; }
+    if (texture.find("trigger") != std::string::npos)
+    {
+        flags |= TEX_SPECIAL;
+    }
 
     raw_face.texinfo = Q1_AddTexInfo(texture, flags, s, t);
 
@@ -1044,7 +1052,7 @@ static void MapModel_Face(quake_mapmodel_c *model, int face, int16_t plane,
     raw_face.styles[2] = 0xFF;
     raw_face.styles[3] = 0xFF;
 
-    raw_face.lightofs = 0;  // a shared lightmap at very start
+    raw_face.lightofs = 0; // a shared lightmap at very start
 
     DoWriteFace(raw_face);
 }
@@ -1068,19 +1076,19 @@ static void MapModel_Nodes(quake_mapmodel_c *model, float *mins, float *maxs)
 
         bool flipped;
 
-        if (face < 2)  // PLANE_X
+        if (face < 2) // PLANE_X
         {
             v                 = (face == 0) ? model->x1 : model->x2;
             dir               = (face == 0) ? -1 : 1;
             raw_node.planenum = BSP_AddPlane(v, 0, 0, dir, 0, 0, &flipped);
         }
-        else if (face < 4)  // PLANE_Y
+        else if (face < 4) // PLANE_Y
         {
             v                 = (face == 2) ? model->y1 : model->y2;
             dir               = (face == 2) ? -1 : 1;
             raw_node.planenum = BSP_AddPlane(0, v, 0, 0, dir, 0, &flipped);
         }
-        else  // PLANE_Z
+        else // PLANE_Z
         {
             v                 = (face == 5) ? model->z1 : model->z2;
             dir               = (face == 5) ? -1 : 1;
@@ -1144,7 +1152,10 @@ static void Q1_ClipModels()
     q1_clip       = BSP_NewLump(LUMP_CLIPNODES);
     q1_total_clip = 0;
 
-    for (int hull = 1; hull < 6; hull++) { Q1_ClippingHull(hull); }
+    for (int hull = 1; hull < 6; hull++)
+    {
+        Q1_ClippingHull(hull);
+    }
 }
 
 static void Q1_WriteModels()
@@ -1185,7 +1196,10 @@ static void Q1_LightWorld()
 
     int max_size = MAX_MAP_LIGHTING;
 
-    if (qk_sub_format == SUBFMT_HalfLife) { max_size = HL_MAX_MAP_LIGHTING; }
+    if (qk_sub_format == SUBFMT_HalfLife)
+    {
+        max_size = HL_MAX_MAP_LIGHTING;
+    }
 
     QLIT_BuildLightingLump(LUMP_LIGHTING, max_size);
 }
@@ -1198,7 +1212,7 @@ static void Q1_VisWorld(int base_leafs)
     // add in the map models
     for (unsigned int i = 0; i < qk_all_mapmodels.size(); i++)
     {
-        numleafs += 6;  /// TODO  qk_all_mapmodels->PredictLeafs();
+        numleafs += 6; /// TODO  qk_all_mapmodels->PredictLeafs();
     }
 
     QVIS_Visibility(LUMP_VISIBILITY, MAX_MAP_VISIBILITY, numleafs);
@@ -1208,7 +1222,10 @@ static void Q1_CreateBSPFile(const char *name)
 {
     q_mono_lighting = true;
 
-    if (qk_sub_format == SUBFMT_HalfLife) { q_mono_lighting = false; }
+    if (qk_sub_format == SUBFMT_HalfLife)
+    {
+        q_mono_lighting = false;
+    }
 
     BSP_OpenLevel(name);
 
@@ -1261,7 +1278,10 @@ int Q1_add_tex_wad(lua_State *L)
         qk_texture_wad = name.string();
         lua_pushboolean(L, 1);
     }
-    else { lua_pushboolean(L, 0); }
+    else
+    {
+        lua_pushboolean(L, 0);
+    }
     return 1;
     // TODO: support more than one
 }
@@ -1277,10 +1297,10 @@ int Q1_add_tex_wad(lua_State *L)
 
 class quake1_game_interface_c : public game_interface_c
 {
-   private:
+  private:
     std::filesystem::path filename;
 
-   public:
+  public:
     quake1_game_interface_c() = default;
 
     bool Start(const char *preset);
@@ -1292,19 +1312,19 @@ class quake1_game_interface_c : public game_interface_c
     std::filesystem::path Filename();
     std::filesystem::path ZIP_Filename();
 
-   private:
+  private:
     const char *StepsForGame(int sub)
     {
         switch (sub)
         {
-            case SUBFMT_HalfLife:
-                return "CSG,BSP,Vis,Light,Hull,Hull,Hull";
+        case SUBFMT_HalfLife:
+            return "CSG,BSP,Vis,Light,Hull,Hull,Hull";
 
-            case SUBFMT_Hexen2:
-                return "CSG,BSP,Vis,Light,Hull,Hull,Hull,Hull,Hull";
+        case SUBFMT_Hexen2:
+            return "CSG,BSP,Vis,Light,Hull,Hull,Hull,Hull,Hull";
 
-            default:
-                return "CSG,BSP,Vis,Light,Hull,Hull";
+        default:
+            return "CSG,BSP,Vis,Light,Hull,Hull";
         }
     }
 };
@@ -1321,27 +1341,27 @@ bool quake1_game_interface_c::Start(const char *preset)
 #ifndef CONSOLE_ONLY
     if (batch_mode)
     {
-        if (batch_output_file.is_absolute()) { filename = batch_output_file; }
+        if (batch_output_file.is_absolute())
+        {
+            filename = batch_output_file;
+        }
         else
         {
-            filename = std::filesystem::current_path().append(
-                batch_output_file.string());
+            filename = std::filesystem::current_path().append(batch_output_file.string());
         }
     }
     else
     {
-        filename = std::filesystem::current_path()
-                       .append(preset)
-                       .replace_extension("pak")
-                       .u8string()
-                       .c_str();
+        filename = std::filesystem::current_path().append(preset).replace_extension("pak").u8string().c_str();
     }
 #else
-    if (batch_output_file.is_absolute()) { filename = batch_output_file; }
+    if (batch_output_file.is_absolute())
+    {
+        filename = batch_output_file;
+    }
     else
     {
-        filename =
-            std::filesystem::current_path().append(batch_output_file.string());
+        filename = std::filesystem::current_path().append(batch_output_file.string());
     }
 #endif
 
@@ -1351,7 +1371,10 @@ bool quake1_game_interface_c::Start(const char *preset)
         return false;
     }
 
-    if (create_backups) { Main::BackupFile(filename); }
+    if (create_backups)
+    {
+        Main::BackupFile(filename);
+    }
 
     if (!PAK_OpenWrite(filename))
     {
@@ -1369,8 +1392,14 @@ bool quake1_game_interface_c::Finish(bool build_ok)
     PAK_CloseWrite();
 
     // remove the file if an error occurred
-    if (!build_ok) { std::filesystem::remove(filename); }
-    else { Recent_AddFile(RECG_Output, filename.c_str()); }
+    if (!build_ok)
+    {
+        std::filesystem::remove(filename);
+    }
+    else
+    {
+        Recent_AddFile(RECG_Output, filename.c_str());
+    }
 
     return build_ok;
 }
@@ -1398,7 +1427,10 @@ void quake1_game_interface_c::Property(std::string key, std::string value)
     }
     else if (StringCaseCompareASCII(key, "sub_format") == 0)
     {
-        if (StringCaseCompareASCII(value, "quake") == 0) { qk_sub_format = 0; }
+        if (StringCaseCompareASCII(value, "quake") == 0)
+        {
+            qk_sub_format = 0;
+        }
         else if (StringCaseCompareASCII(value, "hexen2") == 0)
         {
             qk_sub_format = SUBFMT_Hexen2;
@@ -1409,8 +1441,7 @@ void quake1_game_interface_c::Property(std::string key, std::string value)
         }
         else
         {
-            LogPrintf("WARNING: unknown QUAKE1 sub_format '%s'\n",
-                      value.c_str());
+            LogPrintf("WARNING: unknown QUAKE1 sub_format '%s'\n", value.c_str());
         }
     }
     else if (StringCaseCompareASCII(key, "worldtype") == 0)
@@ -1419,14 +1450,19 @@ void quake1_game_interface_c::Property(std::string key, std::string value)
     }
     else
     {
-        LogPrintf("WARNING: unknown QUAKE1 property: %s=%s\n", key.c_str(),
-                  value.c_str());
+        LogPrintf("WARNING: unknown QUAKE1 property: %s=%s\n", key.c_str(), value.c_str());
     }
 }
 
-std::filesystem::path quake1_game_interface_c::Filename() { return filename; }
+std::filesystem::path quake1_game_interface_c::Filename()
+{
+    return filename;
+}
 
-std::filesystem::path quake1_game_interface_c::ZIP_Filename() { return ""; }
+std::filesystem::path quake1_game_interface_c::ZIP_Filename()
+{
+    return "";
+}
 
 void quake1_game_interface_c::EndLevel()
 {
@@ -1437,8 +1473,7 @@ void quake1_game_interface_c::EndLevel()
 
     if (level_name.size() >= 32)
     {
-        ErrorPrintf("Script problem: level name too long: %s\n",
-                    level_name.c_str());
+        ErrorPrintf("Script problem: level name too long: %s\n", level_name.c_str());
     }
 
     std::string entry_in_pak = StringFormat("maps/%s.bsp", level_name.c_str());

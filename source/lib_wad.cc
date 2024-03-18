@@ -43,15 +43,13 @@ bool WAD_OpenRead(std::filesystem::path filename)
 
     if (!wad_R_fp)
     {
-        LogPrintf("WAD_OpenRead: no such file: %s\n",
-                  filename.u8string().c_str());
+        LogPrintf("WAD_OpenRead: no such file: %s\n", filename.u8string().c_str());
         return false;
     }
 
     LogPrintf("Opened WAD file: %s\n", filename.u8string().c_str());
 
-    if ((PHYSFS_readBytes(wad_R_fp, &wad_R_header, sizeof(wad_R_header)) /
-         sizeof(wad_R_header)) != 1)
+    if ((PHYSFS_readBytes(wad_R_fp, &wad_R_header, sizeof(wad_R_header)) / sizeof(wad_R_header)) != 1)
     {
         LogPrintf("WAD_OpenRead: failed reading header\n");
         PHYSFS_close(wad_R_fp);
@@ -70,18 +68,16 @@ bool WAD_OpenRead(std::filesystem::path filename)
 
     /* read directory */
 
-    if (wad_R_header.num_entries >= 5000)  // sanity check
+    if (wad_R_header.num_entries >= 5000) // sanity check
     {
-        LogPrintf("WAD_OpenRead: bad header (%u entries?)\n",
-                  wad_R_header.num_entries);
+        LogPrintf("WAD_OpenRead: bad header (%u entries?)\n", wad_R_header.num_entries);
         PHYSFS_close(wad_R_fp);
         return false;
     }
 
     if (!PHYSFS_seek(wad_R_fp, wad_R_header.dir_start))
     {
-        LogPrintf("WAD_OpenRead: cannot seek to directory (at 0x%u)\n",
-                  wad_R_header.dir_start);
+        LogPrintf("WAD_OpenRead: cannot seek to directory (at 0x%u)\n", wad_R_header.dir_start);
         PHYSFS_close(wad_R_fp);
         return false;
     }
@@ -92,8 +88,7 @@ bool WAD_OpenRead(std::filesystem::path filename)
     {
         RawWadEntry *L = &wad_R_dir[i];
 
-        size_t res = (PHYSFS_readBytes(wad_R_fp, L, sizeof(RawWadEntry)) /
-                      sizeof(RawWadEntry));
+        size_t res = (PHYSFS_readBytes(wad_R_fp, L, sizeof(RawWadEntry)) / sizeof(RawWadEntry));
         if (res != 1)
         {
             if (i == 0)
@@ -114,7 +109,7 @@ bool WAD_OpenRead(std::filesystem::path filename)
         L->size = AlignedLittleEndianU32(L->size);
     }
 
-    return true;  // OK
+    return true; // OK
 }
 
 void WAD_CloseRead(void)
@@ -127,7 +122,10 @@ void WAD_CloseRead(void)
     wad_R_dir = NULL;
 }
 
-int WAD_NumEntries(void) { return (int)wad_R_header.num_entries; }
+int WAD_NumEntries(void)
+{
+    return (int)wad_R_header.num_entries;
+}
 
 int WAD_FindEntry(const char *name)
 {
@@ -137,10 +135,13 @@ int WAD_FindEntry(const char *name)
         strncpy(buffer, wad_R_dir[i].name, 8);
         buffer[8] = 0;
 
-        if (StringCaseCompareASCII(name, buffer) == 0) { return i; }
+        if (StringCaseCompareASCII(name, buffer) == 0)
+        {
+            return i;
+        }
     }
 
-    return -1;  // not found
+    return -1; // not found
 }
 
 int WAD_EntryLen(int entry)
@@ -172,11 +173,14 @@ bool WAD_ReadData(int entry, int offset, int length, void *buffer)
     RawWadEntry *L = &wad_R_dir[entry];
 
     if ((uint32_t)offset + (uint32_t)length > L->size)
-    {  // EOF
+    { // EOF
         return false;
     }
 
-    if (!PHYSFS_seek(wad_R_fp, L->pos + offset)) { return false; }
+    if (!PHYSFS_seek(wad_R_fp, L->pos + offset))
+    {
+        return false;
+    }
 
     return ((PHYSFS_readBytes(wad_R_fp, buffer, length) / length) == 1);
 }
@@ -201,8 +205,7 @@ bool WAD_OpenWrite(std::filesystem::path filename)
 
     if (!wad_W_fp)
     {
-        LogPrintf("WAD_OpenWrite: cannot create file: %s\n",
-                  filename.u8string().c_str());
+        LogPrintf("WAD_OpenWrite: cannot create file: %s\n", filename.u8string().c_str());
         return false;
     }
 
@@ -281,7 +284,10 @@ void WAD_NewLump(std::string name)
 
 bool WAD_AppendData(const void *data, int length)
 {
-    if (length == 0) { return true; }
+    if (length == 0)
+    {
+        return true;
+    }
 
     SYS_ASSERT(length > 0);
 
@@ -330,8 +336,7 @@ bool WAD2_OpenRead(const char *filename)
 
     LogPrintf("Opened WAD2 file: %s\n", filename);
 
-    if ((PHYSFS_readBytes(wad2_R_fp, &wad2_R_header, sizeof(wad2_R_header)) /
-         sizeof(wad2_R_header)) != 1)
+    if ((PHYSFS_readBytes(wad2_R_fp, &wad2_R_header, sizeof(wad2_R_header)) / sizeof(wad2_R_header)) != 1)
     {
         LogPrintf("WAD2_OpenRead: failed reading header\n");
         PHYSFS_close(wad2_R_fp);
@@ -345,24 +350,21 @@ bool WAD2_OpenRead(const char *filename)
         return false;
     }
 
-    wad2_R_header.num_entries =
-        AlignedLittleEndianU32(wad2_R_header.num_entries);
-    wad2_R_header.dir_start = AlignedLittleEndianU32(wad2_R_header.dir_start);
+    wad2_R_header.num_entries = AlignedLittleEndianU32(wad2_R_header.num_entries);
+    wad2_R_header.dir_start   = AlignedLittleEndianU32(wad2_R_header.dir_start);
 
     /* read directory */
 
-    if (wad2_R_header.num_entries >= 5000)  // sanity check
+    if (wad2_R_header.num_entries >= 5000) // sanity check
     {
-        LogPrintf("WAD2_OpenRead: bad header (%u entries?)\n",
-                  wad2_R_header.num_entries);
+        LogPrintf("WAD2_OpenRead: bad header (%u entries?)\n", wad2_R_header.num_entries);
         PHYSFS_close(wad2_R_fp);
         return false;
     }
 
     if (!PHYSFS_seek(wad2_R_fp, wad2_R_header.dir_start))
     {
-        LogPrintf("WAD2_OpenRead: cannot seek to directory (at 0x&u)\n",
-                  wad2_R_header.dir_start);
+        LogPrintf("WAD2_OpenRead: cannot seek to directory (at 0x&u)\n", wad2_R_header.dir_start);
         PHYSFS_close(wad2_R_fp);
         return false;
     }
@@ -373,8 +375,7 @@ bool WAD2_OpenRead(const char *filename)
     {
         raw_wad2_lump_t *L = &wad2_R_dir[i];
 
-        size_t res = (PHYSFS_readBytes(wad2_R_fp, L, sizeof(raw_wad2_lump_t)) /
-                      sizeof(raw_wad2_lump_t));
+        size_t res = (PHYSFS_readBytes(wad2_R_fp, L, sizeof(raw_wad2_lump_t)) / sizeof(raw_wad2_lump_t));
         if (res != 1)
         {
             if (i == 0)
@@ -399,7 +400,7 @@ bool WAD2_OpenRead(const char *filename)
         L->u_len  = AlignedLittleEndianU32(L->u_len);
     }
 
-    return true;  // OK
+    return true; // OK
 }
 
 void WAD2_CloseRead(void)
@@ -412,16 +413,22 @@ void WAD2_CloseRead(void)
     wad2_R_dir = NULL;
 }
 
-int WAD2_NumEntries(void) { return (int)wad2_R_header.num_entries; }
+int WAD2_NumEntries(void)
+{
+    return (int)wad2_R_header.num_entries;
+}
 
 int WAD2_FindEntry(const char *name)
 {
     for (unsigned int i = 0; i < wad2_R_header.num_entries; i++)
     {
-        if (StringCaseCompareASCII(name, wad2_R_dir[i].name) == 0) { return i; }
+        if (StringCaseCompareASCII(name, wad2_R_dir[i].name) == 0)
+        {
+            return i;
+        }
     }
 
-    return -1;  // not found
+    return -1; // not found
 }
 
 int WAD2_EntryLen(int entry)
@@ -442,7 +449,10 @@ int WAD2_EntryType(int entry)
 {
     SYS_ASSERT(entry >= 0 && entry < (int)wad2_R_header.num_entries);
 
-    if (wad2_R_dir[entry].compression != 0) { return TYP_COMPRESSED; }
+    if (wad2_R_dir[entry].compression != 0)
+    {
+        return TYP_COMPRESSED;
+    }
 
     return wad2_R_dir[entry].type;
 }
@@ -456,39 +466,18 @@ bool WAD2_ReadData(int entry, int offset, int length, void *buffer)
     raw_wad2_lump_t *L = &wad2_R_dir[entry];
 
     if ((uint32_t)offset + (uint32_t)length > L->length)
-    {  // EOF
+    { // EOF
         return false;
     }
 
-    if (!PHYSFS_seek(wad2_R_fp, L->start + offset)) { return false; }
+    if (!PHYSFS_seek(wad2_R_fp, L->start + offset))
+    {
+        return false;
+    }
 
     size_t res = (PHYSFS_readBytes(wad2_R_fp, buffer, length) / length);
 
     return (res == 1);
-}
-
-static char LetterForType(uint8_t type)
-{
-    switch (type)
-    {
-        case TYP_NONE:
-            return 'x';
-        case TYP_LABEL:
-            return 'L';
-        case TYP_PALETTE:
-            return 'C';
-        case TYP_QTEX:
-            return 'T';
-        case TYP_QPIC:
-            return 'P';
-        case TYP_SOUND:
-            return 'S';
-        case TYP_MIPTEX:
-            return 'M';
-
-        default:
-            return '?';
-    }
 }
 
 //------------------------------------------------------------------------
@@ -582,7 +571,10 @@ void WAD2_NewLump(const char *name, int type)
 
 bool WAD2_AppendData(const void *data, int length)
 {
-    if (length == 0) { return true; }
+    if (length == 0)
+    {
+        return true;
+    }
 
     SYS_ASSERT(length > 0);
 

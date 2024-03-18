@@ -36,7 +36,7 @@ class gap_c;
 
 class snag_c
 {
-   public:
+  public:
     double x1, y1;
     double x2, y2;
 
@@ -44,7 +44,7 @@ class snag_c
 
     partition_c *on_node;
 
-    region_c *region;  // only valid AFTER MergeRegions()
+    region_c *region; // only valid AFTER MergeRegions()
 
     snag_c *partner;  // only valid AFTER HandleOverlaps()
 
@@ -57,10 +57,10 @@ class snag_c
     // used by CSG DOOM code
     bool seen;
 
-   private:
+  private:
     snag_c(const snag_c &other);
 
-   public:
+  public:
     snag_c(brush_vert_c *side, double _x1, double _y1, double _x2, double _y2);
 
     snag_c(double _x1, double _y1, double _x2, double _y2, partition_c *part);
@@ -92,7 +92,7 @@ class snag_c
 
 class region_c
 {
-   public:
+  public:
     std::vector<snag_c *> snags;
 
     std::vector<csg_brush_c *> brushes;
@@ -114,7 +114,7 @@ class region_c
     // used by DOOM shading code
     int shade;
 
-   public:
+  public:
     region_c();
 
     region_c(const region_c &other);
@@ -158,12 +158,12 @@ class region_c
 
     void ComputeMidPoint();
     void ComputeBounds();
-    void ClockwiseSnags();  // requires CalcMidPoint()
+    void ClockwiseSnags(); // requires CalcMidPoint()
 };
 
 class gap_c
 {
-   public:
+  public:
     csg_brush_c *bottom;
     csg_brush_c *top;
 
@@ -174,7 +174,7 @@ class gap_c
     // liquid brush whose surface is in this gap (or clipped above it)
     csg_brush_c *liquid;
 
-   public:
+  public:
     gap_c(csg_brush_c *B, csg_brush_c *T);
 
     ~gap_c();
@@ -185,7 +185,7 @@ class gap_c
 
 class bsp_node_c
 {
-   public:
+  public:
     // partition
     double x1, y1, x2, y2;
 
@@ -201,7 +201,7 @@ class bsp_node_c
     float bb_x1, bb_y1;
     float bb_x2, bb_y2;
 
-   public:
+  public:
     bsp_node_c(double px1, double py1, double px2, double py2);
 
     // destructor deletes child nodes (but not leafs)
@@ -209,7 +209,7 @@ class bsp_node_c
 
     void ComputeBBox();
 
-   private:
+  private:
     void AddBBox(bsp_node_c *node);
     void AddBBox(region_c *leaf);
 };

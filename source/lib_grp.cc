@@ -39,8 +39,8 @@ static raw_grp_header_t grp_R_header;
 static raw_grp_lump_t  *grp_R_dir;
 static uint32_t        *grp_R_starts;
 
-static const uint8_t grp_magic_data[GRP_MAGIC_LEN] = {
-    0xb4, 0x9a, 0x91, 0xac, 0x96, 0x93, 0x89, 0x9a, 0x8d, 0x92, 0x9e, 0x91};
+static const uint8_t grp_magic_data[GRP_MAGIC_LEN] = {0xb4, 0x9a, 0x91, 0xac, 0x96, 0x93,
+                                                      0x89, 0x9a, 0x8d, 0x92, 0x9e, 0x91};
 
 bool GRP_OpenRead(const char *filename)
 {
@@ -54,8 +54,7 @@ bool GRP_OpenRead(const char *filename)
 
     LogPrintf("Opened GRP file: %s\n", filename);
 
-    if ((PHYSFS_readBytes(grp_R_fp, &grp_R_header, sizeof(grp_R_header)) /
-         sizeof(grp_R_header)) != 1)
+    if ((PHYSFS_readBytes(grp_R_fp, &grp_R_header, sizeof(grp_R_header)) / sizeof(grp_R_header)) != 1)
     {
         LogPrintf("GRP_OpenRead: failed reading header\n");
         PHYSFS_close(grp_R_fp);
@@ -73,10 +72,9 @@ bool GRP_OpenRead(const char *filename)
 
     /* read directory */
 
-    if (grp_R_header.num_lumps >= 5000)  // sanity check
+    if (grp_R_header.num_lumps >= 5000) // sanity check
     {
-        LogPrintf("GRP_OpenRead: bad header (%u entries?)\n",
-                  grp_R_header.num_lumps);
+        LogPrintf("GRP_OpenRead: bad header (%u entries?)\n", grp_R_header.num_lumps);
         PHYSFS_close(grp_R_fp);
         return false;
     }
@@ -84,15 +82,13 @@ bool GRP_OpenRead(const char *filename)
     grp_R_dir    = new raw_grp_lump_t[grp_R_header.num_lumps + 1];
     grp_R_starts = new uint32_t[grp_R_header.num_lumps + 1];
 
-    uint32_t L_start = sizeof(raw_grp_header_t) +
-                       sizeof(raw_grp_lump_t) * grp_R_header.num_lumps;
+    uint32_t L_start = sizeof(raw_grp_header_t) + sizeof(raw_grp_lump_t) * grp_R_header.num_lumps;
 
     for (int i = 0; i < (int)grp_R_header.num_lumps; i++)
     {
         raw_grp_lump_t *L = &grp_R_dir[i];
 
-        size_t res = (PHYSFS_readBytes(grp_R_fp, L, sizeof(raw_grp_lump_t)) /
-                      sizeof(raw_grp_lump_t));
+        size_t res = (PHYSFS_readBytes(grp_R_fp, L, sizeof(raw_grp_lump_t)) / sizeof(raw_grp_lump_t));
         if (res != 1)
         {
             if (i == 0)
@@ -115,7 +111,7 @@ bool GRP_OpenRead(const char *filename)
         L_start += L->length;
     }
 
-    return true;  // OK
+    return true; // OK
 }
 
 void GRP_CloseRead(void)
@@ -131,7 +127,10 @@ void GRP_CloseRead(void)
     grp_R_starts = NULL;
 }
 
-int GRP_NumEntries(void) { return (int)grp_R_header.num_lumps; }
+int GRP_NumEntries(void)
+{
+    return (int)grp_R_header.num_lumps;
+}
 
 int GRP_FindEntry(const char *name)
 {
@@ -142,10 +141,13 @@ int GRP_FindEntry(const char *name)
         strncpy(buffer, grp_R_dir[i].name, GRP_NAME_LEN);
         buffer[GRP_NAME_LEN] = 0;
 
-        if (StringCaseCompareASCII(name, buffer) == 0) { return i; }
+        if (StringCaseCompareASCII(name, buffer) == 0)
+        {
+            return i;
+        }
     }
 
-    return -1;  // not found
+    return -1; // not found
 }
 
 int GRP_EntryLen(int entry)
@@ -177,11 +179,14 @@ bool GRP_ReadData(int entry, int offset, int length, void *buffer)
     int L_start = grp_R_starts[entry];
 
     if ((uint32_t)offset + (uint32_t)length > grp_R_dir[entry].length)
-    {  // EOF
+    { // EOF
         return false;
     }
 
-    if (!PHYSFS_seek(grp_R_fp, L_start + offset)) { return false; }
+    if (!PHYSFS_seek(grp_R_fp, L_start + offset))
+    {
+        return false;
+    }
 
     size_t res = (PHYSFS_readBytes(grp_R_fp, buffer, length) / length);
 
@@ -212,8 +217,7 @@ bool GRP_OpenWrite(const std::filesystem::path &filename)
 
     if (!grp_W_fp)
     {
-        LogPrintf("GRP_OpenWrite: cannot create file: %s\n",
-                  filename.u8string().c_str());
+        LogPrintf("GRP_OpenWrite: cannot create file: %s\n", filename.u8string().c_str());
         return false;
     }
 
@@ -312,14 +316,20 @@ void GRP_NewLump(std::string name)
 
 bool GRP_AppendData(const void *data, int length)
 {
-    if (length == 0) { return true; }
+    if (length == 0)
+    {
+        return true;
+    }
 
     SYS_ASSERT(length > 0);
 
-    if (!fwrite(data, length, 1, grp_W_fp)) { return false; }
+    if (!fwrite(data, length, 1, grp_W_fp))
+    {
+        return false;
+    }
 
     grp_W_lump.length += (uint32_t)length;
-    return true;  // OK
+    return true; // OK
 }
 
 void GRP_FinishLump(void)

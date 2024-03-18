@@ -36,7 +36,7 @@ class quake_leaf_c;
 
 class qCluster_c
 {
-   public:
+  public:
     // cluster coordinate (starts at 0)
     int cx, cy;
 
@@ -46,9 +46,9 @@ class qCluster_c
 
     // offset into LUMP_VISIBILITY
     int visofs;
-    int hearofs;  // Quake 2 only
+    int hearofs; // Quake 2 only
 
-   public:
+  public:
     qCluster_c(int _x, int _y);
 
     ~qCluster_c();
@@ -79,8 +79,7 @@ bool QVIS_TraceRay(float x1, float y1, float z1, float x2, float y2, float z2);
 // returns true if point is in air, false for solid or sky
 bool QVIS_TracePoint(float x, float y, float z);
 
-void QVIS_CreateClusters(double min_x, double min_y, double max_x,
-                         double max_y);
+void QVIS_CreateClusters(double min_x, double min_y, double max_x, double max_y);
 void QVIS_FreeClusters();
 
 void QVIS_MarkWall(int cx, int cy, int side);

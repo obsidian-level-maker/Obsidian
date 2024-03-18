@@ -46,7 +46,7 @@ class nukem_sector_c;
 
 class nukem_wall_c
 {
-   public:
+  public:
     int x1, y1;
     int x2, y2;
 
@@ -63,42 +63,40 @@ class nukem_wall_c
     int pic;
     int flags;
 
-   public:
+  public:
     nukem_wall_c(int _x1, int _y1, int _x2, int _y2)
-        : x1(_x1),
-          y1(_y1),
-          x2(_x2),
-          y2(_y2),
-          snag(NULL),
-          partner(NULL),
-          index(-1),
-          pic(0),
-          flags(0)
+        : x1(_x1), y1(_y1), x2(_x2), y2(_y2), snag(NULL), partner(NULL), index(-1), pic(0), flags(0)
     {
     }
 
-    ~nukem_wall_c() {}
+    ~nukem_wall_c()
+    {
+    }
 
     void Write();
 };
 
 class nukem_plane_c
 {
-   public:
+  public:
     float h;
 
     int pic;
     int flags;
 
-   public:
-    nukem_plane_c() : h(0), pic(0), flags(0) {}
+  public:
+    nukem_plane_c() : h(0), pic(0), flags(0)
+    {
+    }
 
-    ~nukem_plane_c() {}
+    ~nukem_plane_c()
+    {
+    }
 };
 
 class nukem_sector_c
 {
-   public:
+  public:
     nukem_plane_c floor;
     nukem_plane_c ceil;
 
@@ -119,23 +117,16 @@ class nukem_sector_c
     int first_wall;
     int num_walls;
 
-   public:
+  public:
     nukem_sector_c()
-        : floor(),
-          ceil(),
-          region(NULL),
-          walls(),
-          entities(),
-          mark(0),
-          index(-1),
-          lotag(0),
-          hitag(0),
-          first_wall(-1),
+        : floor(), ceil(), region(NULL), walls(), entities(), mark(0), index(-1), lotag(0), hitag(0), first_wall(-1),
           num_walls(-1)
     {
     }
 
-    ~nukem_sector_c() {}
+    ~nukem_sector_c()
+    {
+    }
 
     void AddWall(nukem_wall_c *W)
     {
@@ -144,7 +135,10 @@ class nukem_sector_c
         walls.push_back(W);
     }
 
-    void AddEntity(csg_entity_c *E) { entities.push_back(E); }
+    void AddEntity(csg_entity_c *E)
+    {
+        entities.push_back(E);
+    }
 
 #if 0
     bool Match(const nukem_sector_c *other) const
@@ -191,7 +185,10 @@ class nukem_sector_c
         {
             nukem_wall_c *W = walls[i];
 
-            if (W->snag == snag) { return W; }
+            if (W->snag == snag)
+            {
+                return W;
+            }
         }
 
         return NULL;
@@ -215,8 +212,14 @@ void NK_FreeStuff()
 {
     unsigned int i;
 
-    for (i = 0; i < nk_all_walls.size(); i++) { delete nk_all_walls[i]; }
-    for (i = 0; i < nk_all_sectors.size(); i++) { delete nk_all_sectors[i]; }
+    for (i = 0; i < nk_all_walls.size(); i++)
+    {
+        delete nk_all_walls[i];
+    }
+    for (i = 0; i < nk_all_sectors.size(); i++)
+    {
+        delete nk_all_sectors[i];
+    }
 
     nk_all_walls.clear();
     nk_all_sectors.clear();
@@ -230,7 +233,10 @@ static void NK_MakeBasicWall(nukem_sector_c *S, snag_c *snag)
     int x2 = RoundToInteger(snag->x2 * NK_WALL_MUL);
     int y2 = RoundToInteger(-snag->y2 * NK_WALL_MUL);
 
-    if (x1 == x2 && y1 == y2) { return; }
+    if (x1 == x2 && y1 == y2)
+    {
+        return;
+    }
 
     nukem_wall_c *W = new nukem_wall_c(x1, y1, x2, y2);
 
@@ -320,7 +326,10 @@ static void NK_MakeSector(region_c *R)
     S->floor.h = B->t.z + f_delta;
     S->ceil.h  = T->b.z + c_delta;
 
-    if (S->ceil.h < S->floor.h) { S->ceil.h = S->floor.h; }
+    if (S->ceil.h < S->floor.h)
+    {
+        S->ceil.h = S->floor.h;
+    }
 
     NK_GetPlaneInfo(&S->floor, f_face);
     NK_GetPlaneInfo(&S->ceil, c_face);
@@ -335,7 +344,10 @@ static void NK_MakeSector(region_c *R)
 
     S->lotag = f_lotag ? f_lotag : c_lotag;
 
-    if (T->bflags & BFLAG_Sky) { S->ceil.flags |= SECTOR_F_PARALLAX; }
+    if (T->bflags & BFLAG_Sky)
+    {
+        S->ceil.flags |= SECTOR_F_PARALLAX;
+    }
 
     // handle Lighting brushes
 
@@ -343,11 +355,17 @@ static void NK_MakeSector(region_c *R)
 
     // create walls
 
-    for (i = 0; i < R->snags.size(); i++) { NK_MakeBasicWall(S, R->snags[i]); }
+    for (i = 0; i < R->snags.size(); i++)
+    {
+        NK_MakeBasicWall(S, R->snags[i]);
+    }
 
     // grab entities
 
-    for (i = 0; i < R->entities.size(); i++) { S->AddEntity(R->entities[i]); }
+    for (i = 0; i < R->entities.size(); i++)
+    {
+        S->AddEntity(R->entities[i]);
+    }
 }
 
 static void NK_CreateSectors()
@@ -493,10 +511,12 @@ static void NK_TextureSolidWall(nukem_wall_c *W)
         float f_h = W->sector->floor.h;
         float c_h = W->sector->ceil.h;
 
-        brush_vert_c *bvert =
-            W->snag->partner->FindOneSidedVert((f_h + c_h) / 2.0);
+        brush_vert_c *bvert = W->snag->partner->FindOneSidedVert((f_h + c_h) / 2.0);
 
-        if (bvert) { face = &bvert->face; }
+        if (bvert)
+        {
+            face = &bvert->face;
+        }
     }
 
     NK_GetFaceProps(W, face);
@@ -508,13 +528,22 @@ static void NK_TextureTwoSider(nukem_wall_c *W, csg_brush_c *B)
 
     brush_vert_c *bvert = NULL;
 
-    if (W->snag->partner) { bvert = W->snag->partner->FindBrushVert(B); }
+    if (W->snag->partner)
+    {
+        bvert = W->snag->partner->FindBrushVert(B);
+    }
 
     // try other side (important but hacky)
-    if (!bvert) { bvert = W->snag->FindBrushVert(B); }
+    if (!bvert)
+    {
+        bvert = W->snag->FindBrushVert(B);
+    }
 
     // fallback to something safe
-    if (!bvert) { bvert = B->verts[0]; }
+    if (!bvert)
+    {
+        bvert = B->verts[0];
+    }
 
     NK_GetFaceProps(W, &bvert->face);
 }
@@ -541,11 +570,23 @@ static void NK_TextureWallPair(nukem_wall_c *W1, nukem_wall_c *W2)
     int what1 = 0;
     int what2 = 0;
 
-    if (c1 > c2) { what1 = 1; }
-    if (c1 < c2) { what2 = 1; }
+    if (c1 > c2)
+    {
+        what1 = 1;
+    }
+    if (c1 < c2)
+    {
+        what2 = 1;
+    }
 
-    if (c1 > c2 && f1 < f2) { what2 = 2; }
-    if (c1 < c2 && f1 > f2) { what1 = 2; }
+    if (c1 > c2 && f1 < f2)
+    {
+        what2 = 2;
+    }
+    if (c1 < c2 && f1 > f2)
+    {
+        what1 = 2;
+    }
 
     if (what1 == 2 || what2 == 2)
     {
@@ -582,7 +623,7 @@ static void NK_PartnerWalls()
             nukem_wall_c *W = S->walls[k];
 
             if (W->partner)
-            {  // already done
+            { // already done
                 continue;
             }
 
@@ -594,11 +635,20 @@ static void NK_PartnerWalls()
 
                 W->partner = T->FindSnagWall(W->snag->partner);
 
-                if (W->partner) { W->partner->partner = W; }
+                if (W->partner)
+                {
+                    W->partner->partner = W;
+                }
             }
 
-            if (W->partner) { NK_TextureWallPair(W, W->partner); }
-            else { NK_TextureSolidWall(W); }
+            if (W->partner)
+            {
+                NK_TextureWallPair(W, W->partner);
+            }
+            else
+            {
+                NK_TextureSolidWall(W);
+            }
         }
     }
 }
@@ -614,15 +664,17 @@ void nukem_wall_c::Write()
         point2 = sector->first_wall;
     }
 
-    int xscale = 8;  // FIXME  1 + (int)line->length / 16;
-    if (xscale > 255) { xscale = 255; }
+    int xscale = 8; // FIXME  1 + (int)line->length / 16;
+    if (xscale > 255)
+    {
+        xscale = 255;
+    }
 
-    int lo_tag = 0;  // FIXME
+    int lo_tag = 0; // FIXME
     int hi_tag = 0;
 
-    NK_AddWall(x1, y1, point2, partner ? partner->index : -1,
-               partner ? partner->sector->index : -1, flags, pic, 0, xscale, 8,
-               0, 0, lo_tag, hi_tag);
+    NK_AddWall(x1, y1, point2, partner ? partner->index : -1, partner ? partner->sector->index : -1, flags, pic, 0,
+               xscale, 8, 0, 0, lo_tag, hi_tag);
 }
 
 void nukem_sector_c::WriteSprites()
@@ -665,7 +717,10 @@ void nukem_sector_c::AssignWallIndices()
 
 void nukem_sector_c::WriteWalls()
 {
-    for (unsigned int k = 0; k < walls.size(); k++) { walls[k]->Write(); }
+    for (unsigned int k = 0; k < walls.size(); k++)
+    {
+        walls[k]->Write();
+    }
 }
 
 void nukem_sector_c::Write()
@@ -675,8 +730,7 @@ void nukem_sector_c::Write()
     int f_h = RoundToInteger(floor.h * NK_HEIGHT_MUL);
     int c_h = RoundToInteger(ceil.h * NK_HEIGHT_MUL);
 
-    NK_AddSector(first_wall, num_walls, visibility, f_h, floor.pic, c_h,
-                 ceil.pic, ceil.flags, lotag, hitag);
+    NK_AddSector(first_wall, num_walls, visibility, f_h, floor.pic, c_h, ceil.pic, ceil.flags, lotag, hitag);
 }
 
 static void NK_WriteSectors()

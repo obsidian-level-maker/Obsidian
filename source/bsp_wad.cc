@@ -19,7 +19,7 @@
 #include "bsp_wad.h"
 
 #include <stdarg.h>
-#include <string.h>  // memcpy
+#include <string.h> // memcpy
 
 #include <algorithm>
 
@@ -38,9 +38,15 @@ namespace ajbsp
 #define FileMessage DebugPrintf
 #define LumpWarning DebugPrintf
 #else
-void FileMessage(const char *format, ...) { (void)format; }
+void FileMessage(const char *format, ...)
+{
+    (void)format;
+}
 
-void LumpWarning(const char *format, ...) { (void)format; }
+void LumpWarning(const char *format, ...)
+{
+    (void)format;
+}
 #endif
 
 static constexpr uint8_t kMaxLevelLumps = 21;
@@ -49,36 +55,29 @@ static constexpr uint8_t kMaxLevelLumps = 21;
 //  C String Utility Functions
 //------------------------------------------------------------------------
 
-// Copies up to max characters of src into dest, and then applies a
-// terminating zero (so dest must hold at least max+1 characters).
-// The terminating zero is always applied (there is no reason not to)
-static void CStringCopyMax(char *destination, const char *source, int max)
-{
-    for (; *source && max > 0; max--) { *destination++ = *source++; }
-
-    *destination = 0;
-}
-
 static char *CStringNew(int length)
 {
     // length does not include the trailing NUL.
 
     char *s = (char *)calloc(length + 1, 1);
 
-    if (!s) ErrorPrintf("Out of memory (%d bytes for string)\n", length);
+    if (!s)
+        ErrorPrintf("Out of memory (%d bytes for string)\n", length);
 
     return s;
 }
 
 static char *CStringDuplicate(const char *original, int limit = -1)
 {
-    if (!original) return nullptr;
+    if (!original)
+        return nullptr;
 
     if (limit < 0)
     {
         char *s = strdup(original);
 
-        if (!s) ErrorPrintf("Out of memory (copy string)\n");
+        if (!s)
+            ErrorPrintf("Out of memory (copy string)\n");
 
         return s;
     }
@@ -94,14 +93,18 @@ static char *CStringUpper(const char *name)
 {
     char *copy = CStringDuplicate(name);
 
-    for (char *p = copy; *p; p++) *p = ToUpperASCII(*p);
+    for (char *p = copy; *p; p++)
+        *p = ToUpperASCII(*p);
 
     return copy;
 }
 
 static void CStringFree(const char *string)
 {
-    if (string) { free((void *)string); }
+    if (string)
+    {
+        free((void *)string);
+    }
 }
 
 //------------------------------------------------------------------------
@@ -132,7 +135,10 @@ Lump::Lump(WadFile *parent, const RawWadEntry *entry) : parent_(parent)
 #endif
 }
 
-Lump::~Lump() { CStringFree(name_); }
+Lump::~Lump()
+{
+    CStringFree(name_);
+}
 
 void Lump::MakeEntry(struct RawWadEntry *entry)
 {
@@ -172,11 +178,13 @@ bool Lump::GetLine(char *buffer, size_t buffer_size)
 
     cur_pos = (int)ftell(parent_->file_pointer_);
 
-    if (cur_pos < 0) return false;
+    if (cur_pos < 0)
+        return false;
 
     cur_pos -= lump_start_;
 
-    if (cur_pos >= lump_length_) return false;  // EOF
+    if (cur_pos >= lump_length_)
+        return false; // EOF
 
     char *dest     = buffer;
     char *dest_end = buffer + buffer_size - 1;
@@ -186,17 +194,19 @@ bool Lump::GetLine(char *buffer, size_t buffer_size)
         int mem_pos = 0;
         *dest++     = fgetc(parent_->file_pointer_);
 
-        if (dest[-1] == '\n') break;
+        if (dest[-1] == '\n')
+            break;
 
         if (parent_->file_pointer_ && ferror(parent_->file_pointer_))
             return false;
 
-        if (parent_->file_pointer_ && feof(parent_->file_pointer_)) break;
+        if (parent_->file_pointer_ && feof(parent_->file_pointer_))
+            break;
     }
 
     *dest = 0;
 
-    return true;  // OK
+    return true; // OK
 }
 
 bool Lump::Write(const void *data, int length)
@@ -225,7 +235,8 @@ void Lump::Printf(const char *message, ...)
 
 bool Lump::Finish()
 {
-    if (lump_length_ == 0) lump_start_ = 0;
+    if (lump_length_ == 0)
+        lump_start_ = 0;
 
     return parent_->FinishLump(lump_length_);
 }
@@ -235,19 +246,8 @@ bool Lump::Finish()
 //------------------------------------------------------------------------
 
 WadFile::WadFile(std::filesystem::path name, char mode, FILE *file_pointer)
-    : mode_(mode),
-      file_pointer_(file_pointer),
-      kind_('P'),
-      total_size_(0),
-      directory_(),
-      directory_start_(0),
-      directory_count_(0),
-      levels_(),
-      patches_(),
-      sprites_(),
-      flats_(),
-      tx_textures_(),
-      begun_write_(false),
+    : mode_(mode), file_pointer_(file_pointer), kind_('P'), total_size_(0), directory_(), directory_start_(0),
+      directory_count_(0), levels_(), patches_(), sprites_(), flats_(), tx_textures_(), begun_write_(false),
       insert_point_(-1)
 {
     filename_ = name;
@@ -257,10 +257,12 @@ WadFile::~WadFile()
 {
     FileMessage("Closing WAD file: %s\n", filename_.u8string().c_str());
 
-    if (file_pointer_) fclose(file_pointer_);
+    if (file_pointer_)
+        fclose(file_pointer_);
 
     // free the directory_
-    for (int k = 0; k < NumLumps(); k++) delete directory_[k];
+    for (int k = 0; k < NumLumps(); k++)
+        delete directory_[k];
 
     directory_.clear();
 
@@ -271,7 +273,8 @@ WadFile *WadFile::Open(std::filesystem::path filename, char mode)
 {
     SYS_ASSERT(mode == 'r' || mode == 'w' || mode == 'a');
 
-    if (mode == 'w') return Create(filename, mode);
+    if (mode == 'w')
+        return Create(filename, mode);
 
     FileMessage("Opening WAD file: %s\n", filename.u8string().c_str());
 
@@ -281,13 +284,13 @@ retry:
 #ifdef _WIN32
     fp = _wfopen(filename.c_str(), (mode == 'r' ? L"rb" : L"r+b"));
 #else
-    fp = fopen(filename.generic_u8string().c_str(),
-               (mode == 'r' ? "rb" : "r+b"));
+    fp = fopen(filename.generic_u8string().c_str(), (mode == 'r' ? "rb" : "r+b"));
 #endif
     if (!fp)
     {
         // mimic the fopen() semantics
-        if (mode == 'a' && errno == ENOENT) return Create(filename, mode);
+        if (mode == 'a' && errno == ENOENT)
+            return Create(filename, mode);
 
         // if file is read-only, open in 'r' mode instead
         if (mode == 'a' && (errno == EACCES || errno == EROFS))
@@ -305,7 +308,8 @@ retry:
     if (!fp)
     {
         // mimic the fopen() semantics
-        if (mode == 'a' && errno == ENOENT) return Create(filename, mode);
+        if (mode == 'a' && errno == ENOENT)
+            return Create(filename, mode);
 
         // if file is read-only, open in 'r' mode instead
         if (mode == 'a' && (errno == EACCES || errno == EROFS))
@@ -332,7 +336,8 @@ retry:
     DebugPrintf("total_size = %d\n", w->total_size);
 #endif
 
-    if (w->total_size_ < 0) ErrorPrintf("AJBSP: Error determining WAD size.\n");
+    if (w->total_size_ < 0)
+        ErrorPrintf("AJBSP: Error determining WAD size.\n");
 
     w->ReadDirectory();
     w->DetectLevels();
@@ -351,7 +356,8 @@ WadFile *WadFile::Create(std::filesystem::path filename, char mode)
     FILE *fp = fopen(filename.generic_u8string().c_str(), "wb");
 #endif
 
-    if (!fp) return nullptr;
+    if (!fp)
+        return nullptr;
 
     WadFile *w = new WadFile(filename, mode, fp);
 
@@ -371,31 +377,44 @@ WadFile *WadFile::Create(std::filesystem::path filename, char mode)
 
 static int WhatLevelPart(const char *name)
 {
-    if (StringCaseCompareASCII(name, "THINGS") == 0) return 1;
-    if (StringCaseCompareASCII(name, "LINEDEFS") == 0) return 2;
-    if (StringCaseCompareASCII(name, "SIDEDEFS") == 0) return 3;
-    if (StringCaseCompareASCII(name, "VERTEXES") == 0) return 4;
-    if (StringCaseCompareASCII(name, "SECTORS") == 0) return 5;
+    if (StringCaseCompareASCII(name, "THINGS") == 0)
+        return 1;
+    if (StringCaseCompareASCII(name, "LINEDEFS") == 0)
+        return 2;
+    if (StringCaseCompareASCII(name, "SIDEDEFS") == 0)
+        return 3;
+    if (StringCaseCompareASCII(name, "VERTEXES") == 0)
+        return 4;
+    if (StringCaseCompareASCII(name, "SECTORS") == 0)
+        return 5;
 
     return 0;
 }
 
 static bool IsLevelLump(const char *name)
 {
-    if (StringCaseCompareASCII(name, "SEGS") == 0) return true;
-    if (StringCaseCompareASCII(name, "SSECTORS") == 0) return true;
-    if (StringCaseCompareASCII(name, "NODES") == 0) return true;
-    if (StringCaseCompareASCII(name, "REJECT") == 0) return true;
-    if (StringCaseCompareASCII(name, "BLOCKMAP") == 0) return true;
-    if (StringCaseCompareASCII(name, "BEHAVIOR") == 0) return true;
-    if (StringCaseCompareASCII(name, "SCRIPTS") == 0) return true;
+    if (StringCaseCompareASCII(name, "SEGS") == 0)
+        return true;
+    if (StringCaseCompareASCII(name, "SSECTORS") == 0)
+        return true;
+    if (StringCaseCompareASCII(name, "NODES") == 0)
+        return true;
+    if (StringCaseCompareASCII(name, "REJECT") == 0)
+        return true;
+    if (StringCaseCompareASCII(name, "BLOCKMAP") == 0)
+        return true;
+    if (StringCaseCompareASCII(name, "BEHAVIOR") == 0)
+        return true;
+    if (StringCaseCompareASCII(name, "SCRIPTS") == 0)
+        return true;
 
     return WhatLevelPart(name) != 0;
 }
 
 static bool IsGLNodeLump(const char *name)
 {
-    if (StringCaseCompareMaxASCII(name, "GL_", 3) == 0) return true;
+    if (StringCaseCompareMaxASCII(name, "GL_", 3) == 0)
+        return true;
 
     return false;
 }
@@ -414,15 +433,16 @@ Lump *WadFile::FindLump(const char *name)
         if (StringCaseCompareASCII(directory_[k]->name_, name) == 0)
             return directory_[k];
 
-    return nullptr;  // not found
+    return nullptr; // not found
 }
 
 int WadFile::FindLumpNumber(const char *name)
 {
     for (int k = 0; k < NumLumps(); k++)
-        if (StringCaseCompareASCII(directory_[k]->name_, name) == 0) return k;
+        if (StringCaseCompareASCII(directory_[k]->name_, name) == 0)
+            return k;
 
-    return -1;  // not found
+    return -1; // not found
 }
 
 int WadFile::LevelLookupLump(int level_number, const char *name)
@@ -434,10 +454,11 @@ int WadFile::LevelLookupLump(int level_number, const char *name)
     {
         SYS_ASSERT(0 <= k && k < NumLumps());
 
-        if (StringCaseCompareASCII(directory_[k]->name_, name) == 0) return k;
+        if (StringCaseCompareASCII(directory_[k]->name_, name) == 0)
+            return k;
     }
 
-    return -1;  // not found
+    return -1; // not found
 }
 
 int WadFile::LevelFind(const char *name)
@@ -453,7 +474,7 @@ int WadFile::LevelFind(const char *name)
             return k;
     }
 
-    return -1;  // not found
+    return -1; // not found
 }
 
 int WadFile::LevelLastLump(int level_number)
@@ -466,8 +487,7 @@ int WadFile::LevelLastLump(int level_number)
     {
         while (count < kMaxLevelLumps && start + count < NumLumps())
         {
-            if (StringCaseCompareASCII(directory_[start + count]->name_,
-                                       "ENDMAP") == 0)
+            if (StringCaseCompareASCII(directory_[start + count]->name_, "ENDMAP") == 0)
             {
                 count++;
                 break;
@@ -476,11 +496,10 @@ int WadFile::LevelLastLump(int level_number)
             count++;
         }
     }
-    else  // standard DOOM or HEXEN format
+    else // standard DOOM or HEXEN format
     {
         while (count < kMaxLevelLumps && start + count < NumLumps() &&
-               (IsLevelLump(directory_[start + count]->name_) ||
-                IsGLNodeLump(directory_[start + count]->name_)))
+               (IsLevelLump(directory_[start + count]->name_) || IsGLNodeLump(directory_[start + count]->name_)))
         {
             count++;
         }
@@ -492,7 +511,8 @@ int WadFile::LevelLastLump(int level_number)
 int WadFile::LevelFindByNumber(int number)
 {
     // sanity check
-    if (number <= 0 || number > 99) return -1;
+    if (number <= 0 || number > 99)
+        return -1;
 
     char buffer[10];
     int  index;
@@ -501,15 +521,17 @@ int WadFile::LevelFindByNumber(int number)
     sprintf(buffer, "MAP%02d", number);
 
     index = LevelFind(buffer);
-    if (index >= 0) return index;
+    if (index >= 0)
+        return index;
 
     // otherwise try E#M#
     sprintf(buffer, "E%dM%d", OBSIDIAN_MAX(1, number / 10), number % 10);
 
     index = LevelFind(buffer);
-    if (index >= 0) return index;
+    if (index >= 0)
+        return index;
 
-    return -1;  // not found
+    return -1; // not found
 }
 
 int WadFile::LevelFindFirst()
@@ -517,7 +539,7 @@ int WadFile::LevelFindFirst()
     if (levels_.size() > 0)
         return 0;
     else
-        return -1;  // none
+        return -1; // none
 }
 
 int WadFile::LevelHeader(int level_number)
@@ -535,7 +557,8 @@ MapFormat WadFile::LevelFormat(int level_number)
     {
         const char *name = GetLump(start + 1)->Name();
 
-        if (StringCaseCompareASCII(name, "TEXTMAP") == 0) return kMapFormatUDMF;
+        if (StringCaseCompareASCII(name, "TEXTMAP") == 0)
+            return kMapFormatUDMF;
     }
 
     if (start + kLumpBehavior < (int)NumLumps())
@@ -555,32 +578,29 @@ Lump *WadFile::FindLumpInNamespace(const char *name, char group)
 
     switch (group)
     {
-        case 'P':
-            for (k = 0; k < (int)patches_.size(); k++)
-                if (StringCaseCompareASCII(directory_[patches_[k]]->name_,
-                                           name) == 0)
-                    return directory_[patches_[k]];
-            break;
+    case 'P':
+        for (k = 0; k < (int)patches_.size(); k++)
+            if (StringCaseCompareASCII(directory_[patches_[k]]->name_, name) == 0)
+                return directory_[patches_[k]];
+        break;
 
-        case 'S':
-            for (k = 0; k < (int)sprites_.size(); k++)
-                if (StringCaseCompareASCII(directory_[sprites_[k]]->name_,
-                                           name) == 0)
-                    return directory_[sprites_[k]];
-            break;
+    case 'S':
+        for (k = 0; k < (int)sprites_.size(); k++)
+            if (StringCaseCompareASCII(directory_[sprites_[k]]->name_, name) == 0)
+                return directory_[sprites_[k]];
+        break;
 
-        case 'F':
-            for (k = 0; k < (int)flats_.size(); k++)
-                if (StringCaseCompareASCII(directory_[flats_[k]]->name_,
-                                           name) == 0)
-                    return directory_[flats_[k]];
-            break;
+    case 'F':
+        for (k = 0; k < (int)flats_.size(); k++)
+            if (StringCaseCompareASCII(directory_[flats_[k]]->name_, name) == 0)
+                return directory_[flats_[k]];
+        break;
 
-        default:
-            ErrorPrintf("AJBSP: FindLumpInNamespace: bad group '%c'\n", group);
+    default:
+        ErrorPrintf("AJBSP: FindLumpInNamespace: bad group '%c'\n", group);
     }
 
-    return nullptr;  // not found!
+    return nullptr; // not found!
 }
 
 void WadFile::ReadDirectory()
@@ -602,8 +622,7 @@ void WadFile::ReadDirectory()
     directory_count_ = AlignedLittleEndianS32(header.num_entries);
 
     if (directory_count_ < 0 || directory_count_ > 32000)
-        ErrorPrintf("AJBSP: Bad WAD header, too many entries (%d)\n",
-                    directory_count_);
+        ErrorPrintf("AJBSP: Bad WAD header, too many entries (%d)\n", directory_count_);
 
     if (file_pointer_ && fseek(file_pointer_, directory_start_, SEEK_SET) != 0)
         ErrorPrintf("AJBSP: Error seeking to WAD directory_.\n");
@@ -612,8 +631,7 @@ void WadFile::ReadDirectory()
     {
         RawWadEntry entry;
 
-        if (file_pointer_ &&
-            fread(&entry, sizeof(entry), 1, file_pointer_) != 1)
+        if (file_pointer_ && fread(&entry, sizeof(entry), 1, file_pointer_) != 1)
             ErrorPrintf("AJBSP: Error reading WAD directory_.\n");
 
         Lump *lump = new Lump(this, &entry);
@@ -649,14 +667,17 @@ void WadFile::DetectLevels()
         // check whether the next four lumps are level lumps
         for (int i = 1; i <= 4; i++)
         {
-            if (k + i >= NumLumps()) break;
+            if (k + i >= NumLumps())
+                break;
 
             int part = WhatLevelPart(directory_[k + i]->name_);
 
-            if (part == 0) break;
+            if (part == 0)
+                break;
 
             // do not allow duplicates
-            if (part_mask & (1 << part)) break;
+            if (part_mask & (1 << part))
+                break;
 
             part_mask |= (1 << part);
             part_count++;
@@ -678,22 +699,23 @@ void WadFile::DetectLevels()
 
 void WadFile::SortLevels()
 {
-    std::sort(levels_.begin(), levels_.end(),
-              LevelNameComparisonPredicate(this));
+    std::sort(levels_.begin(), levels_.end(), LevelNameComparisonPredicate(this));
 }
 
 static bool IsDummyMarker(const char *name)
 {
     // matches P1_START, F3_END etc...
 
-    if (strlen(name) < 3) return false;
+    if (strlen(name) < 3)
+        return false;
 
-    if (!strchr("PSF", ToUpperASCII(name[0]))) return false;
+    if (!strchr("PSF", ToUpperASCII(name[0])))
+        return false;
 
-    if (!IsDigitASCII(name[1])) return false;
+    if (!IsDigitASCII(name[1]))
+        return false;
 
-    if (StringCaseCompareASCII(name + 2, "_START") == 0 ||
-        StringCaseCompareASCII(name + 2, "_END") == 0)
+    if (StringCaseCompareASCII(name + 2, "_START") == 0 || StringCaseCompareASCII(name + 2, "_END") == 0)
         return true;
 
     return false;
@@ -708,10 +730,10 @@ void WadFile::ProcessNamespaces()
         const char *name = directory_[k]->name_;
 
         // skip the sub-namespace markers
-        if (IsDummyMarker(name)) continue;
+        if (IsDummyMarker(name))
+            continue;
 
-        if (StringCaseCompareASCII(name, "P_START") == 0 ||
-            StringCaseCompareASCII(name, "PP_START") == 0)
+        if (StringCaseCompareASCII(name, "P_START") == 0 || StringCaseCompareASCII(name, "PP_START") == 0)
         {
             if (active && active != 'P')
                 LumpWarning("missing %c_END marker.\n", active);
@@ -719,17 +741,16 @@ void WadFile::ProcessNamespaces()
             active = 'P';
             continue;
         }
-        else if (StringCaseCompareASCII(name, "P_END") == 0 ||
-                 StringCaseCompareASCII(name, "PP_END") == 0)
+        else if (StringCaseCompareASCII(name, "P_END") == 0 || StringCaseCompareASCII(name, "PP_END") == 0)
         {
-            if (active != 'P') LumpWarning("stray P_END marker found.\n");
+            if (active != 'P')
+                LumpWarning("stray P_END marker found.\n");
 
             active = 0;
             continue;
         }
 
-        if (StringCaseCompareASCII(name, "S_START") == 0 ||
-            StringCaseCompareASCII(name, "SS_START") == 0)
+        if (StringCaseCompareASCII(name, "S_START") == 0 || StringCaseCompareASCII(name, "SS_START") == 0)
         {
             if (active && active != 'S')
                 LumpWarning("missing %c_END marker.\n", active);
@@ -737,17 +758,16 @@ void WadFile::ProcessNamespaces()
             active = 'S';
             continue;
         }
-        else if (StringCaseCompareASCII(name, "S_END") == 0 ||
-                 StringCaseCompareASCII(name, "SS_END") == 0)
+        else if (StringCaseCompareASCII(name, "S_END") == 0 || StringCaseCompareASCII(name, "SS_END") == 0)
         {
-            if (active != 'S') LumpWarning("stray S_END marker found.\n");
+            if (active != 'S')
+                LumpWarning("stray S_END marker found.\n");
 
             active = 0;
             continue;
         }
 
-        if (StringCaseCompareASCII(name, "F_START") == 0 ||
-            StringCaseCompareASCII(name, "FF_START") == 0)
+        if (StringCaseCompareASCII(name, "F_START") == 0 || StringCaseCompareASCII(name, "FF_START") == 0)
         {
             if (active && active != 'F')
                 LumpWarning("missing %c_END marker.\n", active);
@@ -755,10 +775,10 @@ void WadFile::ProcessNamespaces()
             active = 'F';
             continue;
         }
-        else if (StringCaseCompareASCII(name, "F_END") == 0 ||
-                 StringCaseCompareASCII(name, "FF_END") == 0)
+        else if (StringCaseCompareASCII(name, "F_END") == 0 || StringCaseCompareASCII(name, "FF_END") == 0)
         {
-            if (active != 'F') LumpWarning("stray F_END marker found.\n");
+            if (active != 'F')
+                LumpWarning("stray F_END marker found.\n");
 
             active = 0;
             continue;
@@ -774,7 +794,8 @@ void WadFile::ProcessNamespaces()
         }
         else if (StringCaseCompareASCII(name, "TX_END") == 0)
         {
-            if (active != 'T') LumpWarning("stray TX_END marker found.\n");
+            if (active != 'T')
+                LumpWarning("stray TX_END marker found.\n");
 
             active = 0;
             continue;
@@ -784,8 +805,7 @@ void WadFile::ProcessNamespaces()
         {
             if (directory_[k]->Length() == 0)
             {
-                LumpWarning("skipping empty lump %s in %c_START\n", name,
-                            active);
+                LumpWarning("skipping empty lump %s in %c_START\n", name, active);
                 continue;
             }
 
@@ -795,27 +815,27 @@ void WadFile::ProcessNamespaces()
 
             switch (active)
             {
-                case 'P':
-                    patches_.push_back(k);
-                    break;
-                case 'S':
-                    sprites_.push_back(k);
-                    break;
-                case 'F':
-                    flats_.push_back(k);
-                    break;
-                case 'T':
-                    tx_textures_.push_back(k);
-                    break;
+            case 'P':
+                patches_.push_back(k);
+                break;
+            case 'S':
+                sprites_.push_back(k);
+                break;
+            case 'F':
+                flats_.push_back(k);
+                break;
+            case 'T':
+                tx_textures_.push_back(k);
+                break;
 
-                default:
-                    ErrorPrintf("AJBSP: ProcessNamespaces: active = 0x%02x\n",
-                                (int)active);
+            default:
+                ErrorPrintf("AJBSP: ProcessNamespaces: active = 0x%02x\n", (int)active);
             }
         }
     }
 
-    if (active) LumpWarning("Missing %c_END marker (at EOF)\n", active);
+    if (active)
+        LumpWarning("Missing %c_END marker (at EOF)\n", active);
 }
 
 //------------------------------------------------------------------------
@@ -828,8 +848,7 @@ void WadFile::BeginWrite()
         ErrorPrintf("AJBSP: WadFile::BeginWrite() called on read-only file\n");
 
     if (begun_write_)
-        ErrorPrintf(
-            "AJBSP: WadFile::BeginWrite() called again without EndWrite()\n");
+        ErrorPrintf("AJBSP: WadFile::BeginWrite() called again without EndWrite()\n");
 
     // put the size into a quantum state
     total_size_ = 0;
@@ -858,7 +877,10 @@ void WadFile::RemoveLumps(int index, int count)
 
     int i;
 
-    for (i = 0; i < count; i++) { delete directory_[index + i]; }
+    for (i = 0; i < count; i++)
+    {
+        delete directory_[index + i];
+    }
 
     for (i = index; i + count < NumLumps(); i++)
         directory_[i] = directory_[i + count];
@@ -893,13 +915,13 @@ void WadFile::RemoveGLNodes(int level_number)
 
     int count = 0;
 
-    while (start + count <= finish &&
-           IsGLNodeLump(directory_[start + count]->name_))
+    while (start + count <= finish && IsGLNodeLump(directory_[start + count]->name_))
     {
         count++;
     }
 
-    if (count > 0) RemoveLumps(start, count);
+    if (count > 0)
+        RemoveLumps(start, count);
 }
 
 void WadFile::RemoveZNodes(int level_number)
@@ -920,14 +942,14 @@ void WadFile::RemoveZNodes(int level_number)
     }
 }
 
-void WadFile::FixGroup(std::vector<int> &group, int index, int number_added,
-                       int number_removed)
+void WadFile::FixGroup(std::vector<int> &group, int index, int number_added, int number_removed)
 {
     bool did_remove = false;
 
     for (int k = 0; k < (int)group.size(); k++)
     {
-        if (group[k] < index) continue;
+        if (group[k] < index)
+            continue;
 
         if (group[k] < index + number_removed)
         {
@@ -959,7 +981,8 @@ Lump *WadFile::AddLump(const char *name, int max_size)
     Lump *lump = new Lump(this, name, start, 0);
 
     // check if the insert_point_ is still valid
-    if (insert_point_ >= NumLumps()) insert_point_ = -1;
+    if (insert_point_ >= NumLumps())
+        insert_point_ = -1;
 
     if (insert_point_ >= 0)
     {
@@ -974,7 +997,7 @@ Lump *WadFile::AddLump(const char *name, int max_size)
 
         insert_point_++;
     }
-    else  // add to end
+    else // add to end
     {
         directory_.push_back(lump);
     }
@@ -1003,7 +1026,10 @@ Lump *WadFile::AddLevel(const char *name, int max_size, int *level_number)
 
     Lump *lump = AddLump(name, max_size);
 
-    if (level_number) { *level_number = (int)levels_.size(); }
+    if (level_number)
+    {
+        *level_number = (int)levels_.size();
+    }
 
     levels_.push_back(actual_point);
 
@@ -1025,13 +1051,15 @@ int WadFile::HighWaterMark()
         Lump *lump = directory_[k];
 
         // ignore zero-length lumps (their offset could be anything)
-        if (lump->Length() <= 0) continue;
+        if (lump->Length() <= 0)
+            continue;
 
         int l_end = lump->lump_start_ + lump->lump_length_;
 
         l_end = ((l_end + 3) / 4) * 4;
 
-        if (offset < l_end) offset = l_end;
+        if (offset < l_end)
+            offset = l_end;
     }
 
     return offset;
@@ -1048,11 +1076,11 @@ int WadFile::FindFreeSpace(int length)
     {
         Lump *lump = directory_[k];
 
-        if (lump->Length() > 0) sorted_dir.push_back(lump);
+        if (lump->Length() > 0)
+            sorted_dir.push_back(lump);
     }
 
-    std::sort(sorted_dir.begin(), sorted_dir.end(),
-              Lump::OffsetComparisonPredicate());
+    std::sort(sorted_dir.begin(), sorted_dir.end(), Lump::OffsetComparisonPredicate());
 
     int offset = (int)sizeof(RawWadHeader);
 
@@ -1065,9 +1093,11 @@ int WadFile::FindFreeSpace(int length)
 
         l_end = ((l_end + 3) / 4) * 4;
 
-        if (l_end <= offset) continue;
+        if (l_end <= offset)
+            continue;
 
-        if (lump_start >= offset + length) continue;
+        if (lump_start >= offset + length)
+            continue;
 
         // the lump overlapped the current gap, so bump offset
 
@@ -1117,8 +1147,7 @@ int WadFile::PositionForWrite(int max_size)
     }
 
 #if DEBUG_WAD
-    DebugPrintf("POSITION FOR WRITE: %d  (total_size %d)\n", want_pos,
-                total_size);
+    DebugPrintf("POSITION FOR WRITE: %d  (total_size %d)\n", want_pos, total_size);
 #endif
 
     return want_pos;
@@ -1131,13 +1160,14 @@ bool WadFile::FinishLump(int final_size)
     // sanity check
     if (begun_max_size_ >= 0)
         if (final_size > begun_max_size_)
-            ErrorPrintf(
-                "AJBSP: Internal Error: wrote too much in lump (%d > %d)\n",
-                final_size, begun_max_size_);
+            ErrorPrintf("AJBSP: Internal Error: wrote too much in lump (%d > %d)\n", final_size, begun_max_size_);
 
     int pos = (int)ftell(file_pointer_);
 
-    if (pos & 3) { WritePadding(4 - (pos & 3)); }
+    if (pos & 3)
+    {
+        WritePadding(4 - (pos & 3));
+    }
 
     fflush(file_pointer_);
     return true;
@@ -1198,7 +1228,8 @@ void WadFile::WriteDirectory()
     DebugPrintf("total_size: %d\n", total_size);
 #endif
 
-    if (total_size_ < 0) ErrorPrintf("AJBSP: Error determining WAD size.\n");
+    if (total_size_ < 0)
+        ErrorPrintf("AJBSP: Error determining WAD size.\n");
 
     // update header at start of file
 
@@ -1217,7 +1248,7 @@ void WadFile::WriteDirectory()
     fflush(file_pointer_);
 }
 
-}  // namespace ajbsp
+} // namespace ajbsp
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

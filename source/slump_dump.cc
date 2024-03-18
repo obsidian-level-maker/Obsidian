@@ -58,7 +58,10 @@ int swap_32s(int in)
            ((in & 0xff00) << 8) | /* byte 3 becomes byte 2 */
            ((in & 0xff) << 24);   /* low byte becomes hi uint8_t */
 }
-short swap_16(short in) { return ((in >> 8) & 0xff) | ((in & 0xff) << 8); }
+short swap_16(short in)
+{
+    return ((in >> 8) & 0xff) | ((in & 0xff) << 8);
+}
 #endif /* ENDIAN_BIG */
 
 /* Open a file ready to dump multiple levels into */
@@ -86,7 +89,7 @@ dumphandle OpenDump(config *c)
     }
     memcpy(headerstuff.tag, "PWAD", 4);
     /* No endian issues since these values are zero */
-    headerstuff.lmpcount  = 0; /* To be filled in later */
+    headerstuff.lmpcount  = 0;                        /* To be filled in later */
     headerstuff.inxoffset = 0;
     fwrite(&headerstuff, sizeof(headerstuff), 1, answer->f);
     answer->offset_to_index    = sizeof(headerstuff); /* Length of the header */
@@ -147,7 +150,10 @@ void RegisterLmp(dumphandle dh, const char *s, unsigned int size)
     ie       = (index_entry *)malloc(sizeof(*ie));
     ie->next = NULL;
     /* This list really has to be in frontwards order! */
-    if (dh->index_entry_anchor == NULL) { dh->index_entry_anchor = ie; }
+    if (dh->index_entry_anchor == NULL)
+    {
+        dh->index_entry_anchor = ie;
+    }
     else
     {
         for (ie2 = dh->index_entry_anchor; ie2->next; ie2 = ie2->next)
@@ -164,8 +170,7 @@ void RegisterLmp(dumphandle dh, const char *s, unsigned int size)
 /* Given a dumphandle, a music header, a music buffer, a lump name, */
 /* and for some reason a config, do what's necessary to record it   */
 /* in the file and index and stuff. */
-void record_music(dumphandle dh, musheader *mh, uint8_t *buf, const char *s,
-                  config *c)
+void record_music(dumphandle dh, musheader *mh, uint8_t *buf, const char *s, config *c)
 {
     unsigned int lsize;
 
@@ -175,7 +180,7 @@ void record_music(dumphandle dh, musheader *mh, uint8_t *buf, const char *s,
      * have custom music on big-endian machines */
 #ifndef ENDIAN_BIG
     // Need to try to get this working - Dasho
-    fwrite(mh, sizeof(musheader), 1, dh->f);  // Write fixed header
+    fwrite(mh, sizeof(musheader), 1, dh->f); // Write fixed header
     fwrite(buf, mh->patches * sizeof(short) + mh->muslength, 1, dh->f);
 #endif
 }
@@ -185,8 +190,7 @@ void make_slinfo(dumphandle dh, config *c)
 {
     static byte slinfo[100];
 
-    sprintf((char *)slinfo, "SLUMP (%d.%03d.%02d)", SOURCE_VERSION,
-            SOURCE_SERIAL, SOURCE_PATCHLEVEL);
+    sprintf((char *)slinfo, "SLUMP (%d.%03d.%02d)", SOURCE_VERSION, SOURCE_SERIAL, SOURCE_PATCHLEVEL);
     RegisterLmp(dh, "SLINFO", strlen((char *)slinfo) + 1);
     fwrite(slinfo, strlen((char *)slinfo) + 1, 1, dh->f);
 
@@ -198,19 +202,23 @@ void validate_teleports(linedef *pLinedef, sector *pSector)
 {
     int tags[1024];
     int a = 0;
-    for (a = 0; a < 1024; a++) { tags[a] = 0; }
+    for (a = 0; a < 1024; a++)
+    {
+        tags[a] = 0;
+    }
     for (; pSector != NULL; pSector = pSector->next)
     {
-        if (pSector->tag > 0 && pSector->tag < 1024) { tags[pSector->tag] = 1; }
+        if (pSector->tag > 0 && pSector->tag < 1024)
+        {
+            tags[pSector->tag] = 1;
+        }
     }
     for (; pLinedef != NULL; pLinedef = pLinedef->next)
     {
-        if (pLinedef->type == LINEDEF_TELEPORT && pLinedef->tag > 0 &&
-            pLinedef->tag < 1024 && tags[pLinedef->tag] == 0)
+        if (pLinedef->type == LINEDEF_TELEPORT && pLinedef->tag > 0 && pLinedef->tag < 1024 && tags[pLinedef->tag] == 0)
         {
-            printf(
-                "Warning: teleport with invalid tag; "
-                "making end of level!\n");
+            printf("Warning: teleport with invalid tag; "
+                   "making end of level!\n");
             pLinedef->type = LINEDEF_W1_END_LEVEL;
         }
     }
@@ -219,8 +227,7 @@ void validate_teleports(linedef *pLinedef, sector *pSector)
 /* Write out a PWAD containing just the THINGS, LINEDEFS, SIDEDEFS, */
 /* VERTEXES, and SECTORS for the given episode/mission.  The user   */
 /* will have to run a nodebuilder and reject mapper hisself.        */
-void DumpLevel(dumphandle dh, config *c, level *l, int episode, int mission,
-               int map)
+void DumpLevel(dumphandle dh, config *c, level *l, int episode, int mission, int map)
 {
     unsigned int i;
     sector      *pSector;
@@ -280,8 +287,14 @@ void DumpLevel(dumphandle dh, config *c, level *l, int episode, int mission,
 
     /* Register the zero-length marker entry */
 
-    if (map == 0) { sprintf(sb, "E%dM%d", episode, mission); }
-    else { sprintf(sb, "MAP%02d", map); }
+    if (map == 0)
+    {
+        sprintf(sb, "E%dM%d", episode, mission);
+    }
+    else
+    {
+        sprintf(sb, "MAP%02d", map);
+    }
     RegisterLmp(dh, sb, 0);
 
     /* Number all items, register in the directory */
@@ -362,8 +375,7 @@ void DumpLevel(dumphandle dh, config *c, level *l, int episode, int mission,
     validate_teleports(l->linedef_anchor, l->sector_anchor);
 
     /* and all the linedefs */
-    for (pLinedef = l->linedef_anchor; pLinedef != NULL;
-         pLinedef = pLinedef->next)
+    for (pLinedef = l->linedef_anchor; pLinedef != NULL; pLinedef = pLinedef->next)
     {
         rawlinedef.from  = (pLinedef->from)->number;
         rawlinedef.to    = (pLinedef->to)->number;
@@ -374,9 +386,18 @@ void DumpLevel(dumphandle dh, config *c, level *l, int episode, int mission,
         {
             rawlinedef.right = (short)0xFFFF; /* actually an error, eh? */
         }
-        else { rawlinedef.right = (pLinedef->right)->number; }
-        if (pLinedef->left == NULL) { rawlinedef.left = (short)0xFFFF; }
-        else { rawlinedef.left = (pLinedef->left)->number; }
+        else
+        {
+            rawlinedef.right = (pLinedef->right)->number;
+        }
+        if (pLinedef->left == NULL)
+        {
+            rawlinedef.left = (short)0xFFFF;
+        }
+        else
+        {
+            rawlinedef.left = (pLinedef->left)->number;
+        }
 #ifdef ENDIAN_BIG
         rawlinedef.from  = swap_16(rawlinedef.from);
         rawlinedef.to    = swap_16(rawlinedef.to);
@@ -390,18 +411,15 @@ void DumpLevel(dumphandle dh, config *c, level *l, int episode, int mission,
     }
 
     /* and all the sidedefs */
-    for (pSidedef = l->sidedef_anchor; pSidedef != NULL;
-         pSidedef = pSidedef->next)
+    for (pSidedef = l->sidedef_anchor; pSidedef != NULL; pSidedef = pSidedef->next)
     {
         rawsidedef.x_offset = pSidedef->x_offset;
         rawsidedef.y_offset = pSidedef->y_offset;
         memset(rawsidedef.upper_texture, 0, 8);
-        memcpy(rawsidedef.upper_texture, pSidedef->upper_texture->realname,
-               strlen(pSidedef->upper_texture->realname));
+        memcpy(rawsidedef.upper_texture, pSidedef->upper_texture->realname, strlen(pSidedef->upper_texture->realname));
         pSidedef->upper_texture->used = SLUMP_TRUE;
         memset(rawsidedef.lower_texture, 0, 8);
-        memcpy(rawsidedef.lower_texture, pSidedef->lower_texture->realname,
-               strlen(pSidedef->lower_texture->realname));
+        memcpy(rawsidedef.lower_texture, pSidedef->lower_texture->realname, strlen(pSidedef->lower_texture->realname));
         pSidedef->lower_texture->used = SLUMP_TRUE;
         memset(rawsidedef.middle_texture, 0, 8);
         memcpy(rawsidedef.middle_texture, pSidedef->middle_texture->realname,
@@ -434,12 +452,10 @@ void DumpLevel(dumphandle dh, config *c, level *l, int episode, int mission,
         rawsector.floor_height   = pSector->floor_height;
         rawsector.ceiling_height = pSector->ceiling_height;
         memset(rawsector.floor_flat, 0, 8);
-        memcpy(rawsector.floor_flat, pSector->floor_flat->name,
-               strlen(pSector->floor_flat->name));
+        memcpy(rawsector.floor_flat, pSector->floor_flat->name, strlen(pSector->floor_flat->name));
         pSector->floor_flat->used = SLUMP_TRUE;
         memset(rawsector.ceiling_flat, 0, 8);
-        memcpy(rawsector.ceiling_flat, pSector->ceiling_flat->name,
-               strlen(pSector->ceiling_flat->name));
+        memcpy(rawsector.ceiling_flat, pSector->ceiling_flat->name, strlen(pSector->ceiling_flat->name));
         pSector->ceiling_flat->used = SLUMP_TRUE;
         if (pSector->light_level < ABSOLUTE_MINLIGHT)
         { /* Rooms can be too dark */
@@ -479,7 +495,8 @@ void dump_texture_lmp(dumphandle dh, texture_lmp *tl)
     {
         texturecount++;
         lmpsize += 4 + 22; /* Four bytes index, 22 bytes structure */
-        for (p = ct->patch_anchor; p; p = p->next) lmpsize += 10;
+        for (p = ct->patch_anchor; p; p = p->next)
+            lmpsize += 10;
     }
 
     /* Get storage for the lmp itself */
@@ -507,7 +524,8 @@ void dump_texture_lmp(dumphandle dh, texture_lmp *tl)
         tbuf += sizeof(int);
 #endif
         isize += 22; /* Four bytes index, 22 bytes structure */
-        for (p = ct->patch_anchor; p; p = p->next) isize += 10;
+        for (p = ct->patch_anchor; p; p = p->next)
+            isize += 10;
     }
 
     /* Now one last time, writing the data itself */
@@ -517,7 +535,10 @@ void dump_texture_lmp(dumphandle dh, texture_lmp *tl)
         {
             *(tbuf++) = (byte)((ct->name)[i]);
         }
-        for (i = strlen(ct->name); i < 8; i++) { *(tbuf++) = (byte)0; }
+        for (i = strlen(ct->name); i < 8; i++)
+        {
+            *(tbuf++) = (byte)0;
+        }
         *(short *)tbuf = 0;
         tbuf += sizeof(short);
         *(short *)tbuf = 0;
@@ -537,7 +558,8 @@ void dump_texture_lmp(dumphandle dh, texture_lmp *tl)
         tbuf += sizeof(short);
         *(short *)tbuf = 0;
         tbuf += sizeof(short);
-        for (patchcount = 0, p = ct->patch_anchor; p; p = p->next) patchcount++;
+        for (patchcount = 0, p = ct->patch_anchor; p; p = p->next)
+            patchcount++;
 #ifndef ENDIAN_BIG
         *(short *)tbuf = patchcount;
         tbuf += sizeof(short);
@@ -587,10 +609,15 @@ void add_patch(custom_texture *ct, short patchid, short x, short y)
     answer->y      = y;
     answer->next   = NULL;
     /* Simplest if these are in frontward order */
-    if (ct->patch_anchor == NULL) { ct->patch_anchor = answer; }
+    if (ct->patch_anchor == NULL)
+    {
+        ct->patch_anchor = answer;
+    }
     else
     {
-        for (p = ct->patch_anchor; p->next; p = p->next) {}; /* find last */
+        for (p = ct->patch_anchor; p->next; p = p->next)
+        {
+        }; /* find last */
         p->next = answer;
     }
 }
@@ -605,7 +632,8 @@ void record_custom_textures(dumphandle dh, config *c)
     custom_texture *ct;
 
     /* Return if TEXTURE2 not available */
-    if (c->gamemask & (DOOM0_BIT | DOOM1_BIT | DOOMI_BIT | HERETIC_BIT)) return;
+    if (c->gamemask & (DOOM0_BIT | DOOM1_BIT | DOOMI_BIT | HERETIC_BIT))
+        return;
 
     tl = new_texture_lmp("TEXTURE2");
 
@@ -619,7 +647,7 @@ void record_custom_textures(dumphandle dh, config *c)
     add_patch(ct, 0x183, 0x40, 0);
     add_patch(ct, 0x19b, 0x80, 0);
     add_patch(ct, 0x183, 0xc0, 0);
-    add_patch(ct, 0x35, 0, 0); /* Vines! */
+    add_patch(ct, 0x35, 0, 0);     /* Vines! */
     ct = new_custom_texture(tl, "WOODVINE", 0x100, 0x80);
     add_patch(ct, 0x1b1, 0, 0);    /* WOOD9 */
     add_patch(ct, 0x1b1, 0x40, 0); /* WOOD9 */
@@ -627,13 +655,13 @@ void record_custom_textures(dumphandle dh, config *c)
     add_patch(ct, 0x1b1, 0xc0, 0); /* WOOD9 */
     add_patch(ct, 0x35, 0, 0);     /* Vines! */
     ct = new_custom_texture(tl, "WOODLITE", 0x100, 0x80);
-    add_patch(ct, 0x1ac, -4, 0);  /* Copied from WOOD5 */
-    add_patch(ct, 0x1ad, 124, 0); /* Copied from WOOD5 */
-    add_patch(ct, 0x1ac, 252, 0); /* Copied from WOOD5 */
-    add_patch(ct, 0x78, 32, 20);  /* The light overlay */
+    add_patch(ct, 0x1ac, -4, 0);   /* Copied from WOOD5 */
+    add_patch(ct, 0x1ad, 124, 0);  /* Copied from WOOD5 */
+    add_patch(ct, 0x1ac, 252, 0);  /* Copied from WOOD5 */
+    add_patch(ct, 0x78, 32, 20);   /* The light overlay */
     ct = new_custom_texture(tl, "DOORSKUL", 0x40, 0x48);
-    add_patch(ct, 0x6b, 0, 0);    /* The door */
-    add_patch(ct, 0x1ab, 21, 11); /* The liddle skull */
+    add_patch(ct, 0x6b, 0, 0);     /* The door */
+    add_patch(ct, 0x1ab, 21, 11);  /* The liddle skull */
     ct = new_custom_texture(tl, "EXITSWIT", 0x40, 0x80);
     add_patch(ct, 0x87, 0, 0);
     add_patch(ct, 0x87, 0, 64);
@@ -655,7 +683,7 @@ void record_custom_textures(dumphandle dh, config *c)
     free_texture_lmp(tl);
 } /* end record_custom_textures */
 
-byte fbuf[64 * 64 + 4]; /* For use in making custom flats and patches; 64x64 */
+byte fbuf[64 * 64 + 4];          /* For use in making custom flats and patches; 64x64 */
 byte pbuf[TLMPSIZE(0x80, 0x40)]; /* Also */
 
 /* Record any custom flats that we might want to show off by using. */
@@ -667,7 +695,8 @@ void record_custom_flats(dumphandle dh, config *c, boolean even_unused)
 
     if (even_unused || find_flat(c, "SLGRASS1")->used)
     {
-        if (!started) RegisterLmp(dh, "FF_START", 0);
+        if (!started)
+            RegisterLmp(dh, "FF_START", 0);
         started = SLUMP_TRUE;
         announce(VERBOSE, "SLGRASS1");
 
@@ -678,23 +707,30 @@ void record_custom_flats(dumphandle dh, config *c, boolean even_unused)
         {
             dx = 1 - roll(3);
             dy = 1 - roll(3);
-            if (dx && dy) break;
+            if (dx && dy)
+                break;
         }
         for (i = 512; i; i--)
         {
             x += dx;
             y += dy;
-            if (x < 0) x += 64;
-            if (x > 63) x -= 64;
-            if (y < 0) y += 64;
-            if (y > 63) y -= 64;
+            if (x < 0)
+                x += 64;
+            if (x > 63)
+                x -= 64;
+            if (y < 0)
+                y += 64;
+            if (y > 63)
+                y -= 64;
             fbuf[64 * x + y]  = 0xbc + roll(4);
             x2                = (x == 0) ? 63 : x - 1;
             fbuf[64 * x2 + y] = 0xbc;
             x2                = (x == 63) ? 0 : x + 1;
             fbuf[64 * x2 + y] = 0xbf;
-            if (roll(8) == 0) dx = 1 - roll(3);
-            if (roll(8) == 0) dy = 1 - roll(3);
+            if (roll(8) == 0)
+                dx = 1 - roll(3);
+            if (roll(8) == 0)
+                dy = 1 - roll(3);
             for (; !(dx || dy);)
             {
                 dx = 1 - roll(3);
@@ -708,18 +744,21 @@ void record_custom_flats(dumphandle dh, config *c, boolean even_unused)
 
     if (even_unused || find_flat(c, "SLSPARKS")->used)
     {
-        if (!started) RegisterLmp(dh, "FF_START", 0);
+        if (!started)
+            RegisterLmp(dh, "FF_START", 0);
         started = SLUMP_TRUE;
         announce(VERBOSE, "SLSPARKS");
         memset(fbuf, 0, 4096);
-        for (i = 512; i; i--) fbuf[roll(64) + 64 * roll(64)] = 0xb0 + roll(16);
+        for (i = 512; i; i--)
+            fbuf[roll(64) + 64 * roll(64)] = 0xb0 + roll(16);
         RegisterLmp(dh, "SLSPARKS", 4096);
         fwrite(fbuf, 4096, 1, dh->f);
     }
 
     if (even_unused || find_flat(c, "SLGATE1")->used)
     {
-        if (!started) RegisterLmp(dh, "FF_START", 0);
+        if (!started)
+            RegisterLmp(dh, "FF_START", 0);
         started = SLUMP_TRUE;
         announce(VERBOSE, "SLGATE1");
 
@@ -734,8 +773,10 @@ void record_custom_flats(dumphandle dh, config *c, boolean even_unused)
                 x  = 0xcf - (dx + dy) / 2;
                 x += roll(2);
                 x -= roll(2);
-                if (x > 0xcf) x = 0xcf;
-                if (x < 0xc0) x = 0xc0;
+                if (x > 0xcf)
+                    x = 0xcf;
+                if (x < 0xc0)
+                    x = 0xc0;
                 fbuf[64 * i + j] = (byte)x;
             }
         }
@@ -746,7 +787,8 @@ void record_custom_flats(dumphandle dh, config *c, boolean even_unused)
 
     if (even_unused || find_flat(c, "SLLITE1")->used)
     {
-        if (!started) RegisterLmp(dh, "FF_START", 0);
+        if (!started)
+            RegisterLmp(dh, "FF_START", 0);
         started = SLUMP_TRUE;
         announce(VERBOSE, "SLLITE1");
 
@@ -764,11 +806,14 @@ void record_custom_flats(dumphandle dh, config *c, boolean even_unused)
                             continue;
                         dx = abs((x << 1) - 15) >> 2;
                         dy = abs((y << 1) - 15) >> 2;
-                        if (dy > dx) dx = dy;
+                        if (dy > dx)
+                            dx = dy;
                         x2 = 0xa1 + 2 * dx;
                         x2 += roll(2) - roll(2);
-                        if (x2 > 0xa7) x2 = 0xa7;
-                        if (x2 < 0xa0) x2 = 0xa0;
+                        if (x2 > 0xa7)
+                            x2 = 0xa7;
+                        if (x2 < 0xa0)
+                            x2 = 0xa0;
                         fbuf[64 * (16 * i + x) + 16 * j + y] = (byte)x2;
                     }
                 }
@@ -781,13 +826,15 @@ void record_custom_flats(dumphandle dh, config *c, boolean even_unused)
 
     if (even_unused || find_flat(c, "SLFLAT01")->used)
     {
-        if (!started) RegisterLmp(dh, "FF_START", 0);
+        if (!started)
+            RegisterLmp(dh, "FF_START", 0);
         started = SLUMP_TRUE;
         announce(VERBOSE, "SLFLAT01");
 
         basic_background2(fbuf, 0x6b, 5);
         for (i = 0; i < 4096; i++)
-            if (fbuf[i] > 0x6d) fbuf[i] = 0x0;
+            if (fbuf[i] > 0x6d)
+                fbuf[i] = 0x0;
         for (i = 0; i < 64; i++)
         {
             fbuf[i]           = 0x6b;
@@ -1094,18 +1141,19 @@ void make_secret_level(dumphandle dh, haa *oldhaa, config *c)
     SecHaa = (haa *)malloc(sizeof(*SecHaa));
     memcpy(SecHaa, oldhaa, sizeof(*oldhaa));
     secretize_config(SecConfig);
-    if (SecConfig->map == 31) SecConfig->map++;
-    if (SecConfig->map == 15) SecConfig->map = 31;
-    if (SecConfig->episode != 0) SecConfig->mission = 9;
+    if (SecConfig->map == 31)
+        SecConfig->map++;
+    if (SecConfig->map == 15)
+        SecConfig->map = 31;
+    if (SecConfig->episode != 0)
+        SecConfig->mission = 9;
     NewLevel(&SecLevel, SecHaa, SecConfig);
-    DumpLevel(dh, SecConfig, &SecLevel, SecConfig->episode, SecConfig->mission,
-              SecConfig->map);
+    DumpLevel(dh, SecConfig, &SecLevel, SecConfig->episode, SecConfig->mission, SecConfig->map);
     if (SecConfig->map == 31)
     {
         SecConfig->map           = 32;
         SecConfig->secret_themes = SLUMP_TRUE;
         NewLevel(&SecLevel, SecHaa, SecConfig);
-        DumpLevel(dh, SecConfig, &SecLevel, SecConfig->episode,
-                  SecConfig->mission, SecConfig->map);
+        DumpLevel(dh, SecConfig, &SecLevel, SecConfig->episode, SecConfig->mission, SecConfig->map);
     }
 }

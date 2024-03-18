@@ -86,14 +86,14 @@ constexpr const char *WAD2_MAGIC = "WAD2";
 struct raw_wad2_lump_t
 {
     uint32_t start;
-    uint32_t length;  // compressed
-    uint32_t u_len;   // uncompressed
+    uint32_t length; // compressed
+    uint32_t u_len;  // uncompressed
 
     uint8_t type;
     uint8_t compression;
     uint8_t _pad[2];
 
-    char name[16];  // must be null terminated
+    char name[16]; // must be null terminated
 };
 #pragma pack(pop)
 

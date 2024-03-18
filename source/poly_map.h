@@ -29,7 +29,7 @@ namespace ajpoly
 
 class wall_tip_c
 {
-   public:
+  public:
     // link in list.  List is kept in ANTI-clockwise order.
     wall_tip_c *next;
     wall_tip_c *prev;
@@ -72,7 +72,7 @@ ajpoly::vertex_c *NewVertexFromSplit(ajpoly::edge_c *E, double x, double y);
 
 bool VerifyOuterLines();
 
-}  // namespace ajpoly
+} // namespace ajpoly
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

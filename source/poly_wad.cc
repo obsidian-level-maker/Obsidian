@@ -30,17 +30,15 @@ namespace ajpoly
 {
 
 const char *level_lumps[] = {
-    "THINGS",   "LINEDEFS", "SIDEDEFS", "VERTEXES", "SEGS",
-    "SSECTORS", "NODES",    "SECTORS",  "REJECT",   "BLOCKMAP",
-    "BEHAVIOR", "TEXTMAP",  "ZNODES",
+    "THINGS",  "LINEDEFS", "SIDEDEFS", "VERTEXES", "SEGS",    "SSECTORS", "NODES",
+    "SECTORS", "REJECT",   "BLOCKMAP", "BEHAVIOR", "TEXTMAP", "ZNODES",
 
-    NULL  // end of list
+    NULL // end of list
 };
 
 int CheckMagic(const char type[4])
 {
-    if ((type[0] == 'I' || type[0] == 'P') && type[1] == 'W' &&
-        type[2] == 'A' && type[3] == 'D')
+    if ((type[0] == 'I' || type[0] == 'P') && type[1] == 'W' && type[2] == 'A' && type[3] == 'D')
     {
         return true;
     }
@@ -52,7 +50,10 @@ int CheckLevelLump(const char *name)
 {
     for (int i = 0; level_lumps[i]; i++)
     {
-        if (strcmp(name, level_lumps[i]) == 0) { return 1 + i; }
+        if (strcmp(name, level_lumps[i]) == 0)
+        {
+            return 1 + i;
+        }
     }
 
     return 0;
@@ -60,16 +61,25 @@ int CheckLevelLump(const char *name)
 
 wad_c::~wad_c()
 {
-    if (fp) { PHYSFS_close(fp); }
+    if (fp)
+    {
+        PHYSFS_close(fp);
+    }
 
     FreeData();
 
-    for (unsigned int i = 0; i < lumps.size(); i++) { delete lumps[i]; }
+    for (unsigned int i = 0; i < lumps.size(); i++)
+    {
+        delete lumps[i];
+    }
 }
 
 uint8_t *wad_c::AllocateData(int length)
 {
-    if (data_block && length <= data_len) { return data_block; }
+    if (data_block && length <= data_len)
+    {
+        return data_block;
+    }
 
     FreeData();
 
@@ -81,7 +91,10 @@ uint8_t *wad_c::AllocateData(int length)
 
 void wad_c::FreeData()
 {
-    if (data_block) { delete[] data_block; }
+    if (data_block)
+    {
+        delete[] data_block;
+    }
 
     data_block = NULL;
     data_len   = -1;
@@ -91,12 +104,10 @@ bool wad_c::ReadDirEntry()
 {
     RawWadEntry entry;
 
-    int len =
-        (int)(PHYSFS_readBytes(fp, &entry, sizeof(entry)) / sizeof(entry));
+    int len = (int)(PHYSFS_readBytes(fp, &entry, sizeof(entry)) / sizeof(entry));
     if (len != 1)
     {
-        SetErrorMsg("Trouble reading wad directory --> %s",
-                    PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+        SetErrorMsg("Trouble reading wad directory --> %s", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         return false;
     }
 
@@ -116,19 +127,17 @@ bool wad_c::ReadDirEntry()
 
     lumps.push_back(lump);
 
-    return true;  // OK
+    return true; // OK
 }
 
 bool wad_c::ReadDirectory()
 {
     RawWadHeader header;
 
-    int len =
-        (int)(PHYSFS_readBytes(fp, &header, sizeof(header)) / sizeof(header));
+    int len = (int)(PHYSFS_readBytes(fp, &header, sizeof(header)) / sizeof(header));
     if (len != 1)
     {
-        SetErrorMsg("Error reading wad header --> %s",
-                    PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+        SetErrorMsg("Error reading wad header --> %s", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         return false;
     }
 
@@ -147,10 +156,13 @@ bool wad_c::ReadDirectory()
 
     for (int i = 0; i < num_entries; i++)
     {
-        if (!ReadDirEntry()) { return false; }
+        if (!ReadDirEntry())
+        {
+            return false;
+        }
     }
 
-    return true;  // OK
+    return true; // OK
 }
 
 void wad_c::DetermineLevels()
@@ -160,7 +172,10 @@ void wad_c::DetermineLevels()
         lump_c *L = lumps[k];
 
         // skip known lumps (these are never valid level names)
-        if (CheckLevelLump(L->name)) { continue; }
+        if (CheckLevelLump(L->name))
+        {
+            continue;
+        }
 
         // check if the next four lumps after the current lump match the
         // level-lump names.  Order doesn't matter, but repeats do.
@@ -168,7 +183,10 @@ void wad_c::DetermineLevels()
 
         for (unsigned int i = 1; i <= 4; i++)
         {
-            if (k + i >= lumps.size()) { break; }
+            if (k + i >= lumps.size())
+            {
+                break;
+            }
 
             lump_c *N = lumps[k + i];
 
@@ -182,7 +200,10 @@ void wad_c::DetermineLevels()
             matched |= (1 << idx);
         }
 
-        if ((matched & 0xF) == 0xF) { continue; }
+        if ((matched & 0xF) == 0xF)
+        {
+            continue;
+        }
 
 #if DEBUG_WAD
         DebugPrintf("Found level name: %s\n", L->name);
@@ -193,11 +214,17 @@ void wad_c::DetermineLevels()
 
         for (unsigned int j = 5; j < 16; j++)
         {
-            if (k + j >= lumps.size()) { break; }
+            if (k + j >= lumps.size())
+            {
+                break;
+            }
 
             lump_c *N = lumps[k + j];
 
-            if (!CheckLevelLump(N->name)) { break; }
+            if (!CheckLevelLump(N->name))
+            {
+                break;
+            }
 
             L->children = j;
         }
@@ -210,8 +237,7 @@ wad_c *wad_c::Open(const char *filename)
 
     if (!in_file)
     {
-        SetErrorMsg("Cannot open WAD file: %s --> %s", filename,
-                    PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+        SetErrorMsg("Cannot open WAD file: %s --> %s", filename, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         return NULL;
     }
 
@@ -236,17 +262,19 @@ wad_c *wad_c::Open(const char *filename)
 int wad_c::FindLump(const char *name, int level)
 {
     int first = (level < 0) ? 0 : level + 1;
-    int last =
-        (level < 0) ? (int)lumps.size() - 1 : level + lumps[level]->children;
+    int last  = (level < 0) ? (int)lumps.size() - 1 : level + lumps[level]->children;
 
     for (int i = first; i <= last; i++)
     {
         lump_c *L = lumps[i];
 
-        if (strcmp(L->name, name) == 0 && L->children == 0) { return i; }
+        if (strcmp(L->name, name) == 0 && L->children == 0)
+        {
+            return i;
+        }
     }
 
-    return -1;  // NOT FOUND
+    return -1; // NOT FOUND
 }
 
 int wad_c::FindLevel(const char *name)
@@ -255,12 +283,18 @@ int wad_c::FindLevel(const char *name)
     {
         lump_c *L = lumps[i];
 
-        if (L->children == 0) { continue; }
+        if (L->children == 0)
+        {
+            continue;
+        }
 
-        if (name[0] == '*' || (strcmp(L->name, name) == 0)) { return i; }
+        if (name[0] == '*' || (strcmp(L->name, name) == 0))
+        {
+            return i;
+        }
     }
 
-    return -1;  // NOT FOUND
+    return -1; // NOT FOUND
 }
 
 uint8_t *wad_c::ReadLump(const char *name, int *length, int level)
@@ -279,7 +313,10 @@ uint8_t *wad_c::ReadLump(const char *name, int *length, int level)
     DebugPrintf("Reading lump: %s (%d bytes)\n", L->name, L->length);
 #endif
 
-    if (length) { (*length) = L->length; }
+    if (length)
+    {
+        (*length) = L->length;
+    }
 
     uint8_t *data = AllocateData(L->length);
 
@@ -290,8 +327,7 @@ uint8_t *wad_c::ReadLump(const char *name, int *length, int level)
         int len = (int)(PHYSFS_readBytes(fp, data, L->length) / L->length);
         if (len != 1)
         {
-            SetErrorMsg("Trouble reading lump '%s' --> %s", name,
-                        PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+            SetErrorMsg("Trouble reading lump '%s' --> %s", name, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
             return NULL;
         }
     }
@@ -313,22 +349,25 @@ bool LoadWAD(const char *wad_filename)
 
     if (!the_wad)
     {
-        return false;  // error will be set
+        return false; // error will be set
     }
 
     the_wad->the_file = wad_filename;
 
-    return true;  // OK
+    return true; // OK
 }
 
 void FreeWAD()
 {
-    if (the_wad) { delete the_wad; }
+    if (the_wad)
+    {
+        delete the_wad;
+    }
 
     the_wad = NULL;
 }
 
-}  // namespace ajpoly
+} // namespace ajpoly
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

@@ -47,8 +47,8 @@ void Recent_Write(FILE *fp);
 
 typedef enum
 {
-    RECG_Output = 0,  // generated WAD or PAK file
-    RECG_Config = 1,  // file saved from Config Manager
+    RECG_Output = 0, // generated WAD or PAK file
+    RECG_Config = 1, // file saved from Config Manager
 
     RECG_NUM_GROUPS
 
@@ -56,8 +56,7 @@ typedef enum
 
 void Recent_AddFile(int group, std::filesystem::path filename);
 void Recent_RemoveFile(int group, std::string filename);
-bool Recent_GetName(int group, int index, std::string name_buf,
-                    bool for_menu = false);
+bool Recent_GetName(int group, int index, std::string name_buf, bool for_menu = false);
 
 #endif /* __OBLIGE_COOKIE_H__ */
 

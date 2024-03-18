@@ -42,8 +42,7 @@ void VFS_AddFolder(std::string name)
 
     if (!PHYSFS_mount(path.generic_u8string().c_str(), mount.c_str(), 0))
     {
-        ErrorPrintf("Failed to mount '%s' folder in PhysFS:\n%s\n",
-                    name.c_str(),
+        ErrorPrintf("Failed to mount '%s' folder in PhysFS:\n%s\n", name.c_str(),
                     PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         return; /* NOT REACHED */
     }
@@ -61,13 +60,10 @@ bool VFS_AddArchive(std::filesystem::path filename, bool options_file)
     if ((!std::filesystem::exists(filename) && !filename.has_parent_path()))
     {
         std::filesystem::path new_name = std::filesystem::u8path(
-            StringFormat("%s/addons/%s", home_dir.generic_u8string().c_str(),
-                         filename.string().c_str()));
+            StringFormat("%s/addons/%s", home_dir.generic_u8string().c_str(), filename.string().c_str()));
         if (!std::filesystem::exists(new_name))
         {
-            new_name = StringFormat("%s/addons/%s",
-                                    install_dir.generic_u8string().c_str(),
-                                    filename.string().c_str());
+            new_name = StringFormat("%s/addons/%s", install_dir.generic_u8string().c_str(), filename.string().c_str());
         }
         filename = new_name;
     }
@@ -76,21 +72,19 @@ bool VFS_AddArchive(std::filesystem::path filename, bool options_file)
     {
         if (options_file)
         {
-            LogPrintf("Failed to mount '%s' archive in PhysFS:\n%s\n",
-                      filename.u8string().c_str(),
+            LogPrintf("Failed to mount '%s' archive in PhysFS:\n%s\n", filename.u8string().c_str(),
                       PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         }
         else
         {
-            ErrorPrintf("Failed to mount '%s' archive in PhysFS:\n%s\n",
-                        filename.u8string().c_str(),
+            ErrorPrintf("Failed to mount '%s' archive in PhysFS:\n%s\n", filename.u8string().c_str(),
                         PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         }
 
         return false;
     }
 
-    return true;  // Ok
+    return true; // Ok
 }
 
 void VFS_InitAddons(std::filesystem::path search_dir)
@@ -99,8 +93,7 @@ void VFS_InitAddons(std::filesystem::path search_dir)
 
     if (!PHYSFS_init(search_dir.generic_u8string().c_str()))
     {
-        ErrorPrintf("Failed to init PhysFS:\n%s\n",
-                    PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+        ErrorPrintf("Failed to init PhysFS:\n%s\n", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
     }
 
     VFS_AddFolder("scripts");
@@ -118,7 +111,10 @@ void VFS_ParseCommandLine()
     int arg   = argv::Find('a', "addon");
     int count = 0;
 
-    if (arg < 0) { return; }
+    if (arg < 0)
+    {
+        return;
+    }
 
     arg++;
 
@@ -126,11 +122,13 @@ void VFS_ParseCommandLine()
 
     for (; arg < argv::list.size() && !argv::IsOption(arg); arg++, count++)
     {
-        VFS_AddArchive(std::filesystem::u8path(argv::list[arg]),
-                       false /* options_file */);
+        VFS_AddArchive(std::filesystem::u8path(argv::list[arg]), false /* options_file */);
     }
 
-    if (!count) { ErrorPrintf("Missing filename for --addon option\n"); }
+    if (!count)
+    {
+        ErrorPrintf("Missing filename for --addon option\n");
+    }
 
     LogPrintf("DONE\n\n");
 }
@@ -176,12 +174,9 @@ void VFS_ScanForAddons()
 
     for (auto &file : std::filesystem::directory_iterator(dir_name))
     {
-        if (file.is_directory() ||
-            StringCaseCompareASCII(file.path().extension().string(), ".oaf") ==
-                0)
+        if (file.is_directory() || StringCaseCompareASCII(file.path().extension().string(), ".oaf") == 0)
         {
-            if (PHYSFS_mount(file.path().generic_u8string().c_str(), nullptr,
-                             0))
+            if (PHYSFS_mount(file.path().generic_u8string().c_str(), nullptr, 0))
             {
                 PHYSFS_unmount(file.path().generic_u8string().c_str());
                 result1 += 1;
@@ -189,8 +184,7 @@ void VFS_ScanForAddons()
             }
             else
             {
-                LogPrintf("Failed to mount '%s' archive in PhysFS:\n%s\n",
-                          file.path().u8string().c_str(),
+                LogPrintf("Failed to mount '%s' archive in PhysFS:\n%s\n", file.path().u8string().c_str(),
                           PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
             }
         }
@@ -200,18 +194,18 @@ void VFS_ScanForAddons()
     {
         dir_name = home_dir;
         dir_name /= "addons";
-        if (!std::filesystem::exists(dir_name)) { goto no_home_addon_dir; }
+        if (!std::filesystem::exists(dir_name))
+        {
+            goto no_home_addon_dir;
+        }
 
         std::vector<std::filesystem::path> list2;
 
         for (auto &file : std::filesystem::directory_iterator(dir_name))
         {
-            if (file.is_directory() ||
-                StringCaseCompareASCII(file.path().extension().string(),
-                                       ".oaf") == 0)
+            if (file.is_directory() || StringCaseCompareASCII(file.path().extension().string(), ".oaf") == 0)
             {
-                if (PHYSFS_mount(file.path().generic_u8string().c_str(),
-                                 nullptr, 0))
+                if (PHYSFS_mount(file.path().generic_u8string().c_str(), nullptr, 0))
                 {
                     PHYSFS_unmount(file.path().generic_u8string().c_str());
                     result2 += 1;
@@ -219,14 +213,16 @@ void VFS_ScanForAddons()
                 }
                 else
                 {
-                    LogPrintf("Failed to mount '%s' archive in PhysFS:\n%s\n",
-                              file.path().u8string().c_str(),
+                    LogPrintf("Failed to mount '%s' archive in PhysFS:\n%s\n", file.path().u8string().c_str(),
                               PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
                 }
             }
         }
         // std::vector<std::filesystem::path>().swap(list2);
-        for (auto x : list2) { list.push_back(x); }
+        for (auto x : list2)
+        {
+            list.push_back(x);
+        }
     }
 
 no_home_addon_dir:
@@ -245,8 +241,7 @@ no_home_addon_dir:
 
         info.enabled = false;
 
-        if (initial_enabled_addons.find(list[i]) !=
-            initial_enabled_addons.end())
+        if (initial_enabled_addons.find(list[i]) != initial_enabled_addons.end())
         {
             info.enabled = true;
         }
@@ -254,8 +249,7 @@ no_home_addon_dir:
         // DEBUG
         // info.enabled = true;
 
-        LogPrintf("  found: %s%s\n", info.name.u8string().c_str(),
-                  info.enabled ? " (Enabled)" : " (Disabled)");
+        LogPrintf("  found: %s%s\n", info.name.u8string().c_str(), info.enabled ? " (Enabled)" : " (Disabled)");
 
         all_addons.push_back(info);
 
@@ -266,8 +260,14 @@ no_home_addon_dir:
         }
     }
 
-    if (list.size() == 0) { LogPrintf("DONE (none found)\n"); }
-    else { LogPrintf("DONE\n"); }
+    if (list.size() == 0)
+    {
+        LogPrintf("DONE (none found)\n");
+    }
+    else
+    {
+        LogPrintf("DONE\n");
+    }
 
     LogPrintf("\n");
 }
@@ -284,7 +284,10 @@ bool VFS_CopyFile(const char *src_name, const char *dest_name)
     char buffer[1024];
 
     PHYSFS_file *src = PHYSFS_openRead(src_name);
-    if (!src) { return false; }
+    if (!src)
+    {
+        return false;
+    }
 
     FILE *dest = fopen(dest_name, "wb");
     if (!dest)
@@ -297,14 +300,22 @@ bool VFS_CopyFile(const char *src_name, const char *dest_name)
 
     while (was_OK)
     {
-        int rlen = (int)(PHYSFS_readBytes(src, buffer, sizeof(buffer)) /
-                         sizeof(buffer));
-        if (rlen < 0) { was_OK = false; }
+        int rlen = (int)(PHYSFS_readBytes(src, buffer, sizeof(buffer)) / sizeof(buffer));
+        if (rlen < 0)
+        {
+            was_OK = false;
+        }
 
-        if (rlen <= 0) { break; }
+        if (rlen <= 0)
+        {
+            break;
+        }
 
         int wlen = fwrite(buffer, 1, rlen, dest);
-        if (wlen < rlen || ferror(dest)) { was_OK = false; }
+        if (wlen < rlen || ferror(dest))
+        {
+            was_OK = false;
+        }
     }
 
     fclose(dest);
@@ -319,7 +330,10 @@ uint8_t *VFS_LoadFile(const char *filename, int *length)
 
     PHYSFS_File *fp = PHYSFS_openRead(filename);
 
-    if (!fp) { return NULL; }
+    if (!fp)
+    {
+        return NULL;
+    }
 
     *length = (int)PHYSFS_fileLength(fp);
 
@@ -348,7 +362,10 @@ uint8_t *VFS_LoadFile(const char *filename, int *length)
 
 void VFS_FreeFile(const uint8_t *mem)
 {
-    if (mem) { delete[] mem; }
+    if (mem)
+    {
+        delete[] mem;
+    }
 }
 
 //--- editor settings ---

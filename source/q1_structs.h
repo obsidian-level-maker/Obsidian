@@ -93,7 +93,7 @@ struct dmodel_t
     float origin[3];
 
     int32_t headnode[MAX_MAP_HULLS];
-    int32_t numleafs;  // not including the solid leaf 0
+    int32_t numleafs; // not including the solid leaf 0
     int32_t firstface, numfaces;
 };
 #pragma pack(pop)
@@ -102,7 +102,7 @@ struct dmodel_t
 struct dmiptexlump_t
 {
     int32_t num_miptex;
-    int32_t data_ofs[2];  // [nummiptex]
+    int32_t data_ofs[2]; // [nummiptex]
 };
 #pragma pack(pop)
 
@@ -112,7 +112,7 @@ struct miptex_t
 {
     char     name[16];
     uint32_t width, height;
-    uint32_t offsets[MIP_LEVELS];  // four mip maps stored
+    uint32_t offsets[MIP_LEVELS]; // four mip maps stored
 };
 #pragma pack(pop)
 
@@ -143,13 +143,13 @@ enum
 struct dnode_t
 {
     int32_t planenum;
-    int16_t children[2];  // negative numbers are -(leafs+1), not nodes
+    int16_t children[2]; // negative numbers are -(leafs+1), not nodes
 
-    int16_t mins[3];  // for sphere culling
+    int16_t mins[3];     // for sphere culling
     int16_t maxs[3];
 
     uint16_t firstface;
-    uint16_t numfaces;  // counting both sides
+    uint16_t numfaces; // counting both sides
 };
 #pragma pack(pop)
 
@@ -170,7 +170,7 @@ constexpr unsigned int CLIP_SPECIAL = 0xFFF0;
 #pragma pack(push, 1)
 struct texinfo_t
 {
-    float s[4];  // x/y/z/offset
+    float s[4]; // x/y/z/offset
     float t[4];
 
     int32_t miptex;
@@ -197,7 +197,7 @@ struct dleaf_t
     int32_t contents;
     int32_t visofs;  // -1 = no visibility info
 
-    int16_t mins[3];  // for frustum culling
+    int16_t mins[3]; // for frustum culling
     int16_t maxs[3];
 
     uint16_t first_marksurf;

@@ -32,7 +32,7 @@
 #include "m_lua.h"
 #include "m_trans.h"
 #include "main.h"
-#include "q_common.h"  // qLump_c
+#include "q_common.h" // qLump_c
 #include "sys_debug.h"
 #include "sys_endian.h"
 #include "sys_macro.h"
@@ -79,7 +79,10 @@ static void NK_WriteLump(const char *name, qLump_c *lump)
 
 bool NK_StartGRP(const std::filesystem::path &filename)
 {
-    if (!GRP_OpenWrite(filename)) { return false; }
+    if (!GRP_OpenWrite(filename))
+    {
+        return false;
+    }
 
     qLump_c *info = BSP_CreateInfoLump();
     NK_WriteLump("OBLIGE.DAT", info);
@@ -88,7 +91,10 @@ bool NK_StartGRP(const std::filesystem::path &filename)
     return true;
 }
 
-void NK_EndGRP(void) { GRP_CloseWrite(); }
+void NK_EndGRP(void)
+{
+    GRP_CloseWrite();
+}
 
 void NK_BeginLevel(const char *level_name)
 {
@@ -134,9 +140,8 @@ void NK_EndLevel()
     NK_FreeLumps();
 }
 
-void NK_AddSector(int first_wall, int num_wall, int visibility, int f_h,
-                  int f_pic, int c_h, int c_pic, int c_flags, int lo_tag,
-                  int hi_tag)
+void NK_AddSector(int first_wall, int num_wall, int visibility, int f_h, int f_pic, int c_h, int c_pic, int c_flags,
+                  int lo_tag, int hi_tag)
 {
     raw_nukem_sector_t raw;
 
@@ -154,7 +159,10 @@ void NK_AddSector(int first_wall, int num_wall, int visibility, int f_h,
     raw.ceil_flags = AlignedLittleEndianU16(c_flags);
 
     // preven the space skies from killing the player
-    if (c_flags & SECTOR_F_PARALLAX) { raw.ceil_palette = 3; }
+    if (c_flags & SECTOR_F_PARALLAX)
+    {
+        raw.ceil_palette = 3;
+    }
 
     raw.visibility = visibility;
 
@@ -165,9 +173,8 @@ void NK_AddSector(int first_wall, int num_wall, int visibility, int f_h,
     nk_sectors->Append(&raw, sizeof(raw));
 }
 
-void NK_AddWall(int x, int y, int right, int back, int back_sec, int flags,
-                int pic, int mask_pic, int xscale, int yscale, int xpan,
-                int ypan, int lo_tag, int hi_tag)
+void NK_AddWall(int x, int y, int right, int back, int back_sec, int flags, int pic, int mask_pic, int xscale,
+                int yscale, int xpan, int ypan, int lo_tag, int hi_tag)
 {
     raw_nukem_wall_t raw;
 
@@ -197,8 +204,7 @@ void NK_AddWall(int x, int y, int right, int back, int back_sec, int flags,
     nk_walls->Append(&raw, sizeof(raw));
 }
 
-void NK_AddSprite(int x, int y, int z, int sec, int flags, int pic, int angle,
-                  int lo_tag, int hi_tag)
+void NK_AddSprite(int x, int y, int z, int sec, int flags, int pic, int angle, int lo_tag, int hi_tag)
 {
     raw_nukem_sprite_t raw;
 
@@ -240,7 +246,10 @@ int NK_NumSectors()
     return nk_sectors->GetSize() / sizeof(raw_nukem_sector_t);
 }
 
-int NK_NumWalls() { return nk_walls->GetSize() / sizeof(raw_nukem_wall_t); }
+int NK_NumWalls()
+{
+    return nk_walls->GetSize() / sizeof(raw_nukem_wall_t);
+}
 
 int NK_NumSprites()
 {
@@ -253,11 +262,13 @@ int NK_NumSprites()
 
 class nukem_game_interface_c : public game_interface_c
 {
-   private:
+  private:
     std::filesystem::path filename;
 
-   public:
-    nukem_game_interface_c() : filename("") {}
+  public:
+    nukem_game_interface_c() : filename("")
+    {
+    }
 
     bool Start(const char *preset);
     bool Finish(bool build_ok);
@@ -268,7 +279,7 @@ class nukem_game_interface_c : public game_interface_c
     std::filesystem::path Filename();
     std::filesystem::path ZIP_Filename();
 
-   private:
+  private:
 };
 
 bool nukem_game_interface_c::Start(const char *preset)
@@ -276,27 +287,27 @@ bool nukem_game_interface_c::Start(const char *preset)
 #ifndef CONSOLE_ONLY
     if (batch_mode)
     {
-        if (batch_output_file.is_absolute()) { filename = batch_output_file; }
+        if (batch_output_file.is_absolute())
+        {
+            filename = batch_output_file;
+        }
         else
         {
-            filename = std::filesystem::current_path().append(
-                batch_output_file.string());
+            filename = std::filesystem::current_path().append(batch_output_file.string());
         }
     }
     else
     {
-        filename = std::filesystem::current_path()
-                       .append(preset)
-                       .replace_extension("grp")
-                       .u8string()
-                       .c_str();
+        filename = std::filesystem::current_path().append(preset).replace_extension("grp").u8string().c_str();
     }
 #else
-    if (batch_output_file.is_absolute()) { filename = batch_output_file; }
+    if (batch_output_file.is_absolute())
+    {
+        filename = batch_output_file;
+    }
     else
     {
-        filename =
-            std::filesystem::current_path().append(batch_output_file.string());
+        filename = std::filesystem::current_path().append(batch_output_file.string());
     }
 #endif
 
@@ -306,7 +317,10 @@ bool nukem_game_interface_c::Start(const char *preset)
         return false;
     }
 
-    if (create_backups) { Main::BackupFile(filename); }
+    if (create_backups)
+    {
+        Main::BackupFile(filename);
+    }
 
     if (!NK_StartGRP(filename.c_str()))
     {
@@ -322,13 +336,21 @@ bool nukem_game_interface_c::Finish(bool build_ok)
     NK_EndGRP();
 
     // remove the file if an error occurred
-    if (!build_ok) { std::filesystem::remove(filename); }
-    else { Recent_AddFile(RECG_Output, filename); }
+    if (!build_ok)
+    {
+        std::filesystem::remove(filename);
+    }
+    else
+    {
+        Recent_AddFile(RECG_Output, filename);
+    }
 
     return build_ok;
 }
 
-void nukem_game_interface_c::BeginLevel() {}
+void nukem_game_interface_c::BeginLevel()
+{
+}
 
 void nukem_game_interface_c::Property(std::string key, std::string value)
 {
@@ -343,14 +365,19 @@ void nukem_game_interface_c::Property(std::string key, std::string value)
     }
     else
     {
-        LogPrintf("WARNING: unknown NUKEM property: %s=%s\n", key.c_str(),
-                  value.c_str());
+        LogPrintf("WARNING: unknown NUKEM property: %s=%s\n", key.c_str(), value.c_str());
     }
 }
 
-std::filesystem::path nukem_game_interface_c::Filename() { return filename; }
+std::filesystem::path nukem_game_interface_c::Filename()
+{
+    return filename;
+}
 
-std::filesystem::path nukem_game_interface_c::ZIP_Filename() { return ""; }
+std::filesystem::path nukem_game_interface_c::ZIP_Filename()
+{
+    return "";
+}
 
 void nukem_game_interface_c::EndLevel()
 {
@@ -368,7 +395,10 @@ void nukem_game_interface_c::EndLevel()
     level_name.clear();
 }
 
-game_interface_c *Nukem_GameObject() { return new nukem_game_interface_c(); }
+game_interface_c *Nukem_GameObject()
+{
+    return new nukem_game_interface_c();
+}
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

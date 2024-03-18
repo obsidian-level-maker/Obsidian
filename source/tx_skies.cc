@@ -47,15 +47,17 @@ uint8_t *SKY_GenGradient(int W, int H, std::vector<uint8_t> &colors)
         uint8_t *dest  = &pixels[y * W];
         uint8_t *d_end = dest + W;
 
-        while (dest < d_end) { *dest++ = color; }
+        while (dest < d_end)
+        {
+            *dest++ = color;
+        }
     }
 
     return pixels;
 }
 
-void SKY_AddClouds(unsigned long long seed, uint8_t *pixels, int W, int H,
-                   color_mapping_t *map, double powscale, double thresh,
-                   double fracdim, double squish)
+void SKY_AddClouds(unsigned long long seed, uint8_t *pixels, int W, int H, color_mapping_t *map, double powscale,
+                   double thresh, double fracdim, double squish)
 {
     // SYS_ASSERT(is_power_of_two(W))
 
@@ -71,7 +73,7 @@ void SKY_AddClouds(unsigned long long seed, uint8_t *pixels, int W, int H,
 
     for (int y = 0; y < H; y++)
     {
-        int sy = (int)(y * squish) & (W - 1);  // yes 'W'
+        int sy = (int)(y * squish) & (W - 1); // yes 'W'
 
         const float *src = &synth[sy * W];
 
@@ -100,8 +102,8 @@ void SKY_AddClouds(unsigned long long seed, uint8_t *pixels, int W, int H,
     delete[] synth;
 }
 
-void SKY_AddStars(unsigned long long seed, uint8_t *pixels, int W, int H,
-                  color_mapping_t *map, double powscale, double thresh)
+void SKY_AddStars(unsigned long long seed, uint8_t *pixels, int W, int H, color_mapping_t *map, double powscale,
+                  double thresh)
 {
     SYS_ASSERT(map->size >= 1);
     SYS_ASSERT(powscale > 0);
@@ -136,9 +138,8 @@ void SKY_AddStars(unsigned long long seed, uint8_t *pixels, int W, int H,
     }
 }
 
-void SKY_AddHills(unsigned long long seed, uint8_t *pixels, int W, int H,
-                  color_mapping_t *map, double min_h, double max_h,
-                  double powscale, double fracdim)
+void SKY_AddHills(unsigned long long seed, uint8_t *pixels, int W, int H, color_mapping_t *map, double min_h,
+                  double max_h, double powscale, double fracdim)
 {
     SYS_ASSERT(map->size >= 2);
     SYS_ASSERT(min_h <= max_h);
@@ -202,7 +203,10 @@ void SKY_AddHills(unsigned long long seed, uint8_t *pixels, int W, int H,
         int high_span = 0;
 
         int x2 = x + 1;
-        if (x2 >= W) { x2 = 0; }
+        if (x2 >= W)
+        {
+            x2 = 0;
+        }
 
         for (int z = 0; z < W - 1; z++)
         {
@@ -211,9 +215,15 @@ void SKY_AddHills(unsigned long long seed, uint8_t *pixels, int W, int H,
             int span = int(f * H);
 
             // hidden by previous spans?
-            if (span <= high_span) { continue; }
+            if (span <= high_span)
+            {
+                continue;
+            }
 
-            if (span >= H) { span = H - 1; }
+            if (span >= H)
+            {
+                span = H - 1;
+            }
 
             // determine slopes at current point
             float slope_x = height_map[z * W + x2] - f;
@@ -221,8 +231,14 @@ void SKY_AddHills(unsigned long long seed, uint8_t *pixels, int W, int H,
 
             float ity = 0.75 - (max_h - f);
 
-            if (use_slope_z) { ity += fabs(slope_z) * 60 - 0.25; }
-            else { ity += slope_x * 50; }
+            if (use_slope_z)
+            {
+                ity += fabs(slope_z) * 60 - 0.25;
+            }
+            else
+            {
+                ity += slope_x * 50;
+            }
 
             int col_idx = (int)(ity * map->size);
             col_idx     = OBSIDIAN_CLAMP(0, col_idx, map->size - 1);
@@ -241,10 +257,8 @@ void SKY_AddHills(unsigned long long seed, uint8_t *pixels, int W, int H,
     delete[] height_map;
 }
 
-void SKY_AddBuilding(unsigned long long seed, uint8_t *pixels, int W, int H,
-                     std::vector<uint8_t> &colors, int pos_x, int width,
-                     int base_h, int top_h, int win_prob, int win_w, int win_h,
-                     int antenna)
+void SKY_AddBuilding(unsigned long long seed, uint8_t *pixels, int W, int H, std::vector<uint8_t> &colors, int pos_x,
+                     int width, int base_h, int top_h, int win_prob, int win_w, int win_h, int antenna)
 {
     int numcol = (int)colors.size();
     SYS_ASSERT(numcol >= 2);
@@ -260,7 +274,10 @@ void SKY_AddBuilding(unsigned long long seed, uint8_t *pixels, int W, int H,
 
     for (y = 0; y < base_h + top_h; y++)
     {
-        if (y >= H) { break; }
+        if (y >= H)
+        {
+            break;
+        }
 
         int x1 = pos_x;
         int x2 = pos_x + width - 1;
@@ -271,7 +288,10 @@ void SKY_AddBuilding(unsigned long long seed, uint8_t *pixels, int W, int H,
             x2 = x2 - width / 8;
         }
 
-        for (x = x1; x <= x2; x++) { pixels[(H - 1 - y) * W + (x % W)] = bg; }
+        for (x = x1; x <= x2; x++)
+        {
+            pixels[(H - 1 - y) * W + (x % W)] = bg;
+        }
 
         // Windows
         if (y == win_y && y < base_h + top_h - 2)
@@ -289,8 +309,7 @@ void SKY_AddBuilding(unsigned long long seed, uint8_t *pixels, int W, int H,
                 {
                     for (int dy = 0; dy < win_h; dy++)
                     {
-                        pixels[(H - 1 - win_y + dy) * W + ((win_x + dx) % W)] =
-                            fg;
+                        pixels[(H - 1 - win_y + dy) * W + ((win_x + dx) % W)] = fg;
                     }
                 }
             }

@@ -43,16 +43,16 @@ enum quake_subformat_e
 
 class qLump_c
 {
-   public:
+  public:
     std::string name;
 
-   private:
+  private:
     std::vector<uint8_t> buffer;
 
     // when true Printf() converts '\n' to CR/LF pair
     bool crlf;
 
-   public:
+  public:
     qLump_c();
     ~qLump_c();
 
@@ -70,7 +70,7 @@ class qLump_c
     int            GetSize() const;
     const uint8_t *GetBuffer() const;
 
-   private:
+  private:
     void RawPrintf(const char *str);
 };
 
@@ -90,8 +90,7 @@ qLump_c *BSP_NewLump(int entry);
 void     BSP_AddInfoFile();
 qLump_c *BSP_CreateInfoLump();
 
-uint16_t BSP_AddPlane(float x, float y, float z, float nx, float ny, float nz,
-                      bool *flip_var = NULL);
+uint16_t BSP_AddPlane(float x, float y, float z, float nx, float ny, float nz, bool *flip_var = NULL);
 uint16_t BSP_AddPlane(const quake_plane_c *P, bool *flip_var = NULL);
 
 uint16_t BSP_AddVertex(float x, float y, float z);
@@ -158,7 +157,7 @@ struct dvertex_t
 #pragma pack(push, 1)
 struct dedge_t
 {
-    uint16_t v[2];  // vertex numbers
+    uint16_t v[2]; // vertex numbers
 };
 #pragma pack(pop)
 
@@ -167,7 +166,7 @@ struct dplane_t
 {
     float   normal[3];
     float   dist;
-    int32_t type;  // PLANE_X - PLANE_ANYZ
+    int32_t type; // PLANE_X - PLANE_ANYZ
 };
 #pragma pack(pop)
 
@@ -192,14 +191,14 @@ struct dface_t
     int16_t planenum;
     int16_t side;
 
-    int32_t firstedge;  // we must support > 64k edges
+    int32_t firstedge; // we must support > 64k edges
     int16_t numedges;
     int16_t texinfo;
 
     // lighting info
     uint8_t styles[NUM_STYLES];
 
-    int32_t lightofs;  // start of [numstyles*surfsize] samples
+    int32_t lightofs; // start of [numstyles*surfsize] samples
 };
 #pragma pack(pop)
 

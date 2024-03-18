@@ -56,28 +56,38 @@ typedef enum
 
 class quake_vertex_c
 {
-   public:
+  public:
     float x, y, z;
 
-   public:
-    quake_vertex_c() : x(0), y(0), z(0) {}
+  public:
+    quake_vertex_c() : x(0), y(0), z(0)
+    {
+    }
 
-    quake_vertex_c(float _x, float _y, float _z) : x(_x), y(_y), z(_z) {}
+    quake_vertex_c(float _x, float _y, float _z) : x(_x), y(_y), z(_z)
+    {
+    }
 
-    ~quake_vertex_c() {}
+    ~quake_vertex_c()
+    {
+    }
 };
 
 class quake_plane_c
 {
-   public:
-    float x, y, z;  // any point on the plane
+  public:
+    float x, y, z;    // any point on the plane
 
-    float nx, ny, nz;  // normal
+    float nx, ny, nz; // normal
 
-   public:
-    quake_plane_c() : x(0), y(0), z(0), nx(0), ny(0), nz(0) {}
+  public:
+    quake_plane_c() : x(0), y(0), z(0), nx(0), ny(0), nz(0)
+    {
+    }
 
-    ~quake_plane_c() {}
+    ~quake_plane_c()
+    {
+    }
 
     void SetPos(double ax, double ay, double az);
 
@@ -103,14 +113,18 @@ class quake_plane_c
 
 class quake_bbox_c
 {
-   public:
+  public:
     float mins[3];
     float maxs[3];
 
-   public:
-    quake_bbox_c() {}
+  public:
+    quake_bbox_c()
+    {
+    }
 
-    ~quake_bbox_c() {}
+    ~quake_bbox_c()
+    {
+    }
 
     void Begin();
     void End();
@@ -127,7 +141,7 @@ class quake_bbox_c
 
 class quake_face_c
 {
-   public:
+  public:
     // plane the face sits on (can be opposite of node plane)
     quake_plane_c plane;
 
@@ -137,7 +151,7 @@ class quake_face_c
 
     quake_leaf_c *leaf;
 
-    int node_side;  // 0 = front, 1 = back
+    int node_side; // 0 = front, 1 = back
 
     std::vector<quake_vertex_c> verts;
 
@@ -152,26 +166,18 @@ class quake_face_c
 
     int index;
 
-   public:
-    quake_face_c()
-        : plane(),
-          node(NULL),
-          leaf(NULL),
-          node_side(-1),
-          verts(),
-          texture(),
-          flags(0),
-          lmap(NULL),
-          index(-1)
+  public:
+    quake_face_c() : plane(), node(NULL), leaf(NULL), node_side(-1), verts(), texture(), flags(0), lmap(NULL), index(-1)
     {
     }
 
-    ~quake_face_c() {}
+    ~quake_face_c()
+    {
+    }
 
     void AddVert(float x, float y, float z);
 
-    void StoreWinding(const std::vector<quake_vertex_c> &winding,
-                      const quake_plane_c *plane, bool reverse);
+    void StoreWinding(const std::vector<quake_vertex_c> &winding, const quake_plane_c *plane, bool reverse);
 
     void SetupMatrix();
 
@@ -197,20 +203,18 @@ class quake_face_c
         return uv_mat.Calc_T(V->x, V->y, V->z);
     }
 
-    void ST_Bounds(double *min_s, double *min_t, double *max_s,
-                   double *max_t) const;
+    void ST_Bounds(double *min_s, double *min_t, double *max_s, double *max_t) const;
 
     void ComputeMidPoint(float *mx, float *my, float *mz);
 
     void GetNormal(float *vec3) const;
 
-    bool IntersectRay(float x1, float y1, float z1, float x2, float y2,
-                      float z2);
+    bool IntersectRay(float x1, float y1, float z1, float x2, float y2, float z2);
 };
 
 class quake_leaf_c
 {
-   public:
+  public:
     int medium;
 
     std::vector<quake_face_c *> faces;
@@ -225,13 +229,14 @@ class quake_leaf_c
     // for Quake2 collision handling
     std::vector<csg_brush_c *> brushes;
 
-   public:
-    quake_leaf_c(int _m)
-        : medium(_m), faces(), cluster(NULL), index(-1), brushes()
+  public:
+    quake_leaf_c(int _m) : medium(_m), faces(), cluster(NULL), index(-1), brushes()
     {
     }
 
-    ~quake_leaf_c() {}
+    ~quake_leaf_c()
+    {
+    }
 
     void AddFace(quake_face_c *F);
 
@@ -244,7 +249,7 @@ class quake_leaf_c
 
 class quake_node_c
 {
-   public:
+  public:
     quake_plane_c plane;
 
     quake_node_c *front_N;
@@ -259,7 +264,7 @@ class quake_node_c
 
     int index;
 
-   public:
+  public:
     quake_node_c();
     quake_node_c(const quake_plane_c &P);
 
@@ -279,7 +284,7 @@ class quake_node_c
 
 class quake_mapmodel_c
 {
-   public:
+  public:
     // bounding box
     float x1, y1, z1;
     float x2, y2, z2;
@@ -297,7 +302,7 @@ class quake_mapmodel_c
     // light level for whole model
     int light;
 
-   public:
+  public:
     quake_mapmodel_c();
     ~quake_mapmodel_c();
 };

@@ -397,23 +397,11 @@ std::string t_language = GetTranslatedText("AUTO");
 #endif
 #endif
 
-static std::string remove_codeset(std::string langcode)
-{
-    if (langcode.find('.') != std::string::npos)
-    {
-        auto p = std::find(langcode.begin(), langcode.end(), '.');
-        langcode.resize(p - langcode.begin());
-    }
-
-    return langcode;
-}
-
 static std::string remove_territory(std::string langcode)
 {
     if (langcode.find('_') != std::string::npos)
     {
-        langcode.resize(std::find(langcode.begin(), langcode.end(), '_') -
-                        langcode.begin());
+        langcode.resize(std::find(langcode.begin(), langcode.end(), '_') - langcode.begin());
     }
 
     return langcode;
@@ -439,309 +427,317 @@ static std::string Trans_GetUserLanguage()
     int sub     = SUBLANGID(langid);
 
     // andrewj: special check for traditional Chinese characters
-    if (primary == LANG_CHINESE &&
-        (sub == 0x1f || sub == SUBLANG_CHINESE_TRADITIONAL ||
-         sub == SUBLANG_CHINESE_HONGKONG || sub == SUBLANG_CHINESE_MACAU))
+    if (primary == LANG_CHINESE && (sub == 0x1f || sub == SUBLANG_CHINESE_TRADITIONAL ||
+                                    sub == SUBLANG_CHINESE_HONGKONG || sub == SUBLANG_CHINESE_MACAU))
     {
         return "zh_TW";
     }
 
     switch (primary)
     {
-        case LANG_AFRIKAANS:
-            return "af";
-        case LANG_ALBANIAN:
-            return "sq";
-        case LANG_ALSATIAN:
-            return "gsw";
-        case LANG_AMHARIC:
-            return "am";
-        case LANG_ARABIC:
-            return "ar";
-        case LANG_ARMENIAN:
-            return "hy";
-        case LANG_ASSAMESE:
-            return "as";
-        case LANG_AZERI:
-            return "az";
-        case LANG_BASHKIR:
-            return "ba";
-        case LANG_BASQUE:
-            return "eu";
-        case LANG_BELARUSIAN:
-            return "be";
-        case LANG_BENGALI:
-            return "bn";
-        case LANG_BRETON:
-            return "br";
-        case LANG_BULGARIAN:
-            return "bg";
-        case LANG_BURMESE:
-            return "my";
-        case LANG_CAMBODIAN:
-            return "km";
-        case LANG_CATALAN:
-            return "ca";
-        case LANG_CHEROKEE:
-            return "chr";
-        case LANG_CHINESE:
-            return "zh";
-        case LANG_CORSICAN:
-            return "co";
-        case LANG_CROATIAN:
-            return "hr";
-        case LANG_CZECH:
-            return "cs";
-        case LANG_DANISH:
-            return "da";
-        case LANG_DARI:
-            return "prs";
-        case LANG_DIVEHI:
-            return "dv";
-        case LANG_DUTCH:
-            return "nl";
-        case LANG_EDO:
-            return "bin";
-        case LANG_ENGLISH:
-            return "en";
-        case LANG_ESTONIAN:
-            return "et";
-        case LANG_FAEROESE:
-            return "fo";
-        case LANG_FARSI:
-            return "fa";
-        case LANG_FINNISH:
-            return "fi";
-        case LANG_FRENCH:
-            return "fr";
-        case LANG_FRISIAN:
-            return "fy";
-        case LANG_FULFULDE:
-            return "ff";
-        case LANG_GAELIC:
-            return "ga";
-        case LANG_GALICIAN:
-            return "gl";
-        case LANG_GEORGIAN:
-            return "ka";
-        case LANG_GERMAN:
-            return "de";
-        case LANG_GREEK:
-            return "el";
-        case LANG_GREENLANDIC:
-            return "kl";
-        case LANG_GUARANI:
-            return "gn";
-        case LANG_GUJARATI:
-            return "gu";
-        case LANG_HAUSA:
-            return "ha";
-        case LANG_HAWAIIAN:
-            return "haw";
-        case LANG_HEBREW:
-            return "he";
-        case LANG_HINDI:
-            return "hi";
-        case LANG_HUNGARIAN:
-            return "hu";
-        case LANG_IBIBIO:
-            return "nic";
-        case LANG_ICELANDIC:
-            return "is";
-        case LANG_IGBO:
-            return "ig";
-        case LANG_INDONESIAN:
-            return "id";
-        case LANG_INUKTITUT:
-            return "iu";
-        case LANG_ITALIAN:
-            return "it";
-        case LANG_JAPANESE:
-            return "ja";
-        case LANG_KANNADA:
-            return "kn";
-        case LANG_KANURI:
-            return "kr";
-        case LANG_KASHMIRI:
-            return "ks";
-        case LANG_KAZAK:
-            return "kk";
-        case LANG_KICHE:
-            return "qut";
-        case LANG_KINYARWANDA:
-            return "rw";
-        case LANG_KONKANI:
-            return "kok";
-        case LANG_KOREAN:
-            return "ko";
-        case LANG_KYRGYZ:
-            return "ky";
-        case LANG_LAO:
-            return "lo";
-        case LANG_LATIN:
-            return "la";
-        case LANG_LATVIAN:
-            return "lv";
-        case LANG_LITHUANIAN:
-            return "lt";
-        case LANG_LUXEMBOURGISH:
-            return "lb";
-        case LANG_MACEDONIAN:
-            return "mk";
-        case LANG_MALAY:
-            return "ms";
-        case LANG_MALAYALAM:
-            return "ml";
-        case LANG_MALTESE:
-            return "mt";
-        case LANG_MANIPURI:
-            return "mni";
-        case LANG_MAORI:
-            return "mi";
-        case LANG_MAPUDUNGUN:
-            return "arn";
-        case LANG_MARATHI:
-            return "mr";
-        case LANG_MOHAWK:
-            return "moh";
-        case LANG_MONGOLIAN:
-            return "mn";
-        case LANG_NEPALI:
-            return "ne";
-        case LANG_NORWEGIAN:
-            return "no";
-        case LANG_OCCITAN:
-            return "oc";
-        case LANG_ORIYA:
-            return "or";
-        case LANG_OROMO:
-            return "om";
-        case LANG_PAPIAMENTU:
-            return "pap";
-        case LANG_PASHTO:
-            return "ps";
-        case LANG_POLISH:
-            return "pl";
-        case LANG_PORTUGUESE:
-            return "pt";
-        case LANG_PUNJABI:
-            return "pa";
-        case LANG_QUECHUA:
-            return "qu";
-        case LANG_ROMANIAN:
-            return "ro";
-        case LANG_ROMANSH:
-            return "rm";
-        case LANG_RUSSIAN:
-            return "ru";
-        case LANG_SAMI:
-            return "se";
-        case LANG_SANSKRIT:
-            return "sa";
-        case LANG_SCOTTISH_GAELIC:
-            return "gd";
-        case LANG_SINDHI:
-            return "sd";
-        case LANG_SINHALESE:
-            return "si";
-        case LANG_SLOVAK:
-            return "sk";
-        case LANG_SLOVENIAN:
-            return "sl";
-        case LANG_SOMALI:
-            return "so";
-        case LANG_SORBIAN:
-            return "wen";
-        case LANG_SOTHO:
-            return "nso";
-        case LANG_SPANISH:
-            return "es";
-        case LANG_SUTU:
-            return "bnt";
-        case LANG_SWAHILI:
-            return "sw";
-        case LANG_SWEDISH:
-            return "sv";
-        case LANG_SYRIAC:
-            return "syr";
-        case LANG_TAGALOG:
-            return "tl";
-        case LANG_TAJIK:
-            return "tg";
-        case LANG_TAMAZIGHT:
-            return "ber";
-        case LANG_TAMIL:
-            return "ta";
-        case LANG_TATAR:
-            return "tt";
-        case LANG_TELUGU:
-            return "te";
-        case LANG_THAI:
-            return "th";
-        case LANG_TIBETAN:
-            return "bo";
-        case LANG_TIGRINYA:
-            return "ti";
-        case LANG_TSONGA:
-            return "ts";
-        case LANG_TSWANA:
-            return "tn";
-        case LANG_TURKISH:
-            return "tr";
-        case LANG_TURKMEN:
-            return "tk";
-        case LANG_UIGHUR:
-            return "ug";
-        case LANG_UKRAINIAN:
-            return "uk";
-        case LANG_URDU:
-            return "ur";
-        case LANG_UZBEK:
-            return "uz";
-        case LANG_VENDA:
-            return "ve";
-        case LANG_VIETNAMESE:
-            return "vi";
-        case LANG_WELSH:
-            return "cy";
-        case LANG_WOLOF:
-            return "wo";
-        case LANG_XHOSA:
-            return "xh";
-        case LANG_YAKUT:
-            return "sah";
-        case LANG_YI:
-            return "ii";
-        case LANG_YIDDISH:
-            return "yi";
-        case LANG_YORUBA:
-            return "yo";
-        case LANG_ZULU:
-            return "zu";
+    case LANG_AFRIKAANS:
+        return "af";
+    case LANG_ALBANIAN:
+        return "sq";
+    case LANG_ALSATIAN:
+        return "gsw";
+    case LANG_AMHARIC:
+        return "am";
+    case LANG_ARABIC:
+        return "ar";
+    case LANG_ARMENIAN:
+        return "hy";
+    case LANG_ASSAMESE:
+        return "as";
+    case LANG_AZERI:
+        return "az";
+    case LANG_BASHKIR:
+        return "ba";
+    case LANG_BASQUE:
+        return "eu";
+    case LANG_BELARUSIAN:
+        return "be";
+    case LANG_BENGALI:
+        return "bn";
+    case LANG_BRETON:
+        return "br";
+    case LANG_BULGARIAN:
+        return "bg";
+    case LANG_BURMESE:
+        return "my";
+    case LANG_CAMBODIAN:
+        return "km";
+    case LANG_CATALAN:
+        return "ca";
+    case LANG_CHEROKEE:
+        return "chr";
+    case LANG_CHINESE:
+        return "zh";
+    case LANG_CORSICAN:
+        return "co";
+    case LANG_CROATIAN:
+        return "hr";
+    case LANG_CZECH:
+        return "cs";
+    case LANG_DANISH:
+        return "da";
+    case LANG_DARI:
+        return "prs";
+    case LANG_DIVEHI:
+        return "dv";
+    case LANG_DUTCH:
+        return "nl";
+    case LANG_EDO:
+        return "bin";
+    case LANG_ENGLISH:
+        return "en";
+    case LANG_ESTONIAN:
+        return "et";
+    case LANG_FAEROESE:
+        return "fo";
+    case LANG_FARSI:
+        return "fa";
+    case LANG_FINNISH:
+        return "fi";
+    case LANG_FRENCH:
+        return "fr";
+    case LANG_FRISIAN:
+        return "fy";
+    case LANG_FULFULDE:
+        return "ff";
+    case LANG_GAELIC:
+        return "ga";
+    case LANG_GALICIAN:
+        return "gl";
+    case LANG_GEORGIAN:
+        return "ka";
+    case LANG_GERMAN:
+        return "de";
+    case LANG_GREEK:
+        return "el";
+    case LANG_GREENLANDIC:
+        return "kl";
+    case LANG_GUARANI:
+        return "gn";
+    case LANG_GUJARATI:
+        return "gu";
+    case LANG_HAUSA:
+        return "ha";
+    case LANG_HAWAIIAN:
+        return "haw";
+    case LANG_HEBREW:
+        return "he";
+    case LANG_HINDI:
+        return "hi";
+    case LANG_HUNGARIAN:
+        return "hu";
+    case LANG_IBIBIO:
+        return "nic";
+    case LANG_ICELANDIC:
+        return "is";
+    case LANG_IGBO:
+        return "ig";
+    case LANG_INDONESIAN:
+        return "id";
+    case LANG_INUKTITUT:
+        return "iu";
+    case LANG_ITALIAN:
+        return "it";
+    case LANG_JAPANESE:
+        return "ja";
+    case LANG_KANNADA:
+        return "kn";
+    case LANG_KANURI:
+        return "kr";
+    case LANG_KASHMIRI:
+        return "ks";
+    case LANG_KAZAK:
+        return "kk";
+    case LANG_KICHE:
+        return "qut";
+    case LANG_KINYARWANDA:
+        return "rw";
+    case LANG_KONKANI:
+        return "kok";
+    case LANG_KOREAN:
+        return "ko";
+    case LANG_KYRGYZ:
+        return "ky";
+    case LANG_LAO:
+        return "lo";
+    case LANG_LATIN:
+        return "la";
+    case LANG_LATVIAN:
+        return "lv";
+    case LANG_LITHUANIAN:
+        return "lt";
+    case LANG_LUXEMBOURGISH:
+        return "lb";
+    case LANG_MACEDONIAN:
+        return "mk";
+    case LANG_MALAY:
+        return "ms";
+    case LANG_MALAYALAM:
+        return "ml";
+    case LANG_MALTESE:
+        return "mt";
+    case LANG_MANIPURI:
+        return "mni";
+    case LANG_MAORI:
+        return "mi";
+    case LANG_MAPUDUNGUN:
+        return "arn";
+    case LANG_MARATHI:
+        return "mr";
+    case LANG_MOHAWK:
+        return "moh";
+    case LANG_MONGOLIAN:
+        return "mn";
+    case LANG_NEPALI:
+        return "ne";
+    case LANG_NORWEGIAN:
+        return "no";
+    case LANG_OCCITAN:
+        return "oc";
+    case LANG_ORIYA:
+        return "or";
+    case LANG_OROMO:
+        return "om";
+    case LANG_PAPIAMENTU:
+        return "pap";
+    case LANG_PASHTO:
+        return "ps";
+    case LANG_POLISH:
+        return "pl";
+    case LANG_PORTUGUESE:
+        return "pt";
+    case LANG_PUNJABI:
+        return "pa";
+    case LANG_QUECHUA:
+        return "qu";
+    case LANG_ROMANIAN:
+        return "ro";
+    case LANG_ROMANSH:
+        return "rm";
+    case LANG_RUSSIAN:
+        return "ru";
+    case LANG_SAMI:
+        return "se";
+    case LANG_SANSKRIT:
+        return "sa";
+    case LANG_SCOTTISH_GAELIC:
+        return "gd";
+    case LANG_SINDHI:
+        return "sd";
+    case LANG_SINHALESE:
+        return "si";
+    case LANG_SLOVAK:
+        return "sk";
+    case LANG_SLOVENIAN:
+        return "sl";
+    case LANG_SOMALI:
+        return "so";
+    case LANG_SORBIAN:
+        return "wen";
+    case LANG_SOTHO:
+        return "nso";
+    case LANG_SPANISH:
+        return "es";
+    case LANG_SUTU:
+        return "bnt";
+    case LANG_SWAHILI:
+        return "sw";
+    case LANG_SWEDISH:
+        return "sv";
+    case LANG_SYRIAC:
+        return "syr";
+    case LANG_TAGALOG:
+        return "tl";
+    case LANG_TAJIK:
+        return "tg";
+    case LANG_TAMAZIGHT:
+        return "ber";
+    case LANG_TAMIL:
+        return "ta";
+    case LANG_TATAR:
+        return "tt";
+    case LANG_TELUGU:
+        return "te";
+    case LANG_THAI:
+        return "th";
+    case LANG_TIBETAN:
+        return "bo";
+    case LANG_TIGRINYA:
+        return "ti";
+    case LANG_TSONGA:
+        return "ts";
+    case LANG_TSWANA:
+        return "tn";
+    case LANG_TURKISH:
+        return "tr";
+    case LANG_TURKMEN:
+        return "tk";
+    case LANG_UIGHUR:
+        return "ug";
+    case LANG_UKRAINIAN:
+        return "uk";
+    case LANG_URDU:
+        return "ur";
+    case LANG_UZBEK:
+        return "uz";
+    case LANG_VENDA:
+        return "ve";
+    case LANG_VIETNAMESE:
+        return "vi";
+    case LANG_WELSH:
+        return "cy";
+    case LANG_WOLOF:
+        return "wo";
+    case LANG_XHOSA:
+        return "xh";
+    case LANG_YAKUT:
+        return "sah";
+    case LANG_YI:
+        return "ii";
+    case LANG_YIDDISH:
+        return "yi";
+    case LANG_YORUBA:
+        return "yo";
+    case LANG_ZULU:
+        return "zu";
 
-        default:
-            return "UNKNOWN";
+    default:
+        return "UNKNOWN";
     }
 
-        // #elif defined(__APPLE__)
-        //
-        //    return "UNKNOWN";
+    // #elif defined(__APPLE__)
+    //
+    //    return "UNKNOWN";
 
-#else  // Unix
+#else // Unix
 
     const char *res = NULL;
 
     res = setlocale(LC_ALL, NULL /* query only */);
 
-    if (res && res[0] && res[0] != 'C') { return remove_codeset(res); }
+    if (res && res[0] && res[0] != 'C')
+    {
+        return remove_codeset(res);
+    }
 
     // check the LC_ALL and LANG environment variables
 
     res = getenv("LC_ALL");
-    if (res && res[0] && res[0] != 'C') { return remove_codeset(res); }
+    if (res && res[0] && res[0] != 'C')
+    {
+        return remove_codeset(res);
+    }
 
     res = getenv("LANG");
-    if (res && res[0] && res[0] != 'C') { return remove_codeset(res); }
+    if (res && res[0] && res[0] != 'C')
+    {
+        return remove_codeset(res);
+    }
 
     return "UNKNOWN";
 #endif
@@ -763,35 +759,43 @@ void Trans_ParseLangLine(char *line)
     char *pos;
 
     // skip any BOM (can occur at very start of file)
-    if ((uint8_t)(line[0]) == 0xEF && (uint8_t)(line[1]) == 0xBB &&
-        (uint8_t)(line[2]) == 0xBF)
+    if ((uint8_t)(line[0]) == 0xEF && (uint8_t)(line[1]) == 0xBB && (uint8_t)(line[2]) == 0xBF)
     {
         line += 3;
     }
 
     // remove CR/LF line ending
     pos = (char *)strchr(line, '\r');
-    if (pos) { pos[0] = 0; }
+    if (pos)
+    {
+        pos[0] = 0;
+    }
 
     pos = (char *)strchr(line, '\n');
-    if (pos) { pos[0] = 0; }
+    if (pos)
+    {
+        pos[0] = 0;
+    }
 
     // ignore blank lines and comments
-    if (line[0] == 0 || line[0] == '#') { return; }
+    if (line[0] == 0 || line[0] == '#')
+    {
+        return;
+    }
 
     // find separator
     pos = (char *)strchr(line, '=');
 
     if (!pos)
     {
-        return;  // uh oh
+        return; // uh oh
     }
 
     *pos++ = 0;
 
     if (strlen(line) < 2 || strlen(pos) < 2)
     {
-        return;  // uh oh
+        return; // uh oh
     }
 
     // Ok, add the language
@@ -809,12 +813,18 @@ void Trans_AddMessage(const char *before, const char *after)
     // an empty before string has special meaning in a PO file,
     // providing a bunch of meta-information (which we ignore).
 
-    if (before[0] == 0) { return; }
+    if (before[0] == 0)
+    {
+        return;
+    }
 
     // an empty after string means the translator has not yet
     // provided a translation.  hence we ignore that too.
 
-    if (after[0] == 0) { return; }
+    if (after[0] == 0)
+    {
+        return;
+    }
 
     trans_store[before] = std::string(after);
 }
@@ -859,7 +869,10 @@ struct po_parse_state_t
 
         dest = dest + d_len;
 
-        while (*p && isspace(*p)) { p++; }
+        while (*p && isspace(*p))
+        {
+            p++;
+        }
 
         if (*p++ != '"')
         {
@@ -871,8 +884,7 @@ struct po_parse_state_t
         {
             if (*p == 0)
             {
-                LogPrintf("WARNING: unterminated string on line %d\n",
-                          line_number);
+                LogPrintf("WARNING: unterminated string on line %d\n", line_number);
                 break;
             }
 
@@ -893,47 +905,45 @@ struct po_parse_state_t
 
             if (*p == 0)
             {
-                LogPrintf("WARNING: unterminated string on line %d\n",
-                          line_number);
+                LogPrintf("WARNING: unterminated string on line %d\n", line_number);
                 break;
             }
 
             switch (*p++)
             {
-                case '\\':
-                    *dest++ = '\\';
-                    break;
-                case '"':
-                    *dest++ = '"';
-                    break;
+            case '\\':
+                *dest++ = '\\';
+                break;
+            case '"':
+                *dest++ = '"';
+                break;
 
-                case 'n':
-                    *dest++ = '\n';
-                    break;
-                case 'r':
-                    *dest++ = '\r';
-                    break;
-                case 't':
-                    *dest++ = '\t';
-                    break;
+            case 'n':
+                *dest++ = '\n';
+                break;
+            case 'r':
+                *dest++ = '\r';
+                break;
+            case 't':
+                *dest++ = '\t';
+                break;
 
-                case 'a':
-                    *dest++ = '\a';
-                    break;
-                case 'b':
-                    *dest++ = '\b';
-                    break;
-                case 'f':
-                    *dest++ = '\f';
-                    break;
-                case 'v':
-                    *dest++ = '\v';
-                    break;
+            case 'a':
+                *dest++ = '\a';
+                break;
+            case 'b':
+                *dest++ = '\b';
+                break;
+            case 'f':
+                *dest++ = '\f';
+                break;
+            case 'v':
+                *dest++ = '\v';
+                break;
 
-                default:
-                    LogPrintf("WARNING: strange escape sequence on line %d\n",
-                              line_number);
-                    break;
+            default:
+                LogPrintf("WARNING: strange escape sequence on line %d\n", line_number);
+                break;
             }
         }
 
@@ -943,8 +953,14 @@ struct po_parse_state_t
 
     void Append(const char *p)
     {
-        if (has_str) { ParseString(p, str, sizeof(str)); }
-        else if (has_id) { ParseString(p, id, sizeof(id)); }
+        if (has_str)
+        {
+            ParseString(p, str, sizeof(str));
+        }
+        else if (has_id)
+        {
+            ParseString(p, id, sizeof(id));
+        }
         else
         {
             LogPrintf("WARNING: unexpected string on line %d\n", line_number);
@@ -993,15 +1009,17 @@ void Trans_Read_PO_File(FILE *fp)
         char *p = line;
 
         // skip any BOM (can occur at very start of file)
-        if ((uint8_t)(p[0]) == 0xEF && (uint8_t)(p[1]) == 0xBB &&
-            (uint8_t)(p[2]) == 0xBF)
+        if ((uint8_t)(p[0]) == 0xEF && (uint8_t)(p[1]) == 0xBB && (uint8_t)(p[2]) == 0xBF)
         {
             p += 3;
         }
 
         // NOTE: I assume whitespace at start of line is not valid
 
-        if (isspace(*p) || *p == '#') { continue; }
+        if (isspace(*p) || *p == '#')
+        {
+            continue;
+        }
 
         // extension string?
         if (*p == '"')
@@ -1013,13 +1031,21 @@ void Trans_Read_PO_File(FILE *fp)
         // if we have a pending translation, add it now
         po_state.Push();
 
-        if (strncmp(p, "msgctxt ", 8) == 0) { po_state.SetContext(p + 8); }
-        else if (strncmp(p, "msgid ", 6) == 0) { po_state.SetId(p + 6); }
-        else if (strncmp(p, "msgstr ", 7) == 0) { po_state.SetString(p + 7); }
+        if (strncmp(p, "msgctxt ", 8) == 0)
+        {
+            po_state.SetContext(p + 8);
+        }
+        else if (strncmp(p, "msgid ", 6) == 0)
+        {
+            po_state.SetId(p + 6);
+        }
+        else if (strncmp(p, "msgstr ", 7) == 0)
+        {
+            po_state.SetString(p + 7);
+        }
         else
         {
-            LogPrintf("WARNING: unsupported keyword on line %d\n",
-                      po_state.line_number);
+            LogPrintf("WARNING: unsupported keyword on line %d\n", po_state.line_number);
         }
     }
 
@@ -1104,17 +1130,15 @@ void Trans_SetLanguage()
 
     // see if the translation file exists
     std::filesystem::path path = std::filesystem::u8path(
-        StringFormat("%s/language/%s.po",
-                     install_dir.generic_u8string().c_str(), langcode.c_str()));
+        StringFormat("%s/language/%s.po", install_dir.generic_u8string().c_str(), langcode.c_str()));
 
     if (!std::filesystem::exists(path))
     {
         // if language has a territory field (like zh_TW or en_AU) then
         // try again with the plain language code.
 
-        path = std::filesystem::u8path(StringFormat(
-            "%s/language/%s.po", install_dir.generic_u8string().c_str(),
-            lang_plain.c_str()));
+        path = std::filesystem::u8path(
+            StringFormat("%s/language/%s.po", install_dir.generic_u8string().c_str(), lang_plain.c_str()));
     }
 
     FILE *fp = fopen(path.generic_u8string().c_str(), "rb");
@@ -1142,7 +1166,10 @@ std::string Trans_GetAvailCode(int idx)
     SYS_ASSERT(idx >= 0);
 
     // end of list?
-    if (idx >= (int)available_langs.size()) { return ""; }
+    if (idx >= (int)available_langs.size())
+    {
+        return "";
+    }
 
     return available_langs[idx].langcode;
 }
@@ -1152,12 +1179,18 @@ std::string Trans_GetAvailLanguage(int idx)
     SYS_ASSERT(idx >= 0);
 
     // end of list?
-    if (idx >= (int)available_langs.size()) { return ""; }
+    if (idx >= (int)available_langs.size())
+    {
+        return "";
+    }
 
     return available_langs[idx].fullname;
 }
 
-void Trans_UnInit() { trans_store.clear(); }
+void Trans_UnInit()
+{
+    trans_store.clear();
+}
 
 //----------------------------------------------------------------------
 
@@ -1170,7 +1203,10 @@ std::string mucked_up_string(std::string_view s)
     for (p = s.size() - 1, q = 0; p >= 0 && q < 250; p--, q++)
     {
         int ch = s[p];
-        if (ch == '%') { ch = '#'; }
+        if (ch == '%')
+        {
+            ch = '#';
+        }
         ch        = (isupper(ch) ? tolower(ch) : toupper(ch));
         buffer[q] = ch;
     }
@@ -1180,7 +1216,7 @@ std::string mucked_up_string(std::string_view s)
 
 const char *GetTranslatedText(const char *s)
 {
-#if 0  // DEBUGGING CRUD
+#if 0 // DEBUGGING CRUD
     return mucked_up_string(s);
 #endif
 
@@ -1188,7 +1224,10 @@ const char *GetTranslatedText(const char *s)
 
     IT = trans_store.find(s);
 
-    if (IT != trans_store.end()) { return IT->second.c_str(); }
+    if (IT != trans_store.end())
+    {
+        return IT->second.c_str();
+    }
 
     return s;
 }

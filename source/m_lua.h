@@ -34,7 +34,7 @@ typedef struct lua_State lua_State;
 void Script_Open();
 void Script_Close();
 
-#define MAX_COLOR_MAPS     9  // 1 to 9 (from Lua)
+#define MAX_COLOR_MAPS     9 // 1 to 9 (from Lua)
 #define MAX_COLORS_PER_MAP 260
 
 typedef struct
@@ -48,8 +48,7 @@ extern color_mapping_t color_mappings[MAX_COLOR_MAPS];
 // Wrappers which call Lua functions:
 
 bool ob_set_config(std::string key, std::string value);
-bool ob_set_mod_option(std::string module, std::string option,
-                       std::string value);
+bool ob_set_mod_option(std::string module, std::string option, std::string value);
 
 bool ob_read_all_config(std::vector<std::string> *lines, bool need_full);
 

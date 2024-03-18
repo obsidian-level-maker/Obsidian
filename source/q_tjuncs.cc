@@ -45,7 +45,7 @@
 
 class infinite_line_c
 {
-   public:
+  public:
     // the closest point to (0,0,0)
     float x, y, z;
 
@@ -54,10 +54,14 @@ class infinite_line_c
 
     std::vector<float> vertices;
 
-   public:
-    infinite_line_c() : vertices() {}
+  public:
+    infinite_line_c() : vertices()
+    {
+    }
 
-    ~infinite_line_c() {}
+    ~infinite_line_c()
+    {
+    }
 
     void Set(const quake_vertex_c &A, const quake_vertex_c &B)
     {
@@ -99,7 +103,10 @@ class infinite_line_c
     // make sure the normal faces a consistent direction
     void MakeConsistent()
     {
-        if (nx > NORMAL_EPSILON) { return; }
+        if (nx > NORMAL_EPSILON)
+        {
+            return;
+        }
         if (nx < -NORMAL_EPSILON)
         {
             Flip();
@@ -108,7 +115,10 @@ class infinite_line_c
 
         nx = 0;
 
-        if (ny > NORMAL_EPSILON) { return; }
+        if (ny > NORMAL_EPSILON)
+        {
+            return;
+        }
         if (ny < -NORMAL_EPSILON)
         {
             Flip();
@@ -117,7 +127,10 @@ class infinite_line_c
 
         ny = 0;
 
-        if (nz > NORMAL_EPSILON) { return; }
+        if (nz > NORMAL_EPSILON)
+        {
+            return;
+        }
         if (nz < -NORMAL_EPSILON)
         {
             Flip();
@@ -140,15 +153,13 @@ class infinite_line_c
 
     bool Match(const infinite_line_c &other) const
     {
-        if (fabs(x - other.x) > NORMAL_EPSILON ||
-            fabs(y - other.y) > NORMAL_EPSILON ||
+        if (fabs(x - other.x) > NORMAL_EPSILON || fabs(y - other.y) > NORMAL_EPSILON ||
             fabs(z - other.z) > NORMAL_EPSILON)
         {
             return false;
         }
 
-        if (fabs(nx - other.nx) > NORMAL_EPSILON ||
-            fabs(ny - other.ny) > NORMAL_EPSILON ||
+        if (fabs(nx - other.nx) > NORMAL_EPSILON || fabs(ny - other.ny) > NORMAL_EPSILON ||
             fabs(nz - other.nz) > NORMAL_EPSILON)
         {
             return false;
@@ -162,7 +173,10 @@ class infinite_line_c
         return (V.x - x) * nx + (V.y - y) * ny + (V.z - z) * nz;
     }
 
-    void AddVert(const quake_vertex_c &V) { vertices.push_back(CalcAlong(V)); }
+    void AddVert(const quake_vertex_c &V)
+    {
+        vertices.push_back(CalcAlong(V));
+    }
 
     void GetCoord(quake_vertex_c &V, float along) const
     {
@@ -173,7 +187,10 @@ class infinite_line_c
 
     void SortVerts()
     {
-        if (vertices.empty()) { return; }
+        if (vertices.empty())
+        {
+            return;
+        }
 
         std::sort(vertices.begin(), vertices.end());
 
@@ -193,7 +210,10 @@ class infinite_line_c
             vertices[d++] = vertices[s];
         }
 
-        if (d < s) { vertices.resize(d); }
+        if (d < s)
+        {
+            vertices.resize(d);
+        }
     }
 };
 
@@ -225,8 +245,7 @@ static void TJ_FreeHash()
     }
 }
 
-static infinite_line_c *TJ_HashLookup(const quake_vertex_c &A,
-                                      const quake_vertex_c &B)
+static infinite_line_c *TJ_HashLookup(const quake_vertex_c &A, const quake_vertex_c &B)
 {
     // this will create the infinite line when not already present
 
@@ -250,7 +269,10 @@ static infinite_line_c *TJ_HashLookup(const quake_vertex_c &A,
 
         infinite_line_c *test = &infinite_lines[index];
 
-        if (test->Match(IL)) { return test; }
+        if (test->Match(IL))
+        {
+            return test;
+        }
     }
 
     // not found, make new one
@@ -290,8 +312,14 @@ static void TJ_AddFaces(quake_node_c *node)
         }
     }
 
-    if (node->front_N) { TJ_AddFaces(node->front_N); }
-    if (node->back_N) { TJ_AddFaces(node->back_N); }
+    if (node->front_N)
+    {
+        TJ_AddFaces(node->front_N);
+    }
+    if (node->back_N)
+    {
+        TJ_AddFaces(node->back_N);
+    }
 }
 
 static void TJ_SortVertices()
@@ -329,15 +357,24 @@ static bool TJ_FixOneFace(quake_face_c *F)
         float along_A = IL->CalcAlong(A);
         float along_B = IL->CalcAlong(B);
 
-        if (along_A > along_B) { std::swap(along_A, along_B); }
+        if (along_A > along_B)
+        {
+            std::swap(along_A, along_B);
+        }
 
         for (unsigned int n = 0; n < IL->vertices.size(); n++)
         {
             float along_N = IL->vertices[n];
 
-            if (along_N < along_A + ALONG_EPSILON) { continue; }
+            if (along_N < along_A + ALONG_EPSILON)
+            {
+                continue;
+            }
 
-            if (along_N > along_B - ALONG_EPSILON) { break; }
+            if (along_N > along_B - ALONG_EPSILON)
+            {
+                break;
+            }
 
             // we have found a T-junction folks!
             tjunc_count++;
@@ -355,7 +392,7 @@ static bool TJ_FixOneFace(quake_face_c *F)
         }
     }
 
-    return !changed;  // OK if not changed
+    return !changed; // OK if not changed
 }
 
 static void TJ_FixFaces(quake_node_c *node)
@@ -364,12 +401,21 @@ static void TJ_FixFaces(quake_node_c *node)
     {
         for (int loop = 0; loop < 16; loop++)
         {
-            if (TJ_FixOneFace(node->faces[i])) { break; }
+            if (TJ_FixOneFace(node->faces[i]))
+            {
+                break;
+            }
         }
     }
 
-    if (node->front_N) { TJ_FixFaces(node->front_N); }
-    if (node->back_N) { TJ_FixFaces(node->back_N); }
+    if (node->front_N)
+    {
+        TJ_FixFaces(node->front_N);
+    }
+    if (node->back_N)
+    {
+        TJ_FixFaces(node->back_N);
+    }
 }
 
 void QCOM_Fix_T_Junctions()

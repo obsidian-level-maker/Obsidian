@@ -22,16 +22,25 @@
 
 fastPRNG::fastXS64 xoshiro;
 
-void XoshiroReseed(uint64_t new_seed) { xoshiro.seed(new_seed); }
+void XoshiroReseed(uint64_t new_seed)
+{
+    xoshiro.seed(new_seed);
+}
 
 uint64_t XoshiroInt()
 {
     int64_t rand_num = (int64_t)(xoshiro.xoshiro256p());
-    if (rand_num >= 0) { return rand_num; }
+    if (rand_num >= 0)
+    {
+        return rand_num;
+    }
     return -rand_num;
 }
 
-double XoshiroDouble() { return xoshiro.xoshiro256p_UNI<double>(); }
+double XoshiroDouble()
+{
+    return xoshiro.xoshiro256p_UNI<double>();
+}
 
 // This probably isn't super efficient, but it is rarely used and shouldn't make
 // a huge overall hit to performance - Dasho

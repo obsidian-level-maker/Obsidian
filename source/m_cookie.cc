@@ -45,13 +45,11 @@ static void Cookie_SetValue(std::string name, std::string value)
 {
     if (context == cookie_context_e::Load)
     {
-        DebugPrintf("CONFIG: Name: [%s] Value: [%s]\n", name.c_str(),
-                    value.c_str());
+        DebugPrintf("CONFIG: Name: [%s] Value: [%s]\n", name.c_str(), value.c_str());
     }
     else if (context == cookie_context_e::Arguments)
     {
-        DebugPrintf("ARGUMENT: Name: [%s] Value: [%s]\n", name.c_str(),
-                    value.c_str());
+        DebugPrintf("ARGUMENT: Name: [%s] Value: [%s]\n", name.c_str(), value.c_str());
     }
 
     // the new style module syntax
@@ -64,7 +62,10 @@ static void Cookie_SetValue(std::string name, std::string value)
     if (!active_module.empty())
     {
         ob_set_mod_option(active_module, name, value);
-        if (batch_mode) { ob_set_config(name, value); }
+        if (batch_mode)
+        {
+            ob_set_config(name, value);
+        }
         return;
     }
 
@@ -98,9 +99,8 @@ static void Cookie_SetValue(std::string name, std::string value)
             catch (std::out_of_range &e)
             {
                 (void)e;
-                LogPrintf(
-                    "Resulting number would be out of range. Will generate new "
-                    "seed.\n");
+                LogPrintf("Resulting number would be out of range. Will generate new "
+                          "seed.\n");
             }
         }
 
@@ -118,7 +118,10 @@ static bool Cookie_ParseLine(std::string buf)
         return true;
     }
 
-    while (std::isspace(buf[0])) { buf.erase(buf.begin()); }
+    while (std::isspace(buf[0]))
+    {
+        buf.erase(buf.begin());
+    }
 
     if (!(isalpha(buf.front()) || buf.front() == '@'))
     {
@@ -137,15 +140,24 @@ static bool Cookie_ParseLine(std::string buf)
     {
         buf.erase(buf.begin() + (pos + 1));
     }
-    while (std::isspace(buf[buf.size() - 1])) { buf.erase(buf.end() - 1); }
+    while (std::isspace(buf[buf.size() - 1]))
+    {
+        buf.erase(buf.end() - 1);
+    }
 
     std::string name  = buf.substr(0, pos);
     std::string value = buf.substr(pos + 1);
 
-    if (name.empty() || value.empty()) { return false; }
+    if (name.empty() || value.empty())
+    {
+        return false;
+    }
 
     // FIXME: Can't remember if this is needed anymore.
-    if (StringCaseCompareASCII(value, "MixItUp") == 0) { value = "Mix It Up"; }
+    if (StringCaseCompareASCII(value, "MixItUp") == 0)
+    {
+        value = "Mix It Up";
+    }
 
     Cookie_SetValue(name, value);
     return true;
@@ -179,7 +191,10 @@ bool Cookie_Load(std::filesystem::path filename)
     FILE *cookie_fp = fopen(filename.generic_u8string().c_str(), "r");
 #endif
 
-    if (!cookie_fp) { return false; }
+    if (!cookie_fp)
+    {
+        return false;
+    }
 
     LogPrintf("Loading config file: %s\n", filename.u8string().c_str());
 
@@ -191,7 +206,10 @@ bool Cookie_Load(std::filesystem::path filename)
 
     for (fgets(line.data(), 4096, cookie_fp); !line.empty();)
     {
-        if (!Cookie_ParseLine(line)) { error_count += 1; }
+        if (!Cookie_ParseLine(line))
+        {
+            error_count += 1;
+        }
         line.clear();
         fgets(line.data(), 4096, cookie_fp);
     }
@@ -202,7 +220,10 @@ bool Cookie_Load(std::filesystem::path filename)
     {
         LogPrintf("DONE (found %d parse errors)\n\n", error_count);
     }
-    else { LogPrintf("DONE.\n\n"); }
+    else
+    {
+        LogPrintf("DONE.\n\n");
+    }
 #ifdef __APPLE__
     setlocale(LC_NUMERIC, numeric_locale.c_str());
 #elif __unix__
@@ -265,19 +286,16 @@ bool Cookie_Save(std::filesystem::path filename)
 
     if (!cookie_fp)
     {
-        LogPrintf("Error: unable to create file: %s\n(%s)\n\n",
-                  filename.u8string().c_str(), strerror(errno));
+        LogPrintf("Error: unable to create file: %s\n(%s)\n\n", filename.u8string().c_str(), strerror(errno));
         return false;
     }
 
     LogPrintf("Saving config file...\n");
 
     // header...
-    fprintf(cookie_fp, "-- CONFIG FILE : OBSIDIAN %s \"%s\"\n",
-            OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str());
+    fprintf(cookie_fp, "-- CONFIG FILE : OBSIDIAN %s \"%s\"\n", OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str());
     fprintf(cookie_fp, "-- Build %s\n", OBSIDIAN_VERSION);
-    fprintf(cookie_fp,
-            "-- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n");
+    fprintf(cookie_fp, "-- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n");
     fprintf(cookie_fp, "-- %s\n\n", OBSIDIAN_WEBSITE);
 
     // settings...
@@ -318,9 +336,15 @@ void Cookie_ParseArguments(void)
     {
         const std::string &arg = argv::list[i];
 
-        if (arg[0] == '-') { continue; }
+        if (arg[0] == '-')
+        {
+            continue;
+        }
 
-        if (arg[0] == '{' || arg[0] == '}') { continue; }
+        if (arg[0] == '{' || arg[0] == '}')
+        {
+            continue;
+        }
 
         if (strcmp(arg.c_str(), "@@") == 0)
         {
@@ -329,9 +353,7 @@ void Cookie_ParseArguments(void)
         }
 
         // support an isolated "=", like in: FOO = 3
-        if (i + 2 < argv::list.size() &&
-            strcmp(argv::list[i + 1].c_str(), "=") == 0 &&
-            argv::list[i + 2][0] != '-')
+        if (i + 2 < argv::list.size() && strcmp(argv::list[i + 1].c_str(), "=") == 0 && argv::list[i + 2][0] != '-')
         {
             Cookie_SetValue(arg, argv::list[i + 2]);
             i += 2;
@@ -342,7 +364,10 @@ void Cookie_ParseArguments(void)
         if (!eq_pos)
         {
             // allow module names to omit the (rather useless) value
-            if (arg[0] == '@') { Cookie_SetValue(arg, "1"); }
+            if (arg[0] == '@')
+            {
+                Cookie_SetValue(arg, "1");
+            }
 
             continue;
         }
@@ -372,23 +397,32 @@ void Cookie_ParseArguments(void)
 
 class RecentFiles_c
 {
-   public:
+  public:
     int size;
 
     // newest is at index [0]
     std::filesystem::path filenames[MAX_RECENT];
 
-   public:
+  public:
     RecentFiles_c() : size(0)
     {
-        for (int k = 0; k < MAX_RECENT; k++) { filenames[k].clear(); }
+        for (int k = 0; k < MAX_RECENT; k++)
+        {
+            filenames[k].clear();
+        }
     }
 
-    ~RecentFiles_c() { clear(); }
+    ~RecentFiles_c()
+    {
+        clear();
+    }
 
     void clear()
     {
-        for (int k = 0; k < size; k++) { filenames[k].clear(); }
+        for (int k = 0; k < size; k++)
+        {
+            filenames[k].clear();
+        }
 
         size = 0;
     }
@@ -400,14 +434,13 @@ class RecentFiles_c
 
         for (int k = 0; k < size; k++)
         {
-            if (a.lexically_normal() ==
-                filenames[k].filename().lexically_normal())
+            if (a.lexically_normal() == filenames[k].filename().lexically_normal())
             {
                 return k;
             }
         }
 
-        return -1;  // not found
+        return -1; // not found
     }
 
     void erase(int index)
@@ -428,10 +461,16 @@ class RecentFiles_c
 
     void push_front(const std::filesystem::path &file)
     {
-        if (size >= MAX_RECENT) { erase(MAX_RECENT - 1); }
+        if (size >= MAX_RECENT)
+        {
+            erase(MAX_RECENT - 1);
+        }
 
         // shift elements up
-        for (int k = size - 1; k >= 0; k--) { filenames[k + 1] = filenames[k]; }
+        for (int k = size - 1; k >= 0; k--)
+        {
+            filenames[k + 1] = filenames[k];
+        }
 
         filenames[0] = file;
 
@@ -443,7 +482,10 @@ class RecentFiles_c
         // ensure filename (without any path) is unique
         int f = find(file);
 
-        if (f >= 0) { erase(f); }
+        if (f >= 0)
+        {
+            erase(f);
+        }
 
         push_front(file);
     }
@@ -452,7 +494,10 @@ class RecentFiles_c
     {
         int f = find(file);
 
-        if (f >= 0) { erase(f); }
+        if (f >= 0)
+        {
+            erase(f);
+        }
     }
 
     void write_all(FILE *fp, std::string keyword) const
@@ -463,16 +508,21 @@ class RecentFiles_c
 
         for (int k = size - 1; k >= 0; k--)
         {
-            fprintf(fp, "%s = %s\n", keyword.c_str(),
-                    filenames[k].generic_u8string().c_str());
+            fprintf(fp, "%s = %s\n", keyword.c_str(), filenames[k].generic_u8string().c_str());
         }
 
-        if (size > 0) { fprintf(fp, "\n"); }
+        if (size > 0)
+        {
+            fprintf(fp, "\n");
+        }
     }
 
     bool get_name(int index, std::filesystem::path buffer, bool for_menu) const
     {
-        if (index >= size) { return false; }
+        if (index >= size)
+        {
+            return false;
+        }
 
         const std::filesystem::path &name = filenames[index];
 
@@ -480,7 +530,10 @@ class RecentFiles_c
         {
             buffer = StringFormat("%-.32s", name.filename().c_str());
         }
-        else { buffer = name; }
+        else
+        {
+            buffer = name;
+        }
 
         return true;
     }
@@ -514,17 +567,20 @@ void Recent_AddFile(int group, std::filesystem::path filename)
 
     switch (group)
     {
-        case RECG_Output:
-            recent_wads.insert(filename);
-            break;
+    case RECG_Output:
+        recent_wads.insert(filename);
+        break;
 
-        case RECG_Config:
-            recent_configs.insert(filename);
-            break;
+    case RECG_Config:
+        recent_configs.insert(filename);
+        break;
     }
 
     // push to disk now -- why wait?
-    if (!batch_mode) { Options_Save(options_file); }
+    if (!batch_mode)
+    {
+        Options_Save(options_file);
+    }
 }
 
 void Recent_RemoveFile(int group, std::string filename)
@@ -533,17 +589,20 @@ void Recent_RemoveFile(int group, std::string filename)
 
     switch (group)
     {
-        case RECG_Output:
-            recent_wads.remove(filename);
-            break;
+    case RECG_Output:
+        recent_wads.remove(filename);
+        break;
 
-        case RECG_Config:
-            recent_configs.remove(filename);
-            break;
+    case RECG_Config:
+        recent_configs.remove(filename);
+        break;
     }
 
     // push to disk now -- why wait?
-    if (!batch_mode) { Options_Save(options_file); }
+    if (!batch_mode)
+    {
+        Options_Save(options_file);
+    }
 }
 
 bool Recent_GetName(int group, int index, std::string name_buf, bool for_menu)
@@ -553,11 +612,11 @@ bool Recent_GetName(int group, int index, std::string name_buf, bool for_menu)
 
     switch (group)
     {
-        case RECG_Output:
-            return recent_wads.get_name(index, name_buf, for_menu);
+    case RECG_Output:
+        return recent_wads.get_name(index, name_buf, for_menu);
 
-        case RECG_Config:
-            return recent_configs.get_name(index, name_buf, for_menu);
+    case RECG_Config:
+        return recent_configs.get_name(index, name_buf, for_menu);
     }
 
     return false;

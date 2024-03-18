@@ -53,7 +53,8 @@ void machioize(config *c, float amount)
     int    a;
     for (m = c->genus_anchor; m; m = m->next)
     {
-        if (!(m->bits & MONSTER)) continue;
+        if (!(m->bits & MONSTER))
+            continue;
         for (a = 0; a <= 2; a++)
         {
             m->ammo_to_kill[a] *= amount;
@@ -74,35 +75,42 @@ bool slump_main(std::filesystem::path filename)
     dumphandle dh;
     float      macho_amount = 1;
 
-    printf(
-        "SLUMP version %d.%03d.%02d -- by Sam Trenholme, "
-        "http://www.samiam.org\n"
-        "based on SLIGE by Dave Chess, dmchess@aol.com\n\n",
-        SOURCE_VERSION, SOURCE_SERIAL, SOURCE_PATCHLEVEL);
+    printf("SLUMP version %d.%03d.%02d -- by Sam Trenholme, "
+           "http://www.samiam.org\n"
+           "based on SLIGE by Dave Chess, dmchess@aol.com\n\n",
+           SOURCE_VERSION, SOURCE_SERIAL, SOURCE_PATCHLEVEL);
 
     ThisConfig = get_config(filename);
-    if (ThisConfig == NULL) { return false; }
+    if (ThisConfig == NULL)
+    {
+        return false;
+    }
     if (ThisConfig->cwadonly)
     {
         dh = OpenDump(ThisConfig);
-        if (dh == NULL) return false;
+        if (dh == NULL)
+            return false;
         record_custom_textures(dh, ThisConfig);
-        record_custom_flats(dh, ThisConfig, SLUMP_TRUE); /* record all flats */
+        record_custom_flats(dh, ThisConfig, SLUMP_TRUE);   /* record all flats */
         record_custom_patches(dh, ThisConfig, SLUMP_TRUE); /* and patches */
         CloseDump(dh);
         printf("\nDone: wrote customization WAD %s.\n", ThisConfig->outfile);
         return true;
     }
     dh = OpenDump(ThisConfig);
-    if (dh == NULL) return false;
-    if (ThisConfig->do_slinfo) make_slinfo(dh, ThisConfig);
-    if (ThisConfig->do_music) make_music(dh, ThisConfig);
+    if (dh == NULL)
+        return false;
+    if (ThisConfig->do_slinfo)
+        make_slinfo(dh, ThisConfig);
+    if (ThisConfig->do_music)
+        make_music(dh, ThisConfig);
 
     for (i = 0; i < ThisConfig->levelcount; i++)
     {
         if ((!ThisHaa) || (ThisConfig->mission == 1))
         {
-            if (ThisHaa) free(ThisHaa);
+            if (ThisHaa)
+                free(ThisHaa);
             ThisHaa = starting_haa();
         }
         if ((i + 1) == (ThisConfig->levelcount))
@@ -114,8 +122,7 @@ bool slump_main(std::filesystem::path filename)
         macho_amount = 1 - ((float)(ThisConfig->map) * .008);
         macho_amount -= ((float)(ThisConfig->mission) * .025);
         NewLevel(&ThisLevel, ThisHaa, ThisConfig);
-        DumpLevel(dh, ThisConfig, &ThisLevel, ThisConfig->episode,
-                  ThisConfig->mission, ThisConfig->map);
+        DumpLevel(dh, ThisConfig, &ThisLevel, ThisConfig->episode, ThisConfig->mission, ThisConfig->map);
         if (need_secret_level(ThisConfig))
         {
             free(ThisHaa);
@@ -125,8 +132,10 @@ bool slump_main(std::filesystem::path filename)
             hardwired_nonswitch_nontheme_config(ThisConfig);
             make_secret_level(dh, ThisHaa, ThisConfig);
         }
-        if (ThisConfig->map) ThisConfig->map++;
-        if (ThisConfig->mission) ThisConfig->mission++;
+        if (ThisConfig->map)
+            ThisConfig->map++;
+        if (ThisConfig->mission)
+            ThisConfig->mission++;
         if (ThisConfig->mission == 9)
         { /* Around the corner */
             ThisConfig->episode++;

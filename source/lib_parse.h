@@ -37,10 +37,14 @@ enum TokenKind
 
 class Lexer
 {
-   public:
-    Lexer(const std::string &data) : data_(data), pos_(0), line_(1) {}
+  public:
+    Lexer(const std::string &data) : data_(data), pos_(0), line_(1)
+    {
+    }
 
-    ~Lexer() {}
+    ~Lexer()
+    {
+    }
 
     // parse the next token, storing contents into given string.
     // returns kTokenEOF at the end of the data, and kTokenError when a
@@ -67,7 +71,7 @@ class Lexer
     // get current lexer position
     size_t GetPos();
 
-   private:
+  private:
     const std::string &data_;
 
     size_t pos_;
@@ -87,7 +91,7 @@ int    LexInteger(const std::string &s);
 double LexDouble(const std::string &s);
 bool   LexBoolean(const std::string &s);
 
-}  // namespace ajparse
+} // namespace ajparse
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

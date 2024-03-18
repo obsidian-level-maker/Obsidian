@@ -38,7 +38,7 @@ class edge_c;
 
 class vertex_c
 {
-   public:
+  public:
     int index;
 
     // coordinates
@@ -50,8 +50,10 @@ class vertex_c
     // set of wall_tips
     wall_tip_c *tip_set;
 
-   public:
-    vertex_c() : index(-1), x(), y(), ref_count(), tip_set() {}
+  public:
+    vertex_c() : index(-1), x(), y(), ref_count(), tip_set()
+    {
+    }
 
     sector_c *CheckOpen(double dx, double dy) const;
 
@@ -63,7 +65,7 @@ class vertex_c
 
 class sector_c
 {
-   public:
+  public:
     int index;
 
     // heights
@@ -85,25 +87,15 @@ class sector_c
     int num_floors;
     int floor_start;
 
-    char is_dummy;  // private
+    char is_dummy; // private
 
     // UDMF support
     std::unordered_map<std::string, std::string> misc_vals;
 
-   public:
+  public:
     sector_c()
-        : index(-1),
-          floor_h(),
-          ceil_h(),
-          floor_tex(),
-          ceil_tex(),
-          light(),
-          special(),
-          tag(),
-          edge_list(),
-          num_floors(),
-          floor_start(),
-          is_dummy()
+        : index(-1), floor_h(), ceil_h(), floor_tex(), ceil_tex(), light(), special(), tag(), edge_list(), num_floors(),
+          floor_start(), is_dummy()
     {
     }
 
@@ -114,7 +106,7 @@ class sector_c
 
 class sidedef_c
 {
-   public:
+  public:
     int index;
 
     // adjacent sector.  Can be NULL (invalid sidedef)
@@ -131,29 +123,22 @@ class sidedef_c
     // UDMF support
     std::unordered_map<std::string, std::string> misc_vals;
 
-   public:
-    sidedef_c()
-        : index(-1),
-          sector(),
-          x_offset(),
-          y_offset(),
-          upper_tex(),
-          lower_tex(),
-          mid_tex()
+  public:
+    sidedef_c() : index(-1), sector(), x_offset(), y_offset(), upper_tex(), lower_tex(), mid_tex()
     {
     }
 };
 
 class linedef_c
 {
-   public:
+  public:
     int index;
 
     vertex_c *start;
     vertex_c *end;
 
-    sidedef_c *right;  // right side
-    sidedef_c *left;   // left side, or NULL if none
+    sidedef_c *right; // right side
+    sidedef_c *left;  // left side, or NULL if none
 
     char is_border;
 
@@ -167,25 +152,15 @@ class linedef_c
     // UDMF support
     std::unordered_map<std::string, std::string> misc_vals;
 
-   public:
-    linedef_c()
-        : index(-1),
-          start(),
-          end(),
-          right(),
-          left(),
-          is_border(),
-          flags(),
-          special(),
-          tag(),
-          args()
+  public:
+    linedef_c() : index(-1), start(), end(), right(), left(), is_border(), flags(), special(), tag(), args()
     {
     }
 };
 
 class thing_c
 {
-   public:
+  public:
     int index;
 
     int x, y;
@@ -202,25 +177,15 @@ class thing_c
     // UDMF support
     std::unordered_map<std::string, std::string> misc_vals;
 
-   public:
-    thing_c()
-        : index(-1),
-          x(),
-          y(),
-          type(),
-          options(),
-          angle(),
-          tid(),
-          height(),
-          special(),
-          args()
+  public:
+    thing_c() : index(-1), x(), y(), type(), options(), angle(), tid(), height(), special(), args()
     {
     }
 };
 
 class edge_c
 {
-   public:
+  public:
     int index;
 
     // link for list
@@ -244,7 +209,7 @@ class edge_c
     // gets split, the partner must also be split.
     edge_c *partner;
 
-   public:  // really private
+  public: // really private
     // precomputed data for faster calculations
     double psx, psy;
     double pex, pey;
@@ -261,16 +226,8 @@ class edge_c
     // can be NULL (e.g. for edges added around the map)
     linedef_c *source_line;
 
-   public:
-    edge_c()
-        : next(),
-          start(),
-          end(),
-          linedef(),
-          sector(),
-          side(),
-          partner(),
-          source_line()
+  public:
+    edge_c() : next(), start(), end(), linedef(), sector(), side(), partner(), source_line()
     {
     }
 
@@ -284,7 +241,7 @@ class edge_c
 
 class polygon_c
 {
-   public:
+  public:
     int index;
 
     // sector this belongs to (possibly 'void_sector')
@@ -296,8 +253,10 @@ class polygon_c
     double mid_x;
     double mid_y;
 
-   public:
-    polygon_c() : sector(), edge_list(), mid_x(), mid_y() {}
+  public:
+    polygon_c() : sector(), edge_list(), mid_x(), mid_y()
+    {
+    }
 
     bool ContainsPoint(double x, double y) const;
 
@@ -362,7 +321,7 @@ thing_c   *Thing(int index);
 
 polygon_c *Polygon(int index);
 
-}  // namespace ajpoly
+} // namespace ajpoly
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

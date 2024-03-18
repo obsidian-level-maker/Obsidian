@@ -61,17 +61,13 @@ void HeaderPrintf(const char *str, ...);
 
 void AddVertex(int x, int y);
 
-void AddSector(int f_h, std::string f_tex, int c_h, std::string c_tex,
-               int light, int special, int tag);
+void AddSector(int f_h, std::string f_tex, int c_h, std::string c_tex, int light, int special, int tag);
 
-void AddSidedef(int sector, std::string l_tex, std::string m_tex,
-                std::string u_tex, int x_offset, int y_offset);
+void AddSidedef(int sector, std::string l_tex, std::string m_tex, std::string u_tex, int x_offset, int y_offset);
 
-void AddLinedef(int vert1, int vert2, int side1, int side2, int type, int flags,
-                int tag, const uint8_t *args);
+void AddLinedef(int vert1, int vert2, int side1, int side2, int type, int flags, int tag, const uint8_t *args);
 
-void AddThing(int x, int y, int h, int type, int angle, int options, int tid,
-              uint8_t special, const uint8_t *args);
+void AddThing(int x, int y, int h, int type, int angle, int options, int tid, uint8_t special, const uint8_t *args);
 
 // v094 stuff (Duh)
 int v094_begin_level(lua_State *L);
@@ -113,9 +109,9 @@ enum thingflag_e
     MTF_NotDM   = 32,
     MTF_NotCOOP = 64,
 
-    MTF_Friend   = 128,  // MBF
-    MTF_Reserved = 256,  // BOOM
-    MTF_Dormant  = 512,  // Eternity
+    MTF_Friend   = 128, // MBF
+    MTF_Reserved = 256, // BOOM
+    MTF_Dormant  = 512, // Eternity
 };
 
 constexpr unsigned int MTF_EDGE_EXFLOOR_MASK  = 0x3C00;
@@ -124,7 +120,7 @@ constexpr unsigned int MTF_EDGE_EXFLOOR_SHIFT = 10;
 #pragma pack(push, 1)
 struct raw_behavior_header_t
 {
-    char marker[4];  // 'ACS' 0
+    char marker[4]; // 'ACS' 0
 
     uint32_t offset;
 
@@ -155,9 +151,9 @@ struct raw_gl_vertex_t
 
 constexpr unsigned int IS_GL_VERT = 0x8000;
 
-}  // namespace Doom
+} // namespace Doom
 
-#endif  // G_DOOM_H_
+#endif // G_DOOM_H_
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

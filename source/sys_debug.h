@@ -34,11 +34,9 @@ void LogEnableDebug(bool enable);
 void LogEnableTerminal(bool enable);
 
 #ifdef __GNUC__
-void LogPrintf(const char *message, ...) __attribute__((format(printf, 1, 2)));
-void DebugPrintf(const char *message, ...)
-    __attribute__((format(printf, 1, 2)));
-[[noreturn]] void ErrorPrintf(const char *message, ...)
-    __attribute__((format(printf, 1, 2)));
+void              LogPrintf(const char *message, ...) __attribute__((format(printf, 1, 2)));
+void              DebugPrintf(const char *message, ...) __attribute__((format(printf, 1, 2)));
+[[noreturn]] void ErrorPrintf(const char *message, ...) __attribute__((format(printf, 1, 2)));
 #else
 void              LogPrintf(const char *message, ...);
 void              DebugPrintf(const char *message, ...);
@@ -46,16 +44,13 @@ void              DebugPrintf(const char *message, ...);
 #endif
 
 #if defined(__GNUC__)
-#define SYS_ASSERT(cond)                                                     \
-    ((cond) ? (void)0                                                        \
-            : ErrorPrintf("Assertion (%s) failed\nIn function %s (%s:%d)\n", \
-                          #cond, __func__, __FILE__, __LINE__))
+#define SYS_ASSERT(cond)                                                                                               \
+    ((cond) ? (void)0                                                                                                  \
+            : ErrorPrintf("Assertion (%s) failed\nIn function %s (%s:%d)\n", #cond, __func__, __FILE__, __LINE__))
 
 #else
-#define SYS_ASSERT(cond)                                                   \
-    ((cond) ? (void)0                                                      \
-            : ErrorPrintf("Assertion (%s) failed\nIn file %s:%d\n", #cond, \
-                          __FILE__, __LINE__))
+#define SYS_ASSERT(cond)                                                                                               \
+    ((cond) ? (void)0 : ErrorPrintf("Assertion (%s) failed\nIn file %s:%d\n", #cond, __FILE__, __LINE__))
 
 #endif
 

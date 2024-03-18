@@ -30,8 +30,7 @@
 #include "main.h"
 #include "sys_debug.h"
 
-tga_image_c::tga_image_c(int W, int H)
-    : width(W), height(H), opacity(OPAC_UNKNOWN)
+tga_image_c::tga_image_c(int W, int H) : width(W), height(H), opacity(OPAC_UNKNOWN)
 {
     pixels = new rgb_color_t[W * H];
 }
@@ -79,7 +78,10 @@ tga_image_c *TGA_LoadImage(const char *path)
 
     uint8_t *buffer = VFS_LoadFile(path, &length);
 
-    if (!buffer) { return NULL; }
+    if (!buffer)
+    {
+        return NULL;
+    }
 
     uint8_t *buf_p = buffer;
     ///    uint8_t * buf_end = buffer + length;
@@ -110,16 +112,13 @@ tga_image_c *TGA_LoadImage(const char *path)
 
     if (targa_header.id_length != 0)
     {
-        buf_p += targa_header.id_length;  // skip TARGA image comment
+        buf_p += targa_header.id_length; // skip TARGA image comment
     }
 
-    if (targa_header.image_type != TGA_INDEXED &&
-        targa_header.image_type != TGA_INDEXED_RLE &&
-        targa_header.image_type != TGA_RGB &&
-        targa_header.image_type != TGA_RGB_RLE)
+    if (targa_header.image_type != TGA_INDEXED && targa_header.image_type != TGA_INDEXED_RLE &&
+        targa_header.image_type != TGA_RGB && targa_header.image_type != TGA_RGB_RLE)
     {
-        ErrorPrintf("Bad tga file: type {} is not supported\n",
-                    targa_header.image_type);
+        ErrorPrintf("Bad tga file: type {} is not supported\n", targa_header.image_type);
     }
 
     int width  = targa_header.width;
@@ -135,15 +134,14 @@ tga_image_c *TGA_LoadImage(const char *path)
     img->width  = width;
     img->height = height;
 
-    bool is_masked  = false;  // opacity testing
-    bool is_complex = false;  //
+    bool is_masked  = false; // opacity testing
+    bool is_complex = false; //
 
     // decode the palette, if any
 
     rgb_color_t palette[256];
 
-    if (targa_header.image_type == TGA_INDEXED ||
-        targa_header.image_type == TGA_INDEXED_RLE)
+    if (targa_header.image_type == TGA_INDEXED || targa_header.image_type == TGA_INDEXED_RLE)
     {
         if (targa_header.colormap_type != 1)
         {
@@ -172,7 +170,10 @@ tga_image_c *TGA_LoadImage(const char *path)
             uint8_t r = *buf_p++;
             uint8_t a = 255;
 
-            if (targa_header.colormap_bits == 32) { a = *buf_p++; }
+            if (targa_header.colormap_bits == 32)
+            {
+                a = *buf_p++;
+            }
 
             palette[n] = MAKE_RGBA(r, g, b, a);
         }
@@ -183,7 +184,7 @@ tga_image_c *TGA_LoadImage(const char *path)
     rgb_color_t *dest = img->pixels;
     rgb_color_t *p;
 
-    if (targa_header.image_type == TGA_RGB)  // Uncompressed, RGB images
+    if (targa_header.image_type == TGA_RGB) // Uncompressed, RGB images
     {
         if (targa_header.pixel_bits != 24 && targa_header.pixel_bits != 32)
         {
@@ -201,17 +202,25 @@ tga_image_c *TGA_LoadImage(const char *path)
                 uint8_t r = *buf_p++;
                 uint8_t a = 255;
 
-                if (targa_header.pixel_bits == 32) { a = *buf_p++; }
+                if (targa_header.pixel_bits == 32)
+                {
+                    a = *buf_p++;
+                }
 
                 *p++ = MAKE_RGBA(r, g, b, a);
 
-                if (a == 0) { is_masked = true; }
-                else if (a != 255) { is_complex = true; }
+                if (a == 0)
+                {
+                    is_masked = true;
+                }
+                else if (a != 255)
+                {
+                    is_complex = true;
+                }
             }
         }
     }
-    else if (targa_header.image_type ==
-             TGA_RGB_RLE)  // Runlength encoded RGB images
+    else if (targa_header.image_type == TGA_RGB_RLE) // Runlength encoded RGB images
     {
         if (targa_header.pixel_bits != 24 && targa_header.pixel_bits != 32)
         {
@@ -231,17 +240,26 @@ tga_image_c *TGA_LoadImage(const char *path)
                 packet_header = *buf_p++;
                 packet_size   = 1 + (packet_header & 0x7f);
 
-                if (packet_header & 0x80)  // run-length packet
+                if (packet_header & 0x80) // run-length packet
                 {
                     b = *buf_p++;
                     g = *buf_p++;
                     r = *buf_p++;
                     a = 255;
 
-                    if (targa_header.pixel_bits == 32) { a = *buf_p++; }
+                    if (targa_header.pixel_bits == 32)
+                    {
+                        a = *buf_p++;
+                    }
 
-                    if (a == 0) { is_masked = true; }
-                    else if (a != 255) { is_complex = true; }
+                    if (a == 0)
+                    {
+                        is_masked = true;
+                    }
+                    else if (a != 255)
+                    {
+                        is_complex = true;
+                    }
 
                     for (int j = 0; j < packet_size; j++)
                     {
@@ -249,17 +267,23 @@ tga_image_c *TGA_LoadImage(const char *path)
 
                         x++;
 
-                        if (x == width)  // run spans across edge
+                        if (x == width) // run spans across edge
                         {
                             x = 0;
-                            if (y > 0) { y--; }
-                            else { goto breakOut; }
+                            if (y > 0)
+                            {
+                                y--;
+                            }
+                            else
+                            {
+                                goto breakOut;
+                            }
 
                             p = dest + y * width;
                         }
                     }
                 }
-                else  // not a run-length packet
+                else // not a run-length packet
                 {
                     for (int j = 0; j < packet_size; j++)
                     {
@@ -268,20 +292,35 @@ tga_image_c *TGA_LoadImage(const char *path)
                         r = *buf_p++;
                         a = 255;
 
-                        if (targa_header.pixel_bits == 32) { a = *buf_p++; }
+                        if (targa_header.pixel_bits == 32)
+                        {
+                            a = *buf_p++;
+                        }
 
                         *p++ = MAKE_RGBA(r, g, b, a);
 
-                        if (a == 0) { is_masked = true; }
-                        else if (a != 255) { is_complex = true; }
+                        if (a == 0)
+                        {
+                            is_masked = true;
+                        }
+                        else if (a != 255)
+                        {
+                            is_complex = true;
+                        }
 
                         x++;
 
-                        if (x == width)  // pixel packet run spans across edge
+                        if (x == width) // pixel packet run spans across edge
                         {
                             x = 0;
-                            if (y > 0) { y--; }
-                            else { goto breakOut; }
+                            if (y > 0)
+                            {
+                                y--;
+                            }
+                            else
+                            {
+                                goto breakOut;
+                            }
 
                             p = dest + y * width;
                         }
@@ -291,8 +330,7 @@ tga_image_c *TGA_LoadImage(const char *path)
         breakOut:;
         }
     }
-    else if (targa_header.image_type ==
-             TGA_INDEXED)  // Uncompressed, colormapped images
+    else if (targa_header.image_type == TGA_INDEXED) // Uncompressed, colormapped images
     {
         for (int y = height - 1; y >= 0; y--)
         {
@@ -306,13 +344,18 @@ tga_image_c *TGA_LoadImage(const char *path)
 
                 uint8_t a = RGB_ALPHA(col);
 
-                if (a == 0) { is_masked = true; }
-                else if (a != 255) { is_complex = true; }
+                if (a == 0)
+                {
+                    is_masked = true;
+                }
+                else if (a != 255)
+                {
+                    is_complex = true;
+                }
             }
         }
     }
-    else if (targa_header.image_type ==
-             TGA_INDEXED_RLE)  // Runlength encoded colormapped image
+    else if (targa_header.image_type == TGA_INDEXED_RLE) // Runlength encoded colormapped image
     {
         uint8_t packet_header, packet_size;
 
@@ -325,14 +368,20 @@ tga_image_c *TGA_LoadImage(const char *path)
                 packet_header = *buf_p++;
                 packet_size   = 1 + (packet_header & 0x7f);
 
-                if (packet_header & 0x80)  // run-length packet
+                if (packet_header & 0x80) // run-length packet
                 {
                     rgb_color_t col = palette[*buf_p++];
 
                     uint8_t a = RGB_ALPHA(col);
 
-                    if (a == 0) { is_masked = true; }
-                    else if (a != 255) { is_complex = true; }
+                    if (a == 0)
+                    {
+                        is_masked = true;
+                    }
+                    else if (a != 255)
+                    {
+                        is_complex = true;
+                    }
 
                     for (int j = 0; j < packet_size; j++)
                     {
@@ -340,17 +389,23 @@ tga_image_c *TGA_LoadImage(const char *path)
 
                         x++;
 
-                        if (x == width)  // run spans across edge
+                        if (x == width) // run spans across edge
                         {
                             x = 0;
-                            if (y > 0) { y--; }
-                            else { goto breakOut2; }
+                            if (y > 0)
+                            {
+                                y--;
+                            }
+                            else
+                            {
+                                goto breakOut2;
+                            }
 
                             p = dest + y * width;
                         }
                     }
                 }
-                else  // not a run-length packet
+                else // not a run-length packet
                 {
                     for (int j = 0; j < packet_size; j++)
                     {
@@ -360,16 +415,28 @@ tga_image_c *TGA_LoadImage(const char *path)
 
                         uint8_t a = RGB_ALPHA(col);
 
-                        if (a == 0) { is_masked = true; }
-                        else if (a != 255) { is_complex = true; }
+                        if (a == 0)
+                        {
+                            is_masked = true;
+                        }
+                        else if (a != 255)
+                        {
+                            is_complex = true;
+                        }
 
                         x++;
 
-                        if (x == width)  // pixel packet run spans across edge
+                        if (x == width) // pixel packet run spans across edge
                         {
                             x = 0;
-                            if (y > 0) { y--; }
-                            else { goto breakOut2; }
+                            if (y > 0)
+                            {
+                                y--;
+                            }
+                            else
+                            {
+                                goto breakOut2;
+                            }
 
                             p = dest + y * width;
                         }
@@ -382,9 +449,7 @@ tga_image_c *TGA_LoadImage(const char *path)
 
     VFS_FreeFile(buffer);
 
-    img->opacity = is_complex  ? OPAC_Complex
-                   : is_masked ? OPAC_Masked
-                               : OPAC_Solid;
+    img->opacity = is_complex ? OPAC_Complex : is_masked ? OPAC_Masked : OPAC_Solid;
 
     return img;
 }

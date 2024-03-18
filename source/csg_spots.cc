@@ -63,8 +63,7 @@ static int *grid_righties;
 // declare this here (don't pull in all CSG headers)
 extern void CSG_spot_processing(int x1, int y1, int x2, int y2, int floor_h);
 
-void SPOT_CreateGrid(uint8_t content, int min_x, int min_y, int max_x,
-                     int max_y)
+void SPOT_CreateGrid(uint8_t content, int min_x, int min_y, int max_x, int max_y)
 {
     grid_min_x = min_x;
     grid_min_y = min_y;
@@ -78,7 +77,7 @@ void SPOT_CreateGrid(uint8_t content, int min_x, int min_y, int max_x,
     SYS_ASSERT(grid_W >= 1);
     SYS_ASSERT(grid_H >= 1);
 
-#if 1  // padding
+#if 1 // padding
     grid_W += 2;
     grid_H += 2;
 #endif
@@ -100,21 +99,29 @@ void SPOT_FreeGrid()
 {
     if (spot_grid)
     {
-        for (int x = 0; x < grid_W; x++) { delete[] spot_grid[x]; }
+        for (int x = 0; x < grid_W; x++)
+        {
+            delete[] spot_grid[x];
+        }
 
         delete[] spot_grid;
 
         spot_grid = NULL;
     }
 
-    if (grid_lefties) { delete[] grid_lefties; }
-    if (grid_righties) { delete[] grid_righties; }
+    if (grid_lefties)
+    {
+        delete[] grid_lefties;
+    }
+    if (grid_righties)
+    {
+        delete[] grid_righties;
+    }
 }
 
 void SPOT_DumpGrid(const char *info)
 {
-    DebugPrintf("%s: (%d %d) .. (%d %d)\n", info, grid_min_x, grid_min_y,
-                grid_max_x, grid_max_y);
+    DebugPrintf("%s: (%d %d) .. (%d %d)\n", info, grid_min_x, grid_min_y, grid_max_x, grid_max_y);
 
     const int MAX_WIDTH = 256;
 
@@ -128,13 +135,34 @@ void SPOT_DumpGrid(const char *info)
         {
             uint8_t content = spot_grid[x][y];
 
-            if (content & HAS_MON) { buffer[x] = 'm'; }
-            else if (content & HAS_ITEM) { buffer[x] = 'i'; }
-            else if ((content & 3) == SPOT_LEDGE) { buffer[x] = '/'; }
-            else if ((content & 3) == SPOT_WALL) { buffer[x] = '#'; }
-            else if ((content & 3) == SPOT_LOW_CEIL) { buffer[x] = '='; }
-            else if (content & NEAR_WALL) { buffer[x] = '%'; }
-            else { buffer[x] = '.'; }
+            if (content & HAS_MON)
+            {
+                buffer[x] = 'm';
+            }
+            else if (content & HAS_ITEM)
+            {
+                buffer[x] = 'i';
+            }
+            else if ((content & 3) == SPOT_LEDGE)
+            {
+                buffer[x] = '/';
+            }
+            else if ((content & 3) == SPOT_WALL)
+            {
+                buffer[x] = '#';
+            }
+            else if ((content & 3) == SPOT_LOW_CEIL)
+            {
+                buffer[x] = '=';
+            }
+            else if (content & NEAR_WALL)
+            {
+                buffer[x] = '%';
+            }
+            else
+            {
+                buffer[x] = '.';
+            }
         }
 
         buffer[width] = 0;
@@ -147,15 +175,21 @@ void SPOT_DumpGrid(const char *info)
 
 class grid_point_c
 {
-   public:
+  public:
     int x, y;
 
-   public:
-    grid_point_c() {}
+  public:
+    grid_point_c()
+    {
+    }
 
-    grid_point_c(int _x, int _y) : x(_x), y(_y) {}
+    grid_point_c(int _x, int _y) : x(_x), y(_y)
+    {
+    }
 
-    ~grid_point_c() {}
+    ~grid_point_c()
+    {
+    }
 };
 
 static void test_item_spot(int x, int y, std::vector<grid_point_c> &spots)
@@ -170,21 +204,24 @@ static void test_item_spot(int x, int y, std::vector<grid_point_c> &spots)
 
             if (content & (7 | HAS_ITEM))
             {
-                return;  // no good, something in the way
+                return; // no good, something in the way
             }
 
-            if (content & NEAR_WALL) { near_walls += 1; }
+            if (content & NEAR_WALL)
+            {
+                near_walls += 1;
+            }
         }
     }
 
     if (near_walls == 0)
     {
-        return;  // no good, not near a wall
+        return; // no good, not near a wall
     }
 
     if (near_walls == 4)
     {
-        return;  // no good, too close to walls
+        return; // no good, too close to walls
     }
 
     // this would be (x + 1) if there was no padding
@@ -206,7 +243,10 @@ static void clean_up_grid()
 {
     for (int x = 0; x < grid_W; x++)
     {
-        for (int y = 0; y < grid_H; y++) { spot_grid[x][y] &= 7; }
+        for (int y = 0; y < grid_H; y++)
+        {
+            spot_grid[x][y] &= 7;
+        }
     }
 }
 
@@ -227,18 +267,33 @@ void SPOT_ItemSpots(std::vector<grid_point_c> &spots)
         {
             if ((spot_grid[x][y] & 3) == SPOT_WALL)
             {
-                if (x > 0) { spot_grid[x - 1][y] |= NEAR_WALL; }
-                if (x < w2) { spot_grid[x + 1][y] |= NEAR_WALL; }
+                if (x > 0)
+                {
+                    spot_grid[x - 1][y] |= NEAR_WALL;
+                }
+                if (x < w2)
+                {
+                    spot_grid[x + 1][y] |= NEAR_WALL;
+                }
 
-                if (y > 0) { spot_grid[x][y - 1] |= NEAR_WALL; }
-                if (y < h2) { spot_grid[x][y + 1] |= NEAR_WALL; }
+                if (y > 0)
+                {
+                    spot_grid[x][y - 1] |= NEAR_WALL;
+                }
+                if (y < h2)
+                {
+                    spot_grid[x][y + 1] |= NEAR_WALL;
+                }
             }
         }
     }
 
     for (y = 1; y < grid_H - 2; y++)
     {
-        for (x = 1; x < grid_W - 2; x++) { test_item_spot(x, y, spots); }
+        for (x = 1; x < grid_W - 2; x++)
+        {
+            test_item_spot(x, y, spots);
+        }
     }
 }
 
@@ -248,13 +303,19 @@ static void remove_dud_cells()
 {
     for (int x = 0; x < grid_W; x++)
     {
-        for (int y = 0; y < grid_H; y++) { spot_grid[x][y] &= ~IS_DUD; }
+        for (int y = 0; y < grid_H; y++)
+        {
+            spot_grid[x][y] &= ~IS_DUD;
+        }
     }
 }
 
 static bool test_mon_area(int x1, int y1, int x2, int y2, int want)
 {
-    if (x1 < 0 or x2 >= grid_W or y1 < 0 or y2 >= grid_H) { return false; }
+    if (x1 < 0 or x2 >= grid_W or y1 < 0 or y2 >= grid_H)
+    {
+        return false;
+    }
 
     for (int x = x1; x <= x2; x++)
     {
@@ -262,9 +323,15 @@ static bool test_mon_area(int x1, int y1, int x2, int y2, int want)
         {
             uint8_t content = spot_grid[x][y];
 
-            if (content & (HAS_MON | IS_DUD)) { return false; }
+            if (content & (HAS_MON | IS_DUD))
+            {
+                return false;
+            }
 
-            if ((content & 3) > want) { return false; }
+            if ((content & 3) > want)
+            {
+                return false;
+            }
         }
     }
 
@@ -392,12 +459,24 @@ static bool grow_spot(int &x1, int &y1, int &x2, int &y2, int want)
     }
 
     // don't make long narrow areas, i.e. keep aspect nice
-    if (w > h * 2) { x1_pass = x2_pass = -1; }
-    if (h > w * 2) { y1_pass = y2_pass = -1; }
+    if (w > h * 2)
+    {
+        x1_pass = x2_pass = -1;
+    }
+    if (h > w * 2)
+    {
+        y1_pass = y2_pass = -1;
+    }
 
     // prevent growing too large
-    if (w + 1 >= MAX_MON_CELLS) { x1_pass = x2_pass = -1; }
-    if (h + 1 >= MAX_MON_CELLS) { y1_pass = y2_pass = -1; }
+    if (w + 1 >= MAX_MON_CELLS)
+    {
+        x1_pass = x2_pass = -1;
+    }
+    if (h + 1 >= MAX_MON_CELLS)
+    {
+        y1_pass = y2_pass = -1;
+    }
 
     for (int pass = 0; pass < 4; pass++)
     {
@@ -431,7 +510,10 @@ static void mark_monster(int x1, int y1, int x2, int y2, uint8_t flag)
 {
     for (int x = x1; x <= x2; x++)
     {
-        for (int y = y1; y <= y2; y++) { spot_grid[x][y] |= flag; }
+        for (int y = y1; y <= y2; y++)
+        {
+            spot_grid[x][y] |= flag;
+        }
     }
 }
 
@@ -451,7 +533,10 @@ void SPOT_MonsterSpots(std::vector<grid_point_c> &spots, int want)
 
         x1 = biggest_gap(&y1, &y2, want);
 
-        if (x1 < 0) { return; }
+        if (x1 < 0)
+        {
+            return;
+        }
 
         y1 = (y1 + y2) / 2;
 
@@ -460,7 +545,9 @@ void SPOT_MonsterSpots(std::vector<grid_point_c> &spots, int want)
         x2 = x1;
         y2 = y1;
 
-        while (grow_spot(x1, y1, x2, y2, want)) {}
+        while (grow_spot(x1, y1, x2, y2, want))
+        {
+        }
 
         if (x2 > x1 && y2 > y1)
         {
@@ -476,8 +563,7 @@ void SPOT_MonsterSpots(std::vector<grid_point_c> &spots, int want)
             spots.push_back(grid_point_c(real_x1, real_y1));
             spots.push_back(grid_point_c(real_x2, real_y2));
 
-            DebugPrintf("Monster spot ---> [%d %d] size [%d %d]\n", x1, y1,
-                        x2 - x1 + 1, y2 - y1 + 1);
+            DebugPrintf("Monster spot ---> [%d %d] size [%d %d]\n", x1, y1, x2 - x1 + 1, y2 - y1 + 1);
         }
         else
         {
@@ -509,7 +595,10 @@ static void clear_rows()
 
 static void raw_pixel(int gx, int gy)
 {
-    if (gy < 0 || gy >= grid_H) { return; }
+    if (gy < 0 || gy >= grid_H)
+    {
+        return;
+    }
 
     grid_lefties[gy]  = OBSIDIAN_MIN(grid_lefties[gy], gx);
     grid_righties[gy] = OBSIDIAN_MAX(grid_righties[gy], gx);
@@ -534,7 +623,7 @@ static void draw_line(int x1, int y1, int x2, int y2)
 
     // TODO: clip to bounding box
 
-#if 1  // padding
+#if 1 // padding
     x1 += GRID_SIZE;
     y1 += GRID_SIZE;
     x2 += GRID_SIZE;
@@ -552,7 +641,10 @@ static void draw_line(int x1, int y1, int x2, int y2)
     // same row ?
     if (py1 == py2)
     {
-        if (py1 < 0 || py1 > h2) { return; }
+        if (py1 < 0 || py1 > h2)
+        {
+            return;
+        }
 
         raw_pixel(px1, py1);
         raw_pixel(px2, py1);
@@ -588,7 +680,10 @@ static void draw_line(int x1, int y1, int x2, int y2)
     // same column ?
     if (px1 == px2)
     {
-        for (; py1 <= py2; py1++) { raw_pixel(px1, py1); }
+        for (; py1 <= py2; py1++)
+        {
+            raw_pixel(px1, py1);
+        }
 
         return;
     }
@@ -622,10 +717,16 @@ static inline void replace_cell(int x, int y, uint8_t content)
     //        generally it is only used to initialize the grid.
 
     // never replace a WALL
-    if (content != SPOT_CLEAR && target == SPOT_WALL) { return; }
+    if (content != SPOT_CLEAR && target == SPOT_WALL)
+    {
+        return;
+    }
 
     // LOW_CEIL cannot replace a LEDGE
-    if (content == SPOT_LOW_CEIL && target == SPOT_LEDGE) { return; }
+    if (content == SPOT_LOW_CEIL && target == SPOT_LEDGE)
+    {
+        return;
+    }
 
     target = content;
 }
@@ -636,12 +737,18 @@ static void fill_rows(uint8_t content)
 
     for (int y = grid_botty; y <= grid_toppy; y++)
     {
-        if (grid_righties[y] < 0) { continue; }
+        if (grid_righties[y] < 0)
+        {
+            continue;
+        }
 
         int low_x  = OBSIDIAN_MAX(0, grid_lefties[y]);
         int high_x = OBSIDIAN_MIN(w2, grid_righties[y]);
 
-        for (int x = low_x; x <= high_x; x++) { replace_cell(x, y, content); }
+        for (int x = low_x; x <= high_x; x++)
+        {
+            replace_cell(x, y, content);
+        }
     }
 }
 
@@ -732,10 +839,12 @@ int SPOT_draw_line(lua_State *L)
     return 0;
 }
 
-static int polygon_coord(lua_State *L, int stack_pos,
-                         std::vector<grid_point_c> &points)
+static int polygon_coord(lua_State *L, int stack_pos, std::vector<grid_point_c> &points)
 {
-    if (stack_pos < 0) { stack_pos += lua_gettop(L) + 1; }
+    if (stack_pos < 0)
+    {
+        stack_pos += lua_gettop(L) + 1;
+    }
 
     if (lua_type(L, stack_pos) != LUA_TTABLE)
     {
@@ -830,14 +939,12 @@ int SPOT_fill_box(lua_State *L)
 //
 int SPOT_apply_brushes(lua_State *L)
 {
-    CSG_spot_processing(grid_min_x, grid_min_y, grid_max_x, grid_max_y,
-                        grid_floor_h);
+    CSG_spot_processing(grid_min_x, grid_min_y, grid_max_x, grid_max_y, grid_floor_h);
 
     return 0;
 }
 
-static void store_mon_or_item(lua_State *L, int stack_pos, unsigned int index,
-                              int x1, int y1, int x2, int y2,
+static void store_mon_or_item(lua_State *L, int stack_pos, unsigned int index, int x1, int y1, int x2, int y2,
                               bool low_ceil = true)
 {
     int ceil_h = grid_floor_h + (low_ceil ? spot_low_h : spot_high_h);
@@ -848,7 +955,10 @@ static void store_mon_or_item(lua_State *L, int stack_pos, unsigned int index,
     x2 = OBSIDIAN_MIN(x2, grid_max_x);
     y2 = OBSIDIAN_MIN(y2, grid_max_y);
 
-    if ((x2 - x1) < 8 || (y2 - y1) < 8) { return; }
+    if ((x2 - x1) < 8 || (y2 - y1) < 8)
+    {
+        return;
+    }
 
     lua_pushinteger(L, index);
 
@@ -885,7 +995,10 @@ int SPOT_dump(lua_State *L)
 {
     const char *text = luaL_checkstring(L, 1);
 
-    if (text) { SPOT_DumpGrid(text); }
+    if (text)
+    {
+        SPOT_DumpGrid(text);
+    }
 
     return 0;
 }
@@ -920,8 +1033,7 @@ int SPOT_get_mons(lua_State *L)
 
         for (unsigned int m = 0; m < mons.size(); m += 2)
         {
-            store_mon_or_item(L, 1, index, mons[m + 0].x, mons[m + 0].y,
-                              mons[m + 1].x, mons[m + 1].y,
+            store_mon_or_item(L, 1, index, mons[m + 0].x, mons[m + 0].y, mons[m + 1].x, mons[m + 1].y,
                               (want > 0) /* low_ceil */);
             index++;
         }
@@ -952,8 +1064,7 @@ int SPOT_get_items(lua_State *L)
 
     for (unsigned int i = 0; i < items.size(); i++)
     {
-        store_mon_or_item(L, 1, 1 + i, items[i].x - 8, items[i].y - 8,
-                          items[i].x + 8, items[i].y + 8);
+        store_mon_or_item(L, 1, 1 + i, items[i].x - 8, items[i].y - 8, items[i].x + 8, items[i].y + 8);
     }
 
     return 0;

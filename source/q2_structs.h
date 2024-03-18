@@ -35,8 +35,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ==============================================================================
 */
 
-constexpr unsigned int IDBSPHEADER =
-    'I' + ('B' << 8) + ('S' << 16) + ('P' << 24);
+constexpr unsigned int IDBSPHEADER = 'I' + ('B' << 8) + ('S' << 16) + ('P' << 24);
 
 constexpr int BSPVERSION = 38;
 
@@ -105,11 +104,11 @@ enum
 struct dmodel2_t
 {
     float mins[3], maxs[3];
-    float origin[3];  // for sounds or lights
+    float origin[3];             // for sounds or lights
 
     int32_t headnode;
-    int32_t firstface, numfaces;  // submodels just draw faces
-                                  // without walking the bsp tree
+    int32_t firstface, numfaces; // submodels just draw faces
+                                 // without walking the bsp tree
 };
 #pragma pack(pop)
 
@@ -126,8 +125,8 @@ struct dmodel2_t
 // these definitions also need to be in q_shared.h!
 
 // lower bits are stronger, and will eat weaker brushes completely
-constexpr unsigned int CONTENTS_SOLID  = 1;  // an eye is never valid in a solid
-constexpr unsigned int CONTENTS_WINDOW = 2;  // translucent, but not watery
+constexpr unsigned int CONTENTS_SOLID  = 1; // an eye is never valid in a solid
+constexpr unsigned int CONTENTS_WINDOW = 2; // translucent, but not watery
 constexpr unsigned int CONTENTS_AUX    = 4;
 constexpr unsigned int CONTENTS_LAVA   = 8;
 constexpr unsigned int CONTENTS_SLIME  = 16;
@@ -164,13 +163,13 @@ constexpr unsigned int CONTENTS_LADDER      = 0x20000000;
 struct dnode2_t
 {
     int32_t planenum;
-    int32_t children[2];  // negative numbers are -(leafs+1), not nodes
+    int32_t children[2]; // negative numbers are -(leafs+1), not nodes
 
-    int16_t mins[3];  // for frustom culling
+    int16_t mins[3];     // for frustom culling
     int16_t maxs[3];
 
     uint16_t firstface;
-    uint16_t numfaces;  // counting both sides
+    uint16_t numfaces; // counting both sides
 };
 #pragma pack(pop)
 
@@ -192,14 +191,14 @@ constexpr unsigned int SURF_NODRAW = 0x80;
 #pragma pack(push, 1)
 struct texinfo2_t
 {
-    float s[4];  // x/y/z/offset
+    float s[4];          // x/y/z/offset
     float t[4];
 
-    uint32_t flags;  // miptex flags + overrides
-    int32_t  value;  // light emission, etc
+    uint32_t flags;      // miptex flags + overrides
+    int32_t  value;      // light emission, etc
 
-    char    texture[32];  // texture name (textures/*.wal)
-    int32_t anim_next;    // for animations, -1 = end of chain
+    char    texture[32]; // texture name (textures/*.wal)
+    int32_t anim_next;   // for animations, -1 = end of chain
 };
 #pragma pack(pop)
 
@@ -210,12 +209,12 @@ struct texinfo2_t
 #pragma pack(push, 1)
 struct dleaf2_t
 {
-    uint32_t contents;  // OR of all brushes
+    uint32_t contents; // OR of all brushes
 
     int16_t cluster;
     int16_t area;
 
-    int16_t mins[3];  // for frustum culling
+    int16_t mins[3]; // for frustum culling
     int16_t maxs[3];
 
     uint16_t first_leafface;
@@ -229,7 +228,7 @@ struct dleaf2_t
 #pragma pack(push, 1)
 struct dbrushside_t
 {
-    uint16_t planenum;  // facing out of the leaf
+    uint16_t planenum; // facing out of the leaf
     int16_t  texinfo;
 };
 #pragma pack(pop)
@@ -258,7 +257,7 @@ constexpr int DVIS_PHS = 1;
 struct dvis_t
 {
     int32_t numclusters;
-    int32_t offsets[1][2];  // [NUMCLUSTERS][2]
+    int32_t offsets[1][2]; // [NUMCLUSTERS][2]
 };
 #pragma pack(pop)
 

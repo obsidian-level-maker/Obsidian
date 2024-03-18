@@ -54,7 +54,7 @@ struct liquid_coloring_t
     float intensity;
     float dropoff;
 
-   public:
+  public:
     void Init(int r, int g, int b)
     {
         color     = MAKE_RGBA(r, g, b, 255);
@@ -104,7 +104,10 @@ void QLIT_InitProperties()
 
 rgb_color_t QLIT_ParseColorString(std::string name)
 {
-    if (name.empty() || name.at(0) == 0) { return WHITE; }
+    if (name.empty() || name.at(0) == 0)
+    {
+        return WHITE;
+    }
 
     if (name.at(0) != '#')
     {
@@ -140,12 +143,18 @@ bool QLIT_ParseProperty(std::string key, std::string value)
 {
     if (StringCaseCompareASCII(key, "q_light_quality") == 0)
     {
-        if (StringCaseCompareASCII(value, "low") == 0) { q_light_quality = -1; }
+        if (StringCaseCompareASCII(value, "low") == 0)
+        {
+            q_light_quality = -1;
+        }
         else if (StringCaseCompareASCII(value, "high") == 0)
         {
             q_light_quality = +1;
         }
-        else { q_light_quality = 0; }
+        else
+        {
+            q_light_quality = 0;
+        }
 
         return true;
     }
@@ -178,44 +187,56 @@ bool QLIT_ParseProperty(std::string key, std::string value)
 
 //------------------------------------------------------------------------
 
-qLightmap_c::qLightmap_c(int w, int h, int value)
-    : width(w), height(h), num_styles(1), samples(), offset(-1)
+qLightmap_c::qLightmap_c(int w, int h, int value) : width(w), height(h), num_styles(1), samples(), offset(-1)
 {
     samples = new rgb_color_t[width * height];
 
     current_pos = samples;
 
     styles[0] = 0;
-    styles[1] = styles[2] = styles[3] = 255;  // unused
+    styles[1] = styles[2] = styles[3] = 255; // unused
 
-    if (value >= 0) { Fill(value); }
+    if (value >= 0)
+    {
+        Fill(value);
+    }
 }
 
-qLightmap_c::~qLightmap_c() { delete[] samples; }
+qLightmap_c::~qLightmap_c()
+{
+    delete[] samples;
+}
 
 void qLightmap_c::Fill(rgb_color_t value)
 {
-    for (int i = 0; i < width * height; i++) { samples[i] = value; }
+    for (int i = 0; i < width * height; i++)
+    {
+        samples[i] = value;
+    }
 }
 
 bool qLightmap_c::hasStyle(uint8_t style) const
 {
-    if (style == 0) { return true; }
+    if (style == 0)
+    {
+        return true;
+    }
 
     return (styles[1] == style) || (styles[2] == style) || (styles[3] == style);
 }
 
 bool qLightmap_c::AddStyle(uint8_t style)
 {
-    if (num_styles > 4) { return false; }
+    if (num_styles > 4)
+    {
+        return false;
+    }
 
     styles[num_styles] = style;
 
-    rgb_color_t *new_samples =
-        new rgb_color_t[width * height * (num_styles + 1)];
+    rgb_color_t *new_samples = new rgb_color_t[width * height * (num_styles + 1)];
 
-    memcpy(new_samples, samples,
-           width * height * num_styles * sizeof(rgb_color_t));
+    memcpy(new_samples, samples, width * height * num_styles * sizeof(rgb_color_t));
 
     num_styles++;
 
@@ -262,9 +283,18 @@ bool qLightmap_c::isDark() const
     {
         const rgb_color_t col = samples[i];
 
-        if ((int)RGB_RED(col) > 0) { return false; }
-        if ((int)RGB_GREEN(col) > 0) { return false; }
-        if ((int)RGB_BLUE(col) > 0) { return false; }
+        if ((int)RGB_RED(col) > 0)
+        {
+            return false;
+        }
+        if ((int)RGB_GREEN(col) > 0)
+        {
+            return false;
+        }
+        if ((int)RGB_BLUE(col) > 0)
+        {
+            return false;
+        }
     }
 
     return true;
@@ -334,7 +364,10 @@ static void WriteFlatBlock(int level, int count)
 {
     uint8_t datum = (uint8_t)level;
 
-    for (; count > 0; count--) { lightmap_lump->Append(&datum, 1); }
+    for (; count > 0; count--)
+    {
+        lightmap_lump->Append(&datum, 1);
+    }
 }
 
 void QLIT_BuildLightingLump(int lump, int max_size)
@@ -353,7 +386,10 @@ void QLIT_BuildLightingLump(int lump, int max_size)
     max_size -= flat_size;
 
     // from here on 'max_size' is in PIXELS (not bytes)
-    if (!q_mono_lighting) { max_size /= 3; }
+    if (!q_mono_lighting)
+    {
+        max_size /= 3;
+    }
 
     // FIXME !!!! : check if lump would overflow, if yes then flatten some maps
 
@@ -434,9 +470,8 @@ static void Q1_CalcFaceStuff(quake_face_c *F)
     texnormal.Normalize();
 
     // flip it towards plane normal
-    double distscale = texnormal.nx * lt_plane_normal[0] +
-                       texnormal.ny * lt_plane_normal[1] +
-                       texnormal.nz * lt_plane_normal[2];
+    double distscale =
+        texnormal.nx * lt_plane_normal[0] + texnormal.ny * lt_plane_normal[1] + texnormal.nz * lt_plane_normal[2];
 
     if (distscale < 0)
     {
@@ -450,12 +485,10 @@ static void Q1_CalcFaceStuff(quake_face_c *F)
 
     for (int i = 0; i < 2; i++)
     {
-        double len_sq = lt_worldtotex[i][0] * lt_worldtotex[i][0] +
-                        lt_worldtotex[i][1] * lt_worldtotex[i][1] +
+        double len_sq = lt_worldtotex[i][0] * lt_worldtotex[i][0] + lt_worldtotex[i][1] * lt_worldtotex[i][1] +
                         lt_worldtotex[i][2] * lt_worldtotex[i][2];
 
-        double dist = lt_worldtotex[i][0] * lt_plane_normal[0] +
-                      lt_worldtotex[i][1] * lt_plane_normal[1] +
+        double dist = lt_worldtotex[i][0] * lt_plane_normal[0] + lt_worldtotex[i][1] * lt_plane_normal[1] +
                       lt_worldtotex[i][2] * lt_plane_normal[2];
 
         dist = dist * distscale / len_sq;
@@ -466,19 +499,15 @@ static void Q1_CalcFaceStuff(quake_face_c *F)
     }
 
     // calculate texorg on the texture plane
-    lt_texorg[0] =
-        -UV->s[3] * lt_textoworld[0][0] - UV->t[3] * lt_textoworld[1][0];
-    lt_texorg[1] =
-        -UV->s[3] * lt_textoworld[0][1] - UV->t[3] * lt_textoworld[1][1];
-    lt_texorg[2] =
-        -UV->s[3] * lt_textoworld[0][2] - UV->t[3] * lt_textoworld[1][2];
+    lt_texorg[0] = -UV->s[3] * lt_textoworld[0][0] - UV->t[3] * lt_textoworld[1][0];
+    lt_texorg[1] = -UV->s[3] * lt_textoworld[0][1] - UV->t[3] * lt_textoworld[1][1];
+    lt_texorg[2] = -UV->s[3] * lt_textoworld[0][2] - UV->t[3] * lt_textoworld[1][2];
 
     // project back to the face plane
 
     // AJA: I assume the "- 1" here means the sampling points are 1 unit
     //      away from the face.
-    double o_dist = lt_texorg[0] * lt_plane_normal[0] +
-                    lt_texorg[1] * lt_plane_normal[1] +
+    double o_dist = lt_texorg[0] * lt_plane_normal[0] + lt_texorg[1] * lt_plane_normal[1] +
                     lt_texorg[2] * lt_plane_normal[2] - lt_plane_dist - 1.0;
 
     o_dist *= distscale;
@@ -525,7 +554,7 @@ static void Q1_CalcFaceStuff(quake_face_c *F)
     float s_step = 16.0;
     float t_step = 16.0;
 
-    if (q_light_quality > 0)  // "best" mode
+    if (q_light_quality > 0) // "best" mode
     {
         s_step = 16 * (lt_W - 1) / (float)(lt_W * 2 - 1);
         t_step = 16 * (lt_H - 1) / (float)(lt_H * 2 - 1);
@@ -543,68 +572,15 @@ static void Q1_CalcFaceStuff(quake_face_c *F)
 
             light_point_t &P = lt_points[s][t];
 
-            P.x = lt_texorg[0] + lt_textoworld[0][0] * us +
-                  lt_textoworld[1][0] * ut;
-            P.y = lt_texorg[1] + lt_textoworld[0][1] * us +
-                  lt_textoworld[1][1] * ut;
-            P.z = lt_texorg[2] + lt_textoworld[0][2] * us +
-                  lt_textoworld[1][2] * ut;
+            P.x = lt_texorg[0] + lt_textoworld[0][0] * us + lt_textoworld[1][0] * ut;
+            P.y = lt_texorg[1] + lt_textoworld[0][1] * us + lt_textoworld[1][1] * ut;
+            P.z = lt_texorg[2] + lt_textoworld[0][2] * us + lt_textoworld[1][2] * ut;
 
             P.medium = CSG_BrushContents(P.x, P.y, P.z);
 
             // TODO: adjust points which are inside walls
         }
     }
-}
-
-static bool LightPointOffFace(quake_face_c *F, double s, double t, double sx,
-                              double sy, double sz, double tx, double ty,
-                              double tz)
-{
-    const double epislon = 0.001;
-
-    for (unsigned int k = 0; k < F->verts.size(); k++)
-    {
-        unsigned int k2 = k + 1;
-        if (k2 >= F->verts.size()) { k2 = 0; }
-
-        const quake_vertex_c *V1 = &F->verts[k];
-
-        double s1 = V1->x * sx + V1->y * sy + V1->z * sz;
-        double t1 = V1->x * tx + V1->y * ty + V1->z * tz;
-
-        const quake_vertex_c *V2 = &F->verts[k2];
-
-        double s2 = V2->x * sx + V2->y * sy + V2->z * sz;
-        double t2 = V2->x * tx + V2->y * ty + V2->z * tz;
-
-        double d = PerpDist(s, t, s1, t1, s2, t2);
-
-        if (d < epislon) { return true; }
-    }
-
-    return false;
-}
-
-// returns false if OFF FACE or in a SOLID
-static bool CheckLightPoint(light_point_t &P, quake_face_c *F, double s,
-                            double t, double sx, double sy, double sz,
-                            double tx, double ty, double tz)
-{
-    if (LightPointOffFace(F, s, t, sx, sy, sz, tx, ty, tz))
-    {
-        P.medium       = MEDIUM_OFF_FACE;
-        P.liquid_depth = -1;
-    }
-    else
-    {
-        double liq_depth = -1;
-
-        P.medium       = CSG_BrushContents(P.x, P.y, P.z, &liq_depth);
-        P.liquid_depth = OBSIDIAN_CLAMP(-7, liq_depth, 8190.0);
-    }
-
-    return !(P.medium == MEDIUM_OFF_FACE || P.medium == MEDIUM_SOLID);
 }
 
 static void ClearLightBuffer(int level)
@@ -615,7 +591,10 @@ static void ClearLightBuffer(int level)
     {
         for (int t = 0; t < lt_H; t++)
         {
-            for (int c = 0; c < 3; c++) { blocklights[s][t][c] = level; }
+            for (int c = 0; c < 3; c++)
+            {
+                blocklights[s][t][c] = level;
+            }
         }
     }
 }
@@ -663,10 +642,19 @@ static bool Luxel_HasSetNeighbor(int s, int t)
         int ds = (side == 0) ? -1 : (side == 1) ? +1 : 0;
         int dt = (side == 2) ? -1 : (side == 3) ? +1 : 0;
 
-        if (s + ds < 0 || s + ds >= lt_W) { continue; }
-        if (t + dt < 0 || t + dt >= lt_H) { continue; }
+        if (s + ds < 0 || s + ds >= lt_W)
+        {
+            continue;
+        }
+        if (t + dt < 0 || t + dt >= lt_H)
+        {
+            continue;
+        }
 
-        if (lt_points[s + ds][t + dt].medium < MEDIUM_SOLID) { return true; }
+        if (lt_points[s + ds][t + dt].medium < MEDIUM_SOLID)
+        {
+            return true;
+        }
     }
 
     return false;
@@ -685,10 +673,19 @@ static void Luxel_ComputeAverage(int s, int t, bool do_avg)
         int ds = (side == 0) ? -1 : (side == 1) ? +1 : 0;
         int dt = (side == 2) ? -1 : (side == 3) ? +1 : 0;
 
-        if (s + ds < 0 || s + ds >= lt_W) { continue; }
-        if (t + dt < 0 || t + dt >= lt_H) { continue; }
+        if (s + ds < 0 || s + ds >= lt_W)
+        {
+            continue;
+        }
+        if (t + dt < 0 || t + dt >= lt_H)
+        {
+            continue;
+        }
 
-        if (lt_points[s + ds][t + dt].medium >= MEDIUM_SOLID) { continue; }
+        if (lt_points[s + ds][t + dt].medium >= MEDIUM_SOLID)
+        {
+            continue;
+        }
 
         if (!do_avg && lt_points[s + ds][t + dt].medium == MEDIUM_AVERAGED)
         {
@@ -728,8 +725,7 @@ static void HandleOffFaceLuxels()
         {
             for (int t = 0; t < lt_H; t++)
             {
-                if (lt_points[s][t].medium >= MEDIUM_SOLID &&
-                    Luxel_HasSetNeighbor(s, t))
+                if (lt_points[s][t].medium >= MEDIUM_SOLID && Luxel_HasSetNeighbor(s, t))
                 {
                     where.push_back((t << 10) + s);
 
@@ -741,7 +737,10 @@ static void HandleOffFaceLuxels()
             }
         }
 
-        if (where.empty()) { return; }
+        if (where.empty())
+        {
+            return;
+        }
 
         // mark the luxels we visited LAST, to prevent run-on effects
         for (unsigned int k = 0; k < where.size(); k++)
@@ -768,10 +767,8 @@ static void FilterSuperSamples()
         {
             for (int c = 0; c < 3; c++)
             {
-                int v = blocklights[s * 2 + 0][t * 2 + 0][c] +
-                        blocklights[s * 2 + 0][t * 2 + 1][c] +
-                        blocklights[s * 2 + 1][t * 2 + 0][c] +
-                        blocklights[s * 2 + 1][t * 2 + 1][c];
+                int v = blocklights[s * 2 + 0][t * 2 + 0][c] + blocklights[s * 2 + 0][t * 2 + 1][c] +
+                        blocklights[s * 2 + 1][t * 2 + 0][c] + blocklights[s * 2 + 1][t * 2 + 1][c];
 
                 blocklights[s][t][c] = v >> 2;
             }
@@ -783,7 +780,10 @@ static void FilterSuperSamples()
 
 std::vector<quake_light_t> qk_all_lights;
 
-static void QLIT_FreeLights() { qk_all_lights.clear(); }
+static void QLIT_FreeLights()
+{
+    qk_all_lights.clear();
+}
 
 static void QLIT_FindLights()
 {
@@ -795,8 +795,14 @@ static void QLIT_FindLights()
 
         quake_light_t light;
 
-        if (E->Match("light")) { light.kind = LTK_Normal; }
-        else if (E->Match("oblige_sun")) { light.kind = LTK_Sun; }
+        if (E->Match("light"))
+        {
+            light.kind = LTK_Normal;
+        }
+        else if (E->Match("oblige_sun"))
+        {
+            light.kind = LTK_Sun;
+        }
         else
         {
             // Change this back to "continue" when light entity placement is
@@ -817,7 +823,10 @@ static void QLIT_FindLights()
         // light.radius = E->props.getDouble("radius", DEFAULT_LIGHT_RADIUS);
         // light.level = E->props.getDouble("level", light.radius * 0.5);
 
-        if (light.level < 1 || light.radius < 1) { continue; }
+        if (light.level < 1 || light.radius < 1)
+        {
+            continue;
+        }
 
         light.color = QLIT_ParseColorString(E->props.getStr("color"));
         light.style = E->props.getInt("style", 0);
@@ -838,29 +847,47 @@ static void QLIT_ProcessLight(qLightmap_c *lmap, quake_light_t &light, int pass)
     // first pass is normal lights, other passes are for styled lights
     if (pass == 0)
     {
-        if (light.style) { return; }
+        if (light.style)
+        {
+            return;
+        }
     }
     else
     {
-        if (light.style == 0) { return; }
+        if (light.style == 0)
+        {
+            return;
+        }
 
         // skip light if we processed that style in an earlier pass
-        if (lt_current_style < 0 && lmap->hasStyle(light.style)) { return; }
+        if (lt_current_style < 0 && lmap->hasStyle(light.style))
+        {
+            return;
+        }
 
         // skip light unless it matches the current style
-        if (lt_current_style > 0 && light.style != lt_current_style) { return; }
+        if (lt_current_style > 0 && light.style != lt_current_style)
+        {
+            return;
+        }
     }
 
     // skip lights which are behind the face
-    float perp = lt_plane_normal[0] * light.x + lt_plane_normal[1] * light.y +
-                 lt_plane_normal[2] * light.z - lt_plane_dist;
+    float perp =
+        lt_plane_normal[0] * light.x + lt_plane_normal[1] * light.y + lt_plane_normal[2] * light.z - lt_plane_dist;
 
-    if (perp <= 0) { return; }
+    if (perp <= 0)
+    {
+        return;
+    }
 
     // skip lights which are too far away
     if (light.kind != LTK_Sun)
     {
-        if (perp > light.radius) { return; }
+        if (perp > light.radius)
+        {
+            return;
+        }
 
         if (!lt_face_bbox.Touches(light.x, light.y, light.z, light.radius))
         {
@@ -877,7 +904,10 @@ static void QLIT_ProcessLight(qLightmap_c *lmap, quake_light_t &light, int pass)
             const light_point_t &P = lt_points[s][t];
 
             // ignore liquids, off-face points and points blocked by solids
-            if (P.medium > MEDIUM_AIR) { continue; }
+            if (P.medium > MEDIUM_AIR)
+            {
+                continue;
+            }
 
             if (!QVIS_TraceRay(P.x, P.y, P.z, light.x, light.y, light.z))
             {
@@ -892,8 +922,7 @@ static void QLIT_ProcessLight(qLightmap_c *lmap, quake_light_t &light, int pass)
             }
             else
             {
-                float dist =
-                    ComputeDist(P.x, P.y, P.z, light.x, light.y, light.z);
+                float dist = ComputeDist(P.x, P.y, P.z, light.x, light.y, light.z);
 
                 if (dist < light.radius)
                 {
@@ -908,7 +937,10 @@ static void QLIT_ProcessLight(qLightmap_c *lmap, quake_light_t &light, int pass)
     // don't create a new style in the lightmap if the light never
     // touched the face (e.g. when on the other side of a wall).
 
-    if (!hit_it) { return; }
+    if (!hit_it)
+    {
+        return;
+    }
 
     if (lt_current_style < 0)
     {
@@ -935,10 +967,12 @@ static void QLIT_LiquidLighting(qLightmap_c *lmap)
                 float fx = 2 + sin(P.x / 16.0);
                 float fy = 2 + sin(P.y / 16.0);
 
-                int level =
-                    (fx + fy) * LC.intensity - P.liquid_depth * LC.dropoff;
+                int level = (fx + fy) * LC.intensity - P.liquid_depth * LC.dropoff;
 
-                if (level > 0) { Bump(s, t, level, LC.color); }
+                if (level > 0)
+                {
+                    Bump(s, t, level, LC.color);
+                }
             }
         }
     }
@@ -979,7 +1013,7 @@ void QLIT_LightFace(quake_face_c *F)
 
     Q1_CalcFaceStuff(F);
 
-#if 0  // DEBUG
+#if 0 // DEBUG
     QLIT_TestingStuff(F->lmap);
     return;
 #endif
@@ -1001,14 +1035,17 @@ void QLIT_LightFace(quake_face_c *F)
 
             HandleOffFaceLuxels();
 
-            if (q_light_quality > 0) { FilterSuperSamples(); }
+            if (q_light_quality > 0)
+            {
+                FilterSuperSamples();
+            }
 
             F->lmap->Store();
         }
     }
 }
 
-#if 0  // this needed for Q1 and Q2
+#if 0 // this needed for Q1 and Q2
 void QLIT_LightMapModel(quake_mapmodel_c *model)
 {
     float value = q_low_light;
@@ -1049,9 +1086,7 @@ void QLIT_LightMapModel(quake_mapmodel_c *model)
 
 static const int grid_z_deltas[6] = {0, +12, +24, -12, -24, +36};
 
-static const int grid_xy_deltas[9 * 2] = {0,   0,   +9,  +9,  +9,  -9,
-                                          -9,  +9,  -9,  -9,  +18, +18,
-                                          +18, -18, -18, +18, -18, -18};
+static const int grid_xy_deltas[9 * 2] = {0, 0, +9, +9, +9, -9, -9, +9, -9, -9, +18, +18, +18, -18, -18, +18, -18, -18};
 
 void QLIT_LightAllFaces()
 {
@@ -1072,18 +1107,23 @@ void QLIT_LightAllFaces()
     {
         quake_face_c *F = qk_all_faces[i];
 
-        if (F->flags & (FACE_F_Sky | FACE_F_Liquid)) { continue; }
+        if (F->flags & (FACE_F_Sky | FACE_F_Liquid))
+        {
+            continue;
+        }
 
         QLIT_LightFace(F);
 
         lit_faces++;
         lit_luxels += F->lmap->width * F->lmap->height;
 
-        if (lit_faces % 400 == 0) { break; }
+        if (lit_faces % 400 == 0)
+        {
+            break;
+        }
     }
 
-    LogPrintf("lit %d faces (of %zu) using %d luxels\n", lit_faces,
-              qk_all_faces.size(), lit_luxels);
+    LogPrintf("lit %d faces (of %zu) using %d luxels\n", lit_faces, qk_all_faces.size(), lit_luxels);
 
 // Todo: Q1/Q2 map models
 #if 0

@@ -43,7 +43,7 @@ void     VFS_FreeFile(const uint8_t *mem);
 
 typedef struct
 {
-    std::filesystem::path name;  // base filename, includes ".pk3" extension
+    std::filesystem::path name; // base filename, includes ".pk3" extension
 
     bool enabled;
 

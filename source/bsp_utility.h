@@ -33,7 +33,7 @@ void  UtilFree(void *data);
 void Adler32Begin(uint32_t *crc);
 void Adler32AddBlock(uint32_t *crc, const uint8_t *data, int length);
 
-}  // namespace ajbsp
+} // namespace ajbsp
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

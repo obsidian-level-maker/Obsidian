@@ -77,8 +77,7 @@ void GetBlockmapBounds(int *x, int *y, int *w, int *h)
     *h = block_h;
 }
 
-int CheckLinedefInsideBox(int xmin, int ymin, int xmax, int ymax, int x1,
-                          int y1, int x2, int y2)
+int CheckLinedefInsideBox(int xmin, int ymin, int xmax, int ymax, int x1, int y1, int x2, int y2)
 {
     int count = 2;
     int tmp;
@@ -87,10 +86,10 @@ int CheckLinedefInsideBox(int xmin, int ymin, int xmax, int ymax, int x1,
     {
         if (y1 > ymax)
         {
-            if (y2 > ymax) return false;
+            if (y2 > ymax)
+                return false;
 
-            x1 =
-                x1 + (int)((x2 - x1) * (double)(ymax - y1) / (double)(y2 - y1));
+            x1 = x1 + (int)((x2 - x1) * (double)(ymax - y1) / (double)(y2 - y1));
             y1 = ymax;
 
             count = 2;
@@ -99,10 +98,10 @@ int CheckLinedefInsideBox(int xmin, int ymin, int xmax, int ymax, int x1,
 
         if (y1 < ymin)
         {
-            if (y2 < ymin) return false;
+            if (y2 < ymin)
+                return false;
 
-            x1 =
-                x1 + (int)((x2 - x1) * (double)(ymin - y1) / (double)(y2 - y1));
+            x1 = x1 + (int)((x2 - x1) * (double)(ymin - y1) / (double)(y2 - y1));
             y1 = ymin;
 
             count = 2;
@@ -111,10 +110,10 @@ int CheckLinedefInsideBox(int xmin, int ymin, int xmax, int ymax, int x1,
 
         if (x1 > xmax)
         {
-            if (x2 > xmax) return false;
+            if (x2 > xmax)
+                return false;
 
-            y1 =
-                y1 + (int)((y2 - y1) * (double)(xmax - x1) / (double)(x2 - x1));
+            y1 = y1 + (int)((y2 - y1) * (double)(xmax - x1) / (double)(x2 - x1));
             x1 = xmax;
 
             count = 2;
@@ -123,10 +122,10 @@ int CheckLinedefInsideBox(int xmin, int ymin, int xmax, int ymax, int x1,
 
         if (x1 < xmin)
         {
-            if (x2 < xmin) return false;
+            if (x2 < xmin)
+                return false;
 
-            y1 =
-                y1 + (int)((y2 - y1) * (double)(xmin - x1) / (double)(x2 - x1));
+            y1 = y1 + (int)((y2 - y1) * (double)(xmin - x1) / (double)(x2 - x1));
             x1 = xmin;
 
             count = 2;
@@ -135,7 +134,8 @@ int CheckLinedefInsideBox(int xmin, int ymin, int xmax, int ymax, int x1,
 
         count--;
 
-        if (count == 0) break;
+        if (count == 0)
+            break;
 
         // swap end points
         tmp = x1;
@@ -173,11 +173,10 @@ static void BlockAdd(int blk_num, int line_index)
     if (!cur)
     {
         // create empty block
-        block_lines[blk_num] = cur =
-            (uint16_t *)UtilCalloc(BK_QUANTUM * sizeof(uint16_t));
-        cur[BK_NUM] = 0;
-        cur[BK_MAX] = BK_QUANTUM;
-        cur[BK_XOR] = 0x1234;
+        block_lines[blk_num] = cur = (uint16_t *)UtilCalloc(BK_QUANTUM * sizeof(uint16_t));
+        cur[BK_NUM]                = 0;
+        cur[BK_MAX]                = BK_QUANTUM;
+        cur[BK_XOR]                = 0x1234;
     }
 
     if (BK_FIRST + cur[BK_NUM] == cur[BK_MAX])
@@ -185,13 +184,11 @@ static void BlockAdd(int blk_num, int line_index)
         // no more room, so allocate some more...
         cur[BK_MAX] += BK_QUANTUM;
 
-        block_lines[blk_num] = cur =
-            (uint16_t *)UtilRealloc(cur, cur[BK_MAX] * sizeof(uint16_t));
+        block_lines[blk_num] = cur = (uint16_t *)UtilRealloc(cur, cur[BK_MAX] * sizeof(uint16_t));
     }
 
     // compute new checksum
-    cur[BK_XOR] =
-        (uint16_t)(((cur[BK_XOR] << 4) | (cur[BK_XOR] >> 12)) ^ line_index);
+    cur[BK_XOR] = (uint16_t)(((cur[BK_XOR] << 4) | (cur[BK_XOR] >> 12)) ^ line_index);
 
     cur[BK_FIRST + cur[BK_NUM]] = AlignedLittleEndianU16(line_index);
     cur[BK_NUM]++;
@@ -213,17 +210,21 @@ static void BlockAddLine(const Linedef *L)
     int line_index = L->index;
 
 #if DEBUG_BLOCKMAP
-    DebugPrintf("BlockAddLine: %d (%d,%d) -> (%d,%d)\n", line_index, x1, y1, x2,
-                y2);
+    DebugPrintf("BlockAddLine: %d (%d,%d) -> (%d,%d)\n", line_index, x1, y1, x2, y2);
 #endif
 
     // handle truncated blockmaps
-    if (bx1 < 0) bx1 = 0;
-    if (by1 < 0) by1 = 0;
-    if (bx2 >= block_w) bx2 = block_w - 1;
-    if (by2 >= block_h) by2 = block_h - 1;
+    if (bx1 < 0)
+        bx1 = 0;
+    if (by1 < 0)
+        by1 = 0;
+    if (bx2 >= block_w)
+        bx2 = block_w - 1;
+    if (by2 >= block_h)
+        by2 = block_h - 1;
 
-    if (bx2 < bx1 || by2 < by1) return;
+    if (bx2 < bx1 || by2 < by1)
+        return;
 
     // handle simple case #1: completely horizontal
     if (by1 == by2)
@@ -275,7 +276,8 @@ static void CreateBlockmap(void)
         const Linedef *L = level_linedefs[i];
 
         // ignore zero-length lines
-        if (L->zero_length) continue;
+        if (L->zero_length)
+            continue;
 
         BlockAddLine(L);
     }
@@ -289,14 +291,23 @@ static int BlockCompare(const void *p1, const void *p2)
     const uint16_t *A = block_lines[blk_num1];
     const uint16_t *B = block_lines[blk_num2];
 
-    if (A == B) return 0;
+    if (A == B)
+        return 0;
 
-    if (A == NULL) return -1;
-    if (B == NULL) return +1;
+    if (A == NULL)
+        return -1;
+    if (B == NULL)
+        return +1;
 
-    if (A[BK_NUM] != B[BK_NUM]) { return A[BK_NUM] - B[BK_NUM]; }
+    if (A[BK_NUM] != B[BK_NUM])
+    {
+        return A[BK_NUM] - B[BK_NUM];
+    }
 
-    if (A[BK_XOR] != B[BK_XOR]) { return A[BK_XOR] - B[BK_XOR]; }
+    if (A[BK_XOR] != B[BK_XOR])
+    {
+        return A[BK_XOR] - B[BK_XOR];
+    }
 
     return memcmp(A + BK_FIRST, B + BK_FIRST, A[BK_NUM] * sizeof(uint16_t));
 }
@@ -316,7 +327,8 @@ static void CompressBlockmap(void)
     // will be next to each other.  The duplicate array gives the order
     // of the blocklists in the BLOCKMAP lump.
 
-    for (i = 0; i < block_count; i++) block_dups[i] = (uint16_t)i;
+    for (i = 0; i < block_count; i++)
+        block_dups[i] = (uint16_t)i;
 
     qsort(block_dups, block_count, sizeof(uint16_t), BlockCompare);
 
@@ -347,8 +359,7 @@ static void CompressBlockmap(void)
         // duplicate ?  Only the very last one of a sequence of duplicates
         // will update the current offset value.
 
-        if (i + 1 < block_count &&
-            BlockCompare(block_dups + i, block_dups + i + 1) == 0)
+        if (i + 1 < block_count && BlockCompare(block_dups + i, block_dups + i + 1) == 0)
         {
             block_ptrs[blk_num] = (uint16_t)cur_offset;
             block_dups[i]       = kDummyDuplicate;
@@ -381,14 +392,14 @@ static void CompressBlockmap(void)
     }
 
 #if DEBUG_BLOCKMAP
-    DebugPrintf("Blockmap: Last ptr = %d  duplicates = %d\n", cur_offset,
-                dup_count);
+    DebugPrintf("Blockmap: Last ptr = %d  duplicates = %d\n", cur_offset, dup_count);
 #endif
 
     block_compression = (orig_size - new_size) * 100 / orig_size;
 
     // there's a tiny chance of new_size > orig_size
-    if (block_compression < 0) block_compression = 0;
+    if (block_compression < 0)
+        block_compression = 0;
 }
 
 static int CalcBlockmapSize()
@@ -409,7 +420,8 @@ static int CalcBlockmapSize()
         int blk_num = block_dups[i];
 
         // ignore duplicate or empty blocks
-        if (blk_num == kDummyDuplicate) continue;
+        if (blk_num == kDummyDuplicate)
+            continue;
 
         uint16_t *blk = block_lines[blk_num];
         SYS_ASSERT(blk);
@@ -447,7 +459,8 @@ static void WriteBlockmap(void)
     {
         uint16_t ptr = AlignedLittleEndianU16(block_ptrs[i]);
 
-        if (ptr == 0) ErrorPrintf("WriteBlockmap: offset %d not set.\n", i);
+        if (ptr == 0)
+            ErrorPrintf("WriteBlockmap: offset %d not set.\n", i);
 
         lump->Write(&ptr, sizeof(uint16_t));
     }
@@ -461,7 +474,8 @@ static void WriteBlockmap(void)
         int blk_num = block_dups[i];
 
         // ignore duplicate or empty blocks
-        if (blk_num == kDummyDuplicate) continue;
+        if (blk_num == kDummyDuplicate)
+            continue;
 
         uint16_t *blk = block_lines[blk_num];
         SYS_ASSERT(blk);
@@ -478,7 +492,8 @@ static void FreeBlockmap(void)
 {
     for (int i = 0; i < block_count; i++)
     {
-        if (block_lines[i]) UtilFree(block_lines[i]);
+        if (block_lines[i])
+            UtilFree(block_lines[i]);
     }
 
     UtilFree(block_lines);
@@ -510,10 +525,14 @@ static void FindBlockmapLimits(BoundingBox *bbox)
             int hx = (int)ceil(std::max(x1, x2));
             int hy = (int)ceil(std::max(y1, y2));
 
-            if (lx < bbox->minx) bbox->minx = lx;
-            if (ly < bbox->miny) bbox->miny = ly;
-            if (hx > bbox->maxx) bbox->maxx = hx;
-            if (hy > bbox->maxy) bbox->maxy = hy;
+            if (lx < bbox->minx)
+                bbox->minx = lx;
+            if (ly < bbox->miny)
+                bbox->miny = ly;
+            if (hx > bbox->maxx)
+                bbox->maxx = hx;
+            if (hy > bbox->maxy)
+                bbox->maxy = hy;
 
             // compute middle of cluster
             mid_x += (lx + hx) / 2;
@@ -528,8 +547,7 @@ static void FindBlockmapLimits(BoundingBox *bbox)
     }
 
 #if DEBUG_BLOCKMAP
-    DebugPrintf("Blockmap lines centered at (%d,%d)\n", block_mid_x,
-                block_mid_y);
+    DebugPrintf("Blockmap lines centered at (%d,%d)\n", block_mid_x, block_mid_y);
 #endif
 }
 
@@ -540,8 +558,7 @@ void InitBlockmap()
     // find limits of linedefs, and store as map limits
     FindBlockmapLimits(&map_bbox);
 
-    LogPrintf("    Map limits: (%d,%d) to (%d,%d)\n", map_bbox.minx,
-              map_bbox.miny, map_bbox.maxx, map_bbox.maxy);
+    LogPrintf("    Map limits: (%d,%d) to (%d,%d)\n", map_bbox.minx, map_bbox.miny, map_bbox.maxx, map_bbox.maxy);
 
     block_x = map_bbox.minx - (map_bbox.minx & 0x7);
     block_y = map_bbox.miny - (map_bbox.miny & 0x7);
@@ -587,8 +604,7 @@ void PutBlockmap()
     {
         WriteBlockmap();
 
-        LogPrintf("    Blockmap size: %dx%d (compression: %d%%)\n", block_w,
-                  block_h, block_compression);
+        LogPrintf("    Blockmap size: %dx%d (compression: %d%%)\n", block_w, block_h, block_compression);
     }
 
     FreeBlockmap();
@@ -599,7 +615,7 @@ void PutBlockmap()
 //------------------------------------------------------------------------
 
 static uint8_t *reject_matrix;
-static int      reject_total_size;  // in bytes
+static int      reject_total_size; // in bytes
 
 //
 // Allocate the matrix, init sectors into individual groups.
@@ -637,16 +653,19 @@ static void Reject_GroupSectors()
     {
         const Linedef *line = level_linedefs[i];
 
-        if (!line->right || !line->left) continue;
+        if (!line->right || !line->left)
+            continue;
 
         Sector *sec1 = line->right->sector;
         Sector *sec2 = line->left->sector;
         Sector *tmp;
 
-        if (!sec1 || !sec2 || sec1 == sec2) continue;
+        if (!sec1 || !sec2 || sec1 == sec2)
+            continue;
 
         // already in the same group ?
-        if (sec1->reject_group == sec2->reject_group) continue;
+        if (sec1->reject_group == sec2->reject_group)
+            continue;
 
         // swap sectors so that the smallest group is added to the biggest
         // group.  This is based on the assumption that sector numbers in
@@ -692,7 +711,8 @@ static void Reject_DebugGroups()
         int group = sec->reject_group;
         int num   = 0;
 
-        if (group < 0) continue;
+        if (group < 0)
+            continue;
 
         sec->reject_group = -1;
         num++;
@@ -717,7 +737,8 @@ static void Reject_ProcessSectors()
             Sector *view_sec = level_sectors[view];
             Sector *targ_sec = level_sectors[target];
 
-            if (view_sec->reject_group == targ_sec->reject_group) continue;
+            if (view_sec->reject_group == targ_sec->reject_group)
+                continue;
 
             // for symmetry, do both sides at same time
 
@@ -948,15 +969,6 @@ void FreeWallTips()
 
 /* ----- reading routines ------------------------------ */
 
-static const char *GetLevelName(int level_index)
-{
-    SYS_ASSERT(cur_wad != nullptr);
-
-    int lump_idx = cur_wad->LevelHeader(level_index);
-
-    return cur_wad->GetLump(lump_idx)->Name();
-}
-
 static Vertex *SafeLookupVertex(int num)
 {
     if (num >= level_vertices.size())
@@ -967,7 +979,8 @@ static Vertex *SafeLookupVertex(int num)
 
 static Sector *SafeLookupSector(uint16_t num)
 {
-    if (num == 0xFFFF) return nullptr;
+    if (num == 0xFFFF)
+        return nullptr;
 
     if (num >= level_sectors.size())
         ErrorPrintf("AJBSP: illegal sector number #%d\n", (int)num);
@@ -977,10 +990,12 @@ static Sector *SafeLookupSector(uint16_t num)
 
 static inline Sidedef *SafeLookupSidedef(uint16_t num)
 {
-    if (num == 0xFFFF) return nullptr;
+    if (num == 0xFFFF)
+        return nullptr;
 
     // silently ignore illegal sidedef numbers
-    if (num >= (unsigned int)level_sidedefs.size()) return nullptr;
+    if (num >= (unsigned int)level_sidedefs.size())
+        return nullptr;
 
     return level_sidedefs[num];
 }
@@ -991,15 +1006,18 @@ void GetVertices()
 
     Lump *lump = FindLevelLump("VERTEXES");
 
-    if (lump) count = lump->Length() / (int)sizeof(RawVertex);
+    if (lump)
+        count = lump->Length() / (int)sizeof(RawVertex);
 
 #if DEBUG_LOAD
     DebugPrintf("GetVertices: num = %d\n", count);
 #endif
 
-    if (lump == nullptr || count == 0) return;
+    if (lump == nullptr || count == 0)
+        return;
 
-    if (!lump->Seek(0)) ErrorPrintf("AJBSP: Error seeking to vertices.\n");
+    if (!lump->Seek(0))
+        ErrorPrintf("AJBSP: Error seeking to vertices.\n");
 
     for (int i = 0; i < count; i++)
     {
@@ -1023,11 +1041,14 @@ void GetSectors()
 
     Lump *lump = FindLevelLump("SECTORS");
 
-    if (lump) count = lump->Length() / (int)sizeof(RawSector);
+    if (lump)
+        count = lump->Length() / (int)sizeof(RawSector);
 
-    if (lump == nullptr || count == 0) return;
+    if (lump == nullptr || count == 0)
+        return;
 
-    if (!lump->Seek(0)) ErrorPrintf("AJBSP: Error seeking to sectors.\n");
+    if (!lump->Seek(0))
+        ErrorPrintf("AJBSP: Error seeking to sectors.\n");
 
 #if DEBUG_LOAD
     DebugPrintf("GetSectors: num = %d\n", count);
@@ -1052,11 +1073,14 @@ void GetThings()
 
     Lump *lump = FindLevelLump("THINGS");
 
-    if (lump) count = lump->Length() / (int)sizeof(RawThing);
+    if (lump)
+        count = lump->Length() / (int)sizeof(RawThing);
 
-    if (lump == nullptr || count == 0) return;
+    if (lump == nullptr || count == 0)
+        return;
 
-    if (!lump->Seek(0)) ErrorPrintf("AJBSP: Error seeking to things.\n");
+    if (!lump->Seek(0))
+        ErrorPrintf("AJBSP: Error seeking to things.\n");
 
 #if DEBUG_LOAD
     DebugPrintf("GetThings: num = %d\n", count);
@@ -1083,11 +1107,14 @@ void GetThingsHexen()
 
     Lump *lump = FindLevelLump("THINGS");
 
-    if (lump) count = lump->Length() / (int)sizeof(RawHexenThing);
+    if (lump)
+        count = lump->Length() / (int)sizeof(RawHexenThing);
 
-    if (lump == nullptr || count == 0) return;
+    if (lump == nullptr || count == 0)
+        return;
 
-    if (!lump->Seek(0)) ErrorPrintf("AJBSP: Error seeking to things.\n");
+    if (!lump->Seek(0))
+        ErrorPrintf("AJBSP: Error seeking to things.\n");
 
 #if DEBUG_LOAD
     DebugPrintf("GetThingsHexen: num = %d\n", count);
@@ -1114,11 +1141,14 @@ void GetSidedefs()
 
     Lump *lump = FindLevelLump("SIDEDEFS");
 
-    if (lump) count = lump->Length() / (int)sizeof(RawSidedef);
+    if (lump)
+        count = lump->Length() / (int)sizeof(RawSidedef);
 
-    if (lump == nullptr || count == 0) return;
+    if (lump == nullptr || count == 0)
+        return;
 
-    if (!lump->Seek(0)) ErrorPrintf("AJBSP: Error seeking to sidedefs.\n");
+    if (!lump->Seek(0))
+        ErrorPrintf("AJBSP: Error seeking to sidedefs.\n");
 
 #if DEBUG_LOAD
     DebugPrintf("GetSidedefs: num = %d\n", count);
@@ -1143,11 +1173,14 @@ void GetLinedefs()
 
     Lump *lump = FindLevelLump("LINEDEFS");
 
-    if (lump) count = lump->Length() / (int)sizeof(RawLinedef);
+    if (lump)
+        count = lump->Length() / (int)sizeof(RawLinedef);
 
-    if (lump == nullptr || count == 0) return;
+    if (lump == nullptr || count == 0)
+        return;
 
-    if (!lump->Seek(0)) ErrorPrintf("AJBSP: Error seeking to linedefs.\n");
+    if (!lump->Seek(0))
+        ErrorPrintf("AJBSP: Error seeking to linedefs.\n");
 
 #if DEBUG_LOAD
     DebugPrintf("GetLinedefs: num = %d\n", count);
@@ -1174,27 +1207,25 @@ void GetLinedefs()
         line->end   = end;
 
         // check for zero-length line
-        line->zero_length = (fabs(start->x_ - end->x_) < kEpsilon) &&
-                            (fabs(start->y_ - end->y_) < kEpsilon);
+        line->zero_length = (fabs(start->x_ - end->x_) < kEpsilon) && (fabs(start->y_ - end->y_) < kEpsilon);
 
         line->type     = AlignedLittleEndianU16(raw.type);
         uint16_t flags = AlignedLittleEndianU16(raw.flags);
         int16_t  tag   = AlignedLittleEndianS16(raw.tag);
 
-        line->two_sided = (flags & kLineFlagTwoSided) != 0;
-        line->is_precious =
-            (tag >= 900 &&
-             tag < 1000);  // Why is this the case? Need to investigate - Dasho
+        line->two_sided   = (flags & kLineFlagTwoSided) != 0;
+        line->is_precious = (tag >= 900 && tag < 1000); // Why is this the case? Need to investigate - Dasho
 
         line->right = SafeLookupSidedef(AlignedLittleEndianU16(raw.right));
         line->left  = SafeLookupSidedef(AlignedLittleEndianU16(raw.left));
 
-        if (line->right || line->left) num_real_lines++;
+        if (line->right || line->left)
+            num_real_lines++;
 
-        line->self_referencing = (line->left && line->right &&
-                                  (line->left->sector == line->right->sector));
+        line->self_referencing = (line->left && line->right && (line->left->sector == line->right->sector));
 
-        if (line->self_referencing) line->is_precious = true;
+        if (line->self_referencing)
+            line->is_precious = true;
     }
 }
 
@@ -1204,11 +1235,14 @@ void GetLinedefsHexen()
 
     Lump *lump = FindLevelLump("LINEDEFS");
 
-    if (lump) count = lump->Length() / (int)sizeof(RawHexenLinedef);
+    if (lump)
+        count = lump->Length() / (int)sizeof(RawHexenLinedef);
 
-    if (lump == nullptr || count == 0) return;
+    if (lump == nullptr || count == 0)
+        return;
 
-    if (!lump->Seek(0)) ErrorPrintf("AJBSP: Error seeking to linedefs.\n");
+    if (!lump->Seek(0))
+        ErrorPrintf("AJBSP: Error seeking to linedefs.\n");
 
 #if DEBUG_LOAD
     DebugPrintf("GetLinedefsHexen: num = %d\n", count);
@@ -1235,8 +1269,7 @@ void GetLinedefsHexen()
         line->end   = end;
 
         // check for zero-length line
-        line->zero_length = (fabs(start->x_ - end->x_) < kEpsilon) &&
-                            (fabs(start->y_ - end->y_) < kEpsilon);
+        line->zero_length = (fabs(start->x_ - end->x_) < kEpsilon) && (fabs(start->y_ - end->y_) < kEpsilon);
 
         line->type     = (uint8_t)raw.type;
         uint16_t flags = AlignedLittleEndianU16(raw.flags);
@@ -1247,12 +1280,13 @@ void GetLinedefsHexen()
         line->right = SafeLookupSidedef(AlignedLittleEndianU16(raw.right));
         line->left  = SafeLookupSidedef(AlignedLittleEndianU16(raw.left));
 
-        if (line->right || line->left) num_real_lines++;
+        if (line->right || line->left)
+            num_real_lines++;
 
-        line->self_referencing = (line->left && line->right &&
-                                  (line->left->sector == line->right->sector));
+        line->self_referencing = (line->left && line->right && (line->left->sector == line->right->sector));
 
-        if (line->self_referencing) line->is_precious = true;
+        if (line->self_referencing)
+            line->is_precious = true;
     }
 }
 
@@ -1276,7 +1310,8 @@ static inline int VanillaSegAngle(const Seg *seg)
 
     double angle = ComputeAngle(dx, dy);
 
-    if (angle < 0) angle += 360.0;
+    if (angle < 0)
+        angle += 360.0;
 
     int result = (int)floor(angle * 65536.0 / 360.0 + 0.5);
 
@@ -1285,8 +1320,7 @@ static inline int VanillaSegAngle(const Seg *seg)
 
 /* ----- UDMF reading routines ------------------------- */
 
-void ParseThingField(Thing *thing, const std::string &key,
-                     const std::string &value)
+void ParseThingField(Thing *thing, const std::string &key, const std::string &value)
 {
     if (StringCaseCompareASCII(key, "x") == 0)
         thing->x = RoundToInteger(ajparse::LexDouble(value));
@@ -1296,8 +1330,7 @@ void ParseThingField(Thing *thing, const std::string &key,
         thing->type = ajparse::LexInteger(value);
 }
 
-void ParseVertexField(Vertex *vertex, const std::string &key,
-                      const std::string &value)
+void ParseVertexField(Vertex *vertex, const std::string &key, const std::string &value)
 {
     if (StringCaseCompareASCII(key, "x") == 0)
         vertex->x_ = ajparse::LexDouble(value);
@@ -1305,8 +1338,7 @@ void ParseVertexField(Vertex *vertex, const std::string &key,
         vertex->y_ = ajparse::LexDouble(value);
 }
 
-void ParseSidedefField(Sidedef *side, const std::string &key,
-                       const std::string &value)
+void ParseSidedefField(Sidedef *side, const std::string &key, const std::string &value)
 {
     if (StringCaseCompareASCII(key, "sector") == 0)
     {
@@ -1319,8 +1351,7 @@ void ParseSidedefField(Sidedef *side, const std::string &key,
     }
 }
 
-void ParseLinedefField(Linedef *line, const std::string &key,
-                       const std::string &value)
+void ParseLinedefField(Linedef *line, const std::string &key, const std::string &value)
 {
     if (StringCaseCompareASCII(key, "v1") == 0)
         line->start = SafeLookupVertex(ajparse::LexInteger(value));
@@ -1359,28 +1390,29 @@ void ParseUDMF_Block(ajparse::Lexer &lex, int cur_type)
 
     switch (cur_type)
     {
-        case kUDMFVertex:
-            vertex = NewVertex();
-            break;
-        case kUDMFThing:
-            thing = NewThing();
-            break;
-        case kUDMFSector:
-            NewSector();  // We don't use the returned pointer in this function
-            break;
-        case kUDMFSidedef:
-            side = NewSidedef();
-            break;
-        case kUDMFLinedef:
-            line = NewLinedef();
-            break;
-        default:
-            break;
+    case kUDMFVertex:
+        vertex = NewVertex();
+        break;
+    case kUDMFThing:
+        thing = NewThing();
+        break;
+    case kUDMFSector:
+        NewSector(); // We don't use the returned pointer in this function
+        break;
+    case kUDMFSidedef:
+        side = NewSidedef();
+        break;
+    case kUDMFLinedef:
+        line = NewLinedef();
+        break;
+    default:
+        break;
     }
 
     for (;;)
     {
-        if (lex.Match("}")) break;
+        if (lex.Match("}"))
+            break;
 
         std::string key;
         std::string value;
@@ -1398,8 +1430,7 @@ void ParseUDMF_Block(ajparse::Lexer &lex, int cur_type)
 
         tok = lex.Next(value);
 
-        if (tok == ajparse::kTokenEOF || tok == ajparse::kTokenError ||
-            value == "}")
+        if (tok == ajparse::kTokenEOF || tok == ajparse::kTokenError || value == "}")
             ErrorPrintf("AJBSP: Malformed TEXTMAP lump: missing value\n");
 
         if (!lex.Match(";"))
@@ -1407,21 +1438,21 @@ void ParseUDMF_Block(ajparse::Lexer &lex, int cur_type)
 
         switch (cur_type)
         {
-            case kUDMFVertex:
-                ParseVertexField(vertex, key, value);
-                break;
-            case kUDMFThing:
-                ParseThingField(thing, key, value);
-                break;
-            case kUDMFSidedef:
-                ParseSidedefField(side, key, value);
-                break;
-            case kUDMFLinedef:
-                ParseLinedefField(line, key, value);
-                break;
-            case kUDMFSector:
-            default: /* just skip it */
-                break;
+        case kUDMFVertex:
+            ParseVertexField(vertex, key, value);
+            break;
+        case kUDMFThing:
+            ParseThingField(thing, key, value);
+            break;
+        case kUDMFSidedef:
+            ParseSidedefField(side, key, value);
+            break;
+        case kUDMFLinedef:
+            ParseLinedefField(line, key, value);
+            break;
+        case kUDMFSector:
+        default: /* just skip it */
+            break;
         }
     }
 
@@ -1430,15 +1461,15 @@ void ParseUDMF_Block(ajparse::Lexer &lex, int cur_type)
     if (line != nullptr)
     {
         if (line->start == nullptr || line->end == nullptr)
-            ErrorPrintf("AJBSP: Linedef #%d is missing a vertex!\n",
-                        line->index);
+            ErrorPrintf("AJBSP: Linedef #%d is missing a vertex!\n", line->index);
 
-        if (line->right || line->left) num_real_lines++;
+        if (line->right || line->left)
+            num_real_lines++;
 
-        line->self_referencing = (line->left && line->right &&
-                                  (line->left->sector == line->right->sector));
+        line->self_referencing = (line->left && line->right && (line->left->sector == line->right->sector));
 
-        if (line->self_referencing) line->is_precious = true;
+        if (line->self_referencing)
+            line->is_precious = true;
     }
 }
 
@@ -1455,7 +1486,8 @@ void ParseUDMF_Pass(const std::string &data, int pass)
         std::string        section;
         ajparse::TokenKind tok = lex.Next(section);
 
-        if (tok == ajparse::kTokenEOF) return;
+        if (tok == ajparse::kTokenEOF)
+            return;
 
         if (tok != ajparse::kTokenIdentifier)
         {
@@ -1479,23 +1511,28 @@ void ParseUDMF_Pass(const std::string &data, int pass)
 
         if (StringCaseCompareASCII(section, "thing") == 0)
         {
-            if (pass == 1) cur_type = kUDMFThing;
+            if (pass == 1)
+                cur_type = kUDMFThing;
         }
         else if (StringCaseCompareASCII(section, "vertex") == 0)
         {
-            if (pass == 1) cur_type = kUDMFVertex;
+            if (pass == 1)
+                cur_type = kUDMFVertex;
         }
         else if (StringCaseCompareASCII(section, "sector") == 0)
         {
-            if (pass == 1) cur_type = kUDMFSector;
+            if (pass == 1)
+                cur_type = kUDMFSector;
         }
         else if (StringCaseCompareASCII(section, "sidedef") == 0)
         {
-            if (pass == 2) cur_type = kUDMFSidedef;
+            if (pass == 2)
+                cur_type = kUDMFSidedef;
         }
         else if (StringCaseCompareASCII(section, "linedef") == 0)
         {
-            if (pass == 3) cur_type = kUDMFLinedef;
+            if (pass == 3)
+                cur_type = kUDMFLinedef;
         }
 
         // process the block
@@ -1535,14 +1572,16 @@ static const uint8_t *level_v5_magic = (uint8_t *)"gNd5";
 
 static inline uint16_t VertexIndex16Bit(const Vertex *v)
 {
-    if (v->is_new_) return (uint16_t)(v->index_ | 0x8000U);
+    if (v->is_new_)
+        return (uint16_t)(v->index_ | 0x8000U);
 
     return (uint16_t)v->index_;
 }
 
 static inline uint32_t VertexIndexV5(const Vertex *v)
 {
-    if (v->is_new_) return (uint32_t)(v->index_ | 0x80000000U);
+    if (v->is_new_)
+        return (uint32_t)(v->index_ | 0x80000000U);
 
     return (uint32_t)v->index_;
 }
@@ -1562,7 +1601,10 @@ static void PutVertices(const char *name)
 
         const Vertex *vert = level_vertices[i];
 
-        if (0 != (vert->is_new_ ? 1 : 0)) { continue; }
+        if (0 != (vert->is_new_ ? 1 : 0))
+        {
+            continue;
+        }
 
         raw.x = AlignedLittleEndianS16(RoundToInteger(vert->x_));
         raw.y = AlignedLittleEndianS16(RoundToInteger(vert->y_));
@@ -1604,7 +1646,8 @@ static void PutGLVertices(int do_v5)
 
         const Vertex *vert = level_vertices[i];
 
-        if (!vert->is_new_) continue;
+        if (!vert->is_new_)
+            continue;
 
         raw.x = AlignedLittleEndianS32(RoundToInteger(vert->x_ * 65536.0));
         raw.y = AlignedLittleEndianS32(RoundToInteger(vert->y_ * 65536.0));
@@ -1617,8 +1660,7 @@ static void PutGLVertices(int do_v5)
     lump->Finish();
 
     if (count != num_new_vert)
-        ErrorPrintf("AJBSP: PutGLVertices miscounted (%d != %d)\n", count,
-                    num_new_vert);
+        ErrorPrintf("AJBSP: PutGLVertices miscounted (%d != %d)\n", count, num_new_vert);
 }
 
 static void PutSegs()
@@ -1644,14 +1686,11 @@ static void PutSegs()
         lump->Write(&raw, sizeof(raw));
 
 #if DEBUG_BSP
-        DebugPrintf(
-            "PUT SEG: %04X  Vert %04X->%04X  Line %04X %s  "
-            "Angle %04X  (%1.1f,%1.1f) -> (%1.1f,%1.1f)\n",
-            seg->index, AlignedLittleEndianU16(raw.start),
-            AlignedLittleEndianU16(raw.end),
-            AlignedLittleEndianU16(raw.linedef), seg->side ? "L" : "R",
-            AlignedLittleEndianU16(raw.angle), seg->start->x, seg->start->y,
-            seg->end->x, seg->end->y);
+        DebugPrintf("PUT SEG: %04X  Vert %04X->%04X  Line %04X %s  "
+                    "Angle %04X  (%1.1f,%1.1f) -> (%1.1f,%1.1f)\n",
+                    seg->index, AlignedLittleEndianU16(raw.start), AlignedLittleEndianU16(raw.end),
+                    AlignedLittleEndianU16(raw.linedef), seg->side ? "L" : "R", AlignedLittleEndianU16(raw.angle),
+                    seg->start->x, seg->start->y, seg->end->x, seg->end->y);
 #endif
     }
 
@@ -1697,12 +1736,10 @@ static void PutGLSegsV2()
         lump->Write(&raw, sizeof(raw));
 
 #if DEBUG_BSP
-        DebugPrintf(
-            "PUT GL SEG: %04X  Line %04X %s  Partner %04X  "
-            "(%1.1f,%1.1f) -> (%1.1f,%1.1f)\n",
-            seg->index, AlignedLittleEndianU16(raw.linedef),
-            seg->side ? "L" : "R", AlignedLittleEndianU16(raw.partner),
-            seg->start->x, seg->start->y, seg->end->x, seg->end->y);
+        DebugPrintf("PUT GL SEG: %04X  Line %04X %s  Partner %04X  "
+                    "(%1.1f,%1.1f) -> (%1.1f,%1.1f)\n",
+                    seg->index, AlignedLittleEndianU16(raw.linedef), seg->side ? "L" : "R",
+                    AlignedLittleEndianU16(raw.partner), seg->start->x, seg->start->y, seg->end->x, seg->end->y);
 #endif
     }
 
@@ -1739,12 +1776,10 @@ static void PutGLSegsV5()
         lump->Write(&raw, sizeof(raw));
 
 #if DEBUG_BSP
-        DebugPrintf(
-            "PUT V3 SEG: %06X  Line %04X %s  Partner %06X  "
-            "(%1.1f,%1.1f) -> (%1.1f,%1.1f)\n",
-            seg->index, AlignedLittleEndianU16(raw.linedef),
-            seg->side ? "L" : "R", AlignedLittleEndianU32(raw.partner),
-            seg->start->x, seg->start->y, seg->end->x, seg->end->y);
+        DebugPrintf("PUT V3 SEG: %06X  Line %04X %s  Partner %06X  "
+                    "(%1.1f,%1.1f) -> (%1.1f,%1.1f)\n",
+                    seg->index, AlignedLittleEndianU16(raw.linedef), seg->side ? "L" : "R",
+                    AlignedLittleEndianU32(raw.partner), seg->start->x, seg->start->y, seg->end->x, seg->end->y);
 #endif
     }
 
@@ -1769,16 +1804,14 @@ void PutSubsecs(const char *name, int do_gl)
         lump->Write(&raw, sizeof(raw));
 
 #if DEBUG_BSP
-        DebugPrintf("PUT SUBSEC %04X  First %04X  Num %04X\n", sub->index,
-                    AlignedLittleEndianU16(raw.first),
+        DebugPrintf("PUT SUBSEC %04X  First %04X  Num %04X\n", sub->index, AlignedLittleEndianU16(raw.first),
                     AlignedLittleEndianU16(raw.num));
 #endif
     }
 
     if (level_subsecs.size() > 32767)
     {
-        LogPrintf("Number of %s has overflowed.\n",
-                  do_gl ? "GL subsectors" : "subsectors");
+        LogPrintf("Number of %s has overflowed.\n", do_gl ? "GL subsectors" : "subsectors");
         level_overflows = true;
     }
 
@@ -1803,8 +1836,7 @@ void PutGLSubsecsV5()
         lump->Write(&raw, sizeof(raw));
 
 #if DEBUG_BSP
-        DebugPrintf("PUT V3 SUBSEC %06X  First %06X  Num %06X\n", sub->index,
-                    AlignedLittleEndianU32(raw.first),
+        DebugPrintf("PUT V3 SUBSEC %06X  First %06X  Num %06X\n", sub->index, AlignedLittleEndianU32(raw.first),
                     AlignedLittleEndianU32(raw.num));
 #endif
     }
@@ -1816,9 +1848,11 @@ static int node_current_index;
 
 static void PutOneNode(Node *node, Lump *lump)
 {
-    if (node->r_.node) PutOneNode(node->r_.node, lump);
+    if (node->r_.node)
+        PutOneNode(node->r_.node, lump);
 
-    if (node->l_.node) PutOneNode(node->l_.node, lump);
+    if (node->l_.node)
+        PutOneNode(node->l_.node, lump);
 
     node->index_ = node_current_index++;
 
@@ -1857,20 +1891,20 @@ static void PutOneNode(Node *node, Lump *lump)
     lump->Write(&raw, sizeof(raw));
 
 #if DEBUG_BSP
-    DebugPrintf(
-        "PUT NODE %04X  Left %04X  Right %04X  "
-        "(%d,%d) -> (%d,%d)\n",
-        node->index, AlignedLittleEndianU16(raw.left),
-        AlignedLittleEndianU16(raw.right), node->x, node->y, node->x + node->dx,
-        node->y + node->dy);
+    DebugPrintf("PUT NODE %04X  Left %04X  Right %04X  "
+                "(%d,%d) -> (%d,%d)\n",
+                node->index, AlignedLittleEndianU16(raw.left), AlignedLittleEndianU16(raw.right), node->x, node->y,
+                node->x + node->dx, node->y + node->dy);
 #endif
 }
 
 static void PutOneNodeV5(Node *node, Lump *lump)
 {
-    if (node->r_.node) PutOneNodeV5(node->r_.node, lump);
+    if (node->r_.node)
+        PutOneNodeV5(node->r_.node, lump);
 
-    if (node->l_.node) PutOneNodeV5(node->l_.node, lump);
+    if (node->l_.node)
+        PutOneNodeV5(node->l_.node, lump);
 
     node->index_ = node_current_index++;
 
@@ -1894,28 +1928,24 @@ static void PutOneNodeV5(Node *node, Lump *lump)
     if (node->r_.node)
         raw.right = AlignedLittleEndianU32(node->r_.node->index_);
     else if (node->r_.subsec)
-        raw.right =
-            AlignedLittleEndianU32(node->r_.subsec->index_ | 0x80000000U);
+        raw.right = AlignedLittleEndianU32(node->r_.subsec->index_ | 0x80000000U);
     else
         ErrorPrintf("AJBSP: Bad right child in V5 node %d\n", node->index_);
 
     if (node->l_.node)
         raw.left = AlignedLittleEndianU32(node->l_.node->index_);
     else if (node->l_.subsec)
-        raw.left =
-            AlignedLittleEndianU32(node->l_.subsec->index_ | 0x80000000U);
+        raw.left = AlignedLittleEndianU32(node->l_.subsec->index_ | 0x80000000U);
     else
         ErrorPrintf("AJBSP: Bad left child in V5 node %d\n", node->index_);
 
     lump->Write(&raw, sizeof(raw));
 
 #if DEBUG_BSP
-    DebugPrintf(
-        "PUT V5 NODE %08X  Left %08X  Right %08X  "
-        "(%d,%d) -> (%d,%d)\n",
-        node->index, AlignedLittleEndianU32(raw.left),
-        AlignedLittleEndianU32(raw.right), node->x, node->y, node->x + node->dx,
-        node->y + node->dy);
+    DebugPrintf("PUT V5 NODE %08X  Left %08X  Right %08X  "
+                "(%d,%d) -> (%d,%d)\n",
+                node->index, AlignedLittleEndianU32(raw.left), AlignedLittleEndianU32(raw.right), node->x, node->y,
+                node->x + node->dx, node->y + node->dy);
 #endif
 }
 
@@ -1941,8 +1971,7 @@ void PutNodes(const char *name, int do_v5, Node *root)
     lump->Finish();
 
     if (node_current_index != level_nodes.size())
-        ErrorPrintf("AJBSP: PutNodes miscounted (%d != %d)\n",
-                    node_current_index, level_nodes.size());
+        ErrorPrintf("AJBSP: PutNodes miscounted (%d != %d)\n", node_current_index, level_nodes.size());
 
     if (!do_v5 && node_current_index > 32767)
     {
@@ -1953,7 +1982,8 @@ void PutNodes(const char *name, int do_v5, Node *root)
 
 static inline uint32_t VertexIndexXNOD(const Vertex *v)
 {
-    if (v->is_new_) return (uint32_t)(num_old_vert + v->index_);
+    if (v->is_new_)
+        return (uint32_t)(num_old_vert + v->index_);
 
     return (uint32_t)v->index_;
 }
@@ -1986,8 +2016,7 @@ void CheckLimits()
 
     if (current_build_info.build_gl_nodes && !current_build_info.force_v5_nodes)
     {
-        if (num_old_vert > 32767 || num_new_vert > 32767 ||
-            level_segs.size() > 65535 || level_nodes.size() > 32767)
+        if (num_old_vert > 32767 || num_new_vert > 32767 || level_segs.size() > 65535 || level_nodes.size() > 32767)
         {
             DebugPrintf("AJBSP: Forcing V5 of GL-Nodes due to overflows.\n");
             level_force_v5 = true;
@@ -1996,8 +2025,7 @@ void CheckLimits()
 
     if (!current_build_info.force_xnod_format)
     {
-        if (num_old_vert > 32767 || num_new_vert > 32767 ||
-            level_segs.size() > 32767 || level_nodes.size() > 32767)
+        if (num_old_vert > 32767 || num_new_vert > 32767 || level_segs.size() > 32767 || level_nodes.size() > 32767)
         {
             DebugPrintf("AJBSP: Forcing XNOD format nodes due to overflows.\n");
             level_force_xnod = true;
@@ -2054,7 +2082,8 @@ void PutZVertices()
 
         const Vertex *vert = level_vertices[i];
 
-        if (!vert->is_new_) continue;
+        if (!vert->is_new_)
+            continue;
 
         raw.x = AlignedLittleEndianS32(RoundToInteger(vert->x_ * 65536.0));
         raw.y = AlignedLittleEndianS32(RoundToInteger(vert->y_ * 65536.0));
@@ -2065,8 +2094,7 @@ void PutZVertices()
     }
 
     if (count != num_new_vert)
-        ErrorPrintf("AJBSP: PutZVertices miscounted (%d != %d)\n", count,
-                    num_new_vert);
+        ErrorPrintf("AJBSP: PutZVertices miscounted (%d != %d)\n", count, num_new_vert);
 }
 
 void PutZSubsecs()
@@ -2085,27 +2113,22 @@ void PutZSubsecs()
 
         // sanity check the seg index values
         int count = 0;
-        for (const Seg *seg = sub->seg_list_; seg;
-             seg            = seg->next_, cur_seg_index++)
+        for (const Seg *seg = sub->seg_list_; seg; seg = seg->next_, cur_seg_index++)
         {
             if (cur_seg_index != seg->index_)
-                ErrorPrintf(
-                    "AJBSP: PutZSubsecs: seg index mismatch in sub %d (%d != "
-                    "%d)\n",
-                    i, cur_seg_index, seg->index_);
+                ErrorPrintf("AJBSP: PutZSubsecs: seg index mismatch in sub %d (%d != "
+                            "%d)\n",
+                            i, cur_seg_index, seg->index_);
 
             count++;
         }
 
         if (count != sub->seg_count_)
-            ErrorPrintf(
-                "AJBSP: PutZSubsecs: miscounted segs in sub %d (%d != %d)\n", i,
-                count, sub->seg_count_);
+            ErrorPrintf("AJBSP: PutZSubsecs: miscounted segs in sub %d (%d != %d)\n", i, count, sub->seg_count_);
     }
 
     if (cur_seg_index != level_segs.size())
-        ErrorPrintf("AJBSP: PutZSubsecs miscounted segs (%d != %d)\n",
-                    cur_seg_index, level_segs.size());
+        ErrorPrintf("AJBSP: PutZSubsecs miscounted segs (%d != %d)\n", cur_seg_index, level_segs.size());
 }
 
 void PutZSegs()
@@ -2118,8 +2141,7 @@ void PutZSegs()
         const Seg *seg = level_segs[i];
 
         if (seg->index_ != i)
-            ErrorPrintf("AJBSP: PutZSegs: seg index mismatch (%d != %d)\n",
-                        seg->index_, i);
+            ErrorPrintf("AJBSP: PutZSegs: seg index mismatch (%d != %d)\n", seg->index_, i);
 
         uint32_t v1 = AlignedLittleEndianU32(VertexIndexXNOD(seg->start_));
         uint32_t v2 = AlignedLittleEndianU32(VertexIndexXNOD(seg->end_));
@@ -2144,15 +2166,12 @@ void PutXGL3Segs()
         const Seg *seg = level_segs[i];
 
         if (seg->index_ != i)
-            ErrorPrintf("AJBSP: PutXGL3Segs: seg index mismatch (%d != %d)\n",
-                        seg->index_, i);
+            ErrorPrintf("AJBSP: PutXGL3Segs: seg index mismatch (%d != %d)\n", seg->index_, i);
 
-        uint32_t v1 = AlignedLittleEndianU32(VertexIndexXNOD(seg->start_));
-        uint32_t partner =
-            AlignedLittleEndianU32(seg->partner_ ? seg->partner_->index_ : -1);
-        uint32_t line =
-            AlignedLittleEndianU32(seg->linedef_ ? seg->linedef_->index : -1);
-        uint8_t side = (uint8_t)seg->side_;
+        uint32_t v1      = AlignedLittleEndianU32(VertexIndexXNOD(seg->start_));
+        uint32_t partner = AlignedLittleEndianU32(seg->partner_ ? seg->partner_->index_ : -1);
+        uint32_t line    = AlignedLittleEndianU32(seg->linedef_ ? seg->linedef_->index : -1);
+        uint8_t  side    = (uint8_t)seg->side_;
 
         ZLibAppendLump(&v1, 4);
         ZLibAppendLump(&partner, 4);
@@ -2160,8 +2179,7 @@ void PutXGL3Segs()
         ZLibAppendLump(&side, 1);
 
 #if DEBUG_BSP
-        fprintf(stderr, "SEG[%d] v1=%d partner=%d line=%d side=%d\n", i, v1,
-                partner, line, side);
+        fprintf(stderr, "SEG[%d] v1=%d partner=%d line=%d side=%d\n", i, v1, partner, line, side);
 #endif
     }
 }
@@ -2170,20 +2188,20 @@ static void PutOneZNode(Node *node, bool do_xgl3)
 {
     RawV5Node raw;
 
-    if (node->r_.node) PutOneZNode(node->r_.node, do_xgl3);
+    if (node->r_.node)
+        PutOneZNode(node->r_.node, do_xgl3);
 
-    if (node->l_.node) PutOneZNode(node->l_.node, do_xgl3);
+    if (node->l_.node)
+        PutOneZNode(node->l_.node, do_xgl3);
 
     node->index_ = node_current_index++;
 
     if (do_xgl3)
     {
-        uint32_t x = AlignedLittleEndianS32(RoundToInteger(node->x_ * 65536.0));
-        uint32_t y = AlignedLittleEndianS32(RoundToInteger(node->y_ * 65536.0));
-        uint32_t dx =
-            AlignedLittleEndianS32(RoundToInteger(node->dx_ * 65536.0));
-        uint32_t dy =
-            AlignedLittleEndianS32(RoundToInteger(node->dy_ * 65536.0));
+        uint32_t x  = AlignedLittleEndianS32(RoundToInteger(node->x_ * 65536.0));
+        uint32_t y  = AlignedLittleEndianS32(RoundToInteger(node->y_ * 65536.0));
+        uint32_t dx = AlignedLittleEndianS32(RoundToInteger(node->dx_ * 65536.0));
+        uint32_t dy = AlignedLittleEndianS32(RoundToInteger(node->dy_ * 65536.0));
 
         ZLibAppendLump(&x, 4);
         ZLibAppendLump(&y, 4);
@@ -2219,16 +2237,14 @@ static void PutOneZNode(Node *node, bool do_xgl3)
     if (node->r_.node)
         raw.right = AlignedLittleEndianU32(node->r_.node->index_);
     else if (node->r_.subsec)
-        raw.right =
-            AlignedLittleEndianU32(node->r_.subsec->index_ | 0x80000000U);
+        raw.right = AlignedLittleEndianU32(node->r_.subsec->index_ | 0x80000000U);
     else
         ErrorPrintf("AJBSP: Bad right child in V5 node %d\n", node->index_);
 
     if (node->l_.node)
         raw.left = AlignedLittleEndianU32(node->l_.node->index_);
     else if (node->l_.subsec)
-        raw.left =
-            AlignedLittleEndianU32(node->l_.subsec->index_ | 0x80000000U);
+        raw.left = AlignedLittleEndianU32(node->l_.subsec->index_ | 0x80000000U);
     else
         ErrorPrintf("AJBSP: Bad left child in V5 node %d\n", node->index_);
 
@@ -2236,12 +2252,10 @@ static void PutOneZNode(Node *node, bool do_xgl3)
     ZLibAppendLump(&raw.left, 4);
 
 #if DEBUG_BSP
-    DebugPrintf(
-        "PUT Z NODE %08X  Left %08X  Right %08X  "
-        "(%d,%d) -> (%d,%d)\n",
-        node->index, AlignedLittleEndianU32(raw.left),
-        AlignedLittleEndianU32(raw.right), node->x, node->y, node->x + node->dx,
-        node->y + node->dy);
+    DebugPrintf("PUT Z NODE %08X  Left %08X  Right %08X  "
+                "(%d,%d) -> (%d,%d)\n",
+                node->index, AlignedLittleEndianU32(raw.left), AlignedLittleEndianU32(raw.right), node->x, node->y,
+                node->x + node->dx, node->y + node->dy);
 #endif
 }
 
@@ -2252,11 +2266,11 @@ void PutZNodes(Node *root, bool do_xgl3)
 
     node_current_index = 0;
 
-    if (root) PutOneZNode(root, do_xgl3);
+    if (root)
+        PutOneZNode(root, do_xgl3);
 
     if (node_current_index != level_nodes.size())
-        ErrorPrintf("AJBSP: PutZNodes miscounted (%d != %d)\n",
-                    node_current_index, level_nodes.size());
+        ErrorPrintf("AJBSP: PutZNodes miscounted (%d != %d)\n", node_current_index, level_nodes.size());
 }
 
 static int CalcZDoomNodesSize()
@@ -2265,7 +2279,7 @@ static int CalcZDoomNodesSize()
     // it does not need to be exact, but it *does* need to be bigger
     // (or equal) to the actual size of the lump.
 
-    int size = 32;  // header + a bit extra
+    int size = 32; // header + a bit extra
 
     size += 8 + level_vertices.size() * 8;
     size += 4 + level_subsecs.size() * 4;
@@ -2341,7 +2355,10 @@ void LoadLevel()
     num_new_vert   = 0;
     num_real_lines = 0;
 
-    if (level_format == kMapFormatUDMF) { ParseUDMF(); }
+    if (level_format == kMapFormatUDMF)
+    {
+        ParseUDMF();
+    }
     else
     {
         GetVertices();
@@ -2364,10 +2381,8 @@ void LoadLevel()
         PruneVerticesAtEnd();
     }
 
-    DebugPrintf(
-        "    Loaded %d vertices, %d sectors, %d sides, %d lines, %d things\n",
-        level_vertices.size(), level_sectors.size(), level_sidedefs.size(),
-        level_linedefs.size(), level_things.size());
+    DebugPrintf("    Loaded %d vertices, %d sectors, %d sides, %d lines, %d things\n", level_vertices.size(),
+                level_sectors.size(), level_sidedefs.size(), level_linedefs.size(), level_things.size());
 
     DetectOverlappingVertices();
     DetectOverlappingLines();
@@ -2377,14 +2392,14 @@ void LoadLevel()
     // -JL- Find sectors containing polyobjs
     switch (level_format)
     {
-        case kMapFormatHexen:
-            DetectPolyobjSectors(false);
-            break;
-        case kMapFormatUDMF:
-            DetectPolyobjSectors(true);
-            break;
-        default:
-            break;
+    case kMapFormatHexen:
+        DetectPolyobjSectors(false);
+        break;
+    case kMapFormatUDMF:
+        DetectPolyobjSectors(true);
+        break;
+    default:
+        break;
     }
 }
 
@@ -2448,7 +2463,10 @@ void UpdateGLMarker(Lump *marker)
 
     cur_wad->RecreateLump(marker, max_size);
 
-    if (level_long_name) { marker->Printf("LEVEL=%s\n", level_current_name); }
+    if (level_long_name)
+    {
+        marker->Printf("LEVEL=%s\n", level_current_name);
+    }
 
     marker->Printf("BUILDER=AJBSP\n");
     marker->Printf("CHECKSUM=0x%08x\n", crc);
@@ -2458,7 +2476,8 @@ void UpdateGLMarker(Lump *marker)
 
 static void AddMissingLump(const char *name, const char *after)
 {
-    if (cur_wad->LevelLookupLump(level_current_idx, name) >= 0) return;
+    if (cur_wad->LevelLookupLump(level_current_idx, name) >= 0)
+        return;
 
     int exist = cur_wad->LevelLookupLump(level_current_idx, after);
 
@@ -2560,7 +2579,10 @@ BuildResult SaveLevel(Node *root_node)
 
     // keyword support (v5.0 of the specs).
     // must be done *after* doing normal nodes, for proper checksum.
-    if (gl_marker) { UpdateGLMarker(gl_marker); }
+    if (gl_marker)
+    {
+        UpdateGLMarker(gl_marker);
+    }
 
     cur_wad->EndWrite();
 
@@ -2585,7 +2607,10 @@ BuildResult SaveUDMF(Node *root_node)
 
     Lump *lump = CreateLevelLump("ZNODES", -1);
 
-    if (num_real_lines == 0) { lump->Finish(); }
+    if (num_real_lines == 0)
+    {
+        lump->Finish();
+    }
     else
     {
         SortSegs();
@@ -2608,7 +2633,8 @@ void ZLibBeginLump(Lump *lump)
 {
     zout_lump = lump;
 
-    if (!current_build_info.compress_nodes) return;
+    if (!current_build_info.compress_nodes)
+        return;
 
     zout_stream.zalloc = (alloc_func)0;
     zout_stream.zfree  = (free_func)0;
@@ -2629,7 +2655,7 @@ void ZLibAppendLump(const void *data, int length)
         return;
     }
 
-    zout_stream.next_in  = (Bytef *)data;  // const override
+    zout_stream.next_in  = (Bytef *)data; // const override
     zout_stream.avail_in = length;
 
     while (zout_stream.avail_in > 0)
@@ -2669,7 +2695,8 @@ void ZLibFinishLump(void)
     {
         int err = deflate(&zout_stream, Z_FINISH);
 
-        if (err == Z_STREAM_END) break;
+        if (err == Z_STREAM_END)
+            break;
 
         if (err != Z_OK)
             ErrorPrintf("AJBSP: Trouble finishing compression (zlib)\n");
@@ -2685,7 +2712,8 @@ void ZLibFinishLump(void)
 
     left_over = sizeof(zout_buffer) - zout_stream.avail_out;
 
-    if (left_over > 0) zout_lump->Write(zout_buffer, left_over);
+    if (left_over > 0)
+        zout_lump->Write(zout_buffer, left_over);
 
     deflateEnd(&zout_stream);
 
@@ -2699,7 +2727,8 @@ Lump *FindLevelLump(const char *name)
 {
     int idx = cur_wad->LevelLookupLump(level_current_idx, name);
 
-    if (idx < 0) return nullptr;
+    if (idx < 0)
+        return nullptr;
 
     return cur_wad->GetLump(idx);
 }
@@ -2709,14 +2738,18 @@ Lump *CreateLevelLump(const char *name, int max_size)
     // look for existing one
     Lump *lump = FindLevelLump(name);
 
-    if (lump) { cur_wad->RecreateLump(lump, max_size); }
+    if (lump)
+    {
+        cur_wad->RecreateLump(lump, max_size);
+    }
     else
     {
         int last_idx = cur_wad->LevelLastLump(level_current_idx);
 
         // in UDMF maps, insert before the ENDMAP lump, otherwise insert
         // after the last known lump of the level.
-        if (level_format != kMapFormatUDMF) last_idx += 1;
+        if (level_format != kMapFormatUDMF)
+            last_idx += 1;
 
         cur_wad->InsertPoint(last_idx);
 
@@ -2778,15 +2811,13 @@ void OpenWad(std::filesystem::path filename)
 {
     cur_wad = WadFile::Open(filename, 'a');
     if (cur_wad == nullptr)
-        ErrorPrintf("AJBSP: Cannot open file: %s\n",
-                    filename.u8string().c_str());
+        ErrorPrintf("AJBSP: Cannot open file: %s\n", filename.u8string().c_str());
     if (cur_wad->IsReadOnly())
     {
         delete cur_wad;
         cur_wad = nullptr;
 
-        ErrorPrintf("AJBSP: File is read only: %s\n",
-                    filename.u8string().c_str());
+        ErrorPrintf("AJBSP: File is read only: %s\n", filename.u8string().c_str());
     }
 }
 
@@ -2802,7 +2833,8 @@ void CloseWad()
 
 int LevelsInWad()
 {
-    if (cur_wad == nullptr) return 0;
+    if (cur_wad == nullptr)
+        return 0;
 
     return cur_wad->LevelCount();
 }
@@ -2837,14 +2869,12 @@ BuildResult BuildLevel(int level_index)
 
     if (ret == kBuildOK)
     {
-        DebugPrintf("    Built %d NODES, %d SSECTORS, %d SEGS, %d VERTEXES\n",
-                    level_nodes.size(), level_subsecs.size(), level_segs.size(),
-                    num_old_vert + num_new_vert);
+        DebugPrintf("    Built %d NODES, %d SSECTORS, %d SEGS, %d VERTEXES\n", level_nodes.size(), level_subsecs.size(),
+                    level_segs.size(), num_old_vert + num_new_vert);
 
         if (root_node != nullptr)
         {
-            DebugPrintf("    Heights of subtrees: %d / %d\n",
-                        ComputeBspHeight(root_node->r_.node),
+            DebugPrintf("    Heights of subtrees: %d / %d\n", ComputeBspHeight(root_node->r_.node),
                         ComputeBspHeight(root_node->l_.node));
         }
 
@@ -2861,7 +2891,7 @@ BuildResult BuildLevel(int level_index)
     return ret;
 }
 
-}  // namespace ajbsp
+} // namespace ajbsp
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

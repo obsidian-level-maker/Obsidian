@@ -35,13 +35,11 @@ inline bool IsLowerASCII(int character)
 }
 inline bool IsAlphaASCII(int character)
 {
-    return ((character > '@' && character < '[') ||
-            (character > '`' && character < '{'));
+    return ((character > '@' && character < '[') || (character > '`' && character < '{'));
 }
 inline bool IsAlphanumericASCII(int character)
 {
-    return ((character > '@' && character < '[') ||
-            (character > '`' && character < '{') ||
+    return ((character > '@' && character < '[') || (character > '`' && character < '{') ||
             (character > '/' && character < ':'));
 }
 inline bool IsDigitASCII(int character)
@@ -50,8 +48,7 @@ inline bool IsDigitASCII(int character)
 }
 inline bool IsXDigitASCII(int character)
 {
-    return ((character > '@' && character < 'G') ||
-            (character > '`' && character < 'g') ||
+    return ((character > '@' && character < 'G') || (character > '`' && character < 'g') ||
             (character > '/' && character < ':'));
 }
 inline bool IsPrintASCII(int character)
@@ -85,12 +82,12 @@ inline int ToUpperASCII(int character)
 std::string  WStringToUTF8(std::wstring_view instring);
 std::wstring UTF8ToWString(std::string_view instring);
 #endif
-int StringCompare(std::string_view A, std::string_view B);
-int StringCaseCompareASCII(std::string_view A, std::string_view B);
-int StringCaseCompareMaxASCII(std::string_view A, std::string_view B, size_t n);
-int StringPrefixCaseCompareASCII(std::string_view A, std::string_view B);
+int         StringCompare(std::string_view A, std::string_view B);
+int         StringCaseCompareASCII(std::string_view A, std::string_view B);
+int         StringCaseCompareMaxASCII(std::string_view A, std::string_view B, size_t n);
+int         StringPrefixCaseCompareASCII(std::string_view A, std::string_view B);
 std::string StringUpperASCII(std::string_view instring);
-std::string StringFormat(const char* fmt, ...);
+std::string StringFormat(const char *fmt, ...);
 std::string NumberToString(int value);
 std::string NumberToString(unsigned long long int value);
 std::string NumberToString(double value);
@@ -111,27 +108,22 @@ uint64_t StringHash64(std::string_view str);
 #define OBSIDIAN_ALIGN_LENGTH(x) (((x) + 3) & ~3)
 
 double PerpDist(double x, double y, double x1, double y1, double x2, double y2);
-double AlongDist(double x, double y, double x1, double y1, double x2,
-                 double y2);
+double AlongDist(double x, double y, double x1, double y1, double x2, double y2);
 
 double CalcAngle(double sx, double sy, double ex, double ey);
-double DiffAngle(double A, double B);  // A + result = B
+double DiffAngle(double A, double B); // A + result = B
 
 double ComputeAngle(double dx, double dy);
 
 double ComputeDist(double sx, double sy, double ex, double ey);
-double ComputeDist(double sx, double sy, double sz, double ex, double ey,
-                   double ez);
+double ComputeDist(double sx, double sy, double sz, double ex, double ey, double ez);
 
-double PointLineDist(double x, double y, double x1, double y1, double x2,
-                     double y2);
+double PointLineDist(double x, double y, double x1, double y1, double x2, double y2);
 
-void CalcIntersection(double nx1, double ny1, double nx2, double ny2,
-                      double px1, double py1, double px2, double py2, double* x,
-                      double* y);
+void CalcIntersection(double nx1, double ny1, double nx2, double ny2, double px1, double py1, double px2, double py2,
+                      double *x, double *y);
 
-std::pair<double, double> AlongCoord(double along, double px1, double py1,
-                                     double px2, double py2);
+std::pair<double, double> AlongCoord(double along, double px1, double py1, double px2, double py2);
 
 bool VectorSameDir(double dx1, double dy1, double dx2, double dy2);
 

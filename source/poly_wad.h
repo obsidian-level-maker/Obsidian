@@ -32,7 +32,7 @@ namespace ajpoly
 // directory entry
 class lump_c
 {
-   public:
+  public:
     // name of lump
     char name[10];
 
@@ -48,21 +48,22 @@ class lump_c
     // # of following lumps (if a level), otherwise zero
     int children;
 
-   public:
-    lump_c(const char *_name, int _start, int _len)
-        : start(_start), length(_len), flags(0), children(0)
+  public:
+    lump_c(const char *_name, int _start, int _len) : start(_start), length(_len), flags(0), children(0)
     {
         strcpy(name, _name);
     }
 
-    ~lump_c() {}
+    ~lump_c()
+    {
+    }
 };
 
 // wad header
 
 class wad_c
 {
-   private:
+  private:
     PHYSFS_File *fp;
 
     // directory entries
@@ -72,8 +73,10 @@ class wad_c
     uint8_t *data_block;
     int      data_len;
 
-   public:
-    wad_c() : fp(NULL), lumps(), data_block(NULL), data_len() {}
+  public:
+    wad_c() : fp(NULL), lumps(), data_block(NULL), data_len()
+    {
+    }
 
     virtual ~wad_c();
 
@@ -97,7 +100,7 @@ class wad_c
     // returns NULL if the lump cannot be found.
     uint8_t *ReadLump(const char *name, int *length, int level = -1);
 
-   private:
+  private:
     bool ReadDirectory();
     bool ReadDirEntry();
     void DetermineLevels();
@@ -109,7 +112,7 @@ class wad_c
 
 extern wad_c *the_wad;
 
-}  // namespace ajpoly
+} // namespace ajpoly
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

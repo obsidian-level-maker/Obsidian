@@ -52,25 +52,31 @@
 
 typedef struct
 {
-    int   type;  // PLANE_X .. PLANE_Z
+    int   type; // PLANE_X .. PLANE_Z
     float normal[3];
     float dist;
 
-    int children[2];  // tnode index, or TRACE_XXX value
+    int children[2]; // tnode index, or TRACE_XXX value
 } tnode_t;
 
 static tnode_t *trace_nodes;
 
 static int ConvertTraceLeaf(quake_leaf_c *leaf)
 {
-    if (leaf->medium != MEDIUM_SOLID) { return TRACE_EMPTY; }
+    if (leaf->medium != MEDIUM_SOLID)
+    {
+        return TRACE_EMPTY;
+    }
 
     // look for sky ceiling, require all brushes to be "sky"
     if (leaf->brushes.size() > 0)
     {
         for (unsigned int k = 0; k < leaf->brushes.size(); k++)
         {
-            if (!(leaf->brushes[k]->bflags & BFLAG_Sky)) { return TRACE_SOLID; }
+            if (!(leaf->brushes[k]->bflags & BFLAG_Sky))
+            {
+                return TRACE_SOLID;
+            }
         }
 
         return TRACE_SKY;
@@ -104,8 +110,7 @@ static int ConvertTraceNode(quake_node_c *node, int &index_var)
     int side = 0;
 
     // ensure tnode planes are positive
-    if ((-nx >= OBSIDIAN_MAX(fy, fz)) || (-ny >= OBSIDIAN_MAX(fx, fz)) ||
-        (-nz >= OBSIDIAN_MAX(fx, fy)))
+    if ((-nx >= OBSIDIAN_MAX(fy, fz)) || (-ny >= OBSIDIAN_MAX(fx, fz)) || (-nz >= OBSIDIAN_MAX(fx, fy)))
     {
         side = 1;
 
@@ -116,16 +121,31 @@ static int ConvertTraceNode(quake_node_c *node, int &index_var)
         TN->dist = -TN->dist;
     }
 
-    if (fx > 0.9999) { TN->type = PLANE_X; }
-    else if (fy > 0.9999) { TN->type = PLANE_Y; }
-    else if (fz > 0.9999) { TN->type = PLANE_Z; }
-    else { TN->type = PLANE_OTHER; }
+    if (fx > 0.9999)
+    {
+        TN->type = PLANE_X;
+    }
+    else if (fy > 0.9999)
+    {
+        TN->type = PLANE_Y;
+    }
+    else if (fz > 0.9999)
+    {
+        TN->type = PLANE_Z;
+    }
+    else
+    {
+        TN->type = PLANE_OTHER;
+    }
 
     if (node->front_N)
     {
         TN->children[side] = ConvertTraceNode(node->front_N, index_var);
     }
-    else { TN->children[side] = ConvertTraceLeaf(node->front_L); }
+    else
+    {
+        TN->children[side] = ConvertTraceLeaf(node->front_L);
+    }
 
     side ^= 1;
 
@@ -133,7 +153,10 @@ static int ConvertTraceNode(quake_node_c *node, int &index_var)
     {
         TN->children[side] = ConvertTraceNode(node->back_N, index_var);
     }
-    else { TN->children[side] = ConvertTraceLeaf(node->back_L); }
+    else
+    {
+        TN->children[side] = ConvertTraceLeaf(node->back_L);
+    }
 
     return this_idx;
 }
@@ -158,12 +181,14 @@ void QVIS_FreeTraceNodes()
     }
 }
 
-static int RecursiveTestRay(int nodenum, float x1, float y1, float z1, float x2,
-                            float y2, float z2)
+static int RecursiveTestRay(int nodenum, float x1, float y1, float z1, float x2, float y2, float z2)
 {
     for (;;)
     {
-        if (nodenum < 0) { return nodenum; }
+        if (nodenum < 0)
+        {
+            return nodenum;
+        }
 
         tnode_t *TN = &trace_nodes[nodenum];
 
@@ -172,27 +197,25 @@ static int RecursiveTestRay(int nodenum, float x1, float y1, float z1, float x2,
 
         switch (TN->type)
         {
-            case PLANE_X:
-                dist1 = x1;
-                dist2 = x2;
-                break;
+        case PLANE_X:
+            dist1 = x1;
+            dist2 = x2;
+            break;
 
-            case PLANE_Y:
-                dist1 = y1;
-                dist2 = y2;
-                break;
+        case PLANE_Y:
+            dist1 = y1;
+            dist2 = y2;
+            break;
 
-            case PLANE_Z:
-                dist1 = z1;
-                dist2 = z2;
-                break;
+        case PLANE_Z:
+            dist1 = z1;
+            dist2 = z2;
+            break;
 
-            default:
-                dist1 = x1 * TN->normal[0] + y1 * TN->normal[1] +
-                        z1 * TN->normal[2];
-                dist2 = x2 * TN->normal[0] + y2 * TN->normal[1] +
-                        z2 * TN->normal[2];
-                break;
+        default:
+            dist1 = x1 * TN->normal[0] + y1 * TN->normal[1] + z1 * TN->normal[2];
+            dist2 = x2 * TN->normal[0] + y2 * TN->normal[1] + z2 * TN->normal[2];
+            break;
         }
 
         dist1 -= TN->dist;
@@ -227,7 +250,10 @@ static int RecursiveTestRay(int nodenum, float x1, float y1, float z1, float x2,
         // -AJA- here is where my TRACE_SKY logic comes into play.
         //       It assumes the ray is cast from luxel to sun light
         //       (and won't work the other way around).
-        if (r != TRACE_EMPTY) { return r; }
+        if (r != TRACE_EMPTY)
+        {
+            return r;
+        }
 
         // yes it was, so continue with the back half
 
@@ -239,8 +265,8 @@ static int RecursiveTestRay(int nodenum, float x1, float y1, float z1, float x2,
     }
 }
 
-static int RecursiveTestDetail(quake_node_c *N, quake_leaf_c *L, float x1,
-                               float y1, float z1, float x2, float y2, float z2)
+static int RecursiveTestDetail(quake_node_c *N, quake_leaf_c *L, float x1, float y1, float z1, float x2, float y2,
+                               float z2)
 {
     for (;;)
     {
@@ -251,9 +277,15 @@ static int RecursiveTestDetail(quake_node_c *N, quake_leaf_c *L, float x1,
             {
                 quake_face_c *F = L->faces[k];
 
-                if (!(F->flags & FACE_F_Detail)) { continue; }
+                if (!(F->flags & FACE_F_Detail))
+                {
+                    continue;
+                }
 
-                if (F->flags & FACE_F_NoShadow) { continue; }
+                if (F->flags & FACE_F_NoShadow)
+                {
+                    continue;
+                }
 
                 if (F->IntersectRay(x1, y1, z1, x2, y2, z2))
                 {
@@ -298,7 +330,10 @@ static int RecursiveTestDetail(quake_node_c *N, quake_leaf_c *L, float x1,
 
         int r = RecursiveTestDetail(N0, L0, x1, y1, z1, mx, my, mz);
 
-        if (r != TRACE_EMPTY) { return r; }
+        if (r != TRACE_EMPTY)
+        {
+            return r;
+        }
 
         // yes it was, so continue with the back half
 
@@ -315,13 +350,19 @@ bool QVIS_TraceRay(float x1, float y1, float z1, float x2, float y2, float z2)
 {
     int r = RecursiveTestRay(0, x1, y1, z1, x2, y2, z2);
 
-    if (r == TRACE_SOLID) { return false; }
+    if (r == TRACE_SOLID)
+    {
+        return false;
+    }
 
     // check for detail faces *after* the main trace
 
     r = RecursiveTestDetail(qk_bsp_root, NULL, x1, y1, z1, x2, y2, z2);
 
-    if (r == TRACE_SOLID) { return false; }
+    if (r == TRACE_SOLID)
+    {
+        return false;
+    }
 
     return true;
 }
@@ -330,7 +371,10 @@ static int RecursiveTestPoint(int nodenum, float x, float y, float z)
 {
     for (;;)
     {
-        if (nodenum < 0) { return nodenum; }
+        if (nodenum < 0)
+        {
+            return nodenum;
+        }
 
         tnode_t *TN = &trace_nodes[nodenum];
 
@@ -338,22 +382,21 @@ static int RecursiveTestPoint(int nodenum, float x, float y, float z)
 
         switch (TN->type)
         {
-            case PLANE_X:
-                dist = x;
-                break;
+        case PLANE_X:
+            dist = x;
+            break;
 
-            case PLANE_Y:
-                dist = y;
-                break;
+        case PLANE_Y:
+            dist = y;
+            break;
 
-            case PLANE_Z:
-                dist = z;
-                break;
+        case PLANE_Z:
+            dist = z;
+            break;
 
-            default:
-                dist =
-                    x * TN->normal[0] + y * TN->normal[1] + z * TN->normal[2];
-                break;
+        default:
+            dist = x * TN->normal[0] + y * TN->normal[1] + z * TN->normal[2];
+            break;
         }
 
         dist -= TN->dist;
@@ -378,7 +421,10 @@ static int RecursiveTestPoint(int nodenum, float x, float y, float z)
 
         // we treat sky brushes as solid here
 
-        if (A == TRACE_EMPTY && B == TRACE_EMPTY) { return TRACE_EMPTY; }
+        if (A == TRACE_EMPTY && B == TRACE_EMPTY)
+        {
+            return TRACE_EMPTY;
+        }
 
         return TRACE_SOLID;
     }
@@ -406,8 +452,7 @@ qCluster_c **qk_clusters;
 
 static Vis_Buffer *qk_visbuf;
 
-qCluster_c::qCluster_c(int _x, int _y)
-    : cx(_x), cy(_y), leafs(), visofs(-1), hearofs(-1)
+qCluster_c::qCluster_c(int _x, int _y) : cx(_x), cy(_y), leafs(), visofs(-1), hearofs(-1)
 {
     ambient_dists[0] = ambient_dists[1] = 255;
     ambient_dists[2] = ambient_dists[3] = 255;
@@ -427,7 +472,10 @@ void qCluster_c::AddLeaf(quake_leaf_c *leaf)
 
 int qCluster_c::CalcID() const
 {
-    if (leafs.empty()) { return -1; }
+    if (leafs.empty())
+    {
+        return -1;
+    }
 
     return (cy * cluster_W) + cx;
 }
@@ -456,8 +504,7 @@ void QVIS_CreateClusters(double min_x, double min_y, double max_x, double max_y)
     cluster_W = cx2 - cx1;
     cluster_H = cy2 - cy1;
 
-    LogPrintf("Cluster Size: %d %d  (origin %+d %+d)\n", cluster_W, cluster_H,
-              cluster_X, cluster_Y);
+    LogPrintf("Cluster Size: %d %d  (origin %+d %+d)\n", cluster_W, cluster_H, cluster_X, cluster_Y);
 
     qk_clusters = new qCluster_c *[cluster_W * cluster_H];
 
@@ -493,8 +540,14 @@ void QVIS_MarkWall(int cx, int cy, int side)
 {
     SYS_ASSERT(qk_visbuf);
 
-    if (side & 1) { qk_visbuf->AddDiagonal(cx, cy, side); }
-    else { qk_visbuf->AddWall(cx, cy, side); }
+    if (side & 1)
+    {
+        qk_visbuf->AddDiagonal(cx, cy, side);
+    }
+    else
+    {
+        qk_visbuf->AddWall(cx, cy, side);
+    }
 
 // debugging
 #if 0
@@ -533,11 +586,17 @@ static void FloodAmbientSounds()
             {
                 qCluster_c *S = qk_clusters[cy * cluster_W + cx];
 
-                if (S->leafs.empty()) { continue; }
+                if (S->leafs.empty())
+                {
+                    continue;
+                }
 
                 for (int side = 2; side <= 8; side += 2)
                 {
-                    if (qk_visbuf->TestWall(cx, cy, side)) { continue; }
+                    if (qk_visbuf->TestWall(cx, cy, side))
+                    {
+                        continue;
+                    }
 
                     int nx = (side == 4) ? -1 : (side == 6) ? +1 : 0;
                     int ny = (side == 2) ? -1 : (side == 8) ? +1 : 0;
@@ -557,7 +616,10 @@ static void FloodAmbientSounds()
                         uint8_t src  = S->ambient_dists[k];
                         uint8_t dest = N->ambient_dists[k];
 
-                        if (src == 255) { continue; }
+                        if (src == 255)
+                        {
+                            continue;
+                        }
 
                         src++;
 
@@ -578,7 +640,7 @@ static qLump_c *q_visibility;
 static uint8_t *v_row_buffer;
 static uint8_t *v_compress_buffer;
 
-static int v_row_bits;  // number of leafs or clusters
+static int v_row_bits; // number of leafs or clusters
 static int v_bytes_per_row;
 
 // statistic stuff
@@ -593,7 +655,7 @@ struct vis_statistics_t
     double average;
     int    total;
 
-   public:
+  public:
     void Start()
     {
         uncompressed = compressed = 0;
@@ -606,8 +668,14 @@ struct vis_statistics_t
 
     void AddValue(float perc)
     {
-        if (perc < best) { best = perc; }
-        if (perc > worst) { worst = perc; }
+        if (perc < best)
+        {
+            best = perc;
+        }
+        if (perc > worst)
+        {
+            worst = perc;
+        }
 
         average += perc;
         total += 1;
@@ -615,15 +683,17 @@ struct vis_statistics_t
 
     void Finish()
     {
-        if (total > 0) { average /= total; }
+        if (total > 0)
+        {
+            average /= total;
+        }
     }
 
     float CalcRatio() const
     {
         int saved = (uncompressed - compressed);
 
-        return OBSIDIAN_MAX(0, saved) * 100.0 /
-               (float)OBSIDIAN_MAX(1, uncompressed);
+        return OBSIDIAN_MAX(0, saved) * 100.0 / (float)OBSIDIAN_MAX(1, uncompressed);
     }
 };
 
@@ -679,19 +749,12 @@ static int WriteCompressedRow(bool PHS)
     return visofs;
 }
 
-static void WriteUncompressedRow()
-{
-    int length = v_bytes_per_row;
-
-    q_visibility->Append(v_row_buffer, length);
-}
-
 static void CollectRowData(int src_x, int src_y, bool PHS)
 {
     // initial state : everything visible
     memset(v_row_buffer, 0xFF, v_bytes_per_row);
 
-    unsigned int blocked = 0;  // statistics
+    unsigned int blocked = 0; // statistics
 
     for (int cy = 0; cy < cluster_H; cy++)
     {
@@ -715,7 +778,7 @@ static void CollectRowData(int src_x, int src_y, bool PHS)
 
                 blocked++;
             }
-            else  // original Quake, data is indexed by leaf number
+            else // original Quake, data is indexed by leaf number
             {
                 unsigned int total = cluster->leafs.size();
 
@@ -727,7 +790,7 @@ static void CollectRowData(int src_x, int src_y, bool PHS)
                 {
                     int index = cluster->leafs[k]->index;
 
-                    index--;  // skip the solid leaf
+                    index--; // skip the solid leaf
 
                     SYS_ASSERT(index >= 0);
                     SYS_ASSERT((index >> 3) < v_bytes_per_row);
@@ -744,14 +807,20 @@ static void CollectRowData(int src_x, int src_y, bool PHS)
 #endif
 
     // update statistics
-    float perc =
-        (v_row_bits - blocked) * 100.0 / (float)OBSIDIAN_MAX(1, v_row_bits);
+    float perc = (v_row_bits - blocked) * 100.0 / (float)OBSIDIAN_MAX(1, v_row_bits);
 
-    if (PHS) { phs_stats.AddValue(perc); }
-    else { pvs_stats.AddValue(perc); }
+    if (PHS)
+    {
+        phs_stats.AddValue(perc);
+    }
+    else
+    {
+        pvs_stats.AddValue(perc);
+    }
 
 #ifdef DEBUG_INVERT_MAP
-    for (int n = 0; n < v_bytes_per_row; n++) v_row_buffer[n] ^= 0xFF;
+    for (int n = 0; n < v_bytes_per_row; n++)
+        v_row_buffer[n] ^= 0xFF;
 #endif
 }
 
@@ -767,7 +836,10 @@ static void Build_PVS()
         {
             qCluster_c *cluster = qk_clusters[cy * cluster_W + cx];
 
-            if (cluster->leafs.empty()) { continue; }
+            if (cluster->leafs.empty())
+            {
+                continue;
+            }
 
             qk_visbuf->ClearVis();
             qk_visbuf->ProcessVis(cx, cy);
@@ -792,7 +864,10 @@ static void Build_PVS()
                 cluster->hearofs = WriteCompressedRow(true);
             }
 
-            if (done % 80 == 0) { return; }
+            if (done % 80 == 0)
+            {
+                return;
+            }
 
             done++;
         }
@@ -812,15 +887,19 @@ static void Q2_PrependOffsets(int num_clusters)
         qCluster_c *cluster = qk_clusters[i];
 
         // dummy offset for unused clusters
-        if (cluster->visofs < 0) { cluster->visofs = 0; }
-        if (cluster->hearofs < 0) { cluster->hearofs = 0; }
+        if (cluster->visofs < 0)
+        {
+            cluster->visofs = 0;
+        }
+        if (cluster->hearofs < 0)
+        {
+            cluster->hearofs = 0;
+        }
 
         // fix endianness too
 
-        header[i * 2 + 1] =
-            AlignedLittleEndianS32(header_size + cluster->visofs);
-        header[i * 2 + 2] =
-            AlignedLittleEndianS32(header_size + cluster->hearofs);
+        header[i * 2 + 1] = AlignedLittleEndianS32(header_size + cluster->visofs);
+        header[i * 2 + 2] = AlignedLittleEndianS32(header_size + cluster->hearofs);
     }
 
     q_visibility->Prepend(header, header_size);
@@ -833,22 +912,20 @@ static void ShowVisStats()
     pvs_stats.Finish();
     phs_stats.Finish();
 
-    LogPrintf("pvs compression ratio %1.0f%% (%d bytes --> %d)\n",
-              pvs_stats.CalcRatio(), pvs_stats.uncompressed,
+    LogPrintf("pvs compression ratio %1.0f%% (%d bytes --> %d)\n", pvs_stats.CalcRatio(), pvs_stats.uncompressed,
               pvs_stats.compressed);
 
     if (qk_game == 2)
     {
-        LogPrintf("phs compression ratio %1.0f%% (%d bytes --> %d)\n",
-                  phs_stats.CalcRatio(), phs_stats.uncompressed,
+        LogPrintf("phs compression ratio %1.0f%% (%d bytes --> %d)\n", phs_stats.CalcRatio(), phs_stats.uncompressed,
                   phs_stats.compressed);
 
-        LogPrintf("average hearability: %1.0f%%  best:%1.0f%%  worst:%1.0f%%\n",
-                  phs_stats.average, phs_stats.best, phs_stats.worst);
+        LogPrintf("average hearability: %1.0f%%  best:%1.0f%%  worst:%1.0f%%\n", phs_stats.average, phs_stats.best,
+                  phs_stats.worst);
     }
 
-    LogPrintf("average visibility: %1.0f%%  best:%1.0f%%  worst:%1.0f%%\n",
-              pvs_stats.average, pvs_stats.best, pvs_stats.worst);
+    LogPrintf("average visibility: %1.0f%%  best:%1.0f%%  worst:%1.0f%%\n", pvs_stats.average, pvs_stats.best,
+              pvs_stats.worst);
 }
 
 void QVIS_Visibility(int lump, int max_size, int numleafs)
@@ -867,8 +944,14 @@ void QVIS_Visibility(int lump, int max_size, int numleafs)
 
     FloodAmbientSounds();
 
-    if (qk_game == 2) { v_row_bits = num_clusters; }
-    else { v_row_bits = numleafs; }
+    if (qk_game == 2)
+    {
+        v_row_bits = num_clusters;
+    }
+    else
+    {
+        v_row_bits = numleafs;
+    }
 
     v_bytes_per_row = (v_row_bits + 7) >> 3;
 
@@ -885,7 +968,10 @@ void QVIS_Visibility(int lump, int max_size, int numleafs)
 
     ShowVisStats();
 
-    if (qk_game == 2) { Q2_PrependOffsets(num_clusters); }
+    if (qk_game == 2)
+    {
+        Q2_PrependOffsets(num_clusters);
+    }
 
     // TODO: handle overflow: store visdata in memory, and "merge" the
     //       clusters into pairs or 2x2 contiguous pieces.

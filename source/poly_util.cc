@@ -42,9 +42,12 @@ void SetErrorMsg(const char *str, ...)
 //   API FUNCTIONS
 //------------------------------------------------------------------------
 
-const char *GetError() { return error_message; }
+const char *GetError()
+{
+    return error_message;
+}
 
-}  // namespace ajpoly
+} // namespace ajpoly
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

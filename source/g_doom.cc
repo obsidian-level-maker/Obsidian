@@ -33,7 +33,7 @@
 #include "m_lua.h"
 #include "m_trans.h"
 #include "main.h"
-#include "q_common.h"  // qLump_c
+#include "q_common.h" // qLump_c
 #include "sys_debug.h"
 #include "sys_endian.h"
 #include "sys_macro.h"
@@ -112,17 +112,13 @@ static const char *section_markers[NUM_SECTIONS][2] = {
 // Empty script numbers matching Korax requirements to prevent errors being
 // thrown
 uint8_t empty_korax_behavior[128] = {
-    0x41, 0x43, 0x53, 0x00, 0x24, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00,
-    0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00,
-    0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00,
-    0x07, 0x00, 0x00, 0x00, 0xF9, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0xFA, 0x00, 0x00, 0x00, 0x0C, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0xFB, 0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0xFC, 0x00, 0x00, 0x00, 0x14, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0xFD, 0x00, 0x00, 0x00, 0x18, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0xFE, 0x00, 0x00, 0x00, 0x1C, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0xFF, 0x00, 0x00, 0x00, 0x20, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+    0x41, 0x43, 0x53, 0x00, 0x24, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00,
+    0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x07, 0x00,
+    0x00, 0x00, 0xF9, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFA, 0x00, 0x00, 0x00, 0x0C,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFB, 0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0xFC, 0x00, 0x00, 0x00, 0x14, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFD, 0x00, 0x00, 0x00, 0x18, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0xFE, 0x00, 0x00, 0x00, 0x1C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x00,
+    0x00, 0x00, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
 //----------------------------------------------------------------------------
 //  AJBSP NODE BUILDING
@@ -142,7 +138,10 @@ bool BuildNodes(std::filesystem::path filename)
 {
     LogPrintf("\n");
 
-    if (!build_nodes) { return true; }
+    if (!build_nodes)
+    {
+        return true;
+    }
 
     // Prep AJBSP parameters
     ajbsp::BuildInfo build_info;
@@ -157,7 +156,7 @@ bool BuildNodes(std::filesystem::path filename)
         build_info.compress_nodes    = false;
     }
     else if (StringCaseCompareASCII(current_port, "eternity") == 0)
-    {  // Eternity
+    { // Eternity
         build_info.build_gl_nodes    = true;
         build_info.do_reject         = false;
         build_info.do_blockmap       = false;
@@ -165,7 +164,7 @@ bool BuildNodes(std::filesystem::path filename)
         build_info.compress_nodes    = false;
     }
     else
-    {  // DSDA/ZDoom
+    { // DSDA/ZDoom
         build_info.build_gl_nodes    = true;
         build_info.do_reject         = false;
         build_info.do_blockmap       = false;
@@ -177,14 +176,15 @@ bool BuildNodes(std::filesystem::path filename)
 
     ajbsp::OpenWad(filename);
 
-    for (int i = 0; i < ajbsp::LevelsInWad(); i++) ajbsp::BuildLevel(i);
+    for (int i = 0; i < ajbsp::LevelsInWad(); i++)
+        ajbsp::BuildLevel(i);
 
     ajbsp::CloseWad();
 
     return true;
 }
 
-}  // namespace Doom
+} // namespace Doom
 
 //------------------------------------------------------------------------
 //  WAD OUTPUT
@@ -200,12 +200,15 @@ void WriteLump(std::string name, const void *data, uint32_t len)
 
     if (len > 0)
     {
-        if (!WAD_AppendData(data, len)) { errors_seen++; }
+        if (!WAD_AppendData(data, len))
+        {
+            errors_seen++;
+        }
     }
 
     WAD_FinishLump();
 }
-}  // namespace Doom
+} // namespace Doom
 
 void Doom::WriteLump(std::string name, qLump_c *lump)
 {
@@ -223,7 +226,10 @@ static void ClearSections()
 {
     for (int k = 0; k < NUM_SECTIONS; k++)
     {
-        if (!sections[k]) { sections[k] = new lump_bag_t; }
+        if (!sections[k])
+        {
+            sections[k] = new lump_bag_t;
+        }
 
         for (unsigned int n = 0; n < sections[k]->size(); n++)
         {
@@ -239,41 +245,47 @@ static void WriteSections()
 {
     for (int k = 0; k < NUM_SECTIONS; k++)
     {
-        if (sections[k]->empty()) { continue; }
+        if (sections[k]->empty())
+        {
+            continue;
+        }
 
         WriteLump(section_markers[k][0], nullptr, 0);
 
-        for (auto *lump : *sections[k]) { WriteLump(lump->name.c_str(), lump); }
+        for (auto *lump : *sections[k])
+        {
+            WriteLump(lump->name.c_str(), lump);
+        }
 
         WriteLump(section_markers[k][1], nullptr, 0);
     }
 }
 
-}  // namespace Doom
+} // namespace Doom
 
 void Doom::AddSectionLump(char ch, std::string name, qLump_c *lump)
 {
     int k;
     switch (ch)
     {
-        case 'P':
-            k = SECTION_Patches;
-            break;
-        case 'S':
-            k = SECTION_Sprites;
-            break;
-        case 'C':
-            k = SECTION_Colormaps;
-            break;
-        case 'T':
-            k = SECTION_ZDoomTex;
-            break;
-        case 'F':
-            k = SECTION_Flats;
-            break;
+    case 'P':
+        k = SECTION_Patches;
+        break;
+    case 'S':
+        k = SECTION_Sprites;
+        break;
+    case 'C':
+        k = SECTION_Colormaps;
+        break;
+    case 'T':
+        k = SECTION_ZDoomTex;
+        break;
+    case 'F':
+        k = SECTION_Flats;
+        break;
 
-        default:
-            ErrorPrintf("DM_AddSectionLump: bad section '%c'\n", ch);
+    default:
+        ErrorPrintf("DM_AddSectionLump: bad section '%c'\n", ch);
     }
 
     lump->name = name;
@@ -288,8 +300,7 @@ bool Doom::StartWAD(std::filesystem::path filename)
 #ifndef CONSOLE_ONLY
 // Placeholder for error window
 #else
-        StdOutPrintf(GetTranslatedText("Unable to create wad file:\n\n%s"),
-                     strerror(errno));
+        StdOutPrintf(GetTranslatedText("Unable to create wad file:\n\n%s"), strerror(errno));
 #endif
         return false;
     }
@@ -303,10 +314,13 @@ bool Doom::StartWAD(std::filesystem::path filename)
     {
         ZIPF_AddMem("OBSIDATA.txt", info->GetBuffer(), info->GetSize());
     }
-    else { WriteLump("OBSIDATA", info); }
+    else
+    {
+        WriteLump("OBSIDATA", info);
+    }
     delete info;
 
-    return true;  // OK
+    return true; // OK
 }
 
 bool Doom::EndWAD()
@@ -346,7 +360,7 @@ static void FreeLumps()
         endmap_lump = nullptr;
     }
 }
-}  // namespace Doom
+} // namespace Doom
 
 void Doom::BeginLevel()
 {
@@ -400,21 +414,23 @@ void Doom::EndLevel(std::string level_name)
 
     // in case we need it
     std::filesystem::path level_wad =
-        std::filesystem::temp_directory_path().append(
-            StringFormat("%s.wad", level_name.c_str()));
+        std::filesystem::temp_directory_path().append(StringFormat("%s.wad", level_name.c_str()));
 
     if (game_object->file_per_map)
     {
         WAD_CloseWrite();
         if (!WAD_OpenWrite(level_wad))
-        {  // Just stick it in the resource WAD?
+        { // Just stick it in the resource WAD?
             WAD_OpenWrite(game_object->Filename());
         }
     }
 
     WriteLump(level_name, header_lump);
 
-    if (UDMF_mode) { WriteLump("TEXTMAP", textmap_lump); }
+    if (UDMF_mode)
+    {
+        WriteLump("TEXTMAP", textmap_lump);
+    }
 
     if (!UDMF_mode)
     {
@@ -427,11 +443,17 @@ void Doom::EndLevel(std::string level_name)
         WriteLump("SSECTORS", NULL, 0);
         WriteLump("NODES", NULL, 0);
         WriteLump("SECTORS", sector_lump);
-        if (sub_format == SUBFMT_Hexen) { WriteBehavior(); }
+        if (sub_format == SUBFMT_Hexen)
+        {
+            WriteBehavior();
+        }
     }
     else
     {
-        if (sub_format == SUBFMT_Hexen) { WriteBehavior(); }
+        if (sub_format == SUBFMT_Hexen)
+        {
+            WriteBehavior();
+        }
         WriteLump("ENDMAP", NULL, 0);
     }
 
@@ -450,7 +472,10 @@ void Doom::EndLevel(std::string level_name)
             ErrorPrintf(GetTranslatedText("Error writing map WAD to %s\n"),
                         game_object->ZIP_Filename().u8string().c_str());
         }
-        else { std::filesystem::remove(level_wad); }
+        else
+        {
+            std::filesystem::remove(level_wad);
+        }
         WAD_OpenWrite(game_object->Filename());
     }
 }
@@ -513,8 +538,7 @@ int Doom::v094_add_vertex(lua_State *L)
     return 0;
 }
 
-void Doom::AddSector(int f_h, std::string f_tex, int c_h, std::string c_tex,
-                     int light, int special, int tag)
+void Doom::AddSector(int f_h, std::string f_tex, int c_h, std::string c_tex, int light, int special, int tag)
 {
     if (!UDMF_mode)
     {
@@ -559,8 +583,7 @@ int Doom::v094_add_sector(lua_State *L)
     return 0;
 }
 
-void Doom::AddSidedef(int sector, std::string l_tex, std::string m_tex,
-                      std::string u_tex, int x_offset, int y_offset)
+void Doom::AddSidedef(int sector, std::string l_tex, std::string m_tex, std::string u_tex, int x_offset, int y_offset)
 {
     if (!UDMF_mode)
     {
@@ -602,8 +625,7 @@ int Doom::v094_add_sidedef(lua_State *L)
     return 0;
 }
 
-void Doom::AddLinedef(int vert1, int vert2, int side1, int side2, int type,
-                      int flags, int tag, const uint8_t *args)
+void Doom::AddLinedef(int vert1, int vert2, int side1, int side2, int type, int flags, int tag, const uint8_t *args)
 {
     if (sub_format != SUBFMT_Hexen)
     {
@@ -677,7 +699,7 @@ void Doom::AddLinedef(int vert1, int vert2, int side1, int side2, int type,
             udmf_linedefs += 1;
         }
     }
-    else  // Hexen format
+    else // Hexen format
     {
         if (!UDMF_mode)
         {
@@ -692,19 +714,25 @@ void Doom::AddLinedef(int vert1, int vert2, int side1, int side2, int type,
             line.right = side1 < 0 ? 0xffff : AlignedLittleEndianU16(side1);
             line.left  = side2 < 0 ? 0xffff : AlignedLittleEndianU16(side2);
 
-            line.type  = type;  // 8 bits
+            line.type  = type; // 8 bits
             line.flags = AlignedLittleEndianU16(flags);
 
             // tag value is UNUSED
 
-            if (args) { std::copy(args, args + 5, line.args); }
+            if (args)
+            {
+                std::copy(args, args + 5, line.args);
+            }
 
             linedef_lump->Append(&line, sizeof(line));
         }
         else
         {
             textmap_lump->Printf("\nlinedef\n{\n");
-            if (type == 121) { textmap_lump->Printf("\tid = %d;\n", args[0]); }
+            if (type == 121)
+            {
+                textmap_lump->Printf("\tid = %d;\n", args[0]);
+            }
             textmap_lump->Printf("\tv1 = %d;\n", vert1);
             textmap_lump->Printf("\tv2 = %d;\n", vert2);
             textmap_lump->Printf("\tsidefront = %d;\n", side1 < 0 ? -1 : side1);
@@ -779,7 +807,10 @@ void Doom::AddLinedef(int vert1, int vert2, int side1, int side2, int type,
                 {
                     textmap_lump->Printf("\tmonstercross = true;\n");
                 }
-                if (spac == 3) { textmap_lump->Printf("\timpact = true;\n"); }
+                if (spac == 3)
+                {
+                    textmap_lump->Printf("\timpact = true;\n");
+                }
                 if (spac == 4)
                 {
                     textmap_lump->Printf("\tplayerpush = true;\n");
@@ -799,7 +830,10 @@ int v094_grab_args(lua_State *L, uint8_t *args, int stack_pos)
 {
     int what = lua_type(L, stack_pos);
 
-    if (what == LUA_TNONE || what == LUA_TNIL) { return 0; }
+    if (what == LUA_TNONE || what == LUA_TNIL)
+    {
+        return 0;
+    }
 
     if (what != LUA_TTABLE)
     {
@@ -811,7 +845,10 @@ int v094_grab_args(lua_State *L, uint8_t *args, int stack_pos)
         lua_pushinteger(L, i + 1);
         lua_gettable(L, stack_pos);
 
-        if (lua_isnumber(L, -1)) { args[i] = lua_tointeger(L, -1); }
+        if (lua_isnumber(L, -1))
+        {
+            args[i] = lua_tointeger(L, -1);
+        }
 
         lua_pop(L, 1);
     }
@@ -835,8 +872,8 @@ int Doom::v094_add_linedef(lua_State *L)
     return 0;
 }
 
-void Doom::AddThing(int x, int y, int h, int type, int angle, int options,
-                    int tid, uint8_t special, const uint8_t *args)
+void Doom::AddThing(int x, int y, int h, int type, int angle, int options, int tid, uint8_t special,
+                    const uint8_t *args)
 {
     if (dm_offset_map)
     {
@@ -888,14 +925,26 @@ void Doom::AddThing(int x, int y, int h, int type, int angle, int options,
             {
                 textmap_lump->Printf("\tsingle = false;\n");
             }
-            else { textmap_lump->Printf("\tsingle = true;\n"); }
-            if (udmf_flags.test(5)) { textmap_lump->Printf("\tdm = false;\n"); }
-            else { textmap_lump->Printf("\tdm = true;\n"); }
+            else
+            {
+                textmap_lump->Printf("\tsingle = true;\n");
+            }
+            if (udmf_flags.test(5))
+            {
+                textmap_lump->Printf("\tdm = false;\n");
+            }
+            else
+            {
+                textmap_lump->Printf("\tdm = true;\n");
+            }
             if (udmf_flags.test(6))
             {
                 textmap_lump->Printf("\tcoop = false;\n");
             }
-            else { textmap_lump->Printf("\tcoop = true;\n"); }
+            else
+            {
+                textmap_lump->Printf("\tcoop = true;\n");
+            }
             if (udmf_flags.test(7))
             {
                 textmap_lump->Printf("\tfriend = true;\n");
@@ -909,7 +958,7 @@ void Doom::AddThing(int x, int y, int h, int type, int angle, int options,
             udmf_things += 1;
         }
     }
-    else  // Hexen format
+    else // Hexen format
     {
         if (!UDMF_mode)
         {
@@ -921,8 +970,14 @@ void Doom::AddThing(int x, int y, int h, int type, int angle, int options,
             thing.x = AlignedLittleEndianS16(x);
             thing.y = AlignedLittleEndianS16(y);
 
-            if (ob_hexen_ceiling_check(type)) { thing.height = 0; }
-            else { thing.height = AlignedLittleEndianS16(h); }
+            if (ob_hexen_ceiling_check(type))
+            {
+                thing.height = 0;
+            }
+            else
+            {
+                thing.height = AlignedLittleEndianS16(h);
+            }
             thing.type    = AlignedLittleEndianU16(type);
             thing.angle   = AlignedLittleEndianS16(angle);
             thing.options = AlignedLittleEndianU16(options);
@@ -930,7 +985,10 @@ void Doom::AddThing(int x, int y, int h, int type, int angle, int options,
             thing.tid     = AlignedLittleEndianS16(tid);
             thing.special = special;
 
-            if (args) { std::copy(args, args + 5, thing.args); }
+            if (args)
+            {
+                std::copy(args, args + 5, thing.args);
+            }
 
             thing_lump->Append(&thing, sizeof(thing));
         }
@@ -944,7 +1002,10 @@ void Doom::AddThing(int x, int y, int h, int type, int angle, int options,
             {
                 textmap_lump->Printf("\theight = %f;\n", 0);
             }
-            else { textmap_lump->Printf("\theight = %f;\n", (double)h); }
+            else
+            {
+                textmap_lump->Printf("\theight = %f;\n", (double)h);
+            }
             textmap_lump->Printf("\ttype = %d;\n", type);
             textmap_lump->Printf("\tangle = %d;\n", angle);
             std::bitset<16> udmf_flags(options);
@@ -990,7 +1051,10 @@ void Doom::AddThing(int x, int y, int h, int type, int angle, int options,
             {
                 textmap_lump->Printf("\tcoop = true;\n");
             }
-            if (udmf_flags.test(10)) { textmap_lump->Printf("\tdm = true;\n"); }
+            if (udmf_flags.test(10))
+            {
+                textmap_lump->Printf("\tdm = true;\n");
+            }
             textmap_lump->Printf("\tspecial = %d;\n", special);
             if (args)
             {
@@ -1025,19 +1089,28 @@ int Doom::v094_add_thing(lua_State *L)
 
 int Doom::NumVertexes()
 {
-    if (!UDMF_mode) { return vertex_lump->GetSize() / sizeof(RawVertex); }
+    if (!UDMF_mode)
+    {
+        return vertex_lump->GetSize() / sizeof(RawVertex);
+    }
     return udmf_vertexes;
 }
 
 int Doom::NumSectors()
 {
-    if (!UDMF_mode) { return sector_lump->GetSize() / sizeof(RawSector); }
+    if (!UDMF_mode)
+    {
+        return sector_lump->GetSize() / sizeof(RawSector);
+    }
     return udmf_sectors;
 }
 
 int Doom::NumSidedefs()
 {
-    if (!UDMF_mode) { return sidedef_lump->GetSize() / sizeof(RawSidedef); }
+    if (!UDMF_mode)
+    {
+        return sidedef_lump->GetSize() / sizeof(RawSidedef);
+    }
     return udmf_sidedefs;
 }
 
@@ -1075,12 +1148,12 @@ namespace Doom
 {
 class game_interface_c : public ::game_interface_c
 {
-   private:
+  private:
     std::filesystem::path filename;
     std::filesystem::path zip_filename;
     bool                  compress_output;
 
-   public:
+  public:
     game_interface_c() : filename(""), zip_filename(""), compress_output(false)
     {
     }
@@ -1094,7 +1167,7 @@ class game_interface_c : public ::game_interface_c
     std::filesystem::path Filename();
     std::filesystem::path ZIP_Filename();
 };
-}  // namespace Doom
+} // namespace Doom
 
 bool Doom::game_interface_c::Start(const char *preset)
 {
@@ -1106,21 +1179,21 @@ bool Doom::game_interface_c::Start(const char *preset)
 
     current_port    = ob_get_param("port");
     compress_output = ob_mod_enabled("compress_output");
-    file_per_map =
-        (compress_output &&
-         !(StringCaseCompareASCII(current_port, "dsda") == 0 ||
-           (StringCaseCompareASCII(current_port, "limit_enforcing") == 0)));
+    file_per_map    = (compress_output && !(StringCaseCompareASCII(current_port, "dsda") == 0 ||
+                                         (StringCaseCompareASCII(current_port, "limit_enforcing") == 0)));
 
     ob_invoke_hook("pre_setup");
 
 #ifndef CONSOLE_ONLY
     if (batch_mode)
     {
-        if (batch_output_file.is_absolute()) { filename = batch_output_file; }
+        if (batch_output_file.is_absolute())
+        {
+            filename = batch_output_file;
+        }
         else
         {
-            filename = std::filesystem::current_path().append(
-                batch_output_file.generic_u8string());
+            filename = std::filesystem::current_path().append(batch_output_file.generic_u8string());
         }
         if (compress_output)
         {
@@ -1129,7 +1202,10 @@ bool Doom::game_interface_c::Start(const char *preset)
             {
                 zip_filename.replace_extension("zip");
             }
-            else { zip_filename.replace_extension("pk3"); }
+            else
+            {
+                zip_filename.replace_extension("pk3");
+            }
         }
     }
     else
@@ -1138,38 +1214,28 @@ bool Doom::game_interface_c::Start(const char *preset)
         {
             if ((StringCaseCompareASCII(current_port, "dsda") == 0))
             {
-                filename = std::filesystem::current_path()
-                               .append(preset)
-                               .replace_extension("zip")
-                               .u8string()
-                               .c_str();
+                filename = std::filesystem::current_path().append(preset).replace_extension("zip").u8string().c_str();
                 zip_filename = filename;
             }
             else
             {
-                filename = std::filesystem::current_path()
-                               .append(preset)
-                               .replace_extension("pk3")
-                               .u8string()
-                               .c_str();
+                filename = std::filesystem::current_path().append(preset).replace_extension("pk3").u8string().c_str();
                 zip_filename = filename;
             }
         }
         else
         {
-            filename = std::filesystem::current_path()
-                           .append(preset)
-                           .replace_extension("wad")
-                           .u8string()
-                           .c_str();
+            filename = std::filesystem::current_path().append(preset).replace_extension("wad").u8string().c_str();
         }
     }
 #else
-    if (batch_output_file.is_absolute()) { filename = batch_output_file; }
+    if (batch_output_file.is_absolute())
+    {
+        filename = batch_output_file;
+    }
     else
     {
-        filename = std::filesystem::current_path().append(
-            batch_output_file.generic_u8string());
+        filename = std::filesystem::current_path().append(batch_output_file.generic_u8string());
     }
     if (compress_output)
     {
@@ -1178,7 +1244,10 @@ bool Doom::game_interface_c::Start(const char *preset)
         {
             zip_filename.replace_extension("zip");
         }
-        else { zip_filename.replace_extension("pk3"); }
+        else
+        {
+            zip_filename.replace_extension("pk3");
+        }
     }
 #endif
 
@@ -1194,12 +1263,17 @@ bool Doom::game_interface_c::Start(const char *preset)
 
     if (file_per_map)
     {
-        filename =
-            std::filesystem::temp_directory_path().append("resources.wad");
+        filename = std::filesystem::temp_directory_path().append("resources.wad");
     }
-    else { filename.replace_extension("wad"); }
+    else
+    {
+        filename.replace_extension("wad");
+    }
 
-    if (create_backups && !file_per_map) { Main::BackupFile(filename); }
+    if (create_backups && !file_per_map)
+    {
+        Main::BackupFile(filename);
+    }
 
     // Need to preempt the rest of this process for now if we are using Vanilla
     // Doom
@@ -1214,13 +1288,15 @@ bool Doom::game_interface_c::Start(const char *preset)
     {
         if (std::filesystem::exists(zip_filename))
         {
-            if (create_backups) { Main::BackupFile(zip_filename); }
+            if (create_backups)
+            {
+                Main::BackupFile(zip_filename);
+            }
             std::filesystem::remove(zip_filename);
         }
         if (!ZIPF_OpenWrite(zip_filename))
         {
-            Main::ProgStatus(GetTranslatedText("Error (create PK3/ZIP)"),
-                             zip_filename.u8string().c_str());
+            Main::ProgStatus(GetTranslatedText("Error (create PK3/ZIP)"), zip_filename.u8string().c_str());
             return false;
         }
     }
@@ -1266,7 +1342,10 @@ bool Doom::game_interface_c::Start(const char *preset)
         std::setlocale(LC_NUMERIC, "C");
 #endif
     }
-    else { UDMF_mode = false; }
+    else
+    {
+        UDMF_mode = false;
+    }
     return true;
 }
 
@@ -1278,7 +1357,10 @@ bool Doom::game_interface_c::Finish(bool build_ok)
         // TODO: handle write errors
         EndWAD();
     }
-    else { build_ok = slump_main(filename); }
+    else
+    {
+        build_ok = slump_main(filename);
+    }
 
     if (UDMF_mode)
     {
@@ -1295,9 +1377,15 @@ bool Doom::game_interface_c::Finish(bool build_ok)
 #endif
     }
 
-    if (build_ok) { build_ok = Doom::BuildNodes(filename); }
+    if (build_ok)
+    {
+        build_ok = Doom::BuildNodes(filename);
+    }
 
-    if (build_ok) { Recent_AddFile(RECG_Output, filename); }
+    if (build_ok)
+    {
+        Recent_AddFile(RECG_Output, filename);
+    }
 
     if (build_ok)
     {
@@ -1305,9 +1393,8 @@ bool Doom::game_interface_c::Finish(bool build_ok)
         {
             if (!ZIPF_AddFile(filename, ""))
             {
-                LogPrintf(
-                    "Adding WAD to PK3 failed! Retaining original "
-                    "WAD.\n");
+                LogPrintf("Adding WAD to PK3 failed! Retaining original "
+                          "WAD.\n");
                 ZIPF_CloseWrite();
                 std::filesystem::remove(zip_filename);
             }
@@ -1318,7 +1405,10 @@ bool Doom::game_interface_c::Finish(bool build_ok)
                     LogPrintf("Corrupt PK3! Retaining original WAD.\n");
                     std::filesystem::remove(zip_filename);
                 }
-                else { std::filesystem::remove(filename); }
+                else
+                {
+                    std::filesystem::remove(filename);
+                }
             }
         }
     }
@@ -1344,7 +1434,10 @@ void Doom::game_interface_c::Property(std::string key, std::string value)
     }
     else if (StringCaseCompareASCII(key, "sub_format") == 0)
     {
-        if (StringCaseCompareASCII(value, "doom") == 0) { sub_format = 0; }
+        if (StringCaseCompareASCII(value, "doom") == 0)
+        {
+            sub_format = 0;
+        }
         else if (StringCaseCompareASCII(value, "hexen") == 0)
         {
             sub_format = SUBFMT_Hexen;
@@ -1376,12 +1469,14 @@ void Doom::game_interface_c::Property(std::string key, std::string value)
     }
     else
     {
-        LogPrintf("WARNING: unknown DOOM property: %s=%s\n", key.c_str(),
-                  value.c_str());
+        LogPrintf("WARNING: unknown DOOM property: %s=%s\n", key.c_str(), value.c_str());
     }
 }
 
-std::filesystem::path Doom::game_interface_c::Filename() { return filename; }
+std::filesystem::path Doom::game_interface_c::Filename()
+{
+    return filename;
+}
 
 std::filesystem::path Doom::game_interface_c::ZIP_Filename()
 {
@@ -1402,7 +1497,10 @@ void Doom::game_interface_c::EndLevel()
     level_name = "";
 }
 
-game_interface_c *Doom_GameObject() { return new Doom::game_interface_c(); }
+game_interface_c *Doom_GameObject()
+{
+    return new Doom::game_interface_c();
+}
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

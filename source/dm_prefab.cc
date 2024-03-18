@@ -118,23 +118,28 @@ static int calc_thing_z(int x, int y)
         const ajpoly::polygon_c *poly = ajpoly::Polygon(p);
 
         // ignore void space
-        if (!poly->sector || poly->sector->index < 0 ||
-            poly->sector->index == VOID_SECTOR_IDX)
+        if (!poly->sector || poly->sector->index < 0 || poly->sector->index == VOID_SECTOR_IDX)
         {
             continue;
         }
 
-        if (poly->ContainsPoint(x, y)) { return poly->sector->floor_h; }
+        if (poly->ContainsPoint(x, y))
+        {
+            return poly->sector->floor_h;
+        }
     }
 
-    return 0;  // dummy value
+    return 0; // dummy value
 }
 
 int wadfab_get_thing(lua_State *L)
 {
     int index = luaL_checkinteger(L, 1);
 
-    if (index < 0 || index >= ajpoly::num_things) { return 0; }
+    if (index < 0 || index >= ajpoly::num_things)
+    {
+        return 0;
+    }
 
     const ajpoly::thing_c *TH = ajpoly::Thing(index);
 
@@ -165,7 +170,10 @@ int wadfab_get_thing_hexen(lua_State *L)
 {
     int index = luaL_checkinteger(L, 1);
 
-    if (index < 0 || index >= ajpoly::num_things) { return 0; }
+    if (index < 0 || index >= ajpoly::num_things)
+    {
+        return 0;
+    }
 
     const ajpoly::thing_c *TH = ajpoly::Thing(index);
 
@@ -217,7 +225,10 @@ int wadfab_get_sector(lua_State *L)
 {
     int index = luaL_checkinteger(L, 1);
 
-    if (index < 0 || index >= ajpoly::num_sectors) { return 0; }
+    if (index < 0 || index >= ajpoly::num_sectors)
+    {
+        return 0;
+    }
 
     const ajpoly::sector_c *SEC = ajpoly::Sector(index);
 
@@ -255,7 +266,10 @@ int wadfab_get_side(lua_State *L)
 {
     int index = luaL_checkinteger(L, 1);
 
-    if (index < 0 || index >= ajpoly::num_sidedefs) { return 0; }
+    if (index < 0 || index >= ajpoly::num_sidedefs)
+    {
+        return 0;
+    }
 
     const ajpoly::sidedef_c *SD = ajpoly::Sidedef(index);
 
@@ -292,7 +306,10 @@ int wadfab_get_line(lua_State *L)
 {
     int index = luaL_checkinteger(L, 1);
 
-    if (index < 0 || index >= ajpoly::num_linedefs) { return 0; }
+    if (index < 0 || index >= ajpoly::num_linedefs)
+    {
+        return 0;
+    }
 
     const ajpoly::linedef_c *LD = ajpoly::Linedef(index);
 
@@ -338,7 +355,10 @@ int wadfab_get_line_hexen(lua_State *L)
 {
     int index = luaL_checkinteger(L, 1);
 
-    if (index < 0 || index >= ajpoly::num_linedefs) { return 0; }
+    if (index < 0 || index >= ajpoly::num_linedefs)
+    {
+        return 0;
+    }
 
     const ajpoly::linedef_c *LD = ajpoly::Linedef(index);
 
@@ -430,8 +450,14 @@ static void push_edge(lua_State *L, int tab_index, const ajpoly::edge_c *E)
         const ajpoly::sidedef_c *SD;
 
         // we want the "outer" sidedef (the opposite side)
-        if (E->side == 0) { SD = E->linedef->left; }
-        else { SD = E->linedef->right; }
+        if (E->side == 0)
+        {
+            SD = E->linedef->left;
+        }
+        else
+        {
+            SD = E->linedef->right;
+        }
 
         if (SD)
         {
@@ -447,14 +473,20 @@ int wadfab_get_polygon(lua_State *L)
 {
     int index = luaL_checkinteger(L, 1);
 
-    if (index < 0 || index >= ajpoly::num_polygons) { return 0; }
+    if (index < 0 || index >= ajpoly::num_polygons)
+    {
+        return 0;
+    }
 
     const ajpoly::polygon_c *poly = ajpoly::Polygon(index);
 
     // result #1 : SECTOR
     int sect_id = poly->sector ? poly->sector->index : -1;
 
-    if (sect_id == VOID_SECTOR_IDX) { sect_id = -1; }
+    if (sect_id == VOID_SECTOR_IDX)
+    {
+        sect_id = -1;
+    }
 
     lua_pushinteger(L, sect_id);
 
@@ -486,21 +518,33 @@ int wadfab_get_3d_floor(lua_State *L)
     int poly_idx  = luaL_checkinteger(L, 1);
     int floor_idx = luaL_checkinteger(L, 2);
 
-    if (poly_idx < 0 || poly_idx >= ajpoly::num_polygons) { return 0; }
+    if (poly_idx < 0 || poly_idx >= ajpoly::num_polygons)
+    {
+        return 0;
+    }
 
     const ajpoly::polygon_c *poly = ajpoly::Polygon(poly_idx);
 
-    if (!poly->sector || poly->sector->num_floors <= 0) { return 0; }
+    if (!poly->sector || poly->sector->num_floors <= 0)
+    {
+        return 0;
+    }
 
     // determine line and dummy sector
 
     const ajpoly::linedef_c *LD = poly->sector->getExtraFloor(floor_idx);
 
-    if (!LD) { return 0; }
+    if (!LD)
+    {
+        return 0;
+    }
 
     const ajpoly::sector_c *SEC = LD->right->sector;
 
-    if (!SEC) { return 0; }
+    if (!SEC)
+    {
+        return 0;
+    }
 
     // save the information
 

@@ -35,7 +35,8 @@ bool terminal  = false;
 
 void LogPrintf(const char *message, ...)
 {
-    if (!log_file && !terminal) return;
+    if (!log_file && !terminal)
+        return;
 
     char message_buf[4096];
 
@@ -66,7 +67,8 @@ void LogPrintf(const char *message, ...)
 
 void DebugPrintf(const char *message, ...)
 {
-    if (!debugging || (!log_file && !terminal)) return;
+    if (!debugging || (!log_file && !terminal))
+        return;
 
     char message_buf[4096];
 
@@ -117,14 +119,16 @@ void DebugPrintf(const char *message, ...)
         fflush(log_file);
     }
 
-    if (terminal) printf("ERROR: %s", message_buf);
+    if (terminal)
+        printf("ERROR: %s", message_buf);
 
     Main::Shutdown();
 #if defined WIN32 && !defined CONSOLE_ONLY
     if (batch_mode)
     {
         printf("\nClose window when finished...");
-        do {
+        do
+        {
         } while (true);
     }
 #endif
@@ -143,7 +147,10 @@ bool LogInit(const std::filesystem::path &filename)
         log_file = fopen(log_filename.generic_u8string().c_str(), "w");
 #endif
 
-        if (!log_file) { return false; }
+        if (!log_file)
+        {
+            return false;
+        }
     }
 
     std::time_t result = std::time(nullptr);
@@ -157,21 +164,34 @@ bool LogInit(const std::filesystem::path &filename)
 
 void LogEnableDebug(bool enable)
 {
-    if (debugging == enable) { return; }
+    if (debugging == enable)
+    {
+        return;
+    }
 
     debugging = enable;
 
-    if (debugging) { LogPrintf("===  DEBUGGING ENABLED  ===\n\n"); }
-    else { LogPrintf("===  DEBUGGING DISABLED  ===\n\n"); }
+    if (debugging)
+    {
+        LogPrintf("===  DEBUGGING ENABLED  ===\n\n");
+    }
+    else
+    {
+        LogPrintf("===  DEBUGGING DISABLED  ===\n\n");
+    }
 }
 
-void LogEnableTerminal(bool enable) { terminal = enable; }
+void LogEnableTerminal(bool enable)
+{
+    terminal = enable;
+}
 
 void LogClose(void)
 {
     LogPrintf("\n====== END OF OBSIDIAN LOGS ======\n\n");
 
-    if (log_file) fclose(log_file);
+    if (log_file)
+        fclose(log_file);
 
     log_filename.clear();
 }

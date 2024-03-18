@@ -36,14 +36,14 @@ typedef enum
 {
     OPAC_UNKNOWN = 0,
 
-    OPAC_Solid,   // utterly solid (alpha = 255 everywhere)
-    OPAC_Masked,  // only uses alpha 255 and 0
-    OPAC_Complex  // uses full range of alpha values
+    OPAC_Solid,  // utterly solid (alpha = 255 everywhere)
+    OPAC_Masked, // only uses alpha 255 and 0
+    OPAC_Complex // uses full range of alpha values
 } opacity_e;
 
 class tga_image_c
 {
-   public:
+  public:
     int width;
     int height;
 
@@ -51,7 +51,7 @@ class tga_image_c
 
     rgb_color_t *pixels;
 
-   public:
+  public:
     tga_image_c(int W, int H);
     ~tga_image_c();
 };
