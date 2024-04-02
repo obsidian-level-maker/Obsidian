@@ -385,175 +385,83 @@ function ScriptMan_assemble_mapinfo_lump()
 
   local mapinfo_lines
 
-  if OB_CONFIG.port == "zdoom" then
-    -- GAMEINFO stuff
-    mapinfo_lines = {
-        "gameinfo\n",
-        "{\n",
-    }
+  -- GAMEINFO stuff
+  mapinfo_lines = {
+      "gameinfo\n",
+      "{\n",
+  }
 
-    local eventhandler_lines = ""
-    if SCRIPTS.zs_eventhandlers then
-      eventhandler_lines = eventhandler_lines .. SCRIPTS.zs_eventhandlers
-    end
-    if PARAM.bool_boss_gen == 1 and PARAM.boss_count ~= -1 then
-      eventhandler_lines = eventhandler_lines .. '"BossGenerator_Handler"'
-    end
-    eventhandler_lines = string.gsub(eventhandler_lines, ",$", "");
+  local eventhandler_lines = ""
+  if SCRIPTS.zs_eventhandlers then
+    eventhandler_lines = eventhandler_lines .. SCRIPTS.zs_eventhandlers
+  end
+  if PARAM.bool_boss_gen == 1 and PARAM.boss_count ~= -1 then
+    eventhandler_lines = eventhandler_lines .. '"BossGenerator_Handler"'
+  end
+  eventhandler_lines = string.gsub(eventhandler_lines, ",$", "");
 
-    if eventhandler_lines ~= "" then
-      eventhandler_lines = "addeventhandlers = " .. eventhandler_lines
-    end
+  if eventhandler_lines ~= "" then
+    eventhandler_lines = "addeventhandlers = " .. eventhandler_lines
+  end
 
-    if SCRIPTS.zs_eventhandlers ~= "" then
-      eventhandler_lines = eventhandler_lines .. "\n"
-      table.insert(mapinfo_lines, eventhandler_lines)
-    end
+  if SCRIPTS.zs_eventhandlers ~= "" then
+    eventhandler_lines = eventhandler_lines .. "\n"
+    table.insert(mapinfo_lines, eventhandler_lines)
+  end
 
-    -- MAPINFO extras
-    if PARAM.bool_custom_quit_messages == 1 or PARAM.bool_heretic_quit_messages == 1 then
-      for _,line in pairs(PARAM.gameinfolump) do
-        table.insert(mapinfo_lines,line)
-      end
+  -- MAPINFO extras
+  if PARAM.bool_custom_quit_messages == 1 or PARAM.bool_heretic_quit_messages == 1 then
+    for _,line in pairs(PARAM.gameinfolump) do
+      table.insert(mapinfo_lines,line)
     end
+  end
 
-    table.insert(mapinfo_lines, "\n}\n")
+  table.insert(mapinfo_lines, "\n}\n")
 
-    -- doomednums
-    if SCRIPTS.doomednums then
-      SCRIPTS.doomednums = "DoomedNums\n" ..
-      "{\n" .. SCRIPTS.doomednums .. "}\n"
-    end
-    -- rest of map info lump
-    table.insert(mapinfo_lines, SCRIPTS.doomednums)
-    table.insert(mapinfo_lines, SCRIPTS.mapinfolump)
-    if OB_CONFIG.game == "heretic" and OB_CONFIG.length == "game" then
-      if not SCRIPTS.mapinfolump then
-        for _,lev in pairs(GAME.levels) do
-          if string.match(lev.name, "E4") then
-            mapline = "map " .. lev.name
-            if lev.description then
-              mapline = mapline .. " \"" .. lev.description .. "\""
-            end
-            mapline = mapline .. "\n{\n"
-            mapline = mapline .. "sky1 = SKY4\n"
-            mapline = mapline .. "Music = " .. HERETIC.MUSIC[lev.id] .. "\n"
-            mapline = mapline .. "next = " .. GAME.levels[lev.id + 1].name .. "\n"
-            mapline = mapline .. "}\n\n"
-            table.insert(mapinfo_lines, mapline)
-          elseif string.match(lev.name, "E5") then
-            mapline = "map " .. lev.name
-            if lev.description then
-              mapline = mapline .. " \"" .. lev.description .. "\""
-            end
-            mapline = mapline .. "\n{\n"
-            mapline = mapline .. "sky1 = SKY5\n"
-            mapline = mapline .. "Music = " .. HERETIC.MUSIC[lev.id] .. "\n"
-            if lev.id == 45 then
-              mapline = mapline .. "next = EndPic, TITLE\n"
-            else
-              mapline = mapline .. "next = " .. GAME.levels[lev.id + 1].name .. "\n"
-            end
-            mapline = mapline .. "}\n\n"
-            table.insert(mapinfo_lines, mapline)
-          end
-        end
-      end
-    elseif OB_CONFIG.game == "hexen" then
+  -- doomednums
+  if SCRIPTS.doomednums then
+    SCRIPTS.doomednums = "DoomedNums\n" ..
+    "{\n" .. SCRIPTS.doomednums .. "}\n"
+  end
+  -- rest of map info lump
+  table.insert(mapinfo_lines, SCRIPTS.doomednums)
+  table.insert(mapinfo_lines, SCRIPTS.mapinfolump)
+  if OB_CONFIG.game == "heretic" and OB_CONFIG.length == "game" then
+    if not SCRIPTS.mapinfolump then
       for _,lev in pairs(GAME.levels) do
-        local mapnum = tonumber(string.sub(lev.name, 4))
-        mapline = "map " .. lev.name .. " \"" .. lev.description .. "\"\n{\n"
-        for k, v in pairs(HEXEN.MAPINFO_MAPS) do
-          if v == mapnum then
-            mapline = mapline .. "warptrans = " .. k .. "\n"
-            goto foundmap
+        if string.match(lev.name, "E4") then
+          mapline = "map " .. lev.name
+          if lev.description then
+            mapline = mapline .. " \"" .. lev.description .. "\""
           end
-        end
-        ::foundmap::
-        mapline = mapline .. "levelnum = " .. mapnum .. "\n"
-        mapline = mapline .. "cluster = 1\n"
-        local sky = lev.theme.sky_mapinfo
-        mapline = mapline .. "sky1 = \"" .. sky.sky_patch1 .. "\", " .. sky.sky_speed1 / 100 .. "\n"
-        mapline = mapline .. "sky2 = \"" .. sky.sky_patch2 .. "\", " .. sky.sky_speed2 / 100 .. "\n"
-        if sky.lightning_chance then
-          if rand.odds(sky.lightning_chance) then
-            mapline = mapline .. "lightning\n"
+          mapline = mapline .. "\n{\n"
+          mapline = mapline .. "sky1 = SKY4\n"
+          mapline = mapline .. "Music = " .. HERETIC.MUSIC[lev.id] .. "\n"
+          mapline = mapline .. "next = " .. GAME.levels[lev.id + 1].name .. "\n"
+          mapline = mapline .. "}\n\n"
+          table.insert(mapinfo_lines, mapline)
+        elseif string.match(lev.name, "E5") then
+          mapline = "map " .. lev.name
+          if lev.description then
+            mapline = mapline .. " \"" .. lev.description .. "\""
           end
-        end
-        if sky.doublesky then
-          mapline = mapline .. "doublesky\n"
-        end
-        if sky.fadetable then
-          mapline = mapline .. "fadetable = \"fogmap\"\n"
-        end
-        mapline = mapline .. "}\n\n"
-        table.insert(mapinfo_lines, mapline)
-      end
-    elseif OB_CONFIG.game == "strife" then
-      for _,lev in pairs(GAME.levels) do
-        local mapnum = tonumber(string.sub(lev.name, 4))
-        mapline = "map " .. lev.name .. " \"" .. lev.description .. "\"\n{\n"
-        mapline = mapline .. "levelnum = " .. mapnum .. "\n"
-        mapline = mapline .. "music = " .. rand.pick(STRIFE.MUSIC_LIST) .. "\n"
-        if OB_CONFIG.length ~= "single" then
-          if mapnum == 1 then
-            mapline = mapline .. "next = MAP03\n"
-          elseif mapnum == 2 then
-            mapline = mapline .. "next = MAP01\n"
+          mapline = mapline .. "\n{\n"
+          mapline = mapline .. "sky1 = SKY5\n"
+          mapline = mapline .. "Music = " .. HERETIC.MUSIC[lev.id] .. "\n"
+          if lev.id == 45 then
+            mapline = mapline .. "next = EndPic, TITLE\n"
           else
-            mapnum = mapnum + 1
-            if mapnum <= #GAME.levels then
-              if mapnum < 10 then
-                mapline = mapline .. "next = " .. "MAP0" .. mapnum .. "\n"
-              else
-                mapline = mapline .. "next = " .. "MAP" .. mapnum .. "\n"
-              end
-            else
-              mapline = mapline .. "next = EndGameS\n"
-            end
+            mapline = mapline .. "next = " .. GAME.levels[lev.id + 1].name .. "\n"
           end
+          mapline = mapline .. "}\n\n"
+          table.insert(mapinfo_lines, mapline)
         end
-        mapline = mapline .. "cluster = 1\n"
-        mapline = mapline .. "sky1 = " .. "P_BLUE1" .. "\n"
-        mapline = mapline .. "}\n\n"
-        table.insert(mapinfo_lines, mapline)
-      end
-    end
-  else
-    if OB_CONFIG.game == "hexen" then
-      mapinfo_lines = {}
-      for _,lev in pairs(GAME.levels) do
-        local mapnum = tonumber(string.sub(lev.name, 4))
-        mapline = "map " .. mapnum .. " \"" .. lev.description .. "\"\n"
-        for k, v in pairs(HEXEN.MAPINFO_MAPS) do
-          if v == mapnum then
-            mapline = mapline .. "warptrans " .. k .. "\n"
-            goto foundmap
-          end
-        end
-        ::foundmap::
-        mapline = mapline .. "cluster 1\n"
-        local sky = lev.theme.sky_mapinfo
-        mapline = mapline .. "sky1 " .. sky.sky_patch1 .. " " .. sky.sky_speed1 .. "\n"
-        mapline = mapline .. "sky2 " .. sky.sky_patch2 .. " " .. sky.sky_speed2 .. "\n"
-        if sky.lightning_chance then
-          if rand.odds(sky.lightning_chance) then
-            mapline = mapline .. "lightning\n"
-          end
-        end
-        if sky.doublesky then
-          mapline = mapline .. "doublesky\n"
-        end
-        if sky.fadetable then
-          mapline = mapline .. "fadetable fogmap\n"
-        end
-        mapline = mapline .. "\n"
-        table.insert(mapinfo_lines, mapline)
       end
     end
   end
-  if mapinfo_lines and (#mapinfo_lines > 2  or (OB_CONFIG.port ~= "zdoom" and #mapinfo_lines > 0)) then
-    if ob_mod_enabled("compress_output") == 1 and OB_CONFIG.port ~= "dsda" then
+
+  if mapinfo_lines and #mapinfo_lines > 2 then
+    if ob_mod_enabled("compress_output") == 1 then
       gui.wad_add_text_lump("MAPINFO.txt", mapinfo_lines)
     else
       gui.wad_add_text_lump("MAPINFO", mapinfo_lines)
@@ -569,7 +477,7 @@ function ScriptMan_assemble_trnslate_lump()
   end
 
   if trnslate_lines ~= "" then
-    if ob_mod_enabled("compress_output") == 1 and OB_CONFIG.port ~= "dsda" then
+    if ob_mod_enabled("compress_output") == 1 then
       add_script_lump("TRNSLATE.txt", trnslate_lines)
     else
       add_script_lump("TRNSLATE", trnslate_lines)
@@ -596,7 +504,7 @@ function ScriptMan_assemble_zscript_lump()
 
   if zscript_lines ~= "" then
     zscript_lines = 'version "4.3"\n' .. zscript_lines
-    if ob_mod_enabled("compress_output") == 1 and OB_CONFIG.port ~= "dsda" then
+    if ob_mod_enabled("compress_output") == 1 then
       add_script_lump("ZSCRIPT.txt", zscript_lines)
     else
       add_script_lump("ZSCRIPT", zscript_lines)
@@ -611,7 +519,7 @@ function ScriptMan_assemble_decorate_lump()
   end
 
   if SCRIPTS.decorate then
-    if ob_mod_enabled("compress_output") == 1 and OB_CONFIG.port ~= "dsda" then
+    if ob_mod_enabled("compress_output") == 1 then
       add_script_lump("DECORATE.txt", SCRIPTS.decorate)
     else
       add_script_lump("DECORATE", SCRIPTS.decorate)
@@ -637,7 +545,7 @@ function ScriptMan_assemble_sndinfo_lump()
   end
 
   if sndinfo_lines ~= "" then
-    if ob_mod_enabled("compress_output") == 1 and OB_CONFIG.port ~= "dsda" then
+    if ob_mod_enabled("compress_output") == 1 then
       add_script_lump("SNDINFO.txt", sndinfo_lines)
     else
       add_script_lump("SNDINFO", sndinfo_lines)
@@ -670,7 +578,7 @@ function ScriptMan_assemble_gldefs_lump()
   end
 
   if gldefs_lines ~= "" then
-    if ob_mod_enabled("compress_output") == 1 and OB_CONFIG.port ~= "dsda" then
+    if ob_mod_enabled("compress_output") == 1 then
       add_script_lump("GLDEFS.txt", gldefs_lines)
     else
       add_script_lump("GLDEFS", gldefs_lines)
@@ -700,7 +608,7 @@ function ScriptMan_assemble_language_lump()
   end
 
   if #language_lines > 2 then
-    if ob_mod_enabled("compress_output") == 1 and OB_CONFIG.port ~= "dsda" then
+    if ob_mod_enabled("compress_output") == 1 then
       gui.wad_add_text_lump("LANGUAGE.txt", language_lines)
     else
       gui.wad_add_text_lump("LANGUAGE", language_lines)
@@ -720,7 +628,7 @@ function ScriptMan_assemble_acs_loader_lump()
   end
 
   if not table.empty(acs_loader_lines) then
-    if ob_mod_enabled("compress_output") == 1 and OB_CONFIG.port ~= "dsda" then
+    if ob_mod_enabled("compress_output") == 1 then
       gui.wad_add_text_lump("LOADACS.txt", acs_loader_lines)
     else
       gui.wad_add_text_lump("LOADACS", acs_loader_lines)
@@ -747,7 +655,7 @@ function ScriptMan_assemble_textures_lump()
 
   if PARAM.obsidian_resource_pack_active then
     table.insert(textures_lump_lines, EPIC_TEXTUREX_LUMP)
-    if ob_mod_enabled("compress_output") == 1 and OB_CONFIG.port ~= "dsda" then
+    if ob_mod_enabled("compress_output") == 1 then
       gui.wad_add_text_lump("TEXTURES.txt", textures_lump_lines)
     else
       gui.wad_add_text_lump("TEXTURES", textures_lump_lines)
@@ -756,7 +664,7 @@ function ScriptMan_assemble_textures_lump()
 
   if SCRIPTS.animdefs then
     table.insert(textures_lump_lines, EPIC_TEXTUREX_LUMP)
-    if ob_mod_enabled("compress_output") == 1 and OB_CONFIG.port ~= "dsda" then
+    if ob_mod_enabled("compress_output") == 1 then
       gui.wad_add_text_lump("ANIMDEFS.txt", {SCRIPTS.animdefs})
     else
       gui.wad_add_text_lump("ANIMDEFS", {SCRIPTS.animdefs})
@@ -766,7 +674,7 @@ end
 
 function ScriptMan_assemble_terrain_lump()
   if SCRIPTS.terrain then
-    if ob_mod_enabled("compress_output") == 1 and OB_CONFIG.port ~= "dsda" then
+    if ob_mod_enabled("compress_output") == 1 then
       gui.wad_add_text_lump("TERRAIN.txt", {SCRIPTS.terrain})
     else
       gui.wad_add_text_lump("TERRAIN", {SCRIPTS.terrain})

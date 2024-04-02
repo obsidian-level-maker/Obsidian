@@ -139,124 +139,7 @@ PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_DROPS =
           scale *= 0.99;
           SetZ(pos.z+2);
       }
-  }]],
-  harmony =
-  [[class BossExiter : CustomInventory
-  {
-      Default
-      {
-      }
-      States
-      {
-      Spawn:
-          FBXP A 4 BRIGHT A_SpawnItemEx("BossExiterGlow");
-          Loop;
-      Pickup:
-          TNT1 A 1 Exit_Normal(0);
-          Stop;
-      }
-  }
-  class BossExiterGlow : Actor
-  {
-      Default
-      {
-      +NOGRAVITY;
-      +NOINTERACTION;
-      }
-      States
-      {
-      Spawn:
-          FBXP A 4 BRIGHT;
-          Loop;
-      }
-      override void Tick()
-      {
-          super.Tick();
-          A_Fadeout(0.02);
-          scale *= 0.99;
-          SetZ(pos.z+2);
-      }
-  }]],
-  strife =
-  [[class BossExiter : CustomInventory
-  {
-      Default
-      {
-      Translation 6;
-      Scale 2;
-      }
-      States
-      {
-      Spawn:
-          SIGL E 4 BRIGHT A_SpawnItemEx("BossExiterGlow");
-          Loop;
-      Pickup:
-          TNT1 A 1 Exit_Normal(0);
-          Stop;
-      }
-  }
-  class BossExiterGlow : Actor
-  {
-      Default
-      {
-      Translation 6;
-      Scale 2;
-      +NOGRAVITY;
-      +NOINTERACTION;
-      }
-      States
-      {
-      Spawn:
-          SIGL E 4 BRIGHT;
-          Loop;
-      }
-      override void Tick()
-      {
-          super.Tick();
-          A_Fadeout(0.02);
-          scale *= 0.99;
-          SetZ(pos.z+2);
-      }
-  }]],
-  hexen =
-  [[class BossExiter : CustomInventory
-  {
-      Default
-      {
-      Scale 2;
-      }
-      States
-      {
-      Spawn:
-          BPFX C 4 BRIGHT A_SpawnItemEx("BossExiterGlow");
-          Loop;
-      Pickup:
-          TNT1 A 1 Exit_Normal(0);
-          Stop;
-      }
-  }
-  class BossExiterGlow : Actor
-  {
-      Default
-      {
-      Scale 2;
-      +NOGRAVITY;
-      +NOINTERACTION;
-      }
-      States
-      {
-      Spawn:
-          BPFX C 4 BRIGHT;
-          Loop;
-      }
-      override void Tick()
-      {
-          super.Tick();
-          A_Fadeout(0.02);
-          scale *= 0.99;
-          SetZ(pos.z+2);
-      }
-  }]] 
+  }]]
 }
 
 PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_DIFF_CHOICES =
@@ -1435,7 +1318,7 @@ PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.TRAITS =
 }
 
 function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.game_specific_hpbar()
-    if OB_CONFIG.game == "heretic" or OB_CONFIG.game == "hexen" then
+    if OB_CONFIG.game == "heretic" then
      PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.TEMPLATES.BAR = [[if(bossFound)
         {
         ThinkerIterator BossFinder = ThinkerIterator.Create("bossController");
@@ -1592,20 +1475,8 @@ function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.end_lvl(self, LEVEL)
 
     local id
 
-    if ob_match_game({game = {doom2=1, hacx=1, harmony=1, hexen=1, strife=1}}) then
-      if OB_CONFIG.game == "strife" then
-        if LEVEL.id == 1 then
-          id = 2
-        elseif LEVEL.id == 2 then
-          id = 1
-        else
-          id = LEVEL.id
-        end
-      elseif OB_CONFIG.game == "hexen" then
-        id = HEXEN.MAPINFO_MAPS[LEVEL.id]
-      else
+    if ob_match_game({game = {doom2=1, hacx=1}}) then
         id = LEVEL.id
-      end
     else
       if OB_CONFIG.length == "single" or OB_CONFIG.length == "few" then
         id = LEVEL.id
@@ -1682,12 +1553,6 @@ function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.all_done()
     scripty = string.gsub(scripty, "BOSSDROP", PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_DROPS.heretic)
   elseif OB_CONFIG.game == "hacx" then
     scripty = string.gsub(scripty, "BOSSDROP", PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_DROPS.hacx)
-  elseif OB_CONFIG.game == "harmony" then
-    scripty = string.gsub(scripty, "BOSSDROP", PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_DROPS.harmony)
-  elseif OB_CONFIG.game == "strife" then
-    scripty = string.gsub(scripty, "BOSSDROP", PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_DROPS.strife)
-  elseif OB_CONFIG.game == "hexen" then
-    scripty = string.gsub(scripty, "BOSSDROP", PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_DROPS.hexen)
   else
     scripty = string.gsub(scripty, "BOSSDROP", PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_DROPS.doomish)
   end

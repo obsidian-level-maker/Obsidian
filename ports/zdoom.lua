@@ -66,7 +66,7 @@ OB_PORTS["zdoom"] =
 
   game =
   {
-    chex3=1, doom1=1, doom2=1, heretic=1, hexen=1, strife=1, hacx=1, harmony=1
+    chex1=1, doom1=1, doom2=1, heretic=1, hacx=1
   },
 
   tables =

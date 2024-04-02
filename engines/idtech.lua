@@ -50,34 +50,11 @@ OB_ENGINES["idtech_1"] =
 
   priority = 100,
 
-  game = { chex1=1, chex3=1, doom1=1, doom2=1, hacx=1, harmony=1, heretic=1, hexen=1, strife=1 },
+  game = { chex1=1, doom1=1, doom2=1, hacx=1, heretic=1 },
 
   tables =
   {
     IDTECH_1
-  },
-
-  hooks =
-  {
-  
-  }
-}
-
-----------------------------------------------------------------
-
-IDTECH_2 = {}
-
-UNFINISHED["idtech_2"] =
-{
-  label = _("id Tech 2"),
-
-  priority = 100,
-
-  game = { quake=1 },
-
-  tables =
-  {
-    IDTECH_2
   },
 
   hooks =

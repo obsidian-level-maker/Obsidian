@@ -292,7 +292,7 @@ OB_MODULES["misc"] =
       label=_("Streets-Friendly Themes Only"),
       valuator = "button",
       default = 1,
-      tooltip = _("Only allow Streets Mode slider to affect levels with the following themes:\n\nChex Quest 3 - Chextropolis\nDoom 2 - Urban\nHeretic - City\nStrife - Town"),
+      tooltip = _("Only allow Streets Mode slider to affect levels with the following themes:\n\nDoom 2 - Urban\nHeretic - City"),
       priority = 95,
       gap = 1,
     },

@@ -4183,50 +4183,7 @@ function Room_cleanup_stairs_to_nowhere(R)
 
 end
 
-
-
-function Room_add_sun()
-  -- game check
-  if not GAME.ENTITIES["sun"] then return end
-
-  local sun_r = 25000
-  local sun_h = 40000
-
-  -- nine lights in the sky, one is "the sun" and the rest provide
-  -- ambient light (to keep outdoor areas from getting too dark).
-
-  local dim = 4
-  local bright = 40
-
-  for i = 1,10 do
-    local angle = i * 36 - 18
-
-    local x = math.sin(angle * math.pi / 180.0) * sun_r
-    local y = math.cos(angle * math.pi / 180.0) * sun_r
-
-    local level = sel(i == 2, bright, dim)
-
-    Trans.entity("sun", x, y, sun_h, { light=level })
-  end
-
-  Trans.entity("sun", 0, 0, sun_h, { light=dim })
-end
-
-
-
-function Room_add_camera()
-  -- this is used for Quake intermissions
-
-  -- game check
-  if not GAME.ENTITIES["camera"] then return end
-
-  -- TODO
-end
-
-
-
 ------------------------------------------------------------------------
-
 
 function Room_build_all(LEVEL, SEEDS)
 
@@ -4279,7 +4236,4 @@ function Room_build_all(LEVEL, SEEDS)
 
   Render_triggers(LEVEL)
   Render_determine_spots(LEVEL, SEEDS)
-
-  Room_add_sun()
-  Room_add_camera()
 end

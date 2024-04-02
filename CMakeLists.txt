@@ -60,19 +60,16 @@ if(NOT CONSOLE_ONLY AND NOT HAIKU)
     source_files/obsidian_main/csg_clip.cc
     source_files/obsidian_main/csg_doom.cc
     source_files/obsidian_main/csg_main.cc
-    source_files/obsidian_main/csg_nukem.cc
     source_files/obsidian_main/csg_quake.cc
     source_files/obsidian_main/csg_shade.cc
     source_files/obsidian_main/csg_spots.cc
     source_files/obsidian_main/dm_extra.cc
     source_files/obsidian_main/dm_prefab.cc
     source_files/obsidian_main/g_doom.cc
-    source_files/obsidian_main/g_nukem.cc
     source_files/obsidian_main/g_quake.cc
     source_files/obsidian_main/g_quake2.cc
     source_files/obsidian_main/g_wolf.cc
     source_files/obsidian_main/lib_argv.cc
-    source_files/obsidian_main/lib_grp.cc
     source_files/obsidian_main/lib_pak.cc
     source_files/obsidian_main/lib_tga.cc
     source_files/obsidian_main/lib_util.cc
@@ -119,19 +116,16 @@ else()
     source_files/obsidian_main/csg_clip.cc
     source_files/obsidian_main/csg_doom.cc
     source_files/obsidian_main/csg_main.cc
-    source_files/obsidian_main/csg_nukem.cc
     source_files/obsidian_main/csg_quake.cc
     source_files/obsidian_main/csg_shade.cc
     source_files/obsidian_main/csg_spots.cc
     source_files/obsidian_main/dm_extra.cc
     source_files/obsidian_main/dm_prefab.cc
     source_files/obsidian_main/g_doom.cc
-    source_files/obsidian_main/g_nukem.cc
     source_files/obsidian_main/g_quake.cc
     source_files/obsidian_main/g_quake2.cc
     source_files/obsidian_main/g_wolf.cc
     source_files/obsidian_main/lib_argv.cc
-    source_files/obsidian_main/lib_grp.cc
     source_files/obsidian_main/lib_pak.cc
     source_files/obsidian_main/lib_tga.cc
     source_files/obsidian_main/lib_util.cc

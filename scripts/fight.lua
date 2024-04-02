@@ -244,16 +244,6 @@ function Fight_Simulator(monsters, weapons, stats)
     end
   end
 
-
-  local function fixup_hexen_mana()
-    if stats.dual_mana then
-      stats.blue_mana  = (stats.blue_mana  or 0) + stats.dual_mana
-      stats.green_mana = (stats.green_mana or 0) + stats.dual_mana
-      stats.dual_mana  = nil
-    end
-  end
-
-
   ---==| Fight_Simulator |==---
 
   stats.health = stats.health or 0
@@ -292,7 +282,5 @@ function Fight_Simulator(monsters, weapons, stats)
     player_shoot(W)
     remove_dead_mon()
   end
-
-  fixup_hexen_mana()
 end
 

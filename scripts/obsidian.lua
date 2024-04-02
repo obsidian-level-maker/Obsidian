@@ -52,7 +52,6 @@ gui.import("/data/text/random_words_en_m.lua")
 gui.import("/data/text/dialogues.lua")
 
 gui.import("094/oblige_v094.lua")
---gui.import("nfs/main.lua")
 
 function ob_ref_table(op, t)
   if not gui.___REFS then
@@ -546,12 +545,8 @@ function ob_update_games()
   if need_new then
     if OB_CONFIG.engine == "idtech_0" then
       OB_CONFIG.game = "wolf"
-    elseif OB_CONFIG.engine == "idtech_1" then
-      OB_CONFIG.game = "doom2"
-    elseif OB_CONFIG.engine == "idtech_2" then
-      OB_CONFIG.game = "quake"
     else
-      OB_CONFIG.game = "nukem"
+      OB_CONFIG.game = "doom2"
     end
     gui.set_button("game", OB_CONFIG.game)
   end
@@ -1903,22 +1898,14 @@ function ob_default_filename()
     return "unused.filename"
   else
     local name_tab = {}
-    if OB_CONFIG.game == "chex3" then
-      name_tab = CHEX3.NAMES
-    elseif OB_CONFIG.game == "chex1" then
+    if OB_CONFIG.game == "chex1" then
       name_tab = CHEX1.NAMES
     elseif ob_match_game({game = "doomish"}) then
       name_tab = DOOM.NAMES
     elseif OB_CONFIG.game == "hacx" then
       name_tab = HACX.NAMES
-    elseif OB_CONFIG.game == "harmony" then
-      name_tab = HARMONY.NAMES
     elseif OB_CONFIG.game == "heretic" then
       name_tab = HERETIC.NAMES
-    elseif OB_CONFIG.game == "hexen" then
-      name_tab = HEXEN.NAMES
-    elseif OB_CONFIG.game == "strife" then
-      name_tab = STRIFE.NAMES
     end
     Naming_init(name_tab)
   end
@@ -1946,11 +1933,9 @@ function ob_default_filename()
     elseif OB_CONFIG.length == "few" then
       levelcount = "4"
     elseif OB_CONFIG.length == "episode" then
-      if ob_match_game({game = {doom2=1,tnt=1,plutonia=1,hacx=1,harmony=1,strife=1}}) then
+      if ob_match_game({game = {doom2=1,tnt=1,plutonia=1,hacx=1}}) then
         levelcount = "11"
-      elseif OB_CONFIG.game == "hexen" then
-        levelcount = "6"
-      elseif OB_CONFIG.game == "chex3" or OB_CONFIG.game == "chex1" then
+      elseif OB_CONFIG.game == "chex1" then
         levelcount = "5"
       else
         levelcount = "9"
@@ -2387,17 +2372,13 @@ local function ob_get_module_refs()
       port = {_("ALL")},
       choices = {
         "chex1",
-        "chex3",
         "doom1",
         "doom2",
         "ultdoom",
         "tnt",
         "plutonia",
         "hacx",
-        "harmony",
         "heretic",
-        "hexen",
-        "strife",
         "wolf3d",
         "spear",
         "noah",
@@ -2413,10 +2394,8 @@ local function ob_get_module_refs()
         "vanilla",
         "limit_enforcing",
         "boom",
-        "dsda",
         "zdoom",
         "edge",
-        "eternity",
       },
       default = "zdoom",
     },
@@ -2434,7 +2413,7 @@ local function ob_get_module_refs()
       default = "game",
     },
     theme = {
-      tooltip = _("The following values are game-specific:\n  Chex Quest 3: bazoik,spaceport,villa\n  Ultimate Doom/Doom 1: deimos,flesh\n  Ultimate Doom/Doom 1/Doom 2/TNT/Plutonia: tech,urban,hell\n  TNT: egypt\n  HacX: hacx_urban\n  Harmony: ndf_base\n  Heretic: city,maw,dome,ossuary,demense\n  Hexen: forest,ice_caves,fire_steel,swamp,dungeon,town\n  Strife: town\n\n  Note: This setting currently does nothing for id Tech 0 games!\n"),
+      tooltip = _("The following values are game-specific:\n  Ultimate Doom/Doom 1: deimos,flesh\n  Ultimate Doom/Doom 1/Doom 2/TNT/Plutonia: tech,urban,hell\n  TNT: egypt\n  HacX: hacx_urban\n  Heretic: city,maw,dome,ossuary,demense\n\n  Note: This setting currently does nothing for id Tech 0 games!\n"),
       engine = {_("ALL")},
       game = {_("ALL")},
       port = {_("ALL")},
@@ -2444,9 +2423,6 @@ local function ob_get_module_refs()
         "jumble",
         "bit_mixed",
         "psycho",
-        "bazoik",
-        "spaceport",
-        "villa",
         "tech",
         "urban",
         "hell",
@@ -2454,18 +2430,11 @@ local function ob_get_module_refs()
         "flesh",
         "egypt",
         "hacx_urban",
-        "ndf_base",
         "city",
         "maw",
         "dome",
         "ossuary",
-        "demense",
-        "forest",
-        "ice_caves",
-        "fire_steel",
-        "swamp",
-        "dungeon",
-        "town",
+        "demense"
       },
       default = "original",
     },
@@ -2717,12 +2686,6 @@ function ob_build_cool_shit()
     local result = v094_build_wolf3d_shit()
     ob_clean_up()
     return result
-  end
-
-  if PARAM.float_historical_oblige_v2 then
-    if OB_CONFIG.game == "hexen" and PARAM.float_historical_oblige_v2 < 100 then
-      error(gui.gettext("Hexen's level linking in Oblige v2 is incompatible with Obsidian's level progression. Please set the slider to 100% to generate the full WAD with Oblige v2."))
-    end
   end
 
   if PARAM["bool_save_gif"] == 1 then

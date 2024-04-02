@@ -119,7 +119,7 @@ if(NOT PHYSFS_ARCHIVE_GRP)
     add_definitions(-DPHYSFS_SUPPORTS_GRP=0)
 endif()
 
-option(PHYSFS_ARCHIVE_WAD "Enable Doom WAD support" TRUE)
+option(PHYSFS_ARCHIVE_WAD "Enable Doom WAD support" OFF)
 if(NOT PHYSFS_ARCHIVE_WAD)
     add_definitions(-DPHYSFS_SUPPORTS_WAD=0)
 endif()

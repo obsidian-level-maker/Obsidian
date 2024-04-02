@@ -27,8 +27,6 @@
     -- updates the hmodel for the items in the room.  When placing items, we
     -- exclude stuff that the player already has.
     --
-    -- There is one 'HMODEL' for each player class (in HEXEN there are three
-    -- player classes).  So LEVEL.hmodels is indexed by the class name.
     --
     -- The GAME.PLAYER_MODEL table contains the initial model, especially the
     -- weapons that a player always holds.
@@ -49,42 +47,6 @@ DOOM_FLAGS =
   DEAF    = 8
 }
 
--- Hexen thing flags
-HEXEN_FLAGS =
-{
-  FIGHTER = 32,
-  CLERIC  = 64,
-  MAGE    = 128,
-
-  DM      = 1024
-}
-
--- Quake flags
-QUAKE_FLAGS =
-{
-  DEAF       = 1,
-
-  NOT_EASY   = 256,
-  NOT_MEDIUM = 512,
-  NOT_HARD   = 1024,
-  NOT_DM     = 2048
-}
-
--- Hexen2 flags  [NOT USED YET]
-HEXEN2_FLAGS =
-{
-  NOT_PALADIN  = 256,
-  NOT_CLERIC   = 512,
-  NOT_NECRO    = 1024,
-  NOT_ASSASSIN = 2048,
-
-  NOT_EASY     = 4096,
-  NOT_MEDIUM   = 8192,
-  NOT_HARD     = 16384,
-  NOT_DM       = 32768
-}
-
-
 function Player_init(LEVEL)
   LEVEL.hmodels = table.deep_copy(GAME.PLAYER_MODEL)
 
@@ -92,7 +54,6 @@ function Player_init(LEVEL)
     hmodel.class = CL
   end
 end
-
 
 function Player_give_weapon(LEVEL, weapon, only_CL)
   gui.printf("Giving weapon: %s\n", weapon)
@@ -200,10 +161,6 @@ function Player_firepower(LEVEL)
   -- The 'firepower' is (roughly) how much damage per second
   -- the player would normally do using their current set of
   -- weapons.
-  --
-  -- If there are different classes (Hexen) then the result
-  -- will be an average of each class, as all classes face
-  -- the same monsters.
 
   local function get_firepower(hmodel)
     local firepower = 0

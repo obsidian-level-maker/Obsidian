@@ -1,5 +1,5 @@
 ---------------------------------------------------------------
---  MODULE: Harmony Control
+--  MODULE: Chex Quest 3 Control
 ----------------------------------------------------------------
 --
 --  Copyright (C) 2009-2010 Andrew Apted
@@ -18,9 +18,9 @@
 --
 ----------------------------------------------------------------
 
-CTL_HARMONY = {}
+CTL_CHEX1 = {}
 
-function CTL_HARMONY.monster_setup(self)
+function CTL_CHEX1.monster_setup(self)
 
   module_param_up(self)
 
@@ -53,134 +53,151 @@ function CTL_HARMONY.monster_setup(self)
 end
 
 
-OB_MODULES["harmony_mon_control"] =
+OB_MODULES["chex1_mon_control"] =
 {
+  name = "chex1_mon_control",
 
-  name = "harmony_mon_control",
+  label = _("Chex Quest 1 Monster Control"),
 
-  label = _("Harmony Monster Control"),
-
-  game = "harmony",
+  game = "chex1",
   engine = "idtech_1",
   port = "!limit_enforcing",
   where = "combat",
 
+
   hooks =
   {
-    setup = CTL_HARMONY.monster_setup
+    setup = CTL_CHEX1.monster_setup
   },
 
   options =
   {
+     {
+      name = "float_commonus",
+      label = _("Commonus"),
+      valuator = "slider",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = _("Default"),
+      nan = _("Default"),
+      tooltip = _("Control the amount of Commoni."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
+      randomize_group = "monsters"
+     },
+
+     {
+      name = "float_bipedicus",
+      label = _("Bipedicus"),
+      valuator = "slider",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = _("Default"),
+      nan = _("Default"),
+      tooltip = _("Control the amount of Bipedici."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
+      randomize_group = "monsters"
+     },
 
     {
-      name = "float_beastling",
-      label = _("Beastling"),
+      name = "float_armored_biped",
+      label = _("Armored Bipedicus"),
       valuator = "slider",
       min = 0,
       max = 20,
       increment = .02,
       default = _("Default"),
       nan = _("Default"),
-      tooltip = _("Control the amount of Beastlings."), 
+      tooltip = _("Control the amount of Armored Bipedici."),  
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
      {
-      name = "float_critter",
-      label = _("Critter"),
+      name = "float_quadrumpus",
+      label = _("Quadrumpus"),
       valuator = "slider",
       min = 0,
       max = 20,
       increment = .02,
       default = _("Default"),
       nan = _("Default"),
-      tooltip = _("Control the amount of Critters."), 
+      tooltip = _("Control the amount of Quadrumpi."),  
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
      {
-      name = "float_follower",
-      label = _("Follower"),
+      name = "float_cycloptis",
+      label = _("Cycloptis"),
       valuator = "slider",
       min = 0,
       max = 20,
       increment = .02,
       default = _("Default"),
-      nan = _("Default"),
-      tooltip = _("Control the amount of Followers."), 
+      nan = _("Default"), 
+      tooltip = _("Control the amount of Cyclopti."), 
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
+     
      {
-      name = "float_predator",
-      label = _("Predator"),
+      name = "float_larva",
+      label = _("Larva"),
       valuator = "slider",
       min = 0,
       max = 20,
       increment = .02,
       default = _("Default"),
       nan = _("Default"),
-      tooltip = _("Control the amount of Predators."), 
+      tooltip = _("Control the amount of Larvae."),  
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
+     
      {
-      name = "float_centaur",
-      label = _("Centaur"),
+      name = "float_flemmine",
+      label = _("Flem Mine"),
       valuator = "slider",
       min = 0,
       max = 20,
       increment = .02,
       default = _("Default"),
       nan = _("Default"),
-      tooltip = _("Control the amount of Centaurs."), 
+      tooltip = _("Control the amount of Flem Mines."),  
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
-
+	 
+     
      {
-      name = "float_mutant",
-      label = _("Mutant"),
+      name = "float_stridicus",
+      label = _("Stridicus"),
       valuator = "slider",
       min = 0,
       max = 20,
       increment = .02,
       default = _("Default"),
       nan = _("Default"),
-      tooltip = _("Control the amount of Mutants."), 
+      tooltip = _("Control the amount of Stridici."),  
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
-
+	 
+     
      {
-      name = "float_phage",
-      label = _("Phage"),
+      name = "float_super_cyclop",
+      label = _("Super Cycloptis"),
       valuator = "slider",
       min = 0,
       max = 20,
       increment = .02,
       default = _("Default"),
       nan = _("Default"),
-      tooltip = _("Control the amount of Phages."), 
-      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group = "monsters"
-     },
-
-     {
-      name = "float_echidna",
-      label = _("Echidna"),
-      valuator = "slider",
-      min = 0,
-      max = 20,
-      increment = .02,
-      default = _("Default"),
-      nan = _("Default"),
-      tooltip = _("Control the amount of Echidnae."), 
+      tooltip = _("Control the amount of Super Cyclopti."),  
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      }
@@ -190,7 +207,7 @@ OB_MODULES["harmony_mon_control"] =
 
 ----------------------------------------------------------------
 
-CTL_HARMONY.WEAPON_PREF_CHOICES =
+CTL_CHEX1.WEAPON_PREF_CHOICES =
 {
   "normal",  _("Normal"),
   "vanilla", _("Vanilla"),
@@ -198,7 +215,7 @@ CTL_HARMONY.WEAPON_PREF_CHOICES =
 }
 
 
-function CTL_HARMONY.weapon_setup(self)
+function CTL_CHEX1.weapon_setup(self)
 
   module_param_up(self)
 
@@ -223,84 +240,112 @@ function CTL_HARMONY.weapon_setup(self)
   end
 
   if PARAM.weapon_prefs == "vanilla" then
-    GAME.MONSTERS["Beastling"].weap_prefs = { launcher = 2.0 }
+    GAME.MONSTERS["Flem Mine"].weap_prefs = { zorch_propulsor = 2.0 }
   end
 
 end
 
 
-OB_MODULES["harmony_weapon_control"] =
+OB_MODULES["chex1_weapon_control"] =
 {
 
-  name = "harmony_weapon_control",
+  name = "chex1_weapon_control",
 
-  label = _("Harmony Weapon Control"),
+  label = _("Chex Quest 3 Weapon Control"),
 
-  game = "harmony",
+  game = "chex1",
   engine = "idtech_1",
   port = "!limit_enforcing",
   where = "pickup",
 
   hooks =
   {
-    setup = CTL_HARMONY.weapon_setup
+    setup = CTL_CHEX1.weapon_setup
   },
 
   options =
   {
-
+     
      {
-      name = "float_minigun",
-      label = _("Minigun"),
+      name = "float_super_bootspork",
+      label = _("Super Bootspork"),
       valuator = "slider",
       min = 0,
       max = 10,
       increment = .02,
       default = _("Default"),
       nan = _("Default"),
-      tooltip = _("Control the amount of Miniguns."), 
+      tooltip = _("Control the likelihood of finding the Super Bootspork."),  
       presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group = "pickups"
      },
 
      {
-      name = "float_shotgun",
-      label = _("Compensator"),
+      name = "float_large_zorcher",
+      label = _("Large Zorcher"),
       valuator = "slider",
       min = 0,
       max = 10,
       increment = .02,
       default = _("Default"),
       nan = _("Default"),
-      tooltip = _("Control the amount of Compensators."), 
+      tooltip = _("Control the amount of Large Zorchers."),  
       presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group = "pickups"
      },
 
      {
-      name = "float_launcher",
-      label = _("Grenade Launcher"),
+      name = "float_rapid_zorcher",
+      label = _("Rapid Zorcher"),
       valuator = "slider",
       min = 0,
       max = 10,
       increment = .02,
       default = _("Default"),
       nan = _("Default"),
-      tooltip = _("Control the amount of Grenade Launchers."), 
+      tooltip = _("Control the amount of Rapid Zorchers."),  
       presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group = "pickups"
      },
 
      {
-      name = "float_entropy",
-      label = _("Entropy Thrower"),
+      name = "float_zorch_propulsor",
+      label = _("Zorch Propulsor"),
       valuator = "slider",
       min = 0,
       max = 10,
       increment = .02,
       default = _("Default"),
       nan = _("Default"),
-      tooltip = _("Control the amount of Entropy Throwers."), 
+      tooltip = _("Control the amount of Zorch Propulsors."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
+      randomize_group = "pickups"
+     },
+	 
+     {
+      name = "float_phasing_zorcher",
+      label = _("Phasing Zorcher"),
+      valuator = "slider",
+      min = 0,
+      max = 10,
+      increment = .02,
+      default = _("Default"),
+      nan = _("Default"),
+      tooltip = _("Control the amount of Phasing Zorchers."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
+      randomize_group = "pickups"
+     },
+	 
+     {
+      name = "float_laz_device",
+      label = _("LAZ Device"),
+      valuator = "slider",
+      min = 0,
+      max = 10,
+      increment = .02,
+      default = _("Default"),
+      nan = _("Default"),
+      tooltip = _("Control the amount of LAZ Devices."),  
       presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group = "pickups"
      },
@@ -308,9 +353,10 @@ OB_MODULES["harmony_weapon_control"] =
     {
       name="weapon_prefs",
       label=_("Weapon Preferences"),
-      choices=CTL_HARMONY.WEAPON_PREF_CHOICES,
-      tooltip = _("Alters selection of weapons that are prefered to show up depending on enemy palette for a chosen map.\n\nNormal: Monsters have weapon preferences. Stronger weapons and ammo are more likely to appear directly with stronger enemies.\n\nVanilla: Vanilla Oblige-style preferences. Increases grenade launchers if the map has more beastlings. \n\nNONE: No preferences at all. For those who like to live life dangerously with Phages and only miniguns."),
+      choices=CTL_CHEX1.WEAPON_PREF_CHOICES,
+      tooltip = _("Alters selection of weapons that are prefered to show up depending on enemy palette for a chosen map.\n\nNormal: Monsters have weapon preferences. Stronger weapons and ammo are more likely to appear directly with stronger enemies.\n\nVanilla: Vanilla Oblige-style preferences. Increases Zorch Propulsors if the map has more Flem Mines. \n\nNONE: No preferences at all. For those who like to live life dangerously with Super Cyclopti and only Super Bootsporks."),
       default="normal",
+	  priority = 0,
     },
   },
 }

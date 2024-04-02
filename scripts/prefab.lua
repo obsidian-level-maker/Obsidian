@@ -720,11 +720,6 @@ function Fab_transform_Z(fab, T)
     if Trans.mirror_z then
       M.z1, M.z2 = M.z2, M.z1
     end
-
-    -- handle QUAKE I / II platforms
-    if M.entity.height and T.scale_z then
-      M.entity.height = M.entity.height * T.scale_z
-    end
   end
 
 
@@ -1391,7 +1386,7 @@ function Fab_load_wad(def)
 
 
     for _,C in pairs(coords) do
-      if OB_CONFIG.game == "hexen" then
+      if GAME.sub_format == "hexen" then
         table.insert(B, decode_polygon_side_hexen(nil, C, 1))
       else
         table.insert(B, decode_polygon_side(nil, C, 1))
@@ -1439,7 +1434,7 @@ function Fab_load_wad(def)
     decode_lighting(S, B[1])
 
     for _,C in pairs(coords) do
-      if OB_CONFIG.game == "hexen" then
+      if GAME.sub_format == "hexen" then
         table.insert(B, decode_polygon_side_hexen(S, C, 1))
       else
         table.insert(B, decode_polygon_side(S, C, 1))  
@@ -1541,7 +1536,7 @@ function Fab_load_wad(def)
     end
 
     for _,C in pairs(coords) do
-      if OB_CONFIG.game == "hexen" then
+      if GAME.sub_format == "hexen" then
         table.insert(B, decode_polygon_side_hexen(S, C, pass))
       else
         table.insert(B, decode_polygon_side(S, C, pass))
@@ -1605,7 +1600,7 @@ function Fab_load_wad(def)
   
     local spot_info
 
-    if OB_CONFIG.game == "hexen" then
+    if GAME.sub_format == "hexen" then
       spot_info = WADFAB_ENTITIES_HEXEN[E.id]
     else
       spot_info = WADFAB_ENTITIES[E.id]
@@ -1807,7 +1802,7 @@ function Fab_load_wad(def)
     local E
 
     for thing_idx = 0,9999 do
-      if OB_CONFIG.game == "hexen" then
+      if GAME.sub_format == "hexen" then
         E = gui.wadfab_get_thing_hexen(thing_idx)
       else
         E = gui.wadfab_get_thing(thing_idx)
@@ -1850,7 +1845,7 @@ function Fab_load_wad(def)
     local L
 
     for line_idx = 0,9999 do
-      if OB_CONFIG.game == "hexen" then
+      if GAME.sub_format == "hexen" then
         L = gui.wadfab_get_line_hexen(line_idx)
       else
         L = gui.wadfab_get_line(line_idx)
@@ -1940,7 +1935,7 @@ function Fab_merge_skins(fab, room, list)
 
   for _,skin in pairs(list) do 
     table.merge(result, skin)
-    if OB_CONFIG.game == "hexen" then
+    if GAME.sub_format == "hexen" then
       table.merge_missing(result, skin)
     end
   end
@@ -2313,7 +2308,7 @@ function Fab_replacements(LEVEL, fab)
       if C.special and not C.x then C.special = check("sector", C.special) end
 
       -- Convulted solution for Hexen-format remote/local switch rendering - Dasho
-      if OB_CONFIG.game == "hexen" then
+      if GAME.sub_format == "hexen" then
         if fab.switch_action and C.special and C.special ~= 0 then
           if C.special == fab.switch_action then
             if fab.switch_arg1 then
@@ -2346,7 +2341,7 @@ function Fab_replacements(LEVEL, fab)
       end
 
       -- This should provide enough compatibility to work with the generic prefab set - Dasho
-      if OB_CONFIG.game == "hexen" then
+      if GAME.sub_format == "hexen" then
         if C.x and C.special then 
           if (C.special >= 10 and C.special <= 12) then 
             C.arg1 = current_tag 
@@ -2367,48 +2362,6 @@ function Fab_replacements(LEVEL, fab)
             else
               C.arg1 = fab.out_tag
               C.arg2 = fab.out_tag
-            end
-          elseif C.special == 74 then
-            if OB_CONFIG.length == "single" or LEVEL.game_along == 1.0 then
-              C.special = 75
-            else
-              local mapnum = tonumber(string.sub(LEVEL.name, 4))
-              for k, v in pairs(HEXEN.MAPINFO_MAPS) do
-                if v == mapnum then
-                  C.arg1 = HEXEN.MAPINFO_MAPS[k + 1]
-                  goto foundmap
-                end
-              end
-              ::foundmap::
-            end
-          end
-        end
-      end
-
-      -- Fix linear progression of first several maps for Strife and end game on last generated level
-      if OB_CONFIG.game == "strife" then
-        if C.special == 11 then
-          if OB_CONFIG.length == "single" or LEVEL.game_along == 1.0 then
-            C.special = 51
-          else
-            if OB_CONFIG.port ~= "zdoom" then
-              if LEVEL.name == "MAP02" then
-                C.tag = 1
-              elseif LEVEL.name == "MAP01" then
-                C.tag = 3
-              end
-            end
-          end
-        elseif C.special == 52 then
-          if OB_CONFIG.length == "single" or LEVEL.game_along == 1.0 then
-            C.special = 124
-          else
-            if OB_CONFIG.port ~= "zdoom" then
-              if LEVEL.name == "MAP02" then
-                C.tag = 100
-              elseif LEVEL.name == "MAP01" then
-                C.tag = 300
-              end
             end
           end
         end
@@ -2502,7 +2455,7 @@ function Fab_replacements(LEVEL, fab)
     -- unknown entities set the 'id' to NIL
     -- (which prevents sending it to the CSG)
     E.id = check_thing(E.id)
-    if OB_CONFIG.game == "hexen" then
+    if GAME.sub_format == "hexen" then
       if E.tid ~= 0 then
         E.tid = check_tag(E.tid)
       end
@@ -2544,7 +2497,6 @@ function Fab_replacements(LEVEL, fab)
       ::entdone::
     end
   end
-  -- TODO : models (for Quake)
 end
 
 
@@ -2588,7 +2540,7 @@ function Fabricate(LEVEL, room, def, T, skins)
 
   Fab_substitutions(fab, SKIN)
 
-  if OB_CONFIG.game == "hexen" then
+  if GAME.sub_format == "hexen" then
     if SKIN.switch_action and type(SKIN.switch_action) == "number" then
       fab.switch_action = SKIN.switch_action
       if SKIN.switch_arg1 and type(SKIN.switch_arg1) == "number" then

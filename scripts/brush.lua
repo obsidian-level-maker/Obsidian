@@ -52,16 +52,6 @@ function raw_add_entity(ent)
   -- skip unknown entities (from wad-fab loader)
   if not ent.id or (ent.id and ent.id == 0) then return end
 
-  if GAME.format == "quake" then
-    ent.mangle = ent.angles ; ent.angles = nil
-  end
-
-  if GAME.format == "doom" then
-    -- this is mainly for Legacy (spawning things on 3D floors)
-    -- it is OK for this to be NIL
-    ent.fs_name = FRAGGLESCRIPT_THINGS[ent.id]
-  end
-
   gui.add_entity(ent)
 
   if GAME.add_entity_func then
@@ -365,55 +355,12 @@ function Trans.entity(name, x, y, z, props)
     props.spawnflags = (props.spawnflags or 0) + info.spawnflags
   end
 
-  if OB_CONFIG.game == "hexen" then
-    if info.id == 7000 or info.id == 7001 then -- Place all weapon variants with appropriate per-class flags
-      local wep
-      for _,v in pairs(GAME.WEAPONS) do
-        if info.id == v.id then
-          wep = v
-        end
-      end
-      for _,v in pairs(wep.class_weapon_ids) do
-        local wep_ent = table.copy(props)
-        wep_ent.id = v.id
-        wep_ent.flags = v.flags 
-        wep_ent.x  = x
-        wep_ent.y  = y
-        wep_ent.z  = z
-        raw_add_entity(wep_ent)
-      end
-    elseif info.id == 7002 or info.id == 7003 or info.id == 7004 then -- Place all ultimate weapon pieces with appropriate per-class flags
-      local piece
-      for _,v in pairs(GAME.NICE_ITEMS) do
-        if info.id == v.id then
-          piece = v
-        end
-      end
-      for _,v in pairs(piece.weapon_piece_ids) do
-        local piece_ent = table.copy(props)
-        piece_ent.id = v.id
-        piece_ent.flags = v.flags
-        piece_ent.x  = x
-        piece_ent.y  = y
-        piece_ent.z  = z
-        raw_add_entity(piece_ent)
-      end
-    else
-      local ent = table.copy(props)
-      ent.id = info.id
-      ent.x  = x
-      ent.y  = y
-      ent.z  = z
-      raw_add_entity(ent)
-    end
-  else
-    local ent = table.copy(props)
-    ent.id = info.id
-    ent.x  = x
-    ent.y  = y
-    ent.z  = z
-    raw_add_entity(ent)
-  end
+  local ent = table.copy(props)
+  ent.id = info.id
+  ent.x  = x
+  ent.y  = y
+  ent.z  = z
+  raw_add_entity(ent)
 end
 
 
@@ -1182,156 +1129,4 @@ function brushlib.line_passes_through(brush, px1, py1, px2, py2)
   end
 
   return false
-end
-
-
-------------------------------------------------------------------------
---  STUFF FOR TESTING THE CSG CODE
-------------------------------------------------------------------------
-
-function Quake3_test()
-
---- Trans.set({ rotate=30 })
-
-  local F = brushlib.quad(0, 128, 256, 384,  -24, 0)
-  local C = brushlib.quad(0, 128, 256, 384,  192, 208)
-
-  local W = brushlib.quad(0,   128,  32, 384,  0, 192)
-  local E = brushlib.quad(224, 128, 256, 384,  0, 192)
-  local S = brushlib.quad(0,   128, 256, 144,  0, 192)
-  local N = brushlib.quad(0,   370, 256, 384,  0, 192)
-
-
-  -- slope test --
-
-  if false then
-    F = brushlib.quad(32, 144, 224, 370, -256,   0)
-    C = brushlib.quad(32, 144, 224, 370,  192, 512)
-
-    W = brushlib.quad(0,   128,  32, 384, -256, 512)
-    E = brushlib.quad(224, 128, 256, 384, -256, 512)
-    S = brushlib.quad(0,   128, 256, 144, -256, 512)
-    N = brushlib.quad(0,   370, 256, 384, -256, 512)
-
-    brushlib.slope_top(F, 0.3, 0.0, 1.0)
-
-    brushlib.slope_bottom(C, 0.0, 0.7, -1.0)
-  end
-
-
-  local F_tex = "base_floor/clang_floor_s2"
-  local C_tex = "cosmo_floor/bfloor3"
-  local W_tex = "gothic_block/blocks15"
-
-  brushlib.set_tex(F, F_tex, F_tex)
-  brushlib.set_tex(C, C_tex, C_tex)
-
-  brushlib.set_tex(N, W_tex, W_tex)
-  brushlib.set_tex(S, W_tex, W_tex)
-  brushlib.set_tex(E, W_tex, W_tex)
-  brushlib.set_tex(W, W_tex, W_tex)
-
-
-  Trans.brush(F) ; Trans.brush(C)
-  Trans.brush(S) ; Trans.brush(N)
-  Trans.brush(W) ; Trans.brush(E)
-
-
-  Trans.entity("player1", 80, 256, 130)
-  Trans.entity("light",   80, 256, 160, { radius=200 })
-
-
-  -- corner test --
-
-  if false then
-    local P_tex = "base_trim/pewter_shiney"
-
-    local P = brushlib.quad(128, 256, 224, 370, 0, 170)
-
-    brushlib.set_tex(P, P_tex, P_tex)
-
---  brushlib.slope_top(P, -1, -1, 1.4)
-
-    Trans.brush(P)
-  end
-
-
-  -- clip test --
-
-  if false then
-    local P_tex = "common/clip"
-
-    local P = brushlib.quad(192, 140, 224, 370, 0, 31)
-
-    brushlib.set_tex(P, P_tex, P_tex)
-    brushlib.set_kind(P, "clip")
-
-    Trans.brush(P)
-  end
-
-
-  -- liquid test --
-
-  if false then
-    local L_tex = "liquids/hydrowater"
-
-    gui.property("water_shader", L_tex)
-
-    local L = brushlib.quad(0, 128, 256, 384, -1024, 64)
-
-    brushlib.q3_liquid(L, "water", L_tex)
-
-    Trans.brush(L)
-  end
-
-
-  -- model test --
-
-  if false then
-    -- create an entity table.
-    -- the 'link_id' field must be unique, and links brushes to the entity.
-    -- the coordinates will be unused.
-    local ent =
-    {
-      id = "func_static",
-
-      link_id = "m1",
-
-      x = 0,
-      y = 0,
-      z = 0,
-    }
-
-    raw_add_entity(ent)
-
-    local M_tex = "base_trim/pewter_shiney"
-    local M = brushlib.quad(170, 260, 210, 310, 30, 100)
-
-    brushlib.slope_top(M, -0.5, -0.5, 1.0)
-
-    brushlib.set_tex (M, M_tex, M_tex)
-    brushlib.set_kind(M, "solid", { link_entity=ent.link_id })
-
-    Trans.brush(M)
-  end
-end
-
-
-function Quake3_conversion()
-  for _,B in pairs(all_brushes) do
-    if B[1].m ~= "xxxliquid" then
-      Trans.brush(B)
-    end
-  end
-
-  for _,E in pairs(all_entities) do
-    if E.light then
-      E.radius = E.light * 1.5
-      E.light  = nil
-    end
-
-    if E.id ~= "nothing" then
-      raw_add_entity(E)
-    end
-  end
 end

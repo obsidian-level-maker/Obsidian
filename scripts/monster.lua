@@ -1506,16 +1506,7 @@ function Monster_fill_room(LEVEL, R, SEEDS)
         ang = geom.angle_add(ang, 180)
       end
       if LEVEL.is_procedural_gotcha and PARAM.bool_boss_gen == 1 and spot.bossgen then
-        if ob_match_game({game = {doom2=1, hacx=1, harmony=1, hexen=1, strife=1}}) then
-          if OB_CONFIG.game == "strife" then
-            if LEVEL.id == 1 then
-              return ang + 2
-            elseif LEVEL.id == 2 then
-              return ang + 1
-            end
-          elseif OB_CONFIG.game == "hexen" then
-            return ang + HEXEN.MAPINFO_MAPS[LEVEL.id]
-          end
+        if ob_match_game({game = {doom2=1, hacx=1}}) then
           return ang + LEVEL.id
         else
           if OB_CONFIG.length == "single" or OB_CONFIG.length == "few" then
@@ -1531,16 +1522,7 @@ function Monster_fill_room(LEVEL, R, SEEDS)
 
     -- fallback : purely random angle
     if LEVEL.is_procedural_gotcha and PARAM.bool_boss_gen == 1 and spot.bossgen then
-      if ob_match_game({game = {doom2=1, hacx=1, harmony=1, hexen=1, strife=1}}) then
-        if OB_CONFIG.game == "strife" then
-          if LEVEL.id == 1 then
-            return (rand.irange(0,7) * 45) + 2
-          elseif LEVEL.id == 2 then
-            return (rand.irange(0,7) * 45) + 1
-          end
-        elseif OB_CONFIG.game == "hexen" then
-          return (rand.irange(0,7) * 45) + HEXEN.MAPINFO_MAPS[LEVEL.id]
-        end
+      if ob_match_game({game = {doom2=1, hacx=1}}) then
         return (rand.irange(0,7) * 45) + LEVEL.id
       else
         if OB_CONFIG.length == "single" or OB_CONFIG.length == "few" then
@@ -1690,26 +1672,14 @@ function Monster_fill_room(LEVEL, R, SEEDS)
 
     props.angle = angle
 
-    if PARAM.use_spawnflags then
-      props.spawnflags = 0
+    props.flags = DOOM_FLAGS.HARD
 
-      -- UGH, special check needed for Quake zombie
-      if deaf and mon ~= "zombie" then
-        props.spawnflags = props.spawnflags + QUAKE_FLAGS.DEAF
-      end
-
-      if (skill > 1) then props.spawnflags = props.spawnflags + QUAKE_FLAGS.NOT_EASY end
-      if (skill > 2) then props.spawnflags = props.spawnflags + QUAKE_FLAGS.NOT_MEDIUM end
-    else
-      props.flags = DOOM_FLAGS.HARD
-
-      if deaf then
-        props.flags = props.flags + DOOM_FLAGS.DEAF
-      end
-
-      if (skill <= 1) then props.flags = props.flags + DOOM_FLAGS.EASY end
-      if (skill <= 2) then props.flags = props.flags + DOOM_FLAGS.MEDIUM end
+    if deaf then
+      props.flags = props.flags + DOOM_FLAGS.DEAF
     end
+
+    if (skill <= 1) then props.flags = props.flags + DOOM_FLAGS.EASY end
+    if (skill <= 2) then props.flags = props.flags + DOOM_FLAGS.MEDIUM end
 
     LEVEL.mon_count = LEVEL.mon_count + 1
 

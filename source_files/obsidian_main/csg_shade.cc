@@ -32,7 +32,6 @@
 #include "lib_argv.h"
 #include "lib_util.h"
 #include "main.h"
-#include "q_common.h"
 #include "q_light.h"
 
 /*

@@ -733,8 +733,6 @@ function Cave_liquid_pools__OLD()
     f_h = f_h - 24,
     c_h = c_h + 64,
 
-    -- TODO: fireballs for Quake
-
     for x = 1, cave.w do
     for y = 1, cave.h do
 
