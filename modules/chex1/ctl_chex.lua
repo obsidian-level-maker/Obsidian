@@ -1,5 +1,5 @@
 ---------------------------------------------------------------
---  MODULE: Chex Quest 3 Control
+--  MODULE: Chex Quest 1 Control
 ----------------------------------------------------------------
 --
 --  Copyright (C) 2009-2010 Andrew Apted
@@ -115,20 +115,6 @@ OB_MODULES["chex1_mon_control"] =
      },
 
      {
-      name = "float_quadrumpus",
-      label = _("Quadrumpus"),
-      valuator = "slider",
-      min = 0,
-      max = 20,
-      increment = .02,
-      default = _("Default"),
-      nan = _("Default"),
-      tooltip = _("Control the amount of Quadrumpi."),  
-      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group = "monsters"
-     },
-
-     {
       name = "float_cycloptis",
       label = _("Cycloptis"),
       valuator = "slider",
@@ -138,66 +124,6 @@ OB_MODULES["chex1_mon_control"] =
       default = _("Default"),
       nan = _("Default"), 
       tooltip = _("Control the amount of Cyclopti."), 
-      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group = "monsters"
-     },
-
-     
-     {
-      name = "float_larva",
-      label = _("Larva"),
-      valuator = "slider",
-      min = 0,
-      max = 20,
-      increment = .02,
-      default = _("Default"),
-      nan = _("Default"),
-      tooltip = _("Control the amount of Larvae."),  
-      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group = "monsters"
-     },
-
-     
-     {
-      name = "float_flemmine",
-      label = _("Flem Mine"),
-      valuator = "slider",
-      min = 0,
-      max = 20,
-      increment = .02,
-      default = _("Default"),
-      nan = _("Default"),
-      tooltip = _("Control the amount of Flem Mines."),  
-      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group = "monsters"
-     },
-	 
-     
-     {
-      name = "float_stridicus",
-      label = _("Stridicus"),
-      valuator = "slider",
-      min = 0,
-      max = 20,
-      increment = .02,
-      default = _("Default"),
-      nan = _("Default"),
-      tooltip = _("Control the amount of Stridici."),  
-      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
-      randomize_group = "monsters"
-     },
-	 
-     
-     {
-      name = "float_super_cyclop",
-      label = _("Super Cycloptis"),
-      valuator = "slider",
-      min = 0,
-      max = 20,
-      increment = .02,
-      default = _("Default"),
-      nan = _("Default"),
-      tooltip = _("Control the amount of Super Cyclopti."),  
       presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      }
@@ -251,7 +177,7 @@ OB_MODULES["chex1_weapon_control"] =
 
   name = "chex1_weapon_control",
 
-  label = _("Chex Quest 3 Weapon Control"),
+  label = _("Chex Quest 1 Weapon Control"),
 
   game = "chex1",
   engine = "idtech_1",
