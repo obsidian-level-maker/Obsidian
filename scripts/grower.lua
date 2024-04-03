@@ -728,6 +728,8 @@ function Grower_preprocess_grammar(test_grammar)
 
       for name,cur_def in pairs(grammar) do
 
+        if type(cur_def) ~= "table" then goto continue end
+
         if cur_def.is_processed then goto continue end
         cur_def.is_processed = true
 
@@ -867,19 +869,21 @@ function Grower_calc_rule_probs(LEVEL)
   PARAM.skipped_rules = 0
 
   for _,rule in pairs(SHAPE_GRAMMAR) do
-    local new_prob = calc_prob(rule, LEVEL)
-    rule.use_prob = new_prob
-    if new_prob == 0 then
-      PARAM.skipped_rules = PARAM.skipped_rules + 1
-    end
-
-    -- attempt to ignore hallway sprouts
-    if LEVEL.is_nature then
-      if rule.new_room 
-      and rule.new_room.env
-      and rule.new_room.env == "hallway" then
-        rule.use_prob = 0
+    if type(rule) == "table" then
+      local new_prob = calc_prob(rule, LEVEL)
+      rule.use_prob = new_prob
+      if new_prob == 0 then
         PARAM.skipped_rules = PARAM.skipped_rules + 1
+      end
+
+      -- attempt to ignore hallway sprouts
+      if LEVEL.is_nature then
+        if rule.new_room 
+        and rule.new_room.env
+        and rule.new_room.env == "hallway" then
+          rule.use_prob = 0
+          PARAM.skipped_rules = PARAM.skipped_rules + 1
+        end
       end
     end
   end
@@ -1862,6 +1866,8 @@ function Grower_grammatical_pass(SEEDS, LEVEL, R, pass, apply_num, stop_prob,
     local tab = {}
 
     for name,rule in pairs(grammar) do
+      if type(rule) ~= "table" then goto continue end
+
       if rule.pass ~= want_pass then goto continue end
 
       if no_new_areas and rule.new_area then goto continue end

@@ -733,8 +733,6 @@ function Cave_liquid_pools__OLD()
     f_h = f_h - 24,
     c_h = c_h + 64,
 
-    -- TODO: fireballs for Quake
-
     for x = 1, cave.w do
     for y = 1, cave.h do
 
@@ -5337,7 +5335,7 @@ function Cave_build_a_scenic_vista(LEVEL, area, SEEDS)
         if B.floor_h > CLIFF2.floor_h and rand.odds(70) then goto continue end
 
         -- don't place trees too close to the rooms... -MSSP
-        if reg.room_dist < 1 then goto continue end
+        if reg.room_dist and reg.room_dist < 1 then goto continue end
 
         -- OK --
         local mx = area.base_x + (cx-1) * 64 + 32

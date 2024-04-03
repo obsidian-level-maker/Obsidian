@@ -223,13 +223,7 @@ bool BuildNodes(std::filesystem::path filename) {
         build_info->force_xnod = false;
         build_info->do_blockmap = true;
         build_info->do_reject = true;
-    } else if (StringCaseCmp(current_port, "eternity") == 0) { // Eternity
-        build_info->gl_nodes = true;
-        build_info->do_reject = false;
-        build_info->do_blockmap = false;
-        build_info->force_xnod = true;
-        build_info->force_compress = false;
-    } else { // DSDA/ZDoom
+    } else { // ZDoom
         build_info->gl_nodes = true;
         build_info->do_reject = false;
         build_info->do_blockmap = false;
@@ -425,11 +419,7 @@ void Doom::BeginLevel() {
         if (sub_format == SUBFMT_Hexen) {
             textmap_lump->Printf("namespace = \"Hexen\";\n\n");
         } else {
-            if (StringCaseCmp(current_port, "eternity") == 0) {
-                textmap_lump->Printf("namespace = \"Doom\";\n\n");
-            } else {
-                textmap_lump->Printf("namespace = \"ZDoomTranslated\";\n\n");
-            }
+            textmap_lump->Printf("namespace = \"ZDoomTranslated\";\n\n");
         }
         endmap_lump = new qLump_c();
     }
@@ -1081,8 +1071,7 @@ bool Doom::game_interface_c::Start(const char *preset) {
 
     current_port = ob_get_param("port");
     compress_output = ob_mod_enabled("compress_output");
-    file_per_map = (compress_output && !(StringCaseCmp(current_port, "dsda") == 0 || 
-        (StringCaseCmp(current_port, "limit_enforcing") == 0)));
+    file_per_map = (compress_output && StringCaseCmp(current_port, "limit_enforcing") != 0);
 
     ob_invoke_hook("pre_setup");
 
@@ -1094,24 +1083,14 @@ bool Doom::game_interface_c::Start(const char *preset) {
         }
         if (compress_output) {
             zip_filename = filename;
-            if ((StringCaseCmp(current_port, "dsda") == 0)) {
-                zip_filename.replace_extension("zip");
-            } else {
-                zip_filename.replace_extension("pk3");
-            }
+            zip_filename.replace_extension("pk3");
         }
     } else {
 #ifndef CONSOLE_ONLY
         if (compress_output) {
-            if ((StringCaseCmp(current_port, "dsda") == 0)) {
-                filename = DLG_OutputFilename("zip", 
-                    std::filesystem::path{preset}.replace_extension("zip").u8string().c_str());
-                zip_filename = filename;
-            } else {
-                filename = DLG_OutputFilename("pk3", 
-                    std::filesystem::path{preset}.replace_extension("pk3").u8string().c_str());
-                zip_filename = filename;
-            }
+            filename = DLG_OutputFilename("pk3", 
+                std::filesystem::path{preset}.replace_extension("pk3").u8string().c_str());
+            zip_filename = filename;
         } else {
             filename = DLG_OutputFilename("wad", preset);
         }
@@ -1179,9 +1158,6 @@ bool Doom::game_interface_c::Start(const char *preset) {
     if (StringCaseCmp(current_port, "zdoom") == 0) {
         map_format = FORMAT_UDMF;
         build_nodes = ob_mod_enabled("build_nodes");
-    } else if (StringCaseCmp(current_port, "eternity") == 0) {
-        map_format = FORMAT_UDMF;
-        build_nodes = true;
     } else if (StringCaseCmp(current_port, "edge") == 0) {
         map_format = FORMAT_UDMF;
         build_nodes = false;

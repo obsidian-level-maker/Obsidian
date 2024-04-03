@@ -73,6 +73,8 @@ void Parse_Option(const std::string &name, const std::string &value) {
         mature_word_lists = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "filename_prefix") == 0) {
         filename_prefix = StringToInt(value);
+    } else if (StringCaseCmp(name, "custom_prefix") == 0) {
+        custom_prefix = value;
     } else if (StringCaseCmp(name, "default_output_path") == 0) {
         default_output_path = std::filesystem::u8path(value);
     } else {
@@ -174,6 +176,7 @@ bool Options_Save(std::filesystem::path filename) {
     option_fp << "password_mode = " << (password_mode ? 1 : 0) << "\n";
     option_fp << "mature_word_lists = " << (mature_word_lists ? 1 : 0) << "\n";
     option_fp << "filename_prefix = " << filename_prefix << "\n";
+    option_fp << "custom_prefix = " << custom_prefix << "\n";
     std::string dop = StringFormat(
         "default_output_path = %s\n",
         StringToUTF8(default_output_path.generic_u16string()).c_str());
@@ -204,6 +207,8 @@ class UI_OptionsWin : public Fl_Window {
     UI_CustomMenu *opt_language;
     UI_CustomMenu *opt_filename_prefix;
 
+    Fl_Button *opt_custom_prefix;
+    UI_HelpLink *custom_prefix_help;
     Fl_Button *opt_default_output_path;
     Fl_Box *opt_current_output_path;
 
@@ -472,6 +477,20 @@ class UI_OptionsWin : public Fl_Window {
         // clang-format on
     }
 
+    static void callback_SetCustomPrefix(Fl_Widget *w, void *data) {
+        tryagain:
+        const char *user_buf = fl_input("%s", custom_prefix.c_str(),
+                                        _("Enter Custom Prefix Format:"));
+
+        if (user_buf) {
+            custom_prefix = user_buf;
+            if (custom_prefix.empty()) {
+                fl_alert("%s", _("Custom prefix cannot be blank!"));
+                goto tryagain;
+            }
+        }
+    }
+
     static void callback_SetDefaultOutputPath(Fl_Widget *w, void *data) {
         // save and restore the font height
         // (because FLTK's own browser get totally borked)
@@ -564,7 +583,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_filename_prefix->callback(callback_FilenamePrefix, this);
     // clang-format off
     opt_filename_prefix->add(
-        _("Date and Time|Number of Levels|Game|Port|Theme|Nothing"));
+        _("Date and Time|Number of Levels|Game|Port|Theme|Version|Custom|Nothing"));
     // clang-format on
     opt_filename_prefix->labelfont(font_style);
     opt_filename_prefix->textfont(font_style);
@@ -573,6 +592,23 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_filename_prefix->value(filename_prefix);
 
     cy += opt_filename_prefix->h() + y_step;
+
+    opt_custom_prefix = new Fl_Button(cx + W * .38, cy, listwidth, kf_h(24),
+                                      _("Set Custom Prefix..."));
+    opt_custom_prefix->box(button_style);
+    opt_custom_prefix->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
+    opt_custom_prefix->visible_focus(0);
+    opt_custom_prefix->color(BUTTON_COLOR);
+    opt_custom_prefix->callback(callback_SetCustomPrefix, this);
+    opt_custom_prefix->labelfont(font_style);
+    opt_custom_prefix->labelcolor(FONT2_COLOR);
+
+    custom_prefix_help = new UI_HelpLink(
+        cx + W * .38 + this->opt_custom_prefix->w(), cy, W * 0.10, kf_h(24));
+    custom_prefix_help->labelfont(font_style);
+    custom_prefix_help->callback(callback_PrefixHelp, this);
+
+    cy += opt_custom_prefix->h() + y_step;
 
     opt_default_output_path = new Fl_Button(
         cx + W * .38, cy, listwidth, kf_h(24), _("Set Default Output Path"));

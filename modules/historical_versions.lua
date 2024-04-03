@@ -35,7 +35,7 @@ OB_MODULES["historical_versions"] =
   where = "arch",
   priority = 103,
   port = "!limit_enforcing",
-  game = { chex1=1, chex3=0, doom1=1, doom2=1, ultdoom=1, heretic=1, hexen=1, hacx=1, harmony=1, strife=1, nukem=0, quake=0, wolf=0, noah=0 },
+  game = { chex1=1, doom1=1, doom2=1, ultdoom=1, heretic=1, hacx=1, wolf=0, noah=0 },
 
   tooltip = _("Options to generate levels using past releases of Oblige, Obsidian's predecessor."),
 
@@ -57,7 +57,7 @@ OB_MODULES["historical_versions"] =
       increment = 1,
       default = 0,
       tooltip = _("Sets chance of levels being generated using Oblige v2"),
-      longtip = _("Gives levels a chance of being generated using an internal version of Oblige version 2.x. NOTE: Not all module settings will affect levels generated in this manner.\n\nWARNING! When using Hexen, you MUST set this to 100% and generate the entire WAD with v2 to use its level and hub progression!"),
+      longtip = _("Gives levels a chance of being generated using an internal version of Oblige version 2.x. NOTE: Not all module settings will affect levels generated in this manner."),
       priority = 102,
       randomize_group = "architecture",
     },

@@ -77,9 +77,6 @@ UI_Game::UI_Game(int X, int Y, int W, int H) : Fl_Group(X, Y, W, H) {
     game->textcolor(FONT2_COLOR);
     game->selection_color(SELECTION);
     game->callback(callback_Game, this);
-    game_help = new UI_HelpLink(cx + cw, cy, W * 0.10, ch);
-    game_help->labelfont(font_style);
-    game_help->callback(callback_GameHelp, this);
 
     cy += y_step;
 
@@ -210,22 +207,6 @@ void UI_Game::callback_EngineHelp(Fl_Widget *w, void *data) {
     // clang-format on
 }
 
-void UI_Game::callback_GameHelp(Fl_Widget *w, void *data) {
-    fl_cursor(FL_CURSOR_DEFAULT);
-    Fl_Window *win = new Fl_Window(640, 480, _("Game"));
-    Fl_Text_Buffer *buff = new Fl_Text_Buffer();
-    Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
-    disp->buffer(buff);
-    disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
-    win->resizable(*disp);
-    win->hotspot(0, 0, 0);
-    win->set_modal();
-    win->show();
-    // clang-format off
-    buff->text(_("The following games will have gameplay that differs from the original IWADs:\n\nHexen: Game progression is linear and episodic. There are no hubs present. The Death Wyvern is not present in the monster table due to the infeasibility of scripting and flight pathing.\n\nStrife: Quests/multiple endings not yet implemented. Progression is linear and game will end on last level generated."));
-    // clang-format on
-}
-
 void UI_Game::callback_PortHelp(Fl_Widget *w, void *data) {
     fl_cursor(FL_CURSOR_DEFAULT);
     Fl_Window *win = new Fl_Window(640, 480, _("Port"));
@@ -238,7 +219,7 @@ void UI_Game::callback_PortHelp(Fl_Widget *w, void *data) {
     win->set_modal();
     win->show();
     // clang-format off
-    buff->text(_("Available Ports:\n\nid Tech 0:\n\nVanilla: Works with the original executables\n\nid Tech 1:\n\nGZDoom: GZDoom and variants (LZDoom, QZDoom, etc)\n\nVanilla: Works with the original program or ports that enforce the original limits. Examples: Doom within DOSBox, Chocolate Doom. NOTE: This option will use SLUMP as the map builder.\n\nBoom-Compatible: Ports that are able to use the entire suite of Boom types and features. Most modern source ports fall into this category at a minimum.\n\nDSDA-Doom: Targets version 0.26.0 and newer; PrBoom-Plus fork with additional features such as ZIP and UDMF support.\n\nEDGE-Classic: Boom-compatible, plus UDMF support, additional specials and other advanced features.\n\nEternity: Boom-compatible, software renderer only, but with advanced features such as UDMF."));
+    buff->text(_("Available Ports:\n\nid Tech 0:\n\nVanilla: Works with the original executables\n\nid Tech 1:\n\nGZDoom: GZDoom and variants (LZDoom, QZDoom, etc)\n\nVanilla: Works with the original program or ports that enforce the original limits. Examples: Doom within DOSBox, Chocolate Doom. NOTE: This option will use SLUMP as the map builder.\n\nBoom-Compatible: Ports that are able to use the entire suite of Boom types and features. Most modern source ports fall into this category at a minimum.\n\nEDGE-Classic: Boom-compatible, plus UDMF support, additional specials and other advanced features."));
     // clang-format on
 }
 

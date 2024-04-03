@@ -26,22 +26,14 @@ function Render_add_exit_sign(E, z, SEEDS, LEVEL)
 
   if PARAM.bool_exit_signs ~= 1 then return end
 
-  -- Need to fashion an exit sign for Hexen
-
-  if OB_CONFIG.game == "hexen" then return end
-
   -- These games need an engine that supports TX_START/TX_END merging
-  if ob_match_game({ game = { chex1=1, chex3=1, hacx=1, heretic=1} }) then
-     if not ob_match_port({ port = { edge=1, eternity=1, zdoom=1 } }) then return end
+  if ob_match_game({ game = { chex1=1, hacx=1, heretic=1} }) then
+     if not ob_match_port({ port = { edge=1, zdoom=1 } }) then return end
   end
 
   local def
 
-  if OB_CONFIG.game == "strife" then -- Strife needs special offsets for its "exit sign"
-    def = PREFABS["Decor_exit_sign_strife"]
-  else
-    def = PREFABS["Decor_exit_sign"]
-  end
+  def = PREFABS["Decor_exit_sign"]
 
   if not def then return end
 
@@ -2138,7 +2130,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
     local skin1 = { }
 
     skin1.switch_tag    = assert(chunk.goal.tag)
-    if OB_CONFIG.game == "hexen" then
+    if GAME.sub_format == "hexen" then
       local info = Action_lookup_hexen(chunk.goal.action)
       skin1.switch_action = info.id
       if info.arg1 then
@@ -2267,7 +2259,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
     Trans.brush(brush)
 
     -- add teleport entity
-    if OB_CONFIG.game == "hexen" then
+    if GAME.sub_format == "hexen" then
       Trans.entity("teleport_spot", mx, my, top.t + 1, { tid = top.tag })
     else
       Trans.entity("teleport_spot", mx, my, top.t + 1)
@@ -2502,7 +2494,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
     local goal = assert(chunk.goal)
 
     skin.switch_tag = assert(goal.tag)
-    if OB_CONFIG.game == "hexen" then
+    if GAME.sub_format == "hexen" then
       local info = Action_lookup_hexen(goal.action)
       skin.switch_action = info.id
       if info.arg1 then
@@ -3888,7 +3880,7 @@ function Render_triggers(LEVEL)
     end
 
     for _,C in pairs(brush) do
-      if OB_CONFIG.game == "hexen" then
+      if GAME.sub_format == "hexen" then
         setup_coord_hexen(C, trig)
       else
         setup_coord(C, trig)
@@ -3929,7 +3921,7 @@ function Render_triggers(LEVEL)
       -- two sides have the trigger info, other two sides are empty
       if side_num >= 3 then
         print("RENDER STAGE")
-        if OB_CONFIG.game == "hexen" then
+        if GAME.sub_format == "hexen" then
           setup_coord_hexen(C, trig)
         else
           setup_coord(C, trig)
@@ -3982,7 +3974,7 @@ function Render_triggers(LEVEL)
 
       -- three sides have the trigger info, other one is empty
       if side_num >= 2 then
-        if OB_CONFIG.game == "hexen" then
+        if GAME.sub_format == "hexen" then
           setup_coord_hexen(C, trig)
         else
           setup_coord(C, trig)

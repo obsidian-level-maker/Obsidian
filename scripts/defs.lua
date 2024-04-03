@@ -634,12 +634,6 @@ GLOBAL_SKIN_DEFAULTS =
   object = "",
   switch_action = "",
   scroller = "",
-
-  -- Quake engine stuff
-  style = "",
-  message = "",
-  wait = "",
-  targetname = ""
 }
 
 

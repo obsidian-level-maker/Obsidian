@@ -5,6 +5,7 @@ add_subdirectory(source_files/ajparse EXCLUDE_FROM_ALL)
 if(NOT CONSOLE_ONLY AND NOT HAIKU)
   add_subdirectory(source_files/fltk EXCLUDE_FROM_ALL)
 endif()
+add_subdirectory(source_files/filename_formatter EXCLUDE_FROM_ALL)
 add_subdirectory(source_files/miniz EXCLUDE_FROM_ALL)
 add_subdirectory(source_files/physfs EXCLUDE_FROM_ALL)
 add_subdirectory(source_files/slump EXCLUDE_FROM_ALL)
@@ -59,19 +60,16 @@ if(NOT CONSOLE_ONLY AND NOT HAIKU)
     source_files/obsidian_main/csg_clip.cc
     source_files/obsidian_main/csg_doom.cc
     source_files/obsidian_main/csg_main.cc
-    source_files/obsidian_main/csg_nukem.cc
     source_files/obsidian_main/csg_quake.cc
     source_files/obsidian_main/csg_shade.cc
     source_files/obsidian_main/csg_spots.cc
     source_files/obsidian_main/dm_extra.cc
     source_files/obsidian_main/dm_prefab.cc
     source_files/obsidian_main/g_doom.cc
-    source_files/obsidian_main/g_nukem.cc
     source_files/obsidian_main/g_quake.cc
     source_files/obsidian_main/g_quake2.cc
     source_files/obsidian_main/g_wolf.cc
     source_files/obsidian_main/lib_argv.cc
-    source_files/obsidian_main/lib_grp.cc
     source_files/obsidian_main/lib_pak.cc
     source_files/obsidian_main/lib_tga.cc
     source_files/obsidian_main/lib_util.cc
@@ -118,19 +116,16 @@ else()
     source_files/obsidian_main/csg_clip.cc
     source_files/obsidian_main/csg_doom.cc
     source_files/obsidian_main/csg_main.cc
-    source_files/obsidian_main/csg_nukem.cc
     source_files/obsidian_main/csg_quake.cc
     source_files/obsidian_main/csg_shade.cc
     source_files/obsidian_main/csg_spots.cc
     source_files/obsidian_main/dm_extra.cc
     source_files/obsidian_main/dm_prefab.cc
     source_files/obsidian_main/g_doom.cc
-    source_files/obsidian_main/g_nukem.cc
     source_files/obsidian_main/g_quake.cc
     source_files/obsidian_main/g_quake2.cc
     source_files/obsidian_main/g_wolf.cc
     source_files/obsidian_main/lib_argv.cc
-    source_files/obsidian_main/lib_grp.cc
     source_files/obsidian_main/lib_pak.cc
     source_files/obsidian_main/lib_tga.cc
     source_files/obsidian_main/lib_util.cc
@@ -164,6 +159,8 @@ if(NOT CONSOLE_ONLY AND NOT HAIKU)
     obsidian SYSTEM PRIVATE "${PROJECT_BINARY_DIR}/source_files/fltk"
   ) # Hack for FLTK 1.4 (for now)
 endif()
+target_include_directories(
+  obsidian SYSTEM PRIVATE source_files/filename_formatter)
 target_include_directories(obsidian SYSTEM PRIVATE source_files/gif-h)
 target_include_directories(obsidian SYSTEM PRIVATE source_files/minilua)
 target_include_directories(obsidian SYSTEM PRIVATE source_files/miniz)
@@ -194,6 +191,7 @@ if(UNIX)
         obsidian
         PRIVATE ajbsp
                 ajparse
+                filename_formatter
                 fltk
                 fltk_images
                 miniz
@@ -206,7 +204,7 @@ if(UNIX)
       )
     else()
       target_link_libraries(
-        obsidian PRIVATE ajbsp ajparse miniz physfs-static
+        obsidian PRIVATE ajbsp ajparse filename_formatter miniz physfs-static
                          obsidian_slump
       )
     endif()
@@ -216,6 +214,7 @@ if(UNIX)
         obsidian
         PRIVATE ajbsp
                 ajparse
+                filename_formatter
                 fltk
                 fltk_images
                 miniz
@@ -224,7 +223,7 @@ if(UNIX)
       )
     else()
       target_link_libraries(
-        obsidian PRIVATE ajbsp ajparse miniz physfs-static
+        obsidian PRIVATE ajbsp ajparse filename_formatter miniz physfs-static
                          obsidian_slump
       )
     endif()
@@ -233,6 +232,7 @@ if(UNIX)
       obsidian
       PRIVATE ajbsp
               ajparse
+              filename_formatter
               miniz
               physfs-static
               obsidian_slump
@@ -246,6 +246,7 @@ if(UNIX)
         obsidian
         PRIVATE ajbsp
                 ajparse
+                filename_formatter
                 fltk
                 fltk_images
                 miniz
@@ -259,6 +260,7 @@ if(UNIX)
         obsidian
         PRIVATE ajbsp
                 ajparse
+                filename_formatter
                 miniz
                 physfs-static
                 obsidian_slump
@@ -272,6 +274,7 @@ else()
       obsidian
       PRIVATE ajbsp
               ajparse
+              filename_formatter
               fltk
               fltk_images
               miniz
@@ -280,7 +283,7 @@ else()
     )
   else()
     target_link_libraries(
-      obsidian PRIVATE ajbsp ajparse miniz physfs-static
+      obsidian PRIVATE ajbsp ajparse filename_formatter miniz physfs-static
                        obsidian_slump
     )
   endif()

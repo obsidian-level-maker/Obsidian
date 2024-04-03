@@ -47,8 +47,6 @@
 
     episode : EPISODE
 
-    hub : HUB_INFO     -- used in hub-based games (like Hexen)
-
       ep_along  -- how far along in the episode:    0.0 --> 1.0,
     game_along  -- how far along in the whole game: 0.0 --> 1.0,
 
@@ -2580,7 +2578,7 @@ function Level_handle_prebuilt(LEVEL)
   if GAME.format == "doom" then
     gui.wad_transfer_map(info.file, info.map, LEVEL.name)
   else
-    -- FIXME: support other games (Wolf3d, Quake, etc)
+    -- FIXME: support other games (Wolf3d, etc)
   end
 
   return "ok"
@@ -2702,7 +2700,7 @@ function Level_make_level(LEV)
 
   if coverage_target == 0 then coverage_target = LEVEL.min_coverage end
 
-  if not LEVEL.is_linear then
+  if not LEVEL.is_linear and not SHAPE_GRAMMAR.ignore_coverage  then
     if LEVEL.cur_coverage < coverage_target then
       res = "runt"
     end
@@ -2752,11 +2750,15 @@ function Level_make_level(LEV)
 
   gui.end_level()
 
-  for _,k in pairs (LEVEL) do
-    LEVEL[k] = nil
+  if LEVEL then
+    for _,k in pairs (LEVEL) do
+      LEVEL[k] = nil
+    end
   end
-  for _,k in pairs (SEEDS) do
-    SEEDS[k] = nil
+  if SEEDS then
+    for _,k in pairs (SEEDS) do
+      SEEDS[k] = nil
+    end
   end
   LEVEL = nil
   SEEDS = nil
@@ -2774,7 +2776,7 @@ function Level_make_all()
   GAME.episodes = {}
 
   -- semi-supported games warning
-  if ob_match_game({ game = { chex1=1, chex3=1, harmony=1, hexen=1, strife=1, nukem=1, quake=1 } }) then
+  if ob_match_game({ game = { chex1=1} }) then
     if ob_mod_enabled("experimental_games") == 0 then
       error(gui.gettext("\nWarning: The game that you have selected is in an experimental state. WADs may not build successfully and certain gameplay features may not be implemented yet! To ignore this warning and continue generation for these games, check the \"Allow Partially Supported Games\" checkbox located under the Experimental tab.\n\nUse the tooltip for the \"Allow Partially Supported Games\" module to find the exact status for the game in question."))
     end
@@ -2874,7 +2876,7 @@ function Level_make_all()
       LEV.allowances = {}
 
       if PARAM.float_historical_oblige_v2 and rand.odds(PARAM.float_historical_oblige_v2) then
-        LEV.description = Naming_grab_one(LEV.name_class) -- For Hexen
+        LEV.description = Naming_grab_one(LEV.name_class)
         gui.minimap_disable(gui.gettext("Oblige V2"))
         if v094_create_LEVEL(GAME.FACTORY.all_levels[LEV.id], LEV.id, #GAME.levels) == "abort" then
           return "abort"

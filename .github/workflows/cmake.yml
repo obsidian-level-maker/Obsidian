@@ -2,65 +2,39 @@ name: CMake
 
 on:
   push:
-    branches: [ obsidian ]
+    branches: [ v21 ]
   pull_request:
-    branches: [ obsidian ]
+    branches: [ v21 ]
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Release
+  # The number of days to retain artifacts
+  RETENTION_DAYS: 30
 
 jobs:
-  build-linux:
-    # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
-    # You can convert this to a matrix build if you need cross-platform coverage.
-    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-    runs-on: ubuntu-latest
-
+  build-msvc:
+    runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y libxft-dev libfontconfig1-dev
-
-    - name: Configure CMake
-      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
-      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-      run: cmake --preset dist
-
-    - name: Build
-      # Build your program with the given configuration
-      run: cmake --build --preset dist
-    
-    - name: Install
-      run: cmake --install build/dist
-    
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: linux-x64
-        path: install
-  build-macos:
-    # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
-    # You can convert this to a matrix build if you need cross-platform coverage.
-    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-    runs-on: macos-latest
-
-    steps:
-    - uses: actions/checkout@v3
-    
-    - name: Configure CMake
-      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
-      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-      run: cmake --preset dist
-
-    - name: Build
-      # Build your program with the given configuration
-      run: cmake --build --preset dist
-    
-    - name: Install
-      run: cmake --install build/dist
-    
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: obsidian-macos
-        path: install
+      - uses: actions/checkout@v4
+      - name: Configure CMake MSVC
+        run: mkdir build && cd build && cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      - name: Build MSVC
+        run: cmake --build build --config ${{env.BUILD_TYPE}}
+      - uses: actions/upload-artifact@v3
+        with:
+          name: obsidian-msvc
+          path: |
+            addons
+            data
+            engines
+            games
+            language
+            modules
+            ports
+            presets
+            scripts
+            theme
+            tools
+            obsidian.exe
+          retention-days: ${{env.RETENTION_DAYS}}

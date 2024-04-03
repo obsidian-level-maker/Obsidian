@@ -33,11 +33,11 @@ msgstr ""
 msgid "Mix It Up"
 msgstr ""
 
-#: modules/chex3/ctl_chex.lua:31
+#: modules/chex1/ctl_chex.lua:31
 msgid "Default"
 msgstr ""
 
-#: scripts/level.lua:2779
+#: scripts/level.lua:2781
 msgid ""
 "\n"
 "Warning: The game that you have selected is in an experimental state. WADs may not build successfully and certain gameplay features may not be implemented yet! To ignore this warning and continue generation for these games, check the \"Allow Partially Supported Games\" checkbox located under the Experimental tab.\n"
@@ -45,123 +45,119 @@ msgid ""
 "Use the tooltip for the \"Allow Partially Supported Games\" module to find the exact status for the game in question."
 msgstr ""
 
-#: scripts/level.lua:2878
+#: scripts/level.lua:2880
 msgid "Oblige V2"
 msgstr ""
 
-#: scripts/obsidian.lua:2481
+#: scripts/obsidian.lua:2452
 msgid "option: "
 msgstr ""
 
-#: scripts/obsidian.lua:2483
+#: scripts/obsidian.lua:2454
 msgid "comment: "
 msgstr ""
 
-#: scripts/obsidian.lua:2485
+#: scripts/obsidian.lua:2456
 msgid "engine: "
 msgstr ""
 
-#: scripts/obsidian.lua:2493
+#: scripts/obsidian.lua:2464
 msgid "game: "
 msgstr ""
 
-#: scripts/obsidian.lua:2501
+#: scripts/obsidian.lua:2472
 msgid "port: "
 msgstr ""
 
-#: scripts/obsidian.lua:2508
+#: scripts/obsidian.lua:2479
 msgid "values: "
 msgstr ""
 
-#: scripts/obsidian.lua:2514
+#: scripts/obsidian.lua:2485
 msgid "default: "
 msgstr ""
 
-#: scripts/obsidian.lua:2535
+#: scripts/obsidian.lua:2506
 msgid "randomize_group: "
 msgstr ""
 
-#: scripts/obsidian.lua:2569
+#: scripts/obsidian.lua:2540
 msgid "tooltip"
 msgstr ""
 
-#: scripts/obsidian.lua:2570
+#: scripts/obsidian.lua:2541
 msgid "engine"
 msgstr ""
 
-#: scripts/obsidian.lua:2572
+#: scripts/obsidian.lua:2543
 msgid "ALL"
 msgstr ""
 
-#: scripts/obsidian.lua:2584
+#: scripts/obsidian.lua:2555
 msgid "game"
 msgstr ""
 
-#: scripts/obsidian.lua:2598
+#: scripts/obsidian.lua:2569
 msgid "port"
 msgstr ""
 
-#: scripts/obsidian.lua:2613
+#: scripts/obsidian.lua:2584
 msgid "type"
 msgstr ""
 
-#: scripts/obsidian.lua:2614
+#: scripts/obsidian.lua:2585
 msgid "slider"
 msgstr ""
 
-#: scripts/obsidian.lua:2615
+#: scripts/obsidian.lua:2586
 msgid "values"
 msgstr ""
 
-#: scripts/obsidian.lua:2616
+#: scripts/obsidian.lua:2587
 msgid "min"
 msgstr ""
 
-#: scripts/obsidian.lua:2617
+#: scripts/obsidian.lua:2588
 msgid "max"
 msgstr ""
 
-#: scripts/obsidian.lua:2622
+#: scripts/obsidian.lua:2593
 msgid "default"
 msgstr ""
 
-#: scripts/obsidian.lua:2639
+#: scripts/obsidian.lua:2610
 msgid "boolean"
 msgstr ""
 
-#: scripts/obsidian.lua:2643
+#: scripts/obsidian.lua:2614
 msgid "choice"
 msgstr ""
 
-#: scripts/obsidian.lua:2655
+#: scripts/obsidian.lua:2626
 msgid "randomize_group"
 msgstr ""
 
-#: scripts/obsidian.lua:2684
+#: scripts/obsidian.lua:2655
 msgid ""
 "~~~~~~~ Making Levels ~~~~~~~\n"
 "\n"
 msgstr ""
 
-#: scripts/obsidian.lua:2703
+#: scripts/obsidian.lua:2674
 msgid "SLUMP"
 msgstr ""
 
-#: scripts/obsidian.lua:2714
+#: scripts/obsidian.lua:2685
 msgid "id Tech 0"
 msgstr ""
 
-#: scripts/obsidian.lua:2722
-msgid "Hexen's level linking in Oblige v2 is incompatible with Obsidian's level progression. Please set the slider to 100% to generate the full WAD with Oblige v2."
-msgstr ""
-
-#: scripts/obsidian.lua:2734
+#: scripts/obsidian.lua:2714
 msgid ""
 "~~~~~~~ Build Aborted! ~~~~~~~\n"
 "\n"
 msgstr ""
 
-#: scripts/obsidian.lua:2739
+#: scripts/obsidian.lua:2719
 msgid ""
 "~~~~~~ Finished Making Levels ~~~~~~\n"
 "\n"
@@ -292,16 +288,8 @@ msgid ""
 "Yum!"
 msgstr ""
 
-#: engines/build.lua:28
-msgid "Build"
-msgstr ""
-
 #: engines/idtech.lua:49
 msgid "id Tech 1"
-msgstr ""
-
-#: engines/idtech.lua:72
-msgid "id Tech 2"
 msgstr ""
 
 #: games/chex1/base.lua:48
@@ -320,39 +308,35 @@ msgstr ""
 msgid "Villa Chex"
 msgstr ""
 
-#: games/chex3/base.lua:47
-msgid "Chex Quest 3"
-msgstr ""
-
 #: games/doom/base.lua:51
 msgid "Doom 2"
 msgstr ""
 
-#: games/doom/themes.lua:5956
+#: games/doom/themes.lua:5961
 msgid "Tech"
 msgstr ""
 
-#: games/doom/themes.lua:5966
+#: games/doom/themes.lua:5971
 msgid "Urban"
 msgstr ""
 
-#: games/doom/themes.lua:5976
+#: games/doom/themes.lua:5981
 msgid "Hell"
 msgstr ""
 
-#: games/doom/x_doom1.lua:10682
+#: games/doom/x_doom1.lua:10685
 msgid "Doom 1"
 msgstr ""
 
-#: games/doom/x_doom1.lua:10711
+#: games/doom/x_doom1.lua:10714
 msgid "Ultimate Doom"
 msgstr ""
 
-#: games/doom/x_doom1.lua:10728
+#: games/doom/x_doom1.lua:10731
 msgid "Deimos"
 msgstr ""
 
-#: games/doom/x_doom1.lua:10738
+#: games/doom/x_doom1.lua:10741
 msgid "Thy Flesh"
 msgstr ""
 
@@ -372,16 +356,12 @@ msgstr ""
 msgid "HacX 1.2"
 msgstr ""
 
-#: games/hacx/themes.lua:466
-msgid "GenEmp Corp"
+#: games/hacx/themes.lua:673
+msgid "Prison"
 msgstr ""
 
-#: games/harmony/base.lua:24
-msgid "Harmony"
-msgstr ""
-
-#: games/harmony/themes.lua:857
-msgid "NDF Base"
+#: games/hacx/themes.lua:681
+msgid "Digi-Ota"
 msgstr ""
 
 #: games/heretic/base.lua:52
@@ -408,56 +388,8 @@ msgstr ""
 msgid "Demense"
 msgstr ""
 
-#: games/hexen/base.lua:44
-msgid "Hexen"
-msgstr ""
-
-#: games/hexen/themes.lua:3260
-msgid "Forest"
-msgstr ""
-
-#: games/hexen/themes.lua:3268
-msgid "Ice Caves"
-msgstr ""
-
-#: games/hexen/themes.lua:3276
-msgid "Fire and Steel"
-msgstr ""
-
-#: games/hexen/themes.lua:3284
-msgid "Swamp"
-msgstr ""
-
-#: games/hexen/themes.lua:3292
-msgid "Dungeon"
-msgstr ""
-
 #: games/noah/base.lua:40
 msgid "Noah's Ark 3D"
-msgstr ""
-
-#: games/nukem/base.lua:38
-msgid "Duke Nukem 3D (Exp)"
-msgstr ""
-
-#: games/nukem/themes.lua:432
-msgid "Nukem City"
-msgstr ""
-
-#: games/quake/base.lua:41
-msgid "Quake"
-msgstr ""
-
-#: games/quake/themes.lua:562
-msgid "Castle"
-msgstr ""
-
-#: games/strife/base.lua:53
-msgid "Strife"
-msgstr ""
-
-#: games/strife/themes.lua:600
-msgid "Town"
 msgstr ""
 
 #: games/wolf/base.lua:41
@@ -477,7 +409,7 @@ msgid "Options for alternate means of determining the layout of a level."
 msgstr ""
 
 #: modules/alt_shape_grammars.lua:52
-msgid "Boxes of Death"
+msgid "The Backhalls (WIP)"
 msgstr ""
 
 #: modules/alt_shape_grammars.lua:54
@@ -485,23 +417,47 @@ msgid "% Chance Per Level"
 msgstr ""
 
 #: modules/alt_shape_grammars.lua:59
-msgid "Sets chance of levels using the Boxes of Death shape grammar."
+msgid "Sets chance of levels using the Backhalls shape grammar."
 msgstr ""
 
 #: modules/alt_shape_grammars.lua:60
-msgid "Gives levels a chance of being generated using Boxes of Death shape grammar. With this grammar, rooms are square shaped, with the occasional chunk taken out of one of the corners or sides. Room sizes are very consistent."
+msgid "The true Linear Mode."
 msgstr ""
 
 #: modules/alt_shape_grammars.lua:67
-msgid "Oblige 7.45"
+msgid "Boxes of Death"
 msgstr ""
 
 #: modules/alt_shape_grammars.lua:74
-msgid "Sets chance of levels using the shape grammar from Oblige v7.45."
+msgid "Sets chance of levels using the Boxes of Death shape grammar."
 msgstr ""
 
 #: modules/alt_shape_grammars.lua:75
-msgid "Gives levels a chance of being generated using the shape grammar from Oblige v7.45. This is primarily to provide a simpler grammar for facilitating new game support, but is available for curious users as well."
+msgid "It's like that movie Cube, but with .5 less dimensions (if you're a contrarian)."
+msgstr ""
+
+#: modules/alt_shape_grammars.lua:82
+msgid "Eternal Entryway (WIP)"
+msgstr ""
+
+#: modules/alt_shape_grammars.lua:89
+msgid "Sets chance of levels using the Eternal Entryway shape grammar."
+msgstr ""
+
+#: modules/alt_shape_grammars.lua:90
+msgid "It's MAP01. This is an example of a non-traditional use of shape grammar to try to force a level layout into a certain shape."
+msgstr ""
+
+#: modules/alt_shape_grammars.lua:97
+msgid "The OG"
+msgstr ""
+
+#: modules/alt_shape_grammars.lua:104
+msgid "Sets chance of levels using the OG shape grammar."
+msgstr ""
+
+#: modules/alt_shape_grammars.lua:105
+msgid "These are the shapes from Oblige 7.45, one of the earliest examples of the shape grammar system."
 msgstr ""
 
 #: modules/build_nodes.lua:21
@@ -512,159 +468,119 @@ msgstr ""
 msgid "Use Obsidian's internal nodebuilder to add GL Nodes to the generated mapset."
 msgstr ""
 
-#: modules/chex3/ctl_chex.lua:60
-msgid "Chex Quest 3 Monster Control"
+#: modules/chex1/ctl_chex.lua:60
+msgid "Chex Quest 1 Monster Control"
 msgstr ""
 
-#: modules/chex3/ctl_chex.lua:77
+#: modules/chex1/ctl_chex.lua:77
 msgid "Commonus"
 msgstr ""
 
-#: modules/chex3/ctl_chex.lua:84
+#: modules/chex1/ctl_chex.lua:84
 msgid "Control the amount of Commoni."
 msgstr ""
 
-#: modules/chex3/ctl_chex.lua:85
+#: modules/chex1/ctl_chex.lua:85
 msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
 msgstr ""
 
-#: modules/chex3/ctl_chex.lua:91
+#: modules/chex1/ctl_chex.lua:91
 msgid "Bipedicus"
 msgstr ""
 
-#: modules/chex3/ctl_chex.lua:98
+#: modules/chex1/ctl_chex.lua:98
 msgid "Control the amount of Bipedici."
 msgstr ""
 
-#: modules/chex3/ctl_chex.lua:105
+#: modules/chex1/ctl_chex.lua:105
 msgid "Armored Bipedicus"
 msgstr ""
 
-#: modules/chex3/ctl_chex.lua:112
+#: modules/chex1/ctl_chex.lua:112
 msgid "Control the amount of Armored Bipedici."
 msgstr ""
 
-#: modules/chex3/ctl_chex.lua:119
-msgid "Quadrumpus"
-msgstr ""
-
-#: modules/chex3/ctl_chex.lua:126
-msgid "Control the amount of Quadrumpi."
-msgstr ""
-
-#: modules/chex3/ctl_chex.lua:133
+#: modules/chex1/ctl_chex.lua:119
 msgid "Cycloptis"
 msgstr ""
 
-#: modules/chex3/ctl_chex.lua:140
+#: modules/chex1/ctl_chex.lua:126
 msgid "Control the amount of Cyclopti."
 msgstr ""
 
-#: modules/chex3/ctl_chex.lua:148
-msgid "Larva"
-msgstr ""
-
-#: modules/chex3/ctl_chex.lua:155
-msgid "Control the amount of Larvae."
-msgstr ""
-
-#: modules/chex3/ctl_chex.lua:163
-msgid "Flem Mine"
-msgstr ""
-
-#: modules/chex3/ctl_chex.lua:170
-msgid "Control the amount of Flem Mines."
-msgstr ""
-
-#: modules/chex3/ctl_chex.lua:178
-msgid "Stridicus"
-msgstr ""
-
-#: modules/chex3/ctl_chex.lua:185
-msgid "Control the amount of Stridici."
-msgstr ""
-
-#: modules/chex3/ctl_chex.lua:193
-msgid "Super Cycloptis"
-msgstr ""
-
-#: modules/chex3/ctl_chex.lua:200
-msgid "Control the amount of Super Cyclopti."
-msgstr ""
-
-#: modules/chex3/ctl_chex.lua:212
+#: modules/chex1/ctl_chex.lua:138
 msgid "Normal"
 msgstr ""
 
-#: modules/chex3/ctl_chex.lua:213
+#: modules/chex1/ctl_chex.lua:139
 msgid "Vanilla"
 msgstr ""
 
-#: modules/chex3/ctl_chex.lua:214
+#: modules/chex1/ctl_chex.lua:140
 msgid "NONE"
 msgstr ""
 
-#: modules/chex3/ctl_chex.lua:254
-msgid "Chex Quest 3 Weapon Control"
+#: modules/chex1/ctl_chex.lua:180
+msgid "Chex Quest 1 Weapon Control"
 msgstr ""
 
-#: modules/chex3/ctl_chex.lua:271
+#: modules/chex1/ctl_chex.lua:197
 msgid "Super Bootspork"
 msgstr ""
 
-#: modules/chex3/ctl_chex.lua:278
+#: modules/chex1/ctl_chex.lua:204
 msgid "Control the likelihood of finding the Super Bootspork."
 msgstr ""
 
-#: modules/chex3/ctl_chex.lua:279
+#: modules/chex1/ctl_chex.lua:205
 msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
 msgstr ""
 
-#: modules/chex3/ctl_chex.lua:285
+#: modules/chex1/ctl_chex.lua:211
 msgid "Large Zorcher"
 msgstr ""
 
-#: modules/chex3/ctl_chex.lua:292
+#: modules/chex1/ctl_chex.lua:218
 msgid "Control the amount of Large Zorchers."
 msgstr ""
 
-#: modules/chex3/ctl_chex.lua:299
+#: modules/chex1/ctl_chex.lua:225
 msgid "Rapid Zorcher"
 msgstr ""
 
-#: modules/chex3/ctl_chex.lua:306
+#: modules/chex1/ctl_chex.lua:232
 msgid "Control the amount of Rapid Zorchers."
 msgstr ""
 
-#: modules/chex3/ctl_chex.lua:313
+#: modules/chex1/ctl_chex.lua:239
 msgid "Zorch Propulsor"
 msgstr ""
 
-#: modules/chex3/ctl_chex.lua:320
+#: modules/chex1/ctl_chex.lua:246
 msgid "Control the amount of Zorch Propulsors."
 msgstr ""
 
-#: modules/chex3/ctl_chex.lua:327
+#: modules/chex1/ctl_chex.lua:253
 msgid "Phasing Zorcher"
 msgstr ""
 
-#: modules/chex3/ctl_chex.lua:334
+#: modules/chex1/ctl_chex.lua:260
 msgid "Control the amount of Phasing Zorchers."
 msgstr ""
 
-#: modules/chex3/ctl_chex.lua:341
+#: modules/chex1/ctl_chex.lua:267
 msgid "LAZ Device"
 msgstr ""
 
-#: modules/chex3/ctl_chex.lua:348
+#: modules/chex1/ctl_chex.lua:274
 msgid "Control the amount of LAZ Devices."
 msgstr ""
 
-#: modules/chex3/ctl_chex.lua:355
+#: modules/chex1/ctl_chex.lua:281
 msgid "Weapon Preferences"
 msgstr ""
 
-#: modules/chex3/ctl_chex.lua:357
+#: modules/chex1/ctl_chex.lua:283
 msgid ""
 "Alters selection of weapons that are prefered to show up depending on enemy palette for a chosen map.\n"
 "\n"
@@ -1204,46 +1120,54 @@ msgid "Saves SVG format images of generated map thumbnails."
 msgstr ""
 
 #: modules/debugger.lua:156
-msgid "Live Growth Minimap"
+msgid "Save Minimap GIF"
 msgstr ""
 
 #: modules/debugger.lua:159
+msgid "Save an animated GIF of the building process. Recommended in combination with the Live Growth Minimap."
+msgstr ""
+
+#: modules/debugger.lua:166
+msgid "Live Growth Minimap"
+msgstr ""
+
+#: modules/debugger.lua:169
 msgid "Controls the granularity of steps shown on the GUI minimap as a level is built."
 msgstr ""
 
-#: modules/debugger.lua:160
+#: modules/debugger.lua:170
 msgid "Higher levels of detail will increase the amount of time that it takes to generate a WAD. If saving an animated GIF of the build process, its animation speed will also be affected by this setting (less detail=slower, more detail=faster)."
 msgstr ""
 
-#: modules/debugger.lua:172
+#: modules/debugger.lua:182
 msgid "Material Options"
 msgstr ""
 
-#: modules/debugger.lua:179
+#: modules/debugger.lua:189
 msgid "Debugging options related to textures and flats"
 msgstr ""
 
-#: modules/debugger.lua:190
+#: modules/debugger.lua:200
 msgid "Print Fab Materials"
 msgstr ""
 
-#: modules/debugger.lua:193
+#: modules/debugger.lua:203
 msgid "Print list of textures/flats present in each fab"
 msgstr ""
 
-#: modules/debugger.lua:194
+#: modules/debugger.lua:204
 msgid "Print the names of all textures/flats preset in a prefab WAD. This will also list values like _FLOOR, _WALL, etc, prior to their conversion."
 msgstr ""
 
-#: modules/debugger.lua:200
+#: modules/debugger.lua:210
 msgid "Missing Fab Material Behavior"
 msgstr ""
 
-#: modules/debugger.lua:203
+#: modules/debugger.lua:213
 msgid "Choose what to do when encountering a missing material"
 msgstr ""
 
-#: modules/debugger.lua:204
+#: modules/debugger.lua:214
 msgid ""
 "Provides the following options if a material definition isn't present in a game's MATERIALS table: \n"
 "\n"
@@ -1254,82 +1178,50 @@ msgid ""
 "Abort: Throw an error and halt generation, with an error message explaining which fab and material are causing the issue. Will also write this information to the logfile."
 msgstr ""
 
-#: modules/debugger.lua:210
+#: modules/debugger.lua:220
 msgid "Check For Non-Vanilla Materials"
 msgstr ""
 
-#: modules/debugger.lua:213
+#: modules/debugger.lua:223
 msgid "Choose what to do when encountering a non-vanilla material"
 msgstr ""
 
-#: modules/debugger.lua:214
+#: modules/debugger.lua:224
 msgid "If checked, will compare all flats/textures used against a list of vanilla materials for that IWAD, and treat non-vanilla materials as missing for the purposes of logging and throwing errors."
 msgstr ""
 
-#: modules/debugger.lua:220
+#: modules/debugger.lua:230
 msgid "Custom Error Texture"
 msgstr ""
 
-#: modules/debugger.lua:223
+#: modules/debugger.lua:233
 msgid "Replaces Obsidian's default texture with a high visibility version for easier detection of broken level geometry or missing textures."
 msgstr ""
 
-#: modules/debugger.lua:232
+#: modules/debugger.lua:242
 msgid "Allow Partially Supported Games"
 msgstr ""
 
-#: modules/debugger.lua:236
+#: modules/debugger.lua:246
 msgid ""
 "The following games are in an experimental status, meaning that they may have errors when building levels, or support for certain gameplay features has not been implemented yet:\n"
 "\n"
-"Chex Quest 1: SLUMP/Vanilla Port support only\n"
-"\n"
-"Harmony: SLUMP/Vanilla Port support only\n"
-"\n"
-"Hexen: Oblige v2 support only (Architecture->Historical Versions must be set to 100%)\n"
-"\n"
-"Chex Quest 3: Currently disabled\n"
-"\n"
-"Strife: Currently disabled\n"
-"\n"
-"Duke Nukem 3D: Currently disabled\n"
-"\n"
-"Quake: Currently disabled"
+"Chex Quest 1: SLUMP/Vanilla Port support only"
 msgstr ""
 
-#: modules/debugger.lua:244
-msgid "Game Length Options"
-msgstr ""
-
-#: modules/debugger.lua:252
-msgid "Alter the amount of levels used with the Full Game length option. Will probably break something."
-msgstr ""
-
-#: modules/debugger.lua:263
-msgid "Full Game Length"
-msgstr ""
-
-#: modules/debugger.lua:265
-msgid " Levels"
-msgstr ""
-
-#: modules/debugger.lua:270
-msgid "Sets the number of levels in a full game. May cause issues if this value does not match the original game."
-msgstr ""
-
-#: modules/debugger.lua:281
+#: modules/debugger.lua:254
 msgid "Pickup Options"
 msgstr ""
 
-#: modules/debugger.lua:288
+#: modules/debugger.lua:261
 msgid "Experimental options related to pickups (items, weapons, etc)"
 msgstr ""
 
-#: modules/debugger.lua:299
+#: modules/debugger.lua:272
 msgid "Alternate Item Quantities"
 msgstr ""
 
-#: modules/debugger.lua:302
+#: modules/debugger.lua:275
 msgid "Scales item distribution with map size"
 msgstr ""
 
@@ -1927,113 +1819,6 @@ msgid ""
 "NONE: No preferences at all. For those who like to live life dangerously with ICEs and only 'Zookas."
 msgstr ""
 
-#: modules/harmony/ctl_harmony.lua:61
-msgid "Harmony Monster Control"
-msgstr ""
-
-#: modules/harmony/ctl_harmony.lua:78
-msgid "Beastling"
-msgstr ""
-
-#: modules/harmony/ctl_harmony.lua:85
-msgid "Control the amount of Beastlings."
-msgstr ""
-
-#: modules/harmony/ctl_harmony.lua:92
-msgid "Critter"
-msgstr ""
-
-#: modules/harmony/ctl_harmony.lua:99
-msgid "Control the amount of Critters."
-msgstr ""
-
-#: modules/harmony/ctl_harmony.lua:106
-msgid "Follower"
-msgstr ""
-
-#: modules/harmony/ctl_harmony.lua:113
-msgid "Control the amount of Followers."
-msgstr ""
-
-#: modules/harmony/ctl_harmony.lua:120
-msgid "Predator"
-msgstr ""
-
-#: modules/harmony/ctl_harmony.lua:127
-msgid "Control the amount of Predators."
-msgstr ""
-
-#: modules/harmony/ctl_harmony.lua:134
-msgid "Centaur"
-msgstr ""
-
-#: modules/harmony/ctl_harmony.lua:141
-msgid "Control the amount of Centaurs."
-msgstr ""
-
-#: modules/harmony/ctl_harmony.lua:148
-msgid "Mutant"
-msgstr ""
-
-#: modules/harmony/ctl_harmony.lua:155
-msgid "Control the amount of Mutants."
-msgstr ""
-
-#: modules/harmony/ctl_harmony.lua:176
-msgid "Echidna"
-msgstr ""
-
-#: modules/harmony/ctl_harmony.lua:183
-msgid "Control the amount of Echidnae."
-msgstr ""
-
-#: modules/harmony/ctl_harmony.lua:237
-msgid "Harmony Weapon Control"
-msgstr ""
-
-#: modules/harmony/ctl_harmony.lua:254
-msgid "Minigun"
-msgstr ""
-
-#: modules/harmony/ctl_harmony.lua:261
-msgid "Control the amount of Miniguns."
-msgstr ""
-
-#: modules/harmony/ctl_harmony.lua:268
-msgid "Compensator"
-msgstr ""
-
-#: modules/harmony/ctl_harmony.lua:275
-msgid "Control the amount of Compensators."
-msgstr ""
-
-#: modules/harmony/ctl_harmony.lua:282
-msgid "Grenade Launcher"
-msgstr ""
-
-#: modules/harmony/ctl_harmony.lua:289
-msgid "Control the amount of Grenade Launchers."
-msgstr ""
-
-#: modules/harmony/ctl_harmony.lua:296
-msgid "Entropy Thrower"
-msgstr ""
-
-#: modules/harmony/ctl_harmony.lua:303
-msgid "Control the amount of Entropy Throwers."
-msgstr ""
-
-#: modules/harmony/ctl_harmony.lua:312
-msgid ""
-"Alters selection of weapons that are prefered to show up depending on enemy palette for a chosen map.\n"
-"\n"
-"Normal: Monsters have weapon preferences. Stronger weapons and ammo are more likely to appear directly with stronger enemies.\n"
-"\n"
-"Vanilla: Vanilla Oblige-style preferences. Increases grenade launchers if the map has more beastlings. \n"
-"\n"
-"NONE: No preferences at all. For those who like to live life dangerously with Phages and only miniguns."
-msgstr ""
-
 #: modules/heretic/ctl_heretic.lua:59
 msgid "Heretic Monster Control"
 msgstr ""
@@ -2406,334 +2191,6 @@ msgstr ""
 msgid "Removes end-level Intermission Screens (containing map completion data) but retains Text Screens with story."
 msgstr ""
 
-#: modules/hexen/ctl_hexen.lua:61
-msgid "Hexen Monster Control"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:78
-msgid "Ettin"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:85
-msgid "Control the amount of Ettins."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:92
-msgid "Afrit"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:99
-msgid "Control the amount of Afrits."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:120
-msgid "Slaughtaur"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:127
-msgid "Control the amount of Slaughtaurs."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:134
-msgid "Stalker"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:141
-msgid "Control the amount of Stalkers."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:148
-msgid "Stalker w/ projectile"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:155
-msgid "Control the amount of Projectile Stalkers."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:162
-msgid "Wendigo"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:169
-msgid "Control the amount of Wendigos."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:176
-msgid "Green Serpent"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:183
-msgid "Control the amount of Green Serpents."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:190
-msgid "Brown Serpent"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:197
-msgid "Control the amount of Brown Serpents."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:204
-msgid "Bishop"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:211
-msgid "Control the amount of Bishops."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:218
-msgid "Reiver"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:225
-msgid "Control the amount of Reivers."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:232
-msgid "Buried Reiver"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:239
-msgid "Control the amount of Buried Reivers."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:246
-msgid "Heresiarch"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:253
-msgid "Control the amount of Heresiarchs."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:260
-msgid "Zedek"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:267
-msgid "Control the amount of Zedeks."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:274
-msgid "Traductus"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:281
-msgid "Control the amount of Traducti."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:288
-msgid "Menelkir"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:295
-msgid "Control the amount of Menelkirs."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:302
-msgid "Korax"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:309
-msgid "Control the amount of Koraxes."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:375
-msgid "Hexen Item Control"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:392
-msgid "Crystal Vial"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:399
-msgid "Control the amount of Crystal Vials."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:407
-msgid "Quartz Flask"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:414
-msgid "Control the amount of Quartz Flasks."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:422
-msgid "Mystic Urn"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:429
-msgid "Control the amount of Mystic Urns."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:438
-msgid "Blue Mana"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:445
-msgid "Control the amount of Blue Mana."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:453
-msgid "Green Mana"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:460
-msgid "Control the amount of Green Mana."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:468
-msgid "Dual Mana"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:475
-msgid "Control the amount of Dual Mana."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:483
-msgid "Platinum Helm"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:490
-msgid "Control the amount of Platinum Helms."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:498
-msgid "Mesh Armor"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:505
-msgid "Control the amount of Mesh Armors."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:512
-msgid "Falcon Shield"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:519
-msgid "Control the amount of Falcon Shields."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:526
-msgid "Amulet of Warding"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:533
-msgid "Control the amount of Amulets of Warding."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:540
-msgid "Dragonskin Bracers"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:547
-msgid "Control the amount of Dragonskin Bracers."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:555
-msgid "Krater of Might"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:562
-msgid "Control the amount of Kraters of Might."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:569
-msgid "Banishment Device"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:576
-msgid "Control the amount of Banishment Devices."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:583
-msgid "Boots of Speed"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:590
-msgid "Control the amount of Boots of Speed."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:597
-msgid "Chaos Device"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:604
-msgid "Control the amount of Chaos Devices."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:612
-msgid "Dark Servant"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:619
-msgid "Control the amount of Dark Servants."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:627
-msgid "Disc of Repulsion"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:634
-msgid "Control the amount of Discs of Repulsion."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:642
-msgid "Flechette"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:649
-msgid "Control the amount of Flechettes."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:657
-msgid "Icon of the Defender"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:664
-msgid "Control the amount of Icons of the Defender."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:672
-msgid "Mystic Ambit Incant"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:679
-msgid "Control the amount of Mystic Ambit Incants."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:687
-msgid "Porkalator"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:694
-msgid "Control the amount of Porkalators."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:702
-msgid "Torch"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:709
-msgid "Control the amount of Torches."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:717
-msgid "Wings of Wrath"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:724
-msgid "Control the amount of Wings of Wrath."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:732
-msgid "Ultimate Weapon Pieces"
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:739
-msgid "Control the likelihood of finding Ultimate Weapon Pieces."
-msgstr ""
-
 #: modules/historical_versions.lua:33
 msgid "Historical Versions"
 msgstr ""
@@ -2751,10 +2208,7 @@ msgid "Sets chance of levels being generated using Oblige v2"
 msgstr ""
 
 #: modules/historical_versions.lua:60
-msgid ""
-"Gives levels a chance of being generated using an internal version of Oblige version 2.x. NOTE: Not all module settings will affect levels generated in this manner.\n"
-"\n"
-"WARNING! When using Hexen, you MUST set this to 100% and generate the entire WAD with v2 to use its level and hub progression!"
+msgid "Gives levels a chance of being generated using an internal version of Oblige version 2.x. NOTE: Not all module settings will affect levels generated in this manner."
 msgstr ""
 
 #: modules/historical_versions.lua:67
@@ -3043,10 +2497,8 @@ msgstr ""
 msgid ""
 "Only allow Streets Mode slider to affect levels with the following themes:\n"
 "\n"
-"Chex Quest 3 - Chextropolis\n"
 "Doom 2 - Urban\n"
-"Heretic - City\n"
-"Strife - Town"
+"Heretic - City"
 msgstr ""
 
 #: modules/miscellaneous.lua:302
@@ -3531,190 +2983,190 @@ msgstr ""
 msgid "I LOVE IT"
 msgstr ""
 
-#: modules/prefab_controller.lua:275
+#: modules/prefab_controller.lua:265
 msgid "Advanced Level Control"
 msgstr ""
 
-#: modules/prefab_controller.lua:293
+#: modules/prefab_controller.lua:283
 msgid "Alt-start Rooms"
 msgstr ""
 
-#: modules/prefab_controller.lua:296
+#: modules/prefab_controller.lua:286
 msgid "For Co-operative games, sometimes have players start in different rooms"
 msgstr ""
 
-#: modules/prefab_controller.lua:301
+#: modules/prefab_controller.lua:291
 msgid "Foreshadowing Exit"
 msgstr ""
 
-#: modules/prefab_controller.lua:304
+#: modules/prefab_controller.lua:294
 msgid "Gets exit room theme to follow the theme of the next level, if different."
 msgstr ""
 
-#: modules/prefab_controller.lua:311
+#: modules/prefab_controller.lua:301
 msgid "Auto Detailing"
 msgstr ""
 
-#: modules/prefab_controller.lua:314
+#: modules/prefab_controller.lua:304
 msgid "Reduces the amount of complex architecture in a map based on its size. Default is on in binary map format, off in UDMF map format."
 msgstr ""
 
-#: modules/prefab_controller.lua:322
+#: modules/prefab_controller.lua:312
 msgid "Point Decor"
 msgstr ""
 
-#: modules/prefab_controller.lua:324
+#: modules/prefab_controller.lua:314
 msgid ""
 "Decor prefabs are prefabs placed along the floors such as crates, pillars, and other decorative elements which aren't tied to walls. This directly modifies probabilities on a per-room basis, not the density for decor prefabs in any given room.\n"
 "\n"
 "Note: DEFAULT actually behaves like Mix-It-Up."
 msgstr ""
 
-#: modules/prefab_controller.lua:333
+#: modules/prefab_controller.lua:323
 msgid "Wall Decor"
 msgstr ""
 
-#: modules/prefab_controller.lua:335
+#: modules/prefab_controller.lua:325
 msgid "Determines the odds for decorated wall junctions in a map versus plain ones."
 msgstr ""
 
-#: modules/prefab_controller.lua:344
+#: modules/prefab_controller.lua:334
 msgid "Group Walls"
 msgstr ""
 
-#: modules/prefab_controller.lua:346
+#: modules/prefab_controller.lua:336
 msgid "Determines the percentage at which grouped walls are applied to rooms."
 msgstr ""
 
-#: modules/prefab_controller.lua:359
+#: modules/prefab_controller.lua:349
 msgid "Max Room Themes Per Level"
 msgstr ""
 
-#: modules/prefab_controller.lua:366
+#: modules/prefab_controller.lua:356
 msgid "Determines the maximum number of distinct indoor room themes used per level. Default is 1."
 msgstr ""
 
-#: modules/prefab_controller.lua:374
+#: modules/prefab_controller.lua:364
 msgid "Avoid Room Theme Re-Use"
 msgstr ""
 
-#: modules/prefab_controller.lua:378
+#: modules/prefab_controller.lua:368
 msgid "Attempt to use unique room themes for each generated level, unless the pool of available themes is exhausted."
 msgstr ""
 
-#: modules/prefab_controller.lua:385
+#: modules/prefab_controller.lua:375
 msgid "Max Indoor Wall Groups Per Level"
 msgstr ""
 
-#: modules/prefab_controller.lua:392
+#: modules/prefab_controller.lua:382
 msgid "Determines the maximum number of distinct indoor wall groups used per level. Default is 2."
 msgstr ""
 
-#: modules/prefab_controller.lua:400
+#: modules/prefab_controller.lua:390
 msgid "Avoid Wall Group Re-Use"
 msgstr ""
 
-#: modules/prefab_controller.lua:404
+#: modules/prefab_controller.lua:394
 msgid "Attempt to use unique indoor wall groups for each generated level, unless the pool of available groups is exhausted."
 msgstr ""
 
-#: modules/prefab_controller.lua:414
+#: modules/prefab_controller.lua:404
 msgid "Peered Starts/Exits"
 msgstr ""
 
-#: modules/prefab_controller.lua:418
+#: modules/prefab_controller.lua:408
 msgid "Attempt to use matched start and exit fabs for a level (if a matched set is possible)."
 msgstr ""
 
-#: modules/prefab_controller.lua:426
+#: modules/prefab_controller.lua:416
 msgid "Steppy Caves"
 msgstr ""
 
-#: modules/prefab_controller.lua:433
+#: modules/prefab_controller.lua:423
 msgid "Disables or enables caves with height variations."
 msgstr ""
 
-#: modules/prefab_controller.lua:444
+#: modules/prefab_controller.lua:434
 msgid "Crushers"
 msgstr ""
 
-#: modules/prefab_controller.lua:446
+#: modules/prefab_controller.lua:436
 msgid "Changes probabilities for fabs with crushing sectors. Default is on."
 msgstr ""
 
-#: modules/prefab_controller.lua:455
+#: modules/prefab_controller.lua:445
 msgid "Dexterity Fabs"
 msgstr ""
 
-#: modules/prefab_controller.lua:457
+#: modules/prefab_controller.lua:447
 msgid "Changes probabilities for fabs featuring Chasm-ish navigation. Default is on."
 msgstr ""
 
-#: modules/prefab_controller.lua:465
+#: modules/prefab_controller.lua:455
 msgid "Gambling Fabs"
 msgstr ""
 
-#: modules/prefab_controller.lua:467
+#: modules/prefab_controller.lua:457
 msgid "Changes probabilities for fabs that may lockout a player on items. Default is on."
 msgstr ""
 
-#: modules/prefab_controller.lua:476
+#: modules/prefab_controller.lua:466
 msgid "Sight Ambush Cages"
 msgstr ""
 
-#: modules/prefab_controller.lua:478
+#: modules/prefab_controller.lua:468
 msgid "Changes probabilities for cages that unleash its monsters when player is in sight. Default is on."
 msgstr ""
 
-#: modules/prefab_controller.lua:487
+#: modules/prefab_controller.lua:477
 msgid "Mirror Mazes"
 msgstr ""
 
-#: modules/prefab_controller.lua:489
+#: modules/prefab_controller.lua:479
 msgid "Changes probabilities for hell mirror maze closets and joiners."
 msgstr ""
 
-#: modules/prefab_controller.lua:498
+#: modules/prefab_controller.lua:488
 msgid "Dark Mazes"
 msgstr ""
 
-#: modules/prefab_controller.lua:500
+#: modules/prefab_controller.lua:490
 msgid "Changes probabilities for dark/eye maze joiners in hell theme."
 msgstr ""
 
-#: modules/prefab_controller.lua:509
+#: modules/prefab_controller.lua:499
 msgid "Stair Ladders"
 msgstr ""
 
-#: modules/prefab_controller.lua:511
+#: modules/prefab_controller.lua:501
 msgid "Changes probabilities for high-step ladders (stairs)."
 msgstr ""
 
-#: modules/prefab_controller.lua:521
+#: modules/prefab_controller.lua:511
 msgid "Jump/Crouch Fabs"
 msgstr ""
 
-#: modules/prefab_controller.lua:524
+#: modules/prefab_controller.lua:514
 msgid "Enables or disables prefabs that require jumping or crouching to navigate."
 msgstr ""
 
-#: modules/prefab_controller.lua:534
+#: modules/prefab_controller.lua:524
 msgid "Damaging Hallways"
 msgstr ""
 
-#: modules/prefab_controller.lua:536
+#: modules/prefab_controller.lua:526
 msgid "Changes the liquids on hallways with damaging floors to either be damaging (default) or non-damaging."
 msgstr ""
 
-#: modules/prefab_controller.lua:547
+#: modules/prefab_controller.lua:537
 msgid "Test New Content"
 msgstr ""
 
-#: modules/prefab_controller.lua:559
+#: modules/prefab_controller.lua:549
 msgid "Match Theme"
 msgstr ""
 
-#: modules/prefab_controller.lua:562
+#: modules/prefab_controller.lua:552
 msgid "Ensures that prefabs selected match their intended Theme."
 msgstr ""
 
@@ -3966,91 +3418,91 @@ msgstr ""
 msgid "Changes multiplier of healing items on the boss arena."
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:291
+#: modules/procedural_gotcha_zdoom.lua:174
 msgid "Weaker"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:294
+#: modules/procedural_gotcha_zdoom.lua:177
 msgid "Much Harder"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:300
+#: modules/procedural_gotcha_zdoom.lua:183
 msgid "Extremely slow"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:301
+#: modules/procedural_gotcha_zdoom.lua:184
 msgid "Very slow"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:302
+#: modules/procedural_gotcha_zdoom.lua:185
 msgid "Slow"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:304
+#: modules/procedural_gotcha_zdoom.lua:187
 msgid "Fast"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:305
+#: modules/procedural_gotcha_zdoom.lua:188
 msgid "Faster"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:317
+#: modules/procedural_gotcha_zdoom.lua:200
 msgid "Exit after 10 seconds"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:318
+#: modules/procedural_gotcha_zdoom.lua:201
 msgid "Spawn pickup that exits the level"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2005
+#: modules/procedural_gotcha_zdoom.lua:1870
 msgid "ZScript Generated Boss Options"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2040
+#: modules/procedural_gotcha_zdoom.lua:1905
 msgid "Boss Trait Strength"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2043
+#: modules/procedural_gotcha_zdoom.lua:1908
 msgid "Increases or reduces chances of boss getting more powerful traits."
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2076
+#: modules/procedural_gotcha_zdoom.lua:1941
 msgid "Visible Health Bar"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2079
+#: modules/procedural_gotcha_zdoom.lua:1944
 msgid "If enabled, an hp bar will appear on UI while boss is active."
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2086
+#: modules/procedural_gotcha_zdoom.lua:1951
 msgid "Enable Boss Music"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2089
+#: modules/procedural_gotcha_zdoom.lua:1954
 msgid "If enabled, encountering a boss will start boss theme music. (For now you have to have your own music files with lumps named D_BOSSx where x is boss number)"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2096
+#: modules/procedural_gotcha_zdoom.lua:1961
 msgid "Reinforcement Strength"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2099
+#: modules/procedural_gotcha_zdoom.lua:1964
 msgid "Influences the strength of reinforcements summoned by bosses"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2107
+#: modules/procedural_gotcha_zdoom.lua:1972
 msgid "Reinforcement Rate"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2110
+#: modules/procedural_gotcha_zdoom.lua:1975
 msgid "Influences the spawn rate of reinforcements summoned by bosses"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2154
+#: modules/procedural_gotcha_zdoom.lua:2019
 msgid "Exit type"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2157
+#: modules/procedural_gotcha_zdoom.lua:2022
 msgid "Changes exit type after boss has been destroyed."
 msgstr ""
 
@@ -4072,166 +3524,6 @@ msgstr ""
 
 #: modules/procedural_textures.lua:256
 msgid "That one guy"
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:24
-msgid "None at all"
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:25
-msgid "Scarce"
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:27
-msgid "Plenty"
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:30
-msgid "INSANE"
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:83
-msgid "Quake Monster Control"
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:96
-msgid "Rottweiler"
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:97
-msgid "Control the amount of Rottweilers."
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:100
-msgid "Rotfish"
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:101
-msgid "Control the amount of Rotfish."
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:104
-msgid "Grunt"
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:105
-msgid "Control the amount of Grunts."
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:108
-msgid "Enforcer"
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:109
-msgid "Control the amount of Enforcers."
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:112
-msgid "Zombie"
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:113
-msgid "Control the amount of Zombies."
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:117
-msgid "Knight"
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:118
-msgid "Control the amount of Knights."
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:121
-msgid "Scrag"
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:122
-msgid "Control the amount of Scrags."
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:125
-msgid "Spawn"
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:126
-msgid "Control the amount of Spawns."
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:129
-msgid "Ogre"
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:130
-msgid "Control the amount of Ogres."
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:133
-msgid "Fiend"
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:134
-msgid "Control the amount of Fiends."
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:138
-msgid "Death Knight"
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:139
-msgid "Control the amount of Death Knights."
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:142
-msgid "Vore"
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:143
-msgid "Control the amount of Vores."
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:146
-msgid "Shambler"
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:147
-msgid "Control the amount of Shamblers."
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:212
-msgid "Quake Weapon Control"
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:226
-msgid "Double Shotgun"
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:227
-msgid "Control the amount of Double Shotguns."
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:230
-msgid "Nailgun"
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:231
-msgid "Control the amount of Nailguns."
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:234
-msgid "Perforator"
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:235
-msgid "Control the amount of Perforators."
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:246
-msgid "Thunderbolt"
-msgstr ""
-
-#: modules/quake/ctl_quake.lua:247
-msgid "Control the amount of Thunderbolts."
 msgstr ""
 
 #: modules/sky_generator.lua:25
@@ -5003,6 +4295,10 @@ msgstr ""
 msgid "0:None,0.15:0.15 (Trivial),0.35:0.35 (Sporadic),0.7:0.7 (Meager),1.0:1.0 (Easy),1.3:1.3 (Modest),1.5:1.5 (Bearable),2.0:2.0 (Rough),2.5:2.5 (Strenuous),3.0:3.0 (Formidable),3.5:3.5 (Harsh),4.0:4.0 (Painful),4.5:4.5 (Ferocious),5.0:5.0 (Unforgiving),5.5:5.5 (Punishing),6.0:6.0 (Murderous),6.5:6.5 (Grueling),7.0:7.0 (Unrelenting),7.5:7.5 (Arduous),8.0:8.0 (Barbaric),8.5:8.5 (Savage),9.0:9.0 (Brutal),9.5:9.5 (Draconian),10.0:10.00 (Merciless)"
 msgstr ""
 
+#: modules/ui_pickups.lua:25
+msgid "Scarce"
+msgstr ""
+
 #: modules/ui_pickups.lua:27
 msgid "Bit Less"
 msgstr ""
@@ -5195,46 +4491,6 @@ msgstr ""
 msgid "MsrSgtShooterPerson's Delta Resource Pack"
 msgstr ""
 
-#: modules/useful_links.lua:63
-msgid "Source Ports"
-msgstr ""
-
-#: modules/useful_links.lua:72
-msgid "ZDoom Family (GZDoom, LZDoom, ZDoom)"
-msgstr ""
-
-#: modules/useful_links.lua:77
-msgid "EDGE-Classic (EDGE fork)"
-msgstr ""
-
-#: modules/useful_links.lua:82
-msgid "DSDA-Doom (PrBoom fork)"
-msgstr ""
-
-#: modules/useful_links.lua:87
-msgid "Eternity Engine"
-msgstr ""
-
-#: modules/useful_links.lua:92
-msgid "k8vavoom (Vavoom fork)"
-msgstr ""
-
-#: modules/useful_links.lua:97
-msgid "PrBoomX (PrBoom fork)"
-msgstr ""
-
-#: modules/useful_links.lua:102
-msgid "Doom Retro"
-msgstr ""
-
-#: modules/useful_links.lua:107
-msgid "Helion"
-msgstr ""
-
-#: modules/useful_links.lua:112
-msgid "Woof (WinMBF fork)"
-msgstr ""
-
 #: modules/wolf/miscellaneous.lua:25
 msgid "x0.33"
 msgstr ""
@@ -5407,6 +4663,10 @@ msgstr ""
 msgid "Adds ambient sound things to fabs, room themes, and environments (WIP). Needs an accompanying sound pack containing corresponding sound files to be included with your Doom launcher."
 msgstr ""
 
+#: modules/zdoom_marines.lua:181
+msgid "Plenty"
+msgstr ""
+
 #: modules/zdoom_marines.lua:222
 msgid "Hostile Marines"
 msgstr ""
@@ -5523,42 +4783,42 @@ msgstr ""
 msgid "Doom 1 Vanilla"
 msgstr ""
 
-#: modules/zdoom_specials.lua:920
+#: modules/zdoom_specials.lua:919
 msgid "ZDoom Lighting Options"
 msgstr ""
 
-#: modules/zdoom_specials.lua:935
+#: modules/zdoom_specials.lua:934
 msgid "This module adds ZDoom-exclusive GL/dynamic lighting definitions."
 msgstr ""
 
-#: modules/zdoom_specials.lua:941
+#: modules/zdoom_specials.lua:940
 msgid "Dynamic Lights"
 msgstr ""
 
-#: modules/zdoom_specials.lua:945
+#: modules/zdoom_specials.lua:944
 msgid "Generates dynamic point lights on prefabs if available."
 msgstr ""
 
-#: modules/zdoom_specials.lua:950
+#: modules/zdoom_specials.lua:949
 msgid "Glowing Flats"
 msgstr ""
 
-#: modules/zdoom_specials.lua:954
+#: modules/zdoom_specials.lua:953
 msgid "Adds Doom-64 style lighting/glowing flats via GLDEFS lump. Visible on Zandronum ports as well."
 msgstr ""
 
-#: modules/zdoom_specials.lua:1035
+#: modules/zdoom_specials.lua:1034
 msgid ""
 "Shuffles music in the MAPINFO lump. Oblige's vanilla music shuffler uses a BEX lump and is therefore ignored when the ZDoom Addons module is active.\n"
 "\n"
 "Warning: the 'Merge Doom 1 and 2' option is for music packs that contain both Doom 1 and 2 direct patch replacements. Do not use unless you have such a pack."
 msgstr ""
 
-#: modules/zdoom_specials.lua:1067
+#: modules/zdoom_specials.lua:1066
 msgid "Episode Selection"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1071
+#: modules/zdoom_specials.lua:1070
 msgid "Creates a classic Doom/Ultimate Doom style episode selection."
 msgstr ""
 
@@ -5568,10 +4828,6 @@ msgstr ""
 
 #: ports/boom.lua:186
 msgid "Advanced"
-msgstr ""
-
-#: ports/boom.lua:221
-msgid "DSDA-Doom"
 msgstr ""
 
 #: ports/edge.lua:142
@@ -5584,10 +4840,6 @@ msgstr ""
 
 #: ports/edge.lua:158
 msgid "EDGE-Classic"
-msgstr ""
-
-#: ports/eternity.lua:25
-msgid "Eternity"
 msgstr ""
 
 #: ports/zdoom.lua:62
@@ -5622,71 +4874,67 @@ msgstr ""
 msgid "Full Game"
 msgstr ""
 
-#: scripts/obsidian.lua:2371
+#: scripts/obsidian.lua:2358
 msgid ""
 "Choose which engine to build maps for:\n"
 "  id Tech 0: Wolfenstein 3D and similar games\n"
 "  id Tech 1: Doom and similar games\n"
 msgstr ""
 
-#: scripts/obsidian.lua:2382
+#: scripts/obsidian.lua:2369
 msgid "Choose which game to build maps for."
 msgstr ""
 
-#: scripts/obsidian.lua:2406
+#: scripts/obsidian.lua:2389
 msgid ""
 "Choose which port to build maps for.\n"
 "  Vanilla is the only option for id Tech 0; the remaining options are for id Tech 1.\n"
 msgstr ""
 
-#: scripts/obsidian.lua:2422
+#: scripts/obsidian.lua:2403
 msgid "Choose how many levels to create."
 msgstr ""
 
-#: scripts/obsidian.lua:2435
+#: scripts/obsidian.lua:2416
 msgid ""
 "The following values are game-specific:\n"
-"  Chex Quest 3: bazoik,spaceport,villa\n"
 "  Ultimate Doom/Doom 1: deimos,flesh\n"
 "  Ultimate Doom/Doom 1/Doom 2/TNT/Plutonia: tech,urban,hell\n"
 "  TNT: egypt\n"
 "  HacX: hacx_urban\n"
-"  Harmony: ndf_base\n"
 "  Heretic: city,maw,dome,ossuary,demense\n"
-"  Hexen: forest,ice_caves,fire_steel,swamp,dungeon,town\n"
-"  Strife: town\n"
 "\n"
 "  Note: This setting currently does nothing for id Tech 0 games!\n"
 msgstr ""
 
-#: source_files/obsidian_main/g_doom.cc:241
+#: source_files/obsidian_main/g_doom.cc:235
 msgid "AJBSP Error!"
 msgstr ""
 
-#: source_files/obsidian_main/g_doom.cc:358
+#: source_files/obsidian_main/g_doom.cc:352
 msgid ""
 "Unable to create wad file:\n"
 "\n"
 "%s"
 msgstr ""
 
-#: source_files/obsidian_main/g_doom.cc:496
+#: source_files/obsidian_main/g_doom.cc:486
 msgid "Error writing map WAD to %s\n"
 msgstr ""
 
-#: source_files/obsidian_main/g_doom.cc:1122
+#: source_files/obsidian_main/g_doom.cc:1101
 msgid "Cancelled"
 msgstr ""
 
-#: source_files/obsidian_main/g_doom.cc:1162
+#: source_files/obsidian_main/g_doom.cc:1141
 msgid "Error (create PK3/ZIP)"
 msgstr ""
 
-#: source_files/obsidian_main/g_doom.cc:1169
+#: source_files/obsidian_main/g_doom.cc:1148
 msgid "Error (create file)"
 msgstr ""
 
-#: source_files/obsidian_main/g_doom.cc:1175
+#: source_files/obsidian_main/g_doom.cc:1154
 msgid "CSG"
 msgstr ""
 
@@ -5722,124 +4970,124 @@ msgstr ""
 msgid "Error (write file)"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:232
+#: source_files/obsidian_main/main.cc:231
 msgid "Addons/"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:243
+#: source_files/obsidian_main/main.cc:242
 msgid "OBSIDIAN will now restart and apply changes to addons."
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:262
+#: source_files/obsidian_main/main.cc:261
 msgid ""
 "Cannot open: %s\n"
 "\n"
 "%s"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:269
+#: source_files/obsidian_main/main.cc:268
 msgid "No config found in file."
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1001
+#: source_files/obsidian_main/main.cc:995
 msgid "OK"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1002
+#: source_files/obsidian_main/main.cc:996
 msgid "Cancel"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1003
+#: source_files/obsidian_main/main.cc:997
 msgid "Close"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1116
+#: source_files/obsidian_main/main.cc:1096
 msgid "Seed:"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1178
+#: source_files/obsidian_main/main.cc:1156
 msgid "Preparing..."
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1215
+#: source_files/obsidian_main/main.cc:1193
 msgid "Success"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1233
+#: source_files/obsidian_main/main.cc:1211
 msgid "Seed: -"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1492
+#: source_files/obsidian_main/main.cc:1470
 msgid "OBSIDIAN Level Maker"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1493
+#: source_files/obsidian_main/main.cc:1471
 msgid "Unstable"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1587
+#: source_files/obsidian_main/main.cc:1565
 msgid "No such config file: %s\n"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1720
+#: source_files/obsidian_main/main.cc:1698
 msgid "Surprise Me/Preserve Old Config"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1724
+#: source_files/obsidian_main/main.cc:1702
 msgid "Surprise Me/Randomize Architecture"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1728
+#: source_files/obsidian_main/main.cc:1706
 msgid "Surprise Me/Randomize Combat"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1732
+#: source_files/obsidian_main/main.cc:1710
 msgid "Surprise Me/Randomize Pickups"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1736
+#: source_files/obsidian_main/main.cc:1714
 msgid "Surprise Me/Randomize Other"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1739
+#: source_files/obsidian_main/main.cc:1717
 msgid "Addons/No folders or *.oaf files"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1741
+#: source_files/obsidian_main/main.cc:1719
 msgid "Addons/found in the \\/addons directory!"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1744
+#: source_files/obsidian_main/main.cc:1722
 msgid "Addons/Restart and Apply Changes"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1757
+#: source_files/obsidian_main/main.cc:1735
 msgid "Presets/No *.txt preset files"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1759
+#: source_files/obsidian_main/main.cc:1737
 msgid "Presets/found in the \\/presets directory!"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1762
+#: source_files/obsidian_main/main.cc:1740
 msgid "Presets/Note: Selecting a Preset will immediately apply it!"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1765
+#: source_files/obsidian_main/main.cc:1743
 msgid "Presets/"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1772
+#: source_files/obsidian_main/main.cc:1750
 msgid "Summon Clippy"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1947
+#: source_files/obsidian_main/main.cc:1923
 msgid ""
 "Sorry, an internal error occurred:\n"
 "%s"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1950
+#: source_files/obsidian_main/main.cc:1926
 msgid ""
 "An exception occurred: \n"
 "%s"
@@ -5901,40 +5149,40 @@ msgstr ""
 msgid "Resulting number would be out of range. Will process as string.\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:457
+#: source_files/obsidian_main/m_dialog.cc:444
 msgid "Save"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:469
+#: source_files/obsidian_main/m_dialog.cc:456
 msgid "Copy"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:588
+#: source_files/obsidian_main/m_dialog.cc:575
 msgid "Pick file to save to"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:605
+#: source_files/obsidian_main/m_dialog.cc:592
 msgid ""
 "Unable to save the file:\n"
 "\n"
 "%s"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:627
+#: source_files/obsidian_main/m_dialog.cc:614
 msgid ""
 "%s already exists.\n"
 "Choose Yes to overwrite or No to choose a new filename."
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:642
+#: source_files/obsidian_main/m_dialog.cc:629
 msgid "Please choose a filename ending in .txt"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:780
+#: source_files/obsidian_main/m_dialog.cc:767
 msgid "OBSIDIAN Log Viewer"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:800
+#: source_files/obsidian_main/m_dialog.cc:787
 msgid "OBSIDIAN Glossary Viewer"
 msgstr ""
 
@@ -5950,23 +5198,23 @@ msgstr ""
 msgid "Preview Not Available"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1568
+#: source_files/obsidian_main/m_lua.cc:1598
 msgid "[ ERROR ]"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1572
+#: source_files/obsidian_main/m_lua.cc:1602
 msgid "Script Error: "
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1926
+#: source_files/obsidian_main/m_lua.cc:1956
 msgid "ob_print_reference: Error creating REFERENCE.txt!\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1936
+#: source_files/obsidian_main/m_lua.cc:1966
 msgid "ob_print_reference_json: Error printing json reference!\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1945
+#: source_files/obsidian_main/m_lua.cc:1975
 msgid "Script Error"
 msgstr ""
 
@@ -6042,83 +5290,83 @@ msgstr ""
 msgid "OBSIDIAN Config Manager"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:80
+#: source_files/obsidian_main/m_options.cc:81
 msgid "Unknown option: "
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:101
+#: source_files/obsidian_main/m_options.cc:102
 msgid "Weird option line: "
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:110
+#: source_files/obsidian_main/m_options.cc:111
 msgid "Name or value missing!\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:122
+#: source_files/obsidian_main/m_options.cc:123
 msgid ""
 "Missing Options file -- using defaults.\n"
 "\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:239
+#: source_files/obsidian_main/m_options.cc:242
 msgid "AUTO"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:283
+#: source_files/obsidian_main/m_options.cc:286
 msgid ""
 "Obsidian will now restart to apply language changes.\n"
 "Obsidian will be in your selected language after restarting."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:300
+#: source_files/obsidian_main/m_options.cc:303
 msgid ""
 "Toggling Simple Mode requires a restart.\n"
 "Obsidian will now restart."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:310
+#: source_files/obsidian_main/m_options.cc:313
 msgid "Simple Mode"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:320
+#: source_files/obsidian_main/m_options.cc:323
 msgid "In Simple Mode, generation options that are more nuanced or granular are hidden in order to provide an easier experience for the user."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:339
+#: source_files/obsidian_main/m_options.cc:342
 msgid "Random String Seeds"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:349
+#: source_files/obsidian_main/m_options.cc:352
 msgid "Will randomly pull 1 to 3 words from Obsidian's random word list and use those as input for the map generation seed. Purely for cosmetic/entertainment value."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:361
+#: source_files/obsidian_main/m_options.cc:364
 msgid "Password Mode"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:371
+#: source_files/obsidian_main/m_options.cc:374
 msgid "Will produce a pseudo-random sequence of characters as input for the map generation seed. Random String Seeds must be enabled to use this option."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:389
+#: source_files/obsidian_main/m_options.cc:392
 msgid "Mature Wordlists"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:399
+#: source_files/obsidian_main/m_options.cc:402
 msgid "When enabled, will use a random wordlist that can result in obscene or otherwise offensive language being used for seed, map and WAD title elements."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:427
+#: source_files/obsidian_main/m_options.cc:430
 msgid ""
 "File prefix changes require a restart.\n"
 "OBSIDIAN will now restart."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:441
+#: source_files/obsidian_main/m_options.cc:444
 msgid "Yes, break Obsidian"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:442
+#: source_files/obsidian_main/m_options.cc:445
 msgid ""
 "WARNING! This option will allow you to manually enter values in excess of the \n"
 "(usually) stable slider limits for Obsidian.\n"
@@ -6126,17 +5374,17 @@ msgid ""
 "You must select Yes for this option to be applied."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:452
+#: source_files/obsidian_main/m_options.cc:455
 msgid ""
 "Restoring slider limits requires a restart.\n"
 "Obsidian will now restart."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:463
+#: source_files/obsidian_main/m_options.cc:466
 msgid "Custom Prefix"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:473
+#: source_files/obsidian_main/m_options.cc:476
 msgid ""
 "Custom prefixes can use any of the special format strings listed below. Anything else is used as-is.\n"
 "\n"
@@ -6163,79 +5411,79 @@ msgid ""
 "%count or %c: The number of levels in the generated WAD."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:480
+#: source_files/obsidian_main/m_options.cc:483
 msgid "Enter Custom Prefix Format:"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:485
+#: source_files/obsidian_main/m_options.cc:488
 msgid "Custom prefix cannot be blank!"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:499
+#: source_files/obsidian_main/m_options.cc:502
 msgid "Select default save directory"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:525
+#: source_files/obsidian_main/m_options.cc:528
 msgid "Empty default directory provided???:\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:536
+#: source_files/obsidian_main/m_options.cc:539
 msgid "Current Path"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:564
+#: source_files/obsidian_main/m_options.cc:567
 msgid "Language: "
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:578
+#: source_files/obsidian_main/m_options.cc:581
 msgid "Filename Prefix: "
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:583
+#: source_files/obsidian_main/m_options.cc:586
 msgid "Date and Time|Number of Levels|Game|Port|Theme|Version|Custom|Nothing"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:594
+#: source_files/obsidian_main/m_options.cc:597
 msgid "Set Custom Prefix..."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:611
+#: source_files/obsidian_main/m_options.cc:614
 msgid "Set Default Output Path"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:637
+#: source_files/obsidian_main/m_options.cc:640
 msgid " Simple Mode"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:653
+#: source_files/obsidian_main/m_options.cc:656
 msgid " Random String Seeds"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:669
+#: source_files/obsidian_main/m_options.cc:672
 msgid " Password Mode"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:688
+#: source_files/obsidian_main/m_options.cc:691
 msgid " Use Mature Wordlists"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:704
+#: source_files/obsidian_main/m_options.cc:707
 msgid " Create Backups"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:715
+#: source_files/obsidian_main/m_options.cc:718
 msgid " Overwrite File Warning"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:726
+#: source_files/obsidian_main/m_options.cc:729
 msgid " Debugging Messages"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:737
+#: source_files/obsidian_main/m_options.cc:740
 msgid " Ignore Slider Limits"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:800
+#: source_files/obsidian_main/m_options.cc:803
 msgid "OBSIDIAN Misc Options"
 msgstr ""
 
@@ -6439,51 +5687,42 @@ msgstr ""
 msgid "Game: "
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:87
+#: source_files/obsidian_main/ui_game.cc:84
 msgid "Port: "
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:100
+#: source_files/obsidian_main/ui_game.cc:97
 msgid "Length: "
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:113
+#: source_files/obsidian_main/ui_game.cc:110
 msgid "Theme: "
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:137
+#: source_files/obsidian_main/ui_game.cc:122
+msgid "Build"
+msgstr ""
+
+#: source_files/obsidian_main/ui_game.cc:134
 msgid "Quit"
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:199
+#: source_files/obsidian_main/ui_game.cc:196
 msgid "Engine"
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:209
+#: source_files/obsidian_main/ui_game.cc:206
 msgid ""
 "id Tech 0: Powered Wolfenstein-3D and similar games\n"
 "\n"
 "id Tech 1: Powered Doom, Doom 2, Heretic, etc"
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:215
-msgid "Game"
-msgstr ""
-
-#: source_files/obsidian_main/ui_game.cc:225
-msgid ""
-"The following games will have gameplay that differs from the original IWADs:\n"
-"\n"
-"Hexen: Game progression is linear and episodic. There are no hubs present. The Death Wyvern is not present in the monster table due to the infeasibility of scripting and flight pathing.\n"
-"\n"
-"Strife: Quests/multiple endings not yet implemented. Progression is linear and game will end on last level generated."
-msgstr ""
-
-#: source_files/obsidian_main/ui_game.cc:231
+#: source_files/obsidian_main/ui_game.cc:212
 msgid "Port"
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:241
+#: source_files/obsidian_main/ui_game.cc:222
 msgid ""
 "Available Ports:\n"
 "\n"
@@ -6499,18 +5738,14 @@ msgid ""
 "\n"
 "Boom-Compatible: Ports that are able to use the entire suite of Boom types and features. Most modern source ports fall into this category at a minimum.\n"
 "\n"
-"DSDA-Doom: Targets version 0.26.0 and newer; PrBoom-Plus fork with additional features such as ZIP and UDMF support.\n"
-"\n"
-"EDGE-Classic: Boom-compatible, plus UDMF support, additional specials and other advanced features.\n"
-"\n"
-"Eternity: Boom-compatible, software renderer only, but with advanced features such as UDMF."
+"EDGE-Classic: Boom-compatible, plus UDMF support, additional specials and other advanced features."
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:247
+#: source_files/obsidian_main/ui_game.cc:228
 msgid "Length"
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:257
+#: source_files/obsidian_main/ui_game.cc:238
 msgid ""
 "Available Game Lengths:\n"
 "\n"
@@ -6523,11 +5758,11 @@ msgid ""
 "Full Game: The length of a full game in the original program."
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:263
+#: source_files/obsidian_main/ui_game.cc:244
 msgid "Theme"
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:274
+#: source_files/obsidian_main/ui_game.cc:255
 msgid ""
 "Available Themes:\n"
 "\n"
