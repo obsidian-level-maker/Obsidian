@@ -2896,6 +2896,14 @@ function Area_create_rooms(LEVEL, SEEDS)
     table.add_unique(level_grammar, SHAPES.OBLIGE_745)
   end
 
+  if PARAM.float_grammar_map_01 and rand.odds(PARAM.float_grammar_map_01) then
+    table.add_unique(level_grammar, SHAPES.MAP_01)
+  end
+
+  if PARAM.float_grammar_backhalls and rand.odds(PARAM.float_grammar_backhalls) then
+    table.add_unique(level_grammar, SHAPES.BACKHALLS)
+  end
+
   if not table.empty(level_grammar) then
     if LEVEL.is_procedural_gotcha and PARAM.bool_gotcha_boss_fight == 1 then
       SHAPE_GRAMMAR = SHAPES.OBSIDIAN
@@ -2904,6 +2912,12 @@ function Area_create_rooms(LEVEL, SEEDS)
     end
   else
     SHAPE_GRAMMAR = SHAPES.OBSIDIAN
+  end
+
+  if SHAPE_GRAMMAR.force_level_size then
+    LEVEL.map_W = SHAPE_GRAMMAR.force_level_size
+    LEVEL.map_H = 1 + int(LEVEL.map_W * 0.8)
+    SEEDS = Seed_init(LEVEL)
   end
 
   Grower_create_rooms(LEVEL, SEEDS)

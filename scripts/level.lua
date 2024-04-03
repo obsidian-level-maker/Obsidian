@@ -2700,7 +2700,7 @@ function Level_make_level(LEV)
 
   if coverage_target == 0 then coverage_target = LEVEL.min_coverage end
 
-  if not LEVEL.is_linear then
+  if not LEVEL.is_linear and not SHAPE_GRAMMAR.ignore_coverage  then
     if LEVEL.cur_coverage < coverage_target then
       res = "runt"
     end
@@ -2750,11 +2750,15 @@ function Level_make_level(LEV)
 
   gui.end_level()
 
-  for _,k in pairs (LEVEL) do
-    LEVEL[k] = nil
+  if LEVEL then
+    for _,k in pairs (LEVEL) do
+      LEVEL[k] = nil
+    end
   end
-  for _,k in pairs (SEEDS) do
-    SEEDS[k] = nil
+  if SEEDS then
+    for _,k in pairs (SEEDS) do
+      SEEDS[k] = nil
+    end
   end
   LEVEL = nil
   SEEDS = nil

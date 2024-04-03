@@ -7,7 +7,10 @@ PREFABS.Switch_niche1 =
   file   = "switch/niche1.wad",
   prob   = 50,
 
-  
+  forced_offsets =
+  {
+    [20] = {x=40}
+  },
 
   where  = "seeds",
 

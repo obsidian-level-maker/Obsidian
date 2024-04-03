@@ -564,13 +564,17 @@ end
 
 function table.name_up(t)
   for name,info in pairs(t) do
-    info.name = name
+    if type(info) == "table" then
+      info.name = name
+    end
   end
 end
 
 function table.index_up(t)
   for index,info in pairs(t) do
-    info.id = index
+    if type(info) == "table" then
+      info.id = index
+    end
   end
 end
 
@@ -609,25 +613,27 @@ end
 
 function table.expand_templates(t)
   for name,sub in pairs(t) do
-    if sub.template then
-      local orig = t[sub.template]
+    if type(sub) == "table" then
+      if sub.template then
+        local orig = t[sub.template]
 
-      if orig == nil then
-        orig = TEMPLATES[sub.template]
+        if orig == nil then
+          orig = TEMPLATES[sub.template]
+        end
+
+        if orig == nil then
+          error("Missing template: " .. tostring(sub.template) .. " in: " .. name)
+        end
+        
+        if orig.template then
+          error("Template reference cannot use templates (" .. tostring(sub.template) .. ")")
+        end
+
+        table.merge_missing(sub, orig)
+
+        -- can safely remove the template name now
+        sub.template = nil
       end
-
-      if orig == nil then
-        error("Missing template: " .. tostring(sub.template) .. " in: " .. name)
-      end
-      
-      if orig.template then
-        error("Template reference cannot use templates (" .. tostring(sub.template) .. ")")
-      end
-
-      table.merge_missing(sub, orig)
-
-      -- can safely remove the template name now
-      sub.template = nil
     end
   end
 end
