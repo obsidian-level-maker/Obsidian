@@ -26,6 +26,11 @@ OB_MODULES["links_addons"] =
   options =
   {
     { 
+      name="url_edge_classic_pack",     
+      label=_("Lobo's EDGE-Classic Enhancements"),
+      url="https://obsidian-level-maker.github.io/index.html#_addons",
+    },
+    { 
         name="url_mobreck_mbf21",     
         label=_("Mobreck's MBF21 Expanded DOOM Beastiary"),
         url="https://www.moddb.com/mods/the-mbf21-expanded-doom-bestiary-project/downloads/medb-addon-for-obsidian",    
