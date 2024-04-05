@@ -154,6 +154,9 @@ Swedra
 KadKad1
   - D1, D2, and Half-Life themes
 
+Lobo
+  - EDGE-Classic Enhancement Addon
+
 # OBLIGE
 
 ## DEVELOPER:
