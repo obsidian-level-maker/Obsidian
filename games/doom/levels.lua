@@ -177,38 +177,40 @@ function DOOM.themes_alts()
     }
     GAME.THEMES.hell.fence_groups = { PLAIN = 50, crenels=12 }
     GAME.THEMES.hell.fence_posts = { Post = 50 }
-    GAME.THEMES.egypt.narrow_halls = { vent = 50 }
-    GAME.THEMES.egypt.beam_groups = { beam_metal = 50 }
-    GAME.THEMES.egypt.wall_groups = 
-    {
-      PLAIN = 0.01,
-      mid_band = 10,
-      lite1 = 20,
-      lite2 = 20,
-      torches1 = 12,
-      torches2 = 12,
-      high_gap = 25,
-      vert_gap = 25,
-      wallgutters = 10,
-      lamptorch = 16,
-      runic = 10,
-      croix = 10,
-    }
-    GAME.THEMES.egypt.outdoor_wall_groups = { PLAIN = 50 }
-    GAME.THEMES.egypt.window_groups = 
-    {
-      straddle = 70,
-      tall   = 80,
-      grate  = 45,
-      barred = 10,
-      supertall = 60,
-      slits = 20,
-      pillbox = 20,
-      slumpish = 30,
-      window_crossfire = 10,
-    }
-    GAME.THEMES.egypt.fence_groups = { PLAIN = 50, crenels = 12 }
-    GAME.THEMES.egypt.fence_posts = { Post = 50 }
+    if GAME.THEMES.egypt then
+      GAME.THEMES.egypt.narrow_halls = { vent = 50 }
+      GAME.THEMES.egypt.beam_groups = { beam_metal = 50 }
+      GAME.THEMES.egypt.wall_groups = 
+      {
+        PLAIN = 0.01,
+        mid_band = 10,
+        lite1 = 20,
+        lite2 = 20,
+        torches1 = 12,
+        torches2 = 12,
+        high_gap = 25,
+        vert_gap = 25,
+        wallgutters = 10,
+        lamptorch = 16,
+        runic = 10,
+        croix = 10,
+      }
+      GAME.THEMES.egypt.outdoor_wall_groups = { PLAIN = 50 }
+      GAME.THEMES.egypt.window_groups = 
+      {
+        straddle = 70,
+        tall   = 80,
+        grate  = 45,
+        barred = 10,
+        supertall = 60,
+        slits = 20,
+        pillbox = 20,
+        slumpish = 30,
+        window_crossfire = 10,
+      }
+      GAME.THEMES.egypt.fence_groups = { PLAIN = 50, crenels = 12 }
+      GAME.THEMES.egypt.fence_posts = { Post = 50 }
+    end
   end
 
   if OB_CONFIG.port == "zdoom" or OB_CONFIG.port == "gzdoom" then
