@@ -3050,6 +3050,11 @@ brightmap texture SD_TSGWB
   map STGSWBBR
 }
 
+brightmap texture S_W2WALE
+{
+  map SW2WLEBR
+}
+
 ]]
 
 -- aliases - when you're too lazy to write down wall and flat names in every
