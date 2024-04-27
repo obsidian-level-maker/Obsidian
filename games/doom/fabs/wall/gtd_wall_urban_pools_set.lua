@@ -22,9 +22,9 @@ PREFABS.Wall_urban_pools_1 =
 PREFABS.Wall_urban_pools_2 =
 {
   template = "Wall_urban_pools_1",
-  map = "MAP02"
+  map = "MAP02",
 
-  prob = 10,
+  prob = 10
 }
 
 PREFABS.Wall_urban_pools_3a =
