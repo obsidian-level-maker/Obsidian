@@ -142,20 +142,15 @@ function PREFAB_CONTROL.fine_tune_filters()
   }
   local new_fab_groups_multipliers =
   {
-    tech_o_letter_F = 1.25,
-    tech_o_letter_G = 1.25,
-    tech_o_letter_H = 1.25,
-    tech_o_letter_I = 1.25,
-    tech_o_letter_J = 1.25,
-    tech_o_letter_K = 1.5,
-    tech_o_letter_L = 1.5,
     tech_o_letter_M = 1.5,
-    tech_o_letter_N = 3,
-    tech_o_letter_O = 3,
-    tech_o_letter_P = 3,
-    tech_o_letter_Q = 3,
+    tech_o_letter_N = 1.5,
+    tech_o_letter_O = 1.5,
+    tech_o_letter_P = 1.5,
+    tech_o_letter_Q = 1.5,
     --
-    gtd_mscottpaper = 3
+    gtd_mscottpaper = 1.25,
+    --
+    gtd_pools = 3
   }
   local new_themes_multipliers =
   {

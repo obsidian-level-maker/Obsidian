@@ -9472,7 +9472,9 @@ OBS_RESOURCE_PACK_THEMES =
       gtd_tekwoodlite_pillar = 25,
       --
       gtd_bathwater = 30,
-      gtd_mscottpaper = 30
+      gtd_mscottpaper = 30,
+      --
+      gtd_pools = 30
     },
 
     window_groups =
