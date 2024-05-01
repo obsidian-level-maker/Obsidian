@@ -39,7 +39,7 @@ PREFABS.Decor_urban_pools_round =
 PREFABS.Decor_urban_pools_square_L =
 {
   template = "Decor_urban_pools_pillar",
-  map = "MAP03",
+  map = "MAP04",
 
   size = 128,
 
@@ -49,7 +49,19 @@ PREFABS.Decor_urban_pools_square_L =
 PREFABS.Decor_urban_pools_seating =
 {
   template = "Decor_urban_pools_pillar",
-  map = "MAP04",
+  map = "MAP05",
 
   size = 88
+}
+
+PREFABS.Decor_urban_pools_square_L =
+{
+  template = "Decor_urban_pools_pillar",
+  map = "MAP06",
+
+  height = 96+100,
+
+  size = 128,
+
+  delta = 32
 }
