@@ -3,7 +3,7 @@ PREFABS.Locked_tall_key_1 =
   file   = "door/key_tall.wad",
   map    = "MAP01",
 
-  prob   = 50,
+  prob   = 5,
 
   where  = "edge",
   key    = "k_red",
@@ -21,7 +21,7 @@ PREFABS.Locked_tall_key_2 =
   file   = "door/key_tall.wad",
   map    = "MAP02",
 
-  prob   = 50,
+  prob   = 5,
 
   where  = "edge",
   key    = "k_yellow",
@@ -39,7 +39,7 @@ PREFABS.Locked_tall_key_3 =
   file   = "door/key_tall.wad",
   map    = "MAP03",
 
-  prob   = 50,
+  prob   = 5,
 
   where  = "edge",
   key    = "k_blue",
