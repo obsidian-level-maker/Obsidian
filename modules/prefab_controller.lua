@@ -176,6 +176,11 @@ function PREFAB_CONTROL.fine_tune_filters()
     hell_kievan_rus = 1.5,
     hell_new_york_art_deco = 1.5,
     hell_computerCatacombs = 1.75,
+
+    --
+
+    tech_iStuff = 2.75,
+    urban_iStuff = 2.75
   }
   local themes =
   {
