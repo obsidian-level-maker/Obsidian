@@ -9,7 +9,7 @@ PREFABS.Locked_joiner_triple_tall =
   shape  = "I",
 
   key    = "k_ALL",
-  prob   = 25,
+  prob   = 5,
 
   seed_w = 1,
   seed_h = 2,
@@ -25,7 +25,6 @@ PREFABS.Locked_joiner_triple_tall =
   flat_FLOOR7_1 = "BIGDOOR4",
 
   sector_1  = { [0]=70, [1]=15, [2]=5, [3]=5, [8]=10, [12]=7, [13]=7 },
-
 }
 
 PREFABS.Locked_joiner_triple2_tall =
