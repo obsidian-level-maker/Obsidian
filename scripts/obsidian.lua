@@ -574,9 +574,7 @@ function ob_update_ports()
       else
         OB_CONFIG.port = "zdoom"
       end
-    elseif OB_CONFIG.engine == "idtech_2" then
-      OB_CONFIG.port = "vanilla"
-    else
+    else -- shouldn't get here - Dasho
       OB_CONFIG.port = "vanilla"
     end
     gui.set_button("port", OB_CONFIG.port)
@@ -1935,8 +1933,6 @@ function ob_default_filename()
     elseif OB_CONFIG.length == "episode" then
       if ob_match_game({game = {doom2=1,tnt=1,plutonia=1,hacx=1}}) then
         levelcount = "11"
-      elseif OB_CONFIG.game == "chex1" then
-        levelcount = "5"
       else
         levelcount = "9"
       end

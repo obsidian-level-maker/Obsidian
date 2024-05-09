@@ -1208,8 +1208,6 @@ config *get_config(std::filesystem::path filename) {
         if (StringCaseCmp(current_game, "doom2") == 0 || StringCaseCmp(current_game, "plutonia") == 0 || StringCaseCmp(current_game, "tnt") == 0
             || StringCaseCmp(current_game, "hacx") == 0) {
             answer->levelcount = 11;
-        } else if (StringCaseCmp(current_game, "chex1") == 5) {
-            answer->levelcount = 5;
         } else {
             answer->levelcount = 8;
         }
@@ -1217,12 +1215,10 @@ config *get_config(std::filesystem::path filename) {
         if (StringCaseCmp(current_game, "doom2") == 0 || StringCaseCmp(current_game, "plutonia") == 0 || StringCaseCmp(current_game, "tnt") == 0
             || StringCaseCmp(current_game, "hacx") == 0) {
             answer->levelcount = 32;
-        } else if (StringCaseCmp(current_game, "doom1") == 0) {
+        } else if (StringCaseCmp(current_game, "doom1") == 0 || StringCaseCmp(current_game, "chex1") == 0) {
             answer->levelcount = 24;
         } else if (StringCaseCmp(current_game, "ultdoom") == 0) {
             answer->levelcount = 32;
-        } else if (StringCaseCmp(current_game, "chex1") == 0) {
-            answer->levelcount = 5;
         } else {
             answer->levelcount = 40; // Heretic
         }
@@ -1236,7 +1232,7 @@ config *get_config(std::filesystem::path filename) {
     answer->do_dm = StringToInt(dm_starts);
     answer->do_slinfo = SLUMP_TRUE;
     answer->produce_null_lmps = SLUMP_FALSE;
-    answer->do_seclevels = (StringCaseCmp(current_game, "chex1") == 0) ? SLUMP_FALSE : SLUMP_TRUE;
+    answer->do_seclevels = (StringCaseCmp(current_game, "chex1") == 0) ? SLUMP_FALSE : SLUMP_TRUE; // review now that CQ3 Vanilla exists - Dasho
     answer->force_secret = SLUMP_FALSE;
     answer->minlight = 115;
     /* Is this the right place for all these? */

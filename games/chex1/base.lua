@@ -34,7 +34,7 @@ end
 
 OB_GAMES["chex1"] =
 {
-	label = _("Chex Quest 1"),
+	label = _("Chex 3 Vanilla"),
 	priority = 93,
 	
 	engine = "idtech_1",

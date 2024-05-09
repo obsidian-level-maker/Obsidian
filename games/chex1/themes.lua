@@ -1196,28 +1196,11 @@ CHEX1.ROOM_THEMES =
 }
 ------------------------------------------------------------------------
 
-
-CHEX1.ROOMS =
-{
-  GENERIC =
-  {
-    env = "any"
-  },
-
-  OUTSIDE =
-  {
-    env = "outdoor",
-    prob = 50
-  },
-
-}
-
-
 function CHEX1.slump_setup()
   if ob_match_game({game = {chex1=1}}) then
-    if OB_CONFIG.theme == "original" or OB_CONFIG.theme == "epi" then
+    if OB_CONFIG.theme == "default" then
       PARAM.slump_config = CHEX1.THEMES.DEFAULTS.slump_config
-    elseif OB_CONFIG.theme == "jumble" or OB_CONFIG.theme == "bit_mixed" then
+    elseif OB_CONFIG.theme == "jumble" then
       local possible_configs = {}
       for _,tab in pairs(CHEX1.THEMES) do
         if tab.slump_config then
