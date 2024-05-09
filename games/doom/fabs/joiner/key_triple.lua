@@ -11,7 +11,7 @@ PREFABS.Locked_joiner_triple =
   
 
   key    = "k_ALL",
-  prob   = 100,
+  prob   = 25,
 
   seed_w = 2,
   seed_h = 1,

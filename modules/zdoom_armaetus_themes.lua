@@ -1664,7 +1664,9 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
   {
     env = "building",
     prob = 50,
-  
+
+    is_generative = true,
+
     walls =
     {
       SDOM_WL1 = 5,
@@ -1717,7 +1719,19 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
       S_W2WALB = 2,
       S_W2WALC = 2,
       S_W2WALD = 2,
-      S_W2WALE = 2
+      S_W2WALE = 2,
+
+      SDIPHWL1 = 4,
+      SDIPHWL2 = 4,
+      SDIPHWL3 = 4,
+      SDIPHWL4 = 4,
+      SDIPHWL5 = 4,
+      SDIPHWL6 = 4,
+      SDIPHWL7 = 4,
+      SDIPHWL8 = 4,
+      SDIPHWL9 = 4,
+      SDIPHWLA = 4,
+      SDIPHWLB = 4
     },
 
     floors =
@@ -1755,7 +1769,15 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
       SD_GTHF3 = 1,
       SD_GTHF4 = 1,
       SD_GTHF5 = 1,
-      SD_GTHF6 = 1
+      SD_GTHF6 = 1,
+
+      SDIPHFT1 = 4,
+      SDIPHFT2 = 4,
+      SDIPHFT3 = 4,
+      SDIPHFT4 = 4,
+      SDIPHFT5 = 4,
+      SDIPHFT6 = 4,
+      SDIPHFT7 = 4
     },
 
     ceilings =
@@ -1777,7 +1799,15 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
       SDOM_FT7 = 5,
       SDOM_FT8 = 5,
       SDOM_FT9 = 5,
-      SDOM_FTA = 5
+      SDOM_FTA = 5,
+
+      SDIPHFT1 = 4,
+      SDIPHFT2 = 4,
+      SDIPHFT3 = 4,
+      SDIPHFT4 = 4,
+      SDIPHFT5 = 4,
+      SDIPHFT6 = 4,
+      SDIPHFT7 = 4
     }
   },
 
@@ -1785,7 +1815,9 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
   {
     env = "building",
     prob = 50,
-  
+
+    is_generative = true,
+
     walls =
     {
       SD_GTHW1 = 10,
@@ -1872,6 +1904,8 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
   {
     env = "building",
     prob = 50,
+
+    is_generative = true,
 
     walls =
     {
@@ -1966,6 +2000,8 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
   {
     env = "building",
     prob = 30,
+
+    is_generative = true,
 
     walls =
     {
@@ -2073,6 +2109,8 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
   {
     env = "building",
     prob = 40,
+
+    is_generative = true,
 
     walls =
     {
@@ -2203,6 +2241,8 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
     env = "building",
     prob = 45,
 
+    is_generative = true,
+
     walls =
     {
       SD_TWLW1 = 5,
@@ -2281,6 +2321,8 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
   {
     env = "building",
     prob = 50,
+
+    is_generative = true,
 
     walls =
     {
@@ -2394,10 +2436,12 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
     }
   },
 
-  tech_bumblebee = --40
+  tech_bumblebee = --30
   {
     env = "building",
-    prob = 40,
+    prob = 30,
+
+    is_generative = true,
 
     walls =
     {
@@ -2517,6 +2561,8 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
     env = "building",
     prob = 50,
 
+    is_generative = true,
+
     walls =
     {
       S_W2WAL1 = 50,
@@ -2602,6 +2648,76 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
       GRATE5 = 20,
       GRATE6 = 20,
       GRATE7 = 20,
+    }
+  },
+
+  tech_iStuff = --60
+  {
+    env = "building",
+    prob = 60,
+
+    is_generative = true,
+
+    walls =
+    {
+      SDIPHWL1 = 20,
+      SDIPHWL2 = 20,
+      SDIPHWL3 = 20,
+      SDIPHWL4 = 20,
+      SDIPHWL5 = 20,
+      SDIPHWL6 = 20,
+      SDIPHWL7 = 20,
+      SDIPHWL8 = 20,
+      SDIPHWL9 = 20,
+      SDIPHWLA = 20,
+      SDIPHWLB = 20,
+
+      BROWN2 = 5,
+      BROWN3 = 5,
+      BRIKS32 = 5,
+      CEM10 = 5,
+      GRAY6 = 5,
+      GRAY8 = 5,
+      GRAY9 = 5
+    },
+
+    floors =
+    {
+      SDIPHFT1 = 20,
+      SDIPHFT2 = 20,
+      SDIPHFT3 = 20,
+      SDIPHFT4 = 20,
+      SDIPHFT5 = 20,
+      SDIPHFT6 = 20,
+      SDIPHFT7 = 20,
+
+      SD_TSGF3 = 5,
+      SD_TSGF9 = 5,
+      SD_TSGFA = 5,
+      SD_TSGFC = 5,
+
+      FLAT18 = 4,
+      FLAT20 = 4,
+      FLAT3 = 4,
+      FLOOR0_5 = 4,
+      SLIME14 = 3
+    },
+
+    ceilings =
+    {
+      SDIPHFT1 = 20,
+      SDIPHFT2 = 20,
+      SDIPHFT3 = 20,
+      SDIPHFT4 = 20,
+      SDIPHFT5 = 20,
+      SDIPHFT6 = 20,
+      SDIPHFT7 = 20,
+
+      FLAT18 = 4,
+      FLAT20 = 4,
+      FLAT3 = 4,
+      FLOOR0_5 = 4,
+      SLIME14 = 3
     }
   },
 
@@ -3931,6 +4047,8 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
     env = "building",
     prob = 60,
 
+    is_generative = true,
+
     walls =
     {
       SDM_HAW1 = 10,
@@ -4020,6 +4138,8 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
   {
     env = "building",
     prob = 55,
+
+    is_generative = true,
 
     walls =
     {
@@ -4135,6 +4255,8 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
     env = "building",
     prob = 55,
 
+    is_generative = true,
+
     walls =
     {
       SDMHAZW1 = 5,
@@ -4229,6 +4351,8 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
   {
     env = "building",
     prob = 55,
+
+    is_generative = true,
 
     walls =
     {
@@ -4549,6 +4673,8 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
     env = "building",
     prob = 50,
 
+    is_generative = true,
+
     walls =
     {
       SD_UHMW1 = 20,
@@ -4646,6 +4772,8 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
   {
     env = "building",
     prob = 45,
+
+    is_generative = true,
 
     walls =
     {
@@ -4781,6 +4909,8 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
     prob = 17,
     env = "building",
 
+    is_generative = true,
+
     walls =
     {
       SD_UADW1 = 25,
@@ -4885,6 +5015,8 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
   {
     prob = 50,
     env = "building",
+
+    is_generative = true,
 
     walls =
     {
@@ -6339,6 +6471,8 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
     env = "building",
     prob = 30,
 
+    is_generative = true,
+
     walls =
     {
       SDSLDWL1 = 5,
@@ -6433,6 +6567,8 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
     env  = "cave",
     prob = 60,
 
+    is_generative = true,
+
     walls =
     {
       SP_ROCK1 = 30,
@@ -6470,6 +6606,8 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
   {
     env = "building",
     prob = 40,
+
+    is_generative = true,
 
     walls =
     {
@@ -6603,6 +6741,8 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
     env = "building",
     prob = 40,
 
+    is_generative = true,
+
     walls =
     {
       SD_TWLW1 = 5,
@@ -6681,6 +6821,8 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
   {
     env = "building",
     prob = 35,
+
+    is_generative = true,
 
     walls =
     {
@@ -6780,6 +6922,8 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
     env = "building",
     prob = 50,
 
+    is_generative = true,
+
     walls =
     {
       SD_UHMW1 = 20,
@@ -6877,6 +7021,8 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
   {
     prob = 65,
     env = "building",
+
+    is_generative = true,
 
     walls =
     {
@@ -6982,6 +7128,7 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
   {
     env  = "outdoor",
     prob = 50,
+    is_generative = true,
 
     floors =
     {
@@ -7314,6 +7461,8 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
     env = "building",
     prob = 25,
 
+    is_generative = true,
+
     walls =
     {
       SD_HRFW1 = 25,
@@ -7448,6 +7597,8 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
     prob = 15,
     env = "building",
 
+    is_generative = true,
+
     walls =
     {
       SD_HCCW1 = 25,
@@ -7523,6 +7674,76 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
       SDM_HGF1 = 8,
       SDM_HGF2 = 8,
       SDM_HGF3 = 8,
+    }
+  },
+
+  urban_iStuff = --30
+  {
+    env = "building",
+    prob = 30,
+
+    is_generative = true,
+
+    walls =
+    {
+      SDIPHWL1 = 20,
+      SDIPHWL2 = 20,
+      SDIPHWL3 = 20,
+      SDIPHWL4 = 20,
+      SDIPHWL5 = 20,
+      SDIPHWL6 = 20,
+      SDIPHWL7 = 20,
+      SDIPHWL8 = 20,
+      SDIPHWL9 = 20,
+      SDIPHWLA = 20,
+      SDIPHWLB = 20,
+
+      BROWN2 = 5,
+      BROWN3 = 5,
+      BRIKS32 = 5,
+      CEM10 = 5,
+      GRAY6 = 5,
+      GRAY8 = 5,
+      GRAY9 = 5
+    },
+
+    floors =
+    {
+      SDIPHFT1 = 20,
+      SDIPHFT2 = 20,
+      SDIPHFT3 = 20,
+      SDIPHFT4 = 20,
+      SDIPHFT5 = 20,
+      SDIPHFT6 = 20,
+      SDIPHFT7 = 20,
+
+      SD_TSGF3 = 5,
+      SD_TSGF9 = 5,
+      SD_TSGFA = 5,
+      SD_TSGFC = 5,
+
+      FLAT18 = 4,
+      FLAT20 = 4,
+      FLAT3 = 4,
+      FLOOR0_5 = 4,
+      SLIME14 = 3
+    },
+
+    ceilings =
+    {
+      SDIPHFT1 = 20,
+      SDIPHFT2 = 20,
+      SDIPHFT3 = 20,
+      SDIPHFT4 = 20,
+      SDIPHFT5 = 20,
+      SDIPHFT6 = 20,
+      SDIPHFT7 = 20,
+
+      FLAT18 = 4,
+      FLAT20 = 4,
+      FLAT3 = 4,
+      FLOOR0_5 = 4,
+      SLIME14 = 3
     }
   }
 -- END OF THEMES TABLES
@@ -9472,7 +9693,9 @@ OBS_RESOURCE_PACK_THEMES =
       gtd_tekwoodlite_pillar = 25,
       --
       gtd_bathwater = 30,
-      gtd_mscottpaper = 30
+      gtd_mscottpaper = 30,
+      --
+      gtd_pools = 30
     },
 
     window_groups =

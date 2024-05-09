@@ -6362,6 +6362,41 @@ GROW_CAUSEWAY_WATERLOCKED_PILLARED_BRIDGE_CAGED =
   }
 },
 
+GROW_CAUSEWAY_WATERLOCKED_PILLARED_BRIDGE_THIN =
+{
+  prob = 15,
+  skip_prob = 80,
+
+  structure =
+  {
+    ".111.","11111",
+    ".....","~~1~~",
+    ".....","~#1#~",
+    ".....","~~1~~",
+    ".....","~~1~~",
+    ".....","~#1#~",
+    ".....","~~1~~",
+    ".....","11111"
+  }
+},
+
+GROW_CAUSEWAY_WATERLOCKED_PILLARED_BRIDGE_THIN_HORSESHOE =
+{
+  prob = 12,
+  skip_prob = 85,
+
+  structure =
+  {
+    ".111......","1111##1111",
+    "..........","~~1~~~~1~~",
+    "..........","~#1#~~#1#~",
+    "..........","~~1~~~~1~~",
+    "..........","~~111111~~",
+    "..........","~###~~~#~~",
+    "..........","~~~~~~~~~~"
+  }
+},
+
 GROW_CAUSEWAY_WATERLOCKED =
 {
   prob = 35,
