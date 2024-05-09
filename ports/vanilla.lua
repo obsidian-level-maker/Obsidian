@@ -78,6 +78,6 @@ OB_PORTS["limit_enforcing"] =
 {
   label = _("Vanilla"), -- Keep Vanilla labeling for consistency
   engine = "idtech_1",
-  game = { chex1=1,doom1=1,doom2=1,ultdoom=1,heretic=1,hacx=1,wolf=0,noah=0 },
+  game = { chex1=1,doom1=1,doom2=1,ultdoom=1,harmony=1,heretic=1,hacx=1,wolf=0,noah=0,strife=1,rekkr=1 },
   priority = 99
 }

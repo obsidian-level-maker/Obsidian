@@ -91,6 +91,9 @@ typedef unsigned int gamebits;   /* Also bitarray    */
 #define HERETIC_BIT (0x20)
 #define CHEX_BIT (0x40)
 #define HACX_BIT (0x80)
+#define HARMONY_BIT (0x100)
+#define STRIFE_BIT (0x200)
+#define REKKR_BIT (0x400)
 /* and that's all */
 
 typedef unsigned long propertybits;  /* Another bitarray */

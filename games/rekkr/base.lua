@@ -1,11 +1,11 @@
 ----------------------------------------------------------------
---  Engine: idTech
+-- GAME DEF : REKKR
 ----------------------------------------------------------------
 --
---  Obsidian Level Maker
+--  Oblige Level Maker
 --
---  Copyright (C) 2021-2022 Dashodanger (?)
---  Copyright (C) 2021-2022 MsrSgtShooterPerson (?)
+--  Copyright (C) 2009 Enhas
+--  Copyright (C) 2011 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -19,46 +19,40 @@
 --
 ----------------------------------------------------------------
 
-IDTECH_0 = {}
+REKKR = { }
 
-OB_ENGINES["idtech_0"] =
-{
-  label = _("id Tech 0"),
-
-  priority = 100,
-
-  game = {wolf=1, noah=1},
-
-  tables =
-  {
-    IDTECH_0
-  },
-
-  hooks =
-  {
-  
-  }
-}
+----------------------------------------------------------------
+gui.import("params")
+gui.import("themes")
+gui.import("resources")
+gui.import("names")
 
 ----------------------------------------------------------------
 
-IDTECH_1 = {}
+function REKKR.all_done()
+	gui.wad_insert_file("data/endoom/ENDOOM.bin", "ENDOOM")
+end
 
-OB_ENGINES["idtech_1"] =
+OB_GAMES["rekkr"] =
 {
-  label = _("id Tech 1"),
+	label = _("REKKR"),
+	priority = 93,
+	
+	engine = "idtech_1",
 
-  priority = 100,
+	format = "doom",
+	
+	game_dir = "rekkr",
+	iwad_name = "rekkr.wad",
 
-  game = { chex1=1, doom1=1, doom2=1, hacx=1, harmony=1, heretic=1, strife=1, rekkr=1 },
-
-  tables =
-  {
-    IDTECH_1
-  },
-
-  hooks =
-  {
-  
-  }
+	tables =
+	{
+		REKKR
+	},
+	
+	hooks =
+	{
+		slump_setup = REKKR.slump_setup,
+		all_done = REKKR.all_done
+	},
 }

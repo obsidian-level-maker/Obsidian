@@ -401,6 +401,8 @@ class UI_ThemeWin : public Fl_Window {
             "        ");
         main_win->game_box->engine_help->copy_label("");
         main_win->game_box->engine_help->labelsize(FL_NORMAL_SIZE);
+        main_win->game_box->game_help->labelsize(FL_NORMAL_SIZE);
+        main_win->game_box->game_help->copy_label("");
         main_win->game_box->game->labelsize(FL_NORMAL_SIZE);
         main_win->game_box->game->textsize(FL_NORMAL_SIZE);
         main_win->game_box->game->copy_label(
@@ -425,8 +427,6 @@ class UI_ThemeWin : public Fl_Window {
         main_win->game_box->theme->copy_label(
             "                                "
             "        ");
-        main_win->game_box->theme_help->labelsize(FL_NORMAL_SIZE);
-        main_win->game_box->theme_help->copy_label("");
         main_win->game_box->build->labelsize(header_font_size);
         main_win->game_box->quit->labelsize(FL_NORMAL_SIZE);
         for (int x = 0; x < main_win->game_box->children(); x++) {
@@ -440,7 +440,7 @@ class UI_ThemeWin : public Fl_Window {
         main_win->game_box->engine_help->copy_label("?");
         main_win->game_box->port_help->copy_label("?");
         main_win->game_box->length_help->copy_label("?");
-        main_win->game_box->theme_help->copy_label("?");
+        main_win->game_box->game_help->copy_label("?");
         main_win->build_box->seed_disp->labelsize(small_font_size);
         main_win->build_box->name_disp->labelsize(small_font_size);
         main_win->build_box->status->labelsize(FL_NORMAL_SIZE);
@@ -519,6 +519,8 @@ class UI_ThemeWin : public Fl_Window {
             "        ");
         main_win->game_box->engine_help->copy_label("");
         main_win->game_box->engine_help->labelfont(font_style);
+        main_win->game_box->game_help->labelfont(font_style);
+        main_win->game_box->game_help->copy_label("");
         main_win->game_box->game->labelfont(font_style);
         main_win->game_box->game->textfont(font_style);
         main_win->game_box->game->copy_label(
@@ -543,8 +545,6 @@ class UI_ThemeWin : public Fl_Window {
         main_win->game_box->theme->copy_label(
             "                                "
             "        ");
-        main_win->game_box->theme_help->labelfont(font_style);
-        main_win->game_box->theme_help->copy_label("");
         main_win->game_box->build->labelfont(font_style | FL_BOLD);
         main_win->game_box->quit->labelfont(font_style);
         for (int x = 0; x < main_win->game_box->children(); x++) {
@@ -558,7 +558,7 @@ class UI_ThemeWin : public Fl_Window {
         main_win->game_box->engine_help->copy_label("?");
         main_win->game_box->port_help->copy_label("?");
         main_win->game_box->length_help->copy_label("?");
-        main_win->game_box->theme_help->copy_label("?");
+        main_win->game_box->game_help->copy_label("?");
         main_win->build_box->seed_disp->labelfont(font_style);
         main_win->build_box->name_disp->labelfont(font_style);
         main_win->build_box->status->labelfont(font_style);
@@ -1059,12 +1059,12 @@ class UI_ThemeWin : public Fl_Window {
         main_win->game_box->engine->labelcolor(FONT_COLOR);
         main_win->game_box->engine_help->labelcolor(FONT_COLOR);
         main_win->game_box->game->labelcolor(FONT_COLOR);
+        main_win->game_box->game_help->labelcolor(FONT_COLOR);
         main_win->game_box->port->labelcolor(FONT_COLOR);
         main_win->game_box->port_help->labelcolor(FONT_COLOR);
         main_win->game_box->length->labelcolor(FONT_COLOR);
         main_win->game_box->length_help->labelcolor(FONT_COLOR);
         main_win->game_box->theme->labelcolor(FONT_COLOR);
-        main_win->game_box->theme_help->labelcolor(FONT_COLOR);
         for (int x = 0; x < main_win->game_box->children(); x++) {
             main_win->game_box->child(x)->redraw();
             main_win->game_box->child(x)->redraw_label();

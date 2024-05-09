@@ -569,7 +569,7 @@ function ob_update_ports()
     if OB_CONFIG.engine == "idtech_0" then
       OB_CONFIG.port = "vanilla"
     elseif OB_CONFIG.engine == "idtech_1" then
-      if OB_CONFIG.game == "chex1" or OB_CONFIG.game == "hacx" then  -- Ugh
+      if OB_CONFIG.game == "chex1" or OB_CONFIG.game == "hacx" or OB_CONFIG.game == "harmony" or OB_CONFIG.game == "strife" or OB_CONFIG.game == "rekkr" then  -- Ugh
         OB_CONFIG.port = "limit_enforcing"
       else
         OB_CONFIG.port = "zdoom"
@@ -1902,8 +1902,14 @@ function ob_default_filename()
       name_tab = DOOM.NAMES
     elseif OB_CONFIG.game == "hacx" then
       name_tab = HACX.NAMES
+    elseif OB_CONFIG.game == "harmony" then
+      name_tab = HARMONY.NAMES
     elseif OB_CONFIG.game == "heretic" then
       name_tab = HERETIC.NAMES
+    elseif OB_CONFIG.game == "strife" then
+      name_tab = STRIFE.NAMES
+    elseif OB_CONFIG.game == "rekkr" then
+      name_tab = REKKR.NAMES
     end
     Naming_init(name_tab)
   end
@@ -2374,7 +2380,10 @@ local function ob_get_module_refs()
         "tnt",
         "plutonia",
         "hacx",
+        "harmony",
         "heretic",
+        "rekkr",
+        "strife",
         "wolf3d",
         "spear",
         "noah",

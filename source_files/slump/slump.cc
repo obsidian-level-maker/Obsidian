@@ -734,7 +734,7 @@ flat *new_flat(config *c,const char *name)
   answer = (flat *)malloc(sizeof(*answer));
   memset(answer->name,0,9);
   memcpy(answer->name,name,strlen(name));
-  answer->gamemask = DOOM0_BIT | DOOM1_BIT | DOOM2_BIT | DOOMC_BIT | DOOMI_BIT | HERETIC_BIT | CHEX_BIT | HACX_BIT;
+  answer->gamemask = DOOM0_BIT | DOOM1_BIT | DOOM2_BIT | DOOMC_BIT | DOOMI_BIT | HERETIC_BIT | CHEX_BIT | HACX_BIT | HARMONY_BIT | STRIFE_BIT | REKKR_BIT;
   answer->compatible = 0;
   answer->props = 0;
   answer->used = SLUMP_FALSE;
@@ -814,7 +814,7 @@ genus *new_genus(config *c,int thingid)
 
   answer = (genus *)malloc(sizeof(*answer));
   /* Default mask */
-  answer->gamemask = DOOM0_BIT|DOOM1_BIT|DOOM2_BIT|DOOMC_BIT|DOOMI_BIT|HERETIC_BIT|CHEX_BIT|HACX_BIT;
+  answer->gamemask = DOOM0_BIT|DOOM1_BIT|DOOM2_BIT|DOOMC_BIT|DOOMI_BIT|HERETIC_BIT|CHEX_BIT|HACX_BIT|HARMONY_BIT|STRIFE_BIT|REKKR_BIT;
   answer->compatible = ~(unsigned int)0;     /* Assume all themes OK */
   answer->thingid = thingid;
   answer->width = 65;  /* Sort of sensible default */
@@ -870,7 +870,7 @@ texture *new_texture(config *c,const char *name)
   memset(answer->name,0,9);
   memcpy(answer->name,name,strlen(name));
   answer->realname = answer->name;
-  answer->gamemask = DOOM0_BIT | DOOM1_BIT | DOOM2_BIT | DOOMC_BIT | DOOMI_BIT | HERETIC_BIT | CHEX_BIT | HACX_BIT;
+  answer->gamemask = DOOM0_BIT | DOOM1_BIT | DOOM2_BIT | DOOMC_BIT | DOOMI_BIT | HERETIC_BIT | CHEX_BIT | HACX_BIT | HARMONY_BIT | STRIFE_BIT | REKKR_BIT;
   answer->compatible = 0;
   answer->core = 0;
   answer->props = 0;     /* Filled in later */
@@ -1060,7 +1060,7 @@ void secretize_config(config *c)
   c->lock_themes = SLUMP_TRUE;
   if (rollpercent(25)) c->force_biggest = SLUMP_TRUE;   /* stub */
   c->big_monsters = SLUMP_TRUE;
-  if (!(c->gamemask & CHEX_BIT || c->gamemask & HACX_BIT)) {
+  if (!(c->gamemask & CHEX_BIT || c->gamemask & HARMONY_BIT || c->gamemask & STRIFE_BIT || c->gamemask & HACX_BIT)) {
     c->secret_themes = SLUMP_TRUE;
   }
   else {
@@ -1182,6 +1182,11 @@ config *get_config(std::filesystem::path filename) {
         answer->map = 0;
         answer->episode = 1;
         answer->mission = 1;
+    } else if (StringCaseCmp(current_game, "rekkr") == 0) {
+        answer->gamemask = (DOOM1_BIT|DOOMI_BIT|DOOMC_BIT|REKKR_BIT);
+        answer->map = 0;
+        answer->episode = 1;
+        answer->mission = 1;
     } else if (StringCaseCmp(current_game, "heretic") == 0) {
         answer->gamemask = HERETIC_BIT;
         answer->map = 0;
@@ -1190,6 +1195,16 @@ config *get_config(std::filesystem::path filename) {
     } else if (StringCaseCmp(current_game, "hacx") == 0) {
         answer->gamemask = (DOOM2_BIT|DOOMI_BIT|HACX_BIT);
         answer->map = 1;
+        answer->episode = 0;
+        answer->mission = 0;
+    } else if (StringCaseCmp(current_game, "harmony") == 0) {
+        answer->gamemask = (DOOM2_BIT|DOOMI_BIT|HARMONY_BIT);
+        answer->map = 1;
+        answer->episode = 0;
+        answer->mission = 0;
+    } else if (StringCaseCmp(current_game, "strife") == 0) {
+        answer->gamemask = (DOOM2_BIT|DOOMI_BIT|STRIFE_BIT);
+        answer->map = 2;
         answer->episode = 0;
         answer->mission = 0;
     } else { // Doom 2 / Final Doom
@@ -1206,18 +1221,18 @@ config *get_config(std::filesystem::path filename) {
         answer->levelcount = 4;
     } else if (StringCaseCmp(wadlength, "episode") == 0) {
         if (StringCaseCmp(current_game, "doom2") == 0 || StringCaseCmp(current_game, "plutonia") == 0 || StringCaseCmp(current_game, "tnt") == 0
-            || StringCaseCmp(current_game, "hacx") == 0) {
+            || StringCaseCmp(current_game, "hacx") == 0 || StringCaseCmp(current_game, "harmony") == 0 || StringCaseCmp(current_game, "strife") == 0) {
             answer->levelcount = 11;
         } else {
             answer->levelcount = 8;
         }
     } else {
         if (StringCaseCmp(current_game, "doom2") == 0 || StringCaseCmp(current_game, "plutonia") == 0 || StringCaseCmp(current_game, "tnt") == 0
-            || StringCaseCmp(current_game, "hacx") == 0) {
+            || StringCaseCmp(current_game, "hacx") == 0 || StringCaseCmp(current_game, "harmony") == 0 || StringCaseCmp(current_game, "strife") == 0) {
             answer->levelcount = 32;
         } else if (StringCaseCmp(current_game, "doom1") == 0 || StringCaseCmp(current_game, "chex1") == 0) {
             answer->levelcount = 24;
-        } else if (StringCaseCmp(current_game, "ultdoom") == 0) {
+        } else if (StringCaseCmp(current_game, "ultdoom") == 0 || StringCaseCmp(current_game, "rekkr") == 0) {
             answer->levelcount = 32;
         } else {
             answer->levelcount = 40; // Heretic
@@ -1232,7 +1247,8 @@ config *get_config(std::filesystem::path filename) {
     answer->do_dm = StringToInt(dm_starts);
     answer->do_slinfo = SLUMP_TRUE;
     answer->produce_null_lmps = SLUMP_FALSE;
-    answer->do_seclevels = (StringCaseCmp(current_game, "chex1") == 0) ? SLUMP_FALSE : SLUMP_TRUE; // review now that CQ3 Vanilla exists - Dasho
+    answer->do_seclevels = (StringCaseCmp(current_game, "chex1") == 0 || StringCaseCmp(current_game, "harmony") == 0 ||
+      StringCaseCmp(current_game, "strife") == 0 || StringCaseCmp(current_game, "rekkr") == 0) ? SLUMP_FALSE : SLUMP_TRUE;
     answer->force_secret = SLUMP_FALSE;
     answer->minlight = 115;
     /* Is this the right place for all these? */
@@ -2907,7 +2923,7 @@ void basic_background3(uint8_t *fbuf, byte bottom, int range)
 /* Should there be a secret level after the current level? */
 boolean need_secret_level(config *c)
 {
-  if (c->gamemask & (CHEX_BIT|HACX_BIT)) return SLUMP_FALSE;
+  if (c->gamemask & (CHEX_BIT|HACX_BIT|HARMONY_BIT|STRIFE_BIT)) return SLUMP_FALSE;
   if (c->do_seclevels==SLUMP_FALSE) return SLUMP_FALSE;
   if (c->gamemask & HERETIC_BIT) {
     switch (c->episode) {
@@ -8113,7 +8129,7 @@ construct *new_construct(config *c)
   construct *answer = (construct *)malloc(sizeof(*answer));
 
   answer->height = 64;
-  answer->gamemask = DOOM1_BIT|DOOM0_BIT|DOOM2_BIT|DOOMI_BIT|DOOMC_BIT|HERETIC_BIT|CHEX_BIT|HACX_BIT;
+  answer->gamemask = DOOM1_BIT|DOOM0_BIT|DOOM2_BIT|DOOMI_BIT|DOOMC_BIT|HERETIC_BIT|CHEX_BIT|HACX_BIT|HARMONY_BIT|STRIFE_BIT|REKKR_BIT;
   answer->compatible = 0;
   answer->texture_cell_anchor = NULL;
   answer->flat_cell_anchor = NULL;

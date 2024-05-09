@@ -1,4 +1,4 @@
-CHEX1.PARAMETERS =
+REKKR.PARAMETERS =
 {
   max_name_length = 28,
   titlepic_lump   = "TITLEPIC",

@@ -236,16 +236,6 @@ OB_MODULES["material_debugger"] =
   },
 }
 
-OB_MODULES["experimental_games"] =
-{
-  name = "experimental_games",
-  label = _("Allow Partially Supported Games"),
-  engine = "!idtech_0",
-  port = "!limit_enforcing",
-  where = "experimental",
-  tooltip = _("The following games are in an experimental status, meaning that they may have errors when building levels, or support for certain gameplay features has not been implemented yet:\n\nChex Quest 1: SLUMP/Vanilla Port support only"),
-}
-
 OB_MODULES["pickup_params"] =
 {
 
