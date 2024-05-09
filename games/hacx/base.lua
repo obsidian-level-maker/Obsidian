@@ -23,25 +23,13 @@ HACX = { }
 
 ----------------------------------------------------------------
 gui.import("params")
-gui.import("entities")
-gui.import("factory") -- For earlier Oblige versions
-gui.import("monsters")
-gui.import("pickups")
-gui.import("weapons")
-gui.import("materials")
 gui.import("themes")
-gui.import("levels")
 gui.import("resources")
-gui.import("vanilla_mats")
 gui.import("names")
 gui.import("stories")
 ----------------------------------------------------------------
 
 function HACX.all_done()
-	if ob_match_port("advanced") then
-	  local wad_file = "games/hacx/data/HAC_EXIT.wad"
-	  gui.wad_merge_sections(wad_file)
-	end
 	gui.wad_insert_file("data/endoom/ENDOOM.bin", "ENDOOM")
 end
 
@@ -63,9 +51,7 @@ OB_GAMES["hacx"] =
 	
 	hooks =
 	{
-		factory_setup = HACX.factory_setup,
 		slump_setup = HACX.slump_setup,
-		get_levels = HACX.get_levels,
 		all_done   = HACX.all_done
 	},
 }

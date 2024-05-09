@@ -27,25 +27,3 @@ CHEX1.PARAMETERS =
 
   episode_length = 5
 }
-
-CHEX1.ACTIONS =
-{
-  --
-  -- These keywords are used by prefabs that are remotely
-  -- triggered (by a switch or walk-over line).
-  --
-
-  S1_OpenDoor = { id=103,  kind="open" },    -- opens and stays open
-  W1_OpenDoor = { id=2,    kind="open" },    --
-  GR_OpenDoor = { id=46,   kind="open" },    --
-
-  W1_OpenDoorFast = { id=2, kind="open" },
-
-  S1_RaiseStair = { id=106,  kind="stair" },  -- 16 units
-  W1_RaiseStair = { id=107,  kind="stair" },  --
-
-  S1_FloorUp    = { id=18,  kind="floor_up" }, -- up to next highest floor
-
-  S1_LowerFloor = { id=23, kind="lower" },  -- down to lowest nb floor
-  W1_LowerFloor = { id=38, kind="lower" }  --
-}

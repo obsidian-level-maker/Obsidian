@@ -173,5 +173,4 @@ end
 function CHEX1.all_done()
   CHEX1.make_cool_gfx()
   CHEX1.make_episode_gfx()
-
 end

@@ -66,31 +66,7 @@ CHEX1.SINKS =
 CHEX1.THEMES =
 {
   DEFAULTS =
-  {
-
-    keys =
-    {
-      k_yellow = 50,
-      k_red = 50,
-      k_blue = 50
-    },
-
-    skyboxes =
-    {
-
-    },
-
-    cage_lights = { 0, 8, 12, 13 },
-
-    pool_depth = 24,
-
-    street_sinks =
-    {
-      floor_default_streets = 1
-    },
-
-    streets_friendly = false,
-    
+  {   
     slump_config = 
     [[
       ;

@@ -2776,7 +2776,7 @@ function Level_make_all()
   GAME.episodes = {}
 
   -- semi-supported games warning
-  if ob_match_game({ game = { chex1=1} }) then
+  if ob_match_game({ game = { unused=1 } }) then
     if ob_mod_enabled("experimental_games") == 0 then
       error(gui.gettext("\nWarning: The game that you have selected is in an experimental state. WADs may not build successfully and certain gameplay features may not be implemented yet! To ignore this warning and continue generation for these games, check the \"Allow Partially Supported Games\" checkbox located under the Experimental tab.\n\nUse the tooltip for the \"Allow Partially Supported Games\" module to find the exact status for the game in question."))
     end
