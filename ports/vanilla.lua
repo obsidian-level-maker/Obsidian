@@ -45,7 +45,7 @@ OB_PORTS["vanilla"] =
 
   engine = {idtech_0=1,idtech_1=0},
 
-  game = {doom1=0,doom2=0,hacx=0,heretic=0,noah=1,wolf=1},
+  game = {doom1=0,doom2=0,hacx=0,heretic=0,noah=1,obc=1,wolf=1,blake=1},
 
   tables =
   {
@@ -78,6 +78,6 @@ OB_PORTS["limit_enforcing"] =
 {
   label = _("Vanilla"), -- Keep Vanilla labeling for consistency
   engine = "idtech_1",
-  game = { chex1=1,doom1=1,doom2=1,ultdoom=1,harmony=1,heretic=1,hacx=1,wolf=0,noah=0,strife=1,rekkr=1 },
+  game = { chex1=1,doom1=1,doom2=1,ultdoom=1,harmony=1,heretic=1,hacx=1,wolf=0,noah=0,strife=1,rekkr=1,obc=0,blake=0 },
   priority = 99
 }

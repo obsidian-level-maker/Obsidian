@@ -1892,7 +1892,7 @@ function ob_default_filename()
   
   -- I don't like doing this, but I'd rather not try to reorder
   -- the normal GAME table merge stuff - Dasho
-  if ob_match_game({game = {wolf=1, spear=1, noah=1}}) then
+  if ob_match_game({game = {wolf=1, spear=1, noah=1, obc=1, blake=1}}) then
     return "unused.filename"
   else
     local name_tab = {}
@@ -2203,7 +2203,7 @@ function ob_build_setup()
     RANDOMIZE_GROUPS = gui.get_batch_randomize_groups()
   end
 
-  if not ob_match_game({game = {wolf=1,spear=1,noah=1}}) then
+  if not ob_match_game({game = {wolf=1,spear=1,noah=1,obc=1,blake=1}}) then
     Naming_init(GAME.NAMES)
   end
 
@@ -2387,6 +2387,8 @@ local function ob_get_module_refs()
         "wolf3d",
         "spear",
         "noah",
+        "obc",
+        "blake"
       },
       default = "doom2",
     },
