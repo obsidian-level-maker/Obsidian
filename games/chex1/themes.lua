@@ -137,7 +137,7 @@ CHEX1.THEMES =
       Texture COMPSTA1 size 8 128 jamb comp LAB comp BAZ
 
       ; Support textures, used in various places
-      Texture SUPPORT2 size 64 128 support comp LAB
+      Texture COMPSTA2 size 128 128 support comp LAB
 	  Texture NUKEDGE1 size 128 128 support comp BAZ
 
       ; Bunch of things for outside patios (no themes applied here)
@@ -152,12 +152,12 @@ CHEX1.THEMES =
       Flat GATE1 gate comp LAB comp BAZ
 
       ; Lab floors and ceilings
-      Flat FLOOR4_1 ceiling light comp LAB
-      Flat FLOOR4_1 ceiling outside comp LAB
-      Flat FLOOR4_1 floor comp LAB
+      Flat FLAT1_1 ceiling light comp LAB
+      Flat FLAT1_1 ceiling outside comp LAB
+      Flat FLAT1_1 floor comp LAB
 	  Flat STEP1 floor comp LAB
-      Flat FLOOR4_1 ceiling comp LAB
-      Flat FLOOR4_1 floor outside comp LAB
+      Flat FLAT1_1 ceiling comp LAB
+      Flat FLAT1_1 floor outside comp LAB
 
       ; Bazoik floors and ceilings
       Flat CEIL3_1 ceiling light comp BAZ
@@ -466,7 +466,7 @@ CHEX1.THEMES =
       Texture COMPSTA1 size 8 128 jamb comp LAB
 
       ; Support textures, used in various places
-      Texture SUPPORT2 size 64 128 support comp LAB
+      Texture COMPSTA2 size 128 128 support comp LAB
 
       ; Bunch of things for outside patios (no themes applied here)
 	  Texture BIGDOOR3 size 128 128 outside
@@ -480,12 +480,12 @@ CHEX1.THEMES =
       Flat GATE1 gate comp LAB
 
       ; Lab floors and ceilings
-      Flat FLOOR4_1 ceiling light comp LAB
-      Flat FLOOR4_1 ceiling outside comp LAB
-      Flat FLOOR4_1 floor comp LAB
+      Flat FLAT1_1 ceiling light comp LAB
+      Flat FLAT1_1 ceiling outside comp LAB
+      Flat FLAT1_1 floor comp LAB
 	  Flat STEP1 floor comp LAB
-      Flat FLOOR4_1 ceiling comp LAB
-      Flat FLOOR4_1 floor outside comp LAB
+      Flat FLAT1_1 ceiling comp LAB
+      Flat FLAT1_1 floor outside comp LAB
 
       ; and nukage
       Flat BLOOD1 nukage comp LAB

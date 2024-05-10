@@ -31,9 +31,9 @@ OB_MODULES["links_iwads"] =
       url="https://freedoom.github.io/download.html",
     },
     { 
-        name="url_blasphemer",     
-        label=_("Blasphemer (Heretic Replacement)"),
-        url="https://github.com/Catoptromancy/blasphemer",    
+      name="url_blasphemer",     
+      label=_("Blasphemer (Heretic Replacement)"),
+      url="https://github.com/Catoptromancy/blasphemer",    
     },
     { 
       name="url_hacx",     
@@ -68,9 +68,9 @@ OB_MODULES["links_addons"] =
       url="https://obsidian-level-maker.github.io/index.html#_addons",
     },
     { 
-        name="url_mobreck_mbf21",     
-        label=_("Mobreck's MBF21 Expanded DOOM Beastiary"),
-        url="https://www.moddb.com/mods/the-mbf21-expanded-doom-bestiary-project/downloads/medb-addon-for-obsidian",    
+      name="url_mobreck_mbf21",     
+      label=_("Mobreck's MBF21 Expanded DOOM Beastiary"),
+      url="https://www.moddb.com/mods/the-mbf21-expanded-doom-bestiary-project/downloads/medb-addon-for-obsidian",    
     },
     { 
       name="url_doomrla_pickups",     
