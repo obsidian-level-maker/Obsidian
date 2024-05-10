@@ -35,8 +35,8 @@
 
 #define RLEW_TAG 0xABCD
 
-#define NO_TILE 48
-#define NO_OBJ 0
+static uint8_t no_tile = 48;
+static uint8_t no_obj = 0;
 
 /* private data */
 
@@ -269,7 +269,7 @@ static void WF_DumpMap(void) {
 
             int ch;
 
-            if (tile == NO_TILE) {
+            if (tile == no_tile) {
                 ch = '#';
             } else if (obj >= 19 && obj <= 22) {
                 ch = 'p';  // player_angles[obj-19];
@@ -281,7 +281,7 @@ static void WF_DumpMap(void) {
                 ch = '+';
             } else if (show_floors && 108 <= tile && tile <= 143) {
                 ch = '0' + ((tile - 108) % 10);
-            } else if (obj == NO_OBJ) {
+            } else if (obj == no_obj) {
                 ch = '.';
             } else if ((obj >= 43 && obj <= 56) || obj == 29) {
                 ch = '$';  // pickup
@@ -396,7 +396,7 @@ bool wolf_game_interface_c::Start(const char *ext) {
         file_ext = ext;
     }
 
-    if (StringCaseCmp(file_ext, "BS6") == 0 || StringCaseCmp(file_ext, "BC") == 0) {
+    if (StringCaseCmp(file_ext, "BC") == 0) {
         map_fp = fopen(TEMP_MAPTEMP, "wb");
     } else {
         map_fp = fopen(TEMP_GAMEFILE, "wb");
@@ -468,7 +468,7 @@ bool wolf_game_interface_c::Finish(bool build_ok) {
 
 void wolf_game_interface_c::Rename() {
     std::filesystem::path gamemaps =
-        wolf_output_dir / ((StringCaseCmp(file_ext, "BS6") == 0 || StringCaseCmp(file_ext, "BC") == 0) ? StringFormat("MAPTEMP.%s", file_ext.c_str()) : StringFormat("GAMEMAPS.%s", file_ext.c_str()));
+        wolf_output_dir / (StringCaseCmp(file_ext, "BC") == 0 ? StringFormat("MAPTEMP.%s", file_ext.c_str()) : StringFormat("GAMEMAPS.%s", file_ext.c_str()));
     std::filesystem::path maphead =
         wolf_output_dir / StringFormat("MAPHEAD.%s", file_ext.c_str());
 
@@ -480,7 +480,7 @@ void wolf_game_interface_c::Rename() {
     std::filesystem::remove(gamemaps);
     std::filesystem::remove(maphead);
 
-    if (StringCaseCmp(file_ext, "BS6") == 0 || StringCaseCmp(file_ext, "BC") == 0) {
+    if (StringCaseCmp(file_ext, "BC") == 0) {
         std::filesystem::rename(TEMP_MAPTEMP, gamemaps);
     } else {
         std::filesystem::rename(TEMP_GAMEFILE, gamemaps);
@@ -495,10 +495,12 @@ void wolf_game_interface_c::Tidy() {
 }
 
 void wolf_game_interface_c::BeginLevel() {
+    no_tile = StringToInt(ob_get_param("no_tile"));
+    no_obj = StringToInt(ob_get_param("no_obj"));
     // clear the planes before use
     for (int i = 0; i < 64 * 64; i++) {
-        solid_plane[PL_START + i] = NO_TILE;
-        thing_plane[PL_START + i] = NO_OBJ;
+        solid_plane[PL_START + i] = no_tile;
+        thing_plane[PL_START + i] = no_obj;
     }
 
     SYS_ASSERT(current_map < 100);
