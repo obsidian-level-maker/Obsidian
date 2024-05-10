@@ -179,7 +179,7 @@ void UI_Game::callback_GameHelp(Fl_Widget *w, void *data) {
     win->set_modal();
     win->show();
     // clang-format off
-    buff->text(_("Chex 3 Vanilla: Unofficial repackaging of Chex Quest 3 for non-ZDoom derived engines. SLUMP support only.\n\nHacX 1.2: SLUMP support only.\n\nHarmony Compat: Harmony re-release for non-ZDoom derived engines. Must be run as a PWAD in conjuction with the Doom 2/Freedoom 2 IWAD. SLUMP support only.\n\nStrife: SLUMP support only."));
+    buff->text(_("Available Games:\n\nid Tech 0:\n\nWolfenstein 3D\n\nSpear of Destiny\n\nNoah's Ark 3D\n\nOperation Body Count: Note, this game is less stable than its other id Tech 0 counterparts!\n\nid Tech 1:\n\nDoom 2\n\nDoom\n\nThe Ultimate Doom\n\nPlutonia: Part of Final Doom\n\nTNT: Evilution: Part of Final Doom\n\nHeretic\n\nChex 3 Vanilla: Unofficial repackaging of Chex Quest 3 for non-ZDoom derived engines. SLUMP support only.\n\nHacX 1.2: SLUMP support only.\n\nREKKR: SLUMP support only.\n\nHarmony Compat: Harmony re-release for non-ZDoom derived engines. Must be run as a PWAD in conjuction with the Doom 2/Freedoom 2 IWAD. SLUMP support only.\n\nStrife: SLUMP support only."));
     // clang-format on
 }
 

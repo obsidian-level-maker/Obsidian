@@ -16,9 +16,46 @@
 --
 ----------------------------------------------------------------
 
+OB_MODULES["links_iwads"] =
+{
+  label = _("Game WADs (Libre/Freeware)"),
+
+  where = "links",
+  priority = 101,
+
+  options =
+  {
+    { 
+      name="url_freedoom",     
+      label=_("Freedoom (Doom 1/2 Replacement)"),
+      url="https://freedoom.github.io/download.html",
+    },
+    { 
+        name="url_blasphemer",     
+        label=_("Blasphemer (Heretic Replacement)"),
+        url="https://github.com/Catoptromancy/blasphemer",    
+    },
+    { 
+      name="url_hacx",     
+      label=_("HacX 1.2"),
+      url="https://www.doomworld.com/idgames/themes/hacx/hacx12",    
+    },
+    { 
+      name="url_harmony",     
+      label=_("Harmony Compatible"),
+      url="https://www.doomworld.com/idgames/levels/doom2/Ports/g-i/harmonyc",    
+    },
+    { 
+      name="url_rekkr",     
+      label=_("REKKR"),
+      url="https://www.doomworld.com/idgames/levels/doom/megawads/rekkr",    
+    },
+  }
+}
+
 OB_MODULES["links_addons"] =
 {
-  label = _("Addons"),
+  label = _("Obsidian Addons"),
 
   where = "links",
   priority = 101,
