@@ -608,7 +608,11 @@ function ob_update_themes()
     end
 
     -- otherwise revert to As Original
-    OB_CONFIG.theme = "original",
+    if OB_CONFIG.port == "limit_enforcing" then
+      OB_CONFIG.theme = "default"
+    else
+      OB_CONFIG.theme = "original"
+    end
     gui.set_button("theme", OB_CONFIG.theme)
   end
 end

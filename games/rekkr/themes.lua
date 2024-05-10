@@ -43,8 +43,7 @@ REKKR.THEMES =
       ; used on secret levels.  There should be at least one "secret"
       ; theme.
 
-	  Theme LAB ; Chex labs
-	  Theme BAZ ; Bazoik caves/E1M5 theme
+	  Theme RAM ; Rampart (castle-ish)
 
       ; Flats and textures and constructs and stuff are also in the [THEMES] section
 
@@ -74,131 +73,107 @@ REKKR.THEMES =
       ;    divisor of 256 (except for doors, where you should give the real
       ;    width so SLIGE can make them look nice).
 
-	  ; Lab walls
-	  Texture SKIN2 size 128 128 wall core LAB
-	  Texture STARG3 size 128 128 wall core LAB subtle CEMENT6
-	  Texture TEKWALL2 size 128 128 wall core LAB subtle STONE2
+	  ; Rampart walls
+	  Texture DVSTON9 size 128 128 wall core RAM
+    Texture DVSTON6 size 128 128 wall core RAM
+    Texture DVSTON16 size 128 128 wall core RAM
+    Texture DVSTON17 size 128 128 wall core RAM
+    Texture DVBRKW4 size 64 128 wall comp RAM
 
 	  ; Lab switches
-	  Texture SW1STARG size 128 128 isswitch comp LAB
-	  Texture SW1PIPE size 128 128 isswitch comp LAB
-
-	  ; Bazoik walls
-      Texture BIGDOOR2 size 128 128 wall core BAZ subtle STARGR1
-
-      ; Bazoik switches
-      Texture SW1BRCOM size 128 128 isswitch comp BAZ
+	  Texture SW1GARG size 64 128 isswitch comp RAM
 
       ; And the lift texture
-      Texture COMPBLUE size 64 128 lift comp LAB comp BAZ
+      Texture DVROCK6 size 128 128 lift comp RAM
 
       ; Doors of all kinds.  "size" gives the width and height of the texture,
       ; and "locked" means that it's a good texture to use on a door that only
       ; opens with a switch, not a touch.
-      Texture BIGDOOR4 size 128 128 door comp LAB
-	  Texture BIGDOOR1 size 128 128 door comp LAB comp BAZ
-      Texture SP_DUDE4 size 64 128 door comp LAB comp BAZ
-	  Texture SKSNAKE1 size 64 128 door comp LAB comp BAZ
+      Texture DVDORB2 size 128 128 door comp RAM
+	  Texture DVDORS size 64 128 door comp RAM
 
-	  ; Lab exit switches
-	  Texture SW1STARG size 128 128 exitswitch comp LAB
-	  Texture SW1PIPE size 128 128 exitswitch comp LAB
-
-      ; Bazoik exit switches
-      Texture SW1BRCOM size 128 128 exitswitch comp BAZ
+	  ; Rampart exit switches
+	  Texture SW1GARG size 64 128 exitswitch comp RAM
 
       ; Lights, suitable for lighting recesses and stuff.
-      Texture LITEMET size 128 128 light comp LAB
-	  Texture BLODRIP1 size 64 128 light comp BAZ
+	  Texture DVLIGHT6 size 64 128 light comp RAM
 
       ; "Plaques", suitable for wall consoles and paintings and pillars and stuff.
       ; "vtiles" means that it's OK to pile one on top of another, as when
       ;    making the big central pillar in an arena.
       ; "half_plaque" means that the upper half of this texture can be used
       ;    by itself, as well as the whole thing.
-      Texture FIREWALL size 128 112 plaque vtiles comp LAB
-	  Texture DOORTRAK size 128 128 plaque vtiles comp BAZ
-      Texture FIREMAG1 size 128 128 plaque comp BAZ
+	  Texture DVROCK28 size 128 128 plaque vtiles comp RAM
 
       ; Gratings
-      Texture MIDVINE1 size 256 128 grating comp LAB
-	  Texture MIDVINE2 size 256 128 grating comp LAB
-	  Texture SKSPINE1 size 64 128 grating comp BAZ
+      Texture DVMIDM2 size 64 128 grating comp RAM
 
       ; Colors (suitable for marking key-locked things)
-      Texture DOORRED size 8 128 red comp LAB comp BAZ
-      Texture DOORYEL size 8 128 yellow comp LAB comp BAZ
-      Texture DOORBLU size 8 128 blue comp LAB comp BAZ
+      Texture DVKEYCOR size 64 128 red comp RAM
+      Texture DVKEYCOY size 64 128 yellow comp RAM
+      Texture DVKEYCOB size 64 128 blue comp RAM
 
-      ; Step kickplates
-      Texture STEP1 size 32 8 step comp LAB comp BAZ
+    ; Step kickplates
+    Texture KS_LADH size 64 8 step comp RAM
 
-      ; "Doorjambs"
-      Texture COMPSTA1 size 8 128 jamb comp LAB comp BAZ
+    ; "Doorjambs"
+    Texture DVBLACK size 64 128 jamb comp RAM
 
-      ; Support textures, used in various places
-      Texture SUPPORT2 size 64 128 support comp LAB
-	  Texture NUKEDGE1 size 128 128 support comp BAZ
+    ; Support textures, used in various places
+    Texture DVDRK19 size 64 128 support comp RAM
+	  Texture DVROCK70 size 128 128 support comp RAM
 
-      ; Bunch of things for outside patios (no themes applied here)
-	  Texture BIGDOOR3 size 128 128 outside
+    ; Bunch of things for outside patios (no themes applied here)
+	  Texture DVSTON9 size 128 128 outside
 
-      ; Misc
-      Texture LITEBLU1 size 128 128 error
+    ; Misc
+    Texture DVMUSAW size 64 128 error
 
-      ; Now the flats.  Keywords should all be pretty obvious...   *8)
+    ; Now the flats.  Keywords should all be pretty obvious...   *8)
 
-      ; Teleport-gate floors
-      Flat GATE1 gate comp LAB comp BAZ
+    ; Teleport-gate floors
+    Flat GATE1 gate comp RAM
 
-      ; Lab floors and ceilings
-      Flat FLOOR4_1 ceiling light comp LAB
-      Flat FLOOR4_1 ceiling outside comp LAB
-      Flat FLOOR4_1 floor comp LAB
-	  Flat STEP1 floor comp LAB
-      Flat FLOOR4_1 ceiling comp LAB
-      Flat FLOOR4_1 floor outside comp LAB
+    ; Rampart floors and ceilings
+    Flat FLAT22 ceiling light comp RAM
+    Flat CEIL1_3 ceiling outside comp RAM
+	  Flat STEP1 floor comp RAM
+    Flat FLAT4 ceiling comp RAM
+    Flat FLAT4 floor outside comp RAM
 
-      ; Bazoik floors and ceilings
-      Flat CEIL3_1 ceiling light comp BAZ
-      Flat CEIL3_1 ceiling outside comp BAZ
-      Flat CEIL3_1 floor comp BAZ
-      Flat CEIL3_1 ceiling comp BAZ
-      Flat CEIL3_1 floor outside comp BAZ
+    ; and nukage
+    Flat NUKAGE1 nukage comp RAM
+    Flat LAVA1 nukage red comp RAM
 
-      ; and nukage
-      Flat BLOOD1 nukage comp LAB comp BAZ
-      Flat LAVA1 nukage red comp LAB comp BAZ
+    ; Floors for outside areas not yet mentioned
+    Flat FLOOR3_3 outside
 
-      ; Floors for outside areas not yet mentioned
-      Flat CEIL3_1 outside
+    ; These are the defaults, but we'll list them anyway.
+    Flat FWATER1 water
+    Flat F_SKY1 sky
 
-      ; These are the defaults, but we'll list them anyway.
-      Flat FWATER1 water
-      Flat F_SKY1 sky
+    ; Constructs: computers and crates and stuff that stand around in rooms
+    ; This is pretty complex!  Fool with it at your peril.
 
-      ; Constructs: computers and crates and stuff that stand around in rooms
-      ; This is pretty complex!  Fool with it at your peril.
+    ; Family 1 is crates of various sizes and kinds
+    Construct family 1 height 128 comp RAM
+      top CEIL1_1
+      Primary DVCRATES width 64
 
-      ; Family 1 is crates of various sizes and kinds
-      Construct family 1 height 128 comp LAB comp BAZ
-        top CRATOP2
-        Primary CRATE2 width 64
+    ; Load the hardwired monster and object and so on data (required in
+    ; this version of SLIGE; don't remove this!)
+    Hardwired1
 
-      ; Load the hardwired monster and object and so on data (required in
-      ; this version of SLIGE; don't remove this!)
-      Hardwired1
+    ; Say which lamps we like in which themes, and where barrels are allowed
+    ; Information like which Doom version each object is in, and which ones
+    ; cast light, and which ones explode, is still hardwired.
+    Thing 2028 comp RAM  ; floor lamp
 
-      ; Say which lamps we like in which themes, and where barrels are allowed
-      ; Information like which Doom version each object is in, and which ones
-      ; cast light, and which ones explode, is still hardwired.
-      Thing 2028 comp LAB comp BAZ  ; floor lamp
-
-      ; and that's it!
+    ; and that's it!
     ]]
   },
 
-  rekkr_village =
+  rampart =
   {
     slump_config = 
     [[
@@ -226,8 +201,7 @@ REKKR.THEMES =
       ; used on secret levels.  There should be at least one "secret"
       ; theme.
 
-	  Theme LAB ; Chex labs
-	  Theme BAZ ; Bazoik caves/E1M5 theme
+	  Theme RAM ; Rampart (castle-ish)
 
       ; Flats and textures and constructs and stuff are also in the [THEMES] section
 
@@ -257,127 +231,103 @@ REKKR.THEMES =
       ;    divisor of 256 (except for doors, where you should give the real
       ;    width so SLIGE can make them look nice).
 
-	  ; Lab walls
-	  Texture SKIN2 size 128 128 wall core LAB
-	  Texture STARG3 size 128 128 wall core LAB subtle CEMENT6
-	  Texture TEKWALL2 size 128 128 wall core LAB subtle STONE2
+	  ; Rampart walls
+	  Texture DVSTON9 size 128 128 wall core RAM
+    Texture DVSTON6 size 128 128 wall core RAM
+    Texture DVSTON16 size 128 128 wall core RAM
+    Texture DVSTON17 size 128 128 wall core RAM
+    Texture DVBRKW4 size 64 128 wall comp RAM
 
 	  ; Lab switches
-	  Texture SW1STARG size 128 128 isswitch comp LAB
-	  Texture SW1PIPE size 128 128 isswitch comp LAB
-
-	  ; Bazoik walls
-      Texture BIGDOOR2 size 128 128 wall core BAZ subtle STARGR1
-
-      ; Bazoik switches
-      Texture SW1BRCOM size 128 128 isswitch comp BAZ
+	  Texture SW1GARG size 64 128 isswitch comp RAM
 
       ; And the lift texture
-      Texture COMPBLUE size 64 128 lift comp LAB comp BAZ
+      Texture DVROCK6 size 128 128 lift comp RAM
 
       ; Doors of all kinds.  "size" gives the width and height of the texture,
       ; and "locked" means that it's a good texture to use on a door that only
       ; opens with a switch, not a touch.
-      Texture BIGDOOR4 size 128 128 door comp LAB
-	  Texture BIGDOOR1 size 128 128 door comp LAB comp BAZ
-      Texture SP_DUDE4 size 64 128 door comp LAB comp BAZ
-	  Texture SKSNAKE1 size 64 128 door comp LAB comp BAZ
+      Texture DVDORB2 size 128 128 door comp RAM
+	  Texture DVDORS size 64 128 door comp RAM
 
-	  ; Lab exit switches
-	  Texture SW1STARG size 128 128 exitswitch comp LAB
-	  Texture SW1PIPE size 128 128 exitswitch comp LAB
-
-      ; Bazoik exit switches
-      Texture SW1BRCOM size 128 128 exitswitch comp BAZ
+	  ; Rampart exit switches
+	  Texture SW1GARG size 64 128 exitswitch comp RAM
 
       ; Lights, suitable for lighting recesses and stuff.
-      Texture LITEMET size 128 128 light comp LAB
-	  Texture BLODRIP1 size 64 128 light comp BAZ
+	  Texture DVVERT size 64 128 light comp RAM
 
       ; "Plaques", suitable for wall consoles and paintings and pillars and stuff.
       ; "vtiles" means that it's OK to pile one on top of another, as when
       ;    making the big central pillar in an arena.
       ; "half_plaque" means that the upper half of this texture can be used
       ;    by itself, as well as the whole thing.
-      Texture FIREWALL size 128 112 plaque vtiles comp LAB
-	  Texture DOORTRAK size 128 128 plaque vtiles comp BAZ
-      Texture FIREMAG1 size 128 128 plaque comp BAZ
+	  Texture DVROCK28 size 128 128 plaque vtiles comp RAM
 
       ; Gratings
-      Texture MIDVINE1 size 256 128 grating comp LAB
-	  Texture MIDVINE2 size 256 128 grating comp LAB
-	  Texture SKSPINE1 size 64 128 grating comp BAZ
+      Texture DVMIDM2 size 64 128 grating comp RAM
 
       ; Colors (suitable for marking key-locked things)
-      Texture DOORRED size 8 128 red comp LAB comp BAZ
-      Texture DOORYEL size 8 128 yellow comp LAB comp BAZ
-      Texture DOORBLU size 8 128 blue comp LAB comp BAZ
+      Texture DVKEYCOR size 64 128 red comp RAM
+      Texture DVKEYCOY size 64 128 yellow comp RAM
+      Texture DVKEYCOB size 64 128 blue comp RAM
 
-      ; Step kickplates
-      Texture STEP1 size 32 8 step comp LAB comp BAZ
+    ; Step kickplates
+    Texture KS_LADH size 64 8 step comp RAM
 
-      ; "Doorjambs"
-      Texture COMPSTA1 size 8 128 jamb comp LAB comp BAZ
+    ; "Doorjambs"
+    Texture DVBLACK size 64 128 jamb comp RAM
 
-      ; Support textures, used in various places
-      Texture SUPPORT2 size 64 128 support comp LAB
-	  Texture NUKEDGE1 size 128 128 support comp BAZ
+    ; Support textures, used in various places
+    Texture DVDRK2 size 64 128 support comp RAM
+	  Texture DVROCK70 size 128 128 support comp RAM
 
-      ; Bunch of things for outside patios (no themes applied here)
-	  Texture BIGDOOR3 size 128 128 outside
+    ; Bunch of things for outside patios (no themes applied here)
+	  Texture DVSTON9 size 128 128 outside
 
-      ; Misc
-      Texture LITEBLU1 size 128 128 error
+    ; Misc
+    Texture DVMUSAW size 64 128 error
 
-      ; Now the flats.  Keywords should all be pretty obvious...   *8)
+    ; Now the flats.  Keywords should all be pretty obvious...   *8)
 
-      ; Teleport-gate floors
-      Flat GATE1 gate comp LAB comp BAZ
+    ; Teleport-gate floors
+    Flat GATE1 gate comp RAM
 
-      ; Lab floors and ceilings
-      Flat FLOOR4_1 ceiling light comp LAB
-      Flat FLOOR4_1 ceiling outside comp LAB
-      Flat FLOOR4_1 floor comp LAB
-	  Flat STEP1 floor comp LAB
-      Flat FLOOR4_1 ceiling comp LAB
-      Flat FLOOR4_1 floor outside comp LAB
+    ; Rampart floors and ceilings
+    Flat FLAT14 ceiling light comp RAM
+    Flat CEIL1_3 ceiling outside comp RAM
+	  Flat STEP1 floor comp RAM
+    Flat FLAT4 ceiling comp RAM
+    Flat FLAT4 floor outside comp RAM
 
-      ; Bazoik floors and ceilings
-      Flat CEIL3_1 ceiling light comp BAZ
-      Flat CEIL3_1 ceiling outside comp BAZ
-      Flat CEIL3_1 floor comp BAZ
-      Flat CEIL3_1 ceiling comp BAZ
-      Flat CEIL3_1 floor outside comp BAZ
+    ; and nukage
+    Flat NUKAGE1 nukage comp RAM
+    Flat LAVA1 nukage red comp RAM
 
-      ; and nukage
-      Flat BLOOD1 nukage comp LAB comp BAZ
-      Flat LAVA1 nukage red comp LAB comp BAZ
+    ; Floors for outside areas not yet mentioned
+    Flat FLOOR3_3 outside
 
-      ; Floors for outside areas not yet mentioned
-      Flat CEIL3_1 outside
+    ; These are the defaults, but we'll list them anyway.
+    Flat FWATER1 water
+    Flat F_SKY1 sky
 
-      ; These are the defaults, but we'll list them anyway.
-      Flat FWATER1 water
-      Flat F_SKY1 sky
+    ; Constructs: computers and crates and stuff that stand around in rooms
+    ; This is pretty complex!  Fool with it at your peril.
 
-      ; Constructs: computers and crates and stuff that stand around in rooms
-      ; This is pretty complex!  Fool with it at your peril.
+    ; Family 1 is crates of various sizes and kinds
+    Construct family 1 height 128 comp RAM
+      top CEIL1_1
+      Primary DVCRATES width 64
 
-      ; Family 1 is crates of various sizes and kinds
-      Construct family 1 height 128 comp LAB comp BAZ
-        top CRATOP2
-        Primary CRATE2 width 64
+    ; Load the hardwired monster and object and so on data (required in
+    ; this version of SLIGE; don't remove this!)
+    Hardwired1
 
-      ; Load the hardwired monster and object and so on data (required in
-      ; this version of SLIGE; don't remove this!)
-      Hardwired1
+    ; Say which lamps we like in which themes, and where barrels are allowed
+    ; Information like which Doom version each object is in, and which ones
+    ; cast light, and which ones explode, is still hardwired.
+    Thing 2028 comp RAM  ; floor lamp
 
-      ; Say which lamps we like in which themes, and where barrels are allowed
-      ; Information like which Doom version each object is in, and which ones
-      ; cast light, and which ones explode, is still hardwired.
-      Thing 2028 comp LAB comp BAZ  ; floor lamp
-
-      ; and that's it!
+    ; and that's it!
     ]]
   },
   
@@ -406,9 +356,9 @@ end
 
 ------------------------------------------------------------------------
 
-OB_THEMES["rekkr_village"] =
+OB_THEMES["rampart"] =
 {
-  label = _("Village"),
+  label = _("Rampart"),
   game = "rekkr",
   name_class = "TECH",
   mixed_prob = 34
