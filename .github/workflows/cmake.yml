@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Configure CMake MSVC
-        run: mkdir build && cd build && cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+        run: mkdir build && cd build && cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -A Win32
       - name: Build MSVC
         run: cmake --build build --config ${{env.BUILD_TYPE}}
       - uses: actions/upload-artifact@v3
@@ -37,4 +37,58 @@ jobs:
             theme
             tools
             obsidian.exe
+          retention-days: ${{env.RETENTION_DAYS}}
+  build-linux:
+      runs-on: ubuntu-latest
+      steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libxft-dev libfontconfig1-dev
+      - name: Configure CMake Ubuntu
+        run: mkdir build && cd build && cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      - name: Build Ubuntu
+        run: cmake --build build --config ${{env.BUILD_TYPE}}
+      - uses: actions/upload-artifact@v3
+        with:
+          name: obsidian-ubuntu
+          path: |
+            addons
+            data
+            engines
+            games
+            language
+            modules
+            ports
+            presets
+            scripts
+            theme
+            tools
+            obsidian
+          retention-days: ${{env.RETENTION_DAYS}}
+    build-macos:
+      runs-on: macos-latest
+      steps:
+      - uses: actions/checkout@v4
+      - name: Configure CMake Ubuntu
+        run: mkdir build && cd build && cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      - name: Build Ubuntu
+        run: cmake --build build --config ${{env.BUILD_TYPE}}
+      - uses: actions/upload-artifact@v3
+        with:
+          name: obsidian-macos
+          path: |
+            addons
+            data
+            engines
+            games
+            language
+            modules
+            ports
+            presets
+            scripts
+            theme
+            tools
+            obsidian
           retention-days: ${{env.RETENTION_DAYS}}

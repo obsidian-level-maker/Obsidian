@@ -36,6 +36,11 @@ OB_MODULES["links_iwads"] =
       url="https://github.com/Catoptromancy/blasphemer",    
     },
     { 
+      name="url_cq3_vanilla",     
+      label=_("Chex Quest 3: Vanilla Edition"),
+      url="https://melodic-spaceship.neocities.org/chex3v",    
+    },
+    { 
       name="url_hacx",     
       label=_("HacX 1.2"),
       url="https://www.doomworld.com/idgames/themes/hacx/hacx12",    
