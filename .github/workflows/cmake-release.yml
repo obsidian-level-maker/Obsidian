@@ -1,10 +1,8 @@
-name: CMake
+name: CMake-Release
 
 on:
-  push:
-    branches: [ v21 ]
-  pull_request:
-    branches: [ v21 ]
+  release:
+    types: [prereleased]
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -13,17 +11,17 @@ env:
   RETENTION_DAYS: 30
 
 jobs:
-  build-msvc:
+  build-msvc-win32:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Configure CMake MSVC
+      - name: Configure CMake MSVC 32-bit
         run: mkdir build && cd build && cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -A Win32
-      - name: Build MSVC
+      - name: Build MSVC 32-bit
         run: cmake --build build --config ${{env.BUILD_TYPE}}
       - uses: actions/upload-artifact@v4
         with:
-          name: obsidian-msvc
+          name: obsidian-msvc-win32
           path: |
             addons
             data
@@ -38,21 +36,17 @@ jobs:
             tools
             obsidian.exe
           retention-days: ${{env.RETENTION_DAYS}}
-  build-linux:
-      runs-on: ubuntu-latest
-      steps:
+  build-msvc-win64:
+    runs-on: windows-latest
+    steps:
       - uses: actions/checkout@v4
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libxft-dev libfontconfig1-dev
-      - name: Configure CMake Ubuntu
+      - name: Configure CMake MSVC 64-bit
         run: mkdir build && cd build && cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
-      - name: Build Ubuntu
+      - name: Build MSVC 64-bit
         run: cmake --build build --config ${{env.BUILD_TYPE}}
       - uses: actions/upload-artifact@v4
         with:
-          name: obsidian-ubuntu
+          name: obsidian-msvc-win64
           path: |
             addons
             data
@@ -65,30 +59,5 @@ jobs:
             scripts
             theme
             tools
-            obsidian
-          retention-days: ${{env.RETENTION_DAYS}}
-  build-macos:
-    runs-on: macos-latest
-    steps:
-    - uses: actions/checkout@v4
-    - name: Configure CMake MacOS
-      run: mkdir build && cd build && cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
-    - name: Build MacOS
-      run: cmake --build build --config ${{env.BUILD_TYPE}}
-    - uses: actions/upload-artifact@v4
-      with:
-        name: obsidian-macos
-        path: |
-          addons
-          data
-          engines
-          games
-          language
-          modules
-          ports
-          presets
-          scripts
-          theme
-          tools
-          obsidian
-        retention-days: ${{env.RETENTION_DAYS}}
+            obsidian.exe
+          retention-days: ${{env.RETENTION_DAYS}} 
