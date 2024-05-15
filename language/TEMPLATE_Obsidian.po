@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: Obsidian Level Maker\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-05-09 23:41+1000\n"
-"PO-Revision-Date: 2023-12-19 23:48-0000\n"
+"PO-Revision-Date: 2024-05-15 05:33-0000\n"
 "Last-Translator:  Dasho\n"
 "Language-Team: English\n"
 "Language: en_US\n"
@@ -33,131 +33,123 @@ msgstr ""
 msgid "Mix It Up"
 msgstr ""
 
-#: modules/chex1/ctl_chex.lua:31
+#: modules/ctl_doom.lua:30
 msgid "Default"
 msgstr ""
 
-#: scripts/level.lua:2781
-msgid ""
-"\n"
-"Warning: The game that you have selected is in an experimental state. WADs may not build successfully and certain gameplay features may not be implemented yet! To ignore this warning and continue generation for these games, check the \"Allow Partially Supported Games\" checkbox located under the Experimental tab.\n"
-"\n"
-"Use the tooltip for the \"Allow Partially Supported Games\" module to find the exact status for the game in question."
-msgstr ""
-
-#: scripts/level.lua:2880
+#: scripts/level.lua:2873
 msgid "Oblige V2"
 msgstr ""
 
-#: scripts/obsidian.lua:2452
+#: scripts/obsidian.lua:2462
 msgid "option: "
 msgstr ""
 
-#: scripts/obsidian.lua:2454
+#: scripts/obsidian.lua:2464
 msgid "comment: "
 msgstr ""
 
-#: scripts/obsidian.lua:2456
+#: scripts/obsidian.lua:2466
 msgid "engine: "
 msgstr ""
 
-#: scripts/obsidian.lua:2464
+#: scripts/obsidian.lua:2474
 msgid "game: "
 msgstr ""
 
-#: scripts/obsidian.lua:2472
+#: scripts/obsidian.lua:2482
 msgid "port: "
 msgstr ""
 
-#: scripts/obsidian.lua:2479
+#: scripts/obsidian.lua:2489
 msgid "values: "
 msgstr ""
 
-#: scripts/obsidian.lua:2485
+#: scripts/obsidian.lua:2495
 msgid "default: "
 msgstr ""
 
-#: scripts/obsidian.lua:2506
+#: scripts/obsidian.lua:2516
 msgid "randomize_group: "
 msgstr ""
 
-#: scripts/obsidian.lua:2540
+#: scripts/obsidian.lua:2550
 msgid "tooltip"
 msgstr ""
 
-#: scripts/obsidian.lua:2541
+#: scripts/obsidian.lua:2551
 msgid "engine"
 msgstr ""
 
-#: scripts/obsidian.lua:2543
+#: scripts/obsidian.lua:2553
 msgid "ALL"
 msgstr ""
 
-#: scripts/obsidian.lua:2555
+#: scripts/obsidian.lua:2565
 msgid "game"
 msgstr ""
 
-#: scripts/obsidian.lua:2569
+#: scripts/obsidian.lua:2579
 msgid "port"
 msgstr ""
 
-#: scripts/obsidian.lua:2584
+#: scripts/obsidian.lua:2594
 msgid "type"
 msgstr ""
 
-#: scripts/obsidian.lua:2585
+#: scripts/obsidian.lua:2595
 msgid "slider"
 msgstr ""
 
-#: scripts/obsidian.lua:2586
+#: scripts/obsidian.lua:2596
 msgid "values"
 msgstr ""
 
-#: scripts/obsidian.lua:2587
+#: scripts/obsidian.lua:2597
 msgid "min"
 msgstr ""
 
-#: scripts/obsidian.lua:2588
+#: scripts/obsidian.lua:2598
 msgid "max"
 msgstr ""
 
-#: scripts/obsidian.lua:2593
+#: scripts/obsidian.lua:2603
 msgid "default"
 msgstr ""
 
-#: scripts/obsidian.lua:2610
+#: scripts/obsidian.lua:2620
 msgid "boolean"
 msgstr ""
 
-#: scripts/obsidian.lua:2614
+#: scripts/obsidian.lua:2624
 msgid "choice"
 msgstr ""
 
-#: scripts/obsidian.lua:2626
+#: scripts/obsidian.lua:2636
 msgid "randomize_group"
 msgstr ""
 
-#: scripts/obsidian.lua:2655
+#: scripts/obsidian.lua:2665
 msgid ""
 "~~~~~~~ Making Levels ~~~~~~~\n"
 "\n"
 msgstr ""
 
-#: scripts/obsidian.lua:2674
+#: scripts/obsidian.lua:2684
 msgid "SLUMP"
 msgstr ""
 
-#: scripts/obsidian.lua:2685
+#: scripts/obsidian.lua:2695
 msgid "id Tech 0"
 msgstr ""
 
-#: scripts/obsidian.lua:2714
+#: scripts/obsidian.lua:2724
 msgid ""
 "~~~~~~~ Build Aborted! ~~~~~~~\n"
 "\n"
 msgstr ""
 
-#: scripts/obsidian.lua:2719
+#: scripts/obsidian.lua:2729
 msgid ""
 "~~~~~~ Finished Making Levels ~~~~~~\n"
 "\n"
@@ -292,20 +284,16 @@ msgstr ""
 msgid "id Tech 1"
 msgstr ""
 
-#: games/chex1/base.lua:48
-msgid "Chex Quest 1"
+#: games/chex1/base.lua:37
+msgid "Chex 3 Vanilla"
 msgstr ""
 
-#: games/chex1/themes.lua:1264
+#: games/chex1/themes.lua:551
 msgid "Bazoik"
 msgstr ""
 
-#: games/chex1/themes.lua:1272
-msgid "Chextropolis"
-msgstr ""
-
-#: games/chex1/themes.lua:1280
-msgid "Villa Chex"
+#: games/chex1/themes.lua:559
+msgid "Chex Labs"
 msgstr ""
 
 #: games/doom/base.lua:51
@@ -352,16 +340,24 @@ msgstr ""
 msgid "Egypt"
 msgstr ""
 
-#: games/hacx/base.lua:50
+#: games/hacx/base.lua:38
 msgid "HacX 1.2"
 msgstr ""
 
-#: games/hacx/themes.lua:673
+#: games/hacx/themes.lua:548
 msgid "Prison"
 msgstr ""
 
-#: games/hacx/themes.lua:681
+#: games/hacx/themes.lua:556
 msgid "Digi-Ota"
+msgstr ""
+
+#: games/harmony/base.lua:16
+msgid "Harmony Compat"
+msgstr ""
+
+#: games/harmony/themes.lua:354
+msgid "Amazon Base"
 msgstr ""
 
 #: games/heretic/base.lua:52
@@ -392,6 +388,26 @@ msgstr ""
 msgid "Noah's Ark 3D"
 msgstr ""
 
+#: games/obc/base.lua:40
+msgid "Op. Body Count"
+msgstr ""
+
+#: games/rekkr/base.lua:38
+msgid "REKKR"
+msgstr ""
+
+#: games/rekkr/themes.lua:361
+msgid "Rampart"
+msgstr ""
+
+#: games/strife/base.lua:44
+msgid "Strife"
+msgstr ""
+
+#: games/strife/themes.lua:363
+msgid "Town"
+msgstr ""
+
 #: games/wolf/base.lua:41
 msgid "Wolfenstein 3D"
 msgstr ""
@@ -409,7 +425,7 @@ msgid "Options for alternate means of determining the layout of a level."
 msgstr ""
 
 #: modules/alt_shape_grammars.lua:52
-msgid "The Backhalls (WIP)"
+msgid "The Backhalls"
 msgstr ""
 
 #: modules/alt_shape_grammars.lua:54
@@ -437,26 +453,14 @@ msgid "It's like that movie Cube, but with .5 less dimensions (if you're a contr
 msgstr ""
 
 #: modules/alt_shape_grammars.lua:82
-msgid "Eternal Entryway (WIP)"
-msgstr ""
-
-#: modules/alt_shape_grammars.lua:89
-msgid "Sets chance of levels using the Eternal Entryway shape grammar."
-msgstr ""
-
-#: modules/alt_shape_grammars.lua:90
-msgid "It's MAP01. This is an example of a non-traditional use of shape grammar to try to force a level layout into a certain shape."
-msgstr ""
-
-#: modules/alt_shape_grammars.lua:97
 msgid "The OG"
 msgstr ""
 
-#: modules/alt_shape_grammars.lua:104
+#: modules/alt_shape_grammars.lua:89
 msgid "Sets chance of levels using the OG shape grammar."
 msgstr ""
 
-#: modules/alt_shape_grammars.lua:105
+#: modules/alt_shape_grammars.lua:90
 msgid "These are the shapes from Oblige 7.45, one of the earliest examples of the shape grammar system."
 msgstr ""
 
@@ -466,129 +470,6 @@ msgstr ""
 
 #: modules/build_nodes.lua:29
 msgid "Use Obsidian's internal nodebuilder to add GL Nodes to the generated mapset."
-msgstr ""
-
-#: modules/chex1/ctl_chex.lua:60
-msgid "Chex Quest 1 Monster Control"
-msgstr ""
-
-#: modules/chex1/ctl_chex.lua:77
-msgid "Commonus"
-msgstr ""
-
-#: modules/chex1/ctl_chex.lua:84
-msgid "Control the amount of Commoni."
-msgstr ""
-
-#: modules/chex1/ctl_chex.lua:85
-msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
-msgstr ""
-
-#: modules/chex1/ctl_chex.lua:91
-msgid "Bipedicus"
-msgstr ""
-
-#: modules/chex1/ctl_chex.lua:98
-msgid "Control the amount of Bipedici."
-msgstr ""
-
-#: modules/chex1/ctl_chex.lua:105
-msgid "Armored Bipedicus"
-msgstr ""
-
-#: modules/chex1/ctl_chex.lua:112
-msgid "Control the amount of Armored Bipedici."
-msgstr ""
-
-#: modules/chex1/ctl_chex.lua:119
-msgid "Cycloptis"
-msgstr ""
-
-#: modules/chex1/ctl_chex.lua:126
-msgid "Control the amount of Cyclopti."
-msgstr ""
-
-#: modules/chex1/ctl_chex.lua:138
-msgid "Normal"
-msgstr ""
-
-#: modules/chex1/ctl_chex.lua:139
-msgid "Vanilla"
-msgstr ""
-
-#: modules/chex1/ctl_chex.lua:140
-msgid "NONE"
-msgstr ""
-
-#: modules/chex1/ctl_chex.lua:180
-msgid "Chex Quest 1 Weapon Control"
-msgstr ""
-
-#: modules/chex1/ctl_chex.lua:197
-msgid "Super Bootspork"
-msgstr ""
-
-#: modules/chex1/ctl_chex.lua:204
-msgid "Control the likelihood of finding the Super Bootspork."
-msgstr ""
-
-#: modules/chex1/ctl_chex.lua:205
-msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
-msgstr ""
-
-#: modules/chex1/ctl_chex.lua:211
-msgid "Large Zorcher"
-msgstr ""
-
-#: modules/chex1/ctl_chex.lua:218
-msgid "Control the amount of Large Zorchers."
-msgstr ""
-
-#: modules/chex1/ctl_chex.lua:225
-msgid "Rapid Zorcher"
-msgstr ""
-
-#: modules/chex1/ctl_chex.lua:232
-msgid "Control the amount of Rapid Zorchers."
-msgstr ""
-
-#: modules/chex1/ctl_chex.lua:239
-msgid "Zorch Propulsor"
-msgstr ""
-
-#: modules/chex1/ctl_chex.lua:246
-msgid "Control the amount of Zorch Propulsors."
-msgstr ""
-
-#: modules/chex1/ctl_chex.lua:253
-msgid "Phasing Zorcher"
-msgstr ""
-
-#: modules/chex1/ctl_chex.lua:260
-msgid "Control the amount of Phasing Zorchers."
-msgstr ""
-
-#: modules/chex1/ctl_chex.lua:267
-msgid "LAZ Device"
-msgstr ""
-
-#: modules/chex1/ctl_chex.lua:274
-msgid "Control the amount of LAZ Devices."
-msgstr ""
-
-#: modules/chex1/ctl_chex.lua:281
-msgid "Weapon Preferences"
-msgstr ""
-
-#: modules/chex1/ctl_chex.lua:283
-msgid ""
-"Alters selection of weapons that are prefered to show up depending on enemy palette for a chosen map.\n"
-"\n"
-"Normal: Monsters have weapon preferences. Stronger weapons and ammo are more likely to appear directly with stronger enemies.\n"
-"\n"
-"Vanilla: Vanilla Oblige-style preferences. Increases Zorch Propulsors if the map has more Flem Mines. \n"
-"\n"
-"NONE: No preferences at all. For those who like to live life dangerously with Super Cyclopti and only Super Bootsporks."
 msgstr ""
 
 #: modules/compress_output.lua:21
@@ -609,6 +490,10 @@ msgstr ""
 
 #: modules/ctl_doom.lua:84
 msgid "Control the amount of Zombiemen."
+msgstr ""
+
+#: modules/ctl_doom.lua:85
+msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
 msgstr ""
 
 #: modules/ctl_doom.lua:91
@@ -747,6 +632,18 @@ msgstr ""
 msgid "Control the amount of Spider Masterminds."
 msgstr ""
 
+#: modules/ctl_doom.lua:334
+msgid "Normal"
+msgstr ""
+
+#: modules/ctl_doom.lua:335
+msgid "Vanilla"
+msgstr ""
+
+#: modules/ctl_doom.lua:336
+msgid "NONE"
+msgstr ""
+
 #: modules/ctl_doom.lua:403
 msgid "Doom Weapon Control"
 msgstr ""
@@ -757,6 +654,10 @@ msgstr ""
 
 #: modules/ctl_doom.lua:427
 msgid "Control the likelihood of finding a Chainsaw."
+msgstr ""
+
+#: modules/ctl_doom.lua:428
+msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
 msgstr ""
 
 #: modules/ctl_doom.lua:434
@@ -805,6 +706,10 @@ msgstr ""
 
 #: modules/ctl_doom.lua:511
 msgid "Control the amount of BFG 9000s."
+msgstr ""
+
+#: modules/ctl_doom.lua:518
+msgid "Weapon Preferences"
 msgstr ""
 
 #: modules/ctl_doom.lua:520
@@ -1198,30 +1103,19 @@ msgstr ""
 msgid "Replaces Obsidian's default texture with a high visibility version for easier detection of broken level geometry or missing textures."
 msgstr ""
 
-#: modules/debugger.lua:242
-msgid "Allow Partially Supported Games"
-msgstr ""
-
-#: modules/debugger.lua:246
-msgid ""
-"The following games are in an experimental status, meaning that they may have errors when building levels, or support for certain gameplay features has not been implemented yet:\n"
-"\n"
-"Chex Quest 1: SLUMP/Vanilla Port support only"
-msgstr ""
-
-#: modules/debugger.lua:254
+#: modules/debugger.lua:244
 msgid "Pickup Options"
 msgstr ""
 
-#: modules/debugger.lua:261
+#: modules/debugger.lua:251
 msgid "Experimental options related to pickups (items, weapons, etc)"
 msgstr ""
 
-#: modules/debugger.lua:272
+#: modules/debugger.lua:262
 msgid "Alternate Item Quantities"
 msgstr ""
 
-#: modules/debugger.lua:275
+#: modules/debugger.lua:265
 msgid "Scales item distribution with map size"
 msgstr ""
 
@@ -1638,185 +1532,6 @@ msgstr ""
 
 #: modules/gzdoom_marine_closet.lua:1845
 msgid "If enabled, allowed marine closets to be built in secret rooms."
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:61
-msgid "HacX 1.2 Monster Control"
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:77
-msgid "Thug"
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:84
-msgid "Control the amount of Thugs."
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:91
-msgid "Android"
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:98
-msgid "Control the amount of Androids."
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:105
-msgid "Stealth Buzzer"
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:112
-msgid "Control the amount of Stealth Buzzers."
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:119
-msgid "Roaming Mine"
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:126
-msgid "Control the amount of Roaming Mines."
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:133
-msgid "Phage"
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:140
-msgid "Control the amount of Phages."
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:147
-msgid "Buzzer"
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:154
-msgid "Control the amount of Buzzers."
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:161
-msgid "ICE"
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:168
-msgid "Control the amount of ICEs."
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:175
-msgid "D-Man"
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:182
-msgid "Control the amount of D-Men."
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:189
-msgid "Monstruct"
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:196
-msgid "Control the amount of Monstructs."
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:203
-msgid "Majong 7"
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:210
-msgid "Control the amount of Majong 7s."
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:217
-msgid "Terminatrix"
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:224
-msgid "Control the amount of Terminatrixes."
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:231
-msgid "Thorn"
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:238
-msgid "Control the amount of Thorns."
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:245
-msgid "Mecha Maniac"
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:252
-msgid "Control the amount of Mecha Maniacs."
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:326
-msgid "HacX 1.2 Weapon Control"
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:343
-msgid "Hoig Reznator"
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:350
-msgid "Control the likelihood of finding the Hoig Reznator."
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:357
-msgid "Tazer"
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:364
-msgid "Control the amount of Tazers."
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:371
-msgid "Cryogun"
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:378
-msgid "Control the amount of Cryoguns."
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:385
-msgid "Uzi"
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:392
-msgid "Control the amount of Uzis."
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:399
-msgid "Photon 'Zooka"
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:406
-msgid "Control the amount of Photon 'Zookas."
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:413
-msgid "Anti-Gun"
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:420
-msgid "Control the amount of Anti-Guns."
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:427
-msgid "Nuker"
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:434
-msgid "Control the amount of Nukers."
-msgstr ""
-
-#: modules/hacx/ctl_hacx.lua:443
-msgid ""
-"Alters selection of weapons that are prefered to show up depending on enemy palette for a chosen map.\n"
-"\n"
-"Normal: Monsters have weapon preferences. Stronger weapons and ammo are more likely to appear directly with stronger enemies.\n"
-"\n"
-"Vanilla: Vanilla Oblige-style preferences. Increases 'Zookas if the map has more ICEs, D-Mans, or roaming mines. \n"
-"\n"
-"NONE: No preferences at all. For those who like to live life dangerously with ICEs and only 'Zookas."
 msgstr ""
 
 #: modules/heretic/ctl_heretic.lua:59
@@ -4464,30 +4179,54 @@ msgid "Populates the level with only SS troopers. This may expand to include pin
 msgstr ""
 
 #: modules/useful_links.lua:21
-msgid "Addons"
+msgid "Game WADs (Libre/Freeware)"
 msgstr ""
 
 #: modules/useful_links.lua:30
-msgid "Mobreck's MBF21 Expanded DOOM Beastiary"
+msgid "Freedoom (Doom 1/2 Replacement)"
 msgstr ""
 
 #: modules/useful_links.lua:35
-msgid "xBEEKAYRANDEEx's DoomRLA Pickups"
+msgid "Blasphemer (Heretic Replacement)"
 msgstr ""
 
 #: modules/useful_links.lua:40
-msgid "Heathen's Maze For Heretic - Craneo"
-msgstr ""
-
-#: modules/useful_links.lua:45
-msgid "Simon-v's Jukebox"
+msgid "Chex Quest 3: Vanilla Edition"
 msgstr ""
 
 #: modules/useful_links.lua:50
+msgid "Harmony Compatible"
+msgstr ""
+
+#: modules/useful_links.lua:63
+msgid "Obsidian Addons"
+msgstr ""
+
+#: modules/useful_links.lua:72
+msgid "Lobo's EDGE-Classic Enhancements"
+msgstr ""
+
+#: modules/useful_links.lua:77
+msgid "Mobreck's MBF21 Expanded DOOM Beastiary"
+msgstr ""
+
+#: modules/useful_links.lua:82
+msgid "xBEEKAYRANDEEx's DoomRLA Pickups"
+msgstr ""
+
+#: modules/useful_links.lua:87
+msgid "Heathen's Maze For Heretic - Craneo"
+msgstr ""
+
+#: modules/useful_links.lua:92
+msgid "Simon-v's Jukebox"
+msgstr ""
+
+#: modules/useful_links.lua:97
 msgid "SilentZorah's Jukebox - Craneo"
 msgstr ""
 
-#: modules/useful_links.lua:55
+#: modules/useful_links.lua:102
 msgid "MsrSgtShooterPerson's Delta Resource Pack"
 msgstr ""
 
@@ -4846,56 +4585,56 @@ msgstr ""
 msgid "GZDoom"
 msgstr ""
 
-#: scripts/defs.lua:67
+#: scripts/defs.lua:68
 msgid "Original"
 msgstr ""
 
-#: scripts/defs.lua:81
+#: scripts/defs.lua:83
 msgid "Jumbled Up"
 msgstr ""
 
-#: scripts/defs.lua:88
+#: scripts/defs.lua:91
 msgid "Bit Mixed"
 msgstr ""
 
-#: scripts/defs.lua:103
+#: scripts/defs.lua:114
 msgid "Single Level"
 msgstr ""
 
-#: scripts/defs.lua:104
+#: scripts/defs.lua:115
 msgid "A Few Maps"
 msgstr ""
 
-#: scripts/defs.lua:105
+#: scripts/defs.lua:116
 msgid "One Episode"
 msgstr ""
 
-#: scripts/defs.lua:106
+#: scripts/defs.lua:117
 msgid "Full Game"
 msgstr ""
 
-#: scripts/obsidian.lua:2358
+#: scripts/obsidian.lua:2364
 msgid ""
 "Choose which engine to build maps for:\n"
 "  id Tech 0: Wolfenstein 3D and similar games\n"
 "  id Tech 1: Doom and similar games\n"
 msgstr ""
 
-#: scripts/obsidian.lua:2369
+#: scripts/obsidian.lua:2375
 msgid "Choose which game to build maps for."
 msgstr ""
 
-#: scripts/obsidian.lua:2389
+#: scripts/obsidian.lua:2399
 msgid ""
 "Choose which port to build maps for.\n"
 "  Vanilla is the only option for id Tech 0; the remaining options are for id Tech 1.\n"
 msgstr ""
 
-#: scripts/obsidian.lua:2403
+#: scripts/obsidian.lua:2413
 msgid "Choose how many levels to create."
 msgstr ""
 
-#: scripts/obsidian.lua:2416
+#: scripts/obsidian.lua:2426
 msgid ""
 "The following values are game-specific:\n"
 "  Ultimate Doom/Doom 1: deimos,flesh\n"
@@ -5687,15 +5426,15 @@ msgstr ""
 msgid "Game: "
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:84
+#: source_files/obsidian_main/ui_game.cc:87
 msgid "Port: "
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:97
+#: source_files/obsidian_main/ui_game.cc:100
 msgid "Length: "
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:110
+#: source_files/obsidian_main/ui_game.cc:113
 msgid "Theme: "
 msgstr ""
 
@@ -5707,22 +5446,65 @@ msgstr ""
 msgid "Quit"
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:196
+#: source_files/obsidian_main/ui_game.cc:172
+msgid "Game"
+msgstr ""
+
+#: source_files/obsidian_main/ui_game.cc:182
+msgid ""
+"Available Games:\n"
+"\n"
+"id Tech 0:\n"
+"\n"
+"Wolfenstein 3D\n"
+"\n"
+"Spear of Destiny\n"
+"\n"
+"Noah's Ark 3D\n"
+"\n"
+"Operation Body Count: Note, this game is less stable than its other id Tech 0 counterparts!\n"
+"\n"
+"id Tech 1:\n"
+"\n"
+"Doom 2\n"
+"\n"
+"Doom\n"
+"\n"
+"The Ultimate Doom\n"
+"\n"
+"Plutonia: Part of Final Doom\n"
+"\n"
+"TNT: Evilution: Part of Final Doom\n"
+"\n"
+"Heretic\n"
+"\n"
+"Chex 3 Vanilla: Unofficial repackaging of Chex Quest 3 for non-ZDoom derived engines. SLUMP support only.\n"
+"\n"
+"HacX 1.2: SLUMP support only.\n"
+"\n"
+"REKKR: SLUMP support only.\n"
+"\n"
+"Harmony Compat: Harmony re-release for non-ZDoom derived engines. Must be run as a PWAD in conjuction with the Doom 2/Freedoom 2 IWAD. SLUMP support only.\n"
+"\n"
+"Strife: SLUMP support only."
+msgstr ""
+
+#: source_files/obsidian_main/ui_game.cc:212
 msgid "Engine"
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:206
+#: source_files/obsidian_main/ui_game.cc:222
 msgid ""
 "id Tech 0: Powered Wolfenstein-3D and similar games\n"
 "\n"
 "id Tech 1: Powered Doom, Doom 2, Heretic, etc"
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:212
+#: source_files/obsidian_main/ui_game.cc:228
 msgid "Port"
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:222
+#: source_files/obsidian_main/ui_game.cc:238
 msgid ""
 "Available Ports:\n"
 "\n"
@@ -5741,11 +5523,11 @@ msgid ""
 "EDGE-Classic: Boom-compatible, plus UDMF support, additional specials and other advanced features."
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:228
+#: source_files/obsidian_main/ui_game.cc:244
 msgid "Length"
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:238
+#: source_files/obsidian_main/ui_game.cc:254
 msgid ""
 "Available Game Lengths:\n"
 "\n"
@@ -5756,27 +5538,6 @@ msgid ""
 "One Episode: The length of an episode in the original game. For Doom 2 and other games which normally doesn't have episodes, this number is determined by Obsidian.\n"
 "\n"
 "Full Game: The length of a full game in the original program."
-msgstr ""
-
-#: source_files/obsidian_main/ui_game.cc:244
-msgid "Theme"
-msgstr ""
-
-#: source_files/obsidian_main/ui_game.cc:255
-msgid ""
-"Available Themes:\n"
-"\n"
-"Original: Follows the theme progression of the original game.\n"
-"\n"
-"Episodic: Each episode follows a single randomly chosen theme.\n"
-"\n"
-"Bit Mixed: Theme will change every few levels.\n"
-"\n"
-"Jumbled Up: Level themes are purely random.\n"
-"\n"
-"Psychedelic: Trippy.\n"
-"\n"
-"Other themes listed are game-specific."
 msgstr ""
 
 #: source_files/obsidian_main/ui_module.cc:320
