@@ -1,18 +1,8 @@
 --------------------------------------------------------------------
---  CHEX1 RESOURCES / GRAFIX
---------------------------------------------------------------------
---
---  Copyright (C) 2006-2016 Andrew Apted
---  Copyright (C)      2011 Reisal
---
---  This program is free software; you can redistribute it and/or
---  modify it under the terms of the GNU General Public License
---  as published by the Free Software Foundation; either version 2
---  of the License, or (at your option) any later version.
---
+--  HARMONY RESOURCES / GRAFIX
 --------------------------------------------------------------------
 
-CHEX1.PALETTES =
+HARMONY.PALETTES = -- Update with correct colors - Dasho
 {
   normal =
   {
@@ -71,35 +61,31 @@ CHEX1.PALETTES =
   }
 }
 
-
---------------------------------------------------------------------
-
-CHEX1.LEVEL_GFX_COLORS =
+-- These are the only tracks used in the base Harmony IWAD (this does include the title music)
+HARMONY.MUSIC_LUMPS = 
 {
-  gold   = { 0,47,44, 167,166,165,164,163,162,161,160, 225 },
-  silver = { 0,246,243,240, 205,202,200,198, 196,195,194,193,192, 4 },
-  bronze = { 0,2, 191,188, 235,232, 221,218,215,213,211,209 },
-  iron   = { 0,7,5, 111,109,107,104,101,98,94,90,86,81 },
-
-  red    = { 0,2, 191,189,187,185,183,181,179 },
-  black  = { 0,0,0,0, 0,0,0,0 }
+  "D_RUNNIN",
+  "D_STALKS",
+  "D_DM2TTL",
 }
 
-
-function CHEX1.make_cool_gfx()
+function HARMONY.make_cool_gfx()
   local GREEN =
   {
-    0, 7, 127, 126, 125, 124, 123, 122, 120, 118, 116, 113
+    0, 7, 127, 126, 125, 124, 123,
+    122, 120, 118, 116, 113
   }
 
   local BRONZE_2 =
   {
-    0, 2, 191, 189, 187, 235, 233, 223, 221, 219, 216, 213, 210
+    0, 2, 191, 189, 187, 235, 233,
+    223, 221, 219, 216, 213, 210
   }
 
   local RED =
   {
-    0, 2, 188,185,184,183,182,181, 180,179,178,177,176,175,174,173
+    0, 2, 188,185,184,183,182,181,
+    180,179,178,177,176,175,174,173
   }
 
   local GOLD = { 0,47,44, 167,166,165,164,163,162,161,160, 225 }
@@ -119,58 +105,23 @@ function CHEX1.make_cool_gfx()
   gui.set_colormap(3, colmaps[3])
   gui.set_colormap(4, colmaps[4])
 
-  -- patches : SP_ROCK1, SP_ROCK2, MIDBRN1, NUKESLAD
-  gui.wad_logo_gfx("WALL63_1", "p", "BOLT",   128,128, 2)
-  gui.wad_logo_gfx("WALL63_2", "p", "PILL",   128,128, 1)
-  gui.wad_logo_gfx("DOOR12_1", "p", "RELIEF",  64,128, 3)
-  gui.wad_logo_gfx("WALL57_1", "p", "CARVE",   64,128, 4)
+--[[ FIXME
+
+  -- patches : HW313, HW316, HW329, HW309
+  gui.wad_logo_gfx("RW23_1", "p", "PILL",   128,128, 1)
+  gui.wad_logo_gfx("RW25_3", "p", "BOLT",   128,128, 2)
+  gui.wad_logo_gfx("RW33_2", "p", "RELIEF", 128,128, 3)
+  gui.wad_logo_gfx("RW24_1", "p", "CARVE",  128,128, 4)
 
   -- flats
   gui.wad_logo_gfx("O_PILL",   "f", "PILL",   64,64, 1)
   gui.wad_logo_gfx("O_BOLT",   "f", "BOLT",   64,64, 2)
   gui.wad_logo_gfx("O_RELIEF", "f", "RELIEF", 64,64, 3)
   gui.wad_logo_gfx("O_CARVE",  "f", "CARVE",  64,64, 4)
+--]]
 end
 
 
-function CHEX1.make_level_gfx(LEVEL)
-  -- decide color set
-  if not GAME.level_gfx_colors then
-    local kind = rand.key_by_probs(
-    {
-      gold=12, silver=3, bronze=8, iron=10
-    })
-
-    GAME.level_gfx_colors = assert(CHEX1.LEVEL_GFX_COLORS[kind])
-  end
-
-  gui.set_colormap(1, GAME.level_gfx_colors)
-
-  if LEVEL.patch and LEVEL.description then
-    gui.wad_name_gfx(LEVEL.patch, LEVEL.description, 1)
-  end
-end
-
-
-function CHEX1.make_episode_gfx()
-  local colors = assert(CHEX1.LEVEL_GFX_COLORS["red"])
-
-  gui.set_colormap(2, colors)
-
-  for _,EPI in pairs(GAME.episodes) do
-    if EPI.name_patch and EPI.description then
-      gui.wad_name_gfx(EPI.name_patch, EPI.description, 2)
-    end
-  end
-end
-
-
-function CHEX1.end_level(LEVEL)
-  CHEX1.make_level_gfx(LEVEL)
-end
-
-
-function CHEX1.all_done()
-  CHEX1.make_cool_gfx()
-  CHEX1.make_episode_gfx()
+function HARMONY.all_done()
+  HARMONY.make_cool_gfx()
 end

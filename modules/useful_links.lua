@@ -16,9 +16,9 @@
 --
 ----------------------------------------------------------------
 
-OB_MODULES["links_addons"] =
+OB_MODULES["links_iwads"] =
 {
-  label = _("Addons"),
+  label = _("Game WADs (Libre/Freeware)"),
 
   where = "links",
   priority = 101,
@@ -26,9 +26,56 @@ OB_MODULES["links_addons"] =
   options =
   {
     { 
-        name="url_mobreck_mbf21",     
-        label=_("Mobreck's MBF21 Expanded DOOM Beastiary"),
-        url="https://www.moddb.com/mods/the-mbf21-expanded-doom-bestiary-project/downloads/medb-addon-for-obsidian",    
+      name="url_freedoom",     
+      label=_("Freedoom (Doom 1/2 Replacement)"),
+      url="https://freedoom.github.io/download.html",
+    },
+    { 
+      name="url_blasphemer",     
+      label=_("Blasphemer (Heretic Replacement)"),
+      url="https://github.com/Catoptromancy/blasphemer",    
+    },
+    { 
+      name="url_cq3_vanilla",     
+      label=_("Chex Quest 3: Vanilla Edition"),
+      url="https://melodic-spaceship.neocities.org/chex3v",    
+    },
+    { 
+      name="url_hacx",     
+      label=_("HacX 1.2"),
+      url="https://www.doomworld.com/idgames/themes/hacx/hacx12",    
+    },
+    { 
+      name="url_harmony",     
+      label=_("Harmony Compatible"),
+      url="https://www.doomworld.com/idgames/levels/doom2/Ports/g-i/harmonyc",    
+    },
+    { 
+      name="url_rekkr",     
+      label=_("REKKR"),
+      url="https://www.doomworld.com/idgames/levels/doom/megawads/rekkr",    
+    },
+  }
+}
+
+OB_MODULES["links_addons"] =
+{
+  label = _("Obsidian Addons"),
+
+  where = "links",
+  priority = 101,
+
+  options =
+  {
+    { 
+      name="url_edge_classic_pack",     
+      label=_("Lobo's EDGE-Classic Enhancements"),
+      url="https://obsidian-level-maker.github.io/index.html#_addons",
+    },
+    { 
+      name="url_mobreck_mbf21",     
+      label=_("Mobreck's MBF21 Expanded DOOM Beastiary"),
+      url="https://www.moddb.com/mods/the-mbf21-expanded-doom-bestiary-project/downloads/medb-addon-for-obsidian",    
     },
     { 
       name="url_doomrla_pickups",     

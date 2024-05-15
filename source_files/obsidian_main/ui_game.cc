@@ -77,6 +77,9 @@ UI_Game::UI_Game(int X, int Y, int W, int H) : Fl_Group(X, Y, W, H) {
     game->textcolor(FONT2_COLOR);
     game->selection_color(SELECTION);
     game->callback(callback_Game, this);
+    game_help = new UI_HelpLink(cx + cw, cy, W * 0.10, ch);
+    game_help->labelfont(font_style);
+    game_help->callback(callback_GameHelp, this);
 
     cy += y_step;
 
@@ -113,9 +116,6 @@ UI_Game::UI_Game(int X, int Y, int W, int H) : Fl_Group(X, Y, W, H) {
     theme->textcolor(FONT2_COLOR);
     theme->selection_color(SELECTION);
     theme->callback(callback_Theme, this);
-    theme_help = new UI_HelpLink(cx + cw, cy, W * 0.10, ch);
-    theme_help->labelfont(font_style);
-    theme_help->callback(callback_ThemeHelp, this);
 
     cy += y_step;
 
@@ -165,6 +165,22 @@ void UI_Game::callback_Game(Fl_Widget *w, void *data) {
     UI_Game *that = (UI_Game *)data;
 
     ob_set_config("game", that->game->GetID());
+}
+
+void UI_Game::callback_GameHelp(Fl_Widget *w, void *data) {
+    fl_cursor(FL_CURSOR_DEFAULT);
+    Fl_Window *win = new Fl_Window(640, 480, _("Game"));
+    Fl_Text_Buffer *buff = new Fl_Text_Buffer();
+    Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
+    disp->buffer(buff);
+    disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
+    win->resizable(*disp);
+    win->hotspot(0, 0, 0);
+    win->set_modal();
+    win->show();
+    // clang-format off
+    buff->text(_("Available Games:\n\nid Tech 0:\n\nWolfenstein 3D\n\nSpear of Destiny\n\nNoah's Ark 3D\n\nOperation Body Count: Note, this game is less stable than its other id Tech 0 counterparts!\n\nid Tech 1:\n\nDoom 2\n\nDoom\n\nThe Ultimate Doom\n\nPlutonia: Part of Final Doom\n\nTNT: Evilution: Part of Final Doom\n\nHeretic\n\nChex 3 Vanilla: Unofficial repackaging of Chex Quest 3 for non-ZDoom derived engines. SLUMP support only.\n\nHacX 1.2: SLUMP support only.\n\nREKKR: SLUMP support only.\n\nHarmony Compat: Harmony re-release for non-ZDoom derived engines. Must be run as a PWAD in conjuction with the Doom 2/Freedoom 2 IWAD. SLUMP support only.\n\nStrife: SLUMP support only."));
+    // clang-format on
 }
 
 void UI_Game::callback_Port(Fl_Widget *w, void *data) {
@@ -236,23 +252,6 @@ void UI_Game::callback_LengthHelp(Fl_Widget *w, void *data) {
     win->show();
     // clang-format off
     buff->text(_("Available Game Lengths:\n\nSingle Level: One map.\n\nA Few Maps: Four maps.\n\nOne Episode: The length of an episode in the original game. For Doom 2 and other games which normally doesn't have episodes, this number is determined by Obsidian.\n\nFull Game: The length of a full game in the original program."));
-    // clang-format on
-}
-
-void UI_Game::callback_ThemeHelp(Fl_Widget *w, void *data) {
-    fl_cursor(FL_CURSOR_DEFAULT);
-    Fl_Window *win = new Fl_Window(640, 480, _("Theme"));
-    Fl_Text_Buffer *buff = new Fl_Text_Buffer();
-    Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
-    disp->buffer(buff);
-    disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
-    win->resizable(*disp);
-    win->hotspot(0, 0, 0);
-    win->set_modal();
-    win->show();
-    // clang-format off
-    buff->text(
-        _("Available Themes:\n\nOriginal: Follows the theme progression of the original game.\n\nEpisodic: Each episode follows a single randomly chosen theme.\n\nBit Mixed: Theme will change every few levels.\n\nJumbled Up: Level themes are purely random.\n\nPsychedelic: Trippy.\n\nOther themes listed are game-specific."));
     // clang-format on
 }
 

@@ -23,29 +23,18 @@ CHEX1 = { }
 
 ----------------------------------------------------------------
 gui.import("params")
-gui.import("entities")
-gui.import("monsters")
-gui.import("pickups")
-gui.import("weapons")
-gui.import("materials")
 gui.import("themes")
-gui.import("levels")
 gui.import("resources")
-gui.import("vanilla_mats")
 gui.import("names")
 ----------------------------------------------------------------
 
 function CHEX1.all_done()
-	if ob_match_port("advanced") then
-	  local wad_file = "games/chex1/data/CQ1_EXIT.wad"
-	  gui.wad_merge_sections(wad_file)
-	end
 	gui.wad_insert_file("data/endoom/ENDOOM.bin", "ENDOOM")
 end
 
 OB_GAMES["chex1"] =
 {
-	label = _("Chex Quest 1"),
+	label = _("Chex 3 Vanilla"),
 	priority = 93,
 	
 	engine = "idtech_1",
@@ -63,7 +52,6 @@ OB_GAMES["chex1"] =
 	hooks =
 	{
 		slump_setup = CHEX1.slump_setup,
-		get_levels = CHEX1.get_levels,
 		all_done = CHEX1.all_done
 	},
 }

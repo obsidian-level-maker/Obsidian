@@ -891,10 +891,12 @@ function Grower_calc_rule_probs(LEVEL)
   -- outdoor openness pass
   if LEVEL.outdoor_openness then
     for _,rule in pairs(SHAPE_GRAMMAR) do
-      if string.match(rule.name, "COLONNADE") or
-      string.match(rule.name, "PILLAR") then
-        rule.env = "building"
-        rule.outdoor_openness = "low"
+      if type(rule) == "table" then
+        if string.match(rule.name, "COLONNADE") or
+        string.match(rule.name, "PILLAR") then
+          rule.env = "building"
+          rule.outdoor_openness = "low"
+        end
       end
     end
   end

@@ -569,14 +569,12 @@ function ob_update_ports()
     if OB_CONFIG.engine == "idtech_0" then
       OB_CONFIG.port = "vanilla"
     elseif OB_CONFIG.engine == "idtech_1" then
-      if OB_CONFIG.game == "chex1" then  -- Ugh
+      if OB_CONFIG.game == "chex1" or OB_CONFIG.game == "hacx" or OB_CONFIG.game == "harmony" or OB_CONFIG.game == "strife" or OB_CONFIG.game == "rekkr" then  -- Ugh
         OB_CONFIG.port = "limit_enforcing"
       else
         OB_CONFIG.port = "zdoom"
       end
-    elseif OB_CONFIG.engine == "idtech_2" then
-      OB_CONFIG.port = "vanilla"
-    else
+    else -- shouldn't get here - Dasho
       OB_CONFIG.port = "vanilla"
     end
     gui.set_button("port", OB_CONFIG.port)
@@ -610,7 +608,11 @@ function ob_update_themes()
     end
 
     -- otherwise revert to As Original
-    OB_CONFIG.theme = "original",
+    if OB_CONFIG.port == "limit_enforcing" then
+      OB_CONFIG.theme = "default"
+    else
+      OB_CONFIG.theme = "original"
+    end
     gui.set_button("theme", OB_CONFIG.theme)
   end
 end
@@ -1894,7 +1896,7 @@ function ob_default_filename()
   
   -- I don't like doing this, but I'd rather not try to reorder
   -- the normal GAME table merge stuff - Dasho
-  if ob_match_game({game = {wolf=1, spear=1, noah=1}}) then
+  if ob_match_game({game = {wolf=1, spear=1, noah=1, obc=1}}) then
     return "unused.filename"
   else
     local name_tab = {}
@@ -1904,8 +1906,14 @@ function ob_default_filename()
       name_tab = DOOM.NAMES
     elseif OB_CONFIG.game == "hacx" then
       name_tab = HACX.NAMES
+    elseif OB_CONFIG.game == "harmony" then
+      name_tab = HARMONY.NAMES
     elseif OB_CONFIG.game == "heretic" then
       name_tab = HERETIC.NAMES
+    elseif OB_CONFIG.game == "strife" then
+      name_tab = STRIFE.NAMES
+    elseif OB_CONFIG.game == "rekkr" then
+      name_tab = REKKR.NAMES
     end
     Naming_init(name_tab)
   end
@@ -1935,8 +1943,6 @@ function ob_default_filename()
     elseif OB_CONFIG.length == "episode" then
       if ob_match_game({game = {doom2=1,tnt=1,plutonia=1,hacx=1}}) then
         levelcount = "11"
-      elseif OB_CONFIG.game == "chex1" then
-        levelcount = "5"
       else
         levelcount = "9"
       end
@@ -2201,7 +2207,7 @@ function ob_build_setup()
     RANDOMIZE_GROUPS = gui.get_batch_randomize_groups()
   end
 
-  if not ob_match_game({game = {wolf=1,spear=1,noah=1}}) then
+  if not ob_match_game({game = {wolf=1,spear=1,noah=1,obc=1}}) then
     Naming_init(GAME.NAMES)
   end
 
@@ -2378,10 +2384,14 @@ local function ob_get_module_refs()
         "tnt",
         "plutonia",
         "hacx",
+        "harmony",
         "heretic",
+        "rekkr",
+        "strife",
         "wolf3d",
         "spear",
         "noah",
+        "obc",
       },
       default = "doom2",
     },

@@ -49,7 +49,7 @@ OB_MODULES["alt_shape_grammars"] =
 
     {
       name = "float_grammar_backhalls",
-      label = _("The Backhalls (WIP)"),
+      label = _("The Backhalls"),
       valuator = "slider",
       units = _("% Chance Per Level"),
       min = 0,
@@ -74,21 +74,6 @@ OB_MODULES["alt_shape_grammars"] =
       tooltip = _("Sets chance of levels using the Boxes of Death shape grammar."),
       longtip = _("It's like that movie Cube, but with .5 less dimensions (if you're a contrarian)."),
       priority = 102,
-      randomize_group = "architecture",
-    },
-
-    {
-      name = "float_grammar_map_01",
-      label = _("Eternal Entryway (WIP)"),
-      valuator = "slider",
-      units = _("% Chance Per Level"),
-      min = 0,
-      max = 100,
-      increment = 1,
-      default = 0,
-      tooltip = _("Sets chance of levels using the Eternal Entryway shape grammar."),
-      longtip = _("It's MAP01. This is an example of a non-traditional use of shape grammar to try to force a level layout into a certain shape."),
-      priority = 101,
       randomize_group = "architecture",
     },
 

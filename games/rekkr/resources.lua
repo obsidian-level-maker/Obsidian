@@ -1,5 +1,5 @@
 --------------------------------------------------------------------
---  CHEX1 RESOURCES / GRAFIX
+--  REKKR RESOURCES / GRAFIX
 --------------------------------------------------------------------
 --
 --  Copyright (C) 2006-2016 Andrew Apted
@@ -12,7 +12,7 @@
 --
 --------------------------------------------------------------------
 
-CHEX1.PALETTES =
+REKKR.PALETTES =
 {
   normal =
   {
@@ -74,7 +74,7 @@ CHEX1.PALETTES =
 
 --------------------------------------------------------------------
 
-CHEX1.LEVEL_GFX_COLORS =
+REKKR.LEVEL_GFX_COLORS =
 {
   gold   = { 0,47,44, 167,166,165,164,163,162,161,160, 225 },
   silver = { 0,246,243,240, 205,202,200,198, 196,195,194,193,192, 4 },
@@ -86,7 +86,7 @@ CHEX1.LEVEL_GFX_COLORS =
 }
 
 
-function CHEX1.make_cool_gfx()
+function REKKR.make_cool_gfx()
   local GREEN =
   {
     0, 7, 127, 126, 125, 124, 123, 122, 120, 118, 116, 113
@@ -133,7 +133,7 @@ function CHEX1.make_cool_gfx()
 end
 
 
-function CHEX1.make_level_gfx(LEVEL)
+function REKKR.make_level_gfx(LEVEL)
   -- decide color set
   if not GAME.level_gfx_colors then
     local kind = rand.key_by_probs(
@@ -141,7 +141,7 @@ function CHEX1.make_level_gfx(LEVEL)
       gold=12, silver=3, bronze=8, iron=10
     })
 
-    GAME.level_gfx_colors = assert(CHEX1.LEVEL_GFX_COLORS[kind])
+    GAME.level_gfx_colors = assert(REKKR.LEVEL_GFX_COLORS[kind])
   end
 
   gui.set_colormap(1, GAME.level_gfx_colors)
@@ -152,8 +152,8 @@ function CHEX1.make_level_gfx(LEVEL)
 end
 
 
-function CHEX1.make_episode_gfx()
-  local colors = assert(CHEX1.LEVEL_GFX_COLORS["red"])
+function REKKR.make_episode_gfx()
+  local colors = assert(REKKR.LEVEL_GFX_COLORS["red"])
 
   gui.set_colormap(2, colors)
 
@@ -165,12 +165,12 @@ function CHEX1.make_episode_gfx()
 end
 
 
-function CHEX1.end_level(LEVEL)
-  CHEX1.make_level_gfx(LEVEL)
+function REKKR.end_level(LEVEL)
+  REKKR.make_level_gfx(LEVEL)
 end
 
 
-function CHEX1.all_done()
-  CHEX1.make_cool_gfx()
-  CHEX1.make_episode_gfx()
+function REKKR.all_done()
+  REKKR.make_cool_gfx()
+  REKKR.make_episode_gfx()
 end
