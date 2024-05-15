@@ -28,25 +28,37 @@ Features of OBSIDIAN include:
 * Heretic  
   Moderate level of support, with some advanced modules and a handful of addons available.
   
-* Chex Quest 1
-  Basic level of support.
+* Chex Quest 3: Vanilla Edition  
+  Basic level of support through the SLUMP generator only.
   
-* HacX 1.2
-  Basic level of support.
+* HacX 1.2  
+  Basic level of support through the SLUMP generator only.
+
+* REKKR  
+  Basic level of support through the SLUMP generator only.
+
+* Harmony Compatible  
+  Basic level of support through the SLUMP generator only.
+
+* Strife  
+  Basic level of support through the SLUMP generator only.
   
-* Wolfenstein 3D / Spear of Destiny
+* Wolfenstein 3D / Spear of Destiny  
   Moderate level of support.
   
-* Super Noah's Ark 3D
-  Basic level of support. 
+* Super Noah's Ark 3D  
+  Basic level of support.
+
+* Operation: Body Count  
+  Basic level of support. Less stable than Wolfenstein/Noah's Ark 3D.
 
 ## QUICK START GUIDE (Windows)
 
-First, unpack the zip somewhere .  Make sure it is extracted with folders, and also make sure the OBSIDIAN.EXE file gets extracted too.
+First, unpack the zip somewhere .  Make sure it is extracted with folders, and also make sure the OBSIDIAN.EXE file gets extracted to.
 
 Double click on the OBSIDIAN icon to run it.  Select the game in the top left panel, and any other options which take your fancy. Then click the BUILD button in the top left panel, and pick a location in which to save your file.
 
-OBSIDIAN will then build all the maps, showing a blueprint of each one as it goes, and if everything goes smoothly the output file (e.g. "TEST.WAD") will be created at the end.  Then you can play it using the normal method for playing mods with that game (e.g. for DOOM source ports: dragging-n-dropping the WAD file onto the source port's EXE is usually enough).
+OBSIDIAN will then build all the maps, showing a blueprint of each one as it goes, and if everything goes smoothly the output file will be created at the end.  Then you can play it using the normal method for playing mods with that game (e.g. for DOOM source ports: dragging-n-dropping the WAD file onto the source port's EXE is usually enough).
 
 ## QUICK START GUIDE (Linux/BSD/Haiku OS)
 
