@@ -1,0 +1,289 @@
+-- CONFIG FILE : OBSIDIAN 21"Unstable"
+-- Build 2024.04.03
+-- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted
+-- https://obsidian-level-maker.github.io
+
+-- Obsidian (C) 2018-2023
+-- MsrSgtShooterPerson
+-- Reisal
+-- Garrett
+-- Caligari87
+-- Frozsoul
+-- Simon-v
+-- Beed28
+-- Craneo
+-- MogWaltz
+-- EpicTyphlosion
+-- Tapwave
+-- Swedra
+-- Demios
+-- Scionox
+-- josh771
+-- dashodanger
+-- Phytolizer
+-- HugLifeTiZ
+
+-- Cubebert
+
+-- Morthimer McMare
+
+-- ika707
+
+-- Chameleon_111
+
+-- hytalego
+
+-- Twin Galaxy
+
+-- WolVexus
+
+-- username
+
+-- Dan_The_Noob
+
+-- Il Str
+
+-- VoidRunner
+
+-- 4ffy
+
+-- DasCake
+
+-- Baysha
+
+-- Arcterezion
+
+-- Xenamta
+
+-- KadKad1
+
+-- https://github.com/obsidian-level-maker/Obsidian/
+
+---- Game Settings ----
+
+engine = idtech_1
+game = doom2
+port = zdoom
+length = game
+theme = jumble
+
+---- Architecture ----
+
+float_size = Mix It Up
+float_level_upper_bound = 50.0
+float_level_lower_bound = 30.0
+bool_prebuilt_levels = 0.0
+float_overall_lighting_mult = 0.9
+outdoors = some
+caves = mixed
+liquids = less
+hallways = mixed
+teleporters = mixed
+steepness = mixed
+zdoom_vista = disable
+zdoom_skybox = disable
+
+---- Architecture ----
+
+float_size_wolf_3d = 36.0
+float_level_upper_bound_wolf_3d = 75.0
+float_level_lower_bound_wolf_3d = 10.0
+level_size_ramp_factor_wolf_3d = 0.66
+level_size_bias_wolf_3d = default
+
+---- Combat ----
+
+float_mons = Mix It Up
+float_mix_it_up_upper_range = 4.0
+float_mix_it_up_lower_range = 2.5
+float_strength = 0.85
+bool_quiet_start = 0.0
+mon_variety_jumpstart = default
+bosses = medium
+bossesnormal = no
+traps = more
+cages = few
+secret_monsters = no
+
+---- Combat ----
+
+float_mons_wolf_3d = 1.0
+float_mix_it_up_upper_range_wolf_3d = 10.0
+float_mix_it_up_lower_range_wolf_3d = 0.0
+
+---- Pickups ----
+
+health = bit_more
+ammo = normal
+weapons = sooner
+items = normal
+secrets = less
+
+---- Architecture ----
+
+float_minrooms_slump = 15.0
+float_minrooms_slump_ub = 36.0
+float_minrooms_slump_lb = 10.0
+
+---- Combat ----
+
+slump_mons = normal
+bool_quiet_start_slump = 1.0
+
+---- Other Modules ----
+
+@alt_shape_grammars = 0
+
+@armaetus_epic_textures = 1
+  bool_custom_liquids = 1.0
+  custom_trees = no
+  environment_themes = no
+  bool_include_package = 1.0
+  bool_include_brightmaps = 1.0
+  bool_include_custom_actors = 0.0
+  bool_no_env_theme_for_hell = 1.0
+
+@build_nodes = 1
+
+@compress_output = 0
+
+@debugger = 1
+  title_screen_source = titlegen
+  bool_sub_titles = 0.0
+  bool_whole_names_only = 0.0
+  bool_shape_rule_stats = 0.0
+  bool_save_svg = 0.0
+  bool_save_gif = 0.0
+  live_minimap = none
+
+@doom_item_control = 1
+  float_potion = Default
+  float_stimpack = Default
+  float_medikit = Default
+  float_helmet = Default
+  float_green_armor = Default
+  float_blue_armor = Default
+  float_soul = Default
+  float_backpack = Default
+  float_berserk = Default
+  float_invis = Default
+  float_invul = Default
+  float_allmap = Default
+  float_goggles = 0.0
+  float_mega = Default
+  float_bullets = Default
+  float_bullet_box = Default
+  float_shells = Default
+  float_shell_box = Default
+  float_rocket = Default
+  float_rocket_box = Default
+  float_cells = Default
+  float_cell_pack = Default
+
+@doom_mon_control = 0
+
+@doom_weapon_control = 0
+
+@experimental_games = 0
+
+@export_map = 0
+
+@fauna_module = 0
+
+@gzdoom_marine_closets = 0
+
+@historical_versions = 0
+
+@iwad_mode = 0
+
+@jokewad_module = 0
+
+@links_addons = 0
+
+@material_debugger = 0
+
+@misc = 1
+  float_layout_absurdity = 0.0
+  float_linear_mode = 20.0
+  float_nature_mode = 0.0
+  float_streets_mode = 10.0
+  bool_appropriate_street_themes = 1.0
+  big_rooms = rare
+  big_outdoor_rooms = none
+  room_heights = mixed
+  parks = few
+  windows = more
+  symmetry = few
+  beams = mixed
+  fences = mixed
+  porches = mixed
+  pictures = mixed
+  scenics = mixed
+  liquid_sinks = no
+  darkness = none
+  barrels = more
+  doors = mixed
+  keys = mixed
+  trikeys = mixed
+  switches = mixed
+  local_switches = mixed
+  bool_exit_signs = 1.0
+
+@modded_game_extras = 0
+
+@pickup_params = 0
+
+@prefab_control = 1
+  point_prob = fab_default
+  wall_prob = fab_default
+  steppy_caves = always
+  pf_crushers = 0.33
+  pf_dexterity = 0.33
+  pf_gamble = 0.33
+  pf_sight_ambushes = 0.5
+  pf_mirror_mazes = 0
+  pf_dark_mazes = 0.33
+  pf_stair_ladders = 0.75
+  bool_jump_crouch = 1.0
+  pf_damaging_halls = no
+
+@procedural_gotcha_zdoom = 0
+
+@sky_generator = 1
+  force_sky = sky_default
+  force_hills = hs_random
+  force_hill_params = hp_random
+  cloud_color = default
+  terrain_color = default
+  nebula_color = default
+  bool_influence_map_darkness = 0.0
+
+@stealth_mon_control = 0
+
+@stealth_mons = 0
+
+@theme_ctl_doom2 = 0
+
+@zdoom_ambient_sound = 0
+
+@zdoom_marine_control = 0
+
+@zdoom_marines = 0
+
+@zdoom_specials = 1
+  fog_generator = no
+  fog_env = outdoor
+  fog_intensity = subtle
+  bool_fog_affects_sky = 1.0
+  mapinfo_music_shuffler = no
+  story_generator = proc
+  bool_custom_quit_messages = 1.0
+  generic_intermusic = $MUSIC_READ_M
+  bool_episode_selection = 0.0
+  bool_no_intermission = 0.0
+
+@zdoom_specials_lighting = 1
+  bool_dynamic_lights = 1.0
+  bool_glowing_flats = 0.0
+
+-- END --
