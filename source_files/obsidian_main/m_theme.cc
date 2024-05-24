@@ -1310,6 +1310,8 @@ class UI_ThemeWin : public Fl_Window {
         for (int x = 0; x < main_win->game_box->children(); x++) {
             main_win->game_box->child(x)->redraw();
         }
+        main_win->mod_tabs->color(BUTTON_COLOR, WINDOW_BG);
+        main_win->mod_tabs->redraw();
         for (int t = 0; t < main_win->mod_tabs->children(); t++) {
             UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(t);
             tab->sbar->color(GAP_COLOR, BUTTON_COLOR);
@@ -1414,15 +1416,6 @@ class UI_ThemeWin : public Fl_Window {
         main_win->redraw();
         main_win->build_box->progress->color(GAP_COLOR, GAP_COLOR);
         main_win->build_box->redraw();
-        main_win->mod_tabs->color(GAP_COLOR, WINDOW_BG);
-        main_win->mod_tabs->redraw();
-        for (int t = 0; t < main_win->mod_tabs->children(); t++) {
-            UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(t);
-            tab->color(GAP_COLOR, GAP_COLOR);
-            tab->sbar->color(GAP_COLOR, BUTTON_COLOR);
-            tab->mod_pack->color(GAP_COLOR);
-            tab->redraw();
-        }
     }
 
     static void callback_LoadDefaults(Fl_Widget *w, void *data) {

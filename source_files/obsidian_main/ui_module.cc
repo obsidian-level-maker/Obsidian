@@ -1698,22 +1698,31 @@ UI_CustomTabs::UI_CustomTabs(int X, int Y, int W, int H)
     : Fl_Tabs(X, Y, W, H) {
 
     box(box_style);
-    
+
+    color(BUTTON_COLOR, WINDOW_BG);
+
     visible_focus(0);
 
     arch_mods = new UI_CustomMods(X, Y+kf_h(22), W, H-kf_h(22), _("Architecture"));
+    arch_mods->color(BUTTON_COLOR, BUTTON_COLOR);
     arch_mods->end();
     combat_mods = new UI_CustomMods(X, Y+kf_h(22), W, H-kf_h(22), _("Combat"));
+    combat_mods->color(BUTTON_COLOR, BUTTON_COLOR);
     combat_mods->end();
     pickup_mods = new UI_CustomMods(X, Y+kf_h(22), W, H-kf_h(22), _("Pickups"));
+    pickup_mods->color(BUTTON_COLOR, BUTTON_COLOR);
     pickup_mods->end();
     other_mods = new UI_CustomMods(X, Y+kf_h(22), W, H-kf_h(22), _("Other"));
+    other_mods->color(BUTTON_COLOR, BUTTON_COLOR);
     other_mods->end();
     debug_mods = new UI_CustomMods(X, Y+kf_h(22), W, H-kf_h(22), _("Debug"));
+    debug_mods->color(BUTTON_COLOR, BUTTON_COLOR);
     debug_mods->end();
     experimental_mods = new UI_CustomMods(X, Y+kf_h(22), W, H-kf_h(22), _("Experimental"));
+    experimental_mods->color(BUTTON_COLOR, BUTTON_COLOR);
     experimental_mods->end();
     links = new UI_CustomMods(X, Y+kf_h(22), W, H-kf_h(22), _("Links"));
+    links->color(BUTTON_COLOR, BUTTON_COLOR);
     links->end();
 
     end();

@@ -271,6 +271,16 @@ typedef struct s_genus {
 #define ID_THORNTHING (0x044)
 #define ID_MECHAMANIAC (0x045)
 #define ID_ROAMINGMINE (0x054)
+/* The Harmony Monsters */
+#define ID_BEASTLING (0x0bba)
+#define ID_FOLLOWER (0x9)
+#define ID_MUTANTSOLDIER (0x41)
+#define ID_PHAGE (0x44)
+#define ID_PREDATOR (0x42)
+#define ID_LANDMINE (0xbbe)
+#define ID_AEROSOL (0xbbd)
+#define ID_CENTAUR (0x10)
+#define ID_ECHIDNA (0x7)
   short width;
   short height;
   int min_level; /* Minimum level to put monster in */
