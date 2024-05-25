@@ -60,7 +60,7 @@ end
 OB_PORTS["zdoom"] =
 {
   label = _("GZDoom"),
-  priority = 101,
+  priority = 100,
 
   extends = "advanced",
 

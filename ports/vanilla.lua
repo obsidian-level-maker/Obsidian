@@ -41,7 +41,7 @@ OB_PORTS["vanilla"] =
 {
   label = _("Vanilla"),
 
-  priority = 100,
+  priority = 101,
 
   engine = {idtech_0=1,idtech_1=0},
 
