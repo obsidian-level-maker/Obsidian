@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.12..3.20)
 
 add_subdirectory(source_files/ajbsp EXCLUDE_FROM_ALL)
 add_subdirectory(source_files/ajparse EXCLUDE_FROM_ALL)
-if(NOT CONSOLE_ONLY AND NOT HAIKU)
+if(NOT CONSOLE_ONLY)
   add_subdirectory(source_files/fltk EXCLUDE_FROM_ALL)
 endif()
 add_subdirectory(source_files/filename_formatter EXCLUDE_FROM_ALL)
@@ -19,7 +19,7 @@ project(
 string(TIMESTAMP BUILD_TIMESTAMP "%Y.%m.%d" UTC)
 add_compile_definitions(OBSIDIAN_TIMESTAMP="${BUILD_TIMESTAMP}")
 
-if(CONSOLE_ONLY OR HAIKU)
+if(CONSOLE_ONLY)
   add_compile_definitions(CONSOLE_ONLY=1)
 endif()
 
@@ -49,7 +49,7 @@ if(${CMAKE_SYSTEM} MATCHES "OpenBSD")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -I /usr/X11R6/include")
 endif()
 
-if(NOT CONSOLE_ONLY AND NOT HAIKU)
+if(NOT CONSOLE_ONLY)
   add_executable(
     obsidian
     source_files/obsidian_main/aj_map.cc
@@ -153,7 +153,7 @@ endif()
 
 target_include_directories(obsidian SYSTEM PRIVATE source_files/ajbsp)
 target_include_directories(obsidian SYSTEM PRIVATE source_files/ajparse)
-if(NOT CONSOLE_ONLY AND NOT HAIKU)
+if(NOT CONSOLE_ONLY)
   target_include_directories(obsidian SYSTEM PRIVATE source_files/fltk)
   target_include_directories(
     obsidian SYSTEM PRIVATE "${PROJECT_BINARY_DIR}/source_files/fltk"
@@ -169,7 +169,6 @@ target_include_directories(obsidian SYSTEM PRIVATE source_files/slump)
 
 if(UNIX)
   if(NOT CONSOLE_ONLY
-     AND NOT HAIKU
      AND NOT APPLE
   )
     find_package(Fontconfig REQUIRED)
@@ -227,19 +226,6 @@ if(UNIX)
                          obsidian_slump
       )
     endif()
-  elseif(HAIKU)
-    target_link_libraries(
-      obsidian
-      PRIVATE ajbsp
-              ajparse
-              filename_formatter
-              miniz
-              physfs-static
-              obsidian_slump
-              pthread
-              be
-              root
-    )
   else()
     if(NOT CONSOLE_ONLY)
       target_link_libraries(
