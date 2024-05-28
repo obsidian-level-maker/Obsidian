@@ -49,7 +49,7 @@ jobs:
       - name: Set environment variables and build
         run: |
           $env:Path = "${{github.workspace}}\w64devkit\bin;" + $env:Path
-          cmake -B build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_CXX_FLAGS="-isystem ${{github.workspace}}\w64devkit\include" -G "MinGW Makefiles"
+          cmake -B build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_CXX_FLAGS="-isystem ${{github.workspace}}\w64devkit\include" -DCMAKE_C_FLAGS="-isystem ${{github.workspace}}\w64devkit\include" -G "MinGW Makefiles"
           cmake --build build --config ${{env.BUILD_TYPE}}
           strip ${{github.workspace}}\obsidian.exe
       - uses: actions/upload-artifact@v4
