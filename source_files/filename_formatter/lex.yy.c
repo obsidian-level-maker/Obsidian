@@ -1415,7 +1415,7 @@ static void yy_init_buffer(YY_BUFFER_STATE b, FILE *file)
         b->yy_bs_column = 0;
     }
 
-    b->yy_is_interactive = file ? (isatty(fileno(file)) > 0) : 0;
+    b->yy_is_interactive = 0;
 
     errno = oerrno;
 }

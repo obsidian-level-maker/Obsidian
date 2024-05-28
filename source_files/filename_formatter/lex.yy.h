@@ -213,13 +213,6 @@ extern char *yytext;
 
 #endif
 
-/*windows compatibility case*/
-#ifdef _WIN32
-#include <io.h>
-#define isatty _isatty
-#define fileno _fileno
-#endif
-
 #ifndef YY_EXTRA_TYPE
 #define YY_EXTRA_TYPE void *
 #endif
