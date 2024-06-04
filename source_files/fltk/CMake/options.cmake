@@ -999,10 +999,7 @@ else(FLTK_USE_XRENDER)
 endif(FLTK_USE_XRENDER)
 
 #######################################################################
-set(FL_NO_PRINT_SUPPORT FALSE)
-if(X11_FOUND AND NOT FLTK_OPTION_PRINT_SUPPORT)
-  set(FL_NO_PRINT_SUPPORT TRUE)
-endif(X11_FOUND AND NOT FLTK_OPTION_PRINT_SUPPORT)
+set(FL_NO_PRINT_SUPPORT TRUE)
 #######################################################################
 
 #######################################################################
