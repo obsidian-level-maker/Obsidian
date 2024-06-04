@@ -5936,9 +5936,9 @@ DOOM.NAMES =
 
 function DOOM.slump_setup()
   if ob_match_game({game = {doom2=1, tnt=1, plutonia=1}}) then
-    if OB_CONFIG.theme == "original" or OB_CONFIG.theme == "epi" then
+    if OB_CONFIG.theme == "default" then
       PARAM.slump_config = DOOM.THEMES.DEFAULTS.slump_config
-    elseif OB_CONFIG.theme == "jumble" or OB_CONFIG.theme == "bit_mixed" then
+    elseif OB_CONFIG.theme == "jumble" then
       local possible_configs = {}
       for _,tab in pairs(DOOM.THEMES) do
         if tab.slump_config then
