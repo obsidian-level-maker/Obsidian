@@ -137,9 +137,9 @@ endif(NOT HAVE_DIRENT_H)
 find_path(FREETYPE_PATH freetype.h PATH_SUFFIXES freetype2)
 find_path(FREETYPE_PATH freetype/freetype.h PATH_SUFFIXES freetype2)
 
-if(FREETYPE_PATH)
+if(FREETYPE_PATH AND ((NOT APPLE) OR FLTK_BACKEND_X11))
   list(APPEND FLTK_BUILD_INCLUDE_DIRECTORIES ${FREETYPE_PATH})
-endif(FREETYPE_PATH)
+endif(FREETYPE_PATH AND ((NOT APPLE) OR FLTK_BACKEND_X11))
 
 mark_as_advanced(FREETYPE_PATH)
 
@@ -152,25 +152,30 @@ endif((NOT APPLE) OR FLTK_BACKEND_X11)
 find_library(LIB_freetype freetype)
 find_library(LIB_GL GL)
 find_library(LIB_MesaGL MesaGL)
-find_library(LIB_GLEW NAMES GLEW glew32)
 find_library(LIB_jpeg jpeg)
 find_library(LIB_png png)
 find_library(LIB_zlib z)
+find_library(LIB_m m)
 
 mark_as_advanced(LIB_dl LIB_fontconfig LIB_freetype)
-mark_as_advanced(LIB_GL LIB_MesaGL LIB_GLEW)
+mark_as_advanced(LIB_GL LIB_MesaGL)
 mark_as_advanced(LIB_jpeg LIB_png LIB_zlib)
+mark_as_advanced(LIB_m)
 
 #######################################################################
 # functions
 include(CheckFunctionExists)
 
-# save CMAKE_REQUIRED_LIBRARIES (is this really necessary ?)
+# Save CMAKE_REQUIRED_LIBRARIES
+# Note: CMAKE_REQUIRED_LIBRARIES must be set for each search and
+#   reset after the search to avoid to influence subsequent searches.
+#   The original value is restored after all searches.
+
 if(DEFINED CMAKE_REQUIRED_LIBRARIES)
   set(SAVED_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES})
-else(DEFINED CMAKE_REQUIRED_LIBRARIES)
+else()
   unset(SAVED_REQUIRED_LIBRARIES)
-endif(DEFINED CMAKE_REQUIRED_LIBRARIES)
+endif()
 set(CMAKE_REQUIRED_LIBRARIES)
 
 if(HAVE_DLFCN_H)
@@ -178,31 +183,40 @@ if(HAVE_DLFCN_H)
 endif(HAVE_DLFCN_H)
 
 set(CMAKE_REQUIRED_LIBRARIES ${CMAKE_DL_LIBS})
-CHECK_FUNCTION_EXISTS (dlsym                    HAVE_DLSYM)
+check_function_exists(dlsym                     HAVE_DLSYM)
 set(CMAKE_REQUIRED_LIBRARIES)
 
-CHECK_FUNCTION_EXISTS (localeconv               HAVE_LOCALECONV)
+check_function_exists(localeconv                HAVE_LOCALECONV)
 
 if(LIB_png)
   set(CMAKE_REQUIRED_LIBRARIES ${LIB_png})
-  CHECK_FUNCTION_EXISTS (png_get_valid          HAVE_PNG_GET_VALID)
-  CHECK_FUNCTION_EXISTS (png_set_tRNS_to_alpha  HAVE_PNG_SET_TRNS_TO_ALPHA)
+  check_function_exists(png_get_valid           HAVE_PNG_GET_VALID)
+  check_function_exists(png_set_tRNS_to_alpha   HAVE_PNG_SET_TRNS_TO_ALPHA)
   set(CMAKE_REQUIRED_LIBRARIES)
 endif(LIB_png)
 
-CHECK_FUNCTION_EXISTS (scandir                  HAVE_SCANDIR)
-CHECK_FUNCTION_EXISTS (snprintf                 HAVE_SNPRINTF)
+check_function_exists(scandir                   HAVE_SCANDIR)
+check_function_exists(snprintf                  HAVE_SNPRINTF)
 
 # not really true but we convert strcasecmp calls to _stricmp calls in flstring.h
 if(MSVC)
    set(HAVE_STRCASECMP 1)
 endif(MSVC)
 
-CHECK_FUNCTION_EXISTS (strcasecmp               HAVE_STRCASECMP)
+check_function_exists(strcasecmp                HAVE_STRCASECMP)
 
-CHECK_FUNCTION_EXISTS (strlcat                  HAVE_STRLCAT)
-CHECK_FUNCTION_EXISTS (strlcpy                  HAVE_STRLCPY)
-CHECK_FUNCTION_EXISTS (vsnprintf                HAVE_VSNPRINTF)
+check_function_exists(strlcat                   HAVE_STRLCAT)
+check_function_exists(strlcpy                   HAVE_STRLCPY)
+check_function_exists(vsnprintf                 HAVE_VSNPRINTF)
+
+check_function_exists(setenv                    HAVE_SETENV)
+
+# Windows doesn't require '-lm' for trunc(), other platforms do
+if(LIB_m AND NOT WIN32)
+  set(CMAKE_REQUIRED_LIBRARIES ${LIB_m})
+endif()
+check_function_exists(trunc                     HAVE_TRUNC)
+set(CMAKE_REQUIRED_LIBRARIES)
 
 if(HAVE_SCANDIR AND NOT HAVE_SCANDIR_POSIX)
    set(MSG "POSIX compatible scandir")
@@ -221,19 +235,19 @@ if(HAVE_SCANDIR AND NOT HAVE_SCANDIR_POSIX)
 endif(HAVE_SCANDIR AND NOT HAVE_SCANDIR_POSIX)
 mark_as_advanced(HAVE_SCANDIR_POSIX)
 
-# restore CMAKE_REQUIRED_LIBRARIES (is this really necessary ?)
+# restore CMAKE_REQUIRED_LIBRARIES
 if(DEFINED SAVED_REQUIRED_LIBRARIES)
   set(CMAKE_REQUIRED_LIBRARIES ${SAVED_REQUIRED_LIBRARIES})
   unset(SAVED_REQUIRED_LIBRARIES)
-else(DEFINED SAVED_REQUIRED_LIBRARIES)
+else()
   unset(CMAKE_REQUIRED_LIBRARIES)
-endif(DEFINED SAVED_REQUIRED_LIBRARIES)
+endif()
 
 #######################################################################
 # packages
 
 # Doxygen: necessary for HTML and PDF docs
-find_package (Doxygen)
+find_package(Doxygen)
 
 # LaTex: necessary for PDF docs (note: FindLATEX doesn't return LATEX_FOUND)
 
@@ -242,7 +256,7 @@ find_package (Doxygen)
 
 set(LATEX_FOUND)
 if(DOXYGEN_FOUND)
-  find_package (LATEX)
+  find_package(LATEX)
   if(LATEX_COMPILER AND NOT LATEX_FOUND)
     set(LATEX_FOUND YES)
   endif(LATEX_COMPILER AND NOT LATEX_FOUND)

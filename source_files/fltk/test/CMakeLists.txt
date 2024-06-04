@@ -89,6 +89,8 @@ fl_create_example(boxtype boxtype.cxx fltk::fltk)
 fl_create_example(browser browser.cxx fltk::fltk)
 fl_create_example(button button.cxx fltk::fltk)
 fl_create_example(buttons buttons.cxx fltk::fltk)
+# Cairo demo, built with and w/o Cairo (libcairo is linked implicitly - or not at all)
+fl_create_example(cairo_test cairo_test.cxx fltk::fltk)
 fl_create_example(checkers "checkers.cxx;checkers_pieces.fl;checkers.icns" fltk::images)
 fl_create_example(clipboard clipboard.cxx fltk::images)
 fl_create_example(clock clock.cxx fltk::fltk)
@@ -115,6 +117,7 @@ fl_create_example(grid_buttons grid_buttons.cxx fltk::fltk)
 fl_create_example(grid_dialog grid_dialog.cxx fltk::fltk)
 fl_create_example(grid_login grid_login.cxx fltk::fltk)
 fl_create_example(handle_events handle_events.cxx "${GLDEMO_LIBS}")
+fl_create_example(handle_keys handle_keys.cxx fltk::fltk)
 fl_create_example(hello hello.cxx fltk::fltk)
 fl_create_example(help_dialog help_dialog.cxx fltk::images)
 fl_create_example(icon icon.cxx fltk::fltk)
@@ -213,12 +216,49 @@ if(OPENGL_FOUND)
   fl_create_example(shape shape.cxx "${GLDEMO_LIBS}")
 endif(OPENGL_FOUND)
 
-# Cairo demo - must also be built w/o Cairo (displays a message box)
-if(FLTK_HAVE_CAIRO)
-  fl_create_example(cairo_test cairo_test.cxx "fltk::fltk;cairo")
-else()
-  fl_create_example(cairo_test cairo_test.cxx fltk::fltk)
-endif(FLTK_HAVE_CAIRO)
+# Test FLTK headers for variable shadowing [-Wshadow] (STR 2728)
+#
+# The following test program is added only for GNU or Clang compilers which
+# are known to support the '-Wshadow' compiler flag. We could also implement
+# a compile test but using GNU and Clang appears to be sufficient.
+#
+# Note 1: usage of `file(GLOB ...)` is discouraged by CMake documentation because
+#   it doesn't trigger rebuilding when new header files are added. However, this
+#   is better than nothing.
+#
+# Note 2: a better way to generate the header file might be with a custom command
+#   to be able to generate proper dependencies but this is left for later...
+#
+# Note 3: this test program is only included in CMake builds and was inspired
+#   by STR 2728: "Add test program to test for shadowed variables (-Wshadow)".
+#   Its sole purpose is to issue compilation warnings during build time if
+#   variables are shadowed in public headers.
+
+set(_compilers GNU Clang AppleClang)
+if(CMAKE_CXX_COMPILER_ID IN_LIST _compilers)
+
+  set(include_all "${CMAKE_CURRENT_BINARY_DIR}/include_all.h")
+  file(WRITE ${include_all} "/* DO NOT EDIT - this file is created by CMake */\n")
+
+  file(GLOB all_headers "${FLTK_SOURCE_DIR}/FL/*.[hH]")
+  foreach(hd ${all_headers})
+    get_filename_component(hd "${hd}" NAME)
+    # skip headers that must not be included directly and fl_config.h if it exists
+    string(REGEX MATCH "^(mac|win32|x11|wayland|fl_config)\.[hH]$" skip "${hd}")
+    if(skip STREQUAL "")
+      file(APPEND ${include_all} "#include <FL/${hd}>\n")
+    endif()
+  endforeach()
+  file(APPEND ${include_all} "/* End of generated file */\n")
+
+  # now add the 'shadow_variables' target and set the compiler flag
+
+  fl_create_example(shadow_variables shadow_variables.cxx fltk::fltk)
+  set_target_properties(shadow_variables PROPERTIES COMPILE_FLAGS -Wshadow)
+
+endif() # GNU or Clang (-Wshadow test)
+unset(_compilers)
+
 
 # *** EXPERIMENTAL ***
 # Build some of the demo programs linked against the shared FLTK lib(s).
@@ -266,8 +306,9 @@ if(FLTK_BUILD_SHARED_LIBS)
 
   else() # not MSVC
 
+    fl_create_example(cairo_test-shared cairo_test.cxx fltk::fltk-shared)
     fl_create_example(hello-shared hello.cxx fltk::fltk-shared)
-    fl_create_example(pixmap_browser-shared pixmap_browser.cxx "fltk::images-shared")
+    fl_create_example(pixmap_browser-shared pixmap_browser.cxx fltk::images-shared)
     fl_create_example(unittests-shared "${UNITTEST_SRCS}" "${GLDEMO_SHARED}")
 
     if(OPENGL_FOUND)
@@ -275,11 +316,6 @@ if(FLTK_BUILD_SHARED_LIBS)
       fl_create_example(shape-shared shape.cxx "${GLDEMO_SHARED}")
     endif(OPENGL_FOUND)
 
-    if(FLTK_HAVE_CAIRO)
-      fl_create_example(cairo_test-shared cairo_test.cxx "fltk::fltk-shared;cairo")
-    else()
-      fl_create_example(cairo_test-shared cairo_test.cxx "fltk::fltk-shared")
-    endif()
 
   endif(MSVC) # (not MSVC)
 

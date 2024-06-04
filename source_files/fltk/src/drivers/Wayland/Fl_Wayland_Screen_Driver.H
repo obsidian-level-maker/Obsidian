@@ -63,6 +63,7 @@ public:
     struct xkb_compose_state *xkb_compose_state;
     char *name;
     struct zwp_text_input_v3 *text_input;
+    struct gtk_shell1 *gtk_shell;
   };
   struct output { // one record for each screen
     uint32_t id;
@@ -76,6 +77,9 @@ public:
     bool done;
     struct wl_list link;
   };
+  enum cursor_shapes {arrow = 0, wait, insert, hand, help, cross, move,
+    north, south, west, east, north_south, west_east, south_west, south_east, north_east, north_west, nesw, nwse};
+  static const int cursor_count = nwse + 1; //  nber of elements of 'enum cursor_shapes'
 
 // static member variables
   static FL_EXPORT struct wl_display *wl_display;
@@ -91,25 +95,7 @@ public:
   static void do_set_cursor(struct Fl_Wayland_Screen_Driver::seat *,
                             struct wl_cursor *wl_cursor = NULL);
 // member variables
-  struct wl_cursor *xc_arrow;
-  struct wl_cursor *xc_ns;
-  struct wl_cursor *xc_wait;
-  struct wl_cursor *xc_insert;
-  struct wl_cursor *xc_hand;
-  struct wl_cursor *xc_help;
-  struct wl_cursor *xc_cross;
-  struct wl_cursor *xc_move;
-  struct wl_cursor *xc_north;
-  struct wl_cursor *xc_south;
-  struct wl_cursor *xc_west;
-  struct wl_cursor *xc_east;
-  struct wl_cursor *xc_we;
-  struct wl_cursor *xc_nesw;
-  struct wl_cursor *xc_nwse;
-  struct wl_cursor *xc_sw;
-  struct wl_cursor *xc_se;
-  struct wl_cursor *xc_ne;
-  struct wl_cursor *xc_nw;
+  struct wl_cursor *xc_cursor[cursor_count]; // one for each element of enum cursor_shapes
   struct wl_registry *wl_registry;
   struct wl_compositor *wl_compositor;
   struct wl_subcompositor *wl_subcompositor;

@@ -43,6 +43,8 @@ function(fl_expand_name out in min_len)
     set(temp "${in}${spaces}${spaces}")
     string(SUBSTRING "${temp}" 0 ${min_len} temp)
     set(${out} "${temp}" PARENT_SCOPE)
+  else()
+    set(${out} "${in}" PARENT_SCOPE)
   endif()
 endfunction(fl_expand_name)
 
@@ -94,22 +96,44 @@ function(fl_debug_target name)
   message(STATUS "+++ fl_debug_target(${name})")
   set(var "${name}")
   fl_expand_name(var "${name}" 40)
-  if(TARGET ${name})
-    message(STATUS "${var} = <target>")
-    foreach(prop
-              ALIASED_TARGET
-              INTERFACE_INCLUDE_DIRECTORIES
-              INTERFACE_LINK_DIRECTORIES
-              INTERFACE_LINK_LIBRARIES)
-      get_target_property(${prop} ${name} ${prop})
-      if(NOT ${prop})
-        set(${prop} "")
-      endif()
-      fl_debug_var(${prop})
-    endforeach()
-  else()
+
+  if(NOT TARGET ${name})
     message(STATUS "${var} = <not a target>")
+    message(STATUS "")
+    return()
   endif()
+
+  get_target_property(_type ${name} TYPE)
+  # message(STATUS "${var} = target, type = ${_type}")
+
+  # these properties are always supported:
+  set(_props NAME TYPE ALIASED_TARGET)
+
+  # these properties can't be read from executable target types
+  ### if(NOT _type STREQUAL "EXECUTABLE")
+  ###   list(APPEND _props
+  ###       LOCATION
+  ###       IMPORTED_LOCATION
+  ###       INTERFACE_LOCATION)
+  ### endif()
+
+  list(APPEND _props
+      INCLUDE_DIRECTORIES
+      LINK_DIRECTORIES
+      LINK_LIBRARIES
+      COMPILE_DEFINITIONS
+      INTERFACE_COMPILE_DEFINITIONS
+      INTERFACE_INCLUDE_DIRECTORIES
+      INTERFACE_LINK_DIRECTORIES
+      INTERFACE_LINK_LIBRARIES)
+
+  foreach(prop ${_props})
+    get_target_property(${prop} ${name} ${prop})
+    if(NOT ${prop})
+      set(${prop} "")
+    endif()
+    fl_debug_var(${prop})
+  endforeach()
   message(STATUS "")
 
 endfunction(fl_debug_target)

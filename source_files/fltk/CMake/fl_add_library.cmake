@@ -153,7 +153,9 @@ function(fl_add_library LIBNAME LIBTYPE SOURCES)
     )
 
     if(APPLE AND NOT FLTK_BACKEND_X11)
-      target_link_libraries(${TARGET_NAME} PUBLIC "-framework Cocoa")
+      foreach(item ${FLTK_COCOA_FRAMEWORKS})
+        target_link_libraries(${TARGET_NAME} PUBLIC "${item}")
+      endforeach()
     endif()
 
     # we must link fltk with cairo if Cairo or Wayland is enabled (or both)
@@ -195,7 +197,7 @@ function(fl_add_library LIBNAME LIBTYPE SOURCES)
         OUTPUT_NAME_DEBUG   ${LIBNAME}_dlld
         OUTPUT_NAME_RELEASE ${LIBNAME}_dll
       )
-      target_compile_definitions(${TARGET_NAME} PRIVATE FL_DLL)
+      target_compile_definitions(${TARGET_NAME} PUBLIC FL_DLL)
     endif(MSVC)
   endif(LIBTYPE STREQUAL "SHARED")
 

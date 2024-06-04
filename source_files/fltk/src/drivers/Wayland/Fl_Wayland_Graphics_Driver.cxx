@@ -22,10 +22,10 @@
 #include <unistd.h> // for close()
 #include <errno.h>
 #include <string.h> // for strerror()
-
+#include <cairo/cairo.h>
 
 extern "C" {
-#  include "../../../libdecor/src/os-compatibility.h" // for os_create_anonymous_file()
+#  include "../../../libdecor/src/os-compatibility.h" // for libdecor_os_create_anonymous_file()
 }
 
 // used by create_shm_buffer and do_buffer_release
@@ -76,9 +76,9 @@ void Fl_Wayland_Graphics_Driver::create_shm_buffer(Fl_Wayland_Graphics_Driver::w
     pool_size = default_pool_size;
     if (buffer->draw_buffer.data_size > pool_size)
       pool_size = 2 * buffer->draw_buffer.data_size; // a larger pool is needed
-    int fd = os_create_anonymous_file(pool_size);
+    int fd = libdecor_os_create_anonymous_file(pool_size);
     if (fd < 0) {
-      Fl::fatal("os_create_anonymous_file failed: %s\n", strerror(errno));
+      Fl::fatal("libdecor_os_create_anonymous_file failed: %s\n", strerror(errno));
     }
     pool_data = (struct wld_shm_pool_data*)calloc(1, sizeof(struct wld_shm_pool_data));
     pool_data->pool_memory = (char*)mmap(NULL, pool_size, PROT_READ | PROT_WRITE,
@@ -139,15 +139,18 @@ const struct wl_callback_listener *Fl_Wayland_Graphics_Driver::p_surface_frame_l
 
 
 // copy pixels in region r from the Cairo surface to the Wayland buffer
-static void copy_region(struct wld_window *window, struct flCairoRegion *r) {
+static void copy_region(struct wld_window *window, cairo_region_t *r) {
   struct Fl_Wayland_Graphics_Driver::wld_buffer *buffer = window->buffer;
   float f = Fl::screen_scale(window->fl_win->screen_num()) *
     Fl_Wayland_Window_Driver::driver(window->fl_win)->wld_scale();
-  for (int i = 0; i < r->count; i++) {
-    int left = r->rects[i].x * f;
-    int top = r->rects[i].y * f;
-    int width = r->rects[i].width * f;
-    int height = r->rects[i].height * f;
+  int count = cairo_region_num_rectangles(r);
+  cairo_rectangle_int_t rect;
+  for (int i = 0; i < count; i++) {
+    cairo_region_get_rectangle(r, i, &rect);
+    int left = rect.x * f;
+    int top = rect.y * f;
+    int width = rect.width * f;
+    int height = rect.height * f;
     int offset = top * buffer->draw_buffer.stride + 4 * left;
     int W4 = 4 * width;
     for (int l = 0; l < height; l++) {
@@ -163,7 +166,7 @@ static void copy_region(struct wld_window *window, struct flCairoRegion *r) {
 }
 
 
-void Fl_Wayland_Graphics_Driver::buffer_commit(struct wld_window *window, struct flCairoRegion *r)
+void Fl_Wayland_Graphics_Driver::buffer_commit(struct wld_window *window, cairo_region_t *r)
 {
   if (!window->buffer->wl_buffer) create_shm_buffer(window->buffer);
   cairo_surface_t *surf = cairo_get_target(window->buffer->draw_buffer.cairo_);

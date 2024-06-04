@@ -281,21 +281,10 @@ void Fl_Menu_Item::draw(int x, int y, int w, int h, const Fl_Menu_* m,
   l.size    = labelsize_ ? labelsize_ : m ? m->textsize() : FL_NORMAL_SIZE;
   l.color   = labelcolor_ ? labelcolor_ : m ? m->textcolor() : int(FL_FOREGROUND_COLOR);
   if (!active()) l.color = fl_inactive((Fl_Color)l.color);
-  Fl_Color color = m ? m->color() : FL_GRAY;
   if (selected) {
     Fl_Color r = m ? m->selection_color() : FL_SELECTION_COLOR;
     Fl_Boxtype b = m && m->down_box() ? m->down_box() : FL_FLAT_BOX;
-    if (fl_contrast(r, color) != r) { // back compatibility boxtypes
-      if (selected == 2) { // menu title
-        r = color;
-        b = m ? m->box() : FL_UP_BOX;
-      } else {
-        r = (Fl_Color)(FL_COLOR_CUBE-1); // white
-        l.color = fl_contrast((Fl_Color)labelcolor_, r);
-      }
-    } else {
-      l.color = fl_contrast((Fl_Color)labelcolor_, r);
-    }
+    l.color = fl_contrast((Fl_Color)labelcolor_, r);
     if (selected == 2) { // menu title
       fl_draw_box(b, x, y, w, h, r);
       x += 3;
@@ -355,8 +344,8 @@ menuwindow::menuwindow(const Fl_Menu_Item* m, int X, int Y, int Wp, int Hp,
   menubartitle = menubar_title;
   origin = NULL;
   offset_y = 0;
-
-  Fl_Window_Driver::driver(this)->menu_window_area(scr_x, scr_y, scr_w, scr_h);
+  int n = (Wp > 0 ? Fl::screen_num(X, Y) : -1);
+  Fl_Window_Driver::driver(this)->menu_window_area(scr_x, scr_y, scr_w, scr_h, n);
   if (!right_edge || right_edge > scr_x+scr_w) right_edge = scr_x+scr_w;
 
   if (m) m = m->first(); // find the first item that needs to be rendered
@@ -536,9 +525,10 @@ void menuwindow::drawentry(const Fl_Menu_Item* m, int n, int eraseit) {
   if (m->submenu()) {
 
     // calculate the bounding box of the submenu pointer (arrow)
-    int sz = (hh-2) & -2;
-    int x1 = xx + ww - sz - 2;
-    int y1 = yy + (hh-sz)/2 + 1;
+    int sz = ((hh-2) & (-2)) + 1 ;  // must be odd for better centering
+    if (sz > 13) sz = 13;           // limit arrow size
+    int x1 = xx + ww - sz - 2;      // left border
+    int y1 = yy + (hh-sz)/2 + 1;    // top border
 
     // draw an arrow whose style depends on the active scheme
     fl_draw_arrow(Fl_Rect(x1, y1, sz, sz), FL_ARROW_SINGLE, FL_ORIENT_RIGHT, fl_color());

@@ -3,7 +3,7 @@ dnl the "configure" script is made from this by running GNU "autoconf"
 dnl
 dnl Configuration script for the Fast Light Tool Kit (FLTK).
 dnl
-dnl Copyright 1998-2023 by Bill Spitzak and others.
+dnl Copyright 1998-2024 by Bill Spitzak and others.
 dnl
 dnl This library is free software. Distribution and use rights are outlined in
 dnl the file "COPYING" which should have been included with this file.  If this
@@ -101,6 +101,14 @@ AS_IF([test x$enable_debug = xyes], [
 ], [
     DEBUGFLAG=""
 ])
+
+AC_ARG_ENABLE([test], AS_HELP_STRING([--disable-test], [build test programs (default=yes)]))
+AS_IF([test x$enable_test = xno], [
+    TESTDIR=""
+], [
+    TESTDIR="test"
+])
+AC_SUBST(TESTDIR)
 
 AC_ARG_ENABLE([forms], AS_HELP_STRING([--disable-forms], [build Forms compatibility library (default=yes)]))
 
@@ -620,9 +628,15 @@ AC_CHECK_FUNCS([strcasecmp strlcat strlcpy])
 AC_CHECK_HEADERS([locale.h])
 AC_CHECK_FUNCS([localeconv])
 
+dnl HP-UX 11.11 does not provide setenv()
+AC_CHECK_FUNCS([setenv])
+
 
 dnl FLTK library uses math library functions...
 AC_SEARCH_LIBS([pow], [m])
+
+AC_CHECK_HEADERS([math.h])
+AC_CHECK_FUNCS([trunc])
 
 
 dnl Check for largefile support...
@@ -955,7 +969,7 @@ AS_CASE([$host_os_gui], [cygwin* | mingw*], [
     # CXXFLAGS="-mwindows -D_WIN32 -DUSE_OPENGL32 $CXXFLAGS"
     LDFLAGS="-mwindows $LDFLAGS"
     DSOFLAGS="-mwindows $DSOFLAGS"
-    LIBS="$LIBS -lole32 -luuid -lcomctl32 -lws2_32"
+    LIBS="$LIBS -lole32 -luuid -lcomctl32 -lws2_32 -lwinspool"
 
     BUILD="WIN"
     AS_IF([test "x$with_optim" = x], [
@@ -994,6 +1008,10 @@ AS_CASE([$host_os_gui], [cygwin* | mingw*], [
 
     # MacOS X uses Cocoa for graphics.
     LIBS="$LIBS -framework Cocoa"
+    macosversion_maj=$(sw_vers -productVersion | cut -d. -f1)
+    AS_IF([test $macosversion_maj -ge 11], [
+      LIBS="$LIBS -framework UniformTypeIdentifiers"
+    ])
 
     AS_IF([test x$have_pthread = xyes], [
         AC_DEFINE([HAVE_PTHREAD])
@@ -1078,10 +1096,14 @@ AS_CASE([$host_os_gui], [cygwin* | mingw*], [
       [
         plugin_dir="$($PKGCONFIG --variable=libdir libdecor-0)/libdecor/plugins-1"
         CFLAGS="$CFLAGS -DUSE_SYSTEM_LIBDECOR"
+        CXXFLAGS="$CXXFLAGS -DUSE_SYSTEM_LIBDECOR"
         CFLAGS="$CFLAGS -DLIBDECOR_PLUGIN_DIR=\\\"$plugin_dir\\\" "
         LIBS="$LIBS $($PKGCONFIG --libs libdecor-0)"
       ],
-      [CFLAGS="$CFLAGS -DUSE_SYSTEM_LIBDECOR=0 -DLIBDECOR_PLUGIN_DIR=\\\"\\\" "]
+      [
+        CFLAGS="$CFLAGS -DUSE_SYSTEM_LIBDECOR=0 -DLIBDECOR_PLUGIN_DIR=\\\"\\\" "
+        CXXFLAGS="$CXXFLAGS -DUSE_SYSTEM_LIBDECOR=0"
+      ]
       )
       LIBS="$LIBS $($PKGCONFIG --libs wayland-cursor) $($PKGCONFIG --libs wayland-client) $($PKGCONFIG --libs xkbcommon) $($PKGCONFIG --libs pangocairo) "
       AS_IF([test x$enable_x11 != xno], [LIBS="$LIBS $($PKGCONFIG --libs x11)"] )
@@ -1093,11 +1115,6 @@ AS_CASE([$host_os_gui], [cygwin* | mingw*], [
        [LIBDECORDBUS="-DHAS_DBUS $($PKGCONFIG --cflags dbus-1)" LIBS="$LIBS $($PKGCONFIG --libs dbus-1)"]
       )
       LDFLAGS="$LDFLAGS -rdynamic"
-      AC_SUBST([UNAME])
-      UNAME="$(uname -s)"
-      AS_CASE([$UNAME],
-         [Linux], [LDFLAGS="$LDFLAGS -no-pie"]
-      )
 
       AC_SEARCH_LIBS([dlopen], [dl])
 
@@ -1810,6 +1827,12 @@ AS_IF([test x$enable_fluid != xno], [
     echo "    Build fluid: YES"
     ],[
     echo "    Build fluid: NO"
+    ])
+
+AS_IF([test x$enable_test != xno], [
+    echo "    Build tests: YES"
+    ],[
+    echo "    Build tests: NO"
     ])
 
 AS_IF([test "$fltk_cross_compiling" = "yes"], [

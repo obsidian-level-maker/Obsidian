@@ -76,7 +76,6 @@ BUILDING AND INSTALLING FLTK UNDER UNIX AND macOS
         --disable-gl            - Disable OpenGL support
         --enable-shared         - Enable generation of shared libraries
         --enable-threads        - Enable multithreading support
-        --enable-xdbe           - Enable the X double-buffer extension
         --enable-xft            - Enable the Xft library (anti-aliased fonts)
         --enable-pango          - Draw text with the pango library
         --disable-wayland       - Force building for X11 only (no Wayland support)
@@ -109,7 +108,7 @@ BUILDING AND INSTALLING FLTK UNDER UNIX AND macOS
 
 GIT USERS
 
-    If you've just checked out a fresh copy of FLTK from GIT,
+    If you've just checked out a fresh copy of FLTK from  Git (GitHub),
     you'll need to generate an initial version of 'configure'
     by running 'make makeinclude' or 'make clean' (we don't
     include a copy of configure in git).

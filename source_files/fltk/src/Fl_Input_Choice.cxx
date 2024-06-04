@@ -239,7 +239,6 @@ void Fl_Input_Choice::inp_cb(Fl_Widget*, void *data) {
     if (o->when() & FL_WHEN_NOT_CHANGED)
       o->do_callback(FL_REASON_RESELECTED);
   }
-
   if (wp.deleted()) return;
 
   if (o->callback() != default_callback)

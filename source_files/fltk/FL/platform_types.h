@@ -49,7 +49,7 @@ typedef opaque Fl_Offscreen;
  Pointer to a platform-specific structure representing a collection of rectangles.
   \note This pointer can be safely cast to these types on each platform:
   \li X11: Region as defined by X11
-  \li Wayland: struct flCairoRegion *
+  \li Wayland:  cairo_region_t *
   \li Windows: HRGN
   \li macOS:  struct flCocoaRegion *
  */
@@ -138,7 +138,7 @@ extern FL_EXPORT int fl_control_modifier();
 
 #endif /* FL_PLATFORM_TYPES_H */
 
-// This is currently the same for all platforms, but may change in the future
+/* This is currently the same for all platforms but may change in the future */
 struct Fl_Timestamp_t {
   time_t sec;
   int usec;

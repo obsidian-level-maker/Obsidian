@@ -174,7 +174,7 @@ const char *Fl_Mac_App_Menu::quit = "Quit %@";
 {
   NSUInteger macMod = 0;
   if ( value & FL_META ) macMod = NSEventModifierFlagCommand;
-  if ( value & FL_SHIFT || isupper(value) ) macMod |= NSEventModifierFlagShift;
+  if ( value & FL_SHIFT || (value > 0 && value < 127 && isupper(value)) ) macMod |= NSEventModifierFlagShift;
   if ( value & FL_ALT ) macMod |= NSEventModifierFlagOption;
   if ( value & FL_CTRL ) macMod |= NSEventModifierFlagControl;
   [super setKeyEquivalentModifierMask:macMod];
@@ -569,8 +569,6 @@ static void minimize_win_cb(Fl_Widget *, void *data)
 
 static void window_menu_cb(Fl_Widget *, void *data)
 {
-  Fl_Window *top = Fl::first_window();
-  if (top && top->fullscreen_active()) return;
   if (data) ((Fl_Window*)data)->show();
 }
 
@@ -664,7 +662,7 @@ void Fl_MacOS_Sys_Menu_Bar_Driver::new_window(Fl_Window *win)
   int index = window_menu_items->size() - 1;
   if (index >= window_menu_items_count - 1) {
     window_menu_items_count += 5;
-    window_menu_items = (Fl_Menu_Item*)realloc(window_menu_items, 
+    window_menu_items = (Fl_Menu_Item*)realloc(window_menu_items,
                                     window_menu_items_count * sizeof(Fl_Menu_Item));
     Fl_Menu_Item *item = (Fl_Menu_Item*)fl_sys_menu_bar->find_item("Window");
     item->user_data(window_menu_items);
@@ -726,6 +724,42 @@ void Fl_MacOS_Sys_Menu_Bar_Driver::rename_window(Fl_Window *win)
 
 void fl_mac_set_about(Fl_Callback *cb, void *user_data, int shortcut) {
   Fl_Sys_Menu_Bar::about(cb, user_data);
+}
+
+
+void Fl_MacOS_Sys_Menu_Bar_Driver::play_menu(const Fl_Menu_Item *item) {
+  // Use the accessibility interface to programmatically open a menu of the system menubar
+  CFArrayRef children = NULL;
+  CFIndex count = 0;
+  AXUIElementRef element;
+  char *label = remove_ampersand(item->label());
+  NSString *mac_name = NSLocalizedString([NSString stringWithUTF8String:label], nil);
+  free(label);
+  AXUIElementRef appElement = AXUIElementCreateApplication(getpid());
+  AXUIElementRef menu_bar = NULL;
+  AXError error = AXUIElementCopyAttributeValue(appElement, kAXMenuBarAttribute, 
+                                                (CFTypeRef *)&menu_bar);
+  if (!error) error = AXUIElementGetAttributeValueCount(menu_bar, kAXChildrenAttribute, &count);
+  if (!error) error = AXUIElementCopyAttributeValues(menu_bar, kAXChildrenAttribute, 0, count, 
+                                                     &children);
+  if (!error) {
+    NSEnumerator *enumerator = [(NSArray*)children objectEnumerator];
+    [enumerator nextObject]; // skip Apple menu
+    [enumerator nextObject]; // skip application menu
+    bool need_more = true;
+    while (need_more && (element = (AXUIElementRef)[enumerator nextObject]) != nil) {
+      CFTypeRef title = NULL;
+      need_more = ( AXUIElementCopyAttributeValue(element, kAXTitleAttribute, &title) == 0 );
+      if (need_more && [(NSString*)title isEqualToString:mac_name]) {
+        AXUIElementPerformAction(element, kAXPressAction);
+        need_more = false;
+      }
+      if (title) CFRelease(title);
+    }
+  }
+  if (menu_bar) CFRelease(menu_bar);
+  if (children) CFRelease(children);
+  CFRelease(appElement);
 }
 
 #endif /* __APPLE__ */

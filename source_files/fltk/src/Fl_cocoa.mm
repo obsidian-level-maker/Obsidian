@@ -1318,6 +1318,34 @@ static FLWindowDelegate *flwindowdelegate_instance = nil;
   }
   fl_unlock_function();
 }
+
+/*
+ This method is called whenever the view of an Fl_Window changes size.
+
+ This can happen for various reasons:
+
+ - the user resizes a desktop window (NSViewFrameDidChangeNotification)
+      Fl_Cocoa_Window_Driver::driver(window)->through_resize() == 0 for the top level window
+      Fl_Window::is_a_rescale() == 0
+ - the app scale is changed (the Cocoa size changes, but the FLTK size remains)
+      Fl_Cocoa_Window_Driver::driver(window)->through_resize() == 1
+      Fl_Window::is_a_rescale() == 1
+ - a window is resized by application code: Fl_Window:resize()
+      Fl_Cocoa_Window_Driver::driver(window)->through_resize() == 1
+      Fl_Window::is_a_rescale() == 0
+
+ Note that a top level window must be treated differently than a subwindow
+ (an Fl_Window that is the child of another window).
+
+ Also note, it's important to keep the logical FLTK coordinate system intact.
+ Converting Cocoa coordinates into FLTK coordinates is not reliable because
+ it loses precision if the screen scale is set to anything but 1:1.
+
+ See also:
+ Fl_Cocoa_Window_Driver::driver(window)->view_resized() avoid recursion
+ Fl_Cocoa_Window_Driver::driver(window)->through_resize(); avoid recursion
+ Fl_Cocoa_Window_Driver::driver(window)->changed_resolution(); tested OK
+ */
 - (void)view_did_resize:(NSNotification *)notif
 {
   if (![[notif object] isKindOfClass:[FLView class]]) return;
@@ -1326,10 +1354,37 @@ static FLWindowDelegate *flwindowdelegate_instance = nil;
   if (!nsw || ![nsw getFl_Window]) return;
   fl_lock_function();
   Fl_Window *window = [nsw getFl_Window];
-  int X, Y;
-  CocoatoFLTK(window, X, Y);
+
+  int X, Y, W, H;
   float s = Fl::screen_driver()->scale(window->screen_num());
-  NSRect r = [view frame];
+  if (Fl_Window::is_a_rescale()) {
+    if (window->parent()) {
+      X = window->x();
+      Y = window->y();
+    } else {
+      // Recalculate the FLTK position from the current Cocoa position applying
+      // the new scale, so the window stays at its current position after scaling.
+      CocoatoFLTK(window, X, Y);
+    }
+    W = window->w();
+    H = window->h();
+  } else if (Fl_Cocoa_Window_Driver::driver(window)->through_resize()) {
+    if (window->parent()) {
+      X = window->x();
+      Y = window->y();
+    } else {
+      // Recalculate the FLTK position from the current Cocoa position
+      CocoatoFLTK(window, X, Y);
+    }
+    W = window->w();
+    H = window->h();
+  } else {
+    CocoatoFLTK(window, X, Y);
+    NSRect r = [view frame];
+    W = (int)lround(r.size.width/s);
+    H = (int)lround(r.size.height/s);
+  }
+
   Fl_Cocoa_Window_Driver::driver(window)->view_resized(1);
   if (Fl_Cocoa_Window_Driver::driver(window)->through_resize()) {
     if (window->as_gl_window()) {
@@ -1339,12 +1394,12 @@ static FLWindowDelegate *flwindowdelegate_instance = nil;
         plugin = (Fl_Cocoa_Plugin*)pm.plugin("gl.cocoa.fltk.org");
       }
       // calls Fl_Gl_Window::resize() without including Fl_Gl_Window.H
-      plugin->resize(window->as_gl_window(), X, Y, (int)lround(r.size.width/s), (int)lround(r.size.height/s));
+      plugin->resize(window->as_gl_window(), X, Y, W, H);
     } else {
-      Fl_Cocoa_Window_Driver::driver(window)->resize(X, Y, (int)lround(r.size.width/s), (int)lround(r.size.height/s));
+      Fl_Cocoa_Window_Driver::driver(window)->resize(X, Y, W, H);
     }
   } else
-    window->resize(X, Y, (int)lround(r.size.width/s), (int)lround(r.size.height/s));
+    window->resize(X, Y, W, H);
   Fl_Cocoa_Window_Driver::driver(window)->view_resized(0);
   update_e_xy_and_e_xy_root(nsw);
 #if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_14
@@ -1378,7 +1433,7 @@ static FLWindowDelegate *flwindowdelegate_instance = nil;
   FLWindow *nsw = (FLWindow*)[notif object];
   Fl_Window *w = [nsw getFl_Window];
   /* Restore previous fullscreen level */
-  if (w->fullscreen_active()) {
+  if (w->fullscreen_active() && fl_mac_os_version < 100700) {
     [nsw setLevel:NSStatusWindowLevel];
     fixup_window_levels();
   }
@@ -2028,7 +2083,9 @@ static int fake_X_wm(Fl_Window* w,int &X,int &Y, int &bt,int &bx, int &by) {
   int W, H, xoff, yoff, dx, dy;
   int ret = bx = by = bt = 0;
   if (w->border() && !w->parent()) {
-    if (Fl_Window_Driver::driver(w)->maxw() != Fl_Window_Driver::driver(w)->minw() || Fl_Window_Driver::driver(w)->maxh() != Fl_Window_Driver::driver(w)->minh()) {
+    int minw, minh, maxw, maxh;
+    w->get_size_range(&minw, &minh, &maxw, &maxh, NULL, NULL, NULL);
+    if (maxw != minw || maxh != minh) {
       ret = 2;
     } else {
       ret = 1;
@@ -3053,7 +3110,7 @@ void Fl_Cocoa_Window_Driver::makeWindow()
   changed_resolution(false);
 
   NSRect crect;
-  if (w->fullscreen_active()) {
+  if (w->fullscreen_active() && fl_mac_os_version < 100700) {
     int top, bottom, left, right;
     int sx, sy, sw, sh, X, Y, W, H;
 
@@ -3164,7 +3221,7 @@ void Fl_Cocoa_Window_Driver::makeWindow()
   [myview registerForDraggedTypes:[NSArray arrayWithObjects:UTF8_pasteboard_type,
                                    fl_filenames_pboard_type, nil]];
 
-  if (size_range_set()) size_range();
+  if (pWindow->get_size_range(NULL, NULL, NULL, NULL, NULL, NULL, NULL)) size_range();
 
   if ( w->border() || (!w->modal() && !w->tooltip_window()) ) {
     Fl_Tooltip::enter(0);
@@ -3198,6 +3255,9 @@ void Fl_Cocoa_Window_Driver::makeWindow()
   } else { // a top-level window
     if ([cw canBecomeKeyWindow]) [cw makeKeyAndOrderFront:nil];
     else [cw orderFront:nil];
+    if (w->fullscreen_active() && fl_mac_os_version >= 100700) {
+      [cw toggleFullScreen:nil];
+    }
   }
   if (fl_sys_menu_bar && Fl_MacOS_Sys_Menu_Bar_Driver::window_menu_style() && !w->parent() && w->border() &&
       !w->modal() && !w->non_modal()) {
@@ -3356,8 +3416,10 @@ void Fl_Cocoa_Window_Driver::size_range() {
   if (i && i->xid) {
     float s = Fl::screen_driver()->scale(0);
     int bt = get_window_frame_sizes(pWindow);
-    NSSize minSize = NSMakeSize(int(minw() * s +.5) , int(minh() * s +.5) + bt);
-    NSSize maxSize = NSMakeSize(maxw() ? int(maxw() * s + .5):32000, maxh() ? int(maxh() * s +.5) + bt:32000);
+    int minw, minh, maxw, maxh;
+    pWindow->get_size_range(&minw, &minh, &maxw, &maxh, NULL, NULL, NULL);
+    NSSize minSize = NSMakeSize(int(minw * s +.5) , int(minh * s +.5) + bt);
+    NSSize maxSize = NSMakeSize(maxw ? int(maxw * s + .5):32000, maxh ? int(maxh * s +.5) + bt:32000);
     [(FLWindow*)i->xid setMinSize:minSize];
     [(FLWindow*)i->xid setMaxSize:maxSize];
   }
@@ -3430,8 +3492,15 @@ void Fl_Cocoa_Window_Driver::resize(int X, int Y, int W, int H) {
         pWindow->Fl_Group::resize(X, Y, W, H); // runs rarely, e.g. with scaled down test/tabs
         pWindow->redraw();
       } else {
+        // First resize the logical FLTK coordinates for this and all children
+        if (!Fl_Window::is_a_rescale())
+          pWindow->Fl_Group::resize(X, Y, W, H);
+        // Next update the physical Cocoa view
         [xid setFrame:r display:YES];
         [[xid contentView] displayIfNeededIgnoringOpacity];
+        // Finally tell the the group to render its contents if the code above
+        // didn't already
+        pWindow->redraw();
       }
     }
     else {
@@ -3996,8 +4065,6 @@ static PrintWithTitlebarItem *print_with_titlebar_item = NULL;
 }
 - (void)showPanel
 {
-  Fl_Window *top = Fl::first_window();
-  if (top && top->fullscreen_active()) return;
     NSDictionary *options;
     options = [NSDictionary dictionaryWithObjectsAndKeys:
                [[[NSAttributedString alloc]
@@ -4008,8 +4075,6 @@ static PrintWithTitlebarItem *print_with_titlebar_item = NULL;
 }
 - (void)printPanel
 {
-  Fl_Window *top = Fl::first_window();
-  if (top && top->fullscreen_active()) return;
   bool grab_decoration = ([print_with_titlebar_item state] == NSControlStateValueOn);
   fl_lock_function();
   fl_print_or_copy_window(Fl::first_window(), grab_decoration, 1);
@@ -4545,7 +4610,7 @@ int Fl_Cocoa_Window_Driver::decorated_h()
 void Fl_Cocoa_Window_Driver::draw_titlebar_to_context(CGContextRef gc, int w, int h)
 {
   FLWindow *nswin = fl_xid(pWindow);
-  [nswin makeMainWindow];
+  if ([nswin canBecomeMainWindow]) [nswin makeMainWindow];
   [NSApp nextEventMatchingMask:NSEventMaskAny untilDate:nil inMode:NSDefaultRunLoopMode dequeue:NO];
   CGImageRef img;
 #if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5

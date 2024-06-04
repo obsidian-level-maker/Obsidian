@@ -18,7 +18,7 @@
 #include "Fl_Wayland_Window_Driver.H"
 #include "Fl_Wayland_Graphics_Driver.H"
 #include <wayland-cursor.h>
-#include "../../../libdecor/src/libdecor.h"
+#include "../../../libdecor/build/fl_libdecor.h"
 #include "xdg-shell-client-protocol.h"
 #include "../Posix/Fl_Posix_System_Driver.H"
 #include <FL/Fl.H>
@@ -47,7 +47,8 @@
 #include <string.h> // for strerror()
 extern "C" {
   bool libdecor_get_cursor_settings(char **theme, int *size);
-  bool fl_is_surface_gtk_titlebar(struct wl_surface *, struct libdecor *);
+  bool fl_is_surface_from_GTK_titlebar (struct wl_surface *surface, struct libdecor_frame *frame,
+                                        bool *using_GTK);
 }
 
 // set this to 1 for keyboard debug output, 0 for no debug output
@@ -90,7 +91,6 @@ struct pointer_output {
 
 
 static Fl_Int_Vector key_vector; // used by Fl_Wayland_Screen_Driver::event_key()
-static struct gtk_shell1 *gtk_shell = NULL;
 static struct wl_surface *gtk_shell_surface = NULL;
 
 Fl_Wayland_Screen_Driver::compositor_name Fl_Wayland_Screen_Driver::compositor =
@@ -203,19 +203,27 @@ static Fl_Window *event_coords_from_surface(struct wl_surface *surface,
 
 static void pointer_enter(void *data, struct wl_pointer *wl_pointer, uint32_t serial,
         struct wl_surface *surface, wl_fixed_t surface_x, wl_fixed_t surface_y) {
+  struct Fl_Wayland_Screen_Driver::seat *seat = (struct Fl_Wayland_Screen_Driver::seat*)data;
   Fl_Window *win = event_coords_from_surface(surface, surface_x, surface_y);
-  if (!win && gtk_shell) { // check that surface is the headerbar of a GTK-decorated window
-    Fl_Wayland_Screen_Driver *scr_driver = (Fl_Wayland_Screen_Driver*)Fl::screen_driver();
-    if (fl_is_surface_gtk_titlebar(surface, scr_driver->libdecor_context)) {
-      gtk_shell_surface = surface;
+  static bool using_GTK = seat->gtk_shell &&
+    (gtk_shell1_get_version(seat->gtk_shell) >= GTK_SURFACE1_TITLEBAR_GESTURE_SINCE_VERSION);
+  if (!win && using_GTK) {
+    // check whether surface is the headerbar of a GTK-decorated window
+    Fl_X *xp = Fl_X::first;
+    while (xp && using_GTK) { // all mapped windows
+      struct wld_window *xid = (struct wld_window*)xp->xid;
+      if (xid->kind == Fl_Wayland_Window_Driver::DECORATED &&
+          fl_is_surface_from_GTK_titlebar(surface, xid->frame, &using_GTK)) {
+        gtk_shell_surface = surface;
+        break;
+      }
+      xp = xp->next;
     }
   }
   if (!win) return;
   // use custom cursor if present
   struct wl_cursor *cursor =
     fl_wl_xid(win)->custom_cursor ? fl_wl_xid(win)->custom_cursor->wl_cursor : NULL;
-  struct Fl_Wayland_Screen_Driver::seat *seat =
-    (struct Fl_Wayland_Screen_Driver::seat*)data;
   Fl_Wayland_Screen_Driver::do_set_cursor(seat, cursor);
   seat->serial = serial;
   seat->pointer_enter_serial = serial;
@@ -277,11 +285,10 @@ static void pointer_button(void *data,
     (struct Fl_Wayland_Screen_Driver::seat*)data;
   if (gtk_shell_surface && state == WL_POINTER_BUTTON_STATE_PRESSED &&
       button == BTN_MIDDLE) {
-    struct gtk_surface1 *gtk_surface = gtk_shell1_get_gtk_surface(gtk_shell,
-                                                                  gtk_shell_surface);
+    struct gtk_surface1 *gtk_surface = gtk_shell1_get_gtk_surface(seat->gtk_shell,gtk_shell_surface);
     gtk_surface1_titlebar_gesture(gtk_surface, serial, seat->wl_seat,
                                   GTK_SURFACE1_GESTURE_MIDDLE_CLICK);
-    gtk_surface1_release(gtk_surface);
+    gtk_surface1_release(gtk_surface); // very necessary
     return;
   }
   seat->serial = serial;
@@ -471,7 +478,7 @@ static void init_cursors(struct Fl_Wayland_Screen_Driver::seat *seat) {
     seat->cursor_theme = theme;
   }
   if (seat->cursor_theme) {
-    seat->default_cursor = scr_driver->xc_arrow =
+    seat->default_cursor = scr_driver->xc_cursor[Fl_Wayland_Screen_Driver::arrow] =
       wl_cursor_theme_get_cursor(seat->cursor_theme, "left_ptr");
   }
   if (!seat->cursor_surface) {
@@ -610,12 +617,28 @@ int Fl_Wayland_Screen_Driver::insertion_point_width = 0;
 int Fl_Wayland_Screen_Driver::insertion_point_height = 0;
 bool Fl_Wayland_Screen_Driver::insertion_point_location_is_valid = false;
 
+static int previous_cursor_x = 0, previous_cursor_y = 0, previous_cursor_h = 0;
+static uint32_t commit_serial = 0;
+static char *current_pre_edit = NULL;
+static char *pending_pre_edit = NULL;
+static char *pending_commit = NULL;
+
+
+static void send_commit(struct zwp_text_input_v3 *zwp_text_input_v3) {
+  zwp_text_input_v3_commit(zwp_text_input_v3);
+  commit_serial++;
+}
+
 
 // inform TIM about location of the insertion point, and memorize this info.
 void Fl_Wayland_Screen_Driver::insertion_point_location(int x, int y, int height) {
 //printf("insertion_point_location %dx%d\n",x,y);
   Fl_Wayland_Screen_Driver *scr_driver = (Fl_Wayland_Screen_Driver*)Fl::screen_driver();
-  if (scr_driver->seat->text_input) {
+  if (scr_driver->seat->text_input && !current_pre_edit &&
+        (x != previous_cursor_x || y != previous_cursor_y  || height != previous_cursor_h)) {
+    previous_cursor_x = x;
+    previous_cursor_y = y;
+    previous_cursor_h = height;
     if (Fl::focus()) {
       Fl_Widget *focuswin = Fl::focus()->window();
       while (focuswin && focuswin->parent()) {
@@ -631,9 +654,9 @@ void Fl_Wayland_Screen_Driver::insertion_point_location(int x, int y, int height
     insertion_point_height = s*height;
     if (zwp_text_input_v3_get_user_data(scr_driver->seat->text_input) ) {
       zwp_text_input_v3_set_cursor_rectangle(scr_driver->seat->text_input,
-        insertion_point_x, insertion_point_y,
-        insertion_point_width, insertion_point_height);
-      zwp_text_input_v3_commit(scr_driver->seat->text_input);
+                                             insertion_point_x, insertion_point_y,
+                                             insertion_point_width, insertion_point_height);
+      send_commit(scr_driver->seat->text_input);
     }
   }
 }
@@ -750,9 +773,12 @@ static void wl_keyboard_key(void *data, struct wl_keyboard *wl_keyboard,
     }
   } else {
     remove_int_vector(key_vector, for_key_vector);
+    // Under KDE, the time value received doesn't change at each keystroke as it should,
+    // so we remove any key repeat timer at each FL_KEYUP event.
+    Fl::remove_timeout((Fl_Timeout_Handler)key_repeat_timer_cb);
   }
   Fl::e_text = buf;
-  Fl::e_length = strlen(buf);
+  Fl::e_length = (int)strlen(buf);
   // Process dead keys and compose sequences :
   enum xkb_compose_status status = XKB_COMPOSE_NOTHING;
   // This part is useful only if the compositor doesn't support protocol text-input-unstable-v3
@@ -768,7 +794,7 @@ static void wl_keyboard_key(void *data, struct wl_keyboard *wl_keyboard,
         }
         if (i < dead_key_count) strcpy(buf, dead_keys[i].marked_text);
         else buf[0] = 0;
-        Fl::e_length = strlen(buf);
+        Fl::e_length = (int)strlen(buf);
         Fl::compose_state = 0;
       }
       Fl_Wayland_Screen_Driver::next_marked_length = Fl::e_length;
@@ -867,12 +893,12 @@ void text_input_enter(void *data, struct zwp_text_input_v3 *zwp_text_input_v3,
 //puts("text_input_enter");
   zwp_text_input_v3_set_user_data(zwp_text_input_v3, surface);
   zwp_text_input_v3_enable(zwp_text_input_v3);
+  zwp_text_input_v3_set_content_type(zwp_text_input_v3, ZWP_TEXT_INPUT_V3_CONTENT_HINT_NONE, ZWP_TEXT_INPUT_V3_CONTENT_PURPOSE_NORMAL);
   int x, y, width, height;
   if (Fl_Wayland_Screen_Driver::insertion_point_location(&x, &y, &width, &height)) {
     zwp_text_input_v3_set_cursor_rectangle(zwp_text_input_v3,  x,  y,  width, height);
   }
-  zwp_text_input_v3_commit(zwp_text_input_v3);
-  wl_display_roundtrip(Fl_Wayland_Screen_Driver::wl_display);
+  send_commit(zwp_text_input_v3);
 }
 
 
@@ -881,39 +907,48 @@ void text_input_leave(void *data, struct zwp_text_input_v3 *zwp_text_input_v3,
 //puts("text_input_leave");
   zwp_text_input_v3_disable(zwp_text_input_v3);
   zwp_text_input_v3_set_user_data(zwp_text_input_v3, NULL);
-  zwp_text_input_v3_commit(zwp_text_input_v3);
+  send_commit(zwp_text_input_v3);
+  free(pending_pre_edit); pending_pre_edit = NULL;
+  free(current_pre_edit); current_pre_edit = NULL;
+  free(pending_commit); pending_commit = NULL;
+}
+
+
+static void send_text_to_fltk(const char *text, bool is_marked, struct wl_surface *current_surface) {
+//printf("send_text_to_fltk(%s, %d)\n",text,is_marked);
+  Fl_Window *win =  Fl_Wayland_Window_Driver::surface_to_window(current_surface);
+  Fl::e_text = text ? (char*)text : (char*)"";
+  Fl::e_length = text ? (int)strlen(text) : 0;
+  Fl::e_keysym = 'a'; // fake a simple key
+  set_event_xy(win);
+  Fl::e_is_click = 0;
+  if (is_marked) { // goes to widget as marked text
+    Fl_Wayland_Screen_Driver::next_marked_length = Fl::e_length;
+    Fl::handle(FL_KEYDOWN, win);
+  } else if (text) {
+    Fl_Wayland_Screen_Driver::next_marked_length = 0;
+    Fl::handle(FL_KEYDOWN, win);
+    Fl::compose_state = 0;
+  } else {
+    Fl_Wayland_Screen_Driver::next_marked_length = 0;
+    Fl::handle(FL_KEYDOWN, win);
+  }
 }
 
 
 void text_input_preedit_string(void *data, struct zwp_text_input_v3 *zwp_text_input_v3,
            const char *text, int32_t cursor_begin, int32_t cursor_end) {
 //printf("text_input_preedit_string %s cursor_begin=%d cursor_end=%d\n",text, cursor_begin, cursor_end);
-  // goes to widget as marked text
-  Fl_Wayland_Screen_Driver::next_marked_length = text ? strlen(text) : 0;
-  Fl::e_text = text ? (char*)text : (char*)"";
-  Fl::e_length = text ? strlen(text) : 0;
-  Fl::e_keysym = 'a'; // fake a simple key
-  struct wl_surface *surface = (struct wl_surface*)data;
-  Fl_Window *win =  Fl_Wayland_Window_Driver::surface_to_window(surface);
-  set_event_xy(win);
-  Fl::e_is_click = 0;
-  Fl::handle(FL_KEYDOWN, win);
+  free(pending_pre_edit);
+  pending_pre_edit = text ? strdup(text) : NULL;
 }
 
 
 void text_input_commit_string(void *data, struct zwp_text_input_v3 *zwp_text_input_v3,
                               const char *text) {
 //printf("text_input_commit_string %s\n",text);
-  Fl::e_text = (char*)text;
-  Fl::e_length = strlen(text);
-  struct wl_surface *surface = (struct wl_surface*)data;
-  Fl_Window *win =  Fl_Wayland_Window_Driver::surface_to_window(surface);
-  set_event_xy(win);
-  Fl::e_is_click = 0;
-  Fl::handle(FL_KEYDOWN, win);
-  zwp_text_input_v3_commit(zwp_text_input_v3);
-  Fl_Wayland_Screen_Driver::next_marked_length = 0;
-  Fl::compose_state = 0;
+  free(pending_commit);
+  pending_commit = text ? strdup(text) : NULL;
 }
 
 
@@ -928,6 +963,25 @@ void text_input_delete_surrounding_text(void *data,
 void text_input_done(void *data, struct zwp_text_input_v3 *zwp_text_input_v3,
                      uint32_t serial) {
 //puts("text_input_done");
+  struct wl_surface *current_surface = (struct wl_surface*)data;
+  const bool bad_event = (serial != commit_serial);
+  if ((pending_pre_edit == NULL && current_pre_edit == NULL) ||
+      (pending_pre_edit && current_pre_edit && strcmp(pending_pre_edit, current_pre_edit) == 0)) {
+      free(pending_pre_edit); pending_pre_edit = NULL;
+  } else {
+      free(current_pre_edit);
+      current_pre_edit = pending_pre_edit;
+      pending_pre_edit = NULL;
+      if (current_pre_edit) {
+        send_text_to_fltk(current_pre_edit, !bad_event, current_surface);
+      } else {
+        send_text_to_fltk(NULL, false, current_surface);
+      }
+  }
+  if (pending_commit) {
+    send_text_to_fltk(pending_commit, false, current_surface);
+    free(pending_commit); pending_commit = NULL;
+  }
 }
 
 
@@ -957,6 +1011,9 @@ void Fl_Wayland_Screen_Driver::disable_im() {
     zwp_text_input_v3_commit(seat->text_input);
     zwp_text_input_v3_destroy(seat->text_input);
     seat->text_input = NULL;
+    free(pending_pre_edit); pending_pre_edit = NULL;
+    free(current_pre_edit); current_pre_edit = NULL;
+    free(pending_commit); pending_commit = NULL;
   }
 }
 
@@ -1201,10 +1258,8 @@ static void registry_handle_global(void *user_data, struct wl_registry *wl_regis
   } else if (strcmp(interface, "gtk_shell1") == 0) {
     Fl_Wayland_Screen_Driver::compositor = Fl_Wayland_Screen_Driver::MUTTER;
     //fprintf(stderr, "Running the Mutter compositor\n");
-    if ( version >= 5) {
-      gtk_shell = (struct gtk_shell1*)wl_registry_bind(wl_registry, id,
-                                                  &gtk_shell1_interface, 5);
-    }
+    scr_driver->seat->gtk_shell = (struct gtk_shell1*)wl_registry_bind(wl_registry, id,
+                                  &gtk_shell1_interface, version);
   } else if (strcmp(interface, "weston_desktop_shell") == 0) {
     Fl_Wayland_Screen_Driver::compositor = Fl_Wayland_Screen_Driver::WESTON;
     //fprintf(stderr, "Running the Weston compositor\n");
@@ -1731,9 +1786,7 @@ struct wl_cursor *Fl_Wayland_Screen_Driver::cache_cursor(const char *cursor_name
 
 
 void Fl_Wayland_Screen_Driver::reset_cursor() {
-  xc_arrow = xc_ns = xc_wait = xc_insert = xc_hand = xc_help = xc_cross = xc_move =
-  xc_north = xc_south = xc_west = xc_east = xc_we = xc_nesw = xc_nwse = xc_sw = xc_se =
-  xc_ne = xc_nw = NULL;
+  for (int i = 0; i < cursor_count; i++) xc_cursor[i] = NULL;
 }
 
 
@@ -1820,11 +1873,7 @@ void *Fl_Wayland_Screen_Driver::control_maximize_button(void *data) {
             LIBDECOR_WINDOW_STATE_MAXIMIZED) ) {
         win_dims *dim = new win_dims;
         dim->tracker = new Fl_Widget_Tracker(win);
-        Fl_Window_Driver *dr = Fl_Window_Driver::driver(win);
-        dim->minw = dr->minw();
-        dim->minh = dr->minh();
-        dim->maxw = dr->maxw();
-        dim->maxh = dr->maxh();
+        win->get_size_range(&dim->minw, &dim->minh, &dim->maxw, &dim->maxh, NULL, NULL, NULL);
         //make win un-resizable
         win->size_range(win->w(), win->h(), win->w(), win->h());
         dim->next = first_dim;
@@ -1878,7 +1927,12 @@ int Fl_Wayland_Screen_Driver::get_key(int k) {
 
 
 float Fl_Wayland_Screen_Driver::base_scale(int numscreen) {
-  return 1.f;
+  const char *p;
+  float factor = 1;
+  if ((p = fl_getenv("FLTK_SCALING_FACTOR"))) {
+    sscanf(p, "%f", &factor);
+  }
+  return factor;
 }
 
 

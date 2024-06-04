@@ -39,7 +39,7 @@
 
 #include "libdecor-plugin.h"
 #include "utils.h"
-#include "cursor-settings.h"
+#include "desktop-settings.h"
 #include "os-compatibility.h"
 
 #include <cairo/cairo.h>
@@ -597,7 +597,7 @@ create_shm_buffer(struct libdecor_plugin_cairo *plugin_cairo,
 	stride = buffer_width * 4;
 	size = stride * buffer_height;
 
-	fd = os_create_anonymous_file(size);
+	fd = libdecor_os_create_anonymous_file(size);
 	if (fd < 0) {
 		fprintf(stderr, "creating a buffer file for %d B failed: %s\n",
 			size, strerror(errno));

@@ -174,8 +174,12 @@ public:
     \see Fl::screen_xywh(int &X, int &Y, int &W, int &H, int n)
 
    \note Under Wayland, it's generally not possible for the client app to control
-   the position of a window in the system. It's only possible to specify on what screen
-   should the compositor place a fullscreen window.
+   the position of a window in the system. It's possible to specify on what screen
+   should the compositor place a fullscreen window. It's also possible to make an
+   Fl_Window the child of another window or group and control with \p x and \p y
+   its screen position relatively to the enclosing window. Apply member function
+   Fl_Window::allow_expand_outside_parent() to the child window to allow it
+   to expand partially or totally outside its parent.
   */
     Fl_Window(int x, int y, int w, int h, const char *title = 0);
   /**
@@ -346,6 +350,8 @@ public:
   void free_position()  {clear_flag(FORCE_POSITION);}
 
   void size_range(int minw, int minh, int maxw=0, int maxh=0, int dw=0, int dh=0, int aspect=0);
+
+  uchar get_size_range(int *minw, int *minh, int *maxw=NULL, int *maxh=NULL, int *dw=NULL, int *dh=NULL, int *aspect=NULL);
 
   /** See void Fl_Window::label(const char*)   */
   const char* label() const     {return Fl_Widget::label();}
@@ -623,6 +629,9 @@ public:
   static char show_next_window_iconic() {
     return show_next_window_iconic_;
   }
+  
+  void allow_expand_outside_parent();
+  
 };
 
 #endif

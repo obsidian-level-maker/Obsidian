@@ -1,7 +1,7 @@
 //
 // Main header file for the Fast Light Tool Kit (FLTK).
 //
-// Copyright 1998-2023 by Bill Spitzak and others.
+// Copyright 1998-2024 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
@@ -87,6 +87,9 @@ typedef void (Fl_Label_Measure_F)(const Fl_Label *label, int &width, int &height
 
 /** Signature of some box drawing functions passed as parameters */
 typedef void (Fl_Box_Draw_F)(int x, int y, int w, int h, Fl_Color color);
+
+/** Signature of box focus frame drawing functions */
+typedef void (Fl_Box_Draw_Focus_F)(Fl_Boxtype bt, int x, int y, int w, int h, Fl_Color fg, Fl_Color bg);
 
 /** Signature of timeout callback functions passed as parameters.
   Please see Fl::add_timeout() for details.
@@ -266,6 +269,13 @@ public:
      /// if the GTK library is available on the platform (linux/unix only).
      /// When switched off, GTK file dialogs aren't used even if the GTK library is available.
     OPTION_FNFC_USES_GTK,
+    /// Meaningful for the Wayland/X11 platform only. When switched on, the library uses a Zenity-based file dialog.
+    /// When switched off (default), no zenity-based file dialog is used.
+    OPTION_FNFC_USES_ZENITY,
+    /// Meaningful for the Wayland/X11 platform only.
+    /// When switched on, the library uses a kdialog-based file dialog if command 'kdialog' is available on the running system.
+    /// When switched off (default), no kdialog-based file dialog is used.
+    OPTION_FNFC_USES_KDIALOG,
     /// When switched on (default), Fl_Printer runs the GTK printer dialog
     /// if the GTK library is available on the platform (linux/unix only).
     /// When switched off, the GTK printer dialog isn't used even if the GTK library is available.
@@ -274,9 +284,6 @@ public:
     /// value.
     /// When switched off, no such window gets displayed.
     OPTION_SHOW_SCALING,
-    /// Meaningful for the Wayland/X11 platform only. When switched on (default), the library uses a Zenity-based file dialog.
-    /// When switched off, the GTK file dialog is used instead.
-    OPTION_FNFC_USES_ZENITY,
     /// When switched on and when the keyboard in use has '+' in the shifted position of its key,
     /// pressing that key and ctrl triggers the zoom-in operation.
     /// When switched off (default), the zoom-in operation requires that also the shift key is pressed.
@@ -1211,7 +1218,9 @@ public:
 
   // boxtypes:
   static Fl_Box_Draw_F *get_boxtype(Fl_Boxtype);
-  static void set_boxtype(Fl_Boxtype, Fl_Box_Draw_F*,uchar,uchar,uchar,uchar);
+  static void set_boxtype(Fl_Boxtype, Fl_Box_Draw_F*,
+                          uchar, uchar, uchar, uchar, 
+                          Fl_Box_Draw_Focus_F* =NULL);
   static void set_boxtype(Fl_Boxtype, Fl_Boxtype from);
   static int box_dx(Fl_Boxtype);
   static int box_dy(Fl_Boxtype);
@@ -1493,7 +1502,7 @@ public:
   */
   static void cairo_flush(cairo_t *c) {
     // flush Cairo drawings: necessary at least for Windows
-    cairo_surface_t *s = cairo_get_target(Fl::cairo_cc());
+    cairo_surface_t *s = cairo_get_target(c);
     cairo_surface_flush(s);
   }
 

@@ -38,6 +38,12 @@
 #include "Fl_String.H"
 
 /////////////////////////////////
+////// Static Class Data ////////
+/////////////////////////////////
+
+const char *Fl_Terminal::unknown_char = "¿";
+
+/////////////////////////////////
 ////// Static Functions /////////
 /////////////////////////////////
 
@@ -1214,7 +1220,7 @@ void Fl_Terminal::set_scrollbar_params(Fl_Scrollbar* scroll, // scrollbar to set
   int   diff    = max - min;
   int   length  = is_hor ? scroll->w() : scroll->h();        // long side of scrollbar in pixels
   float tabsize = min / float(max);                          // fractional size of tab
-  float minpix  = (float)MAX(10, scrollbar_actual_size());   // scrollbar_size preferred, 10pix min (**)
+  float minpix  = float(MAX(10, scrollbar_actual_size()));   // scrollbar_size preferred, 10pix min (**)
   float minfrac = minpix / length;                           // slide_size wants a fraction
   tabsize       = MAX(minfrac, tabsize);                     // use best fractional size
   scroll->slider_size(tabsize);                              // size of slider's tab
@@ -1299,6 +1305,7 @@ void Fl_Terminal::update_scrollbar(void) {
 //   See also issue #844.
 //
 void Fl_Terminal::refit_disp_to_screen(void) {
+  // TODO: Needs to account for change in width too - implement dcol_diff
   int dh         = h_to_row(scrn_.h());         // disp height: in rows for tty pixel height
   int dw         = MAX(w_to_col(scrn_.w()), disp_cols()); // disp width: in cols from pixel width - enlarge only!
   int drows      = clamp(dh, 2,  dh);           // disp rows: 2 rows minimum
@@ -1482,6 +1489,7 @@ void Fl_Terminal::display_rows(int drows) {
   if (drows == disp_rows()) return;           // no change? early exit
   ring_.resize(drows, disp_cols(), hist_rows(), *current_style_);
   update_screen(false);                       // false: no font change ?NEED?
+  refit_disp_to_screen();
 }
 
 /**
@@ -1513,6 +1521,7 @@ void Fl_Terminal::display_columns(int dcols) {
   // Change cols, preserves previous content if possible
   ring_.resize(disp_rows(), dcols, hist_rows(), *current_style_);
   update_screen(false);                       // false: no font change ?NEED?
+  refit_disp_to_screen();
 }
 
 /** Return reference to internal current style for rendering text. */
@@ -1899,10 +1908,10 @@ void Fl_Terminal::clear_sod(void) {
   for (int drow=0; drow <= cursor_.row(); drow++)
     if (drow == cursor_.row())
       for (int dcol=0; dcol<=cursor_.col(); dcol++)
-        putchar(' ', drow, dcol);
+        plot_char(' ', drow, dcol);
     else
       for (int dcol=0; dcol<disp_cols(); dcol++)
-        putchar(' ', drow, dcol);
+        plot_char(' ', drow, dcol);
   //TODO: Clear mouse selection?
 }
 
@@ -1911,10 +1920,10 @@ void Fl_Terminal::clear_eod(void) {
   for (int drow=cursor_.row(); drow<disp_rows(); drow++)
     if (drow == cursor_.row())
       for (int dcol=cursor_.col(); dcol<disp_cols(); dcol++)
-        putchar(' ', drow, dcol);
+        plot_char(' ', drow, dcol);
     else
       for (int dcol=0; dcol<disp_cols(); dcol++)
-        putchar(' ', drow, dcol);
+        plot_char(' ', drow, dcol);
   //TODO: Clear mouse selection?
 }
 
@@ -2974,7 +2983,7 @@ const Fl_Terminal::Utf8Char* Fl_Terminal::utf8_char_at_glob(int grow, int gcol) 
 }
 
 /**
-  Print UTF-8 character \p text of length \p len at display position \p (drow,dcol).
+  Plot the UTF-8 character \p text of length \p len at display position \p (drow,dcol).
   The character is displayed using the current text color/attributes.
 
   This is a very low level method.
@@ -2984,21 +2993,23 @@ const Fl_Terminal::Utf8Char* Fl_Terminal::utf8_char_at_glob(int grow, int gcol) 
   - \p dcol must be in range 0..(display_columns()-1)
 
   - Does not trigger redraws
-  - Does not handle ANSI or XTERM escape sequences
+  - Does not handle control codes, ANSI or XTERM escape sequences.
   - Invalid UTF-8 chars show the error character (¿) depending on show_unknown(bool).
 
   \see handle_unknown_char()
 */
-void Fl_Terminal::putchar(const char *text, int len, int drow, int dcol) {
+void Fl_Terminal::plot_char(const char *text, int len, int drow, int dcol) {
   Utf8Char *u8c = u8c_disp_row(drow) + dcol;
   // text_utf8() warns we must do invalid checks first
-  if (!text || len<1 || len>u8c->max_utf8() || len!=fl_utf8len(*text))
-    { handle_unknown_char(); return; }
+  if (!text || len<1 || len>u8c->max_utf8() || len!=fl_utf8len(*text)) {
+    handle_unknown_char(drow, dcol);
+    return;
+  }
   u8c->text_utf8(text, len, *current_style_);
 }
 
 /**
-  Print the ASCII character \p c at the terminal's display position \p (drow,dcol).
+  Plot the ASCII character \p c at the terminal's display position \p (drow,dcol).
 
   The character MUST be printable (in range 0x20 - 0x7e), and is displayed
   using the current text color/attributes. Characters outside that range are either
@@ -3015,8 +3026,11 @@ void Fl_Terminal::putchar(const char *text, int len, int drow, int dcol) {
 
   \see show_unknown(bool), handle_unknown_char(), is_printable()
 */
-void Fl_Terminal::putchar(char c, int drow, int dcol) {
-  if (!is_printable(c)) { handle_unknown_char(); return; }
+void Fl_Terminal::plot_char(char c, int drow, int dcol) {
+  if (!is_printable(c)) {
+    handle_unknown_char(drow, dcol);
+    return;
+  }
   Utf8Char *u8c = u8c_disp_row(drow) + dcol;
   u8c->text_ascii(c, *current_style_);
 }
@@ -3050,7 +3064,7 @@ void Fl_Terminal::print_char(const char *text, int len/*=-1*/) {
   } else if (escseq.parse_in_progress()) {     // ESC sequence in progress?
     handle_escseq(*text);
   } else {                                     // Handle printable char..
-    putchar(text, len, cursor_row(), cursor_col());
+    plot_char(text, len, cursor_row(), cursor_col());
     cursor_right(1, do_scroll);
   }
 }
@@ -3071,7 +3085,7 @@ void Fl_Terminal::print_char(char c) {
   } else if (escseq.parse_in_progress()) {     // ESC sequence in progress?
     handle_escseq(c);
   } else {                                     // Handle printable char..
-    putchar(c, cursor_row(), cursor_col());
+    plot_char(c, cursor_row(), cursor_col());
     cursor_right(1, do_scroll);
     return;
   }
@@ -3230,17 +3244,36 @@ void Fl_Terminal::append(const char *s, int len/*=-1*/) {
 /**
   Handle an unknown char by either emitting an error symbol to the tty, or do nothing,
   depending on the user configurable value of show_unknown().
+
+  This writes the "unknown" character to the output stream
+  if show_unknown() is true.
+
   Returns 1 if tty modified, 0 if not.
   \see show_unknown()
 */
 int Fl_Terminal::handle_unknown_char(void) {
-  const char *unknown = "¿";
-  if (show_unknown_) {
-    escseq.reset();              // disable any pending esc seq to prevent eating unknown char
-    print_char(unknown);
-    return 1;
-  }
-  return 0;
+  if (!show_unknown_) return 0;
+  escseq.reset();               // disable any pending esc seq to prevent eating unknown char
+  print_char(unknown_char);
+  return 1;
+}
+
+/**
+  Handle an unknown char by either emitting an error symbol to the tty, or do nothing,
+  depending on the user configurable value of show_unknown().
+
+  This writes the "unknown" character to the display position \p (drow,dcol)
+  if show_unknown() is true.
+
+  Returns 1 if tty modified, 0 if not.
+  \see show_unknown()
+*/
+int Fl_Terminal::handle_unknown_char(int drow, int dcol) {
+  if (!show_unknown_) return 0;
+  int len = (int)strlen(unknown_char);
+  Utf8Char *u8c = u8c_disp_row(drow) + dcol;
+  u8c->text_utf8(unknown_char, len, *current_style_);
+  return 1;
 }
 
 // Handle user interactive scrolling
@@ -3359,6 +3392,7 @@ void Fl_Terminal::init_(int X,int Y,int W,int H,const char*L,int rows,int cols,i
   oflags_         = LF_TO_CRLF;         // default: "\n" handled as "\r\n"
   // scrollbar_size must be set before scrn_
   scrollbar_size_ = 0;                  // 0 uses Fl::scrollbar_size()
+  Fl_Group::box(FL_DOWN_FRAME);         // set before update_screen_xywh()
   update_screen_xywh();
   // Tabs
   tabstops_       = 0;
@@ -3398,7 +3432,6 @@ void Fl_Terminal::init_(int X,int Y,int W,int H,const char*L,int rows,int cols,i
   hscrollbar_style_ = SCROLLBAR_AUTO;
 
   resizable(0);
-  Fl_Group::box(FL_DOWN_FRAME);
   Fl_Group::color(FL_BLACK);  // black bg by default
   update_screen(true);        // update internal vars after setting screen size/font
   clear_screen_home();        // clear screen, home cursor
@@ -3654,6 +3687,12 @@ void Fl_Terminal::draw(void) {
     current_style_->update();   // do deferred update here
     update_screen(true);        // update fonts
   }
+  // Detect if Fl::scrollbar_size() was changed in size, recalc if so
+  if (scrollbar_size_ == 0 &&
+      ((scrollbar->visible() && scrollbar->w() != Fl::scrollbar_size()) ||
+       (hscrollbar->visible() && hscrollbar->h() != Fl::scrollbar_size()))) {
+    update_scrollbar();
+  }
   // Draw group first, terminal last
   Fl_Group::draw();
   // Draw that little square between the scrollbars:
@@ -3896,6 +3935,8 @@ int Fl_Terminal::handle(int e) {
       free((void*)s);                // free() the copy when done!
   \endcode
 
+  \param[in]  lines_below_cursor  include lines below cursor, default: false
+
   \return A string allocated with strdup(3) which must be free'd, text is UTF-8.
 */
 const char* Fl_Terminal::text(bool lines_below_cursor) const {
@@ -3913,8 +3954,8 @@ const char* Fl_Terminal::text(bool lines_below_cursor) const {
       const char *s = u8c->text_utf8();                  // first byte of char
       for (int i=0; i<u8c->length(); i++) lines += *s++; // append all bytes in multibyte char
       // Count any trailing whitespace to trim
-      if (u8c->length()==1 && *s==' ') trim++;           // trailing whitespace? trim
-      else                             trim = 0;         // non-whitespace? don't trim
+      if (u8c->length()==1 && s[-1]==' ') trim++;        // trailing whitespace? trim
+      else                                trim = 0;      // non-whitespace? don't trim
     }
     // trim trailing whitespace from each line, if any
     if (trim) lines.resize(lines.size() - trim);

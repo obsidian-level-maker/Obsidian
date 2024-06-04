@@ -144,6 +144,7 @@ extern void     fl_thin_up_box(int, int, int, int, Fl_Color);
 extern void     fl_thin_down_box(int, int, int, int, Fl_Color);
 extern void     fl_round_up_box(int, int, int, int, Fl_Color);
 extern void     fl_round_down_box(int, int, int, int, Fl_Color);
+extern void     fl_round_focus(Fl_Boxtype, int, int, int, int, Fl_Color, Fl_Color);
 
 extern void     fl_up_frame(int, int, int, int, Fl_Color);
 extern void     fl_down_frame(int, int, int, int, Fl_Color);
@@ -186,10 +187,11 @@ static Fl_Pixmap        tile(tile_xpm);
 
   \param[in]  s   Scheme name of NULL
 
-  \returns    Current scheme name or NULL
-  \retval     NULL if the scheme has not been set or is the default scheme
+  \retval     0 if the scheme has not been set or is the default scheme
+  \retval     1 if a scheme other than "none"/"base" was set
 
-  \see Fl::is_scheme()
+  \see Fl::scheme() to get the name of the current scheme
+  \see Fl::is_scheme(const char*) to test if the specified scheme is set
 */
 int Fl::scheme(const char *s) {
   if (!s) {
@@ -197,12 +199,12 @@ int Fl::scheme(const char *s) {
   }
 
   if (s) {
-    if (!fl_ascii_strcasecmp(s, "none") || !fl_ascii_strcasecmp(s, "base") || !*s) s = 0;
+    if (!fl_ascii_strcasecmp(s, "none") || !fl_ascii_strcasecmp(s, "base") || !*s) s = NULL;
     else if (!fl_ascii_strcasecmp(s, "gtk+")) s = fl_strdup("gtk+");
     else if (!fl_ascii_strcasecmp(s, "plastic")) s = fl_strdup("plastic");
     else if (!fl_ascii_strcasecmp(s, "gleam")) s = fl_strdup("gleam");
     else if (!fl_ascii_strcasecmp(s, "oxy")) s = fl_strdup("oxy");
-    else s = 0;
+    else s = NULL;
   }
   if (scheme_) free((void*)scheme_);
   scheme_ = s;
@@ -210,12 +212,13 @@ int Fl::scheme(const char *s) {
   // Save the new scheme in the FLTK_SCHEME env var so that child processes
   // inherit it...
   static char e[1024];
-  strcpy(e,"FLTK_SCHEME=");
-  if (s) strlcat(e,s,sizeof(e));
+  strcpy(e, "FLTK_SCHEME=");
+  if (s) strlcat(e, s, sizeof(e));
   Fl::system_driver()->putenv(e);
 
   // Load the scheme...
-  return reload_scheme();
+  reload_scheme();
+  return (s != NULL);
 }
 
 /**
@@ -357,8 +360,8 @@ int Fl::reload_scheme() {
     set_boxtype(FL_DOWN_BOX,        fl_down_box, D1, D1, D2, D2);
     set_boxtype(FL_THIN_UP_BOX,     fl_thin_up_box, 1, 1, 2, 2);
     set_boxtype(FL_THIN_DOWN_BOX,   fl_thin_down_box, 1, 1, 2, 2);
-    set_boxtype(_FL_ROUND_UP_BOX,   fl_round_up_box, 3, 3, 6, 6);
-    set_boxtype(_FL_ROUND_DOWN_BOX, fl_round_down_box, 3, 3, 6, 6);
+    set_boxtype(_FL_ROUND_UP_BOX,   fl_round_up_box, 3, 3, 6, 6, fl_round_focus);
+    set_boxtype(_FL_ROUND_DOWN_BOX, fl_round_down_box, 3, 3, 6, 6, fl_round_focus);
 
     // Use standard size scrollbars...
     Fl::scrollbar_size(16);

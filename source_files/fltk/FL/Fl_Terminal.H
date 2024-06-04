@@ -144,7 +144,7 @@
   Single character output can be done with:
   \par
      - print_char() to print a single ASCII/UTF-8 char at the cursor
-     - putchar() to put single ASCII/UTF-8 char at an x,y position
+     - plot_char() to put single ASCII/UTF-8 char at an x,y position
   \par
 
   \subsection Fl_Terminal_Attributes Text Attributes
@@ -944,9 +944,10 @@ protected:
 private:
   bool is_hist_ring_row(int grow) const;
   bool is_disp_ring_row(int grow) const;
-protected:
+public:
   int  selection_text_len(void) const;
   const char* selection_text(void) const;
+protected:
   void clear_mouse_selection(void);
   bool selection_extend(int X,int Y);
   void select_word(int grow, int gcol);
@@ -1016,8 +1017,8 @@ private:
   void utf8_cache_flush(void);
   // API: Character display output
 public:
-  void putchar(const char *text, int len, int drow, int dcol);
-  void putchar(char c, int drow, int dcol);
+  void plot_char(const char *text, int len, int drow, int dcol);
+  void plot_char(char c, int drow, int dcol);
   void print_char(const char *text, int len=-1);
   void print_char(char c);
   // API: String display output
@@ -1026,6 +1027,7 @@ public:
   void append(const char *s, int len=-1);
 protected:
   int handle_unknown_char(void);
+  int handle_unknown_char(int drow, int dcol);
   // Drawing
   void draw_row_bg(int grow, int X, int Y) const;
   void draw_row(int grow, int Y) const;
@@ -1169,6 +1171,9 @@ public:
   // API: Show unknown/unprintable chars
   bool  show_unknown(void) const;
   void  show_unknown(bool val);
+protected:
+  static const char *unknown_char; ///< "unknown" replacement character
+public:
   // API: ANSI sequences
   bool  ansi(void) const;
   void  ansi(bool val);

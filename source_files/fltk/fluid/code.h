@@ -68,7 +68,7 @@ public:
   int indentation;
   /// set if we write abbreviated file for the source code previewer
   /// (disables binary data blocks, for example)
-  bool write_sourceview;
+  bool write_codeview;
   /// silly thing to prevent declaring unused variables:
   /// When this symbol is on, all attempts to write code don't write
   /// anything, but set a variable if it looks like the variable "o" is used:
@@ -99,8 +99,9 @@ public:
   void write_h(const char*, ...) __fl_attr((__format__ (__printf__, 2, 3)));
   void write_hc(const char *, int, const char*, const char*);
   void write_c_indented(const char *textlines, int inIndent, char inTrailwWith);
+  Fl_Type* write_static(Fl_Type* p);
   Fl_Type* write_code(Fl_Type* p);
-  int write_code(const char *cfile, const char *hfile, bool to_sourceview=false);
+  int write_code(const char *cfile, const char *hfile, bool to_codeview=false);
   void write_public(int state); // writes pubic:/private: as needed
 
   void tag(int type, unsigned short uid);

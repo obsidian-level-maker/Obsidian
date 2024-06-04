@@ -1,7 +1,7 @@
 //
 // X specific code for the Fast Light Tool Kit (FLTK).
 //
-// Copyright 1998-2023 by Bill Spitzak and others.
+// Copyright 1998-2024 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
@@ -530,6 +530,11 @@ void Fl_X11_Screen_Driver::disable_im() {
   xim_deactivate();
 }
 
+static void delayed_create_print_window(void *) {
+  Fl::remove_check(delayed_create_print_window);
+  fl_create_print_window();
+}
+
 void Fl_X11_Screen_Driver::open_display_platform() {
   static Display *d = NULL;
   if (d) return;
@@ -550,7 +555,7 @@ void Fl_X11_Screen_Driver::open_display_platform() {
   // the unique GC used by all X windows
   GC gc = XCreateGC(fl_display, RootWindow(fl_display, fl_screen), 0, 0);
   Fl_Graphics_Driver::default_driver().gc(gc);
-  fl_create_print_window();
+  Fl::add_check(delayed_create_print_window);
 }
 
 
@@ -1215,26 +1220,45 @@ static void react_to_screen_reconfiguration() {
 
 #if USE_XFT
 static void after_display_rescale(float *p_current_xft_dpi) {
-  FILE *pipe = popen("xrdb -query", "r");
-  if (!pipe) return;
-  char line[100];
-  while (fgets(line, sizeof(line), pipe) != NULL) {
-    if (memcmp(line, "Xft.dpi:", 8)) continue;
-    float dpi;
-    if (sscanf(line+8, "%f", &dpi) == 1) {
-      //fprintf(stderr," previous=%g dpi=%g \n", *p_current_xft_dpi, dpi);
-      if (fabs(dpi - *p_current_xft_dpi) > 0.01) {
-        *p_current_xft_dpi = dpi;
-        float f = dpi/96.;
-        for (int i = 0; i < Fl::screen_count(); i++)
-          Fl::screen_driver()->rescale_all_windows_from_screen(i, f, f);
-      }
+  Display *new_dpy = XOpenDisplay(XDisplayString(fl_display));
+  if (!new_dpy) return;
+  char *s = XGetDefault(new_dpy, "Xft", "dpi");
+  float dpi;
+  if (s && sscanf(s, "%f", &dpi) == 1) {
+    //printf("%s previous=%g dpi=%g \n", s, *p_current_xft_dpi, dpi);
+    if (fabs(dpi - *p_current_xft_dpi) > 0.1) {
+      *p_current_xft_dpi = dpi;
+      float f = dpi / 96.;
+      for (int i = 0; i < Fl::screen_count(); i++)
+        Fl::screen_driver()->rescale_all_windows_from_screen(i, f, f);
     }
-    break;
   }
-  pclose(pipe);
+  XCloseDisplay(new_dpy);
 }
 #endif // USE_XFT
+
+
+static Window *xid_vector = NULL; // list of FLTK-created xid's (see issue #935)
+static int xid_vector_size = 0;
+static int xid_vector_count = 0;
+
+static void add_xid_vector(Window xid) {
+  if (xid_vector_count >= xid_vector_size) {
+    xid_vector_size += 10;
+    xid_vector = (Window*)realloc(xid_vector, xid_vector_size * sizeof(Window));
+  }
+  xid_vector[xid_vector_count++] = xid;
+}
+
+static bool remove_xid_vector(Window xid) {
+  for (int pos = xid_vector_count - 1; pos >= 0; pos--) {
+    if (xid_vector[pos] == xid) {
+      if (pos != --xid_vector_count) xid_vector[pos] = xid_vector[xid_vector_count];
+      return true;
+    }
+  }
+  return false;
+}
 
 int fl_handle(const XEvent& thisevent)
 {
@@ -1242,9 +1266,23 @@ int fl_handle(const XEvent& thisevent)
   fl_xevent = &thisevent;
   Window xid = xevent.xany.window;
 
+  // For each DestroyNotify event, determine whether an FLTK-created window
+  // is being destroyed (see issue #935).
+  bool xid_is_from_fltk_win = false;
+  if (xevent.type == DestroyNotify) {
+    xid_is_from_fltk_win = remove_xid_vector(xid);
+  }
+
+  // The following if statement is limited to cases when event DestroyNotify
+  // concerns a non-FLTK window. Thus, the possibly slow call to XOpenIM()
+  // is not performed when an FLTK-created window is closed. This fixes issue #935.
   if (Fl_X11_Screen_Driver::xim_ic && xevent.type == DestroyNotify &&
-        xid != Fl_X11_Screen_Driver::xim_win && !fl_find(xid))
+        xid != Fl_X11_Screen_Driver::xim_win && !fl_find(xid) && !xid_is_from_fltk_win)
   {
+// When using menus or tooltips: xid is a just hidden top-level FLTK win, xim_win is non-FLTK;
+// after XIM crash: xid is non-FLTK.
+// Trigger XIM crash under Debian: kill process containing "ibus-daemon"
+// Restart XIM after triggered crash: "ibus-daemon --panel disable --xim &"
     XIM xim_im;
     xim_im = XOpenIM(fl_display, NULL, NULL, NULL);
     if (!xim_im) {
@@ -1548,6 +1586,35 @@ int fl_handle(const XEvent& thisevent)
     if ((Atom)(data[0]) == WM_DELETE_WINDOW) {
       event = FL_CLOSE;
     } else if (message == fl_XdndEnter) {
+      /*
+       Excerpt from the XDND protocol at https://www.freedesktop.org/wiki/Specifications/XDND/ :
+       - data.l[0] contains the XID of the source window.
+       - data.l[1]:
+           Bit 0 is set if the source supports more than three data types.
+           The high byte contains the protocol version to use (minimum of the source's and 
+           target's highest supported versions). The rest of the bits are reserved for future use.
+       - data.l[2,3,4] contain the first three types that the source supports. Unused slots are set
+           to None. The ordering is arbitrary.
+       
+       If the Source supports more than three data types, bit 0 of data.l[1] is set. This tells the
+         Target to check the property XdndTypeList on the Source window for the list of available
+         types. This property should contain all the available types.
+       
+       BUT wayland gnome apps (e.g., gnome-text-editor) set bit 0 of data.l[1]
+       even though their source supports 2 data types (UTF8 text + a gnome-specific type)
+       and put None (==0) in each of data.l[2,3,4].
+       The same gnome apps run in X11 mode (GDK_BACKEND=x11) clear bit 0 of data.l[1]
+       and support only UTF8 text announced in data.l[2].
+       FLTK wayland apps set bit 0 of data.l[1] and support only UTF8 text.
+       
+       Overall, the correct procedure is
+       if (bit 0 of data.l[1] is set) {
+         get the XdndTypeList property
+         use all the data types it returns which can be in any number ≥ 1
+       } else {
+         the source supports 1, 2 or 3 data types available at data.l[2,3,4]
+       }
+       */
 #if FLTK_CONSOLIDATE_MOTION
       fl_xmousewin = window;
 #endif // FLTK_CONSOLIDATE_MOTION
@@ -1562,7 +1629,7 @@ int fl_handle(const XEvent& thisevent)
         XGetWindowProperty(fl_display, fl_dnd_source_window, fl_XdndTypeList,
                            0, 0x8000000L, False, XA_ATOM, &actual, &format,
                            &count, &remaining, &cm_buffer);
-        if (actual != XA_ATOM || format != 32 || (count<4 && count!=1) || !cm_buffer) {
+        if (actual != XA_ATOM || format != 32 || count <= 0 || !cm_buffer) {
           if ( cm_buffer ) { XFree(cm_buffer); cm_buffer = 0; }
           goto FAILED;
         }
@@ -2376,6 +2443,7 @@ void Fl_X11_Window_Driver::un_maximize() {
 void fl_fix_focus(); // in Fl.cxx
 
 Fl_X* Fl_X::set_xid(Fl_Window* win, Window winxid) {
+  if (!win->parent()) add_xid_vector(winxid); // store xid's of top-level FLTK windows
   Fl_X *xp = new Fl_X;
   xp->xid = winxid;
   Fl_Window_Driver::driver(win)->other_xid = 0;
@@ -2689,13 +2757,15 @@ void Fl_X11_Window_Driver::sendxjunk() {
   // memset(&hints, 0, sizeof(hints)); jreiser suggestion to fix purify?
   float s = Fl::screen_driver()->scale(screen_num());
 
-  hints->min_width  = s * minw();
-  hints->min_height = s * minh();
-  hints->max_width  = s * maxw();
-  hints->max_height = s * maxh();
+  int minw, minh, maxw, maxh, dw, dh, aspect;
+  pWindow->get_size_range(&minw, &minh, &maxw, &maxh, &dw, &dh, &aspect);
+  hints->min_width  = s * minw;
+  hints->min_height = s * minh;
+  hints->max_width  = s * maxw;
+  hints->max_height = s * maxh;
   if (int(s) == s) { // use win size increment value only if scale is an integer. Is it possible to do better?
-    hints->width_inc  = s * dw();
-    hints->height_inc = s * dh();
+    hints->width_inc  = s * dw;
+    hints->height_inc = s * dh;
   } else {
     hints->width_inc  = 0;
     hints->height_inc = 0;
@@ -2721,7 +2791,7 @@ void Fl_X11_Window_Driver::sendxjunk() {
       if (hints->max_height < hints->min_height) hints->max_height = Fl::h()*s;
     }
     if (hints->width_inc && hints->height_inc) hints->flags |= PResizeInc;
-    if (aspect()) {
+    if (aspect) {
       // stupid X!  It could insist that the corner go on the
       // straight line between min and max...
       hints->min_aspect.x = hints->max_aspect.x = hints->min_width;

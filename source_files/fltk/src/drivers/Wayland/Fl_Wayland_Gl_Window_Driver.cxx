@@ -299,6 +299,7 @@ void Fl_Wayland_Gl_Window_Driver::make_current_before() {
     Fl_Wayland_Gl_Choice *g = (Fl_Wayland_Gl_Choice*)this->g();
     egl_surface = eglCreateWindowSurface(egl_display, g->egl_conf, egl_window, NULL);
     wl_surface_set_buffer_scale(surface, scale);
+    if (mode() & FL_ALPHA) wl_surface_set_opaque_region(surface, NULL);
     // Tested apps: shape, glpuzzle, cube, fractals, gl_overlay, fullscreen, unittests,
     //   OpenGL3-glut-test, OpenGL3test.
     // Tested wayland compositors: mutter, kde-plasma, weston, sway on FreeBSD.
@@ -356,6 +357,13 @@ void Fl_Wayland_Gl_Window_Driver::swap_buffers() {
   }
 
   if (egl_surface) {
+    if (pWindow->parent()) {
+      struct wld_window *xid = fl_wl_xid(pWindow);
+      if (xid->frame_cb) return;
+      xid->frame_cb = wl_surface_frame(xid->wl_surface);
+      wl_callback_add_listener(xid->frame_cb, Fl_Wayland_Graphics_Driver::p_surface_frame_listener,
+                               xid);
+    }
     eglSwapBuffers(Fl_Wayland_Gl_Window_Driver::egl_display, egl_surface);
   }
 }
@@ -409,7 +417,7 @@ void Fl_Wayland_Gl_Window_Driver::resize(int is_a_resize, int W, int H) {
     struct wld_window *xid = fl_wl_xid(pWindow);
     if (xid->kind == Fl_Wayland_Window_Driver::DECORATED && !xid->frame_cb) {
       xid->frame_cb = wl_surface_frame(xid->wl_surface);
-      wl_callback_add_listener(xid->frame_cb, 
+      wl_callback_add_listener(xid->frame_cb,
                                Fl_Wayland_Graphics_Driver::p_surface_frame_listener, xid);
     }
     wl_egl_window_resize(egl_window, W, H, 0, 0);

@@ -255,12 +255,6 @@ FLTK_OPTION_SVG - default ON
     FLTK has a built-in SVG library and can create (write) SVG image files.
     Turning this option off disables SVG (read and write) support.
 
-FLTK_USE_KDIALOG - default ON
-    Under the KDE desktop, allows class Fl_Native_File_Chooser to use the
-    kdialog utility program to construct its file dialog windows, when that
-    utility is available at run time on the system. This option makes sense
-    only under X11 or Wayland.
-
 FLTK_USE_LIBDECOR_GTK - default ON (Wayland only).
     Allow to use libdecor's GTK plugin to draw window titlebars. Otherwise
     FLTK does not use GTK and apps will not need linking to GTK. This feature
@@ -286,8 +280,6 @@ FLTK_USE_SYSTEM_LIBDECOR - default ON (Wayland only)
     This option makes FLTK use package libdecor-0-dev to draw window titlebars
     under Wayland. When OFF or when this package has a version < 0.2.0, FLTK
     uses its bundled copy of libdecor to draw window titlebars.
-    As of november 2023, version 0.2.0 of package libdecor-0-dev is available
-    only in testing distributions.
 
 FLTK_USE_SYSTEM_LIBJPEG - default ON (macOS and Windows: OFF)
 FLTK_USE_SYSTEM_LIBPNG  - default ON (macOS and Windows: OFF)
@@ -325,6 +317,12 @@ FLTK_BUILD_PDF_DOCS  - default ON
     You can safely leave these two options ON if you want to save build time
     because the docs are not built automatically.
 
+FLTK_BUILD_FLUID_DOCS - default OFF
+    If this option is ON, the FLUID user documentation will be built. If 
+    FLTK_BUILD_PDF_DOCS is ON, the FLUID documentation will be generated
+    in PDF forma. To generate the screen shots used in the handbook,
+    the CMake build mode must be set to "Debug".
+
 FLTK_INCLUDE_DRIVER_DOCS - default OFF
     This option adds driver documentation to HTML and PDF docs (if ON). This
     option is marked as "advanced" since it is only useful for FLTK developers
@@ -332,9 +330,10 @@ FLTK_INCLUDE_DRIVER_DOCS - default OFF
     options above is ON as well.
 
 FLTK_INSTALL_HTML_DOCS - default OFF
+FLTK_INSTALL_FLUID_DOCS - default OFF
 FLTK_INSTALL_PDF_DOCS  - default OFF
-    If these options are ON then the HTML and/or PDF docs are installed
-    when the 'install' target is executed, e.g. with `make install'. You
+    If these options are ON then the HTML, FLUID, and/or PDF docs are installed
+    when the 'install' target is executed, e.g. with `make install'. You 
     need to select above options FLTK_BUILD_*_DOCS as well.
 
 

@@ -394,7 +394,8 @@ bool Fd_Code_Writer::c_contains(void *pp) {
 /**
  Write a C string to the code file, escaping non-ASCII characters.
 
- Adds " before and after the text.
+ Text is broken into lines of 78 character.
+ FLUID " before and after every line text.
 
  A list of control characters and ", ', and \\ are escaped by adding a \\ in
  front of them. Escape ?? by writing ?\\?. All other characters that are not
@@ -408,13 +409,14 @@ bool Fd_Code_Writer::c_contains(void *pp) {
  \see f.write_cstring(const char*)
  */
 void Fd_Code_Writer::write_cstring(const char *s, int length) {
+  const char *next_line = "\"\n\"";
   if (varused_test) {
     varused = 1;
     return;
   }
   // if we are rendering to the source code preview window, and the text is
   // longer than four lines, we only render a placeholder.
-  if (write_sourceview && ((s==NULL) || (length>300))) {
+  if (write_codeview && ((s==NULL) || (length>300))) {
     if (length>=0)
       crc_printf("\" ... %d bytes of text... \"", length);
     else
@@ -443,7 +445,7 @@ void Fd_Code_Writer::write_cstring(const char *s, int length) {
     case '\'':
     case '\\':
     QUOTED:
-      if (linelength >= 77) { crc_puts("\\\n"); linelength = 0; }
+      if (linelength >= 77) { crc_puts(next_line); linelength = 0; }
       crc_putc('\\');
       crc_putc(c);
       linelength += 2;
@@ -454,47 +456,28 @@ void Fd_Code_Writer::write_cstring(const char *s, int length) {
     default:
       if (c >= ' ' && c < 127) {
         // a legal ASCII character
-        if (linelength >= 78) { crc_puts("\\\n"); linelength = 0; }
+        if (linelength >= 78) { crc_puts(next_line); linelength = 0; }
         crc_putc(c);
         linelength++;
         break;
       }
       // if the UTF-8 option is checked, write unicode characters verbatim
-        if (g_project.utf8_in_src && (c&0x80)) {
-          if ((c&0x40)) {
-            // This is the first character in a utf-8 sequence (0b11......).
-            // A line break would be ok here. Do not put linebreak in front of
-            // following characters (0b10......)
-            if (linelength >= 78) { crc_puts("\\\n"); linelength = 0; }
-          }
-          crc_putc(c);
-          linelength++;
-          break;
+      if (g_project.utf8_in_src && (c&0x80)) {
+        if ((c&0x40)) {
+          // This is the first character in a utf-8 sequence (0b11......).
+          // A line break would be ok here. Do not put linebreak in front of
+          // following characters (0b10......)
+          if (linelength >= 78) { crc_puts(next_line); linelength = 0; }
         }
+        crc_putc(c);
+        linelength++;
+        break;
+      }
       // otherwise we must print it as an octal constant:
       c &= 255;
-      if (c < 8) {
-        if (linelength >= 76) { crc_puts("\\\n"); linelength = 0; }
-        crc_printf("\\%o", c);
-        linelength += 2;
-      } else if (c < 64) {
-        if (linelength >= 75) { crc_puts("\\\n"); linelength = 0; }
-        crc_printf("\\%o", c);
-        linelength += 3;
-      } else {
-        if (linelength >= 74) { crc_puts("\\\n"); linelength = 0; }
-        crc_printf("\\%o", c);
-        linelength += 4;
-      }
-      // We must not put more numbers after it, because some C compilers
-      // consume them as part of the quoted sequence.  Use string constant
-      // pasting to avoid this:
-      c = *p;
-      if (p < e && ( (c>='0'&&c<='9') || (c>='a'&&c<='f') || (c>='A'&&c<='F') )) {
-        crc_putc('\"'); linelength++;
-        if (linelength >= 79) { crc_puts("\n"); linelength = 0; }
-        crc_putc('\"'); linelength++;
-      }
+      if (linelength >= 74) { crc_puts(next_line); linelength = 0; }
+      crc_printf("\\%03o", c);
+      linelength += 4;
       break;
     }
   }
@@ -523,7 +506,7 @@ void Fd_Code_Writer::write_cdata(const char *s, int length) {
     varused = 1;
     return;
   }
-  if (write_sourceview) {
+  if (write_codeview) {
     if (length>=0)
       crc_printf("{ /* ... %d bytes of binary data... */ }", length);
     else
@@ -699,7 +682,29 @@ bool is_comment_before_class_member(Fl_Type *q) {
 }
 
 /**
- Recursively dump code, putting children between the two parts of the parent code.
+ Recursively write static code and declarations
+ \param[in] p write this type and all its children
+ \return pointer to the next sibling
+ */
+Fl_Type* Fd_Code_Writer::write_static(Fl_Type* p) {
+  if (write_codeview) p->header_static_start = (int)ftell(header_file);
+  if (write_codeview) p->code_static_start = (int)ftell(code_file);
+  p->write_static(*this);
+  if (write_codeview) p->code_static_end = (int)ftell(code_file);
+  if (write_codeview) p->header_static_end = (int)ftell(header_file);
+
+  Fl_Type* q;
+  for (q = p->next; q && q->level > p->level;) {
+    q = write_static(q);
+  }
+
+  p->write_static_after(*this);
+
+  return q;
+}
+
+/**
+ Recursively write code, putting children between the two parts of the parent code.
  \param[in] p write this type and all its children
  \return pointer to the next sibling
  */
@@ -707,11 +712,11 @@ Fl_Type* Fd_Code_Writer::write_code(Fl_Type* p) {
   // write all code that comes before the children code
   // (but don't write the last comment until the very end)
   if (!(p==Fl_Type::last && p->is_a(ID_Comment))) {
-    if (write_sourceview) p->code1_start = (int)ftell(code_file);
-    if (write_sourceview) p->header1_start = (int)ftell(header_file);
+    if (write_codeview) p->code1_start = (int)ftell(code_file);
+    if (write_codeview) p->header1_start = (int)ftell(header_file);
     p->write_code1(*this);
-    if (write_sourceview) p->code1_end = (int)ftell(code_file);
-    if (write_sourceview) p->header1_end = (int)ftell(header_file);
+    if (write_codeview) p->code1_end = (int)ftell(code_file);
+    if (write_codeview) p->header1_end = (int)ftell(header_file);
   }
   // recursively write the code of all children
   Fl_Type* q;
@@ -730,11 +735,11 @@ Fl_Type* Fd_Code_Writer::write_code(Fl_Type* p) {
     }
 
     // write all code that come after the children
-    if (write_sourceview) p->code2_start = (int)ftell(code_file);
-    if (write_sourceview) p->header2_start = (int)ftell(header_file);
+    if (write_codeview) p->code2_start = (int)ftell(code_file);
+    if (write_codeview) p->header2_start = (int)ftell(header_file);
     p->write_code2(*this);
-    if (write_sourceview) p->code2_end = (int)ftell(code_file);
-    if (write_sourceview) p->header2_end = (int)ftell(header_file);
+    if (write_codeview) p->code2_end = (int)ftell(code_file);
+    if (write_codeview) p->header2_end = (int)ftell(header_file);
 
     for (q = p->next; q && q->level > p->level;) {
       if (is_class_member(q) || is_comment_before_class_member(q)) {
@@ -752,11 +757,11 @@ Fl_Type* Fd_Code_Writer::write_code(Fl_Type* p) {
   } else {
     for (q = p->next; q && q->level > p->level;) q = write_code(q);
     // write all code that come after the children
-    if (write_sourceview) p->code2_start = (int)ftell(code_file);
-    if (write_sourceview) p->header2_start = (int)ftell(header_file);
+    if (write_codeview) p->code2_start = (int)ftell(code_file);
+    if (write_codeview) p->header2_start = (int)ftell(header_file);
     p->write_code2(*this);
-    if (write_sourceview) p->code2_end = (int)ftell(code_file);
-    if (write_sourceview) p->header2_end = (int)ftell(header_file);
+    if (write_codeview) p->code2_end = (int)ftell(code_file);
+    if (write_codeview) p->header2_end = (int)ftell(header_file);
   }
   return q;
 }
@@ -772,8 +777,8 @@ Fl_Type* Fd_Code_Writer::write_code(Fl_Type* p) {
  \param[in] t filename of the header file
  \return 0 if the operation failed, 1 if it was successful
  */
-int Fd_Code_Writer::write_code(const char *s, const char *t, bool to_sourceview) {
-  write_sourceview = to_sourceview;
+int Fd_Code_Writer::write_code(const char *s, const char *t, bool to_codeview) {
+  write_codeview = to_codeview;
   delete id_root; id_root = 0;
   indentation = 0;
   current_class = 0L;
@@ -791,7 +796,7 @@ int Fd_Code_Writer::write_code(const char *s, const char *t, bool to_sourceview)
     header_file = f;
   }
   // Remember the last code file location for MergeBack
-  if (s && g_project.write_mergeback_data && !to_sourceview) {
+  if (s && g_project.write_mergeback_data && !to_codeview) {
     Fl_String proj_filename = g_project.projectfile_path() + g_project.projectfile_name();
     int i, n = proj_filename.size();
     for (i=0; i<n; i++) if (proj_filename[i]=='\\') proj_filename[i] = '/';
@@ -803,13 +808,13 @@ int Fd_Code_Writer::write_code(const char *s, const char *t, bool to_sourceview)
   // a copyright notice. We print that before anything else in the file!
   Fl_Type* first_type = Fl_Type::first;
   if (first_type && first_type->is_a(ID_Comment)) {
-    if (write_sourceview) {
+    if (write_codeview) {
       first_type->code1_start = first_type->code2_start = (int)ftell(code_file);
       first_type->header1_start = first_type->header2_start = (int)ftell(header_file);
     }
     // it is ok to write non-recursive code here, because comments have no children or code2 blocks
     first_type->write_code1(*this);
-    if (write_sourceview) {
+    if (write_codeview) {
       first_type->code1_end = first_type->code2_end = (int)ftell(code_file);
       first_type->header1_end = first_type->header2_end = (int)ftell(header_file);
     }
@@ -835,7 +840,7 @@ int Fd_Code_Writer::write_code(const char *s, const char *t, bool to_sourceview)
     write_h_once("#include <FL/Fl.H>");
   }
   if (t && g_project.include_H_from_C) {
-    if (to_sourceview) {
+    if (to_codeview) {
       write_c("#include \"CodeView.h\"\n");
     } else if (g_project.header_file_name[0] == '.' && strchr(g_project.header_file_name.c_str(), '/') == NULL) {
       write_c("#include \"%s\"\n", fl_filename_name(t));
@@ -896,18 +901,7 @@ int Fd_Code_Writer::write_code(const char *s, const char *t, bool to_sourceview)
   }
   for (Fl_Type* p = first_type; p;) {
     // write all static data for this & all children first
-    if (write_sourceview) p->header_static_start = (int)ftell(header_file);
-    if (write_sourceview) p->code_static_start = (int)ftell(code_file);
-    p->write_static(*this);
-    if (write_sourceview) p->code_static_end = (int)ftell(code_file);
-    if (write_sourceview) p->header_static_end = (int)ftell(header_file);
-    for (Fl_Type* q = p->next; q && q->level > p->level; q = q->next) {
-      if (write_sourceview) q->header_static_start = (int)ftell(header_file);
-      if (write_sourceview) q->code_static_start = (int)ftell(code_file);
-      q->write_static(*this);
-      if (write_sourceview) q->code_static_end = (int)ftell(code_file);
-      if (write_sourceview) q->header_static_end = (int)ftell(header_file);
-    }
+    write_static(p);
     // then write the nested code:
     p = write_code(p);
   }
@@ -918,12 +912,12 @@ int Fd_Code_Writer::write_code(const char *s, const char *t, bool to_sourceview)
 
   Fl_Type* last_type = Fl_Type::last;
   if (last_type && (last_type != Fl_Type::first) && last_type->is_a(ID_Comment)) {
-    if (write_sourceview) {
+    if (write_codeview) {
       last_type->code1_start = last_type->code2_start = (int)ftell(code_file);
       last_type->header1_start = last_type->header2_start = (int)ftell(header_file);
     }
     last_type->write_code1(*this);
-    if (write_sourceview) {
+    if (write_codeview) {
       last_type->code1_end = last_type->code2_end = (int)ftell(code_file);
       last_type->header1_end = last_type->header2_end = (int)ftell(header_file);
     }
@@ -973,7 +967,7 @@ Fd_Code_Writer::Fd_Code_Writer()
   block_buffer_(NULL),
   block_buffer_size_(0),
   indentation(0),
-  write_sourceview(false),
+  write_codeview(false),
   varused_test(0),
   varused(0)
 {
