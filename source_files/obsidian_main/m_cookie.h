@@ -47,7 +47,7 @@ void Recent_Parse(std::string name, std::string value);
 void Recent_Write(std::ofstream &fp);
 
 typedef enum {
-    RECG_Output = 0,  // generated WAD or PAK file
+    RECG_Output = 0,  // generated WAD
     RECG_Config = 1,  // file saved from Config Manager
 
     RECG_NUM_GROUPS
