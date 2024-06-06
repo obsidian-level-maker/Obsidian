@@ -94,7 +94,6 @@ if(NOT CONSOLE_ONLY)
     source_files/obsidian_main/ui_module.cc
     source_files/obsidian_main/ui_widgets.cc
     source_files/obsidian_main/ui_window.cc
-    source_files/obsidian_main/vis_buffer.cc
   )
 else()
   add_executable(
@@ -129,7 +128,6 @@ else()
     source_files/obsidian_main/sys_xoshiro.cc
     source_files/obsidian_main/tx_forge.cc
     source_files/obsidian_main/tx_skies.cc
-    source_files/obsidian_main/vis_buffer.cc
   )
 endif()
 

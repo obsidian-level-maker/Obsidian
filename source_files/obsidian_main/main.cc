@@ -1915,9 +1915,6 @@ softrestart:;
                 main_action = MAIN_SOFT_RESTART;
             }
         }
-    } catch (const assert_fail_c &err) {
-        Main::FatalError(_("Sorry, an internal error occurred:\n%s"),
-                         err.GetMessage());
     } catch (std::exception &e) {
         Main::FatalError(_("An exception occurred: \n%s"), e.what());
     }

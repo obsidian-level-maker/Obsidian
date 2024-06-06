@@ -22,27 +22,6 @@
 #include "headers.h"
 #include "main.h"
 
-assert_fail_c::assert_fail_c(const char *_msg) {
-    strncpy(message, _msg, sizeof(message));
-
-    message[sizeof(message) - 1] = 0;
-}
-
-assert_fail_c::~assert_fail_c() { /* nothing needed */
-}
-
-assert_fail_c::assert_fail_c(const assert_fail_c &other) {
-    strcpy(message, other.message);
-}
-
-assert_fail_c &assert_fail_c::operator=(const assert_fail_c &other) {
-    if (this != &other) {
-        strcpy(message, other.message);
-    }
-
-    return *this;
-}
-
 //----------------------------------------------------------------------------
 
 void AssertFail(const char *msg, ...) {
@@ -55,8 +34,6 @@ void AssertFail(const char *msg, ...) {
     va_end(argptr);
 
     buffer[MSG_BUF_LEN - 2] = 0;
-
-    // NO WORKY WITH LUA :( ---> throw assert_fail_c(buffer);
 
     Main::FatalError("Sorry, an internal error occurred.\n%s", buffer);
 }

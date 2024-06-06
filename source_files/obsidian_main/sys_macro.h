@@ -68,19 +68,6 @@ constexpr T ABS(T a) {
 }
 #endif
 
-#ifndef SGN
-template <typename T>
-constexpr auto SGN(T x) {
-    if (x < 0) {
-        return -1;
-    }
-    if (x > 0) {
-        return 1;
-    }
-    return 0;
-}
-#endif
-
 #ifndef I_ROUND
 template <typename T>
 constexpr int I_ROUND(T x) {
