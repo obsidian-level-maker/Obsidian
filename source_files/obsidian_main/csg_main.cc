@@ -24,7 +24,6 @@
 #include <algorithm>
 
 #include "csg_local.h"
-#include "csg_quake.h"  // for quake_plane_c
 #ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
 #endif
@@ -35,6 +34,133 @@
 #include "main.h"
 
 #define EPSILON 0.001
+
+double CLUSTER_SIZE = 128.0;
+
+typedef enum {
+    MEDIUM_AIR = 0,
+    MEDIUM_WATER,
+    MEDIUM_SLIME,
+    MEDIUM_LAVA,
+    MEDIUM_SOLID,
+} quake_medium_e;
+
+class quake_plane_c {
+   public:
+    float x, y, z;  // any point on the plane
+
+    float nx, ny, nz;  // normal
+
+   public:
+    quake_plane_c() : x(0), y(0), z(0), nx(0), ny(0), nz(0) {}
+
+    ~quake_plane_c() {}
+
+    void SetPos(double ax, double ay, double az);
+
+    double CalcDist() const;
+
+    void Flip();
+
+    // make the normal vector be a unit vector
+    void Normalize();
+
+    // distance of point to the plane, positive is on the front
+    // (same side as normal faces), negative value is on the back.
+    float PointDist(float ax, float ay, float az) const;
+
+    // returns -1 if brush completely behind the plane, +1 if completely
+    // in front of the plane, or 0 if the brush straddles the plane.
+    int BrushSide(csg_brush_c *B, float epsilon = 0.1) const;
+
+    // given an XY coordinate, compute the Z coordinate.
+    // result is undefined if the plane is vertical (nz == 0).
+    double CalcZ(double ax, double ay) const;
+};
+
+void quake_plane_c::SetPos(double ax, double ay, double az) {
+    x = ax;
+    y = ay;
+    z = az;
+}
+
+double quake_plane_c::CalcDist() const {
+    return (x * (double)nx) + (y * (double)ny) + (z * (double)nz);
+}
+
+void quake_plane_c::Flip() {
+    nx = -nx;
+    ny = -ny;
+    nz = -nz;
+}
+
+void quake_plane_c::Normalize() {
+    double len = sqrt(nx * nx + ny * ny + nz * nz);
+
+    if (len > 0.000001) {
+        nx /= len;
+        ny /= len;
+        nz /= len;
+    }
+}
+
+float quake_plane_c::PointDist(float ax, float ay, float az) const {
+    return (ax - x) * nx + (ay - y) * ny + (az - z) * nz;
+}
+
+int quake_plane_c::BrushSide(csg_brush_c *B, float epsilon) const {
+    float min_d = +9e9;
+    float max_d = -9e9;
+
+    for (unsigned int i = 0; i < B->verts.size(); i++) {
+        brush_vert_c *V = B->verts[i];
+
+        for (unsigned int k = 0; k < 2; k++) {
+            // TODO : compute proper z coord
+            // [ though unlikely to make much difference, due to the
+            //   2D-ish nature of our BSP tree... ]
+
+            float x = V->x;
+            float y = V->y;
+            float z = k ? B->b.z : B->t.z;
+
+            float d = PointDist(x, y, z);
+
+            min_d = MIN(min_d, d);
+            max_d = MAX(max_d, d);
+        }
+    }
+
+    if (min_d > -epsilon) {
+        return +1;
+    }
+    if (max_d < epsilon) {
+        return -1;
+    }
+
+    return 0;
+}
+
+double quake_plane_c::CalcZ(double ax, double ay) const {
+    // for vertical planes, result is meaningless
+    if (fabs(nz) < 0.01) {
+        return 0;
+    }
+
+    if (fabs(nz) > 0.999) {
+        return z;
+    }
+
+    // solve the plane equation:
+    //    nx*(ax-x) + ny*(ay-y) + nz*(az-z) = 0
+
+    double tx = (double)nx * (ax - (double)x);
+    double ty = (double)ny * (ay - (double)y);
+
+    double dz = (tx + ty) / (double)nz;
+
+    return (double)z - dz;
+}
 
 std::vector<csg_brush_c *> all_brushes;
 
@@ -59,8 +185,6 @@ extern float q_light_scale;
 extern int q_low_light;
 
 extern void SPOT_FillPolygon(uint8_t content, const int *shape, int count);
-
-extern bool QLIT_ParseProperty(std::string key, std::string value);
 
 void csg_property_set_c::Add(std::string key, std::string value) {
     dict[key] = std::string(value);
@@ -1105,10 +1229,6 @@ int CSG_property(lua_State *L) {
         return 0;
     } else if (StringCaseCmp(key, "cluster_size") == 0) {
         CLUSTER_SIZE = StringToDouble(value);
-        return 0;
-    }
-
-    if (QLIT_ParseProperty(key, value)) {
         return 0;
     }
 

@@ -1376,9 +1376,6 @@ extern int wadfab_get_3d_floor(lua_State *L);
 extern int wadfab_get_thing(lua_State *L);
 extern int wadfab_get_thing_hexen(lua_State *L);
 
-extern int Q1_add_mapmodel(lua_State *L);
-extern int Q1_add_tex_wad(lua_State *L);
-
 static const luaL_Reg gui_script_funcs[] = {
 
     {"format_prefix", gui_format_prefix},
@@ -1503,10 +1500,6 @@ static const luaL_Reg gui_script_funcs[] = {
     {"wadfab_get_3d_floor", wadfab_get_3d_floor},
     {"wadfab_get_thing", wadfab_get_thing},
     {"wadfab_get_thing_hexen", wadfab_get_thing_hexen},
-
-    // Quake functions
-    {"q1_add_mapmodel", Q1_add_mapmodel},
-    {"q1_add_tex_wad", Q1_add_tex_wad},
 
     // SPOT functions
     {"spots_begin", SPOT_begin},

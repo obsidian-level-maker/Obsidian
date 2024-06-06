@@ -36,7 +36,6 @@
 #include "m_cookie.h"
 #include "m_lua.h"
 #include "main.h"
-#include "q_common.h"  // qLump_c
 #include "sys_xoshiro.h"
 
 #ifdef WIN32
@@ -191,6 +190,141 @@ public:
         Doom::Send_Prog_Nodes(current, total);
     }
 };
+
+qLump_c::qLump_c() : buffer(), crlf(false) {}
+
+qLump_c::~qLump_c() {}
+
+int qLump_c::GetSize() const { return (int)buffer.size(); }
+
+const uint8_t *qLump_c::GetBuffer() const {
+    return buffer.empty() ? nullptr : &buffer[0];
+}
+
+void qLump_c::Append(const void *data, uint32_t len) {
+    if (len == 0) {
+        return;
+    }
+
+    uint32_t old_size = buffer.size();
+    uint32_t new_size = old_size + len;
+
+    buffer.resize(new_size);
+
+    memcpy(&buffer[old_size], data, len);
+}
+
+void qLump_c::Append(qLump_c *other) {
+    if (other->buffer.size() > 0) {
+        Append(&other->buffer[0], other->buffer.size());
+    }
+}
+
+void qLump_c::Prepend(const void *data, uint32_t len) {
+    if (len == 0) {
+        return;
+    }
+
+    uint32_t old_size = buffer.size();
+    uint32_t new_size = old_size + len;
+
+    buffer.resize(new_size);
+
+    if (old_size > 0) {
+        memmove(&buffer[len], &buffer[0], old_size);
+    }
+    memcpy(&buffer[0], data, len);
+}
+
+void qLump_c::AddByte(uint8_t value) { Append(&value, 1); }
+
+void qLump_c::RawPrintf(const char *str) {
+    if (!crlf) {
+        Append(str, strlen(str));
+        return;
+    }
+
+    // convert each newline into CR/LF pair
+    while (*str) {
+        const char *next = strchr(str, '\n');
+
+        Append(str, next ? (next - str) : strlen(str));
+
+        if (!next) {
+            break;
+        }
+
+        Append("\r\n", 2);
+
+        str = next + 1;
+    }
+}
+
+void qLump_c::Printf(const char *str, ...) {
+    static char msg_buf[MSG_BUF_LEN];
+
+    va_list args;
+
+    va_start(args, str);
+    vsnprintf(msg_buf, MSG_BUF_LEN - 1, str, args);
+    va_end(args);
+
+    msg_buf[MSG_BUF_LEN - 2] = 0;
+
+    RawPrintf(msg_buf);
+}
+
+void qLump_c::KeyPair(const char *key, const char *val, ...) {
+    static char v_buffer[MSG_BUF_LEN];
+
+    va_list args;
+
+    va_start(args, val);
+    vsnprintf(v_buffer, MSG_BUF_LEN - 1, val, args);
+    va_end(args);
+
+    v_buffer[MSG_BUF_LEN - 2] = 0;
+
+    RawPrintf("\"");
+    RawPrintf(key);
+    RawPrintf("\" \"");
+    RawPrintf(v_buffer);
+    RawPrintf("\"\n");
+}
+
+void qLump_c::SetCRLF(bool enable) { crlf = enable; }
+
+qLump_c *BSP_CreateInfoLump() {
+    qLump_c *L = new qLump_c();
+
+    L->SetCRLF(true);
+
+    L->Printf("\n");
+    L->Printf("-- Levels created by OBSIDIAN %s \"%s\"\n",
+              OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str());
+    L->Printf("-- Build %s\n", OBSIDIAN_VERSION);
+    L->Printf(
+        "-- Based on the OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n");
+    L->Printf("-- %s\n", OBSIDIAN_WEBSITE);
+    L->Printf("\n");
+
+    std::vector<std::string> lines;
+
+    ob_read_all_config(&lines, false /* need_full */);
+
+    for (unsigned int i = 0; i < lines.size(); i++) {
+        L->Printf("%s\n", lines[i].c_str());
+    }
+
+    L->Printf("\n\n\n");
+
+    // terminate lump with ^Z and a NUL character
+    static const uint8_t terminator[2] = {26, 0};
+
+    L->Append(terminator, 2);
+
+    return L;
+}
 
 //----------------------------------------------------------------------------
 //  AJBSP NODE BUILDING

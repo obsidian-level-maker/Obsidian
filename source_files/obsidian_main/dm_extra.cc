@@ -38,7 +38,6 @@
 #include "m_lua.h"
 #include "main.h"
 #include "physfs.h"
-#include "q_common.h"  // qLump_c
 #include "tx_forge.h"
 #include "tx_skies.h"
 

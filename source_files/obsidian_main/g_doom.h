@@ -26,7 +26,39 @@
 #include <array>
 #include "m_lua.h"
 
-class qLump_c;
+class qLump_c {
+   public:
+    std::string name;
+
+   private:
+    std::vector<uint8_t> buffer;
+
+    // when true Printf() converts '\n' to CR/LF pair
+    bool crlf;
+
+   public:
+    qLump_c();
+    ~qLump_c();
+
+    void Append(const void *data, uint32_t len);
+    void Append(qLump_c *other);
+
+    void Prepend(const void *data, uint32_t len);
+
+    void AddByte(uint8_t value);
+
+    void Printf(const char *str, ...);
+    void KeyPair(const char *key, const char *val, ...);
+    void SetCRLF(bool enable);
+
+    int GetSize() const;
+    const uint8_t *GetBuffer() const;
+
+   private:
+    void RawPrintf(const char *str);
+};
+
+qLump_c *BSP_CreateInfoLump();
 
 /***** VARIABLES ****************/
 

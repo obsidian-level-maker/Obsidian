@@ -57,20 +57,15 @@ if(NOT CONSOLE_ONLY)
     source_files/obsidian_main/aj_util.cc
     source_files/obsidian_main/aj_wad.cc
     source_files/obsidian_main/csg_bsp.cc
-    source_files/obsidian_main/csg_clip.cc
     source_files/obsidian_main/csg_doom.cc
     source_files/obsidian_main/csg_main.cc
-    source_files/obsidian_main/csg_quake.cc
     source_files/obsidian_main/csg_shade.cc
     source_files/obsidian_main/csg_spots.cc
     source_files/obsidian_main/dm_extra.cc
     source_files/obsidian_main/dm_prefab.cc
     source_files/obsidian_main/g_doom.cc
-    source_files/obsidian_main/g_quake.cc
-    source_files/obsidian_main/g_quake2.cc
     source_files/obsidian_main/g_wolf.cc
     source_files/obsidian_main/lib_argv.cc
-    source_files/obsidian_main/lib_pak.cc
     source_files/obsidian_main/lib_tga.cc
     source_files/obsidian_main/lib_util.cc
     source_files/obsidian_main/lib_wad.cc
@@ -86,10 +81,6 @@ if(NOT CONSOLE_ONLY)
     source_files/obsidian_main/m_trans.cc
     source_files/obsidian_main/main.cc
     source_files/obsidian_main/obsidian.rc
-    source_files/obsidian_main/q_common.cc
-    source_files/obsidian_main/q_light.cc
-    source_files/obsidian_main/q_tjuncs.cc
-    source_files/obsidian_main/q_vis.cc
     source_files/obsidian_main/sys_assert.cc
     source_files/obsidian_main/sys_debug.cc
     source_files/obsidian_main/sys_xoshiro.cc
@@ -113,20 +104,15 @@ else()
     source_files/obsidian_main/aj_util.cc
     source_files/obsidian_main/aj_wad.cc
     source_files/obsidian_main/csg_bsp.cc
-    source_files/obsidian_main/csg_clip.cc
     source_files/obsidian_main/csg_doom.cc
     source_files/obsidian_main/csg_main.cc
-    source_files/obsidian_main/csg_quake.cc
     source_files/obsidian_main/csg_shade.cc
     source_files/obsidian_main/csg_spots.cc
     source_files/obsidian_main/dm_extra.cc
     source_files/obsidian_main/dm_prefab.cc
     source_files/obsidian_main/g_doom.cc
-    source_files/obsidian_main/g_quake.cc
-    source_files/obsidian_main/g_quake2.cc
     source_files/obsidian_main/g_wolf.cc
     source_files/obsidian_main/lib_argv.cc
-    source_files/obsidian_main/lib_pak.cc
     source_files/obsidian_main/lib_tga.cc
     source_files/obsidian_main/lib_util.cc
     source_files/obsidian_main/lib_wad.cc
@@ -138,10 +124,6 @@ else()
     source_files/obsidian_main/m_trans.cc
     source_files/obsidian_main/main.cc
     source_files/obsidian_main/obsidian.rc
-    source_files/obsidian_main/q_common.cc
-    source_files/obsidian_main/q_light.cc
-    source_files/obsidian_main/q_tjuncs.cc
-    source_files/obsidian_main/q_vis.cc
     source_files/obsidian_main/sys_assert.cc
     source_files/obsidian_main/sys_debug.cc
     source_files/obsidian_main/sys_xoshiro.cc

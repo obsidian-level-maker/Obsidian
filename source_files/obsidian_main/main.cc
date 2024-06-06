@@ -1128,10 +1128,6 @@ bool Build_Cool_Shit() {
             game_object = Doom_GameObject();
         } else if (StringCaseCmp(format, "wolf3d") == 0) {
             game_object = Wolf_GameObject();
-        } else if (StringCaseCmp(format, "quake") == 0) {
-            game_object = Quake1_GameObject();
-        } else if (StringCaseCmp(format, "quake2") == 0) {
-            game_object = Quake2_GameObject();
         } else {
             Main::FatalError("ERROR: unknown format: '%s'\n", format.c_str());
         }
