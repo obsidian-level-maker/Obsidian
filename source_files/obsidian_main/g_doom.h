@@ -23,7 +23,6 @@
 #define G_DOOM_H_
 
 #include <filesystem>
-#include <array>
 #include "m_lua.h"
 
 class qLump_c {
@@ -155,7 +154,7 @@ struct raw_hexen_linedef_t {
     uint16_t end;                 // ... to this vertex
     uint16_t flags;               // linedef flags (impassible, etc)
     uint8_t special;              // special type
-    std::array<uint8_t, 5> args;  // special arguments
+    uint8_t args[5];              // special arguments
     uint16_t sidedef1;            // right sidedef
     uint16_t sidedef2;            // left sidedef
 };
@@ -166,9 +165,9 @@ struct raw_sidedef_t {
     int16_t x_offset;  // X offset for texture
     int16_t y_offset;  // Y offset for texture
 
-    std::array<char, 8> upper_tex;  // texture name for the part above
-    std::array<char, 8> lower_tex;  // texture name for the part below
-    std::array<char, 8> mid_tex;    // texture name for the regular part
+    char upper_tex[8]; // texture name for the part above
+    char lower_tex[8]; // texture name for the part below
+    char mid_tex[8]; // texture name for the regular part
 
     uint16_t sector;  // adjacent sector
 };
@@ -179,8 +178,8 @@ struct raw_sector_t {
     int16_t floor_h;  // floor height
     int16_t ceil_h;   // ceiling height
 
-    std::array<char, 8> floor_tex;  // floor texture
-    std::array<char, 8> ceil_tex;   // ceiling texture
+    char floor_tex[8];  // floor texture
+    char ceil_tex[8];   // ceiling texture
 
     uint16_t light;    // light level (0-255)
     uint16_t special;  // special behaviour (0 = normal, 9 = secret, ...)
@@ -225,13 +224,13 @@ struct raw_hexen_thing_t {
     uint16_t options;  // when appears, deaf, dormant, etc..
 
     uint8_t special;              // special type
-    std::array<uint8_t, 5> args;  // special arguments
+    uint8_t args[5];              // special arguments
 };
 #pragma pack(pop)
 
 #pragma pack(push, 1)
 struct raw_behavior_header_t {
-    std::array<char, 4> marker;  // 'ACS' 0
+    char marker[4]; // 'ACS' 0
 
     uint32_t offset;
 

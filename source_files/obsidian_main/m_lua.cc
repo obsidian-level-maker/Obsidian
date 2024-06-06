@@ -23,7 +23,6 @@
 #ifdef WIN32
 #include <iso646.h>
 #endif
-#include <array>
 
 #ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
@@ -1792,13 +1791,13 @@ bool ob_set_config(std::string key, std::string value) {
         return false;
     }
 
-    std::array<std::string, 3> params{
+    std::string params[3] = {
         key,
         value,
         "",
     };
 
-    return Script_CallFunc("ob_set_config", 0, params.data());
+    return Script_CallFunc("ob_set_config", 0, &params[0]);
 }
 
 bool ob_set_mod_option(std::string module, std::string option,
@@ -1808,9 +1807,9 @@ bool ob_set_mod_option(std::string module, std::string option,
         return false;
     }
 
-    std::array<std::string, 4> params = {module, option, value, ""};
+    std::string params[4] = {module, option, value, ""};
 
-    return Script_CallFunc("ob_set_mod_option", 0, params.data());
+    return Script_CallFunc("ob_set_mod_option", 0, &params[0]);
 }
 
 bool ob_read_all_config(std::vector<std::string> *lines, bool need_full) {
@@ -1821,12 +1820,12 @@ bool ob_read_all_config(std::vector<std::string> *lines, bool need_full) {
 
     conf_line_buffer = lines;
 
-    std::array<std::string, 2> params;
+    std::string params[2];
 
     params[0] = need_full ? "need_full" : "";
     params[1] = "";  // end of list
 
-    bool result = Script_CallFunc("ob_read_all_config", 0, params.data());
+    bool result = Script_CallFunc("ob_read_all_config", 0, &params[0]);
 
     conf_line_buffer = NULL;
 
@@ -1873,9 +1872,9 @@ std::string ob_game_format() {
 }
 
 std::string ob_get_param(std::string parameter) {
-    std::array<std::string, 2> params = {parameter, ""};
+    std::string params[2] = {parameter, ""};
 
-    if (!Script_CallFunc("ob_get_param", 1, params.data())) {
+    if (!Script_CallFunc("ob_get_param", 1, &params[0])) {
         return "";
     }
 
@@ -1888,9 +1887,9 @@ std::string ob_get_param(std::string parameter) {
 }
 
 bool ob_hexen_ceiling_check(int thing_id) {
-    std::array<std::string, 2> params = {NumToString(thing_id), ""};
+    std::string params[2] = {NumToString(thing_id), ""};
 
-    if (!Script_CallFunc("ob_hexen_ceiling_check", 1, params.data())) {
+    if (!Script_CallFunc("ob_hexen_ceiling_check", 1, &params[0])) {
         return false;
     }
 
@@ -1903,9 +1902,9 @@ bool ob_hexen_ceiling_check(int thing_id) {
 }
 
 bool ob_mod_enabled(std::string module_name) {
-    std::array<std::string, 2> params = {module_name, ""};
+    std::string params[2] = {module_name, ""};
 
-    if (!Script_CallFunc("ob_mod_enabled", 1, params.data())) {
+    if (!Script_CallFunc("ob_mod_enabled", 1, &params[0])) {
         return false;
     }
 
@@ -1962,9 +1961,9 @@ void ob_print_reference_json() {
 }
 
 void ob_invoke_hook(std::string hookname) {
-    std::array<std::string, 2> params = {hookname, ""};
+    std::string params[2] = {hookname, ""};
 
-    if (!Script_CallFunc("ob_invoke_hook", 0, params.data())) {
+    if (!Script_CallFunc("ob_invoke_hook", 0, &params[0])) {
         Main::ProgStatus(_("Script Error"));
     }
 }

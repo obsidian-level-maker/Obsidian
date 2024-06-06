@@ -21,7 +21,6 @@
 
 #include "m_cookie.h"
 
-#include <array>
 #include <iostream>
 
 #ifndef CONSOLE_ONLY
@@ -349,7 +348,7 @@ class RecentFiles_c {
     int size;
 
     // newest is at index [0]
-    std::array<std::filesystem::path, MAX_RECENT> filenames;
+    std::filesystem::path filenames[MAX_RECENT];
 
    public:
     RecentFiles_c() : size(0) {

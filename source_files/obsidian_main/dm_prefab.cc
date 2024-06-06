@@ -273,10 +273,10 @@ int wadfab_get_sector(lua_State *L) {
         lua_setfield(L, -2, "tag");
     }
 
-    lua_pushstring(L, SEC->floor_tex.data());
+    lua_pushstring(L, SEC->floor_tex);
     lua_setfield(L, -2, "floor_tex");
 
-    lua_pushstring(L, SEC->ceil_tex.data());
+    lua_pushstring(L, SEC->ceil_tex);
     lua_setfield(L, -2, "ceil_tex");
 
     return 1;
@@ -304,13 +304,13 @@ int wadfab_get_side(lua_State *L) {
         lua_setfield(L, -2, "sector");
     }
 
-    lua_pushstring(L, SD->upper_tex.data());
+    lua_pushstring(L, SD->upper_tex);
     lua_setfield(L, -2, "upper_tex");
 
-    lua_pushstring(L, SD->lower_tex.data());
+    lua_pushstring(L, SD->lower_tex);
     lua_setfield(L, -2, "lower_tex");
 
-    lua_pushstring(L, SD->mid_tex.data());
+    lua_pushstring(L, SD->mid_tex);
     lua_setfield(L, -2, "mid_tex");
 
     lua_pushinteger(L, index);
@@ -546,18 +546,18 @@ int wadfab_get_3d_floor(lua_State *L) {
     lua_pushinteger(L, SEC->floor_h);
     lua_setfield(L, -2, "bottom_h");
 
-    lua_pushstring(L, SEC->floor_tex.data());
+    lua_pushstring(L, SEC->floor_tex);
     lua_setfield(L, -2, "bottom_tex");
 
     // TOP
     lua_pushinteger(L, SEC->ceil_h);
     lua_setfield(L, -2, "top_h");
 
-    lua_pushstring(L, SEC->ceil_tex.data());
+    lua_pushstring(L, SEC->ceil_tex);
     lua_setfield(L, -2, "top_tex");
 
     // SIDE
-    lua_pushstring(L, LD->right->mid_tex.data());
+    lua_pushstring(L, LD->right->mid_tex);
     lua_setfield(L, -2, "side_tex");
 
     lua_pushinteger(L, LD->right->x_offset);

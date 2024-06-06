@@ -19,8 +19,6 @@
 #ifndef __AJPOLY_STRUCTS_H__
 #define __AJPOLY_STRUCTS_H__
 
-#include <array>
-
 #ifdef __GNUC__
 #define PACKEDATTR __attribute__((packed))
 #else
@@ -39,7 +37,7 @@ typedef struct {
     uint32_t start;
     uint32_t length;
 
-    std::array<char, 8> name;
+    char name[8];
 
 } PACKEDATTR raw_wad_entry_t;
 
@@ -64,7 +62,7 @@ typedef struct {
     uint16_t end;                     // ... to this vertex
     uint16_t flags;                   // linedef flags (impassible, etc)
     uint8_t type;                     // linedef type
-    std::array<uint8_t, 5> specials;  // hexen specials
+    uint8_t specials[5];              // hexen specials
     uint16_t sidedef1;                // right sidedef
     uint16_t sidedef2;                // left sidedef
 
@@ -74,9 +72,9 @@ typedef struct {
     int16_t x_offset;  // X offset for texture
     int16_t y_offset;  // Y offset for texture
 
-    std::array<char, 8> upper_tex;  // texture name for the part above
-    std::array<char, 8> lower_tex;  // texture name for the part below
-    std::array<char, 8> mid_tex;    // texture name for the regular part
+    char upper_tex[8]; // texture name for the part above
+    char lower_tex[8]; // texture name for the part below
+    char mid_tex[8]; // texture name for the regular part
 
     uint16_t sector;  // adjacent sector
 
@@ -86,8 +84,8 @@ typedef struct {
     int16_t floor_h;  // floor height
     int16_t ceil_h;   // ceiling height
 
-    std::array<char, 8> floor_tex;  // floor texture
-    std::array<char, 8> ceil_tex;   // ceiling texture
+    char floor_tex[8];  // floor texture
+    char ceil_tex[8];   // ceiling texture
 
     uint16_t light;    // light level (0-255)
     uint16_t special;  // special behaviour (0 = normal, 9 = secret, ...)
@@ -112,7 +110,7 @@ typedef struct {
     uint16_t options;  // when appears, deaf, dormant, etc..
 
     uint8_t special;             // special type
-    std::array<uint8_t, 5> arg;  // special arguments
+    uint8_t arg[5];              // special arguments
 
 } PACKEDATTR raw_hexen_thing_t;
 

@@ -241,7 +241,7 @@ class vertex_c {
     // keep track of a few (but not all) linedefs touching this vertex.
     // this is used to detect colinear lines which can be merged. and
     // also for horizontal texture alignment.
-    std::array<linedef_c *, 4> lines;
+    linedef_c *lines[4];
 
     // was the vertex created by corner rounding code, and it split an
     // existing linedef in half?
@@ -389,7 +389,7 @@ class linedef_c {
     int special;
     int tag;
 
-    std::array<uint8_t, 5> args;
+    uint8_t args[5];
 
     double length;
 
@@ -1492,9 +1492,9 @@ static void MakeLine(region_c *R, snag_c *S) {
     L->tag = L_tag;
 
     if (use_trig) {
-        trig->getHexenArgs(L->args.data());
+        trig->getHexenArgs(L->args);
     } else if (spec) {
-        spec->getHexenArgs(L->args.data());
+        spec->getHexenArgs(L->args);
     }
 
     // flags...
@@ -2578,7 +2578,7 @@ void Doom::linedef_c::Write() {
 
     int f = front ? front->Write() : -1;
     int b = back ? back->Write() : -1;
-    AddLinedef(v1, v2, f, b, special, flags, tag, args.data());
+    AddLinedef(v1, v2, f, b, special, flags, tag, args);
 }
 
 namespace Doom {

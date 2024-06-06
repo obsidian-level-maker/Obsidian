@@ -229,12 +229,12 @@ void ParseSectorField(sector_c *sector, const std::string& key, ajparse::token_k
     else if (key == "texturefloor") 
     {
         std::copy(value.data(), value.data() + MIN(8, value.size()),
-                  sector->floor_tex.data());
+                  sector->floor_tex);
     }
     else if (key == "textureceiling") 
     {
 		std::copy(value.data(), value.data() + MIN(8, value.size()),
-                  sector->ceil_tex.data());
+                  sector->ceil_tex);
     }
 	else if (key == "lightlevel") 
     {
@@ -268,17 +268,17 @@ void ParseSidedefField(sidedef_c *side, const std::string& key, ajparse::token_k
     else if (key == "texturetop")
     {
         std::copy(value.data(), value.data() + MIN(8, value.size()),
-                  side->upper_tex.data());
+                  side->upper_tex);
     }
     else if (key == "texturebottom")
     {
         std::copy(value.data(), value.data() + MIN(8, value.size()),
-                  side->lower_tex.data());
+                  side->lower_tex);
     }
     else if (key == "texturemiddle")
     {
         std::copy(value.data(), value.data() + MIN(8, value.size()),
-                  side->mid_tex.data());
+                  side->mid_tex);
     }
 	else if (key == "sector")
 	{
@@ -767,10 +767,10 @@ bool LoadSectors() {
         sector->floor_h = LE_S16(raw->floor_h);
         sector->ceil_h = LE_S16(raw->ceil_h);
 
-        std::copy(raw->floor_tex.data(), raw->floor_tex.data() + 8,
-                  sector->floor_tex.data());
-        std::copy(raw->ceil_tex.data(), raw->ceil_tex.data() + 8,
-                  sector->ceil_tex.data());
+        std::copy(raw->floor_tex, raw->floor_tex + 8,
+                  sector->floor_tex);
+        std::copy(raw->ceil_tex, raw->ceil_tex + 8,
+                  sector->ceil_tex);
 
         sector->light = LE_U16(raw->light);
         sector->special = LE_U16(raw->special);
@@ -850,7 +850,7 @@ bool LoadThingsHexen() {
 
         thing->special = LE_U16(raw->special);
 
-        thing->args = raw->arg;
+        memcpy(thing->args, raw->arg, 5);
     }
 
     return true;  // OK
@@ -887,12 +887,12 @@ bool LoadSidedefs() {
         side->x_offset = LE_S16(raw->x_offset);
         side->y_offset = LE_S16(raw->y_offset);
 
-        std::copy(raw->upper_tex.data(), raw->upper_tex.data() + 8,
-                  side->upper_tex.data());
-        std::copy(raw->mid_tex.data(), raw->mid_tex.data() + 8,
-                  side->mid_tex.data());
-        std::copy(raw->lower_tex.data(), raw->lower_tex.data() + 8,
-                  side->lower_tex.data());
+        std::copy(raw->upper_tex, raw->upper_tex + 8,
+                  side->upper_tex);
+        std::copy(raw->mid_tex, raw->mid_tex + 8,
+                  side->mid_tex);
+        std::copy(raw->lower_tex, raw->lower_tex + 8,
+                  side->lower_tex);
     }
 
     return true;  // OK

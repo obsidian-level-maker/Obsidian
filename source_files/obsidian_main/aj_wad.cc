@@ -111,7 +111,7 @@ bool wad_c::ReadDirEntry() {
     // ensure name gets NUL terminated
     char name_buf[10];
     memset(name_buf, 0, sizeof(name_buf));
-    memcpy(name_buf, entry.name.data(), 8);
+    memcpy(name_buf, entry.name, 8);
 
     lump_c *lump = new lump_c(name_buf, start, length);
 

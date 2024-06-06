@@ -115,7 +115,7 @@ static const char *section_markers[NUM_SECTIONS][2] = {
 
 // Empty script numbers matching Korax requirements to prevent errors being
 // thrown
-std::array<uint8_t, 128> empty_korax_behavior = {
+static constexpr uint8_t empty_korax_behavior[128] = {
     0x41, 0x43, 0x53, 0x00, 0x24, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00,
     0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00,
     0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00,
@@ -408,7 +408,7 @@ static void WriteBehavior() {
     /*raw_behavior_header_t behavior;
 
     std::string_view acs{"ACS"};
-    std::copy(acs.data(), acs.data() + 4, behavior.marker.data());
+    std::copy(acs.data(), acs.data() + 4, behavior.marker);
 
     behavior.offset = LE_U32(8);
     behavior.func_num = 0;
@@ -416,7 +416,7 @@ static void WriteBehavior() {
 
     WriteLump("BEHAVIOR", &behavior, sizeof(behavior));*/
 
-    WriteLump("BEHAVIOR", empty_korax_behavior.data(), 128);
+    WriteLump("BEHAVIOR", empty_korax_behavior, 128);
 }
 
 static void ClearSections() {
@@ -683,8 +683,8 @@ void Doom::AddSector(int f_h, std::string f_tex, int c_h, std::string c_tex,
         sec.floor_h = LE_S16(f_h);
         sec.ceil_h = LE_S16(c_h);
 
-        std::copy(f_tex.data(), f_tex.data() + 8, sec.floor_tex.data());
-        std::copy(c_tex.data(), c_tex.data() + 8, sec.ceil_tex.data());
+        std::copy(f_tex.data(), f_tex.data() + 8, sec.floor_tex);
+        std::copy(c_tex.data(), c_tex.data() + 8, sec.ceil_tex);
 
         sec.light = LE_U16(light);
         sec.special = LE_U16(special);
@@ -723,9 +723,9 @@ void Doom::AddSidedef(int sector, std::string l_tex, std::string m_tex,
 
         side.sector = LE_S16(sector);
 
-        std::copy(l_tex.data(), l_tex.data() + 8, side.lower_tex.data());
-        std::copy(m_tex.data(), m_tex.data() + 8, side.mid_tex.data());
-        std::copy(u_tex.data(), u_tex.data() + 8, side.upper_tex.data());
+        std::copy(l_tex.data(), l_tex.data() + 8, side.lower_tex);
+        std::copy(m_tex.data(), m_tex.data() + 8, side.mid_tex);
+        std::copy(u_tex.data(), u_tex.data() + 8, side.upper_tex);
 
         side.x_offset = LE_S16(x_offset);
         side.y_offset = LE_S16(y_offset);
@@ -833,7 +833,7 @@ void Doom::AddLinedef(int vert1, int vert2, int side1, int side2, int type,
             // tag value is UNUSED
 
             if (args) {
-                std::copy(args, args + 5, line.args.data());
+                std::copy(args, args + 5, line.args);
             }
 
             linedef_lump->Append(&line, sizeof(line));
@@ -1045,7 +1045,7 @@ void Doom::AddThing(int x, int y, int h, int type, int angle, int options,
             thing.special = special;
 
             if (args) {
-                std::copy(args, args + 5, thing.args.data());
+                std::copy(args, args + 5, thing.args);
             }
 
             thing_lump->Append(&thing, sizeof(thing));
