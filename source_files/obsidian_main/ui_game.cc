@@ -154,7 +154,7 @@ void UI_Game::callback_Engine(Fl_Widget *w, void *data) {
 
     ob_set_config("engine", that->engine->GetID());
 
-    if (StringCaseCmp(that->engine->GetID(), "idtech_0") == 0) {
+    if (StringCompare(that->engine->GetID(), "idtech_0") == 0) {
         that->theme->deactivate();
     } else {
         that->theme->activate();
@@ -188,7 +188,7 @@ void UI_Game::callback_Port(Fl_Widget *w, void *data) {
 
     ob_set_config("port", that->port->GetID());
 
-    if (StringCaseCmp(that->engine->GetID(), "idtech_0") == 0) {
+    if (StringCompare(that->engine->GetID(), "idtech_0") == 0) {
         that->theme->deactivate();
     } else {
         that->theme->activate();
@@ -274,25 +274,25 @@ void UI_Game::Locked(bool value) {
 }
 
 bool UI_Game::AddChoice(std::string button, std::string id, std::string label) {
-    if (!StringCaseCmp(button, "engine")) {
+    if (!StringCompare(button, "engine")) {
         engine->AddChoice(id, label);
         return true;
     }
-    if (!StringCaseCmp(button, "game")) {
+    if (!StringCompare(button, "game")) {
         game->AddChoice(id, label);
         return true;
     }
-    if (!StringCaseCmp(button, "port")) {
-        if (StringCaseCmp(id, "advanced")) {
+    if (!StringCompare(button, "port")) {
+        if (StringCompare(id, "advanced")) {
             port->AddChoice(id, label);
         }
         return true;
     }
-    if (!StringCaseCmp(button, "length")) {
+    if (!StringCompare(button, "length")) {
         length->AddChoice(id, label);
         return true;
     }
-    if (!StringCaseCmp(button, "theme")) {
+    if (!StringCompare(button, "theme")) {
         theme->AddChoice(id, label);
         return true;
     }
@@ -301,23 +301,23 @@ bool UI_Game::AddChoice(std::string button, std::string id, std::string label) {
 }
 
 bool UI_Game::EnableChoice(std::string button, std::string id, bool enable_it) {
-    if (!StringCaseCmp(button, "engine")) {
+    if (!StringCompare(button, "engine")) {
         engine->EnableChoice(id, enable_it);
         return true;
     }
-    if (!StringCaseCmp(button, "game")) {
+    if (!StringCompare(button, "game")) {
         game->EnableChoice(id, enable_it);
         return true;
     }
-    if (!StringCaseCmp(button, "port")) {
+    if (!StringCompare(button, "port")) {
         port->EnableChoice(id, enable_it);
         return true;
     }
-    if (!StringCaseCmp(button, "length")) {
+    if (!StringCompare(button, "length")) {
         length->EnableChoice(id, enable_it);
         return true;
     }
-    if (!StringCaseCmp(button, "theme")) {
+    if (!StringCompare(button, "theme")) {
         theme->EnableChoice(id, enable_it);
         return true;
     }
@@ -326,23 +326,23 @@ bool UI_Game::EnableChoice(std::string button, std::string id, bool enable_it) {
 }
 
 bool UI_Game::SetButton(std::string button, std::string id) {
-    if (!StringCaseCmp(button, "engine")) {
+    if (!StringCompare(button, "engine")) {
         engine->ChangeTo(id);
         return true;
     }
-    if (!StringCaseCmp(button, "game")) {
+    if (!StringCompare(button, "game")) {
         game->ChangeTo(id);
         return true;
     }
-    if (!StringCaseCmp(button, "port")) {
+    if (!StringCompare(button, "port")) {
         port->ChangeTo(id);
         return true;
     }
-    if (!StringCaseCmp(button, "length")) {
+    if (!StringCompare(button, "length")) {
         length->ChangeTo(id);
         return true;
     }
-    if (!StringCaseCmp(button, "theme")) {
+    if (!StringCompare(button, "theme")) {
         theme->ChangeTo(id);
         return true;
     }

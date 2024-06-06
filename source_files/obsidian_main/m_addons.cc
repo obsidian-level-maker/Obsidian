@@ -164,7 +164,7 @@ void VFS_ScanForPresets() {
     int result2 = 0;
 
     for (auto &file : std::filesystem::directory_iterator(dir_name)) {
-        if (StringCaseCmp(file.path().extension().string(), ".txt") == 0) {
+        if (StringCompare(file.path().extension().string(), ".txt") == 0) {
             result1 += 1;
             list.push_back(file.path());
         }
@@ -180,7 +180,7 @@ void VFS_ScanForPresets() {
         std::vector<std::filesystem::path> list2;
 
         for (auto &file : std::filesystem::directory_iterator(dir_name)) {
-            if (StringCaseCmp(file.path().extension().string(), ".txt") == 0) {
+            if (StringCompare(file.path().extension().string(), ".txt") == 0) {
                 result2 += 1;
                 list2.push_back(file.path());
             }
@@ -224,7 +224,7 @@ void VFS_ScanForAddons() {
     int result2 = 0;
 
     for (auto &file : std::filesystem::directory_iterator(dir_name)) {
-        if (file.is_directory() || StringCaseCmp(file.path().extension().string(), ".oaf") == 0) {
+        if (file.is_directory() || StringCompare(file.path().extension().string(), ".oaf") == 0) {
             if (PHYSFS_mount(file.path().generic_u8string().c_str(), nullptr, 0)) {
                 PHYSFS_unmount(file.path().generic_u8string().c_str());
                 result1 += 1;
@@ -248,7 +248,7 @@ void VFS_ScanForAddons() {
         std::vector<std::filesystem::path> list2;
 
         for (auto &file : std::filesystem::directory_iterator(dir_name)) {
-            if (file.is_directory() || StringCaseCmp(file.path().extension().string(), ".oaf") == 0) {
+            if (file.is_directory() || StringCompare(file.path().extension().string(), ".oaf") == 0) {
                 if (PHYSFS_mount(file.path().generic_u8string().c_str(), nullptr, 0)) {
                     PHYSFS_unmount(file.path().generic_u8string().c_str());
                     result2 += 1;

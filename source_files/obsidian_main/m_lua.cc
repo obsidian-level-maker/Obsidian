@@ -65,7 +65,7 @@ int gui_format_prefix(lua_State *L) {
 
     SYS_ASSERT(levelcount && game && theme && (!format.empty()));
 
-    if (StringCaseCmp(format, "custom") == 0) {
+    if (StringCompare(format, "custom") == 0) {
         format = custom_prefix.c_str();
     }
 
@@ -342,7 +342,7 @@ static bool scan_dir_process_name(const std::filesystem::path &name,
 
 struct scan_dir_nocase_CMP {
     inline bool operator()(std::string_view A, std::string_view B) const {
-        return StringCaseCmp(A, B) < 0;
+        return StringCompare(A, B) < 0;
     }
 };
 
@@ -525,37 +525,37 @@ int gui_add_module(lua_State *L) {
         Main::FatalError("Script problem: gui.add_module called late.\n");
     }
 
-    if (StringCaseCmp(where, "arch") == 0) {
+    if (StringCompare(where, "arch") == 0) {
         if (!main_win->mod_tabs->arch_mods->FindID(id)) {
             main_win->mod_tabs->arch_mods->AddModule(id, label, tip, red, green, blue,
                                         suboptions);
         }
-    } else if (StringCaseCmp(where, "combat") == 0) {
+    } else if (StringCompare(where, "combat") == 0) {
         if (!main_win->mod_tabs->combat_mods->FindID(id)) {
             main_win->mod_tabs->combat_mods->AddModule(id, label, tip, red, green, blue,
                                         suboptions);
         }
-    } else if (StringCaseCmp(where, "pickup") == 0) {
+    } else if (StringCompare(where, "pickup") == 0) {
         if (!main_win->mod_tabs->pickup_mods->FindID(id)) {
             main_win->mod_tabs->pickup_mods->AddModule(id, label, tip, red, green, blue,
                                         suboptions);
         }
-    } else if (StringCaseCmp(where, "other") == 0) {
+    } else if (StringCompare(where, "other") == 0) {
         if (!main_win->mod_tabs->other_mods->FindID(id)) {
             main_win->mod_tabs->other_mods->AddModule(id, label, tip, red, green, blue,
                                         suboptions);
         }
-    } else if (StringCaseCmp(where, "debug") == 0) {
+    } else if (StringCompare(where, "debug") == 0) {
         if (!main_win->mod_tabs->debug_mods->FindID(id)) {
             main_win->mod_tabs->debug_mods->AddModule(id, label, tip, red, green, blue,
                                         suboptions);
         }
-    } else if (StringCaseCmp(where, "experimental") == 0) {
+    } else if (StringCompare(where, "experimental") == 0) {
         if (!main_win->mod_tabs->experimental_mods->FindID(id)) {
             main_win->mod_tabs->experimental_mods->AddModule(id, label, tip, red, green, blue,
                                         suboptions);
         }
-    } else if (StringCaseCmp(where, "links") == 0) {
+    } else if (StringCompare(where, "links") == 0) {
         if (!main_win->mod_tabs->links->FindID(id)) {
             main_win->mod_tabs->links->AddModule(id, label, tip, red, green, blue,
                                         suboptions);
@@ -896,7 +896,7 @@ int gui_set_module_option(lua_State *L) {
         return 0;
     }
 
-    if (!StringCaseCmp(option, "self")) {
+    if (!StringCompare(option, "self")) {
         return luaL_error(L, "set_module_option: cannot use 'self' here\n",
                           option.c_str());
     }
@@ -927,7 +927,7 @@ int gui_set_module_slider_option(lua_State *L) {
         return 0;
     }
 
-    if (!StringCaseCmp(option, "self")) {
+    if (!StringCompare(option, "self")) {
         return luaL_error(L, "set_module_option: cannot use 'self' here\n",
                           option.c_str());
     }
@@ -958,7 +958,7 @@ int gui_set_module_button_option(lua_State *L) {
         return 0;
     }
 
-    if (!StringCaseCmp(option, "self")) {
+    if (!StringCompare(option, "self")) {
         return luaL_error(L, "set_module_option: cannot use 'self' here\n",
                           option.c_str());
     }

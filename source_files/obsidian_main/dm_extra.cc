@@ -224,13 +224,13 @@ int wad_logo_gfx(lua_State *L) {
     // find the requested image (TODO: look in a table)
     const logo_image_t *logo = NULL;
 
-    if (StringCaseCmp(image, logo_BOLT.name) == 0) {
+    if (StringCompare(image, logo_BOLT.name) == 0) {
         logo = &logo_BOLT;
-    } else if (StringCaseCmp(image, logo_PILL.name) == 0) {
+    } else if (StringCompare(image, logo_PILL.name) == 0) {
         logo = &logo_PILL;
-    } else if (StringCaseCmp(image, logo_CARVE.name) == 0) {
+    } else if (StringCompare(image, logo_CARVE.name) == 0) {
         logo = &logo_CARVE;
-    } else if (StringCaseCmp(image, logo_RELIEF.name) == 0) {
+    } else if (StringCompare(image, logo_RELIEF.name) == 0) {
         logo = &logo_RELIEF;
     } else {
         return luaL_argerror(L, 3, "unknown image name");
@@ -765,7 +765,7 @@ int wad_add_text_lump(lua_State *L) {
     }
 
     if (game_object->file_per_map) {
-        ZIPF_AddMem(name, const_cast<uint8_t *>(lump->GetBuffer()), lump->GetSize());
+        ZIPF_AddMem(name, (uint8_t *)lump->GetBuffer(), lump->GetSize());
     } else {
         WriteLump(name, lump);
     }
@@ -1576,9 +1576,9 @@ int title_write(lua_State *L) {
 
     qLump_c *lump;
 
-    if (StringCaseCmp(format, "tga") == 0) {
+    if (StringCompare(format, "tga") == 0) {
         lump = TitleCreateTGA();
-    } else if (StringCaseCmp(format, "raw") == 0) {
+    } else if (StringCompare(format, "raw") == 0) {
         lump = TitleCreateRaw();
     } else {
         lump = TitleCreatePatch();
@@ -1586,7 +1586,7 @@ int title_write(lua_State *L) {
     }
 
     if (game_object->file_per_map) {
-        ZIPF_AddMem(StringFormat("graphics/%s.%s", lumpname, format), const_cast<uint8_t *>(lump->GetBuffer()), lump->GetSize());
+        ZIPF_AddMem(StringFormat("graphics/%s.%s", lumpname, format), (uint8_t *)lump->GetBuffer(), lump->GetSize());
     } else {
         WriteLump(lumpname, lump);
     }

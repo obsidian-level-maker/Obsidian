@@ -64,7 +64,7 @@ static void Cookie_SetValue(std::string name, std::string value) {
     }
 
     // need special handling for the 'seed' value
-    if (StringCaseCmp(name, "seed") == 0) {
+    if (StringCompare(name, "seed") == 0) {
         // ignore seed when loading a config file
         // unless the -k / --keep option is given.
 
@@ -129,11 +129,6 @@ static bool Cookie_ParseLine(std::string buf) {
     if (name.empty() || value.empty()) {
         LogPrintf("Name or value missing!\n");
         return false;
-    }
-
-    // FIXME: Can't remember if this is needed anymore.
-    if (StringCaseCmp(value, "MixItUp") == 0) {
-        value = "Mix It Up";
     }
 
     Cookie_SetValue(name, value);
@@ -435,7 +430,7 @@ class RecentFiles_c {
         // order they are read.
 
         for (int k = size - 1; k >= 0; k--) {
-            std::string fn = StringFormat("%s = %s\n", keyword.c_str(), StringToUTF8(filenames[k].generic_u16string()).c_str());
+            std::string fn = StringFormat("%s = %s\n", keyword.c_str(), filenames[k].u8string().c_str());
             fp.write(fn.c_str(), fn.size());
         }
 
@@ -466,10 +461,10 @@ static RecentFiles_c recent_wads;
 static RecentFiles_c recent_configs;
 
 void Recent_Parse(std::string name, std::string value) {
-    if (StringCaseCmp(name, "recent_wad") == 0) {
+    if (StringCompare(name, "recent_wad") == 0) {
         recent_wads.insert(std::filesystem::u8path(value));
 
-    } else if (StringCaseCmp(name, "recent_config") == 0) {
+    } else if (StringCompare(name, "recent_config") == 0) {
         recent_configs.insert(std::filesystem::u8path(value));
     }
 }

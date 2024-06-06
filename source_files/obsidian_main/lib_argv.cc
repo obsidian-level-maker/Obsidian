@@ -99,8 +99,8 @@ void argv::Init(const int argc, const char *const *argv) {
 
     for (i = 0; i < win_argc; i++) {
         SYS_NULL_CHECK(win_argv[i]);
-		std::u16string arg = reinterpret_cast<char16_t *>(win_argv[i]);
-		argv_block.push_back(StringToUTF8(arg));
+		std::wstring arg = win_argv[i];
+		argv_block.push_back(WStringToUTF8(arg));
     }
 
 	LocalFree(win_argv);
@@ -184,7 +184,7 @@ int argv::Find(const char shortName, const char *longName, int *numParams) {
         }
 
         if (longName &&
-            StringCaseCmp(longName,
+            StringCompare(longName,
                           std::string_view{&str[1], (str.size() - 1)}) == 0) {
             break;
         }

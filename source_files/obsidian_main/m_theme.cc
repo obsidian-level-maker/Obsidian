@@ -122,68 +122,68 @@ std::filesystem::path Theme_AskLoadFilename() {
 }
 
 static void Parse_Theme_Option(std::string name, std::string value) {
-    if (StringCaseCmp(name, "window_scaling") == 0) {
+    if (StringCompare(name, "window_scaling") == 0) {
         window_scaling = StringToInt(value);
         window_scaling = CLAMP(0, window_scaling, 5);
-    } else if (StringCaseCmp(name, "font_scaling") == 0) {
+    } else if (StringCompare(name, "font_scaling") == 0) {
         font_scaling = StringToInt(value);
-    } else if (StringCaseCmp(name, "font_theme") == 0) {
+    } else if (StringCompare(name, "font_theme") == 0) {
         font_theme = StringToInt(value);
-    } else if (StringCaseCmp(name, "widget_theme") == 0) {
+    } else if (StringCompare(name, "widget_theme") == 0) {
         widget_theme = StringToInt(value);
-    } else if (StringCaseCmp(name, "box_theme") == 0) {
+    } else if (StringCompare(name, "box_theme") == 0) {
         box_theme = StringToInt(value);
-    } else if (StringCaseCmp(name, "button_theme") == 0) {
+    } else if (StringCompare(name, "button_theme") == 0) {
         button_theme = StringToInt(value);
-    } else if (StringCaseCmp(name, "color_scheme") == 0) {
+    } else if (StringCompare(name, "color_scheme") == 0) {
         color_scheme = StringToInt(value);
-    } else if (StringCaseCmp(name, "text_red") == 0) {
+    } else if (StringCompare(name, "text_red") == 0) {
         text_red = StringToInt(value);
-    } else if (StringCaseCmp(name, "text_green") == 0) {
+    } else if (StringCompare(name, "text_green") == 0) {
         text_green = StringToInt(value);
-    } else if (StringCaseCmp(name, "text_blue") == 0) {
+    } else if (StringCompare(name, "text_blue") == 0) {
         text_blue = StringToInt(value);
-    } else if (StringCaseCmp(name, "text2_red") == 0) {
+    } else if (StringCompare(name, "text2_red") == 0) {
         text2_red = StringToInt(value);
-    } else if (StringCaseCmp(name, "text2_green") == 0) {
+    } else if (StringCompare(name, "text2_green") == 0) {
         text2_green = StringToInt(value);
-    } else if (StringCaseCmp(name, "text2_blue") == 0) {
+    } else if (StringCompare(name, "text2_blue") == 0) {
         text2_blue = StringToInt(value);
-    } else if (StringCaseCmp(name, "bg_red") == 0) {
+    } else if (StringCompare(name, "bg_red") == 0) {
         bg_red = StringToInt(value);
-    } else if (StringCaseCmp(name, "bg_green") == 0) {
+    } else if (StringCompare(name, "bg_green") == 0) {
         bg_green = StringToInt(value);
-    } else if (StringCaseCmp(name, "bg_blue") == 0) {
+    } else if (StringCompare(name, "bg_blue") == 0) {
         bg_blue = StringToInt(value);
-    } else if (StringCaseCmp(name, "bg2_red") == 0) {
+    } else if (StringCompare(name, "bg2_red") == 0) {
         bg2_red = StringToInt(value);
-    } else if (StringCaseCmp(name, "bg2_green") == 0) {
+    } else if (StringCompare(name, "bg2_green") == 0) {
         bg2_green = StringToInt(value);
-    } else if (StringCaseCmp(name, "bg2_blue") == 0) {
+    } else if (StringCompare(name, "bg2_blue") == 0) {
         bg2_blue = StringToInt(value);
-    } else if (StringCaseCmp(name, "button_red") == 0) {
+    } else if (StringCompare(name, "button_red") == 0) {
         button_red = StringToInt(value);
-    } else if (StringCaseCmp(name, "button_green") == 0) {
+    } else if (StringCompare(name, "button_green") == 0) {
         button_green = StringToInt(value);
-    } else if (StringCaseCmp(name, "button_blue") == 0) {
+    } else if (StringCompare(name, "button_blue") == 0) {
         button_blue = StringToInt(value);
-    } else if (StringCaseCmp(name, "gradient_red") == 0) {
+    } else if (StringCompare(name, "gradient_red") == 0) {
         gradient_red = StringToInt(value);
-    } else if (StringCaseCmp(name, "gradient_green") == 0) {
+    } else if (StringCompare(name, "gradient_green") == 0) {
         gradient_green = StringToInt(value);
-    } else if (StringCaseCmp(name, "gradient_blue") == 0) {
+    } else if (StringCompare(name, "gradient_blue") == 0) {
         gradient_blue = StringToInt(value);
-    } else if (StringCaseCmp(name, "border_red") == 0) {
+    } else if (StringCompare(name, "border_red") == 0) {
         border_red = StringToInt(value);
-    } else if (StringCaseCmp(name, "border_green") == 0) {
+    } else if (StringCompare(name, "border_green") == 0) {
         border_green = StringToInt(value);
-    } else if (StringCaseCmp(name, "border_blue") == 0) {
+    } else if (StringCompare(name, "border_blue") == 0) {
         border_blue = StringToInt(value);
-    } else if (StringCaseCmp(name, "gap_red") == 0) {
+    } else if (StringCompare(name, "gap_red") == 0) {
         gap_red = StringToInt(value);
-    } else if (StringCaseCmp(name, "gap_green") == 0) {
+    } else if (StringCompare(name, "gap_green") == 0) {
         gap_green = StringToInt(value);
-    } else if (StringCaseCmp(name, "gap_blue") == 0) {
+    } else if (StringCompare(name, "gap_blue") == 0) {
         gap_blue = StringToInt(value);
     } else {
         LogPrintf("Unknown option: '%s'\n", name.c_str());

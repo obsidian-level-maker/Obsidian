@@ -35,6 +35,8 @@
 #include <cstdlib>
 #include <string.h>
 
+extern const char *ob_gettext(const char *s);
+
 // Shim functions to replace old SLUMP RNG
 int roll(int n) {   
     if (n<1) {
@@ -1149,13 +1151,13 @@ config *get_config(std::filesystem::path filename) {
       answer->forbidden_monster_bits = 0;
     } else {
       std::string monvariety = ob_get_param("slump_mons");
-      if (StringCaseCmp(monvariety, "normal") == 0) {
+      if (StringCompare(monvariety, "normal") == 0) {
           answer->required_monster_bits = 0;
           answer->forbidden_monster_bits = SPECIAL;
-      } else if (StringCaseCmp(monvariety, "shooters") == 0) {
+      } else if (StringCompare(monvariety, "shooters") == 0) {
           answer->required_monster_bits = SHOOTS;
           answer->forbidden_monster_bits = SPECIAL;
-      } else if (StringCaseCmp(monvariety, "noflyzone") == 0) {
+      } else if (StringCompare(monvariety, "noflyzone") == 0) {
           answer->required_monster_bits = 0;
           answer->forbidden_monster_bits = FLIES + SPECIAL;
       } else { // Fallback
@@ -1164,7 +1166,7 @@ config *get_config(std::filesystem::path filename) {
       }
     }
     std::string levelsize = ob_get_param("float_minrooms_slump");
-    if (StringCaseCmp(levelsize, "Mix It Up") == 0) {
+    if (StringCompare(levelsize, ob_gettext("Mix It Up")) == 0) {
         int low = StringToInt(ob_get_param("float_minrooms_slump_lb"));
         int high = StringToInt(ob_get_param("float_minrooms_slump_ub"));
         answer->minrooms = xoshiro_Between(std::min(low,high), std::max(low,high));
@@ -1172,37 +1174,37 @@ config *get_config(std::filesystem::path filename) {
         answer->minrooms = StringToInt(levelsize);
     }
     std::string current_game = ob_get_param("game");
-    if (StringCaseCmp(current_game, "doom1") == 0 || StringCaseCmp(current_game, "ultdoom") == 0) {
+    if (StringCompare(current_game, "doom1") == 0 || StringCompare(current_game, "ultdoom") == 0) {
         answer->gamemask = (DOOM1_BIT|DOOMI_BIT);
         answer->map = 0;
         answer->episode = 1;
         answer->mission = 1;
-    } else if (StringCaseCmp(current_game, "chex1") == 0) {
+    } else if (StringCompare(current_game, "chex1") == 0) {
         answer->gamemask = (DOOM1_BIT|DOOMI_BIT|DOOMC_BIT|CHEX_BIT);
         answer->map = 0;
         answer->episode = 1;
         answer->mission = 1;
-    } else if (StringCaseCmp(current_game, "rekkr") == 0) {
+    } else if (StringCompare(current_game, "rekkr") == 0) {
         answer->gamemask = (DOOM1_BIT|DOOMI_BIT|DOOMC_BIT|REKKR_BIT);
         answer->map = 0;
         answer->episode = 1;
         answer->mission = 1;
-    } else if (StringCaseCmp(current_game, "heretic") == 0) {
+    } else if (StringCompare(current_game, "heretic") == 0) {
         answer->gamemask = HERETIC_BIT;
         answer->map = 0;
         answer->episode = 1;
         answer->mission = 1;
-    } else if (StringCaseCmp(current_game, "hacx") == 0) {
+    } else if (StringCompare(current_game, "hacx") == 0) {
         answer->gamemask = (DOOM2_BIT|DOOMI_BIT|HACX_BIT);
         answer->map = 1;
         answer->episode = 0;
         answer->mission = 0;
-    } else if (StringCaseCmp(current_game, "harmony") == 0) {
+    } else if (StringCompare(current_game, "harmony") == 0) {
         answer->gamemask = (DOOM2_BIT|DOOMI_BIT|HARMONY_BIT);
         answer->map = 1;
         answer->episode = 0;
         answer->mission = 0;
-    } else if (StringCaseCmp(current_game, "strife") == 0) {
+    } else if (StringCompare(current_game, "strife") == 0) {
         answer->gamemask = (DOOM2_BIT|DOOMI_BIT|STRIFE_BIT);
         answer->map = 2;
         answer->episode = 0;
@@ -1215,24 +1217,24 @@ config *get_config(std::filesystem::path filename) {
     }                                 
     answer->last_mission = SLUMP_FALSE;
     std::string wadlength = ob_get_param("length");
-    if (StringCaseCmp(wadlength, "single") == 0) {
+    if (StringCompare(wadlength, "single") == 0) {
         answer->levelcount = 1;
-    } else if (StringCaseCmp(wadlength, "few") == 0) {
+    } else if (StringCompare(wadlength, "few") == 0) {
         answer->levelcount = 4;
-    } else if (StringCaseCmp(wadlength, "episode") == 0) {
-        if (StringCaseCmp(current_game, "doom2") == 0 || StringCaseCmp(current_game, "plutonia") == 0 || StringCaseCmp(current_game, "tnt") == 0
-            || StringCaseCmp(current_game, "hacx") == 0 || StringCaseCmp(current_game, "harmony") == 0 || StringCaseCmp(current_game, "strife") == 0) {
+    } else if (StringCompare(wadlength, "episode") == 0) {
+        if (StringCompare(current_game, "doom2") == 0 || StringCompare(current_game, "plutonia") == 0 || StringCompare(current_game, "tnt") == 0
+            || StringCompare(current_game, "hacx") == 0 || StringCompare(current_game, "harmony") == 0 || StringCompare(current_game, "strife") == 0) {
             answer->levelcount = 11;
         } else {
             answer->levelcount = 8;
         }
     } else {
-        if (StringCaseCmp(current_game, "doom2") == 0 || StringCaseCmp(current_game, "plutonia") == 0 || StringCaseCmp(current_game, "tnt") == 0
-            || StringCaseCmp(current_game, "hacx") == 0 || StringCaseCmp(current_game, "harmony") == 0 || StringCaseCmp(current_game, "strife") == 0) {
+        if (StringCompare(current_game, "doom2") == 0 || StringCompare(current_game, "plutonia") == 0 || StringCompare(current_game, "tnt") == 0
+            || StringCompare(current_game, "hacx") == 0 || StringCompare(current_game, "harmony") == 0 || StringCompare(current_game, "strife") == 0) {
             answer->levelcount = 32;
-        } else if (StringCaseCmp(current_game, "doom1") == 0 || StringCaseCmp(current_game, "chex1") == 0) {
+        } else if (StringCompare(current_game, "doom1") == 0 || StringCompare(current_game, "chex1") == 0) {
             answer->levelcount = 24;
-        } else if (StringCaseCmp(current_game, "ultdoom") == 0 || StringCaseCmp(current_game, "rekkr") == 0) {
+        } else if (StringCompare(current_game, "ultdoom") == 0 || StringCompare(current_game, "rekkr") == 0) {
             answer->levelcount = 32;
         } else {
             answer->levelcount = 40; // Heretic
@@ -1247,8 +1249,8 @@ config *get_config(std::filesystem::path filename) {
     answer->do_dm = StringToInt(dm_starts);
     answer->do_slinfo = SLUMP_TRUE;
     answer->produce_null_lmps = SLUMP_FALSE;
-    answer->do_seclevels = (StringCaseCmp(current_game, "chex1") == 0 || StringCaseCmp(current_game, "harmony") == 0 ||
-      StringCaseCmp(current_game, "strife") == 0 || StringCaseCmp(current_game, "rekkr") == 0) ? SLUMP_FALSE : SLUMP_TRUE;
+    answer->do_seclevels = (StringCompare(current_game, "chex1") == 0 || StringCompare(current_game, "harmony") == 0 ||
+      StringCompare(current_game, "strife") == 0 || StringCompare(current_game, "rekkr") == 0) ? SLUMP_FALSE : SLUMP_TRUE;
     answer->force_secret = SLUMP_FALSE;
     answer->minlight = 115;
     /* Is this the right place for all these? */

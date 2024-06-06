@@ -35,47 +35,47 @@
 extern std::filesystem::path BestDirectory();
 
 void Parse_Option(const std::string &name, const std::string &value) {
-    if (StringCaseCmpPartial(name, "recent") == 0) {
+    if (StringPrefixCompare(name, "recent") == 0) {
         Recent_Parse(name, value);
         return;
     }
-    if (StringCaseCmp(name, "addon") == 0) {
+    if (StringCompare(name, "addon") == 0) {
         VFS_OptParse(value);
-    } else if (StringCaseCmp(name, "language") == 0) {
+    } else if (StringCompare(name, "language") == 0) {
         t_language = value;
-    } else if (StringCaseCmp(name, "create_backups") == 0) {
+    } else if (StringCompare(name, "create_backups") == 0) {
         create_backups = StringToInt(value) ? true : false;
-    } else if (StringCaseCmp(name, "overwrite_warning") == 0) {
+    } else if (StringCompare(name, "overwrite_warning") == 0) {
         overwrite_warning = StringToInt(value) ? true : false;
-    } else if (StringCaseCmp(name, "debug_messages") == 0) {
+    } else if (StringCompare(name, "debug_messages") == 0) {
         debug_messages = StringToInt(value) ? true : false;
-    } else if (StringCaseCmp(name, "limit_break") == 0) {
+    } else if (StringCompare(name, "limit_break") == 0) {
         limit_break = StringToInt(value) ? true : false;
-    } else if (StringCaseCmp(name, "preserve_old_config") == 0) {
+    } else if (StringCompare(name, "preserve_old_config") == 0) {
         preserve_old_config = StringToInt(value) ? true : false;
-    } else if (StringCaseCmp(name, "randomize_architecture") == 0) {
+    } else if (StringCompare(name, "randomize_architecture") == 0) {
         randomize_architecture = StringToInt(value) ? true : false;
-    } else if (StringCaseCmp(name, "randomize_monsters") == 0) {
+    } else if (StringCompare(name, "randomize_monsters") == 0) {
         randomize_monsters = StringToInt(value) ? true : false;
-    } else if (StringCaseCmp(name, "randomize_pickups") == 0) {
+    } else if (StringCompare(name, "randomize_pickups") == 0) {
         randomize_pickups = StringToInt(value) ? true : false;
-    } else if (StringCaseCmp(name, "randomize_misc") == 0) {
+    } else if (StringCompare(name, "randomize_misc") == 0) {
         randomize_misc = StringToInt(value) ? true : false;
-    } else if (StringCaseCmp(name, "random_string_seeds") == 0) {
+    } else if (StringCompare(name, "random_string_seeds") == 0) {
         random_string_seeds = StringToInt(value) ? true : false;
 #ifndef CONSOLE_ONLY
-    } else if (StringCaseCmp(name, "gui_simple_mode") == 0) {
+    } else if (StringCompare(name, "gui_simple_mode") == 0) {
         gui_simple_mode = StringToInt(value) ? true : false;
 #endif
-    } else if (StringCaseCmp(name, "password_mode") == 0) {
+    } else if (StringCompare(name, "password_mode") == 0) {
         password_mode = StringToInt(value) ? true : false;
-    } else if (StringCaseCmp(name, "mature_word_lists") == 0) {
+    } else if (StringCompare(name, "mature_word_lists") == 0) {
         mature_word_lists = StringToInt(value) ? true : false;
-    } else if (StringCaseCmp(name, "filename_prefix") == 0) {
+    } else if (StringCompare(name, "filename_prefix") == 0) {
         filename_prefix = StringToInt(value);
-    } else if (StringCaseCmp(name, "custom_prefix") == 0) {
+    } else if (StringCompare(name, "custom_prefix") == 0) {
         custom_prefix = value;
-    } else if (StringCaseCmp(name, "default_output_path") == 0) {
+    } else if (StringCompare(name, "default_output_path") == 0) {
         default_output_path = std::filesystem::u8path(value);
     } else {
         StdOutPrintf("%s '%s'\n", _("Unknown option: "), name.c_str());
@@ -179,7 +179,7 @@ bool Options_Save(std::filesystem::path filename) {
     option_fp << "custom_prefix = " << custom_prefix << "\n";
     std::string dop = StringFormat(
         "default_output_path = %s\n",
-        StringToUTF8(default_output_path.generic_u16string()).c_str());
+        default_output_path.u8string().c_str());
     option_fp.write(dop.c_str(), dop.size());
 
     option_fp << "\n";

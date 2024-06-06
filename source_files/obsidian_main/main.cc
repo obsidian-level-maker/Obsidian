@@ -173,10 +173,10 @@ Fl_Pixmap *clippy;
 #ifndef CONSOLE_ONLY
 static FLASHWINFO *blinker;
 static int i_load_private_font(const char *path) {
-    return AddFontResourceExW((LPCWSTR)StringToUTF16(path).data(), FR_PRIVATE, nullptr);
+    return AddFontResourceExW((LPCWSTR)UTF8ToWString(path).data(), FR_PRIVATE, nullptr);
 }
 int v_unload_private_font(const char *path) {
-    return RemoveFontResourceExW((LPCWSTR)StringToUTF16(path).data(), FR_PRIVATE, nullptr);
+    return RemoveFontResourceExW((LPCWSTR)UTF8ToWString(path).data(), FR_PRIVATE, nullptr);
 }
 #endif
 #else
@@ -185,7 +185,7 @@ int v_unload_private_font(const char *path) {
 #include <fontconfig/fontconfig.h>
 static int i_load_private_font(const char *path) {
     return static_cast<int>(FcConfigAppFontAddFile(
-        nullptr, reinterpret_cast<const FcChar8 *>(path)));
+        nullptr, (const FcChar8 *)path));
 }
 int v_unload_private_font(const char *path) {
     FcConfigAppFontClear(nullptr);
@@ -1123,9 +1123,9 @@ bool Build_Cool_Shit() {
 
     // create game object
     {
-        if (StringCaseCmp(format, "doom") == 0) {
+        if (StringCompare(format, "doom") == 0) {
             game_object = Doom_GameObject();
-        } else if (StringCaseCmp(format, "wolf3d") == 0) {
+        } else if (StringCompare(format, "wolf3d") == 0) {
             game_object = Wolf_GameObject();
         } else {
             Main::FatalError("ERROR: unknown format: '%s'\n", format.c_str());
@@ -1156,15 +1156,15 @@ bool Build_Cool_Shit() {
     const uint32_t start_time = TimeGetMillies();
     bool was_ok = false;
     // this will ask for output filename (among other things)
-    if (StringCaseCmp(format, "wolf3d") == 0) {
+    if (StringCompare(format, "wolf3d") == 0) {
         std::string current_game = ob_get_param("game");
-        if (StringCaseCmp(current_game, "wolf") == 0) {
+        if (StringCompare(current_game, "wolf") == 0) {
             was_ok = game_object->Start("WL6");
-        } else if (StringCaseCmp(current_game, "spear") == 0) {
+        } else if (StringCompare(current_game, "spear") == 0) {
             was_ok = game_object->Start("SOD");
-        } else if (StringCaseCmp(current_game, "noah") == 0) {
+        } else if (StringCompare(current_game, "noah") == 0) {
             was_ok = game_object->Start("N3D");
-        } else if (StringCaseCmp(current_game, "obc") == 0) {
+        } else if (StringCompare(current_game, "obc") == 0) {
             was_ok = game_object->Start("BC");
         }
     } else {
@@ -1677,7 +1677,7 @@ softrestart:;
 
 #ifndef CONSOLE_ONLY
     if (main_win) {
-        if (StringCaseCmp(main_win->game_box->engine->GetID(), "idtech_0") == 0) {
+        if (StringCompare(main_win->game_box->engine->GetID(), "idtech_0") == 0) {
             main_win->game_box->theme->deactivate();
         } else {
             main_win->game_box->theme->activate();

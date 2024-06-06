@@ -174,7 +174,7 @@ int WAD_FindEntry(const char *name) {
         strncpy(buffer, wad_R_dir[i].name, 8);
         buffer[8] = 0;
 
-        if (StringCaseCmp(name, buffer) == 0) {
+        if (StringCompare(name, buffer) == 0) {
             return i;
         }
     }
@@ -249,7 +249,7 @@ bool WAD_OpenWrite(std::filesystem::path filename) {
     raw_wad_header_t header;
     memset(&header, 0, sizeof(header));
 
-    wad_W_fp.write(reinterpret_cast<const char *>(&header),
+    wad_W_fp.write((const char *)&header,
                    sizeof(raw_wad_header_t));
     wad_W_fp << std::flush;
 
@@ -275,7 +275,7 @@ void WAD_CloseWrite(void) {
     for (WDI = wad_W_directory.begin(); WDI != wad_W_directory.end(); ++WDI) {
         raw_wad_lump_t *L = &(*WDI);
 
-        wad_W_fp.write(reinterpret_cast<const char *>(L),
+        wad_W_fp.write((const char *)L,
                        sizeof(raw_wad_lump_t));
         wad_W_fp << std::flush;
 
@@ -291,7 +291,7 @@ void WAD_CloseWrite(void) {
 
     wad_W_fp.seekp(0, std::ios::beg);
 
-    wad_W_fp.write(reinterpret_cast<const char *>(&header), sizeof(header));
+    wad_W_fp.write((const char *)&header, sizeof(header));
 
     wad_W_fp << std::flush;
     wad_W_fp.close();
@@ -334,7 +334,7 @@ void WAD_FinishLump(void) {
     if (padding > 0) {
         static uint8_t zeros[4] = {0, 0, 0, 0};
 
-        wad_W_fp.write(reinterpret_cast<const char *>(zeros), padding);
+        wad_W_fp.write((const char *)zeros, padding);
         wad_W_fp << std::flush;
     }
 

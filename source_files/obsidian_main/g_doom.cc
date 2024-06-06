@@ -350,8 +350,8 @@ bool BuildNodes(std::filesystem::path filename) {
     // Prep AJBSP parameters
     obbuildinfo_t *build_info = new obbuildinfo_t;
     build_info->fast = true;
-    if (StringCaseCmp(current_port, "limit_enforcing") == 0 ||
-        StringCaseCmp(current_port, "boom") == 0) {
+    if (StringCompare(current_port, "limit_enforcing") == 0 ||
+        StringCompare(current_port, "boom") == 0) {
         build_info->gl_nodes = false;
         build_info->force_v5 = false;
         build_info->force_xnod = false;
@@ -496,7 +496,7 @@ bool Doom::StartWAD(std::filesystem::path filename) {
 
     qLump_c *info = BSP_CreateInfoLump();
     if (game_object->file_per_map) {
-        ZIPF_AddMem("OBSIDATA.txt", const_cast<uint8_t *>(info->GetBuffer()), info->GetSize());
+        ZIPF_AddMem("OBSIDATA.txt", (uint8_t *)info->GetBuffer(), info->GetSize());
     } else {
         WriteLump("OBSIDATA", info);
     }
@@ -1205,7 +1205,7 @@ bool Doom::game_interface_c::Start(const char *preset) {
 
     current_port = ob_get_param("port");
     compress_output = ob_mod_enabled("compress_output");
-    file_per_map = (compress_output && StringCaseCmp(current_port, "limit_enforcing") != 0);
+    file_per_map = (compress_output && StringCompare(current_port, "limit_enforcing") != 0);
 
     ob_invoke_hook("pre_setup");
 
@@ -1252,7 +1252,7 @@ bool Doom::game_interface_c::Start(const char *preset) {
 
     // Need to preempt the rest of this process for now if we are using Vanilla
     // Doom
-    if (StringCaseCmp(current_port, "limit_enforcing") == 0) {
+    if (StringCompare(current_port, "limit_enforcing") == 0) {
         map_format = FORMAT_BINARY;
         build_nodes = true;
 #ifndef CONSOLE_ONLY
@@ -1289,10 +1289,10 @@ bool Doom::game_interface_c::Start(const char *preset) {
     }
 #endif
 
-    if (StringCaseCmp(current_port, "zdoom") == 0) {
+    if (StringCompare(current_port, "zdoom") == 0) {
         map_format = FORMAT_UDMF;
         build_nodes = ob_mod_enabled("build_nodes");
-    } else if (StringCaseCmp(current_port, "edge") == 0) {
+    } else if (StringCompare(current_port, "edge") == 0) {
         map_format = FORMAT_UDMF;
         build_nodes = false;
     } else {
@@ -1320,7 +1320,7 @@ bool Doom::game_interface_c::Start(const char *preset) {
 
 bool Doom::game_interface_c::Finish(bool build_ok) {
     // Skip DM_EndWAD if using Vanilla Doom
-    if (StringCaseCmp(current_port, "limit_enforcing") != 0) {
+    if (StringCompare(current_port, "limit_enforcing") != 0) {
         // TODO: handle write errors
         EndWAD();
     } else {
@@ -1388,30 +1388,30 @@ void Doom::game_interface_c::BeginLevel() {
 }
 
 void Doom::game_interface_c::Property(std::string key, std::string value) {
-    if (StringCaseCmp(key, "level_name") == 0) {
+    if (StringCompare(key, "level_name") == 0) {
         level_name = value.c_str();
 #ifndef CONSOLE_ONLY
-    } else if (StringCaseCmp(key, "description") == 0 && main_win) {
+    } else if (StringCompare(key, "description") == 0 && main_win) {
         main_win->build_box->name_disp->copy_label(value.c_str());
         main_win->build_box->name_disp->redraw();
 #endif
-    } else if (StringCaseCmp(key, "sub_format") == 0) {
-        if (StringCaseCmp(value, "doom") == 0) {
+    } else if (StringCompare(key, "sub_format") == 0) {
+        if (StringCompare(value, "doom") == 0) {
             sub_format = 0;
-        } else if (StringCaseCmp(value, "hexen") == 0) {
+        } else if (StringCompare(value, "hexen") == 0) {
             sub_format = SUBFMT_Hexen;
-        } else if (StringCaseCmp(value, "strife") == 0) {
+        } else if (StringCompare(value, "strife") == 0) {
             sub_format = SUBFMT_Strife;
         } else {
             LogPrintf("WARNING: unknown DOOM sub_format '%s'\n", value.c_str());
         }
-    } else if (StringCaseCmp(key, "offset_map") == 0) {
+    } else if (StringCompare(key, "offset_map") == 0) {
         dm_offset_map = StringToInt(value);
-    } else if (StringCaseCmp(key, "ef_solid_type") == 0) {
+    } else if (StringCompare(key, "ef_solid_type") == 0) {
         ef_solid_type = StringToInt(value);
-    } else if (StringCaseCmp(key, "ef_liquid_type") == 0) {
+    } else if (StringCompare(key, "ef_liquid_type") == 0) {
         ef_liquid_type = StringToInt(value);
-    } else if (StringCaseCmp(key, "ef_thing_mode") == 0) {
+    } else if (StringCompare(key, "ef_thing_mode") == 0) {
         ef_thing_mode = StringToInt(value);
     } else {
         LogPrintf("WARNING: unknown DOOM property: %s=%s\n", key.c_str(), value.c_str());

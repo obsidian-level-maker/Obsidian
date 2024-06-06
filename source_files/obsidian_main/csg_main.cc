@@ -470,11 +470,11 @@ int csg_brush_c::CalcMedium() const {
         case BKIND_Liquid: {
             std::string str = props.getStr("medium", "");
 
-            if (StringCaseCmp(str, "slime") == 0) {
+            if (StringCompare(str, "slime") == 0) {
                 return MEDIUM_SLIME;
             }
 
-            if (StringCaseCmp(str, "lava") == 0) {
+            if (StringCompare(str, "lava") == 0) {
                 return MEDIUM_LAVA;
             }
 
@@ -569,7 +569,7 @@ csg_entity_c::csg_entity_c() : id(), x(0), y(0), z(0), props(), ex_floor(-1) {}
 csg_entity_c::~csg_entity_c() {}
 
 bool csg_entity_c::Match(std::string want_name) const {
-    return (StringCaseCmp(id, want_name) == 0);
+    return (StringCompare(id, want_name) == 0);
 }
 
 //------------------------------------------------------------------------
@@ -1022,25 +1022,25 @@ static void Grab_BrushMode(csg_brush_c *B, lua_State *L, const char *kind) {
 
     SYS_ASSERT(kind);
 
-    if (StringCaseCmp(kind, "solid") == 0) {
+    if (StringCompare(kind, "solid") == 0) {
         B->bkind = BKIND_Solid;
-    } else if (StringCaseCmp(kind, "liquid") == 0) {
+    } else if (StringCompare(kind, "liquid") == 0) {
         B->bkind = BKIND_Liquid;
-    } else if (StringCaseCmp(kind, "trigger") == 0) {
+    } else if (StringCompare(kind, "trigger") == 0) {
         B->bkind = BKIND_Trigger;
-    } else if (StringCaseCmp(kind, "light") == 0) {
+    } else if (StringCompare(kind, "light") == 0) {
         B->bkind = BKIND_Light;
-    } else if (StringCaseCmp(kind, "rail") == 0) {
+    } else if (StringCompare(kind, "rail") == 0) {
         B->bkind = BKIND_Rail;
-    } else if (StringCaseCmp(kind, "sky") == 0)  // back compat
+    } else if (StringCompare(kind, "sky") == 0)  // back compat
     {
         B->bkind = BKIND_Solid;
         B->bflags |= BFLAG_Sky;
-    } else if (StringCaseCmp(kind, "clip") == 0)  // back compat
+    } else if (StringCompare(kind, "clip") == 0)  // back compat
     {
         B->bkind = BKIND_Solid;
         B->bflags |= BFLAG_NoDraw | BFLAG_Detail;
-    } else if (StringCaseCmp(kind, "detail") == 0)  // back compat
+    } else if (StringCompare(kind, "detail") == 0)  // back compat
     {
         B->bkind = BKIND_Solid;
         B->bflags |= BFLAG_Detail;
@@ -1212,22 +1212,22 @@ int CSG_property(lua_State *L) {
 
     // eat propertities intended for CSG2
 
-    if (StringCaseCmp(key, "error_tex") == 0) {
+    if (StringCompare(key, "error_tex") == 0) {
         dummy_wall_tex = value;
         return 0;
-    } else if (StringCaseCmp(key, "error_flat") == 0) {
+    } else if (StringCompare(key, "error_flat") == 0) {
         dummy_plane_tex = value;
         return 0;
-    } else if (StringCaseCmp(key, "spot_low_h") == 0) {
+    } else if (StringCompare(key, "spot_low_h") == 0) {
         spot_low_h = StringToInt(value);
         return 0;
-    } else if (StringCaseCmp(key, "spot_high_h") == 0) {
+    } else if (StringCompare(key, "spot_high_h") == 0) {
         spot_high_h = StringToInt(value);
         return 0;
-    } else if (StringCaseCmp(key, "chunk_size") == 0) {
+    } else if (StringCompare(key, "chunk_size") == 0) {
         CHUNK_SIZE = StringToDouble(value);
         return 0;
-    } else if (StringCaseCmp(key, "cluster_size") == 0) {
+    } else if (StringCompare(key, "cluster_size") == 0) {
         CLUSTER_SIZE = StringToDouble(value);
         return 0;
     }
@@ -1450,7 +1450,7 @@ void CSG_LinkBrushToEntity(csg_brush_c *B, std::string link_key) {
             continue;
         }
 
-        if (StringCaseCmp(E_key, link_key) == 0) {
+        if (StringCompare(E_key, link_key) == 0) {
             B->link_ent = E;
             return;
         }

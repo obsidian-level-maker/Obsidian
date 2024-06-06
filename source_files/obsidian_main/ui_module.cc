@@ -84,7 +84,7 @@ UI_Module::UI_Module(int X, int Y, int W, int H, std::string id,
 UI_Module::~UI_Module() {}
 
 bool UI_Module::Is_UI() const {
-    return (!StringCaseCmp(id_name.substr(0, 3), "ui_"));
+    return (!StringCompare(id_name.substr(0, 3), "ui_"));
 }
 
 void UI_Module::AddHeader(std::string opt, std::string label, int gap) {
@@ -579,7 +579,7 @@ void UI_Module::randomize_Values(
         UI_RChoice *M = IT->second;
         SYS_ASSERT(M);
         for (auto group : selected_randomize_groups) {
-            if (StringCaseCmp(group, M->randomize_group) == 0) {
+            if (StringCompare(group, M->randomize_group) == 0) {
                 M->mod_menu->value(xoshiro_Between(0, M->mod_menu->size() - 1));
                 M->mod_menu->do_callback();
                 break;
@@ -592,7 +592,7 @@ void UI_Module::randomize_Values(
         UI_RSlide *M = IT2->second;
         SYS_ASSERT(M);
         for (auto group : selected_randomize_groups) {
-            if (StringCaseCmp(group, M->randomize_group) == 0) {
+            if (StringCompare(group, M->randomize_group) == 0) {
                 if (M->nan_choices.size() > 0) {
                     M->nan_options->value(0);
                     M->nan_options->do_callback();
@@ -611,7 +611,7 @@ void UI_Module::randomize_Values(
         UI_RButton *M = IT3->second;
         SYS_ASSERT(M);
         for (auto group : selected_randomize_groups) {
-            if (StringCaseCmp(group, M->randomize_group) == 0) {
+            if (StringCompare(group, M->randomize_group) == 0) {
                 if (xoshiro.xoshiro256p_UNI<float>() < 0.5) {
                     M->mod_check->value(0);
                 } else {
@@ -1649,7 +1649,7 @@ UI_Module *UI_CustomMods::FindID(std::string id) const {
         UI_Module *M = (UI_Module *)mod_pack->child(j);
         SYS_ASSERT(M);
 
-        if (!StringCaseCmp(M->id_name, id)) {
+        if (!StringCompare(M->id_name, id)) {
             return M;
         }
     }

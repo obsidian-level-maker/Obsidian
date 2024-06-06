@@ -20,44 +20,211 @@
 //------------------------------------------------------------------------
 
 #include "lib_util.h"
-#include <algorithm>
-#include <cctype>
-#include <charconv>
-#include <functional>
-
+#include "main.h"
 #include "headers.h"
-
+#include "grapheme.h"
 #include <chrono>
 
-int StringCaseCmp(std::string_view a, std::string_view b) {
-    return StringCaseEquals(a, b) ? 0 : a < b ? -1 : 1;
+#ifdef _WIN32
+std::wstring UTF8ToWString(std::string_view instring)
+{
+    size_t                  utf8pos = 0;
+    const char             *utf8ptr = instring.data();
+    size_t                  utf8len = instring.size();
+    std::wstring            outstring;
+    uint32_t                u32c;
+    while (utf8pos < utf8len)
+    {
+        u32c       = 0;
+        size_t res = grapheme_decode_utf8(utf8ptr+utf8pos, utf8len, &u32c);
+        if (res < 0)
+            Main::FatalError("Failed to convert %s to a wide string!\n", std::string(instring).c_str());
+        else
+            utf8pos += res;
+        if (u32c < 0x10000)
+            outstring.push_back((wchar_t)u32c);
+        else // Make into surrogate pair if needed
+        {
+            u32c -= 0x10000;
+            outstring.push_back((wchar_t)(u32c >> 10) + 0xD800);
+            outstring.push_back((wchar_t)(u32c & 0x3FF) + 0xDC00);
+        }
+    }
+    return outstring;
+}
+std::string WStringToUTF8(std::wstring_view instring)
+{
+    std::string      outstring;
+    size_t           inpos = 0;
+    size_t           inlen = instring.size();
+    const wchar_t   *inptr = instring.data();
+    char             u8c[4];
+    while (inpos < inlen)
+    {
+        uint32_t u32c = 0;
+        if ((*(inptr + inpos) & 0xD800) == 0xD800)                              // High surrogate
+        {
+            if (inpos + 1 < inlen && (*(inptr + inpos + 1) & 0xDC00) == 0xDC00) // Low surrogate
+            {
+                u32c = ((*(inptr + inpos) - 0xD800) * 0x400) + (*(inptr + inpos + 1) - 0xDC00) + 0x10000;
+                inpos += 2;
+            }
+            else // Assume an unpaired surrogate is malformed
+            {
+                // print what was safely converted if present
+                if (!outstring.empty())
+                    Main::FatalError("Failure to convert %s from a wide string!\n", outstring.c_str());
+                else
+                    Main::FatalError("Wide string to UTF-8 conversion failure!\n");
+            }
+        }
+        else
+        {
+            u32c = *(inptr + inpos);
+            inpos++;
+        }
+        memset(u8c, 0, 4);
+        grapheme_encode_utf8((uint_least32_t)u32c, &u8c[0], 4);
+        if (u8c[0])
+            outstring.push_back(u8c[0]);
+        if (u8c[1])
+            outstring.push_back(u8c[1]);
+        if (u8c[2])
+            outstring.push_back(u8c[2]);
+        if (u8c[3])
+            outstring.push_back(u8c[3]);
+    }
+    return outstring;
+}
+#endif
+
+
+int StringCompare(std::string_view A, std::string_view B)
+{
+    size_t        A_pos = 0;
+    size_t        B_pos = 0;
+    size_t        A_end = A.size();
+    size_t        B_end = B.size();
+    unsigned char AC    = 0;
+    unsigned char BC    = 0;
+
+    for (;; A_pos++, B_pos++)
+    {
+        if (A_pos >= A_end)
+            AC = 0;
+        else
+            AC = (int)(unsigned char)A[A_pos];
+        if (B_pos >= B_end)
+            BC = 0;
+        else
+            BC = (int)(unsigned char)B[B_pos];
+
+        if (AC != BC)
+            return AC - BC;
+
+        if (A_pos == A_end)
+            return 0;
+    }
 }
 
-int StringCaseCmpPartial(std::string_view a, std::string_view b) {
-    return !StringCaseEqualsPartial(a, b);
+int StringPrefixCompare(std::string_view A, std::string_view B)
+{
+    size_t        A_pos = 0;
+    size_t        B_pos = 0;
+    size_t        A_end = A.size();
+    size_t        B_end = B.size();
+    unsigned char AC    = 0;
+    unsigned char BC    = 0;
+
+    for (;; A_pos++, B_pos++)
+    {
+        if (A_pos >= A_end)
+            AC = 0;
+        else
+            AC = (int)(unsigned char)A[A_pos];
+        if (B_pos >= B_end)
+            BC = 0;
+        else
+            BC = (int)(unsigned char)B[B_pos];
+
+        if (B_pos == B_end)
+            return 0;
+
+        if (AC != BC)
+            return AC - BC;
+    }
 }
 
-bool StringCaseEquals(std::string_view a, std::string_view b) {
-    return a.size() == b.size() &&
-           std::equal(a.begin(), a.end(), b.begin(), [](char a, char b) {
-               return std::tolower(a) == std::tolower(b);
-           });
+int StringCaseCompare(std::string_view A, std::string_view B)
+{
+    size_t        A_pos = 0;
+    size_t        B_pos = 0;
+    size_t        A_end = A.size();
+    size_t        B_end = B.size();
+    unsigned char AC    = 0;
+    unsigned char BC    = 0;
+
+    for (;; A_pos++, B_pos++)
+    {
+        if (A_pos >= A_end)
+            AC = 0;
+        else
+        {
+            AC = (int)(unsigned char)A[A_pos];
+            if (AC > '@' && AC < '[')
+                AC ^= 0x20;
+        }
+        if (B_pos >= B_end)
+            BC = 0;
+        else
+        {
+            BC = (int)(unsigned char)B[B_pos];
+            if (BC > '@' && BC < '[')
+                BC ^= 0x20;
+        }
+
+        if (AC != BC)
+            return AC - BC;
+
+        if (A_pos == A_end)
+            return 0;
+    }
 }
 
-bool StringCaseEqualsPartial(std::string_view a, std::string_view b) {
-    return a.size() >= b.size() &&
-           std::equal(a.begin(), a.begin() + b.size(), b.begin(),
-                      [](char a, char b) {
-                          return std::tolower(a) == std::tolower(b);
-                      });
-}
+int StringPrefixCaseCompare(std::string_view A, std::string_view B)
+{
+    size_t        A_pos = 0;
+    size_t        B_pos = 0;
+    size_t        A_end = A.size();
+    size_t        B_end = B.size();
+    unsigned char AC    = 0;
+    unsigned char BC    = 0;
 
-std::string StringUpper(std::string_view name) {
-    std::string copy;
-    copy.reserve(name.size());
-    std::transform(name.begin(), name.end(), std::back_inserter(copy),
-                   [](char c) { return std::toupper(c); });
-    return copy;
+    for (;; A_pos++, B_pos++)
+    {
+        if (A_pos >= A_end)
+            AC = 0;
+        else
+        {
+            AC = (int)(unsigned char)A[A_pos];
+            if (AC > '@' && AC < '[')
+                AC ^= 0x20;
+        }
+        if (B_pos >= B_end)
+            BC = 0;
+        else
+        {
+            BC = (int)(unsigned char)B[B_pos];
+            if (BC > '@' && BC < '[')
+                BC ^= 0x20;
+        }
+
+        if (B_pos == B_end)
+            return 0;
+
+        if (AC != BC)
+            return AC - BC;
+    }
 }
 
 void StringRemoveCRLF(std::string *str) {
@@ -123,100 +290,25 @@ std::string StringFormat(std::string_view fmt, ...)
 	}
 }
 
-// The following string conversion classes/code are adapted from public domain
-// code by Andrew Choi originally found at https://web.archive.org/web/20151209032329/http://members.shaw.ca/akochoi/articles/unicode-processing-c++0x/
-
-template<>
-int storageMultiplier<UTF8, UTF32>() { return 4; }
-
-template<>
-int storageMultiplier<UTF8, UTF16>() { return 3; }
-
-template<>
-int storageMultiplier<UTF16, UTF8>() { return 1; }
-
-template<>
-int storageMultiplier<UTF32, UTF8>() { return 1; }
-
-std::string StringToUTF8(const std::string& s)
-{
-  return s;
-}
-
-std::string StringToUTF8(const std::u16string& s)
-{
-  static str_converter<UTF8, UTF16, UTF16> converter;
-
-  return converter.out(s);
-}
-
-std::string StringToUTF8(const std::u32string& s)
-{
-  static str_converter<UTF8, UTF32, UTF32> converter;
-
-  return converter.out(s);
-}
-
-std::u16string StringToUTF16(const std::string& s)
-{
-  static str_converter<UTF16, UTF8, UTF16> converter;
-
-  return converter.in(s);
-}
-
-std::u32string StringToUTF32(const std::string& s)
-{
-  static str_converter<UTF32, UTF8, UTF32> converter;
-
-  return converter.in(s);
-}
-
 std::string NumToString(unsigned long long int value) {
-    std::string num_string;
-    num_string.resize(50, ' ');
-    static_cast<void>(std::to_chars(
-        num_string.data(), num_string.data() + num_string.size(), value));
-    return num_string;
+    return StringFormat("%llu", value);;
 }
 
 std::string NumToString(int value) {
-    std::string num_string;
-    num_string.resize(50, ' ');
-    static_cast<void>(std::to_chars(
-        num_string.data(), num_string.data() + num_string.size(), value));
-    return num_string;
+    return StringFormat("%d", value);
 }
 
-std::string NumToString(double value) { return std::to_string(value); }
-
-/* This can be used instead when Mingw's GCC can use charconv with floating
-point numbers - Dasho std::string NumToString(double value) { std::string
-num_string; num_string.resize(50, ' '); static_cast<void>(std::to_chars(
-        num_string.data(), num_string.data() + num_string.size(), value));
-    return num_string;
-}*/
-
-int StringToInt(std::string value) {
-    int actual_number;
-    static_cast<void>(std::from_chars(value.data(), value.data() + value.size(),
-                                      actual_number));
-    return actual_number;
+std::string NumToString(double value) { 
+    return StringFormat("%f", value); 
 }
 
-int StringToHex(std::string value) {
-    int actual_number;
-    static_cast<void>(std::from_chars(value.data(), value.data() + value.size(),
-                                      actual_number, 16));
-    return actual_number;
+int StringToInt(const std::string &value) {
+    return atoi(value.c_str());
 }
 
-double StringToDouble(std::string value) { return stod(value); }
-
-/* This can be used instead when Mingw's GCC can use charconv with floating
-point numbers - Dasho double StringToDouble(std::string value) { double
-actual_number; static_cast<void>(std::from_chars(value.data(), value.data() +
-value.size(), actual_number)); return actual_number;
-}*/
+double StringToDouble(const std::string &value) { 
+    return strtod(value.data(), nullptr);
+}
 
 char *mem_gets(char *buf, int size, const char **str_ptr) {
     // This is like fgets() but reads lines from a string.
@@ -268,7 +360,7 @@ uint32_t IntHash(uint32_t key) {
     return key;
 }
 
-uint32_t StringHash(std::string str) {
+uint32_t StringHash(const std::string &str) {
     uint32_t hash = 0;
 
     if (!str.empty()) {
@@ -280,7 +372,7 @@ uint32_t StringHash(std::string str) {
     return hash;
 }
 
-uint64_t StringHash64(std::string str) {
+uint64_t StringHash64(const std::string &str) {
     uint32_t hash1 = 0;
     uint32_t hash2 = 0;
 

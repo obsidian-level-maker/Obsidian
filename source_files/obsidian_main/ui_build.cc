@@ -307,7 +307,7 @@ void UI_Build::SetStatus(std::string_view msg) {
     // strncpy(status_label, msg.data(), std::min<int>(limit, msg.size()));
     status_label = msg;
 
-    if (StringCaseCmp(status_label, _("Success")) == 0) {
+    if (StringCompare(status_label, _("Success")) == 0) {
         main_win->label(StringFormat("%s %s \"%s\"", OBSIDIAN_TITLE.c_str(),
                                     OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str())
                             .c_str());
@@ -343,7 +343,7 @@ void UI_Build::ParseSteps(const char *names) {
 
 int UI_Build::FindStep(std::string name) {
     for (int i = 0; i < (int)step_names.size(); i++) {
-        if (StringCaseCmp(step_names[i], name) == 0) {
+        if (StringCompare(step_names[i], name) == 0) {
             return i;
         }
     }

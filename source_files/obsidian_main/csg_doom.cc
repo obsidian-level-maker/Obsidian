@@ -200,8 +200,8 @@ class sector_c {
                (light == other->light) && (special == other->special) &&
                (tag == other->tag) && (sound_area == other->sound_area) &&
 
-               (StringCaseCmp(f_tex, other->f_tex) == 0) &&
-               (StringCaseCmp(c_tex, other->c_tex) == 0);
+               (StringCompare(f_tex, other->f_tex) == 0) &&
+               (StringCompare(c_tex, other->c_tex) == 0);
     }
 
     bool MatchNoLight(const sector_c *other) const {
@@ -209,8 +209,8 @@ class sector_c {
                (c_h == other->c_h) && (special == other->special) &&
                (tag == other->tag) &&
 
-               (StringCaseCmp(f_tex, other->f_tex) == 0) &&
-               (StringCaseCmp(c_tex, other->c_tex) == 0);
+               (StringCompare(f_tex, other->f_tex) == 0) &&
+               (StringCompare(c_tex, other->c_tex) == 0);
     }
 
     bool Match(const sector_c *other) const {
