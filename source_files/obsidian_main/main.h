@@ -31,9 +31,10 @@
 #ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
 #include "ui_window.h"
+#endif
 #include "lib_util.h"
 #include "sys_debug.h"
-#endif
+
 extern std::string OBSIDIAN_TITLE;
 
 #ifdef OBSIDIAN_TIMESTAMP

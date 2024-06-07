@@ -100,9 +100,7 @@ enum map_format_e {
 map_format_e map_format;
 static bool UDMF_mode;
 
-typedef std::vector<qLump_c *> lump_bag_t;
-
-static lump_bag_t *sections[NUM_SECTIONS];
+static std::vector<qLump_c *> *sections[NUM_SECTIONS];
 
 static const char *section_markers[NUM_SECTIONS][2] = {
     {"PP_START", "PP_END"},
@@ -422,7 +420,7 @@ static void WriteBehavior() {
 static void ClearSections() {
     for (int k = 0; k < NUM_SECTIONS; k++) {
         if (!sections[k]) {
-            sections[k] = new lump_bag_t;
+            sections[k] = new std::vector<qLump_c *>;
         }
 
         for (unsigned int n = 0; n < sections[k]->size(); n++) {
