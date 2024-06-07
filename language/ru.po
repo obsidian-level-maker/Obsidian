@@ -14,7 +14,8 @@ msgstr ""
 "Project-Id-Version: Obsidian Level Maker\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-05-09 23:41+1000\n"
-"PO-Revision-Date: 2023-08-10 16:07+0300\n"
+"PO-Revision-Date: 2024-06-07 23:56+0300
+"2023-08-10 16:07+0300\n"
 "Last-Translator: Morthimer McMare\n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -7116,6 +7117,266 @@ msgstr "Помощь/Руководство"
 #: source_files/obsidian_main/ui_window.cc:89
 msgid "Surprise Me/Go"
 msgstr "Удивить/Перегенерировать выбранное"
+
+#: source_files/fltk/test/preferences.fl:293
+msgid "Please restart the app to use your new language setting."
+msgstr ""
+
+#: source_files/obsidian_main/m_options.cc:303
+msgid ""
+"Toggling Simple Mode requires a restart.\n"
+"Obsidian will now restart."
+msgstr ""
+
+#: source_files/obsidian_main/m_options.cc:313
+msgid "Simple Mode"
+msgstr ""
+
+#: source_files/obsidian_main/m_options.cc:323
+msgid "In Simple Mode, generation options that are more nuanced or granular are hidden in order to provide an easier experience for the user."
+msgstr ""
+
+#: source_files/obsidian_main/m_options.cc:640
+msgid " Simple Mode"
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:1735
+msgid "Presets/No *.txt preset files"
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:1737
+msgid "Presets/found in the \\/presets directory!"
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:1740
+msgid "Presets/Note: Selecting a Preset will immediately apply it!"
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:1743
+msgid "Presets/"
+msgstr ""
+
+#: source_files/obsidian_main/g_doom.cc:486
+msgid "Error writing map WAD to %s\n"
+msgstr ""
+
+#: source_files/obsidian_main/g_doom.cc:1141
+msgid "Error (create PK3/ZIP)"
+msgstr ""
+
+#: source_files/obsidian_main/ui_game.cc:182
+msgid ""
+"Available Games:\n"
+"\n"
+"id Tech 0:\n"
+"\n"
+"Wolfenstein 3D\n"
+"\n"
+"Spear of Destiny\n"
+"\n"
+"Noah's Ark 3D\n"
+"\n"
+"Operation Body Count: Note, this game is less stable than its other id Tech 0 counterparts!\n"
+"\n"
+"id Tech 1:\n"
+"\n"
+"Doom 2\n"
+"\n"
+"Doom\n"
+"\n"
+"The Ultimate Doom\n"
+"\n"
+"Plutonia: Part of Final Doom\n"
+"\n"
+"TNT: Evilution: Part of Final Doom\n"
+"\n"
+"Heretic\n"
+"\n"
+"Chex 3 Vanilla: Unofficial repackaging of Chex Quest 3 for non-ZDoom derived engines. SLUMP support only.\n"
+"\n"
+"HacX 1.2: SLUMP support only.\n"
+"\n"
+"REKKR: SLUMP support only.\n"
+"\n"
+"Harmony Compat: Harmony re-release for non-ZDoom derived engines. Must be run as a PWAD in conjuction with the Doom 2/Freedoom 2 IWAD. SLUMP support only.\n"
+"\n"
+"Strife: SLUMP support only."
+msgstr ""
+
+#: source_files/obsidian_main/ui_game.cc:238
+msgid ""
+"Available Ports:\n"
+"\n"
+"id Tech 0:\n"
+"\n"
+"Vanilla: Works with the original executables\n"
+"\n"
+"id Tech 1:\n"
+"\n"
+"GZDoom: GZDoom and variants (LZDoom, QZDoom, etc)\n"
+"\n"
+"Vanilla: Works with the original program or ports that enforce the original limits. Examples: Doom within DOSBox, Chocolate Doom. NOTE: This option will use SLUMP as the map builder.\n"
+"\n"
+"Boom-Compatible: Ports that are able to use the entire suite of Boom types and features. Most modern source ports fall into this category at a minimum.\n"
+"\n"
+"EDGE-Classic: Boom-compatible, plus UDMF support, additional specials and other advanced features."
+msgstr ""
+
+#: games/harmony/themes.lua:354
+msgid "Amazon Base"
+msgstr ""
+
+#: games/harmony/base.lua:16
+msgid "Harmony Compat"
+msgstr ""
+
+#: games/chex1/themes.lua:559
+msgid "Chex Labs"
+msgstr ""
+
+#: games/chex1/base.lua:37
+msgid "Chex 3 Vanilla"
+msgstr ""
+
+#: games/obc/base.lua:40
+msgid "Op. Body Count"
+msgstr ""
+
+#: games/hacx/themes.lua:548
+msgid "Prison"
+msgstr ""
+
+#: games/hacx/themes.lua:556
+msgid "Digi-Ota"
+msgstr ""
+
+#: games/rekkr/themes.lua:361
+msgid "Rampart"
+msgstr ""
+
+#: games/rekkr/base.lua:38
+msgid "REKKR"
+msgstr ""
+
+#: scripts/obsidian.lua:2423
+msgid ""
+"The following values are game-specific:\n"
+"  Ultimate Doom/Doom 1: deimos,flesh\n"
+"  Ultimate Doom/Doom 1/Doom 2/TNT/Plutonia: tech,urban,hell\n"
+"  TNT: egypt\n"
+"  HacX: hacx_urban\n"
+"  Heretic: city,maw,dome,ossuary,demense\n"
+"\n"
+"  Note: This setting currently does nothing for id Tech 0 games!\n"
+msgstr ""
+
+#: modules/compress_output.lua:21
+msgid "PK3/ZIP Output"
+msgstr ""
+
+#: modules/useful_links.lua:21
+msgid "Game WADs (Libre/Freeware)"
+msgstr ""
+
+#: modules/useful_links.lua:30
+msgid "Freedoom (Doom 1/2 Replacement)"
+msgstr ""
+
+#: modules/useful_links.lua:35
+msgid "Blasphemer (Heretic Replacement)"
+msgstr ""
+
+#: modules/useful_links.lua:40
+msgid "Chex Quest 3: Vanilla Edition"
+msgstr ""
+
+#: modules/useful_links.lua:50
+msgid "Harmony Compatible"
+msgstr ""
+
+#: modules/useful_links.lua:63
+msgid "Obsidian Addons"
+msgstr ""
+
+#: modules/useful_links.lua:72
+msgid "Lobo's EDGE-Classic Enhancements"
+msgstr ""
+
+#: modules/useful_links.lua:77
+msgid "Mobreck's MBF21 Expanded DOOM Beastiary"
+msgstr ""
+
+#: modules/useful_links.lua:82
+msgid "xBEEKAYRANDEEx's DoomRLA Pickups"
+msgstr ""
+
+#: modules/useful_links.lua:87
+msgid "Heathen's Maze For Heretic - Craneo"
+msgstr ""
+
+#: modules/useful_links.lua:92
+msgid "Simon-v's Jukebox"
+msgstr ""
+
+#: modules/useful_links.lua:97
+msgid "SilentZorah's Jukebox - Craneo"
+msgstr ""
+
+#: modules/useful_links.lua:102
+msgid "MsrSgtShooterPerson's Delta Resource Pack"
+msgstr ""
+
+#: modules/alt_shape_grammars.lua:52
+msgid "The Backhalls"
+msgstr ""
+
+#: modules/alt_shape_grammars.lua:59
+msgid "Sets chance of levels using the Backhalls shape grammar."
+msgstr ""
+
+#: modules/alt_shape_grammars.lua:60
+msgid "The true Linear Mode."
+msgstr ""
+
+#: modules/alt_shape_grammars.lua:75
+msgid "It's like that movie Cube, but with .5 less dimensions (if you're a contrarian)."
+msgstr ""
+
+#: modules/alt_shape_grammars.lua:82
+msgid "The OG"
+msgstr ""
+
+#: modules/alt_shape_grammars.lua:89
+msgid "Sets chance of levels using the OG shape grammar."
+msgstr ""
+
+#: modules/alt_shape_grammars.lua:90
+msgid "These are the shapes from Oblige 7.45, one of the earliest examples of the shape grammar system."
+msgstr ""
+
+#: modules/miscellaneous.lua:295
+msgid ""
+"Only allow Streets Mode slider to affect levels with the following themes:\n"
+"\n"
+"Doom 2 - Urban\n"
+"Heretic - City"
+msgstr ""
+
+#: modules/prefab_controller.lua:537
+msgid "Test New Content"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:1915
+msgid "Boss Health Multiplier"
+msgstr ""
+
+#: modules/procedural_gotcha_edge.lua:184
+msgid "DDF Generated Boss Options"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:1537
+msgid "Friendly Marine Closets"
+msgstr ""
 
 #~ msgid ""
 #~ "\n"
