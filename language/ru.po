@@ -2965,13 +2965,9 @@ msgstr "Устанавливает шанс создания уровня с п�
 
 #: modules/historical_versions.lua:60
 msgid ""
-"Gives levels a chance of being generated using an internal version of Oblige version 2.x. NOTE: Not all module settings will affect levels generated in this manner.\n"
-"\n"
-"WARNING! When using Hexen, you MUST set this to 100% and generate the entire WAD with v2 to use its level and hub progression!"
+"Gives levels a chance of being generated using an internal version of Oblige version 2.x. NOTE: Not all module settings will affect levels generated in this manner."
 msgstr ""
-"Позволяет генерацию уровней с использованием внутренней версии Oblige v2.x. Примечание: далеко не все остальные настройки влияют на уровни, созданные таким образом.\n"
-"\n"
-"Внимание! При создании карт под Hexen вы ДОЛЖНЫ установить это значение на 100% и сгенерировать весь WAD с Oblige v2 для того, чтобы использовать его прогрессию по уровням и хабам!"
+"Позволяет генерацию уровней с использованием внутренней версии Oblige v2.x. Примечание: далеко не все остальные настройки влияют на созданные таким образом уровни."
 
 #: modules/historical_versions.lua:67
 msgid "Oblige v2 Deathmatch Mode"
@@ -4336,7 +4332,7 @@ msgstr "Влияет на скорость появления подкрепле
 
 #: modules/procedural_gotcha_zdoom.lua:2128
 msgid "Respect zero prob"
-msgstr "Учитывать вероятность 0%"
+msgstr "Учитывать вероятность в 0%"
 
 #: modules/procedural_gotcha_zdoom.lua:2132
 msgid "If enabled, monsters disabled in monster control module cant be chosen as a boss."
@@ -4921,17 +4917,15 @@ msgid ""
 "\n"
 "Obsidian default is Fast Curve."
 msgstr ""
-"Очень быстро: размеры уровней достигают половины от своего верхнего предела за ¼ от игры, кривая примерно равна функции плавности \"easeOutQuint\";\n"
+"Очень быстро: размеры уровней достигают половины от своего верхнего предела за ¼ от игры;\n"
 "\n"
-"Быстро: размеры уровней достигают половины от своего верхнего предела за ⅓ от игры, примерно равно \"easeOutCubic\";\n"
+"Быстро: размеры уровней достигают половины от своего верхнего предела за ⅓ от игры;\n"
 "\n"
 "Линейно: размеры уровней плавно увеличиваются, максимум достигается ровно в конце сгенерированного сборника;\n"
 "\n"
-"Медленно: размеры уровней достигают половины от своего верхнего предела за ⅔ от игры, примерно равно \"easeInCubic\";\n"
+"Медленно: размеры уровней достигают половины от своего верхнего предела за ⅔ от игры;\n"
 "\n"
-"Очень медленно: размеры уровней достигают половины от своего верхнего предела за ¾ от игры, примерно равно \"easeInQuint\".\n"
-"\n"
-"Все определения и анимации функций плавности можно найти в Интернете — к примеру, на посвящённом этому сайте https://easings.net/ru."
+"Очень медленно: размеры уровней достигают половины от своего верхнего предела за ¾ от игры.\n"
 
 #: modules/ui_arch.lua:181
 msgid "Level Size Bias"
@@ -4939,7 +4933,7 @@ msgstr "Уклон в этот размер уровня"
 
 #: modules/ui_arch.lua:182
 msgid "Alters probability skew when using Mix It Up for level sizes."
-msgstr "Меняет уклон в более малый или более крупный размер уровней при использовании настройки \"Размер уровней\"→\"Случайно\"."
+msgstr "Меняет уклон размера уровней в маленькие или большие при использовании настройки \"Размер уровней\"→\"Случайно\"."
 
 #: modules/ui_arch.lua:183
 msgid ""
@@ -5063,9 +5057,9 @@ msgid ""
 "\n"
 "Disable - Old Oblige behavior - no bottomless vistas."
 msgstr ""
-"Включено: бездонные виды могут быть сгенерированы в любом случае. Зачастую применимо вместе с использованием 3D-скайбоксов.\n"
+"Включено: \"бездонные\" виды могут генерироваться без ограничений. Зачастую применяется вместе с использованием 3D-скайбоксов.\n"
 "\n"
-"В зависимости от неба: позволять генерировать подобные виды только если небо на уровне не имеет рельефа (например, гор или пещер).\n"
+"В зависимости от неба: позволять генерировать подобные виды только если небо на уровне не имеет рельефа вроде гор или пещер.\n"
 "\n"
 "Отключено: не генерировать виды — использовать старое поведение Oblige."
 
@@ -5175,7 +5169,7 @@ msgstr "Бой"
 
 #: modules/ui_mons.lua:105
 msgid "Monster Quantity"
-msgstr "Кол-во монстров"
+msgstr "Количество монстров"
 
 #: modules/ui_mons.lua:111
 msgid "Mix It Up,Progressive"
@@ -5363,7 +5357,7 @@ msgstr "Создавать ли монстров в секретных комн�
 
 #: modules/ui_mons.lua:261
 msgid "Enemy Drop Compensation"
-msgstr "Не учитывать предметы с монстров"
+msgstr "Не учитывать выпадающие вещи"
 
 #: modules/ui_mons.lua:264
 msgid ""
@@ -5886,7 +5880,7 @@ msgstr "Позволяет выбрать эпизод в стиле класс�
 
 #: ports/boom.lua:144
 msgid "BOOM Compat"
-msgstr "Совместимый с BOOM"
+msgstr "BOOM-совместимый"
 
 #: ports/boom.lua:182
 msgid "Advanced"
@@ -5922,11 +5916,11 @@ msgstr "Оригинал"
 
 #: scripts/defs.lua:81
 msgid "Jumbled Up"
-msgstr "Дискретно"
+msgstr "Каждый уровень новая"
 
 #: scripts/defs.lua:88
 msgid "Bit Mixed"
-msgstr "Сокращённой длины"
+msgstr "Короче эпизодов"
 
 #: scripts/defs.lua:103
 msgid "Single Level"
@@ -7120,49 +7114,51 @@ msgstr "Удивить/Перегенерировать выбранное"
 
 #: source_files/fltk/test/preferences.fl:293
 msgid "Please restart the app to use your new language setting."
-msgstr ""
+msgstr "Пожалуйста, перезапустите приложение для применения новых языковых настроек."
 
 #: source_files/obsidian_main/m_options.cc:303
 msgid ""
 "Toggling Simple Mode requires a restart.\n"
 "Obsidian will now restart."
 msgstr ""
+"Переключение Упрощённого режима требует перезагрузки программы.\n"
+"Obsidian сейчас перезапустится."
 
 #: source_files/obsidian_main/m_options.cc:313
 msgid "Simple Mode"
-msgstr ""
+msgstr "Упрощённый режим"
 
 #: source_files/obsidian_main/m_options.cc:323
 msgid "In Simple Mode, generation options that are more nuanced or granular are hidden in order to provide an easier experience for the user."
-msgstr ""
+msgstr "В Упрощённом режиме скрыты большинство опций, влияющих незначительно или даже неочевидно для простого пользователя."
 
 #: source_files/obsidian_main/m_options.cc:640
 msgid " Simple Mode"
-msgstr ""
+msgstr " Упрощённый режим"
 
 #: source_files/obsidian_main/main.cc:1735
 msgid "Presets/No *.txt preset files"
-msgstr ""
+msgstr "Заготовки/*.txt-файлов предзаготовок"
 
 #: source_files/obsidian_main/main.cc:1737
 msgid "Presets/found in the \\/presets directory!"
-msgstr ""
+msgstr "Заготовки/не найдено в каталоге \\/presets!"
 
 #: source_files/obsidian_main/main.cc:1740
 msgid "Presets/Note: Selecting a Preset will immediately apply it!"
-msgstr ""
+msgstr "Заготовки/Выбор заготовки меняет настройки мгновенно!"
 
 #: source_files/obsidian_main/main.cc:1743
 msgid "Presets/"
-msgstr ""
+msgstr "Заготовки/"
 
 #: source_files/obsidian_main/g_doom.cc:486
 msgid "Error writing map WAD to %s\n"
-msgstr ""
+msgstr "Ошибка записи WAD-карты в %s\n"
 
 #: source_files/obsidian_main/g_doom.cc:1141
 msgid "Error (create PK3/ZIP)"
-msgstr ""
+msgstr "Ошибка при создании *.PK3/*.ZIP"
 
 #: source_files/obsidian_main/ui_game.cc:182
 msgid ""
@@ -7202,6 +7198,27 @@ msgid ""
 "\n"
 "Strife: SLUMP support only."
 msgstr ""
+"Доступные игры:\n"
+"\n"
+"id Tech 0:\n"
+"- Wolfenstein 3D;\n"
+"- Spear of Destiny;\n"
+"- Noah's Ark 3D;\n"
+"- Operation Body Count. Обратите внимание, генерация для этой игры менее стабильна по сравнению с другими на том же движке.\n"
+"\n"
+"id Tech 1:\n"
+"- Doom 2;\n"
+"- Doom;\n"
+"- The Ultimate Doom;\n"
+"- TNT: Evilution. Часть Final Doom;\n"
+"- Plutonia. Часть Final Doom;\n"
+"- Heretic;\n"
+"- Chex 3 Vanilla. Неофициальный переиздание Chex Quest 3 для движков вне семейства *ZDoom. Для генерации поддержкивается только SLUMP;\n"
+"- HacX 1.2. Поддерживается только SLUMP;\n"
+"- REKKR. Поддерживается только SLUMP;\n"
+"- Harmony Compat. Переиздание Harmony для движков вне семейства *ZDoom. Должен запускаться как PWAD вместе с IWAD Doom 2/Freedoom 2. Поддерживается только SLUMP;\n"
+"- Strife. Поддерживается только SLUMP."
+
 
 #: source_files/obsidian_main/ui_game.cc:238
 msgid ""
@@ -7221,6 +7238,16 @@ msgid ""
 "\n"
 "EDGE-Classic: Boom-compatible, plus UDMF support, additional specials and other advanced features."
 msgstr ""
+"Доступные игровые движки:\n"
+"\n"
+"id Tech 0:\n"
+"- Vanilla: работает с оригинальными исполняемыми файлами.\n"
+"\n"
+"id Tech 1:\n"
+"- GZDoom: GZDoom и его разновидности (LZDoom, QZDoom, VkDoom и т. д.);\n"
+"- Оригинал: работает с оригинальными программами или портами, в которых учитываются старые лимиты. Примеры: Doom через DOSBox, Chocolate Doom. Поддерживается только SLUMP;\n"
+"- BOOM-совместимый: порты, которые могут использовать весь набор типов и функций расширений Boom. Большинство современных портов попадают как минимум в эту категорию.\n"
+"- EDGE: Совместимый с Boom, но также с поддержкой UDMF, дополнительных типов (action special) линий и иных улучшений, присущих этому порту."
 
 #: games/harmony/themes.lua:354
 msgid "Amazon Base"
@@ -7256,7 +7283,7 @@ msgstr ""
 
 #: games/rekkr/base.lua:38
 msgid "REKKR"
-msgstr ""
+msgstr "REKKR"
 
 #: scripts/obsidian.lua:2423
 msgid ""
@@ -7272,87 +7299,88 @@ msgstr ""
 
 #: modules/compress_output.lua:21
 msgid "PK3/ZIP Output"
-msgstr ""
+msgstr "Вывод в PK3/ZIP"
 
 #: modules/useful_links.lua:21
 msgid "Game WADs (Libre/Freeware)"
-msgstr ""
+msgstr "Свободно распространяемые IWAD"
 
 #: modules/useful_links.lua:30
 msgid "Freedoom (Doom 1/2 Replacement)"
-msgstr ""
+msgstr "Freedoom (замена Doom 1/2)"
 
 #: modules/useful_links.lua:35
 msgid "Blasphemer (Heretic Replacement)"
-msgstr ""
+msgstr "Blasphemer (замена Heretic)"
 
 #: modules/useful_links.lua:40
 msgid "Chex Quest 3: Vanilla Edition"
-msgstr ""
+msgstr "Chex Quest 3: Vanilla Edition"
 
 #: modules/useful_links.lua:50
 msgid "Harmony Compatible"
-msgstr ""
+msgstr "Harmony Compatible"
 
 #: modules/useful_links.lua:63
 msgid "Obsidian Addons"
-msgstr ""
+msgstr "Аддоны Obsidian"
 
 #: modules/useful_links.lua:72
 msgid "Lobo's EDGE-Classic Enhancements"
-msgstr ""
+msgstr "Lobo's EDGE-Classic Enhancements"
 
 #: modules/useful_links.lua:77
 msgid "Mobreck's MBF21 Expanded DOOM Beastiary"
-msgstr ""
+msgstr "Mobreck's MBF21 Expanded DOOM Beastiary"
 
 #: modules/useful_links.lua:82
 msgid "xBEEKAYRANDEEx's DoomRLA Pickups"
-msgstr ""
+msgstr "xBEEKAYRANDEEx's DoomRLA Pickups"
 
 #: modules/useful_links.lua:87
 msgid "Heathen's Maze For Heretic - Craneo"
-msgstr ""
+msgstr "Heathen's Maze For Heretic - Craneo"
 
 #: modules/useful_links.lua:92
 msgid "Simon-v's Jukebox"
-msgstr ""
+msgstr "Simon-v's Jukebox"
 
 #: modules/useful_links.lua:97
 msgid "SilentZorah's Jukebox - Craneo"
-msgstr ""
+msgstr "SilentZorah's Jukebox - Craneo"
 
 #: modules/useful_links.lua:102
 msgid "MsrSgtShooterPerson's Delta Resource Pack"
-msgstr ""
+msgstr "MsrSgtShooterPerson's Delta Resource Pack"
 
 #: modules/alt_shape_grammars.lua:52
 msgid "The Backhalls"
-msgstr ""
+msgstr "Подсобные помещения"
 
 #: modules/alt_shape_grammars.lua:59
 msgid "Sets chance of levels using the Backhalls shape grammar."
-msgstr ""
+msgstr "Устанавливает шанс того, что каждый конкретный уровень будет сгенерирован с использованием набора правил \"Подсобные помещения\""
 
 #: modules/alt_shape_grammars.lua:60
 msgid "The true Linear Mode."
-msgstr ""
+msgstr "Вот он. Действительно Линейный Режим."
 
 #: modules/alt_shape_grammars.lua:75
 msgid "It's like that movie Cube, but with .5 less dimensions (if you're a contrarian)."
-msgstr ""
+msgstr "Примерно как в фильме \"Куб\", но с уменьшенным на 0.5 числом измерений.\n\n"
+"С данным набором правил комнаты будут квадратными, со случайно вырезанной частью в одном из углов или на одной из стен. Размеры комнат практически одинаковы."
 
 #: modules/alt_shape_grammars.lua:82
 msgid "The OG"
-msgstr ""
+msgstr "Пробы пера из v7.45"
 
 #: modules/alt_shape_grammars.lua:89
 msgid "Sets chance of levels using the OG shape grammar."
-msgstr ""
+msgstr "Устанавливает шанс того, что каждый конкретный уровень будет сгенерирован с использованием набора правил \"Проб пера\""
 
 #: modules/alt_shape_grammars.lua:90
 msgid "These are the shapes from Oblige 7.45, one of the earliest examples of the shape grammar system."
-msgstr ""
+msgstr "Уровни будут строиться с использованием форм из Oblige 7.45 — один из самых ранних примеров системы формообразования."
 
 #: modules/miscellaneous.lua:295
 msgid ""
@@ -7361,14 +7389,17 @@ msgid ""
 "Doom 2 - Urban\n"
 "Heretic - City"
 msgstr ""
+"Разрешить генерировать улицы из настройки \"Процент карт с улицами\" только в следующих темах:\n"
+"Doom 2 — Городская тема;\n"
+"Heretic — Город Проклятых (эп. 1)."
 
 #: modules/prefab_controller.lua:537
 msgid "Test New Content"
-msgstr ""
+msgstr "Тестирование нового"
 
 #: modules/procedural_gotcha_zdoom.lua:1915
 msgid "Boss Health Multiplier"
-msgstr ""
+msgstr "Множитель здоровья босса"
 
 #: modules/procedural_gotcha_edge.lua:184
 msgid "DDF Generated Boss Options"
@@ -7376,7 +7407,7 @@ msgstr ""
 
 #: modules/gzdoom_marine_closet.lua:1537
 msgid "Friendly Marine Closets"
-msgstr ""
+msgstr "Комнаты дружественных ИИ-морпехов"
 
 #~ msgid ""
 #~ "\n"
