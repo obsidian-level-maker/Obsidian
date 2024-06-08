@@ -125,7 +125,7 @@ FILE *FileOpen(std::string_view name, std::string_view mode)
 }
 bool FileRename(std::string_view oldname, std::string_view newname)
 {
-    return rename(oldname.c_str(), newname.c_str()) == 0;
+    return rename(std::string(oldname).c_str(), std::string(newname).c_str()) == 0;
 }
 bool FileDelete(std::string_view name)
 {
