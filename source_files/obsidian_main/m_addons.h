@@ -22,6 +22,8 @@
 #ifndef __OBLIGE_ADDONS_H__
 #define __OBLIGE_ADDONS_H__
 
+#include <stdint.h>
+
 #include <cstdio>
 #include <string>
 #include <fstream>
