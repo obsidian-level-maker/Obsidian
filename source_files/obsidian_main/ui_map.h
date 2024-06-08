@@ -22,6 +22,8 @@
 #ifndef __UI_MAP_H__
 #define __UI_MAP_H__
 
+#include <stdint.h>
+
 #include "FL/Fl_Box.H"
 #include "FL/Fl_Image.H"
 
