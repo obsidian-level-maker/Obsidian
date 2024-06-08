@@ -352,7 +352,7 @@ void Determine_WorkingPath() {
 #ifdef _WIN32
     home_dir = PHYSFS_getBaseDir();
 #else
-    home_dir = PHYSFS_getUserDir();
+    home_dir = PHYSFS_getPrefDir(NULL, "Obsidian Level Maker");
 #endif
 }
 

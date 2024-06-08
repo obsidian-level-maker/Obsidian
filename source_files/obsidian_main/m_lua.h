@@ -22,6 +22,7 @@
 #ifndef __SCRIPTING_HEADER__
 #define __SCRIPTING_HEADER__
 
+#include <stdint.h>
 #include <string>
 #include <vector>
 

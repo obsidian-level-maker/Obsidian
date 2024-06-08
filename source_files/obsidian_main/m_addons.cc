@@ -181,6 +181,8 @@ void VFS_ScanForPresets() {
         }
     }
 
+    PHYSFS_freeList(got_names);
+
     if (all_presets.size() == 0) {
         LogPrintf("DONE (none found)\n");
     } else {
@@ -228,6 +230,8 @@ void VFS_ScanForAddons() {
             }
         }
     }
+
+    PHYSFS_freeList(got_names);
 
     if (all_addons.size() == 0) {
         LogPrintf("DONE (none found)\n");

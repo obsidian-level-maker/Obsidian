@@ -343,12 +343,6 @@ static bool scan_dir_process_name(const std::string &name,
     return false; /* NOT REACHED */
 }
 
-struct scan_dir_nocase_CMP {
-    inline bool operator()(std::string_view A, std::string_view B) const {
-        return StringCompare(A, B) < 0;
-    }
-};
-
 // LUA: scan_directory(dir, match) --> list
 //
 // Note: 'match' parameter must be of the form "*" or "*.xxx"
@@ -384,10 +378,6 @@ int gui_scan_directory(lua_State *L) {
     }
 
     PHYSFS_freeList(got_names);
-
-    // sort into alphabetical order [ Note: not unicode aware ]
-
-    std::sort(list.begin(), list.end(), scan_dir_nocase_CMP());
 
     // create the list of filenames / dirnames
 
