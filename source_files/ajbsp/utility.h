@@ -38,7 +38,7 @@ char *ReplaceExtension(const char *filename, const char *ext);
 const char *FindBaseName(const char *filename);
 
 // file utilities
-bool FileExists(std::filesystem::path filename);
+bool FileExists(std::string filename);
 
 // memory allocation, guaranteed to not return NULL.
 void *UtilCalloc(int size);

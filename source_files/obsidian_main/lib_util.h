@@ -25,6 +25,24 @@
 #include <stdint.h>
 #include <string>
 
+/* file utilities */
+
+std::string GetFilename(std::string_view path);
+std::string GetStem(std::string_view path);
+std::string GetDirectory(std::string_view path);
+std::string GetExtension(std::string_view path);
+std::string PathAppend(std::string_view parent, std::string_view child);
+bool        IsPathAbsolute(std::string_view path);
+void        ReplaceExtension(std::string &path, std::string_view ext);
+
+std::string CurrentDirectoryGet();
+bool MakeDirectory(std::string_view dir);
+
+bool  FileExists(std::string_view name);
+FILE *FileOpen(std::string_view name, std::string_view mode);
+bool FileRename(std::string_view oldname, std::string_view newname);
+bool FileDelete(std::string_view name);
+
 /* string utilities */
 
 #ifdef _WIN32
@@ -33,6 +51,55 @@
 std::string  WStringToUTF8(std::wstring_view instring);
 std::wstring UTF8ToWString(std::string_view instring);
 #endif
+
+inline bool IsUpperASCII(int character)
+{
+    return (character > '@' && character < '[');
+}
+inline bool IsLowerASCII(int character)
+{
+    return (character > '`' && character < '{');
+}
+inline bool IsAlphaASCII(int character)
+{
+    return ((character > '@' && character < '[') || (character > '`' && character < '{'));
+}
+inline bool IsAlphanumericASCII(int character)
+{
+    return ((character > '@' && character < '[') || (character > '`' && character < '{') ||
+            (character > '/' && character < ':'));
+}
+inline bool IsDigitASCII(int character)
+{
+    return (character > '/' && character < ':');
+}
+inline bool IsXDigitASCII(int character)
+{
+    return ((character > '@' && character < 'G') || (character > '`' && character < 'g') ||
+            (character > '/' && character < ':'));
+}
+inline bool IsPrintASCII(int character)
+{
+    return (character > 0x1F && character < 0x7F);
+}
+inline bool IsSpaceASCII(int character)
+{
+    return ((character > 0x8 && character < 0xE) || character == 0x20);
+}
+inline int ToLowerASCII(int character)
+{
+    if (character > '@' && character < '[')
+        return character ^ 0x20;
+    else
+        return character;
+}
+inline int ToUpperASCII(int character)
+{
+    if (character > '`' && character < '{')
+        return character ^ 0x20;
+    else
+        return character;
+}
 
 int StringCompare(std::string_view A, std::string_view B);
 int StringPrefixCompare(std::string_view A, std::string_view B);

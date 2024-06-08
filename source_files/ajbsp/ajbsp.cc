@@ -176,10 +176,10 @@ build_result_e BuildFile(buildinfo_t *build_info)
 	return BUILD_OK;
 }
 
-void VisitFile(std::filesystem::path filename, buildinfo_t *build_info)
+void VisitFile(std::string filename, buildinfo_t *build_info)
 {
 	build_info->Print(0, "\n");
-	build_info->Print(0, "Building %s\n", filename.u8string().c_str());
+	build_info->Print(0, "Building %s\n", filename.c_str());
 
 	// this will fatal error if it fails
 	ajbsp::OpenWad(filename);
@@ -329,7 +329,7 @@ void CheckTypeSizes(buildinfo_t *build_info)
 }
 
 
-int AJBSP_BuildNodes(std::filesystem::path filename, buildinfo_t *build_info)
+int AJBSP_BuildNodes(std::string filename, buildinfo_t *build_info)
 {
 	// need this early, especially for fatal errors in utility/wad code
 	ajbsp::SetInfo(build_info);
@@ -347,7 +347,7 @@ int AJBSP_BuildNodes(std::filesystem::path filename, buildinfo_t *build_info)
 
 	// validate file before processing it
 	if (! ajbsp::FileExists(filename))
-		build_info->FatalError("no such file: %s\n", filename.u8string().c_str());
+		build_info->FatalError("no such file: %s\n", filename.c_str());
 
 	VisitFile(filename, build_info);
 

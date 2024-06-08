@@ -28,17 +28,17 @@
 #include "miniz.h"
 
 static mz_zip_archive *zip_writer = nullptr;
-static std::filesystem::path current_zip;
+static std::string current_zip;
 
 //------------------------------------------------------------------------
 //  ZIP WRITING
 //------------------------------------------------------------------------
 
-bool ZIPF_OpenWrite(const std::filesystem::path &filename) {
+bool ZIPF_OpenWrite(const std::string &filename) {
     // Make sure the last ZIPF operation was closed properly and that
     // the target archive doesn't already exist (unlike our WAD stuff
     // there should only ever be one pk3 going on at a time)
-    if (std::filesystem::exists(filename)) {
+    if (FileExists(filename)) {
         return false;
     }
     if (zip_writer) {
@@ -48,7 +48,7 @@ bool ZIPF_OpenWrite(const std::filesystem::path &filename) {
     }
     zip_writer = new mz_zip_archive;
     mz_zip_zero_struct(zip_writer);
-    if (!mz_zip_writer_init_file(zip_writer, filename.generic_u8string().c_str(), 0)) {
+    if (!mz_zip_writer_init_file(zip_writer, filename.c_str(), 0)) {
         mz_zip_writer_end(zip_writer);
         delete zip_writer;
         zip_writer = nullptr;
@@ -58,13 +58,13 @@ bool ZIPF_OpenWrite(const std::filesystem::path &filename) {
     return true;
 }
 
-bool ZIPF_AddFile(const std::filesystem::path &filename, std::filesystem::path directory) {
+bool ZIPF_AddFile(const std::string &filename, std::string directory) {
     if (!zip_writer) {
         return false;
     }
     return mz_zip_writer_add_file(zip_writer,
-            !directory.empty() ? (directory / filename.filename()).generic_u8string().c_str() : 
-            filename.filename().generic_u8string().c_str(), filename.generic_u8string().c_str(),
+            !directory.empty() ? PathAppend(directory, filename).c_str() : 
+            filename.c_str(), filename.c_str(),
              NULL, 0, MZ_DEFAULT_COMPRESSION);
 }
 

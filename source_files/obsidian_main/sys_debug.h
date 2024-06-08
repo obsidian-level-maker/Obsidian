@@ -23,7 +23,6 @@
 #define __SYS_DEBUG_H__
 
 #include <algorithm>
-#include <filesystem>
 #include <fstream>
 #include <string>
 #include <iostream>
@@ -33,9 +32,9 @@ extern std::fstream log_file;
 extern std::fstream ref_file;
 extern std::string StringFormat(std::string_view str, ...);
 
-bool LogInit(const std::filesystem::path &filename);  // NULL for none
+bool LogInit(const std::string &filename);  // NULL for none
 void LogClose(void);
-bool RefInit(const std::filesystem::path &filename);  // NULL for none
+bool RefInit(const std::string &filename);  // NULL for none
 void RefClose(void);
 
 void LogEnableDebug(bool enable);

@@ -982,11 +982,11 @@ int wad_transfer_lump(lua_State *L) {
     //
     // Open an existing wad file and copy the lump into our wad.
 
-    std::filesystem::path pkg_name = luaL_checkstring(L, 1);
+    std::string pkg_name = luaL_checkstring(L, 1);
     const char *src_lump = luaL_checkstring(L, 2);
     const char *dest_lump = luaL_checkstring(L, 3);
 
-    if (pkg_name.extension() != ".wad") {
+    if (GetExtension(pkg_name) != ".wad") {
         return luaL_error(L,
                           "wad_transfer_lump: file extension is not WAD: %s\n",
                           pkg_name.c_str());
@@ -1016,11 +1016,11 @@ int wad_transfer_map(lua_State *L) {
     //
     // Open an existing wad file and copy the map into our wad.
 
-    std::filesystem::path pkg_name = luaL_checkstring(L, 1);
+    std::string pkg_name = luaL_checkstring(L, 1);
     const char *src_map = luaL_checkstring(L, 2);
     const char *dest_map = luaL_checkstring(L, 3);
 
-    if (pkg_name.extension() != ".wad") {
+    if (GetExtension(pkg_name) != ".wad") {
         return luaL_error(L,
                           "wad_transfer_map: file extension is not WAD: %s\n",
                           pkg_name.c_str());
@@ -1106,19 +1106,19 @@ int wad_merge_sections(lua_State *L) {
     // and other stuff (which occur in between P_START/P_END and similar
     // marker lumps).
 
-    std::filesystem::path pkg_name = std::filesystem::u8path(luaL_checkstring(L, 1));
+    std::string pkg_name = luaL_checkstring(L, 1);
 
-    LogPrintf("Merging WAD sections from: %s\n", pkg_name.u8string().c_str());
+    LogPrintf("Merging WAD sections from: %s\n", pkg_name.c_str());
 
-    if (pkg_name.extension() != ".wad") {
+    if (GetExtension(pkg_name) != ".wad") {
         return luaL_error(L,
                           "wad_merge_sections: file extension is not WAD: %s\n",
-                          pkg_name.u8string().c_str());
+                          pkg_name.c_str());
     }
 
     if (!WAD_OpenRead(pkg_name)) {
         return luaL_error(L, "wad_merge_sections: bad WAD file: %s",
-                          pkg_name.u8string().c_str());
+                          pkg_name.c_str());
     }
 
     DoMergeSection('P', "P_START", "PP_START", "P_END", "PP_END");
@@ -1164,10 +1164,10 @@ int wad_read_text_lump(lua_State *L) {
     // If the lump does not exist, NIL is returned.
     // If the _file_ does not exist, an error is raised.
 
-    std::filesystem::path pkg_name = luaL_checkstring(L, 1);
+    std::string pkg_name = luaL_checkstring(L, 1);
     const char *src_lump = luaL_checkstring(L, 2);
 
-    if (pkg_name.extension() != ".wad") {
+    if (GetExtension(pkg_name) != ".wad") {
         return luaL_error(L,
                           "wad_read_text_lump: file extension is not WAD: %s\n",
                           pkg_name.c_str());

@@ -23,8 +23,6 @@
 
 #define AJBSP_VERSION  "1.05"
 
-#include <filesystem>
-
 //
 // Node Build Information Structure
 //
@@ -108,7 +106,7 @@ typedef enum
 }
 build_result_e;
 
-int AJBSP_BuildNodes(std::filesystem::path filename, buildinfo_t *build_info);
+int AJBSP_BuildNodes(std::string filename, buildinfo_t *build_info);
 
 namespace ajbsp
 {
@@ -118,7 +116,7 @@ void SetInfo(buildinfo_t *info);
 
 // attempt to open a wad.  on failure, the FatalError method in the
 // buildinfo_t interface is called.
-void OpenWad(std::filesystem::path filename);
+void OpenWad(std::string filename);
 
 // close a previously opened wad.
 void CloseWad();

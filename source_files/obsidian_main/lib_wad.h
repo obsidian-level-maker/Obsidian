@@ -24,10 +24,9 @@
 
 /* WAD reading */
 
-#include <filesystem>
 #include <string_view>
 
-bool WAD_OpenRead(std::filesystem::path filename);
+bool WAD_OpenRead(std::string filename);
 void WAD_CloseRead();
 
 int WAD_NumEntries();
@@ -39,7 +38,7 @@ bool WAD_ReadData(int entry, int offset, int length, void *buffer);
 
 /* WAD writing */
 
-bool WAD_OpenWrite(std::filesystem::path filename);
+bool WAD_OpenWrite(std::string filename);
 void WAD_CloseWrite();
 
 void WAD_NewLump(std::string name);

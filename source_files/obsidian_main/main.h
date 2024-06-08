@@ -27,7 +27,6 @@
 #include <vector>
 #include <string>
 #include <map>
-#include <filesystem>
 #ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
 #include "ui_window.h"
@@ -61,17 +60,17 @@ constexpr const char *REF_FILENAME = "REFERENCE.txt";
 extern int v_unload_private_font(const char *path);
 #endif
 
-extern std::filesystem::path home_dir;
-extern std::filesystem::path install_dir;
-extern std::filesystem::path config_file;
-extern std::filesystem::path options_file;
-extern std::filesystem::path theme_file;
-extern std::filesystem::path logging_file;
-extern std::filesystem::path reference_file;
+extern std::string home_dir;
+extern std::string install_dir;
+extern std::string config_file;
+extern std::string options_file;
+extern std::string theme_file;
+extern std::string logging_file;
+extern std::string reference_file;
 
 extern bool batch_mode;
 
-extern std::filesystem::path batch_output_file;
+extern std::string batch_output_file;
 
 extern unsigned long long next_rand_seed;
 
@@ -155,7 +154,7 @@ extern bool did_specify_seed;
 
 extern std::string def_filename;
 
-extern std::filesystem::path last_directory;
+extern std::string last_directory;
 extern std::string numeric_locale;
 extern std::vector<std::string> batch_randomize_groups;
 
@@ -163,15 +162,15 @@ extern std::vector<std::string> batch_randomize_groups;
 // Dialog Windows
 void DLG_ShowError(const char *msg, ...);
 
-std::filesystem::path DLG_OutputFilename(const char *ext,
+std::string DLG_OutputFilename(const char *ext,
                                          const char *preset = nullptr);
 #endif
 
-extern std::filesystem::path default_output_path;
+extern std::string default_output_path;
 
-extern std::filesystem::path Resolve_DefaultOutputPath();
+extern std::string Resolve_DefaultOutputPath();
 
-extern std::filesystem::path gif_filename;
+extern std::string gif_filename;
 
 extern std::string string_seed;
 extern std::string selected_lang;
@@ -230,7 +229,7 @@ void ProgStatus(std::string_view msg, Args &&...args) {
     StdErrPrintf("%s\n", buffer.c_str());
 #endif
 }
-bool BackupFile(const std::filesystem::path &filename);
+bool BackupFile(const std::string &filename);
 #if defined WIN32 && !defined CONSOLE_ONLY
 void Blinker();
 #endif
@@ -298,9 +297,9 @@ class game_interface_c {
     // properties are ignored.  May be called during startup too.
     virtual void Property(std::string key, std::string value) = 0;
 
-    virtual std::filesystem::path Filename() = 0;
+    virtual std::string Filename() = 0;
 
-    virtual std::filesystem::path ZIP_Filename() = 0;
+    virtual std::string ZIP_Filename() = 0;
 
     // likely only useful for Doom, but informs the program if it needs to package
     // each map in its own native format (WAD, etc)
@@ -312,8 +311,6 @@ extern game_interface_c *game_object;
 /* interface for each game format */
 
 game_interface_c *Doom_GameObject();
-game_interface_c *Quake1_GameObject();
-game_interface_c *Quake2_GameObject();
 game_interface_c *Wolf_GameObject();
 
 #endif /* __OBSIDIAN_MAIN_H__ */

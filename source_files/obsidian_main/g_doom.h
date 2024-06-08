@@ -22,7 +22,6 @@
 #ifndef G_DOOM_H_
 #define G_DOOM_H_
 
-#include <filesystem>
 #include "m_lua.h"
 
 class qLump_c {
@@ -72,7 +71,7 @@ extern int sub_format;
 
 /***** FUNCTIONS ****************/
 
-bool StartWAD(std::filesystem::path filename);
+bool StartWAD(std::string filename);
 bool EndWAD();
 
 void BeginLevel();

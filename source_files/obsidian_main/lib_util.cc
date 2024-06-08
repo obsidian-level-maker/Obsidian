@@ -24,6 +24,285 @@
 #include "headers.h"
 #include "grapheme.h"
 #include <chrono>
+#ifndef _WIN32
+#include <dirent.h>
+#include <ftw.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+#endif
+#ifdef __MINGW32__
+#include <sys/stat.h>
+#endif
+
+#ifdef _WIN32                                    // Windows API
+static inline bool IsDirectorySeparator(const char c)
+{
+    return (c == '\\' || c == '/' || c == ':'); // Kester added ':'
+}
+bool IsPathAbsolute(std::string_view path)
+{
+    SYS_ASSERT(!path.empty());
+
+    // Check for Drive letter, colon and slash...
+    if (path.size() > 2 && path[1] == ':' && (path[2] == '\\' || path[2] == '/') && IsAlphaASCII(path[0]))
+    {
+        return true;
+    }
+    else if (path.size() == 2 && path[1] == ':' && IsAlphaASCII(path[0]))
+    {
+        return true;
+    }
+
+    // Check for share name...
+    if (path.size() > 1 && path[0] == '\\' && path[1] == '\\')
+        return true;
+
+    return false;
+}
+FILE *FileOpen(std::string_view name, std::string_view mode)
+{
+    std::wstring wname = UTF8ToWString(name);
+    std::wstring wmode = UTF8ToWString(mode);
+    return _wfopen(wname.c_str(), wmode.c_str());
+}
+bool FileRename(std::string_view oldname, std::string_view newname)
+{
+    std::wstring woldname = UTF8ToWString(oldname);
+    std::wstring wnewname = UTF8ToWString(newname);
+    return _wrename(woldname.c_str(), wnewname.c_str()) == 0;
+}
+bool FileDelete(std::string_view name)
+{
+    SYS_ASSERT(!name.empty());
+    std::wstring wname = UTF8ToWString(name);
+    return _wremove(wname.c_str()) == 0;
+}
+std::string CurrentDirectoryGet()
+{
+    std::string    directory;
+    const wchar_t *dir = _wgetcwd(nullptr, 0);
+    if (dir)
+        directory = WStringToUTF8(dir);
+    return directory; // can be empty
+}
+static bool CurrentDirectorySet(std::string_view dir)
+{
+    SYS_ASSERT(!dir.empty());
+    std::wstring wdir = UTF8ToWString(dir);
+    return _wchdir(wdir.c_str()) == 0;
+}
+bool MakeDirectory(std::string_view dir)
+{
+    SYS_ASSERT(!dir.empty());
+    std::wstring wdirectory = UTF8ToWString(dir);
+    return _wmkdir(wdirectory.c_str()) == 0;
+}
+bool FileExists(std::string_view name)
+{
+    SYS_ASSERT(!name.empty());
+    std::wstring wname = UTF8ToWString(name);
+    return _waccess(wname.c_str(), 0) == 0;
+}
+#else // POSIX API
+static inline bool IsDirectorySeparator(const char c)
+{
+    return (c == '\\' || c == '/');
+}
+bool IsPathAbsolute(std::string_view path)
+{
+    SYS_ASSERT(!path.empty());
+
+    if (IsDirectorySeparator(path[0]))
+        return true;
+    else
+        return false;
+}
+FILE *FileOpen(std::string_view name, std::string_view mode)
+{
+    SYS_ASSERT(!name.empty());
+    return fopen(std::string(name).c_str(), std::string(mode).c_str());
+}
+bool FileRename(std::string_view oldname, std::string_view newname)
+{
+    return rename(oldname.c_str(), newname.c_str()) == 0;
+}
+bool FileDelete(std::string_view name)
+{
+    SYS_ASSERT(!name.empty());
+    return remove(std::string(name).c_str()) == 0;
+}
+std::string CurrentDirectoryGet()
+{
+    std::string directory;
+    const char *dir = getcwd(nullptr, 0);
+    if (dir)
+        directory = dir;
+    return directory;
+}
+static bool CurrentDirectorySet(std::string_view dir)
+{
+    SYS_ASSERT(!dir.empty());
+    return chdir(std::string(dir).c_str()) == 0;
+}
+bool MakeDirectory(std::string_view dir)
+{
+    SYS_ASSERT(!dir.empty());
+    return (mkdir(std::string(dir).c_str(), 0774) == 0);
+}
+bool FileExists(std::string_view name)
+{
+    SYS_ASSERT(!name.empty());
+    return access(std::string(name).c_str(), F_OK) == 0;
+}
+#endif
+
+// Universal Functions
+
+std::string GetStem(std::string_view path)
+{
+    SYS_ASSERT(!path.empty());
+    // back up until a slash or the start
+    for (int p = path.size() - 1; p > 1; p--)
+    {
+        if (IsDirectorySeparator(path[p - 1]))
+        {
+            path.remove_prefix(p);
+            break;
+        }
+    }
+    // back up until a dot
+    for (int p = path.size() - 2; p >= 0; p--)
+    {
+        const char ch = path[p];
+        if (IsDirectorySeparator(ch))
+            break;
+
+        if (ch == '.')
+        {
+            // handle filenames that being with a dot
+            // (un*x style hidden files)
+            if (p == 0 || IsDirectorySeparator(path[p - 1]))
+                break;
+
+            path.remove_suffix(path.size() - p);
+            break;
+        }
+    }
+    std::string filename(path);
+    return filename;
+}
+
+std::string GetFilename(std::string_view path)
+{
+    SYS_ASSERT(!path.empty());
+    // back up until a slash or the start
+    for (int p = path.size() - 1; p > 0; p--)
+    {
+        if (IsDirectorySeparator(path[p - 1]))
+        {
+            path.remove_prefix(p);
+            break;
+        }
+    }
+    std::string filename(path);
+    return filename;
+}
+
+std::string PathAppend(std::string_view parent, std::string_view child)
+{
+    SYS_ASSERT(!parent.empty() && !child.empty());
+
+    if (IsDirectorySeparator(parent.back()))
+        parent.remove_suffix(1);
+
+    std::string new_path(parent);
+
+    new_path.push_back('/');
+
+    if (IsDirectorySeparator(child[0]))
+        child.remove_prefix(1);
+
+    new_path.append(child);
+
+    return new_path;
+}
+
+std::string GetDirectory(std::string_view path)
+{
+    SYS_ASSERT(!path.empty());
+    std::string directory;
+    // back up until a slash or the start
+    for (int p = path.size() - 1; p >= 0; p--)
+    {
+        if (IsDirectorySeparator(path[p]))
+        {
+            directory = path.substr(0, p);
+            break;
+        }
+    }
+
+    return directory; // nothing
+}
+
+std::string GetExtension(std::string_view path)
+{
+    SYS_ASSERT(!path.empty());
+    std::string extension;
+    // back up until a dot
+    for (int p = path.size() - 1; p >= 0; p--)
+    {
+        const char ch = path[p];
+        if (IsDirectorySeparator(ch))
+            break;
+
+        if (ch == '.')
+        {
+            // handle filenames that being with a dot
+            // (un*x style hidden files)
+            if (p == 0 || IsDirectorySeparator(path[p - 1]))
+                break;
+
+            extension = path.substr(p);
+            break;
+        }
+    }
+    return extension; // can be empty
+}
+
+void ReplaceExtension(std::string &path, std::string_view ext)
+{
+    SYS_ASSERT(!path.empty() && !ext.empty());
+    int extpos = -1;
+    // back up until a dot
+    for (int p = path.size() - 1; p >= 0; p--)
+    {
+        char &ch = path[p];
+        if (IsDirectorySeparator(ch))
+            break;
+
+        if (ch == '.')
+        {
+            // handle filenames that being with a dot
+            // (un*x style hidden files)
+            if (p == 0 || IsDirectorySeparator(path[p - 1]))
+                break;
+
+            extpos = p;
+            break;
+        }
+    }
+    if (extpos == -1) // No extension found, add it
+        path.append(ext);
+    else
+    {
+        while (path.size() > extpos)
+        {
+            path.pop_back();
+        }
+        path.append(ext);
+    }
+}
 
 #ifdef _WIN32
 std::wstring UTF8ToWString(std::string_view instring)

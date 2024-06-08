@@ -50,13 +50,13 @@
  */
 constexpr size_t TICKER_TIME = 50;
 
-std::filesystem::path home_dir;
-std::filesystem::path install_dir;
-std::filesystem::path config_file;
-std::filesystem::path options_file;
-std::filesystem::path theme_file;
-std::filesystem::path logging_file;
-std::filesystem::path reference_file;
+std::string home_dir;
+std::string install_dir;
+std::string config_file;
+std::string options_file;
+std::string theme_file;
+std::string logging_file;
+std::string reference_file;
 
 struct UpdateKv {
     char section;
@@ -77,7 +77,7 @@ int main_action;
 unsigned long long next_rand_seed;
 
 bool batch_mode = false;
-std::filesystem::path batch_output_file;
+std::string batch_output_file;
 std::string numeric_locale;
 std::vector<std::string> batch_randomize_groups;
 
@@ -154,8 +154,8 @@ bool password_mode = false;
 bool mature_word_lists = false;
 bool did_specify_seed = false;
 
-std::filesystem::path gif_filename = "gif_output.gif";
-std::filesystem::path default_output_path;
+std::string gif_filename = "gif_output.gif";
+std::string default_output_path;
 
 std::string string_seed;
 
@@ -230,7 +230,7 @@ static void main_win_addon_CB(Fl_Widget *w, void *data) {
     std::string menu_item = _("Addons/");
     Fl_Menu_Bar *menu = (Fl_Menu_Bar *)w;
     addon_info_t *addon = (addon_info_t *)data;
-    menu_item.append(addon->name.filename().string());
+    menu_item.append(addon->name);
     const Fl_Menu_Item *checkbox = menu->find_item(menu_item.c_str());
     addon->enabled = (checkbox->value() != 0) ? true : false;
 }
@@ -252,13 +252,13 @@ static void main_win_apply_addon_CB(Fl_Widget *w, void *data) {
 }
 
 static void main_win_preset_CB(Fl_Widget *w, void *data) {
-    std::filesystem::path *preset = (std::filesystem::path *)data;
+    std::string *preset = (std::string *)data;
 
     // adapted from our Config Manager Load/Use callbacks
-    FILE *fp = fl_fopen(preset->generic_u8string().c_str(), "rb");
+    FILE *fp = fl_fopen(preset->c_str(), "rb");
     if (!fp) {
         DLG_ShowError(_("Cannot open: %s\n\n%s"),
-                        preset->filename().u8string().c_str(),
+                        preset->c_str(),
                         strerror(errno));
         return;
     }
@@ -348,69 +348,20 @@ static void ShowVersion() {
     fflush(stdout);
 }
 
-void Determine_WorkingPath(std::filesystem::path &path_check) {
-    // firstly find the "Working directory" : that's the place where
-    // the CONFIG.txt and LOGS.txt files are, as well the temp files.
-
-    if (const int home_arg = argv::Find(0, "home"); home_arg >= 0) {
-        if (home_arg + 1 >= argv::list.size() || argv::IsOption(home_arg + 1)) {
-            StdErrPrintf("OBSIDIAN ERROR: missing path for --home\n");
-            exit(EXIT_FAILURE);
-        }
-
-        home_dir = std::filesystem::u8path(argv::list[home_arg + 1]);
-        return;
-    }
-
+void Determine_WorkingPath() {
 #ifdef _WIN32
-    home_dir = path_check;
-    home_dir.remove_filename();
+    home_dir = PHYSFS_getBaseDir();
 #else
-    const char *xdg_config_home = std::getenv("XDG_CONFIG_HOME");
-    if (xdg_config_home == nullptr) {
-        xdg_config_home = std::getenv("HOME");
-        if (xdg_config_home == nullptr) {
-            home_dir = ".";
-        } else {
-            home_dir = xdg_config_home;
-            home_dir /= ".config";
-        }
-    } else {
-        home_dir = xdg_config_home;
-    }
-    home_dir /= "obsidian";
-    if (!home_dir.is_absolute()) {
-        home_dir = std::getenv("HOME");
-        home_dir /= ".config/obsidian";
-
-        if (!home_dir.is_absolute()) {
-            Main::FatalError("Unable to find $HOME directory!\n");
-        }
-    }
-// FLTK is going to want a ~/.config directory as well I think - Dasho
-#ifdef __OpenBSD__
-    std::filesystem::path config_checker = std::getenv("HOME");
-    config_checker /= ".config";
-    if (!std::filesystem::exists(config_checker)) {
-        std::filesystem::create_directory(config_checker);
-    }
+    home_dir = PHYSFS_getUserDir();
 #endif
-    // try to create it (doesn't matter if it already exists)
-    if (!std::filesystem::exists(home_dir)) {
-        std::filesystem::create_directory(home_dir);
-    }
-#endif
-    if (home_dir.empty()) {
-        home_dir = std::filesystem::canonical(".");
-    }
 }
 
-std::filesystem::path Resolve_DefaultOutputPath() {
+std::string Resolve_DefaultOutputPath() {
     if (default_output_path.empty()) {
         default_output_path = install_dir;
     }
-    if (default_output_path.generic_u8string()[0] == '$') {
-        const char *var = getenv(default_output_path.generic_u8string().c_str() + 1);
+    if (default_output_path[0] == '$') {
+        const char *var = getenv(default_output_path.c_str() + 1);
         if (var != nullptr) {
             return var;
         }
@@ -418,146 +369,51 @@ std::filesystem::path Resolve_DefaultOutputPath() {
     return default_output_path;
 }
 
-static bool Verify_InstallDir(const std::filesystem::path &path) {
-    const std::filesystem::path filename = path / "scripts" / "obsidian.lua";
+static bool Verify_InstallDir(const std::string &path) {
+    const std::string filename = PathAppend(path, "scripts/obsidian.lua");
 
-    return exists(filename);
+    return FileExists(filename);
 }
 
-void Determine_InstallDir(std::filesystem::path &path_check) {
-    // secondly find the "Install directory", and store the
-    // result in the global variable 'install_dir'.  This is
-    // where all the LUA scripts and other data files are.
-
-    if (const int inst_arg = argv::Find(0, "install"); inst_arg >= 0) {
-        if (inst_arg + 1 >= argv::list.size() || argv::IsOption(inst_arg + 1)) {
-            StdErrPrintf("OBSIDIAN ERROR: missing path for --install\n");
-            exit(EXIT_FAILURE);
-        }
-
-        install_dir = std::filesystem::u8path(argv::list[inst_arg + 1]);
-
-        if (Verify_InstallDir(install_dir)) {
-            return;
-        }
-
-        Main::FatalError("Bad install directory specified!\n");
-    }
-
-    // if run from current directory, look there
-    if (path_check == "." && Verify_InstallDir(".")) {
-        install_dir = std::filesystem::canonical(".");
-        return;
-    }
-
-#ifdef WIN32
-    install_dir = home_dir;
-#else
-    if (Verify_InstallDir(std::filesystem::canonical("."))) {
-        install_dir = std::filesystem::canonical(".");
-    }
-#endif
-
-    if (install_dir.empty()) {
-        Main::FatalError("Unable to find Obsidian's install directory!\n");
-    }
+void Determine_InstallDir() {
+    install_dir = PHYSFS_getBaseDir();
 }
 
 void Determine_ConfigFile() {
-    if (const int conf_arg = argv::Find(0, "config"); conf_arg >= 0) {
-        if (conf_arg + 1 >= argv::list.size() || argv::IsOption(conf_arg + 1)) {
-            StdErrPrintf("OBSIDIAN ERROR: missing path for --config\n");
-            exit(EXIT_FAILURE);
-        }
-
-        config_file = argv::list[conf_arg + 1];
-    } else {
-        config_file /= home_dir;
-        config_file /= CONFIG_FILENAME;
-    }
+    config_file = PathAppend(home_dir, CONFIG_FILENAME);
 }
 
 void Determine_OptionsFile() {
-    if (const int optf_arg = argv::Find(0, "options"); optf_arg >= 0) {
-        if (optf_arg + 1 >= argv::list.size() || argv::IsOption(optf_arg + 1)) {
-            StdErrPrintf("OBSIDIAN ERROR: missing path for --options\n");
-            exit(EXIT_FAILURE);
-        }
-
-        options_file = argv::list[optf_arg + 1];
-    } else {
-        options_file /= home_dir;
-        options_file /= OPTIONS_FILENAME;
-    }
+    options_file = PathAppend(home_dir, OPTIONS_FILENAME);
 }
 
 #ifndef CONSOLE_ONLY
 void Determine_ThemeFile() {
-    if (const int themef_arg = argv::Find(0, "theme"); themef_arg >= 0) {
-        if (themef_arg + 1 >= argv::list.size() ||
-            argv::IsOption(themef_arg + 1)) {
-            StdErrPrintf("OBSIDIAN ERROR: missing path for --theme\n");
-            exit(EXIT_FAILURE);
-        }
-
-        theme_file = argv::list[themef_arg + 1];
-    } else {
-        theme_file /= home_dir;
-        theme_file /= THEME_FILENAME;
-    }
+    theme_file = PathAppend(home_dir, THEME_FILENAME);
 }
 #endif
 
 void Determine_LoggingFile() {
-    if (const int logf_arg = argv::Find(0, "log"); logf_arg >= 0) {
-        if (logf_arg + 1 >= argv::list.size() || argv::IsOption(logf_arg + 1)) {
-            StdErrPrintf("OBSIDIAN ERROR: missing path for --log\n");
-            exit(EXIT_FAILURE);
-        }
-
-        logging_file = std::filesystem::u8path(argv::list[logf_arg + 1]);
-
-        // test that it can be created
-        std::ofstream fp{logging_file};
-
-        if (!fp.is_open()) {
-            Main::FatalError("Cannot create log file: %s\n",
-                             logging_file.u8string().c_str());
-        }
-
-        fp.close();
-    } else if (!batch_mode) {
-        logging_file /= home_dir;
-        logging_file /= LOG_FILENAME;
-    } else {
-        logging_file = std::filesystem::current_path();
-        logging_file /= LOG_FILENAME;
-    }
+    logging_file = PathAppend(home_dir, LOG_FILENAME);
 }
 
 void Determine_ReferenceFile() {
     if (argv::Find('p', "printref") >= 0) {
-        if (!batch_mode) {
-            reference_file /= home_dir;
-            reference_file /= REF_FILENAME;
-        } else {
-            reference_file = std::filesystem::current_path();
-            reference_file /= REF_FILENAME;
-        }
+        reference_file = PathAppend(home_dir, REF_FILENAME);
     }
 }
 
-bool Main::BackupFile(const std::filesystem::path &filename) {
-    if (std::filesystem::exists(filename)) {
-        std::filesystem::path backup_name = filename;
+bool Main::BackupFile(const std::string &filename) {
+    if (FileExists(filename)) {
+        std::string backup_name = filename;
 
-        backup_name.replace_extension(StringFormat(
-            "%s.%s", backup_name.filename().extension().string().c_str(), "bak"));
+        ReplaceExtension(backup_name, StringFormat(
+            "%s.%s", GetExtension(backup_name).c_str(), ".bak"));
 
-        LogPrintf("Backing up existing file to: %s\n", backup_name.u8string().c_str());
+        LogPrintf("Backing up existing file to: %s\n", backup_name.c_str());
 
-        std::filesystem::remove(backup_name);
-        std::filesystem::rename(filename, backup_name);
+        FileDelete(backup_name);
+        FileRename(filename, backup_name);
     }
 
     return true;
@@ -1034,7 +890,7 @@ void Main::Detail::Shutdown(const bool error) {
         main_win = nullptr;
     }
 #else
-    if (!std::filesystem::exists(options_file)) {
+    if (!FileExists(options_file)) {
         Options_Save(options_file);
     }
 #endif
@@ -1236,11 +1092,11 @@ bool Build_Cool_Shit() {
     ZIPF_CloseWrite();
     if (!was_ok)
     {
-        if (std::filesystem::exists(game_object->Filename())) {
-            std::filesystem::remove(game_object->Filename());
+        if (FileExists(game_object->Filename())) {
+            FileDelete(game_object->Filename());
         }
-        if (std::filesystem::exists(game_object->ZIP_Filename())) {
-            std::filesystem::remove(game_object->ZIP_Filename());
+        if (FileExists(game_object->ZIP_Filename())) {
+            FileDelete(game_object->ZIP_Filename());
         }
     }
 
@@ -1305,6 +1161,11 @@ int main(int argc, char **argv) {
     argv::Init(argc, argv);
 
 hardrestart:;
+
+    if (!PHYSFS_init(argv::list[0].c_str())) {
+        Main::FatalError("Failed to init PhysFS:\n%s\n",
+                         PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+    }
 
     if (argv::Find('?', NULL) >= 0 || argv::Find('h', "help") >= 0) {
 #if defined WIN32 && !defined CONSOLE_ONLY
@@ -1411,10 +1272,9 @@ hardrestart:;
 #endif
     }
 
-    std::filesystem::path path_check = std::filesystem::u8path(argv::list[0]);
-    Determine_WorkingPath(path_check);
-    Determine_InstallDir(path_check);
-
+    Determine_WorkingPath();
+    Determine_InstallDir();
+    Trans_Init();
     Determine_ConfigFile();
     Determine_OptionsFile();
 #ifndef CONSOLE_ONLY
@@ -1451,11 +1311,9 @@ hardrestart:;
               FL_MINOR_VERSION, FL_PATCH_VERSION);
 #endif
 
-    LogPrintf("home_dir: %s\n", home_dir.u8string().c_str());
-    LogPrintf("install_dir: %s\n", install_dir.u8string().c_str());
-    LogPrintf("config_file: %s\n\n", config_file.u8string().c_str());
-
-    Trans_Init();
+    LogPrintf("home_dir: %s\n", home_dir.c_str());
+    LogPrintf("install_dir: %s\n", install_dir.c_str());
+    LogPrintf("config_file: %s\n\n", config_file.c_str());
 
     if (!batch_mode) {
 #ifndef CONSOLE_ONLY
@@ -1560,7 +1418,7 @@ softrestart:;
                 Main::FatalError(_("No such config file: %s\n"), load_file.c_str());
             }
         } else {
-            if (!std::filesystem::exists(config_file)) {
+            if (!FileExists(config_file)) {
                 Cookie_Save(config_file);
             }
             if (!Cookie_Load(config_file)) {
@@ -1718,7 +1576,7 @@ softrestart:;
                     nullptr, main_win_apply_addon_CB, nullptr, 0);
                 for (int i = 0; i < all_addons.size(); i++) {
                     std::string addon_entry = _("Addons/");
-                    addon_entry.append(all_addons[i].name.filename().string());
+                    addon_entry.append(all_addons[i].name);
                     main_win->menu_bar->add(
                         addon_entry.c_str(), nullptr, main_win_addon_CB,
                         (void *)&all_addons[i],
@@ -1736,7 +1594,7 @@ softrestart:;
                         nullptr, nullptr, nullptr, FL_MENU_INACTIVE);
                 for (int i = 0; i < all_presets.size(); i++) {
                     std::string preset_entry = _("Presets/");
-                    preset_entry.append(all_presets[i].stem().string());
+                    preset_entry.append(GetStem(all_presets[i]));
                     main_win->menu_bar->add(
                         preset_entry.c_str(), nullptr, main_win_preset_CB,
                         (void *)&all_presets[i], 0);

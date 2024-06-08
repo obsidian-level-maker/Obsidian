@@ -48,7 +48,7 @@
 #include "slump_main.h"
 
 extern void CSG_DOOM_Write();
-extern std::filesystem::path BestDirectory();
+extern std::string BestDirectory();
 
 // extern void CSG_TestRegions_Doom();
 
@@ -338,7 +338,7 @@ void Send_Prog_Nodes(int progress, int num_maps) {
 #endif
 }
 
-bool BuildNodes(std::filesystem::path filename) {
+bool BuildNodes(std::string filename) {
     LogPrintf("\n");
 
     if (!build_nodes) {
@@ -478,7 +478,7 @@ void Doom::AddSectionLump(char ch, std::string name, qLump_c *lump) {
     sections[k]->push_back(lump);
 }
 
-bool Doom::StartWAD(std::filesystem::path filename) {
+bool Doom::StartWAD(std::string filename) {
     if (!WAD_OpenWrite(filename)) {
 #ifndef CONSOLE_ONLY
         DLG_ShowError(_("Unable to create wad file:\n\n%s"), strerror(errno));
@@ -570,7 +570,7 @@ void Doom::EndLevel(std::string level_name) {
     }
 
     // in case we need it
-    std::filesystem::path level_wad = std::filesystem::temp_directory_path().append(StringFormat("%s.wad", level_name.c_str()));
+    std::string level_wad = PathAppend(home_dir, StringFormat("%s.wad", level_name.c_str()));
 
     if (game_object->file_per_map) {
         WAD_CloseWrite();
@@ -611,13 +611,13 @@ void Doom::EndLevel(std::string level_name) {
         WAD_CloseWrite();
         Doom::BuildNodes(level_wad);
         if (!ZIPF_AddFile(level_wad, "maps")) {
-            std::filesystem::remove(level_wad);
+            FileDelete(level_wad);
             ZIPF_CloseWrite();
-            std::filesystem::remove(game_object->ZIP_Filename());
-            std::filesystem::remove(game_object->Filename());
-            Main::FatalError(_("Error writing map WAD to %s\n"), game_object->ZIP_Filename().u8string().c_str());
+            FileDelete(game_object->ZIP_Filename());
+            FileDelete(game_object->Filename());
+            Main::FatalError(_("Error writing map WAD to %s\n"), game_object->ZIP_Filename().c_str());
         } else {
-            std::filesystem::remove(level_wad);
+            FileDelete(level_wad);
         }
         WAD_OpenWrite(game_object->Filename());
     }
@@ -1173,8 +1173,8 @@ int Doom::NumThings() {
 namespace Doom {
 class game_interface_c : public ::game_interface_c {
    private:
-    std::filesystem::path filename;
-    std::filesystem::path zip_filename;
+    std::string filename;
+    std::string zip_filename;
     bool compress_output;
 
    public:
@@ -1189,8 +1189,8 @@ class game_interface_c : public ::game_interface_c {
     void BeginLevel();
     void EndLevel();
     void Property(std::string key, std::string value);
-    std::filesystem::path Filename();
-    std::filesystem::path ZIP_Filename();
+    std::string Filename();
+    std::string ZIP_Filename();
 };
 }  // namespace Doom
 
@@ -1208,20 +1208,21 @@ bool Doom::game_interface_c::Start(const char *preset) {
     ob_invoke_hook("pre_setup");
 
     if (batch_mode) {
-        if (batch_output_file.is_absolute()) {
+        if (IsPathAbsolute(batch_output_file)) {
             filename = batch_output_file;
         } else {
-            filename = std::filesystem::current_path().append(batch_output_file.generic_u8string());
+            filename = PathAppend(CurrentDirectoryGet(), batch_output_file);
         }
         if (compress_output) {
             zip_filename = filename;
-            zip_filename.replace_extension("pk3");
+            ReplaceExtension(zip_filename, ".pk3");
         }
     } else {
 #ifndef CONSOLE_ONLY
         if (compress_output) {
-            filename = DLG_OutputFilename("pk3", 
-                std::filesystem::path{preset}.replace_extension("pk3").u8string().c_str());
+            std::string zip_preset = preset;
+            ReplaceExtension(zip_preset, ".pk3");
+            filename = DLG_OutputFilename("pk3", zip_preset.c_str());
             zip_filename = filename;
         } else {
             filename = DLG_OutputFilename("wad", preset);
@@ -1236,12 +1237,12 @@ bool Doom::game_interface_c::Start(const char *preset) {
 
     gif_filename = filename;
 
-    gif_filename.replace_extension("gif");
+    ReplaceExtension(gif_filename, ".gif");
 
     if (file_per_map) {
-        filename = std::filesystem::temp_directory_path().append("resources.wad");
+        filename = PathAppend(home_dir, "resources.wad");
     } else {
-        filename.replace_extension("wad");
+        ReplaceExtension(filename, ".wad");
     }
 
     if (create_backups && !file_per_map) {
@@ -1262,16 +1263,16 @@ bool Doom::game_interface_c::Start(const char *preset) {
     }
 
     if (compress_output) {
-        if (std::filesystem::exists(zip_filename)) {
+        if (FileExists(zip_filename)) {
             if (create_backups) {
                 Main::BackupFile(zip_filename);
             }
-            std::filesystem::remove(zip_filename);
+            FileDelete(zip_filename);
         }
         if (!ZIPF_OpenWrite(zip_filename)) {
             Main::ProgStatus(
                     _("Error (create PK3/ZIP)"),
-                    zip_filename.u8string().c_str());
+                    zip_filename.c_str());
             return false;
         }
     }
@@ -1346,7 +1347,7 @@ bool Doom::game_interface_c::Finish(bool build_ok) {
     if (!build_ok) {
         // remove the WAD if an error occurred
         if (!preserve_failures) {
-            std::filesystem::remove(filename);
+            FileDelete(filename);
         }
     } else {
         Recent_AddFile(RECG_Output, filename);
@@ -1359,15 +1360,15 @@ bool Doom::game_interface_c::Finish(bool build_ok) {
                     "Adding WAD to PK3 failed! Retaining original "
                     "WAD.\n");
                 ZIPF_CloseWrite();
-                std::filesystem::remove(zip_filename);
+                FileDelete(zip_filename);
             } else {
                 if (!ZIPF_CloseWrite()) {
                     LogPrintf(
                     "Corrupt PK3! Retaining original WAD.\n");
-                    std::filesystem::remove(zip_filename);
+                    FileDelete(zip_filename);
                 }
                 else {
-                    std::filesystem::remove(filename);
+                    FileDelete(filename);
                 }
             }
         }
@@ -1416,11 +1417,11 @@ void Doom::game_interface_c::Property(std::string key, std::string value) {
     }
 }
 
-std::filesystem::path Doom::game_interface_c::Filename() {
+std::string Doom::game_interface_c::Filename() {
     return filename;
 }
 
-std::filesystem::path Doom::game_interface_c::ZIP_Filename() {
+std::string Doom::game_interface_c::ZIP_Filename() {
     return zip_filename;
 }
 

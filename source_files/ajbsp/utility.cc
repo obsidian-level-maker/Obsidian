@@ -170,9 +170,9 @@ const char *FindBaseName(const char *filename)
 // FILE MANAGEMENT
 //------------------------------------------------------------------------
 
-bool FileExists(std::filesystem::path filename)
+bool FileExists(std::string filename)
 {
-	FILE *fp = fopen(filename.string().c_str(), "rb");
+	FILE *fp = fopen(filename.c_str(), "rb");
 
 	if (fp)
 	{

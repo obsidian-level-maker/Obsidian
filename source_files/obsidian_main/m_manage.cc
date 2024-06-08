@@ -283,9 +283,9 @@ class UI_Manage_Config : public Fl_Double_Window {
         redraw();
     }
 
-    void MarkSource_FILE(std::filesystem::path filename) {
+    void MarkSource_FILE(std::string filename) {
         conf_disp->copy_label(
-            StringFormat("[ %s ]", filename.filename().u8string().c_str())
+            StringFormat("[ %s ]", filename.c_str())
                 .c_str());
 
         redraw();
@@ -364,9 +364,9 @@ class UI_Manage_Config : public Fl_Double_Window {
         chooser.filter("Text files\t*.txt");
 
         if (!last_directory.empty()) {
-            chooser.directory(last_directory.generic_u8string().c_str());
+            chooser.directory(last_directory.c_str());
         } else {
-            chooser.directory(install_dir.generic_u8string().c_str());
+            chooser.directory(install_dir.c_str());
         }
 
         switch (chooser.show()) {
@@ -416,16 +416,16 @@ class UI_Manage_Config : public Fl_Double_Window {
         }
     }
 
-    std::filesystem::path AskLoadFilename() {
+    std::string AskLoadFilename() {
         Fl_Native_File_Chooser chooser;
 
         chooser.title(_("Select file to load"));
         chooser.type(Fl_Native_File_Chooser::BROWSE_FILE);
 
         if (!last_directory.empty()) {
-            chooser.directory(last_directory.generic_u8string().c_str());
+            chooser.directory(last_directory.c_str());
         } else {
-            chooser.directory(install_dir.generic_u8string().c_str());
+            chooser.directory(install_dir.c_str());
         }
 
         switch (chooser.show()) {
@@ -444,17 +444,17 @@ class UI_Manage_Config : public Fl_Double_Window {
                 break;  // OK
         }
 
-        std::filesystem::path filename = std::filesystem::u8path(chooser.filename());
+        std::string filename = chooser.filename();
 
         return filename;
     }
 
-    bool LoadFromFile(std::filesystem::path filename) {
-        FILE *fp = fl_fopen(filename.generic_u8string().c_str(), "rb");
+    bool LoadFromFile(std::string filename) {
+        FILE *fp = fl_fopen(filename.c_str(), "rb");
 
         if (!fp) {
             DLG_ShowError(_("Cannot open: %s\n\n%s"),
-                          filename.filename().u8string().c_str(),
+                          filename.c_str(),
                           strerror(errno));
             return false;
         }
@@ -498,8 +498,8 @@ class UI_Manage_Config : public Fl_Double_Window {
    private:
     static void callback_Defaults(Fl_Widget *w, void *data) {
         UI_Manage_Config *that = (UI_Manage_Config *)data;
-        if (std::filesystem::exists(config_file)) {
-            std::filesystem::remove(config_file);
+        if (FileExists(config_file)) {
+            FileDelete(config_file);
         }
         config_file.clear();
         main_action = MAIN_HARD_RESTART;  // MAIN_SOFT_RESTART???
@@ -516,7 +516,7 @@ class UI_Manage_Config : public Fl_Double_Window {
         int old_font_h = FL_NORMAL_SIZE;
         FL_NORMAL_SIZE = 14 + KF;
 
-        std::filesystem::path filename = that->AskLoadFilename();
+        std::string filename = that->AskLoadFilename();
 
         FL_NORMAL_SIZE = old_font_h;
 

@@ -55,8 +55,8 @@ static std::string level_name;
 
 #define PL_START 2
 
-std::filesystem::path wolf_output_dir;
-extern std::filesystem::path BestDirectory();
+std::string wolf_output_dir;
+extern std::string BestDirectory();
 
 //------------------------------------------------------------------------
 //  WOLF OUTPUT
@@ -331,8 +331,8 @@ class wolf_game_interface_c : public game_interface_c {
     void EndLevel();
     void Property(std::string key, std::string value);
     // Don't really need this, but whatever
-    std::filesystem::path Filename();
-    std::filesystem::path ZIP_Filename();
+    std::string Filename();
+    std::string ZIP_Filename();
 
    private:
     void Rename();
@@ -345,8 +345,8 @@ bool wolf_game_interface_c::Start(const char *ext) {
     write_errors_seen = 0;
 
     if (batch_mode) {
-        if (batch_output_file.is_absolute()) {
-            wolf_output_dir = batch_output_file.remove_filename();
+        if (IsPathAbsolute(batch_output_file)) {
+            wolf_output_dir = GetDirectory(batch_output_file);
         } else {
             wolf_output_dir = Resolve_DefaultOutputPath();
         }
@@ -359,7 +359,7 @@ bool wolf_game_interface_c::Start(const char *ext) {
 
         chooser.title(_("Select output directory"));
 
-        chooser.directory(BestDirectory().generic_u8string().c_str());
+        chooser.directory(BestDirectory().c_str());
 
         chooser.type(Fl_Native_File_Chooser::BROWSE_DIRECTORY);
 
@@ -381,7 +381,7 @@ bool wolf_game_interface_c::Start(const char *ext) {
                 break;  // OK
         }
 
-        std::filesystem::path dir_name = std::filesystem::u8path(chooser.filename());
+        std::string dir_name = chooser.filename();
 
         if (dir_name.empty()) {
             LogPrintf(_("Empty directory provided???:\n"));
@@ -467,31 +467,31 @@ bool wolf_game_interface_c::Finish(bool build_ok) {
 }
 
 void wolf_game_interface_c::Rename() {
-    std::filesystem::path gamemaps =
-        wolf_output_dir / (StringCompare(file_ext, "BC") == 0 ? StringFormat("MAPTEMP.%s", file_ext.c_str()) : StringFormat("GAMEMAPS.%s", file_ext.c_str()));
-    std::filesystem::path maphead =
-        wolf_output_dir / StringFormat("MAPHEAD.%s", file_ext.c_str());
+    std::string gamemaps =
+        PathAppend(wolf_output_dir, (StringCompare(file_ext, "BC") == 0 ? StringFormat("MAPTEMP.%s", file_ext.c_str()) : StringFormat("GAMEMAPS.%s", file_ext.c_str())));
+    std::string maphead =
+        PathAppend(wolf_output_dir, StringFormat("MAPHEAD.%s", file_ext.c_str()));
 
     if (create_backups) {
         Main::BackupFile(gamemaps);
         Main::BackupFile(maphead);
     }
 
-    std::filesystem::remove(gamemaps);
-    std::filesystem::remove(maphead);
+    FileDelete(gamemaps);
+    FileDelete(maphead);
 
     if (StringCompare(file_ext, "BC") == 0) {
-        std::filesystem::rename(TEMP_MAPTEMP, gamemaps);
+        FileRename(TEMP_MAPTEMP, gamemaps);
     } else {
-        std::filesystem::rename(TEMP_GAMEFILE, gamemaps);
+        FileRename(TEMP_GAMEFILE, gamemaps);
     }
-    std::filesystem::rename(TEMP_HEADFILE, maphead);
+    FileRename(TEMP_HEADFILE, maphead);
 }
 
 void wolf_game_interface_c::Tidy() {
-    std::filesystem::remove(TEMP_MAPTEMP);
-    std::filesystem::remove(TEMP_GAMEFILE);
-    std::filesystem::remove(TEMP_HEADFILE);
+    FileDelete(TEMP_MAPTEMP);
+    FileDelete(TEMP_GAMEFILE);
+    FileDelete(TEMP_HEADFILE);
 }
 
 void wolf_game_interface_c::BeginLevel() {
@@ -537,11 +537,11 @@ void wolf_game_interface_c::Property(std::string key, std::string value) {
     }
 }
 
-std::filesystem::path wolf_game_interface_c::Filename() {
+std::string wolf_game_interface_c::Filename() {
     return "";
 }
 
-std::filesystem::path wolf_game_interface_c::ZIP_Filename() {
+std::string wolf_game_interface_c::ZIP_Filename() {
     return "";
 }
 

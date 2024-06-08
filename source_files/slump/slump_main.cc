@@ -34,7 +34,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <filesystem>
+
+#include <string>
 
 // Global variables
 int current_level_number = 0;
@@ -57,7 +58,7 @@ void machioize(config *c,float amount) {
 	}
 }
 
- bool slump_main(std::filesystem::path filename) {
+ bool slump_main(std::string filename) {
 
   /* A stubby but functional main() */
 

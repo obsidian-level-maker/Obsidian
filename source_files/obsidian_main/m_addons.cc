@@ -36,18 +36,17 @@
 
 // need this because the OPTIONS file is loaded *before* the addons
 // folder is scanned for valid archives, so remember enabled ones here.
-std::map<std::filesystem::path, int> initial_enabled_addons;
+std::map<std::string, int> initial_enabled_addons;
 
 std::vector<addon_info_t> all_addons;
 
-std::vector<std::filesystem::path> all_presets;
+std::vector<std::string> all_presets;
 
 void VFS_AddFolder(std::string name) {
-    std::filesystem::path path = install_dir;
-    path /= name;
+    std::string path = PathAppend(install_dir, name);
     std::string mount = StringFormat("/%s", name.c_str());
 
-    if (!PHYSFS_mount(path.generic_u8string().c_str(), mount.c_str(), 0)) {
+    if (!PHYSFS_mount(path.c_str(), mount.c_str(), 0)) {
         Main::FatalError("Failed to mount '%s' folder in PhysFS:\n%s\n", name.c_str(),
                          PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         return; /* NOT REACHED */
@@ -56,30 +55,44 @@ void VFS_AddFolder(std::string name) {
     DebugPrintf("mounted folder '%s'\n", name.c_str());
 }
 
-bool VFS_AddArchive(std::filesystem::path filename, bool options_file) {
-    LogPrintf("  using: %s\n", filename.u8string().c_str());
+// install and home directories if different
+void VFS_AddBothFolders(std::string name) {
+    std::string path = PathAppend(install_dir, name);
+    std::string mount = StringFormat("/%s", name.c_str());
+    if (!PHYSFS_mount(path.c_str(), mount.c_str(), 0)) {
+        Main::FatalError("Failed to mount '%s' folder in PhysFS:\n%s\n", name.c_str(),
+                         PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+        return; /* NOT REACHED */
+    }
+    path = PathAppend(home_dir, name);
+    PHYSFS_mount(path.c_str(), mount.c_str(), 0); // this one can fail if not present, that's fine
+
+    DebugPrintf("mounted folder '%s'\n", name.c_str());
+}
+
+bool VFS_AddArchive(std::string filename, bool options_file) {
+    LogPrintf("  using: %s\n", filename.c_str());
 
    // when handling "bare" filenames from the command line (i.e. ones
     // containing no paths or drive spec) and the file does not exist in
     // the current dir, look for it in the standard addons/ folder.
-    if ((!std::filesystem::exists(filename) && !filename.has_parent_path())) {
-        std::filesystem::path new_name =
-            std::filesystem::u8path(StringFormat("%s/addons/%s", home_dir.generic_u8string().c_str(), filename.string().c_str()));
-        if (!std::filesystem::exists(new_name)) {
-            new_name = StringFormat("%s/addons/%s", install_dir.generic_u8string().c_str(),
-                                   filename.string().c_str());
+    if ((!FileExists(filename) && GetDirectory(filename).empty())) {
+        std::string new_name = StringFormat("%s/addons/%s", home_dir.c_str(), filename.c_str());
+        if (!FileExists(new_name)) {
+            new_name = StringFormat("%s/addons/%s", install_dir.c_str(),
+                                   filename.c_str());
         }
         filename = new_name;
     }
 
-    if (!PHYSFS_mount(filename.generic_u8string().c_str(), "/", 0)) {
+    if (!PHYSFS_mount(filename.c_str(), "/", 0)) {
         if (options_file) {
             LogPrintf("Failed to mount '%s' archive in PhysFS:\n%s\n",
-                            filename.u8string().c_str(),
+                            filename.c_str(),
                             PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         } else {
             Main::FatalError("Failed to mount '%s' archive in PhysFS:\n%s\n",
-                             filename.u8string().c_str(),
+                             filename.c_str(),
                              PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         }
 
@@ -89,13 +102,8 @@ bool VFS_AddArchive(std::filesystem::path filename, bool options_file) {
     return true;  // Ok
 }
 
-void VFS_InitAddons(std::filesystem::path search_dir) {
+void VFS_InitAddons(std::string search_dir) {
     LogPrintf("Initializing VFS...\n");
-
-    if (!PHYSFS_init(search_dir.generic_u8string().c_str())) {
-        Main::FatalError("Failed to init PhysFS:\n%s\n",
-                         PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
-    }
 
     VFS_AddFolder("scripts");
     VFS_AddFolder("games");
@@ -103,6 +111,8 @@ void VFS_InitAddons(std::filesystem::path search_dir) {
     VFS_AddFolder("modules");
     VFS_AddFolder("data");
     VFS_AddFolder("ports");
+    VFS_AddBothFolders("presets");
+    VFS_AddBothFolders("addons");
 
     LogPrintf("DONE.\n\n");
 }
@@ -120,7 +130,7 @@ void VFS_ParseCommandLine() {
     LogPrintf("Command-line addons....\n");
 
     for (; arg < argv::list.size() && !argv::IsOption(arg); arg++, count++) {
-        VFS_AddArchive(std::filesystem::u8path(argv::list[arg]), false /* options_file */);
+        VFS_AddArchive(argv::list[arg], false /* options_file */);
     }
 
     if (!count) {
@@ -144,7 +154,7 @@ void VFS_OptWrite(std::ofstream &fp) {
         const addon_info_t *info = &all_addons[i];
 
         if (info->enabled) {
-            fp << "addon = " << info->name.string() << "\n";
+            fp << "addon = " << info->name << "\n";
         }
     }
 
@@ -156,53 +166,22 @@ void VFS_ScanForPresets() {
 
     all_presets.clear();
 
-    std::filesystem::path dir_name = install_dir;
-    dir_name /= "presets";
+    char **got_names = PHYSFS_enumerateFiles("presets");
 
-    std::vector<std::filesystem::path> list;
-    int result1 = 0;
-    int result2 = 0;
+    // seems this only happens on out-of-memory error
+    if (!got_names) {
+        LogPrintf("DONE (none found)\n");
+    }
 
-    for (auto &file : std::filesystem::directory_iterator(dir_name)) {
-        if (StringCompare(file.path().extension().string(), ".txt") == 0) {
-            result1 += 1;
-            list.push_back(file.path());
+    char **p;
+
+    for (p = got_names; *p; p++) {
+        if (GetExtension(*p) == ".txt") {
+            all_presets.push_back(*p);
         }
     }
 
-    if (home_dir != install_dir) {
-        dir_name = home_dir;
-        dir_name /= "presets";
-        if (!std::filesystem::exists(dir_name)) {
-            goto no_home_preset_dir;
-        }
-
-        std::vector<std::filesystem::path> list2;
-
-        for (auto &file : std::filesystem::directory_iterator(dir_name)) {
-            if (StringCompare(file.path().extension().string(), ".txt") == 0) {
-                result2 += 1;
-                list2.push_back(file.path());
-            }
-        }
-        // std::vector<std::filesystem::path>().swap(list2);
-        for (auto x : list2) {
-            list.push_back(x);
-        }
-    }
-
-no_home_preset_dir:
-
-    if ((result1 < 0) && (result2 < 0)) {
-        LogPrintf("FAILED -- no preset directory found.\n\n");
-        return;
-    }
-
-    for (auto preset : list) {
-        all_presets.push_back(preset);
-    }
-
-    if (list.size() == 0) {
+    if (all_presets.size() == 0) {
         LogPrintf("DONE (none found)\n");
     } else {
         LogPrintf("DONE\n");
@@ -216,91 +195,41 @@ void VFS_ScanForAddons() {
 
     all_addons.clear();
 
-    std::filesystem::path dir_name = install_dir;
-    dir_name /= "addons";
+    char **got_names = PHYSFS_enumerateFiles("addons");
 
-    std::vector<std::filesystem::path> list;
-    int result1 = 0;
-    int result2 = 0;
-
-    for (auto &file : std::filesystem::directory_iterator(dir_name)) {
-        if (file.is_directory() || StringCompare(file.path().extension().string(), ".oaf") == 0) {
-            if (PHYSFS_mount(file.path().generic_u8string().c_str(), nullptr, 0)) {
-                PHYSFS_unmount(file.path().generic_u8string().c_str());
-                result1 += 1;
-                list.push_back(file.path());
-            }
-            else {
-                LogPrintf("Failed to mount '%s' archive in PhysFS:\n%s\n",
-                                file.path().u8string().c_str(),
-                                PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
-            }
-        }
+    // seems this only happens on out-of-memory error
+    if (!got_names) {
+        LogPrintf("DONE (none found)\n");
     }
 
-    if (home_dir != install_dir) {
-        dir_name = home_dir;
-        dir_name /= "addons";
-        if (!std::filesystem::exists(dir_name)) {
-            goto no_home_addon_dir;
-        }
+    char **p;
 
-        std::vector<std::filesystem::path> list2;
+    for (p = got_names; *p; p++) {
+        if (GetExtension(*p) == ".oaf") {
+            addon_info_t info;
 
-        for (auto &file : std::filesystem::directory_iterator(dir_name)) {
-            if (file.is_directory() || StringCompare(file.path().extension().string(), ".oaf") == 0) {
-                if (PHYSFS_mount(file.path().generic_u8string().c_str(), nullptr, 0)) {
-                    PHYSFS_unmount(file.path().generic_u8string().c_str());
-                    result2 += 1;
-                    list2.push_back(file.path());
-                }
-                else {
-                    LogPrintf("Failed to mount '%s' archive in PhysFS:\n%s\n",
-                                file.path().u8string().c_str(),
-                                PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
-                }
+            info.name = *p;
+
+            info.enabled = false;
+
+            if (initial_enabled_addons.find(*p) !=
+                initial_enabled_addons.end()) {
+                info.enabled = true;
+            }
+
+            LogPrintf("  found: %s%s\n", info.name.c_str(),
+                    info.enabled ? " (Enabled)" : " (Disabled)");
+
+            all_addons.push_back(info);
+
+            // if enabled, install into the VFS
+            if (info.enabled) {
+                VFS_AddArchive(info.name, true /* options_file */);
             }
         }
-        // std::vector<std::filesystem::path>().swap(list2);
-        for (auto x : list2) {
-            list.push_back(x);
-        }
     }
 
-no_home_addon_dir:
-
-    if ((result1 < 0) && (result2 < 0)) {
-        LogPrintf("FAILED -- no addon directory found.\n\n");
-        return;
-    }
-
-    for (unsigned int i = 0; i < list.size(); i++) {
-        addon_info_t info;
-
-        info.name = list[i];
-
-        info.enabled = false;
-
-        if (initial_enabled_addons.find(list[i]) !=
-            initial_enabled_addons.end()) {
-            info.enabled = true;
-        }
-
-        // DEBUG
-        // info.enabled = true;
-
-        LogPrintf("  found: %s%s\n", info.name.u8string().c_str(),
-                  info.enabled ? " (Enabled)" : " (Disabled)");
-
-        all_addons.push_back(info);
-
-        // if enabled, install into the VFS
-        if (info.enabled) {
-            VFS_AddArchive(info.name, true /* options_file */);
-        }
-    }
-
-    if (list.size() == 0) {
+    if (all_addons.size() == 0) {
         LogPrintf("DONE (none found)\n");
     } else {
         LogPrintf("DONE\n");

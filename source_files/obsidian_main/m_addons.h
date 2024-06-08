@@ -25,11 +25,10 @@
 #include <cstdio>
 #include <string>
 #include <fstream>
-#include <filesystem>
 #include <map>
 #include <vector>
 
-void VFS_InitAddons(std::filesystem::path search_dir);
+void VFS_InitAddons(std::string search_dir);
 void VFS_ParseCommandLine();
 void VFS_ScanForAddons();
 void VFS_ScanForPresets();
@@ -43,7 +42,7 @@ uint8_t *VFS_LoadFile(const char *filename, int *length);
 void VFS_FreeFile(const uint8_t *mem);
 
 typedef struct {
-    std::filesystem::path name;  // base filename, includes ".pk3" extension
+    std::string name;  // base filename, includes extension
 
     bool enabled;
 
@@ -51,9 +50,9 @@ typedef struct {
 
 extern std::vector<addon_info_t> all_addons;
 
-extern std::vector<std::filesystem::path> all_presets;
+extern std::vector<std::string> all_presets;
 
-extern std::map<std::filesystem::path, int> initial_enabled_addons;
+extern std::map<std::string, int> initial_enabled_addons;
 
 #endif /* __OBLIGE_ADDONS_H__ */
 

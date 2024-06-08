@@ -38,7 +38,7 @@
 
 #include "m_lua.h"
 
-std::filesystem::path last_directory;
+std::string last_directory;
 
 static int dialog_result;
 
@@ -218,7 +218,7 @@ void DLG_ShowError(const char *msg, ...) {
 
 //----------------------------------------------------------------------
 
-std::filesystem::path BestDirectory() {
+std::string BestDirectory() {
     if (!last_directory.empty()) {
         return last_directory;
     } else {
@@ -226,7 +226,7 @@ std::filesystem::path BestDirectory() {
     }
 }
 
-std::filesystem::path DLG_OutputFilename(const char *ext, const char *preset) {
+std::string DLG_OutputFilename(const char *ext, const char *preset) {
     std::string kind_buf = StringFormat("%s %s\t*.%s", ext, _("files"), ext);
 
     // uppercase the first word
@@ -253,9 +253,9 @@ std::filesystem::path DLG_OutputFilename(const char *ext, const char *preset) {
     auto best_dir = BestDirectory();
 
     if (preset) {
-        chooser.preset_file((best_dir / preset).generic_u8string().c_str());
+        chooser.preset_file(PathAppend(best_dir, preset).c_str());
     } else {
-        chooser.directory(best_dir.generic_u8string().c_str());
+        chooser.directory(best_dir.c_str());
     }
 
     int result = chooser.show();
@@ -278,10 +278,9 @@ std::filesystem::path DLG_OutputFilename(const char *ext, const char *preset) {
             break;  // OK
     }
 
-    std::filesystem::path src_name =
-        std::filesystem::u8path(chooser.filename());
+    std::string src_name = chooser.filename();
 
-    std::filesystem::path dir_name = src_name.parent_path();
+    std::string dir_name = GetDirectory(src_name);
 
     if (!dir_name.empty()) {
         last_directory = dir_name;
@@ -289,11 +288,11 @@ std::filesystem::path DLG_OutputFilename(const char *ext, const char *preset) {
 
 #ifdef WIN32
     // add extension if missing
-    if (src_name.extension().empty()) {
-        src_name.replace_extension(ext);
+    if (GetExtension(src_name).empty()) {
+        ReplaceExtension(src_name, ext);
 
         // check if exists, ask for confirmation
-        if (std::filesystem::exists(src_name)) {
+        if (FileExists(src_name)) {
             if (!fl_choice("%s", fl_cancel, fl_ok, NULL,
                            Fl_Native_File_Chooser::file_exists_message)) {
                 return "";  // cancelled
@@ -584,7 +583,7 @@ void UI_LogViewer::save_callback(Fl_Widget *w, void *data) {
 tryagain:;
 
     if (!last_directory.empty()) {
-        chooser.directory(last_directory.generic_u8string().c_str());
+        chooser.directory(last_directory.c_str());
     }
 
     switch (chooser.show()) {
@@ -601,23 +600,22 @@ tryagain:;
             break;  // OK
     }
 
-    std::filesystem::path filename =
-        std::filesystem::u8path(chooser.filename());
+    std::string filename = chooser.filename();
 
     // add an extension if missing
-    if (!filename.has_extension()) {
-        filename.replace_extension(".txt");
+    if (GetExtension(filename).empty()) {
+        ReplaceExtension(filename, ".txt");
     }
 
-    if (std::filesystem::exists(filename)) {
+    if (FileExists(filename)) {
         // clang-format off
         switch (fl_choice(_("%s already exists.\nChoose Yes to overwrite or No to choose a new filename."),
                           _("Yes"), 
                           _("No"), 0,
                           // clang-format on
-                          filename.u8string().c_str())) {
+                          filename.c_str())) {
             case 0:
-                std::filesystem::remove(filename);
+                FileDelete(filename);
                 break;
             case 1:
                 goto tryagain;
@@ -625,7 +623,7 @@ tryagain:;
         }
     }
 
-    if (filename.extension() != ".txt") {
+    if (GetExtension(filename) != ".txt") {
         DLG_ShowError(_("Please choose a filename ending in .txt"));
         goto tryagain;
     }
@@ -724,11 +722,10 @@ UI_GlossaryViewer::UI_GlossaryViewer(int W, int H, const char *l)
 UI_GlossaryViewer::~UI_GlossaryViewer() {}
 
 void UI_GlossaryViewer::ReadGlossary() {
-    std::filesystem::path glossary = std::filesystem::u8path(
-        StringFormat("%s/language/%s.txt", install_dir.u8string().c_str(),
-                     selected_lang.c_str()));
+    std::string glossary = StringFormat("%s/language/%s.txt", install_dir.c_str(),
+                     selected_lang.c_str());
 
-    if (!std::filesystem::exists(glossary)) {
+    if (!FileExists(glossary)) {
         return;
     }
 

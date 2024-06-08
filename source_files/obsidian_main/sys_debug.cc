@@ -30,13 +30,13 @@
 
 std::fstream log_file;
 std::fstream ref_file;
-std::filesystem::path log_filename;
-std::filesystem::path ref_filename;
+std::string log_filename;
+std::string ref_filename;
 
 bool debugging = false;
 bool terminal = false;
 
-bool LogInit(const std::filesystem::path &filename) {
+bool LogInit(const std::string &filename) {
     if (!filename.empty()) {
         log_filename = filename;
 
@@ -57,13 +57,13 @@ bool LogInit(const std::filesystem::path &filename) {
     return true;
 }
 
-bool RefInit(const std::filesystem::path &filename) {
+bool RefInit(const std::string &filename) {
     if (!filename.empty()) {
         ref_filename = filename;
 
         // Clear previously generated reference if present
-        if (std::filesystem::exists(ref_filename)) {
-            std::filesystem::remove(ref_filename);
+        if (FileExists(ref_filename)) {
+            FileDelete(ref_filename);
         }
 
         ref_file.open(ref_filename, std::ios::out);

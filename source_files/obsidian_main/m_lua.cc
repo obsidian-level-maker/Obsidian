@@ -49,7 +49,7 @@ static std::vector<std::string> *conf_line_buffer;
 
 static std::string import_dir;
 
-void Script_Load(std::filesystem::path script_name);
+void Script_Load(std::string script_name);
 
 // color maps
 color_mapping_t color_mappings[MAX_COLOR_MAPS];
@@ -185,7 +185,7 @@ int gui_config_line(lua_State *L) {
 int gui_mkdir(lua_State *L) {
     const char *name = luaL_checkstring(L, 1);
 
-    bool result = std::filesystem::create_directory(name);
+    bool result = MakeDirectory(name);
 
     lua_pushboolean(L, result ? 1 : 0);
     return 1;
@@ -194,24 +194,24 @@ int gui_mkdir(lua_State *L) {
 // LUA: get_filename_base()
 //
 int gui_get_filename_base(lua_State *L) {
-    std::filesystem::path base = game_object->Filename();
-    lua_pushstring(L, base.stem().generic_u8string().c_str());
+    std::string base = game_object->Filename();
+    lua_pushstring(L, GetStem(base).c_str());
     return 1;
 }
 
 // LUA: get_file_extension()
 //
 int gui_get_file_extension(lua_State *L) {
-    std::filesystem::path base = luaL_checkstring(L, 1);
-    lua_pushstring(L, base.extension().generic_u8string().c_str());
+    std::string base = luaL_checkstring(L, 1);
+    lua_pushstring(L, GetExtension(base).c_str());
     return 1;
 }
 
 // LUA: get_save_path()
 //
 int gui_get_save_path(lua_State *L) {
-    std::filesystem::path path = game_object->Filename();
-    lua_pushstring(L, path.remove_filename().generic_u8string().c_str());
+    std::string path = game_object->Filename();
+    lua_pushstring(L, GetDirectory(path).c_str());
     return 1;
 }
 
@@ -271,20 +271,23 @@ int gui_set_import_dir(lua_State *L) {
 
     import_dir = dir_name;
 
+    if (import_dir.empty())
+        import_dir = "scripts";
+
     return 0;
 }
 
 // LUA: get_install_dir() --> string
 //
 int gui_get_install_dir(lua_State *L) {
-    lua_pushstring(L, install_dir.generic_u8string().c_str());
+    lua_pushstring(L, install_dir.c_str());
     return 1;
 }
 
-static bool scan_dir_process_name(const std::filesystem::path &name,
-                                  const std::filesystem::path &parent,
+static bool scan_dir_process_name(const std::string &name,
+                                  const std::string &parent,
                                   std::string match) {
-    if (name.native()[0] == '.') {
+    if (name[0] == '.') {
         return false;
     }
 
@@ -293,11 +296,11 @@ static bool scan_dir_process_name(const std::filesystem::path &name,
     // check if it is a directory
     // [ generally skip directories, unless match is "DIRS" ]
 
-    std::filesystem::path temp_name = parent / name;
+    std::string temp_name = PathAppend(parent, name);
 
     PHYSFS_Stat dir_checker;
 
-    PHYSFS_stat(temp_name.generic_u8string().c_str(), &dir_checker);
+    PHYSFS_stat(temp_name.c_str(), &dir_checker);
 
     bool is_it_dir = (dir_checker.filetype == PHYSFS_FILETYPE_DIRECTORY);
 
@@ -314,7 +317,7 @@ static bool scan_dir_process_name(const std::filesystem::path &name,
 
     uint8_t buffer[1];
 
-    PHYSFS_File *fp = PHYSFS_openRead(temp_name.generic_u8string().c_str());
+    PHYSFS_File *fp = PHYSFS_openRead(temp_name.c_str());
 
     if (!fp) {
         return false;
@@ -331,7 +334,7 @@ static bool scan_dir_process_name(const std::filesystem::path &name,
     if (match == "*") {
         return true;
     } else if (match[0] == '*' && match[1] == '.' && isalnum(match[2])) {
-        return name.extension().string() ==
+        return GetExtension(name) ==
                "." + std::string{match.begin() + 2, match.end()};
     }
 
@@ -1642,15 +1645,15 @@ static const char *my_reader(lua_State *L, void *ud, size_t *size) {
     return info->buffer;  // OK
 }
 
-static int my_loadfile(lua_State *L, const std::filesystem::path &filename) {
+static int my_loadfile(lua_State *L, const std::string &filename) {
     /* index of filename on the stack */
     int fnameindex = lua_gettop(L) + 1;
 
-    lua_pushfstring(L, "@%s", filename.generic_u8string().c_str());
+    lua_pushfstring(L, "@%s", filename.c_str());
 
     load_info_t info;
 
-    info.fp = PHYSFS_openRead(filename.generic_u8string().c_str());
+    info.fp = PHYSFS_openRead(filename.c_str());
     info.error_msg.clear();
 
     if (!info.fp) {
@@ -1682,18 +1685,17 @@ static int my_loadfile(lua_State *L, const std::filesystem::path &filename) {
     return status;
 }
 
-void Script_Load(std::filesystem::path script_name) {
+void Script_Load(std::string script_name) {
     SYS_ASSERT(!import_dir.empty());
 
     // add extension if missing
-    if (script_name.extension().empty()) {
-        script_name.replace_extension("lua");
+    if (GetExtension(script_name).empty()) {
+        ReplaceExtension(script_name, ".lua");
     }
 
-    std::filesystem::path filename =
-        std::filesystem::path{import_dir} / script_name;
+    std::string filename = PathAppend(import_dir, script_name);
 
-    DebugPrintf("  loading script: '%s'\n", filename.u8string().c_str());
+    DebugPrintf("  loading script: '%s'\n", filename.c_str());
 
     int status = my_loadfile(LUA_ST, filename);
 
@@ -1704,7 +1706,7 @@ void Script_Load(std::filesystem::path script_name) {
     if (status != 0) {
         const char *msg = lua_tolstring(LUA_ST, -1, NULL);
 
-        Main::FatalError("Unable to load script '%s'\n%s", filename.u8string().c_str(), msg);
+        Main::FatalError("Unable to load script '%s'\n%s", filename.c_str(), msg);
     }
 }
 
@@ -1949,7 +1951,7 @@ void ob_print_reference() {
         // clang-format on
     }
     StdOutPrintf("\nA copy of this output can be found at %s\n",
-               reference_file.u8string().c_str());
+               reference_file.c_str());
 }
 
 void ob_print_reference_json() {

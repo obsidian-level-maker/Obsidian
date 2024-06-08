@@ -1116,7 +1116,7 @@ void secretize_config(config *c)
 /* 3. Parse the arglist to get overrides to switches,         */
 /* 4. Read the config for non-switches (flats, themes, etc).  */
 /* 5. Do postproduction defaults and calculations and such.   */
-config *get_config(std::filesystem::path filename) {
+config *get_config(std::string filename) {
     config *answer;
     int i;
     genus *m;
@@ -1125,7 +1125,7 @@ config *get_config(std::filesystem::path filename) {
 
     /* Set various defaults and stuff */
     answer->cwadonly = SLUMP_FALSE;
-    answer->outfile = strdup(filename.generic_u8string().c_str());
+    answer->outfile = strdup(filename.c_str());
 
     ok_to_roll = SLUMP_TRUE;
 

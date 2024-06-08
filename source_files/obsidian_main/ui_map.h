@@ -24,7 +24,6 @@
 
 #include "FL/Fl_Box.H"
 #include "FL/Fl_Image.H"
-#include <filesystem>
 
 class UI_MiniMap : public Fl_Box {
    private:
@@ -55,7 +54,7 @@ class UI_MiniMap : public Fl_Box {
 
     void MapClear();
 
-    void GifStart(std::filesystem::path filename, int delay);
+    void GifStart(std::string filename, int delay);
     void GifFrame();
     void GifFinish();
 

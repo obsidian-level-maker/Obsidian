@@ -47,9 +47,13 @@ gui.import("level")
 
 gui.import("script_manager")
 
-gui.import("/data/text/random_words_en.lua")
-gui.import("/data/text/random_words_en_m.lua")
-gui.import("/data/text/dialogues.lua")
+gui.set_import_dir("data/text/")
+
+gui.import("random_words_en.lua")
+gui.import("random_words_en_m.lua")
+gui.import("dialogues.lua")
+
+gui.set_import_dir("")
 
 gui.import("094/oblige_v094.lua")
 

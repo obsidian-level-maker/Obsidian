@@ -28,13 +28,12 @@
 #include "m_cookie.h"
 #include "m_trans.h"
 #include "main.h"
-#include <filesystem>
 
 bool skip_color_picker = false;
 
 //----------------------------------------------------------------------
 
-std::filesystem::path Theme_OutputFilename() {
+std::string Theme_OutputFilename() {
     // save and restore the font height
     // (because FLTK's own browser get totally borked)
     int old_font_h = FL_NORMAL_SIZE;
@@ -51,9 +50,8 @@ std::filesystem::path Theme_OutputFilename() {
 
     chooser.filter("Text files\t*.txt");
 
-    std::filesystem::path theme_dir = install_dir;
-    theme_dir /= "theme";
-    chooser.directory(theme_dir.generic_u8string().c_str());
+    std::string theme_dir = PathAppend(install_dir, "theme");
+    chooser.directory(theme_dir.c_str());
 
     FL_NORMAL_SIZE = old_font_h;
 
@@ -73,10 +71,10 @@ std::filesystem::path Theme_OutputFilename() {
             break;  // OK
     }
 
-    std::filesystem::path filename = std::filesystem::u8path(chooser.filename());
-    filename.replace_extension(".txt");
+    std::string filename = chooser.filename();
+    ReplaceExtension(filename, ".txt");
     // re-check for overwriting
-    if (std::filesystem::exists(filename)) {
+    if (FileExists(filename)) {
         if (!fl_choice("%s", fl_cancel, fl_ok, NULL,
                        Fl_Native_File_Chooser::file_exists_message)) {
             return "";  // cancelled
@@ -86,7 +84,7 @@ std::filesystem::path Theme_OutputFilename() {
     return filename;
 }
 
-std::filesystem::path Theme_AskLoadFilename() {
+std::string Theme_AskLoadFilename() {
     Fl_Native_File_Chooser chooser;
 
     chooser.title(_("Select Theme file to load"));
@@ -94,9 +92,8 @@ std::filesystem::path Theme_AskLoadFilename() {
 
     chooser.filter("Text files\t*.txt");
 
-    std::filesystem::path theme_dir = install_dir;
-    theme_dir /= "theme";
-    chooser.directory(theme_dir.generic_u8string().c_str());
+    std::string theme_dir = PathAppend(install_dir, "theme");
+    chooser.directory(theme_dir.c_str());
 
     int result = chooser.show();
 
@@ -116,7 +113,7 @@ std::filesystem::path Theme_AskLoadFilename() {
             break;  // OK
     }
 
-    std::filesystem::path filename = std::filesystem::u8path(chooser.filename());
+    std::string filename = chooser.filename();
 
     return filename;
 }
@@ -221,7 +218,7 @@ static bool Theme_Options_ParseLine(std::string buf) {
     return true;
 }
 
-bool Theme_Options_Load(std::filesystem::path filename) {
+bool Theme_Options_Load(std::string filename) {
     std::ifstream option_fp(filename, std::ios::in);
 
     if (!option_fp.is_open()) {
@@ -229,7 +226,7 @@ bool Theme_Options_Load(std::filesystem::path filename) {
         return false;
     }
 
-    LogPrintf("Loading theme file: %s\n", filename.u8string().c_str());
+    LogPrintf("Loading theme file: %s\n", filename.c_str());
 
     int error_count = 0;
 
@@ -250,12 +247,12 @@ bool Theme_Options_Load(std::filesystem::path filename) {
     return true;
 }
 
-bool Theme_Options_Save(std::filesystem::path filename) {
+bool Theme_Options_Save(std::string filename) {
     std::ofstream option_fp(filename);
 
     if (!option_fp.is_open()) {
         LogPrintf("Error: unable to create file: %s\n(%s)\n\n",
-                  filename.u8string().c_str(), strerror(errno));
+                  filename.c_str(), strerror(errno));
         return false;
     }
 
@@ -1461,7 +1458,7 @@ class UI_ThemeWin : public Fl_Window {
     static void callback_LoadTheme(Fl_Widget *w, void *data) {
         UI_ThemeWin *that = (UI_ThemeWin *)data;
 
-        std::filesystem::path theme_file = Theme_AskLoadFilename();
+        std::string theme_file = Theme_AskLoadFilename();
         if (!theme_file.empty()) {
             Theme_Options_Load(theme_file);
             // clang-format off
@@ -1475,7 +1472,7 @@ class UI_ThemeWin : public Fl_Window {
     }
 
     static void callback_SaveTheme(Fl_Widget *w, void *data) {
-        std::filesystem::path new_theme_file = Theme_OutputFilename();
+        std::string new_theme_file = Theme_OutputFilename();
         if (!new_theme_file.empty()) {
             Theme_Options_Save(new_theme_file);
         }

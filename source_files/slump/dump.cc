@@ -72,7 +72,7 @@ dumphandle OpenDump(config *c)
 
   answer = (dumphandle)malloc(sizeof (*answer));
 #ifdef _WIN32
-  answer->f = _wfopen(std::filesystem::u8path(c->outfile).c_str(), UTF8ToWString("wb").c_str());
+  answer->f = _wfopen(UTF8ToWString(c->outfile).c_str(), UTF8ToWString("wb").c_str());
 #else
   answer->f = fopen(c->outfile,"wb");
 #endif

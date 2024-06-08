@@ -22,12 +22,12 @@
 #ifndef LIB_ZIP_H_
 #define LIB_ZIP_H_
 
-#include <filesystem>
+#include <string>
 
 /* ZIP writing */
 
-bool ZIPF_OpenWrite(const std::filesystem::path &filename);
-bool ZIPF_AddFile(const std::filesystem::path &filename, std::filesystem::path directory);
+bool ZIPF_OpenWrite(const std::string &filename);
+bool ZIPF_AddFile(const std::string &filename, std::string directory);
 bool ZIPF_AddMem(std::string name, uint8_t *data, size_t length);
 bool ZIPF_CloseWrite();
 
