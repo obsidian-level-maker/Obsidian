@@ -255,7 +255,7 @@ static void main_win_preset_CB(Fl_Widget *w, void *data) {
     std::string *preset = (std::string *)data;
 
     // adapted from our Config Manager Load/Use callbacks
-    FILE *fp = fl_fopen(preset->c_str(), "rb");
+    FILE *fp = FileOpen(preset->c_str(), "rb");
     if (!fp) {
         DLG_ShowError(_("Cannot open: %s\n\n%s"),
                         preset->c_str(),

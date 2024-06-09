@@ -450,7 +450,7 @@ class UI_Manage_Config : public Fl_Double_Window {
     }
 
     bool LoadFromFile(std::string filename) {
-        FILE *fp = fl_fopen(filename.c_str(), "rb");
+        FILE *fp = FileOpen(filename.c_str(), "rb");
 
         if (!fp) {
             DLG_ShowError(_("Cannot open: %s\n\n%s"),

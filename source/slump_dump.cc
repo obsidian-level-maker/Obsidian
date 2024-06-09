@@ -71,11 +71,7 @@ dumphandle OpenDump(config *c)
   } headerstuff;
 
   answer = (dumphandle)malloc(sizeof (*answer));
-#ifdef _WIN32
-  answer->f = _wfopen(UTF8ToWString(c->outfile).c_str(), UTF8ToWString("wb").c_str());
-#else
-  answer->f = fopen(c->outfile,"wb");
-#endif
+  answer->f = FileOpen(c->outfile,"wb");
   if (answer->f==NULL) {
     fprintf(stderr,"Error opening <%s>.\n",c->outfile);
     perror("Maybe");
