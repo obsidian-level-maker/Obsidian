@@ -155,7 +155,7 @@ qLump_c *CreateFlat(int new_W, int new_H, const uint8_t *pixels, int W, int H) {
 
     for (int y = 0; y < new_H; y++) {
         for (int x = 0; x < new_W; x += W) {
-            int span = MIN(W, new_W - x);
+            int span = OBSIDIAN_MIN(W, new_W - x);
 
             SYS_ASSERT(span > 0);
 
@@ -352,11 +352,11 @@ int fsky_solid_box(lua_State *L) {
     SYS_ASSERT(sky_pixels);
 
     // clip box to pixel rectangle
-    x1 = MAX(x1, 0);
-    y1 = MAX(y1, 0);
+    x1 = OBSIDIAN_MAX(x1, 0);
+    y1 = OBSIDIAN_MAX(y1, 0);
 
-    x2 = MIN(x2, sky_W);
-    y2 = MIN(y2, sky_H);
+    x2 = OBSIDIAN_MIN(x2, sky_W);
+    y2 = OBSIDIAN_MIN(y2, sky_H);
 
     for (int y = y1; y < y2; y++) {
         if (x2 > x1) {
@@ -876,7 +876,7 @@ static void TransferWADtoWAD(int src_entry, const char *dest_lump) {
     char *buffer = new char[buf_size];
 
     for (int pos = 0; pos < length;) {
-        int want_len = MIN(buf_size, length - pos);
+        int want_len = OBSIDIAN_MIN(buf_size, length - pos);
 
         // FIXME: handle error better
         if (!WAD_ReadData(src_entry, pos, want_len, buffer)) {
@@ -902,7 +902,7 @@ static qLump_c *DoLoadLump(int src_entry) {
     char *buffer = new char[buf_size];
 
     for (int pos = 0; pos < length;) {
-        int want_len = MIN(buf_size, length - pos);
+        int want_len = OBSIDIAN_MIN(buf_size, length - pos);
 
         // FIXME: handle error better
         if (!WAD_ReadData(src_entry, pos, want_len, buffer)) {
@@ -1772,9 +1772,9 @@ static inline rgb_color_t CalcAdditive(rgb_color_t C1, rgb_color_t C2) {
     int g = RGB_GREEN(C1) + RGB_GREEN(C2);
     int b = RGB_BLUE(C1) + RGB_BLUE(C2);
 
-    r = MIN(r, 255);
-    g = MIN(g, 255);
-    b = MIN(b, 255);
+    r = OBSIDIAN_MIN(r, 255);
+    g = OBSIDIAN_MIN(g, 255);
+    b = OBSIDIAN_MIN(b, 255);
 
     return MAKE_RGBA(r, g, b, 255);
 }
@@ -1784,9 +1784,9 @@ static inline rgb_color_t CalcSubtract(rgb_color_t C1, rgb_color_t C2) {
     int g = RGB_GREEN(C1) - RGB_GREEN(C2);
     int b = RGB_BLUE(C1) - RGB_BLUE(C2);
 
-    r = MAX(r, 0);
-    g = MAX(g, 0);
-    b = MAX(b, 0);
+    r = OBSIDIAN_MAX(r, 0);
+    g = OBSIDIAN_MAX(g, 0);
+    b = OBSIDIAN_MAX(b, 0);
 
     return MAKE_RGBA(r, g, b, 255);
 }
@@ -1862,11 +1862,11 @@ static void TDraw_Box(int x, int y, int w, int h) {
     int x2 = x + w;
     int y2 = y + h;
 
-    x1 = MAX(x1, 0);
-    y1 = MAX(y1, 0);
+    x1 = OBSIDIAN_MAX(x1, 0);
+    y1 = OBSIDIAN_MAX(y1, 0);
 
-    x2 = MIN(x2, title_W3);
-    y2 = MIN(y2, title_H3);
+    x2 = OBSIDIAN_MIN(x2, title_W3);
+    y2 = OBSIDIAN_MIN(y2, title_H3);
 
     if (x1 > x2 || y1 > y2) {
         return;
@@ -1904,11 +1904,11 @@ static void TDraw_Circle(int x, int y, int w, int h) {
     int x2 = x + w;
     int y2 = y + h;
 
-    x1 = MAX(x1, 0);
-    y1 = MAX(y1, 0);
+    x1 = OBSIDIAN_MAX(x1, 0);
+    y1 = OBSIDIAN_MAX(y1, 0);
 
-    x2 = MIN(x2, title_W3);
-    y2 = MIN(y2, title_H3);
+    x2 = OBSIDIAN_MIN(x2, title_W3);
+    y2 = OBSIDIAN_MIN(y2, title_H3);
 
     if (x1 > x2 || y1 > y2) {
         return;
@@ -1978,8 +1978,8 @@ static void TDraw_Line(int x1, int y1, int x2, int y2) {
             x2 = tmp;
         }
 
-        x1 = MAX(0, x1);
-        x2 = MIN(title_W3 - 1, x2);
+        x1 = OBSIDIAN_MAX(0, x1);
+        x2 = OBSIDIAN_MIN(title_W3 - 1, x2);
 
         for (; x1 <= x2; x1++) {
             TDraw_LinePart(x1, y1);
@@ -1995,8 +1995,8 @@ static void TDraw_Line(int x1, int y1, int x2, int y2) {
             y2 = tmp;
         }
 
-        y1 = MAX(0, y1);
-        y2 = MIN(title_H3 - 1, y2);
+        y1 = OBSIDIAN_MAX(0, y1);
+        y2 = OBSIDIAN_MIN(title_H3 - 1, y2);
 
         for (; y1 <= y2; y1++) {
             TDraw_LinePart(x1, y1);
@@ -2241,7 +2241,7 @@ int title_draw_clouds(lua_State *L) {
     // create height field
     // [ it is a square, and size must be a power of two ]
 
-    int W = MAX(title_W, title_H) - 1;
+    int W = OBSIDIAN_MAX(title_W, title_H) - 1;
     for (int k = 0; k < 30; k++) {
         W |= (W >> 1);
     }
@@ -2275,9 +2275,9 @@ int title_draw_clouds(lua_State *L) {
                 b = RGB_BLUE(hue3) * src + RGB_BLUE(hue2) * (1.0 - src);
             }
 
-            int r2 = CLAMP(0, r, 255);
-            int g2 = CLAMP(0, g, 255);
-            int b2 = CLAMP(0, b, 255);
+            int r2 = OBSIDIAN_CLAMP(0, r, 255);
+            int g2 = OBSIDIAN_CLAMP(0, g, 255);
+            int b2 = OBSIDIAN_CLAMP(0, b, 255);
 
             rgb_color_t col = MAKE_RGBA(r2, g2, b2, 255);
 
@@ -2396,7 +2396,7 @@ for (int kx = 0   ; kx < W ; kx++)
         // TEMP CRUD
 #if 1
         int ity = 128 + (nx - ny + nz) * 128;
-        ity = CLAMP(0, ity, 255);
+        ity = OBSIDIAN_CLAMP(0, ity, 255);
 
         if ((int)(K * 32) & 3)
             col = MAKE_RGBA(0  , 0  , ity, 255);
@@ -2405,7 +2405,7 @@ for (int kx = 0   ; kx < W ; kx++)
 #else
         // moon colors
         int ity = 80 + (nx + nx + nx) * 60;
-        ity = CLAMP(0, ity, 255);
+        ity = OBSIDIAN_CLAMP(0, ity, 255);
 
         col = MAKE_RGBA(ity, ity, ity, 255);
 #endif

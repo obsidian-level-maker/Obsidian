@@ -257,7 +257,7 @@ bool VFS_CopyFile(const char *src_name, const char *dest_name) {
         return false;
     }
 
-    FILE *dest = fopen(dest_name, "wb");
+    FILE *dest = FileOpen(dest_name, "wb");
     if (!dest) {
         PHYSFS_close(src);
         return false;

@@ -22,76 +22,27 @@
 #ifndef SYS_MACRO_H_
 #define SYS_MACRO_H_
 
-#include <type_traits>
-
-// basic macros
-
-// smallest distance between two points before being considered equal
-#define DIST_EPSILON (1.0 / 128.0)
-
-// smallest degrees between two angles before being considered equal
-#define ANG_EPSILON (1.0 / 1024.0)
-
+// basic constants
+constexpr uint16_t MSG_BUF_LEN = 2000;
+constexpr double   DIST_EPSILON     = (1.0 / 128.0);
+constexpr double   ANG_EPSILON        = (1.0 / 1024.0);
 #ifndef M_PI
-constexpr double M_PI = 3.14159265358979323846;
+constexpr double   M_PI       = 3.14159265358979323846;
 #endif
 
-#ifndef MAX
-template <typename A, typename B,
-          typename = std::enable_if_t<std::is_convertible_v<B, A>>>
-constexpr A MAX(A a, B b) {
-    if (a > b) {
-        return a;
-    }
-    return static_cast<A>(b);
+// basic math
+#define OBSIDIAN_MAX(a, b)           ((a > b) ? a : b)
+#define OBSIDIAN_MIN(a, b)           ((a < b) ? a : b)
+#define OBSIDIAN_ABS(a)              ((a < 0) ? -a : a)
+#define OBSIDIAN_CLAMP(low, x, high) ((x < low) ? low : ((x > high) ? high : x))
+inline int RoundToInteger(float x)
+{
+    return (int)roundf(x);
 }
-#endif
-
-#ifndef MIN
-template <typename A, typename B,
-          typename = std::enable_if_t<std::is_convertible_v<B, A>>>
-constexpr A MIN(A a, B b) {
-    if (a < b) {
-        return a;
-    }
-    return static_cast<A>(b);
+inline int RoundToInteger(double x)
+{
+    return (int)round(x);
 }
-#endif
-
-#ifndef ABS
-template <typename T>
-constexpr T ABS(T a) {
-    if (a < 0) {
-        return -a;
-    }
-    return a;
-}
-#endif
-
-#ifndef I_ROUND
-template <typename T>
-constexpr int I_ROUND(T x) {
-    if (x < 0) {
-        return x - 0.5;
-    }
-    return x + 0.5;
-}
-#endif
-
-#ifndef CLAMP
-template <typename T, typename L, typename U,
-          typename = std::enable_if_t<std::conjunction_v<
-              std::is_convertible<L, T>, std::is_convertible<U, T>>>>
-constexpr T CLAMP(L low, T x, U high) {
-    if (x < low) {
-        return static_cast<T>(low);
-    }
-    if (x > high) {
-        return static_cast<T>(high);
-    }
-    return x;
-}
-#endif
 
 #endif  // SYS_MACRO_H_
 

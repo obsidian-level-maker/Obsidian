@@ -153,8 +153,8 @@ void UI_MiniMap::DrawLine(int x1, int y1, int x2, int y2, uint8_t r, uint8_t g,
             x2 = tmp;
         }
 
-        x1 = MAX(0, x1);
-        x2 = MIN(map_W - 1, x2);
+        x1 = OBSIDIAN_MAX(0, x1);
+        x2 = OBSIDIAN_MIN(map_W - 1, x2);
 
         for (; x1 <= x2; x1++) {
             RawPixel(x1, y1, r, g, b);
@@ -170,8 +170,8 @@ void UI_MiniMap::DrawLine(int x1, int y1, int x2, int y2, uint8_t r, uint8_t g,
             y2 = tmp;
         }
 
-        y1 = MAX(0, y1);
-        y2 = MIN(map_H - 1, y2);
+        y1 = OBSIDIAN_MAX(0, y1);
+        y2 = OBSIDIAN_MIN(map_H - 1, y2);
 
         for (; y1 <= y2; y1++) {
             RawPixel(x1, y1, r, g, b);

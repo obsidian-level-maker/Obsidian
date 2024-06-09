@@ -33,6 +33,7 @@
 #include "headers.h"
 #include "lib_util.h"
 #include "main.h"
+#include "sys_macro.h"
 
 // Properties
 int ef_solid_type;
@@ -581,8 +582,8 @@ class linedef_c {
         sidedef_c *B_front = B->front;
         sidedef_c *B_back = B->back;
 
-        int A_len = I_ROUND(length);
-        int B_len = I_ROUND(B->length);
+        int A_len = RoundToInteger(length);
+        int B_len = RoundToInteger(B->length);
 
         if (!CanMergeSides(front, B_front)) {
             return false;
@@ -786,7 +787,7 @@ static void LightInSector(sector_c *S, region_c *R, csg_property_set_c *f_face,
     // use the shade computed in CSG_Shade()
     S->light = R->shade;
 
-    S->light = CLAMP(0, S->light, 255);
+    S->light = OBSIDIAN_CLAMP(0, S->light, 255);
 
     // handle "fx_delta" property for light effects
 
@@ -833,8 +834,8 @@ static void MakeSector(region_c *R) {
     double f_delta = f_face->getDouble("delta_z");
     double c_delta = c_face->getDouble("delta_z");
 
-    S->f_h = I_ROUND(B->t.z + f_delta);
-    S->c_h = I_ROUND(T->b.z + c_delta);
+    S->f_h = RoundToInteger(B->t.z + f_delta);
+    S->c_h = RoundToInteger(T->b.z + c_delta);
 
     // when delta-ing up the floor, limit it to the ceiling
     // (this can be important in outdoor rooms)
@@ -1053,7 +1054,7 @@ static int NaturalXOffset(Doom::linedef_c *L, int side) {
         along = AlongDist(0, 0, L->end->x, L->end->y, L->start->x, L->start->y);
     }
 
-    return I_ROUND(-along);
+    return RoundToInteger(-along);
 }
 
 static int CalcXOffset(snag_c *S, brush_vert_c *V, int ox) {
@@ -1154,9 +1155,9 @@ static sidedef_c *MakeSidedef(linedef_c *L, sector_c *sec, sector_c *back,
                 r_oy = rail->face.getInt("v1", 0);
 
                 // adjust Y-offset for higher floor than expected
-                int sec_max_z = MAX(sec->f_h, back->f_h);
+                int sec_max_z = OBSIDIAN_MAX(sec->f_h, back->f_h);
 
-                r_oy += I_ROUND(rail->parent->b.z) - sec_max_z;
+                r_oy += RoundToInteger(rail->parent->b.z) - sec_max_z;
             }
         }
 
@@ -1218,8 +1219,8 @@ static csg_property_set_c *FindTrigger(snag_c *S, sector_c *front,
         return NULL;
     }
 
-    float f_max = MAX(front->f_h, back->f_h) + 4;
-    float c_min = MIN(front->c_h, back->c_h) - 4;
+    float f_max = OBSIDIAN_MAX(front->f_h, back->f_h) + 4;
+    float c_min = OBSIDIAN_MIN(front->c_h, back->c_h) - 4;
 
     if (f_max >= c_min) {
         return NULL;
@@ -1398,11 +1399,11 @@ static void MakeLine(region_c *R, snag_c *S) {
     }
 
     // skip snags which would become zero length linedefs
-    int x1 = I_ROUND(S->x1);
-    int y1 = I_ROUND(S->y1);
+    int x1 = RoundToInteger(S->x1);
+    int y1 = RoundToInteger(S->y1);
 
-    int x2 = I_ROUND(S->x2);
-    int y2 = I_ROUND(S->y2);
+    int x2 = RoundToInteger(S->x2);
+    int y2 = RoundToInteger(S->y2);
 
     if (x1 == x2 && y1 == y2) {
         return;
@@ -1446,11 +1447,11 @@ static void MakeLine(region_c *R, snag_c *S) {
     }
 
     // update map's bounding box
-    map_bound_x1 = MIN(map_bound_x1, MIN(x1, x2));
-    map_bound_y1 = MIN(map_bound_y1, MIN(y1, y2));
+    map_bound_x1 = OBSIDIAN_MIN(map_bound_x1, OBSIDIAN_MIN(x1, x2));
+    map_bound_y1 = OBSIDIAN_MIN(map_bound_y1, OBSIDIAN_MIN(y1, y2));
 
-    map_bound_x2 = MAX(map_bound_x2, MAX(x1, x2));
-    map_bound_y2 = MAX(map_bound_y2, MAX(y1, y2));
+    map_bound_x2 = OBSIDIAN_MAX(map_bound_x2, OBSIDIAN_MAX(x1, x2));
+    map_bound_y2 = OBSIDIAN_MAX(map_bound_y2, OBSIDIAN_MAX(y1, y2));
 
     // create the line...
 
@@ -1666,14 +1667,14 @@ static void AlignTextures() {
 
             while (P->sim_prev && P->sim_prev->front->x_offset == IVAL_NONE) {
                 P->sim_prev->front->x_offset =
-                    P->front->x_offset - I_ROUND(P->sim_prev->length);
+                    P->front->x_offset - RoundToInteger(P->sim_prev->length);
                 P = P->sim_prev;
                 prev_count++;
             }
 
             while (N->sim_next && N->sim_next->front->x_offset == IVAL_NONE) {
                 N->sim_next->front->x_offset =
-                    N->front->x_offset + I_ROUND(N->length);
+                    N->front->x_offset + RoundToInteger(N->length);
                 N = N->sim_next;
                 next_count++;
             }
@@ -1692,11 +1693,11 @@ static bool RoundWouldClobber(int cx, int cy, int ox, int oy,
                               const Doom::vertex_c *ignore1,
                               const Doom::vertex_c *ignore2,
                               const Doom::vertex_c *ignore3) {
-    int x1 = MIN(cx, ox);
-    int y1 = MIN(cy, oy);
+    int x1 = OBSIDIAN_MIN(cx, ox);
+    int y1 = OBSIDIAN_MIN(cy, oy);
 
-    int x2 = MAX(cx, ox);
-    int y2 = MAX(cy, oy);
+    int x2 = OBSIDIAN_MAX(cx, ox);
+    int y2 = OBSIDIAN_MAX(cy, oy);
 
     for (const auto *V : Doom::vertices) {
         if (V == ignore1 || V == ignore2 || V == ignore3) {
@@ -2214,8 +2215,8 @@ static void SolidExtraFloor(sector_c *sec, gap_c *gap1, gap_c *gap2) {
         }
     }
 
-    EF->top_h = I_ROUND(gap2->bottom->t.z);
-    EF->bottom_h = I_ROUND(gap1->top->b.z);
+    EF->top_h = RoundToInteger(gap2->bottom->t.z);
+    EF->bottom_h = RoundToInteger(gap1->top->b.z);
 
     EF->top = gap2->bottom->t.face.getStr("tex", dummy_plane_tex);
     EF->bottom = gap1->top->b.face.getStr("tex", dummy_plane_tex);
@@ -2244,10 +2245,10 @@ static void LiquidExtraFloor(sector_c *sec, csg_brush_c *liquid) {
     if (EF->line_special == 301)  // Legacy style
     {
         EF->bottom_h = sec->f_h;
-        EF->top_h = I_ROUND(liquid->t.z);
+        EF->top_h = RoundToInteger(liquid->t.z);
     } else  // EDGE style
     {
-        EF->bottom_h = I_ROUND(liquid->t.z);
+        EF->bottom_h = RoundToInteger(liquid->t.z);
         EF->top_h = EF->bottom_h + 128;  // not significant
     }
 
@@ -2404,13 +2405,13 @@ static int CalcDoorLight(const sector_c *S) {
         // we ignore closed neighbors
 
         if (front == S && back->f_h < back->c_h) {
-            l_min = MIN(l_min, back->light);
-            l_max = MAX(l_max, back->light);
+            l_min = OBSIDIAN_MIN(l_min, back->light);
+            l_max = OBSIDIAN_MAX(l_max, back->light);
         }
 
         if (back == S && front->f_h < front->c_h) {
-            l_min = MIN(l_min, front->light);
-            l_max = MAX(l_max, front->light);
+            l_min = OBSIDIAN_MIN(l_min, front->light);
+            l_max = OBSIDIAN_MAX(l_max, front->light);
         }
     }
 
@@ -2631,9 +2632,9 @@ static void WriteThing(sector_c *S, csg_entity_c *E) {
         return;
     }
 
-    int x = I_ROUND(E->x);
-    int y = I_ROUND(E->y);
-    int z = I_ROUND(E->z);
+    int x = RoundToInteger(E->x);
+    int y = RoundToInteger(E->y);
+    int z = RoundToInteger(E->z);
 
     int h = z - S->f_h;
 

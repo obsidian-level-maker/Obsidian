@@ -1,15 +1,13 @@
 //------------------------------------------------------------------------
-//  EDGE Endian handling
-//------------------------------------------------------------------------
+//  OBSIDIAN Endian handling
+//----------------------------------------------------------------------------
 //
-//  OBSIDIAN Level Maker
-//
-//  Copyright (C) 2021-2022 The OBSIDIAN Team
-//  Copyright (C) 2006-2017 Andrew Apted
+//  Copyright (c) 2024 The OBSIDIAN Team.
+//  Copyright (c) 2003-2024 The EDGE Team.
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
-//  as published by the Free Software Foundation; either version 2
+//  as published by the Free Software Foundation; either version 3
 //  of the License, or (at your option) any later version.
 //
 //  This program is distributed in the hope that it will be useful,
@@ -17,103 +15,206 @@
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //  GNU General Public License for more details.
 //
-//------------------------------------------------------------------------
-//
-//  Using code from SDL_byteorder.h and SDL_endian.h.
-//  Copyright (C) 1997-2004 Sam Lantinga.
-//
-//------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 
-#ifndef __SYS_ENDIAN_H__
-#define __SYS_ENDIAN_H__
+#pragma once
 
 #include <stdint.h>
+#include <stdlib.h>
 
-// ---- determine byte order ----
-
-#define UT_LIL_ENDIAN 1234
-#define UT_BIG_ENDIAN 4321
-
-#if defined(__LITTLE_ENDIAN__) || defined(WIN32) || defined(__i386__) || \
-    defined(__i386) || defined(__ia64__) || defined(__x86_64__) ||       \
-    defined(__alpha__) || defined(__alpha) || defined(__arm__) ||        \
-    defined(__aarch64__) || defined(__SYMBIAN32__) ||                    \
-    (defined(__mips__) && defined(__MIPSEL__))
-#define UT_BYTEORDER UT_LIL_ENDIAN
-#else
-#define UT_BYTEORDER UT_BIG_ENDIAN
-#endif
-
-// ---- the gruntwork of swapping ----
-
-#if defined(__GNUC__) && defined(__i386__)
-static inline uint16_t UT_Swap16(uint16_t x) {
-    __asm__("xchgb %b0,%h0" : "=q"(x) : "0"(x));
-    return x;
+// Used to swap values.  Try to use superfast macros on systems
+// that support them, otherwise use regular C++ functions.
+#if defined(__GNUC__) || defined(__clang__)
+static inline uint16_t __Swap16(uint16_t n)
+{
+    return __builtin_bswap16(n);
 }
-#elif defined(__GNUC__) && defined(__x86_64__)
-static inline uint16_t UT_Swap16(uint16_t x) {
-    __asm__("xchgb %b0,%h0" : "=Q"(x) : "0"(x));
-    return x;
+static inline uint32_t __Swap32(uint32_t n)
+{
+    return __builtin_bswap32(n);
 }
-#elif defined(__GNUC__) && (defined(__powerpc__) || defined(__ppc__))
-static inline uint16_t UT_Swap16(uint16_t x) {
-    uint16_t result;
-
-    __asm__("rlwimi %0,%2,8,16,23" : "=&r"(result) : "0"(x >> 8), "r"(x));
-    return result;
+static inline uint64_t __Swap64(uint64_t n)
+{
+    return __builtin_bswap64(n);
+}
+#elif defined(_MSC_VER)
+static inline uint16_t __Swap16(uint16_t n)
+{
+    return _byteswap_ushort(n);
+}
+static inline uint32_t __Swap32(uint32_t n)
+{
+    return _byteswap_ulong(n);
+}
+static inline uint64_t __Swap64(uint64_t n)
+{
+    return _byteswap_uint64(n);
 }
 #else
-static inline uint16_t UT_Swap16(uint16_t x) { return ((x << 8) | (x >> 8)); }
-#endif
-
-#if defined(__GNUC__) && defined(__i386__)
-static inline uint32_t UT_Swap32(uint32_t x) {
-    __asm__("bswap %0" : "=r"(x) : "0"(x));
-    return x;
+static inline uint16_t __Swap16(uint16_t n)
+{
+    uint16_t a;
+    a = (n & 0xFF) << 8;
+    a |= (n >> 8) & 0xFF;
+    return a;
 }
-#elif defined(__GNUC__) && defined(__x86_64__)
-static inline uint32_t UT_Swap32(uint32_t x) {
-    __asm__("bswapl %0" : "=r"(x) : "0"(x));
-    return x;
+static inline uint32_t __Swap32(uint32_t n)
+{
+    uint32_t a;
+    a = (n & 0xFFU) << 24;
+    a |= (n & 0xFF00U) << 8;
+    a |= (n >> 8) & 0xFF00U;
+    a |= (n >> 24) & 0xFFU;
+    return a;
 }
-#elif defined(__GNUC__) && (defined(__powerpc__) || defined(__ppc__))
-static inline uint32_t UT_Swap32(uint32_t x) {
-    uint32_t result;
-
-    __asm__("rlwimi %0,%2,24,16,23" : "=&r"(result) : "0"(x >> 24), "r"(x));
-    __asm__("rlwimi %0,%2,8,8,15" : "=&r"(result) : "0"(result), "r"(x));
-    __asm__("rlwimi %0,%2,24,0,7" : "=&r"(result) : "0"(result), "r"(x));
-    return result;
-}
-#else
-static inline uint32_t UT_Swap32(uint32_t x) {
-    return ((x << 24) | ((x << 8) & 0x00FF0000) | ((x >> 8) & 0x0000FF00) |
-            (x >> 24));
+static inline uint64_t __Swap64(uint64_t n)
+{
+    uint64_t a;
+    a = (n & 0xFFULL) << 56;
+    a |= (n & 0xFF00ULL) << 40;
+    a |= (n & 0xFF0000ULL) << 24;
+    a |= (n & 0xFF000000ULL) << 8;
+    a |= (n >> 8) & 0xFF000000ULL;
+    a |= (n >> 24) & 0xFF0000ULL;
+    a |= (n >> 40) & 0xFF00ULL;
+    a |= (n >> 56) & 0xFFULL;
+    return a;
 }
 #endif
 
-// ---- byte swap from specified endianness to native ----
+#if defined(__LITTLE_ENDIAN__) || defined(__i386__) || defined(__ia64__) || defined(WIN32) || defined(__alpha__) ||    \
+    defined(__alpha) || defined(__arm__) || (defined(__mips__) && defined(__MIPSEL__)) || defined(__SYMBIAN32__) ||    \
+    defined(__x86_64__) || defined(__arm64__) || defined(__aarch64__)
 
-#if (UT_BYTEORDER == UT_LIL_ENDIAN)
-#define LE_U16(X) ((uint16_t)(X))
-#define LE_U32(X) ((uint32_t)(X))
-#define BE_U16(X) UT_Swap16(X)
-#define BE_U32(X) UT_Swap32(X)
+inline uint16_t LE_U16(const uint16_t x)
+{
+    return x;
+}
+inline int16_t LE_S16(const uint16_t x)
+{
+    return (int16_t)x;
+}
+inline uint32_t LE_U32(const uint32_t x)
+{
+    return x;
+}
+inline int32_t LE_S32(const uint32_t x)
+{
+    return (int32_t)x;
+}
+inline uint64_t LE_U64(const uint64_t x)
+{
+    return x;
+}
+inline int64_t LE_S64(const uint64_t x)
+{
+    return (int64_t)x;
+}
+inline float LE_FLOAT(const float x)
+{
+    return x;
+}
+
+inline uint16_t BE_U16(const uint16_t x)
+{
+    return __Swap16(x);
+}
+inline int16_t BE_S16(const uint16_t x)
+{
+    return (int16_t)__Swap16(x);
+}
+inline uint32_t BE_U32(const uint32_t x)
+{
+    return __Swap32(x);
+}
+inline int32_t BE_S32(const uint32_t x)
+{
+    return (int32_t)__Swap32(x);
+}
+inline uint64_t BE_U64(const uint64_t x)
+{
+    return __Swap64(x);
+}
+inline int64_t BE_S64(const uint64_t x)
+{
+    return (int64_t)__Swap64(x);
+}
+inline float BE_FLOAT(const float x)
+{
+    union {
+        float    f;
+        uint32_t u;
+    } in, out;
+    in.f  = x;
+    out.u = BE_U32(in.u);
+    return out.f;
+}
 #else
-#define LE_U16(X) UT_Swap16(X)
-#define LE_U32(X) UT_Swap32(X)
-#define BE_U16(X) ((uint16_t)(X))
-#define BE_U32(X) ((uint32_t)(X))
+
+inline uint16_t LE_U16(const uint16_t x)
+{
+    return __Swap16(x);
+}
+inline int16_t LE_S16(const uint16_t x)
+{
+    return (int16_t)__Swap16(x);
+}
+inline uint32_t LE_U32(const uint32_t x)
+{
+    return __Swap32(x);
+}
+inline int32_t LE_S32(const uint32_t x)
+{
+    return (int32_t)__Swap32(x);
+}
+inline uint64_t LE_U64(const uint64_t x)
+{
+    return __Swap64(x);
+}
+inline int64_t LE_S64(const uint64_t x)
+{
+    return (int64_t)__Swap64(x);
+}
+inline float LE_FLOAT(const float x)
+{
+    union {
+        float    f;
+        uint32_t u;
+    } in, out;
+    in.f  = x;
+    out.u = LE_U32(in.u);
+    return out.f;
+}
+
+inline uint16_t BE_U16(const uint16_t x)
+{
+    return x;
+}
+inline int16_t BE_S16(const uint16_t x)
+{
+    return (int16_t)x;
+}
+inline uint32_t BE_U32(const uint32_t x)
+{
+    return x;
+}
+inline int32_t BE_S32(const uint32_t x)
+{
+    return (int32_t)x;
+}
+inline uint64_t BE_U64(const uint64_t x)
+{
+    return x;
+}
+inline int64_t BE_S64(const uint64_t x)
+{
+    return (int64_t)x;
+}
+inline float BE_FLOAT(const float x)
+{
+    return x;
+}
 #endif
-
-// signed versions of the above
-#define LE_S16(X) ((int16_t)LE_U16((uint16_t)(X)))
-#define LE_S32(X) ((int32_t)LE_U32((uint32_t)(X)))
-#define BE_S16(X) ((int16_t)BE_U16((uint16_t)(X)))
-#define BE_S32(X) ((int32_t)BE_U32((uint32_t)(X)))
-
-#endif  // __SYS_ENDIAN_H__
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

@@ -86,7 +86,7 @@ void SKY_AddClouds(unsigned long long seed, uint8_t *pixels, int W, int H,
             v = (v - thresh) / (1.0 - thresh);
 
             int idx = (int)(v * map->size);
-            idx = CLAMP(0, idx, map->size - 1);
+            idx = OBSIDIAN_CLAMP(0, idx, map->size - 1);
 
             *dest++ = map->colors[idx];
         }
@@ -120,7 +120,7 @@ void SKY_AddStars(unsigned long long seed, uint8_t *pixels, int W, int H,
             v = (v - thresh) / (1.0 - thresh);
 
             int idx = (int)(v * map->size);
-            idx = CLAMP(0, idx, map->size - 1);
+            idx = OBSIDIAN_CLAMP(0, idx, map->size - 1);
 
             *dest++ = map->colors[idx];
         }
@@ -155,7 +155,7 @@ void SKY_AddHills(unsigned long long seed, uint8_t *pixels, int W, int H,
     float z0_max_h = -99;
 
     for (x = 0; x < W; x++) {
-        z0_max_h = MAX(z0_max_h, height_map[x]);
+        z0_max_h = OBSIDIAN_MAX(z0_max_h, height_map[x]);
     }
 
     if (z0_max_h > -0.05) {
@@ -216,7 +216,7 @@ void SKY_AddHills(unsigned long long seed, uint8_t *pixels, int W, int H,
             }
 
             int col_idx = (int)(ity * map->size);
-            col_idx = CLAMP(0, col_idx, map->size - 1);
+            col_idx = OBSIDIAN_CLAMP(0, col_idx, map->size - 1);
 
             uint8_t col = map->colors[col_idx];
 

@@ -397,9 +397,9 @@ bool wolf_game_interface_c::Start(const char *ext) {
     }
 
     if (StringCompare(file_ext, "BC") == 0) {
-        map_fp = fopen(TEMP_MAPTEMP, "wb");
+        map_fp = FileOpen(TEMP_MAPTEMP, "wb");
     } else {
-        map_fp = fopen(TEMP_GAMEFILE, "wb");
+        map_fp = FileOpen(TEMP_GAMEFILE, "wb");
     }
 
     if (!map_fp) {
@@ -409,7 +409,7 @@ bool wolf_game_interface_c::Start(const char *ext) {
         return false;
     }
 
-    head_fp = fopen(TEMP_HEADFILE, "wb");
+    head_fp = FileOpen(TEMP_HEADFILE, "wb");
 
     if (!head_fp) {
         fclose(map_fp);

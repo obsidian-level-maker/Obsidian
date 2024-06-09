@@ -1312,8 +1312,8 @@ void UI_CustomMods::PositionAll(UI_Module *focus) {
 
         offset_y = above_h - focus_oy;
 
-        offset_y = MAX(offset_y, 0);
-        offset_y = MIN(offset_y, new_height - mh);
+        offset_y = OBSIDIAN_MAX(offset_y, 0);
+        offset_y = OBSIDIAN_MIN(offset_y, new_height - mh);
     } else {
         // when not shrinking, offset_y will remain valid
         if (new_height < total_h) {

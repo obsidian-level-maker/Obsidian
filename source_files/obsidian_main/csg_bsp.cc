@@ -32,6 +32,7 @@
 #include "lib_util.h"
 #include "m_lua.h"
 #include "main.h"
+#include "sys_macro.h"
 
 double QUANTIZE_GRID;
 
@@ -78,11 +79,11 @@ class group_c {
 
             regs[k]->GetBounds(&x1, &y1, &x2, &y2);
 
-            *min_x = MIN(*min_x, x1);
-            *min_y = MIN(*min_y, y1);
+            *min_x = OBSIDIAN_MIN(*min_x, x1);
+            *min_y = OBSIDIAN_MIN(*min_y, y1);
 
-            *max_x = MAX(*max_x, x1);
-            *max_y = MAX(*max_y, y1);
+            *max_x = OBSIDIAN_MAX(*max_x, x1);
+            *max_y = OBSIDIAN_MAX(*max_y, y1);
         }
     }
 };
@@ -162,8 +163,8 @@ void snag_c::CalcAlongs() {
     a1 /= SNAG_EPSILON;
     a2 /= SNAG_EPSILON;
 
-    q_along1 = I_ROUND(a1);
-    q_along2 = I_ROUND(a2);
+    q_along1 = RoundToInteger(a1);
+    q_along2 = RoundToInteger(a2);
 }
 
 bool snag_c::SameSides() const {
@@ -361,11 +362,11 @@ void region_c::GetBounds(double *x1, double *y1, double *x2, double *y2) const {
     for (unsigned int i = 0; i < snags.size(); i++) {
         const snag_c *S = snags[i];
 
-        *x1 = MIN(*x1, MIN(S->x1, S->x2));
-        *y1 = MIN(*y1, MIN(S->y1, S->y2));
+        *x1 = OBSIDIAN_MIN(*x1, OBSIDIAN_MIN(S->x1, S->x2));
+        *y1 = OBSIDIAN_MIN(*y1, OBSIDIAN_MIN(S->y1, S->y2));
 
-        *x2 = MAX(*x1, MAX(S->x1, S->x2));
-        *y2 = MAX(*y1, MAX(S->y1, S->y2));
+        *x2 = OBSIDIAN_MAX(*x1, OBSIDIAN_MAX(S->x1, S->x2));
+        *y2 = OBSIDIAN_MAX(*y1, OBSIDIAN_MAX(S->y1, S->y2));
     }
 }
 
@@ -395,8 +396,8 @@ void region_c::ComputeBounds() {
     for (unsigned int i = 0; i < snags.size(); i++) {
         const snag_c *S = snags[i];
 
-        rw = MAX(rw, fabs(S->x1 - mid_x));
-        rh = MAX(rh, fabs(S->y1 - mid_y));
+        rw = OBSIDIAN_MAX(rw, fabs(S->x1 - mid_x));
+        rh = OBSIDIAN_MAX(rh, fabs(S->y1 - mid_y));
     }
 }
 
@@ -426,7 +427,7 @@ double region_c::DistanceToPoint(float x, float y) const {
 
         double dist = PointLineDist(x, y, S->x1, S->y1, S->x2, S->y2);
 
-        best = MIN(best, dist);
+        best = OBSIDIAN_MIN(best, dist);
     }
 
     return best;
@@ -440,7 +441,7 @@ double region_c::SquareDistance(float x, float y) const {
     double x_dist = (x < bx1) ? (bx1 - x) : (x > bx2) ? (x - bx2) : 0;
     double y_dist = (y < by1) ? (by1 - y) : (y > by2) ? (y - by2) : 0;
 
-    return MAX(x_dist, y_dist);
+    return OBSIDIAN_MAX(x_dist, y_dist);
 }
 
 bool region_c::HasSameBrushes(const region_c *other) const {
@@ -609,11 +610,11 @@ void bsp_node_c::AddBBox(bsp_node_c *node) {
     node->ComputeBBox();
 
     if (node->bb_x2 > node->bb_x1) {
-        bb_x1 = MIN(bb_x1, node->bb_x1);
-        bb_x2 = MAX(bb_x2, node->bb_x2);
+        bb_x1 = OBSIDIAN_MIN(bb_x1, node->bb_x1);
+        bb_x2 = OBSIDIAN_MAX(bb_x2, node->bb_x2);
 
-        bb_y1 = MIN(bb_y1, node->bb_y1);
-        bb_y2 = MAX(bb_y2, node->bb_y2);
+        bb_y1 = OBSIDIAN_MIN(bb_y1, node->bb_y1);
+        bb_y2 = OBSIDIAN_MAX(bb_y2, node->bb_y2);
     }
 }
 
@@ -622,11 +623,11 @@ void bsp_node_c::AddBBox(region_c *leaf) {
 
     leaf->GetBounds(&x1, &y1, &x2, &y2);
 
-    bb_x1 = MIN(bb_x1, x1);
-    bb_x2 = MAX(bb_x2, x2);
+    bb_x1 = OBSIDIAN_MIN(bb_x1, x1);
+    bb_x2 = OBSIDIAN_MAX(bb_x2, x2);
 
-    bb_y1 = MIN(bb_y1, y1);
-    bb_y2 = MAX(bb_y2, y2);
+    bb_y1 = OBSIDIAN_MIN(bb_y1, y1);
+    bb_y2 = OBSIDIAN_MAX(bb_y2, y2);
 }
 
 /***** VARIABLES ******************/
@@ -640,8 +641,8 @@ bsp_node_c *bsp_root;
 //------------------------------------------------------------------------
 
 static void QuantizeVert(const brush_vert_c *V, int *qx, int *qy) {
-    *qx = I_ROUND(V->x / QUANTIZE_GRID);
-    *qy = I_ROUND(V->y / QUANTIZE_GRID);
+    *qx = RoundToInteger(V->x / QUANTIZE_GRID);
+    *qy = RoundToInteger(V->y / QUANTIZE_GRID);
 }
 
 static bool OnSameLine(double x1, double y1, double x2, double y2,
@@ -765,11 +766,11 @@ static void CreateRegion(group_c &root, csg_brush_c *P) {
 
         R->AddSnag(S);
 
-        min_qx = MIN(min_qx, MIN(qx1, qx2));
-        min_qy = MIN(min_qy, MIN(qy1, qy2));
+        min_qx = OBSIDIAN_MIN(min_qx, OBSIDIAN_MIN(qx1, qx2));
+        min_qy = OBSIDIAN_MIN(min_qy, OBSIDIAN_MIN(qy1, qy2));
 
-        max_qx = MAX(max_qx, MAX(qx1, qx2));
-        max_qy = MAX(max_qy, MAX(qy1, qy2));
+        max_qx = OBSIDIAN_MAX(max_qx, OBSIDIAN_MAX(qx1, qx2));
+        max_qy = OBSIDIAN_MAX(max_qy, OBSIDIAN_MAX(qy1, qy2));
     }
 
     if (R->snags.size() < 3 || max_qx <= min_qx || max_qy <= min_qy ||
@@ -872,8 +873,8 @@ static void DivideOneSnag(snag_c *S, partition_c *part, region_c *front,
         double along =
             AlongDist(ix, iy, part->x1, part->y1, part->x2, part->y2);
 
-        *along_min = MIN(*along_min, along);
-        *along_max = MAX(*along_max, along);
+        *along_min = OBSIDIAN_MIN(*along_min, along);
+        *along_max = OBSIDIAN_MAX(*along_max, along);
     }
 
     // completely on front side?
@@ -1040,10 +1041,10 @@ static partition_c *ChoosePartition(group_c &group, bool *reached_chunk) {
         if (sw >= 2 || sh >= 2) {
             if (sw >= sh) {
                 double px = (sx1 + sw / 2) * CHUNK_SIZE;
-                return AddPartition(px, gy1, px, MAX(gy2, gy1 + 4));
+                return AddPartition(px, gy1, px, OBSIDIAN_MAX(gy2, gy1 + 4));
             } else {
                 double py = (sy1 + sh / 2) * CHUNK_SIZE;
-                return AddPartition(gx1, py, MAX(gx2, gx1 + 4), py);
+                return AddPartition(gx1, py, OBSIDIAN_MAX(gx2, gx1 + 4), py);
             }
         }
 
@@ -1221,11 +1222,11 @@ static bool TestOverlap(std::vector<snag_c *> &list, int i, int k) {
         return false;
     }
 
-    int a_min = MIN(A->q_along1, A->q_along2);
-    int a_max = MAX(A->q_along1, A->q_along2);
+    int a_min = OBSIDIAN_MIN(A->q_along1, A->q_along2);
+    int a_max = OBSIDIAN_MAX(A->q_along1, A->q_along2);
 
-    int b_min = MIN(B->q_along1, B->q_along2);
-    int b_max = MAX(B->q_along1, B->q_along2);
+    int b_min = OBSIDIAN_MIN(B->q_along1, B->q_along2);
+    int b_max = OBSIDIAN_MAX(B->q_along1, B->q_along2);
 
     if (a_min >= b_max || a_max <= b_min) {
         return false;
@@ -1290,7 +1291,7 @@ static void ProcessOverlapList(std::vector<snag_c *> &overlap_list) {
         overlap_list[i]->CalcAlongs();
     }
 
-    // TODO: sort list by MIN(q_along), take advantage of that
+    // TODO: sort list by OBSIDIAN_MIN(q_along), take advantage of that
 
     int changes;
 
@@ -1984,8 +1985,8 @@ static int TestVertex(snag_c *S, int which) {
     double x = which ? S->x2 : S->x1;
     double y = which ? S->y2 : S->y1;
 
-    int ix = I_ROUND(x + RX * 0);
-    int iy = I_ROUND(y + RY * 0);
+    int ix = RoundToInteger(x + RX * 0);
+    int iy = RoundToInteger(y + RY * 0);
 
     int id = (iy << 16) + ix;
 
@@ -2041,7 +2042,7 @@ void CSG_TestRegions_Doom() {
         for (k = 0; k < R->entities.size(); k++) {
             csg_entity_c *E = R->entities[k];
 
-            DM_AddThing(I_ROUND(E->x), I_ROUND(E->y), 0, 11, sec_id, 7, 0, 0,
+            DM_AddThing(RoundToInteger(E->x), RoundToInteger(E->y), 0, 11, sec_id, 7, 0, 0,
                         NULL);
         }
 

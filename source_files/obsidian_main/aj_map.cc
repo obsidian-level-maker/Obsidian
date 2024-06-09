@@ -19,6 +19,7 @@
 #include "aj_local.h"
 #include "aj_parse.h"
 #include "main.h"
+#include "sys_macro.h"
 
 #define DEBUG_LOAD 0
 
@@ -228,12 +229,12 @@ void ParseSectorField(sector_c *sector, const std::string& key, ajparse::token_k
     }
     else if (key == "texturefloor") 
     {
-        std::copy(value.data(), value.data() + MIN(8, value.size()),
+        std::copy(value.data(), value.data() + OBSIDIAN_MIN(8, value.size()),
                   sector->floor_tex);
     }
     else if (key == "textureceiling") 
     {
-		std::copy(value.data(), value.data() + MIN(8, value.size()),
+		std::copy(value.data(), value.data() + OBSIDIAN_MIN(8, value.size()),
                   sector->ceil_tex);
     }
 	else if (key == "lightlevel") 
@@ -267,17 +268,17 @@ void ParseSidedefField(sidedef_c *side, const std::string& key, ajparse::token_k
     }
     else if (key == "texturetop")
     {
-        std::copy(value.data(), value.data() + MIN(8, value.size()),
+        std::copy(value.data(), value.data() + OBSIDIAN_MIN(8, value.size()),
                   side->upper_tex);
     }
     else if (key == "texturebottom")
     {
-        std::copy(value.data(), value.data() + MIN(8, value.size()),
+        std::copy(value.data(), value.data() + OBSIDIAN_MIN(8, value.size()),
                   side->lower_tex);
     }
     else if (key == "texturemiddle")
     {
-        std::copy(value.data(), value.data() + MIN(8, value.size()),
+        std::copy(value.data(), value.data() + OBSIDIAN_MIN(8, value.size()),
                   side->mid_tex);
     }
 	else if (key == "sector")
@@ -1024,11 +1025,11 @@ void DetermineMapLimits() {
         int x2 = (int)L->end->x;
         int y2 = (int)L->end->y;
 
-        limit_x1 = MIN(limit_x1, MIN(x1, x2));
-        limit_y1 = MIN(limit_y1, MIN(y1, y2));
+        limit_x1 = OBSIDIAN_MIN(limit_x1, OBSIDIAN_MIN(x1, x2));
+        limit_y1 = OBSIDIAN_MIN(limit_y1, OBSIDIAN_MIN(y1, y2));
 
-        limit_x2 = MAX(limit_x2, MAX(x1, x2));
-        limit_y2 = MAX(limit_y2, MAX(y1, y2));
+        limit_x2 = OBSIDIAN_MAX(limit_x2, OBSIDIAN_MAX(x1, x2));
+        limit_y2 = OBSIDIAN_MAX(limit_y2, OBSIDIAN_MAX(y1, y2));
     }
 
     Appl_Printf("Map goes from (%d,%d) to (%d,%d)\n", limit_x1, limit_y1,
@@ -1074,11 +1075,11 @@ void CheckSectorIsDummy(sector_c *sec) {
             int x = pass ? line->end->x : line->start->x;
             int y = pass ? line->end->y : line->start->y;
 
-            bound_x1 = MIN(bound_x1, x);
-            bound_y1 = MIN(bound_y1, y);
+            bound_x1 = OBSIDIAN_MIN(bound_x1, x);
+            bound_y1 = OBSIDIAN_MIN(bound_y1, y);
 
-            bound_x2 = MAX(bound_x2, x);
-            bound_y2 = MAX(bound_y2, y);
+            bound_x2 = OBSIDIAN_MAX(bound_x2, x);
+            bound_y2 = OBSIDIAN_MAX(bound_y2, y);
         }
     }
 

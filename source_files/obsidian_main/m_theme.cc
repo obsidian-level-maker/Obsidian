@@ -121,7 +121,7 @@ std::string Theme_AskLoadFilename() {
 static void Parse_Theme_Option(std::string name, std::string value) {
     if (StringCompare(name, "window_scaling") == 0) {
         window_scaling = StringToInt(value);
-        window_scaling = CLAMP(0, window_scaling, 5);
+        window_scaling = OBSIDIAN_CLAMP(0, window_scaling, 5);
     } else if (StringCompare(name, "font_scaling") == 0) {
         font_scaling = StringToInt(value);
     } else if (StringCompare(name, "font_theme") == 0) {

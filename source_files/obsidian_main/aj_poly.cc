@@ -18,6 +18,7 @@
 
 #include <cstddef>
 #include "aj_local.h"
+#include "sys_macro.h"
 
 #define DEBUG_POLY 0
 
@@ -361,8 +362,8 @@ int EvalPartition(edge_c *part, edge_c *edge_list) {
     }
 
     // increase cost by the difference between left and right
-    cost += 100 * ABS(real_left - real_right);
-    cost += 30 * ABS(mini_left - mini_right);
+    cost += 100 * OBSIDIAN_ABS(real_left - real_right);
+    cost += 30 * OBSIDIAN_ABS(mini_left - mini_right);
 
     // show a slight preference for purely horizontally or vertical
     // partition lines.

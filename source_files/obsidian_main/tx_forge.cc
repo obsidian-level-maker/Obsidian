@@ -259,8 +259,8 @@ static void copy_and_scale(float *buf) {
         for (j = 0; j < meshsize; j++) {
             double r = Real(i, j);
 
-            rmin = MIN(rmin, r);
-            rmax = MAX(rmax, r);
+            rmin = OBSIDIAN_MIN(rmin, r);
+            rmax = OBSIDIAN_MAX(rmax, r);
         }
     }
 

@@ -1076,7 +1076,7 @@ void Trans_SetLanguage() {
         path = StringFormat("%s/language/%s.po", install_dir.c_str(), lang_plain.c_str());
     }
 
-    FILE *fp = fopen(path.c_str(), "rb");
+    FILE *fp = FileOpen(path.c_str(), "rb");
     if (!fp) {
         LogPrintf("No translation file: language/%s.po\n", lang_plain.c_str());
         LogPrintf("Using the default language (English)\n\n");

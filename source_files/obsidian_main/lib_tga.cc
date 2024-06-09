@@ -29,9 +29,7 @@
 #include "headers.h"
 #include "main.h"
 
-#ifdef HAVE_PHYSFS
 #include "m_addons.h"
-#endif
 
 tga_image_c::tga_image_c(int W, int H)
     : width(W), height(H), opacity(OPAC_UNKNOWN) {
@@ -393,11 +391,7 @@ tga_image_c *TGA_LoadImage(const char *path) {
         }
     }
 
-#ifdef HAVE_PHYSFS
     VFS_FreeFile(buffer);
-#else
-    FileFree(buffer);
-#endif
 
     img->opacity = is_complex  ? OPAC_Complex
                    : is_masked ? OPAC_Masked
