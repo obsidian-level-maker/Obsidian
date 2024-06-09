@@ -123,7 +123,7 @@ bool IsPathAbsolute(std::string_view path)
 FILE *FileOpen(std::string_view name, std::string_view mode)
 {
     SYS_ASSERT(!name.empty());
-    return FileOpen(std::string(name).c_str(), std::string(mode).c_str());
+    return fopen(std::string(name).c_str(), std::string(mode).c_str());
 }
 bool FileRename(std::string_view oldname, std::string_view newname)
 {
