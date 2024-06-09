@@ -1048,7 +1048,7 @@ static bool IsLevelLump(const char *name)
 {
     for (int i = 0; i < NUM_LEVEL_LUMPS; i++)
     {
-        if (strcmp(name, level_lumps[i]) == 0)
+        if (StringCompare(name, level_lumps[i]) == 0)
         {
             return true;
         }
@@ -1835,19 +1835,19 @@ int title_set_palette(lua_State *L)
 
 static void TitleParsePen(const char *what)
 {
-    if (strcmp(what, "circle") == 0)
+    if (StringCompare(what, "circle") == 0)
     {
         title_drawctx.pen_type = PEN_Circle;
     }
-    else if (strcmp(what, "box") == 0)
+    else if (StringCompare(what, "box") == 0)
     {
         title_drawctx.pen_type = PEN_Box;
     }
-    else if (strcmp(what, "slash") == 0)
+    else if (StringCompare(what, "slash") == 0)
     {
         title_drawctx.pen_type = PEN_Slash;
     }
-    else if (strcmp(what, "slash2") == 0)
+    else if (StringCompare(what, "slash2") == 0)
     {
         title_drawctx.pen_type = PEN_Slash2;
     }
@@ -1857,31 +1857,31 @@ static void TitleParseRenderMode(const char *what)
 {
     // Note: REND_Textured is handled differently
 
-    if (strcmp(what, "solid") == 0)
+    if (StringCompare(what, "solid") == 0)
     {
         title_drawctx.render_mode = REND_Solid;
     }
-    else if (strcmp(what, "additive") == 0)
+    else if (StringCompare(what, "additive") == 0)
     {
         title_drawctx.render_mode = REND_Additive;
     }
-    else if (strcmp(what, "subtract") == 0)
+    else if (StringCompare(what, "subtract") == 0)
     {
         title_drawctx.render_mode = REND_Subtract;
     }
-    else if (strcmp(what, "multiply") == 0)
+    else if (StringCompare(what, "multiply") == 0)
     {
         title_drawctx.render_mode = REND_Multiply;
     }
-    else if (strcmp(what, "gradient") == 0)
+    else if (StringCompare(what, "gradient") == 0)
     {
         title_drawctx.render_mode = REND_Gradient;
     }
-    else if (strcmp(what, "gradient3") == 0)
+    else if (StringCompare(what, "gradient3") == 0)
     {
         title_drawctx.render_mode = REND_Gradient3;
     }
-    else if (strcmp(what, "random") == 0)
+    else if (StringCompare(what, "random") == 0)
     {
         title_drawctx.render_mode = REND_Random;
     }
@@ -1905,51 +1905,51 @@ int title_property(lua_State *L)
 
     const char *propname = luaL_checkstring(L, 1);
 
-    if (strcmp(propname, "reset") == 0)
+    if (StringCompare(propname, "reset") == 0)
     {
         title_drawctx.Reset();
     }
-    else if (strcmp(propname, "color") == 0 || strcmp(propname, "color1") == 0)
+    else if (StringCompare(propname, "color") == 0 || StringCompare(propname, "color1") == 0)
     {
         title_drawctx.color[0] = Grab_Color(L, 2);
     }
-    else if (strcmp(propname, "color2") == 0)
+    else if (StringCompare(propname, "color2") == 0)
     {
         title_drawctx.color[1] = Grab_Color(L, 2);
     }
-    else if (strcmp(propname, "color3") == 0)
+    else if (StringCompare(propname, "color3") == 0)
     {
         title_drawctx.color[2] = Grab_Color(L, 2);
     }
-    else if (strcmp(propname, "color4") == 0)
+    else if (StringCompare(propname, "color4") == 0)
     {
         title_drawctx.color[3] = Grab_Color(L, 2);
     }
-    else if (strcmp(propname, "box_w") == 0)
+    else if (StringCompare(propname, "box_w") == 0)
     {
         title_drawctx.box_w = luaL_checkinteger(L, 2);
     }
-    else if (strcmp(propname, "box_h") == 0)
+    else if (StringCompare(propname, "box_h") == 0)
     {
         title_drawctx.box_h = luaL_checkinteger(L, 2);
     }
-    else if (strcmp(propname, "grad_y1") == 0)
+    else if (StringCompare(propname, "grad_y1") == 0)
     {
         title_drawctx.grad_y1 = luaL_checkinteger(L, 2);
     }
-    else if (strcmp(propname, "grad_y2") == 0)
+    else if (StringCompare(propname, "grad_y2") == 0)
     {
         title_drawctx.grad_y2 = luaL_checkinteger(L, 2);
     }
-    else if (strcmp(propname, "pen_type") == 0)
+    else if (StringCompare(propname, "pen_type") == 0)
     {
         TitleParsePen(luaL_checkstring(L, 2));
     }
-    else if (strcmp(propname, "render_mode") == 0)
+    else if (StringCompare(propname, "render_mode") == 0)
     {
         TitleParseRenderMode(luaL_checkstring(L, 2));
     }
-    else if (strcmp(propname, "texture") == 0)
+    else if (StringCompare(propname, "texture") == 0)
     {
         TitleParseTexture(L, luaL_checkstring(L, 2));
     }

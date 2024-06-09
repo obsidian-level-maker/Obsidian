@@ -109,8 +109,8 @@ class extrafloor_c
 
                (u_light == other->u_light) && (u_special == other->u_special) && (u_tag == other->u_tag) &&
 
-               (strcmp(top.c_str(), other->top.c_str()) == 0) && (strcmp(bottom.c_str(), other->bottom.c_str()) == 0) &&
-               (strcmp(wall.c_str(), other->wall.c_str()) == 0);
+               (StringCompare(top.c_str(), other->top.c_str()) == 0) && (StringCompare(bottom.c_str(), other->bottom.c_str()) == 0) &&
+               (StringCompare(wall.c_str(), other->wall.c_str()) == 0);
     }
 };
 
@@ -389,8 +389,8 @@ class sidedef_c
 
     inline bool SameTex(const sidedef_c *T) const
     {
-        return (strcmp(mid.c_str(), T->mid.c_str()) == 0) && (strcmp(lower.c_str(), T->lower.c_str()) == 0) &&
-               (strcmp(upper.c_str(), T->upper.c_str()) == 0);
+        return (StringCompare(mid.c_str(), T->mid.c_str()) == 0) && (StringCompare(lower.c_str(), T->lower.c_str()) == 0) &&
+               (StringCompare(upper.c_str(), T->upper.c_str()) == 0);
     }
 };
 
@@ -769,7 +769,7 @@ class linedef_c
     {
         if (!back && !P->back)
         {
-            return (strcmp(front->mid.c_str(), P->front->mid.c_str()) == 0);
+            return (StringCompare(front->mid.c_str(), P->front->mid.c_str()) == 0);
         }
 
         if (back && P->back)
@@ -787,8 +787,8 @@ class linedef_c
         // now L is single sided and P is double sided.
 
         // allow either upper or lower to match
-        return (strcmp(L->front->mid.c_str(), P->front->lower.c_str()) == 0) ||
-               (strcmp(L->front->mid.c_str(), P->front->upper.c_str()) == 0);
+        return (StringCompare(L->front->mid.c_str(), P->front->lower.c_str()) == 0) ||
+               (StringCompare(L->front->mid.c_str(), P->front->upper.c_str()) == 0);
     }
 
     void Write();
@@ -2833,7 +2833,7 @@ static sector_c *FindDepotPeer()
 
         for (auto *E : R->entities)
         {
-            if (strcmp(E->id.c_str(), "oblige_depot") == 0)
+            if (StringCompare(E->id.c_str(), "oblige_depot") == 0)
             {
                 return S;
             }
@@ -2860,7 +2860,7 @@ void ProcessSecrets()
 
         for (auto *E : R->entities)
         {
-            if (strcmp(E->id.c_str(), "oblige_secret") == 0)
+            if (StringCompare(E->id.c_str(), "oblige_secret") == 0)
             {
                 S->special = 9;
             }
@@ -3008,7 +3008,7 @@ static void AddThing_FraggleScript(int x, int y, int z, csg_entity_c *E, int typ
 static void WriteThing(sector_c *S, csg_entity_c *E)
 {
     // ignore light entities and boxes
-    if (strcmp(E->id.c_str(), "light") == 0 || strncmp(E->id.c_str(), "oblige_", 7) == 0)
+    if (StringCompare(E->id.c_str(), "light") == 0 || strncmp(E->id.c_str(), "oblige_", 7) == 0)
     {
         return;
     }

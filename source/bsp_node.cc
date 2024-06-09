@@ -391,9 +391,9 @@ bool EvalPartitionWorker(quadtree_c *tree, seg_t *part, double best_cost, eval_i
             //       the cost.
 
             if (a <= DIST_EPSILON || b <= DIST_EPSILON)
-                qnty = IFFY_LEN / std::max(a, b);
+                qnty = IFFY_LEN / OBSIDIAN_MAX(a, b);
             else
-                qnty = IFFY_LEN / std::min(a, b);
+                qnty = IFFY_LEN / OBSIDIAN_MIN(a, b);
 
             info->cost += 70.0 * split_cost * (qnty * qnty - 1.0);
             continue;
@@ -415,9 +415,9 @@ bool EvalPartitionWorker(quadtree_c *tree, seg_t *part, double best_cost, eval_i
 
             // the closer the miss, the higher the cost (see note above)
             if (a >= -DIST_EPSILON || b >= -DIST_EPSILON)
-                qnty = IFFY_LEN / -std::min(a, b);
+                qnty = IFFY_LEN / -OBSIDIAN_MIN(a, b);
             else
-                qnty = IFFY_LEN / -std::max(a, b);
+                qnty = IFFY_LEN / -OBSIDIAN_MAX(a, b);
 
             info->cost += 70.0 * split_cost * (qnty * qnty - 1.0);
             continue;
@@ -448,7 +448,7 @@ bool EvalPartitionWorker(quadtree_c *tree, seg_t *part, double best_cost, eval_i
             info->iffy++;
 
             // the closer to the end, the higher the cost
-            qnty = IFFY_LEN / std::min(fa, fb);
+            qnty = IFFY_LEN / OBSIDIAN_MIN(fa, fb);
             info->cost += 140.0 * split_cost * (qnty * qnty - 1.0);
         }
     }
@@ -804,10 +804,10 @@ void FindLimits2(seg_t *list, bbox_t *bbox)
         double x2 = list->end->x;
         double y2 = list->end->y;
 
-        int lx = (int)floor(std::min(x1, x2) - 0.2);
-        int ly = (int)floor(std::min(y1, y2) - 0.2);
-        int hx = (int)ceil(std::max(x1, x2) + 0.2);
-        int hy = (int)ceil(std::max(y1, y2) + 0.2);
+        int lx = (int)floor(OBSIDIAN_MIN(x1, x2) - 0.2);
+        int ly = (int)floor(OBSIDIAN_MIN(y1, y2) - 0.2);
+        int hx = (int)ceil(OBSIDIAN_MAX(x1, x2) + 0.2);
+        int hy = (int)ceil(OBSIDIAN_MAX(y1, y2) + 0.2);
 
         if (lx < bbox->minx)
             bbox->minx = lx;
@@ -1008,11 +1008,11 @@ void quadtree_c::AddSeg(seg_t *seg)
 
     if (subs[0] != NULL)
     {
-        double x_min = std::min(seg->start->x, seg->end->x);
-        double y_min = std::min(seg->start->y, seg->end->y);
+        double x_min = OBSIDIAN_MIN(seg->start->x, seg->end->x);
+        double y_min = OBSIDIAN_MIN(seg->start->y, seg->end->y);
 
-        double x_max = std::max(seg->start->x, seg->end->x);
-        double y_max = std::max(seg->start->y, seg->end->y);
+        double x_max = OBSIDIAN_MAX(seg->start->x, seg->end->x);
+        double y_max = OBSIDIAN_MAX(seg->start->y, seg->end->y);
 
         if ((x2 - x1) >= (y2 - y1))
         {
@@ -1462,7 +1462,7 @@ int ComputeBspHeight(const node_t *node)
     int right = ComputeBspHeight(node->r.node);
     int left  = ComputeBspHeight(node->l.node);
 
-    return std::max(left, right) + 1;
+    return OBSIDIAN_MAX(left, right) + 1;
 }
 
 #if DEBUG_BUILDER

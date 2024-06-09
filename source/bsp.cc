@@ -63,10 +63,10 @@ bool CheckMapInRange(const map_range_t *range, const char *name)
     if (strlen(name) != strlen(range->low))
         return false;
 
-    if (strcmp(name, range->low) < 0)
+    if (StringCompare(name, range->low) < 0)
         return false;
 
-    if (strcmp(name, range->high) > 0)
+    if (StringCompare(name, range->high) > 0)
         return false;
 
     return true;
@@ -252,7 +252,7 @@ void ParseMapRange(char *tok, buildinfo_t *build_info)
     if (low[0] != high[0])
         build_info->FatalError("bad map range (%s and %s start with different letters)\n", low, high);
 
-    if (strcmp(low, high) > 0)
+    if (StringCompare(low, high) > 0)
         build_info->FatalError("bad map range (wrong order, %s > %s)\n", low, high);
 
     // Ok

@@ -16,6 +16,7 @@
 //
 //------------------------------------------------------------------------
 
+#include "lib_util.h"
 #include "poly_local.h"
 
 #define DEBUG_WAD 0
@@ -44,7 +45,7 @@ int CheckLevelLump(const char *name)
 {
     for (int i = 0; level_lumps[i]; i++)
     {
-        if (strcmp(name, level_lumps[i]) == 0)
+        if (StringCompare(name, level_lumps[i]) == 0)
         {
             return 1 + i;
         }
@@ -263,7 +264,7 @@ int wad_c::FindLump(const char *name, int level)
     {
         lump_c *L = lumps[i];
 
-        if (strcmp(L->name, name) == 0 && L->children == 0)
+        if (StringCompare(L->name, name) == 0 && L->children == 0)
         {
             return i;
         }
@@ -283,7 +284,7 @@ int wad_c::FindLevel(const char *name)
             continue;
         }
 
-        if (name[0] == '*' || (strcmp(L->name, name) == 0))
+        if (name[0] == '*' || (StringCompare(L->name, name) == 0))
         {
             return i;
         }

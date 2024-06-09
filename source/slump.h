@@ -63,11 +63,6 @@ typedef unsigned char boolean;
 
 typedef unsigned char byte;
 
-#ifndef USE_STRICMP
-#define slump_stricmp(x, y)     strcasecmp(x, y)
-#define slump_strnicmp(x, y, n) strncasecmp(x, y, n)
-#endif
-
 #ifdef OK_TO_USE_REAL_MONSTER_WIDTH
 #define MONSTER_WIDTH(m) (m->width)
 #else

@@ -22,6 +22,8 @@
 #ifndef SYS_MACRO_H_
 #define SYS_MACRO_H_
 
+#include <math.h>
+
 // basic constants
 constexpr uint16_t MSG_BUF_LEN  = 2000;
 constexpr double   DIST_EPSILON = (1.0 / 1024.0);

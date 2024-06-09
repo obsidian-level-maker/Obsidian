@@ -18,6 +18,9 @@
 //
 //------------------------------------------------------------------------
 
+#include <limits.h>
+#include <math.h>
+
 #include <algorithm>
 
 #include "bsp_local.h"
@@ -192,10 +195,10 @@ static void BlockAddLine(const linedef_t *L)
     int x2 = (int)L->end->x;
     int y2 = (int)L->end->y;
 
-    int bx1 = (std::min(x1, x2) - block_x) / 128;
-    int by1 = (std::min(y1, y2) - block_y) / 128;
-    int bx2 = (std::max(x1, x2) - block_x) / 128;
-    int by2 = (std::max(y1, y2) - block_y) / 128;
+    int bx1 = (OBSIDIAN_MIN(x1, x2) - block_x) / 128;
+    int by1 = (OBSIDIAN_MIN(y1, y2) - block_y) / 128;
+    int bx2 = (OBSIDIAN_MAX(x1, x2) - block_x) / 128;
+    int by2 = (OBSIDIAN_MAX(y1, y2) - block_y) / 128;
 
     int bx, by;
     int line_index = L->index;
@@ -511,10 +514,10 @@ static void FindBlockmapLimits(bbox_t *bbox)
             double x2 = L->end->x;
             double y2 = L->end->y;
 
-            int lx = (int)floor(std::min(x1, x2));
-            int ly = (int)floor(std::min(y1, y2));
-            int hx = (int)ceil(std::max(x1, x2));
-            int hy = (int)ceil(std::max(y1, y2));
+            int lx = (int)floor(OBSIDIAN_MIN(x1, x2));
+            int ly = (int)floor(OBSIDIAN_MIN(y1, y2));
+            int hx = (int)ceil(OBSIDIAN_MAX(x1, x2));
+            int hy = (int)ceil(OBSIDIAN_MAX(y1, y2));
 
             if (lx < bbox->minx)
                 bbox->minx = lx;
@@ -1563,7 +1566,7 @@ void ParseUDMF()
     {
         char buffer[4096];
 
-        int want = std::min(remain, (int)sizeof(buffer));
+        int want = OBSIDIAN_MIN(remain, (int)sizeof(buffer));
 
         if (!lump->Read(buffer, want))
             cur_info->FatalError("Error reading TEXTMAP lump.\n");

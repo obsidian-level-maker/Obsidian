@@ -24,6 +24,7 @@
 #include <vector>
 
 #include "bsp.h"
+#include "sys_macro.h"
 
 namespace ajbsp
 {
@@ -215,7 +216,7 @@ class linedef_t
   public:
     double MinX() const
     {
-        return std::min(start->x, end->x);
+        return OBSIDIAN_MIN(start->x, end->x);
     }
 };
 

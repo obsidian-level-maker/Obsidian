@@ -340,14 +340,14 @@ void Cookie_ParseArguments(void)
             continue;
         }
 
-        if (strcmp(arg.c_str(), "@@") == 0)
+        if (StringCompare(arg.c_str(), "@@") == 0)
         {
             active_module.clear();
             continue;
         }
 
         // support an isolated "=", like in: FOO = 3
-        if (i + 2 < argv::list.size() && strcmp(argv::list[i + 1].c_str(), "=") == 0 && argv::list[i + 2][0] != '-')
+        if (i + 2 < argv::list.size() && StringCompare(argv::list[i + 1].c_str(), "=") == 0 && argv::list[i + 2][0] != '-')
         {
             Cookie_SetValue(arg, argv::list[i + 2]);
             i += 2;

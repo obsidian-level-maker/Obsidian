@@ -2195,7 +2195,7 @@ bool ob_build_cool_shit()
     // remove result from lua stack
     lua_pop(LUA_ST, 1);
 
-    if (res && strcmp(res, "ok") == 0)
+    if (res && StringCompare(res, "ok") == 0)
     {
         return true;
     }

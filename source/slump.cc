@@ -36,6 +36,7 @@
 
 #include "lib_util.h"
 #include "m_lua.h"
+#include "sys_macro.h"
 #include "sys_xoshiro.h"
 
 extern const char *ob_gettext(const char *s);
@@ -902,7 +903,7 @@ flat *find_flat(config *c, const char *name)
     flat *t = NULL;
 
     for (t = c->flat_anchor; t; t = t->next)
-        if (!strcmp(name, t->name))
+        if (!StringCompare(name, t->name))
             return t;
     return new_flat(c, name);
 }
@@ -1057,7 +1058,7 @@ texture *find_texture(config *c, const char *name)
     texture *t = NULL;
 
     for (t = c->texture_anchor; t; t = t->next)
-        if (!strcmp(name, t->name))
+        if (!StringCompare(name, t->name))
             return t;
     return new_texture(c, name);
 }
@@ -1408,7 +1409,7 @@ config *get_config(std::string filename)
     {
         int low          = StringToInt(ob_get_param("float_minrooms_slump_lb"));
         int high         = StringToInt(ob_get_param("float_minrooms_slump_ub"));
-        answer->minrooms = xoshiro_Between(std::min(low, high), std::max(low, high));
+        answer->minrooms = xoshiro_Between(OBSIDIAN_MIN(low, high), OBSIDIAN_MAX(low, high));
     }
     else
     {
@@ -11075,49 +11076,49 @@ propertybits absorb_propertybit(char **r)
 
     p = *r;
 
-    if ((!slump_stricmp(p, "wall")) || (!strcmp(p, "w")))
+    if ((!StringCaseCompare(p, "wall")) || (!StringCompare(p, "w")))
         return WALL;
-    if ((!slump_stricmp(p, "isswitch")) || (!strcmp(p, "i")))
+    if ((!StringCaseCompare(p, "isswitch")) || (!StringCompare(p, "i")))
         return SWITCH;
-    if ((!slump_stricmp(p, "lift")) || (!strcmp(p, "F")))
+    if ((!StringCaseCompare(p, "lift")) || (!StringCompare(p, "F")))
         return LIFT_TEXTURE;
-    if ((!slump_stricmp(p, "support")) || (!strcmp(p, "I")))
+    if ((!StringCaseCompare(p, "support")) || (!StringCompare(p, "I")))
         return SUPPORT;
-    if ((!slump_stricmp(p, "jamb")) || (!strcmp(p, "j")))
+    if ((!StringCaseCompare(p, "jamb")) || (!StringCompare(p, "j")))
         return JAMB;
-    if ((!slump_stricmp(p, "step")) || (!strcmp(p, "e")))
+    if ((!StringCaseCompare(p, "step")) || (!StringCompare(p, "e")))
         return STEP;
-    if ((!slump_stricmp(p, "grating")) || (!strcmp(p, "g")))
+    if ((!StringCaseCompare(p, "grating")) || (!StringCompare(p, "g")))
         return GRATING;
-    if ((!slump_stricmp(p, "plaque")) || (!strcmp(p, "p")))
+    if ((!StringCaseCompare(p, "plaque")) || (!StringCompare(p, "p")))
         return PLAQUE;
-    if ((!slump_stricmp(p, "vtiles")) || (!strcmp(p, "v")))
+    if ((!StringCaseCompare(p, "vtiles")) || (!StringCompare(p, "v")))
         return VTILES;
-    if ((!slump_stricmp(p, "half_plaque")) || (!strcmp(p, "H")))
+    if ((!StringCaseCompare(p, "half_plaque")) || (!StringCompare(p, "H")))
         return HALF_PLAQUE;
-    if ((!slump_stricmp(p, "light")) || (!strcmp(p, "l")))
+    if ((!StringCaseCompare(p, "light")) || (!StringCompare(p, "l")))
         return LIGHT;
-    if ((!slump_stricmp(p, "exitswitch")) || (!strcmp(p, "E")))
+    if ((!StringCaseCompare(p, "exitswitch")) || (!StringCompare(p, "E")))
         return EXITSWITCH;
-    if ((!slump_stricmp(p, "door")) || (!strcmp(p, "d")))
+    if ((!StringCaseCompare(p, "door")) || (!StringCompare(p, "d")))
         return DOOR;
-    if ((!slump_stricmp(p, "locked")) || (!strcmp(p, "L")))
+    if ((!StringCaseCompare(p, "locked")) || (!StringCompare(p, "L")))
         return GATE;
-    if ((!slump_stricmp(p, "outside")) || (!strcmp(p, "o")))
+    if ((!StringCaseCompare(p, "outside")) || (!StringCompare(p, "o")))
         return OUTDOOR;
-    if ((!slump_stricmp(p, "red")) || (!strcmp(p, "r")))
+    if ((!StringCaseCompare(p, "red")) || (!StringCompare(p, "r")))
         return RED;
-    if ((!slump_stricmp(p, "blue")) || (!strcmp(p, "b")))
+    if ((!StringCaseCompare(p, "blue")) || (!StringCompare(p, "b")))
         return BLUE;
-    if ((!slump_stricmp(p, "yellow")) || (!strcmp(p, "y")))
+    if ((!StringCaseCompare(p, "yellow")) || (!StringCompare(p, "y")))
         return YELLOW;
-    if ((!slump_stricmp(p, "floor")) || (!strcmp(p, "D")))
+    if ((!StringCaseCompare(p, "floor")) || (!StringCompare(p, "D")))
         return FLOOR;
-    if ((!slump_stricmp(p, "ceiling")) || (!strcmp(p, "U")))
+    if ((!StringCaseCompare(p, "ceiling")) || (!StringCompare(p, "U")))
         return CEILING;
-    if ((!slump_stricmp(p, "nukage")) || (!strcmp(p, "n")))
+    if ((!StringCaseCompare(p, "nukage")) || (!StringCompare(p, "n")))
         return NUKAGE;
-    if ((!slump_stricmp(p, "gate")) || (!strcmp(p, "G")))
+    if ((!StringCaseCompare(p, "gate")) || (!StringCompare(p, "G")))
         return GATE;
 
     return 0;
@@ -11133,17 +11134,17 @@ gamebits absorb_gamebit(char **r)
 
     p = *r;
 
-    if ((!slump_stricmp(p, "nodoom0")) || (!strcmp(p, "0")))
+    if ((!StringCaseCompare(p, "nodoom0")) || (!StringCompare(p, "0")))
         return DOOM0_BIT;
-    if ((!slump_stricmp(p, "nodoom1")) || (!strcmp(p, "1")))
+    if ((!StringCaseCompare(p, "nodoom1")) || (!StringCompare(p, "1")))
         return DOOM1_BIT;
-    if ((!slump_stricmp(p, "nodoom2")) || (!strcmp(p, "2")))
+    if ((!StringCaseCompare(p, "nodoom2")) || (!StringCompare(p, "2")))
         return DOOM2_BIT;
-    if ((!slump_stricmp(p, "gross")) || (!strcmp(p, "Q")))
+    if ((!StringCaseCompare(p, "gross")) || (!StringCompare(p, "Q")))
         return DOOMC_BIT;
-    if ((!slump_stricmp(p, "custom")) || (!strcmp(p, "u")))
+    if ((!StringCaseCompare(p, "custom")) || (!StringCompare(p, "u")))
         return DOOMI_BIT;
-    if ((!slump_stricmp(p, "heretic")) || (!strcmp(p, "R")))
+    if ((!StringCaseCompare(p, "heretic")) || (!StringCompare(p, "R")))
         return HERETIC_BIT; // "R" for Raven, since "H" is already used
 
     return 0;
@@ -11161,7 +11162,7 @@ char *absorb_theme(char *p, config *c)
     name = p;
 
     q = p + 1 + strlen(p);
-    if ((!slump_stricmp(q, "secret")) || (!strcmp(q, "?")))
+    if ((!StringCaseCompare(q, "secret")) || (!StringCompare(q, "?")))
     {
         p = q;
         b = SLUMP_TRUE;
@@ -11180,7 +11181,7 @@ themebits themebit_for_name(char *name, config *c)
 
     for (t = c->theme_anchor; t; t = t->next)
     {
-        if (!slump_stricmp(t->name, name))
+        if (!StringCaseCompare(t->name, name))
             return answer;
         answer <<= 1;
     }
@@ -11193,7 +11194,7 @@ themebits themebit_for_name(char *name, config *c)
 char *absorb_string(char **r, const char *ln, const char *sn)
 {
     /* Needs more error-checking.  Input Is Evil. */
-    if (slump_stricmp(*r, ln) && strcmp(*r, sn))
+    if (StringCaseCompare(*r, ln) && StringCompare(*r, sn))
         return NULL;
     (*r) += 1 + strlen(*r); /* That's the name */
     return *r;
@@ -11304,12 +11305,12 @@ char *absorb_texture(char *p, config *c)
             t->height = n;
             continue;
         }
-        if ((!slump_stricmp(q, "error")) || (!slump_stricmp(q, "!")))
+        if ((!StringCaseCompare(q, "error")) || (!StringCaseCompare(q, "!")))
         {
             c->error_texture = t;
             continue;
         }
-        if ((!slump_stricmp(q, "gateexitsign")) || (!slump_stricmp(q, "X")))
+        if ((!StringCaseCompare(q, "gateexitsign")) || (!StringCaseCompare(q, "X")))
         {
             c->gate_exitsign_texture = t;
             continue;
@@ -11358,12 +11359,12 @@ char *absorb_flat(char *p, config *c)
             f->compatible |= tb;
             continue;
         }
-        if ((!slump_stricmp(q, "sky")) || (!slump_stricmp(q, "K")))
+        if ((!StringCaseCompare(q, "sky")) || (!StringCaseCompare(q, "K")))
         {
             c->sky_flat = f;
             continue;
         }
-        if ((!slump_stricmp(q, "water")) || (!slump_stricmp(q, "W")))
+        if ((!StringCaseCompare(q, "water")) || (!StringCaseCompare(q, "W")))
         {
             c->water_flat = f;
             continue;
@@ -11420,7 +11421,7 @@ boolean absorb_cell(construct *x, char **r, const char *ln, const char *sn, bool
     short         s, t;
 
     p = *r;
-    if (slump_stricmp(p, ln) && strcmp(p, sn))
+    if (StringCaseCompare(p, ln) && StringCompare(p, sn))
         return SLUMP_FALSE;
     p += 1 + strlen(p); /* That's the name */
     name = p;
@@ -11516,7 +11517,7 @@ boolean nonswitch_config(config *c)
 
     /* Skip to the "[THEMES]" section */
     for (p = c->configdata->data(); *p; p += 1 + strlen(p))
-        if (!slump_stricmp("[themes]", p))
+        if (!StringCaseCompare("[themes]", p))
             break;
     if (!*p)
     {
@@ -11528,17 +11529,17 @@ boolean nonswitch_config(config *c)
     {
         if (p[0] == '[')
             break; /* End of section */
-        if ((!strcmp(p, "T")) || (!slump_stricmp(p, "theme")))
+        if ((!StringCompare(p, "T")) || (!StringCaseCompare(p, "theme")))
             p = absorb_theme(p, c);
-        else if ((!strcmp(p, "t")) || (!slump_stricmp(p, "texture")))
+        else if ((!StringCompare(p, "t")) || (!StringCaseCompare(p, "texture")))
             p = absorb_texture(p, c);
-        else if ((!strcmp(p, "f")) || (!slump_stricmp(p, "flat")))
+        else if ((!StringCompare(p, "f")) || (!StringCaseCompare(p, "flat")))
             p = absorb_flat(p, c);
-        else if ((!strcmp(p, "x")) || (!slump_stricmp(p, "construct")))
+        else if ((!StringCompare(p, "x")) || (!StringCaseCompare(p, "construct")))
             p = absorb_construct(p, c);
-        else if ((!strcmp(p, ".")) || (!slump_stricmp(p, "thing")))
+        else if ((!StringCompare(p, ".")) || (!StringCaseCompare(p, "thing")))
             p = absorb_thing(p, c);
-        else if ((!strcmp(p, "#")) || (!slump_stricmp(p, "hardwired1")))
+        else if ((!StringCompare(p, "#")) || (!StringCaseCompare(p, "hardwired1")))
             hardwired_nonswitch_nontheme_config(c);
         else
         {

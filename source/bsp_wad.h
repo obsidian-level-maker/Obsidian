@@ -21,6 +21,7 @@
 
 #include <vector>
 
+#include "lib_util.h"
 #include "raw_def.h"
 
 namespace ajbsp
@@ -319,7 +320,7 @@ class Wad_file
             const Lump_c *L1 = wad->directory[A];
             const Lump_c *L2 = wad->directory[B];
 
-            return (strcmp(L1->Name(), L2->Name()) < 0);
+            return (StringCompare(L1->Name(), L2->Name()) < 0);
         }
     };
 };

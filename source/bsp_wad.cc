@@ -461,7 +461,7 @@ int Wad_file::LevelFindByNumber(int number)
         return index;
 
     // otherwise try E#M#
-    sprintf(buffer, "E%dM%d", std::max(1, number / 10), number % 10);
+    sprintf(buffer, "E%dM%d", OBSIDIAN_MAX(1, number / 10), number % 10);
 
     index = LevelFind(buffer);
     if (index >= 0)
