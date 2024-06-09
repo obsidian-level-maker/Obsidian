@@ -19,6 +19,8 @@
 
 #include "bsp.h"
 
+#include <string.h>
+
 #include "bsp_utility.h"
 #include "bsp_wad.h"
 #include "lib_util.h"

@@ -75,7 +75,6 @@ set(OBSIDIAN_SOURCE_FILES
     source/m_options.cc
     source/m_trans.cc
     source/main.cc
-    source/obsidian.rc
     source/poly_map.cc
     source/poly.cc
     source/poly_util.cc
@@ -105,6 +104,13 @@ if (NOT CONSOLE_ONLY)
     source/ui_module.cc
     source/ui_widgets.cc
     source/ui_window.cc
+  )
+endif()
+
+if (WIN32)
+  set(OBSIDIAN_SOURCE_FILES
+    ${OBSIDIAN_SOURCE_FILES}
+    source/obsidian.rc
   )
 endif()
 
