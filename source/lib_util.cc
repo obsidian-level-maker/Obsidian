@@ -304,6 +304,59 @@ void ReplaceExtension(std::string &path, std::string_view ext)
     }
 }
 
+char *CStringNew(int length)
+{
+    // length does not include the trailing NUL.
+
+    char *s = (char *)calloc(length + 1, 1);
+
+    if (!s)
+        Main::FatalError("Out of memory (%d bytes for string)\n", length);
+
+    return s;
+}
+
+char *CStringDup(const char *original, int limit)
+{
+    if (!original)
+        return nullptr;
+
+    if (limit < 0)
+    {
+        char *s = strdup(original);
+
+        if (!s)
+            Main::FatalError("Out of memory (copy string)\n");
+
+        return s;
+    }
+
+    char *s = CStringNew(limit + 1);
+    strncpy(s, original, limit);
+    s[limit] = 0;
+
+    return s;
+}
+
+char *CStringUpper(const char *name)
+{
+    char *copy = CStringDup(name);
+
+    for (char *p = copy; *p; p++)
+        *p = ToUpperASCII(*p);
+
+    return copy;
+}
+
+void CStringFree(const char *string)
+{
+    if (string)
+    {
+        free((void *)string);
+    }
+}
+
+
 #ifdef _WIN32
 std::wstring UTF8ToWString(std::string_view instring)
 {

@@ -19,7 +19,7 @@
 #ifndef __AJPOLY_MAP_H__
 #define __AJPOLY_MAP_H__
 
-#include "aj_poly.h"
+#include "poly.h"
 
 /* ----- OBJECTS --------------------------------- */
 

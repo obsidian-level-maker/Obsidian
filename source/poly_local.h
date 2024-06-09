@@ -29,18 +29,18 @@
 
 #include <vector>
 
-#include "aj_poly.h"
+#include "poly.h"
 #include "sys_endian.h"
 #include "sys_macro.h"
 
 #include "physfs.h"
+#include "raw_def.h"
 
 namespace ajpoly {
 
-#include "aj_map.h"
-#include "aj_structs.h"
-#include "aj_util.h"
-#include "aj_wad.h"
+#include "poly_map.h"
+#include "poly_util.h"
+#include "poly_wad.h"
 
 }  // namespace ajpoly
 

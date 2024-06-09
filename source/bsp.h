@@ -21,6 +21,8 @@
 #ifndef __AJBSP_BSP_H__
 #define __AJBSP_BSP_H__
 
+#include <string>
+
 #define AJBSP_VERSION  "1.05"
 
 //

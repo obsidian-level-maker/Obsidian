@@ -18,14 +18,16 @@
 //
 //------------------------------------------------------------------------
 
-#include "system.h"
-#include "local.h"
-#include "lib_parse.h"
-#include "raw_def.h"
-#include "utility.h"
-#include "wad.h"
+#include <algorithm>
 
+#include "bsp_local.h"
+#include "lib_parse.h"
+#include "bsp_utility.h"
+#include "bsp_wad.h"
 #include "miniz.h"
+#include "raw_def.h"
+#include "sys_endian.h"
+#include "sys_macro.h"
 
 #define DEBUG_BLOCKMAP  0
 #define DEBUG_REJECT    0
@@ -531,8 +533,8 @@ static void FindBlockmapLimits(bbox_t *bbox)
 
 	if (num_linedefs > 0)
 	{
-		block_mid_x = I_ROUND(mid_x / (double)num_linedefs);
-		block_mid_y = I_ROUND(mid_y / (double)num_linedefs);
+		block_mid_x = RoundToInteger(mid_x / (double)num_linedefs);
+		block_mid_y = RoundToInteger(mid_y / (double)num_linedefs);
 	}
 
 #if DEBUG_BLOCKMAP
@@ -1638,8 +1640,8 @@ void PutVertices(const char *name, int do_gl)
 			continue;
 		}
 
-		raw.x = LE_S16(I_ROUND(vert->x));
-		raw.y = LE_S16(I_ROUND(vert->y));
+		raw.x = LE_S16(RoundToInteger(vert->x));
+		raw.y = LE_S16(RoundToInteger(vert->y));
 
 		lump->Write(&raw, sizeof(raw));
 
@@ -1683,8 +1685,8 @@ void PutGLVertices(int do_v5)
 		if (! vert->is_new)
 			continue;
 
-		raw.x = LE_S32(I_ROUND(vert->x * 65536.0));
-		raw.y = LE_S32(I_ROUND(vert->y * 65536.0));
+		raw.x = LE_S32(RoundToInteger(vert->x * 65536.0));
+		raw.y = LE_S32(RoundToInteger(vert->y * 65536.0));
 
 		lump->Write(&raw, sizeof(raw));
 
@@ -1926,10 +1928,10 @@ static void PutOneNode(node_t *node, Lump_c *lump)
 	raw_node_t raw;
 
 	// note that x/y/dx/dy are always integral in non-UDMF maps
-	raw.x  = LE_S16(I_ROUND(node->x));
-	raw.y  = LE_S16(I_ROUND(node->y));
-	raw.dx = LE_S16(I_ROUND(node->dx));
-	raw.dy = LE_S16(I_ROUND(node->dy));
+	raw.x  = LE_S16(RoundToInteger(node->x));
+	raw.y  = LE_S16(RoundToInteger(node->y));
+	raw.dx = LE_S16(RoundToInteger(node->dx));
+	raw.dy = LE_S16(RoundToInteger(node->dy));
 
 	raw.b1.minx = LE_S16(node->r.bounds.minx);
 	raw.b1.miny = LE_S16(node->r.bounds.miny);
@@ -1978,10 +1980,10 @@ static void PutOneNode_V5(node_t *node, Lump_c *lump)
 
 	raw_v5_node_t raw;
 
-	raw.x  = LE_S16(I_ROUND(node->x));
-	raw.y  = LE_S16(I_ROUND(node->y));
-	raw.dx = LE_S16(I_ROUND(node->dx));
-	raw.dy = LE_S16(I_ROUND(node->dy));
+	raw.x  = LE_S16(RoundToInteger(node->x));
+	raw.y  = LE_S16(RoundToInteger(node->y));
+	raw.dx = LE_S16(RoundToInteger(node->dx));
+	raw.dy = LE_S16(RoundToInteger(node->dy));
 
 	raw.b1.minx = LE_S16(node->r.bounds.minx);
 	raw.b1.miny = LE_S16(node->r.bounds.miny);
@@ -2155,8 +2157,8 @@ void PutZVertices()
 		if (! vert->is_new)
 			continue;
 
-		raw.x = LE_S32(I_ROUND(vert->x * 65536.0));
-		raw.y = LE_S32(I_ROUND(vert->y * 65536.0));
+		raw.x = LE_S32(RoundToInteger(vert->x * 65536.0));
+		raw.y = LE_S32(RoundToInteger(vert->y * 65536.0));
 
 		ZLibAppendLump(&raw, sizeof(raw));
 
@@ -2272,10 +2274,10 @@ static void PutOneZNode(node_t *node, bool do_xgl3)
 
 	if (do_xgl3)
 	{
-		uint32_t x  = LE_S32(I_ROUND(node->x  * 65536.0));
-		uint32_t y  = LE_S32(I_ROUND(node->y  * 65536.0));
-		uint32_t dx = LE_S32(I_ROUND(node->dx * 65536.0));
-		uint32_t dy = LE_S32(I_ROUND(node->dy * 65536.0));
+		uint32_t x  = LE_S32(RoundToInteger(node->x  * 65536.0));
+		uint32_t y  = LE_S32(RoundToInteger(node->y  * 65536.0));
+		uint32_t dx = LE_S32(RoundToInteger(node->dx * 65536.0));
+		uint32_t dy = LE_S32(RoundToInteger(node->dy * 65536.0));
 
 		ZLibAppendLump(&x,  4);
 		ZLibAppendLump(&y,  4);
@@ -2284,10 +2286,10 @@ static void PutOneZNode(node_t *node, bool do_xgl3)
 	}
 	else
 	{
-		raw.x  = LE_S16(I_ROUND(node->x));
-		raw.y  = LE_S16(I_ROUND(node->y));
-		raw.dx = LE_S16(I_ROUND(node->dx));
-		raw.dy = LE_S16(I_ROUND(node->dy));
+		raw.x  = LE_S16(RoundToInteger(node->x));
+		raw.y  = LE_S16(RoundToInteger(node->y));
+		raw.dx = LE_S16(RoundToInteger(node->dx));
+		raw.dy = LE_S16(RoundToInteger(node->dy));
 
 		ZLibAppendLump(&raw.x,  2);
 		ZLibAppendLump(&raw.y,  2);
@@ -2494,55 +2496,10 @@ void FreeLevel()
 	FreeIntersections();
 }
 
-
-static uint32_t CalcGLChecksum(void)
-{
-	uint32_t crc;
-
-	Adler32_Begin(&crc);
-
-	Lump_c *lump = FindLevelLump("VERTEXES");
-
-	if (lump && lump->Length() > 0)
-	{
-		uint8_t *data = new uint8_t[lump->Length()];
-
-		if (! lump->Seek(0) ||
-		    ! lump->Read(data, lump->Length()))
-			cur_info->FatalError("Error reading vertices (for checksum).\n");
-
-		Adler32_AddBlock(&crc, data, lump->Length());
-		delete[] data;
-	}
-
-	lump = FindLevelLump("LINEDEFS");
-
-	if (lump && lump->Length() > 0)
-	{
-		uint8_t *data = new uint8_t[lump->Length()];
-
-		if (! lump->Seek(0) ||
-		    ! lump->Read(data, lump->Length()))
-			cur_info->FatalError("Error reading linedefs (for checksum).\n");
-
-		Adler32_AddBlock(&crc, data, lump->Length());
-		delete[] data;
-	}
-
-	Adler32_Finish(&crc);
-
-	return crc;
-}
-
-
 void UpdateGLMarker(Lump_c *marker)
 {
 	// this is very conservative, around 4 times the actual size
 	const int max_size = 512;
-
-	// we *must* compute the checksum BEFORE (re)creating the lump
-	// [ otherwise we write data into the wrong part of the file ]
-	uint32_t crc = CalcGLChecksum();
 
 	cur_wad->RecreateLump(marker, max_size);
 
@@ -2552,7 +2509,6 @@ void UpdateGLMarker(Lump_c *marker)
 	}
 
 	marker->Printf("BUILDER=%s\n", "AJBSP " AJBSP_VERSION);
-	marker->Printf("CHECKSUM=0x%08x\n", crc);
 
 	marker->Finish();
 }

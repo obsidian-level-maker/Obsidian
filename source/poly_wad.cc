@@ -16,7 +16,7 @@
 //
 //------------------------------------------------------------------------
 
-#include "aj_local.h"
+#include "poly_local.h"
 
 #define DEBUG_WAD 0
 
@@ -93,8 +93,8 @@ bool wad_c::ReadDirEntry() {
         return false;
     }
 
-    int start = LE_U32(entry.start);
-    int length = LE_U32(entry.length);
+    int start = LE_U32(entry.pos);
+    int length = LE_U32(entry.size);
 
     // ensure name gets NUL terminated
     char name_buf[10];
@@ -123,7 +123,7 @@ bool wad_c::ReadDirectory() {
         return false;
     }
 
-    if (!CheckMagic(header.type)) {
+    if (!CheckMagic(header.ident)) {
         SetErrorMsg("File is not a WAD file.");
         return false;
     }

@@ -16,7 +16,7 @@
 //
 //------------------------------------------------------------------------
 
-#include "aj_local.h"
+#include "poly_local.h"
 
 namespace ajpoly {
 

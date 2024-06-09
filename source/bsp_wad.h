@@ -19,6 +19,10 @@
 #ifndef __AJBSP_WAD_H__
 #define __AJBSP_WAD_H__
 
+#include <vector>
+
+#include "raw_def.h"
+
 namespace ajbsp
 {
 
@@ -50,9 +54,9 @@ private:
 
 	// constructor is private
 	Lump_c(Wad_file *_par, const char *_name, int _start, int _len);
-	Lump_c(Wad_file *_par, const struct raw_wad_entry_s *entry);
+	Lump_c(Wad_file *_par, const raw_wad_entry_s *entry);
 
-	void MakeEntry(struct raw_wad_entry_s *entry);
+	void MakeEntry(raw_wad_entry_s *entry);
 
 public:
 	~Lump_c();

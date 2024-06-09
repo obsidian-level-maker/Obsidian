@@ -24,7 +24,7 @@
 
 // basic constants
 constexpr uint16_t MSG_BUF_LEN = 2000;
-constexpr double   DIST_EPSILON     = (1.0 / 128.0);
+constexpr double   DIST_EPSILON     = (1.0 / 1024.0);
 constexpr double   ANG_EPSILON        = (1.0 / 1024.0);
 #ifndef M_PI
 constexpr double   M_PI       = 3.14159265358979323846;

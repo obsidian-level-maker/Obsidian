@@ -18,11 +18,10 @@
 //
 //------------------------------------------------------------------------
 
-#include "system.h"
-#include "local.h"
-#include "utility.h"
-#include "wad.h"
-
+#include "bsp_local.h"
+#include "bsp_utility.h"
+#include "bsp_wad.h"
+#include "sys_macro.h"
 
 #define DEBUG_SPLIT     0
 #define DEBUG_CUTLIST   0
@@ -1742,8 +1741,8 @@ void subsec_t::RoundOff()
 	for (seg=seg_list ; seg ; seg=seg->next)
 	{
 		// is the seg degenerate ?
-		if (I_ROUND(seg->start->x) == I_ROUND(seg->end->x) &&
-			I_ROUND(seg->start->y) == I_ROUND(seg->end->y))
+		if (RoundToInteger(seg->start->x) == RoundToInteger(seg->end->x) &&
+			RoundToInteger(seg->start->y) == RoundToInteger(seg->end->y))
 		{
 			seg->is_degenerate = true;
 
@@ -1781,10 +1780,10 @@ void subsec_t::RoundOff()
 
 #if DEBUG_SUBSEC
 		cur_info->Debug("Degenerate after:  (%d,%d) -> (%d,%d)\n",
-				I_ROUND(last_real_degen->start->x),
-				I_ROUND(last_real_degen->start->y),
-				I_ROUND(last_real_degen->end->x),
-				I_ROUND(last_real_degen->end->y));
+				RoundToInteger(last_real_degen->start->x),
+				RoundToInteger(last_real_degen->start->y),
+				RoundToInteger(last_real_degen->end->x),
+				RoundToInteger(last_real_degen->end->y));
 #endif
 
 		last_real_degen->is_degenerate = false;

@@ -16,11 +16,16 @@
 //
 //------------------------------------------------------------------------
 
-#include "system.h"
-#include "local.h"
-#include "raw_def.h"
-#include "utility.h"
-#include "wad.h"
+#include <stdarg.h>
+
+#include <algorithm>
+
+#include "bsp_local.h"
+#include "bsp_utility.h"
+#include "bsp_wad.h"
+#include "lib_util.h"
+#include "sys_endian.h"
+#include "sys_macro.h"
 
 #define DEBUG_WAD  0
 
@@ -51,11 +56,11 @@ Lump_c::Lump_c(Wad_file *_par, const char *_name, int _start, int _len) :
 	parent(_par), l_start(_start), l_length(_len)
 {
 	// ensure lump name is uppercase
-	name = StringUpper(_name);
+	name = CStringUpper(_name);
 }
 
 
-Lump_c::Lump_c(Wad_file *_par, const struct raw_wad_entry_s *entry) :
+Lump_c::Lump_c(Wad_file *_par, const raw_wad_entry_s *entry) :
 	parent(_par)
 {
 	// handle the entry name, which can lack a terminating NUL
@@ -63,7 +68,7 @@ Lump_c::Lump_c(Wad_file *_par, const struct raw_wad_entry_s *entry) :
 	strncpy(buffer, entry->name, 8);
 	buffer[8] = 0;
 
-	name = StringDup(buffer);
+	name = CStringDup(buffer);
 
 	l_start  = LE_U32(entry->pos);
 	l_length = LE_U32(entry->size);
@@ -76,11 +81,11 @@ Lump_c::Lump_c(Wad_file *_par, const struct raw_wad_entry_s *entry) :
 
 Lump_c::~Lump_c()
 {
-	StringFree(name);
+	CStringFree(name);
 }
 
 
-void Lump_c::MakeEntry(struct raw_wad_entry_s *entry)
+void Lump_c::MakeEntry(raw_wad_entry_s *entry)
 {
 	// do a dance to avoid a compiler warning from strncpy(), *sigh*
 	memset(entry->name, 0, 8);
@@ -93,10 +98,10 @@ void Lump_c::MakeEntry(struct raw_wad_entry_s *entry)
 
 void Lump_c::Rename(const char *new_name)
 {
-	StringFree(name);
+	CStringFree(name);
 
 	// ensure lump name is uppercase
-	name = StringUpper(new_name);
+	name = CStringUpper(new_name);
 }
 
 
@@ -197,7 +202,7 @@ Wad_file::Wad_file(const char *_name, char _mode, FILE * _fp) :
 	levels(), patches(), sprites(), flats(), tx_tex(),
 	begun_write(false), insert_point(-1)
 {
-	filename = StringDup(_name);
+	filename = CStringDup(_name);
 }
 
 Wad_file::~Wad_file()
@@ -212,7 +217,7 @@ Wad_file::~Wad_file()
 
 	directory.clear();
 
-	StringFree(filename);
+	CStringFree(filename);
 }
 
 
@@ -328,31 +333,31 @@ bool Wad_file::Validate(const char *filename)
 
 static int WhatLevelPart(const char *name)
 {
-	if (StringCaseCmp(name, "THINGS")   == 0) return 1;
-	if (StringCaseCmp(name, "LINEDEFS") == 0) return 2;
-	if (StringCaseCmp(name, "SIDEDEFS") == 0) return 3;
-	if (StringCaseCmp(name, "VERTEXES") == 0) return 4;
-	if (StringCaseCmp(name, "SECTORS")  == 0) return 5;
+	if (StringCompare(name, "THINGS")   == 0) return 1;
+	if (StringCompare(name, "LINEDEFS") == 0) return 2;
+	if (StringCompare(name, "SIDEDEFS") == 0) return 3;
+	if (StringCompare(name, "VERTEXES") == 0) return 4;
+	if (StringCompare(name, "SECTORS")  == 0) return 5;
 
 	return 0;
 }
 
 static bool IsLevelLump(const char *name)
 {
-	if (StringCaseCmp(name, "SEGS")     == 0) return true;
-	if (StringCaseCmp(name, "SSECTORS") == 0) return true;
-	if (StringCaseCmp(name, "NODES")    == 0) return true;
-	if (StringCaseCmp(name, "REJECT")   == 0) return true;
-	if (StringCaseCmp(name, "BLOCKMAP") == 0) return true;
-	if (StringCaseCmp(name, "BEHAVIOR") == 0) return true;
-	if (StringCaseCmp(name, "SCRIPTS")  == 0) return true;
+	if (StringCompare(name, "SEGS")     == 0) return true;
+	if (StringCompare(name, "SSECTORS") == 0) return true;
+	if (StringCompare(name, "NODES")    == 0) return true;
+	if (StringCompare(name, "REJECT")   == 0) return true;
+	if (StringCompare(name, "BLOCKMAP") == 0) return true;
+	if (StringCompare(name, "BEHAVIOR") == 0) return true;
+	if (StringCompare(name, "SCRIPTS")  == 0) return true;
 
 	return WhatLevelPart(name) != 0;
 }
 
 static bool IsGLNodeLump(const char *name)
 {
-	if (StringCaseCmpMax(name, "GL_", 3) == 0)
+	if (StringPrefixCompare(name, "GL_") == 0)
 		return true;
 
 	return false;
@@ -371,7 +376,7 @@ Lump_c * Wad_file::GetLump(int index)
 Lump_c * Wad_file::FindLump(const char *name)
 {
 	for (int k = 0 ; k < NumLumps() ; k++)
-		if (StringCaseCmp(directory[k]->name, name) == 0)
+		if (StringCompare(directory[k]->name, name) == 0)
 			return directory[k];
 
 	return NULL;  // not found
@@ -380,7 +385,7 @@ Lump_c * Wad_file::FindLump(const char *name)
 int Wad_file::FindLumpNum(const char *name)
 {
 	for (int k = 0 ; k < NumLumps() ; k++)
-		if (StringCaseCmp(directory[k]->name, name) == 0)
+		if (StringCompare(directory[k]->name, name) == 0)
 			return k;
 
 	return -1;  // not found
@@ -398,7 +403,7 @@ int Wad_file::LevelLookupLump(int lev_num, const char *name)
 	{
 		SYS_ASSERT(0 <= k && k < NumLumps());
 
-		if (StringCaseCmp(directory[k]->name, name) == 0)
+		if (StringCompare(directory[k]->name, name) == 0)
 			return k;
 	}
 
@@ -415,7 +420,7 @@ int Wad_file::LevelFind(const char *name)
 		SYS_ASSERT(0 <= index && index < NumLumps());
 		SYS_ASSERT(directory[index]);
 
-		if (StringCaseCmp(directory[index]->name, name) == 0)
+		if (StringCompare(directory[index]->name, name) == 0)
 			return k;
 	}
 
@@ -434,7 +439,7 @@ int Wad_file::LevelLastLump(int lev_num)
 		while (count < MAX_LUMPS_IN_A_LEVEL &&
 			   start+count < NumLumps())
 		{
-			if (StringCaseCmp(directory[start+count]->name, "ENDMAP") == 0)
+			if (StringCompare(directory[start+count]->name, "ENDMAP") == 0)
 			{
 				count++;
 				break;
@@ -510,7 +515,7 @@ map_format_e Wad_file::LevelFormat(int lev_num)
 	{
 		const char *name = GetLump(start + 1)->Name();
 
-		if (StringCaseCmp(name, "TEXTMAP") == 0)
+		if (StringCompare(name, "TEXTMAP") == 0)
 			return MAPF_UDMF;
 	}
 
@@ -519,7 +524,7 @@ map_format_e Wad_file::LevelFormat(int lev_num)
 		for (int i = LL_REJECT; i <= LL_BEHAVIOR; i++)
 		{
 			const char *name = GetLump(start + i)->Name();
-			if (StringCaseCmp(name, "BEHAVIOR") == 0)
+			if (StringCompare(name, "BEHAVIOR") == 0)
 				return MAPF_Hexen;
 		}
 	}
@@ -536,19 +541,19 @@ Lump_c * Wad_file::FindLumpInNamespace(const char *name, char group)
 	{
 		case 'P':
 			for (k = 0 ; k < (int)patches.size() ; k++)
-				if (StringCaseCmp(directory[patches[k]]->name, name) == 0)
+				if (StringCompare(directory[patches[k]]->name, name) == 0)
 					return directory[patches[k]];
 			break;
 
 		case 'S':
 			for (k = 0 ; k < (int)sprites.size() ; k++)
-				if (StringCaseCmp(directory[sprites[k]]->name, name) == 0)
+				if (StringCompare(directory[sprites[k]]->name, name) == 0)
 					return directory[sprites[k]];
 			break;
 
 		case 'F':
 			for (k = 0 ; k < (int)flats.size() ; k++)
-				if (StringCaseCmp(directory[flats[k]]->name, name) == 0)
+				if (StringCompare(directory[flats[k]]->name, name) == 0)
 					return directory[flats[k]];
 			break;
 
@@ -613,7 +618,7 @@ void Wad_file::DetectLevels()
 		int part_count = 0;
 
 		// check for UDMF levels
-		if (StringCaseCmp(directory[k+1]->name, "TEXTMAP") == 0)
+		if (StringCompare(directory[k+1]->name, "TEXTMAP") == 0)
 		{
 			levels.push_back(k);
 #if DEBUG_WAD
@@ -675,8 +680,8 @@ static bool IsDummyMarker(const char *name)
 	if (! isdigit(name[1]))
 		return false;
 
-	if (StringCaseCmp(name+2, "_START") == 0 ||
-	    StringCaseCmp(name+2, "_END") == 0)
+	if (StringCompare(name+2, "_START") == 0 ||
+	    StringCompare(name+2, "_END") == 0)
 		return true;
 
 	return false;
@@ -695,7 +700,7 @@ void Wad_file::ProcessNamespaces()
 		if (IsDummyMarker(name))
 			continue;
 
-		if (StringCaseCmp(name, "P_START") == 0 || StringCaseCmp(name, "PP_START") == 0)
+		if (StringCompare(name, "P_START") == 0 || StringCompare(name, "PP_START") == 0)
 		{
 			if (active && active != 'P')
 				LumpWarning("missing %c_END marker.\n", active);
@@ -703,7 +708,7 @@ void Wad_file::ProcessNamespaces()
 			active = 'P';
 			continue;
 		}
-		else if (StringCaseCmp(name, "P_END") == 0 || StringCaseCmp(name, "PP_END") == 0)
+		else if (StringCompare(name, "P_END") == 0 || StringCompare(name, "PP_END") == 0)
 		{
 			if (active != 'P')
 				LumpWarning("stray P_END marker found.\n");
@@ -712,7 +717,7 @@ void Wad_file::ProcessNamespaces()
 			continue;
 		}
 
-		if (StringCaseCmp(name, "S_START") == 0 || StringCaseCmp(name, "SS_START") == 0)
+		if (StringCompare(name, "S_START") == 0 || StringCompare(name, "SS_START") == 0)
 		{
 			if (active && active != 'S')
 				LumpWarning("missing %c_END marker.\n", active);
@@ -720,7 +725,7 @@ void Wad_file::ProcessNamespaces()
 			active = 'S';
 			continue;
 		}
-		else if (StringCaseCmp(name, "S_END") == 0 || StringCaseCmp(name, "SS_END") == 0)
+		else if (StringCompare(name, "S_END") == 0 || StringCompare(name, "SS_END") == 0)
 		{
 			if (active != 'S')
 				LumpWarning("stray S_END marker found.\n");
@@ -729,7 +734,7 @@ void Wad_file::ProcessNamespaces()
 			continue;
 		}
 
-		if (StringCaseCmp(name, "F_START") == 0 || StringCaseCmp(name, "FF_START") == 0)
+		if (StringCompare(name, "F_START") == 0 || StringCompare(name, "FF_START") == 0)
 		{
 			if (active && active != 'F')
 				LumpWarning("missing %c_END marker.\n", active);
@@ -737,7 +742,7 @@ void Wad_file::ProcessNamespaces()
 			active = 'F';
 			continue;
 		}
-		else if (StringCaseCmp(name, "F_END") == 0 || StringCaseCmp(name, "FF_END") == 0)
+		else if (StringCompare(name, "F_END") == 0 || StringCompare(name, "FF_END") == 0)
 		{
 			if (active != 'F')
 				LumpWarning("stray F_END marker found.\n");
@@ -746,7 +751,7 @@ void Wad_file::ProcessNamespaces()
 			continue;
 		}
 
-		if (StringCaseCmp(name, "TX_START") == 0)
+		if (StringCompare(name, "TX_START") == 0)
 		{
 			if (active && active != 'T')
 				LumpWarning("missing %c_END marker.\n", active);
@@ -754,7 +759,7 @@ void Wad_file::ProcessNamespaces()
 			active = 'T';
 			continue;
 		}
-		else if (StringCaseCmp(name, "TX_END") == 0)
+		else if (StringCompare(name, "TX_END") == 0)
 		{
 			if (active != 'T')
 				LumpWarning("stray TX_END marker found.\n");
@@ -927,7 +932,7 @@ void Wad_file::RemoveZNodes(int lev_num)
 
 	for ( ; start <= finish ; start++)
 	{
-		if (StringCaseCmp(directory[start]->name, "ZNODES") == 0)
+		if (StringCompare(directory[start]->name, "ZNODES") == 0)
 		{
 			RemoveLumps(start, 1);
 			break;

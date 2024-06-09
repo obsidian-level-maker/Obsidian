@@ -21,7 +21,9 @@
 #ifndef __AJBSP_LOCAL_H__
 #define __AJBSP_LOCAL_H__
 
-#include "aj_bsp.h"
+#include <vector>
+
+#include "bsp.h"
 
 namespace ajbsp
 {
@@ -537,13 +539,6 @@ vertex_t *NewVertexDegenerate(vertex_t *start, vertex_t *end);
 //------------------------------------------------------------------------
 
 #define IFFY_LEN  4.0
-
-// smallest distance between two points before being considered equal
-#define DIST_EPSILON  (1.0 / 1024.0)
-
-// smallest degrees between two angles before being considered equal
-#define ANG_EPSILON  (1.0 / 1024.0)
-
 
 inline void ListAddSeg(seg_t **list_ptr, seg_t *seg)
 {

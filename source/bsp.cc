@@ -17,12 +17,10 @@
 //
 //------------------------------------------------------------------------
 
-#include "system.h"
-#include "aj_bsp.h"
-#include "utility.h"
-#include "wad.h"
-
-// this is only needed for CheckTypeSizes
+#include "bsp.h"
+#include "bsp_utility.h"
+#include "bsp_wad.h"
+#include "lib_util.h"
 #include "raw_def.h"
 
 bool opt_backup   = false;
@@ -277,7 +275,7 @@ void ParseMapList(const char *from_arg, buildinfo_t *build_info)
 {
 	// create a mutable copy of the string
 	// [ we will keep long-term pointers into this buffer ]
-	char *buf = ajbsp::StringDup(from_arg);
+	char *buf = CStringDup(from_arg);
 
 	char *arg = buf;
 
@@ -346,7 +344,7 @@ int AJBSP_BuildNodes(std::string filename, buildinfo_t *build_info)
 	ShowBanner();
 
 	// validate file before processing it
-	if (! ajbsp::FileExists(filename))
+	if (!FileExists(filename))
 		build_info->FatalError("no such file: %s\n", filename.c_str());
 
 	VisitFile(filename, build_info);

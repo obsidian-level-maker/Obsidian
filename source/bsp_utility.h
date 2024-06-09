@@ -23,23 +23,6 @@
 namespace ajbsp
 {
 
-#ifdef WIN32
-#define DIR_SEP_CH   '\\'
-#define DIR_SEP_STR  "\\"
-#else
-#define DIR_SEP_CH   '/'
-#define DIR_SEP_STR  "/"
-#endif
-
-// filename functions
-bool HasExtension(const char *filename);
-bool MatchExtension(const char *filename, const char *ext);
-char *ReplaceExtension(const char *filename, const char *ext);
-const char *FindBaseName(const char *filename);
-
-// file utilities
-bool FileExists(std::string filename);
-
 // memory allocation, guaranteed to not return NULL.
 void *UtilCalloc(int size);
 void *UtilRealloc(void *old, int size);
@@ -48,21 +31,6 @@ void UtilFree(void *data);
 // math stuff
 int RoundPOW2(int x);
 double ComputeAngle(double dx, double dy);
-
-// string utilities
-int StringCaseCmp   (const char *s1, const char *s2);
-int StringCaseCmpMax(const char *s1, const char *s2, size_t len);
-
-char *StringNew(int length);
-char *StringDup(const char *orig, int limit = -1);
-char *StringUpper(const char *name);
-char *StringPrintf(const char *str, ...);
-void  StringFree(const char *str);
-
-// checksum functions
-void Adler32_Begin(uint32_t *crc);
-void Adler32_AddBlock(uint32_t *crc, const uint8_t *data, int length);
-void Adler32_Finish(uint32_t *crc);
 
 } // namespace ajbsp
 

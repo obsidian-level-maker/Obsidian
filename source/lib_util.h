@@ -101,6 +101,11 @@ inline int ToUpperASCII(int character)
         return character;
 }
 
+char *CStringNew(int length);
+char *CStringDup(const char *original, int limit = -1);
+char *CStringUpper(const char *name);
+void  CStringFree(const char *string);
+
 int StringCompare(std::string_view A, std::string_view B);
 int StringPrefixCompare(std::string_view A, std::string_view B);
 

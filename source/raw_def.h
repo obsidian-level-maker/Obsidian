@@ -17,6 +17,11 @@
 #ifndef __AJBSP_RAW_DEF_H__
 #define __AJBSP_RAW_DEF_H__
 
+#ifdef __GNUC__
+#define PACKEDATTR __attribute__((packed))
+#else
+#define PACKEDATTR
+#endif
 
 /* ----- The wad structures ---------------------- */
 

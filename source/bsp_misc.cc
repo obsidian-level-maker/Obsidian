@@ -18,11 +18,14 @@
 //
 //------------------------------------------------------------------------
 
-#include "system.h"
-#include "local.h"
+#include <algorithm>
+#include <stdarg.h>
+
+#include "bsp_local.h"
+#include "bsp_utility.h"
+#include "bsp_wad.h"
 #include "raw_def.h"
-#include "utility.h"
-#include "wad.h"
+#include "sys_macro.h"
 
 
 #define DEBUG_WALLTIPS   0
@@ -647,8 +650,8 @@ vertex_t *NewVertexDegenerate(vertex_t *start, vertex_t *end)
 	dx /= dlen;
 	dy /= dlen;
 
-	while (I_ROUND(vert->x) == I_ROUND(start->x) &&
-		   I_ROUND(vert->y) == I_ROUND(start->y))
+	while (RoundToInteger(vert->x) == RoundToInteger(start->x) &&
+		   RoundToInteger(vert->y) == RoundToInteger(start->y))
 	{
 		vert->x += dx;
 		vert->y += dy;

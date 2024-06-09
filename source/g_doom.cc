@@ -42,7 +42,7 @@
 #include <iso646.h>
 #endif
 
-#include "aj_bsp.h"
+#include "bsp.h"
 
 // SLUMP for Vanilla Doom
 #include "slump.h"

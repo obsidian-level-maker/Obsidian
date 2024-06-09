@@ -17,7 +17,7 @@
 //------------------------------------------------------------------------
 
 #include <cstddef>
-#include "aj_local.h"
+#include "poly_local.h"
 #include "sys_macro.h"
 
 #define DEBUG_POLY 0

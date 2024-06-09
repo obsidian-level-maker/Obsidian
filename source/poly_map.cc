@@ -16,7 +16,7 @@
 //
 //------------------------------------------------------------------------
 
-#include "aj_local.h"
+#include "poly_local.h"
 #include "lib_parse.h"
 #include "main.h"
 #include "sys_macro.h"
@@ -765,8 +765,8 @@ bool LoadSectors() {
     for (int i = 0; i < count; i++, raw++) {
         sector_c *sector = NewSector();
 
-        sector->floor_h = LE_S16(raw->floor_h);
-        sector->ceil_h = LE_S16(raw->ceil_h);
+        sector->floor_h = LE_S16(raw->floorh);
+        sector->ceil_h = LE_S16(raw->ceilh);
 
         std::copy(raw->floor_tex, raw->floor_tex + 8,
                   sector->floor_tex);
@@ -774,7 +774,7 @@ bool LoadSectors() {
                   sector->ceil_tex);
 
         sector->light = LE_U16(raw->light);
-        sector->special = LE_U16(raw->special);
+        sector->special = LE_U16(raw->type);
         sector->tag = LE_S16(raw->tag);
     }
 
@@ -851,7 +851,7 @@ bool LoadThingsHexen() {
 
         thing->special = LE_U16(raw->special);
 
-        memcpy(thing->args, raw->arg, 5);
+        memcpy(thing->args, raw->args, 5);
     }
 
     return true;  // OK
@@ -939,8 +939,8 @@ bool LoadLinedefs() {
         line->special = LE_U16(raw->type);
         line->tag = LE_S16(raw->tag);
 
-        line->right = SafeSidedef(LE_U16(raw->sidedef1));
-        line->left = SafeSidedef(LE_U16(raw->sidedef2));
+        line->right = SafeSidedef(LE_U16(raw->right));
+        line->left = SafeSidedef(LE_U16(raw->left));
     }
 
     return true;  // OK
@@ -986,11 +986,11 @@ bool LoadLinedefsHexen() {
         line->special = raw->type;
         line->tag = 0;
 
-        line->right = SafeSidedef(LE_U16(raw->sidedef1));
-        line->left = SafeSidedef(LE_U16(raw->sidedef2));
+        line->right = SafeSidedef(LE_U16(raw->right));
+        line->left = SafeSidedef(LE_U16(raw->left));
 
         for (int k = 0; k < 5; k++) {
-            line->args[k] = raw->specials[k];
+            line->args[k] = raw->args[k];
         }
     }
 

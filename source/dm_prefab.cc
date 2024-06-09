@@ -60,7 +60,7 @@
 
 #include "dm_prefab.h"
 
-#include "aj_poly.h"
+#include "poly.h"
 #include "csg_main.h"
 #include "g_doom.h"
 #ifndef CONSOLE_ONLY
