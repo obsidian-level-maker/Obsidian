@@ -42,21 +42,27 @@ int KF = 0;
 int small_font_size;
 int header_font_size;
 
-static void main_win_close_CB(Fl_Widget *w, void *data) {
+static void main_win_close_CB(Fl_Widget *w, void *data)
+{
     main_action = MAIN_QUIT;
 }
 
-static void main_win_surprise_go_CB(Fl_Widget *w, void *data) {
-    for (int i=0; i < main_win->mod_tabs->children(); i++) {
+static void main_win_surprise_go_CB(Fl_Widget *w, void *data)
+{
+    for (int i = 0; i < main_win->mod_tabs->children(); i++)
+    {
         UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(i);
         tab->SurpriseMe();
     }
     did_randomize = true;
 }
 
-int UI_MainWin::handle(int event) {
-    if (Fl::event_key() == FL_Escape) {
-        if (clippy->shown()) {
+int UI_MainWin::handle(int event)
+{
+    if (Fl::event_key() == FL_Escape)
+    {
+        if (clippy->shown())
+        {
             clippy->hide();
             return 1;
         }
@@ -67,8 +73,8 @@ int UI_MainWin::handle(int event) {
 //
 // MainWin Constructor
 //
-UI_MainWin::UI_MainWin(int W, int H, const char *title)
-    : Fl_Double_Window(W, H, title) {
+UI_MainWin::UI_MainWin(int W, int H, const char *title) : Fl_Double_Window(W, H, title)
+{
     size_range(W, H, 0, 0, 0, 0, 1);
 
     callback((Fl_Callback *)main_win_close_CB);
@@ -76,7 +82,7 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title)
     color(GAP_COLOR, SELECTION);
 
     int LEFT_W = kf_w(232);
-    int MOD_W = (W - LEFT_W) / 2 - kf_h(4);
+    int MOD_W  = (W - LEFT_W) / 2 - kf_h(4);
 
     int TOP_H = kf_h(240);
     int BOT_H = H - TOP_H - kf_h(4);
@@ -105,8 +111,7 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title)
 
     build_box = new UI_Build(0, TOP_H + kf_h(4), LEFT_W, BOT_H);
 
-    mod_tabs = new UI_CustomTabs(LEFT_W + kf_h(4), kf_h(22), MOD_W * 2,
-                                  H - kf_h(22));
+    mod_tabs = new UI_CustomTabs(LEFT_W + kf_h(4), kf_h(22), MOD_W * 2, H - kf_h(22));
 
     clippy = new UI_Clippy();
 
@@ -122,14 +127,18 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title)
 //
 // MainWin Destructor
 //
-UI_MainWin::~UI_MainWin() {}
+UI_MainWin::~UI_MainWin()
+{
+}
 
-void UI_MainWin::CalcWindowSize(int *W, int *H) {
+void UI_MainWin::CalcWindowSize(int *W, int *H)
+{
     *W = kf_w(BASE_WINDOW_W);
     *H = kf_h(BASE_WINDOW_H);
 
     // tweak for "Tiny" setting
-    if (KF < 0) {
+    if (KF < 0)
+    {
         *W -= 24;
         *H -= 24;
     }
@@ -138,36 +147,56 @@ void UI_MainWin::CalcWindowSize(int *W, int *H) {
     //    fprintf(stderr, "\n\nCalcWindowSize --> %d x %d\n", *W, *H);
 }
 
-void UI_MainWin::Locked(bool value) {
-    if (value) {
+void UI_MainWin::Locked(bool value)
+{
+    if (value)
+    {
         main_win->menu_bar->deactivate();
-    } else {
+    }
+    else
+    {
         main_win->menu_bar->activate();
     }
     game_box->Locked(value);
-    for (int i=0; i < main_win->mod_tabs->children(); i++) {
+    for (int i = 0; i < main_win->mod_tabs->children(); i++)
+    {
         UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(i);
         tab->Locked(value);
     }
 }
 
-void UI_MainWin::menu_do_about(Fl_Widget *w, void *data) { DLG_AboutText(); }
+void UI_MainWin::menu_do_about(Fl_Widget *w, void *data)
+{
+    DLG_AboutText();
+}
 
-void UI_MainWin::menu_do_view_logs(Fl_Widget *w, void *data) { DLG_ViewLogs(); }
+void UI_MainWin::menu_do_view_logs(Fl_Widget *w, void *data)
+{
+    DLG_ViewLogs();
+}
 
-void UI_MainWin::menu_do_glossary(Fl_Widget *w, void *data) {
+void UI_MainWin::menu_do_glossary(Fl_Widget *w, void *data)
+{
     DLG_ViewGlossary();
 }
 
-void UI_MainWin::menu_do_options(Fl_Widget *w, void *data) {
+void UI_MainWin::menu_do_options(Fl_Widget *w, void *data)
+{
     DLG_OptionsEditor();
 }
 
-void UI_MainWin::menu_do_theme(Fl_Widget *w, void *data) { DLG_ThemeEditor(); }
+void UI_MainWin::menu_do_theme(Fl_Widget *w, void *data)
+{
+    DLG_ThemeEditor();
+}
 
-void UI_MainWin::menu_do_edit_seed(Fl_Widget *w, void *data) { DLG_EditSeed(); }
+void UI_MainWin::menu_do_edit_seed(Fl_Widget *w, void *data)
+{
+    DLG_EditSeed();
+}
 
-void UI_MainWin::menu_do_manage_config(Fl_Widget *w, void *data) {
+void UI_MainWin::menu_do_manage_config(Fl_Widget *w, void *data)
+{
     DLG_ManageConfig();
 }
 //--- editor settings ---

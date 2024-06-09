@@ -27,22 +27,29 @@
 #include "FL/Fl_Box.H"
 #include "FL/Fl_Image.H"
 
-class UI_MiniMap : public Fl_Box {
-   private:
+class UI_MiniMap : public Fl_Box
+{
+  private:
     Fl_RGB_Image *cur_image;
 
-   public:
+  public:
     int map_W, map_H;
 
     uint8_t *pixels;
 
-   public:
+  public:
     UI_MiniMap(int x, int y, int w, int h, const char *label = NULL);
     virtual ~UI_MiniMap();
 
-   public:
-    int GetWidth() const { return map_W; }
-    int GetHeight() const { return map_H; }
+  public:
+    int GetWidth() const
+    {
+        return map_W;
+    }
+    int GetHeight() const
+    {
+        return map_H;
+    }
 
     void EmptyMap();
 
@@ -60,25 +67,28 @@ class UI_MiniMap : public Fl_Box {
     void GifFrame();
     void GifFinish();
 
-   private:
-    inline void RawPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b) {
+  private:
+    inline void RawPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b)
+    {
         uint8_t *pos = pixels + ((map_H - 1 - y) * map_W + x) * 3;
 
         *pos++ = r;
         *pos++ = g;
-        *pos = b;
+        *pos   = b;
     }
 
-    enum outcode_flags_e {
-        O_TOP = 1,
+    enum outcode_flags_e
+    {
+        O_TOP    = 1,
         O_BOTTOM = 2,
-        O_LEFT = 4,
-        O_RIGHT = 8,
+        O_LEFT   = 4,
+        O_RIGHT  = 8,
     };
 
-    int Calc_Outcode(int x, int y) {
-        return ((y < 0) ? O_BOTTOM : 0) | ((y > map_H - 1) ? O_TOP : 0) |
-               ((x < 0) ? O_LEFT : 0) | ((x > map_W - 1) ? O_RIGHT : 0);
+    int Calc_Outcode(int x, int y)
+    {
+        return ((y < 0) ? O_BOTTOM : 0) | ((y > map_H - 1) ? O_TOP : 0) | ((x < 0) ? O_LEFT : 0) |
+               ((x > map_W - 1) ? O_RIGHT : 0);
     }
 };
 

@@ -25,8 +25,8 @@
 #include "lib_util.h"
 #include "main.h"
 
-UI_Build::UI_Build(int X, int Y, int W, int H, const char *label)
-    : Fl_Group(X, Y, W, H, label) {
+UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) : Fl_Group(X, Y, W, H, label)
+{
     box(box_style);
     // clang-format off
     tooltip(_("Progress and minimap display.\nMinimap Legend:\nWhite - Regular rooms\nBrown - Caves\nBlue - Outdoors\nGreen - Parks"));
@@ -69,8 +69,7 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label)
 
     cy += mini_map->h() + kf_h(4);
 
-    status = new Fl_Box(FL_FLAT_BOX, X + pad, cy, W - pad * 2, kf_h(26),
-                        _("Ready to go!"));
+    status = new Fl_Box(FL_FLAT_BOX, X + pad, cy, W - pad * 2, kf_h(26), _("Ready to go!"));
     status->box(FL_NO_BOX);
     status->align(FL_ALIGN_INSIDE | FL_ALIGN_LEFT);
     status->labelfont(font_style);
@@ -90,36 +89,44 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label)
     end();
 }
 
-UI_Build::~UI_Build() {}
+UI_Build::~UI_Build()
+{
+}
 
 // Same as regular Fl_Group resize with the exception of calling the minimap to
 // redraw afterwards
-void UI_Build::resize(int X, int Y, int W, int H) {
+void UI_Build::resize(int X, int Y, int W, int H)
+{
     int dx = X - x();
     int dy = Y - y();
     int dw = W - w();
     int dh = H - h();
 
-    int *p = sizes();  // save initial sizes and positions
+    int *p = sizes();              // save initial sizes and positions
 
-    Fl_Widget::resize(X, Y, W, H);  // make new xywh values visible for children
+    Fl_Widget::resize(X, Y, W, H); // make new xywh values visible for children
 
-    if (!resizable() || (dw == 0 && dh == 0)) {
-        if (type() < FL_WINDOW) {
+    if (!resizable() || (dw == 0 && dh == 0))
+    {
+        if (type() < FL_WINDOW)
+        {
             Fl_Widget *const *a = array();
-            for (int i = this->children(); i--;) {
+            for (int i = this->children(); i--;)
+            {
                 Fl_Widget *o = *a++;
                 o->resize(o->x() + dx, o->y() + dy, o->w(), o->h());
             }
         }
-
-    } else if (this->children()) {
+    }
+    else if (this->children())
+    {
         // get changes in size/position from the initial size:
         dx = X - p[0];
         dw = W - (p[1] - p[0]);
         dy = Y - p[2];
         dh = H - (p[3] - p[2]);
-        if (type() >= FL_WINDOW) {
+        if (type() >= FL_WINDOW)
+        {
             dx = dy = 0;
         }
         p += 4;
@@ -131,39 +138,48 @@ void UI_Build::resize(int X, int Y, int W, int H) {
         int IB = *p++;
 
         Fl_Widget *const *a = array();
-        for (int i = this->children(); i--;) {
+        for (int i = this->children(); i--;)
+        {
             Fl_Widget *o = *a++;
 #if 1
             int XX = *p++;
-            if (XX >= IR) {
+            if (XX >= IR)
+            {
                 XX += dw;
-            } else if (XX > IX) {
-                XX = IX +
-                     ((XX - IX) * (IR + dw - IX) + (IR - IX) / 2) / (IR - IX);
+            }
+            else if (XX > IX)
+            {
+                XX = IX + ((XX - IX) * (IR + dw - IX) + (IR - IX) / 2) / (IR - IX);
             }
             int R = *p++;
-            if (R >= IR) {
+            if (R >= IR)
+            {
                 R += dw;
-            } else if (R > IX) {
-                R = IX +
-                    ((R - IX) * (IR + dw - IX) + (IR - IX) / 2) / (IR - IX);
+            }
+            else if (R > IX)
+            {
+                R = IX + ((R - IX) * (IR + dw - IX) + (IR - IX) / 2) / (IR - IX);
             }
 
             int YY = *p++;
-            if (YY >= IB) {
+            if (YY >= IB)
+            {
                 YY += dh;
-            } else if (YY > IY) {
-                YY = IY +
-                     ((YY - IY) * (IB + dh - IY) + (IB - IY) / 2) / (IB - IY);
+            }
+            else if (YY > IY)
+            {
+                YY = IY + ((YY - IY) * (IB + dh - IY) + (IB - IY) / 2) / (IB - IY);
             }
             int B = *p++;
-            if (B >= IB) {
+            if (B >= IB)
+            {
                 B += dh;
-            } else if (B > IY) {
-                B = IY +
-                    ((B - IY) * (IB + dh - IY) + (IB - IY) / 2) / (IB - IY);
             }
-#else  // much simpler code from Francois Ostiguy:
+            else if (B > IY)
+            {
+                B = IY + ((B - IY) * (IB + dh - IY) + (IB - IY) / 2) / (IB - IY);
+            }
+#else // much simpler code from Francois Ostiguy:
             int XX = *p++;
             if (XX >= IR)
                 XX += dw;
@@ -194,7 +210,8 @@ void UI_Build::resize(int X, int Y, int W, int H) {
 
 //----------------------------------------------------------------
 
-void UI_Build::Prog_Init(int node_perc, const char *extra_steps) {
+void UI_Build::Prog_Init(int node_perc, const char *extra_steps)
+{
     level_index = 0;
     level_total = 0;
 
@@ -212,23 +229,27 @@ void UI_Build::Prog_Init(int node_perc, const char *extra_steps) {
     progress->labelcolor(fl_contrast(FONT_COLOR, GAP_COLOR));
 }
 
-void UI_Build::Prog_Finish() {
+void UI_Build::Prog_Finish()
+{
     progress->color(GAP_COLOR, GAP_COLOR);
     progress->value(0.0);
     progress->label("");
 }
 
-void UI_Build::Prog_AtLevel(int index, int total) {
+void UI_Build::Prog_AtLevel(int index, int total)
+{
     level_index = index;
     level_total = total;
 
     Prog_Step(N_("Plan"));
 }
 
-void UI_Build::Prog_Step(const char *step_name) {
+void UI_Build::Prog_Step(const char *step_name)
+{
     int pos = FindStep(step_name);
 
-    if (pos < 0) {
+    if (pos < 0)
+    {
         return;
     }
 
@@ -240,10 +261,12 @@ void UI_Build::Prog_Step(const char *step_name) {
 
     val = (val / (float)level_total) * (1 - node_ratio);
 
-    if (val < 0) {
+    if (val < 0)
+    {
         val = 0;
     }
-    if (val > 1) {
+    if (val > 1)
+    {
         val = 1;
     }
 
@@ -254,8 +277,8 @@ void UI_Build::Prog_Step(const char *step_name) {
     std::string newtitle = "[ ";
     newtitle.append(prog_label);
     newtitle.append(" ] ");
-    newtitle.append(StringFormat("%s %s \"%s\"", OBSIDIAN_TITLE.c_str(),
-                                OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str()));
+    newtitle.append(
+        StringFormat("%s %s \"%s\"", OBSIDIAN_TITLE.c_str(), OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str()));
     newtitle.append(" - ");
     newtitle.append(status_label.c_str());
     main_win->copy_label(newtitle.c_str());
@@ -265,10 +288,12 @@ void UI_Build::Prog_Step(const char *step_name) {
     Main::Ticker();
 }
 
-void UI_Build::Prog_Nodes(int pos, int limit) {
+void UI_Build::Prog_Nodes(int pos, int limit)
+{
     SYS_ASSERT(limit > 0);
 
-    if (!node_begun) {
+    if (!node_begun)
+    {
         node_begun = true;
         SetStatus(_("Building Nodes"));
         progress->selection_color(SELECTION);
@@ -277,7 +302,8 @@ void UI_Build::Prog_Nodes(int pos, int limit) {
     }
 
     float val = node_along + (node_fracs * pos);
-    if (val > 1) {
+    if (val > 1)
+    {
         val = 1;
     }
 
@@ -289,8 +315,8 @@ void UI_Build::Prog_Nodes(int pos, int limit) {
     std::string newtitle = "[ ";
     newtitle.append(prog_label);
     newtitle.append(" ] ");
-    newtitle.append(StringFormat("%s %s \"%s\"", OBSIDIAN_TITLE.c_str(),
-                                OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str()));
+    newtitle.append(
+        StringFormat("%s %s \"%s\"", OBSIDIAN_TITLE.c_str(), OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str()));
     newtitle.append(" - ");
     newtitle.append(status_label.c_str());
     main_win->copy_label(newtitle.c_str());
@@ -298,7 +324,8 @@ void UI_Build::Prog_Nodes(int pos, int limit) {
     Main::Ticker();
 }
 
-void UI_Build::SetStatus(std::string_view msg) {
+void UI_Build::SetStatus(std::string_view msg)
+{
     // int limit = (int)sizeof(status_label);
 
 #ifdef WIN32
@@ -307,17 +334,19 @@ void UI_Build::SetStatus(std::string_view msg) {
     // strncpy(status_label, msg.data(), std::min<int>(limit, msg.size()));
     status_label = msg;
 
-    if (StringCompare(status_label, _("Success")) == 0) {
-        main_win->label(StringFormat("%s %s \"%s\"", OBSIDIAN_TITLE.c_str(),
-                                    OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str())
-                            .c_str());
+    if (StringCompare(status_label, _("Success")) == 0)
+    {
+        main_win->label(
+            StringFormat("%s %s \"%s\"", OBSIDIAN_TITLE.c_str(), OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str())
+                .c_str());
     }
 
     status->copy_label(status_label.c_str());
     status->redraw();
 }
 
-void UI_Build::ParseSteps(const char *names) {
+void UI_Build::ParseSteps(const char *names)
+{
     step_names.clear();
 
     // these three are done by Lua (no variation)
@@ -325,10 +354,12 @@ void UI_Build::ParseSteps(const char *names) {
     step_names.push_back(_("Rooms"));
     step_names.push_back(_("Mons"));
 
-    while (*names) {
+    while (*names)
+    {
         const char *comma = strchr(names, ',');
 
-        if (!comma) {
+        if (!comma)
+        {
             step_names.push_back(names);
             break;
         }
@@ -341,17 +372,21 @@ void UI_Build::ParseSteps(const char *names) {
     }
 }
 
-int UI_Build::FindStep(std::string name) {
-    for (int i = 0; i < (int)step_names.size(); i++) {
-        if (StringCompare(step_names[i], name) == 0) {
+int UI_Build::FindStep(std::string name)
+{
+    for (int i = 0; i < (int)step_names.size(); i++)
+    {
+        if (StringCompare(step_names[i], name) == 0)
+        {
             return i;
         }
     }
 
-    return -1;  // not found
+    return -1; // not found
 }
 
-void UI_Build::AddStatusStep(std::string name) {
+void UI_Build::AddStatusStep(std::string name)
+{
     // modifies the current status string to show the current step
     std::string blankout;
     blankout.append(200, ' ');

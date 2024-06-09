@@ -22,8 +22,8 @@
 #ifndef __OB_HDR_UI_H__
 #define __OB_HDR_UI_H__
 
-#include "ui_build.h"
 #include "ui_boxes.h"
+#include "ui_build.h"
 #include "ui_game.h"
 #include "ui_hyper.h"
 #include "ui_map.h"

@@ -22,13 +22,15 @@
 // functions provided by the application
 
 #include <stdint.h>
+
 #include <cstring>
 #include <string>
 #include <unordered_map>
 void Appl_FatalError(const char *str, ...);
 void Appl_Printf(const char *str, ...);
 
-namespace ajpoly {
+namespace ajpoly
+{
 
 /* -------- OBJECTS ------------------------ */
 
@@ -37,8 +39,9 @@ class sector_c;
 class linedef_c;
 class edge_c;
 
-class vertex_c {
-   public:
+class vertex_c
+{
+  public:
     int index;
 
     // coordinates
@@ -50,8 +53,10 @@ class vertex_c {
     // set of wall_tips
     wall_tip_c *tip_set;
 
-   public:
-    vertex_c() : index(-1), x(), y(), ref_count(), tip_set() {}
+  public:
+    vertex_c() : index(-1), x(), y(), ref_count(), tip_set()
+    {
+    }
 
     sector_c *CheckOpen(double dx, double dy) const;
 
@@ -61,8 +66,9 @@ class vertex_c {
 // this bit in the index value differentiates normal vertices from split ones
 #define SPLIT_VERTEX (1 << 24)
 
-class sector_c {
-   public:
+class sector_c
+{
+  public:
     int index;
 
     // heights
@@ -84,33 +90,26 @@ class sector_c {
     int num_floors;
     int floor_start;
 
-    char is_dummy;  // private
+    char is_dummy; // private
 
     // UDMF support
     std::unordered_map<std::string, std::string> misc_vals;
 
-   public:
+  public:
     sector_c()
-        : index(-1),
-          floor_h(),
-          ceil_h(),
-          floor_tex(),
-          ceil_tex(),
-          light(),
-          special(),
-          tag(),
-          edge_list(),
-          num_floors(),
-          floor_start(),
-          is_dummy() {}
+        : index(-1), floor_h(), ceil_h(), floor_tex(), ceil_tex(), light(), special(), tag(), edge_list(), num_floors(),
+          floor_start(), is_dummy()
+    {
+    }
 
     linedef_c *getExtraFloor(int index);
 };
 
 #define VOID_SECTOR_IDX 0xFFFF
 
-class sidedef_c {
-   public:
+class sidedef_c
+{
+  public:
     int index;
 
     // adjacent sector.  Can be NULL (invalid sidedef)
@@ -127,26 +126,22 @@ class sidedef_c {
     // UDMF support
     std::unordered_map<std::string, std::string> misc_vals;
 
-   public:
-    sidedef_c()
-        : index(-1),
-          sector(),
-          x_offset(),
-          y_offset(),
-          upper_tex(),
-          lower_tex(),
-          mid_tex() {}
+  public:
+    sidedef_c() : index(-1), sector(), x_offset(), y_offset(), upper_tex(), lower_tex(), mid_tex()
+    {
+    }
 };
 
-class linedef_c {
-   public:
+class linedef_c
+{
+  public:
     int index;
 
     vertex_c *start;
     vertex_c *end;
 
-    sidedef_c *right;  // right side
-    sidedef_c *left;   // left side, or NULL if none
+    sidedef_c *right; // right side
+    sidedef_c *left;  // left side, or NULL if none
 
     char is_border;
 
@@ -160,22 +155,15 @@ class linedef_c {
     // UDMF support
     std::unordered_map<std::string, std::string> misc_vals;
 
-   public:
-    linedef_c()
-        : index(-1),
-          start(),
-          end(),
-          right(),
-          left(),
-          is_border(),
-          flags(),
-          special(),
-          tag(),
-          args() {}
+  public:
+    linedef_c() : index(-1), start(), end(), right(), left(), is_border(), flags(), special(), tag(), args()
+    {
+    }
 };
 
-class thing_c {
-   public:
+class thing_c
+{
+  public:
     int index;
 
     int x, y;
@@ -184,30 +172,23 @@ class thing_c {
     int angle;
 
     // Hexen support
-    int tid;
-    int height;
-    int special;
+    int     tid;
+    int     height;
+    int     special;
     uint8_t args[5];
 
     // UDMF support
     std::unordered_map<std::string, std::string> misc_vals;
 
-   public:
-    thing_c()
-        : index(-1),
-          x(),
-          y(),
-          type(),
-          options(),
-          angle(),
-          tid(),
-          height(),
-          special(),
-          args() {}
+  public:
+    thing_c() : index(-1), x(), y(), type(), options(), angle(), tid(), height(), special(), args()
+    {
+    }
 };
 
-class edge_c {
-   public:
+class edge_c
+{
+  public:
     int index;
 
     // link for list
@@ -231,7 +212,7 @@ class edge_c {
     // gets split, the partner must also be split.
     edge_c *partner;
 
-   public:  // really private
+  public: // really private
     // precomputed data for faster calculations
     double psx, psy;
     double pex, pey;
@@ -248,16 +229,10 @@ class edge_c {
     // can be NULL (e.g. for edges added around the map)
     linedef_c *source_line;
 
-   public:
-    edge_c()
-        : next(),
-          start(),
-          end(),
-          linedef(),
-          sector(),
-          side(),
-          partner(),
-          source_line() {}
+  public:
+    edge_c() : next(), start(), end(), linedef(), sector(), side(), partner(), source_line()
+    {
+    }
 
     void Recompute();
 
@@ -267,8 +242,9 @@ class edge_c {
     void CopyInfo(const edge_c *other);
 };
 
-class polygon_c {
-   public:
+class polygon_c
+{
+  public:
     int index;
 
     // sector this belongs to (possibly 'void_sector')
@@ -280,8 +256,10 @@ class polygon_c {
     double mid_x;
     double mid_y;
 
-   public:
-    polygon_c() : sector(), edge_list(), mid_x(), mid_y() {}
+  public:
+    polygon_c() : sector(), edge_list(), mid_x(), mid_y()
+    {
+    }
 
     bool ContainsPoint(double x, double y) const;
 
@@ -338,15 +316,15 @@ bool Polygonate(bool require_border);
 // the first group can be called after OpenMap().
 // the Polygon() function can only be called after Polygonate().
 
-vertex_c *Vertex(int index);
+vertex_c  *Vertex(int index);
 linedef_c *Linedef(int index);
 sidedef_c *Sidedef(int index);
-sector_c *Sector(int index);
-thing_c *Thing(int index);
+sector_c  *Sector(int index);
+thing_c   *Thing(int index);
 
 polygon_c *Polygon(int index);
 
-}  // namespace ajpoly
+} // namespace ajpoly
 
 #endif /* __AJPOLY_API_H__ */
 

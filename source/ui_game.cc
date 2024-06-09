@@ -19,6 +19,8 @@
 //
 //----------------------------------------------------------------
 
+#include <iostream>
+
 #include "hdr_fltk.h"
 #include "hdr_lua.h"
 #include "hdr_ui.h"
@@ -26,14 +28,14 @@
 #include "lib_util.h"
 #include "m_lua.h"
 #include "main.h"
-#include <iostream>
 
 #define ABORT_COLOR fl_color_cube(3, 1, 1)
 
 //
 // Constructor
 //
-UI_Game::UI_Game(int X, int Y, int W, int H) : Fl_Group(X, Y, W, H) {
+UI_Game::UI_Game(int X, int Y, int W, int H) : Fl_Group(X, Y, W, H)
+{
     box(box_style);
 
     int button_w = W * 0.35;
@@ -45,8 +47,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H) : Fl_Group(X, Y, W, H) {
     int cx = X + W * 0.29;
     int cy = Y + kf_h(4);
 
-    heading = new Fl_Box(FL_NO_BOX, X + kf_w(8), cy, W - kf_w(12), kf_h(24),
-                         _("Game Settings"));
+    heading = new Fl_Box(FL_NO_BOX, X + kf_w(8), cy, W - kf_w(12), kf_h(24), _("Game Settings"));
     heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
     heading->labeltype(FL_NORMAL_LABEL);
     heading->labelfont(font_style | FL_BOLD);
@@ -130,8 +131,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H) : Fl_Group(X, Y, W, H) {
     build->callback(build_callback, this);
     build->shortcut(FL_F + 2);
 
-    quit = new Fl_Button(W - button_x - button_w, cy, button_w, button_h,
-                         _("Quit"));
+    quit = new Fl_Button(W - button_x - button_w, cy, button_w, button_h, _("Quit"));
     quit->visible_focus(0);
     quit->box(button_style);
     quit->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
@@ -147,30 +147,38 @@ UI_Game::UI_Game(int X, int Y, int W, int H) : Fl_Group(X, Y, W, H) {
 //
 // Destructor
 //
-UI_Game::~UI_Game() {}
+UI_Game::~UI_Game()
+{
+}
 
-void UI_Game::callback_Engine(Fl_Widget *w, void *data) {
+void UI_Game::callback_Engine(Fl_Widget *w, void *data)
+{
     UI_Game *that = (UI_Game *)data;
 
     ob_set_config("engine", that->engine->GetID());
 
-    if (StringCompare(that->engine->GetID(), "idtech_0") == 0) {
+    if (StringCompare(that->engine->GetID(), "idtech_0") == 0)
+    {
         that->theme->deactivate();
-    } else {
+    }
+    else
+    {
         that->theme->activate();
     }
 }
 
-void UI_Game::callback_Game(Fl_Widget *w, void *data) {
+void UI_Game::callback_Game(Fl_Widget *w, void *data)
+{
     UI_Game *that = (UI_Game *)data;
 
     ob_set_config("game", that->game->GetID());
 }
 
-void UI_Game::callback_GameHelp(Fl_Widget *w, void *data) {
+void UI_Game::callback_GameHelp(Fl_Widget *w, void *data)
+{
     fl_cursor(FL_CURSOR_DEFAULT);
-    Fl_Window *win = new Fl_Window(640, 480, _("Game"));
-    Fl_Text_Buffer *buff = new Fl_Text_Buffer();
+    Fl_Window       *win  = new Fl_Window(640, 480, _("Game"));
+    Fl_Text_Buffer  *buff = new Fl_Text_Buffer();
     Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
     disp->buffer(buff);
     disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
@@ -183,34 +191,41 @@ void UI_Game::callback_GameHelp(Fl_Widget *w, void *data) {
     // clang-format on
 }
 
-void UI_Game::callback_Port(Fl_Widget *w, void *data) {
+void UI_Game::callback_Port(Fl_Widget *w, void *data)
+{
     UI_Game *that = (UI_Game *)data;
 
     ob_set_config("port", that->port->GetID());
 
-    if (StringCompare(that->engine->GetID(), "idtech_0") == 0) {
+    if (StringCompare(that->engine->GetID(), "idtech_0") == 0)
+    {
         that->theme->deactivate();
-    } else {
+    }
+    else
+    {
         that->theme->activate();
     }
 }
 
-void UI_Game::callback_Length(Fl_Widget *w, void *data) {
+void UI_Game::callback_Length(Fl_Widget *w, void *data)
+{
     UI_Game *that = (UI_Game *)data;
 
     ob_set_config("length", that->length->GetID());
 }
 
-void UI_Game::callback_Theme(Fl_Widget *w, void *data) {
+void UI_Game::callback_Theme(Fl_Widget *w, void *data)
+{
     UI_Game *that = (UI_Game *)data;
 
     ob_set_config("theme", that->theme->GetID());
 }
 
-void UI_Game::callback_EngineHelp(Fl_Widget *w, void *data) {
+void UI_Game::callback_EngineHelp(Fl_Widget *w, void *data)
+{
     fl_cursor(FL_CURSOR_DEFAULT);
-    Fl_Window *win = new Fl_Window(640, 480, _("Engine"));
-    Fl_Text_Buffer *buff = new Fl_Text_Buffer();
+    Fl_Window       *win  = new Fl_Window(640, 480, _("Engine"));
+    Fl_Text_Buffer  *buff = new Fl_Text_Buffer();
     Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
     disp->buffer(buff);
     disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
@@ -223,10 +238,11 @@ void UI_Game::callback_EngineHelp(Fl_Widget *w, void *data) {
     // clang-format on
 }
 
-void UI_Game::callback_PortHelp(Fl_Widget *w, void *data) {
+void UI_Game::callback_PortHelp(Fl_Widget *w, void *data)
+{
     fl_cursor(FL_CURSOR_DEFAULT);
-    Fl_Window *win = new Fl_Window(640, 480, _("Port"));
-    Fl_Text_Buffer *buff = new Fl_Text_Buffer();
+    Fl_Window       *win  = new Fl_Window(640, 480, _("Port"));
+    Fl_Text_Buffer  *buff = new Fl_Text_Buffer();
     Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
     disp->buffer(buff);
     disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
@@ -239,10 +255,11 @@ void UI_Game::callback_PortHelp(Fl_Widget *w, void *data) {
     // clang-format on
 }
 
-void UI_Game::callback_LengthHelp(Fl_Widget *w, void *data) {
+void UI_Game::callback_LengthHelp(Fl_Widget *w, void *data)
+{
     fl_cursor(FL_CURSOR_DEFAULT);
-    Fl_Window *win = new Fl_Window(640, 480, _("Length"));
-    Fl_Text_Buffer *buff = new Fl_Text_Buffer();
+    Fl_Window       *win  = new Fl_Window(640, 480, _("Length"));
+    Fl_Text_Buffer  *buff = new Fl_Text_Buffer();
     Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
     disp->buffer(buff);
     disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
@@ -255,15 +272,19 @@ void UI_Game::callback_LengthHelp(Fl_Widget *w, void *data) {
     // clang-format on
 }
 
-void UI_Game::Locked(bool value) {
-    if (value) {
+void UI_Game::Locked(bool value)
+{
+    if (value)
+    {
         engine->deactivate();
         game->deactivate();
         port->deactivate();
         length->deactivate();
         theme->deactivate();
         build->deactivate();
-    } else {
+    }
+    else
+    {
         engine->activate();
         game->activate();
         port->activate();
@@ -273,85 +294,106 @@ void UI_Game::Locked(bool value) {
     }
 }
 
-bool UI_Game::AddChoice(std::string button, std::string id, std::string label) {
-    if (!StringCompare(button, "engine")) {
+bool UI_Game::AddChoice(std::string button, std::string id, std::string label)
+{
+    if (!StringCompare(button, "engine"))
+    {
         engine->AddChoice(id, label);
         return true;
     }
-    if (!StringCompare(button, "game")) {
+    if (!StringCompare(button, "game"))
+    {
         game->AddChoice(id, label);
         return true;
     }
-    if (!StringCompare(button, "port")) {
-        if (StringCompare(id, "advanced")) {
+    if (!StringCompare(button, "port"))
+    {
+        if (StringCompare(id, "advanced"))
+        {
             port->AddChoice(id, label);
         }
         return true;
     }
-    if (!StringCompare(button, "length")) {
+    if (!StringCompare(button, "length"))
+    {
         length->AddChoice(id, label);
         return true;
     }
-    if (!StringCompare(button, "theme")) {
+    if (!StringCompare(button, "theme"))
+    {
         theme->AddChoice(id, label);
         return true;
     }
 
-    return false;  // unknown button
+    return false; // unknown button
 }
 
-bool UI_Game::EnableChoice(std::string button, std::string id, bool enable_it) {
-    if (!StringCompare(button, "engine")) {
+bool UI_Game::EnableChoice(std::string button, std::string id, bool enable_it)
+{
+    if (!StringCompare(button, "engine"))
+    {
         engine->EnableChoice(id, enable_it);
         return true;
     }
-    if (!StringCompare(button, "game")) {
+    if (!StringCompare(button, "game"))
+    {
         game->EnableChoice(id, enable_it);
         return true;
     }
-    if (!StringCompare(button, "port")) {
+    if (!StringCompare(button, "port"))
+    {
         port->EnableChoice(id, enable_it);
         return true;
     }
-    if (!StringCompare(button, "length")) {
+    if (!StringCompare(button, "length"))
+    {
         length->EnableChoice(id, enable_it);
         return true;
     }
-    if (!StringCompare(button, "theme")) {
+    if (!StringCompare(button, "theme"))
+    {
         theme->EnableChoice(id, enable_it);
         return true;
     }
 
-    return false;  // unknown button
+    return false; // unknown button
 }
 
-bool UI_Game::SetButton(std::string button, std::string id) {
-    if (!StringCompare(button, "engine")) {
+bool UI_Game::SetButton(std::string button, std::string id)
+{
+    if (!StringCompare(button, "engine"))
+    {
         engine->ChangeTo(id);
         return true;
     }
-    if (!StringCompare(button, "game")) {
+    if (!StringCompare(button, "game"))
+    {
         game->ChangeTo(id);
         return true;
     }
-    if (!StringCompare(button, "port")) {
+    if (!StringCompare(button, "port"))
+    {
         port->ChangeTo(id);
         return true;
     }
-    if (!StringCompare(button, "length")) {
+    if (!StringCompare(button, "length"))
+    {
         length->ChangeTo(id);
         return true;
     }
-    if (!StringCompare(button, "theme")) {
+    if (!StringCompare(button, "theme"))
+    {
         theme->ChangeTo(id);
         return true;
     }
 
-    return false;  // unknown button
+    return false; // unknown button
 }
 
-void UI_Game::SetAbortButton(bool abort) {
-    if (abort) {
+void UI_Game::SetAbortButton(bool abort)
+{
+    if (abort)
+    {
         quit->label(_("Cancel"));
         quit->labelcolor(ABORT_COLOR);
         quit->labelfont(font_style | FL_BOLD);
@@ -359,7 +401,9 @@ void UI_Game::SetAbortButton(bool abort) {
         quit->callback(stop_callback, this);
 
         build->labelfont(font_style);
-    } else {
+    }
+    else
+    {
         quit->label(_("Quit"));
         quit->labelcolor(FL_FOREGROUND_COLOR);
         quit->labelfont(font_style);
@@ -370,19 +414,24 @@ void UI_Game::SetAbortButton(bool abort) {
     }
 }
 
-void UI_Game::build_callback(Fl_Widget *w, void *data) {
-    if (main_action == 0) {
+void UI_Game::build_callback(Fl_Widget *w, void *data)
+{
+    if (main_action == 0)
+    {
         main_action = MAIN_BUILD;
     }
 }
 
-void UI_Game::stop_callback(Fl_Widget *w, void *data) {
-    if (main_action != MAIN_QUIT) {
+void UI_Game::stop_callback(Fl_Widget *w, void *data)
+{
+    if (main_action != MAIN_QUIT)
+    {
         main_action = MAIN_CANCEL;
     }
 }
 
-void UI_Game::quit_callback(Fl_Widget *w, void *data) {
+void UI_Game::quit_callback(Fl_Widget *w, void *data)
+{
     main_action = MAIN_QUIT;
 }
 

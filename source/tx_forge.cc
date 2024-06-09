@@ -43,12 +43,13 @@
    array of complex numbers as stored by fourn(). */
 
 static float *mesh_a;
-static int meshsize;
+static int    meshsize;
 
-#define Real(x, y) mesh_a[1 + (((x)*meshsize) + (y)) * 2]
-#define Imag(x, y) mesh_a[2 + (((x)*meshsize) + (y)) * 2]
+#define Real(x, y) mesh_a[1 + (((x) * meshsize) + (y)) * 2]
+#define Imag(x, y) mesh_a[2 + (((x) * meshsize) + (y)) * 2]
 
-static void create_mesh(int width) {
+static void create_mesh(int width)
+{
     meshsize = width;
 
     int total_elem = (meshsize * meshsize + 1) * 2;
@@ -59,7 +60,8 @@ static void create_mesh(int width) {
     memset(mesh_a, 0, total_elem * sizeof(float));
 }
 
-static void free_mesh(void) {
+static void free_mesh(void)
+{
     delete[] mesh_a;
     mesh_a = NULL;
 }
@@ -88,34 +90,41 @@ static void free_mesh(void) {
     Recipes In C", Section 12.11, pp. 467-470.
 */
 
-static void fourn(float data[], int nn[], int ndim, int isign) {
-    int i1, i2, i3;
-    int i2rev, i3rev, ip1, ip2, ip3, ifp1, ifp2;
-    int ibit, idim, k1, k2, n, nprev, nrem, ntot;
-    float tempi, tempr;
+static void fourn(float data[], int nn[], int ndim, int isign)
+{
+    int    i1, i2, i3;
+    int    i2rev, i3rev, ip1, ip2, ip3, ifp1, ifp2;
+    int    ibit, idim, k1, k2, n, nprev, nrem, ntot;
+    float  tempi, tempr;
     double theta, wi, wpi, wpr, wr, wtemp;
 
-#define FN_SWAP(a, b) \
-    tempr = (a);      \
-    (a) = (b);        \
-    (b) = tempr
+#define FN_SWAP(a, b)                                                                                                  \
+    tempr = (a);                                                                                                       \
+    (a)   = (b);                                                                                                       \
+    (b)   = tempr
 
     ntot = 1;
-    for (idim = 1; idim <= ndim; idim++) {
+    for (idim = 1; idim <= ndim; idim++)
+    {
         ntot *= nn[idim];
     }
     nprev = 1;
-    for (idim = ndim; idim >= 1; idim--) {
-        n = nn[idim];
-        nrem = ntot / (n * nprev);
-        ip1 = nprev << 1;
-        ip2 = ip1 * n;
-        ip3 = ip2 * nrem;
+    for (idim = ndim; idim >= 1; idim--)
+    {
+        n     = nn[idim];
+        nrem  = ntot / (n * nprev);
+        ip1   = nprev << 1;
+        ip2   = ip1 * n;
+        ip3   = ip2 * nrem;
         i2rev = 1;
-        for (i2 = 1; i2 <= ip2; i2 += ip1) {
-            if (i2 < i2rev) {
-                for (i1 = i2; i1 <= i2 + ip1 - 2; i1 += 2) {
-                    for (i3 = i1; i3 <= ip3; i3 += ip2) {
+        for (i2 = 1; i2 <= ip2; i2 += ip1)
+        {
+            if (i2 < i2rev)
+            {
+                for (i1 = i2; i1 <= i2 + ip1 - 2; i1 += 2)
+                {
+                    for (i3 = i1; i3 <= ip3; i3 += ip2)
+                    {
                         i3rev = i2rev + i3 - i2;
                         FN_SWAP(data[i3], data[i3rev]);
                         FN_SWAP(data[i3 + 1], data[i3rev + 1]);
@@ -123,29 +132,34 @@ static void fourn(float data[], int nn[], int ndim, int isign) {
                 }
             }
             ibit = ip2 >> 1;
-            while (ibit >= ip1 && i2rev > ibit) {
+            while (ibit >= ip1 && i2rev > ibit)
+            {
                 i2rev -= ibit;
                 ibit >>= 1;
             }
             i2rev += ibit;
         }
         ifp1 = ip1;
-        while (ifp1 < ip2) {
-            ifp2 = ifp1 << 1;
+        while (ifp1 < ip2)
+        {
+            ifp2  = ifp1 << 1;
             theta = isign * (M_PI * 2) / (ifp2 / ip1);
             wtemp = sin(0.5 * theta);
-            wpr = -2.0 * wtemp * wtemp;
-            wpi = sin(theta);
-            wr = 1.0;
-            wi = 0.0;
-            for (i3 = 1; i3 <= ifp1; i3 += ip1) {
-                for (i1 = i3; i1 <= i3 + ip1 - 2; i1 += 2) {
-                    for (i2 = i1; i2 <= ip3; i2 += ifp2) {
-                        k1 = i2;
-                        k2 = k1 + ifp1;
-                        tempr = wr * data[k2] - wi * data[k2 + 1];
-                        tempi = wr * data[k2 + 1] + wi * data[k2];
-                        data[k2] = data[k1] - tempr;
+            wpr   = -2.0 * wtemp * wtemp;
+            wpi   = sin(theta);
+            wr    = 1.0;
+            wi    = 0.0;
+            for (i3 = 1; i3 <= ifp1; i3 += ip1)
+            {
+                for (i1 = i3; i1 <= i3 + ip1 - 2; i1 += 2)
+                {
+                    for (i2 = i1; i2 <= ip3; i2 += ifp2)
+                    {
+                        k1           = i2;
+                        k2           = k1 + ifp1;
+                        tempr        = wr * data[k2] - wi * data[k2 + 1];
+                        tempi        = wr * data[k2 + 1] + wi * data[k2];
+                        data[k2]     = data[k1] - tempr;
                         data[k2 + 1] = data[k1 + 1] - tempi;
                         data[k1] += tempr;
                         data[k1 + 1] += tempi;
@@ -164,11 +178,12 @@ static void fourn(float data[], int nn[], int ndim, int isign) {
 /*  INITGAUSS  --  Initialize random number generators.  As given in
                    Peitgen & Saupe, page 77.
 */
-#define NRAND 4 /* Gauss() sample count */
+#define NRAND 4                     /* Gauss() sample count */
 
 static double gauss_add, gauss_mul; /* Gaussian random parameters */
 
-static void init_gauss(void) {
+static void init_gauss(void)
+{
     /* Range of random generator */
     gauss_add = sqrt(3.0 * NRAND);
     gauss_mul = 2 * gauss_add / (NRAND * double(0xFFFF));
@@ -176,34 +191,45 @@ static void init_gauss(void) {
 
 /*  GAUSS  --  Return a Gaussian random number.  As given in Peitgen
                & Saupe, page 77. */
-static double rand_gauss(void) {
+static double rand_gauss(void)
+{
     double sum = 0.0;
 
-    for (int i = 0; i < NRAND; i++) {
+    for (int i = 0; i < NRAND; i++)
+    {
         sum += (xoshiro_UInt() & 0xFFFF);
     }
 
     return sum * gauss_mul - gauss_add;
 }
 
-static double rand_phase(void) { return 2 * M_PI * xoshiro_Double(); }
+static double rand_phase(void)
+{
+    return 2 * M_PI * xoshiro_Double();
+}
 
 /*  SPECTRALSYNTH  --  Spectrally  synthesized  fractal  motion in two
                        dimensions.  This algorithm is given under  the
                        name   SpectralSynthesisFM2D  on  page  108  of
                        Peitgen & Saupe.
 */
-static void spectral_synth(int n, double h) {
+static void spectral_synth(int n, double h)
+{
     int i, j;
 
-    for (i = 0; i <= n / 2; i++) {
-        for (j = 0; j <= n / 2; j++) {
+    for (i = 0; i <= n / 2; i++)
+    {
+        for (j = 0; j <= n / 2; j++)
+        {
             double phase = rand_phase();
             double rad;
 
-            if (i == 0 && j == 0) {
+            if (i == 0 && j == 0)
+            {
                 rad = 0;
-            } else {
+            }
+            else
+            {
                 rad = pow((double)(i * i + j * j), -(h + 1) / 2) * rand_gauss();
             }
 
@@ -213,22 +239,23 @@ static void spectral_synth(int n, double h) {
             int i0 = (i == 0) ? 0 : n - i;
             int j0 = (j == 0) ? 0 : n - j;
 
-            Real(i, j) = rcos;
-            Imag(i, j) = rsin;
+            Real(i, j)   = rcos;
+            Imag(i, j)   = rsin;
             Real(i0, j0) = rcos;
             Imag(i0, j0) = -rsin;
         }
     }
 
-    Imag(n / 2, 0) = 0;
-    Imag(0, n / 2) = 0;
+    Imag(n / 2, 0)     = 0;
+    Imag(0, n / 2)     = 0;
     Imag(n / 2, n / 2) = 0;
 
-    for (i = 1; i <= n / 2 - 1; i++) {
-        for (j = 1; j <= n / 2 - 1; j++) {
+    for (i = 1; i <= n / 2 - 1; i++)
+    {
+        for (j = 1; j <= n / 2 - 1; j++)
+        {
             double phase = rand_phase();
-            double rad =
-                pow((double)(i * i + j * j), -(h + 1) / 2) * rand_gauss();
+            double rad   = pow((double)(i * i + j * j), -(h + 1) / 2) * rand_gauss();
 
             double rcos = rad * cos(phase);
             double rsin = rad * sin(phase);
@@ -243,20 +270,23 @@ static void spectral_synth(int n, double h) {
     int nsize[3];
 
     nsize[0] = 0;
-    nsize[1] = nsize[2] = n; /* Dimension of frequency domain array */
+    nsize[1] = nsize[2] = n;     /* Dimension of frequency domain array */
 
     fourn(mesh_a, nsize, 2, -1); /* Take inverse 2D Fourier transform */
 }
 
-static void copy_and_scale(float *buf) {
+static void copy_and_scale(float *buf)
+{
     /* Compute extrema for autoscaling. */
     double rmin = 1e30;
     double rmax = -1e30;
 
     int i, j;
 
-    for (i = 0; i < meshsize; i++) {
-        for (j = 0; j < meshsize; j++) {
+    for (i = 0; i < meshsize; i++)
+    {
+        for (j = 0; j < meshsize; j++)
+        {
             double r = Real(i, j);
 
             rmin = OBSIDIAN_MIN(rmin, r);
@@ -268,38 +298,44 @@ static void copy_and_scale(float *buf) {
 
     double range = (rmax - rmin);
 
-    if (fabs(range) < 0.0001) {
+    if (fabs(range) < 0.0001)
+    {
         range = 0.0001;
     }
 
-    for (i = 0; i < meshsize; i++) {
-        for (j = 0; j < meshsize; j++) {
+    for (i = 0; i < meshsize; i++)
+    {
+        for (j = 0; j < meshsize; j++)
+        {
             *buf++ = (Real(i, j) - rmin) / range;
         }
     }
 }
 
-static void power_law_scale(float *buf, double powscale) {
+static void power_law_scale(float *buf, double powscale)
+{
     /* Apply power law scaling if non-unity scale is requested. */
 
     float *buf_end = buf + (meshsize * meshsize);
 
-    for (; buf < buf_end; buf++) {
+    for (; buf < buf_end; buf++)
+    {
         *buf = pow(*buf, powscale);
     }
 }
 
-void TX_SpectralSynth(unsigned long long seed, float *buf, int width,
-                      double fracdim, double powscale) {
+void TX_SpectralSynth(unsigned long long seed, float *buf, int width, double fracdim, double powscale)
+{
     SYS_ASSERT(width > 0 && (width & 1) == 0);
     SYS_ASSERT(0 < fracdim && fracdim < 4.0);
     SYS_ASSERT(powscale > 0);
 
     // NOTE : width *must* be a power of two
-    for (int test = width; test > 1; test >>= 1) {
-        if (test & 1) {
-            Main::FatalError(
-                "TX_SpectralSynth: width '%d' is not a power of two\n", width);
+    for (int test = width; test > 1; test >>= 1)
+    {
+        if (test & 1)
+        {
+            Main::FatalError("TX_SpectralSynth: width '%d' is not a power of two\n", width);
         }
     }
 
@@ -311,22 +347,26 @@ void TX_SpectralSynth(unsigned long long seed, float *buf, int width,
 
     copy_and_scale(buf);
 
-    if (fabs(powscale - 1.0) > 0.01) {
+    if (fabs(powscale - 1.0) > 0.01)
+    {
         power_law_scale(buf, powscale);
     }
 
     free_mesh();
 }
 
-void TX_TestSynth(unsigned long long seed) {
+void TX_TestSynth(unsigned long long seed)
+{
     float *buf = new float[128 * 128];
 
     TX_SpectralSynth(seed, buf, 128);
 
     LogPrintf("P6\n128 128 255\n");
 
-    for (int y = 0; y < 128; y++) {
-        for (int x = 0; x < 128; x++) {
+    for (int y = 0; y < 128; y++)
+    {
+        for (int x = 0; x < 128; x++)
+        {
             float f = buf[y * 128 + x];
 
             int ity = (int)(1 + f * 253);

@@ -22,28 +22,32 @@
 #include <ctime>
 #include <fstream>
 #include <iostream>
+
 #include "headers.h"
 #include "lib_util.h"
-#include "main.h"
 #include "m_lua.h"
+#include "main.h"
 
 #define DEBUG_BUF_LEN 20000
 
 std::fstream log_file;
 std::fstream ref_file;
-std::string log_filename;
-std::string ref_filename;
+std::string  log_filename;
+std::string  ref_filename;
 
 bool debugging = false;
-bool terminal = false;
+bool terminal  = false;
 
-bool LogInit(const std::string &filename) {
-    if (!filename.empty()) {
+bool LogInit(const std::string &filename)
+{
+    if (!filename.empty())
+    {
         log_filename = filename;
 
         log_file.open(log_filename, std::ios::out);
 
-        if (!log_file.is_open()) {
+        if (!log_file.is_open())
+        {
             return false;
         }
     }
@@ -52,51 +56,62 @@ bool LogInit(const std::string &filename) {
 
     LogPrintf("====== START OF OBSIDIAN LOGS ======\n\n");
 
-    LogPrintf("Initialized on %s",
-        std::ctime(&result));
+    LogPrintf("Initialized on %s", std::ctime(&result));
 
     return true;
 }
 
-bool RefInit(const std::string &filename) {
-    if (!filename.empty()) {
+bool RefInit(const std::string &filename)
+{
+    if (!filename.empty())
+    {
         ref_filename = filename;
 
         // Clear previously generated reference if present
-        if (FileExists(ref_filename)) {
+        if (FileExists(ref_filename))
+        {
             FileDelete(ref_filename);
         }
 
         ref_file.open(ref_filename, std::ios::out);
 
-        if (!ref_file.is_open()) {
+        if (!ref_file.is_open())
+        {
             return false;
         }
     }
 
-    RefPrintf("====== OBSIDIAN REFERENCE for V%s BUILD %s ======\n\n",
-              OBSIDIAN_SHORT_VERSION, OBSIDIAN_VERSION);
+    RefPrintf("====== OBSIDIAN REFERENCE for V%s BUILD %s ======\n\n", OBSIDIAN_SHORT_VERSION, OBSIDIAN_VERSION);
 
     return true;
 }
 
-void LogEnableDebug(bool enable) {
-    if (debugging == enable) {
+void LogEnableDebug(bool enable)
+{
+    if (debugging == enable)
+    {
         return;
     }
 
     debugging = enable;
 
-    if (debugging) {
+    if (debugging)
+    {
         LogPrintf("===  DEBUGGING ENABLED  ===\n\n");
-    } else {
+    }
+    else
+    {
         LogPrintf("===  DEBUGGING DISABLED  ===\n\n");
     }
 }
 
-void LogEnableTerminal(bool enable) { terminal = enable; }
+void LogEnableTerminal(bool enable)
+{
+    terminal = enable;
+}
 
-void LogClose(void) {
+void LogClose(void)
+{
     LogPrintf("\n====== END OF OBSIDIAN LOGS ======\n\n");
 
     log_file.close();
@@ -104,7 +119,8 @@ void LogClose(void) {
     log_filename.clear();
 }
 
-void RefClose(void) {
+void RefClose(void)
+{
     RefPrintf("\n====== END OF REFERENCE ======\n\n");
 
     ref_file.close();
@@ -112,9 +128,11 @@ void RefClose(void) {
     ref_filename.clear();
 }
 
-void LogReadLines(log_display_func_t display_func, void *priv_data) {
+void LogReadLines(log_display_func_t display_func, void *priv_data)
+{
 
-    if (!log_file) {
+    if (!log_file)
+    {
         return;
     }
 
@@ -128,12 +146,14 @@ void LogReadLines(log_display_func_t display_func, void *priv_data) {
     log_file.open(log_filename, std::ios::in);
 
     // this is very unlikely to happen, but check anyway
-    if (!log_file.is_open()) {
+    if (!log_file.is_open())
+    {
         return;
     }
 
     std::string buffer;
-    while (std::getline(log_file, buffer)) {
+    while (std::getline(log_file, buffer))
+    {
         // remove any newline at the end (LF or CR/LF)
         StringRemoveCRLF(&buffer);
 

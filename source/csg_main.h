@@ -23,6 +23,7 @@
 #define __OBLIGE_CSG_MAIN_H__
 
 #include <stdint.h>
+
 #include <map>
 #include <string>
 #include <vector>
@@ -50,17 +51,24 @@ extern double CLUSTER_SIZE;
 
 /******* CLASSES ***************/
 
-class csg_property_set_c {
-   private:
+class csg_property_set_c
+{
+  private:
     std::map<std::string, std::string> dict;
 
-   public:
-    csg_property_set_c() : dict() {}
+  public:
+    csg_property_set_c() : dict()
+    {
+    }
 
-    ~csg_property_set_c() {}
+    ~csg_property_set_c()
+    {
+    }
 
     // copy constructor
-    csg_property_set_c(const csg_property_set_c &other) : dict(other.dict) {}
+    csg_property_set_c(const csg_property_set_c &other) : dict(other.dict)
+    {
+    }
 
     void Add(std::string key, std::string value);
     void Remove(std::string key);
@@ -68,28 +76,40 @@ class csg_property_set_c {
     std::string getStr(std::string key, std::string def_val = "") const;
 
     double getDouble(std::string key, double def_val = 0) const;
-    int getInt(std::string key, int def_val = 0) const;
+    int    getInt(std::string key, int def_val = 0) const;
 
     void getHexenArgs(uint8_t *arg5) const;
 
     void DebugDump();
 
-   public:
+  public:
     typedef std::map<std::string, std::string>::iterator iterator;
 
-    iterator begin() { return dict.begin(); }
-    iterator end() { return dict.end(); }
+    iterator begin()
+    {
+        return dict.begin();
+    }
+    iterator end()
+    {
+        return dict.end();
+    }
 };
 
-class uv_matrix_c {
-   public:
+class uv_matrix_c
+{
+  public:
     // fourth value is the offset
     float s[4];
     float t[4];
 
-   public:
-    uv_matrix_c() { Clear(); }
-    ~uv_matrix_c() {}
+  public:
+    uv_matrix_c()
+    {
+        Clear();
+    }
+    ~uv_matrix_c()
+    {
+    }
 
     void Clear();
 
@@ -99,36 +119,40 @@ class uv_matrix_c {
     float Calc_T(float x, float y, float z) const;
 };
 
-class brush_vert_c {
-   public:
+class brush_vert_c
+{
+  public:
     csg_brush_c *parent;
 
     double x, y;
 
     csg_property_set_c face;
 
-    uv_matrix_c *uv_mat;  // can be NULL
+    uv_matrix_c *uv_mat; // can be NULL
 
-   public:
+  public:
     brush_vert_c(csg_brush_c *_parent, double _x = 0, double _y = 0);
     ~brush_vert_c();
 };
 
-class brush_plane_c {
-   public:
+class brush_plane_c
+{
+  public:
     // without slope, this is just the height of the top or bottom
     // of the brush.  When sloped, it still represents a bounding
     // height of the brush.
     double z;
 
-    quake_plane_c *slope;  // NULL if not sloped
+    quake_plane_c *slope; // NULL if not sloped
 
     csg_property_set_c face;
 
-    uv_matrix_c *uv_mat;  // can be NULL
+    uv_matrix_c *uv_mat; // can be NULL
 
-   public:
-    brush_plane_c(double _z = 0) : z(_z), slope(NULL), face(), uv_mat(NULL) {}
+  public:
+    brush_plane_c(double _z = 0) : z(_z), slope(NULL), face(), uv_mat(NULL)
+    {
+    }
 
     ///    brush_plane_c(const brush_plane_c& other);
 
@@ -137,35 +161,38 @@ class brush_plane_c {
     double CalcZ(double ax, double ay) const;
 };
 
-typedef enum {
+typedef enum
+{
     BKIND_Solid = 0,
     BKIND_Liquid,
 
-    BKIND_Trigger,  // supply a trigger special (DOOM only)
-    BKIND_Rail,     // supply a railing texture (DOOM only)
-    BKIND_Light,    // supply extra lighting or shadow
+    BKIND_Trigger, // supply a trigger special (DOOM only)
+    BKIND_Rail,    // supply a railing texture (DOOM only)
+    BKIND_Light,   // supply extra lighting or shadow
 } brush_kind_e;
 
-typedef enum {
-    BFLAG_Detail = (1 << 0),  // not structural (ignored for node/leaf creation)
-    BFLAG_Sky = (1 << 1),     // special handling for lighting
+typedef enum
+{
+    BFLAG_Detail = (1 << 0),   // not structural (ignored for node/leaf creation)
+    BFLAG_Sky    = (1 << 1),   // special handling for lighting
 
-    BFLAG_NoClip = (1 << 2),    // inhibit clipping for this brush
-    BFLAG_NoDraw = (1 << 3),    // inhibit faces for this brush
-    BFLAG_NoShadow = (1 << 4),  // inhibit blocking of light (detail only)
+    BFLAG_NoClip   = (1 << 2), // inhibit clipping for this brush
+    BFLAG_NoDraw   = (1 << 3), // inhibit faces for this brush
+    BFLAG_NoShadow = (1 << 4), // inhibit blocking of light (detail only)
 
     // internal flags
-    BRU_IF_Quad = (1 << 16),  // brush is a four-sided box
-    BRU_IF_Seen = (1 << 17),  // already seen (Quake II)
+    BRU_IF_Quad = (1 << 16), // brush is a four-sided box
+    BRU_IF_Seen = (1 << 17), // already seen (Quake II)
 } brush_flags_e;
 
-class csg_brush_c {
+class csg_brush_c
+{
     // This represents a "brush" in Quake terms, a solid area
     // on the map with out-facing sides and top/bottom.  Like
     // quake brushes, these must be convex, but co-linear sides
     // are allowed.
 
-   public:
+  public:
     int bkind;
     int bflags;
 
@@ -173,8 +200,8 @@ class csg_brush_c {
 
     std::vector<brush_vert_c *> verts;
 
-    brush_plane_c b;  // bottom
-    brush_plane_c t;  // top
+    brush_plane_c b; // bottom
+    brush_plane_c t; // top
 
     double min_x, min_y;
     double max_x, max_y;
@@ -182,7 +209,7 @@ class csg_brush_c {
     // only set when brush is part of a map-model (bmodel)
     csg_entity_c *link_ent;
 
-   public:
+  public:
     csg_brush_c();
     ~csg_brush_c();
 
@@ -205,12 +232,12 @@ class csg_brush_c {
 
     bool ContainsPoint(float x, float y, float z) const;
 
-    bool IntersectRay(float x1, float y1, float z1, float x2, float y2,
-                      float z2) const;
+    bool IntersectRay(float x1, float y1, float z1, float x2, float y2, float z2) const;
 };
 
-class csg_entity_c {
-   public:
+class csg_entity_c
+{
+  public:
     std::string id;
 
     double x, y, z;
@@ -222,7 +249,7 @@ class csg_entity_c {
     // this only used by DOOM Extrafloor code, -1 until known
     int ex_floor;
 
-   public:
+  public:
     csg_entity_c();
     ~csg_entity_c();
 
@@ -242,11 +269,9 @@ extern std::string dummy_plane_tex;
 
 void CSG_Main_Free();
 
-bool CSG_TraceRay(double x1, double y1, double z1, double x2, double y2,
-                  double z2, std::string mode);
+bool CSG_TraceRay(double x1, double y1, double z1, double x2, double y2, double z2, std::string mode);
 
-int CSG_BrushContents(double x, double y, double z,
-                      double *liquid_depth = NULL);
+int CSG_BrushContents(double x, double y, double z, double *liquid_depth = NULL);
 
 csg_property_set_c *CSG_LookupTexProps(std::string name);
 

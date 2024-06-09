@@ -29,9 +29,9 @@
 bool WAD_OpenRead(std::string filename);
 void WAD_CloseRead();
 
-int WAD_NumEntries();
-int WAD_FindEntry(const char *name);
-int WAD_EntryLen(int entry);
+int         WAD_NumEntries();
+int         WAD_FindEntry(const char *name);
+int         WAD_EntryLen(int entry);
 const char *WAD_EntryName(int entry);
 
 bool WAD_ReadData(int entry, int offset, int length, void *buffer);
@@ -48,7 +48,8 @@ void WAD_FinishLump();
 /* ----- WAD structure (Doom) ---------------------- */
 
 #pragma pack(push, 1)
-struct raw_wad_header_t {
+struct raw_wad_header_t
+{
     char magic[4];
 
     uint32_t num_lumps;
@@ -57,7 +58,8 @@ struct raw_wad_header_t {
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-struct raw_wad_lump_t {
+struct raw_wad_lump_t
+{
     uint32_t start;
     uint32_t length;
 

@@ -34,8 +34,9 @@ class partition_c;
 class region_c;
 class gap_c;
 
-class snag_c {
-   public:
+class snag_c
+{
+  public:
     double x1, y1;
     double x2, y2;
 
@@ -43,7 +44,7 @@ class snag_c {
 
     partition_c *on_node;
 
-    region_c *region;  // only valid AFTER MergeRegions()
+    region_c *region; // only valid AFTER MergeRegions()
 
     snag_c *partner;  // only valid AFTER HandleOverlaps()
 
@@ -56,10 +57,10 @@ class snag_c {
     // used by CSG DOOM code
     bool seen;
 
-   private:
+  private:
     snag_c(const snag_c &other);
 
-   public:
+  public:
     snag_c(brush_vert_c *side, double _x1, double _y1, double _x2, double _y2);
 
     snag_c(double _x1, double _y1, double _x2, double _y2, partition_c *part);
@@ -89,8 +90,9 @@ class snag_c {
     brush_vert_c *FindBrushVert(const csg_brush_c *B);
 };
 
-class region_c {
-   public:
+class region_c
+{
+  public:
     std::vector<snag_c *> snags;
 
     std::vector<csg_brush_c *> brushes;
@@ -112,7 +114,7 @@ class region_c {
     // used by DOOM shading code
     int shade;
 
-   public:
+  public:
     region_c();
 
     region_c(const region_c &other);
@@ -141,7 +143,7 @@ class region_c {
 
     void GetBounds(double *x1, double *y1, double *x2, double *y2) const;
 
-    bool ContainsPoint(double x, double y) const;
+    bool   ContainsPoint(double x, double y) const;
     double DistanceToPoint(float x, float y) const;
     double SquareDistance(float x, float y) const;
 
@@ -156,13 +158,14 @@ class region_c {
 
     void ComputeMidPoint();
     void ComputeBounds();
-    void ClockwiseSnags();  // requires CalcMidPoint()
+    void ClockwiseSnags(); // requires CalcMidPoint()
 
     void DebugDump();
 };
 
-class gap_c {
-   public:
+class gap_c
+{
+  public:
     csg_brush_c *bottom;
     csg_brush_c *top;
 
@@ -173,7 +176,7 @@ class gap_c {
     // liquid brush whose surface is in this gap (or clipped above it)
     csg_brush_c *liquid;
 
-   public:
+  public:
     gap_c(csg_brush_c *B, csg_brush_c *T);
 
     ~gap_c();
@@ -182,24 +185,25 @@ class gap_c {
     bool HasNeighbor(gap_c *N) const;
 };
 
-class bsp_node_c {
-   public:
+class bsp_node_c
+{
+  public:
     // partition
     double x1, y1, x2, y2;
 
     // front : one of these should be non-NULL
     bsp_node_c *front_node;
-    region_c *front_leaf;
+    region_c   *front_leaf;
 
     // back : one of these should be non-NULL
     bsp_node_c *back_node;
-    region_c *back_leaf;
+    region_c   *back_leaf;
 
     // bounding box of this node
     float bb_x1, bb_y1;
     float bb_x2, bb_y2;
 
-   public:
+  public:
     bsp_node_c(double px1, double py1, double px2, double py2);
 
     // destructor deletes child nodes (but not leafs)
@@ -207,7 +211,7 @@ class bsp_node_c {
 
     void ComputeBBox();
 
-   private:
+  private:
     void AddBBox(bsp_node_c *node);
     void AddBBox(region_c *leaf);
 };

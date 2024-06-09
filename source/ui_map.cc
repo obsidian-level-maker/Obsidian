@@ -19,44 +19,52 @@
 //
 //------------------------------------------------------------------------
 
+#include <vector>
+
+#include "gif.h"
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
 #include "headers.h"
 #include "lib_util.h"
 #include "main.h"
-#include <vector>
-#include "gif.h"
 
 // The includes got too messy to make these part of the UI_MiniMap class - Dasho
 static GifWriter *gif_writer;
-int gif_delay;
+int               gif_delay;
 
 UI_MiniMap::UI_MiniMap(int x, int y, int w, int h, const char *label)
-    : Fl_Box(x, y, w, h, label), pixels(NULL), cur_image(NULL) {
+    : Fl_Box(x, y, w, h, label), pixels(NULL), cur_image(NULL)
+{
     box(FL_NO_BOX);
 }
 
-UI_MiniMap::~UI_MiniMap() {
-    if (cur_image) {
+UI_MiniMap::~UI_MiniMap()
+{
+    if (cur_image)
+    {
         image(NULL);
         delete cur_image;
     }
 
-    if (pixels) {
+    if (pixels)
+    {
         delete[] pixels;
     }
 }
 
-void UI_MiniMap::EmptyMap() {
+void UI_MiniMap::EmptyMap()
+{
     MapBegin();
     MapFinish();
 }
 
-void UI_MiniMap::MapBegin() {
+void UI_MiniMap::MapBegin()
+{
     map_W = w();
     map_H = h();
 
-    if (pixels) {
+    if (pixels)
+    {
         delete[] pixels;
     }
 
@@ -65,16 +73,20 @@ void UI_MiniMap::MapBegin() {
     MapClear();
 }
 
-void UI_MiniMap::MapClear() {
+void UI_MiniMap::MapClear()
+{
     memset(pixels, 0, map_W * map_H * 3);
 
     // draw the grid
 
-    for (int py = 0; py < map_H; py++) {
-        for (int px = 0; px < map_W; px++) {
+    for (int py = 0; py < map_H; py++)
+    {
+        for (int px = 0; px < map_W; px++)
+        {
             uint8_t *pix = pixels + (py * map_W + px) * 3;
 
-            if ((px % 10) == 5 || (py % 10) == 5) {
+            if ((px % 10) == 5 || (py % 10) == 5)
+            {
                 // if (have_an_addon) pix[1] = 144; else
                 pix[2] = 176;
             }
@@ -85,10 +97,12 @@ void UI_MiniMap::MapClear() {
     main_win->build_box->name_disp->redraw();
 }
 
-void UI_MiniMap::MapFinish() {
+void UI_MiniMap::MapFinish()
+{
     SYS_ASSERT(pixels);
 
-    if (cur_image) {
+    if (cur_image)
+    {
         image(NULL);
         delete cur_image;
     }
@@ -99,81 +113,97 @@ void UI_MiniMap::MapFinish() {
     redraw();
 }
 
-void UI_MiniMap::DrawPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b) {
-    if (x < 0 || x >= map_W || y < 0 || y >= map_H) {
+void UI_MiniMap::DrawPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b)
+{
+    if (x < 0 || x >= map_W || y < 0 || y >= map_H)
+    {
         return;
     }
 
     RawPixel(x, y, r, g, b);
 }
 
-void UI_MiniMap::DrawBox(int x1, int y1, int x2, int y2, uint8_t r, uint8_t g,
-                         uint8_t b) {
-    if (x1 < 0) {
+void UI_MiniMap::DrawBox(int x1, int y1, int x2, int y2, uint8_t r, uint8_t g, uint8_t b)
+{
+    if (x1 < 0)
+    {
         x1 = 0;
     }
-    if (y1 < 0) {
+    if (y1 < 0)
+    {
         y1 = 0;
     }
 
-    if (x2 >= map_W) {
+    if (x2 >= map_W)
+    {
         x2 = map_W - 1;
     }
-    if (y2 >= map_H) {
+    if (y2 >= map_H)
+    {
         y2 = map_H - 1;
     }
 
     // fully clipped?
-    if (x1 > x2 || y1 > y2) {
+    if (x1 > x2 || y1 > y2)
+    {
         return;
     }
 
-    for (int y = y1; y <= y2; y++) {
-        for (int x = x1; x <= x2; x++) {
+    for (int y = y1; y <= y2; y++)
+    {
+        for (int x = x1; x <= x2; x++)
+        {
             RawPixel(x, y, r, g, b);
         }
     }
 }
 
-void UI_MiniMap::DrawLine(int x1, int y1, int x2, int y2, uint8_t r, uint8_t g,
-                          uint8_t b) {
+void UI_MiniMap::DrawLine(int x1, int y1, int x2, int y2, uint8_t r, uint8_t g, uint8_t b)
+{
     int out1 = Calc_Outcode(x1, y1);
     int out2 = Calc_Outcode(x2, y2);
 
-    if (out1 & out2) {
+    if (out1 & out2)
+    {
         return;
     }
 
     // handle simple (but common) cases of horiz/vert lines
 
-    if (y1 == y2) {
-        if (x1 > x2) {
+    if (y1 == y2)
+    {
+        if (x1 > x2)
+        {
             int tmp = x1;
-            x1 = x2;
-            x2 = tmp;
+            x1      = x2;
+            x2      = tmp;
         }
 
         x1 = OBSIDIAN_MAX(0, x1);
         x2 = OBSIDIAN_MIN(map_W - 1, x2);
 
-        for (; x1 <= x2; x1++) {
+        for (; x1 <= x2; x1++)
+        {
             RawPixel(x1, y1, r, g, b);
         }
 
         return;
     }
 
-    if (x1 == x2) {
-        if (y1 > y2) {
+    if (x1 == x2)
+    {
+        if (y1 > y2)
+        {
             int tmp = y1;
-            y1 = y2;
-            y2 = tmp;
+            y1      = y2;
+            y2      = tmp;
         }
 
         y1 = OBSIDIAN_MAX(0, y1);
         y2 = OBSIDIAN_MIN(map_H - 1, y2);
 
-        for (; y1 <= y2; y1++) {
+        for (; y1 <= y2; y1++)
+        {
             RawPixel(x1, y1, r, g, b);
         }
 
@@ -183,7 +213,8 @@ void UI_MiniMap::DrawLine(int x1, int y1, int x2, int y2, uint8_t r, uint8_t g,
     // clip diagonal line to the map
     // (this is the Cohen-Sutherland clipping algorithm)
 
-    while (out1 | out2) {
+    while (out1 | out2)
+    {
         // may be partially inside box, find an outside point
         int outside = (out1 ? out1 : out2);
 
@@ -192,35 +223,46 @@ void UI_MiniMap::DrawLine(int x1, int y1, int x2, int y2, uint8_t r, uint8_t g,
 
         // this almost certainly cannot happen, but for the sake of
         // robustness we check anyway (just in case)
-        if (dx == 0 && dy == 0) {
+        if (dx == 0 && dy == 0)
+        {
             return;
         }
 
         int new_x, new_y;
 
         // clip to each side
-        if (outside & O_BOTTOM) {
+        if (outside & O_BOTTOM)
+        {
             new_y = 0;
             new_x = x1 + dx * (new_y - y1) / dy;
-        } else if (outside & O_TOP) {
+        }
+        else if (outside & O_TOP)
+        {
             new_y = map_H - 1;
             new_x = x1 + dx * (new_y - y1) / dy;
-        } else if (outside & O_LEFT) {
+        }
+        else if (outside & O_LEFT)
+        {
             new_x = 0;
             new_y = y1 + dy * (new_x - x1) / dx;
-        } else {
+        }
+        else
+        {
             SYS_ASSERT(outside & O_RIGHT);
 
             new_x = map_W - 1;
             new_y = y1 + dy * (new_x - x1) / dx;
         }
 
-        if (out1) {
+        if (out1)
+        {
             x1 = new_x;
             y1 = new_y;
 
             out1 = Calc_Outcode(x1, y1);
-        } else {
+        }
+        else
+        {
             SYS_ASSERT(out2);
 
             x2 = new_x;
@@ -229,7 +271,8 @@ void UI_MiniMap::DrawLine(int x1, int y1, int x2, int y2, uint8_t r, uint8_t g,
             out2 = Calc_Outcode(x2, y2);
         }
 
-        if (out1 & out2) {
+        if (out1 & out2)
+        {
             return;
         }
     }
@@ -249,14 +292,16 @@ void UI_MiniMap::DrawLine(int x1, int y1, int x2, int y2, uint8_t r, uint8_t g,
     int x = x1;
     int y = y1;
 
-    if (ax > ay)  // horizontal stepping
+    if (ax > ay) // horizontal stepping
     {
         int d = ay - ax / 2;
 
         RawPixel(x, y, r, g, b);
 
-        while (x != x2) {
-            if (d >= 0) {
+        while (x != x2)
+        {
+            if (d >= 0)
+            {
                 y += sy;
                 d -= ax;
             }
@@ -266,14 +311,17 @@ void UI_MiniMap::DrawLine(int x1, int y1, int x2, int y2, uint8_t r, uint8_t g,
 
             RawPixel(x, y, r, g, b);
         }
-    } else  // vertical stepping
+    }
+    else // vertical stepping
     {
         int d = ax - ay / 2;
 
         RawPixel(x, y, r, g, b);
 
-        while (y != y2) {
-            if (d >= 0) {
+        while (y != y2)
+        {
+            if (d >= 0)
+            {
                 x += sx;
                 d -= ay;
             }
@@ -286,8 +334,10 @@ void UI_MiniMap::DrawLine(int x1, int y1, int x2, int y2, uint8_t r, uint8_t g,
     }
 }
 
-void UI_MiniMap::DrawEntity(int x, int y, uint8_t r, uint8_t g, uint8_t b) {
-    if (x < 1 || x > map_W - 2 || y < 1 || y > map_H - 2) {
+void UI_MiniMap::DrawEntity(int x, int y, uint8_t r, uint8_t g, uint8_t b)
+{
+    if (x < 1 || x > map_W - 2 || y < 1 || y > map_H - 2)
+    {
         return;
     }
 
@@ -303,20 +353,24 @@ void UI_MiniMap::DrawEntity(int x, int y, uint8_t r, uint8_t g, uint8_t b) {
     RawPixel(x, y + 1, r, g, b);
 }
 
-void UI_MiniMap::GifStart(std::string filename, int delay) {
+void UI_MiniMap::GifStart(std::string filename, int delay)
+{
     gif_writer = new GifWriter;
-    gif_delay = delay;
+    gif_delay  = delay;
     GifBegin(gif_writer, FileOpen(filename, "wb"), map_W, map_H, gif_delay);
 }
 
-void UI_MiniMap::GifFrame() {
+void UI_MiniMap::GifFrame()
+{
     std::vector<uint8_t> frame_pixels;
-    int rgb_counter = 0;
+    int                  rgb_counter = 0;
     // Sloppy RGB->RGBA conversion for Gif-H - Dasho
-    for (int i = 0; i < map_W * map_H * 3; i++) {
+    for (int i = 0; i < map_W * map_H * 3; i++)
+    {
         frame_pixels.push_back(pixels[i]);
         rgb_counter++;
-        if (rgb_counter == 3) {
+        if (rgb_counter == 3)
+        {
             frame_pixels.push_back(0);
             rgb_counter = 0;
         }
@@ -324,7 +378,8 @@ void UI_MiniMap::GifFrame() {
     GifWriteFrame(gif_writer, frame_pixels.data(), map_W, map_H, gif_delay);
 }
 
-void UI_MiniMap::GifFinish() {
+void UI_MiniMap::GifFinish()
+{
     GifEnd(gif_writer);
     delete gif_writer;
 }

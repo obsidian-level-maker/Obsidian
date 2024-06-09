@@ -25,8 +25,9 @@
 
 // a wall_tip is where a wall meets a vertex
 
-class wall_tip_c {
-   public:
+class wall_tip_c
+{
+  public:
     // link in list.  List is kept in ANTI-clockwise order.
     wall_tip_c *next;
     wall_tip_c *prev;
@@ -52,16 +53,16 @@ extern ajpoly::sector_c *void_sector;
 
 /* ----- FUNCTIONS --------------------------------- */
 
-ajpoly::vertex_c *NewVertex();
+ajpoly::vertex_c  *NewVertex();
 ajpoly::linedef_c *NewLinedef();
 ajpoly::sidedef_c *NewSidedef();
-ajpoly::sector_c *NewSector();
-ajpoly::thing_c *NewThing();
+ajpoly::sector_c  *NewSector();
+ajpoly::thing_c   *NewThing();
 
-ajpoly::vertex_c *NewSplit();
-ajpoly::edge_c *NewEdge();
+ajpoly::vertex_c  *NewSplit();
+ajpoly::edge_c    *NewEdge();
 ajpoly::polygon_c *NewPolygon();
-wall_tip_c *NewWallTip();
+wall_tip_c        *NewWallTip();
 
 // return a new vertex (with correct wall_tip info) for the split that
 // happens along the given edge at the given location.

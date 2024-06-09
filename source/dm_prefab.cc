@@ -60,16 +60,15 @@
 
 #include "dm_prefab.h"
 
-#include "poly.h"
 #include "csg_main.h"
 #include "g_doom.h"
+#include "poly.h"
 #ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
 #endif
 #include "hdr_lua.h"
 #include "headers.h"
-
 #include "lib_util.h"
 #include "lib_wad.h"
 #include "m_lua.h"
@@ -80,7 +79,8 @@
 
 static char appl_message[MSG_BUF_LEN];
 
-void Appl_FatalError(const char *str, ...) {
+void Appl_FatalError(const char *str, ...)
+{
     va_list args;
 
     va_start(args, str);
@@ -93,8 +93,10 @@ void Appl_FatalError(const char *str, ...) {
     /* NOT REACHED */
 }
 
-void Appl_Printf(const char *str, ...) {
-    if (debug_messages) {
+void Appl_Printf(const char *str, ...)
+{
+    if (debug_messages)
+    {
         va_list args;
 
         va_start(args, str);
@@ -109,30 +111,36 @@ void Appl_Printf(const char *str, ...) {
 
 //------------------------------------------------------------------------
 
-int wadfab_free(lua_State *L) {
+int wadfab_free(lua_State *L)
+{
     ajpoly::CloseMap();
     ajpoly::FreeMap();
     ajpoly::FreeWAD();
     return 0;
 }
 
-int wadfab_load(lua_State *L) {
+int wadfab_load(lua_State *L)
+{
     const char *filename = luaL_checkstring(L, 1);
-    const char *map = luaL_checkstring(L, 2);
+    const char *map      = luaL_checkstring(L, 2);
 
-    if (!PHYSFS_exists(filename)) {
+    if (!PHYSFS_exists(filename))
+    {
         return luaL_error(L, "wadfab_load: no such file: %s", filename);
     }
 
-    if (!ajpoly::LoadWAD(filename)) {
+    if (!ajpoly::LoadWAD(filename))
+    {
         return luaL_error(L, "wadfab_load: %s", ajpoly::GetError());
     }
 
-    if (!ajpoly::OpenMap(map)) {
+    if (!ajpoly::OpenMap(map))
+    {
         return luaL_error(L, "wadfab_load: %s", ajpoly::GetError());
     }
 
-    if (!ajpoly::Polygonate(true /* require_border */)) {
+    if (!ajpoly::Polygonate(true /* require_border */))
+    {
         return luaL_error(L, "wadfab_load: %s", ajpoly::GetError());
     }
 
@@ -141,28 +149,33 @@ int wadfab_load(lua_State *L) {
 
 //------------------------------------------------------------------------
 
-static int calc_thing_z(int x, int y) {
-    for (int p = 0; p < ajpoly::num_polygons; p++) {
+static int calc_thing_z(int x, int y)
+{
+    for (int p = 0; p < ajpoly::num_polygons; p++)
+    {
         const ajpoly::polygon_c *poly = ajpoly::Polygon(p);
 
         // ignore void space
-        if (!poly->sector || poly->sector->index < 0 ||
-            poly->sector->index == VOID_SECTOR_IDX) {
+        if (!poly->sector || poly->sector->index < 0 || poly->sector->index == VOID_SECTOR_IDX)
+        {
             continue;
         }
 
-        if (poly->ContainsPoint(x, y)) {
+        if (poly->ContainsPoint(x, y))
+        {
             return poly->sector->floor_h;
         }
     }
 
-    return 0;  // dummy value
+    return 0; // dummy value
 }
 
-int wadfab_get_thing(lua_State *L) {
+int wadfab_get_thing(lua_State *L)
+{
     int index = luaL_checkinteger(L, 1);
 
-    if (index < 0 || index >= ajpoly::num_things) {
+    if (index < 0 || index >= ajpoly::num_things)
+    {
         return 0;
     }
 
@@ -191,10 +204,12 @@ int wadfab_get_thing(lua_State *L) {
     return 1;
 }
 
-int wadfab_get_thing_hexen(lua_State *L) {
+int wadfab_get_thing_hexen(lua_State *L)
+{
     int index = luaL_checkinteger(L, 1);
 
-    if (index < 0 || index >= ajpoly::num_things) {
+    if (index < 0 || index >= ajpoly::num_things)
+    {
         return 0;
     }
 
@@ -244,10 +259,12 @@ int wadfab_get_thing_hexen(lua_State *L) {
     return 1;
 }
 
-int wadfab_get_sector(lua_State *L) {
+int wadfab_get_sector(lua_State *L)
+{
     int index = luaL_checkinteger(L, 1);
 
-    if (index < 0 || index >= ajpoly::num_sectors) {
+    if (index < 0 || index >= ajpoly::num_sectors)
+    {
         return 0;
     }
 
@@ -268,7 +285,8 @@ int wadfab_get_sector(lua_State *L) {
     lua_setfield(L, -2, "light");
 
     // if we have 3D floors here, do not send the tag
-    if (SEC->num_floors == 0) {
+    if (SEC->num_floors == 0)
+    {
         lua_pushinteger(L, SEC->tag);
         lua_setfield(L, -2, "tag");
     }
@@ -282,10 +300,12 @@ int wadfab_get_sector(lua_State *L) {
     return 1;
 }
 
-int wadfab_get_side(lua_State *L) {
+int wadfab_get_side(lua_State *L)
+{
     int index = luaL_checkinteger(L, 1);
 
-    if (index < 0 || index >= ajpoly::num_sidedefs) {
+    if (index < 0 || index >= ajpoly::num_sidedefs)
+    {
         return 0;
     }
 
@@ -299,7 +319,8 @@ int wadfab_get_side(lua_State *L) {
     lua_pushinteger(L, SD->y_offset);
     lua_setfield(L, -2, "y_offset");
 
-    if (SD->sector) {
+    if (SD->sector)
+    {
         lua_pushinteger(L, SD->sector->index);
         lua_setfield(L, -2, "sector");
     }
@@ -319,10 +340,12 @@ int wadfab_get_side(lua_State *L) {
     return 1;
 }
 
-int wadfab_get_line(lua_State *L) {
+int wadfab_get_line(lua_State *L)
+{
     int index = luaL_checkinteger(L, 1);
 
-    if (index < 0 || index >= ajpoly::num_linedefs) {
+    if (index < 0 || index >= ajpoly::num_linedefs)
+    {
         return 0;
     }
 
@@ -342,12 +365,14 @@ int wadfab_get_line(lua_State *L) {
     lua_pushinteger(L, LD->end->y);
     lua_setfield(L, -2, "y2");
 
-    if (LD->right) {
+    if (LD->right)
+    {
         lua_pushinteger(L, LD->right->index);
         lua_setfield(L, -2, "right");
     }
 
-    if (LD->left) {
+    if (LD->left)
+    {
         lua_pushinteger(L, LD->left->index);
         lua_setfield(L, -2, "left");
     }
@@ -364,10 +389,12 @@ int wadfab_get_line(lua_State *L) {
     return 1;
 }
 
-int wadfab_get_line_hexen(lua_State *L) {
+int wadfab_get_line_hexen(lua_State *L)
+{
     int index = luaL_checkinteger(L, 1);
 
-    if (index < 0 || index >= ajpoly::num_linedefs) {
+    if (index < 0 || index >= ajpoly::num_linedefs)
+    {
         return 0;
     }
 
@@ -387,12 +414,14 @@ int wadfab_get_line_hexen(lua_State *L) {
     lua_pushinteger(L, LD->end->y);
     lua_setfield(L, -2, "y2");
 
-    if (LD->right) {
+    if (LD->right)
+    {
         lua_pushinteger(L, LD->right->index);
         lua_setfield(L, -2, "right");
     }
 
-    if (LD->left) {
+    if (LD->left)
+    {
         lua_pushinteger(L, LD->left->index);
         lua_setfield(L, -2, "left");
     }
@@ -421,7 +450,8 @@ int wadfab_get_line_hexen(lua_State *L) {
     return 1;
 }
 
-static double calc_along_dist(const ajpoly::edge_c *E) {
+static double calc_along_dist(const ajpoly::edge_c *E)
+{
     const ajpoly::linedef_c *LD = E->linedef;
 
     SYS_ASSERT(LD);
@@ -435,7 +465,8 @@ static double calc_along_dist(const ajpoly::edge_c *E) {
     return hypot(dx, dy);
 }
 
-static void push_edge(lua_State *L, int tab_index, const ajpoly::edge_c *E) {
+static void push_edge(lua_State *L, int tab_index, const ajpoly::edge_c *E)
+{
     lua_newtable(L);
 
     // using 'end' coord since edges face outwards
@@ -446,7 +477,8 @@ static void push_edge(lua_State *L, int tab_index, const ajpoly::edge_c *E) {
     lua_pushnumber(L, E->end->y);
     lua_setfield(L, -2, "y");
 
-    if (E->linedef) {
+    if (E->linedef)
+    {
         lua_pushinteger(L, E->linedef->index);
         lua_setfield(L, -2, "line");
 
@@ -456,13 +488,17 @@ static void push_edge(lua_State *L, int tab_index, const ajpoly::edge_c *E) {
         const ajpoly::sidedef_c *SD;
 
         // we want the "outer" sidedef (the opposite side)
-        if (E->side == 0) {
+        if (E->side == 0)
+        {
             SD = E->linedef->left;
-        } else {
+        }
+        else
+        {
             SD = E->linedef->right;
         }
 
-        if (SD) {
+        if (SD)
+        {
             lua_pushinteger(L, SD->index);
             lua_setfield(L, -2, "side");
         }
@@ -471,10 +507,12 @@ static void push_edge(lua_State *L, int tab_index, const ajpoly::edge_c *E) {
     lua_rawseti(L, -2, tab_index);
 }
 
-int wadfab_get_polygon(lua_State *L) {
+int wadfab_get_polygon(lua_State *L)
+{
     int index = luaL_checkinteger(L, 1);
 
-    if (index < 0 || index >= ajpoly::num_polygons) {
+    if (index < 0 || index >= ajpoly::num_polygons)
+    {
         return 0;
     }
 
@@ -483,7 +521,8 @@ int wadfab_get_polygon(lua_State *L) {
     // result #1 : SECTOR
     int sect_id = poly->sector ? poly->sector->index : -1;
 
-    if (sect_id == VOID_SECTOR_IDX) {
+    if (sect_id == VOID_SECTOR_IDX)
+    {
         sect_id = -1;
     }
 
@@ -492,7 +531,8 @@ int wadfab_get_polygon(lua_State *L) {
     // result #2 : COORDS
     std::vector<ajpoly::edge_c *> edges;
 
-    for (ajpoly::edge_c *E = poly->edge_list; E; E = E->next) {
+    for (ajpoly::edge_c *E = poly->edge_list; E; E = E->next)
+    {
         edges.push_back(E);
     }
 
@@ -500,7 +540,8 @@ int wadfab_get_polygon(lua_State *L) {
 
     lua_createtable(L, edge_num, 0);
 
-    for (int tab_index = 1; tab_index <= edge_num; tab_index++) {
+    for (int tab_index = 1; tab_index <= edge_num; tab_index++)
+    {
         // the polygon edges are clockwise, but OBLIGE are anti-clockwise.
         // hence reverse the order.  We also use 'end' instead of 'start'.
 
@@ -510,17 +551,20 @@ int wadfab_get_polygon(lua_State *L) {
     return 2;
 }
 
-int wadfab_get_3d_floor(lua_State *L) {
-    int poly_idx = luaL_checkinteger(L, 1);
+int wadfab_get_3d_floor(lua_State *L)
+{
+    int poly_idx  = luaL_checkinteger(L, 1);
     int floor_idx = luaL_checkinteger(L, 2);
 
-    if (poly_idx < 0 || poly_idx >= ajpoly::num_polygons) {
+    if (poly_idx < 0 || poly_idx >= ajpoly::num_polygons)
+    {
         return 0;
     }
 
     const ajpoly::polygon_c *poly = ajpoly::Polygon(poly_idx);
 
-    if (!poly->sector || poly->sector->num_floors <= 0) {
+    if (!poly->sector || poly->sector->num_floors <= 0)
+    {
         return 0;
     }
 
@@ -528,13 +572,15 @@ int wadfab_get_3d_floor(lua_State *L) {
 
     const ajpoly::linedef_c *LD = poly->sector->getExtraFloor(floor_idx);
 
-    if (!LD) {
+    if (!LD)
+    {
         return 0;
     }
 
     const ajpoly::sector_c *SEC = LD->right->sector;
 
-    if (!SEC) {
+    if (!SEC)
+    {
         return 0;
     }
 
@@ -573,7 +619,8 @@ int wadfab_get_3d_floor(lua_State *L) {
     lua_pushinteger(L, SEC->light);
     lua_setfield(L, -2, "light");
 
-    if (LD->special == 405) {
+    if (LD->special == 405)
+    {
         lua_pushinteger(L, 1);
         lua_setfield(L, -2, "liquid");
     }

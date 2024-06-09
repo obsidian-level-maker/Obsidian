@@ -17,8 +17,9 @@
 //
 //------------------------------------------------------------------------
 
-#include "bsp_local.h"
 #include "bsp_utility.h"
+
+#include "bsp_local.h"
 #include "sys_macro.h"
 
 namespace ajbsp
@@ -33,40 +34,37 @@ namespace ajbsp
 //
 void *UtilCalloc(int size)
 {
-	void *ret = calloc(1, size);
+    void *ret = calloc(1, size);
 
-	if (!ret)
-		cur_info->FatalError("Out of memory (cannot allocate %d bytes)\n", size);
+    if (!ret)
+        cur_info->FatalError("Out of memory (cannot allocate %d bytes)\n", size);
 
-	return ret;
+    return ret;
 }
-
 
 //
 // Reallocate memory with error checking.
 //
 void *UtilRealloc(void *old, int size)
 {
-	void *ret = realloc(old, size);
+    void *ret = realloc(old, size);
 
-	if (!ret)
-		cur_info->FatalError("Out of memory (cannot reallocate %d bytes)\n", size);
+    if (!ret)
+        cur_info->FatalError("Out of memory (cannot reallocate %d bytes)\n", size);
 
-	return ret;
+    return ret;
 }
-
 
 //
 // Free the memory with error checking.
 //
 void UtilFree(void *data)
 {
-	if (data == NULL)
-		BugError("Trying to free a NULL pointer\n");
+    if (data == NULL)
+        BugError("Trying to free a NULL pointer\n");
 
-	free(data);
+    free(data);
 }
-
 
 //------------------------------------------------------------------------
 // MATH STUFF
@@ -77,17 +75,16 @@ void UtilFree(void *data)
 //
 int RoundPOW2(int x)
 {
-	if (x <= 2)
-		return x;
+    if (x <= 2)
+        return x;
 
-	x--;
+    x--;
 
-	for (int tmp = x >> 1 ; tmp ; tmp >>= 1)
-		x |= tmp;
+    for (int tmp = x >> 1; tmp; tmp >>= 1)
+        x |= tmp;
 
-	return x + 1;
+    return x + 1;
 }
-
 
 //
 // Compute angle of line from (0,0) to (dx,dy).
@@ -95,17 +92,17 @@ int RoundPOW2(int x)
 //
 double ComputeAngle(double dx, double dy)
 {
-	double angle;
+    double angle;
 
-	if (dx == 0)
-		return (dy > 0) ? 90.0 : 270.0;
+    if (dx == 0)
+        return (dy > 0) ? 90.0 : 270.0;
 
-	angle = atan2((double) dy, (double) dx) * 180.0 / M_PI;
+    angle = atan2((double)dy, (double)dx) * 180.0 / M_PI;
 
-	if (angle < 0)
-		angle += 360.0;
+    if (angle < 0)
+        angle += 360.0;
 
-	return angle;
+    return angle;
 }
 
 } // namespace ajbsp

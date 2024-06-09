@@ -26,63 +26,64 @@ namespace ajparse
 
 enum token_kind_e
 {
-	TOK_EOF = 0,
-	TOK_ERROR,
+    TOK_EOF = 0,
+    TOK_ERROR,
 
-	TOK_Ident,
-	TOK_Symbol,
-	TOK_Number,
-	TOK_String
+    TOK_Ident,
+    TOK_Symbol,
+    TOK_Number,
+    TOK_String
 };
-
 
 class lexer_c
 {
-public:
-	lexer_c(const std::string& _data) : data(_data), pos(0), line(1)
-	{ }
+  public:
+    lexer_c(const std::string &_data) : data(_data), pos(0), line(1)
+    {
+    }
 
-	~lexer_c()
-	{ }
+    ~lexer_c()
+    {
+    }
 
-	// parse the next token, storing contents into given string.
-	// returns TOK_EOF at the end of the data, and TOK_ERROR when a
-	// problem is encountered (s will be an error message).
-	token_kind_e Next(std::string& s);
+    // parse the next token, storing contents into given string.
+    // returns TOK_EOF at the end of the data, and TOK_ERROR when a
+    // problem is encountered (s will be an error message).
+    token_kind_e Next(std::string &s);
 
-	// check if the next token is an identifier or symbol matching the
-	// given string.  the match is not case sensitive.  if it matches,
-	// the token is consumed and true is returned.  if not, false is
-	// returned and the position is unchanged.
-	bool Match(const char *s);
+    // check if the next token is an identifier or symbol matching the
+    // given string.  the match is not case sensitive.  if it matches,
+    // the token is consumed and true is returned.  if not, false is
+    // returned and the position is unchanged.
+    bool Match(const char *s);
 
-	// give the line number for the last token returned by Next() or
-	// the token implicitly checked by Match().  can be used to show
-	// where in the file an error occurred.
-	int LastLine();
+    // give the line number for the last token returned by Next() or
+    // the token implicitly checked by Match().  can be used to show
+    // where in the file an error occurred.
+    int LastLine();
 
-	// rewind to the very beginning.
-	void Rewind();
+    // rewind to the very beginning.
+    void Rewind();
 
-private:
-	const std::string& data;
+  private:
+    const std::string &data;
 
-	size_t pos;
-	int    line;
+    size_t pos;
+    int    line;
 
-	void SkipToNext();
+    void SkipToNext();
 
-	token_kind_e ParseIdentifier(std::string& s);
-	token_kind_e ParseNumber(std::string& s);
-	token_kind_e ParseString(std::string& s);
+    token_kind_e ParseIdentifier(std::string &s);
+    token_kind_e ParseNumber(std::string &s);
+    token_kind_e ParseString(std::string &s);
 
-	void ParseEscape(std::string& s);
+    void ParseEscape(std::string &s);
 };
 
 // helpers for converting numeric tokens.
-int    LEX_Int    (const std::string& s);
-double LEX_Double (const std::string& s);
-bool   LEX_Boolean(const std::string& s);
+int    LEX_Int(const std::string &s);
+double LEX_Double(const std::string &s);
+bool   LEX_Boolean(const std::string &s);
 
 } // namespace ajparse
 

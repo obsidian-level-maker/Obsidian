@@ -23,11 +23,11 @@
 #define SYS_MACRO_H_
 
 // basic constants
-constexpr uint16_t MSG_BUF_LEN = 2000;
-constexpr double   DIST_EPSILON     = (1.0 / 1024.0);
-constexpr double   ANG_EPSILON        = (1.0 / 1024.0);
+constexpr uint16_t MSG_BUF_LEN  = 2000;
+constexpr double   DIST_EPSILON = (1.0 / 1024.0);
+constexpr double   ANG_EPSILON  = (1.0 / 1024.0);
 #ifndef M_PI
-constexpr double   M_PI       = 3.14159265358979323846;
+constexpr double M_PI = 3.14159265358979323846;
 #endif
 
 // basic math
@@ -44,7 +44,7 @@ inline int RoundToInteger(double x)
     return (int)round(x);
 }
 
-#endif  // SYS_MACRO_H_
+#endif // SYS_MACRO_H_
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

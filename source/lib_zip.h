@@ -23,6 +23,7 @@
 #define LIB_ZIP_H_
 
 #include <stdint.h>
+
 #include <string>
 
 /* ZIP writing */

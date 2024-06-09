@@ -23,10 +23,11 @@
 #define LIB_ARGV_H_
 
 #include <string>
-#include <vector>
 #include <unordered_set>
+#include <vector>
 
-namespace argv {
+namespace argv
+{
 
 extern std::vector<std::string> list;
 // for parsing disambiguation
@@ -34,10 +35,10 @@ extern std::unordered_set<char> short_flags;
 
 void Init(int argc, const char *const *argv);
 
-int Find(char shortName, const char *longName, int *numParams = nullptr);
+int  Find(char shortName, const char *longName, int *numParams = nullptr);
 bool IsOption(int index);
 
-}  // namespace argv
+} // namespace argv
 
 #endif /* __LIB_ARGV_H__ */
 

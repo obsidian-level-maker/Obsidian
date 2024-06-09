@@ -32,14 +32,15 @@
 #include "FL/Fl_Tabs.H"
 #include "ui_widgets.h"
 
-class UI_Module : public Fl_Group {
+class UI_Module : public Fl_Group
+{
     friend class UI_CustomMods;
 
     // NOTES:
     // -  module is "enabled" when mod_button->value() == 1
     // -  module is "shown" when visible() == true
 
-   public:
+  public:
     Fl_Box *heading;
 
     std::map<std::string, UI_RChoice *> choice_map;
@@ -59,29 +60,24 @@ class UI_Module : public Fl_Group {
     // only used while positioning the options (as they are added)
     int cur_opt_y;
 
-   public:
-    UI_Module(int X, int Y, int W, int H, std::string id, std::string label,
-              std::string tip, int red, int green, int blue, bool suboptions);
+  public:
+    UI_Module(int X, int Y, int W, int H, std::string id, std::string label, std::string tip, int red, int green,
+              int blue, bool suboptions);
     virtual ~UI_Module();
 
-    void AddOption(std::string option, std::string label, std::string tip,
-                   std::string longtip, int gap, std::string randomize_group,
-                   std::string default_value);
+    void AddOption(std::string option, std::string label, std::string tip, std::string longtip, int gap,
+                   std::string randomize_group, std::string default_value);
 
     void AddHeader(std::string option, std::string label, int gap);
 
     void AddUrl(std::string option, std::string label, std::string url, int gap);
 
-    void AddSliderOption(std::string option, std::string label, std::string tip,
-                         std::string longtip, int gap, double min, double max,
-                         double inc, std::string units, std::string presets,
-                         std::string nan, std::string randomize_group,
-                         std::string default_value);
+    void AddSliderOption(std::string option, std::string label, std::string tip, std::string longtip, int gap,
+                         double min, double max, double inc, std::string units, std::string presets, std::string nan,
+                         std::string randomize_group, std::string default_value);
 
-    void AddButtonOption(std::string opt, std::string label, std::string tip,
-                         std::string longtip, int gap,
-                         std::string randomize_group,
-                         std::string default_value);
+    void AddButtonOption(std::string opt, std::string label, std::string tip, std::string longtip, int gap,
+                         std::string randomize_group, std::string default_value);
 
     void AddOptionChoice(std::string option, std::string id, std::string label);
 
@@ -93,25 +89,25 @@ class UI_Module : public Fl_Group {
 
     bool Is_UI() const;
 
-   public:
+  public:
     int CalcHeight() const;
 
     void update_Enable();
 
     void randomize_Values(std::vector<std::string> selected_randomize_groups);
 
-    UI_RChoice *FindOpt(std::string opt);  // const;
+    UI_RChoice *FindOpt(std::string opt);       // const;
 
     UI_RSlide *FindSliderOpt(std::string opt);  // const;
 
-    UI_RButton *FindButtonOpt(std::string opt);  // const;
+    UI_RButton *FindButtonOpt(std::string opt); // const;
 
-    UI_RHeader *FindHeaderOpt(std::string opt);  // const;
+    UI_RHeader *FindHeaderOpt(std::string opt); // const;
 
-    UI_RLink *FindUrlOpt(std::string opt);  // const;
+    UI_RLink *FindUrlOpt(std::string opt);      // const;
 
-   protected:
-   private:
+  protected:
+  private:
     void resize(int X, int Y, int W, int H);
 
     static void callback_OptChange(Fl_Widget *w, void *data);
@@ -126,14 +122,14 @@ class UI_Module : public Fl_Group {
     static void callback_NanOptions(Fl_Widget *w, void *data);
 };
 
-class UI_CustomMods : public Fl_Group {
-   public:
+class UI_CustomMods : public Fl_Group
+{
+  public:
     Fl_Group *mod_pack;
 
     Fl_Scrollbar *sbar;
 
-   private:
-
+  private:
     // area occupied by module list
     int mx, my, mw, mh;
 
@@ -143,48 +139,36 @@ class UI_CustomMods : public Fl_Group {
     // total height of all shown modules
     int total_h;
 
-   public:
+  public:
     UI_CustomMods(int X, int Y, int W, int H, std::string label);
     virtual ~UI_CustomMods();
 
-   public:
-    void AddModule(std::string id, std::string label, std::string tip, int red,
-                   int green, int blue, bool suboptions);
+  public:
+    void AddModule(std::string id, std::string label, std::string tip, int red, int green, int blue, bool suboptions);
 
     // these return false if module is unknown
     bool ShowModule(std::string id, bool new_shown);
     bool EnableMod(std::string id, bool enable);
 
-    bool AddHeader(std::string module, std::string option, std::string label,
-                   int gap);
+    bool AddHeader(std::string module, std::string option, std::string label, int gap);
 
-    bool AddUrl(std::string module, std::string option, std::string label,
-                   std::string url, int gap);
+    bool AddUrl(std::string module, std::string option, std::string label, std::string url, int gap);
 
-    bool AddOption(std::string module, std::string option, std::string label,
-                   std::string tip, std::string longtip, int gap,
-                   std::string randomize_group, std::string default_value);
+    bool AddOption(std::string module, std::string option, std::string label, std::string tip, std::string longtip,
+                   int gap, std::string randomize_group, std::string default_value);
 
-    bool AddSliderOption(std::string module, std::string option,
-                         std::string label, std::string tip,
-                         std::string longtip, int gap, double min, double max,
-                         double inc, std::string units, std::string presets,
-                         std::string nan, std::string randomize_group,
-                         std::string default_value);
+    bool AddSliderOption(std::string module, std::string option, std::string label, std::string tip,
+                         std::string longtip, int gap, double min, double max, double inc, std::string units,
+                         std::string presets, std::string nan, std::string randomize_group, std::string default_value);
 
-    bool AddButtonOption(std::string module, std::string option,
-                         std::string label, std::string tip,
-                         std::string longtip, int gap,
-                         std::string randomize_group,
-                         std::string default_value);
+    bool AddButtonOption(std::string module, std::string option, std::string label, std::string tip,
+                         std::string longtip, int gap, std::string randomize_group, std::string default_value);
 
-    bool AddOptionChoice(std::string module, std::string option, std::string id,
-                         std::string label);
+    bool AddOptionChoice(std::string module, std::string option, std::string id, std::string label);
 
     bool SetOption(std::string module, std::string option, std::string value);
 
-    bool SetSliderOption(std::string module, std::string option,
-                         std::string value);
+    bool SetSliderOption(std::string module, std::string option, std::string value);
 
     bool SetButtonOption(std::string module, std::string option, int value);
 
@@ -194,7 +178,7 @@ class UI_CustomMods : public Fl_Group {
 
     UI_Module *FindID(std::string id) const;
 
-   private:
+  private:
     void PositionAll(UI_Module *focus = NULL);
 
     void resize(int X, int Y, int W, int H);
@@ -203,9 +187,9 @@ class UI_CustomMods : public Fl_Group {
     static void callback_ModEnable(Fl_Widget *w, void *data);
 };
 
-class UI_CustomTabs : public Fl_Tabs {
-   public:
-
+class UI_CustomTabs : public Fl_Tabs
+{
+  public:
     UI_CustomMods *arch_mods;
     UI_CustomMods *combat_mods;
     UI_CustomMods *pickup_mods;
@@ -214,14 +198,12 @@ class UI_CustomTabs : public Fl_Tabs {
     UI_CustomMods *experimental_mods;
     UI_CustomMods *links; // Tentative; use with a new "URL" widget option type
 
-   private:
-
-   public:
+  private:
+  public:
     UI_CustomTabs(int X, int Y, int W, int H);
     virtual ~UI_CustomTabs();
 
-   public:
- 
+  public:
 };
 
 #endif /* __UI_MODS_H__ */

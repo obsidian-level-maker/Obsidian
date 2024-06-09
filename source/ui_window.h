@@ -29,7 +29,7 @@
 #include "ui_widgets.h"
 
 // support for scaling up the GUI
-extern int KF;  // Kromulent Factor : -1 .. 3
+extern int KF; // Kromulent Factor : -1 .. 3
 
 #define kf_w(w) ((w) + KF * (w) / (KF >= 0 ? 4 : 8))
 #define kf_h(h) ((h) + KF * (h) / (KF >= 0 ? 5 : 10))
@@ -37,8 +37,9 @@ extern int KF;  // Kromulent Factor : -1 .. 3
 extern int small_font_size;
 extern int header_font_size;
 
-class UI_MainWin : public Fl_Double_Window {
-   public:
+class UI_MainWin : public Fl_Double_Window
+{
+  public:
     // main child widgets
 
     Fl_Menu_Bar *menu_bar;
@@ -53,7 +54,7 @@ class UI_MainWin : public Fl_Double_Window {
 
     UI_Clippy *clippy;
 
-   public:
+  public:
     UI_MainWin(int W, int H, const char *title);
     virtual ~UI_MainWin();
 
@@ -61,10 +62,10 @@ class UI_MainWin : public Fl_Double_Window {
 
     void Locked(bool value);
 
-   private:
+  private:
     int handle(int event);
 
-   private:
+  private:
     static void menu_do_about(Fl_Widget *w, void *data);
     static void menu_do_view_logs(Fl_Widget *w, void *data);
     static void menu_do_glossary(Fl_Widget *w, void *data);

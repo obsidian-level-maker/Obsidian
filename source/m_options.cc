@@ -28,65 +28,106 @@
 #include "lib_util.h"
 #include "m_addons.h"
 #include "m_cookie.h"
-#include "m_trans.h"
 #include "m_lua.h"
+#include "m_trans.h"
 #include "main.h"
 
 extern std::string BestDirectory();
 
-void Parse_Option(const std::string &name, const std::string &value) {
-    if (StringPrefixCompare(name, "recent") == 0) {
+void Parse_Option(const std::string &name, const std::string &value)
+{
+    if (StringPrefixCompare(name, "recent") == 0)
+    {
         Recent_Parse(name, value);
         return;
     }
-    if (StringCompare(name, "addon") == 0) {
+    if (StringCompare(name, "addon") == 0)
+    {
         VFS_OptParse(value);
-    } else if (StringCompare(name, "language") == 0) {
+    }
+    else if (StringCompare(name, "language") == 0)
+    {
         t_language = value;
-    } else if (StringCompare(name, "create_backups") == 0) {
+    }
+    else if (StringCompare(name, "create_backups") == 0)
+    {
         create_backups = StringToInt(value) ? true : false;
-    } else if (StringCompare(name, "overwrite_warning") == 0) {
+    }
+    else if (StringCompare(name, "overwrite_warning") == 0)
+    {
         overwrite_warning = StringToInt(value) ? true : false;
-    } else if (StringCompare(name, "debug_messages") == 0) {
+    }
+    else if (StringCompare(name, "debug_messages") == 0)
+    {
         debug_messages = StringToInt(value) ? true : false;
-    } else if (StringCompare(name, "limit_break") == 0) {
+    }
+    else if (StringCompare(name, "limit_break") == 0)
+    {
         limit_break = StringToInt(value) ? true : false;
-    } else if (StringCompare(name, "preserve_old_config") == 0) {
+    }
+    else if (StringCompare(name, "preserve_old_config") == 0)
+    {
         preserve_old_config = StringToInt(value) ? true : false;
-    } else if (StringCompare(name, "randomize_architecture") == 0) {
+    }
+    else if (StringCompare(name, "randomize_architecture") == 0)
+    {
         randomize_architecture = StringToInt(value) ? true : false;
-    } else if (StringCompare(name, "randomize_monsters") == 0) {
+    }
+    else if (StringCompare(name, "randomize_monsters") == 0)
+    {
         randomize_monsters = StringToInt(value) ? true : false;
-    } else if (StringCompare(name, "randomize_pickups") == 0) {
+    }
+    else if (StringCompare(name, "randomize_pickups") == 0)
+    {
         randomize_pickups = StringToInt(value) ? true : false;
-    } else if (StringCompare(name, "randomize_misc") == 0) {
+    }
+    else if (StringCompare(name, "randomize_misc") == 0)
+    {
         randomize_misc = StringToInt(value) ? true : false;
-    } else if (StringCompare(name, "random_string_seeds") == 0) {
+    }
+    else if (StringCompare(name, "random_string_seeds") == 0)
+    {
         random_string_seeds = StringToInt(value) ? true : false;
 #ifndef CONSOLE_ONLY
-    } else if (StringCompare(name, "gui_simple_mode") == 0) {
+    }
+    else if (StringCompare(name, "gui_simple_mode") == 0)
+    {
         gui_simple_mode = StringToInt(value) ? true : false;
 #endif
-    } else if (StringCompare(name, "password_mode") == 0) {
+    }
+    else if (StringCompare(name, "password_mode") == 0)
+    {
         password_mode = StringToInt(value) ? true : false;
-    } else if (StringCompare(name, "mature_word_lists") == 0) {
+    }
+    else if (StringCompare(name, "mature_word_lists") == 0)
+    {
         mature_word_lists = StringToInt(value) ? true : false;
-    } else if (StringCompare(name, "filename_prefix") == 0) {
+    }
+    else if (StringCompare(name, "filename_prefix") == 0)
+    {
         filename_prefix = StringToInt(value);
-    } else if (StringCompare(name, "custom_prefix") == 0) {
+    }
+    else if (StringCompare(name, "custom_prefix") == 0)
+    {
         custom_prefix = value;
-    } else if (StringCompare(name, "default_output_path") == 0) {
+    }
+    else if (StringCompare(name, "default_output_path") == 0)
+    {
         default_output_path = value;
-    } else {
+    }
+    else
+    {
         StdOutPrintf("%s '%s'\n", _("Unknown option: "), name.c_str());
     }
 }
 
-static bool Options_ParseLine(std::string buf) {
+static bool Options_ParseLine(std::string buf)
+{
     std::string::size_type pos = 0;
 
     pos = buf.find('=', 0);
-    if (pos == std::string::npos) {
+    if (pos == std::string::npos)
+    {
         // Skip blank lines, comments, etc
         return true;
     }
@@ -98,16 +139,18 @@ static bool Options_ParseLine(std::string buf) {
         buf.erase(std::find(buf.begin(), buf.end(), ' '));
     }*/
 
-    if (!isalpha(buf.front())) {
+    if (!isalpha(buf.front()))
+    {
         StdOutPrintf("%s [%s]\n", _("Weird option line: "), buf.c_str());
         return false;
     }
 
     // pos = buf.find('=', 0);  // Fix pos after whitespace deletion
-    std::string name = buf.substr(0, pos - 1);
+    std::string name  = buf.substr(0, pos - 1);
     std::string value = buf.substr(pos + 2);
 
-    if (name.empty() || value.empty()) {
+    if (name.empty() || value.empty())
+    {
         StdOutPrintf(_("Name or value missing!\n"));
         return false;
     }
@@ -116,15 +159,18 @@ static bool Options_ParseLine(std::string buf) {
     return true;
 }
 
-bool Options_Load(std::string filename) {
+bool Options_Load(std::string filename)
+{
     std::ifstream option_fp(filename, std::ios::in);
 
-    if (!option_fp.is_open()) {
+    if (!option_fp.is_open())
+    {
         StdOutPrintf(_("Missing Options file -- using defaults.\n\n"));
         return false;
     }
 
-    for (std::string line; std::getline(option_fp, line);) {
+    for (std::string line; std::getline(option_fp, line);)
+    {
         Options_ParseLine(line);
     }
 
@@ -133,21 +179,22 @@ bool Options_Load(std::string filename) {
     return true;
 }
 
-bool Options_Save(std::string filename) {
+bool Options_Save(std::string filename)
+{
     std::ofstream option_fp(filename, std::ios::out);
 
-    if (!option_fp.is_open()) {
-        LogPrintf("Error: unable to create file: %s\n(%s)\n\n",
-                  filename.c_str(), strerror(errno));
+    if (!option_fp.is_open())
+    {
+        LogPrintf("Error: unable to create file: %s\n(%s)\n\n", filename.c_str(), strerror(errno));
         return false;
     }
 
-    if (main_action != MAIN_SOFT_RESTART) {
+    if (main_action != MAIN_SOFT_RESTART)
+    {
         LogPrintf("Saving options file...\n");
     }
 
-    option_fp << "-- OPTIONS FILE : OBSIDIAN " << OBSIDIAN_SHORT_VERSION
-              << " \"" << OBSIDIAN_CODE_NAME << "\"\n";
+    option_fp << "-- OPTIONS FILE : OBSIDIAN " << OBSIDIAN_SHORT_VERSION << " \"" << OBSIDIAN_CODE_NAME << "\"\n";
     option_fp << "-- Build " << OBSIDIAN_VERSION << "\n";
     option_fp << "-- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n";
     option_fp << "-- " << OBSIDIAN_WEBSITE << "\n\n";
@@ -159,27 +206,20 @@ bool Options_Save(std::string filename) {
     option_fp << "overwrite_warning = " << (overwrite_warning ? 1 : 0) << "\n";
     option_fp << "debug_messages = " << (debug_messages ? 1 : 0) << "\n";
     option_fp << "limit_break = " << (limit_break ? 1 : 0) << "\n";
-    option_fp << "preserve_old_config = " << (preserve_old_config ? 1 : 0)
-              << "\n";
-    option_fp << "randomize_architecture = " << (randomize_architecture ? 1 : 0)
-              << "\n";
-    option_fp << "randomize_monsters = " << (randomize_monsters ? 1 : 0)
-              << "\n";
+    option_fp << "preserve_old_config = " << (preserve_old_config ? 1 : 0) << "\n";
+    option_fp << "randomize_architecture = " << (randomize_architecture ? 1 : 0) << "\n";
+    option_fp << "randomize_monsters = " << (randomize_monsters ? 1 : 0) << "\n";
     option_fp << "randomize_pickups = " << (randomize_pickups ? 1 : 0) << "\n";
     option_fp << "randomize_misc = " << (randomize_misc ? 1 : 0) << "\n";
-    option_fp << "random_string_seeds = " << (random_string_seeds ? 1 : 0)
-              << "\n";
+    option_fp << "random_string_seeds = " << (random_string_seeds ? 1 : 0) << "\n";
 #ifndef CONSOLE_ONLY
-    option_fp << "gui_simple_mode = " << (gui_simple_mode ? 1 : 0)
-              << "\n";
+    option_fp << "gui_simple_mode = " << (gui_simple_mode ? 1 : 0) << "\n";
 #endif
     option_fp << "password_mode = " << (password_mode ? 1 : 0) << "\n";
     option_fp << "mature_word_lists = " << (mature_word_lists ? 1 : 0) << "\n";
     option_fp << "filename_prefix = " << filename_prefix << "\n";
     option_fp << "custom_prefix = " << custom_prefix << "\n";
-    std::string dop = StringFormat(
-        "default_output_path = %s\n",
-        default_output_path.c_str());
+    std::string dop = StringFormat("default_output_path = %s\n", default_output_path.c_str());
     option_fp.write(dop.c_str(), dop.size());
 
     option_fp << "\n";
@@ -190,7 +230,8 @@ bool Options_Save(std::string filename) {
 
     option_fp.close();
 
-    if (main_action != MAIN_SOFT_RESTART) {
+    if (main_action != MAIN_SOFT_RESTART)
+    {
         LogPrintf("DONE.\n\n");
     }
 
@@ -199,53 +240,61 @@ bool Options_Save(std::string filename) {
 
 //----------------------------------------------------------------------
 #ifndef CONSOLE_ONLY
-class UI_OptionsWin : public Fl_Window {
-   public:
+class UI_OptionsWin : public Fl_Window
+{
+  public:
     bool want_quit;
 
-   private:
+  private:
     UI_CustomMenu *opt_language;
     UI_CustomMenu *opt_filename_prefix;
 
-    Fl_Button *opt_custom_prefix;
+    Fl_Button   *opt_custom_prefix;
     UI_HelpLink *custom_prefix_help;
-    Fl_Button *opt_default_output_path;
-    Fl_Box *opt_current_output_path;
+    Fl_Button   *opt_default_output_path;
+    Fl_Box      *opt_current_output_path;
 
     UI_CustomCheckBox *opt_simple_mode;
-    UI_HelpLink *simple_mode_help;
+    UI_HelpLink       *simple_mode_help;
     UI_CustomCheckBox *opt_random_string_seeds;
-    UI_HelpLink *random_string_seeds_help;
+    UI_HelpLink       *random_string_seeds_help;
     UI_CustomCheckBox *opt_password_mode;
-    UI_HelpLink *password_mode_help;
+    UI_HelpLink       *password_mode_help;
     UI_CustomCheckBox *opt_mature_words;
-    UI_HelpLink *mature_words_help;
+    UI_HelpLink       *mature_words_help;
     UI_CustomCheckBox *opt_backups;
     UI_CustomCheckBox *opt_overwrite;
     UI_CustomCheckBox *opt_debug;
     UI_CustomCheckBox *opt_limit_break;
 
-   public:
+  public:
     UI_OptionsWin(int W, int H, const char *label = NULL);
 
-    virtual ~UI_OptionsWin() {
+    virtual ~UI_OptionsWin()
+    {
         // nothing needed
     }
 
-    bool WantQuit() const { return want_quit; }
+    bool WantQuit() const
+    {
+        return want_quit;
+    }
 
-   public:
+  public:
     // FLTK virtual method for handling input events.
     int handle(int event);
 
-    void PopulateLanguages() {
+    void PopulateLanguages()
+    {
         opt_language->add(_("AUTO"));
         opt_language->value(0);
 
-        for (int i = 0;; i++) {
+        for (int i = 0;; i++)
+        {
             std::string fullname = Trans_GetAvailLanguage(i);
 
-            if (fullname.empty()) {
+            if (fullname.empty())
+            {
                 break;
             }
 
@@ -254,31 +303,38 @@ class UI_OptionsWin : public Fl_Window {
             // check for match against current language
             std::string lc = Trans_GetAvailCode(i);
 
-            if (lc == t_language) {
+            if (lc == t_language)
+            {
                 opt_language->value(i + 1);
             }
         }
     }
 
-   private:
-    static void callback_Quit(Fl_Widget *w, void *data) {
+  private:
+    static void callback_Quit(Fl_Widget *w, void *data)
+    {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
 
         that->want_quit = true;
     }
 
-    static void callback_Language(Fl_Widget *w, void *data) {
+    static void callback_Language(Fl_Widget *w, void *data)
+    {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
 
         int val = that->opt_language->value();
 
-        if (val == 0) {
+        if (val == 0)
+        {
             t_language = "AUTO";
-        } else {
+        }
+        else
+        {
             t_language = Trans_GetAvailCode(val - 1);
 
             // this should not happen
-            if (t_language.empty()) {
+            if (t_language.empty())
+            {
                 t_language = "AUTO";
             }
         }
@@ -293,11 +349,11 @@ class UI_OptionsWin : public Fl_Window {
         that->want_quit = true;
     }
 
-    static void callback_Simple_Mode(Fl_Widget *w, void *data) {
+    static void callback_Simple_Mode(Fl_Widget *w, void *data)
+    {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
 
-        gui_simple_mode =
-            that->opt_simple_mode->value() ? true : false;
+        gui_simple_mode = that->opt_simple_mode->value() ? true : false;
 
         // clang-format off
         fl_alert("%s", _("Toggling Simple Mode requires a restart.\nObsidian will now restart."));
@@ -308,10 +364,11 @@ class UI_OptionsWin : public Fl_Window {
         that->want_quit = true;
     }
 
-    static void callback_SimpleModeHelp(Fl_Widget *w, void *data) {
+    static void callback_SimpleModeHelp(Fl_Widget *w, void *data)
+    {
         fl_cursor(FL_CURSOR_DEFAULT);
-        Fl_Window *win = new Fl_Window(640, 480, _("Simple Mode"));
-        Fl_Text_Buffer *buff = new Fl_Text_Buffer();
+        Fl_Window       *win  = new Fl_Window(640, 480, _("Simple Mode"));
+        Fl_Text_Buffer  *buff = new Fl_Text_Buffer();
         Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
         disp->buffer(buff);
         disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
@@ -324,23 +381,27 @@ class UI_OptionsWin : public Fl_Window {
         // clang-format on
     }
 
-    static void callback_Random_String_Seeds(Fl_Widget *w, void *data) {
+    static void callback_Random_String_Seeds(Fl_Widget *w, void *data)
+    {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
 
-        random_string_seeds =
-            that->opt_random_string_seeds->value() ? true : false;
+        random_string_seeds = that->opt_random_string_seeds->value() ? true : false;
 
-        if (!random_string_seeds) {
+        if (!random_string_seeds)
+        {
             that->opt_password_mode->deactivate();
-        } else {
+        }
+        else
+        {
             that->opt_password_mode->activate();
         }
     }
 
-    static void callback_RandomStringSeedsHelp(Fl_Widget *w, void *data) {
+    static void callback_RandomStringSeedsHelp(Fl_Widget *w, void *data)
+    {
         fl_cursor(FL_CURSOR_DEFAULT);
-        Fl_Window *win = new Fl_Window(640, 480, _("Random String Seeds"));
-        Fl_Text_Buffer *buff = new Fl_Text_Buffer();
+        Fl_Window       *win  = new Fl_Window(640, 480, _("Random String Seeds"));
+        Fl_Text_Buffer  *buff = new Fl_Text_Buffer();
         Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
         disp->buffer(buff);
         disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
@@ -353,16 +414,18 @@ class UI_OptionsWin : public Fl_Window {
         // clang-format on
     }
 
-    static void callback_Password_Mode(Fl_Widget *w, void *data) {
+    static void callback_Password_Mode(Fl_Widget *w, void *data)
+    {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
 
         password_mode = that->opt_password_mode->value() ? true : false;
     }
 
-    static void callback_PasswordModeHelp(Fl_Widget *w, void *data) {
+    static void callback_PasswordModeHelp(Fl_Widget *w, void *data)
+    {
         fl_cursor(FL_CURSOR_DEFAULT);
-        Fl_Window *win = new Fl_Window(640, 480, _("Password Mode"));
-        Fl_Text_Buffer *buff = new Fl_Text_Buffer();
+        Fl_Window       *win  = new Fl_Window(640, 480, _("Password Mode"));
+        Fl_Text_Buffer  *buff = new Fl_Text_Buffer();
         Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
         disp->buffer(buff);
         disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
@@ -375,22 +438,27 @@ class UI_OptionsWin : public Fl_Window {
         // clang-format on
     }
 
-    static void callback_MatureWords(Fl_Widget *w, void *data) {
+    static void callback_MatureWords(Fl_Widget *w, void *data)
+    {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
 
         mature_word_lists = that->opt_mature_words->value() ? true : false;
 
-        if (mature_word_lists) {
+        if (mature_word_lists)
+        {
             ob_set_config("mature_words", "yes");
-        } else {
+        }
+        else
+        {
             ob_set_config("mature_words", "no");
         }
     }
 
-    static void callback_MatureWordsHelp(Fl_Widget *w, void *data) {
+    static void callback_MatureWordsHelp(Fl_Widget *w, void *data)
+    {
         fl_cursor(FL_CURSOR_DEFAULT);
-        Fl_Window *win = new Fl_Window(640, 480, _("Mature Wordlists"));
-        Fl_Text_Buffer *buff = new Fl_Text_Buffer();
+        Fl_Window       *win  = new Fl_Window(640, 480, _("Mature Wordlists"));
+        Fl_Text_Buffer  *buff = new Fl_Text_Buffer();
         Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
         disp->buffer(buff);
         disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
@@ -403,26 +471,30 @@ class UI_OptionsWin : public Fl_Window {
         // clang-format on
     }
 
-    static void callback_Backups(Fl_Widget *w, void *data) {
+    static void callback_Backups(Fl_Widget *w, void *data)
+    {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
 
         create_backups = that->opt_backups->value() ? true : false;
     }
 
-    static void callback_Overwrite(Fl_Widget *w, void *data) {
+    static void callback_Overwrite(Fl_Widget *w, void *data)
+    {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
 
         overwrite_warning = that->opt_overwrite->value() ? true : false;
     }
 
-    static void callback_Debug(Fl_Widget *w, void *data) {
+    static void callback_Debug(Fl_Widget *w, void *data)
+    {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
 
         debug_messages = that->opt_debug->value() ? true : false;
         LogEnableDebug(debug_messages);
     }
 
-    static void callback_FilenamePrefix(Fl_Widget *w, void *data) {
+    static void callback_FilenamePrefix(Fl_Widget *w, void *data)
+    {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
 
         filename_prefix = that->opt_filename_prefix->value();
@@ -435,9 +507,11 @@ class UI_OptionsWin : public Fl_Window {
         that->want_quit = true;
     }
 
-    static void callback_LimitBreak(Fl_Widget *w, void *data) {
+    static void callback_LimitBreak(Fl_Widget *w, void *data)
+    {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
-        if (that->opt_limit_break->value()) {
+        if (that->opt_limit_break->value())
+        {
             // clang-format off
             if (fl_choice("%s",
                         _("Cancel"),
@@ -445,11 +519,15 @@ class UI_OptionsWin : public Fl_Window {
                 _("WARNING! This option will allow you to manually enter values in excess of the \n(usually) stable slider limits for Obsidian.\nAny bugs, crashes, or errors as a result of this will not be addressed by the developers.\nYou must select Yes for this option to be applied."))) {
                 // clang-format on
                 limit_break = true;
-            } else {
+            }
+            else
+            {
                 limit_break = false;
                 that->opt_limit_break->value(0);
             }
-        } else {
+        }
+        else
+        {
             limit_break = false;
             // clang-format off
             fl_alert("%s", _("Restoring slider limits requires a restart.\nObsidian will now restart."));
@@ -461,10 +539,11 @@ class UI_OptionsWin : public Fl_Window {
         }
     }
 
-    static void callback_PrefixHelp(Fl_Widget *w, void *data) {
+    static void callback_PrefixHelp(Fl_Widget *w, void *data)
+    {
         fl_cursor(FL_CURSOR_DEFAULT);
-        Fl_Window *win = new Fl_Window(640, 480, _("Custom Prefix"));
-        Fl_Text_Buffer *buff = new Fl_Text_Buffer();
+        Fl_Window       *win  = new Fl_Window(640, 480, _("Custom Prefix"));
+        Fl_Text_Buffer  *buff = new Fl_Text_Buffer();
         Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
         disp->buffer(buff);
         disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
@@ -477,21 +556,24 @@ class UI_OptionsWin : public Fl_Window {
         // clang-format on
     }
 
-    static void callback_SetCustomPrefix(Fl_Widget *w, void *data) {
-        tryagain:
-        const char *user_buf = fl_input("%s", custom_prefix.c_str(),
-                                        _("Enter Custom Prefix Format:"));
+    static void callback_SetCustomPrefix(Fl_Widget *w, void *data)
+    {
+    tryagain:
+        const char *user_buf = fl_input("%s", custom_prefix.c_str(), _("Enter Custom Prefix Format:"));
 
-        if (user_buf) {
+        if (user_buf)
+        {
             custom_prefix = user_buf;
-            if (custom_prefix.empty()) {
+            if (custom_prefix.empty())
+            {
                 fl_alert("%s", _("Custom prefix cannot be blank!"));
                 goto tryagain;
             }
         }
     }
 
-    static void callback_SetDefaultOutputPath(Fl_Widget *w, void *data) {
+    static void callback_SetDefaultOutputPath(Fl_Widget *w, void *data)
+    {
         // save and restore the font height
         // (because FLTK's own browser get totally borked)
         int old_font_h = FL_NORMAL_SIZE;
@@ -507,37 +589,37 @@ class UI_OptionsWin : public Fl_Window {
 
         FL_NORMAL_SIZE = old_font_h;
 
-        switch (result) {
-            case -1:
-                LogPrintf(_("Error choosing directory:\n"));
-                LogPrintf("   %s\n", chooser.errmsg());
+        switch (result)
+        {
+        case -1:
+            LogPrintf(_("Error choosing directory:\n"));
+            LogPrintf("   %s\n", chooser.errmsg());
 
-                return;
+            return;
 
-            case 1:  // cancelled
-                return;
+        case 1: // cancelled
+            return;
 
-            default:
-                break;  // OK
+        default:
+            break; // OK
         }
 
         std::string dir_name = chooser.filename();
 
-        if (dir_name.empty()) {
+        if (dir_name.empty())
+        {
             LogPrintf(_("Empty default directory provided???:\n"));
             return;
         }
 
         default_output_path = dir_name;
         UI_OptionsWin *that = (UI_OptionsWin *)data;
-        std::string blanker;
+        std::string    blanker;
         blanker.append(250, ' ');
         that->opt_current_output_path->copy_label(blanker.c_str());
         that->opt_current_output_path->redraw_label();
         that->opt_current_output_path->copy_label(
-            StringFormat("%s: %s", _("Current Path"),
-                         BestDirectory().c_str())
-                .c_str());
+            StringFormat("%s: %s", _("Current Path"), BestDirectory().c_str()).c_str());
         that->opt_current_output_path->redraw_label();
     }
 };
@@ -545,8 +627,8 @@ class UI_OptionsWin : public Fl_Window {
 //
 // Constructor
 //
-UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
-    : Fl_Window(W, H, label), want_quit(false) {
+UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) : Fl_Window(W, H, label), want_quit(false)
+{
     // non-resizable
     size_range(W, H, W, H);
 
@@ -555,7 +637,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     box(FL_FLAT_BOX);
 
     int y_step = kf_h(9);
-    int pad = kf_w(6);
+    int pad    = kf_w(6);
 
     int cx = x() + kf_w(24);
     int cy = y() + (y_step * 3);
@@ -575,8 +657,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     cy += opt_language->h() + y_step;
 
-    opt_filename_prefix =
-        new UI_CustomMenu(cx + W * .38, cy, listwidth, kf_h(24), "");
+    opt_filename_prefix = new UI_CustomMenu(cx + W * .38, cy, listwidth, kf_h(24), "");
     opt_filename_prefix->copy_label(_("Filename Prefix: "));
     opt_filename_prefix->align(FL_ALIGN_LEFT);
     opt_filename_prefix->callback(callback_FilenamePrefix, this);
@@ -592,8 +673,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     cy += opt_filename_prefix->h() + y_step;
 
-    opt_custom_prefix = new Fl_Button(cx + W * .38, cy, listwidth, kf_h(24),
-                                      _("Set Custom Prefix..."));
+    opt_custom_prefix = new Fl_Button(cx + W * .38, cy, listwidth, kf_h(24), _("Set Custom Prefix..."));
     opt_custom_prefix->box(button_style);
     opt_custom_prefix->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
     opt_custom_prefix->visible_focus(0);
@@ -602,15 +682,13 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_custom_prefix->labelfont(font_style);
     opt_custom_prefix->labelcolor(FONT2_COLOR);
 
-    custom_prefix_help = new UI_HelpLink(
-        cx + W * .38 + this->opt_custom_prefix->w(), cy, W * 0.10, kf_h(24));
+    custom_prefix_help = new UI_HelpLink(cx + W * .38 + this->opt_custom_prefix->w(), cy, W * 0.10, kf_h(24));
     custom_prefix_help->labelfont(font_style);
     custom_prefix_help->callback(callback_PrefixHelp, this);
 
     cy += opt_custom_prefix->h() + y_step;
 
-    opt_default_output_path = new Fl_Button(
-        cx + W * .38, cy, listwidth, kf_h(24), _("Set Default Output Path"));
+    opt_default_output_path = new Fl_Button(cx + W * .38, cy, listwidth, kf_h(24), _("Set Default Output Path"));
     opt_default_output_path->box(button_style);
     opt_default_output_path->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
     opt_default_output_path->visible_focus(0);
@@ -622,8 +700,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     cy += opt_default_output_path->h() + y_step;
 
     opt_current_output_path = new Fl_Box(cx, cy, W - cx - pad, kf_h(36), "");
-    opt_current_output_path->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER |
-                                   FL_ALIGN_WRAP);
+    opt_current_output_path->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER | FL_ALIGN_WRAP);
     opt_current_output_path->visible_focus(0);
     opt_current_output_path->color(BUTTON_COLOR);
     opt_current_output_path->labelfont(font_style);
@@ -634,8 +711,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     cy += opt_current_output_path->h() + y_step;
 
-    opt_simple_mode =
-        new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24), "");
+    opt_simple_mode = new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24), "");
     opt_simple_mode->copy_label(_(" Simple Mode"));
     opt_simple_mode->value(gui_simple_mode ? 1 : 0);
     opt_simple_mode->callback(callback_Simple_Mode, this);
@@ -643,15 +719,13 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_simple_mode->selection_color(SELECTION);
     opt_simple_mode->down_box(button_style);
 
-    simple_mode_help = new UI_HelpLink(
-        cx + W * .38 + this->opt_filename_prefix->w(), cy, W * 0.10, kf_h(24));
+    simple_mode_help = new UI_HelpLink(cx + W * .38 + this->opt_filename_prefix->w(), cy, W * 0.10, kf_h(24));
     simple_mode_help->labelfont(font_style);
     simple_mode_help->callback(callback_SimpleModeHelp, this);
 
     cy += opt_simple_mode->h() + y_step * .5;
 
-    opt_random_string_seeds =
-        new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24), "");
+    opt_random_string_seeds = new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24), "");
     opt_random_string_seeds->copy_label(_(" Random String Seeds"));
     opt_random_string_seeds->value(random_string_seeds ? 1 : 0);
     opt_random_string_seeds->callback(callback_Random_String_Seeds, this);
@@ -659,34 +733,31 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_random_string_seeds->selection_color(SELECTION);
     opt_random_string_seeds->down_box(button_style);
 
-    random_string_seeds_help = new UI_HelpLink(
-        cx + W * .38 + this->opt_filename_prefix->w(), cy, W * 0.10, kf_h(24));
+    random_string_seeds_help = new UI_HelpLink(cx + W * .38 + this->opt_filename_prefix->w(), cy, W * 0.10, kf_h(24));
     random_string_seeds_help->labelfont(font_style);
     random_string_seeds_help->callback(callback_RandomStringSeedsHelp, this);
 
     cy += opt_random_string_seeds->h() + y_step * .5;
 
-    opt_password_mode =
-        new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24), "");
+    opt_password_mode = new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24), "");
     opt_password_mode->copy_label(_(" Password Mode"));
     opt_password_mode->value(password_mode ? 1 : 0);
     opt_password_mode->callback(callback_Password_Mode, this);
     opt_password_mode->labelfont(font_style);
     opt_password_mode->selection_color(SELECTION);
     opt_password_mode->down_box(button_style);
-    if (!random_string_seeds) {
+    if (!random_string_seeds)
+    {
         opt_password_mode->deactivate();
     }
 
-    password_mode_help = new UI_HelpLink(
-        cx + W * .38 + this->opt_filename_prefix->w(), cy, W * 0.10, kf_h(24));
+    password_mode_help = new UI_HelpLink(cx + W * .38 + this->opt_filename_prefix->w(), cy, W * 0.10, kf_h(24));
     password_mode_help->labelfont(font_style);
     password_mode_help->callback(callback_PasswordModeHelp, this);
 
     cy += opt_password_mode->h() + y_step * .5;
 
-    opt_mature_words =
-        new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24), "");
+    opt_mature_words = new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24), "");
     opt_mature_words->copy_label(_(" Use Mature Wordlists"));
     opt_mature_words->value(mature_word_lists ? 1 : 0);
     opt_mature_words->callback(callback_MatureWords, this);
@@ -694,15 +765,13 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_mature_words->selection_color(SELECTION);
     opt_mature_words->down_box(button_style);
 
-    mature_words_help = new UI_HelpLink(
-        cx + W * .38 + this->opt_filename_prefix->w(), cy, W * 0.10, kf_h(24));
+    mature_words_help = new UI_HelpLink(cx + W * .38 + this->opt_filename_prefix->w(), cy, W * 0.10, kf_h(24));
     mature_words_help->labelfont(font_style);
     mature_words_help->callback(callback_MatureWordsHelp, this);
 
     cy += opt_mature_words->h() + y_step * .5;
 
-    opt_backups =
-        new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24), "");
+    opt_backups = new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24), "");
     opt_backups->copy_label(_(" Create Backups"));
     opt_backups->value(create_backups ? 1 : 0);
     opt_backups->callback(callback_Backups, this);
@@ -712,8 +781,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     cy += opt_backups->h() + y_step * .5;
 
-    opt_overwrite =
-        new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24), "");
+    opt_overwrite = new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24), "");
     opt_overwrite->copy_label(_(" Overwrite File Warning"));
     opt_overwrite->value(overwrite_warning ? 1 : 0);
     opt_overwrite->callback(callback_Overwrite, this);
@@ -723,8 +791,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     cy += opt_overwrite->h() + y_step * .5;
 
-    opt_debug =
-        new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24), "");
+    opt_debug = new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24), "");
     opt_debug->copy_label(_(" Debugging Messages"));
     opt_debug->value(debug_messages ? 1 : 0);
     opt_debug->callback(callback_Debug, this);
@@ -734,8 +801,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     cy += opt_debug->h() + y_step * .5;
 
-    opt_limit_break =
-        new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24), "");
+    opt_limit_break = new UI_CustomCheckBox(cx + W * .38, cy, listwidth, kf_h(24), "");
     opt_limit_break->copy_label(_(" Ignore Slider Limits"));
     opt_limit_break->value(limit_break ? 1 : 0);
     opt_limit_break->callback(callback_LimitBreak, this);
@@ -772,21 +838,25 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     resizable(NULL);
 }
 
-int UI_OptionsWin::handle(int event) {
-    if (event == FL_KEYDOWN || event == FL_SHORTCUT) {
+int UI_OptionsWin::handle(int event)
+{
+    if (event == FL_KEYDOWN || event == FL_SHORTCUT)
+    {
         int key = Fl::event_key();
 
-        switch (key) {
-            case FL_Escape:
-                want_quit = true;
-                return 1;
+        switch (key)
+        {
+        case FL_Escape:
+            want_quit = true;
+            return 1;
 
-            default:
-                break;
+        default:
+            break;
         }
 
         // eat all other function keys
-        if (FL_F + 1 <= key && key <= FL_F + 12) {
+        if (FL_F + 1 <= key && key <= FL_F + 12)
+        {
             return 1;
         }
     }
@@ -794,19 +864,20 @@ int UI_OptionsWin::handle(int event) {
     return Fl_Window::handle(event);
 }
 
-void DLG_OptionsEditor(void) {
+void DLG_OptionsEditor(void)
+{
     int opt_w = kf_w(500);
     int opt_h = kf_h(475);
 
-    UI_OptionsWin *option_window =
-        new UI_OptionsWin(opt_w, opt_h, _("OBSIDIAN Misc Options"));
+    UI_OptionsWin *option_window = new UI_OptionsWin(opt_w, opt_h, _("OBSIDIAN Misc Options"));
 
     option_window->want_quit = false;
     option_window->set_modal();
     option_window->show();
 
     // run the GUI until the user closes
-    while (!option_window->WantQuit()) {
+    while (!option_window->WantQuit())
+    {
         Fl::wait();
     }
 

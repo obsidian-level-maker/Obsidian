@@ -31,14 +31,9 @@
 #include "lib_util.h"
 #include "main.h"
 
-UI_HyperLink::UI_HyperLink(int x, int y, int w, int h, const char *label,
-                           const char *_url)
-    : Fl_Button(x, y, w, h, label),
-      hover(false),
-      label_X(0),
-      label_Y(0),
-      label_W(0),
-      label_H(0) {
+UI_HyperLink::UI_HyperLink(int x, int y, int w, int h, const char *label, const char *_url)
+    : Fl_Button(x, y, w, h, label), hover(false), label_X(0), label_Y(0), label_W(0), label_H(0)
+{
     // copy the URL string
     url = _url;
 
@@ -48,19 +43,25 @@ UI_HyperLink::UI_HyperLink(int x, int y, int w, int h, const char *label,
     callback(callback_Link, NULL);
 }
 
-void UI_HyperLink::checkLink() {
+void UI_HyperLink::checkLink()
+{
     // change the cursor if the mouse is over the link.
     // the 'hover' variable reduces the number of times fl_cursor()
     // needs to be called (since it can be expensive).
 
-    if (Fl::event_inside(x() + label_X, y() + label_Y, label_W, label_H)) {
-        if (!hover) {
+    if (Fl::event_inside(x() + label_X, y() + label_Y, label_W, label_H))
+    {
+        if (!hover)
+        {
             fl_cursor(FL_CURSOR_HAND);
         }
 
         hover = true;
-    } else {
-        if (hover) {
+    }
+    else
+    {
+        if (hover)
+        {
             fl_cursor(FL_CURSOR_DEFAULT);
         }
 
@@ -68,38 +69,43 @@ void UI_HyperLink::checkLink() {
     }
 }
 
-int UI_HyperLink::handle(int event) {
-    if (!active_r()) {
+int UI_HyperLink::handle(int event)
+{
+    if (!active_r())
+    {
         return Fl_Button::handle(event);
     }
 
-    switch (event) {
-        case FL_MOVE: {
-            checkLink();
-            return 1;
-        }
+    switch (event)
+    {
+    case FL_MOVE: {
+        checkLink();
+        return 1;
+    }
 
-        case FL_ENTER: {
-            checkLink();
-            redraw();
-            return 1;
-        }
+    case FL_ENTER: {
+        checkLink();
+        redraw();
+        return 1;
+    }
 
-        case FL_LEAVE: {
-            checkLink();
-            redraw();
-            return 1;
-        }
+    case FL_LEAVE: {
+        checkLink();
+        redraw();
+        return 1;
+    }
 
-        default:
-            break;
+    default:
+        break;
     }
 
     return Fl_Button::handle(event);
 }
 
-void UI_HyperLink::draw() {
-    if (type() == FL_HIDDEN_BUTTON) {
+void UI_HyperLink::draw()
+{
+    if (type() == FL_HIDDEN_BUTTON)
+    {
         return;
     }
 
@@ -110,11 +116,16 @@ void UI_HyperLink::draw() {
     fl_font(labelfont(), labelsize());
     fl_measure(label(), label_W, label_H, 1);
 
-    if (align() & FL_ALIGN_LEFT) {
+    if (align() & FL_ALIGN_LEFT)
+    {
         label_X = 2;
-    } else if (align() & FL_ALIGN_RIGHT) {
+    }
+    else if (align() & FL_ALIGN_RIGHT)
+    {
         label_X = w() - label_W - 2;
-    } else {
+    }
+    else
+    {
         label_X = (w() - label_W) / 2;
     }
 
@@ -125,12 +136,12 @@ void UI_HyperLink::draw() {
     fl_draw_box(box(), x(), y(), w(), h(), color());
 
     fl_color(labelcolor());
-    fl_draw(label(), x() + label_X, y() + label_Y, label_W, label_H,
-            FL_ALIGN_LEFT);
+    fl_draw(label(), x() + label_X, y() + label_Y, label_W, label_H, FL_ALIGN_LEFT);
 
     // draw the underline
 
-    if (!value()) {
+    if (!value())
+    {
         int yy = y() + label_Y + label_H - 2;
 
         fl_line_style(FL_SOLID);
@@ -139,17 +150,19 @@ void UI_HyperLink::draw() {
     }
 }
 
-void UI_HyperLink::callback_Link(Fl_Widget *w, void *data) {
+void UI_HyperLink::callback_Link(Fl_Widget *w, void *data)
+{
     UI_HyperLink *link = (UI_HyperLink *)w;
 
-    if (!fl_open_uri(link->url.c_str())) {
+    if (!fl_open_uri(link->url.c_str()))
+    {
         LogPrintf("\nOpen URL failed: %s\n\n", link->url.c_str());
     }
 }
 
-UI_ModHyperLink::UI_ModHyperLink(int x, int y, int w, int h, const char *label,
-                           const char *_url)
-    : Fl_Button(x, y, w, h, label) {
+UI_ModHyperLink::UI_ModHyperLink(int x, int y, int w, int h, const char *label, const char *_url)
+    : Fl_Button(x, y, w, h, label)
+{
     // copy the URL string
     url = _url;
 
@@ -159,31 +172,34 @@ UI_ModHyperLink::UI_ModHyperLink(int x, int y, int w, int h, const char *label,
     callback(callback_Link, NULL);
 }
 
-int UI_ModHyperLink::handle(int event) {
+int UI_ModHyperLink::handle(int event)
+{
 
-    switch (event) {
-        case FL_ENTER: {
-            fl_cursor(FL_CURSOR_HAND);
-            return 1;
-        }
+    switch (event)
+    {
+    case FL_ENTER: {
+        fl_cursor(FL_CURSOR_HAND);
+        return 1;
+    }
 
-        case FL_LEAVE: {
-            fl_cursor(FL_CURSOR_DEFAULT);
-            return 1;
-        }
+    case FL_LEAVE: {
+        fl_cursor(FL_CURSOR_DEFAULT);
+        return 1;
+    }
 
-        default:
-            break;
+    default:
+        break;
     }
 
     return Fl_Button::handle(event);
-
 }
 
-void UI_ModHyperLink::callback_Link(Fl_Widget *w, void *data) {
+void UI_ModHyperLink::callback_Link(Fl_Widget *w, void *data)
+{
     UI_ModHyperLink *link = (UI_ModHyperLink *)w;
 
-    if (!fl_open_uri(link->url.c_str())) {
+    if (!fl_open_uri(link->url.c_str()))
+    {
         LogPrintf("\nOpen URL failed: %s\n\n", link->url.c_str());
     }
 }

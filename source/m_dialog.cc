@@ -32,17 +32,18 @@
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
 #include "headers.h"
-
 #include "lib_util.h"
-#include "main.h"
-
 #include "m_lua.h"
+#include "main.h"
 
 std::string last_directory;
 
 static int dialog_result;
 
-static void dialog_close_CB(Fl_Widget *w, void *data) { dialog_result = 1; }
+static void dialog_close_CB(Fl_Widget *w, void *data)
+{
+    dialog_result = 1;
+}
 
 #define BTN_W kf_w(100)
 #define BTN_H kf_h(30)
@@ -52,22 +53,24 @@ static void dialog_close_CB(Fl_Widget *w, void *data) { dialog_result = 1; }
 
 #define FONT_SIZE (18 + KF * 2)
 
-static void DialogShowAndRun(const char *message, const char *title,
-                             const char *link_title, const char *link_url) {
+static void DialogShowAndRun(const char *message, const char *title, const char *link_title, const char *link_url)
+{
     dialog_result = 0;
 
     // determine required size
-    int mesg_W = kf_w(480);  // NOTE: fl_measure will wrap to this!
+    int mesg_W = kf_w(480); // NOTE: fl_measure will wrap to this!
     int mesg_H = 0;
 
     fl_font(FL_HELVETICA, FONT_SIZE);
     fl_measure(message, mesg_W, mesg_H);
 
-    if (mesg_W < kf_w(200)) {
+    if (mesg_W < kf_w(200))
+    {
         mesg_W = kf_w(200);
     }
 
-    if (mesg_H < ICON_H) {
+    if (mesg_H < ICON_H)
+    {
         mesg_H = ICON_H;
     }
 
@@ -78,7 +81,8 @@ static void DialogShowAndRun(const char *message, const char *title,
     int total_W = ICON_W + mesg_W + kf_w(30);
     int total_H = mesg_H + BTN_H + kf_h(30);
 
-    if (link_title) {
+    if (link_title)
+    {
         total_H += FONT_SIZE + kf_h(10);
     }
 
@@ -102,8 +106,7 @@ static void DialogShowAndRun(const char *message, const char *title,
     dialog->add(icon);
 
     // create the message area...
-    Fl_Box *box =
-        new Fl_Box(ICON_W + kf_w(20), kf_h(10), mesg_W, mesg_H, message);
+    Fl_Box *box = new Fl_Box(ICON_W + kf_w(20), kf_h(10), mesg_W, mesg_H, message);
 
     box->align(FL_ALIGN_LEFT | FL_ALIGN_TOP | FL_ALIGN_INSIDE | FL_ALIGN_WRAP);
     box->labelfont(font_style);
@@ -112,12 +115,11 @@ static void DialogShowAndRun(const char *message, const char *title,
     dialog->add(box);
 
     // create the hyperlink...
-    if (link_title) {
+    if (link_title)
+    {
         SYS_ASSERT(link_url);
 
-        UI_HyperLink *link =
-            new UI_HyperLink(ICON_W + kf_w(20), kf_h(10) + mesg_H, mesg_W, 24,
-                             link_title, link_url);
+        UI_HyperLink *link = new UI_HyperLink(ICON_W + kf_w(20), kf_h(10) + mesg_H, mesg_W, 24, link_title, link_url);
         link->align(FL_ALIGN_INSIDE | FL_ALIGN_LEFT);
         link->labelfont(font_style);
         link->labelsize(FONT_SIZE);
@@ -126,9 +128,7 @@ static void DialogShowAndRun(const char *message, const char *title,
     }
 
     // create button...
-    Fl_Button *button =
-        new Fl_Button(total_W - BTN_W - kf_w(20), total_H - BTN_H - kf_h(12),
-                      BTN_W, BTN_H, fl_close);
+    Fl_Button *button = new Fl_Button(total_W - BTN_W - kf_w(20), total_H - BTN_H - kf_h(12), BTN_W, BTN_H, fl_close);
 
     button->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
     button->callback((Fl_Callback *)dialog_close_CB);
@@ -144,7 +144,8 @@ static void DialogShowAndRun(const char *message, const char *title,
     fl_beep();
 
     // run the GUI and let user make their choice
-    while (dialog_result == 0) {
+    while (dialog_result == 0)
+    {
         Fl::wait();
     }
 
@@ -152,14 +153,15 @@ static void DialogShowAndRun(const char *message, const char *title,
     delete dialog;
 }
 
-static void ParseHyperLink(char *buffer, unsigned int buf_len,
-                           const char **link_title, const char **link_url) {
+static void ParseHyperLink(char *buffer, unsigned int buf_len, const char **link_title, const char **link_url)
+{
     // the syntax for a hyperlink is similar to HTML :-
     //    <a http://blah.blah.org/foobie.html>Title</a>
 
     char *pos = strstr(buffer, "<a ");
 
-    if (!pos) {
+    if (!pos)
+    {
         return;
     }
 
@@ -173,7 +175,8 @@ static void ParseHyperLink(char *buffer, unsigned int buf_len,
 
     pos = strstr(pos, ">");
 
-    if (!pos) {  // malformed : oh well
+    if (!pos)
+    { // malformed : oh well
         return;
     }
 
@@ -186,12 +189,14 @@ static void ParseHyperLink(char *buffer, unsigned int buf_len,
 
     pos = strstr(pos, "<");
 
-    if (pos) {
+    if (pos)
+    {
         pos[0] = 0;
     }
 }
 
-void DLG_ShowError(const char *msg, ...) {
+void DLG_ShowError(const char *msg, ...)
+{
     static char buffer[MSG_BUF_LEN];
 
     va_list arg_pt;
@@ -205,32 +210,38 @@ void DLG_ShowError(const char *msg, ...) {
     LogPrintf("\n%s\n\n", buffer);
 
     const char *link_title = NULL;
-    const char *link_url = NULL;
+    const char *link_url   = NULL;
 
     // handle error messages with a hyperlink at the end
     ParseHyperLink(buffer, sizeof(buffer), &link_title, &link_url);
 
-    if (!batch_mode) {
-        DialogShowAndRun(buffer, _("OBSIDIAN - Error Message"), link_title,
-                         link_url);
+    if (!batch_mode)
+    {
+        DialogShowAndRun(buffer, _("OBSIDIAN - Error Message"), link_title, link_url);
     }
 }
 
 //----------------------------------------------------------------------
 
-std::string BestDirectory() {
-    if (!last_directory.empty()) {
+std::string BestDirectory()
+{
+    if (!last_directory.empty())
+    {
         return last_directory;
-    } else {
+    }
+    else
+    {
         return Resolve_DefaultOutputPath();
     }
 }
 
-std::string DLG_OutputFilename(const char *ext, const char *preset) {
+std::string DLG_OutputFilename(const char *ext, const char *preset)
+{
     std::string kind_buf = StringFormat("%s %s\t*.%s", ext, _("files"), ext);
 
     // uppercase the first word
-    for (char *p = &kind_buf[0]; *p && *p != ' '; p++) {
+    for (char *p = &kind_buf[0]; *p && *p != ' '; p++)
+    {
         *p = toupper(*p);
     }
 
@@ -244,7 +255,8 @@ std::string DLG_OutputFilename(const char *ext, const char *preset) {
     chooser.title(_("Select output file"));
     chooser.type(Fl_Native_File_Chooser::BROWSE_SAVE_FILE);
 
-    if (overwrite_warning) {
+    if (overwrite_warning)
+    {
         chooser.options(Fl_Native_File_Chooser::SAVEAS_CONFIRM);
     }
 
@@ -252,9 +264,12 @@ std::string DLG_OutputFilename(const char *ext, const char *preset) {
 
     auto best_dir = BestDirectory();
 
-    if (preset) {
+    if (preset)
+    {
         chooser.preset_file(PathAppend(best_dir, preset).c_str());
-    } else {
+    }
+    else
+    {
         chooser.directory(best_dir.c_str());
     }
 
@@ -262,40 +277,43 @@ std::string DLG_OutputFilename(const char *ext, const char *preset) {
 
     FL_NORMAL_SIZE = old_font_h;
 
-    switch (result) {
-        case -1:
-            LogPrintf(_("Error choosing output file:\n"));
-            LogPrintf("   %s\n", chooser.errmsg());
+    switch (result)
+    {
+    case -1:
+        LogPrintf(_("Error choosing output file:\n"));
+        LogPrintf("   %s\n", chooser.errmsg());
 
-            DLG_ShowError(_("Unable to create the file:\n\n%s"),
-                          chooser.errmsg());
-            return "";
+        DLG_ShowError(_("Unable to create the file:\n\n%s"), chooser.errmsg());
+        return "";
 
-        case 1:  // cancelled
-            return "";
+    case 1: // cancelled
+        return "";
 
-        default:
-            break;  // OK
+    default:
+        break; // OK
     }
 
     std::string src_name = chooser.filename();
 
     std::string dir_name = GetDirectory(src_name);
 
-    if (!dir_name.empty()) {
+    if (!dir_name.empty())
+    {
         last_directory = dir_name;
     }
 
 #ifdef WIN32
     // add extension if missing
-    if (GetExtension(src_name).empty()) {
+    if (GetExtension(src_name).empty())
+    {
         ReplaceExtension(src_name, ext);
 
         // check if exists, ask for confirmation
-        if (FileExists(src_name)) {
-            if (!fl_choice("%s", fl_cancel, fl_ok, NULL,
-                           Fl_Native_File_Chooser::file_exists_message)) {
-                return "";  // cancelled
+        if (FileExists(src_name))
+        {
+            if (!fl_choice("%s", fl_cancel, fl_ok, NULL, Fl_Native_File_Chooser::file_exists_message))
+            {
+                return ""; // cancelled
             }
         }
     }
@@ -305,26 +323,30 @@ std::string DLG_OutputFilename(const char *ext, const char *preset) {
 
 //----------------------------------------------------------------------cout
 
-void DLG_EditSeed(void) {
+void DLG_EditSeed(void)
+{
     ;
 
-    int user_response;
-    std::string user_buf = fl_input_str(
-        user_response, 0 /* limit */, "%s",
-        string_seed.empty() ? std::to_string(next_rand_seed).c_str()
-                            : string_seed.c_str(),
-        _("Enter New Seed Number or Phrase:"));
+    int         user_response;
+    std::string user_buf =
+        fl_input_str(user_response, 0 /* limit */, "%s",
+                     string_seed.empty() ? std::to_string(next_rand_seed).c_str() : string_seed.c_str(),
+                     _("Enter New Seed Number or Phrase:"));
 
     // cancelled?
-    if (user_response < 0) {
+    if (user_response < 0)
+    {
         return;
     }
 
     std::string word = {user_buf.c_str(), static_cast<size_t>(user_buf.size())};
-    try {
-        for (long unsigned int i = 0; i < word.size(); i++) {
+    try
+    {
+        for (long unsigned int i = 0; i < word.size(); i++)
+        {
             char character = word.at(i);
-            if (!std::isdigit(character)) {
+            if (!std::isdigit(character))
+            {
                 throw std::runtime_error(
                     // clang-format off
                     _("String contains non-digits. Will process as string\n"));
@@ -332,41 +354,51 @@ void DLG_EditSeed(void) {
             }
         }
         did_specify_seed = true;
-        next_rand_seed = std::stoull(word);
+        next_rand_seed   = std::stoull(word);
         return;
-    } catch (std::invalid_argument &e) {
+    }
+    catch (std::invalid_argument &e)
+    {
         (void)e;
         std::cout << _("Invalid argument. Will process as string.\n");
-    } catch (std::out_of_range &e) {
+    }
+    catch (std::out_of_range &e)
+    {
         (void)e;
         // clang-format off
         std::cout << _("Resulting number would be out of range. Will process as string.\n");
         // clang-format on
-    } catch (std::exception &e) {
+    }
+    catch (std::exception &e)
+    {
         std::cout << e.what();
     }
     string_seed = word;
     ob_set_config("string_seed", word.c_str());
-    next_rand_seed = StringHash64(string_seed);
+    next_rand_seed   = StringHash64(string_seed);
     did_specify_seed = true;
     return;
 }
 
 //----------------------------------------------------------------------
 
-class UI_LogViewer : public Fl_Double_Window {
-   private:
+class UI_LogViewer : public Fl_Double_Window
+{
+  private:
     bool want_quit;
 
     Fl_Multi_Browser *browser;
 
     Fl_Button *copy_but;
 
-   public:
+  public:
     UI_LogViewer(int W, int H, const char *l);
     virtual ~UI_LogViewer();
 
-    bool WantQuit() const { return want_quit; }
+    bool WantQuit() const
+    {
+        return want_quit;
+    }
 
     void Add(std::string_view line);
 
@@ -377,7 +409,7 @@ class UI_LogViewer : public Fl_Double_Window {
 
     void WriteLogs(std::ofstream &fp);
 
-   private:
+  private:
     int CountSelectedLines() const;
 
     std::string GetSelectedText() const;
@@ -388,8 +420,8 @@ class UI_LogViewer : public Fl_Double_Window {
     static void copy_callback(Fl_Widget *, void *);
 };
 
-UI_LogViewer::UI_LogViewer(int W, int H, const char *l)
-    : Fl_Double_Window(W, H, l), want_quit(false) {
+UI_LogViewer::UI_LogViewer(int W, int H, const char *l) : Fl_Double_Window(W, H, l), want_quit(false)
+{
     box(FL_NO_BOX);
 
     size_range(W * 3 / 4, H * 3 / 4);
@@ -424,11 +456,10 @@ UI_LogViewer::UI_LogViewer(int W, int H, const char *l)
         Fl_Group *o = new Fl_Group(0, ey, w(), h() - ey);
         o->box(FL_FLAT_BOX);
 
-        int bx = w() - button_w - kf_w(25);
+        int bx  = w() - button_w - kf_w(25);
         int bx2 = bx;
         {
-            Fl_Button *but =
-                new Fl_Button(bx, button_y, button_w, button_h, fl_close);
+            Fl_Button *but = new Fl_Button(bx, button_y, button_w, button_h, fl_close);
             but->box(button_style);
             but->visible_focus(0);
             but->color(BUTTON_COLOR);
@@ -439,8 +470,7 @@ UI_LogViewer::UI_LogViewer(int W, int H, const char *l)
 
         bx = kf_w(25);
         {
-            Fl_Button *but =
-                new Fl_Button(bx, button_y, button_w, button_h, _("Save"));
+            Fl_Button *but = new Fl_Button(bx, button_y, button_w, button_h, _("Save"));
             but->box(button_style);
             but->visible_focus(0);
             but->color(BUTTON_COLOR);
@@ -451,8 +481,7 @@ UI_LogViewer::UI_LogViewer(int W, int H, const char *l)
 
         bx += kf_w(140);
         {
-            copy_but =
-                new Fl_Button(bx, button_y, button_w, button_h, _("Copy"));
+            copy_but = new Fl_Button(bx, button_y, button_w, button_h, _("Copy"));
             copy_but->box(button_style);
             copy_but->visible_focus(0);
             copy_but->color(BUTTON_COLOR);
@@ -465,8 +494,7 @@ UI_LogViewer::UI_LogViewer(int W, int H, const char *l)
 
         bx += button_w + 10;
 
-        Fl_Group *resize_box =
-            new Fl_Group(bx + 10, ey + 2, bx2 - bx - 20, h() - ey - 4);
+        Fl_Group *resize_box = new Fl_Group(bx + 10, ey + 2, bx2 - bx - 20, h() - ey - 4);
         resize_box->box(FL_NO_BOX);
 
         o->resizable(resize_box);
@@ -477,19 +505,26 @@ UI_LogViewer::UI_LogViewer(int W, int H, const char *l)
     end();
 }
 
-UI_LogViewer::~UI_LogViewer() {}
+UI_LogViewer::~UI_LogViewer()
+{
+}
 
-void UI_LogViewer::JumpEnd() {
-    if (browser->size() > 0) {
+void UI_LogViewer::JumpEnd()
+{
+    if (browser->size() > 0)
+    {
         browser->bottomline(browser->size());
     }
 }
 
-int UI_LogViewer::CountSelectedLines() const {
+int UI_LogViewer::CountSelectedLines() const
+{
     int count = 0;
 
-    for (int i = 1; i <= browser->size(); i++) {
-        if (browser->selected(i)) {
+    for (int i = 1; i <= browser->size(); i++)
+    {
+        if (browser->selected(i))
+        {
             count++;
         }
     }
@@ -497,16 +532,20 @@ int UI_LogViewer::CountSelectedLines() const {
     return count;
 }
 
-std::string UI_LogViewer::GetSelectedText() const {
+std::string UI_LogViewer::GetSelectedText() const
+{
     std::string buf;
 
-    for (int i = 1; i <= browser->size(); i++) {
-        if (!browser->selected(i)) {
+    for (int i = 1; i <= browser->size(); i++)
+    {
+        if (!browser->selected(i))
+        {
             continue;
         }
 
         std::string line_text = browser->text(i);
-        if (line_text.empty()) {
+        if (line_text.empty())
+        {
             continue;
         }
 
@@ -516,57 +555,73 @@ std::string UI_LogViewer::GetSelectedText() const {
     return buf;
 }
 
-void UI_LogViewer::Add(std::string_view line) { browser->add(line.data()); }
+void UI_LogViewer::Add(std::string_view line)
+{
+    browser->add(line.data());
+}
 
-static void logviewer_display_func(std::string_view line, void *priv_data) {
+static void logviewer_display_func(std::string_view line, void *priv_data)
+{
     UI_LogViewer *log_viewer = (UI_LogViewer *)priv_data;
 
     log_viewer->Add(line);
 }
 
-void UI_LogViewer::ReadLogs() {
+void UI_LogViewer::ReadLogs()
+{
     LogReadLines(logviewer_display_func, (void *)this);
     JumpEnd();
 }
 
-void UI_LogViewer::WriteLogs(std::ofstream &fp) {
-    for (int n = 1; n <= browser->size(); n++) {
+void UI_LogViewer::WriteLogs(std::ofstream &fp)
+{
+    for (int n = 1; n <= browser->size(); n++)
+    {
         const char *str = browser->text(n);
 
-        if (str) {
+        if (str)
+        {
             StreamPrintf(fp, "%s\n", str);
         }
     }
 }
 
-void UI_LogViewer::quit_callback(Fl_Widget *w, void *data) {
+void UI_LogViewer::quit_callback(Fl_Widget *w, void *data)
+{
     UI_LogViewer *that = (UI_LogViewer *)data;
 
     that->want_quit = true;
 }
 
-void UI_LogViewer::select_callback(Fl_Widget *w, void *data) {
+void UI_LogViewer::select_callback(Fl_Widget *w, void *data)
+{
     UI_LogViewer *that = (UI_LogViewer *)data;
 
     // require 2 or more lines to activate Copy button
-    if (that->CountSelectedLines() >= 2) {
+    if (that->CountSelectedLines() >= 2)
+    {
         that->copy_but->activate();
-    } else {
+    }
+    else
+    {
         that->copy_but->deactivate();
     }
 }
 
-void UI_LogViewer::copy_callback(Fl_Widget *w, void *data) {
+void UI_LogViewer::copy_callback(Fl_Widget *w, void *data)
+{
     UI_LogViewer *that = (UI_LogViewer *)data;
 
     std::string text = that->GetSelectedText();
 
-    if (text[0]) {
+    if (text[0])
+    {
         Fl::copy(text.c_str(), text.size(), 1);
     }
 }
 
-void UI_LogViewer::save_callback(Fl_Widget *w, void *data) {
+void UI_LogViewer::save_callback(Fl_Widget *w, void *data)
+{
     UI_LogViewer *that = (UI_LogViewer *)data;
 
     Fl_Native_File_Chooser chooser;
@@ -574,7 +629,8 @@ void UI_LogViewer::save_callback(Fl_Widget *w, void *data) {
     chooser.title(_("Pick file to save to"));
     chooser.type(Fl_Native_File_Chooser::BROWSE_SAVE_FILE);
 
-    if (overwrite_warning) {
+    if (overwrite_warning)
+    {
         chooser.options(Fl_Native_File_Chooser::SAVEAS_CONFIRM);
     }
 
@@ -582,55 +638,61 @@ void UI_LogViewer::save_callback(Fl_Widget *w, void *data) {
 
 tryagain:;
 
-    if (!last_directory.empty()) {
+    if (!last_directory.empty())
+    {
         chooser.directory(last_directory.c_str());
     }
 
-    switch (chooser.show()) {
-        case -1:
-            DLG_ShowError(_("Unable to save the file:\n\n%s"),
-                          chooser.errmsg());
-            return;
+    switch (chooser.show())
+    {
+    case -1:
+        DLG_ShowError(_("Unable to save the file:\n\n%s"), chooser.errmsg());
+        return;
 
-        case 1:
-            // cancelled
-            return;
+    case 1:
+        // cancelled
+        return;
 
-        default:
-            break;  // OK
+    default:
+        break; // OK
     }
 
     std::string filename = chooser.filename();
 
     // add an extension if missing
-    if (GetExtension(filename).empty()) {
+    if (GetExtension(filename).empty())
+    {
         ReplaceExtension(filename, ".txt");
     }
 
-    if (FileExists(filename)) {
+    if (FileExists(filename))
+    {
         // clang-format off
         switch (fl_choice(_("%s already exists.\nChoose Yes to overwrite or No to choose a new filename."),
                           _("Yes"), 
                           _("No"), 0,
-                          // clang-format on
-                          filename.c_str())) {
-            case 0:
-                FileDelete(filename);
-                break;
-            case 1:
-                goto tryagain;
-                break;
+                         // clang-format on
+                         filename.c_str()))
+        {
+        case 0:
+            FileDelete(filename);
+            break;
+        case 1:
+            goto tryagain;
+            break;
         }
     }
 
-    if (GetExtension(filename) != ".txt") {
+    if (GetExtension(filename) != ".txt")
+    {
         DLG_ShowError(_("Please choose a filename ending in .txt"));
         goto tryagain;
     }
 
     std::ofstream fp{filename};
 
-    if (!fp) {
+    if (!fp)
+    {
         filename = strerror(errno);
 
         DLG_ShowError(_("Unable to save the file:\n\n%s"), filename.c_str());
@@ -644,26 +706,30 @@ tryagain:;
 
 //----------------------------------------------------------------------
 
-class UI_GlossaryViewer : public Fl_Double_Window {
-   private:
+class UI_GlossaryViewer : public Fl_Double_Window
+{
+  private:
     bool want_quit;
 
     Fl_Browser *browser;
 
-   public:
+  public:
     UI_GlossaryViewer(int W, int H, const char *l);
     virtual ~UI_GlossaryViewer();
 
-    bool WantQuit() const { return want_quit; }
+    bool WantQuit() const
+    {
+        return want_quit;
+    }
 
     void ReadGlossary();
 
-   private:
+  private:
     static void quit_callback(Fl_Widget *, void *);
 };
 
-UI_GlossaryViewer::UI_GlossaryViewer(int W, int H, const char *l)
-    : Fl_Double_Window(W, H, l), want_quit(false) {
+UI_GlossaryViewer::UI_GlossaryViewer(int W, int H, const char *l) : Fl_Double_Window(W, H, l), want_quit(false)
+{
     box(FL_NO_BOX);
 
     size_range(W * 3 / 4, H * 3 / 4);
@@ -692,11 +758,10 @@ UI_GlossaryViewer::UI_GlossaryViewer(int W, int H, const char *l)
         Fl_Group *o = new Fl_Group(0, ey, w(), h() - ey);
         o->box(FL_FLAT_BOX);
 
-        int bx = w() - button_w - kf_w(25);
+        int bx  = w() - button_w - kf_w(25);
         int bx2 = bx;
         {
-            Fl_Button *but =
-                new Fl_Button(bx, button_y, button_w, button_h, fl_close);
+            Fl_Button *but = new Fl_Button(bx, button_y, button_w, button_h, fl_close);
             but->box(button_style);
             but->visible_focus(0);
             but->color(BUTTON_COLOR);
@@ -707,8 +772,7 @@ UI_GlossaryViewer::UI_GlossaryViewer(int W, int H, const char *l)
 
         bx += button_w + 10;
 
-        Fl_Group *resize_box =
-            new Fl_Group(bx + 10, ey + 2, bx2 - bx - 20, h() - ey - 4);
+        Fl_Group *resize_box = new Fl_Group(bx + 10, ey + 2, bx2 - bx - 20, h() - ey - 4);
         resize_box->box(FL_NO_BOX);
 
         o->resizable(resize_box);
@@ -719,13 +783,16 @@ UI_GlossaryViewer::UI_GlossaryViewer(int W, int H, const char *l)
     end();
 }
 
-UI_GlossaryViewer::~UI_GlossaryViewer() {}
+UI_GlossaryViewer::~UI_GlossaryViewer()
+{
+}
 
-void UI_GlossaryViewer::ReadGlossary() {
-    std::string glossary = StringFormat("%s/language/%s.txt", install_dir.c_str(),
-                     selected_lang.c_str());
+void UI_GlossaryViewer::ReadGlossary()
+{
+    std::string glossary = StringFormat("%s/language/%s.txt", install_dir.c_str(), selected_lang.c_str());
 
-    if (!FileExists(glossary)) {
+    if (!FileExists(glossary))
+    {
         return;
     }
 
@@ -734,7 +801,8 @@ void UI_GlossaryViewer::ReadGlossary() {
     gloss_stream.open(glossary, std::ios::in);
 
     std::string buffer;
-    while (std::getline(gloss_stream, buffer)) {
+    while (std::getline(gloss_stream, buffer))
+    {
         // remove any newline at the end (LF or CR/LF)
         StringRemoveCRLF(&buffer);
 
@@ -750,18 +818,19 @@ void UI_GlossaryViewer::ReadGlossary() {
     gloss_stream.close();
 }
 
-void UI_GlossaryViewer::quit_callback(Fl_Widget *w, void *data) {
+void UI_GlossaryViewer::quit_callback(Fl_Widget *w, void *data)
+{
     UI_GlossaryViewer *that = (UI_GlossaryViewer *)data;
 
     that->want_quit = true;
 }
 
-void DLG_ViewLogs(void) {
+void DLG_ViewLogs(void)
+{
     int log_w = kf_w(560);
     int log_h = kf_h(380);
 
-    UI_LogViewer *log_viewer =
-        new UI_LogViewer(log_w, log_h, _("OBSIDIAN Log Viewer"));
+    UI_LogViewer *log_viewer = new UI_LogViewer(log_w, log_h, _("OBSIDIAN Log Viewer"));
 
     log_viewer->ReadLogs();
 
@@ -769,19 +838,20 @@ void DLG_ViewLogs(void) {
     log_viewer->show();
 
     // run the dialog until the user closes it
-    while (!log_viewer->WantQuit()) {
+    while (!log_viewer->WantQuit())
+    {
         Fl::wait();
     }
 
     delete log_viewer;
 }
 
-void DLG_ViewGlossary(void) {
+void DLG_ViewGlossary(void)
+{
     int gloss_w = kf_w(640);
     int gloss_h = kf_h(480);
 
-    UI_GlossaryViewer *gloss_viewer =
-        new UI_GlossaryViewer(gloss_w, gloss_h, _("OBSIDIAN Glossary Viewer"));
+    UI_GlossaryViewer *gloss_viewer = new UI_GlossaryViewer(gloss_w, gloss_h, _("OBSIDIAN Glossary Viewer"));
 
     gloss_viewer->ReadGlossary();
 
@@ -789,7 +859,8 @@ void DLG_ViewGlossary(void) {
     gloss_viewer->show();
 
     // run the dialog until the user closes it
-    while (!gloss_viewer->WantQuit()) {
+    while (!gloss_viewer->WantQuit())
+    {
         Fl::wait();
     }
 

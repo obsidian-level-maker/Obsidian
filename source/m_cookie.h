@@ -45,9 +45,10 @@ bool Theme_Options_Save(std::string filename);
 void Recent_Parse(std::string name, std::string value);
 void Recent_Write(std::ofstream &fp);
 
-typedef enum {
-    RECG_Output = 0,  // generated WAD
-    RECG_Config = 1,  // file saved from Config Manager
+typedef enum
+{
+    RECG_Output = 0, // generated WAD
+    RECG_Config = 1, // file saved from Config Manager
 
     RECG_NUM_GROUPS
 
@@ -55,8 +56,7 @@ typedef enum {
 
 void Recent_AddFile(int group, std::string filename);
 void Recent_RemoveFile(int group, std::string filename);
-bool Recent_GetName(int group, int index, std::string name_buf,
-                    bool for_menu = false);
+bool Recent_GetName(int group, int index, std::string name_buf, bool for_menu = false);
 
 #endif /* __OBLIGE_COOKIE_H__ */
 

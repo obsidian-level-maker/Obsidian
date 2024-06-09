@@ -30,14 +30,13 @@
 #include "FL/Fl_Button.H"
 #include "FL/Fl_Check_Button.H"
 #include "FL/Fl_Choice.H"
+#include "FL/Fl_Double_Window.H"
 #include "FL/Fl_Group.H"
 #include "FL/Fl_Hor_Slider.H"
-#include "FL/Fl_Repeat_Button.H"
 #include "FL/Fl_Menu_Button.H"
+#include "FL/Fl_Repeat_Button.H"
 #include "FL/Fl_Text_Buffer.H"
 #include "FL/Fl_Text_Display.H"
-#include "FL/Fl_Double_Window.H"
-
 #include "ui_hyper.h"
 
 //
@@ -47,123 +46,130 @@
 //   these ids and labels to be updated at any time.
 //
 
-class choice_data_c {
-    friend class UI_RChoice;  // Don't know if the 'group' for the menu needs to
-                              // be a friend as well
+class choice_data_c
+{
+    friend class UI_RChoice; // Don't know if the 'group' for the menu needs to
+                             // be a friend as well
     friend class UI_RChoiceMenu;
 
-   public:
-    std::string id;     // terse identifier
-    std::string label;  // description (for the UI)
+  public:
+    std::string id;    // terse identifier
+    std::string label; // description (for the UI)
 
-    bool enabled;  // shown to the user
+    bool enabled;      // shown to the user
 
     // the index in the current list, or -1 if not present
     int mapped;
 
     Fl_Check_Button *widget;
 
-   public:
+  public:
     choice_data_c(std::string _id, std::string _label);
     ~choice_data_c();
 };
 
-typedef struct {
-    void *mod;
+typedef struct
+{
+    void       *mod;
     std::string opt_name;
 } opt_change_callback_data_t;
 
-class UI_ResetOption : public Fl_Button {
-   private:
+class UI_ResetOption : public Fl_Button
+{
+  private:
     // true when mouse is over this widget
     bool hover;
 
     // area containing the label
     int label_X, label_Y, label_W, label_H;
 
-   public:
+  public:
     UI_ResetOption(int x, int y, int w, int h);
     virtual ~UI_ResetOption();
 
-   public:
+  public:
     // FLTK overrides
 
     int handle(int event);
 
     void draw();
 
-   private:
+  private:
     void checkLink();
 };
 
-class UI_HelpLink : public Fl_Button {
-   private:
+class UI_HelpLink : public Fl_Button
+{
+  private:
     // true when mouse is over this widget
     bool hover;
 
     // area containing the label
     int label_X, label_Y, label_W, label_H;
 
-   public:
+  public:
     UI_HelpLink(int x, int y, int w, int h);
     virtual ~UI_HelpLink();
 
     std::string help_text;
     std::string help_title;
 
-   public:
+  public:
     // FLTK overrides
 
     int handle(int event);
 
     void draw();
 
-   private:
+  private:
     void checkLink();
 };
 
-class UI_ManualEntry : public Fl_Button {
-   private:
+class UI_ManualEntry : public Fl_Button
+{
+  private:
     // true when mouse is over this widget
     bool hover;
 
     // area containing the label
     int label_X, label_Y, label_W, label_H;
 
-   public:
+  public:
     UI_ManualEntry(int x, int y, int w, int h);
     virtual ~UI_ManualEntry();
 
-   public:
+  public:
     // FLTK overrides
 
     int handle(int event);
 
     void draw();
 
-   private:
+  private:
     void checkLink();
 };
 
-class UI_CustomMenu : public Fl_Choice {
-   private:
-   public:
+class UI_CustomMenu : public Fl_Choice
+{
+  private:
+  public:
     UI_CustomMenu(int x, int y, int w, int h, std::string label = "");
     virtual ~UI_CustomMenu();
 
-   private:
+  private:
     void draw();
 };
 
-class UI_RChoiceMenu : public UI_CustomMenu {
-   private:
+class UI_RChoiceMenu : public UI_CustomMenu
+{
+  private:
     std::vector<choice_data_c *> opt_list;
 
-   public:
+  public:
     UI_RChoiceMenu(int x, int y, int w, int h, std::string label = "");
     virtual ~UI_RChoiceMenu();
 
-   public:
+  public:
     // add a new choice to the list.  If a choice with the same 'id'
     // already exists, it is just replaced instead.
     // The choice will begin disabled (shown == false).
@@ -186,7 +192,7 @@ class UI_RChoiceMenu : public UI_CustomMenu {
 
     choice_data_c *FindID(std::string id) const;
 
-   private:
+  private:
     choice_data_c *FindMapped() const;
 
     // call this to update the available choices to reflect their
@@ -202,37 +208,40 @@ class UI_RChoiceMenu : public UI_CustomMenu {
     void GotoNext();
 };
 
-class UI_RHeader : public Fl_Group {
-   private:
-   public:
+class UI_RHeader : public Fl_Group
+{
+  private:
+  public:
     UI_RHeader(int x, int y, int w, int h);
     virtual ~UI_RHeader();
 
-   public:
+  public:
     Fl_Box *mod_label;
 
-   private:
+  private:
 };
 
-class UI_RLink : public Fl_Group {
-   private:
-   public:
+class UI_RLink : public Fl_Group
+{
+  private:
+  public:
     UI_RLink(int x, int y, int w, int h);
     virtual ~UI_RLink();
 
-   public:
+  public:
     UI_ModHyperLink *mod_link;
 
-   private:
+  private:
 };
 
-class UI_RChoice : public Fl_Group {
+class UI_RChoice : public Fl_Group
+{
 
-   public:
+  public:
     UI_RChoice(int x, int y, int w, int h);
     virtual ~UI_RChoice();
 
-   public:
+  public:
     Fl_Box *mod_label;
 
     UI_HelpLink *mod_help;
@@ -248,52 +257,56 @@ class UI_RChoice : public Fl_Group {
     opt_change_callback_data_t *cb_data;
 };
 
-class UI_CustomArrowButton : public Fl_Repeat_Button {
-   private:
-   public:
+class UI_CustomArrowButton : public Fl_Repeat_Button
+{
+  private:
+  public:
     UI_CustomArrowButton(int x, int y, int w, int h);
     virtual ~UI_CustomArrowButton();
 
-   private:
+  private:
     void draw();
 };
 
-class UI_CustomMenuButton : public Fl_Menu_Button {
-   private:
+class UI_CustomMenuButton : public Fl_Menu_Button
+{
+  private:
     // true when mouse is over this widget
     bool hover;
 
     // area containing the label
     int label_X, label_Y, label_W, label_H;
 
-   public:
+  public:
     UI_CustomMenuButton(int x, int y, int w, int h);
     virtual ~UI_CustomMenuButton();
 
-   public:
+  public:
     // FLTK overrides
 
     int handle(int event);
 
-   private:
+  private:
     void draw();
 
     void checkLink();
 };
 
-class UI_CustomSlider: public Fl_Hor_Slider {
-   private:
-   public:
+class UI_CustomSlider : public Fl_Hor_Slider
+{
+  private:
+  public:
     UI_CustomSlider(int x, int y, int w, int h);
     virtual ~UI_CustomSlider();
 
-   private:
+  private:
     int handle(int event);
 };
 
-class UI_RSlide : public Fl_Group {
+class UI_RSlide : public Fl_Group
+{
 
-   public:
+  public:
     UI_RSlide(int x, int y, int w, int h);
     virtual ~UI_RSlide();
 
@@ -328,20 +341,21 @@ class UI_RSlide : public Fl_Group {
     opt_change_callback_data_t *cb_data;
 };
 
-class UI_CustomCheckBox : public Fl_Check_Button {
-   private:
-   public:
+class UI_CustomCheckBox : public Fl_Check_Button
+{
+  private:
+  public:
     UI_CustomCheckBox(int x, int y, int w, int h, std::string label = "");
     virtual ~UI_CustomCheckBox();
 
-   private:
+  private:
     void draw();
 };
 
-class UI_RButton : public Fl_Group {
-   private:
-   
-   public:
+class UI_RButton : public Fl_Group
+{
+  private:
+  public:
     UI_RButton(int x, int y, int w, int h);
     virtual ~UI_RButton();
 
@@ -360,9 +374,10 @@ class UI_RButton : public Fl_Group {
     opt_change_callback_data_t *cb_data;
 };
 
-class UI_Clippy : public Fl_Double_Window {
+class UI_Clippy : public Fl_Double_Window
+{
 
-   public:
+  public:
     UI_Clippy();
     virtual ~UI_Clippy();
 
@@ -378,16 +393,15 @@ class UI_Clippy : public Fl_Double_Window {
 
     void ShowAdvice(void);
 
-   private:
-
+  private:
     int handle(int event);
 
     static void callback_MoreAdvice(Fl_Widget *w, void *data);
 
     static void callback_CloseMe(Fl_Widget *w, void *data);
 
-    int xoff; 
-    
+    int xoff;
+
     int yoff;
 };
 

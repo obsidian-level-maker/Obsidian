@@ -26,4 +26,4 @@
 
 #include "../../libraries/minilua/minilua.h"
 
-#endif  // __OB_HDR_LUA__
+#endif // __OB_HDR_LUA__

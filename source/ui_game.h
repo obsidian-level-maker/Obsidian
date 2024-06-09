@@ -28,28 +28,29 @@
 #include "FL/Fl_Group.H"
 #include "ui_widgets.h"
 
-class UI_Game : public Fl_Group {
-   public:
-    Fl_Box *heading;
+class UI_Game : public Fl_Group
+{
+  public:
+    Fl_Box         *heading;
     UI_RChoiceMenu *engine;
-    UI_HelpLink *engine_help;
+    UI_HelpLink    *engine_help;
     UI_RChoiceMenu *game;
-    UI_HelpLink *game_help;
+    UI_HelpLink    *game_help;
     UI_RChoiceMenu *port;
-    UI_HelpLink *port_help;
+    UI_HelpLink    *port_help;
     UI_RChoiceMenu *theme;
     UI_RChoiceMenu *length;
-    UI_HelpLink *length_help;
-    Fl_Button *build;
-    Fl_Button *quit;
-    Fl_Button *surprise;
+    UI_HelpLink    *length_help;
+    Fl_Button      *build;
+    Fl_Button      *quit;
+    Fl_Button      *surprise;
 
-   private:
-   public:
+  private:
+  public:
     UI_Game(int x, int y, int w, int h);
     virtual ~UI_Game();
 
-   public:
+  public:
     void Locked(bool value);
 
     // these return false if 'button' is not valid
@@ -59,8 +60,7 @@ class UI_Game : public Fl_Group {
 
     void SetAbortButton(bool abort);
 
-   private:
-
+  private:
     static void callback_Engine(Fl_Widget *, void *);
     static void callback_Game(Fl_Widget *, void *);
     static void callback_Port(Fl_Widget *, void *);

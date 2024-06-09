@@ -27,21 +27,23 @@ typedef unsigned int rgb_color_t;
 
 #define MAKE_RGBA(r, g, b, a) (((r) << 24) | ((g) << 16) | ((b) << 8) | (a))
 
-#define RGB_RED(col) ((col >> 24) & 255)
+#define RGB_RED(col)   ((col >> 24) & 255)
 #define RGB_GREEN(col) ((col >> 16) & 255)
-#define RGB_BLUE(col) ((col >> 8) & 255)
-#define RGB_ALPHA(col) ((col)&255)
+#define RGB_BLUE(col)  ((col >> 8) & 255)
+#define RGB_ALPHA(col) ((col) & 255)
 
-typedef enum {
+typedef enum
+{
     OPAC_UNKNOWN = 0,
 
-    OPAC_Solid,   // utterly solid (alpha = 255 everywhere)
-    OPAC_Masked,  // only uses alpha 255 and 0
-    OPAC_Complex  // uses full range of alpha values
+    OPAC_Solid,  // utterly solid (alpha = 255 everywhere)
+    OPAC_Masked, // only uses alpha 255 and 0
+    OPAC_Complex // uses full range of alpha values
 } opacity_e;
 
-class tga_image_c {
-   public:
+class tga_image_c
+{
+  public:
     int width;
     int height;
 
@@ -49,7 +51,7 @@ class tga_image_c {
 
     rgb_color_t *pixels;
 
-   public:
+  public:
     tga_image_c(int W, int H);
     ~tga_image_c();
 };

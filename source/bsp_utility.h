@@ -26,15 +26,15 @@ namespace ajbsp
 // memory allocation, guaranteed to not return NULL.
 void *UtilCalloc(int size);
 void *UtilRealloc(void *old, int size);
-void UtilFree(void *data);
+void  UtilFree(void *data);
 
 // math stuff
-int RoundPOW2(int x);
+int    RoundPOW2(int x);
 double ComputeAngle(double dx, double dy);
 
 } // namespace ajbsp
 
-#endif  /* __AJBSP_UTILITY_H__ */
+#endif /* __AJBSP_UTILITY_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

@@ -25,33 +25,42 @@
 #include "lib_util.h"
 #include "main.h"
 
-class UI_About : public Fl_Window {
-   public:
-    bool want_quit;
+class UI_About : public Fl_Window
+{
+  public:
+    bool        want_quit;
     const char *Text;
 
-   public:
+  public:
     UI_About(int W, int H, const char *label = NULL);
 
-    virtual ~UI_About() {
+    virtual ~UI_About()
+    {
         // nothing needed
     }
 
-    bool WantQuit() const { return want_quit; }
+    bool WantQuit() const
+    {
+        return want_quit;
+    }
 
-   public:
+  public:
     // FLTK virtual method for handling input events.
-    int handle(int event) {
-        if (event == FL_KEYDOWN || event == FL_SHORTCUT) {
+    int handle(int event)
+    {
+        if (event == FL_KEYDOWN || event == FL_SHORTCUT)
+        {
             int key = Fl::event_key();
 
-            if (key == FL_Escape) {
+            if (key == FL_Escape)
+            {
                 want_quit = true;
                 return 1;
             }
 
             // eat all other function keys
-            if (FL_F + 1 <= key && key <= FL_F + 12) {
+            if (FL_F + 1 <= key && key <= FL_F + 12)
+            {
                 return 1;
             }
         }
@@ -59,8 +68,9 @@ class UI_About : public Fl_Window {
         return Fl_Window::handle(event);
     }
 
-   private:
-    static void callback_Quit(Fl_Widget *w, void *data) {
+  private:
+    static void callback_Quit(Fl_Widget *w, void *data)
+    {
         UI_About *that = (UI_About *)data;
 
         that->want_quit = true;
@@ -74,8 +84,8 @@ const char *UI_About::URL = OBSIDIAN_WEBSITE;
 //
 // Constructor
 //
-UI_About::UI_About(int W, int H, const char *label)
-    : Fl_Window(W, H, label), want_quit(false) {
+UI_About::UI_About(int W, int H, const char *label) : Fl_Window(W, H, label), want_quit(false)
+{
     // non-resizable
     size_range(W, H, W, H);
 
@@ -84,12 +94,10 @@ UI_About::UI_About(int W, int H, const char *label)
     int cy = kf_h(6);
 
     Fl_Box *box = new Fl_Box(0, cy, W, kf_h(50), "");
-    box->copy_label(StringFormat("%s %s\n\"%s\" Build %s", OBSIDIAN_TITLE.c_str(),
-                                OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str(),
-                                OBSIDIAN_VERSION)
+    box->copy_label(StringFormat("%s %s\n\"%s\" Build %s", OBSIDIAN_TITLE.c_str(), OBSIDIAN_SHORT_VERSION,
+                                 OBSIDIAN_CODE_NAME.c_str(), OBSIDIAN_VERSION)
                         .c_str());
-    box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER | FL_ALIGN_WRAP |
-               FL_ALIGN_CLIP);
+    box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER | FL_ALIGN_WRAP | FL_ALIGN_CLIP);
     box->labelsize(FL_NORMAL_SIZE * 5 / 3);
     box->labelfont(font_style);
 
@@ -115,8 +123,7 @@ UI_About::UI_About(int W, int H, const char *label)
     // website address
     pad = kf_w(8);
 
-    UI_HyperLink *link =
-        new UI_HyperLink(pad, cy, W - pad * 2, kf_h(30), URL, URL);
+    UI_HyperLink *link = new UI_HyperLink(pad, cy, W - pad * 2, kf_h(30), URL, URL);
     link->align(FL_ALIGN_CENTER);
     link->labelsize(FL_NORMAL_SIZE);
     link->labelfont(font_style);
@@ -146,19 +153,20 @@ UI_About::UI_About(int W, int H, const char *label)
     end();
 }
 
-void DLG_AboutText(void) {
+void DLG_AboutText(void)
+{
     int about_w = kf_w(400);
     int about_h = kf_h(400) + KF * 20;
 
-    UI_About *about_window =
-        new UI_About(about_w, about_h, _("About OBSIDIAN"));
+    UI_About *about_window = new UI_About(about_w, about_h, _("About OBSIDIAN"));
 
     about_window->want_quit = false;
     about_window->set_modal();
     about_window->show();
 
     // run the GUI until the user closes
-    while (!about_window->WantQuit()) {
+    while (!about_window->WantQuit())
+    {
         Fl::wait();
     }
 

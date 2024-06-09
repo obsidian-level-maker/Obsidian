@@ -25,19 +25,20 @@
 /* FLTK - Widget Library */
 
 #include <FL/Fl.H>
-#include <FL/fl_ask.H>
+#include <FL/Fl_BMP_Image.H>
 #include <FL/Fl_Box.H>
 #include <FL/Fl_Browser.H>
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Check_Button.H>
-#include <FL/Fl_Color_Chooser.H>
 #include <FL/Fl_Choice.H>
+#include <FL/Fl_Color_Chooser.H>
 #include <FL/Fl_Counter.H>
 #include <FL/Fl_Double_Window.H>
 #include <FL/Fl_File_Chooser.H>
 #include <FL/Fl_File_Icon.H>
 #include <FL/Fl_Group.H>
 #include <FL/Fl_Help_View.H>
+#include <FL/Fl_Hor_Slider.H>
 #include <FL/Fl_Image.H>
 #include <FL/Fl_Input.H>
 #include <FL/Fl_Int_Input.H>
@@ -48,7 +49,6 @@
 #include <FL/Fl_Output.H>
 #include <FL/Fl_Pack.H>
 #include <FL/Fl_Pixmap.H>
-#include <FL/Fl_BMP_Image.H>
 #include <FL/Fl_Progress.H>
 #include <FL/Fl_Return_Button.H>
 #include <FL/Fl_Round_Button.H>
@@ -56,7 +56,7 @@
 #include <FL/Fl_Scrollbar.H>
 #include <FL/Fl_Shared_Image.H>
 #include <FL/Fl_Simple_Counter.H>
-#include <FL/Fl_Hor_Slider.H>
+#include <FL/fl_ask.H>
 #ifdef __APPLE__
 #include <FL/Fl_Sys_Menu_Bar.H>
 #endif
@@ -71,4 +71,4 @@
 #include <FL/fl_draw.H>
 #include <FL/platform.H>
 
-#endif  // __OB_HDR_FLTK__
+#endif // __OB_HDR_FLTK__

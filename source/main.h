@@ -24,9 +24,9 @@
 
 #include <cstddef>
 #include <iostream>
-#include <vector>
-#include <string>
 #include <map>
+#include <string>
+#include <vector>
 #ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
 #include "ui_window.h"
@@ -45,16 +45,15 @@ constexpr const char *OBSIDIAN_VERSION = __DATE__;
 #endif
 
 constexpr const char *OBSIDIAN_SHORT_VERSION = "21";
-extern std::string OBSIDIAN_CODE_NAME;
+extern std::string    OBSIDIAN_CODE_NAME;
 
-constexpr const char *OBSIDIAN_WEBSITE =
-    "https://obsidian-level-maker.github.io";
+constexpr const char *OBSIDIAN_WEBSITE = "https://obsidian-level-maker.github.io";
 
-constexpr const char *CONFIG_FILENAME = "CONFIG.txt";
+constexpr const char *CONFIG_FILENAME  = "CONFIG.txt";
 constexpr const char *OPTIONS_FILENAME = "OPTIONS.txt";
-constexpr const char *THEME_FILENAME = "THEME.txt";
-constexpr const char *LOG_FILENAME = "LOGS.txt";
-constexpr const char *REF_FILENAME = "REFERENCE.txt";
+constexpr const char *THEME_FILENAME   = "THEME.txt";
+constexpr const char *LOG_FILENAME     = "LOGS.txt";
+constexpr const char *REF_FILENAME     = "REFERENCE.txt";
 
 #if !defined CONSOLE_ONLY && !defined __APPLE__
 extern int v_unload_private_font(const char *path);
@@ -75,7 +74,8 @@ extern std::string batch_output_file;
 extern unsigned long long next_rand_seed;
 
 // this records the user action, e.g. Cancel or Quit buttons
-enum main_action_kind_e {
+enum main_action_kind_e
+{
     MAIN_NONE = 0,
     MAIN_BUILD,
     MAIN_CANCEL,
@@ -88,82 +88,81 @@ extern int main_action;
 
 // Misc Options
 #ifndef CONSOLE_ONLY
-extern uchar text_red;
-extern uchar text_green;
-extern uchar text_blue;
-extern uchar text2_red;
-extern uchar text2_green;
-extern uchar text2_blue;
-extern uchar bg_red;
-extern uchar bg_green;
-extern uchar bg_blue;
-extern uchar bg2_red;
-extern uchar bg2_green;
-extern uchar bg2_blue;
-extern uchar button_red;
-extern uchar button_green;
-extern uchar button_blue;
-extern uchar gradient_red;
-extern uchar gradient_green;
-extern uchar gradient_blue;
-extern uchar border_red;
-extern uchar border_green;
-extern uchar border_blue;
-extern uchar gap_red;
-extern uchar gap_green;
-extern uchar gap_blue;
-extern Fl_Boxtype box_style;
-extern Fl_Boxtype button_style;
-extern Fl_Font font_style;
-extern Fl_Color FONT_COLOR;
-extern Fl_Color FONT2_COLOR;
-extern Fl_Color WINDOW_BG;
-extern Fl_Color SELECTION;
-extern Fl_Color GAP_COLOR;
-extern Fl_Color GRADIENT_COLOR;
-extern Fl_Color BUTTON_COLOR;
-extern Fl_Color BORDER_COLOR;
-extern int color_scheme;
-extern int font_theme;
-extern int box_theme;
-extern int button_theme;
-extern int widget_theme;
-extern int window_scaling;
-extern int font_scaling;
-extern int num_fonts;
+extern uchar                                    text_red;
+extern uchar                                    text_green;
+extern uchar                                    text_blue;
+extern uchar                                    text2_red;
+extern uchar                                    text2_green;
+extern uchar                                    text2_blue;
+extern uchar                                    bg_red;
+extern uchar                                    bg_green;
+extern uchar                                    bg_blue;
+extern uchar                                    bg2_red;
+extern uchar                                    bg2_green;
+extern uchar                                    bg2_blue;
+extern uchar                                    button_red;
+extern uchar                                    button_green;
+extern uchar                                    button_blue;
+extern uchar                                    gradient_red;
+extern uchar                                    gradient_green;
+extern uchar                                    gradient_blue;
+extern uchar                                    border_red;
+extern uchar                                    border_green;
+extern uchar                                    border_blue;
+extern uchar                                    gap_red;
+extern uchar                                    gap_green;
+extern uchar                                    gap_blue;
+extern Fl_Boxtype                               box_style;
+extern Fl_Boxtype                               button_style;
+extern Fl_Font                                  font_style;
+extern Fl_Color                                 FONT_COLOR;
+extern Fl_Color                                 FONT2_COLOR;
+extern Fl_Color                                 WINDOW_BG;
+extern Fl_Color                                 SELECTION;
+extern Fl_Color                                 GAP_COLOR;
+extern Fl_Color                                 GRADIENT_COLOR;
+extern Fl_Color                                 BUTTON_COLOR;
+extern Fl_Color                                 BORDER_COLOR;
+extern int                                      color_scheme;
+extern int                                      font_theme;
+extern int                                      box_theme;
+extern int                                      button_theme;
+extern int                                      widget_theme;
+extern int                                      window_scaling;
+extern int                                      font_scaling;
+extern int                                      num_fonts;
 extern std::vector<std::pair<std::string, int>> font_menu_items;
-extern bool gui_simple_mode;
+extern bool                                     gui_simple_mode;
 #endif
-extern int filename_prefix;
+extern int         filename_prefix;
 extern std::string custom_prefix;
-extern bool create_backups;
-extern bool overwrite_warning;
-extern bool debug_messages;
-extern bool limit_break;
-extern bool preserve_failures;
-extern bool preserve_old_config;
-extern bool did_randomize;
-extern bool randomize_architecture;
-extern bool randomize_monsters;
-extern bool randomize_pickups;
-extern bool randomize_misc;
-extern bool random_string_seeds;
-extern bool password_mode;
-extern bool mature_word_lists;
-extern bool did_specify_seed;
+extern bool        create_backups;
+extern bool        overwrite_warning;
+extern bool        debug_messages;
+extern bool        limit_break;
+extern bool        preserve_failures;
+extern bool        preserve_old_config;
+extern bool        did_randomize;
+extern bool        randomize_architecture;
+extern bool        randomize_monsters;
+extern bool        randomize_pickups;
+extern bool        randomize_misc;
+extern bool        random_string_seeds;
+extern bool        password_mode;
+extern bool        mature_word_lists;
+extern bool        did_specify_seed;
 
 extern std::string def_filename;
 
-extern std::string last_directory;
-extern std::string numeric_locale;
+extern std::string              last_directory;
+extern std::string              numeric_locale;
 extern std::vector<std::string> batch_randomize_groups;
 
 #ifndef CONSOLE_ONLY
 // Dialog Windows
 void DLG_ShowError(const char *msg, ...);
 
-std::string DLG_OutputFilename(const char *ext,
-                                         const char *preset = nullptr);
+std::string DLG_OutputFilename(const char *ext, const char *preset = nullptr);
 #endif
 
 extern std::string default_output_path;
@@ -189,25 +188,29 @@ void DLG_ViewGlossary();
 void DLG_ManageConfig();
 #endif
 
-namespace Main {
+namespace Main
+{
 
-namespace Detail {
+namespace Detail
+{
 void Shutdown(bool error);
 }
 
-template <typename... Args>
-[[noreturn]] void FatalError(std::string_view msg, Args &&...args) {
+template <typename... Args> [[noreturn]] void FatalError(std::string_view msg, Args &&...args)
+{
 #ifndef CONSOLE_ONLY
     auto buffer = StringFormat(msg, std::forward<Args>(args)...);
     DLG_ShowError("%s", buffer.c_str());
 #endif
     Detail::Shutdown(true);
 
-    if (batch_mode) {
+    if (batch_mode)
+    {
         std::cout << "ERROR!\n";
 #ifdef WIN32
         std::cout << '\n' << "Close window when finished...";
-        do {
+        do
+        {
         } while (true);
 #endif
     }
@@ -215,14 +218,17 @@ template <typename... Args>
     std::exit(9);
 }
 
-template <typename... Args>
-void ProgStatus(std::string_view msg, Args &&...args) {
+template <typename... Args> void ProgStatus(std::string_view msg, Args &&...args)
+{
     const std::string buffer = StringFormat(msg, std::forward<Args>(args)...);
 
 #ifndef CONSOLE_ONLY
-    if (main_win) {
+    if (main_win)
+    {
         main_win->build_box->SetStatus(buffer.c_str());
-    } else if (batch_mode) {
+    }
+    else if (batch_mode)
+    {
         StdErrPrintf("%s\n", buffer.c_str());
     }
 #else
@@ -244,19 +250,20 @@ void PopulateFontMap();
 void Ticker();
 #endif
 
-}  // namespace Main
+} // namespace Main
 
-class game_interface_c {
+class game_interface_c
+{
     /* this is an abstract base class */
 
-   public:
+  public:
     game_interface_c() = default;
 
-    virtual ~game_interface_c() = default;
-    game_interface_c(const game_interface_c &) = default;
+    virtual ~game_interface_c()                           = default;
+    game_interface_c(const game_interface_c &)            = default;
     game_interface_c &operator=(const game_interface_c &) = default;
-    game_interface_c(game_interface_c &&) = default;
-    game_interface_c &operator=(game_interface_c &&) = default;
+    game_interface_c(game_interface_c &&)                 = default;
+    game_interface_c &operator=(game_interface_c &&)      = default;
 
     /*** MAIN ***/
 

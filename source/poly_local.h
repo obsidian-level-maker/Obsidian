@@ -29,20 +29,20 @@
 
 #include <vector>
 
+#include "physfs.h"
 #include "poly.h"
+#include "raw_def.h"
 #include "sys_endian.h"
 #include "sys_macro.h"
 
-#include "physfs.h"
-#include "raw_def.h"
-
-namespace ajpoly {
+namespace ajpoly
+{
 
 #include "poly_map.h"
 #include "poly_util.h"
 #include "poly_wad.h"
 
-}  // namespace ajpoly
+} // namespace ajpoly
 
 #endif /* __AJPOLY_LOCAL_H__ */
 

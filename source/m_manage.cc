@@ -21,12 +21,11 @@
 
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
+#include "headers.h"
 #include "lib_util.h"
 #include "m_cookie.h"
 #include "m_lua.h"
 #include "main.h"
-
-#include "headers.h"
 
 // forward decls
 class UI_Manage_Config;
@@ -38,8 +37,9 @@ class UI_Manage_Config;
 //
 #define LOOKAHEAD_SIZE 1024
 
-class Lookahead_Stream_c {
-   private:
+class Lookahead_Stream_c
+{
+  private:
     FILE *fp;
 
     char buffer[LOOKAHEAD_SIZE];
@@ -50,8 +50,9 @@ class Lookahead_Stream_c {
     // read position in buffer, < LOOKAHEAD_SIZE/2 except at EOF
     int pos;
 
-   private:
-    void shift_data() {
+  private:
+    void shift_data()
+    {
         SYS_ASSERT(pos > 0);
         SYS_ASSERT(pos <= buf_len);
 
@@ -59,56 +60,70 @@ class Lookahead_Stream_c {
         // (we are eating 'pos' characters at the head)
         buf_len -= pos;
 
-        if (buf_len > 0) {
+        if (buf_len > 0)
+        {
             memmove(buffer, buffer + pos, buf_len);
         }
 
         pos = 0;
     }
 
-    void read_data() {
+    void read_data()
+    {
         int want_len = LOOKAHEAD_SIZE - buf_len;
         SYS_ASSERT(want_len > 0);
 
         int got_len = fread(buffer + buf_len, 1, want_len, fp);
 
-        if (got_len < 0) {
+        if (got_len < 0)
+        {
             got_len = 0;
         }
 
         buf_len = buf_len + got_len;
     }
 
-   public:
-    Lookahead_Stream_c(FILE *_fp) : fp(_fp), buf_len(0), pos(0) {
+  public:
+    Lookahead_Stream_c(FILE *_fp) : fp(_fp), buf_len(0), pos(0)
+    {
         // need an initial packet of data
         read_data();
     }
 
-    virtual ~Lookahead_Stream_c() {}
+    virtual ~Lookahead_Stream_c()
+    {
+    }
 
-   public:
-    bool hit_eof() { return (pos >= buf_len); }
+  public:
+    bool hit_eof()
+    {
+        return (pos >= buf_len);
+    }
 
-    char peek_char(int offset = 0) {
+    char peek_char(int offset = 0)
+    {
         int new_pos = pos + offset;
 
-        if (new_pos >= buf_len) {
+        if (new_pos >= buf_len)
+        {
             return 0;
         }
 
         return buffer[new_pos];
     }
 
-    char get_char() {
-        if (hit_eof()) {
+    char get_char()
+    {
+        if (hit_eof())
+        {
             return 0;
         }
 
         int ch = buffer[pos++];
 
         // time to read more from the file?
-        if (pos >= LOOKAHEAD_SIZE / 2) {
+        if (pos >= LOOKAHEAD_SIZE / 2)
+        {
             shift_data();
             read_data();
         }
@@ -116,9 +131,12 @@ class Lookahead_Stream_c {
         return ch;
     }
 
-    bool match(const char *str) {
-        for (int offset = 0; *str; str++, offset++) {
-            if (peek_char(offset) != *str) {
+    bool match(const char *str)
+    {
+        for (int offset = 0; *str; str++, offset++)
+        {
+            if (peek_char(offset) != *str)
+            {
                 return false;
             }
         }
@@ -127,19 +145,22 @@ class Lookahead_Stream_c {
     }
 };
 
-bool ExtractPresetData(FILE *fp, std::string &buf) {
+bool ExtractPresetData(FILE *fp, std::string &buf)
+{
     Lookahead_Stream_c stream(fp);
 
     /* look for a starting string */
 
-    while (1) {
-        if (stream.hit_eof()) {
-            return false;  // not found
+    while (1)
+    {
+        if (stream.hit_eof())
+        {
+            return false; // not found
         }
 
-        if (stream.match("-- CONFIG FILE : OBSIDIAN ") ||
-            stream.match("-- Levels created by OBSIDIAN ")) {
-            break;  // found it
+        if (stream.match("-- CONFIG FILE : OBSIDIAN ") || stream.match("-- Levels created by OBSIDIAN "))
+        {
+            break; // found it
         }
 
         stream.get_char();
@@ -149,20 +170,24 @@ bool ExtractPresetData(FILE *fp, std::string &buf) {
 
     char mini_buf[4];
 
-    while (!stream.hit_eof()) {
-        if (stream.match("-- END")) {
+    while (!stream.hit_eof())
+    {
+        if (stream.match("-- END"))
+        {
             buf.append("-- END --\n\n");
             break;
         }
 
         int ch = stream.get_char();
 
-        if (ch == 0 || ch == 26) {
+        if (ch == 0 || ch == 26)
+        {
             break;
         }
 
         // remove CR (Carriage Return) characters
-        if (ch == '\r') {
+        if (ch == '\r')
+        {
             continue;
         }
 
@@ -172,22 +197,25 @@ bool ExtractPresetData(FILE *fp, std::string &buf) {
         buf.append(mini_buf);
     }
 
-    return true;  // Success!
+    return true; // Success!
 }
 
-static bool ExtractConfigData(FILE *fp, Fl_Text_Buffer *buf) {
+static bool ExtractConfigData(FILE *fp, Fl_Text_Buffer *buf)
+{
     Lookahead_Stream_c stream(fp);
 
     /* look for a starting string */
 
-    while (1) {
-        if (stream.hit_eof()) {
-            return false;  // not found
+    while (1)
+    {
+        if (stream.hit_eof())
+        {
+            return false; // not found
         }
 
-        if (stream.match("-- CONFIG FILE : OBSIDIAN ") ||
-            stream.match("-- Levels created by OBSIDIAN ")) {
-            break;  // found it
+        if (stream.match("-- CONFIG FILE : OBSIDIAN ") || stream.match("-- Levels created by OBSIDIAN "))
+        {
+            break; // found it
         }
 
         stream.get_char();
@@ -197,20 +225,24 @@ static bool ExtractConfigData(FILE *fp, Fl_Text_Buffer *buf) {
 
     char mini_buf[4];
 
-    while (!stream.hit_eof()) {
-        if (stream.match("-- END")) {
+    while (!stream.hit_eof())
+    {
+        if (stream.match("-- END"))
+        {
             buf->append("-- END --\n\n");
             break;
         }
 
         int ch = stream.get_char();
 
-        if (ch == 0 || ch == 26) {
+        if (ch == 0 || ch == 26)
+        {
             break;
         }
 
         // remove CR (Carriage Return) characters
-        if (ch == '\r') {
+        if (ch == '\r')
+        {
             continue;
         }
 
@@ -220,7 +252,7 @@ static bool ExtractConfigData(FILE *fp, Fl_Text_Buffer *buf) {
         buf->append(mini_buf);
     }
 
-    return true;  // Success!
+    return true; // Success!
 }
 
 //------------------------------------------------------------------------
@@ -229,29 +261,36 @@ static bool ExtractConfigData(FILE *fp, Fl_Text_Buffer *buf) {
 // this prevents the text display widget from selecting areas,
 // as well as eating the CTRL-A and CTRL-C keyboard events.
 //
-class Fl_Text_Display_NoSelect : public Fl_Text_Display {
-   public:
-    Fl_Text_Display_NoSelect(int X, int Y, int W, int H, const char *label = 0)
-        : Fl_Text_Display(X, Y, W, H, label) {}
+class Fl_Text_Display_NoSelect : public Fl_Text_Display
+{
+  public:
+    Fl_Text_Display_NoSelect(int X, int Y, int W, int H, const char *label = 0) : Fl_Text_Display(X, Y, W, H, label)
+    {
+    }
 
-    virtual ~Fl_Text_Display_NoSelect() {}
+    virtual ~Fl_Text_Display_NoSelect()
+    {
+    }
 
-    virtual int handle(int e) {
-        switch (e) {
-            case FL_KEYBOARD:
-            case FL_KEYUP:
-            case FL_PUSH:
-            case FL_RELEASE:
-            case FL_DRAG:
-                return Fl_Group::handle(e);
+    virtual int handle(int e)
+    {
+        switch (e)
+        {
+        case FL_KEYBOARD:
+        case FL_KEYUP:
+        case FL_PUSH:
+        case FL_RELEASE:
+        case FL_DRAG:
+            return Fl_Group::handle(e);
         }
 
         return Fl_Text_Display::handle(e);
     }
 };
 
-class UI_Manage_Config : public Fl_Double_Window {
-   public:
+class UI_Manage_Config : public Fl_Double_Window
+{
+  public:
     bool want_quit;
 
     Fl_Text_Buffer *text_buf;
@@ -268,14 +307,18 @@ class UI_Manage_Config : public Fl_Double_Window {
     Fl_Button *copy_but;
     Fl_Button *paste_but;
 
-   public:
+  public:
     UI_Manage_Config(int W, int H, const char *label = NULL);
 
     virtual ~UI_Manage_Config();
 
-    bool WantQuit() const { return want_quit; }
+    bool WantQuit() const
+    {
+        return want_quit;
+    }
 
-    void MarkSource(const char *where) {
+    void MarkSource(const char *where)
+    {
         std::string full = StringFormat("[ %s ]", where);
 
         conf_disp->copy_label(full.c_str());
@@ -283,15 +326,15 @@ class UI_Manage_Config : public Fl_Double_Window {
         redraw();
     }
 
-    void MarkSource_FILE(std::string filename) {
-        conf_disp->copy_label(
-            StringFormat("[ %s ]", filename.c_str())
-                .c_str());
+    void MarkSource_FILE(std::string filename)
+    {
+        conf_disp->copy_label(StringFormat("[ %s ]", filename.c_str()).c_str());
 
         redraw();
     }
 
-    void Clear() {
+    void Clear()
+    {
         MarkSource("");
 
         text_buf->select(0, text_buf->length());
@@ -306,7 +349,8 @@ class UI_Manage_Config : public Fl_Double_Window {
         redraw();
     }
 
-    void Enable() {
+    void Enable()
+    {
         save_but->activate();
         use_but->activate();
 
@@ -316,7 +360,8 @@ class UI_Manage_Config : public Fl_Double_Window {
         redraw();
     }
 
-    void ReadCurrentSettings() {
+    void ReadCurrentSettings()
+    {
         Clear();
 
         text_buf->append("-- CONFIG FILE : OBSIDIAN ");
@@ -327,8 +372,7 @@ class UI_Manage_Config : public Fl_Double_Window {
         text_buf->append("-- Build ");
         text_buf->append(OBSIDIAN_VERSION);
         text_buf->append("\n");
-        text_buf->append(
-            "-- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n");
+        text_buf->append("-- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n");
         text_buf->append("-- ");
         text_buf->append(OBSIDIAN_WEBSITE);
         text_buf->append("\n\n");
@@ -337,7 +381,8 @@ class UI_Manage_Config : public Fl_Double_Window {
 
         ob_read_all_config(&lines, false /* need_full */);
 
-        for (unsigned int i = 0; i < lines.size(); i++) {
+        for (unsigned int i = 0; i < lines.size(); i++)
+        {
             text_buf->append(lines[i].c_str());
             text_buf->append("\n");
         }
@@ -347,7 +392,8 @@ class UI_Manage_Config : public Fl_Double_Window {
         MarkSource(_("CURRENT SETTINGS"));
     }
 
-    void ReplaceWithString(const char *new_text) {
+    void ReplaceWithString(const char *new_text)
+    {
         Clear();
 
         text_buf->append(new_text);
@@ -355,7 +401,8 @@ class UI_Manage_Config : public Fl_Double_Window {
         Enable();
     }
 
-    const char *AskSaveFilename() {
+    const char *AskSaveFilename()
+    {
         Fl_Native_File_Chooser chooser;
 
         chooser.title(_("Pick file to save to"));
@@ -363,26 +410,29 @@ class UI_Manage_Config : public Fl_Double_Window {
         chooser.options(Fl_Native_File_Chooser::SAVEAS_CONFIRM);
         chooser.filter("Text files\t*.txt");
 
-        if (!last_directory.empty()) {
+        if (!last_directory.empty())
+        {
             chooser.directory(last_directory.c_str());
-        } else {
+        }
+        else
+        {
             chooser.directory(install_dir.c_str());
         }
 
-        switch (chooser.show()) {
-            case -1:
-                LogPrintf(_("Error choosing save file:\n"));
-                LogPrintf("   %s\n", chooser.errmsg());
+        switch (chooser.show())
+        {
+        case -1:
+            LogPrintf(_("Error choosing save file:\n"));
+            LogPrintf("   %s\n", chooser.errmsg());
 
-                DLG_ShowError(_("Unable to save the file:\n\n%s"),
-                              chooser.errmsg());
-                return NULL;
+            DLG_ShowError(_("Unable to save the file:\n\n%s"), chooser.errmsg());
+            return NULL;
 
-            case 1:  // cancelled
-                return NULL;
+        case 1: // cancelled
+            return NULL;
 
-            default:
-                break;  // OK
+        default:
+            break; // OK
         }
 
         static char filename[FL_PATH_MAX + 10];
@@ -391,57 +441,64 @@ class UI_Manage_Config : public Fl_Double_Window {
 
         // if extension is missing then add ".txt"
         char *pos = (char *)fl_filename_ext(filename);
-        if (!*pos) {
+        if (!*pos)
+        {
             strcat(filename, ".txt");
         }
 
         return filename;
     }
 
-    void SaveToFile(const char *filename) {
+    void SaveToFile(const char *filename)
+    {
         // looking at FLTK code, the file is opened in "w" mode, so
         // it should handle end-of-line in an OS-appropriate way.
         int res = text_buf->savefile(filename);
 
         int err_no = errno;
 
-        if (res) {
-            const char *reason = (res == 1 && err_no)
-                                     ? strerror(err_no)
-                                     : _("Error writing to file.");
+        if (res)
+        {
+            const char *reason = (res == 1 && err_no) ? strerror(err_no) : _("Error writing to file.");
 
             DLG_ShowError(_("Unable to save the file:\n\n%s"), reason);
-        } else {
+        }
+        else
+        {
             Recent_AddFile(RECG_Config, filename);
         }
     }
 
-    std::string AskLoadFilename() {
+    std::string AskLoadFilename()
+    {
         Fl_Native_File_Chooser chooser;
 
         chooser.title(_("Select file to load"));
         chooser.type(Fl_Native_File_Chooser::BROWSE_FILE);
 
-        if (!last_directory.empty()) {
+        if (!last_directory.empty())
+        {
             chooser.directory(last_directory.c_str());
-        } else {
+        }
+        else
+        {
             chooser.directory(install_dir.c_str());
         }
 
-        switch (chooser.show()) {
-            case -1:
-                LogPrintf(_("Error choosing load file:\n"));
-                LogPrintf("   %s\n", chooser.errmsg());
+        switch (chooser.show())
+        {
+        case -1:
+            LogPrintf(_("Error choosing load file:\n"));
+            LogPrintf("   %s\n", chooser.errmsg());
 
-                DLG_ShowError(_("Unable to load the file:\n\n%s"),
-                              chooser.errmsg());
-                return "";
+            DLG_ShowError(_("Unable to load the file:\n\n%s"), chooser.errmsg());
+            return "";
 
-            case 1:  // cancelled
-                return "";
+        case 1: // cancelled
+            return "";
 
-            default:
-                break;  // OK
+        default:
+            break; // OK
         }
 
         std::string filename = chooser.filename();
@@ -449,19 +506,20 @@ class UI_Manage_Config : public Fl_Double_Window {
         return filename;
     }
 
-    bool LoadFromFile(std::string filename) {
+    bool LoadFromFile(std::string filename)
+    {
         FILE *fp = FileOpen(filename.c_str(), "rb");
 
-        if (!fp) {
-            DLG_ShowError(_("Cannot open: %s\n\n%s"),
-                          filename.c_str(),
-                          strerror(errno));
+        if (!fp)
+        {
+            DLG_ShowError(_("Cannot open: %s\n\n%s"), filename.c_str(), strerror(errno));
             return false;
         }
 
         Clear();
 
-        if (!ExtractConfigData(fp, text_buf)) {
+        if (!ExtractConfigData(fp, text_buf))
+        {
             DLG_ShowError(_("No config found in file."));
             fclose(fp);
             return false;
@@ -476,16 +534,21 @@ class UI_Manage_Config : public Fl_Double_Window {
         return true;
     }
 
-   private:
+  private:
     // FLTK virtual method for handling input events
-    int handle(int event) {
-        if (event == FL_PASTE) {
+    int handle(int event)
+    {
+        if (event == FL_PASTE)
+        {
             const char *text = Fl::event_text();
             SYS_ASSERT(text);
 
-            if (strlen(text) == 0) {
+            if (strlen(text) == 0)
+            {
                 fl_beep();
-            } else {
+            }
+            else
+            {
                 ReplaceWithString(text);
                 MarkSource(_("PASTED TEXT"));
             }
@@ -495,20 +558,23 @@ class UI_Manage_Config : public Fl_Double_Window {
         return Fl_Double_Window::handle(event);
     }
 
-   private:
-    static void callback_Defaults(Fl_Widget *w, void *data) {
+  private:
+    static void callback_Defaults(Fl_Widget *w, void *data)
+    {
         UI_Manage_Config *that = (UI_Manage_Config *)data;
-        if (FileExists(config_file)) {
+        if (FileExists(config_file))
+        {
             FileDelete(config_file);
         }
         config_file.clear();
-        main_action = MAIN_HARD_RESTART;  // MAIN_SOFT_RESTART???
+        main_action     = MAIN_HARD_RESTART; // MAIN_SOFT_RESTART???
         that->want_quit = true;
     }
 
     /* Loading stuff */
 
-    static void callback_Load(Fl_Widget *w, void *data) {
+    static void callback_Load(Fl_Widget *w, void *data)
+    {
         UI_Manage_Config *that = (UI_Manage_Config *)data;
 
         // save and restore the font height
@@ -520,7 +586,8 @@ class UI_Manage_Config : public Fl_Double_Window {
 
         FL_NORMAL_SIZE = old_font_h;
 
-        if (filename.empty()) {
+        if (filename.empty())
+        {
             return;
         }
 
@@ -529,10 +596,12 @@ class UI_Manage_Config : public Fl_Double_Window {
 
     /* Saving and Using */
 
-    static void callback_Save(Fl_Widget *w, void *data) {
+    static void callback_Save(Fl_Widget *w, void *data)
+    {
         UI_Manage_Config *that = (UI_Manage_Config *)data;
 
-        if (that->text_buf->length() == 0) {
+        if (that->text_buf->length() == 0)
+        {
             fl_beep();
             return;
         }
@@ -546,17 +615,20 @@ class UI_Manage_Config : public Fl_Double_Window {
 
         FL_NORMAL_SIZE = old_font_h;
 
-        if (!filename) {
+        if (!filename)
+        {
             return;
         }
 
         that->SaveToFile(filename);
     }
 
-    static void callback_Use(Fl_Widget *w, void *data) {
+    static void callback_Use(Fl_Widget *w, void *data)
+    {
         UI_Manage_Config *that = (UI_Manage_Config *)data;
 
-        if (that->text_buf->length() == 0) {
+        if (that->text_buf->length() == 0)
+        {
             fl_beep();
             return;
         }
@@ -567,13 +639,14 @@ class UI_Manage_Config : public Fl_Double_Window {
 
         free((void *)str);
 
-        did_specify_seed = true;  // User likely wants to use the seed from a
-                                  // loaded config - Dasho
+        did_specify_seed = true; // User likely wants to use the seed from a
+                                 // loaded config - Dasho
     }
 
     /* Leaving */
 
-    static void callback_Quit(Fl_Widget *w, void *data) {
+    static void callback_Quit(Fl_Widget *w, void *data)
+    {
         UI_Manage_Config *that = (UI_Manage_Config *)data;
 
         that->want_quit = true;
@@ -581,10 +654,12 @@ class UI_Manage_Config : public Fl_Double_Window {
 
     /* Clipboard stuff */
 
-    static void callback_Copy(Fl_Widget *w, void *data) {
+    static void callback_Copy(Fl_Widget *w, void *data)
+    {
         UI_Manage_Config *that = (UI_Manage_Config *)data;
 
-        if (that->text_buf->length() == 0) {
+        if (that->text_buf->length() == 0)
+        {
             fl_beep();
             return;
         }
@@ -596,17 +671,20 @@ class UI_Manage_Config : public Fl_Double_Window {
         free((void *)str);
     }
 
-    static void callback_Cut(Fl_Widget *w, void *data) {
+    static void callback_Cut(Fl_Widget *w, void *data)
+    {
         UI_Manage_Config *that = (UI_Manage_Config *)data;
 
         callback_Copy(w, data);
 
-        if (that->text_buf->length() > 0) {
+        if (that->text_buf->length() > 0)
+        {
             that->Clear();
         }
     }
 
-    static void callback_Paste(Fl_Widget *w, void *data) {
+    static void callback_Paste(Fl_Widget *w, void *data)
+    {
         UI_Manage_Config *that = (UI_Manage_Config *)data;
 
         Fl::paste(*that, 1);
@@ -616,8 +694,8 @@ class UI_Manage_Config : public Fl_Double_Window {
 //
 // Constructor
 //
-UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
-    : Fl_Double_Window(W, H, label), want_quit(false) {
+UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label) : Fl_Double_Window(W, H, label), want_quit(false)
+{
     size_range(W, H);
 
     callback(callback_Quit, this);
@@ -629,8 +707,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
     int conf_x = W - conf_w - kf_w(10);
     int conf_y = kf_h(30);
 
-    conf_disp =
-        new Fl_Text_Display_NoSelect(conf_x, conf_y, conf_w, conf_h, "");
+    conf_disp = new Fl_Text_Display_NoSelect(conf_x, conf_y, conf_w, conf_h, "");
     conf_disp->align(Fl_Align(FL_ALIGN_TOP));
     conf_disp->color(WINDOW_BG);
     conf_disp->box(button_style);
@@ -654,8 +731,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
         Fl_Group *g = new Fl_Group(0, 0, conf_disp->x(), conf_disp->h());
         g->resizable(NULL);
 
-        load_but = new Fl_Button(button_x, kf_h(25), button_w, button_h,
-                                 _("Load WAD/TXT"));
+        load_but = new Fl_Button(button_x, kf_h(25), button_w, button_h, _("Load WAD/TXT"));
         load_but->box(button_style);
         load_but->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
         load_but->visible_focus(0);
@@ -665,8 +741,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
         load_but->labelfont(font_style);
         load_but->labelcolor(FONT2_COLOR);
 
-        save_but =
-            new Fl_Button(button_x, kf_h(75), button_w, button_h, _("Save"));
+        save_but = new Fl_Button(button_x, kf_h(75), button_w, button_h, _("Save"));
         save_but->box(button_style);
         save_but->visible_focus(0);
         save_but->color(BUTTON_COLOR);
@@ -675,8 +750,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
         save_but->labelfont(font_style);
         save_but->labelcolor(FONT2_COLOR);
 
-        use_but =
-            new Fl_Button(button_x, kf_h(125), button_w, button_h, _("Use"));
+        use_but = new Fl_Button(button_x, kf_h(125), button_w, button_h, _("Use"));
         use_but->box(button_style);
         use_but->visible_focus(0);
         use_but->color(BUTTON_COLOR);
@@ -684,16 +758,12 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
         use_but->labelfont(font_style);
         use_but->labelcolor(FONT2_COLOR);
 
-        use_warn =
-            new Fl_Box(0, kf_h(165), kf_w(140), kf_h(50),
-                       _("Note: This will replace\nall current settings!"));
-        use_warn->align(
-            Fl_Align(FL_ALIGN_TOP | FL_ALIGN_INSIDE | FL_ALIGN_CLIP));
+        use_warn = new Fl_Box(0, kf_h(165), kf_w(140), kf_h(50), _("Note: This will replace\nall current settings!"));
+        use_warn->align(Fl_Align(FL_ALIGN_TOP | FL_ALIGN_INSIDE | FL_ALIGN_CLIP));
         use_warn->labelsize(small_font_size);
         use_warn->labelfont(font_style);
 
-        defaults_but = new Fl_Button(button_x, kf_h(200), button_w, button_h,
-                                     _("Reset to Default"));
+        defaults_but = new Fl_Button(button_x, kf_h(200), button_w, button_h, _("Reset to Default"));
         defaults_but->box(button_style);
         defaults_but->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
         defaults_but->visible_focus(0);
@@ -705,16 +775,14 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
         defaults_warn = new Fl_Box(0, kf_h(240), kf_w(140), kf_h(50),
                                    _("Note: This will delete\nthe current CONFIG.txt\nand restart Obsidian!"));
         // clang-format on
-        defaults_warn->align(
-            Fl_Align(FL_ALIGN_TOP | FL_ALIGN_INSIDE | FL_ALIGN_CLIP));
+        defaults_warn->align(Fl_Align(FL_ALIGN_TOP | FL_ALIGN_INSIDE | FL_ALIGN_CLIP));
         defaults_warn->labelsize(small_font_size);
         defaults_warn->labelfont(font_style);
 
         g->end();
     }
 
-    close_but =
-        new Fl_Button(button_x, H - kf_h(50), button_w, button_h + 5, fl_close);
+    close_but = new Fl_Button(button_x, H - kf_h(50), button_w, button_h + 5, fl_close);
     close_but->box(button_style);
     close_but->visible_focus(0);
     close_but->color(BUTTON_COLOR);
@@ -734,8 +802,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
         Fl_Group *g = new Fl_Group(conf_x, base_y, conf_w, H - base_y);
         g->resizable(NULL);
 
-        o = new Fl_Box(cx, base_y, W - cx - 10, kf_h(30),
-                       _(" Clipboard Operations"));
+        o = new Fl_Box(cx, base_y, W - cx - 10, kf_h(30), _(" Clipboard Operations"));
         o->align(Fl_Align(FL_ALIGN_CENTER | FL_ALIGN_INSIDE));
         o->labelsize(small_font_size);
         o->labelfont(font_style);
@@ -791,14 +858,16 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
 //
 // Destructor
 //
-UI_Manage_Config::~UI_Manage_Config() {}
+UI_Manage_Config::~UI_Manage_Config()
+{
+}
 
-void DLG_ManageConfig(void) {
+void DLG_ManageConfig(void)
+{
     int manage_w = kf_w(600);
     int manage_h = kf_h(380);
 
-    UI_Manage_Config *config_window =
-        new UI_Manage_Config(manage_w, manage_h, _("OBSIDIAN Config Manager"));
+    UI_Manage_Config *config_window = new UI_Manage_Config(manage_w, manage_h, _("OBSIDIAN Config Manager"));
 
     config_window->want_quit = false;
     config_window->set_modal();
@@ -807,7 +876,8 @@ void DLG_ManageConfig(void) {
     config_window->ReadCurrentSettings();
 
     // run the window until the user closes it
-    while (!config_window->WantQuit()) {
+    while (!config_window->WantQuit())
+    {
         Fl::wait();
     }
 

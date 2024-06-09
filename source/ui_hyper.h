@@ -24,10 +24,12 @@
 #define __UI_HYPER_H__
 
 #include <FL/Fl_Button.H>
+
 #include <string>
 
-class UI_HyperLink : public Fl_Button {
-   private:
+class UI_HyperLink : public Fl_Button
+{
+  private:
     // true when mouse is over this widget
     bool hover;
 
@@ -37,41 +39,39 @@ class UI_HyperLink : public Fl_Button {
     // the URL to visit when clicked
     std::string url;
 
-   public:
-    UI_HyperLink(int x, int y, int w, int h, const char *label,
-                 const char *_url);
+  public:
+    UI_HyperLink(int x, int y, int w, int h, const char *label, const char *_url);
     virtual ~UI_HyperLink() = default;
 
-   public:
+  public:
     // FLTK overrides
 
     int handle(int event);
 
     void draw();
 
-   private:
+  private:
     void checkLink();
 
     static void callback_Link(Fl_Widget *w, void *data);
 };
 
-class UI_ModHyperLink : public Fl_Button {
-   private:
+class UI_ModHyperLink : public Fl_Button
+{
+  private:
     // the URL to visit when clicked
     std::string url;
 
-   public:
-    UI_ModHyperLink(int x, int y, int w, int h, const char *label,
-                 const char *_url);
+  public:
+    UI_ModHyperLink(int x, int y, int w, int h, const char *label, const char *_url);
     virtual ~UI_ModHyperLink() = default;
 
-   public:
+  public:
     // FLTK overrides
 
     int handle(int event);
 
-   private:
-
+  private:
     static void callback_Link(Fl_Widget *w, void *data);
 };
 

@@ -19,15 +19,14 @@
 //
 //------------------------------------------------------------------------
 
+#include "lib_wad.h"
+
 #include <list>
 
 #include "headers.h"
-#include "main.h"
-
-#include "physfs.h"
-
 #include "lib_util.h"
-#include "lib_wad.h"
+#include "main.h"
+#include "physfs.h"
 
 // #define LogPrintf  printf
 
@@ -35,30 +34,32 @@
 //  WAD READING
 //------------------------------------------------------------------------
 
-static PHYSFS_File *wad_R_fp;
+static PHYSFS_File     *wad_R_fp;
 static raw_wad_header_t wad_R_header;
-static raw_wad_lump_t *wad_R_dir;
+static raw_wad_lump_t  *wad_R_dir;
 
-bool WAD_OpenRead(std::string filename) {
+bool WAD_OpenRead(std::string filename)
+{
 
     wad_R_fp = PHYSFS_openRead(filename.c_str());
 
-    if (!wad_R_fp) {
+    if (!wad_R_fp)
+    {
         LogPrintf("WAD_OpenRead: no such file: %s\n", filename.c_str());
         return false;
     }
 
     LogPrintf("Opened WAD file: %s\n", filename.c_str());
 
-    if ((PHYSFS_readBytes(wad_R_fp, &wad_R_header, sizeof(wad_R_header)) /
-         sizeof(wad_R_header)) != 1)
+    if ((PHYSFS_readBytes(wad_R_fp, &wad_R_header, sizeof(wad_R_header)) / sizeof(wad_R_header)) != 1)
     {
         LogPrintf("WAD_OpenRead: failed reading header\n");
         PHYSFS_close(wad_R_fp);
         return false;
     }
 
-    if (0 != memcmp(wad_R_header.magic + 1, "WAD", 3)) {
+    if (0 != memcmp(wad_R_header.magic + 1, "WAD", 3))
+    {
         LogPrintf("WAD_OpenRead: not a WAD file!\n");
         PHYSFS_close(wad_R_fp);
         return false;
@@ -69,10 +70,9 @@ bool WAD_OpenRead(std::string filename) {
 
     /* read directory */
 
-    if (wad_R_header.num_lumps >= 5000)  // sanity check
+    if (wad_R_header.num_lumps >= 5000) // sanity check
     {
-        LogPrintf("WAD_OpenRead: bad header (%u entries?)\n",
-                  static_cast<unsigned int>(wad_R_header.num_lumps));
+        LogPrintf("WAD_OpenRead: bad header (%u entries?)\n", static_cast<unsigned int>(wad_R_header.num_lumps));
         PHYSFS_close(wad_R_fp);
         return false;
     }
@@ -87,14 +87,15 @@ bool WAD_OpenRead(std::string filename) {
 
     wad_R_dir = new raw_wad_lump_t[wad_R_header.num_lumps + 1];
 
-    for (int i = 0; i < (int)wad_R_header.num_lumps; i++) {
+    for (int i = 0; i < (int)wad_R_header.num_lumps; i++)
+    {
         raw_wad_lump_t *L = &wad_R_dir[i];
 
-        size_t res = (PHYSFS_readBytes(wad_R_fp, L, sizeof(raw_wad_lump_t)) /
-                      sizeof(raw_wad_lump_t));
+        size_t res = (PHYSFS_readBytes(wad_R_fp, L, sizeof(raw_wad_lump_t)) / sizeof(raw_wad_lump_t));
         if (res != 1)
         {
-            if (i == 0) {
+            if (i == 0)
+            {
                 LogPrintf("WAD_OpenRead: could not read any dir-entries!\n");
                 WAD_CloseRead();
                 return false;
@@ -107,14 +108,15 @@ bool WAD_OpenRead(std::string filename) {
             break;
         }
 
-        L->start = LE_U32(L->start);
+        L->start  = LE_U32(L->start);
         L->length = LE_U32(L->length);
     }
 
-    return true;  // OK
+    return true; // OK
 }
 
-void WAD_CloseRead(void) {
+void WAD_CloseRead(void)
+{
     PHYSFS_close(wad_R_fp);
 
     LogPrintf("Closed WAD file\n");
@@ -123,29 +125,37 @@ void WAD_CloseRead(void) {
     wad_R_dir = NULL;
 }
 
-int WAD_NumEntries(void) { return (int)wad_R_header.num_lumps; }
+int WAD_NumEntries(void)
+{
+    return (int)wad_R_header.num_lumps;
+}
 
-int WAD_FindEntry(const char *name) {
-    for (unsigned int i = 0; i < wad_R_header.num_lumps; i++) {
+int WAD_FindEntry(const char *name)
+{
+    for (unsigned int i = 0; i < wad_R_header.num_lumps; i++)
+    {
         char buffer[16];
         strncpy(buffer, wad_R_dir[i].name, 8);
         buffer[8] = 0;
 
-        if (StringCompare(name, buffer) == 0) {
+        if (StringCompare(name, buffer) == 0)
+        {
             return i;
         }
     }
 
-    return -1;  // not found
+    return -1; // not found
 }
 
-int WAD_EntryLen(int entry) {
+int WAD_EntryLen(int entry)
+{
     SYS_ASSERT(entry >= 0 && entry < (int)wad_R_header.num_lumps);
 
     return wad_R_dir[entry].length;
 }
 
-const char *WAD_EntryName(int entry) {
+const char *WAD_EntryName(int entry)
+{
     static char name_buf[16];
 
     SYS_ASSERT(entry >= 0 && entry < (int)wad_R_header.num_lumps);
@@ -157,18 +167,21 @@ const char *WAD_EntryName(int entry) {
     return name_buf;
 }
 
-bool WAD_ReadData(int entry, int offset, int length, void *buffer) {
+bool WAD_ReadData(int entry, int offset, int length, void *buffer)
+{
     SYS_ASSERT(entry >= 0 && entry < (int)wad_R_header.num_lumps);
     SYS_ASSERT(offset >= 0);
     SYS_ASSERT(length > 0);
 
     raw_wad_lump_t *L = &wad_R_dir[entry];
 
-    if ((uint32_t)offset + (uint32_t)length > L->length) {  // EOF
+    if ((uint32_t)offset + (uint32_t)length > L->length)
+    { // EOF
         return false;
     }
 
-    if (!PHYSFS_seek(wad_R_fp, L->start + offset)) {
+    if (!PHYSFS_seek(wad_R_fp, L->start + offset))
+    {
         return false;
     }
 
@@ -185,10 +198,12 @@ static std::list<raw_wad_lump_t> wad_W_directory;
 
 static raw_wad_lump_t wad_W_lump;
 
-bool WAD_OpenWrite(std::string filename) {
+bool WAD_OpenWrite(std::string filename)
+{
     wad_W_fp.open(filename, std::ios::out | std::ios::binary);
 
-    if (!wad_W_fp.is_open()) {
+    if (!wad_W_fp.is_open())
+    {
         LogPrintf("WAD_OpenWrite: cannot create file: %s\n", filename.c_str());
         return false;
     }
@@ -199,14 +214,14 @@ bool WAD_OpenWrite(std::string filename) {
     raw_wad_header_t header;
     memset(&header, 0, sizeof(header));
 
-    wad_W_fp.write((const char *)&header,
-                   sizeof(raw_wad_header_t));
+    wad_W_fp.write((const char *)&header, sizeof(raw_wad_header_t));
     wad_W_fp << std::flush;
 
     return true;
 }
 
-void WAD_CloseWrite(void) {
+void WAD_CloseWrite(void)
+{
     wad_W_fp << std::flush;
 
     // write the directory
@@ -222,11 +237,11 @@ void WAD_CloseWrite(void) {
 
     std::list<raw_wad_lump_t>::iterator WDI;
 
-    for (WDI = wad_W_directory.begin(); WDI != wad_W_directory.end(); ++WDI) {
+    for (WDI = wad_W_directory.begin(); WDI != wad_W_directory.end(); ++WDI)
+    {
         raw_wad_lump_t *L = &(*WDI);
 
-        wad_W_fp.write((const char *)L,
-                       sizeof(raw_wad_lump_t));
+        wad_W_fp.write((const char *)L, sizeof(raw_wad_lump_t));
         wad_W_fp << std::flush;
 
         header.num_lumps++;
@@ -251,8 +266,10 @@ void WAD_CloseWrite(void) {
     wad_W_directory.clear();
 }
 
-void WAD_NewLump(std::string name) {
-    if (name.size() > 8) {
+void WAD_NewLump(std::string name)
+{
+    if (name.size() > 8)
+    {
         Main::FatalError("WAD_NewLump: name too long: '%s'\n", name.c_str());
     }
 
@@ -263,25 +280,27 @@ void WAD_NewLump(std::string name) {
     wad_W_lump.start = wad_W_fp.tellp();
 }
 
-bool WAD_AppendData(const void *data, int length) {
-    if (length == 0) {
+bool WAD_AppendData(const void *data, int length)
+{
+    if (length == 0)
+    {
         return true;
     }
 
     SYS_ASSERT(length > 0);
 
-    return static_cast<bool>(
-        wad_W_fp.write(static_cast<const char *>(data), length));
+    return static_cast<bool>(wad_W_fp.write(static_cast<const char *>(data), length));
 }
 
-void WAD_FinishLump(void) {
-    const int len =
-        static_cast<int>(wad_W_fp.tellp()) - static_cast<int>(wad_W_lump.start);
+void WAD_FinishLump(void)
+{
+    const int len = static_cast<int>(wad_W_fp.tellp()) - static_cast<int>(wad_W_lump.start);
 
     // pad lumps to a multiple of four bytes
     int padding = ALIGN_LEN(len) - len;
 
-    if (padding > 0) {
+    if (padding > 0)
+    {
         static uint8_t zeros[4] = {0, 0, 0, 0};
 
         wad_W_fp.write((const char *)zeros, padding);
@@ -289,7 +308,7 @@ void WAD_FinishLump(void) {
     }
 
     // fix endianness
-    wad_W_lump.start = LE_U32(wad_W_lump.start);
+    wad_W_lump.start  = LE_U32(wad_W_lump.start);
     wad_W_lump.length = LE_U32(len);
 
     wad_W_directory.push_back(wad_W_lump);

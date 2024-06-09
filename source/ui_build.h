@@ -30,34 +30,35 @@
 #include "FL/Fl_Progress.H"
 #include "ui_map.h"
 
-class UI_Build : public Fl_Group {
-   public:
-    UI_MiniMap *mini_map;
-    Fl_Box *seed_disp;
-    Fl_Box *name_disp;
-    Fl_Box *alt_disp;
-    Fl_Box *status;
+class UI_Build : public Fl_Group
+{
+  public:
+    UI_MiniMap  *mini_map;
+    Fl_Box      *seed_disp;
+    Fl_Box      *name_disp;
+    Fl_Box      *alt_disp;
+    Fl_Box      *status;
     Fl_Progress *progress;
 
-   private:
+  private:
     std::string status_label;
     std::string prog_label;
 
-    int level_index;  // starts at 1
+    int level_index; // starts at 1
     int level_total;
 
-    bool node_begun;
+    bool  node_begun;
     float node_ratio;
     float node_along;
     float node_fracs;
 
     std::vector<std::string> step_names;
 
-   public:
+  public:
     UI_Build(int x, int y, int w, int h, const char *label = NULL);
     virtual ~UI_Build();
 
-   public:
+  public:
     void Prog_Init(int node_perc, const char *extra_steps);
     void Prog_AtLevel(int index, int total);
     void Prog_Step(const char *step_name);
@@ -69,13 +70,13 @@ class UI_Build : public Fl_Group {
 
     void AddStatusStep(std::string name);
 
-   private:
+  private:
     void resize(int X, int Y, int W, int H);
 
-    int FindStep(std::string name);  // -1 if not found
+    int FindStep(std::string name); // -1 if not found
 };
 
-#endif /* __UI_BUILD_H__ */
+#endif                              /* __UI_BUILD_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

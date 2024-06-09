@@ -23,6 +23,7 @@
 #define __LIB_UTIL_H__
 
 #include <stdint.h>
+
 #include <string>
 
 /* file utilities */
@@ -36,12 +37,12 @@ bool        IsPathAbsolute(std::string_view path);
 void        ReplaceExtension(std::string &path, std::string_view ext);
 
 std::string CurrentDirectoryGet();
-bool MakeDirectory(std::string_view dir);
+bool        MakeDirectory(std::string_view dir);
 
 bool  FileExists(std::string_view name);
 FILE *FileOpen(std::string_view name, std::string_view mode);
-bool FileRename(std::string_view oldname, std::string_view newname);
-bool FileDelete(std::string_view name);
+bool  FileRename(std::string_view oldname, std::string_view newname);
+bool  FileDelete(std::string_view name);
 
 /* string utilities */
 
@@ -120,8 +121,8 @@ std::string StringFormat(std::string_view fmt, ...);
 std::string NumToString(int value);
 std::string NumToString(unsigned long long int value);
 std::string NumToString(double value);
-int StringToInt(const std::string &value);
-double StringToDouble(const std::string &value);
+int         StringToInt(const std::string &value);
+double      StringToDouble(const std::string &value);
 
 char *mem_gets(char *buf, int size, const char **str_ptr);
 
@@ -138,25 +139,20 @@ uint64_t StringHash64(const std::string &str);
 #define ALIGN_LEN(x) (((x) + 3) & ~3)
 
 double PerpDist(double x, double y, double x1, double y1, double x2, double y2);
-double AlongDist(double x, double y, double x1, double y1, double x2,
-                 double y2);
+double AlongDist(double x, double y, double x1, double y1, double x2, double y2);
 
 double CalcAngle(double sx, double sy, double ex, double ey);
-double DiffAngle(double A, double B);  // A + result = B
+double DiffAngle(double A, double B); // A + result = B
 
 double ComputeDist(double sx, double sy, double ex, double ey);
-double ComputeDist(double sx, double sy, double sz, double ex, double ey,
-                   double ez);
+double ComputeDist(double sx, double sy, double sz, double ex, double ey, double ez);
 
-double PointLineDist(double x, double y, double x1, double y1, double x2,
-                     double y2);
+double PointLineDist(double x, double y, double x1, double y1, double x2, double y2);
 
-void CalcIntersection(double nx1, double ny1, double nx2, double ny2,
-                      double px1, double py1, double px2, double py2, double *x,
-                      double *y);
+void CalcIntersection(double nx1, double ny1, double nx2, double ny2, double px1, double py1, double px2, double py2,
+                      double *x, double *y);
 
-std::pair<double, double> AlongCoord(double along, double px1, double py1,
-                                     double px2, double py2);
+std::pair<double, double> AlongCoord(double along, double px1, double py1, double px2, double py2);
 
 bool VectorSameDir(double dx1, double dy1, double dx2, double dy2);
 

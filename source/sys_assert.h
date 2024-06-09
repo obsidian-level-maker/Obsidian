@@ -32,18 +32,15 @@
 #define SYS_ASSERT(cond) ((void)0)
 
 #elif defined(__GNUC__)
-#define SYS_ASSERT(cond)                                                    \
-    ((cond) ? (void)0                                                       \
-            : AssertFail("Assertion (%s) failed\nIn function %s (%s:%d)\n", \
-                         #cond, __func__, __FILE__, __LINE__))
+#define SYS_ASSERT(cond)                                                                                               \
+    ((cond) ? (void)0                                                                                                  \
+            : AssertFail("Assertion (%s) failed\nIn function %s (%s:%d)\n", #cond, __func__, __FILE__, __LINE__))
 
 #else
-#define SYS_ASSERT(cond)                                                  \
-    ((cond) ? (void)0                                                     \
-            : AssertFail("Assertion (%s) failed\nIn file %s:%d\n", #cond, \
-                         __FILE__, __LINE__))
+#define SYS_ASSERT(cond)                                                                                               \
+    ((cond) ? (void)0 : AssertFail("Assertion (%s) failed\nIn file %s:%d\n", #cond, __FILE__, __LINE__))
 
-#endif  // NDEBUG
+#endif // NDEBUG
 
 #ifdef NDEBUG
 #define SYS_ASSERT_MSG(cond, arglist) ((void)0)
@@ -51,7 +48,7 @@
 #define SYS_ASSERT_MSG(cond, arglist) ((cond) ? (void)0 : AssertFail arglist)
 #endif
 
-#define SYS_NULL_CHECK(ptr) SYS_ASSERT((ptr) != NULL)
+#define SYS_NULL_CHECK(ptr)   SYS_ASSERT((ptr) != NULL)
 #define SYS_ZERO_CHECK(value) SYS_ASSERT((value) != 0)
 
 // -------- the support code --------
