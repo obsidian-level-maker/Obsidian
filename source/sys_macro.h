@@ -23,6 +23,7 @@
 #define SYS_MACRO_H_
 
 #include <math.h>
+#include <stdint.h>
 
 // basic constants
 constexpr uint16_t MSG_BUF_LEN  = 2000;
