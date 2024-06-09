@@ -20,7 +20,7 @@
 
 #include "system.h"
 #include "local.h"
-#include "aj_parse.h"
+#include "lib_parse.h"
 #include "raw_def.h"
 #include "utility.h"
 #include "wad.h"

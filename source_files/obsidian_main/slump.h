@@ -35,6 +35,8 @@
 #include <string>
 #include <vector>
 
+bool slump_main(std::string filename);
+
 /* Slump 0.003.02 */
 #define SOURCE_VERSION (0)
 #define SOURCE_SERIAL (003)

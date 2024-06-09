@@ -17,7 +17,7 @@
 //------------------------------------------------------------------------
 
 #include "aj_local.h"
-#include "aj_parse.h"
+#include "lib_parse.h"
 #include "main.h"
 #include "sys_macro.h"
 

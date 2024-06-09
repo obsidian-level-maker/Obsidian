@@ -1,15 +1,13 @@
 cmake_minimum_required(VERSION 3.12..3.20)
 
 add_subdirectory(source_files/ajbsp EXCLUDE_FROM_ALL)
-add_subdirectory(source_files/ajparse EXCLUDE_FROM_ALL)
 if(NOT CONSOLE_ONLY)
-  add_subdirectory(source_files/fltk EXCLUDE_FROM_ALL)
+  add_subdirectory(libraries/fltk EXCLUDE_FROM_ALL)
 endif()
-add_subdirectory(source_files/filename_formatter EXCLUDE_FROM_ALL)
-add_subdirectory(source_files/libgrapheme EXCLUDE_FROM_ALL)
-add_subdirectory(source_files/miniz EXCLUDE_FROM_ALL)
-add_subdirectory(source_files/physfs EXCLUDE_FROM_ALL)
-add_subdirectory(source_files/slump EXCLUDE_FROM_ALL)
+add_subdirectory(libraries/filename_formatter EXCLUDE_FROM_ALL)
+add_subdirectory(libraries/libgrapheme EXCLUDE_FROM_ALL)
+add_subdirectory(libraries/miniz EXCLUDE_FROM_ALL)
+add_subdirectory(libraries/physfs EXCLUDE_FROM_ALL)
 
 project(
   obsidian
@@ -50,9 +48,7 @@ if(${CMAKE_SYSTEM} MATCHES "OpenBSD")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -I /usr/X11R6/include")
 endif()
 
-if(NOT CONSOLE_ONLY)
-  add_executable(
-    obsidian
+set(OBSIDIAN_SOURCE_FILES
     source_files/obsidian_main/aj_map.cc
     source_files/obsidian_main/aj_poly.cc
     source_files/obsidian_main/aj_util.cc
@@ -71,22 +67,31 @@ if(NOT CONSOLE_ONLY)
     source_files/obsidian_main/lib_util.cc
     source_files/obsidian_main/lib_wad.cc
     source_files/obsidian_main/lib_zip.cc
-    source_files/obsidian_main/m_about.cc
+    source_files/obsidian_main/lib_parse.cc
     source_files/obsidian_main/m_addons.cc
     source_files/obsidian_main/m_cookie.cc
-    source_files/obsidian_main/m_dialog.cc
     source_files/obsidian_main/m_lua.cc
-    source_files/obsidian_main/m_manage.cc
     source_files/obsidian_main/m_options.cc
-    source_files/obsidian_main/m_theme.cc
     source_files/obsidian_main/m_trans.cc
     source_files/obsidian_main/main.cc
     source_files/obsidian_main/obsidian.rc
+    source_files/obsidian_main/slump_dump.cc
+    source_files/obsidian_main/slump_main.cc
+    source_files/obsidian_main/slump.cc
     source_files/obsidian_main/sys_assert.cc
     source_files/obsidian_main/sys_debug.cc
     source_files/obsidian_main/sys_xoshiro.cc
     source_files/obsidian_main/tx_forge.cc
     source_files/obsidian_main/tx_skies.cc
+)
+
+if (NOT CONSOLE_ONLY)
+  set(OBSIDIAN_SOURCE_FILES
+    ${OBSIDIAN_SOURCE_FILES}
+    source_files/obsidian_main/m_about.cc
+    source_files/obsidian_main/m_dialog.cc
+    source_files/obsidian_main/m_manage.cc
+    source_files/obsidian_main/m_theme.cc
     source_files/obsidian_main/ui_boxes.cc
     source_files/obsidian_main/ui_build.cc
     source_files/obsidian_main/ui_game.cc
@@ -96,58 +101,27 @@ if(NOT CONSOLE_ONLY)
     source_files/obsidian_main/ui_widgets.cc
     source_files/obsidian_main/ui_window.cc
   )
-else()
-  add_executable(
-    obsidian
-    source_files/obsidian_main/aj_map.cc
-    source_files/obsidian_main/aj_poly.cc
-    source_files/obsidian_main/aj_util.cc
-    source_files/obsidian_main/aj_wad.cc
-    source_files/obsidian_main/csg_bsp.cc
-    source_files/obsidian_main/csg_doom.cc
-    source_files/obsidian_main/csg_main.cc
-    source_files/obsidian_main/csg_shade.cc
-    source_files/obsidian_main/csg_spots.cc
-    source_files/obsidian_main/dm_extra.cc
-    source_files/obsidian_main/dm_prefab.cc
-    source_files/obsidian_main/g_doom.cc
-    source_files/obsidian_main/g_wolf.cc
-    source_files/obsidian_main/lib_argv.cc
-    source_files/obsidian_main/lib_tga.cc
-    source_files/obsidian_main/lib_util.cc
-    source_files/obsidian_main/lib_wad.cc
-    source_files/obsidian_main/lib_zip.cc
-    source_files/obsidian_main/m_addons.cc
-    source_files/obsidian_main/m_cookie.cc
-    source_files/obsidian_main/m_lua.cc
-    source_files/obsidian_main/m_options.cc
-    source_files/obsidian_main/m_trans.cc
-    source_files/obsidian_main/main.cc
-    source_files/obsidian_main/obsidian.rc
-    source_files/obsidian_main/sys_assert.cc
-    source_files/obsidian_main/sys_debug.cc
-    source_files/obsidian_main/sys_xoshiro.cc
-    source_files/obsidian_main/tx_forge.cc
-    source_files/obsidian_main/tx_skies.cc
-  )
 endif()
 
+add_executable(
+  obsidian
+  ${OBSIDIAN_SOURCE_FILES}
+)
+
 target_include_directories(obsidian SYSTEM PRIVATE source_files/ajbsp)
-target_include_directories(obsidian SYSTEM PRIVATE source_files/ajparse)
 if(NOT CONSOLE_ONLY)
-  target_include_directories(obsidian SYSTEM PRIVATE source_files/fltk)
+  target_include_directories(obsidian SYSTEM PRIVATE libraries/fltk)
   target_include_directories(
-    obsidian SYSTEM PRIVATE "${PROJECT_BINARY_DIR}/source_files/fltk"
+    obsidian SYSTEM PRIVATE "${PROJECT_BINARY_DIR}/libraries/fltk"
   ) # Hack for FLTK 1.4 (for now)
 endif()
 target_include_directories(
-  obsidian SYSTEM PRIVATE source_files/filename_formatter)
-target_include_directories(obsidian SYSTEM PRIVATE source_files/gif-h)
-target_include_directories(obsidian SYSTEM PRIVATE source_files/libgrapheme)
-target_include_directories(obsidian SYSTEM PRIVATE source_files/minilua)
-target_include_directories(obsidian SYSTEM PRIVATE source_files/miniz)
-target_include_directories(obsidian SYSTEM PRIVATE source_files/physfs/src)
-target_include_directories(obsidian SYSTEM PRIVATE source_files/slump)
+  obsidian SYSTEM PRIVATE libraries/filename_formatter)
+target_include_directories(obsidian SYSTEM PRIVATE libraries/gif-h)
+target_include_directories(obsidian SYSTEM PRIVATE libraries/libgrapheme)
+target_include_directories(obsidian SYSTEM PRIVATE libraries/minilua)
+target_include_directories(obsidian SYSTEM PRIVATE libraries/miniz)
+target_include_directories(obsidian SYSTEM PRIVATE libraries/physfs/src)
 
 if(UNIX)
   if(NOT CONSOLE_ONLY
@@ -171,14 +145,12 @@ if(UNIX)
       target_link_libraries(
         obsidian
         PRIVATE ajbsp
-                ajparse
                 filename_formatter
                 fltk
                 fltk_images
                 libgrapheme
                 miniz
                 physfs-static
-                obsidian_slump
                 "-framework Cocoa"
                 "-framework CoreGraphics"
                 "-framework CoreText"
@@ -186,8 +158,7 @@ if(UNIX)
       )
     else()
       target_link_libraries(
-        obsidian PRIVATE ajbsp ajparse filename_formatter libgrapheme miniz physfs-static
-                         obsidian_slump
+        obsidian PRIVATE ajbsp filename_formatter libgrapheme miniz physfs-static
       )
     endif()
   elseif(${CMAKE_SYSTEM} MATCHES "BSD")
@@ -195,19 +166,16 @@ if(UNIX)
       target_link_libraries(
         obsidian
         PRIVATE ajbsp
-                ajparse
                 filename_formatter
                 fltk
                 fltk_images
                 libgrapheme
                 miniz
                 physfs-static
-                obsidian_slump
       )
     else()
       target_link_libraries(
-        obsidian PRIVATE ajbsp ajparse filename_formatter libgrapheme miniz physfs-static
-                         obsidian_slump
+        obsidian PRIVATE ajbsp filename_formatter libgrapheme miniz physfs-static
       )
     endif()
   else()
@@ -215,14 +183,12 @@ if(UNIX)
       target_link_libraries(
         obsidian
         PRIVATE ajbsp
-                ajparse
                 filename_formatter
                 fltk
                 fltk_images
                 libgrapheme
                 miniz
                 physfs-static
-                obsidian_slump
                 fontconfig
                 pthread
       )
@@ -230,12 +196,10 @@ if(UNIX)
       target_link_libraries(
         obsidian
         PRIVATE ajbsp
-                ajparse
                 filename_formatter
                 libgrapheme
                 miniz
                 physfs-static
-                obsidian_slump
                 pthread
       )
     endif()
@@ -245,19 +209,16 @@ else()
     target_link_libraries(
       obsidian
       PRIVATE ajbsp
-              ajparse
               filename_formatter
               fltk
               fltk_images
               libgrapheme
               miniz
               physfs-static
-              obsidian_slump
     )
   else()
     target_link_libraries(
-      obsidian PRIVATE ajbsp ajparse filename_formatter libgrapheme miniz physfs-static
-                       obsidian_slump
+      obsidian PRIVATE ajbsp filename_formatter libgrapheme miniz physfs-static
     )
   endif()
 endif()
