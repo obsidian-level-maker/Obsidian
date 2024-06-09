@@ -326,12 +326,6 @@ void UI_Build::Prog_Nodes(int pos, int limit)
 
 void UI_Build::SetStatus(std::string_view msg)
 {
-    // int limit = (int)sizeof(status_label);
-
-#ifdef WIN32
-#undef min
-#endif
-    // strncpy(status_label, msg.data(), std::min<int>(limit, msg.size()));
     status_label = msg;
 
     if (StringCompare(status_label, _("Success")) == 0)

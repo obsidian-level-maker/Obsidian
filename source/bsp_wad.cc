@@ -19,6 +19,7 @@
 #include "bsp_wad.h"
 
 #include <stdarg.h>
+#include <string.h>
 
 #include <algorithm>
 

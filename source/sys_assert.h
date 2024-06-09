@@ -22,10 +22,6 @@
 #ifndef __SYS_ASSERT__
 #define __SYS_ASSERT__
 
-#ifdef WIN32
-#undef GetMessage
-#endif
-
 // -------- the macros --------
 
 #ifdef NDEBUG
