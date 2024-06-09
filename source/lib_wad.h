@@ -24,6 +24,8 @@
 
 /* WAD reading */
 
+#include <stdint.h>
+
 #include <string_view>
 
 bool WAD_OpenRead(std::string filename);
