@@ -264,13 +264,13 @@ static void main_win_apply_addon_CB(Fl_Widget *w, void *data)
 
 static void main_win_preset_CB(Fl_Widget *w, void *data)
 {
-    std::string *preset = (std::string *)data;
+    std::string preset = PHYSFS_getRealDir(PathAppend("presets", *(std::string *)data).c_str());
 
     // adapted from our Config Manager Load/Use callbacks
-    FILE *fp = FileOpen(preset->c_str(), "rb");
+    FILE *fp = FileOpen(PathAppend(preset, *(std::string *)data), "rb");
     if (!fp)
     {
-        DLG_ShowError(_("Cannot open: %s\n\n%s"), preset->c_str(), strerror(errno));
+        DLG_ShowError(_("Cannot open: %s\n\n%s"), preset.c_str(), strerror(errno));
         return;
     }
     std::string text_buf;
