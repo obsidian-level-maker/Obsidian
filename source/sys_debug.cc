@@ -52,11 +52,11 @@ bool LogInit(const std::string &filename)
         }
     }
 
-    std::time_t result = std::time(nullptr);
+    time_t result = time(nullptr);
 
     LogPrintf("====== START OF OBSIDIAN LOGS ======\n\n");
 
-    LogPrintf("Initialized on %s", std::ctime(&result));
+    LogPrintf("Initialized on %s", ctime(&result));
 
     return true;
 }
