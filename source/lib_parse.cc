@@ -18,9 +18,11 @@
 
 #include "lib_parse.h"
 
-#include <cassert>
-#include <cctype>
-#include <cstdlib>
+#include <ctype.h>
+#include <stdlib.h>
+
+#include "lib_util.h"
+#include "sys_assert.h"
 
 namespace ajparse
 {
@@ -39,10 +41,10 @@ token_kind_e lexer_c::Next(std::string &s)
     if (ch == '"')
         return ParseString(s);
 
-    if (ch == '-' || ch == '+' || std::isdigit(ch))
+    if (ch == '-' || ch == '+' || IsDigitASCII(ch))
         return ParseNumber(s);
 
-    if (std::isalpha(ch) || ch == '_' || ch >= 128)
+    if (IsAlphaASCII(ch) || ch == '_' || ch >= 128)
         return ParseIdentifier(s);
 
     // anything else is a single-character symbol
@@ -53,10 +55,10 @@ token_kind_e lexer_c::Next(std::string &s)
 
 bool lexer_c::Match(const char *s)
 {
-    assert(s);
-    assert(s[0]);
+    SYS_ASSERT(s);
+    SYS_ASSERT(s[0]);
 
-    bool is_keyword = std::isalnum(s[0]);
+    bool is_keyword = IsAlphanumericASCII(s[0]);
 
     SkipToNext();
 
@@ -72,9 +74,9 @@ bool lexer_c::Match(const char *s)
 
         // don't change a char when high-bit is set (for UTF-8)
         if (A < 128)
-            A = std::tolower(A);
+            A = ToLowerASCII(A);
         if (B < 128)
-            B = std::tolower(B);
+            B = ToLowerASCII(B);
 
         if (A != B)
             return false;
@@ -87,7 +89,7 @@ bool lexer_c::Match(const char *s)
     {
         unsigned char ch = (unsigned char)data[pos];
 
-        if (std::isalnum(ch) || ch >= 128)
+        if (IsAlphanumericASCII(ch) || ch >= 128)
             return false;
     }
 
@@ -108,13 +110,13 @@ void lexer_c::Rewind()
 int LEX_Int(const std::string &s)
 {
     // strtol handles all the integer sequences of the UDMF spec
-    return (int)std::strtol(s.c_str(), NULL, 0);
+    return (int)strtol(s.c_str(), NULL, 0);
 }
 
 double LEX_Double(const std::string &s)
 {
     // strtod handles all the floating-point sequences of the UDMF spec
-    return std::strtod(s.c_str(), NULL);
+    return strtod(s.c_str(), NULL);
 }
 
 bool LEX_Boolean(const std::string &s)
@@ -195,16 +197,16 @@ token_kind_e lexer_c::ParseIdentifier(std::string &s)
 
         // don't change a char when high-bit is set (for UTF-8)
         if (ch < 128)
-            ch = std::tolower(ch);
+            ch = ToLowerASCII(ch);
 
-        if (!(std::isalnum(ch) || ch == '_' || ch >= 128))
+        if (!(IsAlphanumericASCII(ch) || ch == '_' || ch >= 128))
             break;
 
         s.push_back((char)ch);
         pos++;
     }
 
-    assert(s.size() > 0);
+    SYS_ASSERT(s.size() > 0);
 
     return TOK_Ident;
 }
@@ -214,7 +216,7 @@ token_kind_e lexer_c::ParseNumber(std::string &s)
     if (data[pos] == '-' || data[pos] == '+')
     {
         // no digits after the sign?
-        if (pos + 1 >= data.size() || !std::isdigit(data[pos + 1]))
+        if (pos + 1 >= data.size() || !IsDigitASCII(data[pos + 1]))
         {
             s.push_back(data[pos++]);
             return TOK_Symbol;
@@ -231,7 +233,7 @@ token_kind_e lexer_c::ParseNumber(std::string &s)
         unsigned char ch = (unsigned char)data[pos];
 
         // this is fairly lax, but adequate for our purposes
-        if (!(std::isalnum(ch) || ch == '+' || ch == '-' || ch == '.'))
+        if (!(IsAlphanumericASCII(ch) || ch == '+' || ch == '-' || ch == '.'))
             break;
     }
 
@@ -328,14 +330,14 @@ void lexer_c::ParseEscape(std::string &s)
         *p++ = '0';
 
         ch = (unsigned char)data[pos];
-        if (std::isxdigit(ch))
+        if (IsXDigitASCII(ch))
         {
             *p++ = ch;
             pos++;
         }
 
         ch = (unsigned char)data[pos];
-        if (std::isxdigit(ch))
+        if (IsXDigitASCII(ch))
         {
             *p++ = ch;
             pos++;
@@ -343,7 +345,7 @@ void lexer_c::ParseEscape(std::string &s)
 
         *p = 0;
 
-        int val = (int)std::strtol(buffer, NULL, 0);
+        int val = (int)strtol(buffer, NULL, 0);
         s.push_back((char)val);
         return;
     }

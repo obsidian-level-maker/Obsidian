@@ -21,10 +21,11 @@
 
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
-#include "headers.h"
 #include "lib_util.h"
 #include "m_lua.h"
+#include "m_trans.h"
 #include "main.h"
+#include "sys_assert.h"
 
 choice_data_c::choice_data_c(std::string _id, std::string _label) : enabled(false), mapped(-1), widget(NULL)
 {

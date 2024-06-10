@@ -20,14 +20,11 @@
 //----------------------------------------------------------------------
 
 #include "hdr_lua.h"
-#include "headers.h"
 #include "lib_argv.h"
 #include "lib_util.h"
 #include "main.h"
-
-#ifdef WIN32
-#include <iso646.h>
-#endif
+#include "sys_assert.h"
+#include "sys_macro.h"
 
 #define GRID_SIZE 20
 
@@ -311,7 +308,7 @@ static void remove_dud_cells()
 
 static bool test_mon_area(int x1, int y1, int x2, int y2, int want)
 {
-    if (x1 < 0 or x2 >= grid_W or y1 < 0 or y2 >= grid_H)
+    if (x1 < 0 || x2 >= grid_W || y1 < 0 || y2 >= grid_H)
     {
         return false;
     }

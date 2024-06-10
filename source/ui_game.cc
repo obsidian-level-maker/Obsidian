@@ -24,9 +24,9 @@
 #include "hdr_fltk.h"
 #include "hdr_lua.h"
 #include "hdr_ui.h"
-#include "headers.h"
 #include "lib_util.h"
 #include "m_lua.h"
+#include "m_trans.h"
 #include "main.h"
 
 #define ABORT_COLOR fl_color_cube(3, 1, 1)

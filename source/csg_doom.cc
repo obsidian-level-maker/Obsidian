@@ -29,9 +29,9 @@
 #include "hdr_fltk.h"
 #include "hdr_ui.h" // ui_build.h
 #endif
-#include "headers.h"
 #include "lib_util.h"
 #include "main.h"
+#include "sys_assert.h"
 #include "sys_macro.h"
 
 // Properties
@@ -841,8 +841,8 @@ template <> struct hash<Doom::vertex_map_key_s>
     size_t operator()(const Doom::vertex_map_key_s &k) const
     {
         size_t h = 0;
-        h ^= std::hash<int>()(k.x);
-        h ^= std::hash<int>()(k.y);
+        h ^= IntHash(k.x);
+        h ^= IntHash(k.y);
         return h;
     }
 };
@@ -3168,7 +3168,6 @@ static void WriteFraggleScript()
 
 void FreeStuff()
 {
-    // This is erroring out right now
     std::for_each(vertices.begin(), vertices.end(), [](auto *i) { delete i; });
     std::for_each(linedefs.begin(), linedefs.end(), [](auto *i) { delete i; });
     std::for_each(sidedefs.begin(), sidedefs.end(), [](auto *i) { delete i; });

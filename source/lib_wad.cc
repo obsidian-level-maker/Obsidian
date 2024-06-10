@@ -23,10 +23,11 @@
 
 #include <list>
 
-#include "headers.h"
 #include "lib_util.h"
 #include "main.h"
 #include "physfs.h"
+#include "sys_assert.h"
+#include "sys_endian.h"
 
 // #define LogPrintf  printf
 
@@ -275,7 +276,7 @@ void WAD_NewLump(std::string name)
 
     memset(&wad_W_lump, 0, sizeof(wad_W_lump));
 
-    std::copy(name.data(), name.data() + name.size(), wad_W_lump.name);
+    memcpy(wad_W_lump.name, name.data(), name.size());
 
     wad_W_lump.start = wad_W_fp.tellp();
 }

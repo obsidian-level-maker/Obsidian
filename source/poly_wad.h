@@ -18,8 +18,9 @@
 
 #pragma once
 
-#include <cstdio>
-#include <cstring>
+#include <stdio.h>
+#include <string.h>
+
 #include <vector>
 
 // directory entry

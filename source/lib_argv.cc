@@ -21,13 +21,14 @@
 
 #include "lib_argv.h"
 
-#include "headers.h"
-#include "lib_util.h"
-
 #ifdef _WIN32
+#include <windows.h>
 #include <processenv.h>
 #include <shellapi.h>
 #endif
+
+#include "lib_util.h"
+#include "sys_assert.h"
 
 std::vector<std::string> argv::list;
 std::unordered_set<char> argv::short_flags;
@@ -56,7 +57,7 @@ static void Parse_LongArg(std::string_view arg)
 
 static void Parse_ShortArgs(std::string_view arg)
 {
-    for (std::size_t i = 1; i < arg.size(); ++i)
+    for (size_t i = 1; i < arg.size(); ++i)
     {
         char ch = arg[i];
 
@@ -210,7 +211,7 @@ int argv::Find(const char shortName, const char *longName, int *numParams)
 
         const std::string &str = list[p];
 
-        if (shortName && (shortName == tolower(str[1])) && str[2] == 0)
+        if (shortName && (shortName == ToLowerASCII(str[1])) && str[2] == 0)
         {
             break;
         }
@@ -244,7 +245,7 @@ int argv::Find(const char shortName, const char *longName, int *numParams)
 
 bool argv::IsOption(const int index)
 {
-    return list.at(index)[0] == '-';
+    return list[index][0] == '-';
 }
 
 //--- editor settings ---

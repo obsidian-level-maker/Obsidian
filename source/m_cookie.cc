@@ -28,11 +28,11 @@
 #include "hdr_ui.h"
 #endif
 #include "hdr_lua.h"
-#include "headers.h"
 #include "lib_argv.h"
 #include "lib_util.h"
 #include "m_lua.h"
 #include "main.h"
+#include "sys_assert.h"
 
 enum struct cookie_context_e
 {
@@ -85,7 +85,7 @@ static void Cookie_SetValue(std::string name, std::string value)
         {
             try
             {
-                next_rand_seed = std::stoull(value);
+                next_rand_seed = stoull(value);
                 return;
             }
             catch (std::invalid_argument &e)
@@ -124,7 +124,7 @@ static bool Cookie_ParseLine(std::string buf)
         return true;
     }
 
-    while (std::isspace(buf[0]))
+    while (IsSpaceASCII(buf[0]))
     {
         buf.erase(buf.begin());
     }
@@ -137,16 +137,16 @@ static bool Cookie_ParseLine(std::string buf)
 
     std::string::size_type pos = buf.find('=');
 
-    while (pos > 0 && std::isspace(buf[pos - 1]))
+    while (pos > 0 && IsSpaceASCII(buf[pos - 1]))
     {
         buf.erase(buf.begin() + (pos - 1));
         pos--;
     }
-    while (pos + 1 < buf.size() && std::isspace(buf[pos + 1]))
+    while (pos + 1 < buf.size() && IsSpaceASCII(buf[pos + 1]))
     {
         buf.erase(buf.begin() + (pos + 1));
     }
-    while (std::isspace(buf[buf.size() - 1]))
+    while (IsSpaceASCII(buf[buf.size() - 1]))
     {
         buf.erase(buf.end() - 1);
     }
@@ -174,17 +174,7 @@ bool Cookie_Load(std::string filename)
 
     active_module.clear();
 
-#ifdef __APPLE__
     setlocale(LC_NUMERIC, "C");
-#elif __unix__
-#ifndef __linux__
-    setlocale(LC_NUMERIC, "C");
-#else
-    std::setlocale(LC_NUMERIC, "C");
-#endif
-#else
-    std::setlocale(LC_NUMERIC, "C");
-#endif
     std::ifstream cookie_fp(filename, std::ios::in);
 
     if (!cookie_fp.is_open())
@@ -218,17 +208,7 @@ bool Cookie_Load(std::string filename)
             LogPrintf("DONE.\n\n");
         }
     }
-#ifdef __APPLE__
     setlocale(LC_NUMERIC, numeric_locale.c_str());
-#elif __unix__
-#ifndef __linux__
-    setlocale(LC_NUMERIC, numeric_locale.c_str());
-#else
-    std::setlocale(LC_NUMERIC, numeric_locale.c_str());
-#endif
-#else
-    std::setlocale(LC_NUMERIC, numeric_locale.c_str());
-#endif
     return true;
 }
 
@@ -260,17 +240,7 @@ bool Cookie_LoadString(std::string str, bool _keep_seed)
 bool Cookie_Save(std::string filename)
 {
     context = cookie_context_e::Save;
-#ifdef __APPLE__
     setlocale(LC_NUMERIC, "C");
-#elif __unix__
-#ifndef __linux__
-    setlocale(LC_NUMERIC, "C");
-#else
-    std::setlocale(LC_NUMERIC, "C");
-#endif
-#else
-    std::setlocale(LC_NUMERIC, "C");
-#endif
     std::ofstream cookie_fp(filename, std::ios::out);
 
     if (!cookie_fp.is_open())
@@ -306,17 +276,7 @@ bool Cookie_Save(std::string filename)
     }
 
     cookie_fp.close();
-#ifdef __APPLE__
     setlocale(LC_NUMERIC, numeric_locale.c_str());
-#elif __unix__
-#ifndef __linux__
-    setlocale(LC_NUMERIC, numeric_locale.c_str());
-#else
-    std::setlocale(LC_NUMERIC, numeric_locale.c_str());
-#endif
-#else
-    std::setlocale(LC_NUMERIC, numeric_locale.c_str());
-#endif
     return true;
 }
 

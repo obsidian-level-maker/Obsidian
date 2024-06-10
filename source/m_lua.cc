@@ -20,23 +20,20 @@
 //----------------------------------------------------------------------
 
 #include <algorithm>
-#ifdef WIN32
-#include <iso646.h>
-#endif
 
 #ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
 #endif
 #include "ff_main.h"
-#include "headers.h"
 #include "lib_util.h"
-#include "main.h"
-#include "physfs.h"
-#include "sys_xoshiro.h"
-
 #define LUA_IMPL
 #include "m_lua.h"
+#include "m_trans.h"
+#include "main.h"
+#include "physfs.h"
+#include "sys_assert.h"
+#include "sys_xoshiro.h"
 
 static lua_State *LUA_ST;
 

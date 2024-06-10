@@ -228,11 +228,11 @@ void ParseSectorField(sector_c *sector, const std::string &key, ajparse::token_k
     }
     else if (key == "texturefloor")
     {
-        std::copy(value.data(), value.data() + OBSIDIAN_MIN(8, value.size()), sector->floor_tex);
+        memcpy(sector->floor_tex, value.data(), OBSIDIAN_MIN(8, value.size()));
     }
     else if (key == "textureceiling")
     {
-        std::copy(value.data(), value.data() + OBSIDIAN_MIN(8, value.size()), sector->ceil_tex);
+        memcpy(sector->ceil_tex, value.data(), OBSIDIAN_MIN(8, value.size()));
     }
     else if (key == "lightlevel")
     {
@@ -264,15 +264,15 @@ void ParseSidedefField(sidedef_c *side, const std::string &key, ajparse::token_k
     }
     else if (key == "texturetop")
     {
-        std::copy(value.data(), value.data() + OBSIDIAN_MIN(8, value.size()), side->upper_tex);
+        memcpy(side->upper_tex, value.data(), OBSIDIAN_MIN(8, value.size()));
     }
     else if (key == "texturebottom")
     {
-        std::copy(value.data(), value.data() + OBSIDIAN_MIN(8, value.size()), side->lower_tex);
+        memcpy(side->lower_tex, value.data(), OBSIDIAN_MIN(8, value.size()));
     }
     else if (key == "texturemiddle")
     {
-        std::copy(value.data(), value.data() + OBSIDIAN_MIN(8, value.size()), side->mid_tex);
+        memcpy(side->mid_tex, value.data(), OBSIDIAN_MIN(8, value.size()));
     }
     else if (key == "sector")
     {
@@ -813,8 +813,8 @@ bool LoadSectors()
         sector->floor_h = LE_S16(raw->floorh);
         sector->ceil_h  = LE_S16(raw->ceilh);
 
-        std::copy(raw->floor_tex, raw->floor_tex + 8, sector->floor_tex);
-        std::copy(raw->ceil_tex, raw->ceil_tex + 8, sector->ceil_tex);
+        memcpy(sector->floor_tex, raw->floor_tex, 8);
+        memcpy(sector->ceil_tex, raw->ceil_tex, 8);
 
         sector->light   = LE_U16(raw->light);
         sector->special = LE_U16(raw->type);
@@ -941,9 +941,9 @@ bool LoadSidedefs()
         side->x_offset = LE_S16(raw->x_offset);
         side->y_offset = LE_S16(raw->y_offset);
 
-        std::copy(raw->upper_tex, raw->upper_tex + 8, side->upper_tex);
-        std::copy(raw->mid_tex, raw->mid_tex + 8, side->mid_tex);
-        std::copy(raw->lower_tex, raw->lower_tex + 8, side->lower_tex);
+        memcpy(side->upper_tex, raw->upper_tex, 8);
+        memcpy(side->mid_tex, raw->mid_tex, 8);
+        memcpy(side->lower_tex, raw->lower_tex, 8);
     }
 
     return true; // OK

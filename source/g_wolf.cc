@@ -23,10 +23,11 @@
 #include "hdr_ui.h"
 #endif
 #include "hdr_lua.h"
-#include "headers.h"
 #include "lib_util.h"
 #include "m_lua.h"
+#include "m_trans.h"
 #include "main.h"
+#include "sys_assert.h"
 
 #define TEMP_GAMEFILE "GAMEMAPS.TMP"
 #define TEMP_MAPTEMP  "MAPTEMP.TMP"

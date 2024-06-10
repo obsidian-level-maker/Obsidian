@@ -21,7 +21,8 @@
 
 #pragma once
 
-#include <cstdio>
+#include <stdio.h>
+
 #include <string>
 
 bool Cookie_Load(std::string filename);

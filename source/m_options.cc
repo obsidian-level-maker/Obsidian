@@ -23,7 +23,6 @@
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
 #endif
-#include "headers.h"
 #include "lib_argv.h"
 #include "lib_util.h"
 #include "m_addons.h"

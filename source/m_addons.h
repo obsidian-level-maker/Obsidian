@@ -22,8 +22,8 @@
 #pragma once
 
 #include <stdint.h>
+#include <stdio.h>
 
-#include <cstdio>
 #include <fstream>
 #include <map>
 #include <string>

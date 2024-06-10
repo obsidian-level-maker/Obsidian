@@ -21,11 +21,13 @@
 
 #pragma once
 
-#include <cstddef>
+#include <stddef.h>
+
 #include <iostream>
 #include <map>
 #include <string>
 #include <vector>
+
 #ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
 #include "ui_window.h"
@@ -214,7 +216,7 @@ template <typename... Args> [[noreturn]] void FatalError(std::string_view msg, A
 #endif
     }
 
-    std::exit(9);
+    exit(9);
 }
 
 template <typename... Args> void ProgStatus(std::string_view msg, Args &&...args)

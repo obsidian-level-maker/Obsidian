@@ -648,7 +648,7 @@ static bool IsDummyMarker(const char *name)
     if (strlen(name) < 3)
         return false;
 
-    if (!strchr("PSF", toupper(name[0])))
+    if (!strchr("PSF", ToUpperASCII(name[0])))
         return false;
 
     if (!isdigit(name[1]))

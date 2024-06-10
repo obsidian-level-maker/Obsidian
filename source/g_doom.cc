@@ -24,8 +24,6 @@
 #include <bitset>
 #include <string>
 
-#include "headers.h"
-
 #ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
 #endif
@@ -35,12 +33,12 @@
 #include "lib_zip.h"
 #include "m_cookie.h"
 #include "m_lua.h"
+#include "m_trans.h"
 #include "main.h"
+#include "sys_assert.h"
+#include "sys_endian.h"
+#include "sys_macro.h"
 #include "sys_xoshiro.h"
-
-#ifdef WIN32
-#include <iso646.h>
-#endif
 
 #include "bsp.h"
 
@@ -445,7 +443,7 @@ static void WriteBehavior()
     /*raw_behavior_header_t behavior;
 
     std::string_view acs{"ACS"};
-    std::copy(acs.data(), acs.data() + 4, behavior.marker);
+    memcpy(behavior.marker, acs.data(), 4);
 
     behavior.offset = LE_U32(8);
     behavior.func_num = 0;
@@ -573,7 +571,7 @@ static void FreeLumps()
 {
     delete header_lump;
     header_lump = nullptr;
-    if (not UDMF_mode)
+    if (!UDMF_mode)
     {
         delete thing_lump;
         thing_lump = nullptr;
@@ -601,7 +599,7 @@ void Doom::BeginLevel()
     FreeLumps();
 
     header_lump = new qLump_c();
-    if (not UDMF_mode)
+    if (!UDMF_mode)
     {
         thing_lump   = new qLump_c();
         vertex_lump  = new qLump_c();
@@ -658,7 +656,7 @@ void Doom::EndLevel(std::string level_name)
         WriteLump("TEXTMAP", textmap_lump);
     }
 
-    if (not UDMF_mode)
+    if (!UDMF_mode)
     {
         WriteLump("THINGS", thing_lump);
         WriteLump("LINEDEFS", linedef_lump);
@@ -737,7 +735,7 @@ void Doom::AddVertex(int x, int y)
         y += 32;
     }
 
-    if (not UDMF_mode)
+    if (!UDMF_mode)
     {
         raw_vertex_t vert;
 
@@ -765,15 +763,15 @@ int Doom::v094_add_vertex(lua_State *L)
 
 void Doom::AddSector(int f_h, std::string f_tex, int c_h, std::string c_tex, int light, int special, int tag)
 {
-    if (not UDMF_mode)
+    if (!UDMF_mode)
     {
         raw_sector_t sec;
 
         sec.floor_h = LE_S16(f_h);
         sec.ceil_h  = LE_S16(c_h);
 
-        std::copy(f_tex.data(), f_tex.data() + 8, sec.floor_tex);
-        std::copy(c_tex.data(), c_tex.data() + 8, sec.ceil_tex);
+        memcpy(sec.floor_tex, f_tex.data(), 8);
+        memcpy(sec.ceil_tex, c_tex.data(), 8);
 
         sec.light   = LE_U16(light);
         sec.special = LE_U16(special);
@@ -810,15 +808,15 @@ int Doom::v094_add_sector(lua_State *L)
 
 void Doom::AddSidedef(int sector, std::string l_tex, std::string m_tex, std::string u_tex, int x_offset, int y_offset)
 {
-    if (not UDMF_mode)
+    if (!UDMF_mode)
     {
         raw_sidedef_t side;
 
         side.sector = LE_S16(sector);
 
-        std::copy(l_tex.data(), l_tex.data() + 8, side.lower_tex);
-        std::copy(m_tex.data(), m_tex.data() + 8, side.mid_tex);
-        std::copy(u_tex.data(), u_tex.data() + 8, side.upper_tex);
+        memcpy(side.lower_tex, l_tex.data(), 8);
+        memcpy(side.mid_tex, m_tex.data(), 8);
+        memcpy(side.upper_tex, u_tex.data(), 8);
 
         side.x_offset = LE_S16(x_offset);
         side.y_offset = LE_S16(y_offset);
@@ -854,7 +852,7 @@ void Doom::AddLinedef(int vert1, int vert2, int side1, int side2, int type, int 
 {
     if (sub_format != SUBFMT_Hexen)
     {
-        if (not UDMF_mode)
+        if (!UDMF_mode)
         {
             raw_linedef_t line;
 
@@ -926,7 +924,7 @@ void Doom::AddLinedef(int vert1, int vert2, int side1, int side2, int type, int 
     }
     else // Hexen format
     {
-        if (not UDMF_mode)
+        if (!UDMF_mode)
         {
             raw_hexen_linedef_t line;
 
@@ -946,7 +944,7 @@ void Doom::AddLinedef(int vert1, int vert2, int side1, int side2, int type, int 
 
             if (args)
             {
-                std::copy(args, args + 5, line.args);
+                memcpy(line.args, args, 5);
             }
 
             linedef_lump->Append(&line, sizeof(line));
@@ -1109,7 +1107,7 @@ void Doom::AddThing(int x, int y, int h, int type, int angle, int options, int t
 
     if (sub_format != SUBFMT_Hexen)
     {
-        if (not UDMF_mode)
+        if (!UDMF_mode)
         {
             raw_thing_t thing;
 
@@ -1186,7 +1184,7 @@ void Doom::AddThing(int x, int y, int h, int type, int angle, int options, int t
     }
     else // Hexen format
     {
-        if (not UDMF_mode)
+        if (!UDMF_mode)
         {
             raw_hexen_thing_t thing;
 
@@ -1213,7 +1211,7 @@ void Doom::AddThing(int x, int y, int h, int type, int angle, int options, int t
 
             if (args)
             {
-                std::copy(args, args + 5, thing.args);
+                memcpy(thing.args, args, 5);
             }
 
             thing_lump->Append(&thing, sizeof(thing));
@@ -1315,7 +1313,7 @@ int Doom::v094_add_thing(lua_State *L)
 
 int Doom::NumVertexes()
 {
-    if (not UDMF_mode)
+    if (!UDMF_mode)
     {
         return vertex_lump->GetSize() / sizeof(raw_vertex_t);
     }
@@ -1324,7 +1322,7 @@ int Doom::NumVertexes()
 
 int Doom::NumSectors()
 {
-    if (not UDMF_mode)
+    if (!UDMF_mode)
     {
         return sector_lump->GetSize() / sizeof(raw_sector_t);
     }
@@ -1333,7 +1331,7 @@ int Doom::NumSectors()
 
 int Doom::NumSidedefs()
 {
-    if (not UDMF_mode)
+    if (!UDMF_mode)
     {
         return sidedef_lump->GetSize() / sizeof(raw_sidedef_t);
     }
@@ -1342,7 +1340,7 @@ int Doom::NumSidedefs()
 
 int Doom::NumLinedefs()
 {
-    if (not UDMF_mode)
+    if (!UDMF_mode)
     {
         if (sub_format == SUBFMT_Hexen)
         {
@@ -1356,7 +1354,7 @@ int Doom::NumLinedefs()
 
 int Doom::NumThings()
 {
-    if (not UDMF_mode)
+    if (!UDMF_mode)
     {
         if (sub_format == SUBFMT_Hexen)
         {
@@ -1529,17 +1527,7 @@ bool Doom::game_interface_c::Start(const char *preset)
     if (map_format == FORMAT_UDMF)
     {
         UDMF_mode = true;
-#ifdef __APPLE__
         setlocale(LC_NUMERIC, "C");
-#elif __unix__
-#ifndef __linux__
-        setlocale(LC_NUMERIC, "C");
-#else
-        std::setlocale(LC_NUMERIC, "C");
-#endif
-#else
-        std::setlocale(LC_NUMERIC, "C");
-#endif
     }
     else
     {
@@ -1563,17 +1551,7 @@ bool Doom::game_interface_c::Finish(bool build_ok)
 
     if (UDMF_mode)
     {
-#ifdef __APPLE__
         setlocale(LC_NUMERIC, numeric_locale.c_str());
-#elif __unix__
-#ifndef __linux__
-        setlocale(LC_NUMERIC, numeric_locale.c_str());
-#else
-        std::setlocale(LC_NUMERIC, numeric_locale.c_str());
-#endif
-#else
-        std::setlocale(LC_NUMERIC, numeric_locale.c_str());
-#endif
     }
 
     if (build_ok)

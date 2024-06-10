@@ -24,10 +24,12 @@
 #include "hdr_fltk.h"
 #include "hdr_lua.h"
 #include "hdr_ui.h"
-#include "headers.h"
 #include "lib_util.h"
 #include "m_lua.h"
+#include "m_trans.h"
 #include "main.h"
+#include "sys_assert.h"
+#include "sys_macro.h"
 #include "sys_xoshiro.h"
 
 UI_Module::UI_Module(int X, int Y, int W, int H, std::string id, std::string label, std::string tip, int red, int green,
@@ -337,17 +339,7 @@ void UI_Module::AddSliderOption(std::string opt, std::string label, std::string 
     // Populate the preset_choices map
     oldpos = 0;
     pos    = 0;
-#ifdef __APPLE__
     setlocale(LC_NUMERIC, "C");
-#elif __unix__
-#ifndef __linux__
-    setlocale(LC_NUMERIC, "C");
-#else
-    std::setlocale(LC_NUMERIC, "C");
-#endif
-#else
-    std::setlocale(LC_NUMERIC, "C");
-#endif
 
     while (pos != std::string::npos)
     {
@@ -363,7 +355,7 @@ void UI_Module::AddSliderOption(std::string opt, std::string label, std::string 
             double key;
             try
             {
-                key                      = std::stod(map_string.substr(0, temp_pos));
+                key                      = stod(map_string.substr(0, temp_pos));
                 std::string value        = map_string.substr(temp_pos + 1);
                 rsl->preset_choices[key] = value;
             }
@@ -388,17 +380,8 @@ void UI_Module::AddSliderOption(std::string opt, std::string label, std::string 
             oldpos = pos + 1;
         }
     }
-#ifdef __APPLE__
+    
     setlocale(LC_NUMERIC, numeric_locale.c_str());
-#elif __unix__
-#ifndef __linux__
-    setlocale(LC_NUMERIC, numeric_locale.c_str());
-#else
-    std::setlocale(LC_NUMERIC, numeric_locale.c_str());
-#endif
-#else
-    std::setlocale(LC_NUMERIC, numeric_locale.c_str());
-#endif
 
     rsl->cb_data           = new opt_change_callback_data_t;
     rsl->cb_data->mod      = rsl;
@@ -682,7 +665,7 @@ bool UI_Module::SetSliderOption(std::string option, std::string value)
     double double_value;
     try
     {
-        double_value = std::stod(value);
+        double_value = stod(value);
         if (limit_break)
         {
             rsl->mod_slider->value(double_value);
@@ -1023,7 +1006,7 @@ tryagain:
 
     try
     {
-        new_value = std::stod(string_value);
+        new_value = stod(string_value);
     }
     catch (std::invalid_argument &e)
     {

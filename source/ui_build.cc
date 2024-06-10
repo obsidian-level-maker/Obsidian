@@ -21,9 +21,10 @@
 
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
-#include "headers.h"
 #include "lib_util.h"
+#include "m_trans.h"
 #include "main.h"
+#include "sys_assert.h"
 
 UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) : Fl_Group(X, Y, W, H, label)
 {

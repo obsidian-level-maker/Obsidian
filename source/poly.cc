@@ -16,7 +16,7 @@
 //
 //------------------------------------------------------------------------
 
-#include <cstddef>
+#include <stddef.h>
 
 #include "poly_local.h"
 #include "sys_macro.h"
@@ -777,7 +777,7 @@ bool polygon_c::ContainsPoint(double x, double y) const
     return true;
 }
 
-static constexpr std::size_t EDGE_BUFFER_SIZE = 32;
+static constexpr size_t EDGE_BUFFER_SIZE = 32;
 
 void polygon_c::ClockwiseOrder()
 {

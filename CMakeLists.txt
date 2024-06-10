@@ -14,15 +14,21 @@ project(
   VERSION 0.1.0
 )
 
-string(TIMESTAMP BUILD_TIMESTAMP "%Y.%m.%d" UTC)
-add_compile_definitions(OBSIDIAN_TIMESTAMP="${BUILD_TIMESTAMP}")
-
-if(CONSOLE_ONLY)
-  add_compile_definitions(CONSOLE_ONLY=1)
-endif()
-
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+string(TIMESTAMP BUILD_TIMESTAMP "%Y.%m.%d" UTC)
+add_compile_definitions(OBSIDIAN_TIMESTAMP="${BUILD_TIMESTAMP}")
+if(CONSOLE_ONLY)
+  add_compile_definitions(CONSOLE_ONLY)
+endif()
+if(WIN32)
+  add_compile_definitions(WIN32_LEAN_AND_MEAN)
+  add_compile_definitions(UNICODE)
+  add_compile_definitions(_UNICODE)
+elseif(NOT APPLE AND NOT CONSOLE_ONLY)
+  add_compile_definitions(USE_XFT)
+endif()
 if(MSVC)
   # get the number of logical cores for parallel build
   cmake_host_system_information(RESULT LOGICAL_CORES QUERY NUMBER_OF_LOGICAL_CORES)

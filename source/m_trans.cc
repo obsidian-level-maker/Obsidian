@@ -27,14 +27,15 @@
 
 #include "m_trans.h"
 
-#include "hdr_lua.h"
-#include "headers.h"
-#include "lib_util.h"
-#include "main.h"
-
 #ifndef WIN32
 #include <locale.h>
 #endif
+
+#include "hdr_lua.h"
+#include "lib_util.h"
+#include "main.h"
+#include "sys_assert.h"
+#include "sys_macro.h"
 
 //
 // NOTE :
@@ -1184,32 +1185,8 @@ void Trans_UnInit()
 
 //----------------------------------------------------------------------
 
-// debugging crud
-std::string mucked_up_string(std::string_view s)
-{
-    std::string buffer;
-    buffer.resize(s.size());
-    int p, q;
-    for (p = s.size() - 1, q = 0; p >= 0 && q < 250; p--, q++)
-    {
-        int ch = s[p];
-        if (ch == '%')
-        {
-            ch = '#';
-        }
-        ch        = (isupper(ch) ? tolower(ch) : toupper(ch));
-        buffer[q] = ch;
-    }
-    buffer[q] = 0;
-    return buffer;
-}
-
 const char *ob_gettext(const char *s)
 {
-#if 0 // DEBUGGING CRUD
-    return mucked_up_string(s);
-#endif
-
     std::map<std::string, std::string>::iterator IT;
 
     IT = trans_store.find(s);

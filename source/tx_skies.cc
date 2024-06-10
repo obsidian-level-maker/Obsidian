@@ -21,10 +21,11 @@
 
 #include "tx_skies.h"
 
-#include "headers.h"
 #include "lib_util.h"
 #include "m_lua.h"
 #include "main.h"
+#include "sys_assert.h"
+#include "sys_macro.h"
 #include "sys_xoshiro.h"
 #include "tx_forge.h"
 

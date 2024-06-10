@@ -2,8 +2,6 @@
 
 #pragma once
 
-#include "headers.h"
-
 #ifndef WIN32
 static const char *obsidian_icon[] = {
     "64 64 928 2",

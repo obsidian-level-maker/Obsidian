@@ -24,9 +24,10 @@
 #include "gif.h"
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
-#include "headers.h"
 #include "lib_util.h"
 #include "main.h"
+#include "sys_assert.h"
+#include "sys_macro.h"
 
 // The includes got too messy to make these part of the UI_MiniMap class - Dasho
 static GifWriter *gif_writer;

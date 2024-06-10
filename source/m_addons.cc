@@ -21,8 +21,6 @@
 
 #include "m_addons.h"
 
-#include "headers.h"
-
 #ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
 #include "hdr_ui.h"

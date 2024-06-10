@@ -26,7 +26,6 @@
 
 #include "lib_tga.h"
 
-#include "headers.h"
 #include "m_addons.h"
 #include "main.h"
 

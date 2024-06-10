@@ -25,16 +25,14 @@
 #include <limits>
 #include <string>
 
-#ifdef WIN32
-#include <iso646.h>
-#endif
-
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
-#include "headers.h"
 #include "lib_util.h"
 #include "m_lua.h"
+#include "m_trans.h"
 #include "main.h"
+#include "sys_assert.h"
+#include "sys_macro.h"
 
 std::string last_directory;
 
@@ -242,7 +240,7 @@ std::string DLG_OutputFilename(const char *ext, const char *preset)
     // uppercase the first word
     for (char *p = &kind_buf[0]; *p && *p != ' '; p++)
     {
-        *p = toupper(*p);
+        *p = ToUpperASCII(*p);
     }
 
     // save and restore the font height
@@ -344,8 +342,8 @@ void DLG_EditSeed(void)
     {
         for (long unsigned int i = 0; i < word.size(); i++)
         {
-            char character = word.at(i);
-            if (!std::isdigit(character))
+            char character = word[i];
+            if (!IsDigitASCII(character))
             {
                 throw std::runtime_error(
                     // clang-format off
@@ -354,7 +352,7 @@ void DLG_EditSeed(void)
             }
         }
         did_specify_seed = true;
-        next_rand_seed   = std::stoull(word);
+        next_rand_seed   = stoull(word);
         return;
     }
     catch (std::invalid_argument &e)

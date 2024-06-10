@@ -30,9 +30,8 @@
 #include "slump.h"
 
 #include <assert.h>
+#include <stdlib.h>
 #include <string.h>
-
-#include <cstdlib>
 
 #include "lib_util.h"
 #include "m_lua.h"

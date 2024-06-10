@@ -34,9 +34,10 @@
 
 #include "tx_forge.h"
 
-#include "headers.h"
 #include "lib_util.h"
 #include "main.h"
+#include "sys_assert.h"
+#include "sys_macro.h"
 #include "sys_xoshiro.h"
 
 /* Definitions used to address real and imaginary parts in a two-dimensional

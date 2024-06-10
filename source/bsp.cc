@@ -218,7 +218,7 @@ bool ValidateMapName(char *name)
     // Ok, convert to upper case
     for (char *s = name; *s; s++)
     {
-        *s = toupper(*s);
+        *s = ToUpperASCII(*s);
     }
 
     return true;

@@ -21,9 +21,10 @@
 
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
-#include "headers.h"
 #include "lib_util.h"
+#include "m_trans.h"
 #include "main.h"
+#include "sys_assert.h"
 
 class UI_About : public Fl_Window
 {

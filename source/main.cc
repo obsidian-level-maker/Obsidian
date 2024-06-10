@@ -27,7 +27,6 @@
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
 #endif
-#include "headers.h"
 #include "lib_argv.h"
 #include "lib_util.h"
 #include "lib_zip.h"
@@ -863,7 +862,7 @@ void Main::SetupFLTK()
     if (font_theme < num_fonts)
     { // In case the number of installed fonts is
       // reduced between launches
-        font_style = font_menu_items.at(font_theme).second;
+        font_style = font_menu_items[font_theme].second;
     }
     else
     {
@@ -1463,17 +1462,7 @@ hardrestart:;
         debug_messages = true;
     }
 // Grab current numeric locale
-#ifdef __APPLE__
     numeric_locale = setlocale(LC_NUMERIC, NULL);
-#elif __unix__
-#ifndef __linux__
-    numeric_locale = setlocale(LC_NUMERIC, NULL);
-#else
-    numeric_locale = std::setlocale(LC_NUMERIC, NULL);
-#endif
-#else
-    numeric_locale = std::setlocale(LC_NUMERIC, NULL);
-#endif
 
     LogEnableDebug(debug_messages);
 

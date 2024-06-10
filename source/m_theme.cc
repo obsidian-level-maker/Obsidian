@@ -21,13 +21,14 @@
 
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
-#include "headers.h"
 #include "lib_argv.h"
 #include "lib_util.h"
 #include "m_addons.h"
 #include "m_cookie.h"
 #include "m_trans.h"
 #include "main.h"
+#include "sys_assert.h"
+#include "sys_macro.h"
 
 bool skip_color_picker = false;
 
@@ -597,7 +598,7 @@ class UI_ThemeWin : public Fl_Window
         UI_ThemeWin *that = (UI_ThemeWin *)data;
 
         font_theme = that->opt_font_theme->value();
-        font_style = font_menu_items.at(font_theme).second;
+        font_style = font_menu_items[font_theme].second;
         fl_font(font_style, FL_NORMAL_SIZE);
         fl_message_font(font_style, FL_NORMAL_SIZE);
         main_win->menu_bar->textfont(font_style);

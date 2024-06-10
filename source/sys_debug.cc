@@ -19,11 +19,11 @@
 //
 //------------------------------------------------------------------------
 
-#include <ctime>
+#include <time.h>
+
 #include <fstream>
 #include <iostream>
 
-#include "headers.h"
 #include "lib_util.h"
 #include "m_lua.h"
 #include "main.h"

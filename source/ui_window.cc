@@ -19,14 +19,14 @@
 //
 //------------------------------------------------------------------------
 
-#include "hdr_fltk.h"
-#include "hdr_ui.h"
-#include "headers.h"
-#include "main.h"
-
-#ifndef WIN32
+#ifndef _WIN32
 #include <unistd.h>
 #endif
+
+#include "hdr_fltk.h"
+#include "hdr_ui.h"
+#include "main.h"
+#include "m_trans.h"
 
 #if (FL_MAJOR_VERSION != 1 || FL_MINOR_VERSION < 3)
 #error "Require FLTK version 1.3.0 or later"

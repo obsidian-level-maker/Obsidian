@@ -26,7 +26,6 @@
 #include "hdr_ui.h"
 #endif
 #include "hdr_lua.h"
-#include "headers.h"
 #include "images.h"
 #include "lib_tga.h"
 #include "lib_util.h"
@@ -35,6 +34,9 @@
 #include "m_lua.h"
 #include "main.h"
 #include "physfs.h"
+#include "sys_assert.h"
+#include "sys_endian.h"
+#include "sys_macro.h"
 #include "tx_forge.h"
 #include "tx_skies.h"
 
@@ -656,7 +658,7 @@ int fsky_add_hills(lua_State *L)
 
 static int FontIndexForChar(char ch)
 {
-    ch = toupper(ch);
+    ch = ToUpperASCII(ch);
 
     if (ch == ' ')
     {

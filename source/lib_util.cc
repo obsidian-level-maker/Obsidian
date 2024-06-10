@@ -21,11 +21,6 @@
 
 #include "lib_util.h"
 
-#include <chrono>
-
-#include "grapheme.h"
-#include "headers.h"
-#include "main.h"
 #ifndef _WIN32
 #include <dirent.h>
 #include <ftw.h>
@@ -36,6 +31,12 @@
 #ifdef __MINGW32__
 #include <sys/stat.h>
 #endif
+#include <chrono>
+
+#include "grapheme.h"
+#include "main.h"
+#include "sys_assert.h"
+#include "sys_macro.h"
 
 #ifdef _WIN32                                   // Windows API
 static inline bool IsDirectorySeparator(const char c)
@@ -742,7 +743,7 @@ uint64_t StringHash64(const std::string &str)
         }
         for (size_t c = str.size() - 1; c > 0; c--)
         {
-            hash2 = (hash2 << 5) - hash2 + str.at(c);
+            hash2 = (hash2 << 5) - hash2 + str[c];
         }
     }
 

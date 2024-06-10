@@ -66,12 +66,13 @@
 #include "hdr_ui.h"
 #endif
 #include "hdr_lua.h"
-#include "headers.h"
 #include "lib_util.h"
 #include "lib_wad.h"
 #include "m_lua.h"
 #include "main.h"
 #include "physfs.h"
+#include "sys_assert.h"
+#include "sys_macro.h"
 
 // callbacks for AJ-Polygonator
 
