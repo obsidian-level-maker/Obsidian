@@ -19,8 +19,7 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __UI_MODS_H__
-#define __UI_MODS_H__
+#pragma once
 
 #include <map>
 #include <string>
@@ -205,8 +204,6 @@ class UI_CustomTabs : public Fl_Tabs
 
   public:
 };
-
-#endif /* __UI_MODS_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

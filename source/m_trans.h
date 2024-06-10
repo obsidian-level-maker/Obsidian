@@ -19,8 +19,7 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __OBLIGE_I18N_H__
-#define __OBLIGE_I18N_H__
+#pragma once
 
 #include <string>
 
@@ -36,8 +35,6 @@ void Trans_UnInit();
 // these are for the UI:
 std::string Trans_GetAvailCode(int idx);
 std::string Trans_GetAvailLanguage(int idx);
-
-#endif /* __OBLIGE_I18N_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

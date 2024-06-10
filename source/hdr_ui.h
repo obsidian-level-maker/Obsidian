@@ -19,8 +19,7 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __OB_HDR_UI_H__
-#define __OB_HDR_UI_H__
+#pragma once
 
 #include "ui_boxes.h"
 #include "ui_build.h"
@@ -30,5 +29,3 @@
 #include "ui_module.h"
 #include "ui_widgets.h"
 #include "ui_window.h"
-
-#endif /* __OB_HDR_UI_H__ */

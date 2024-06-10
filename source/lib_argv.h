@@ -19,8 +19,7 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef LIB_ARGV_H_
-#define LIB_ARGV_H_
+#pragma once
 
 #include <string>
 #include <unordered_set>
@@ -39,8 +38,6 @@ int  Find(char shortName, const char *longName, int *numParams = nullptr);
 bool IsOption(int index);
 
 } // namespace argv
-
-#endif /* __LIB_ARGV_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

@@ -16,8 +16,7 @@
 //
 //----------------------------------------------------------------------------
 
-#ifndef __AJ_PARSE_H__
-#define __AJ_PARSE_H__
+#pragma once
 
 #include <string>
 
@@ -86,8 +85,6 @@ double LEX_Double(const std::string &s);
 bool   LEX_Boolean(const std::string &s);
 
 } // namespace ajparse
-
-#endif /* __AJ_PARSE_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

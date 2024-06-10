@@ -19,8 +19,7 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __UI_GAME_H__
-#define __UI_GAME_H__
+#pragma once
 
 #include <cstddef>
 
@@ -74,8 +73,6 @@ class UI_Game : public Fl_Group
     static void stop_callback(Fl_Widget *, void *);
     static void quit_callback(Fl_Widget *, void *);
 };
-
-#endif /* __UI_GAME_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

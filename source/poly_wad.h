@@ -16,8 +16,7 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __AJPOLY_WAD_H__
-#define __AJPOLY_WAD_H__
+#pragma once
 
 #include <cstdio>
 #include <cstring>
@@ -106,8 +105,6 @@ class wad_c
 };
 
 extern wad_c *the_wad;
-
-#endif /* __AJPOLY_WAD_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

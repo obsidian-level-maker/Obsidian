@@ -19,8 +19,7 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __OBLIGE_TGA_LOADER_H__
-#define __OBLIGE_TGA_LOADER_H__
+#pragma once
 
 // this layout is compatible with Fl_Color (except for alpha)
 typedef unsigned int rgb_color_t;
@@ -57,8 +56,6 @@ class tga_image_c
 };
 
 tga_image_c *TGA_LoadImage(const char *path);
-
-#endif /* __OBLIGE_TGA_LOADER_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

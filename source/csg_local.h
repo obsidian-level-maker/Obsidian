@@ -19,8 +19,7 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __OBLIGE_CSG_LOCAL_H__
-#define __OBLIGE_CSG_LOCAL_H__
+#pragma once
 
 #include <vector>
 
@@ -230,8 +229,6 @@ void CSG_BSP_Free();
 region_c *CSG_PointInRegion(double x, double y);
 
 void CSG_Shade();
-
-#endif /* __OBLIGE_CSG_LOCAL_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

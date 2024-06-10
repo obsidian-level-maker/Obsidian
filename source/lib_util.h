@@ -19,8 +19,7 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __LIB_UTIL_H__
-#define __LIB_UTIL_H__
+#pragma once
 
 #include <stdint.h>
 
@@ -155,8 +154,6 @@ void CalcIntersection(double nx1, double ny1, double nx2, double ny2, double px1
 std::pair<double, double> AlongCoord(double along, double px1, double py1, double px2, double py2);
 
 bool VectorSameDir(double dx1, double dy1, double dx2, double dy2);
-
-#endif /* __LIB_UTIL_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

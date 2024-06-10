@@ -19,8 +19,7 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __OBLIGE_ADDONS_H__
-#define __OBLIGE_ADDONS_H__
+#pragma once
 
 #include <stdint.h>
 
@@ -56,8 +55,6 @@ extern std::vector<addon_info_t> all_addons;
 extern std::vector<std::string> all_presets;
 
 extern std::map<std::string, int> initial_enabled_addons;
-
-#endif /* __OBLIGE_ADDONS_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

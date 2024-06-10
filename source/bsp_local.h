@@ -18,8 +18,7 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __AJBSP_LOCAL_H__
-#define __AJBSP_LOCAL_H__
+#pragma once
 
 #include <vector>
 
@@ -624,8 +623,6 @@ void NormaliseBspTree();
 void RoundOffBspTree();
 
 } // namespace ajbsp
-
-#endif /* __AJBSP_LOCAL_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

@@ -1,5 +1,7 @@
 // Xoshiro256 Random Generator
 
+#pragma once
+
 #include "../../libraries/fastPRNG/fastPRNG.h"
 
 extern fastPRNG::fastXS64 xoshiro;

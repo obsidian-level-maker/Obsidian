@@ -19,8 +19,7 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __OBLIGE_TX_SKIES_H__
-#define __OBLIGE_TX_SKIES_H__
+#pragma once
 
 #include <stdint.h>
 
@@ -38,8 +37,6 @@ void SKY_AddHills(unsigned long long seed, uint8_t *pixels, int W, int H, color_
 void SKY_AddBuilding(unsigned long long seed, uint8_t *pixels, int W, int H, std::vector<uint8_t> &colors, int pos_x,
                      int width, int base_h, int top_h = 0, int win_prob = 50, int win_w = 2, int win_h = 2,
                      int antenna = 0);
-
-#endif /* __OBLIGE_TX_SKIES_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

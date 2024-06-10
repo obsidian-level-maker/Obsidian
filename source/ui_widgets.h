@@ -19,8 +19,7 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __UI_WIDGETS_H__
-#define __UI_WIDGETS_H__
+#pragma once
 
 #include <map>
 #include <string>
@@ -404,8 +403,6 @@ class UI_Clippy : public Fl_Double_Window
 
     int yoff;
 };
-
-#endif /* __UI_WIDGETS_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

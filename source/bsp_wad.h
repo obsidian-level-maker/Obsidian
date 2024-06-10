@@ -16,8 +16,7 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __AJBSP_WAD_H__
-#define __AJBSP_WAD_H__
+#pragma once
 
 #include <vector>
 
@@ -326,8 +325,6 @@ class Wad_file
 };
 
 } // namespace ajbsp
-
-#endif /* __AJBSP_WAD_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

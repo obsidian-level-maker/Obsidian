@@ -18,8 +18,7 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __AJBSP_BSP_H__
-#define __AJBSP_BSP_H__
+#pragma once
 
 #include <string>
 
@@ -135,8 +134,6 @@ const char *GetLevelName(int lev_idx);
 build_result_e BuildLevel(int lev_idx);
 
 } // namespace ajbsp
-
-#endif /* __AJBSP_BSP_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

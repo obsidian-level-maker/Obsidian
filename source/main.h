@@ -19,8 +19,7 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __OBSIDIAN_MAIN_H__
-#define __OBSIDIAN_MAIN_H__
+#pragma once
 
 #include <cstddef>
 #include <iostream>
@@ -319,8 +318,6 @@ extern game_interface_c *game_object;
 
 game_interface_c *Doom_GameObject();
 game_interface_c *Wolf_GameObject();
-
-#endif /* __OBSIDIAN_MAIN_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

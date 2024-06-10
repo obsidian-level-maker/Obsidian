@@ -19,8 +19,7 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __SYS_DEBUG_H__
-#define __SYS_DEBUG_H__
+#pragma once
 
 #include <algorithm>
 #include <fstream>
@@ -86,8 +85,6 @@ template <typename... Args> void StreamPrintf(std::ostream &stream, std::string_
 using log_display_func_t = void (*)(std::string_view line, void *priv_data);
 
 void LogReadLines(log_display_func_t display_func, void *priv_data);
-
-#endif /* __SYS_DEBUG_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

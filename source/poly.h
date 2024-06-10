@@ -16,8 +16,7 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __AJPOLY_API_H__
-#define __AJPOLY_API_H__
+#pragma once
 
 // functions provided by the application
 
@@ -325,8 +324,6 @@ thing_c   *Thing(int index);
 polygon_c *Polygon(int index);
 
 } // namespace ajpoly
-
-#endif /* __AJPOLY_API_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

@@ -29,6 +29,8 @@
  * - Please do not call any derivative of this program SLIGE.
  */
 
+#pragma once
+
 #include <stdint.h>
 #include <stdio.h>
 

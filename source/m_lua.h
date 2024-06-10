@@ -19,8 +19,7 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __SCRIPTING_HEADER__
-#define __SCRIPTING_HEADER__
+#pragma once
 
 #include <stdint.h>
 
@@ -66,8 +65,6 @@ std::string ob_get_random_words();
 std::string ob_get_password();
 
 bool ob_build_cool_shit();
-
-#endif /* __SCRIPTING_HEADER__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

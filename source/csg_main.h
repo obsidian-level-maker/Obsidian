@@ -19,8 +19,7 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __OBLIGE_CSG_MAIN_H__
-#define __OBLIGE_CSG_MAIN_H__
+#pragma once
 
 #include <stdint.h>
 
@@ -276,8 +275,6 @@ int CSG_BrushContents(double x, double y, double z, double *liquid_depth = NULL)
 csg_property_set_c *CSG_LookupTexProps(std::string name);
 
 void CSG_LinkBrushToEntity(csg_brush_c *B, std::string link_key);
-
-#endif /* __OBLIGE_CSG_MAIN_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

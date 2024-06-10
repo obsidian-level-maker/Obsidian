@@ -19,8 +19,7 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __OBLIGE_COOKIE_H__
-#define __OBLIGE_COOKIE_H__
+#pragma once
 
 #include <cstdio>
 #include <string>
@@ -57,8 +56,6 @@ typedef enum
 void Recent_AddFile(int group, std::string filename);
 void Recent_RemoveFile(int group, std::string filename);
 bool Recent_GetName(int group, int index, std::string name_buf, bool for_menu = false);
-
-#endif /* __OBLIGE_COOKIE_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

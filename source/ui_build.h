@@ -19,8 +19,7 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __UI_BUILD_H__
-#define __UI_BUILD_H__
+#pragma once
 
 #include <string>
 #include <vector>
@@ -75,8 +74,6 @@ class UI_Build : public Fl_Group
 
     int FindStep(std::string name); // -1 if not found
 };
-
-#endif                              /* __UI_BUILD_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

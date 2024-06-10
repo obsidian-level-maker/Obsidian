@@ -17,8 +17,7 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __AJBSP_UTILITY_H__
-#define __AJBSP_UTILITY_H__
+#pragma once
 
 namespace ajbsp
 {
@@ -33,8 +32,6 @@ int    RoundPOW2(int x);
 double ComputeAngle(double dx, double dy);
 
 } // namespace ajbsp
-
-#endif /* __AJBSP_UTILITY_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

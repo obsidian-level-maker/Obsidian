@@ -19,8 +19,7 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef SYS_MACRO_H_
-#define SYS_MACRO_H_
+#pragma once
 
 #include <math.h>
 #include <stdint.h>
@@ -46,8 +45,6 @@ inline int RoundToInteger(double x)
 {
     return (int)round(x);
 }
-
-#endif // SYS_MACRO_H_
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

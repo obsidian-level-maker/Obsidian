@@ -20,8 +20,7 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __UI_HYPER_H__
-#define __UI_HYPER_H__
+#pragma once
 
 #include <FL/Fl_Button.H>
 
@@ -74,8 +73,6 @@ class UI_ModHyperLink : public Fl_Button
   private:
     static void callback_Link(Fl_Widget *w, void *data);
 };
-
-#endif /* __UI_HYPER_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

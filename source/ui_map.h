@@ -19,8 +19,7 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __UI_MAP_H__
-#define __UI_MAP_H__
+#pragma once
 
 #include <stdint.h>
 
@@ -91,8 +90,6 @@ class UI_MiniMap : public Fl_Box
                ((x > map_W - 1) ? O_RIGHT : 0);
     }
 };
-
-#endif /* __UI_MAP_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

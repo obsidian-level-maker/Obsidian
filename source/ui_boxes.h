@@ -1,5 +1,5 @@
-#ifndef OBSIDIAN_UI_BOXES_H_
-#define OBSIDIAN_UI_BOXES_H_
+#pragma once
+
 // Headers for custom FLTK box drawing routines so that Theme colors are honored
 // - Dasho
 
@@ -54,5 +54,3 @@ void cengraved_frame(int x, int y, int w, int h, Fl_Color);
 void cengraved_box(int x, int y, int w, int h, Fl_Color c);
 void cembossed_frame(int x, int y, int w, int h, Fl_Color);
 void cembossed_box(int x, int y, int w, int h, Fl_Color c);
-
-#endif

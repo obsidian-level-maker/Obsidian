@@ -19,8 +19,7 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __UI_WINDOW_H__
-#define __UI_WINDOW_H__
+#pragma once
 
 #include "hdr_fltk.h"
 #include "ui_build.h"
@@ -77,8 +76,6 @@ class UI_MainWin : public Fl_Double_Window
 };
 
 extern UI_MainWin *main_win;
-
-#endif /* __UI_WINDOW_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

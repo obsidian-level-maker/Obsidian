@@ -14,8 +14,7 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __AJBSP_RAW_DEF_H__
-#define __AJBSP_RAW_DEF_H__
+#pragma once
 
 #include <stdint.h>
 
@@ -495,8 +494,6 @@ typedef enum
 #define ZDOOM_PO_ANCHOR_TYPE     9300
 #define ZDOOM_PO_SPAWN_TYPE      9301
 #define ZDOOM_PO_SPAWNCRUSH_TYPE 9302
-
-#endif /* __AJBSP_RAW_DEF_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

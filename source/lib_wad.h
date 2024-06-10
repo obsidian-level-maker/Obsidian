@@ -19,8 +19,7 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef LIB_WAD_H_
-#define LIB_WAD_H_
+#pragma once
 
 /* WAD reading */
 
@@ -68,8 +67,6 @@ struct raw_wad_lump_t
     char name[8];
 };
 #pragma pack(pop)
-
-#endif
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

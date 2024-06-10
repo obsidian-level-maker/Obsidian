@@ -58,8 +58,6 @@
 //
 //------------------------------------------------------------------------
 
-#include "dm_prefab.h"
-
 #include "csg_main.h"
 #include "g_doom.h"
 #include "poly.h"

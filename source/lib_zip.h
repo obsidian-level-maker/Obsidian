@@ -19,8 +19,7 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef LIB_ZIP_H_
-#define LIB_ZIP_H_
+#pragma once
 
 #include <stdint.h>
 
@@ -32,8 +31,6 @@ bool ZIPF_OpenWrite(const std::string &filename);
 bool ZIPF_AddFile(const std::string &filename, std::string directory);
 bool ZIPF_AddMem(std::string name, uint8_t *data, size_t length);
 bool ZIPF_CloseWrite();
-
-#endif
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

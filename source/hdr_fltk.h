@@ -19,8 +19,7 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __OB_HDR_FLTK__
-#define __OB_HDR_FLTK__
+#pragma once
 
 /* FLTK - Widget Library */
 
@@ -70,5 +69,3 @@
 #include <FL/fl_ask.H>
 #include <FL/fl_draw.H>
 #include <FL/platform.H>
-
-#endif // __OB_HDR_FLTK__

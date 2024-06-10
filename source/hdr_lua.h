@@ -19,11 +19,8 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __OB_HDR_LUA__
-#define __OB_HDR_LUA__
+#pragma once
 
 /* LUA Scripting Language */
 
 #include "../../libraries/minilua/minilua.h"
-
-#endif // __OB_HDR_LUA__

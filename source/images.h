@@ -1,7 +1,6 @@
 // Various internal images used by Obsidian
 
-#ifndef __OBSIDIAN_LOGOS_H__
-#define __OBSIDIAN_LOGOS_H__
+#pragma once
 
 #include "headers.h"
 
@@ -5263,5 +5262,3 @@ const uint8_t image_data_RELIEF[64 * 64] = {
     20,  20};
 
 const logo_image_t logo_RELIEF = {"RELIEF", 64, 64, image_data_RELIEF};
-
-#endif /* __OBSIDIAN_LOGOS_H__ */

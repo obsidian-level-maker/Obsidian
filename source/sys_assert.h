@@ -19,8 +19,7 @@
 //
 //----------------------------------------------------------------------------
 
-#ifndef __SYS_ASSERT__
-#define __SYS_ASSERT__
+#pragma once
 
 // -------- the macros --------
 
@@ -54,8 +53,6 @@ __attribute__((noreturn))
 #endif
 void AssertFail(const char *msg, ...);
 // throw an assertion exception with the given message.
-
-#endif /* __SYS_ASSERT__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

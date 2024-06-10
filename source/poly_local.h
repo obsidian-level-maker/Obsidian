@@ -16,8 +16,7 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __AJPOLY_LOCAL_H__
-#define __AJPOLY_LOCAL_H__
+#pragma once
 
 #include <ctype.h>
 #include <errno.h>
@@ -43,8 +42,6 @@ namespace ajpoly
 #include "poly_wad.h"
 
 } // namespace ajpoly
-
-#endif /* __AJPOLY_LOCAL_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

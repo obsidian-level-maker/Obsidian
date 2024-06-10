@@ -19,8 +19,7 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef G_DOOM_H_
-#define G_DOOM_H_
+#pragma once
 
 #include "m_lua.h"
 
@@ -289,8 +288,6 @@ struct raw_subsec_t
 #pragma pack(pop)
 
 } // namespace Doom
-
-#endif // G_DOOM_H_
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab
