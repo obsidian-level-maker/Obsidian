@@ -19,6 +19,8 @@
 //
 //----------------------------------------------------------------------
 
+#include <algorithm>
+
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
 #include "lib_argv.h"
