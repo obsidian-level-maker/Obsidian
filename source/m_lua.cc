@@ -27,14 +27,15 @@
 #endif
 #include "ff_main.h"
 #include "lib_util.h"
-#define LUA_IMPL
-#include "m_lua.h"
 #include "m_trans.h"
 #include "main.h"
 #include "physfs.h"
 #include "sys_assert.h"
 #include "sys_debug.h"
 #include "sys_xoshiro.h"
+
+#define LUA_IMPL
+#include "m_lua.h"
 
 static lua_State *LUA_ST;
 
@@ -2135,7 +2136,7 @@ void ob_print_reference()
     if (!Script_CallFunc("ob_print_reference", 1))
     {
         // clang-format off
-        printf(_("ob_print_reference: Error creating REFERENCE.txt!\n"));
+        printf("%s\n", _("ob_print_reference: Error creating REFERENCE.txt!"));
         // clang-format on
     }
     // clang-format off
@@ -2148,7 +2149,7 @@ void ob_print_reference_json()
     if (!Script_CallFunc("ob_print_reference_json", 1))
     {
         // clang-format off
-        printf(_("ob_print_reference_json: Error printing json reference!\n"));
+        printf("%s\n", _("ob_print_reference_json: Error printing json reference!"));
         // clang-format on
     }
 }

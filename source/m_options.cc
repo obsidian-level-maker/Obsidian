@@ -193,7 +193,7 @@ bool Options_Save(std::string filename)
         LogPrintf("Saving options file...\n");
     }
 
-    fprintf(option_fp, "-- OPTIONS FILE : OBSIDIAN %s \"%s\"\n", OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME);
+    fprintf(option_fp, "-- OPTIONS FILE : OBSIDIAN %s \"%s\"\n", OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str());
     fprintf(option_fp, "-- Build %s\n", OBSIDIAN_VERSION);
     fprintf(option_fp, "-- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n");
     fprintf(option_fp, "-- %s\n\n", OBSIDIAN_WEBSITE);
@@ -216,7 +216,7 @@ bool Options_Save(std::string filename)
     fprintf(option_fp, "password_mode = %d\n", (password_mode ? 1 : 0));
     fprintf(option_fp, "mature_word_lists = %d\n", (mature_word_lists ? 1 : 0));
     fprintf(option_fp, "filename_prefix = %d\n", filename_prefix);
-    fprintf(option_fp, "custom_prefix = %d\n", custom_prefix);
+    fprintf(option_fp, "custom_prefix = %s\n", custom_prefix.c_str());
     fprintf(option_fp, "%s", StringFormat("default_output_path = %s\n\n", default_output_path.c_str()).c_str());
 
     VFS_OptWrite(option_fp);
