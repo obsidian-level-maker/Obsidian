@@ -33,6 +33,7 @@
 #include "main.h"
 #include "physfs.h"
 #include "sys_assert.h"
+#include "sys_debug.h"
 #include "sys_xoshiro.h"
 
 static lua_State *LUA_ST;
@@ -100,7 +101,7 @@ int gui_console_print(lua_State *L)
             res += 2;
         }
 
-        StdOutPrintf("%s", res);
+        printf("%s", res);
     }
 
     return 0;
@@ -2134,10 +2135,12 @@ void ob_print_reference()
     if (!Script_CallFunc("ob_print_reference", 1))
     {
         // clang-format off
-        StdOutPrintf(_("ob_print_reference: Error creating REFERENCE.txt!\n"));
+        printf(_("ob_print_reference: Error creating REFERENCE.txt!\n"));
         // clang-format on
     }
-    StdOutPrintf("\nA copy of this output can be found at %s\n", reference_file.c_str());
+    // clang-format off
+    printf("\n%s %s\n", _("A copy of this output can be found at"), reference_file.c_str());
+    // clang-format on
 }
 
 void ob_print_reference_json()
@@ -2145,7 +2148,7 @@ void ob_print_reference_json()
     if (!Script_CallFunc("ob_print_reference_json", 1))
     {
         // clang-format off
-        StdOutPrintf(_("ob_print_reference_json: Error printing json reference!\n"));
+        printf(_("ob_print_reference_json: Error printing json reference!\n"));
         // clang-format on
     }
 }

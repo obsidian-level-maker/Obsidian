@@ -19,6 +19,9 @@
 //
 //------------------------------------------------------------------------
 
+#include <algorithm>
+#include <iterator>
+
 #include "csg_main.h"
 #include "g_doom.h"
 #ifndef CONSOLE_ONLY

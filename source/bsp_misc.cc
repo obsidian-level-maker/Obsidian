@@ -23,7 +23,6 @@
 #include <algorithm>
 
 #include "bsp_local.h"
-#include "bsp_utility.h"
 #include "bsp_wad.h"
 #include "raw_def.h"
 #include "sys_macro.h"

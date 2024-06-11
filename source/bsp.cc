@@ -21,7 +21,6 @@
 
 #include <string.h>
 
-#include "bsp_utility.h"
 #include "bsp_wad.h"
 #include "lib_util.h"
 #include "raw_def.h"

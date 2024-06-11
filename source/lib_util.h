@@ -129,6 +129,13 @@ char *mem_gets(char *buf, int size, const char **str_ptr);
 
 uint32_t TimeGetMillies();
 
+/* memory utilities */
+
+void *UtilCalloc(int size);
+void *UtilRealloc(void *old, int size);
+void  UtilFree(void *data);
+
+
 /* math utilities */
 
 uint32_t IntHash(uint32_t key);
@@ -154,6 +161,9 @@ void CalcIntersection(double nx1, double ny1, double nx2, double ny2, double px1
 std::pair<double, double> AlongCoord(double along, double px1, double py1, double px2, double py2);
 
 bool VectorSameDir(double dx1, double dy1, double dx2, double dy2);
+
+int    RoundPOW2(int x);
+double ComputeAngle(double dx, double dy);
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

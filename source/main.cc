@@ -21,6 +21,8 @@
 
 #include "main.h"
 
+#include <locale.h>
+
 #include "csg_main.h"
 #include "images.h"
 #ifndef CONSOLE_ONLY
@@ -293,14 +295,14 @@ static void main_win_clippy_CB(Fl_Widget *w, void *data)
 
 static void ShowInfo()
 {
-    StdOutPrintf("\n"
+    printf("\n"
                  "** %s %s \"%s\"\n"
                  "** Build %s **\n"
                  "** Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted **\n"
                  "\n",
                  OBSIDIAN_TITLE.c_str(), OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str(), OBSIDIAN_VERSION);
 
-    StdOutPrintf("Usage: Obsidian [options...] [key=value...]\n"
+    printf("Usage: Obsidian [options...] [key=value...]\n"
                  "\n"
                  "Available options:\n"
                  "     --version              Display build information\n"
@@ -334,12 +336,12 @@ static void ShowInfo()
                  "                            (section should be 'c' or 'o')\n"
                  "\n");
 
-    StdOutPrintf("Please visit the web site for complete information:\n"
+    printf("Please visit the web site for complete information:\n"
                  "  %s \n"
                  "\n",
                  OBSIDIAN_WEBSITE);
 
-    StdOutPrintf("This program is free software, under the terms of the GNU General "
+    printf("This program is free software, under the terms of the GNU General "
                  "Public\n"
                  "License, and comes with ABSOLUTELY NO WARRANTY.  See the "
                  "documentation\n"
@@ -351,7 +353,7 @@ static void ShowInfo()
 
 static void ShowVersion()
 {
-    StdOutPrintf("%s %s \"%s\" Build %s\n", OBSIDIAN_TITLE.c_str(), OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str(),
+    printf("%s %s \"%s\" Build %s\n", OBSIDIAN_TITLE.c_str(), OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str(),
                  OBSIDIAN_VERSION);
 
     fflush(stdout);
@@ -918,7 +920,7 @@ void Main::Ticker()
 }
 #endif
 
-void Main::Detail::Shutdown(const bool error)
+void Main::Shutdown(const bool error)
 {
 #ifndef CONSOLE_ONLY
     if (main_win)
@@ -1296,7 +1298,7 @@ hardrestart:;
 #endif
         ShowInfo();
 #if defined WIN32 && !defined CONSOLE_ONLY
-        std::cout << '\n' << "Close window when finished...";
+        printf("\nClose window when finished...");
         do
         {
         } while (true);
@@ -1315,7 +1317,7 @@ hardrestart:;
 #endif
         ShowVersion();
 #if defined WIN32 && !defined CONSOLE_ONLY
-        std::cout << '\n' << "Close window when finished...";
+        printf("\nClose window when finished...");
         do
         {
         } while (true);
@@ -1333,7 +1335,7 @@ hardrestart:;
     {
         if (batch_arg + 1 >= argv::list.size() || argv::IsOption(batch_arg + 1))
         {
-            StdErrPrintf("OBSIDIAN ERROR: missing filename for --batch\n");
+            ErrorPrintf("OBSIDIAN ERROR: missing filename for --batch\n");
             exit(EXIT_FAILURE);
         }
 
@@ -1368,19 +1370,19 @@ hardrestart:;
         if (update_arg + 3 >= argv::list.size() || argv::IsOption(update_arg + 1) || argv::IsOption(update_arg + 2) ||
             argv::IsOption(update_arg + 3))
         {
-            StdErrPrintf("OBSIDIAN ERROR: missing one or more args for --update "
+            ErrorPrintf("OBSIDIAN ERROR: missing one or more args for --update "
                          "<section> <key> <value>\n");
             exit(EXIT_FAILURE);
         }
         if (argv::list[update_arg + 1].length() > 1)
         {
-            StdErrPrintf("OBSIDIAN ERROR: section name must be one character\n");
+            ErrorPrintf("OBSIDIAN ERROR: section name must be one character\n");
             exit(EXIT_FAILURE);
         }
         char section = argv::list[update_arg + 1][0];
         if (section != 'c' && section != 'o')
         {
-            StdErrPrintf("OBSIDIAN ERROR: section name must be 'c' or 'o'\n");
+            ErrorPrintf("OBSIDIAN ERROR: section name must be 'c' or 'o'\n");
             exit(EXIT_FAILURE);
         }
         update_kv.section = section;
@@ -1482,7 +1484,7 @@ softrestart:;
         {
             if (load_arg + 1 >= argv::list.size() || argv::IsOption(load_arg + 1))
             {
-                StdErrPrintf("OBSIDIAN ERROR: missing filename for --load\n");
+                ErrorPrintf("OBSIDIAN ERROR: missing filename for --load\n");
                 exit(EXIT_FAILURE);
             }
 
@@ -1515,13 +1517,13 @@ softrestart:;
             ob_print_reference();
             RefClose();
 #if defined WIN32 && !defined CONSOLE_ONLY
-            std::cout << '\n' << "Close window when finished...";
+            printf("\nClose window when finished...");
 
             do
             {
             } while (true);
 #endif
-            Main::Detail::Shutdown(false);
+            Main::Shutdown(false);
             return 0;
         }
 
@@ -1529,13 +1531,13 @@ softrestart:;
         {
             ob_print_reference_json();
 #if defined WIN32 && !defined CONSOLE_ONLY
-            std::cout << '\n' << "Close window when finished...";
+            printf("\nClose window when finished...");
 
             do
             {
             } while (true);
 #endif
-            Main::Detail::Shutdown(false);
+            Main::Shutdown(false);
             return 0;
         }
 
@@ -1573,20 +1575,20 @@ softrestart:;
             }
             Options_Save(options_file);
             Cookie_Save(config_file);
-            Main::Detail::Shutdown(false);
+            Main::Shutdown(false);
             return 0;
         }
 
         if (batch_output_file.empty())
         {
-            StdErrPrintf("\nNo output filename given! Did you forget the --batch "
+            ErrorPrintf("\nNo output filename given! Did you forget the --batch "
                          "parameter?\n");
             LogPrintf("\nNo output filename given! Did you forget the --batch "
                       "parameter?\n");
 
-            Main::Detail::Shutdown(false);
+            Main::Shutdown(false);
 #if defined WIN32 && !defined CONSOLE_ONLY
-            std::cout << '\n' << "Close window when finished...";
+            printf("\nClose window when finished...");
             do
             {
             } while (true);
@@ -1597,19 +1599,19 @@ softrestart:;
         Main_SetSeed();
         if (!Build_Cool_Shit())
         {
-            StdErrPrintf("FAILED!\n");
+            ErrorPrintf("FAILED!\n");
             LogPrintf("FAILED!\n");
 
-            Main::Detail::Shutdown(false);
+            Main::Shutdown(false);
 #if defined WIN32 && !defined CONSOLE_ONLY
-            std::cout << '\n' << "Close window when finished...";
+            printf("\nClose window when finished...");
             do
             {
             } while (true);
 #endif
             return EXIT_FAILURE;
         }
-        Main::Detail::Shutdown(false);
+        Main::Shutdown(false);
         return 0;
     }
 
@@ -1995,7 +1997,7 @@ softrestart:;
         }
     }
 
-    Main::Detail::Shutdown(false);
+    Main::Shutdown(false);
 
     return 0;
 }

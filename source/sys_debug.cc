@@ -19,19 +19,19 @@
 //
 //------------------------------------------------------------------------
 
-#include <time.h>
+#include "sys_debug.h"
 
-#include <fstream>
-#include <iostream>
+#include <time.h>
 
 #include "lib_util.h"
 #include "m_lua.h"
 #include "main.h"
+#include "sys_assert.h"
 
 #define DEBUG_BUF_LEN 20000
 
-std::fstream log_file;
-std::fstream ref_file;
+FILE *log_file = nullptr;
+FILE *ref_file = nullptr;
 std::string  log_filename;
 std::string  ref_filename;
 
@@ -44,9 +44,9 @@ bool LogInit(const std::string &filename)
     {
         log_filename = filename;
 
-        log_file.open(log_filename, std::ios::out);
+        log_file = FileOpen(log_filename, "w");
 
-        if (!log_file.is_open())
+        if (!log_file)
         {
             return false;
         }
@@ -73,9 +73,9 @@ bool RefInit(const std::string &filename)
             FileDelete(ref_filename);
         }
 
-        ref_file.open(ref_filename, std::ios::out);
+        ref_file = FileOpen(ref_filename, "w");
 
-        if (!ref_file.is_open())
+        if (!ref_file)
         {
             return false;
         }
@@ -114,7 +114,8 @@ void LogClose(void)
 {
     LogPrintf("\n====== END OF OBSIDIAN LOGS ======\n\n");
 
-    log_file.close();
+    fclose(log_file);
+    log_file = nullptr;
 
     log_filename.clear();
 }
@@ -123,14 +124,148 @@ void RefClose(void)
 {
     RefPrintf("\n====== END OF REFERENCE ======\n\n");
 
-    ref_file.close();
+    fclose(ref_file);
+    ref_file = nullptr;
 
     ref_filename.clear();
 }
 
+void LogPrintf(const char *message, ...)
+{
+    if (!log_file && !terminal)
+        return;
+
+    char message_buf[4096];
+
+    message_buf[4095] = 0;
+
+    // Print the message into a text string
+    va_list argptr;
+
+    va_start(argptr, message);
+    vsprintf(message_buf, message, argptr);
+    va_end(argptr);
+
+    // I hope nobody is printing strings longer than 4096 chars...
+    SYS_ASSERT(message_buf[4095] == 0);
+
+    if (log_file)
+    {
+        fprintf(log_file, "%s", message_buf);
+        fflush(log_file);
+    }
+
+    if (terminal)
+    {
+        printf("%s", message_buf);
+        fflush(stdout);
+    }
+}
+
+void RefPrintf(const char *message, ...)
+{
+    if (!ref_file && !terminal)
+        return;
+
+    char message_buf[4096];
+
+    message_buf[4095] = 0;
+
+    // Print the message into a text string
+    va_list argptr;
+
+    va_start(argptr, message);
+    vsprintf(message_buf, message, argptr);
+    va_end(argptr);
+
+    // I hope nobody is printing strings longer than 4096 chars...
+    SYS_ASSERT(message_buf[4095] == 0);
+
+    if (ref_file)
+    {
+        fprintf(ref_file, "%s", message_buf);
+        fflush(ref_file);
+    }
+
+    if (terminal)
+    {
+        printf("%s", message_buf);
+        fflush(stdout);
+    }
+}
+
+void DebugPrintf(const char *message, ...)
+{
+    if (!debugging || (!log_file && !terminal))
+        return;
+
+    char message_buf[4096];
+
+    message_buf[4095] = 0;
+
+    // Print the message into a text string
+    va_list argptr;
+
+    va_start(argptr, message);
+    vsprintf(message_buf, message, argptr);
+    va_end(argptr);
+
+    // I hope nobody is printing strings longer than 4096 chars...
+    SYS_ASSERT(message_buf[4095] == 0);
+
+    if (log_file)
+    {
+        fprintf(log_file, "DEBUG: %s", message_buf);
+        fflush(log_file);
+    }
+
+    if (terminal)
+    {
+        printf("DEBUG: %s", message_buf);
+        fflush(stdout);
+    }
+}
+
+[[noreturn]] void ErrorPrintf(const char *message, ...)
+{
+    char message_buf[4096];
+
+    message_buf[4095] = 0;
+
+    // Print the message into a text string
+    va_list argptr;
+
+    va_start(argptr, message);
+    vsprintf(message_buf, message, argptr);
+    va_end(argptr);
+
+    // I hope nobody is printing strings longer than 4096 chars...
+    SYS_ASSERT(message_buf[4095] == 0);
+
+    if (log_file)
+    {
+        fprintf(log_file, "ERROR: %s", message_buf);
+        fflush(log_file);
+    }
+
+    if (terminal)
+        printf("ERROR: %s", message_buf);
+
+    Main::Shutdown(true);
+#if defined WIN32 && !defined CONSOLE_ONLY
+    if (batch_mode)
+    {
+        printf("\nClose window when finished...");
+        do
+        {
+        } while (true);
+    }
+#endif
+    exit(9);
+}
+
 void LogReadLines(log_display_func_t display_func, void *priv_data)
 {
-
     if (!log_file)
     {
         return;
@@ -141,35 +276,49 @@ void LogReadLines(log_display_func_t display_func, void *priv_data)
     // fussy about opening already open files (in Linux it would
     // not be an issue).
 
-    log_file.close();
+    fclose(log_file);
+    log_file = nullptr;
 
-    log_file.open(log_filename, std::ios::in);
+    log_file = FileOpen(log_filename, "r");
 
     // this is very unlikely to happen, but check anyway
-    if (!log_file.is_open())
+    if (!log_file)
     {
         return;
     }
 
     std::string buffer;
-    while (std::getline(log_file, buffer))
+    int c = EOF;
+    for (;;)
     {
+        buffer.clear();
+        while ((c = fgetc(log_file)) != EOF)
+        {
+            buffer.push_back(c);
+            if (c == '\n')
+                break;
+        }
+
         // remove any newline at the end (LF or CR/LF)
         StringRemoveCRLF(&buffer);
 
         // remove any DEL characters (mainly to workaround an FLTK bug)
         StringReplaceChar(&buffer, 0x7f, 0);
 
-        std::cout << buffer << std::endl;
+        buffer.push_back('\n');
 
         display_func(buffer, priv_data);
+
+        if (feof(log_file) || ferror(log_file))
+            break;
     }
 
     // close the log file after current contents are read
-    log_file.close();
+    fclose(log_file);
+    log_file = nullptr;
 
     // open the log file for writing again
-    log_file.open(log_filename, std::ios::app);
+    log_file = FileOpen(log_filename, "a");
 }
 
 //--- editor settings ---

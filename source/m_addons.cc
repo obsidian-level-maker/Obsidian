@@ -159,9 +159,9 @@ void VFS_OptParse(std::string name)
     }
 }
 
-void VFS_OptWrite(std::ofstream &fp)
+void VFS_OptWrite(FILE *fp)
 {
-    fp << "---- Enabled Addons ----\n\n";
+    fprintf(fp, "---- Enabled Addons ----\n\n");
 
     for (unsigned int i = 0; i < all_addons.size(); i++)
     {
@@ -169,11 +169,11 @@ void VFS_OptWrite(std::ofstream &fp)
 
         if (info->enabled)
         {
-            fp << "addon = " << info->name << "\n";
+            fprintf(fp, "addon = %s\n", info->name.c_str());
         }
     }
 
-    fp << "\n";
+    fprintf(fp, "\n");
 }
 
 void VFS_ScanForPresets()

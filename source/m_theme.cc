@@ -294,9 +294,9 @@ static bool Theme_Options_ParseLine(std::string buf)
 
 bool Theme_Options_Load(std::string filename)
 {
-    std::ifstream option_fp(filename, std::ios::in);
+    FILE *option_fp = FileOpen(filename, "r");
 
-    if (!option_fp.is_open())
+    if (!option_fp)
     {
         LogPrintf("Missing Theme file -- using defaults.\n\n");
         return false;
@@ -306,12 +306,25 @@ bool Theme_Options_Load(std::string filename)
 
     int error_count = 0;
 
-    for (std::string line; std::getline(option_fp, line);)
+    std::string buffer;
+    int c = EOF;
+    for (;;)
     {
-        if (!Theme_Options_ParseLine(line))
+        buffer.clear();
+        while ((c = fgetc(option_fp)) != EOF)
+        {
+            buffer.push_back(c);
+            if (c == '\n')
+                break;
+        }
+
+        if (!Theme_Options_ParseLine(buffer))
         {
             error_count += 1;
         }
+
+        if (feof(option_fp) || ferror(option_fp))
+            break;
     }
 
     if (error_count > 0)
@@ -323,16 +336,16 @@ bool Theme_Options_Load(std::string filename)
         LogPrintf("DONE.\n\n");
     }
 
-    option_fp.close();
+    fclose(option_fp);
 
     return true;
 }
 
 bool Theme_Options_Save(std::string filename)
 {
-    std::ofstream option_fp(filename);
+    FILE *option_fp = FileOpen(filename, "w");
 
-    if (!option_fp.is_open())
+    if (!option_fp)
     {
         LogPrintf("Error: unable to create file: %s\n(%s)\n\n", filename.c_str(), strerror(errno));
         return false;
@@ -343,45 +356,45 @@ bool Theme_Options_Save(std::string filename)
         LogPrintf("Saving theme file...\n");
     }
 
-    option_fp << "-- THEME FILE : OBSIDIAN " << OBSIDIAN_SHORT_VERSION << " \"" << OBSIDIAN_CODE_NAME << "\"\n";
-    option_fp << "-- Build " << OBSIDIAN_VERSION << "\n";
-    option_fp << "-- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n";
-    option_fp << "-- " << OBSIDIAN_WEBSITE << "\n\n";
+    fprintf(option_fp, "-- THEME FILE : OBSIDIAN %s \"%s\"\n", OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME);
+    fprintf(option_fp, "-- Build %s\n", OBSIDIAN_VERSION);
+    fprintf(option_fp, "-- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n");
+    fprintf(option_fp, "-- %s\n\n", OBSIDIAN_WEBSITE);
 
-    option_fp << "window_scaling      = " << NumToString(window_scaling) << "\n";
-    option_fp << "font_scaling      = " << NumToString(font_scaling) << "\n";
-    option_fp << "font_theme      = " << NumToString(font_theme) << "\n";
-    option_fp << "widget_theme      = " << NumToString(widget_theme) << "\n";
-    option_fp << "box_theme      = " << NumToString(box_theme) << "\n";
-    option_fp << "button_theme      = " << NumToString(button_theme) << "\n";
-    option_fp << "color_scheme      = " << NumToString(color_scheme) << "\n";
-    option_fp << "text_red      = " << NumToString(text_red) << "\n";
-    option_fp << "text_green      = " << NumToString(text_green) << "\n";
-    option_fp << "text_blue      = " << NumToString(text_blue) << "\n";
-    option_fp << "text2_red      = " << NumToString(text2_red) << "\n";
-    option_fp << "text2_green      = " << NumToString(text2_green) << "\n";
-    option_fp << "text2_blue      = " << NumToString(text2_blue) << "\n";
-    option_fp << "bg_red      = " << NumToString(bg_red) << "\n";
-    option_fp << "bg_green      = " << NumToString(bg_green) << "\n";
-    option_fp << "bg_blue      = " << NumToString(bg_blue) << "\n";
-    option_fp << "bg2_red      = " << NumToString(bg2_red) << "\n";
-    option_fp << "bg2_green      = " << NumToString(bg2_green) << "\n";
-    option_fp << "bg2_blue      = " << NumToString(bg2_blue) << "\n";
-    option_fp << "button_red      = " << NumToString(button_red) << "\n";
-    option_fp << "button_green      = " << NumToString(button_green) << "\n";
-    option_fp << "button_blue      = " << NumToString(button_blue) << "\n";
-    option_fp << "gradient_red      = " << NumToString(gradient_red) << "\n";
-    option_fp << "gradient_green      = " << NumToString(gradient_green) << "\n";
-    option_fp << "gradient_blue      = " << NumToString(gradient_blue) << "\n";
-    option_fp << "border_red      = " << NumToString(border_red) << "\n";
-    option_fp << "border_green      = " << NumToString(border_green) << "\n";
-    option_fp << "border_blue      = " << NumToString(border_blue) << "\n";
-    option_fp << "gap_red      = " << NumToString(gap_red) << "\n";
-    option_fp << "gap_green      = " << NumToString(gap_green) << "\n";
-    option_fp << "gap_blue      = " << NumToString(gap_blue) << "\n";
-    option_fp << "\n\n";
+    fprintf(option_fp, "window_scaling      = %s\n", NumToString(window_scaling));
+    fprintf(option_fp, "font_scaling      = %s\n", NumToString(font_scaling));
+    fprintf(option_fp, "font_theme      = %s\n", NumToString(font_theme));
+    fprintf(option_fp, "widget_theme      = %s\n", NumToString(widget_theme));
+    fprintf(option_fp, "box_theme      = %s\n", NumToString(box_theme));
+    fprintf(option_fp, "button_theme      = %s\n", NumToString(button_theme));
+    fprintf(option_fp, "color_scheme      = %s\n", NumToString(color_scheme));
+    fprintf(option_fp, "text_red      = %s\n", NumToString(text_red));
+    fprintf(option_fp, "text_green      = %s\n", NumToString(text_green));
+    fprintf(option_fp, "text_blue      = %s\n", NumToString(text_blue));
+    fprintf(option_fp, "text2_red      = %s\n", NumToString(text2_red));
+    fprintf(option_fp, "text2_green      = %s\n", NumToString(text2_green));
+    fprintf(option_fp, "text2_blue      = %s\n", NumToString(text2_blue));
+    fprintf(option_fp, "bg_red      = %s\n", NumToString(bg_red));
+    fprintf(option_fp, "bg_green      = %s\n", NumToString(bg_green));
+    fprintf(option_fp, "bg_blue      = %s\n", NumToString(bg_blue));
+    fprintf(option_fp, "bg2_red      = %s\n", NumToString(bg2_red));
+    fprintf(option_fp, "bg2_green      = %s\n", NumToString(bg2_green));
+    fprintf(option_fp, "bg2_blue      = %s\n", NumToString(bg2_blue));
+    fprintf(option_fp, "button_red      = %s\n", NumToString(button_red));
+    fprintf(option_fp, "button_green      = %s\n", NumToString(button_green));
+    fprintf(option_fp, "button_blue      = %s\n", NumToString(button_blue));
+    fprintf(option_fp, "gradient_red      = %s\n", NumToString(gradient_red));
+    fprintf(option_fp, "gradient_green      = %s\n", NumToString(gradient_green));
+    fprintf(option_fp, "gradient_blue      = %s\n", NumToString(gradient_blue));
+    fprintf(option_fp, "border_red      = %s\n", NumToString(border_red));
+    fprintf(option_fp, "border_green      = %s\n", NumToString(border_green));
+    fprintf(option_fp, "border_blue      = %s\n", NumToString(border_blue));
+    fprintf(option_fp, "gap_red      = %s\n", NumToString(gap_red));
+    fprintf(option_fp, "gap_green      = %s\n", NumToString(gap_green));
+    fprintf(option_fp, "gap_blue      = %s\n", NumToString(gap_blue));
+    fprintf(option_fp, "\n\n");
 
-    option_fp.close();
+    fclose(option_fp);
 
     if (main_action != MAIN_SOFT_RESTART)
     {

@@ -509,7 +509,7 @@ class UI_Manage_Config : public Fl_Double_Window
 
     bool LoadFromFile(std::string filename)
     {
-        FILE *fp = FileOpen(filename.c_str(), "rb");
+        FILE *fp = FileOpen(filename, "rb");
 
         if (!fp)
         {

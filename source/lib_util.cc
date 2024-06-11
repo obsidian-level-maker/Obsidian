@@ -568,7 +568,7 @@ void StringRemoveCRLF(std::string *str)
         {
             str->pop_back();
         }
-        if (str->back() == '\r')
+        if (!str->empty() && str->back() == '\r')
         {
             str->pop_back();
         }
@@ -911,6 +911,87 @@ uint32_t TimeGetMillies()
                std::chrono::system_clock::now().time_since_epoch())
         .count();
 }
+
+//------------------------------------------------------------------------
+// MEMORY ALLOCATION
+//------------------------------------------------------------------------
+
+//
+// Allocate memory with error checking.  Zeros the memory.
+//
+void *UtilCalloc(int size)
+{
+    void *ret = calloc(1, size);
+
+    if (!ret)
+        Main::FatalError("Out of memory (cannot allocate %d bytes)\n", size);
+
+    return ret;
+}
+
+//
+// Reallocate memory with error checking.
+//
+void *UtilRealloc(void *old, int size)
+{
+    void *ret = realloc(old, size);
+
+    if (!ret)
+        Main::FatalError("Out of memory (cannot reallocate %d bytes)\n", size);
+
+    return ret;
+}
+
+//
+// Free the memory with error checking.
+//
+void UtilFree(void *data)
+{
+    if (data == NULL)
+        Main::FatalError("Trying to free a NULL pointer\n");
+
+    free(data);
+}
+
+//------------------------------------------------------------------------
+// MATH STUFF
+//------------------------------------------------------------------------
+
+//
+// rounds the value _up_ to the nearest power of two.
+//
+int RoundPOW2(int x)
+{
+    if (x <= 2)
+        return x;
+
+    x--;
+
+    for (int tmp = x >> 1; tmp; tmp >>= 1)
+        x |= tmp;
+
+    return x + 1;
+}
+
+//
+// Compute angle of line from (0,0) to (dx,dy).
+// Result is degrees, where 0 is east and 90 is north.
+//
+double ComputeAngle(double dx, double dy)
+{
+    double angle;
+
+    if (dx == 0)
+        return (dy > 0) ? 90.0 : 270.0;
+
+    angle = atan2((double)dy, (double)dx) * 180.0 / M_PI;
+
+    if (angle < 0)
+        angle += 360.0;
+
+    return angle;
+}
+
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

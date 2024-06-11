@@ -57,7 +57,6 @@ set(OBSIDIAN_SOURCE_FILES
     source/bsp_level.cc
     source/bsp_misc.cc
     source/bsp_node.cc
-    source/bsp_utility.cc
     source/bsp_wad.cc
     source/bsp.cc
     source/csg_bsp.cc

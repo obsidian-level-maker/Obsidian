@@ -25,7 +25,7 @@
 
 #include <stdint.h>
 
-#include <string_view>
+#include <string>
 
 bool WAD_OpenRead(std::string filename);
 void WAD_CloseRead();
@@ -45,28 +45,6 @@ void WAD_CloseWrite();
 void WAD_NewLump(std::string name);
 bool WAD_AppendData(const void *data, int length);
 void WAD_FinishLump();
-
-/* ----- WAD structure (Doom) ---------------------- */
-
-#pragma pack(push, 1)
-struct raw_wad_header_t
-{
-    char magic[4];
-
-    uint32_t num_lumps;
-    uint32_t dir_start;
-};
-#pragma pack(pop)
-
-#pragma pack(push, 1)
-struct raw_wad_lump_t
-{
-    uint32_t start;
-    uint32_t length;
-
-    char name[8];
-};
-#pragma pack(pop)
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

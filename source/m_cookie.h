@@ -42,8 +42,8 @@ bool Theme_Options_Save(std::string filename);
 
 /* recent file stuff */
 
-void Recent_Parse(std::string name, std::string value);
-void Recent_Write(std::ofstream &fp);
+void Recent_Parse(const std::string &name, const std::string &value);
+void Recent_Write(FILE *fp);
 
 typedef enum
 {

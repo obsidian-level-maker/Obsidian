@@ -23,7 +23,6 @@
 
 #include <stddef.h>
 
-#include <iostream>
 #include <map>
 #include <string>
 #include <vector>
@@ -192,10 +191,7 @@ void DLG_ManageConfig();
 namespace Main
 {
 
-namespace Detail
-{
 void Shutdown(bool error);
-}
 
 template <typename... Args> [[noreturn]] void FatalError(std::string_view msg, Args &&...args)
 {
@@ -203,13 +199,13 @@ template <typename... Args> [[noreturn]] void FatalError(std::string_view msg, A
     auto buffer = StringFormat(msg, std::forward<Args>(args)...);
     DLG_ShowError("%s", buffer.c_str());
 #endif
-    Detail::Shutdown(true);
+    Shutdown(true);
 
     if (batch_mode)
     {
-        std::cout << "ERROR!\n";
+        printf("ERROR!\n");
 #ifdef WIN32
-        std::cout << '\n' << "Close window when finished...";
+        printf("\nClose window when finished...");
         do
         {
         } while (true);
@@ -230,10 +226,10 @@ template <typename... Args> void ProgStatus(std::string_view msg, Args &&...args
     }
     else if (batch_mode)
     {
-        StdErrPrintf("%s\n", buffer.c_str());
+        ErrorPrintf("%s\n", buffer.c_str());
     }
 #else
-    StdErrPrintf("%s\n", buffer.c_str());
+    ErrorPrintf("%s\n", buffer.c_str());
 #endif
 }
 bool BackupFile(const std::string &filename);
@@ -280,7 +276,7 @@ class game_interface_c
     // value is the result from the LUA script, and is false if
     // an error occurred or the user clicked Abort.
     //
-    // For DOOM this will run the AJBSP node builder.
+    // For idTech 1 games this will run the AJBSP node builder.
     //
     // Returns false on error.  Note that Finish() is never
     // called if Start() fails.

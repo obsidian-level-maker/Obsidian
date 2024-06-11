@@ -114,13 +114,9 @@ void Parse_Option(const std::string &name, const std::string &value)
     {
         default_output_path = value;
     }
-    else
-    {
-        StdOutPrintf("%s '%s'\n", _("Unknown option: "), name.c_str());
-    }
 }
 
-static bool Options_ParseLine(std::string buf)
+static bool Options_ParseLine(const std::string &buf)
 {
     std::string::size_type pos = 0;
 
@@ -131,26 +127,17 @@ static bool Options_ParseLine(std::string buf)
         return true;
     }
 
-    // For options file, don't strip whitespace as it can cause issue with addon
-    // paths that have whitespace - Dasho
-
-    /*while (std::find(buf.begin(), buf.end(), ' ') != buf.end()) {
-        buf.erase(std::find(buf.begin(), buf.end(), ' '));
-    }*/
-
-    if (!isalpha(buf.front()))
+    if (!IsAlphaASCII(buf.front()))
     {
-        StdOutPrintf("%s [%s]\n", _("Weird option line: "), buf.c_str());
         return false;
     }
 
-    // pos = buf.find('=', 0);  // Fix pos after whitespace deletion
     std::string name  = buf.substr(0, pos - 1);
     std::string value = buf.substr(pos + 2);
 
     if (name.empty() || value.empty())
     {
-        StdOutPrintf(_("Name or value missing!\n"));
+        printf(_("Name or value missing!\n"));
         return false;
     }
 
@@ -160,29 +147,42 @@ static bool Options_ParseLine(std::string buf)
 
 bool Options_Load(std::string filename)
 {
-    std::ifstream option_fp(filename, std::ios::in);
+    FILE *option_fp = FileOpen(filename, "r");
 
-    if (!option_fp.is_open())
+    if (!option_fp)
     {
-        StdOutPrintf(_("Missing Options file -- using defaults.\n\n"));
+        printf(_("Missing Options file -- using defaults.\n\n"));
         return false;
     }
 
-    for (std::string line; std::getline(option_fp, line);)
+    std::string buffer;
+    int c = EOF;
+    for (;;)
     {
-        Options_ParseLine(line);
+        buffer.clear();
+        while ((c = fgetc(option_fp)) != EOF)
+        {
+            buffer.push_back(c);
+            if (c == '\n')
+                break;
+        }
+
+        Options_ParseLine(buffer);
+
+        if (feof(option_fp) || ferror(option_fp))
+            break;
     }
 
-    option_fp.close();
+    fclose(option_fp);
 
     return true;
 }
 
 bool Options_Save(std::string filename)
 {
-    std::ofstream option_fp(filename, std::ios::out);
+    FILE *option_fp = FileOpen(filename, "w");
 
-    if (!option_fp.is_open())
+    if (!option_fp)
     {
         LogPrintf("Error: unable to create file: %s\n(%s)\n\n", filename.c_str(), strerror(errno));
         return false;
@@ -193,41 +193,37 @@ bool Options_Save(std::string filename)
         LogPrintf("Saving options file...\n");
     }
 
-    option_fp << "-- OPTIONS FILE : OBSIDIAN " << OBSIDIAN_SHORT_VERSION << " \"" << OBSIDIAN_CODE_NAME << "\"\n";
-    option_fp << "-- Build " << OBSIDIAN_VERSION << "\n";
-    option_fp << "-- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n";
-    option_fp << "-- " << OBSIDIAN_WEBSITE << "\n\n";
+    fprintf(option_fp, "-- OPTIONS FILE : OBSIDIAN %s \"%s\"\n", OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME);
+    fprintf(option_fp, "-- Build %s\n", OBSIDIAN_VERSION);
+    fprintf(option_fp, "-- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n");
+    fprintf(option_fp, "-- %s\n\n", OBSIDIAN_WEBSITE);
 
-    option_fp << "language = " << t_language << "\n";
-    option_fp << "\n";
+    fprintf(option_fp, "language = %s\n\n", t_language.c_str());
 
-    option_fp << "create_backups = " << (create_backups ? 1 : 0) << "\n";
-    option_fp << "overwrite_warning = " << (overwrite_warning ? 1 : 0) << "\n";
-    option_fp << "debug_messages = " << (debug_messages ? 1 : 0) << "\n";
-    option_fp << "limit_break = " << (limit_break ? 1 : 0) << "\n";
-    option_fp << "preserve_old_config = " << (preserve_old_config ? 1 : 0) << "\n";
-    option_fp << "randomize_architecture = " << (randomize_architecture ? 1 : 0) << "\n";
-    option_fp << "randomize_monsters = " << (randomize_monsters ? 1 : 0) << "\n";
-    option_fp << "randomize_pickups = " << (randomize_pickups ? 1 : 0) << "\n";
-    option_fp << "randomize_misc = " << (randomize_misc ? 1 : 0) << "\n";
-    option_fp << "random_string_seeds = " << (random_string_seeds ? 1 : 0) << "\n";
+    fprintf(option_fp, "create_backups = %d\n", (create_backups ? 1 : 0));
+    fprintf(option_fp, "overwrite_warning = %d\n", (overwrite_warning ? 1 : 0));
+    fprintf(option_fp, "debug_messages = %d\n", (debug_messages ? 1 : 0));
+    fprintf(option_fp, "limit_break = %d\n", (limit_break ? 1 : 0));
+    fprintf(option_fp, "preserve_old_config = %d\n", (preserve_old_config ? 1 : 0));
+    fprintf(option_fp, "randomize_architecture = %d\n", (randomize_architecture ? 1 : 0));
+    fprintf(option_fp, "randomize_monsters = %d\n", (randomize_monsters ? 1 : 0));
+    fprintf(option_fp, "randomize_pickups = %d\n", (randomize_pickups ? 1 : 0));
+    fprintf(option_fp, "randomize_misc = %d\n", (randomize_misc ? 1 : 0));
+    fprintf(option_fp, "random_string_seeds = %d\n", (random_string_seeds ? 1 : 0));
 #ifndef CONSOLE_ONLY
-    option_fp << "gui_simple_mode = " << (gui_simple_mode ? 1 : 0) << "\n";
+    fprintf(option_fp, "gui_simple_mode = %d\n", (gui_simple_mode ? 1 : 0));
 #endif
-    option_fp << "password_mode = " << (password_mode ? 1 : 0) << "\n";
-    option_fp << "mature_word_lists = " << (mature_word_lists ? 1 : 0) << "\n";
-    option_fp << "filename_prefix = " << filename_prefix << "\n";
-    option_fp << "custom_prefix = " << custom_prefix << "\n";
-    std::string dop = StringFormat("default_output_path = %s\n", default_output_path.c_str());
-    option_fp.write(dop.c_str(), dop.size());
-
-    option_fp << "\n";
+    fprintf(option_fp, "password_mode = %d\n", (password_mode ? 1 : 0));
+    fprintf(option_fp, "mature_word_lists = %d\n", (mature_word_lists ? 1 : 0));
+    fprintf(option_fp, "filename_prefix = %d\n", filename_prefix);
+    fprintf(option_fp, "custom_prefix = %d\n", custom_prefix);
+    fprintf(option_fp, "%s", StringFormat("default_output_path = %s\n\n", default_output_path.c_str()).c_str());
 
     VFS_OptWrite(option_fp);
 
     Recent_Write(option_fp);
 
-    option_fp.close();
+    fclose(option_fp);
 
     if (main_action != MAIN_SOFT_RESTART)
     {

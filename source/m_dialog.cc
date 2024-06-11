@@ -21,8 +21,8 @@
 
 #include <FL/fl_utf8.h>
 
-#include <iostream>
 #include <limits>
+#include <stdexcept>
 #include <string>
 
 #include "hdr_fltk.h"
@@ -358,18 +358,18 @@ void DLG_EditSeed(void)
     catch (std::invalid_argument &e)
     {
         (void)e;
-        std::cout << _("Invalid argument. Will process as string.\n");
+        printf(_("Invalid argument. Will process as string.\n"));
     }
     catch (std::out_of_range &e)
     {
         (void)e;
         // clang-format off
-        std::cout << _("Resulting number would be out of range. Will process as string.\n");
+        printf(_("Resulting number would be out of range. Will process as string.\n"));
         // clang-format on
     }
     catch (std::exception &e)
     {
-        std::cout << e.what();
+        printf(e.what());
     }
     string_seed = word;
     ob_set_config("string_seed", word.c_str());
@@ -405,7 +405,7 @@ class UI_LogViewer : public Fl_Double_Window
 
     void ReadLogs();
 
-    void WriteLogs(std::ofstream &fp);
+    void WriteLogs(FILE *fp);
 
   private:
     int CountSelectedLines() const;
@@ -571,7 +571,7 @@ void UI_LogViewer::ReadLogs()
     JumpEnd();
 }
 
-void UI_LogViewer::WriteLogs(std::ofstream &fp)
+void UI_LogViewer::WriteLogs(FILE *fp)
 {
     for (int n = 1; n <= browser->size(); n++)
     {
@@ -579,7 +579,7 @@ void UI_LogViewer::WriteLogs(std::ofstream &fp)
 
         if (str)
         {
-            StreamPrintf(fp, "%s\n", str);
+            fprintf(fp, "%s\n", str);
         }
     }
 }
@@ -687,7 +687,7 @@ tryagain:;
         goto tryagain;
     }
 
-    std::ofstream fp{filename};
+    FILE *fp = FileOpen(filename, "w");
 
     if (!fp)
     {
@@ -699,7 +699,7 @@ tryagain:;
 
     that->WriteLogs(fp);
 
-    fp.close();
+    fclose(fp);
 }
 
 //----------------------------------------------------------------------
@@ -794,26 +794,41 @@ void UI_GlossaryViewer::ReadGlossary()
         return;
     }
 
-    std::fstream gloss_stream;
+    FILE *gloss_file = FileOpen(glossary, "r");
 
-    gloss_stream.open(glossary, std::ios::in);
+    if (!gloss_file)
+    {
+        return;
+    }
 
     std::string buffer;
-    while (std::getline(gloss_stream, buffer))
+    int c = EOF;
+    for (;;)
     {
+        buffer.clear();
+        while ((c = fgetc(gloss_file)) != EOF)
+        {
+            buffer.push_back(c);
+            if (c == '\n')
+                break;
+        }
+
         // remove any newline at the end (LF or CR/LF)
         StringRemoveCRLF(&buffer);
 
         // remove any DEL characters (mainly to workaround an FLTK bug)
         StringReplaceChar(&buffer, 0x7f, 0);
 
-        std::cout << buffer << std::endl;
+        buffer.push_back('\n');
 
         browser->add(buffer.data());
+
+        if (feof(gloss_file) || ferror(gloss_file))
+            break;
     }
 
     // close the log file after current contents are read
-    gloss_stream.close();
+    fclose(gloss_file);
 }
 
 void UI_GlossaryViewer::quit_callback(Fl_Widget *w, void *data)

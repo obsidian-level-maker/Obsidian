@@ -21,15 +21,10 @@
 
 #pragma once
 
-#include <algorithm>
-#include <fstream>
-#include <iostream>
 #include <string>
+
 extern bool         terminal;
 extern bool         debugging;
-extern std::fstream log_file;
-extern std::fstream ref_file;
-extern std::string  StringFormat(std::string_view str, ...);
 
 bool LogInit(const std::string &filename); // NULL for none
 void LogClose(void);
@@ -39,48 +34,17 @@ void RefClose(void);
 void LogEnableDebug(bool enable);
 void LogEnableTerminal(bool enable);
 
-template <typename... Args> void LogPrintf(std::string_view str, Args &&...args)
-{
-    std::string msg = StringFormat(str, args...);
-    log_file << msg;
-    if (terminal)
-    {
-        std::cout << msg;
-    }
-}
-template <typename... Args> void RefPrintf(std::string_view str, Args &&...args)
-{
-    std::string msg = StringFormat(str, args...);
-    ref_file << msg;
-    if (terminal)
-    {
-        std::cout << msg;
-    }
-}
-template <typename... Args> void DebugPrintf(std::string_view str, Args &&...args)
-{
-    if (debugging)
-    {
-        std::string msg = StringFormat(str, args...);
-        log_file << msg;
-        if (terminal)
-        {
-            std::cout << msg;
-        }
-    }
-}
-template <typename... Args> void StdOutPrintf(std::string_view str, Args &&...args)
-{
-    std::cout << StringFormat(str, args...);
-}
-template <typename... Args> void StdErrPrintf(std::string_view str, Args &&...args)
-{
-    std::cerr << StringFormat(str, args...);
-}
-template <typename... Args> void StreamPrintf(std::ostream &stream, std::string_view str, Args &&...args)
-{
-    stream << StringFormat(str, args...);
-}
+#ifdef __GNUC__
+void              LogPrintf(const char *message, ...) __attribute__((format(printf, 1, 2)));
+void              RefPrintf(const char *message, ...) __attribute__((format(printf, 1, 2)));
+void              DebugPrintf(const char *message, ...) __attribute__((format(printf, 1, 2)));
+[[noreturn]] void ErrorPrintf(const char *message, ...) __attribute__((format(printf, 1, 2)));
+#else
+void              LogPrintf(const char *message, ...);
+void              RefPrintf(const char *message, ...);
+void              DebugPrintf(const char *message, ...);
+[[noreturn]] void ErrorPrintf(const char *message, ...);
+#endif
 
 using log_display_func_t = void (*)(std::string_view line, void *priv_data);
 

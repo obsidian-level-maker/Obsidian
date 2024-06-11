@@ -1003,16 +1003,23 @@ void Trans_Read_PO_File(FILE *fp)
     // initialize
     po_state.Clear();
 
-    // process one line on each iteration
-    static char line[MSG_BUF_LEN];
-
     po_state.line_number = 0;
 
-    while (fgets(line, sizeof(line), fp) != NULL)
+    std::string buffer;
+    int c = EOF;
+    for (;;)
     {
+        buffer.clear();
+        while ((c = fgetc(fp)) != EOF)
+        {
+            buffer.push_back(c);
+            if (c == '\n')
+                break;
+        }
+
         po_state.line_number += 1;
 
-        char *p = line;
+        char *p = buffer.data();
 
         // skip any BOM (can occur at very start of file)
         if ((uint8_t)(p[0]) == 0xEF && (uint8_t)(p[1]) == 0xBB && (uint8_t)(p[2]) == 0xBF)
@@ -1022,7 +1029,7 @@ void Trans_Read_PO_File(FILE *fp)
 
         // NOTE: I assume whitespace at start of line is not valid
 
-        if (isspace(*p) || *p == '#')
+        if (IsSpaceASCII(*p) || *p == '#')
         {
             continue;
         }
@@ -1037,15 +1044,15 @@ void Trans_Read_PO_File(FILE *fp)
         // if we have a pending translation, add it now
         po_state.Push();
 
-        if (strncmp(p, "msgctxt ", 8) == 0)
+        if (StringPrefixCompare(p, "msgctxt ") == 0)
         {
             po_state.SetContext(p + 8);
         }
-        else if (strncmp(p, "msgid ", 6) == 0)
+        else if (StringPrefixCompare(p, "msgid ") == 0)
         {
             po_state.SetId(p + 6);
         }
-        else if (strncmp(p, "msgstr ", 7) == 0)
+        else if (StringPrefixCompare(p, "msgstr ") == 0)
         {
             po_state.SetString(p + 7);
         }
@@ -1053,6 +1060,9 @@ void Trans_Read_PO_File(FILE *fp)
         {
             LogPrintf("WARNING: unsupported keyword on line %d\n", po_state.line_number);
         }
+
+        if (feof(fp) || ferror(fp))
+            break;
     }
 
     // all done, add the final pending translation
@@ -1079,9 +1089,9 @@ void Trans_Init()
         return;
     }
 
-    std::ifstream trans_fp(path);
+    FILE *trans_fp = FileOpen(path, "rb");
 
-    if (!trans_fp.is_open())
+    if (!trans_fp)
     {
         LogPrintf("WARNING: Error opening LANGS.txt!\n");
         return;
@@ -1089,10 +1099,26 @@ void Trans_Init()
 
     LogPrintf("Loading language list: %s\n", path.c_str());
 
-    for (std::string line; std::getline(trans_fp, line);)
+    std::string buffer;
+    int c = EOF;
+    for (;;)
     {
-        Trans_ParseLangLine((char *)line.c_str());
+        buffer.clear();
+
+        while ((c = fgetc(trans_fp)) != EOF)
+        {
+            buffer.push_back((char)c);
+            if (c == '\n')
+                break;
+        }
+
+        Trans_ParseLangLine((char *)buffer.c_str());
+
+        if (feof(trans_fp) || ferror(trans_fp))
+            break;
     }
+
+    fclose(trans_fp);
 
     LogPrintf("DONE.\n\n");
 }
@@ -1132,7 +1158,7 @@ void Trans_SetLanguage()
         path = StringFormat("%s/language/%s.po", install_dir.c_str(), lang_plain.c_str());
     }
 
-    FILE *fp = FileOpen(path.c_str(), "rb");
+    FILE *fp = FileOpen(path, "rb");
     if (!fp)
     {
         LogPrintf("No translation file: language/%s.po\n", lang_plain.c_str());

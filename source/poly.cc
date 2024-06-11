@@ -18,6 +18,7 @@
 
 #include <stddef.h>
 
+#include "lib_util.h"
 #include "poly_local.h"
 #include "sys_macro.h"
 

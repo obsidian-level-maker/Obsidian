@@ -24,7 +24,6 @@
 #include <algorithm>
 
 #include "bsp_local.h"
-#include "bsp_utility.h"
 #include "bsp_wad.h"
 #include "lib_parse.h"
 #include "miniz.h"

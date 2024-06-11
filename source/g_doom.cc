@@ -21,6 +21,8 @@
 
 #include "g_doom.h"
 
+#include <locale.h>
+
 #include <bitset>
 #include <string>
 
@@ -532,7 +534,7 @@ bool Doom::StartWAD(std::string filename)
 #ifndef CONSOLE_ONLY
         DLG_ShowError(_("Unable to create wad file:\n\n%s"), strerror(errno));
 #else
-        StdOutPrintf(_("Unable to create wad file:\n\n%s"), strerror(errno));
+        printf(_("Unable to create wad file:\n\n%s"), strerror(errno));
 #endif
         return false;
     }

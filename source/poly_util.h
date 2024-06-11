@@ -23,8 +23,5 @@
 // set message for certain errors
 void SetErrorMsg(const char *str, ...);
 
-// compute angle for a 2D vector
-double ComputeAngle(double dx, double dy);
-
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

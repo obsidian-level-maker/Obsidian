@@ -24,7 +24,6 @@
 #include <algorithm>
 
 #include "bsp_local.h"
-#include "bsp_utility.h"
 #include "lib_util.h"
 #include "sys_endian.h"
 #include "sys_macro.h"

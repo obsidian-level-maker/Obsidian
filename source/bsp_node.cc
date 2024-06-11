@@ -21,7 +21,6 @@
 #include <limits.h>
 
 #include "bsp_local.h"
-#include "bsp_utility.h"
 #include "bsp_wad.h"
 #include "sys_macro.h"
 
