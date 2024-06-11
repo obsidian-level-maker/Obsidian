@@ -587,7 +587,7 @@ class UI_OptionsWin : public Fl_Window
         switch (result)
         {
         case -1:
-            LogPrintf(_("Error choosing directory:\n"));
+            LogPrintf("%s\n", _("Error choosing directory:"));
             LogPrintf("   %s\n", chooser.errmsg());
 
             return;
@@ -603,7 +603,7 @@ class UI_OptionsWin : public Fl_Window
 
         if (dir_name.empty())
         {
-            LogPrintf(_("Empty default directory provided???:\n"));
+            LogPrintf("%s\n", _("Empty default directory provided???"));
             return;
         }
 

@@ -31,6 +31,8 @@
 #ifdef __MINGW32__
 #include <sys/stat.h>
 #endif
+
+#include <algorithm>
 #include <chrono>
 
 #include "grapheme.h"

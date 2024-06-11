@@ -430,7 +430,7 @@ bool wolf_game_interface_c::Start(const char *ext)
         switch (result)
         {
         case -1:
-            LogPrintf(_("Error choosing directory:\n"));
+            LogPrintf("%s\n", _("Error choosing directory:"));
             LogPrintf("   %s\n", chooser.errmsg());
             break;
 
@@ -446,7 +446,7 @@ bool wolf_game_interface_c::Start(const char *ext)
 
         if (dir_name.empty())
         {
-            LogPrintf(_("Empty directory provided???:\n"));
+            LogPrintf("%s\n",_("Empty directory provided???"));
             dir_name = Resolve_DefaultOutputPath();
         }
 

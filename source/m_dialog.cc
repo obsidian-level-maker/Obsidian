@@ -278,7 +278,7 @@ std::string DLG_OutputFilename(const char *ext, const char *preset)
     switch (result)
     {
     case -1:
-        LogPrintf(_("Error choosing output file:\n"));
+        LogPrintf("%s\n", _("Error choosing output file:"));
         LogPrintf("   %s\n", chooser.errmsg());
 
         DLG_ShowError(_("Unable to create the file:\n\n%s"), chooser.errmsg());
