@@ -31,6 +31,8 @@
 #include <locale.h>
 #endif
 
+#include <algorithm>
+
 #include "hdr_lua.h"
 #include "lib_util.h"
 #include "main.h"

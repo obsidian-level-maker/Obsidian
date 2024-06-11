@@ -534,7 +534,7 @@ bool Doom::StartWAD(std::string filename)
 #ifndef CONSOLE_ONLY
         DLG_ShowError(_("Unable to create wad file:\n\n%s"), strerror(errno));
 #else
-        printf(_("Unable to create wad file:\n\n%s"), strerror(errno));
+        printf("%s\n\n%s\n", _("Unable to create wad file:"), strerror(errno));
 #endif
         return false;
     }

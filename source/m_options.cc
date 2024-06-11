@@ -137,7 +137,7 @@ static bool Options_ParseLine(const std::string &buf)
 
     if (name.empty() || value.empty())
     {
-        printf(_("Name or value missing!\n"));
+        printf("%s\n", _("Name or value missing!"));
         return false;
     }
 
@@ -151,7 +151,7 @@ bool Options_Load(std::string filename)
 
     if (!option_fp)
     {
-        printf(_("Missing Options file -- using defaults.\n\n"));
+        printf("%s\n\n", _("Missing Options file -- using defaults."));
         return false;
     }
 

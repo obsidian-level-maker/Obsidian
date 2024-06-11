@@ -358,18 +358,18 @@ void DLG_EditSeed(void)
     catch (std::invalid_argument &e)
     {
         (void)e;
-        printf(_("Invalid argument. Will process as string.\n"));
+        printf("%s\n", _("Invalid argument. Will process as string."));
     }
     catch (std::out_of_range &e)
     {
         (void)e;
         // clang-format off
-        printf(_("Resulting number would be out of range. Will process as string.\n"));
+        printf("%s\n", _("Resulting number would be out of range. Will process as string."));
         // clang-format on
     }
     catch (std::exception &e)
     {
-        printf(e.what());
+        printf("%s\n", e.what());
     }
     string_seed = word;
     ob_set_config("string_seed", word.c_str());

@@ -371,7 +371,7 @@ void UI_Module::AddSliderOption(std::string opt, std::string label, std::string 
             }
             catch (std::exception &e)
             {
-                fl_message(e.what());
+                fl_message("%s", e.what());
             }
         }
     skippreset:
@@ -690,12 +690,12 @@ bool UI_Module::SetSliderOption(std::string option, std::string value)
     catch (std::out_of_range &e)
     {
         // This shouldn't happen
-        fl_message(e.what());
+        fl_message("%s", e.what());
     }
     catch (std::exception &e)
     {
         // This shouldn't happen either
-        fl_message(e.what());
+        fl_message("%s", e.what());
     }
     return true;
 }
@@ -1020,7 +1020,7 @@ tryagain:
     }
     catch (std::exception &e)
     {
-        fl_message(e.what());
+        fl_message("%s", e.what());
     }
 
     if (limit_break)
