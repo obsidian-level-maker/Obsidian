@@ -105,7 +105,7 @@ bool MakeDirectory(std::string_view dir)
 }
 bool FileExists(std::string_view name)
 {
-    SYS_ASSERT(!name.empty());
+    if (name.empty()) return false;
     std::wstring wname = UTF8ToWString(name);
     return _waccess(wname.c_str(), 0) == 0;
 }
@@ -157,7 +157,7 @@ bool MakeDirectory(std::string_view dir)
 }
 bool FileExists(std::string_view name)
 {
-    SYS_ASSERT(!name.empty());
+    if (name.empty()) return false;
     return access(std::string(name).c_str(), F_OK) == 0;
 }
 #endif
