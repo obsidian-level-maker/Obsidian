@@ -42,6 +42,8 @@ PREFABS.Wall_industrial_modwall_1_hell =
 
   prob = 50,
 
+  bound_z2 = 128,
+
   height = 128
 }
 
@@ -50,10 +52,11 @@ PREFABS.Wall_industrial_modwall_1a_hell =
   template = "Wall_industrial_modwall_1",
   map = "MAP52",
 
+  prob = 120,
   theme = "hell",
   rank = 1,
 
-  prob = 120
+  bound_z2 = 128
 }
 
 PREFABS.Wall_industrial_modwall_1a_hell_diag =
@@ -61,12 +64,13 @@ PREFABS.Wall_industrial_modwall_1a_hell_diag =
   template = "Wall_industrial_modwall_1",
   map = "MAP53",
 
+  prob = 120,
   theme = "hell",
   rank = 1,
 
   where = "diagonal",
 
-  prob = 120
+  bound_z2 = 128
 }
 
 --

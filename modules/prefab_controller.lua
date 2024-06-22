@@ -142,45 +142,27 @@ function PREFAB_CONTROL.fine_tune_filters()
   }
   local new_fab_groups_multipliers =
   {
-    tech_o_letter_M = 1.5,
-    tech_o_letter_N = 1.5,
-    tech_o_letter_O = 1.5,
-    tech_o_letter_P = 1.5,
-    tech_o_letter_Q = 1.5,
-    --
     gtd_mscottpaper = 1.25,
     --
-    gtd_pools = 3
+    gtd_pools = 1.25
   }
   local new_themes_multipliers =
   {
     any_copperRust = 2,
 
-    tech_goth_tech = 1.25,
-    tech_wood_lab = 1.25,
-    tech_dk_green_tech = 1.25,
-    tech_copper_steampunk = 1.25,
-    tech_wood_lab = 1.5,
-    tech_wood_comp = 1.5,
-    tech_silver_grate = 1.75,
-    tech_bumblebee = 1.5,
-    tech_aww2 = 2.25,
-
-    urban_evil_mansion = 1.25,
-    urban_kievan_rus = 1.5,
-    urban_new_york_art_deco = 1.5,
-    urban_computerCatacombs = 1.75,
-
-    hell_green_tk = 1.25,
-    hell_evil_mansion = 1.5,
-    hell_kievan_rus = 1.5,
-    hell_new_york_art_deco = 1.5,
-    hell_computerCatacombs = 1.75,
-
+    tech_silver_grate = 1.25,
+    tech_bumblebee = 1.25,
+    tech_aww2 = 2,
+    tech_iStuff = 2,
+    tech_beigetownTech = 3,
     --
 
-    tech_iStuff = 2.75,
-    urban_iStuff = 2.75
+    urban_computerCatacombs = 1.25,
+    urban_iStuff = 2,
+    urban_beigetownTech = 3,
+    --
+
+    hell_computerCatacombs = 1.25
   }
   local themes =
   {

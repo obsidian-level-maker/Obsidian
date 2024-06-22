@@ -2556,6 +2556,84 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
     }
   },
 
+  tech_beigetownTech = -- 40
+  {
+    env = "building",
+    prob = 40,
+
+    is_generative = true,
+
+    walls =
+    {
+      BROWN1 = 8,
+      BROWNPIP = 8,
+      STUCCO = 8,
+      STUCCO1 = 8,
+      STARTAN2 = 8,
+      STARTAN3 = 8,
+
+      SDBGTWL1 = 25,
+      SDBGTWL2 = 25,
+      SDBGTWL3 = 25,
+      SDBGTWL4 = 25,
+      SDBGTWL5 = 25,
+      SDBGTWL6 = 25,
+      SDBGTWL7 = 25,
+      SDBGTWL8 = 25,
+      SDBGTWL9 = 25,
+      SDBGTWLA = 25,
+      SDBGTWLB = 25,
+      SDBGTWLC = 25,
+      SDBGTWLD = 25,
+      SDBGTWLE = 25,
+      SDBGTWLF = 25
+    },
+
+    floors =
+    {
+      FLAT20 = 5,
+      FLAT3 = 5,
+      FLOOR0_3 = 5,
+      FLOOR0_5 = 5,
+      SLIME14 = 5,
+      GRATE1 = 5,
+      GRATE5 = 5,
+      GRATE6 = 5,
+      GRATE7 = 5,
+
+      SDBGTFT1 = 25,
+      SDBGTFT2 = 25,
+      SDBGTFT3 = 25,
+      SDBGTFT4 = 25,
+      SDBGTFT5 = 25,
+      SDBGTFT6 = 25,
+      SDBGTFT7 = 25,
+      SDBGTFT8 = 25
+    },
+
+    ceilings =
+    {
+      FLAT20 = 5,
+      FLAT3 = 5,
+      FLOOR0_3 = 5,
+      FLOOR0_5 = 5,
+      SLIME14 = 5,
+      GRATE1 = 5,
+      GRATE5 = 5,
+      GRATE6 = 5,
+      GRATE7 = 5,
+
+      SDBGTFT1 = 25,
+      SDBGTFT2 = 25,
+      SDBGTFT3 = 25,
+      SDBGTFT4 = 25,
+      SDBGTFT5 = 25,
+      SDBGTFT6 = 25,
+      SDBGTFT7 = 25,
+      SDBGTFT8 = 25
+    }
+  },
+
   tech_aww2 = --50
   {
     env = "building",
@@ -7744,6 +7822,84 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
       FLAT3 = 4,
       FLOOR0_5 = 4,
       SLIME14 = 3
+    }
+  },
+
+  urban_beigetownTech = --30
+  {
+    env = "building",
+    prob = 30,
+
+    is_generative = true,
+
+    walls =
+    {
+      BROWN1 = 8,
+      BROWNPIP = 8,
+      STUCCO = 8,
+      STUCCO1 = 8,
+      STARTAN2 = 8,
+      STARTAN3 = 8,
+
+      SDBGTWL1 = 25,
+      SDBGTWL2 = 25,
+      SDBGTWL3 = 25,
+      SDBGTWL4 = 25,
+      SDBGTWL5 = 25,
+      SDBGTWL6 = 25,
+      SDBGTWL7 = 25,
+      SDBGTWL8 = 25,
+      SDBGTWL9 = 25,
+      SDBGTWLA = 25,
+      SDBGTWLB = 25,
+      SDBGTWLC = 25,
+      SDBGTWLD = 25,
+      SDBGTWLE = 25,
+      SDBGTWLF = 25
+    },
+
+    floors =
+    {
+      FLAT20 = 5,
+      FLAT3 = 5,
+      FLOOR0_3 = 5,
+      FLOOR0_5 = 5,
+      SLIME14 = 5,
+      GRATE1 = 5,
+      GRATE5 = 5,
+      GRATE6 = 5,
+      GRATE7 = 5,
+
+      SDBGTFT1 = 25,
+      SDBGTFT2 = 25,
+      SDBGTFT3 = 25,
+      SDBGTFT4 = 25,
+      SDBGTFT5 = 25,
+      SDBGTFT6 = 25,
+      SDBGTFT7 = 25,
+      SDBGTFT8 = 25
+    },
+
+    ceilings =
+    {
+      FLAT20 = 5,
+      FLAT3 = 5,
+      FLOOR0_3 = 5,
+      FLOOR0_5 = 5,
+      SLIME14 = 5,
+      GRATE1 = 5,
+      GRATE5 = 5,
+      GRATE6 = 5,
+      GRATE7 = 5,
+
+      SDBGTFT1 = 25,
+      SDBGTFT2 = 25,
+      SDBGTFT3 = 25,
+      SDBGTFT4 = 25,
+      SDBGTFT5 = 25,
+      SDBGTFT6 = 25,
+      SDBGTFT7 = 25,
+      SDBGTFT8 = 25
     }
   }
 -- END OF THEMES TABLES
