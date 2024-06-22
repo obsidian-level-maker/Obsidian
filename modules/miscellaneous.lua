@@ -409,7 +409,7 @@ OB_MODULES["misc"] =
       label=_("Passable Windows"),
       choices=MISC_STUFF.WINDOW_BLOCKING_CHOICES,
       tooltip=_("Sets the preferences for passability on certain windows. On Vistas Only means only windows that look out to vistas/map border scenics have a blocking line."),
-      default="not_on_vistas",
+      default="never",
       priority = 82,
       complex_mode = true
     },
@@ -419,7 +419,7 @@ OB_MODULES["misc"] =
       choices=MISC_STUFF.RAIL_BLOCKING_CHOICES,
       tooltip=_("Sets the passability of railing junctions between full impassability or the 3D midtex flag. Occasional means 3D midtex is only used on railings between areas the player is supposed to circumvent. Always means the inclusion of cages and scenic rails, allowing flying monsters to potentially escape.\n\nNote: 3D midtex lines currently *block* projectiles as well."),
       default="never",
-      priority = 81,
+      priority = 81, 
       gap=1,
       complex_mode = true
     },
