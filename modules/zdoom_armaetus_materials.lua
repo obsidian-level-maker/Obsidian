@@ -1807,6 +1807,33 @@ OBS_RESOURCE_PACK_MATERIALS = {
   SD_TBBFC = { t="SD_TBBWC", f="SD_TBBFC"},
   SD_TBBFD = { t="SD_TBBW6", f="SD_TBBFD"},
 
+  -- bumblebee beige
+  -- walls
+  SDBGTWL1 = { t="SDBGTWL1", f="SDBGTFT1"},
+  SDBGTWL2 = { t="SDBGTWL2", f="SDBGTFT2"},
+  SDBGTWL3 = { t="SDBGTWL3", f="SDBGTFT3"},
+  SDBGTWL4 = { t="SDBGTWL4", f="SDBGTFT4"},
+  SDBGTWL5 = { t="SDBGTWL5", f="SDBGTFT5"},
+  SDBGTWL6 = { t="SDBGTWL6", f="SDBGTFT6"},
+  SDBGTWL7 = { t="SDBGTWL7", f="SDBGTFT7"},
+  SDBGTWL8 = { t="SDBGTWL8", f="SDBGTFT8"},
+  SDBGTWL9 = { t="SDBGTWL9", f="SDBGTFT1"},
+  SDBGTWLA = { t="SDBGTWLA", f="SDBGTFT2"},
+  SDBGTWLB = { t="SDBGTWLB", f="SDBGTFT3"},
+  SDBGTWLC = { t="SDBGTWLC", f="SDBGTFT4"},
+  SDBGTWLD = { t="SDBGTWLD", f="SDBGTFT5"},
+  SDBGTWLE = { t="SDBGTWLE", f="SDBGTFT6"},
+  SDBGTWLF = { t="SDBGTWLF", f="SDBGTFT8"},
+  -- floors
+  SDBGTFT1 = { t="SDBGTWL1", f="SDBGTFT1"},
+  SDBGTFT2 = { t="SDBGTWL3", f="SDBGTFT2"},
+  SDBGTFT3 = { t="SDBGTWL5", f="SDBGTFT3"},
+  SDBGTFT4 = { t="SDBGTWL7", f="SDBGTFT4"},
+  SDBGTFT5 = { t="SDBGTWL9", f="SDBGTFT5"},
+  SDBGTFT6 = { t="SDBGTWLB", f="SDBGTFT6"},
+  SDBGTFT7 = { t="SDBGTWLD", f="SDBGTFT7"},
+  SDBGTFT8 = { t="SDBGTWLF", f="SDBGTFT8"},
+
   -- MSSP-URBAN --
   -- New Yorker art deco
   SD_UADW1 = { t="SD_UADW1", f="SD_UADF1"},
