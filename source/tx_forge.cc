@@ -336,7 +336,7 @@ void TX_SpectralSynth(unsigned long long seed, float *buf, int width, double fra
     {
         if (test & 1)
         {
-            Main::FatalError("TX_SpectralSynth: width '%d' is not a power of two\n", width);
+            FatalError("TX_SpectralSynth: width '%d' is not a power of two\n", width);
         }
     }
 
@@ -362,7 +362,7 @@ void TX_TestSynth(unsigned long long seed)
 
     TX_SpectralSynth(seed, buf, 128);
 
-    LogPrintf("P6\n128 128 255\n");
+    LogPrint("P6\n128 128 255\n");
 
     for (int y = 0; y < 128; y++)
     {
@@ -372,7 +372,7 @@ void TX_TestSynth(unsigned long long seed)
 
             int ity = (int)(1 + f * 253);
 
-            LogPrintf("ITY: %d\n", ity);
+            LogPrint("ITY: %d\n", ity);
         }
     }
 

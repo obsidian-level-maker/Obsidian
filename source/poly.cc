@@ -20,6 +20,7 @@
 
 #include "lib_util.h"
 #include "poly_local.h"
+#include "sys_debug.h"
 #include "sys_macro.h"
 
 #define DEBUG_POLY 0
@@ -103,7 +104,7 @@ void DumpEdges(edge_c *edge_list)
 {
     for (edge_c *cur = edge_list; cur; cur = cur->next)
     {
-        Appl_Printf("  edge #%d (%s)  sector=%d  (%1.1f %1.1f) -> (%1.1f %1.1f)\n", cur->index,
+        LogPrint("  edge #%d (%s)  sector=%d  (%1.1f %1.1f) -> (%1.1f %1.1f)\n", cur->index,
                     cur->linedef ? "LINE" : "mini", cur->sector->index, cur->start->x, cur->start->y, cur->end->x,
                     cur->end->y);
     }
@@ -124,7 +125,7 @@ void edge_c::Recompute()
 
     if (p_length <= 0)
     {
-        Appl_FatalError("INTERNAL ERROR: edge has zero length!\n");
+        FatalError("INTERNAL ERROR: edge has zero length!\n");
     }
 
     p_perp = psy * pdx - psx * pdy;
@@ -154,7 +155,7 @@ void edge_c::CopyInfo(const edge_c *other)
 edge_c *SplitEdge(edge_c *old_edge, double x, double y)
 {
 #if DEBUG_POLY
-    Appl_Printf("Splitting Edge #%d (line #%d) at (%1.1f,%1.1f)\n", old_edge->index,
+    LogPrint("Splitting Edge #%d (line #%d) at (%1.1f,%1.1f)\n", old_edge->index,
                 old_edge->linedef ? old_edge->linedef->index : -1, x, y);
 #endif
 
@@ -171,7 +172,7 @@ edge_c *SplitEdge(edge_c *old_edge, double x, double y)
     new_edge->Recompute();
 
 #if DEBUG_POLY
-    Appl_Printf("Splitting Vertex is %04X at (%1.1f,%1.1f)\n", vert->index, vert->x, vert->y);
+    LogPrint("Splitting Vertex is %04X at (%1.1f,%1.1f)\n", vert->index, vert->x, vert->y);
 #endif
 
     // handle partners
@@ -179,7 +180,7 @@ edge_c *SplitEdge(edge_c *old_edge, double x, double y)
     if (old_edge->partner)
     {
 #if DEBUG_POLY
-        Appl_Printf("Splitting partner #%d\n", old_edge->partner->index);
+        LogPrint("Splitting partner #%d\n", old_edge->partner->index);
 #endif
 
         new_edge->partner = NewEdge();
@@ -401,7 +402,7 @@ int EvalPartition(edge_c *part, edge_c *edge_list)
     if (real_left == 0 || real_right == 0)
     {
 #if DEBUG_POLY
-        Appl_Printf("Eval : No linedefs on %s%sside\n", real_left ? "" : "left ", real_right ? "" : "right ");
+        LogPrint("Eval : No linedefs on %s%sside\n", real_left ? "" : "left ", real_right ? "" : "right ");
 #endif
 
         return -1;
@@ -419,7 +420,7 @@ int EvalPartition(edge_c *part, edge_c *edge_list)
     }
 
 #if DEBUG_POLY
-    Appl_Printf("Eval %p: splits=%d near_miss=%d left=%d+%d right=%d+%d "
+    LogPrint("Eval %p: splits=%d near_miss=%d left=%d+%d right=%d+%d "
                 "cost=%d.%02d\n",
                 part, splits, near_miss, real_left, mini_left, real_right, mini_right, cost / 100, cost % 100);
 #endif
@@ -526,7 +527,7 @@ edge_c *ChoosePartition(edge_c *edge_list, int depth)
     int best_cost = 1 << 30;
 
 #if DEBUG_POLY
-    Appl_Printf("ChoosePartition: BEGUN (depth %d)\n", depth);
+    LogPrint("ChoosePartition: BEGUN (depth %d)\n", depth);
 #endif
 
     for (edge_c *part = edge_list; part; part = part->next)
@@ -540,7 +541,7 @@ edge_c *ChoosePartition(edge_c *edge_list, int depth)
         int cost = EvalPartition(part, edge_list);
 
 #if DEBUG_POLY
-        Appl_Printf("ChoosePartition: EDGE #%d -> cost:%d  | sector:%d  (%1.1f %1.1f) "
+        LogPrint("ChoosePartition: EDGE #%d -> cost:%d  | sector:%d  (%1.1f %1.1f) "
                     "-> (%1.1f %1.1f)\n",
                     part->index, cost, part->sector->index, part->start->x, part->start->y, part->end->x, part->end->y);
 #endif
@@ -558,11 +559,11 @@ edge_c *ChoosePartition(edge_c *edge_list, int depth)
 #if DEBUG_POLY
     if (!best)
     {
-        Appl_Printf("ChoosePartition: NO BEST FOUND\n");
+        LogPrint("ChoosePartition: NO BEST FOUND\n");
     }
     else
     {
-        Appl_Printf("ChoosePartition: Best has score %d.%02d  (%1.1f %1.1f) -> (%1.1f "
+        LogPrint("ChoosePartition: Best has score %d.%02d  (%1.1f %1.1f) -> (%1.1f "
                     "%1.1f)\n",
                     best_cost / 100, best_cost % 100, best->start->x, best->start->y, best->end->x, best->end->y);
     }
@@ -594,12 +595,12 @@ void EdgesAlongPartition(edge_c *part, edge_c **left_list, edge_c **right_list, 
     }
 
 #if DEBUG_POLY
-    Appl_Printf("CUT LIST:\n");
-    Appl_Printf("PARTITION: (%1.1f %1.1f) += (%1.1f %1.1f)\n", part->psx, part->psy, part->pdx, part->pdy);
+    LogPrint("CUT LIST:\n");
+    LogPrint("PARTITION: (%1.1f %1.1f) += (%1.1f %1.1f)\n", part->psx, part->psy, part->pdx, part->pdy);
 
     for (intersect_c *I = cut_list; I; I = I->next)
     {
-        Appl_Printf("  Vertex %8X (%1.1f,%1.1f)  Along %1.2f  [%d/%d]\n", I->vertex->index, I->vertex->x, I->vertex->y,
+        LogPrint("  Vertex %8X (%1.1f,%1.1f)  Along %1.2f  [%d/%d]\n", I->vertex->index, I->vertex->x, I->vertex->y,
                     I->along_dist, I->before, I->after);
     }
 #endif
@@ -615,7 +616,7 @@ void EdgesAlongPartition(edge_c *part, edge_c **left_list, edge_c **right_list, 
 
         if (len < -0.1)
         {
-            Appl_FatalError("INTERNAL ERROR: intersect list not sorted\n");
+            FatalError("INTERNAL ERROR: intersect list not sorted\n");
         }
 
         if (len > 0.2)
@@ -628,7 +629,7 @@ void EdgesAlongPartition(edge_c *part, edge_c **left_list, edge_c **right_list, 
         // merge the two intersections into one
 
 #if DEBUG_POLY
-        Appl_Printf("Merging cut (%1.0f,%1.0f) [%d/%d] with %p (%1.0f,%1.0f) [%d/%d]\n", cur->vertex->x, cur->vertex->y,
+        LogPrint("Merging cut (%1.0f,%1.0f) [%d/%d] with %p (%1.0f,%1.0f) [%d/%d]\n", cur->vertex->x, cur->vertex->y,
                     cur->before, cur->after, next->vertex, next->vertex->x, next->vertex->y, next->before, next->after);
 #endif
 
@@ -643,7 +644,7 @@ void EdgesAlongPartition(edge_c *part, edge_c **left_list, edge_c **right_list, 
         }
 
 #if DEBUG_POLY
-        Appl_Printf("---> merged (%1.0f,%1.0f) [%d/%d]\n", cur->vertex->x, cur->vertex->y, cur->before, cur->after);
+        LogPrint("---> merged (%1.0f,%1.0f) [%d/%d]\n", cur->vertex->x, cur->vertex->y, cur->before, cur->after);
 #endif
 
         // free the unused cut
@@ -704,12 +705,12 @@ void EdgesAlongPartition(edge_c *part, edge_c **left_list, edge_c **right_list, 
         InsertEdge(left_list, buddy);
 
 #if DEBUG_POLY
-        Appl_Printf("EdgesAlongPartition: %p RIGHT  sector %d  (%1.1f %1.1f) -> (%1.1f "
+        LogPrint("EdgesAlongPartition: %p RIGHT  sector %d  (%1.1f %1.1f) -> (%1.1f "
                     "%1.1f)\n",
                     edge, edge->sector ? edge->sector->index : -1, edge->start->x, edge->start->y, edge->end->x,
                     edge->end->y);
 
-        Appl_Printf("EdgesAlongPartition: %p LEFT   sector %d  (%1.1f %1.1f) -> (%1.1f "
+        LogPrint("EdgesAlongPartition: %p LEFT   sector %d  (%1.1f %1.1f) -> (%1.1f "
                     "%1.1f)\n",
                     buddy, buddy->sector ? buddy->sector->index : -1, buddy->start->x, buddy->start->y, buddy->end->x,
                     buddy->end->y);
@@ -790,7 +791,7 @@ void polygon_c::ClockwiseOrder()
     int total = 0;
 
 #if DEBUG_POLY
-    Appl_Printf("Polygon: Clockwising #%d (sector #%d)\n", index, sector->index);
+    LogPrint("Polygon: Clockwising #%d (sector #%d)\n", index, sector->index);
 #endif
 
     // count edges and create an array to manipulate them
@@ -816,7 +817,7 @@ void polygon_c::ClockwiseOrder()
 
     if (i != total)
     {
-        Appl_FatalError("INTERNAL ERROR: ClockwiseOrder miscounted\n");
+        FatalError("INTERNAL ERROR: ClockwiseOrder miscounted\n");
     }
 
     // sort them by angle (from the middle point to the start vertex).
@@ -866,13 +867,13 @@ void polygon_c::ClockwiseOrder()
     }
 
 #if 0 // DEBUGGING
-    Appl_Printf("Sorted edges around (%1.1f %1.1f)\n", poly->mid_x, poly->mid_y);
+    LogPrint("Sorted edges around (%1.1f %1.1f)\n", poly->mid_x, poly->mid_y);
 
     for (cur = edge_list ; cur ; cur = cur->next)
     {
         double angle = ComputeAngle(cur->start->x - mid_x, cur->start->y - mid_y);
 
-        Appl_Printf("  edge #%d : angle %1.6f  (%1.1f %1.1f) -> (%1.1f %1.1f)\n",
+        LogPrint("  edge #%d : angle %1.6f  (%1.1f %1.1f) -> (%1.1f %1.1f)\n",
                     cur->index, angle,
                     cur->start->x, cur->start->y,
                     cur->end->x, cur->end->y);
@@ -890,7 +891,7 @@ polygon_c *CreatePolygon(edge_c *edge_list)
     poly->CalcMiddle();
 
 #if DEBUG_POLY
-    Appl_Printf("Created Polygon #%d @ (%1.1f %1.1f)\n", poly->index, poly->mid_x, poly->mid_y);
+    LogPrint("Created Polygon #%d @ (%1.1f %1.1f)\n", poly->index, poly->mid_x, poly->mid_y);
     DumpEdges(edge_list);
 #endif
 
@@ -900,7 +901,7 @@ polygon_c *CreatePolygon(edge_c *edge_list)
 bool RecursiveDivideEdges(edge_c *edge_list, int depth)
 {
 #if DEBUG_POLY
-    Appl_Printf("Build: BEGUN @ %d\n", depth);
+    LogPrint("Build: BEGUN @ %d\n", depth);
 
     DumpEdges(edge_list);
 #endif
@@ -912,14 +913,14 @@ bool RecursiveDivideEdges(edge_c *edge_list, int depth)
     if (!part)
     {
 #if DEBUG_POLY
-        Appl_Printf("Build: CONVEX\n");
+        LogPrint("Build: CONVEX\n");
 #endif
         CreatePolygon(edge_list);
         return true; // OK
     }
 
 #if DEBUG_POLY
-    Appl_Printf("Build: PARTITION %p (%1.0f,%1.0f) -> (%1.0f,%1.0f)\n", part, part->start->x, part->start->y,
+    LogPrint("Build: PARTITION %p (%1.0f,%1.0f) -> (%1.0f,%1.0f)\n", part, part->start->x, part->start->y,
                 part->end->x, part->end->y);
 #endif
 
@@ -935,18 +936,18 @@ bool RecursiveDivideEdges(edge_c *edge_list, int depth)
     /* sanity checks... */
     if (!rights)
     {
-        Appl_FatalError("INTERNAL ERROR: Separated edge-list has no RIGHT side\n");
+        FatalError("INTERNAL ERROR: Separated edge-list has no RIGHT side\n");
     }
 
     if (!lefts)
     {
-        Appl_FatalError("INTERNAL ERROR: Separated edge-list has no LEFT side\n");
+        FatalError("INTERNAL ERROR: Separated edge-list has no LEFT side\n");
     }
 
     EdgesAlongPartition(part, &lefts, &rights, cut_list);
 
 #if DEBUG_POLY
-    Appl_Printf("Build: Going LEFT\n");
+    LogPrint("Build: Going LEFT\n");
 #endif
 
     if (!RecursiveDivideEdges(lefts, depth + 1))
@@ -955,7 +956,7 @@ bool RecursiveDivideEdges(edge_c *edge_list, int depth)
     }
 
 #if DEBUG_POLY
-    Appl_Printf("Build: Going RIGHT\n");
+    LogPrint("Build: Going RIGHT\n");
 #endif
 
     if (!RecursiveDivideEdges(rights, depth + 1))
@@ -964,7 +965,7 @@ bool RecursiveDivideEdges(edge_c *edge_list, int depth)
     }
 
 #if DEBUG_POLY
-    Appl_Printf("Build: DONE\n");
+    LogPrint("Build: DONE\n");
 #endif
 
     return true; // OK
@@ -998,9 +999,9 @@ bool ProcessSectors()
         }
 
 #if DEBUG_POLY
-        Appl_Printf("-------------------------------\n");
-        Appl_Printf("Processing Sector #%d\n", i);
-        Appl_Printf("-------------------------------\n");
+        LogPrint("-------------------------------\n");
+        LogPrint("Processing Sector #%d\n", i);
+        LogPrint("-------------------------------\n");
 #endif
 
         if (!ProcessOneSector(sec))
@@ -1051,7 +1052,7 @@ void CreateEdges()
 
     edge_c *left, *right;
 
-    Appl_Printf("Creating Edges...\n");
+    LogPrint("Creating Edges...\n");
 
     for (i = 0; i < num_linedefs; i++)
     {
@@ -1162,9 +1163,9 @@ bool Polygonate(bool require_border)
     {
         ClockwisePolygons();
 
-        Appl_Printf("Built %d POLYGONS, %d EDGES, %d SPLIT-VERTS\n", num_polygons, num_edges, num_splits);
+        LogPrint("Built %d POLYGONS, %d EDGES, %d SPLIT-VERTS\n", num_polygons, num_edges, num_splits);
 
-        Appl_Printf("\n");
+        LogPrint("\n");
     }
 
     FreeQuickAllocCuts();

@@ -305,7 +305,7 @@ void Send_Prog_Nodes(int progress, int num_maps)
 
 bool BuildNodes(std::string filename)
 {
-    LogPrintf("\n");
+    LogPrint("\n");
 
     if (!build_nodes)
     {
@@ -334,7 +334,7 @@ bool BuildNodes(std::string filename)
 
     if (AJBSP_BuildNodes(filename, &build_info) != 0)
     {
-        Main::ProgStatus(_("AJBSP Error!"));
+        ProgStatus(_("AJBSP Error!"));
         return false;
     }
 
@@ -455,7 +455,7 @@ void Doom::AddSectionLump(char ch, std::string name, qLump_c *lump)
         break;
 
     default:
-        Main::FatalError("DM_AddSectionLump: bad section '%c'\n", ch);
+        FatalError("DM_AddSectionLump: bad section '%c'\n", ch);
     }
 
     lump->name = name;
@@ -631,7 +631,7 @@ void Doom::EndLevel(std::string level_name)
             ZIPF_CloseWrite();
             FileDelete(game_object->ZIP_Filename());
             FileDelete(game_object->Filename());
-            Main::FatalError(_("Error writing map WAD to %s\n"), game_object->ZIP_Filename().c_str());
+            FatalError(_("Error writing map WAD to %s\n"), game_object->ZIP_Filename().c_str());
         }
         else
         {
@@ -1380,7 +1380,7 @@ bool Doom::game_interface_c::Start(const char *preset)
 
     if (filename.empty())
     {
-        Main::ProgStatus(_("Cancelled"));
+        ProgStatus(_("Cancelled"));
         return false;
     }
 
@@ -1429,14 +1429,14 @@ bool Doom::game_interface_c::Start(const char *preset)
         }
         if (!ZIPF_OpenWrite(zip_filename))
         {
-            Main::ProgStatus(_("Error (create PK3/ZIP)"), zip_filename.c_str());
+            ProgStatus(_("Error (create PK3/ZIP)"), zip_filename.c_str());
             return false;
         }
     }
 
     if (!StartWAD(filename))
     {
-        Main::ProgStatus(_("Error (create file)"));
+        ProgStatus(_("Error (create file)"));
         return false;
     }
 
@@ -1516,7 +1516,7 @@ bool Doom::game_interface_c::Finish(bool build_ok)
         {
             if (!ZIPF_AddFile(filename, ""))
             {
-                LogPrintf("Adding WAD to PK3 failed! Retaining original "
+                LogPrint("Adding WAD to PK3 failed! Retaining original "
                           "WAD.\n");
                 ZIPF_CloseWrite();
                 FileDelete(zip_filename);
@@ -1525,7 +1525,7 @@ bool Doom::game_interface_c::Finish(bool build_ok)
             {
                 if (!ZIPF_CloseWrite())
                 {
-                    LogPrintf("Corrupt PK3! Retaining original WAD.\n");
+                    LogPrint("Corrupt PK3! Retaining original WAD.\n");
                     FileDelete(zip_filename);
                 }
                 else
@@ -1578,7 +1578,7 @@ void Doom::game_interface_c::Property(std::string key, std::string value)
         }
         else
         {
-            LogPrintf("WARNING: unknown DOOM sub_format '%s'\n", value.c_str());
+            LogPrint("WARNING: unknown DOOM sub_format '%s'\n", value.c_str());
         }
     }
     else if (StringCompare(key, "offset_map") == 0)
@@ -1599,7 +1599,7 @@ void Doom::game_interface_c::Property(std::string key, std::string value)
     }
     else
     {
-        LogPrintf("WARNING: unknown DOOM property: %s=%s\n", key.c_str(), value.c_str());
+        LogPrint("WARNING: unknown DOOM property: %s=%s\n", key.c_str(), value.c_str());
     }
 }
 
@@ -1617,7 +1617,7 @@ void Doom::game_interface_c::EndLevel()
 {
     if (level_name.empty())
     {
-        Main::FatalError("Script problem: did not set level name!\n");
+        FatalError("Script problem: did not set level name!\n");
     }
 
 #ifndef CONSOLE_ONLY

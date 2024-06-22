@@ -159,11 +159,11 @@ static void BlockAdd(int blk_num, int line_index)
     uint16_t *cur = block_lines[blk_num];
 
 #if DEBUG_BLOCKMAP
-    DebugPrintf("Block %d has line %d\n", blk_num, line_index);
+    DebugPrint("Block %d has line %d\n", blk_num, line_index);
 #endif
 
     if (blk_num < 0 || blk_num >= block_count)
-        ErrorPrintf("BlockAdd: bad block number %d\n", blk_num);
+        FatalError("BlockAdd: bad block number %d\n", blk_num);
 
     if (!cur)
     {
@@ -205,7 +205,7 @@ static void BlockAddLine(const linedef_t *L)
     int line_index = L->index;
 
 #if DEBUG_BLOCKMAP
-    DebugPrintf("BlockAddLine: %d (%d,%d) -> (%d,%d)\n", line_index, x1, y1, x2, y2);
+    DebugPrint("BlockAddLine: %d (%d,%d) -> (%d,%d)\n", line_index, x1, y1, x2, y2);
 #endif
 
     // handle truncated blockmaps
@@ -387,7 +387,7 @@ static void CompressBlockmap(void)
     }
 
 #if DEBUG_BLOCKMAP
-    DebugPrintf("Blockmap: Last ptr = %d  duplicates = %d\n", cur_offset, dup_count);
+    DebugPrint("Blockmap: Last ptr = %d  duplicates = %d\n", cur_offset, dup_count);
 #endif
 
     block_compression = (orig_size - new_size) * 100 / orig_size;
@@ -455,7 +455,7 @@ static void WriteBlockmap(void)
         uint16_t ptr = LE_U16(block_ptrs[i]);
 
         if (ptr == 0)
-            ErrorPrintf("WriteBlockmap: offset %d not set.\n", i);
+            FatalError("WriteBlockmap: offset %d not set.\n", i);
 
         lump->Write(&ptr, sizeof(uint16_t));
     }
@@ -542,7 +542,7 @@ static void FindBlockmapLimits(bbox_t *bbox)
     }
 
 #if DEBUG_BLOCKMAP
-    DebugPrintf("Blockmap lines centered at (%d,%d)\n", block_mid_x, block_mid_y);
+    DebugPrint("Blockmap lines centered at (%d,%d)\n", block_mid_x, block_mid_y);
 #endif
 }
 
@@ -553,7 +553,7 @@ void InitBlockmap()
     // find limits of linedefs, and store as map limits
     FindBlockmapLimits(&map_bbox);
 
-    LogPrintf("    Map limits: (%d,%d) to (%d,%d)\n", map_bbox.minx, map_bbox.miny, map_bbox.maxx,
+    LogPrint("    Map limits: (%d,%d) to (%d,%d)\n", map_bbox.minx, map_bbox.miny, map_bbox.maxx,
                     map_bbox.maxy);
 
     block_x = map_bbox.minx - (map_bbox.minx & 0x7);
@@ -594,13 +594,13 @@ void PutBlockmap()
         // leave an empty blockmap lump
         CreateLevelLump("BLOCKMAP")->Finish();
 
-        Warning("Blockmap overflowed (lump will be empty)\n");
+        LogPrint("Blockmap overflowed (lump will be empty)\n");
     }
     else
     {
         WriteBlockmap();
 
-        LogPrintf("    Blockmap size: %dx%d (compression: %d%%)\n", block_w, block_h, block_compression);
+        LogPrint("    Blockmap size: %dx%d (compression: %d%%)\n", block_w, block_h, block_compression);
     }
 
     FreeBlockmap();
@@ -719,7 +719,7 @@ static void Reject_DebugGroups()
             num++;
         }
 
-        DebugPrintf("Group %d  Sectors %d\n", group, num);
+        DebugPrint("Group %d  Sectors %d\n", group, num);
     }
 }
 #endif
@@ -780,7 +780,7 @@ void PutReject()
     Reject_WriteLump();
     Reject_Free();
 
-    LogPrintf("    Reject size: %d\n", rej_total_size);
+    LogPrint("    Reject size: %d\n", rej_total_size);
 }
 
 //------------------------------------------------------------------------
@@ -969,7 +969,7 @@ void FreeWallTips()
 static vertex_t *SafeLookupVertex(int num)
 {
     if (num >= num_vertices)
-        ErrorPrintf("illegal vertex number #%d\n", num);
+        FatalError("illegal vertex number #%d\n", num);
 
     return lev_vertices[num];
 }
@@ -980,7 +980,7 @@ static sector_t *SafeLookupSector(uint16_t num)
         return NULL;
 
     if (num >= num_sectors)
-        ErrorPrintf("illegal sector number #%d\n", (int)num);
+        FatalError("illegal sector number #%d\n", (int)num);
 
     return lev_sectors[num];
 }
@@ -1007,21 +1007,21 @@ void GetVertices()
         count = lump->Length() / (int)sizeof(raw_vertex_t);
 
 #if DEBUG_LOAD
-    DebugPrintf("GetVertices: num = %d\n", count);
+    DebugPrint("GetVertices: num = %d\n", count);
 #endif
 
     if (lump == NULL || count == 0)
         return;
 
     if (!lump->Seek(0))
-        ErrorPrintf("Error seeking to vertices.\n");
+        FatalError("Error seeking to vertices.\n");
 
     for (int i = 0; i < count; i++)
     {
         raw_vertex_t raw;
 
         if (!lump->Read(&raw, sizeof(raw)))
-            ErrorPrintf("Error reading vertices.\n");
+            FatalError("Error reading vertices.\n");
 
         vertex_t *vert = NewVertex();
 
@@ -1045,10 +1045,10 @@ void GetSectors()
         return;
 
     if (!lump->Seek(0))
-        ErrorPrintf("Error seeking to sectors.\n");
+        FatalError("Error seeking to sectors.\n");
 
 #if DEBUG_LOAD
-    DebugPrintf("GetSectors: num = %d\n", count);
+    DebugPrint("GetSectors: num = %d\n", count);
 #endif
 
     for (int i = 0; i < count; i++)
@@ -1056,7 +1056,7 @@ void GetSectors()
         raw_sector_t raw;
 
         if (!lump->Read(&raw, sizeof(raw)))
-            ErrorPrintf("Error reading sectors.\n");
+            FatalError("Error reading sectors.\n");
 
         sector_t *sector = NewSector();
 
@@ -1077,10 +1077,10 @@ void GetThings()
         return;
 
     if (!lump->Seek(0))
-        ErrorPrintf("Error seeking to things.\n");
+        FatalError("Error seeking to things.\n");
 
 #if DEBUG_LOAD
-    DebugPrintf("GetThings: num = %d\n", count);
+    DebugPrint("GetThings: num = %d\n", count);
 #endif
 
     for (int i = 0; i < count; i++)
@@ -1088,7 +1088,7 @@ void GetThings()
         raw_thing_t raw;
 
         if (!lump->Read(&raw, sizeof(raw)))
-            ErrorPrintf("Error reading things.\n");
+            FatalError("Error reading things.\n");
 
         thing_t *thing = NewThing();
 
@@ -1111,10 +1111,10 @@ void GetThingsHexen()
         return;
 
     if (!lump->Seek(0))
-        ErrorPrintf("Error seeking to things.\n");
+        FatalError("Error seeking to things.\n");
 
 #if DEBUG_LOAD
-    DebugPrintf("GetThingsHexen: num = %d\n", count);
+    DebugPrint("GetThingsHexen: num = %d\n", count);
 #endif
 
     for (int i = 0; i < count; i++)
@@ -1122,7 +1122,7 @@ void GetThingsHexen()
         raw_hexen_thing_t raw;
 
         if (!lump->Read(&raw, sizeof(raw)))
-            ErrorPrintf("Error reading things.\n");
+            FatalError("Error reading things.\n");
 
         thing_t *thing = NewThing();
 
@@ -1145,10 +1145,10 @@ void GetSidedefs()
         return;
 
     if (!lump->Seek(0))
-        ErrorPrintf("Error seeking to sidedefs.\n");
+        FatalError("Error seeking to sidedefs.\n");
 
 #if DEBUG_LOAD
-    DebugPrintf("GetSidedefs: num = %d\n", count);
+    DebugPrint("GetSidedefs: num = %d\n", count);
 #endif
 
     for (int i = 0; i < count; i++)
@@ -1156,7 +1156,7 @@ void GetSidedefs()
         raw_sidedef_t raw;
 
         if (!lump->Read(&raw, sizeof(raw)))
-            ErrorPrintf("Error reading sidedefs.\n");
+            FatalError("Error reading sidedefs.\n");
 
         sidedef_t *side = NewSidedef();
 
@@ -1177,10 +1177,10 @@ void GetLinedefs()
         return;
 
     if (!lump->Seek(0))
-        ErrorPrintf("Error seeking to linedefs.\n");
+        FatalError("Error seeking to linedefs.\n");
 
 #if DEBUG_LOAD
-    DebugPrintf("GetLinedefs: num = %d\n", count);
+    DebugPrint("GetLinedefs: num = %d\n", count);
 #endif
 
     for (int i = 0; i < count; i++)
@@ -1188,7 +1188,7 @@ void GetLinedefs()
         raw_linedef_t raw;
 
         if (!lump->Read(&raw, sizeof(raw)))
-            ErrorPrintf("Error reading linedefs.\n");
+            FatalError("Error reading linedefs.\n");
 
         linedef_t *line;
 
@@ -1236,10 +1236,10 @@ void GetLinedefsHexen()
         return;
 
     if (!lump->Seek(0))
-        ErrorPrintf("Error seeking to linedefs.\n");
+        FatalError("Error seeking to linedefs.\n");
 
 #if DEBUG_LOAD
-    DebugPrintf("GetLinedefsHexen: num = %d\n", count);
+    DebugPrint("GetLinedefsHexen: num = %d\n", count);
 #endif
 
     for (int i = 0; i < count; i++)
@@ -1247,7 +1247,7 @@ void GetLinedefsHexen()
         raw_hexen_linedef_t raw;
 
         if (!lump->Read(&raw, sizeof(raw)))
-            ErrorPrintf("Error reading linedefs.\n");
+            FatalError("Error reading linedefs.\n");
 
         linedef_t *line;
 
@@ -1350,7 +1350,7 @@ void ParseSidedefField(sidedef_t *side, const std::string &key, ajparse::token_k
         int num = ajparse::LEX_Int(value);
 
         if (num < 0 || num >= num_sectors)
-            ErrorPrintf("illegal sector number #%d\n", (int)num);
+            FatalError("illegal sector number #%d\n", (int)num);
 
         side->sector = lev_sectors[num];
     }
@@ -1431,21 +1431,21 @@ void ParseUDMF_Block(ajparse::lexer_c &lex, int cur_type)
         ajparse::token_kind_e tok = lex.Next(key);
 
         if (tok == ajparse::TOK_EOF)
-            ErrorPrintf("Malformed TEXTMAP lump: unclosed block\n");
+            FatalError("Malformed TEXTMAP lump: unclosed block\n");
 
         if (tok != ajparse::TOK_Ident)
-            ErrorPrintf("Malformed TEXTMAP lump: missing key\n");
+            FatalError("Malformed TEXTMAP lump: missing key\n");
 
         if (!lex.Match("="))
-            ErrorPrintf("Malformed TEXTMAP lump: missing '='\n");
+            FatalError("Malformed TEXTMAP lump: missing '='\n");
 
         tok = lex.Next(value);
 
         if (tok == ajparse::TOK_EOF || tok == ajparse::TOK_ERROR || value == "}")
-            ErrorPrintf("Malformed TEXTMAP lump: missing value\n");
+            FatalError("Malformed TEXTMAP lump: missing value\n");
 
         if (!lex.Match(";"))
-            ErrorPrintf("Malformed TEXTMAP lump: missing ';'\n");
+            FatalError("Malformed TEXTMAP lump: missing ';'\n");
 
         switch (cur_type)
         {
@@ -1475,7 +1475,7 @@ void ParseUDMF_Block(ajparse::lexer_c &lex, int cur_type)
     if (line != NULL)
     {
         if (line->start == NULL || line->end == NULL)
-            ErrorPrintf("Linedef #%d is missing a vertex!\n", line->index);
+            FatalError("Linedef #%d is missing a vertex!\n", line->index);
 
         if (line->right || line->left)
             num_real_lines++;
@@ -1502,7 +1502,7 @@ void ParseUDMF_Pass(const std::string &data, int pass)
 
         if (tok != ajparse::TOK_Ident)
         {
-            ErrorPrintf("Malformed TEXTMAP lump.\n");
+            FatalError("Malformed TEXTMAP lump.\n");
             return;
         }
 
@@ -1511,12 +1511,12 @@ void ParseUDMF_Pass(const std::string &data, int pass)
         {
             lex.Next(section);
             if (!lex.Match(";"))
-                ErrorPrintf("Malformed TEXTMAP lump: missing ';'\n");
+                FatalError("Malformed TEXTMAP lump: missing ';'\n");
             continue;
         }
 
         if (!lex.Match("{"))
-            ErrorPrintf("Malformed TEXTMAP lump: missing '{'\n");
+            FatalError("Malformed TEXTMAP lump: missing '{'\n");
 
         int cur_type = 0;
 
@@ -1556,7 +1556,7 @@ void ParseUDMF()
     Lump_c *lump = FindLevelLump("TEXTMAP");
 
     if (lump == NULL || !lump->Seek(0))
-        ErrorPrintf("Error finding TEXTMAP lump.\n");
+        FatalError("Error finding TEXTMAP lump.\n");
 
     int remain = lump->Length();
 
@@ -1570,7 +1570,7 @@ void ParseUDMF()
         int want = OBSIDIAN_MIN(remain, (int)sizeof(buffer));
 
         if (!lump->Read(buffer, want))
-            ErrorPrintf("Error reading TEXTMAP lump.\n");
+            FatalError("Error reading TEXTMAP lump.\n");
 
         data.append(buffer, want);
 
@@ -1633,11 +1633,11 @@ void PutVertices(const char *name, int do_gl)
     lump->Finish();
 
     if (count != (do_gl ? num_new_vert : num_old_vert))
-        ErrorPrintf("PutVertices miscounted (%d != %d)\n", count, do_gl ? num_new_vert : num_old_vert);
+        FatalError("PutVertices miscounted (%d != %d)\n", count, do_gl ? num_new_vert : num_old_vert);
 
     if (!do_gl && count > 65534)
     {
-        Failure("Number of vertices has overflowed.\n");
+        LogPrint("Number of vertices has overflowed.\n");
         MarkOverflow(LIMIT_VERTEXES);
     }
 }
@@ -1676,7 +1676,7 @@ void PutGLVertices(int do_v5)
     lump->Finish();
 
     if (count != num_new_vert)
-        ErrorPrintf("PutGLVertices miscounted (%d != %d)\n", count, num_new_vert);
+        FatalError("PutGLVertices miscounted (%d != %d)\n", count, num_new_vert);
 }
 
 static inline uint16_t VertexIndex16Bit(const vertex_t *v)
@@ -1726,7 +1726,7 @@ void PutSegs()
         lump->Write(&raw, sizeof(raw));
 
 #if DEBUG_BSP
-        DebugPrintf("PUT SEG: %04X  Vert %04X->%04X  Line %04X %s  "
+        DebugPrint("PUT SEG: %04X  Vert %04X->%04X  Line %04X %s  "
                         "Angle %04X  (%1.1f,%1.1f) -> (%1.1f,%1.1f)\n",
                         seg->index, LE_U16(raw.start), LE_U16(raw.end), LE_U16(raw.linedef), seg->side ? "L" : "R",
                         LE_U16(raw.angle), seg->start->x, seg->start->y, seg->end->x, seg->end->y);
@@ -1737,7 +1737,7 @@ void PutSegs()
 
     if (num_segs > 65534)
     {
-        Failure("Number of segs has overflowed.\n");
+        LogPrint("Number of segs has overflowed.\n");
         MarkOverflow(LIMIT_SEGS);
     }
 }
@@ -1775,7 +1775,7 @@ void PutGLSegs_V2()
         lump->Write(&raw, sizeof(raw));
 
 #if DEBUG_BSP
-        DebugPrintf("PUT GL SEG: %04X  Line %04X %s  Partner %04X  "
+        DebugPrint("PUT GL SEG: %04X  Line %04X %s  Partner %04X  "
                         "(%1.1f,%1.1f) -> (%1.1f,%1.1f)\n",
                         seg->index, LE_U16(raw.linedef), seg->side ? "L" : "R", LE_U16(raw.partner), seg->start->x,
                         seg->start->y, seg->end->x, seg->end->y);
@@ -1815,7 +1815,7 @@ void PutGLSegs_V5()
         lump->Write(&raw, sizeof(raw));
 
 #if DEBUG_BSP
-        DebugPrintf("PUT V3 SEG: %06X  Line %04X %s  Partner %06X  "
+        DebugPrint("PUT V3 SEG: %06X  Line %04X %s  Partner %06X  "
                         "(%1.1f,%1.1f) -> (%1.1f,%1.1f)\n",
                         seg->index, LE_U16(raw.linedef), seg->side ? "L" : "R", LE_U32(raw.partner), seg->start->x,
                         seg->start->y, seg->end->x, seg->end->y);
@@ -1843,13 +1843,13 @@ void PutSubsecs(const char *name, int do_gl)
         lump->Write(&raw, sizeof(raw));
 
 #if DEBUG_BSP
-        DebugPrintf("PUT SUBSEC %04X  First %04X  Num %04X\n", sub->index, LE_U16(raw.first), LE_U16(raw.num));
+        DebugPrint("PUT SUBSEC %04X  First %04X  Num %04X\n", sub->index, LE_U16(raw.first), LE_U16(raw.num));
 #endif
     }
 
     if (num_subsecs > 32767)
     {
-        Failure("Number of %s has overflowed.\n", do_gl ? "GL subsectors" : "subsectors");
+        LogPrint("Number of %s has overflowed.\n", do_gl ? "GL subsectors" : "subsectors");
         MarkOverflow(do_gl ? LIMIT_GL_SSECT : LIMIT_SSECTORS);
     }
 
@@ -1874,7 +1874,7 @@ void PutGLSubsecs_V5()
         lump->Write(&raw, sizeof(raw));
 
 #if DEBUG_BSP
-        DebugPrintf("PUT V3 SUBSEC %06X  First %06X  Num %06X\n", sub->index, LE_U32(raw.first), LE_U32(raw.num));
+        DebugPrint("PUT V3 SUBSEC %06X  First %06X  Num %06X\n", sub->index, LE_U32(raw.first), LE_U32(raw.num));
 #endif
     }
 
@@ -1916,19 +1916,19 @@ static void PutOneNode(node_t *node, Lump_c *lump)
     else if (node->r.subsec)
         raw.right = LE_U16(node->r.subsec->index | 0x8000);
     else
-        ErrorPrintf("Bad right child in node %d\n", node->index);
+        FatalError("Bad right child in node %d\n", node->index);
 
     if (node->l.node)
         raw.left = LE_U16(node->l.node->index);
     else if (node->l.subsec)
         raw.left = LE_U16(node->l.subsec->index | 0x8000);
     else
-        ErrorPrintf("Bad left child in node %d\n", node->index);
+        FatalError("Bad left child in node %d\n", node->index);
 
     lump->Write(&raw, sizeof(raw));
 
 #if DEBUG_BSP
-    DebugPrintf("PUT NODE %04X  Left %04X  Right %04X  "
+    DebugPrint("PUT NODE %04X  Left %04X  Right %04X  "
                     "(%d,%d) -> (%d,%d)\n",
                     node->index, LE_U16(raw.left), LE_U16(raw.right), node->x, node->y, node->x + node->dx,
                     node->y + node->dy);
@@ -1967,19 +1967,19 @@ static void PutOneNode_V5(node_t *node, Lump_c *lump)
     else if (node->r.subsec)
         raw.right = LE_U32(node->r.subsec->index | 0x80000000U);
     else
-        ErrorPrintf("Bad right child in V5 node %d\n", node->index);
+        FatalError("Bad right child in V5 node %d\n", node->index);
 
     if (node->l.node)
         raw.left = LE_U32(node->l.node->index);
     else if (node->l.subsec)
         raw.left = LE_U32(node->l.subsec->index | 0x80000000U);
     else
-        ErrorPrintf("Bad left child in V5 node %d\n", node->index);
+        FatalError("Bad left child in V5 node %d\n", node->index);
 
     lump->Write(&raw, sizeof(raw));
 
 #if DEBUG_BSP
-    DebugPrintf("PUT V5 NODE %08X  Left %08X  Right %08X  "
+    DebugPrint("PUT V5 NODE %08X  Left %08X  Right %08X  "
                     "(%d,%d) -> (%d,%d)\n",
                     node->index, LE_U32(raw.left), LE_U32(raw.right), node->x, node->y, node->x + node->dx,
                     node->y + node->dy);
@@ -2008,11 +2008,11 @@ void PutNodes(const char *name, int do_v5, node_t *root)
     lump->Finish();
 
     if (node_cur_index != num_nodes)
-        ErrorPrintf("PutNodes miscounted (%d != %d)\n", node_cur_index, num_nodes);
+        FatalError("PutNodes miscounted (%d != %d)\n", node_cur_index, num_nodes);
 
     if (!do_v5 && node_cur_index > 32767)
     {
-        Failure("Number of nodes has overflowed.\n");
+        LogPrint("Number of nodes has overflowed.\n");
         MarkOverflow(LIMIT_NODES);
     }
 }
@@ -2025,21 +2025,21 @@ void CheckLimits()
     // the other checks below, like the vertex counts).
     if (num_sectors > 65535)
     {
-        Failure("Map has too many sectors.\n");
+        LogPrint("Map has too many sectors.\n");
         MarkOverflow(LIMIT_SECTORS);
     }
 
     // the sidedef 0xFFFF is reserved to mean "no side" in DOOM map format
     if (num_sidedefs > 65535)
     {
-        Failure("Map has too many sidedefs.\n");
+        LogPrint("Map has too many sidedefs.\n");
         MarkOverflow(LIMIT_SIDEDEFS);
     }
 
     // the linedef 0xFFFF is reserved for minisegs in GL nodes
     if (num_linedefs > 65535)
     {
-        Failure("Map has too many linedefs.\n");
+        LogPrint("Map has too many linedefs.\n");
         MarkOverflow(LIMIT_LINEDEFS);
     }
 
@@ -2047,7 +2047,7 @@ void CheckLimits()
     {
         if (num_old_vert > 32767 || num_new_vert > 32767 || num_segs > 65535 || num_nodes > 32767)
         {
-            Warning("Forcing V5 of GL-Nodes due to overflows.\n");
+            LogPrint("Forcing V5 of GL-Nodes due to overflows.\n");
             lev_force_v5 = true;
         }
     }
@@ -2056,7 +2056,7 @@ void CheckLimits()
     {
         if (num_old_vert > 32767 || num_new_vert > 32767 || num_segs > 32767 || num_nodes > 32767)
         {
-            Warning("Forcing XNOD format nodes due to overflows.\n");
+            LogPrint("Forcing XNOD format nodes due to overflows.\n");
             lev_force_xnod = true;
         }
     }
@@ -2075,7 +2075,7 @@ void SortSegs()
     // do a sanity check
     for (int i = 0; i < num_segs; i++)
         if (lev_segs[i]->index < 0)
-            ErrorPrintf("Seg %p never reached a subsector!\n", i);
+            FatalError("Seg %p never reached a subsector!\n", i);
 
     // sort segs into ascending index
     std::sort(lev_segs.begin(), lev_segs.end(), Compare_seg_pred());
@@ -2123,7 +2123,7 @@ void PutZVertices()
     }
 
     if (count != num_new_vert)
-        ErrorPrintf("PutZVertices miscounted (%d != %d)\n", count, num_new_vert);
+        FatalError("PutZVertices miscounted (%d != %d)\n", count, num_new_vert);
 }
 
 void PutZSubsecs()
@@ -2145,17 +2145,17 @@ void PutZSubsecs()
         for (const seg_t *seg = sub->seg_list; seg; seg = seg->next, cur_seg_index++)
         {
             if (cur_seg_index != seg->index)
-                ErrorPrintf("PutZSubsecs: seg index mismatch in sub %d (%d != %d)\n", i, cur_seg_index, seg->index);
+                FatalError("PutZSubsecs: seg index mismatch in sub %d (%d != %d)\n", i, cur_seg_index, seg->index);
 
             count++;
         }
 
         if (count != sub->seg_count)
-            ErrorPrintf("PutZSubsecs: miscounted segs in sub %d (%d != %d)\n", i, count, sub->seg_count);
+            FatalError("PutZSubsecs: miscounted segs in sub %d (%d != %d)\n", i, count, sub->seg_count);
     }
 
     if (cur_seg_index != num_segs)
-        ErrorPrintf("PutZSubsecs miscounted segs (%d != %d)\n", cur_seg_index, num_segs);
+        FatalError("PutZSubsecs miscounted segs (%d != %d)\n", cur_seg_index, num_segs);
 }
 
 void PutZSegs()
@@ -2168,7 +2168,7 @@ void PutZSegs()
         const seg_t *seg = lev_segs[i];
 
         if (seg->index != i)
-            ErrorPrintf("PutZSegs: seg index mismatch (%d != %d)\n", seg->index, i);
+            FatalError("PutZSegs: seg index mismatch (%d != %d)\n", seg->index, i);
 
         uint32_t v1 = LE_U32(VertexIndex_XNOD(seg->start));
         uint32_t v2 = LE_U32(VertexIndex_XNOD(seg->end));
@@ -2193,7 +2193,7 @@ void PutXGL3Segs()
         const seg_t *seg = lev_segs[i];
 
         if (seg->index != i)
-            ErrorPrintf("PutXGL3Segs: seg index mismatch (%d != %d)\n", seg->index, i);
+            FatalError("PutXGL3Segs: seg index mismatch (%d != %d)\n", seg->index, i);
 
         uint32_t v1      = LE_U32(VertexIndex_XNOD(seg->start));
         uint32_t partner = LE_U32(seg->partner ? seg->partner->index : -1);
@@ -2266,20 +2266,20 @@ static void PutOneZNode(node_t *node, bool do_xgl3)
     else if (node->r.subsec)
         raw.right = LE_U32(node->r.subsec->index | 0x80000000U);
     else
-        ErrorPrintf("Bad right child in V5 node %d\n", node->index);
+        FatalError("Bad right child in V5 node %d\n", node->index);
 
     if (node->l.node)
         raw.left = LE_U32(node->l.node->index);
     else if (node->l.subsec)
         raw.left = LE_U32(node->l.subsec->index | 0x80000000U);
     else
-        ErrorPrintf("Bad left child in V5 node %d\n", node->index);
+        FatalError("Bad left child in V5 node %d\n", node->index);
 
     ZLibAppendLump(&raw.right, 4);
     ZLibAppendLump(&raw.left, 4);
 
 #if DEBUG_BSP
-    DebugPrintf("PUT Z NODE %08X  Left %08X  Right %08X  "
+    DebugPrint("PUT Z NODE %08X  Left %08X  Right %08X  "
                     "(%d,%d) -> (%d,%d)\n",
                     node->index, LE_U32(raw.left), LE_U32(raw.right), node->x, node->y, node->x + node->dx,
                     node->y + node->dy);
@@ -2297,7 +2297,7 @@ void PutZNodes(node_t *root, bool do_xgl3)
         PutOneZNode(root, do_xgl3);
 
     if (node_cur_index != num_nodes)
-        ErrorPrintf("PutZNodes miscounted (%d != %d)\n", node_cur_index, num_nodes);
+        FatalError("PutZNodes miscounted (%d != %d)\n", node_cur_index, num_nodes);
 }
 
 static int CalcZDoomNodesSize()
@@ -2413,7 +2413,7 @@ void LoadLevel()
         PruneVerticesAtEnd();
     }
 
-    LogPrintf("    Loaded %d vertices, %d sectors, %d sides, %d lines, %d things\n", num_vertices, num_sectors,
+    LogPrint("    Loaded %d vertices, %d sectors, %d sides, %d lines, %d things\n", num_vertices, num_sectors,
                     num_sidedefs, num_linedefs, num_things);
 
     DetectOverlappingVertices();
@@ -2476,7 +2476,7 @@ static void AddMissingLump(const char *name, const char *after)
     // if this happens, the level structure is very broken
     if (exist < 0)
     {
-        Warning("Missing %s lump -- level structure is broken\n", after);
+        LogPrint("Missing %s lump -- level structure is broken\n", after);
 
         exist = cur_wad->LevelLastLump(lev_current_idx);
     }
@@ -2655,7 +2655,7 @@ void ZLibBeginLump(Lump_c *lump)
     zout_stream.opaque = (voidpf)0;
 
     if (Z_OK != deflateInit(&zout_stream, Z_DEFAULT_COMPRESSION))
-        ErrorPrintf("Trouble setting up zlib compression\n");
+        FatalError("Trouble setting up zlib compression\n");
 
     zout_stream.next_out  = zout_buffer;
     zout_stream.avail_out = sizeof(zout_buffer);
@@ -2680,7 +2680,7 @@ void ZLibAppendLump(const void *data, int length)
         int err = deflate(&zout_stream, Z_NO_FLUSH);
 
         if (err != Z_OK)
-            ErrorPrintf("Trouble compressing %d bytes (zlib)\n", length);
+            FatalError("Trouble compressing %d bytes (zlib)\n", length);
 
         if (zout_stream.avail_out == 0)
         {
@@ -2716,7 +2716,7 @@ void ZLibFinishLump(void)
             break;
 
         if (err != Z_OK)
-            ErrorPrintf("Trouble finishing compression (zlib)\n");
+            FatalError("Trouble finishing compression (zlib)\n");
 
         if (zout_stream.avail_out == 0)
         {
@@ -2820,14 +2820,14 @@ void OpenWad(std::string filename)
 {
     cur_wad = Wad_file::Open(filename.c_str(), 'a');
     if (cur_wad == NULL)
-        ErrorPrintf("Cannot open file: %s\n", filename.c_str());
+        FatalError("Cannot open file: %s\n", filename.c_str());
 
     if (cur_wad->IsReadOnly())
     {
         delete cur_wad;
         cur_wad = NULL;
 
-        ErrorPrintf("file is read only: %s\n", filename.c_str());
+        FatalError("file is read only: %s\n", filename.c_str());
     }
 }
 
@@ -2835,7 +2835,7 @@ void CreateXWA(const char *filename)
 {
     xwa_wad = Wad_file::Open(filename, 'w');
     if (xwa_wad == NULL)
-        ErrorPrintf("Cannot create file: %s\n", filename);
+        FatalError("Cannot create file: %s\n", filename);
 
     xwa_wad->BeginWrite();
     xwa_wad->AddLump("XG_START")->Finish();
@@ -2915,12 +2915,12 @@ build_result_e BuildLevel(int lev_idx)
 
     if (ret == BUILD_OK)
     {
-        LogPrintf("    Built %d NODES, %d SSECTORS, %d SEGS, %d VERTEXES\n", num_nodes, num_subsecs, num_segs,
+        LogPrint("    Built %d NODES, %d SSECTORS, %d SEGS, %d VERTEXES\n", num_nodes, num_subsecs, num_segs,
                         num_old_vert + num_new_vert);
 
         if (root_node != NULL)
         {
-            LogPrintf("    Heights of subtrees: %d / %d\n", ComputeBspHeight(root_node->r.node),
+            LogPrint("    Heights of subtrees: %d / %d\n", ComputeBspHeight(root_node->r.node),
                             ComputeBspHeight(root_node->l.node));
         }
 

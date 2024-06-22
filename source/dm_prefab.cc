@@ -74,42 +74,6 @@
 #include "sys_assert.h"
 #include "sys_macro.h"
 
-// callbacks for AJ-Polygonator
-
-static char appl_message[MSG_BUF_LEN];
-
-void Appl_FatalError(const char *str, ...)
-{
-    va_list args;
-
-    va_start(args, str);
-    vsnprintf(appl_message, MSG_BUF_LEN, str, args);
-    va_end(args);
-
-    appl_message[MSG_BUF_LEN - 1] = 0;
-
-    Main::FatalError("AJ-Polygonator Failure:\n%s", appl_message);
-    /* NOT REACHED */
-}
-
-void Appl_Printf(const char *str, ...)
-{
-    if (debug_messages)
-    {
-        va_list args;
-
-        va_start(args, str);
-        vsnprintf(appl_message, MSG_BUF_LEN, str, args);
-        va_end(args);
-
-        appl_message[MSG_BUF_LEN - 1] = 0;
-
-        DebugPrintf("AJPOLY: %s", appl_message);
-    }
-}
-
-//------------------------------------------------------------------------
-
 int wadfab_free(lua_State *L)
 {
     ajpoly::CloseMap();

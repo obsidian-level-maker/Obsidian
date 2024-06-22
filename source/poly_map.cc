@@ -72,7 +72,7 @@ int num_wall_tips;
 static vertex_c *SafeLookupVertex(int num)
 {
     if (num >= num_vertices)
-        Main::FatalError("illegal vertex number #%d\n", num);
+        FatalError("illegal vertex number #%d\n", num);
 
     return all_vertices[num];
 }
@@ -83,7 +83,7 @@ static sector_c *SafeLookupSector(uint16_t num)
         return NULL;
 
     if (num >= num_sectors)
-        Main::FatalError("illegal sector number #%d\n", (int)num);
+        FatalError("illegal sector number #%d\n", (int)num);
 
     return all_sectors[num];
 }
@@ -279,7 +279,7 @@ void ParseSidedefField(sidedef_c *side, const std::string &key, ajparse::token_k
         int num = ajparse::LEX_Double(value);
 
         if (num < 0 || num >= num_sectors)
-            Main::FatalError("AJ_Poly: illegal sector number #%d\n", (int)num);
+            FatalError("AJ_Poly: illegal sector number #%d\n", (int)num);
 
         side->sector = all_sectors[num];
     }
@@ -437,21 +437,21 @@ void ParseUDMF_Block(ajparse::lexer_c &lex, int cur_type)
         ajparse::token_kind_e tok = lex.Next(key);
 
         if (tok == ajparse::TOK_EOF)
-            Main::FatalError("Malformed TEXTMAP lump: unclosed block\n");
+            FatalError("Malformed TEXTMAP lump: unclosed block\n");
 
         if (tok != ajparse::TOK_Ident)
-            Main::FatalError("Malformed TEXTMAP lump: missing key\n");
+            FatalError("Malformed TEXTMAP lump: missing key\n");
 
         if (!lex.Match("="))
-            Main::FatalError("Malformed TEXTMAP lump: missing '='\n");
+            FatalError("Malformed TEXTMAP lump: missing '='\n");
 
         tok = lex.Next(value);
 
         if (tok == ajparse::TOK_EOF || tok == ajparse::TOK_ERROR || value == "}")
-            Main::FatalError("Malformed TEXTMAP lump: missing value\n");
+            FatalError("Malformed TEXTMAP lump: missing value\n");
 
         if (!lex.Match(";"))
-            Main::FatalError("Malformed TEXTMAP lump: missing ';'\n");
+            FatalError("Malformed TEXTMAP lump: missing ';'\n");
 
         switch (cur_type)
         {
@@ -481,7 +481,7 @@ void ParseUDMF_Block(ajparse::lexer_c &lex, int cur_type)
     if (line != NULL)
     {
         if (line->start == NULL || line->end == NULL)
-            Main::FatalError("Linedef #%d is missing a vertex!\n", line->index);
+            FatalError("Linedef #%d is missing a vertex!\n", line->index);
     }
 }
 
@@ -503,7 +503,7 @@ void ParseUDMF_Pass(const std::string &data, int pass)
 
         if (tok != ajparse::TOK_Ident)
         {
-            Main::FatalError("Malformed TEXTMAP lump.\n");
+            FatalError("Malformed TEXTMAP lump.\n");
             return;
         }
 
@@ -512,12 +512,12 @@ void ParseUDMF_Pass(const std::string &data, int pass)
         {
             lex.Next(section);
             if (!lex.Match(";"))
-                Main::FatalError("Malformed TEXTMAP lump: missing ;\n");
+                FatalError("Malformed TEXTMAP lump: missing ;\n");
             continue;
         }
 
         if (!lex.Match("{"))
-            Main::FatalError("Malformed TEXTMAP lump: missing opening bracket, instead %s\n", section.c_str());
+            FatalError("Malformed TEXTMAP lump: missing opening bracket, instead %s\n", section.c_str());
 
         int cur_type = 0;
 
@@ -555,7 +555,7 @@ void ParseUDMF_Pass(const std::string &data, int pass)
 void ParseUDMF(uint8_t *lump, int length)
 {
     if (!lump || length <= 0)
-        Main::FatalError("Error parsing TEXTMAP lump.\n");
+        FatalError("Error parsing TEXTMAP lump.\n");
 
     // load the lump into this string
     std::string data;
@@ -578,7 +578,7 @@ vertex_c *Vertex(int index)
 {
     if (index < 0 || index >= num_vertices)
     {
-        Appl_FatalError("No such vertex: #%d\n", index);
+        FatalError("No such vertex: #%d\n", index);
     }
 
     return all_vertices[index];
@@ -588,7 +588,7 @@ linedef_c *Linedef(int index)
 {
     if (index < 0 || index >= num_linedefs)
     {
-        Appl_FatalError("No such linedef: #%d\n", index);
+        FatalError("No such linedef: #%d\n", index);
     }
 
     return all_linedefs[index];
@@ -598,7 +598,7 @@ sidedef_c *Sidedef(int index)
 {
     if (index < 0 || index >= num_sidedefs)
     {
-        Appl_FatalError("No such sidedef: #%d\n", index);
+        FatalError("No such sidedef: #%d\n", index);
     }
 
     return all_sidedefs[index];
@@ -608,7 +608,7 @@ sector_c *Sector(int index)
 {
     if (index < 0 || index >= num_sectors)
     {
-        Appl_FatalError("No such sector: #%d\n", index);
+        FatalError("No such sector: #%d\n", index);
     }
 
     return all_sectors[index];
@@ -618,7 +618,7 @@ thing_c *Thing(int index)
 {
     if (index < 0 || index >= num_things)
     {
-        Appl_FatalError("No such thing: #%d\n", index);
+        FatalError("No such thing: #%d\n", index);
     }
 
     return all_things[index];
@@ -628,7 +628,7 @@ edge_c *Edge(int index)
 {
     if (index < 0 || index >= num_edges)
     {
-        Appl_FatalError("No such edge: #%d\n", index);
+        FatalError("No such edge: #%d\n", index);
     }
 
     return all_edges[index];
@@ -638,7 +638,7 @@ polygon_c *Polygon(int index)
 {
     if (index < 0 || index >= num_polygons)
     {
-        Appl_FatalError("No such polygon: #%d\n", index);
+        FatalError("No such polygon: #%d\n", index);
     }
 
     return all_polygons[index];
@@ -770,7 +770,7 @@ bool LoadVertices()
     int count = length / sizeof(raw_vertex_t);
 
 #if DEBUG_LOAD
-    Appl_Printf("LoadVertices: num = %d\n", count);
+    LogPrint("LoadVertices: num = %d\n", count);
 #endif
 
     raw_vertex_t *raw = (raw_vertex_t *)data;
@@ -801,7 +801,7 @@ bool LoadSectors()
     int count = length / sizeof(raw_sector_t);
 
 #if DEBUG_LOAD
-    Appl_Printf("LoadSectors: num = %d\n", count);
+    LogPrint("LoadSectors: num = %d\n", count);
 #endif
 
     raw_sector_t *raw = (raw_sector_t *)data;
@@ -844,7 +844,7 @@ bool LoadThings()
     int count = length / sizeof(raw_thing_t);
 
 #if DEBUG_LOAD
-    Appl_Printf("LoadThings: num = %d\n", count);
+    LogPrint("LoadThings: num = %d\n", count);
 #endif
 
     raw_thing_t *raw = (raw_thing_t *)data;
@@ -879,7 +879,7 @@ bool LoadThingsHexen()
     int count = length / sizeof(raw_hexen_thing_t);
 
 #if DEBUG_LOAD
-    Appl_Printf("LoadThingsHexen: num = %d\n", count);
+    LogPrint("LoadThingsHexen: num = %d\n", count);
 #endif
 
     raw_hexen_thing_t *raw = (raw_hexen_thing_t *)data;
@@ -921,7 +921,7 @@ bool LoadSidedefs()
     int count = length / sizeof(raw_sidedef_t);
 
 #if DEBUG_LOAD
-    Appl_Printf("LoadSidedefs: num = %d\n", count);
+    LogPrint("LoadSidedefs: num = %d\n", count);
 #endif
 
     raw_sidedef_t *raw = (raw_sidedef_t *)data;
@@ -964,7 +964,7 @@ bool LoadLinedefs()
     int count = length / sizeof(raw_linedef_t);
 
 #if DEBUG_LOAD
-    Appl_Printf("LoadLinedefs: num = %d\n", count);
+    LogPrint("LoadLinedefs: num = %d\n", count);
 #endif
 
     raw_linedef_t *raw = (raw_linedef_t *)data;
@@ -985,7 +985,7 @@ bool LoadLinedefs()
         /* check for zero-length line */
         if ((fabs(start->x - end->x) < DIST_EPSILON) && (fabs(start->y - end->y) < DIST_EPSILON))
         {
-            Appl_FatalError("Linedef #%d has zero length.\n", i);
+            FatalError("Linedef #%d has zero length.\n", i);
         }
 
         line->flags   = LE_U16(raw->flags);
@@ -1014,7 +1014,7 @@ bool LoadLinedefsHexen()
     int count = length / sizeof(raw_hexen_linedef_t);
 
 #if DEBUG_LOAD
-    Appl_Printf("LoadLinedefsHexen: num = %d\n", count);
+    LogPrint("LoadLinedefsHexen: num = %d\n", count);
 #endif
 
     raw_hexen_linedef_t *raw = (raw_hexen_linedef_t *)data;
@@ -1035,7 +1035,7 @@ bool LoadLinedefsHexen()
         /* check for zero-length line */
         if ((fabs(start->x - end->x) < DIST_EPSILON) && (fabs(start->y - end->y) < DIST_EPSILON))
         {
-            Appl_FatalError("Linedef #%d has zero length.\n", i);
+            FatalError("Linedef #%d has zero length.\n", i);
         }
 
         line->flags   = LE_U16(raw->flags);
@@ -1092,7 +1092,7 @@ void DetermineMapLimits()
         limit_y2 = OBSIDIAN_MAX(limit_y2, OBSIDIAN_MAX(y1, y2));
     }
 
-    Appl_Printf("Map goes from (%d,%d) to (%d,%d)\n", limit_x1, limit_y1, limit_x2, limit_y2);
+    LogPrint("Map goes from (%d,%d) to (%d,%d)\n", limit_x1, limit_y1, limit_x2, limit_y2);
 }
 
 void CheckSectorIsDummy(sector_c *sec)
@@ -1533,12 +1533,12 @@ bool ValidateWallTip(const vertex_c *vert)
 
     if (!vert->tip_set)
     {
-        Appl_FatalError("INTERNAL ERROR: vertex #%d got no wall tips\n", vert->index);
+        FatalError("INTERNAL ERROR: vertex #%d got no wall tips\n", vert->index);
     }
 
     if (!vert->tip_set->next)
     {
-        Appl_FatalError("INTERNAL ERROR: vertex #%d only has one linedef\n", vert->index);
+        FatalError("INTERNAL ERROR: vertex #%d only has one linedef\n", vert->index);
     }
 
     first_right = vert->tip_set->right;
@@ -1549,7 +1549,7 @@ bool ValidateWallTip(const vertex_c *vert)
         {
             if (tip->left != tip->next->right)
             {
-                Appl_FatalError("Sector #%d not closed at vertex #%d\n",
+                FatalError("Sector #%d not closed at vertex #%d\n",
                                 tip->left    ? tip->left->index
                                 : tip->right ? tip->right->index
                                              : -1,
@@ -1560,7 +1560,7 @@ bool ValidateWallTip(const vertex_c *vert)
         {
             if (tip->left != first_right)
             {
-                Appl_FatalError("Sector #%d not closed at vertex #%d\n",
+                FatalError("Sector #%d not closed at vertex #%d\n",
                                 tip->left    ? tip->left->index
                                 : tip->right ? tip->right->index
                                              : -1,
@@ -1616,11 +1616,11 @@ bool CalculateWallTips()
         vertex_c   *vert = Vertex(i);
         wall_tip_c *tip;
 
-        Appl_Printf("WallTips for vertex #%d :\n", i);
+        LogPrint("WallTips for vertex #%d :\n", i);
 
         for (tip = vert->tip_set; tip; tip = tip->next)
         {
-            Appl_Printf("  angle=%1.1f left=%d right=%d\n", tip->angle, tip->left ? tip->left->index : -1,
+            LogPrint("  angle=%1.1f left=%d right=%d\n", tip->angle, tip->left ? tip->left->index : -1,
                         tip->right ? tip->right->index : -1);
         }
     }
@@ -1685,7 +1685,7 @@ sector_c *vertex_c::CheckOpen(double dx, double dy) const
 
     /* cannot get here (in theory) */
 
-    Appl_FatalError("INTERNAL ERROR: Bad wall tips at vertex #%d\n", index);
+    FatalError("INTERNAL ERROR: Bad wall tips at vertex #%d\n", index);
     return NULL;
 }
 
@@ -1826,7 +1826,7 @@ bool OpenMap(const char *level_name)
         }
     }
 
-    Appl_Printf("Loaded %d vertices, %d sectors, %d sides, %d lines, %d things\n", num_vertices, num_sectors,
+    LogPrint("Loaded %d vertices, %d sectors, %d sides, %d lines, %d things\n", num_vertices, num_sectors,
                 num_sidedefs, num_linedefs, num_things);
 
     FindDummySectors();

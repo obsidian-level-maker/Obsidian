@@ -36,8 +36,8 @@ namespace ajbsp
 {
 
 #if DEBUG_WAD
-#define FileMessage DebugPrintf
-#define LumpWarning DebugPrintf
+#define FileMessage DebugPrint
+#define LumpWarning DebugPrint
 #else
 void FileMessage(const char *fmt, ...)
 {
@@ -73,7 +73,7 @@ Lump_c::Lump_c(Wad_file *_par, const raw_wad_entry_s *entry) : parent(_par)
     l_length = LE_U32(entry->size);
 
 #if DEBUG_WAD
-    DebugPrintf("new lump '%s' @ %d len:%d\n", name, l_start, l_length);
+    DebugPrint("new lump '%s' @ %d len:%d\n", name, l_start, l_length);
 #endif
 }
 
@@ -243,16 +243,16 @@ retry:
 
     // determine total size (seek to end)
     if (fseek(fp, 0, SEEK_END) != 0)
-        ErrorPrintf("Error determining WAD size.\n");
+        FatalError("Error determining WAD size.\n");
 
     w->total_size = (int)ftell(fp);
 
 #if DEBUG_WAD
-    DebugPrintf("total_size = %d\n", w->total_size);
+    DebugPrint("total_size = %d\n", w->total_size);
 #endif
 
     if (w->total_size < 0)
-        ErrorPrintf("Error determining WAD size.\n");
+        FatalError("Error determining WAD size.\n");
 
     w->ReadDirectory();
     w->DetectLevels();
@@ -537,7 +537,7 @@ Lump_c *Wad_file::FindLumpInNamespace(const char *name, char group)
         break;
 
     default:
-        ErrorPrintf("FindLumpInNamespace: bad group '%c'\n", group);
+        FatalError("FindLumpInNamespace: bad group '%c'\n", group);
     }
 
     return NULL; // not found!
@@ -552,7 +552,7 @@ void Wad_file::ReadDirectory()
     raw_wad_header_t header;
 
     if (fread(&header, sizeof(header), 1, fp) != 1)
-        ErrorPrintf("Error reading WAD header.\n");
+        FatalError("Error reading WAD header.\n");
 
     // WISH: check ident for PWAD or IWAD
 
@@ -562,17 +562,17 @@ void Wad_file::ReadDirectory()
     dir_count = LE_S32(header.num_entries);
 
     if (dir_count < 0 || dir_count > 32000)
-        ErrorPrintf("Bad WAD header, too many entries (%d)\n", dir_count);
+        FatalError("Bad WAD header, too many entries (%d)\n", dir_count);
 
     if (fseek(fp, dir_start, SEEK_SET) != 0)
-        ErrorPrintf("Error seeking to WAD directory.\n");
+        FatalError("Error seeking to WAD directory.\n");
 
     for (int i = 0; i < dir_count; i++)
     {
         raw_wad_entry_t entry;
 
         if (fread(&entry, sizeof(entry), 1, fp) != 1)
-            ErrorPrintf("Error reading WAD directory.\n");
+            FatalError("Error reading WAD directory.\n");
 
         Lump_c *lump = new Lump_c(this, &entry);
 
@@ -599,7 +599,7 @@ void Wad_file::DetectLevels()
         {
             levels.push_back(k);
 #if DEBUG_WAD
-            DebugPrintf("Detected level : %s (UDMF)\n", directory[k]->name);
+            DebugPrint("Detected level : %s (UDMF)\n", directory[k]->name);
 #endif
             continue;
         }
@@ -628,7 +628,7 @@ void Wad_file::DetectLevels()
             levels.push_back(k);
 
 #if DEBUG_WAD
-            DebugPrintf("Detected level : %s\n", directory[k]->name);
+            DebugPrint("Detected level : %s\n", directory[k]->name);
 #endif
         }
     }
@@ -750,7 +750,7 @@ void Wad_file::ProcessNamespaces()
             }
 
 #if DEBUG_WAD
-            DebugPrintf("Namespace %c lump : %s\n", active, name);
+            DebugPrint("Namespace %c lump : %s\n", active, name);
 #endif
 
             switch (active)
@@ -769,7 +769,7 @@ void Wad_file::ProcessNamespaces()
                 break;
 
             default:
-                ErrorPrintf("ProcessNamespaces: active = 0x%02x\n", (int)active);
+                FatalError("ProcessNamespaces: active = 0x%02x\n", (int)active);
             }
         }
     }
@@ -791,10 +791,10 @@ bool Wad_file::WasExternallyModified()
 void Wad_file::BeginWrite()
 {
     if (mode == 'r')
-        ErrorPrintf("Wad_file::BeginWrite() called on read-only file\n");
+        FatalError("Wad_file::BeginWrite() called on read-only file\n");
 
     if (begun_write)
-        ErrorPrintf("Wad_file::BeginWrite() called again without EndWrite()\n");
+        FatalError("Wad_file::BeginWrite() called again without EndWrite()\n");
 
     // put the size into a quantum state
     total_size = 0;
@@ -805,7 +805,7 @@ void Wad_file::BeginWrite()
 void Wad_file::EndWrite()
 {
     if (!begun_write)
-        ErrorPrintf("Wad_file::EndWrite() called without BeginWrite()\n");
+        FatalError("Wad_file::EndWrite() called without BeginWrite()\n");
 
     begun_write = false;
 
@@ -1094,12 +1094,12 @@ int Wad_file::PositionForWrite(int max_size)
     //       needlessly complex and hard to follow.
 
     if (fseek(fp, 0, SEEK_END) < 0)
-        ErrorPrintf("Error seeking to new write position.\n");
+        FatalError("Error seeking to new write position.\n");
 
     total_size = (int)ftell(fp);
 
     if (total_size < 0)
-        ErrorPrintf("Error seeking to new write position.\n");
+        FatalError("Error seeking to new write position.\n");
 
     if (want_pos > total_size)
     {
@@ -1114,11 +1114,11 @@ int Wad_file::PositionForWrite(int max_size)
     else
     {
         if (fseek(fp, want_pos, SEEK_SET) < 0)
-            ErrorPrintf("Error seeking to new write position.\n");
+            FatalError("Error seeking to new write position.\n");
     }
 
 #if DEBUG_WAD
-    DebugPrintf("POSITION FOR WRITE: %d  (total_size %d)\n", want_pos, total_size);
+    DebugPrint("POSITION FOR WRITE: %d  (total_size %d)\n", want_pos, total_size);
 #endif
 
     return want_pos;
@@ -1131,7 +1131,7 @@ bool Wad_file::FinishLump(int final_size)
     // sanity check
     if (begun_max_size >= 0)
         if (final_size > begun_max_size)
-            ErrorPrintf("Internal Error: wrote too much in lump (%d > %d)\n", final_size, begun_max_size);
+            FatalError("Internal Error: wrote too much in lump (%d > %d)\n", final_size, begun_max_size);
 
     int pos = (int)ftell(fp);
 
@@ -1174,8 +1174,8 @@ void Wad_file::WriteDirectory()
     dir_count = NumLumps();
 
 #if DEBUG_WAD
-    DebugPrintf("WriteDirectory...\n");
-    DebugPrintf("dir_start:%d  dir_count:%d\n", dir_start, dir_count);
+    DebugPrint("WriteDirectory...\n");
+    DebugPrint("dir_start:%d  dir_count:%d\n", dir_start, dir_count);
 #endif
 
     for (int k = 0; k < dir_count; k++)
@@ -1188,7 +1188,7 @@ void Wad_file::WriteDirectory()
         lump->MakeEntry(&entry);
 
         if (fwrite(&entry, sizeof(entry), 1, fp) != 1)
-            ErrorPrintf("Error writing WAD directory.\n");
+            FatalError("Error writing WAD directory.\n");
     }
 
     fflush(fp);
@@ -1196,11 +1196,11 @@ void Wad_file::WriteDirectory()
     total_size = (int)ftell(fp);
 
 #if DEBUG_WAD
-    DebugPrintf("total_size: %d\n", total_size);
+    DebugPrint("total_size: %d\n", total_size);
 #endif
 
     if (total_size < 0)
-        ErrorPrintf("Error determining WAD size.\n");
+        FatalError("Error determining WAD size.\n");
 
     // update header at start of file
 
@@ -1214,7 +1214,7 @@ void Wad_file::WriteDirectory()
     header.num_entries = LE_U32(dir_count);
 
     if (fwrite(&header, sizeof(header), 1, fp) != 1)
-        ErrorPrintf("Error writing WAD header.\n");
+        FatalError("Error writing WAD header.\n");
 
     fflush(fp);
 }

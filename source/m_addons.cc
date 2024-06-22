@@ -46,12 +46,12 @@ void VFS_AddFolder(std::string name)
 
     if (!PHYSFS_mount(path.c_str(), mount.c_str(), 0))
     {
-        Main::FatalError("Failed to mount '%s' folder in PhysFS:\n%s\n", name.c_str(),
+        FatalError("Failed to mount '%s' folder in PhysFS:\n%s\n", name.c_str(),
                          PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         return; /* NOT REACHED */
     }
 
-    DebugPrintf("mounted folder '%s'\n", name.c_str());
+    DebugPrint("mounted folder '%s'\n", name.c_str());
 }
 
 // install and home directories if different
@@ -61,19 +61,19 @@ void VFS_AddBothFolders(std::string name)
     std::string mount = StringFormat("/%s", name.c_str());
     if (!PHYSFS_mount(path.c_str(), mount.c_str(), 0))
     {
-        Main::FatalError("Failed to mount '%s' folder in PhysFS:\n%s\n", name.c_str(),
+        FatalError("Failed to mount '%s' folder in PhysFS:\n%s\n", name.c_str(),
                          PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         return;                                   /* NOT REACHED */
     }
     path = PathAppend(home_dir, name);
     PHYSFS_mount(path.c_str(), mount.c_str(), 0); // this one can fail if not present, that's fine
 
-    DebugPrintf("mounted folder '%s'\n", name.c_str());
+    DebugPrint("mounted folder '%s'\n", name.c_str());
 }
 
 bool VFS_AddArchive(std::string filename, bool options_file)
 {
-    LogPrintf("  using: %s\n", filename.c_str());
+    LogPrint("  using: %s\n", filename.c_str());
 
     // when handling "bare" filenames from the command line (i.e. ones
     // containing no paths or drive spec) and the file does not exist in
@@ -92,12 +92,12 @@ bool VFS_AddArchive(std::string filename, bool options_file)
     {
         if (options_file)
         {
-            LogPrintf("Failed to mount '%s' archive in PhysFS:\n%s\n", filename.c_str(),
+            LogPrint("Failed to mount '%s' archive in PhysFS:\n%s\n", filename.c_str(),
                       PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         }
         else
         {
-            Main::FatalError("Failed to mount '%s' archive in PhysFS:\n%s\n", filename.c_str(),
+            FatalError("Failed to mount '%s' archive in PhysFS:\n%s\n", filename.c_str(),
                              PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         }
 
@@ -109,7 +109,7 @@ bool VFS_AddArchive(std::string filename, bool options_file)
 
 void VFS_InitAddons(std::string search_dir)
 {
-    LogPrintf("Initializing VFS...\n");
+    LogPrint("Initializing VFS...\n");
 
     VFS_AddFolder("scripts");
     VFS_AddFolder("games");
@@ -120,7 +120,7 @@ void VFS_InitAddons(std::string search_dir)
     VFS_AddBothFolders("presets");
     VFS_AddBothFolders("addons");
 
-    LogPrintf("DONE.\n\n");
+    LogPrint("DONE.\n\n");
 }
 
 void VFS_ParseCommandLine()
@@ -135,7 +135,7 @@ void VFS_ParseCommandLine()
 
     arg++;
 
-    LogPrintf("Command-line addons....\n");
+    LogPrint("Command-line addons....\n");
 
     for (; arg < argv::list.size() && !argv::IsOption(arg); arg++, count++)
     {
@@ -144,10 +144,10 @@ void VFS_ParseCommandLine()
 
     if (!count)
     {
-        Main::FatalError("Missing filename for --addon option\n");
+        FatalError("Missing filename for --addon option\n");
     }
 
-    LogPrintf("DONE\n\n");
+    LogPrint("DONE\n\n");
 }
 
 void VFS_OptParse(std::string name)
@@ -178,7 +178,7 @@ void VFS_OptWrite(FILE *fp)
 
 void VFS_ScanForPresets()
 {
-    LogPrintf("Scanning for presets....\n");
+    LogPrint("Scanning for presets....\n");
 
     all_presets.clear();
 
@@ -187,7 +187,7 @@ void VFS_ScanForPresets()
     // seems this only happens on out-of-memory error
     if (!got_names)
     {
-        LogPrintf("DONE (none found)\n");
+        LogPrint("DONE (none found)\n");
     }
 
     char **p;
@@ -204,19 +204,19 @@ void VFS_ScanForPresets()
 
     if (all_presets.size() == 0)
     {
-        LogPrintf("DONE (none found)\n");
+        LogPrint("DONE (none found)\n");
     }
     else
     {
-        LogPrintf("DONE\n");
+        LogPrint("DONE\n");
     }
 
-    LogPrintf("\n");
+    LogPrint("\n");
 }
 
 void VFS_ScanForAddons()
 {
-    LogPrintf("Scanning for addons....\n");
+    LogPrint("Scanning for addons....\n");
 
     all_addons.clear();
 
@@ -225,7 +225,7 @@ void VFS_ScanForAddons()
     // seems this only happens on out-of-memory error
     if (!got_names)
     {
-        LogPrintf("DONE (none found)\n");
+        LogPrint("DONE (none found)\n");
     }
 
     char **p;
@@ -245,7 +245,7 @@ void VFS_ScanForAddons()
                 info.enabled = true;
             }
 
-            LogPrintf("  found: %s%s\n", info.name.c_str(), info.enabled ? " (Enabled)" : " (Disabled)");
+            LogPrint("  found: %s%s\n", info.name.c_str(), info.enabled ? " (Enabled)" : " (Disabled)");
 
             all_addons.push_back(info);
 
@@ -261,14 +261,14 @@ void VFS_ScanForAddons()
 
     if (all_addons.size() == 0)
     {
-        LogPrintf("DONE (none found)\n");
+        LogPrint("DONE (none found)\n");
     }
     else
     {
-        LogPrintf("DONE\n");
+        LogPrint("DONE\n");
     }
 
-    LogPrintf("\n");
+    LogPrint("\n");
 }
 
 //----------------------------------------------------------------------

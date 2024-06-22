@@ -53,11 +53,11 @@ static void Cookie_SetValue(std::string name, std::string value)
 {
     if (context == cookie_context_e::Load)
     {
-        DebugPrintf("CONFIG: Name: [%s] Value: [%s]\n", name.c_str(), value.c_str());
+        DebugPrint("CONFIG: Name: [%s] Value: [%s]\n", name.c_str(), value.c_str());
     }
     else if (context == cookie_context_e::Arguments)
     {
-        DebugPrintf("ARGUMENT: Name: [%s] Value: [%s]\n", name.c_str(), value.c_str());
+        DebugPrint("ARGUMENT: Name: [%s] Value: [%s]\n", name.c_str(), value.c_str());
     }
 
     // the new style module syntax
@@ -101,13 +101,13 @@ static void Cookie_SetValue(std::string name, std::string value)
                 }
                 else
                 {
-                    LogPrintf("Invalid argument. Will generate new seed.\n");
+                    LogPrint("Invalid argument. Will generate new seed.\n");
                 }
             }
             catch (std::out_of_range &e)
             {
                 (void)e;
-                LogPrintf("Resulting number would be out of range. Will generate new "
+                LogPrint("Resulting number would be out of range. Will generate new "
                           "seed.\n");
             }
         }
@@ -133,7 +133,7 @@ static bool Cookie_ParseLine(std::string buf)
 
     if (!(isalpha(buf.front()) || buf.front() == '@'))
     {
-        LogPrintf("Weird config line: [%s]\n", buf.c_str());
+        LogPrint("Weird config line: [%s]\n", buf.c_str());
         return false;
     }
 
@@ -158,7 +158,7 @@ static bool Cookie_ParseLine(std::string buf)
 
     if (name.empty() || value.empty())
     {
-        LogPrintf("Name or value missing!\n");
+        LogPrint("Name or value missing!\n");
         return false;
     }
 
@@ -187,7 +187,7 @@ bool Cookie_Load(std::string filename)
 
     if (main_action != MAIN_SOFT_RESTART)
     {
-        LogPrintf("Loading config file: %s\n", filename.c_str());
+        LogPrint("Loading config file: %s\n", filename.c_str());
     }
 
     int error_count = 0;
@@ -219,11 +219,11 @@ bool Cookie_Load(std::string filename)
     {
         if (error_count > 0)
         {
-            LogPrintf("DONE (found %d parse errors)\n\n", error_count);
+            LogPrint("DONE (found %d parse errors)\n\n", error_count);
         }
         else
         {
-            LogPrintf("DONE.\n\n");
+            LogPrint("DONE.\n\n");
         }
     }
     setlocale(LC_NUMERIC, numeric_locale.c_str());
@@ -237,7 +237,7 @@ bool Cookie_LoadString(std::string str, bool _keep_seed)
 
     active_module.clear();
 
-    LogPrintf("Reading config data...\n");
+    LogPrint("Reading config data...\n");
 
     std::string::size_type oldpos = 0;
     std::string::size_type pos    = 0;
@@ -251,7 +251,7 @@ bool Cookie_LoadString(std::string str, bool _keep_seed)
         }
     }
 
-    LogPrintf("DONE.\n\n");
+    LogPrint("DONE.\n\n");
     return true;
 }
 
@@ -264,13 +264,13 @@ bool Cookie_Save(std::string filename)
 
     if (!cookie_fp)
     {
-        LogPrintf("Error: unable to create file: %s\n(%s)\n\n", filename.c_str(), strerror(errno));
+        LogPrint("Error: unable to create file: %s\n(%s)\n\n", filename.c_str(), strerror(errno));
         return false;
     }
 
     if (main_action == MAIN_HARD_RESTART || main_action == MAIN_QUIT)
     {
-        LogPrintf("Saving config file...\n");
+        LogPrint("Saving config file...\n");
     }
 
     // header...
@@ -291,7 +291,7 @@ bool Cookie_Save(std::string filename)
 
     if (main_action == MAIN_HARD_RESTART || main_action == MAIN_QUIT)
     {
-        LogPrintf("DONE.\n\n");
+        LogPrint("DONE.\n\n");
     }
 
     fclose(cookie_fp);
@@ -355,7 +355,7 @@ void Cookie_ParseArguments(void)
 
         if (name[0] == 0 || value[0] == 0)
         {
-            Main::FatalError("Bad setting on command line: '%s'\n", arg.c_str());
+            FatalError("Bad setting on command line: '%s'\n", arg.c_str());
         }
 
         Cookie_SetValue(name.c_str(), value);

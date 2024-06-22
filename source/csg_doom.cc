@@ -1785,7 +1785,7 @@ static void MergeColinearLines(bool show_count = true)
 
     if (show_count)
     {
-        LogPrintf("Merged %d colinear lines\n", count);
+        LogPrint("Merged %d colinear lines\n", count);
     }
 }
 
@@ -1915,7 +1915,7 @@ static void AlignTextures()
         count += prev_count + next_count;
     }
 
-    LogPrintf("Aligned %d textures\n", count);
+    LogPrint("Aligned %d textures\n", count);
 }
 } // namespace Doom
 
@@ -2246,7 +2246,7 @@ static void RoundCorners()
         }
     }
 
-    LogPrintf("Rounded %d square corners\n", count);
+    LogPrint("Rounded %d square corners\n", count);
 
     // need this again, since we often create co-linear diagonals
     MergeColinearLines(false /* show_count */);
@@ -2839,7 +2839,7 @@ static sector_c *FindDepotPeer()
         }
     }
 
-    LogPrintf("WARNING: cannot find peer for monster depot.\n");
+    LogPrint("WARNING: cannot find peer for monster depot.\n");
     return NULL;
 }
 
@@ -2987,7 +2987,7 @@ static void AddThing_FraggleScript(int x, int y, int z, csg_entity_c *E, int typ
 
     if (fs_name.empty())
     {
-        LogPrintf("WARNING: entity lost (no fragglescript name for type #%d)\n", type);
+        LogPrint("WARNING: entity lost (no fragglescript name for type #%d)\n", type);
         return;
     }
 
@@ -3016,7 +3016,7 @@ static void WriteThing(sector_c *S, csg_entity_c *E)
 
     if (type <= 0)
     {
-        LogPrintf("WARNING: bad doom entity number: '%s'\n", E->id.c_str());
+        LogPrint("WARNING: bad doom entity number: '%s'\n", E->id.c_str());
         return;
     }
 
@@ -3194,7 +3194,7 @@ void CSG_DOOM_Write()
     /// Doom_TestRegions();
     /// return;
 
-    LogPrintf("DOOM CSG...\n");
+    LogPrint("DOOM CSG...\n");
 
     Doom::FreeStuff();
 

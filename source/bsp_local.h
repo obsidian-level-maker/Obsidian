@@ -40,16 +40,6 @@ extern buildinfo_t *cur_info;
 extern Wad_file *cur_wad;
 
 //------------------------------------------------------------------------
-// UTILITY : general purpose functions
-//------------------------------------------------------------------------
-
-// Assertion macros
-
-void Failure(const char *fmt, ...);
-void Warning(const char *fmt, ...);
-void MinorIssue(const char *fmt, ...);
-
-//------------------------------------------------------------------------
 // BLOCKMAP : Generate the blockmap
 //------------------------------------------------------------------------
 

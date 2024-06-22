@@ -633,7 +633,7 @@ void UI_Module::AddOptionChoice(std::string option, std::string id, std::string 
 
     if (!rch)
     {
-        LogPrintf("Warning: module '%s' lacks option '%s' (for choice '%s')\n", id_name.c_str(), option.c_str(),
+        LogPrint("Warning: module '%s' lacks option '%s' (for choice '%s')\n", id_name.c_str(), option.c_str(),
                   id.c_str());
         return;
     }

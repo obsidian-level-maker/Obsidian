@@ -47,19 +47,12 @@ class buildinfo_t
 
     bool force_v5;
     bool force_xnod;
-    bool force_compress; // NOTE: only supported when HAVE_ZLIB is defined
+    bool force_compress;
 
     // the GUI can set this to tell the node builder to stop
     bool cancelled;
 
     int split_cost;
-
-    // this affects how some messages are shown
-    int verbosity;
-
-    // from here on, various bits of internal state
-    int total_warnings;
-    int total_minor_issues;
 
   public:
     buildinfo_t()
@@ -73,9 +66,7 @@ class buildinfo_t
 
           cancelled(false),
 
-          split_cost(SPLIT_COST_DEFAULT), verbosity(0),
-
-          total_warnings(0), total_minor_issues(0)
+          split_cost(SPLIT_COST_DEFAULT)
     {
     }
 

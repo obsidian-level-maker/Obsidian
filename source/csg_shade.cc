@@ -338,7 +338,7 @@ static void SHADE_LightWorld()
 
     if (no_light)
     {
-        LogPrintf("LIGHTING DISABLED (-nolight specified)\n");
+        LogPrint("LIGHTING DISABLED (-nolight specified)\n");
     }
 
     for (unsigned int i = 0; i < all_regions.size(); i++)
@@ -362,7 +362,7 @@ static void SHADE_LightWorld()
 
 void CSG_Shade()
 {
-    LogPrintf("Lighting level...\n");
+    LogPrint("Lighting level...\n");
 
     //    SHADE_CollectLights();
 

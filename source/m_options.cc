@@ -184,13 +184,13 @@ bool Options_Save(std::string filename)
 
     if (!option_fp)
     {
-        LogPrintf("Error: unable to create file: %s\n(%s)\n\n", filename.c_str(), strerror(errno));
+        LogPrint("Error: unable to create file: %s\n(%s)\n\n", filename.c_str(), strerror(errno));
         return false;
     }
 
     if (main_action != MAIN_SOFT_RESTART)
     {
-        LogPrintf("Saving options file...\n");
+        LogPrint("Saving options file...\n");
     }
 
     fprintf(option_fp, "-- OPTIONS FILE : OBSIDIAN %s \"%s\"\n", OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str());
@@ -227,7 +227,7 @@ bool Options_Save(std::string filename)
 
     if (main_action != MAIN_SOFT_RESTART)
     {
-        LogPrintf("DONE.\n\n");
+        LogPrint("DONE.\n\n");
     }
 
     return true;
@@ -587,8 +587,8 @@ class UI_OptionsWin : public Fl_Window
         switch (result)
         {
         case -1:
-            LogPrintf("%s\n", _("Error choosing directory:"));
-            LogPrintf("   %s\n", chooser.errmsg());
+            LogPrint("%s\n", _("Error choosing directory:"));
+            LogPrint("   %s\n", chooser.errmsg());
 
             return;
 
@@ -603,7 +603,7 @@ class UI_OptionsWin : public Fl_Window
 
         if (dir_name.empty())
         {
-            LogPrintf("%s\n", _("Empty default directory provided???"));
+            LogPrint("%s\n", _("Empty default directory provided???"));
             return;
         }
 

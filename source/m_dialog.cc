@@ -205,7 +205,7 @@ void DLG_ShowError(const char *msg, ...)
 
     buffer[MSG_BUF_LEN - 2] = 0;
 
-    LogPrintf("\n%s\n\n", buffer);
+    LogPrint("\n%s\n\n", buffer);
 
     const char *link_title = NULL;
     const char *link_url   = NULL;
@@ -278,8 +278,8 @@ std::string DLG_OutputFilename(const char *ext, const char *preset)
     switch (result)
     {
     case -1:
-        LogPrintf("%s\n", _("Error choosing output file:"));
-        LogPrintf("   %s\n", chooser.errmsg());
+        LogPrint("%s\n", _("Error choosing output file:"));
+        LogPrint("   %s\n", chooser.errmsg());
 
         DLG_ShowError(_("Unable to create the file:\n\n%s"), chooser.errmsg());
         return "";

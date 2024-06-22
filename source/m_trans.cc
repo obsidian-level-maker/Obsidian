@@ -884,7 +884,7 @@ struct po_parse_state_t
 
         if (*p++ != '"')
         {
-            LogPrintf("WARNING: missing string on line %d\n", line_number);
+            LogPrint("WARNING: missing string on line %d\n", line_number);
             return;
         }
 
@@ -892,13 +892,13 @@ struct po_parse_state_t
         {
             if (*p == 0)
             {
-                LogPrintf("WARNING: unterminated string on line %d\n", line_number);
+                LogPrint("WARNING: unterminated string on line %d\n", line_number);
                 break;
             }
 
             if (dest >= dest_end)
             {
-                LogPrintf("WARNING: string too long on line %d\n", line_number);
+                LogPrint("WARNING: string too long on line %d\n", line_number);
                 break;
             }
 
@@ -913,7 +913,7 @@ struct po_parse_state_t
 
             if (*p == 0)
             {
-                LogPrintf("WARNING: unterminated string on line %d\n", line_number);
+                LogPrint("WARNING: unterminated string on line %d\n", line_number);
                 break;
             }
 
@@ -950,7 +950,7 @@ struct po_parse_state_t
                 break;
 
             default:
-                LogPrintf("WARNING: strange escape sequence on line %d\n", line_number);
+                LogPrint("WARNING: strange escape sequence on line %d\n", line_number);
                 break;
             }
         }
@@ -971,7 +971,7 @@ struct po_parse_state_t
         }
         else
         {
-            LogPrintf("WARNING: unexpected string on line %d\n", line_number);
+            LogPrint("WARNING: unexpected string on line %d\n", line_number);
         }
     }
 
@@ -1060,7 +1060,7 @@ void Trans_Read_PO_File(FILE *fp)
         }
         else
         {
-            LogPrintf("WARNING: unsupported keyword on line %d\n", po_state.line_number);
+            LogPrint("WARNING: unsupported keyword on line %d\n", po_state.line_number);
         }
 
         if (feof(fp) || ferror(fp))
@@ -1077,7 +1077,7 @@ void Trans_Init()
 #ifndef WIN32
     if (!setlocale(LC_ALL, ""))
     {
-        LogPrintf("WARNING : failed to initialize locale (check localdef)\n\n");
+        LogPrint("WARNING : failed to initialize locale (check localdef)\n\n");
     }
 #endif
 
@@ -1087,7 +1087,7 @@ void Trans_Init()
 
     if (!FileExists(path))
     {
-        LogPrintf("WARNING: missing language/LANGS.txt file\n");
+        LogPrint("WARNING: missing language/LANGS.txt file\n");
         return;
     }
 
@@ -1095,11 +1095,11 @@ void Trans_Init()
 
     if (!trans_fp)
     {
-        LogPrintf("WARNING: Error opening LANGS.txt!\n");
+        LogPrint("WARNING: Error opening LANGS.txt!\n");
         return;
     }
 
-    LogPrintf("Loading language list: %s\n", path.c_str());
+    LogPrint("Loading language list: %s\n", path.c_str());
 
     std::string buffer;
     int c = EOF;
@@ -1122,7 +1122,7 @@ void Trans_Init()
 
     fclose(trans_fp);
 
-    LogPrintf("DONE.\n\n");
+    LogPrint("DONE.\n\n");
 }
 
 void Trans_SetLanguage()
@@ -1135,7 +1135,7 @@ void Trans_SetLanguage()
     {
         langcode = Trans_GetUserLanguage();
 
-        LogPrintf("Detected user language: '%s'\n", langcode.c_str());
+        LogPrint("Detected user language: '%s'\n", langcode.c_str());
     }
 
     std::string lang_plain = remove_territory(langcode);
@@ -1144,7 +1144,7 @@ void Trans_SetLanguage()
 
     if (lang_plain == "UNKNOWN" || lang_plain == "en")
     {
-        LogPrintf("Using the default language (English)\n\n");
+        LogPrint("Using the default language (English)\n\n");
         selected_lang = "en";
         return;
     }
@@ -1163,21 +1163,21 @@ void Trans_SetLanguage()
     FILE *fp = FileOpen(path, "rb");
     if (!fp)
     {
-        LogPrintf("No translation file: language/%s.po\n", lang_plain.c_str());
-        LogPrintf("Using the default language (English)\n\n");
+        LogPrint("No translation file: language/%s.po\n", lang_plain.c_str());
+        LogPrint("Using the default language (English)\n\n");
         selected_lang = "en";
         return;
     }
 
     selected_lang = lang_plain;
 
-    LogPrintf("Loading translation: %s\n", path.c_str());
+    LogPrint("Loading translation: %s\n", path.c_str());
 
     Trans_Read_PO_File(fp);
 
     fclose(fp);
 
-    LogPrintf("DONE.\n\n");
+    LogPrint("DONE.\n\n");
 }
 
 std::string Trans_GetAvailCode(int idx)

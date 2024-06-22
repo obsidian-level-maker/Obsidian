@@ -192,47 +192,8 @@ namespace Main
 {
 
 void Shutdown(bool error);
-
-template <typename... Args> [[noreturn]] void FatalError(std::string_view msg, Args &&...args)
-{
-#ifndef CONSOLE_ONLY
-    auto buffer = StringFormat(msg, std::forward<Args>(args)...);
-    DLG_ShowError("%s", buffer.c_str());
-#endif
-    Shutdown(true);
-
-    if (batch_mode)
-    {
-        printf("ERROR!\n");
-#ifdef WIN32
-        printf("\nClose window when finished...");
-        do
-        {
-        } while (true);
-#endif
-    }
-
-    exit(9);
-}
-
-template <typename... Args> void ProgStatus(std::string_view msg, Args &&...args)
-{
-    const std::string buffer = StringFormat(msg, std::forward<Args>(args)...);
-
-#ifndef CONSOLE_ONLY
-    if (main_win)
-    {
-        main_win->build_box->SetStatus(buffer.c_str());
-    }
-    else if (batch_mode)
-    {
-        ErrorPrintf("%s\n", buffer.c_str());
-    }
-#else
-    ErrorPrintf("%s\n", buffer.c_str());
-#endif
-}
 bool BackupFile(const std::string &filename);
+
 #if defined WIN32 && !defined CONSOLE_ONLY
 void Blinker();
 #endif
@@ -240,6 +201,7 @@ void Blinker();
 #if !defined(CONSOLE_ONLY) && !defined(__APPLE__)
 bool LoadInternalFont(const char *fontpath, int fontnum, const char *fontname);
 #endif
+
 #ifndef CONSOLE_ONLY
 void SetupFLTK();
 int  DetermineScaling();

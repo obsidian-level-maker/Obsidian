@@ -63,8 +63,8 @@ std::string Theme_OutputFilename()
     switch (chooser.show())
     {
     case -1:
-        LogPrintf("Error choosing output file:\n");
-        LogPrintf("   %s\n", chooser.errmsg());
+        LogPrint("Error choosing output file:\n");
+        LogPrint("   %s\n", chooser.errmsg());
 
         DLG_ShowError(_("Unable to create the file:\n\n%s"), chooser.errmsg());
         return "";
@@ -107,8 +107,8 @@ std::string Theme_AskLoadFilename()
     switch (result)
     {
     case -1:
-        LogPrintf("Error choosing load file:\n");
-        LogPrintf("   %s\n", chooser.errmsg());
+        LogPrint("Error choosing load file:\n");
+        LogPrint("   %s\n", chooser.errmsg());
 
         DLG_ShowError(_("Unable to load the file:\n\n%s"), chooser.errmsg());
         return "";
@@ -254,7 +254,7 @@ static void Parse_Theme_Option(std::string name, std::string value)
     }
     else
     {
-        LogPrintf("Unknown option: '%s'\n", name.c_str());
+        LogPrint("Unknown option: '%s'\n", name.c_str());
     }
 }
 
@@ -276,7 +276,7 @@ static bool Theme_Options_ParseLine(std::string buf)
 
     if (!(isalpha(buf.front()) || buf.front() == '@'))
     {
-        LogPrintf("Weird theme option line: [%s]\n", buf.c_str());
+        LogPrint("Weird theme option line: [%s]\n", buf.c_str());
         return false;
     }
 
@@ -286,7 +286,7 @@ static bool Theme_Options_ParseLine(std::string buf)
 
     if (name.empty() || value.empty())
     {
-        LogPrintf("Name or value missing!\n");
+        LogPrint("Name or value missing!\n");
         return false;
     }
 
@@ -300,11 +300,11 @@ bool Theme_Options_Load(std::string filename)
 
     if (!option_fp)
     {
-        LogPrintf("Missing Theme file -- using defaults.\n\n");
+        LogPrint("Missing Theme file -- using defaults.\n\n");
         return false;
     }
 
-    LogPrintf("Loading theme file: %s\n", filename.c_str());
+    LogPrint("Loading theme file: %s\n", filename.c_str());
 
     int error_count = 0;
 
@@ -331,11 +331,11 @@ bool Theme_Options_Load(std::string filename)
 
     if (error_count > 0)
     {
-        LogPrintf("DONE (found %d parse errors)\n\n", error_count);
+        LogPrint("DONE (found %d parse errors)\n\n", error_count);
     }
     else
     {
-        LogPrintf("DONE.\n\n");
+        LogPrint("DONE.\n\n");
     }
 
     fclose(option_fp);
@@ -349,13 +349,13 @@ bool Theme_Options_Save(std::string filename)
 
     if (!option_fp)
     {
-        LogPrintf("Error: unable to create file: %s\n(%s)\n\n", filename.c_str(), strerror(errno));
+        LogPrint("Error: unable to create file: %s\n(%s)\n\n", filename.c_str(), strerror(errno));
         return false;
     }
 
     if (main_action != MAIN_SOFT_RESTART)
     {
-        LogPrintf("Saving theme file...\n");
+        LogPrint("Saving theme file...\n");
     }
 
     fprintf(option_fp, "-- THEME FILE : OBSIDIAN %s \"%s\"\n", OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str());
@@ -400,7 +400,7 @@ bool Theme_Options_Save(std::string filename)
 
     if (main_action != MAIN_SOFT_RESTART)
     {
-        LogPrintf("DONE.\n\n");
+        LogPrint("DONE.\n\n");
     }
 
     return true;

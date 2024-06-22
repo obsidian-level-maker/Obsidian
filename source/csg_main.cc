@@ -1697,7 +1697,7 @@ void CSG_LinkBrushToEntity(csg_brush_c *B, std::string link_key)
     }
 
     // not found
-    LogPrintf("WARNING: brush has unknown link entity '%s'\n", link_key.c_str());
+    LogPrint("WARNING: brush has unknown link entity '%s'\n", link_key.c_str());
 
     // ensure we ignore this brush
     B->bkind = BKIND_Light;

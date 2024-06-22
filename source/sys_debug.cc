@@ -54,9 +54,9 @@ bool LogInit(const std::string &filename)
 
     time_t result = time(nullptr);
 
-    LogPrintf("====== START OF OBSIDIAN LOGS ======\n\n");
+    LogPrint("====== START OF OBSIDIAN LOGS ======\n\n");
 
-    LogPrintf("Initialized on %s", ctime(&result));
+    LogPrint("Initialized on %s", ctime(&result));
 
     return true;
 }
@@ -81,7 +81,7 @@ bool RefInit(const std::string &filename)
         }
     }
 
-    RefPrintf("====== OBSIDIAN REFERENCE for V%s BUILD %s ======\n\n", OBSIDIAN_SHORT_VERSION, OBSIDIAN_VERSION);
+    RefPrint("====== OBSIDIAN REFERENCE for V%s BUILD %s ======\n\n", OBSIDIAN_SHORT_VERSION, OBSIDIAN_VERSION);
 
     return true;
 }
@@ -97,11 +97,11 @@ void LogEnableDebug(bool enable)
 
     if (debugging)
     {
-        LogPrintf("===  DEBUGGING ENABLED  ===\n\n");
+        LogPrint("===  DEBUGGING ENABLED  ===\n\n");
     }
     else
     {
-        LogPrintf("===  DEBUGGING DISABLED  ===\n\n");
+        LogPrint("===  DEBUGGING DISABLED  ===\n\n");
     }
 }
 
@@ -112,7 +112,7 @@ void LogEnableTerminal(bool enable)
 
 void LogClose(void)
 {
-    LogPrintf("\n====== END OF OBSIDIAN LOGS ======\n\n");
+    LogPrint("\n====== END OF OBSIDIAN LOGS ======\n\n");
 
     fclose(log_file);
     log_file = nullptr;
@@ -122,7 +122,7 @@ void LogClose(void)
 
 void RefClose(void)
 {
-    RefPrintf("\n====== END OF REFERENCE ======\n\n");
+    RefPrint("\n====== END OF REFERENCE ======\n\n");
 
     fclose(ref_file);
     ref_file = nullptr;
@@ -130,7 +130,7 @@ void RefClose(void)
     ref_filename.clear();
 }
 
-void LogPrintf(const char *message, ...)
+void LogPrint(const char *message, ...)
 {
     if (!log_file && !terminal)
         return;
@@ -162,7 +162,7 @@ void LogPrintf(const char *message, ...)
     }
 }
 
-void RefPrintf(const char *message, ...)
+void RefPrint(const char *message, ...)
 {
     if (!ref_file && !terminal)
         return;
@@ -194,7 +194,7 @@ void RefPrintf(const char *message, ...)
     }
 }
 
-void DebugPrintf(const char *message, ...)
+void DebugPrint(const char *message, ...)
 {
     if (!debugging || (!log_file && !terminal))
         return;
@@ -226,7 +226,57 @@ void DebugPrintf(const char *message, ...)
     }
 }
 
-[[noreturn]] void ErrorPrintf(const char *message, ...)
+void ProgStatus(const char *message, ...)
+{
+    char message_buf[4096];
+
+    message_buf[4095] = 0;
+
+    // Print the message into a text string
+    va_list argptr;
+
+    va_start(argptr, message);
+    vsprintf(message_buf, message, argptr);
+    va_end(argptr);
+
+    // I hope nobody is printing strings longer than 4096 chars...
+    SYS_ASSERT(message_buf[4095] == 0);
+
+#ifndef CONSOLE_ONLY
+    if (main_win)
+    {
+        main_win->build_box->SetStatus(message_buf);
+    }
+    else if (batch_mode)
+    {
+        if (log_file)
+        {
+            fprintf(log_file, "%s", message_buf);
+            fflush(log_file);
+        }
+
+        if (terminal)
+        {
+            printf("%s", message_buf);
+            fflush(stdout);
+        }
+    }
+#else
+    if (log_file)
+    {
+        fprintf(log_file, "%s", message_buf);
+        fflush(log_file);
+    }
+
+    if (terminal)
+    {
+        printf("%s", message_buf);
+        fflush(stdout);
+    }
+#endif
+}
+
+[[noreturn]] void FatalError(const char *message, ...)
 {
     char message_buf[4096];
 
@@ -250,6 +300,10 @@ void DebugPrintf(const char *message, ...)
 
     if (terminal)
         printf("ERROR: %s", message_buf);
+
+#ifndef CONSOLE_ONLY
+    DLG_ShowError("%s", message_buf);
+#endif
 
     Main::Shutdown(true);
 #if defined WIN32 && !defined CONSOLE_ONLY

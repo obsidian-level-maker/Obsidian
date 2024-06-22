@@ -372,7 +372,7 @@ std::string Resolve_DefaultOutputPath()
 {
     if (default_output_path.empty())
     {
-        default_output_path = install_dir;
+        default_output_path = home_dir;
     }
     if (default_output_path[0] == '$')
     {
@@ -435,7 +435,7 @@ bool Main::BackupFile(const std::string &filename)
 
         ReplaceExtension(backup_name, StringFormat("%s.%s", GetExtension(backup_name).c_str(), ".bak"));
 
-        LogPrintf("Backing up existing file to: %s\n", backup_name.c_str());
+        LogPrint("Backing up existing file to: %s\n", backup_name.c_str());
 
         FileDelete(backup_name);
         FileRename(filename, backup_name);
@@ -1053,7 +1053,7 @@ bool Build_Cool_Shit()
 
     if (format.empty())
     {
-        Main::FatalError("ERROR: missing 'format' for game?!?\n");
+        FatalError("ERROR: missing 'format' for game?!?\n");
     }
 
     // create game object
@@ -1068,7 +1068,7 @@ bool Build_Cool_Shit()
         }
         else
         {
-            Main::FatalError("ERROR: unknown format: '%s'\n", format.c_str());
+            FatalError("ERROR: unknown format: '%s'\n", format.c_str());
         }
     }
 
@@ -1140,12 +1140,12 @@ bool Build_Cool_Shit()
     }
     if (was_ok)
     {
-        Main::ProgStatus(_("Success"));
+        ProgStatus(_("Success"));
 
         const uint32_t end_time   = TimeGetMillies();
         const uint32_t total_time = end_time - start_time;
 
-        LogPrintf("\nTOTAL TIME: %g seconds\n\n", total_time / 1000.0);
+        LogPrint("\nTOTAL TIME: %g seconds\n\n", total_time / 1000.0);
 
         string_seed.clear();
 
@@ -1190,7 +1190,7 @@ bool Build_Cool_Shit()
                     .c_str());
         }
 #endif
-        Main::ProgStatus(_("Cancelled"));
+        ProgStatus(_("Cancelled"));
     }
 
     // Insurance in case the build process errored/cancelled
@@ -1283,7 +1283,7 @@ hardrestart:;
 
     if (!PHYSFS_init(argv::list[0].c_str()))
     {
-        Main::FatalError("Failed to init PhysFS:\n%s\n", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+        FatalError("Failed to init PhysFS:\n%s\n", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
     }
 
     if (argv::Find('?', NULL) >= 0 || argv::Find('h', "help") >= 0)
@@ -1335,7 +1335,7 @@ hardrestart:;
     {
         if (batch_arg + 1 >= argv::list.size() || argv::IsOption(batch_arg + 1))
         {
-            ErrorPrintf("OBSIDIAN ERROR: missing filename for --batch\n");
+            FatalError("OBSIDIAN ERROR: missing filename for --batch\n");
             exit(EXIT_FAILURE);
         }
 
@@ -1370,19 +1370,19 @@ hardrestart:;
         if (update_arg + 3 >= argv::list.size() || argv::IsOption(update_arg + 1) || argv::IsOption(update_arg + 2) ||
             argv::IsOption(update_arg + 3))
         {
-            ErrorPrintf("OBSIDIAN ERROR: missing one or more args for --update "
+            FatalError("OBSIDIAN ERROR: missing one or more args for --update "
                          "<section> <key> <value>\n");
             exit(EXIT_FAILURE);
         }
         if (argv::list[update_arg + 1].length() > 1)
         {
-            ErrorPrintf("OBSIDIAN ERROR: section name must be one character\n");
+            FatalError("OBSIDIAN ERROR: section name must be one character\n");
             exit(EXIT_FAILURE);
         }
         char section = argv::list[update_arg + 1][0];
         if (section != 'c' && section != 'o')
         {
-            ErrorPrintf("OBSIDIAN ERROR: section name must be 'c' or 'o'\n");
+            FatalError("OBSIDIAN ERROR: section name must be 'c' or 'o'\n");
             exit(EXIT_FAILURE);
         }
         update_kv.section = section;
@@ -1431,20 +1431,20 @@ hardrestart:;
         LogEnableTerminal(true);
     }
 
-    LogPrintf("\n");
-    LogPrintf("********************************************************\n");
-    LogPrintf("** %s %s \"%s\" **\n", OBSIDIAN_TITLE.c_str(), OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str());
-    LogPrintf("** Build %s **\n", OBSIDIAN_VERSION);
-    LogPrintf("********************************************************\n");
-    LogPrintf("\n");
+    LogPrint("\n");
+    LogPrint("********************************************************\n");
+    LogPrint("** %s %s \"%s\" **\n", OBSIDIAN_TITLE.c_str(), OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str());
+    LogPrint("** Build %s **\n", OBSIDIAN_VERSION);
+    LogPrint("********************************************************\n");
+    LogPrint("\n");
 
 #ifndef CONSOLE_ONLY
-    LogPrintf("Library versions: FLTK %d.%d.%d\n\n", FL_MAJOR_VERSION, FL_MINOR_VERSION, FL_PATCH_VERSION);
+    LogPrint("Library versions: FLTK %d.%d.%d\n\n", FL_MAJOR_VERSION, FL_MINOR_VERSION, FL_PATCH_VERSION);
 #endif
 
-    LogPrintf("home_dir: %s\n", home_dir.c_str());
-    LogPrintf("install_dir: %s\n", install_dir.c_str());
-    LogPrintf("config_file: %s\n\n", config_file.c_str());
+    LogPrint("home_dir: %s\n", home_dir.c_str());
+    LogPrint("install_dir: %s\n", install_dir.c_str());
+    LogPrint("config_file: %s\n\n", config_file.c_str());
 
     if (!batch_mode)
     {
@@ -1484,7 +1484,7 @@ softrestart:;
         {
             if (load_arg + 1 >= argv::list.size() || argv::IsOption(load_arg + 1))
             {
-                ErrorPrintf("OBSIDIAN ERROR: missing filename for --load\n");
+                FatalError("OBSIDIAN ERROR: missing filename for --load\n");
                 exit(EXIT_FAILURE);
             }
 
@@ -1545,7 +1545,7 @@ softrestart:;
         {
             if (!Cookie_Load(load_file))
             {
-                Main::FatalError(_("No such config file: %s\n"), load_file.c_str());
+                FatalError(_("No such config file: %s\n"), load_file.c_str());
             }
         }
         else
@@ -1556,7 +1556,7 @@ softrestart:;
             }
             if (!Cookie_Load(config_file))
             {
-                Main::FatalError(_("No such config file: %s\n"), config_file.c_str());
+                FatalError(_("No such config file: %s\n"), config_file.c_str());
             }
         }
 
@@ -1581,9 +1581,9 @@ softrestart:;
 
         if (batch_output_file.empty())
         {
-            ErrorPrintf("\nNo output filename given! Did you forget the --batch "
+            FatalError("\nNo output filename given! Did you forget the --batch "
                          "parameter?\n");
-            LogPrintf("\nNo output filename given! Did you forget the --batch "
+            LogPrint("\nNo output filename given! Did you forget the --batch "
                       "parameter?\n");
 
             Main::Shutdown(false);
@@ -1599,8 +1599,8 @@ softrestart:;
         Main_SetSeed();
         if (!Build_Cool_Shit())
         {
-            ErrorPrintf("FAILED!\n");
-            LogPrintf("FAILED!\n");
+            FatalError("FAILED!\n");
+            LogPrint("FAILED!\n");
 
             Main::Shutdown(false);
 #if defined WIN32 && !defined CONSOLE_ONLY
@@ -1665,14 +1665,14 @@ softrestart:;
     // load config after creating window (will set widget values)
     if (!Cookie_Load(config_file))
     {
-        LogPrintf("Missing config file -- using defaults.\n\n");
+        LogPrint("Missing config file -- using defaults.\n\n");
     }
 
     if (!load_file.empty())
     {
         if (!Cookie_Load(load_file))
         {
-            Main::FatalError(_("No such config file: %s\n"), load_file.c_str());
+            FatalError(_("No such config file: %s\n"), load_file.c_str());
         }
     }
 
@@ -1940,12 +1940,12 @@ softrestart:;
     }
     catch (std::exception &e)
     {
-        Main::FatalError(_("An exception occurred: \n%s"), e.what());
+        FatalError(_("An exception occurred: \n%s"), e.what());
     }
 
     if (main_action != MAIN_SOFT_RESTART)
     {
-        LogPrintf("\nQuit......\n\n");
+        LogPrint("\nQuit......\n\n");
     }
 #ifndef CONSOLE_ONLY
     Theme_Options_Save(theme_file);

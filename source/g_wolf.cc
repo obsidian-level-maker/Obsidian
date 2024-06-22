@@ -153,7 +153,7 @@ static void WF_WritePlane(uint16_t *plane, int *offset, int *length)
         if (write_errors_seen < 10)
         {
             write_errors_seen += 1;
-            LogPrintf("Failure writing to map file! (%d bytes)\n", *length);
+            LogPrint("Failure writing to map file! (%d bytes)\n", *length);
         }
     }
 }
@@ -346,7 +346,7 @@ static void WF_DumpMap(void)
 
         line_buf[64] = 0;
 
-        DebugPrintf("%s\n", line_buf);
+        DebugPrint("%s\n", line_buf);
     }
 }
 
@@ -430,12 +430,12 @@ bool wolf_game_interface_c::Start(const char *ext)
         switch (result)
         {
         case -1:
-            LogPrintf("%s\n", _("Error choosing directory:"));
-            LogPrintf("   %s\n", chooser.errmsg());
+            LogPrint("%s\n", _("Error choosing directory:"));
+            LogPrint("   %s\n", chooser.errmsg());
             break;
 
         case 1:
-            Main::ProgStatus(_("Cancelled"));
+            ProgStatus(_("Cancelled"));
             return false;
 
         default:
@@ -446,7 +446,7 @@ bool wolf_game_interface_c::Start(const char *ext)
 
         if (dir_name.empty())
         {
-            LogPrintf("%s\n",_("Empty directory provided???"));
+            LogPrint("%s\n",_("Empty directory provided???"));
             dir_name = Resolve_DefaultOutputPath();
         }
 
@@ -470,9 +470,9 @@ bool wolf_game_interface_c::Start(const char *ext)
 
     if (!map_fp)
     {
-        LogPrintf("Unable to create map file:\n%s", strerror(errno));
+        LogPrint("Unable to create map file:\n%s", strerror(errno));
 
-        Main::ProgStatus(_("Error (create file)"));
+        ProgStatus(_("Error (create file)"));
         return false;
     }
 
@@ -482,9 +482,9 @@ bool wolf_game_interface_c::Start(const char *ext)
     {
         fclose(map_fp);
 
-        LogPrintf("Unable to create %s:\n%s", TEMP_HEADFILE, strerror(errno));
+        LogPrint("Unable to create %s:\n%s", TEMP_HEADFILE, strerror(errno));
 
-        Main::ProgStatus(_("Error (create file)"));
+        ProgStatus(_("Error (create file)"));
         return false;
     }
 
@@ -529,7 +529,7 @@ bool wolf_game_interface_c::Finish(bool build_ok)
 
     if (write_errors_seen > 0)
     {
-        Main::ProgStatus(_("Error (write file)"));
+        ProgStatus(_("Error (write file)"));
         Tidy();
         return false;
     }
@@ -623,7 +623,7 @@ void wolf_game_interface_c::Property(std::string key, std::string value)
     }
     else
     {
-        LogPrintf("WARNING: unknown WOLF3D property: %s=%s\n", key.c_str(), value.c_str());
+        LogPrint("WARNING: unknown WOLF3D property: %s=%s\n", key.c_str(), value.c_str());
     }
 }
 

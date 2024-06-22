@@ -37,50 +37,6 @@
 namespace ajbsp
 {
 
-#define SYS_MSG_BUFLEN 4000
-
-static char message_buf[SYS_MSG_BUFLEN];
-
-void Failure(const char *fmt, ...)
-{
-    va_list args;
-
-    va_start(args, fmt);
-    vsnprintf(message_buf, sizeof(message_buf), fmt, args);
-    va_end(args);
-
-    LogPrintf("    FAILURE: %s", message_buf);
-}
-
-void Warning(const char *fmt, ...)
-{
-    va_list args;
-
-    va_start(args, fmt);
-    vsnprintf(message_buf, sizeof(message_buf), fmt, args);
-    va_end(args);
-
-    LogPrintf("    WARNING: %s", message_buf);
-
-    cur_info->total_warnings++;
-}
-
-void MinorIssue(const char *fmt, ...)
-{
-    if (cur_info->verbosity >= 3)
-    {
-        va_list args;
-
-        va_start(args, fmt);
-        vsnprintf(message_buf, sizeof(message_buf), fmt, args);
-        va_end(args);
-
-        LogPrintf("    ISSUE: %s", message_buf);
-    }
-
-    cur_info->total_minor_issues++;
-}
-
 //------------------------------------------------------------------------
 // ANALYZE : Analyzing level structures
 //------------------------------------------------------------------------
@@ -95,7 +51,7 @@ void MarkPolyobjSector(sector_t *sector)
         return;
 
 #if DEBUG_POLYOBJ
-    DebugPrintf("  Marking SECTOR %d\n", sector->index);
+    DebugPrint("  Marking SECTOR %d\n", sector->index);
 #endif
 
     /* already marked ? */
@@ -143,7 +99,7 @@ void MarkPolyobjPoint(double x, double y)
                                   (int)L->end->y))
         {
 #if DEBUG_POLYOBJ
-            DebugPrintf("  Touching line was %d\n", L->index);
+            DebugPrint("  Touching line was %d\n", L->index);
 #endif
 
             if (L->left != NULL)
@@ -195,7 +151,7 @@ void MarkPolyobjPoint(double x, double y)
 
     if (best_match == NULL)
     {
-        Warning("Bad polyobj thing at (%1.0f,%1.0f).\n", x, y);
+        LogPrint("Bad polyobj thing at (%1.0f,%1.0f).\n", x, y);
         return;
     }
 
@@ -203,14 +159,14 @@ void MarkPolyobjPoint(double x, double y)
     double y2 = best_match->end->y;
 
 #if DEBUG_POLYOBJ
-    DebugPrintf("  Closest line was %d Y=%1.0f..%1.0f (dist=%1.1f)\n", best_match->index, y1, y2, best_dist);
+    DebugPrint("  Closest line was %d Y=%1.0f..%1.0f (dist=%1.1f)\n", best_match->index, y1, y2, best_dist);
 #endif
 
     /* sanity check: shouldn't be directly on the line */
 #if DEBUG_POLYOBJ
     if (fabs(best_dist) < DIST_EPSILON)
     {
-        DebugPrintf("  Polyobj FAILURE: directly on the line (%d)\n", best_match->index);
+        DebugPrint("  Polyobj FAILURE: directly on the line (%d)\n", best_match->index);
     }
 #endif
 
@@ -223,12 +179,12 @@ void MarkPolyobjPoint(double x, double y)
         sector = best_match->left ? best_match->left->sector : NULL;
 
 #if DEBUG_POLYOBJ
-    DebugPrintf("  Sector %d contains the polyobj.\n", sector ? sector->index : -1);
+    DebugPrint("  Sector %d contains the polyobj.\n", sector ? sector->index : -1);
 #endif
 
     if (sector == NULL)
     {
-        Warning("Invalid Polyobj thing at (%1.0f,%1.0f).\n", x, y);
+        LogPrint("Invalid Polyobj thing at (%1.0f,%1.0f).\n", x, y);
         return;
     }
 
@@ -293,7 +249,7 @@ void DetectPolyobjSectors(bool is_udmf)
     }
 
 #if DEBUG_POLYOBJ
-    DebugPrintf("Using %s style polyobj things\n", hexen_style ? "HEXEN" : "ZDOOM");
+    DebugPrint("Using %s style polyobj things\n", hexen_style ? "HEXEN" : "ZDOOM");
 #endif
 
     for (i = 0; i < num_things; i++)
@@ -318,7 +274,7 @@ void DetectPolyobjSectors(bool is_udmf)
         }
 
 #if DEBUG_POLYOBJ
-        DebugPrintf("Thing %d at (%1.0f,%1.0f) is a polyobj spawner.\n", i, x, y);
+        DebugPrint("Thing %d at (%1.0f,%1.0f) is a polyobj spawner.\n", i, x, y);
 #endif
 
         MarkPolyobjPoint(x, y);
@@ -373,7 +329,7 @@ void DetectOverlappingVertices(void)
                 B->overlap = A->overlap ? A->overlap : A;
 
 #if DEBUG_OVERLAPS
-                LogPrintf("Overlap: #%d + #%d\n", array[i]->index, array[i + 1]->index);
+                LogPrint("Overlap: #%d + #%d\n", array[i]->index, array[i + 1]->index);
 #endif
             }
         }
@@ -422,7 +378,7 @@ void PruneVerticesAtEnd(void)
 
     if (unused > 0)
     {
-        LogPrintf("    Pruned %d unused vertices at end\n", unused);
+        LogPrint("    Pruned %d unused vertices at end\n", unused);
     }
 
     num_old_vert = num_vertices;
@@ -481,7 +437,7 @@ void DetectOverlappingLines(void)
 
     if (count > 0)
     {
-        LogPrintf("    Detected %d overlapped linedefs\n", count);
+        LogPrint("    Detected %d overlapped linedefs\n", count);
     }
 }
 
@@ -555,11 +511,11 @@ void CalculateWallTips()
     {
         vertex_t *V = lev_vertices[k];
 
-        DebugPrintf("WallTips for vertex %d:\n", k);
+        DebugPrint("WallTips for vertex %d:\n", k);
 
         for (walltip_t *tip = V->tip_set; tip; tip = tip->next)
         {
-            DebugPrintf("  Angle=%1.1f left=%d right=%d\n", tip->angle, tip->open_left ? 1 : 0,
+            DebugPrint("  Angle=%1.1f left=%d right=%d\n", tip->angle, tip->open_left ? 1 : 0,
                             tip->open_right ? 1 : 0);
         }
     }
@@ -625,7 +581,7 @@ vertex_t *NewVertexDegenerate(vertex_t *start, vertex_t *end)
     vert->y = start->x;
 
     if (dlen == 0)
-        ErrorPrintf("NewVertexDegenerate: bad delta!\n");
+        FatalError("NewVertexDegenerate: bad delta!\n");
 
     dx /= dlen;
     dy /= dlen;
