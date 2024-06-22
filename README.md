@@ -60,9 +60,9 @@ Double click on the OBSIDIAN icon to run it.  Select the game in the top left pa
 
 OBSIDIAN will then build all the maps, showing a blueprint of each one as it goes, and if everything goes smoothly the output file will be created at the end.  Then you can play it using the normal method for playing mods with that game (e.g. for DOOM source ports: dragging-n-dropping the WAD file onto the source port's EXE is usually enough).
 
-## QUICK START GUIDE (Linux/BSD/Haiku OS)
+## QUICK START GUIDE (Linux/BSD)
 
-Please refer to COMPILING.md to build Obsidian for Linux/BSD/Haiku OS
+Please refer to COMPILING.md to build Obsidian for Linux/BSD
 
 ## About This Repository
 

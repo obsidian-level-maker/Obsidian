@@ -38,6 +38,37 @@ jobs:
             tools
             obsidian.exe
           retention-days: ${{env.RETENTION_DAYS}}
+  build-mingw:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download w64devkit
+        run: invoke-webrequest https://github.com/skeeto/w64devkit/releases/download/v1.23.0/w64devkit-i686-1.23.0.zip -outfile ${{github.workspace}}\w64devkit.zip
+      - name: Extract w64devkit
+        run: expand-archive -path ${{github.workspace}}\w64devkit.zip -destinationpath ${{github.workspace}}
+      - name: Set environment variables and build
+        run: |
+          $env:Path = "${{github.workspace}}\w64devkit\bin;" + $env:Path
+          cmake -B build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_CXX_FLAGS="-isystem ${{github.workspace}}\w64devkit\include" -DCMAKE_C_FLAGS="-isystem ${{github.workspace}}\w64devkit\include" -G "MinGW Makefiles"
+          cmake --build build --config ${{env.BUILD_TYPE}}
+          strip ${{github.workspace}}\obsidian.exe
+      - uses: actions/upload-artifact@v4
+        with:
+          name: obsidian-mingw
+          path: |
+            addons
+            data
+            engines
+            games
+            language
+            modules
+            ports
+            presets
+            scripts
+            theme
+            tools
+            obsidian.exe
+          retention-days: ${{env.RETENTION_DAYS}}
   build-linux:
       runs-on: ubuntu-latest
       steps:
@@ -45,7 +76,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libxft-dev libfontconfig1-dev
+          sudo apt-get install -y libxft-dev libfontconfig1-dev libgl-dev
       - name: Configure CMake Ubuntu
         run: mkdir build && cd build && cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
       - name: Build Ubuntu

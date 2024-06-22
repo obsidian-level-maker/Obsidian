@@ -147,7 +147,7 @@ OB_PORTS["boom"] =
 {
   label = _("BOOM Compat"),
 
-  priority = 98,  -- this makes it top-most, and the default engine
+  priority = 102,  -- this makes it top-most, and the default engine
 
   game = { chex1=0, doom1=1, doom2=1, hacx=0, harmony=0, strife=0, rekkr=0 },
 

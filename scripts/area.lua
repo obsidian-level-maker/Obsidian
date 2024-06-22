@@ -758,11 +758,7 @@ function Junction_make_wall(junc)
     local plain_wall_prob = 0
 
     if PARAM.wall_prob and PARAM.wall_prob ~= "fab_default" then
-      if not ob_match_game({game = "doomish"}) then
-        plain_wall_prob = plain_wall_prob + ((PREFAB_CONTROL_GENERIC.WALL_REDUCTION_ODDS[PARAM.wall_prob] or 0) * 100)
-      else
-        plain_wall_prob = plain_wall_prob + ((PREFAB_CONTROL.WALL_REDUCTION_ODDS[PARAM.wall_prob] or 0) * 100)
-      end
+      plain_wall_prob = plain_wall_prob + ((PREFAB_CONTROL.WALL_REDUCTION_ODDS[PARAM.wall_prob] or 0) * 100)
       plain_wall_prob = math.clamp(0, plain_wall_prob, 100)
     end
 

@@ -888,14 +888,6 @@ ULTDOOM.ENTITIES =
   pool_brains   = { id=10, r=20, h=16, pass=true },
 }
 
-ULTDOOM.GENERIC_REQS =
-{
-  -- These are used for fulfilling fab pick requirements in prefab.lua
-  Generic_Key_One = { kind = "k_one", rkind = "k_blue" },
-  Generic_Key_Two = { kind = "k_two", rkind = "k_yellow" },
-  Generic_Key_Three = { kind = "k_three", rkind = "k_red" }
-}
-
 --------------------------------------------------------------------
 
 ULTDOOM.THEMES =
@@ -10660,9 +10652,9 @@ end
 
 function ULTDOOM.slump_setup()
   if ob_match_game({game = {doom1=1, ultdoom=1}}) then
-    if OB_CONFIG.theme == "original" or OB_CONFIG.theme == "epi" then
+    if OB_CONFIG.theme == "default" then
       PARAM.slump_config = ULTDOOM.THEMES.DEFAULTS.slump_config
-    elseif OB_CONFIG.theme == "jumble" or OB_CONFIG.theme == "bit_mixed" then
+    elseif OB_CONFIG.theme == "jumble" then
       local possible_configs = {}
       for _,tab in pairs(ULTDOOM.THEMES) do
         if tab.slump_config then

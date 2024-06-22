@@ -47,9 +47,13 @@ gui.import("level")
 
 gui.import("script_manager")
 
-gui.import("/data/text/random_words_en.lua")
-gui.import("/data/text/random_words_en_m.lua")
-gui.import("/data/text/dialogues.lua")
+gui.set_import_dir("data/text/")
+
+gui.import("random_words_en.lua")
+gui.import("random_words_en_m.lua")
+gui.import("dialogues.lua")
+
+gui.set_import_dir("")
 
 gui.import("094/oblige_v094.lua")
 
@@ -180,9 +184,6 @@ function ob_match_engine(T)
 
   local engine = T.engine
   local result = true
-
-  -- Compatibility stub for old "gzdoom" selection
-  if engine == "gzdoom" then engine = "zdoom" end
 
   -- negated check?
   if type(engine) == "string" and string.sub(engine, 1, 1) == '!' then
@@ -572,7 +573,7 @@ function ob_update_ports()
       if OB_CONFIG.game == "chex1" or OB_CONFIG.game == "hacx" or OB_CONFIG.game == "harmony" or OB_CONFIG.game == "strife" or OB_CONFIG.game == "rekkr" then  -- Ugh
         OB_CONFIG.port = "limit_enforcing"
       else
-        OB_CONFIG.port = "zdoom"
+        OB_CONFIG.port = "boom"
       end
     else -- shouldn't get here - Dasho
       OB_CONFIG.port = "vanilla"
@@ -2407,7 +2408,7 @@ local function ob_get_module_refs()
         "zdoom",
         "edge",
       },
-      default = "zdoom",
+      default = "boom",
     },
     length = {
       tooltip = _("Choose how many levels to create."),

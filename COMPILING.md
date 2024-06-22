@@ -1,10 +1,6 @@
 
 # COMPILING Obsidian
 
-## Haiku OS Dependencies (Builds in console-only mode, tested with R1/Beta 3)
-1. CMake
-   * HaikuDepot package: `cmake`
-
 ## BSD Dependencies
 1. CMake Utilities:
    * package: `cmake`
@@ -38,7 +34,7 @@ The C++ compiler/toolchain should already be present on a typical BSD install
    * Wayland support for FLTK 1.4 is in a state of flux; instructions and
      dependencies can be found in the source_files/fltk/README.Wayland.txt file
 
-## Linux/BSD/Haiku OS Compilation
+## Linux/BSD Compilation
 
 Assuming all those dependencies are met, then the following steps
 will build the Obsidian binary.

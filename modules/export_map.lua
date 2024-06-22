@@ -228,9 +228,6 @@ function EXPORT_MAP.begin_level(self, LEVEL)
   fprintf(file, "{\n")
   fprintf(file, "\"classname\" \"worldspawn\"\n")
   fprintf(file, "\"worldtype\" \"0\"\n")  -- FIXME
-  fprintf(file, "\"wad\" \"quake_tex.wad\"\n")
-
-  -- TODO: "message" : LEVEL.description
 end
 
 
