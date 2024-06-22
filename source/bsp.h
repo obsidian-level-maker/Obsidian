@@ -82,12 +82,6 @@ class buildinfo_t
     ~buildinfo_t()
     {
     }
-
-  public:
-    virtual void Print(int level, const char *msg, ...) = 0;
-    virtual void Debug(const char *msg, ...)            = 0;
-    virtual void FatalError(const char *fmt, ...)       = 0;
-    virtual void ProgressUpdate(int current, int total) = 0;
 };
 
 typedef enum

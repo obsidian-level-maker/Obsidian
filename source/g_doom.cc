@@ -124,68 +124,6 @@ static constexpr uint8_t empty_korax_behavior[128] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0xFE, 0x00, 0x00, 0x00, 0x1C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x00,
     0x00, 0x00, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
-// AJBSP Build Info Class
-class obbuildinfo_t : public buildinfo_t
-{
-  public:
-    void Print(int level, const char *fmt, ...)
-    {
-        if (level > verbosity)
-            return;
-
-        va_list arg_ptr;
-
-        static char buffer[MSG_BUF_LEN];
-
-        va_start(arg_ptr, fmt);
-        vsnprintf(buffer, MSG_BUF_LEN - 1, fmt, arg_ptr);
-        va_end(arg_ptr);
-
-        buffer[MSG_BUF_LEN - 1] = 0;
-
-        LogPrintf("%s\n", buffer);
-    }
-
-    void Debug(const char *fmt, ...)
-    {
-        static char buffer[MSG_BUF_LEN];
-
-        va_list args;
-
-        va_start(args, fmt);
-        vsnprintf(buffer, sizeof(buffer), fmt, args);
-        va_end(args);
-
-        DebugPrintf("%s\n", buffer);
-    }
-
-    //
-    //  show an error message and terminate the program
-    //
-    void FatalError(const char *fmt, ...)
-    {
-        va_list arg_ptr;
-
-        static char buffer[MSG_BUF_LEN];
-
-        va_start(arg_ptr, fmt);
-        vsnprintf(buffer, MSG_BUF_LEN - 1, fmt, arg_ptr);
-        va_end(arg_ptr);
-
-        buffer[MSG_BUF_LEN - 1] = 0;
-
-        ajbsp::CloseWad();
-
-        Main::FatalError("'%s'\n", buffer);
-    }
-
-    // Update status bar with nodebuilding progress
-    void ProgressUpdate(int current, int total)
-    {
-        Doom::Send_Prog_Nodes(current, total);
-    }
-};
-
 qLump_c::qLump_c() : buffer(), crlf(false)
 {
 }
@@ -375,33 +313,31 @@ bool BuildNodes(std::string filename)
     }
 
     // Prep AJBSP parameters
-    obbuildinfo_t *build_info = new obbuildinfo_t;
-    build_info->fast          = true;
+    buildinfo_t build_info;
+    build_info.fast          = true;
     if (StringCompare(current_port, "limit_enforcing") == 0 || StringCompare(current_port, "boom") == 0)
     {
-        build_info->gl_nodes    = false;
-        build_info->force_v5    = false;
-        build_info->force_xnod  = false;
-        build_info->do_blockmap = true;
-        build_info->do_reject   = true;
+        build_info.gl_nodes    = false;
+        build_info.force_v5    = false;
+        build_info.force_xnod  = false;
+        build_info.do_blockmap = true;
+        build_info.do_reject   = true;
     }
     else
     { // ZDoom
-        build_info->gl_nodes       = true;
-        build_info->do_reject      = false;
-        build_info->do_blockmap    = false;
-        build_info->force_xnod     = true;
-        build_info->force_compress = true;
+        build_info.gl_nodes       = true;
+        build_info.do_reject      = false;
+        build_info.do_blockmap    = false;
+        build_info.force_xnod     = true;
+        build_info.force_compress = true;
     }
 
-    if (AJBSP_BuildNodes(filename, build_info) != 0)
+    if (AJBSP_BuildNodes(filename, &build_info) != 0)
     {
         Main::ProgStatus(_("AJBSP Error!"));
-        delete build_info;
         return false;
     }
 
-    delete build_info;
     return true;
 }
 

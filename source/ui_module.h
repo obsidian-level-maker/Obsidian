@@ -195,7 +195,7 @@ class UI_CustomTabs : public Fl_Tabs
     UI_CustomMods *other_mods;
     UI_CustomMods *debug_mods;
     UI_CustomMods *experimental_mods;
-    UI_CustomMods *links; // Tentative; use with a new "URL" widget option type
+    UI_CustomMods *links;
 
   private:
   public:
