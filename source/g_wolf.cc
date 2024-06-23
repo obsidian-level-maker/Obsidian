@@ -434,7 +434,7 @@ bool wolf_game_interface_c::Start(const char *ext)
             break;
 
         case 1:
-            ProgStatus(_("Cancelled"));
+            ProgStatus("%s", _("Cancelled"));
             return false;
 
         default:
@@ -471,7 +471,7 @@ bool wolf_game_interface_c::Start(const char *ext)
     {
         LogPrint("Unable to create map file:\n%s", strerror(errno));
 
-        ProgStatus(_("Error (create file)"));
+        ProgStatus("%s", _("Error (create file)"));
         return false;
     }
 
@@ -483,7 +483,7 @@ bool wolf_game_interface_c::Start(const char *ext)
 
         LogPrint("Unable to create %s:\n%s", TEMP_HEADFILE, strerror(errno));
 
-        ProgStatus(_("Error (create file)"));
+        ProgStatus("%s", _("Error (create file)"));
         return false;
     }
 
@@ -528,7 +528,7 @@ bool wolf_game_interface_c::Finish(bool build_ok)
 
     if (write_errors_seen > 0)
     {
-        ProgStatus(_("Error (write file)"));
+        ProgStatus("%s", _("Error (write file)"));
         Tidy();
         return false;
     }

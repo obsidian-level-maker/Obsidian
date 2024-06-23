@@ -40,10 +40,12 @@
 #include "physfs.h"
 #include "sys_xoshiro.h"
 #ifndef CONSOLE_ONLY
+#ifndef _WIN32
+#include <FL/Fl_File_Icon.H>
+#endif
 #include <FL/Fl_Shared_Image.H>
 #include <FL/fl_ask.H>
 #include <FL/platform.H>
-
 #include "ui_boxes.h"
 #include "ui_window.h"
 #endif
@@ -1142,7 +1144,7 @@ bool Build_Cool_Shit()
     }
     if (was_ok)
     {
-        ProgStatus(_("Success"));
+        ProgStatus("%s", _("Success"));
 
         const uint32_t end_time   = TimeGetMillies();
         const uint32_t total_time = end_time - start_time;
@@ -1192,7 +1194,7 @@ bool Build_Cool_Shit()
                     .c_str());
         }
 #endif
-        ProgStatus(_("Cancelled"));
+        ProgStatus("%s", _("Cancelled"));
     }
 
     // Insurance in case the build process errored/cancelled

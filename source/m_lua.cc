@@ -2158,7 +2158,7 @@ void ob_invoke_hook(std::string hookname)
 
     if (!Script_CallFunc("ob_invoke_hook", 0, &params[0]))
     {
-        ProgStatus(_("Script Error"));
+        ProgStatus("%s", _("Script Error"));
     }
 }
 
@@ -2174,7 +2174,7 @@ bool ob_build_cool_shit()
                                 .c_str());
         }
 #endif
-        ProgStatus(_("Script Error"));
+        ProgStatus("%s", _("Script Error"));
 #ifndef CONSOLE_ONLY
         if (main_win)
         {
@@ -2199,7 +2199,7 @@ bool ob_build_cool_shit()
         return true;
     }
 
-    ProgStatus(_("Cancelled"));
+    ProgStatus("%s", _("Cancelled"));
     return false;
 }
 

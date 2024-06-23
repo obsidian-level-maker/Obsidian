@@ -330,7 +330,7 @@ bool BuildNodes(std::string filename)
 
     if (AJBSP_BuildNodes(filename, &build_info) != 0)
     {
-        ProgStatus(_("AJBSP Error!"));
+        ProgStatus("%s", _("AJBSP Error!"));
         return false;
     }
 
@@ -1376,7 +1376,7 @@ bool Doom::game_interface_c::Start(const char *preset)
 
     if (filename.empty())
     {
-        ProgStatus(_("Cancelled"));
+        ProgStatus("%s", _("Cancelled"));
         return false;
     }
 
@@ -1425,14 +1425,14 @@ bool Doom::game_interface_c::Start(const char *preset)
         }
         if (!ZIPF_OpenWrite(zip_filename))
         {
-            ProgStatus(_("Error (create PK3/ZIP)"), zip_filename.c_str());
+            ProgStatus("%s", _("Error (create PK3/ZIP)"), zip_filename.c_str());
             return false;
         }
     }
 
     if (!StartWAD(filename))
     {
-        ProgStatus(_("Error (create file)"));
+        ProgStatus("%s", _("Error (create file)"));
         return false;
     }
 
