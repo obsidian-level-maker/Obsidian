@@ -21,10 +21,6 @@
 
 #include "m_addons.h"
 
-#ifndef CONSOLE_ONLY
-#include "hdr_fltk.h"
-#include "hdr_ui.h"
-#endif
 #include "lib_argv.h"
 #include "lib_util.h"
 #include "m_cookie.h"
@@ -47,7 +43,7 @@ void VFS_AddFolder(std::string name)
     if (!PHYSFS_mount(path.c_str(), mount.c_str(), 0))
     {
         FatalError("Failed to mount '%s' folder in PhysFS:\n%s\n", name.c_str(),
-                         PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+                   PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         return; /* NOT REACHED */
     }
 
@@ -62,7 +58,7 @@ void VFS_AddBothFolders(std::string name)
     if (!PHYSFS_mount(path.c_str(), mount.c_str(), 0))
     {
         FatalError("Failed to mount '%s' folder in PhysFS:\n%s\n", name.c_str(),
-                         PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+                   PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         return;                                   /* NOT REACHED */
     }
     path = PathAppend(home_dir, name);
@@ -93,12 +89,12 @@ bool VFS_AddArchive(std::string filename, bool options_file)
         if (options_file)
         {
             LogPrint("Failed to mount '%s' archive in PhysFS:\n%s\n", filename.c_str(),
-                      PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+                     PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         }
         else
         {
             FatalError("Failed to mount '%s' archive in PhysFS:\n%s\n", filename.c_str(),
-                             PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+                       PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         }
 
         return false;

@@ -26,10 +26,6 @@
 #include <string>
 #include <vector>
 
-#include "hdr_lua.h"
-
-typedef struct lua_State lua_State;
-
 void Script_Open();
 void Script_Close();
 

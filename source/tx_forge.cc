@@ -144,7 +144,7 @@ static void fourn(float data[], int nn[], int ndim, int isign)
         while (ifp1 < ip2)
         {
             ifp2  = ifp1 << 1;
-            theta = isign * (M_PI * 2) / (ifp2 / ip1);
+            theta = isign * (OBSIDIAN_PI * 2) / (ifp2 / ip1);
             wtemp = sin(0.5 * theta);
             wpr   = -2.0 * wtemp * wtemp;
             wpi   = sin(theta);
@@ -206,7 +206,7 @@ static double rand_gauss(void)
 
 static double rand_phase(void)
 {
-    return 2 * M_PI * xoshiro_Double();
+    return 2 * OBSIDIAN_PI * xoshiro_Double();
 }
 
 /*  SPECTRALSYNTH  --  Spectrally  synthesized  fractal  motion in two

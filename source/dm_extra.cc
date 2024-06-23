@@ -24,19 +24,15 @@
 
 #include "csg_main.h"
 #include "g_doom.h"
-#ifndef CONSOLE_ONLY
-#include "hdr_fltk.h"
-#include "hdr_ui.h"
-#endif
-#include "hdr_lua.h"
 #include "images.h"
 #include "lib_tga.h"
 #include "lib_util.h"
 #include "lib_wad.h"
 #include "lib_zip.h"
-#include "m_lua.h"
 #include "main.h"
+#include "minilua.h"
 #include "physfs.h"
+#include "raw_def.h"
 #include "sys_assert.h"
 #include "sys_endian.h"
 #include "sys_macro.h"

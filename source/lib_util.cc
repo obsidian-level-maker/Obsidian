@@ -105,7 +105,8 @@ bool MakeDirectory(std::string_view dir)
 }
 bool FileExists(std::string_view name)
 {
-    if (name.empty()) return false;
+    if (name.empty())
+        return false;
     std::wstring wname = UTF8ToWString(name);
     return _waccess(wname.c_str(), 0) == 0;
 }
@@ -157,7 +158,8 @@ bool MakeDirectory(std::string_view dir)
 }
 bool FileExists(std::string_view name)
 {
-    if (name.empty()) return false;
+    if (name.empty())
+        return false;
     return access(std::string(name).c_str(), F_OK) == 0;
 }
 #endif
@@ -799,7 +801,7 @@ double CalcAngle(double sx, double sy, double ex, double ey)
         return (ex > 0) ? 0.0 : 180.0;
     }
 
-    double angle = atan2(ey, ex) * 180.0 / M_PI;
+    double angle = atan2(ey, ex) * 180.0 / OBSIDIAN_PI;
 
     if (angle < 0)
     {
@@ -986,14 +988,13 @@ double ComputeAngle(double dx, double dy)
     if (dx == 0)
         return (dy > 0) ? 90.0 : 270.0;
 
-    angle = atan2((double)dy, (double)dx) * 180.0 / M_PI;
+    angle = atan2((double)dy, (double)dx) * 180.0 / OBSIDIAN_PI;
 
     if (angle < 0)
         angle += 360.0;
 
     return angle;
 }
-
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

@@ -19,12 +19,10 @@
 //
 //----------------------------------------------------------------------
 
+#include "m_lua.h"
+
 #include <algorithm>
 
-#ifndef CONSOLE_ONLY
-#include "hdr_fltk.h"
-#include "hdr_ui.h"
-#endif
 #include "ff_main.h"
 #include "lib_util.h"
 #include "m_trans.h"
@@ -35,7 +33,7 @@
 #include "sys_xoshiro.h"
 
 #define LUA_IMPL
-#include "m_lua.h"
+#include "minilua.h"
 
 static lua_State *LUA_ST;
 
@@ -723,7 +721,7 @@ int gui_add_module_header(lua_State *L)
     }
 
     FatalError("Script problem: gui.add_module_header_option called for "
-                     "non-existent module!\n");
+               "non-existent module!\n");
 #endif
     return 0;
 }
@@ -769,7 +767,7 @@ int gui_add_module_url(lua_State *L)
     }
 
     FatalError("Script problem: gui.add_module_url called for "
-                     "non-existent module!\n");
+               "non-existent module!\n");
 #endif
     return 0;
 }
@@ -819,7 +817,7 @@ int gui_add_module_option(lua_State *L)
     }
 
     FatalError("Script problem: gui.add_module_option called for "
-                     "non-existent module!\n");
+               "non-existent module!\n");
 #endif
     return 0;
 }
@@ -878,7 +876,7 @@ int gui_add_module_slider_option(lua_State *L)
     }
 
     FatalError("Script problem: gui.add_module_slider_option called for "
-                     "non-existent module!\n");
+               "non-existent module!\n");
 #endif
     return 0;
 }
@@ -928,7 +926,7 @@ int gui_add_module_button_option(lua_State *L)
     }
 
     FatalError("Script problem: gui.add_module_button_option called for "
-                     "non-existent module!\n");
+               "non-existent module!\n");
 #endif
     return 0;
 }
@@ -2183,7 +2181,7 @@ bool ob_build_cool_shit()
             main_win->label(
                 StringFormat("%s %s \"%s\"", OBSIDIAN_TITLE.c_str(), OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str())
                     .c_str());
-#ifdef WIN32
+#ifdef _WIN32
             Main::Blinker();
 #endif
         }

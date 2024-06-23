@@ -28,7 +28,6 @@
 #include <vector>
 
 #ifndef CONSOLE_ONLY
-#include "hdr_fltk.h"
 #include "ui_window.h"
 #endif
 #include "lib_util.h"
@@ -194,7 +193,7 @@ namespace Main
 void Shutdown(bool error);
 bool BackupFile(const std::string &filename);
 
-#if defined WIN32 && !defined CONSOLE_ONLY
+#if defined _WIN32 && !defined CONSOLE_ONLY
 void Blinker();
 #endif
 

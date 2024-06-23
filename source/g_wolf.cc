@@ -19,14 +19,13 @@
 //------------------------------------------------------------------------
 
 #ifndef CONSOLE_ONLY
-#include "hdr_fltk.h"
-#include "hdr_ui.h"
+#include <FL/Fl_Native_File_Chooser.H>
 #endif
-#include "hdr_lua.h"
 #include "lib_util.h"
 #include "m_lua.h"
 #include "m_trans.h"
 #include "main.h"
+#include "minilua.h"
 #include "sys_assert.h"
 
 #define TEMP_GAMEFILE "GAMEMAPS.TMP"
@@ -446,7 +445,7 @@ bool wolf_game_interface_c::Start(const char *ext)
 
         if (dir_name.empty())
         {
-            LogPrint("%s\n",_("Empty directory provided???"));
+            LogPrint("%s\n", _("Empty directory provided???"));
             dir_name = Resolve_DefaultOutputPath();
         }
 

@@ -19,10 +19,10 @@
 //
 //----------------------------------------------------------------------
 
-#include "hdr_lua.h"
 #include "lib_argv.h"
 #include "lib_util.h"
 #include "main.h"
+#include "minilua.h"
 #include "sys_assert.h"
 #include "sys_macro.h"
 

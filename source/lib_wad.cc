@@ -34,9 +34,9 @@
 //  WAD READING
 //------------------------------------------------------------------------
 
-static PHYSFS_File      *wad_R_fp;
-static raw_wad_header_t  wad_R_header;
-static raw_wad_entry_t  *wad_R_dir;
+static PHYSFS_File     *wad_R_fp;
+static raw_wad_header_t wad_R_header;
+static raw_wad_entry_t *wad_R_dir;
 
 bool WAD_OpenRead(std::string filename)
 {
@@ -66,7 +66,7 @@ bool WAD_OpenRead(std::string filename)
     }
 
     wad_R_header.num_entries = LE_U32(wad_R_header.num_entries);
-    wad_R_header.dir_start = LE_U32(wad_R_header.dir_start);
+    wad_R_header.dir_start   = LE_U32(wad_R_header.dir_start);
 
     /* read directory */
 
@@ -80,7 +80,7 @@ bool WAD_OpenRead(std::string filename)
     if (!PHYSFS_seek(wad_R_fp, wad_R_header.dir_start))
     {
         LogPrint("WAD_OpenRead: cannot seek to directory (at 0x%u)\n",
-                  static_cast<unsigned int>(wad_R_header.dir_start));
+                 static_cast<unsigned int>(wad_R_header.dir_start));
         PHYSFS_close(wad_R_fp);
         return false;
     }
@@ -251,7 +251,7 @@ void WAD_CloseWrite(void)
 
     // finally write the _real_ WAD header
 
-    header.dir_start = LE_U32(header.dir_start);
+    header.dir_start   = LE_U32(header.dir_start);
     header.num_entries = LE_U32(header.num_entries);
 
     fseek(wad_W_fp, 0, SEEK_SET);

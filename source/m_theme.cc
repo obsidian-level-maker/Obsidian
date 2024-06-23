@@ -19,10 +19,12 @@
 //
 //----------------------------------------------------------------------
 
+#include <FL/Fl_Color_Chooser.H>
+#include <FL/Fl_Native_File_Chooser.H>
+#include <FL/Fl_Simple_Counter.H>
+
 #include <algorithm>
 
-#include "hdr_fltk.h"
-#include "hdr_ui.h"
 #include "lib_argv.h"
 #include "lib_util.h"
 #include "m_addons.h"
@@ -309,7 +311,7 @@ bool Theme_Options_Load(std::string filename)
     int error_count = 0;
 
     std::string buffer;
-    int c = EOF;
+    int         c = EOF;
     for (;;)
     {
         buffer.clear();

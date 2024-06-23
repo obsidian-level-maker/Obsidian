@@ -22,8 +22,6 @@
 #include <vector>
 
 #include "gif.h"
-#include "hdr_fltk.h"
-#include "hdr_ui.h"
 #include "lib_util.h"
 #include "main.h"
 #include "sys_assert.h"

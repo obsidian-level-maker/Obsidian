@@ -289,7 +289,7 @@ void ParseMapList(const char *from_arg, buildinfo_t *build_info)
     do                                                                                                                 \
     {                                                                                                                  \
         if (sizeof(type) != size)                                                                                      \
-            FatalError("sizeof " #type " is %d (should be " #size ")\n", (int)sizeof(type));               \
+            FatalError("sizeof " #type " is %d (should be " #size ")\n", (int)sizeof(type));                           \
     } while (0)
 
 void CheckTypeSizes(buildinfo_t *build_info)
@@ -334,8 +334,8 @@ int AJBSP_BuildNodes(std::string filename, buildinfo_t *build_info)
 
     if (total_failed_files > 0)
     {
-        LogPrint("FAILURES occurred on %d map%s in %d file%s.\n", total_failed_maps,
-                          total_failed_maps == 1 ? "" : "s", total_failed_files, total_failed_files == 1 ? "" : "s");
+        LogPrint("FAILURES occurred on %d map%s in %d file%s.\n", total_failed_maps, total_failed_maps == 1 ? "" : "s",
+                 total_failed_files, total_failed_files == 1 ? "" : "s");
 
         LogPrint("Rerun with --verbose to see more details.\n");
 
@@ -357,7 +357,7 @@ int AJBSP_BuildNodes(std::string filename, buildinfo_t *build_info)
         int empty = total_empty_files;
 
         LogPrint("Ok, built %d file%s, %d file%s empty.\n", built, (built == 1 ? "" : "s"), empty,
-                          (empty == 1 ? " was" : "s were"));
+                 (empty == 1 ? " was" : "s were"));
     }
 
     // that's all folks!

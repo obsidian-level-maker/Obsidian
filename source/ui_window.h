@@ -21,7 +21,8 @@
 
 #pragma once
 
-#include "hdr_fltk.h"
+#include <FL/Fl_Menu_Bar.H>
+
 #include "ui_build.h"
 #include "ui_game.h"
 #include "ui_module.h"

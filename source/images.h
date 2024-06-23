@@ -2,7 +2,7 @@
 
 #pragma once
 
-#ifndef WIN32
+#ifndef _WIN32
 static const char *obsidian_icon[] = {
     "64 64 928 2",
     "  	c #000000",

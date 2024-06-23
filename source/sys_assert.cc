@@ -26,15 +26,15 @@
 
 void AssertFail(const char *msg, ...)
 {
-    static char buffer[MSG_BUF_LEN];
+    static char buffer[OBSIDIAN_MSG_BUF_LEN];
 
     va_list argptr;
 
     va_start(argptr, msg);
-    vsnprintf(buffer, MSG_BUF_LEN - 1, msg, argptr);
+    vsnprintf(buffer, OBSIDIAN_MSG_BUF_LEN - 1, msg, argptr);
     va_end(argptr);
 
-    buffer[MSG_BUF_LEN - 2] = 0;
+    buffer[OBSIDIAN_MSG_BUF_LEN - 2] = 0;
 
     FatalError("Sorry, an internal error occurred.\n%s", buffer);
 }

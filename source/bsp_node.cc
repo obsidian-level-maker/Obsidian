@@ -349,7 +349,7 @@ bool EvalPartitionWorker(quadtree_c *tree, seg_t *part, double best_cost, eval_i
         }
 
         /* check for being on the same line */
-        if (fa <= DIST_EPSILON && fb <= DIST_EPSILON)
+        if (fa <= OBSIDIAN_DIST_EPSILON && fb <= OBSIDIAN_DIST_EPSILON)
         {
             // this seg runs along the same line as the partition.  Check
             // whether it goes in the same direction or the opposite.
@@ -368,20 +368,20 @@ bool EvalPartitionWorker(quadtree_c *tree, seg_t *part, double best_cost, eval_i
         //       may fail to detect the sector being cut in half.  Thanks
         //       to Janis Legzdinsh for spotting this obscure bug.
 
-        if (fa <= DIST_EPSILON || fb <= DIST_EPSILON)
+        if (fa <= OBSIDIAN_DIST_EPSILON || fb <= OBSIDIAN_DIST_EPSILON)
         {
             if (check->linedef != NULL && check->linedef->is_precious)
                 info->cost += 40.0 * split_cost * PRECIOUS_MULTIPLY;
         }
 
         /* check for right side */
-        if (a > -DIST_EPSILON && b > -DIST_EPSILON)
+        if (a > -OBSIDIAN_DIST_EPSILON && b > -OBSIDIAN_DIST_EPSILON)
         {
             info->BumpRight(check->linedef);
 
             /* check for a near miss */
-            if ((a >= IFFY_LEN && b >= IFFY_LEN) || (a <= DIST_EPSILON && b >= IFFY_LEN) ||
-                (b <= DIST_EPSILON && a >= IFFY_LEN))
+            if ((a >= IFFY_LEN && b >= IFFY_LEN) || (a <= OBSIDIAN_DIST_EPSILON && b >= IFFY_LEN) ||
+                (b <= OBSIDIAN_DIST_EPSILON && a >= IFFY_LEN))
             {
                 continue;
             }
@@ -393,7 +393,7 @@ bool EvalPartitionWorker(quadtree_c *tree, seg_t *part, double best_cost, eval_i
             //       processing.  Thus the closer the near miss, the higher
             //       the cost.
 
-            if (a <= DIST_EPSILON || b <= DIST_EPSILON)
+            if (a <= OBSIDIAN_DIST_EPSILON || b <= OBSIDIAN_DIST_EPSILON)
                 qnty = IFFY_LEN / OBSIDIAN_MAX(a, b);
             else
                 qnty = IFFY_LEN / OBSIDIAN_MIN(a, b);
@@ -403,13 +403,13 @@ bool EvalPartitionWorker(quadtree_c *tree, seg_t *part, double best_cost, eval_i
         }
 
         /* check for left side */
-        if (a < DIST_EPSILON && b < DIST_EPSILON)
+        if (a < OBSIDIAN_DIST_EPSILON && b < OBSIDIAN_DIST_EPSILON)
         {
             info->BumpLeft(check->linedef);
 
             /* check for a near miss */
-            if ((a <= -IFFY_LEN && b <= -IFFY_LEN) || (a >= -DIST_EPSILON && b <= -IFFY_LEN) ||
-                (b >= -DIST_EPSILON && a <= -IFFY_LEN))
+            if ((a <= -IFFY_LEN && b <= -IFFY_LEN) || (a >= -OBSIDIAN_DIST_EPSILON && b <= -IFFY_LEN) ||
+                (b >= -OBSIDIAN_DIST_EPSILON && a <= -IFFY_LEN))
             {
                 continue;
             }
@@ -417,7 +417,7 @@ bool EvalPartitionWorker(quadtree_c *tree, seg_t *part, double best_cost, eval_i
             info->near_miss++;
 
             // the closer the miss, the higher the cost (see note above)
-            if (a >= -DIST_EPSILON || b >= -DIST_EPSILON)
+            if (a >= -OBSIDIAN_DIST_EPSILON || b >= -OBSIDIAN_DIST_EPSILON)
                 qnty = IFFY_LEN / -OBSIDIAN_MIN(a, b);
             else
                 qnty = IFFY_LEN / -OBSIDIAN_MAX(a, b);
@@ -702,7 +702,7 @@ void DivideOneSeg(seg_t *seg, seg_t *part, seg_t **left_list, seg_t **right_list
         a = b = 0;
 
     /* check for being on the same line */
-    if (fabs(a) <= DIST_EPSILON && fabs(b) <= DIST_EPSILON)
+    if (fabs(a) <= OBSIDIAN_DIST_EPSILON && fabs(b) <= OBSIDIAN_DIST_EPSILON)
     {
         AddIntersection(cut_list, seg->start, part, self_ref);
         AddIntersection(cut_list, seg->end, part, self_ref);
@@ -719,11 +719,11 @@ void DivideOneSeg(seg_t *seg, seg_t *part, seg_t **left_list, seg_t **right_list
     }
 
     /* check for right side */
-    if (a > -DIST_EPSILON && b > -DIST_EPSILON)
+    if (a > -OBSIDIAN_DIST_EPSILON && b > -OBSIDIAN_DIST_EPSILON)
     {
-        if (a < DIST_EPSILON)
+        if (a < OBSIDIAN_DIST_EPSILON)
             AddIntersection(cut_list, seg->start, part, self_ref);
-        else if (b < DIST_EPSILON)
+        else if (b < OBSIDIAN_DIST_EPSILON)
             AddIntersection(cut_list, seg->end, part, self_ref);
 
         ListAddSeg(right_list, seg);
@@ -731,11 +731,11 @@ void DivideOneSeg(seg_t *seg, seg_t *part, seg_t **left_list, seg_t **right_list
     }
 
     /* check for left side */
-    if (a < DIST_EPSILON && b < DIST_EPSILON)
+    if (a < OBSIDIAN_DIST_EPSILON && b < OBSIDIAN_DIST_EPSILON)
     {
-        if (a > -DIST_EPSILON)
+        if (a > -OBSIDIAN_DIST_EPSILON)
             AddIntersection(cut_list, seg->start, part, self_ref);
-        else if (b > -DIST_EPSILON)
+        else if (b > -OBSIDIAN_DIST_EPSILON)
             AddIntersection(cut_list, seg->end, part, self_ref);
 
         ListAddSeg(left_list, seg);
@@ -834,8 +834,8 @@ void AddMinisegs(intersection_t *cut_list, seg_t *part, seg_t **left_list, seg_t
     for (cut = cut_list; cut; cut = cut->next)
     {
         DebugPrint("  Vertex %8X (%1.1f,%1.1f)  Along %1.2f  [%d/%d]  %s\n", cut->vertex->index, cut->vertex->x,
-                        cut->vertex->y, cut->along_dist, cut->open_before ? 1 : 0, cut->open_after ? 1 : 0,
-                        cut->self_ref ? "SELFREF" : "");
+                   cut->vertex->y, cut->along_dist, cut->open_before ? 1 : 0, cut->open_after ? 1 : 0,
+                   cut->self_ref ? "SELFREF" : "");
     }
 #endif
 
@@ -895,11 +895,11 @@ void AddMinisegs(intersection_t *cut_list, seg_t *part, seg_t **left_list, seg_t
         ListAddSeg(left_list, buddy);
 
 #if DEBUG_CUTLIST
-        DebugPrint("AddMiniseg: %p RIGHT  (%1.1f,%1.1f) -> (%1.1f,%1.1f)\n", seg->start->x, seg->start->y,
-                        seg->end->x, seg->end->y);
+        DebugPrint("AddMiniseg: %p RIGHT  (%1.1f,%1.1f) -> (%1.1f,%1.1f)\n", seg->start->x, seg->start->y, seg->end->x,
+                   seg->end->y);
 
         DebugPrint("AddMiniseg: %p LEFT   (%1.1f,%1.1f) -> (%1.1f,%1.1f)\n", buddy->start->x, buddy->start->y,
-                        buddy->end->x, buddy->end->y);
+                   buddy->end->x, buddy->end->y);
 #endif
     }
 }
@@ -961,7 +961,7 @@ int seg_t::PointOnLineSide(double x, double y) const
 {
     double perp = PerpDist(x, y);
 
-    if (fabs(perp) <= DIST_EPSILON)
+    if (fabs(perp) <= OBSIDIAN_DIST_EPSILON)
         return 0;
 
     return (perp < 0) ? -1 : +1;
@@ -1363,7 +1363,7 @@ void subsec_t::ClockwiseOrder()
     for (seg = seg_list; seg; seg = seg->next)
     {
         DebugPrint("  Seg %p: Angle %1.6f  (%1.1f,%1.1f) -> (%1.1f,%1.1f)\n", seg, seg->cmp_angle, seg->start->x,
-                        seg->start->y, seg->end->x, seg->end->y);
+                   seg->start->y, seg->end->x, seg->end->y);
     }
 #endif
 }
@@ -1382,7 +1382,7 @@ void subsec_t::SanityCheckClosed() const
         double dx = seg->end->x - next->start->x;
         double dy = seg->end->y - next->start->y;
 
-        if (fabs(dx) > DIST_EPSILON || fabs(dy) > DIST_EPSILON)
+        if (fabs(dx) > OBSIDIAN_DIST_EPSILON || fabs(dy) > OBSIDIAN_DIST_EPSILON)
             gaps++;
 
         total++;
@@ -1391,14 +1391,14 @@ void subsec_t::SanityCheckClosed() const
     if (gaps > 0)
     {
         LogPrint("Subsector #%d near (%1.1f,%1.1f) is not closed "
-                   "(%d gaps, %d segs)\n",
-                   index, mid_x, mid_y, gaps, total);
+                 "(%d gaps, %d segs)\n",
+                 index, mid_x, mid_y, gaps, total);
 
 #if DEBUG_SUBSEC
         for (seg = seg_list; seg; seg = seg->next)
         {
-            DebugPrint("  SEG %p  (%1.1f,%1.1f) --> (%1.1f,%1.1f)\n", seg, seg->start->x, seg->start->y,
-                            seg->end->x, seg->end->y);
+            DebugPrint("  SEG %p  (%1.1f,%1.1f) --> (%1.1f,%1.1f)\n", seg, seg->start->x, seg->start->y, seg->end->x,
+                       seg->end->y);
         }
 #endif
     }
@@ -1474,7 +1474,7 @@ void DebugShowSegs(const seg_t *list)
     for (const seg_t *seg = list; seg; seg = seg->next)
     {
         DebugPrint("Build:   %sSEG %p  (%1.1f,%1.1f) -> (%1.1f,%1.1f)\n", seg->linedef ? "" : "MINI", seg,
-                        seg->start->x, seg->start->y, seg->end->x, seg->end->y);
+                   seg->start->x, seg->start->y, seg->end->x, seg->end->y);
     }
 }
 #endif
@@ -1517,7 +1517,7 @@ build_result_e BuildNodes(seg_t *list, int depth, bbox_t *bounds /* output */, n
 
 #if DEBUG_BUILDER
     DebugPrint("Build: PARTITION %p (%1.0f,%1.0f) -> (%1.0f,%1.0f)\n", part, part->start->x, part->start->y,
-                    part->end->x, part->end->y);
+               part->end->x, part->end->y);
 #endif
 
     node_t *node = NewNode();
@@ -1716,7 +1716,7 @@ void subsec_t::RoundOff()
 
 #if DEBUG_SUBSEC
         DebugPrint("Degenerate before: (%1.2f,%1.2f) -> (%1.2f,%1.2f)\n", last_real_degen->start->x,
-                        last_real_degen->start->y, last_real_degen->end->x, last_real_degen->end->y);
+                   last_real_degen->start->y, last_real_degen->end->x, last_real_degen->end->y);
 #endif
 
         // create a new vertex for this baby
@@ -1724,8 +1724,8 @@ void subsec_t::RoundOff()
 
 #if DEBUG_SUBSEC
         DebugPrint("Degenerate after:  (%d,%d) -> (%d,%d)\n", RoundToInteger(last_real_degen->start->x),
-                        RoundToInteger(last_real_degen->start->y), RoundToInteger(last_real_degen->end->x),
-                        RoundToInteger(last_real_degen->end->y));
+                   RoundToInteger(last_real_degen->start->y), RoundToInteger(last_real_degen->end->x),
+                   RoundToInteger(last_real_degen->end->y));
 #endif
 
         last_real_degen->is_degenerate = false;

@@ -24,16 +24,15 @@
 #include <time.h>
 
 #include "lib_util.h"
-#include "m_lua.h"
 #include "main.h"
 #include "sys_assert.h"
 
 #define DEBUG_BUF_LEN 20000
 
-FILE *log_file = nullptr;
-FILE *ref_file = nullptr;
-std::string  log_filename;
-std::string  ref_filename;
+FILE       *log_file = nullptr;
+FILE       *ref_file = nullptr;
+std::string log_filename;
+std::string ref_filename;
 
 bool debugging = false;
 bool terminal  = false;
@@ -306,7 +305,7 @@ void ProgStatus(const char *message, ...)
 #endif
 
     Main::Shutdown(true);
-#if defined WIN32 && !defined CONSOLE_ONLY
+#if defined _WIN32 && !defined CONSOLE_ONLY
     if (batch_mode)
     {
         printf("\nClose window when finished...");
@@ -342,7 +341,7 @@ void LogReadLines(log_display_func_t display_func, void *priv_data)
     }
 
     std::string buffer;
-    int c = EOF;
+    int         c = EOF;
     for (;;)
     {
         buffer.clear();

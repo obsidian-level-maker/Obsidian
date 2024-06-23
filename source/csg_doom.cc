@@ -25,12 +25,9 @@
 #include "csg_local.h"
 #include "csg_main.h"
 #include "g_doom.h"
-#ifndef CONSOLE_ONLY
-#include "hdr_fltk.h"
-#include "hdr_ui.h" // ui_build.h
-#endif
 #include "lib_util.h"
 #include "main.h"
+#include "raw_def.h"
 #include "sys_assert.h"
 #include "sys_macro.h"
 
@@ -108,7 +105,8 @@ class extrafloor_c
 
                (u_light == other->u_light) && (u_special == other->u_special) && (u_tag == other->u_tag) &&
 
-               (StringCompare(top.c_str(), other->top.c_str()) == 0) && (StringCompare(bottom.c_str(), other->bottom.c_str()) == 0) &&
+               (StringCompare(top.c_str(), other->top.c_str()) == 0) &&
+               (StringCompare(bottom.c_str(), other->bottom.c_str()) == 0) &&
                (StringCompare(wall.c_str(), other->wall.c_str()) == 0);
     }
 };
@@ -388,7 +386,8 @@ class sidedef_c
 
     inline bool SameTex(const sidedef_c *T) const
     {
-        return (StringCompare(mid.c_str(), T->mid.c_str()) == 0) && (StringCompare(lower.c_str(), T->lower.c_str()) == 0) &&
+        return (StringCompare(mid.c_str(), T->mid.c_str()) == 0) &&
+               (StringCompare(lower.c_str(), T->lower.c_str()) == 0) &&
                (StringCompare(upper.c_str(), T->upper.c_str()) == 0);
     }
 };
@@ -1313,7 +1312,7 @@ static sidedef_c *MakeSidedef(linedef_c *L, sector_c *sec, sector_c *back, snag_
 
         if (back && back->f_h > sec->f_h && !rail && l_oy != IVAL_NONE)
         {
-            L->flags &= ~MLF_LowerUnpeg;
+            L->flags &= ~MLF_LowerUnpegged;
             unpeg_L = false;
         }
 
@@ -1523,7 +1522,7 @@ static void DeterminePegging(linedef_c *L, region_c *front, region_c *back, bool
 
         if (T->props.getInt("mover"))
         {
-            L->flags |= MLF_LowerUnpeg;
+            L->flags |= MLF_LowerUnpegged;
         }
 
         return;
@@ -1544,7 +1543,7 @@ static void DeterminePegging(linedef_c *L, region_c *front, region_c *back, bool
 
     if (has_rail)
     {
-        L->flags |= MLF_LowerUnpeg;
+        L->flags |= MLF_LowerUnpegged;
     }
     else if ((/*  back->f_h > front->f_h && */ B2->props.getInt("mover")) ||
              (/* front->f_h >  back->f_h && */ B1->props.getInt("mover")))
@@ -1553,7 +1552,7 @@ static void DeterminePegging(linedef_c *L, region_c *front, region_c *back, bool
     }
     else
     {
-        L->flags |= MLF_LowerUnpeg;
+        L->flags |= MLF_LowerUnpegged;
     }
 
     if ((/*  back->c_h < front->c_h && */ T2->props.getInt("mover")) ||
@@ -1563,7 +1562,7 @@ static void DeterminePegging(linedef_c *L, region_c *front, region_c *back, bool
     }
     else
     {
-        L->flags |= MLF_UpperUnpeg;
+        L->flags |= MLF_UpperUnpegged;
     }
 }
 
@@ -1664,8 +1663,8 @@ static void MakeLine(region_c *R, snag_c *S)
 
     DeterminePegging(L, R, N, (f_rail || b_rail) ? true : false);
 
-    bool unpeg_L = (L->flags & MLF_LowerUnpeg) != 0;
-    bool unpeg_U = (L->flags & MLF_UpperUnpeg) != 0;
+    bool unpeg_L = (L->flags & MLF_LowerUnpegged) != 0;
+    bool unpeg_U = (L->flags & MLF_UpperUnpegged) != 0;
 
     L->front = MakeSidedef(L, front, back, S->partner, S, f_rail, unpeg_L, unpeg_U);
     L->back  = MakeSidedef(L, back, front, S, S->partner, b_rail, unpeg_L, unpeg_U);
@@ -1695,7 +1694,7 @@ static void MakeLine(region_c *R, snag_c *S)
 
     if (!L->back)
     {
-        L->flags |= MLF_BlockAll;
+        L->flags |= MLF_Blocking;
     }
     else
     {
@@ -1718,7 +1717,7 @@ static void MakeLine(region_c *R, snag_c *S)
     if (L->special == LIN_FAKE_UNPEGGED)
     {
         L->special = 0;
-        L->flags |= MLF_LowerUnpeg;
+        L->flags |= MLF_LowerUnpegged;
     }
 
     if (L->front && L->back && L->front->sector->sound_area != L->back->sector->sound_area)
@@ -2414,11 +2413,11 @@ class dummy_sector_c
             L->flags   = info[index]->flags;
         }
 
-        L->flags |= Doom::MLF_BlockAll | Doom::MLF_DontDraw;
+        L->flags |= MLF_Blocking | MLF_DontDraw;
 
         if (front > 0 && back > 0)
         {
-            L->flags |= Doom::MLF_TwoSided;
+            L->flags |= MLF_TwoSided;
         }
 
         L->front = MakeSidedef(front, back, index);

@@ -18,18 +18,13 @@
 
 #include <stdint.h>
 
-#ifdef __GNUC__
-#define PACKEDATTR __attribute__((packed))
-#else
-#define PACKEDATTR
-#endif
-
 /* ----- The wad structures ---------------------- */
 
 #define WAD_TEX_NAME  8
 #define WAD_FLAT_NAME 8
 
 // wad header
+#pragma pack(push, 1)
 typedef struct raw_wad_header_s
 {
     char ident[4];
@@ -37,9 +32,11 @@ typedef struct raw_wad_header_s
     uint32_t num_entries;
     uint32_t dir_start;
 
-} PACKEDATTR raw_wad_header_t;
+} raw_wad_header_t;
+#pragma pack(pop)
 
 // directory entry
+#pragma pack(push, 1)
 typedef struct raw_wad_entry_s
 {
     uint32_t pos;
@@ -47,7 +44,8 @@ typedef struct raw_wad_entry_s
 
     char name[8];
 
-} PACKEDATTR raw_wad_entry_t;
+} raw_wad_entry_t;
+#pragma pack(pop)
 
 // Lump order in a map WAD: each map needs a couple of lumps
 // to provide a complete scene geometry description.
@@ -69,18 +67,23 @@ typedef enum
 
 /* ----- The level structures ---------------------- */
 
+#pragma pack(push, 1)
 typedef struct raw_vertex_s
 {
     int16_t x, y;
 
-} PACKEDATTR raw_vertex_t;
+} raw_vertex_t;
+#pragma pack(pop)
 
+#pragma pack(push, 1)
 typedef struct raw_v2_vertex_s
 {
     int32_t x, y;
 
-} PACKEDATTR raw_v2_vertex_t;
+} raw_v2_vertex_t;
+#pragma pack(pop)
 
+#pragma pack(push, 1)
 typedef struct raw_linedef_s
 {
     uint16_t start; // from this vertex...
@@ -91,8 +94,10 @@ typedef struct raw_linedef_s
     uint16_t right; // right sidedef
     uint16_t left;  // left sidedef (only if this line adjoins 2 sectors)
 
-} PACKEDATTR raw_linedef_t;
+} raw_linedef_t;
+#pragma pack(pop)
 
+#pragma pack(push, 1)
 typedef struct raw_hexen_linedef_s
 {
     uint16_t start;   // from this vertex...
@@ -103,8 +108,10 @@ typedef struct raw_hexen_linedef_s
     uint16_t right;   // right sidedef
     uint16_t left;    // left sidedef
 
-} PACKEDATTR raw_hexen_linedef_t;
+} raw_hexen_linedef_t;
+#pragma pack(pop)
 
+#pragma pack(push, 1)
 typedef struct raw_sidedef_s
 {
     int16_t x_offset;  // X offset for texture
@@ -116,8 +123,10 @@ typedef struct raw_sidedef_s
 
     uint16_t sector;   // adjacent sector
 
-} PACKEDATTR raw_sidedef_t;
+} raw_sidedef_t;
+#pragma pack(pop)
 
+#pragma pack(push, 1)
 typedef struct raw_sector_s
 {
     int16_t floorh;    // floor height
@@ -130,8 +139,10 @@ typedef struct raw_sector_s
     uint16_t type;     // special type (0 = normal, 9 = secret, ...)
     int16_t  tag;      // sector activated by a linedef with same tag
 
-} PACKEDATTR raw_sector_t;
+} raw_sector_t;
+#pragma pack(pop)
 
+#pragma pack(push, 1)
 typedef struct raw_thing_s
 {
     int16_t  x, y;    // position of thing
@@ -139,8 +150,10 @@ typedef struct raw_thing_s
     uint16_t type;    // type of thing
     uint16_t options; // when appears, deaf, etc..
 
-} PACKEDATTR raw_thing_t;
+} raw_thing_t;
+#pragma pack(pop)
 
+#pragma pack(push, 1)
 // -JL- Hexen thing definition
 typedef struct raw_hexen_thing_s
 {
@@ -154,10 +167,12 @@ typedef struct raw_hexen_thing_s
     uint8_t special;  // special type
     uint8_t args[5];  // special arguments
 
-} PACKEDATTR raw_hexen_thing_t;
+} raw_hexen_thing_t;
+#pragma pack(pop)
 
 /* ----- The BSP tree structures ----------------------- */
 
+#pragma pack(push, 1)
 typedef struct raw_seg_s
 {
     uint16_t start;   // from this vertex...
@@ -167,8 +182,10 @@ typedef struct raw_seg_s
     uint16_t flip;    // true if not the same direction as linedef
     uint16_t dist;    // distance from starting point
 
-} PACKEDATTR raw_seg_t;
+} raw_seg_t;
+#pragma pack(pop)
 
+#pragma pack(push, 1)
 typedef struct raw_gl_seg_s
 {
     uint16_t start;   // from this vertex...
@@ -177,8 +194,10 @@ typedef struct raw_gl_seg_s
     uint16_t side;    // 0 if on right of linedef, 1 if on left
     uint16_t partner; // partner seg number, or -1
 
-} PACKEDATTR raw_gl_seg_t;
+} raw_gl_seg_t;
+#pragma pack(pop)
 
+#pragma pack(push, 1)
 typedef struct raw_v5_seg_s
 {
     uint32_t start;   // from this vertex...
@@ -187,8 +206,10 @@ typedef struct raw_v5_seg_s
     uint16_t side;    // 0 if on right of linedef, 1 if on left
     uint32_t partner; // partner seg number, or -1
 
-} PACKEDATTR raw_v5_seg_t;
+} raw_v5_seg_t;
+#pragma pack(pop)
 
+#pragma pack(push, 1)
 typedef struct raw_zdoom_seg_s
 {
     uint32_t start;   // from this vertex...
@@ -196,15 +217,19 @@ typedef struct raw_zdoom_seg_s
     uint16_t linedef; // linedef that this seg goes along, or -1
     uint8_t  side;    // 0 if on right of linedef, 1 if on left
 
-} PACKEDATTR raw_zdoom_seg_t;
+} raw_zdoom_seg_t;
+#pragma pack(pop)
 
+#pragma pack(push, 1)
 typedef struct raw_bbox_s
 {
     int16_t maxy, miny;
     int16_t minx, maxx;
 
-} PACKEDATTR raw_bbox_t;
+} raw_bbox_t;
+#pragma pack(pop)
 
+#pragma pack(push, 1)
 typedef struct raw_node_s
 {
     int16_t    x, y;        // starting point
@@ -212,22 +237,28 @@ typedef struct raw_node_s
     raw_bbox_t b1, b2;      // bounding rectangles
     uint16_t   right, left; // children: Node or SSector (if high bit is set)
 
-} PACKEDATTR raw_node_t;
+} raw_node_t;
+#pragma pack(pop)
 
+#pragma pack(push, 1)
 typedef struct raw_subsec_s
 {
     uint16_t num;   // number of Segs in this Sub-Sector
     uint16_t first; // first Seg
 
-} PACKEDATTR raw_subsec_t;
+} raw_subsec_t;
+#pragma pack(pop)
 
+#pragma pack(push, 1)
 typedef struct raw_v5_subsec_s
 {
     uint32_t num;   // number of Segs in this Sub-Sector
     uint32_t first; // first Seg
 
-} PACKEDATTR raw_v5_subsec_t;
+} raw_v5_subsec_t;
+#pragma pack(pop)
 
+#pragma pack(push, 1)
 typedef struct raw_zdoom_subsec_s
 {
     uint32_t segnum;
@@ -237,8 +268,10 @@ typedef struct raw_zdoom_subsec_s
     //        segs of the second subsector must appear directly after
     //        all segs of the first subsector.
 
-} PACKEDATTR raw_zdoom_subsec_t;
+} raw_zdoom_subsec_t;
+#pragma pack(pop)
 
+#pragma pack(push, 1)
 typedef struct raw_v5_node_s
 {
     // this structure used by ZDoom nodes too
@@ -248,17 +281,21 @@ typedef struct raw_v5_node_s
     raw_bbox_t b1, b2;      // bounding rectangles
     uint32_t   right, left; // children: Node or SSector (if high bit is set)
 
-} PACKEDATTR raw_v5_node_t;
+} raw_v5_node_t;
+#pragma pack(pop)
 
+#pragma pack(push, 1)
 typedef struct raw_blockmap_header_s
 {
     int16_t x_origin, y_origin;
     int16_t x_blocks, y_blocks;
 
-} PACKEDATTR raw_blockmap_header_t;
+} raw_blockmap_header_t;
+#pragma pack(pop)
 
 /* ----- Graphical structures ---------------------- */
 
+#pragma pack(push, 1)
 typedef struct
 {
     int16_t x_origin;
@@ -268,21 +305,26 @@ typedef struct
     uint16_t stepdir;  // NOT USED
     uint16_t colormap; // NOT USED
 
-} PACKEDATTR raw_patchdef_t;
+} raw_patchdef_t;
+#pragma pack(pop)
 
+#pragma pack(push, 1)
 typedef struct
 {
     int16_t  x_origin;
     int16_t  y_origin;
     uint16_t pname; // index into PNAMES
 
-} PACKEDATTR raw_strife_patchdef_t;
+} raw_strife_patchdef_t;
+#pragma pack(pop)
 
 // Texture definition.
 //
 // Each texture is composed of one or more patches,
 // with patches being lumps stored in the WAD.
 //
+
+#pragma pack(push, 1)
 typedef struct
 {
     char name[8];
@@ -295,8 +337,10 @@ typedef struct
 
     raw_patchdef_t patches[1];
 
-} PACKEDATTR raw_texture_t;
+} raw_texture_t;
+#pragma pack(pop)
 
+#pragma pack(push, 1)
 typedef struct
 {
     char name[8];
@@ -308,7 +352,8 @@ typedef struct
 
     raw_strife_patchdef_t patches[1];
 
-} PACKEDATTR raw_strife_texture_t;
+} raw_strife_texture_t;
+#pragma pack(pop)
 
 // Patches.
 //
@@ -317,6 +362,19 @@ typedef struct
 // and we compose textures from the TEXTURE1/2 lists
 // of patches.
 //
+
+#pragma pack(push, 1)
+struct raw_patch_header_t
+{
+    uint16_t width;
+    uint16_t height;
+
+    int16_t x_offset;
+    int16_t y_offset;
+};
+#pragma pack(pop)
+
+#pragma pack(push, 1)
 typedef struct patch_s
 {
     // bounding box size
@@ -331,7 +389,8 @@ typedef struct patch_s
 
     uint32_t columnofs[1]; // only [width] used
 
-} PACKEDATTR patch_t;
+} patch_t;
+#pragma pack(pop)
 
 //
 // LineDef attributes.

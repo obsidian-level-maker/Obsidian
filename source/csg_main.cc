@@ -24,13 +24,9 @@
 #include <algorithm>
 
 #include "csg_local.h"
-#ifndef CONSOLE_ONLY
-#include "hdr_fltk.h"
-#endif
-#include "hdr_lua.h"
 #include "lib_util.h"
-#include "m_lua.h"
 #include "main.h"
+#include "minilua.h"
 #include "sys_assert.h"
 #include "sys_macro.h"
 

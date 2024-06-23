@@ -19,13 +19,11 @@
 //
 //------------------------------------------------------------------------
 
+#include <FL/fl_ask.H>
 #include <locale.h>
 
 #include <stdexcept>
 
-#include "hdr_fltk.h"
-#include "hdr_lua.h"
-#include "hdr_ui.h"
 #include "lib_util.h"
 #include "m_lua.h"
 #include "m_trans.h"
@@ -382,7 +380,7 @@ void UI_Module::AddSliderOption(std::string opt, std::string label, std::string 
             oldpos = pos + 1;
         }
     }
-    
+
     setlocale(LC_NUMERIC, numeric_locale.c_str());
 
     rsl->cb_data           = new opt_change_callback_data_t;
@@ -634,7 +632,7 @@ void UI_Module::AddOptionChoice(std::string option, std::string id, std::string 
     if (!rch)
     {
         LogPrint("Warning: module '%s' lacks option '%s' (for choice '%s')\n", id_name.c_str(), option.c_str(),
-                  id.c_str());
+                 id.c_str());
         return;
     }
 

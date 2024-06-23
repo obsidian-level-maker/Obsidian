@@ -23,12 +23,13 @@
 
 #include <locale.h>
 
+#ifdef _WIN32
+#include <windows.h>
+#include <winuser.h>
+#endif
+
 #include "csg_main.h"
 #include "images.h"
-#ifndef CONSOLE_ONLY
-#include "hdr_fltk.h"
-#include "hdr_ui.h"
-#endif
 #include "lib_argv.h"
 #include "lib_util.h"
 #include "lib_zip.h"
@@ -39,11 +40,12 @@
 #include "physfs.h"
 #include "sys_xoshiro.h"
 #ifndef CONSOLE_ONLY
-#include "ui_window.h"
-#endif
+#include <FL/Fl_Shared_Image.H>
+#include <FL/fl_ask.H>
+#include <FL/platform.H>
 
-#ifdef WIN32
-#include "winuser.h"
+#include "ui_boxes.h"
+#include "ui_window.h"
 #endif
 
 /**
@@ -296,57 +298,57 @@ static void main_win_clippy_CB(Fl_Widget *w, void *data)
 static void ShowInfo()
 {
     printf("\n"
-                 "** %s %s \"%s\"\n"
-                 "** Build %s **\n"
-                 "** Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted **\n"
-                 "\n",
-                 OBSIDIAN_TITLE.c_str(), OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str(), OBSIDIAN_VERSION);
+           "** %s %s \"%s\"\n"
+           "** Build %s **\n"
+           "** Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted **\n"
+           "\n",
+           OBSIDIAN_TITLE.c_str(), OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str(), OBSIDIAN_VERSION);
 
     printf("Usage: Obsidian [options...] [key=value...]\n"
-                 "\n"
-                 "Available options:\n"
-                 "     --version              Display build information\n"
-                 "     --home     <dir>       Home directory\n"
-                 "     --install  <dir>       Installation directory\n"
-                 "\n"
-                 "     --config   <file>      Config file for GUI\n"
-                 "     --options  <file>      Options file for GUI\n"
-                 "     --log      <file>      Log file to create\n"
-                 "\n"
-                 "  -b --batch    <output>    Batch mode (no GUI)\n"
-                 "  -a --addon    <file>...   Addon(s) to use\n"
-                 "  -l --load     <file>      Load settings from a file\n"
-                 "  -k --keep                 Keep SEED from loaded settings\n"
-                 "\n"
-                 "     --randomize-all        Randomize all options\n"
-                 "     --randomize-arch       Randomize architecture settings\n"
-                 "     --randomize-combat     Randomize combat-related settings\n"
-                 "     --randomize-pickups    Randomize item/weapon settings\n"
-                 "     --randomize-other      Randomize other settings\n"
-                 "\n"
-                 "  -d --debug                Enable debugging\n"
-                 "  -v --verbose              Print log messages to stdout\n"
-                 "  -h --help                 Show this help message\n"
-                 "  -p --printref             Print reference of all keys and values to "
-                 "REFERENCE.txt\n"
-                 "     --printref-json        Print reference of all keys and values in "
-                 "JSON format\n"
-                 "  -u --update <section> <key> <value>\n"
-                 "                            Set a key in the config file\n"
-                 "                            (section should be 'c' or 'o')\n"
-                 "\n");
+           "\n"
+           "Available options:\n"
+           "     --version              Display build information\n"
+           "     --home     <dir>       Home directory\n"
+           "     --install  <dir>       Installation directory\n"
+           "\n"
+           "     --config   <file>      Config file for GUI\n"
+           "     --options  <file>      Options file for GUI\n"
+           "     --log      <file>      Log file to create\n"
+           "\n"
+           "  -b --batch    <output>    Batch mode (no GUI)\n"
+           "  -a --addon    <file>...   Addon(s) to use\n"
+           "  -l --load     <file>      Load settings from a file\n"
+           "  -k --keep                 Keep SEED from loaded settings\n"
+           "\n"
+           "     --randomize-all        Randomize all options\n"
+           "     --randomize-arch       Randomize architecture settings\n"
+           "     --randomize-combat     Randomize combat-related settings\n"
+           "     --randomize-pickups    Randomize item/weapon settings\n"
+           "     --randomize-other      Randomize other settings\n"
+           "\n"
+           "  -d --debug                Enable debugging\n"
+           "  -v --verbose              Print log messages to stdout\n"
+           "  -h --help                 Show this help message\n"
+           "  -p --printref             Print reference of all keys and values to "
+           "REFERENCE.txt\n"
+           "     --printref-json        Print reference of all keys and values in "
+           "JSON format\n"
+           "  -u --update <section> <key> <value>\n"
+           "                            Set a key in the config file\n"
+           "                            (section should be 'c' or 'o')\n"
+           "\n");
 
     printf("Please visit the web site for complete information:\n"
-                 "  %s \n"
-                 "\n",
-                 OBSIDIAN_WEBSITE);
+           "  %s \n"
+           "\n",
+           OBSIDIAN_WEBSITE);
 
     printf("This program is free software, under the terms of the GNU General "
-                 "Public\n"
-                 "License, and comes with ABSOLUTELY NO WARRANTY.  See the "
-                 "documentation\n"
-                 "for more details, or visit http://www.gnu.org/licenses/gpl-2.0.txt\n"
-                 "\n");
+           "Public\n"
+           "License, and comes with ABSOLUTELY NO WARRANTY.  See the "
+           "documentation\n"
+           "for more details, or visit http://www.gnu.org/licenses/gpl-2.0.txt\n"
+           "\n");
 
     fflush(stdout);
 }
@@ -354,7 +356,7 @@ static void ShowInfo()
 static void ShowVersion()
 {
     printf("%s %s \"%s\" Build %s\n", OBSIDIAN_TITLE.c_str(), OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str(),
-                 OBSIDIAN_VERSION);
+           OBSIDIAN_VERSION);
 
     fflush(stdout);
 }
@@ -885,7 +887,7 @@ void Main::SetupFLTK()
 
     KF = Main::DetermineScaling();
     // load icons for file chooser
-#ifndef WIN32
+#ifndef _WIN32
     Fl_File_Icon::load_system_icons();
 #endif
 
@@ -897,7 +899,7 @@ void Main::SetupFLTK()
     fl_close  = _("Close");
 }
 
-#ifdef WIN32
+#ifdef _WIN32
 void Main::Blinker()
 {
     FlashWindowEx(blinker);
@@ -1149,7 +1151,7 @@ bool Build_Cool_Shit()
 
         string_seed.clear();
 
-#ifdef WIN32
+#ifdef _WIN32
 #ifndef CONSOLE_ONLY
         if (main_win)
             Main::Blinker();
@@ -1288,7 +1290,7 @@ hardrestart:;
 
     if (argv::Find('?', NULL) >= 0 || argv::Find('h', "help") >= 0)
     {
-#if defined WIN32 && !defined CONSOLE_ONLY
+#if defined _WIN32 && !defined CONSOLE_ONLY
         if (AllocConsole())
         {
             freopen("CONOUT$", "r", stdin);
@@ -1297,7 +1299,7 @@ hardrestart:;
         }
 #endif
         ShowInfo();
-#if defined WIN32 && !defined CONSOLE_ONLY
+#if defined _WIN32 && !defined CONSOLE_ONLY
         printf("\nClose window when finished...");
         do
         {
@@ -1307,7 +1309,7 @@ hardrestart:;
     }
     else if (argv::Find(0, "version") >= 0)
     {
-#if defined WIN32 && !defined CONSOLE_ONLY
+#if defined _WIN32 && !defined CONSOLE_ONLY
         if (AllocConsole())
         {
             freopen("CONOUT$", "r", stdin);
@@ -1316,7 +1318,7 @@ hardrestart:;
         }
 #endif
         ShowVersion();
-#if defined WIN32 && !defined CONSOLE_ONLY
+#if defined _WIN32 && !defined CONSOLE_ONLY
         printf("\nClose window when finished...");
         do
         {
@@ -1341,7 +1343,7 @@ hardrestart:;
 
         batch_mode        = true;
         batch_output_file = argv::list[batch_arg + 1];
-#if defined WIN32 && !defined CONSOLE_ONLY
+#if defined _WIN32 && !defined CONSOLE_ONLY
         if (AllocConsole())
         {
             freopen("CONOUT$", "r", stdin);
@@ -1354,7 +1356,7 @@ hardrestart:;
     if (argv::Find('p', "printref") >= 0)
     {
         batch_mode = true;
-#if defined WIN32 && !defined CONSOLE_ONLY
+#if defined _WIN32 && !defined CONSOLE_ONLY
         if (AllocConsole())
         {
             freopen("CONOUT$", "r", stdin);
@@ -1371,7 +1373,7 @@ hardrestart:;
             argv::IsOption(update_arg + 3))
         {
             FatalError("OBSIDIAN ERROR: missing one or more args for --update "
-                         "<section> <key> <value>\n");
+                       "<section> <key> <value>\n");
             exit(EXIT_FAILURE);
         }
         if (argv::list[update_arg + 1].length() > 1)
@@ -1393,7 +1395,7 @@ hardrestart:;
     if (argv::Find(0, "printref-json") >= 0)
     {
         batch_mode = true;
-#if defined WIN32 && !defined CONSOLE_ONLY
+#if defined _WIN32 && !defined CONSOLE_ONLY
         if (AllocConsole())
         {
             freopen("CONOUT$", "r", stdin);
@@ -1463,7 +1465,7 @@ hardrestart:;
     {
         debug_messages = true;
     }
-// Grab current numeric locale
+    // Grab current numeric locale
     numeric_locale = setlocale(LC_NUMERIC, NULL);
 
     LogEnableDebug(debug_messages);
@@ -1516,7 +1518,7 @@ softrestart:;
         {
             ob_print_reference();
             RefClose();
-#if defined WIN32 && !defined CONSOLE_ONLY
+#if defined _WIN32 && !defined CONSOLE_ONLY
             printf("\nClose window when finished...");
 
             do
@@ -1530,7 +1532,7 @@ softrestart:;
         if (argv::Find(0, "printref-json") >= 0)
         {
             ob_print_reference_json();
-#if defined WIN32 && !defined CONSOLE_ONLY
+#if defined _WIN32 && !defined CONSOLE_ONLY
             printf("\nClose window when finished...");
 
             do
@@ -1582,12 +1584,12 @@ softrestart:;
         if (batch_output_file.empty())
         {
             FatalError("\nNo output filename given! Did you forget the --batch "
-                         "parameter?\n");
+                       "parameter?\n");
             LogPrint("\nNo output filename given! Did you forget the --batch "
-                      "parameter?\n");
+                     "parameter?\n");
 
             Main::Shutdown(false);
-#if defined WIN32 && !defined CONSOLE_ONLY
+#if defined _WIN32 && !defined CONSOLE_ONLY
             printf("\nClose window when finished...");
             do
             {
@@ -1603,7 +1605,7 @@ softrestart:;
             LogPrint("FAILED!\n");
 
             Main::Shutdown(false);
-#if defined WIN32 && !defined CONSOLE_ONLY
+#if defined _WIN32 && !defined CONSOLE_ONLY
             printf("\nClose window when finished...");
             do
             {
@@ -1749,7 +1751,7 @@ softrestart:;
             main_win->menu_bar->add(_("Summon Clippy"), nullptr, main_win_clippy_CB);
         }
 
-#ifdef WIN32
+#ifdef _WIN32
         main_win->icon((const void *)LoadIcon(fl_display, MAKEINTRESOURCE(1)));
 #else
 #ifdef UNIX
@@ -1771,8 +1773,8 @@ softrestart:;
             }
         }
 
-#ifdef WIN32 // Populate structure for taskbar/window flash. Must be done after
-             // main_win->show() function - Dasho
+#ifdef _WIN32 // Populate structure for taskbar/window flash. Must be done after
+              // main_win->show() function - Dasho
         if (!blinker)
         {
             blinker            = new FLASHWINFO;

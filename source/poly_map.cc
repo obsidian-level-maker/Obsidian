@@ -983,7 +983,7 @@ bool LoadLinedefs()
         end->ref_count++;
 
         /* check for zero-length line */
-        if ((fabs(start->x - end->x) < DIST_EPSILON) && (fabs(start->y - end->y) < DIST_EPSILON))
+        if ((fabs(start->x - end->x) < OBSIDIAN_DIST_EPSILON) && (fabs(start->y - end->y) < OBSIDIAN_DIST_EPSILON))
         {
             FatalError("Linedef #%d has zero length.\n", i);
         }
@@ -1033,7 +1033,7 @@ bool LoadLinedefsHexen()
         end->ref_count++;
 
         /* check for zero-length line */
-        if ((fabs(start->x - end->x) < DIST_EPSILON) && (fabs(start->y - end->y) < DIST_EPSILON))
+        if ((fabs(start->x - end->x) < OBSIDIAN_DIST_EPSILON) && (fabs(start->y - end->y) < OBSIDIAN_DIST_EPSILON))
         {
             FatalError("Linedef #%d has zero length.\n", i);
         }
@@ -1497,7 +1497,7 @@ void vertex_c::AddTip(double dx, double dy, sector_c *left, sector_c *right)
     {
     }
 
-    while (after && tip->angle + ANG_EPSILON < after->angle)
+    while (after && tip->angle + OBSIDIAN_ANG_EPSILON < after->angle)
     {
         after = after->prev;
     }
@@ -1550,10 +1550,10 @@ bool ValidateWallTip(const vertex_c *vert)
             if (tip->left != tip->next->right)
             {
                 FatalError("Sector #%d not closed at vertex #%d\n",
-                                tip->left    ? tip->left->index
-                                : tip->right ? tip->right->index
-                                             : -1,
-                                vert->index);
+                           tip->left    ? tip->left->index
+                           : tip->right ? tip->right->index
+                                        : -1,
+                           vert->index);
             }
         }
         else
@@ -1561,10 +1561,10 @@ bool ValidateWallTip(const vertex_c *vert)
             if (tip->left != first_right)
             {
                 FatalError("Sector #%d not closed at vertex #%d\n",
-                                tip->left    ? tip->left->index
-                                : tip->right ? tip->right->index
-                                             : -1,
-                                vert->index);
+                           tip->left    ? tip->left->index
+                           : tip->right ? tip->right->index
+                                        : -1,
+                           vert->index);
             }
         }
     }
@@ -1621,7 +1621,7 @@ bool CalculateWallTips()
         for (tip = vert->tip_set; tip; tip = tip->next)
         {
             LogPrint("  angle=%1.1f left=%d right=%d\n", tip->angle, tip->left ? tip->left->index : -1,
-                        tip->right ? tip->right->index : -1);
+                     tip->right ? tip->right->index : -1);
         }
     }
 #endif
@@ -1655,7 +1655,8 @@ sector_c *vertex_c::CheckOpen(double dx, double dy) const
 
     for (tip = tip_set; tip; tip = tip->next)
     {
-        if (fabs(tip->angle - angle) < ANG_EPSILON || fabs(tip->angle - angle) > (360.0 - ANG_EPSILON))
+        if (fabs(tip->angle - angle) < OBSIDIAN_ANG_EPSILON ||
+            fabs(tip->angle - angle) > (360.0 - OBSIDIAN_ANG_EPSILON))
         {
             // hit a line -- hence not open
             return NULL;
@@ -1668,7 +1669,7 @@ sector_c *vertex_c::CheckOpen(double dx, double dy) const
 
     for (tip = tip_set; tip; tip = tip->next)
     {
-        if (angle + ANG_EPSILON < tip->angle)
+        if (angle + OBSIDIAN_ANG_EPSILON < tip->angle)
         {
             // found it
             return tip->right;
@@ -1826,8 +1827,8 @@ bool OpenMap(const char *level_name)
         }
     }
 
-    LogPrint("Loaded %d vertices, %d sectors, %d sides, %d lines, %d things\n", num_vertices, num_sectors,
-                num_sidedefs, num_linedefs, num_things);
+    LogPrint("Loaded %d vertices, %d sectors, %d sides, %d lines, %d things\n", num_vertices, num_sectors, num_sidedefs,
+             num_linedefs, num_things);
 
     FindDummySectors();
 

@@ -20,8 +20,8 @@
 //----------------------------------------------------------------------
 
 #ifndef CONSOLE_ONLY
-#include "hdr_fltk.h"
-#include "hdr_ui.h"
+#include <FL/Fl_Native_File_Chooser.H>
+#include <FL/fl_ask.H>
 #endif
 #include "lib_argv.h"
 #include "lib_util.h"
@@ -156,7 +156,7 @@ bool Options_Load(std::string filename)
     }
 
     std::string buffer;
-    int c = EOF;
+    int         c = EOF;
     for (;;)
     {
         buffer.clear();

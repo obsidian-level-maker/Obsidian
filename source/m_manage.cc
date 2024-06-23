@@ -19,8 +19,8 @@
 //
 //------------------------------------------------------------------------
 
-#include "hdr_fltk.h"
-#include "hdr_ui.h"
+#include <FL/Fl_Native_File_Chooser.H>
+
 #include "lib_util.h"
 #include "m_cookie.h"
 #include "m_lua.h"

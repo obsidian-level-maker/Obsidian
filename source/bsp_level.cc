@@ -553,8 +553,7 @@ void InitBlockmap()
     // find limits of linedefs, and store as map limits
     FindBlockmapLimits(&map_bbox);
 
-    LogPrint("    Map limits: (%d,%d) to (%d,%d)\n", map_bbox.minx, map_bbox.miny, map_bbox.maxx,
-                    map_bbox.maxy);
+    LogPrint("    Map limits: (%d,%d) to (%d,%d)\n", map_bbox.minx, map_bbox.miny, map_bbox.maxx, map_bbox.maxy);
 
     block_x = map_bbox.minx - (map_bbox.minx & 0x7);
     block_y = map_bbox.miny - (map_bbox.miny & 0x7);
@@ -1204,7 +1203,8 @@ void GetLinedefs()
         line->end   = end;
 
         // check for zero-length line
-        line->zero_len = (fabs(start->x - end->x) < DIST_EPSILON) && (fabs(start->y - end->y) < DIST_EPSILON);
+        line->zero_len =
+            (fabs(start->x - end->x) < OBSIDIAN_DIST_EPSILON) && (fabs(start->y - end->y) < OBSIDIAN_DIST_EPSILON);
 
         line->type     = LE_U16(raw.type);
         uint16_t flags = LE_U16(raw.flags);
@@ -1263,7 +1263,8 @@ void GetLinedefsHexen()
         line->end   = end;
 
         // check for zero-length line
-        line->zero_len = (fabs(start->x - end->x) < DIST_EPSILON) && (fabs(start->y - end->y) < DIST_EPSILON);
+        line->zero_len =
+            (fabs(start->x - end->x) < OBSIDIAN_DIST_EPSILON) && (fabs(start->y - end->y) < OBSIDIAN_DIST_EPSILON);
 
         line->type     = (uint8_t)raw.type;
         uint16_t flags = LE_U16(raw.flags);
@@ -1727,9 +1728,9 @@ void PutSegs()
 
 #if DEBUG_BSP
         DebugPrint("PUT SEG: %04X  Vert %04X->%04X  Line %04X %s  "
-                        "Angle %04X  (%1.1f,%1.1f) -> (%1.1f,%1.1f)\n",
-                        seg->index, LE_U16(raw.start), LE_U16(raw.end), LE_U16(raw.linedef), seg->side ? "L" : "R",
-                        LE_U16(raw.angle), seg->start->x, seg->start->y, seg->end->x, seg->end->y);
+                   "Angle %04X  (%1.1f,%1.1f) -> (%1.1f,%1.1f)\n",
+                   seg->index, LE_U16(raw.start), LE_U16(raw.end), LE_U16(raw.linedef), seg->side ? "L" : "R",
+                   LE_U16(raw.angle), seg->start->x, seg->start->y, seg->end->x, seg->end->y);
 #endif
     }
 
@@ -1776,9 +1777,9 @@ void PutGLSegs_V2()
 
 #if DEBUG_BSP
         DebugPrint("PUT GL SEG: %04X  Line %04X %s  Partner %04X  "
-                        "(%1.1f,%1.1f) -> (%1.1f,%1.1f)\n",
-                        seg->index, LE_U16(raw.linedef), seg->side ? "L" : "R", LE_U16(raw.partner), seg->start->x,
-                        seg->start->y, seg->end->x, seg->end->y);
+                   "(%1.1f,%1.1f) -> (%1.1f,%1.1f)\n",
+                   seg->index, LE_U16(raw.linedef), seg->side ? "L" : "R", LE_U16(raw.partner), seg->start->x,
+                   seg->start->y, seg->end->x, seg->end->y);
 #endif
     }
 
@@ -1816,9 +1817,9 @@ void PutGLSegs_V5()
 
 #if DEBUG_BSP
         DebugPrint("PUT V3 SEG: %06X  Line %04X %s  Partner %06X  "
-                        "(%1.1f,%1.1f) -> (%1.1f,%1.1f)\n",
-                        seg->index, LE_U16(raw.linedef), seg->side ? "L" : "R", LE_U32(raw.partner), seg->start->x,
-                        seg->start->y, seg->end->x, seg->end->y);
+                   "(%1.1f,%1.1f) -> (%1.1f,%1.1f)\n",
+                   seg->index, LE_U16(raw.linedef), seg->side ? "L" : "R", LE_U32(raw.partner), seg->start->x,
+                   seg->start->y, seg->end->x, seg->end->y);
 #endif
     }
 
@@ -1929,9 +1930,9 @@ static void PutOneNode(node_t *node, Lump_c *lump)
 
 #if DEBUG_BSP
     DebugPrint("PUT NODE %04X  Left %04X  Right %04X  "
-                    "(%d,%d) -> (%d,%d)\n",
-                    node->index, LE_U16(raw.left), LE_U16(raw.right), node->x, node->y, node->x + node->dx,
-                    node->y + node->dy);
+               "(%d,%d) -> (%d,%d)\n",
+               node->index, LE_U16(raw.left), LE_U16(raw.right), node->x, node->y, node->x + node->dx,
+               node->y + node->dy);
 #endif
 }
 
@@ -1980,9 +1981,9 @@ static void PutOneNode_V5(node_t *node, Lump_c *lump)
 
 #if DEBUG_BSP
     DebugPrint("PUT V5 NODE %08X  Left %08X  Right %08X  "
-                    "(%d,%d) -> (%d,%d)\n",
-                    node->index, LE_U32(raw.left), LE_U32(raw.right), node->x, node->y, node->x + node->dx,
-                    node->y + node->dy);
+               "(%d,%d) -> (%d,%d)\n",
+               node->index, LE_U32(raw.left), LE_U32(raw.right), node->x, node->y, node->x + node->dx,
+               node->y + node->dy);
 #endif
 }
 
@@ -2280,9 +2281,9 @@ static void PutOneZNode(node_t *node, bool do_xgl3)
 
 #if DEBUG_BSP
     DebugPrint("PUT Z NODE %08X  Left %08X  Right %08X  "
-                    "(%d,%d) -> (%d,%d)\n",
-                    node->index, LE_U32(raw.left), LE_U32(raw.right), node->x, node->y, node->x + node->dx,
-                    node->y + node->dy);
+               "(%d,%d) -> (%d,%d)\n",
+               node->index, LE_U32(raw.left), LE_U32(raw.right), node->x, node->y, node->x + node->dx,
+               node->y + node->dy);
 #endif
 }
 
@@ -2414,7 +2415,7 @@ void LoadLevel()
     }
 
     LogPrint("    Loaded %d vertices, %d sectors, %d sides, %d lines, %d things\n", num_vertices, num_sectors,
-                    num_sidedefs, num_linedefs, num_things);
+             num_sidedefs, num_linedefs, num_things);
 
     DetectOverlappingVertices();
     DetectOverlappingLines();
@@ -2916,12 +2917,12 @@ build_result_e BuildLevel(int lev_idx)
     if (ret == BUILD_OK)
     {
         LogPrint("    Built %d NODES, %d SSECTORS, %d SEGS, %d VERTEXES\n", num_nodes, num_subsecs, num_segs,
-                        num_old_vert + num_new_vert);
+                 num_old_vert + num_new_vert);
 
         if (root_node != NULL)
         {
             LogPrint("    Heights of subtrees: %d / %d\n", ComputeBspHeight(root_node->r.node),
-                            ComputeBspHeight(root_node->l.node));
+                     ComputeBspHeight(root_node->l.node));
         }
 
         ClockwiseBspTree();

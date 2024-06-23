@@ -19,8 +19,8 @@
 //
 //------------------------------------------------------------------------
 
-#include "hdr_fltk.h"
-#include "hdr_ui.h"
+#include <FL/fl_ask.H>
+
 #include "lib_util.h"
 #include "m_trans.h"
 #include "main.h"

@@ -105,8 +105,8 @@ void DumpEdges(edge_c *edge_list)
     for (edge_c *cur = edge_list; cur; cur = cur->next)
     {
         LogPrint("  edge #%d (%s)  sector=%d  (%1.1f %1.1f) -> (%1.1f %1.1f)\n", cur->index,
-                    cur->linedef ? "LINE" : "mini", cur->sector->index, cur->start->x, cur->start->y, cur->end->x,
-                    cur->end->y);
+                 cur->linedef ? "LINE" : "mini", cur->sector->index, cur->start->x, cur->start->y, cur->end->x,
+                 cur->end->y);
     }
 }
 #endif
@@ -156,7 +156,7 @@ edge_c *SplitEdge(edge_c *old_edge, double x, double y)
 {
 #if DEBUG_POLY
     LogPrint("Splitting Edge #%d (line #%d) at (%1.1f,%1.1f)\n", old_edge->index,
-                old_edge->linedef ? old_edge->linedef->index : -1, x, y);
+             old_edge->linedef ? old_edge->linedef->index : -1, x, y);
 #endif
 
     vertex_c *vert = NewVertexFromSplit(old_edge, x, y);
@@ -336,8 +336,8 @@ int EvalPartition(edge_c *part, edge_c *edge_list)
         double fa = fabs(a);
         double fb = fabs(b);
 
-        int a_side = (fa <= DIST_EPSILON) ? 0 : (a < 0) ? -1 : +1;
-        int b_side = (fb <= DIST_EPSILON) ? 0 : (b < 0) ? -1 : +1;
+        int a_side = (fa <= OBSIDIAN_DIST_EPSILON) ? 0 : (a < 0) ? -1 : +1;
+        int b_side = (fb <= OBSIDIAN_DIST_EPSILON) ? 0 : (b < 0) ? -1 : +1;
 
         // check for being on the same line
         if (a_side == 0 && b_side == 0)
@@ -421,8 +421,8 @@ int EvalPartition(edge_c *part, edge_c *edge_list)
 
 #if DEBUG_POLY
     LogPrint("Eval %p: splits=%d near_miss=%d left=%d+%d right=%d+%d "
-                "cost=%d.%02d\n",
-                part, splits, near_miss, real_left, mini_left, real_right, mini_right, cost / 100, cost % 100);
+             "cost=%d.%02d\n",
+             part, splits, near_miss, real_left, mini_left, real_right, mini_right, cost / 100, cost % 100);
 #endif
 
     return cost;
@@ -441,8 +441,8 @@ void DivideAnEdge(edge_c *cur, edge_c *part, edge_c **left_list, edge_c **right_
         a = b = 0;
     }
 
-    int a_side = (fabs(a) <= DIST_EPSILON) ? 0 : (a < 0) ? -1 : +1;
-    int b_side = (fabs(b) <= DIST_EPSILON) ? 0 : (b < 0) ? -1 : +1;
+    int a_side = (fabs(a) <= OBSIDIAN_DIST_EPSILON) ? 0 : (a < 0) ? -1 : +1;
+    int b_side = (fabs(b) <= OBSIDIAN_DIST_EPSILON) ? 0 : (b < 0) ? -1 : +1;
 
     // check for being on the same line
     if (a_side == 0 && b_side == 0)
@@ -542,8 +542,8 @@ edge_c *ChoosePartition(edge_c *edge_list, int depth)
 
 #if DEBUG_POLY
         LogPrint("ChoosePartition: EDGE #%d -> cost:%d  | sector:%d  (%1.1f %1.1f) "
-                    "-> (%1.1f %1.1f)\n",
-                    part->index, cost, part->sector->index, part->start->x, part->start->y, part->end->x, part->end->y);
+                 "-> (%1.1f %1.1f)\n",
+                 part->index, cost, part->sector->index, part->start->x, part->start->y, part->end->x, part->end->y);
 #endif
 
         // unsuitable or too costly?
@@ -564,8 +564,8 @@ edge_c *ChoosePartition(edge_c *edge_list, int depth)
     else
     {
         LogPrint("ChoosePartition: Best has score %d.%02d  (%1.1f %1.1f) -> (%1.1f "
-                    "%1.1f)\n",
-                    best_cost / 100, best_cost % 100, best->start->x, best->start->y, best->end->x, best->end->y);
+                 "%1.1f)\n",
+                 best_cost / 100, best_cost % 100, best->start->x, best->start->y, best->end->x, best->end->y);
     }
 #endif
 
@@ -601,7 +601,7 @@ void EdgesAlongPartition(edge_c *part, edge_c **left_list, edge_c **right_list, 
     for (intersect_c *I = cut_list; I; I = I->next)
     {
         LogPrint("  Vertex %8X (%1.1f,%1.1f)  Along %1.2f  [%d/%d]\n", I->vertex->index, I->vertex->x, I->vertex->y,
-                    I->along_dist, I->before, I->after);
+                 I->along_dist, I->before, I->after);
     }
 #endif
 
@@ -630,7 +630,7 @@ void EdgesAlongPartition(edge_c *part, edge_c **left_list, edge_c **right_list, 
 
 #if DEBUG_POLY
         LogPrint("Merging cut (%1.0f,%1.0f) [%d/%d] with %p (%1.0f,%1.0f) [%d/%d]\n", cur->vertex->x, cur->vertex->y,
-                    cur->before, cur->after, next->vertex, next->vertex->x, next->vertex->y, next->before, next->after);
+                 cur->before, cur->after, next->vertex, next->vertex->x, next->vertex->y, next->before, next->after);
 #endif
 
         if (!cur->before && next->before)
@@ -706,14 +706,14 @@ void EdgesAlongPartition(edge_c *part, edge_c **left_list, edge_c **right_list, 
 
 #if DEBUG_POLY
         LogPrint("EdgesAlongPartition: %p RIGHT  sector %d  (%1.1f %1.1f) -> (%1.1f "
-                    "%1.1f)\n",
-                    edge, edge->sector ? edge->sector->index : -1, edge->start->x, edge->start->y, edge->end->x,
-                    edge->end->y);
+                 "%1.1f)\n",
+                 edge, edge->sector ? edge->sector->index : -1, edge->start->x, edge->start->y, edge->end->x,
+                 edge->end->y);
 
         LogPrint("EdgesAlongPartition: %p LEFT   sector %d  (%1.1f %1.1f) -> (%1.1f "
-                    "%1.1f)\n",
-                    buddy, buddy->sector ? buddy->sector->index : -1, buddy->start->x, buddy->start->y, buddy->end->x,
-                    buddy->end->y);
+                 "%1.1f)\n",
+                 buddy, buddy->sector ? buddy->sector->index : -1, buddy->start->x, buddy->start->y, buddy->end->x,
+                 buddy->end->y);
 #endif
     }
 
@@ -833,7 +833,7 @@ void polygon_c::ClockwiseOrder()
         double angle1 = ComputeAngle(A->start->x - mid_x, A->start->y - mid_y);
         double angle2 = ComputeAngle(B->start->x - mid_x, B->start->y - mid_y);
 
-        if (angle1 + ANG_EPSILON < angle2)
+        if (angle1 + OBSIDIAN_ANG_EPSILON < angle2)
         {
             // swap 'em
             array[i]     = B;
@@ -920,8 +920,8 @@ bool RecursiveDivideEdges(edge_c *edge_list, int depth)
     }
 
 #if DEBUG_POLY
-    LogPrint("Build: PARTITION %p (%1.0f,%1.0f) -> (%1.0f,%1.0f)\n", part, part->start->x, part->start->y,
-                part->end->x, part->end->y);
+    LogPrint("Build: PARTITION %p (%1.0f,%1.0f) -> (%1.0f,%1.0f)\n", part, part->start->x, part->start->y, part->end->x,
+             part->end->y);
 #endif
 
     // divide the edges between left and right

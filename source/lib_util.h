@@ -135,7 +135,6 @@ void *UtilCalloc(int size);
 void *UtilRealloc(void *old, int size);
 void  UtilFree(void *data);
 
-
 /* math utilities */
 
 uint32_t IntHash(uint32_t key);

@@ -27,13 +27,14 @@
 
 #include "m_trans.h"
 
-#ifndef WIN32
+#ifndef _WIN32
 #include <locale.h>
+#else
+#include <windows.h>
 #endif
 
 #include <algorithm>
 
-#include "hdr_lua.h"
 #include "lib_util.h"
 #include "main.h"
 #include "sys_assert.h"
@@ -58,7 +59,7 @@ std::string t_language = _("AUTO");
 #define MAX_TRANS_STRING 65536
 
 /* Mingw headers don't have latest language and sublanguage codes. */
-#ifdef WIN32
+#ifdef _WIN32
 #ifndef LANG_AFRIKAANS
 #define LANG_AFRIKAANS 0x36
 #endif
@@ -419,7 +420,7 @@ static std::string remove_territory(std::string langcode)
 
 static std::string Trans_GetUserLanguage()
 {
-#ifdef WIN32
+#ifdef _WIN32
     /* Use native Windows API locale ID. */
     LCID lcid = GetThreadLocale();
 
@@ -1008,7 +1009,7 @@ void Trans_Read_PO_File(FILE *fp)
     po_state.line_number = 0;
 
     std::string buffer;
-    int c = EOF;
+    int         c = EOF;
     for (;;)
     {
         buffer.clear();
@@ -1074,7 +1075,7 @@ void Trans_Read_PO_File(FILE *fp)
 
 void Trans_Init()
 {
-#ifndef WIN32
+#ifndef _WIN32
     if (!setlocale(LC_ALL, ""))
     {
         LogPrint("WARNING : failed to initialize locale (check localdef)\n\n");
@@ -1102,7 +1103,7 @@ void Trans_Init()
     LogPrint("Loading language list: %s\n", path.c_str());
 
     std::string buffer;
-    int c = EOF;
+    int         c = EOF;
     for (;;)
     {
         buffer.clear();

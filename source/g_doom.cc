@@ -26,10 +26,7 @@
 #include <bitset>
 #include <string>
 
-#ifndef CONSOLE_ONLY
-#include "hdr_fltk.h"
-#endif
-
+#include "bsp.h"
 #include "lib_util.h"
 #include "lib_wad.h"
 #include "lib_zip.h"
@@ -37,12 +34,11 @@
 #include "m_lua.h"
 #include "m_trans.h"
 #include "main.h"
+#include "raw_def.h"
 #include "sys_assert.h"
 #include "sys_endian.h"
 #include "sys_macro.h"
 #include "sys_xoshiro.h"
-
-#include "bsp.h"
 
 // SLUMP for Vanilla Doom
 #include "slump.h"
@@ -217,30 +213,30 @@ void qLump_c::RawPrintf(const char *str)
 
 void qLump_c::Printf(const char *str, ...)
 {
-    static char msg_buf[MSG_BUF_LEN];
+    static char msg_buf[OBSIDIAN_MSG_BUF_LEN];
 
     va_list args;
 
     va_start(args, str);
-    vsnprintf(msg_buf, MSG_BUF_LEN - 1, str, args);
+    vsnprintf(msg_buf, OBSIDIAN_MSG_BUF_LEN - 1, str, args);
     va_end(args);
 
-    msg_buf[MSG_BUF_LEN - 2] = 0;
+    msg_buf[OBSIDIAN_MSG_BUF_LEN - 2] = 0;
 
     RawPrintf(msg_buf);
 }
 
 void qLump_c::KeyPair(const char *key, const char *val, ...)
 {
-    static char v_buffer[MSG_BUF_LEN];
+    static char v_buffer[OBSIDIAN_MSG_BUF_LEN];
 
     va_list args;
 
     va_start(args, val);
-    vsnprintf(v_buffer, MSG_BUF_LEN - 1, val, args);
+    vsnprintf(v_buffer, OBSIDIAN_MSG_BUF_LEN - 1, val, args);
     va_end(args);
 
-    v_buffer[MSG_BUF_LEN - 2] = 0;
+    v_buffer[OBSIDIAN_MSG_BUF_LEN - 2] = 0;
 
     RawPrintf("\"");
     RawPrintf(key);
@@ -314,7 +310,7 @@ bool BuildNodes(std::string filename)
 
     // Prep AJBSP parameters
     buildinfo_t build_info;
-    build_info.fast          = true;
+    build_info.fast = true;
     if (StringCompare(current_port, "limit_enforcing") == 0 || StringCompare(current_port, "boom") == 0)
     {
         build_info.gl_nodes    = false;
@@ -652,15 +648,15 @@ int Doom::v094_end_level(lua_State *L)
 
 void Doom::HeaderPrintf(const char *str, ...)
 {
-    static char message_buf[MSG_BUF_LEN];
+    static char message_buf[OBSIDIAN_MSG_BUF_LEN];
 
     va_list args;
 
     va_start(args, str);
-    vsnprintf(message_buf, MSG_BUF_LEN, str, args);
+    vsnprintf(message_buf, OBSIDIAN_MSG_BUF_LEN, str, args);
     va_end(args);
 
-    message_buf[MSG_BUF_LEN - 1] = 0;
+    message_buf[OBSIDIAN_MSG_BUF_LEN - 1] = 0;
 
     header_lump->Append(message_buf, strlen(message_buf));
 }
@@ -705,15 +701,15 @@ void Doom::AddSector(int f_h, std::string f_tex, int c_h, std::string c_tex, int
     {
         raw_sector_t sec;
 
-        sec.floor_h = LE_S16(f_h);
-        sec.ceil_h  = LE_S16(c_h);
+        sec.floorh = LE_S16(f_h);
+        sec.ceilh  = LE_S16(c_h);
 
         memcpy(sec.floor_tex, f_tex.data(), 8);
         memcpy(sec.ceil_tex, c_tex.data(), 8);
 
-        sec.light   = LE_U16(light);
-        sec.special = LE_U16(special);
-        sec.tag     = LE_S16(tag);
+        sec.light = LE_U16(light);
+        sec.type  = LE_U16(special);
+        sec.tag   = LE_S16(tag);
         sector_lump->Append(&sec, sizeof(sec));
     }
     else
@@ -797,8 +793,8 @@ void Doom::AddLinedef(int vert1, int vert2, int side1, int side2, int type, int 
             line.start = LE_U16(vert1);
             line.end   = LE_U16(vert2);
 
-            line.sidedef1 = side1 < 0 ? 0xFFFF : LE_U16(side1);
-            line.sidedef2 = side2 < 0 ? 0xFFFF : LE_U16(side2);
+            line.right = side1 < 0 ? 0xFFFF : LE_U16(side1);
+            line.left  = side2 < 0 ? 0xFFFF : LE_U16(side2);
 
             line.type  = LE_U16(type);
             line.flags = LE_U16(flags);
@@ -872,11 +868,11 @@ void Doom::AddLinedef(int vert1, int vert2, int side1, int side2, int type, int 
             line.start = LE_U16(vert1);
             line.end   = LE_U16(vert2);
 
-            line.sidedef1 = side1 < 0 ? 0xffff : LE_U16(side1);
-            line.sidedef2 = side2 < 0 ? 0xffff : LE_U16(side2);
+            line.right = side1 < 0 ? 0xffff : LE_U16(side1);
+            line.left  = side2 < 0 ? 0xffff : LE_U16(side2);
 
-            line.special = type; // 8 bits
-            line.flags   = LE_U16(flags);
+            line.type  = type; // 8 bits
+            line.flags = LE_U16(flags);
 
             // tag value is UNUSED
 
@@ -1517,7 +1513,7 @@ bool Doom::game_interface_c::Finish(bool build_ok)
             if (!ZIPF_AddFile(filename, ""))
             {
                 LogPrint("Adding WAD to PK3 failed! Retaining original "
-                          "WAD.\n");
+                         "WAD.\n");
                 ZIPF_CloseWrite();
                 FileDelete(zip_filename);
             }

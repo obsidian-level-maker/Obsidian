@@ -60,17 +60,12 @@
 
 #include "csg_main.h"
 #include "g_doom.h"
-#include "poly.h"
-#ifndef CONSOLE_ONLY
-#include "hdr_fltk.h"
-#include "hdr_ui.h"
-#endif
-#include "hdr_lua.h"
 #include "lib_util.h"
 #include "lib_wad.h"
-#include "m_lua.h"
 #include "main.h"
+#include "minilua.h"
 #include "physfs.h"
+#include "poly.h"
 #include "sys_assert.h"
 #include "sys_macro.h"
 

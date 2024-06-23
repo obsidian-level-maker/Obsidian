@@ -25,11 +25,6 @@
 
 #include <stdexcept>
 
-#ifndef CONSOLE_ONLY
-#include "hdr_fltk.h"
-#include "hdr_ui.h"
-#endif
-#include "hdr_lua.h"
 #include "lib_argv.h"
 #include "lib_util.h"
 #include "m_lua.h"
@@ -108,7 +103,7 @@ static void Cookie_SetValue(std::string name, std::string value)
             {
                 (void)e;
                 LogPrint("Resulting number would be out of range. Will generate new "
-                          "seed.\n");
+                         "seed.\n");
             }
         }
 
@@ -193,7 +188,7 @@ bool Cookie_Load(std::string filename)
     int error_count = 0;
 
     std::string buffer;
-    int c = EOF;
+    int         c = EOF;
     for (;;)
     {
         buffer.clear();
@@ -326,7 +321,8 @@ void Cookie_ParseArguments(void)
         }
 
         // support an isolated "=", like in: FOO = 3
-        if (i + 2 < argv::list.size() && StringCompare(argv::list[i + 1].c_str(), "=") == 0 && argv::list[i + 2][0] != '-')
+        if (i + 2 < argv::list.size() && StringCompare(argv::list[i + 1].c_str(), "=") == 0 &&
+            argv::list[i + 2][0] != '-')
         {
             Cookie_SetValue(arg, argv::list[i + 2]);
             i += 2;

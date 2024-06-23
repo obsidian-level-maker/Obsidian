@@ -25,8 +25,8 @@
 //
 //------------------------------------------------------------------------
 
-#include "hdr_fltk.h"
-#include "hdr_ui.h"
+#include <FL/filename.H>
+
 #include "lib_util.h"
 #include "main.h"
 

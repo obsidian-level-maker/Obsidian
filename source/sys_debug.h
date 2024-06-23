@@ -23,8 +23,8 @@
 
 #include <string>
 
-extern bool         terminal;
-extern bool         debugging;
+extern bool terminal;
+extern bool debugging;
 
 bool LogInit(const std::string &filename); // NULL for none
 void LogClose(void);

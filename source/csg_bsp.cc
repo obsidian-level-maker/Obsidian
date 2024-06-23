@@ -24,12 +24,7 @@
 #include "csg_local.h"
 #include "csg_main.h"
 #include "g_doom.h" // for MLF_DontDraw
-#ifndef CONSOLE_ONLY
-#include "hdr_fltk.h"
-#endif
-#include "hdr_lua.h"
 #include "lib_util.h"
-#include "m_lua.h"
 #include "main.h"
 #include "sys_assert.h"
 #include "sys_macro.h"
@@ -552,7 +547,7 @@ void region_c::ClockwiseSnags()
         snag_c *A = snags[i];
         snag_c *B = snags[i + 1];
 
-        if (angles[i] < angles[i + 1] - ANG_EPSILON)
+        if (angles[i] < angles[i + 1] - OBSIDIAN_ANG_EPSILON)
         {
             // swap 'em
             snags[i]     = B;
@@ -1813,8 +1808,8 @@ static void MarkGapsWithEntities()
                 if (!csg_is_clip_hull)
                 {
                     LogPrint("WARNING: entity '%s' is inside solid @ "
-                              "(%1.0f,%1.0f,%1.0f)\n",
-                              E->id.c_str(), E->x, E->y, E->z);
+                             "(%1.0f,%1.0f,%1.0f)\n",
+                             E->id.c_str(), E->x, E->y, E->z);
                 }
                 continue;
             }
