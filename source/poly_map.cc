@@ -41,17 +41,6 @@ std::vector<polygon_c *>  all_polygons;
 std::vector<wall_tip_c *> all_wall_tips;
 std::vector<linedef_c *>  all_ex_floors;
 
-std::vector<vertex_c *>   doomed_vertices;
-std::vector<linedef_c *>  doomed_linedefs;
-std::vector<sidedef_c *>  doomed_sidedefs;
-std::vector<sector_c *>   doomed_sectors;
-std::vector<thing_c *>    doomed_things;
-std::vector<vertex_c *>   doomed_splits;
-std::vector<edge_c *>     doomed_edges;
-std::vector<polygon_c *>  doomed_polygons;
-std::vector<wall_tip_c *> doomed_wall_tips;
-std::vector<linedef_c *>  doomed_ex_floors;
-
 int num_vertices;
 int num_linedefs;
 int num_sidedefs;
@@ -1855,46 +1844,45 @@ bool OpenMap(const char *level_name)
 
 void CloseMap()
 {
-    int i;
-    for (i = 0; i < all_vertices.size(); i++)
+    for (vertex_c *vert : all_vertices)
     {
-        doomed_vertices.push_back(all_vertices[i]);
+        delete vert;
     }
-    for (i = 0; i < all_linedefs.size(); i++)
+    for (linedef_c *line : all_linedefs)
     {
-        doomed_linedefs.push_back(all_linedefs[i]);
+        delete line;
     }
-    for (i = 0; i < all_sidedefs.size(); i++)
+    for (sidedef_c *side : all_sidedefs)
     {
-        doomed_sidedefs.push_back(all_sidedefs[i]);
+        delete side;
     }
-    for (i = 0; i < all_sectors.size(); i++)
+    for (sector_c *sec : all_sectors)
     {
-        doomed_sectors.push_back(all_sectors[i]);
+        delete sec;
     }
-    for (i = 0; i < all_things.size(); i++)
+    for (thing_c *thing : all_things)
     {
-        doomed_things.push_back(all_things[i]);
+        delete thing;
     }
-    for (i = 0; i < all_splits.size(); i++)
+    for (vertex_c *split : all_splits)
     {
-        doomed_splits.push_back(all_splits[i]);
+        delete split;
     }
-    for (i = 0; i < all_edges.size(); i++)
+    for (edge_c *edge : all_edges)
     {
-        doomed_edges.push_back(all_edges[i]);
+        delete edge;
     }
-    for (i = 0; i < all_polygons.size(); i++)
+    for (polygon_c *poly : all_polygons)
     {
-        doomed_polygons.push_back(all_polygons[i]);
+        delete poly;
     }
-    for (i = 0; i < all_wall_tips.size(); i++)
+    for (wall_tip_c *tip : all_wall_tips)
     {
-        doomed_wall_tips.push_back(all_wall_tips[i]);
+        delete tip;
     }
-    for (i = 0; i < all_ex_floors.size(); i++)
+    for (linedef_c *exfl : all_ex_floors)
     {
-        doomed_ex_floors.push_back(all_ex_floors[i]);
+        delete exfl;
     }
     all_vertices.clear();
     all_linedefs.clear();
@@ -1916,91 +1904,6 @@ void CloseMap()
     num_edges     = 0;
     num_polygons  = 0;
     num_wall_tips = 0;
-}
-
-void FreeMap()
-{
-    int i;
-    for (i = 0; i < doomed_vertices.size(); i++)
-    {
-        if (doomed_vertices[i])
-        {
-            delete doomed_vertices[i];
-        }
-    }
-    doomed_vertices.clear();
-    for (i = 0; i < doomed_linedefs.size(); i++)
-    {
-        if (doomed_linedefs[i])
-        {
-            delete doomed_linedefs[i];
-        }
-    }
-    doomed_linedefs.clear();
-    for (i = 0; i < doomed_sidedefs.size(); i++)
-    {
-        if (doomed_sidedefs[i])
-        {
-            delete doomed_sidedefs[i];
-        }
-    }
-    doomed_sidedefs.clear();
-    for (i = 0; i < doomed_sectors.size(); i++)
-    {
-        if (doomed_sectors[i])
-        {
-            delete doomed_sectors[i];
-        }
-    }
-    doomed_sectors.clear();
-    for (i = 0; i < doomed_things.size(); i++)
-    {
-        if (doomed_things[i])
-        {
-            delete doomed_things[i];
-        }
-    }
-    doomed_things.clear();
-    for (i = 0; i < doomed_splits.size(); i++)
-    {
-        if (doomed_splits[i])
-        {
-            delete doomed_splits[i];
-        }
-    }
-    doomed_splits.clear();
-    for (i = 0; i < doomed_edges.size(); i++)
-    {
-        if (doomed_edges[i])
-        {
-            delete doomed_edges[i];
-        }
-    }
-    doomed_edges.clear();
-    for (i = 0; i < doomed_polygons.size(); i++)
-    {
-        if (doomed_polygons[i])
-        {
-            delete doomed_polygons[i];
-        }
-    }
-    doomed_polygons.clear();
-    for (i = 0; i < doomed_wall_tips.size(); i++)
-    {
-        if (doomed_wall_tips[i])
-        {
-            delete doomed_wall_tips[i];
-        }
-    }
-    doomed_wall_tips.clear();
-    for (i = 0; i < doomed_ex_floors.size(); i++)
-    {
-        if (doomed_ex_floors[i])
-        {
-            delete doomed_ex_floors[i];
-        }
-    }
-    doomed_ex_floors.clear();
 }
 
 } // namespace ajpoly

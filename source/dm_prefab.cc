@@ -72,7 +72,6 @@
 int wadfab_free(lua_State *L)
 {
     ajpoly::CloseMap();
-    ajpoly::FreeMap();
     ajpoly::FreeWAD();
     return 0;
 }

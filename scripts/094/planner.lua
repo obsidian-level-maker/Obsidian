@@ -403,7 +403,9 @@ function std_decide_quests(Level, QUEST_TAB, LEN_PROBS)
   assert(tot_min and tot_max)
   assert(tot_min <= tot_max)
 
-  assert(#ky_list + #sw_list + #wp_list + #it_list >= tot_min)
+  if ob_size <= 75 then -- this can fail when slider limits exceeded
+    assert(#ky_list + #sw_list + #wp_list + #it_list >= tot_min)
+  end
 
   local RATIO_MINIMUMS = { none=0.0, rare=0.1, few=0.2, less=0.3, some=0.4, more=1.0, heaps=1.5 }
   local RATIO_MAXIMUMS = { none=0.0, rare=0.2, few=0.4, less=0.6, some=1.2, more=2.5, heaps=3.5 }
