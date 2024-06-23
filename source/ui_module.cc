@@ -595,7 +595,7 @@ void UI_Module::randomize_Values(std::vector<std::string> selected_randomize_gro
                     M->nan_options->do_callback();
                 }
                 M->mod_slider->value(M->mod_slider->round(
-                    xoshiro.xoshiro256p_Range<double>(M->mod_slider->minimum(), M->mod_slider->maximum())));
+                    xoshiro_Between(M->mod_slider->minimum(), M->mod_slider->maximum())));
                 M->mod_slider->do_callback();
                 break;
             }
@@ -610,7 +610,7 @@ void UI_Module::randomize_Values(std::vector<std::string> selected_randomize_gro
         {
             if (StringCompare(group, M->randomize_group) == 0)
             {
-                if (xoshiro.xoshiro256p_UNI<float>() < 0.5)
+                if (xoshiro_Float() < 0.5)
                 {
                     M->mod_check->value(0);
                 }

@@ -125,6 +125,7 @@ add_executable(
   ${OBSIDIAN_SOURCE_FILES}
 )
 
+target_include_directories(obsidian SYSTEM PRIVATE libraries/fastPRNG)
 if(NOT CONSOLE_ONLY)
   target_include_directories(obsidian SYSTEM PRIVATE libraries/fltk)
   target_include_directories(

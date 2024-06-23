@@ -1,15 +1,24 @@
-/*
-Xoshiro256 Random Generator
+//------------------------------------------------------------------------
+//  RANDOM NUMBER GENERATION (Xoshiro256)
+//------------------------------------------------------------------------
+//
+//  OBSIDIAN Level Maker
+//
+//  Copyright (C) 2020-2024 The OBSIDIAN Team
+//
+//  This program is free software; you can redistribute it and/or
+//  modify it under the terms of the GNU General Public License
+//  as published by the Free Software Foundation; either version 2
+//  of the License, or (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//------------------------------------------------------------------------
 
-By Dashodanger, 2020
-
-This is meant to be a replacement for the AJ_Random library that
-uses the fastPRNG xoshiro256 implementation for random number generation.
-Usage will be as similar to AJ_Random as possible in order to minimize
-changes in other sections of code.
-*/
-
-#include "../fastPRNG/fastPRNG.h"
+#include "fastPRNG.h"
 
 fastPRNG::fastXS64 xoshiro;
 
@@ -20,12 +29,12 @@ void xoshiro_Reseed(uint64_t newseed)
 
 uint64_t xoshiro_UInt()
 {
-    int64_t rand_num = (int64_t)(xoshiro.xoshiro256p());
-    if (rand_num >= 0)
-    {
-        return rand_num;
-    }
-    return -rand_num;
+    return xoshiro.xoshiro256p();
+}
+
+float xoshiro_Float()
+{
+    return xoshiro.xoshiro256p_UNI<float>();
 }
 
 double xoshiro_Double()
@@ -33,9 +42,12 @@ double xoshiro_Double()
     return xoshiro.xoshiro256p_UNI<double>();
 }
 
-// This probably isn't super efficient, but it is rarely used and shouldn't make
-// a huge overall hit to performance - Dasho
 int xoshiro_Between(int low, int high)
 {
-    return (int)(xoshiro.xoshiro256p_Range<float>(low, high));
+    return (int)xoshiro.xoshiro256p_Range<float>(low, high);
+}
+
+double xoshiro_Between(double low, double high)
+{
+    return xoshiro.xoshiro256p_Range<double>(low, high);
 }
