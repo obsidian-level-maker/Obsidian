@@ -162,9 +162,10 @@ bool Options_Load(std::string filename)
         buffer.clear();
         while ((c = fgetc(option_fp)) != EOF)
         {
-            buffer.push_back(c);
-            if (c == '\n')
+            if (c == '\n' || c == '\r')
                 break;
+            else
+                buffer.push_back(c);
         }
 
         Options_ParseLine(buffer);

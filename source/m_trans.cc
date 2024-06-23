@@ -1015,9 +1015,10 @@ void Trans_Read_PO_File(FILE *fp)
         buffer.clear();
         while ((c = fgetc(fp)) != EOF)
         {
-            buffer.push_back(c);
-            if (c == '\n')
+            if (c == '\n' || c == '\r')
                 break;
+            else
+                buffer.push_back(c);
         }
 
         po_state.line_number += 1;
@@ -1110,9 +1111,10 @@ void Trans_Init()
 
         while ((c = fgetc(trans_fp)) != EOF)
         {
-            buffer.push_back((char)c);
-            if (c == '\n')
+            if (c == '\n' || c == '\r')
                 break;
+            else
+                buffer.push_back(c);
         }
 
         Trans_ParseLangLine((char *)buffer.c_str());
@@ -1157,8 +1159,12 @@ void Trans_SetLanguage()
     {
         // if language has a territory field (like zh_TW or en_AU) then
         // try again with the plain language code.
-
         path = StringFormat("%s/language/%s.po", install_dir.c_str(), lang_plain.c_str());
+    }
+
+    if (!FileExists(path))
+    {
+        FatalError("WTF: %s\n", path.c_str());
     }
 
     FILE *fp = FileOpen(path, "rb");

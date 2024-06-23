@@ -809,13 +809,11 @@ void UI_GlossaryViewer::ReadGlossary()
         buffer.clear();
         while ((c = fgetc(gloss_file)) != EOF)
         {
-            buffer.push_back(c);
-            if (c == '\n')
+            if (c == '\n' || c == '\r')
                 break;
+            else
+                buffer.push_back(c);
         }
-
-        // remove any newline at the end (LF or CR/LF)
-        StringRemoveCRLF(&buffer);
 
         // remove any DEL characters (mainly to workaround an FLTK bug)
         StringReplaceChar(&buffer, 0x7f, 0);

@@ -564,21 +564,6 @@ int StringPrefixCaseCompare(std::string_view A, std::string_view B)
     }
 }
 
-void StringRemoveCRLF(std::string *str)
-{
-    if (!str->empty())
-    {
-        if (str->back() == '\n')
-        {
-            str->pop_back();
-        }
-        if (!str->empty() && str->back() == '\r')
-        {
-            str->pop_back();
-        }
-    }
-}
-
 void StringReplaceChar(std::string *str, char old_ch, char new_ch)
 {
     // when 'new_ch' is zero, the character is simply removed

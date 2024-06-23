@@ -347,13 +347,11 @@ void LogReadLines(log_display_func_t display_func, void *priv_data)
         buffer.clear();
         while ((c = fgetc(log_file)) != EOF)
         {
-            buffer.push_back(c);
-            if (c == '\n')
+            if (c == '\n' || c == '\r')
                 break;
+            else
+                buffer.push_back(c);
         }
-
-        // remove any newline at the end (LF or CR/LF)
-        StringRemoveCRLF(&buffer);
 
         // remove any DEL characters (mainly to workaround an FLTK bug)
         StringReplaceChar(&buffer, 0x7f, 0);

@@ -194,9 +194,10 @@ bool Cookie_Load(std::string filename)
         buffer.clear();
         while ((c = fgetc(cookie_fp)) != EOF)
         {
-            buffer.push_back(c);
-            if (c == '\n')
+            if (c == '\n' || c == '\r')
                 break;
+            else
+                buffer.push_back(c);
         }
 
         if (!Cookie_ParseLine(buffer))
