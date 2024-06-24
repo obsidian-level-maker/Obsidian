@@ -151,7 +151,7 @@ function PREFAB_CONTROL.fine_tune_filters()
     any_copperRust = 2,
 
     tech_silver_grate = 1.25,
-    tech_bumblebee = 1.25,
+    tech_bumblebee = 2,
     tech_aww2 = 2,
     tech_iStuff = 2,
     tech_beigetownTech = 3,
