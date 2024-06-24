@@ -24,6 +24,10 @@
 #include <math.h>
 #include <stdint.h>
 
+constexpr char *BLANKOUT = "                                                                                           "
+                           "                                                                                           "
+                           "                                                                    ";
+
 // basic constants
 #define OBSIDIAN_MSG_BUF_LEN  2000
 #define OBSIDIAN_DIST_EPSILON (1.0 / 1024.0)

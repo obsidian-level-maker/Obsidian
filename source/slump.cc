@@ -1342,7 +1342,7 @@ void secretize_config(config *c)
 /* 3. Parse the arglist to get overrides to switches,         */
 /* 4. Read the config for non-switches (flats, themes, etc).  */
 /* 5. Do postproduction defaults and calculations and such.   */
-config *get_config(std::string filename)
+config *get_config(const std::string &filename)
 {
     config *answer;
     int     i;

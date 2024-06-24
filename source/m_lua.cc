@@ -66,16 +66,16 @@ int gui_format_prefix(lua_State *L)
         format = custom_prefix.c_str();
     }
 
-    const char *result = ff_main(levelcount, game, port, theme, OBSIDIAN_SHORT_VERSION, format.c_str());
+    std::string result = ff_main(levelcount, game, port, theme, OBSIDIAN_SHORT_VERSION, format.c_str());
 
-    if (!result)
+    if (result.empty())
     {
         lua_pushstring(L, "FF_ERROR_"); // Will help people notice issues
         return 1;
     }
     else
     {
-        lua_pushstring(L, result);
+        lua_pushstring(L, result.c_str());
         return 1;
     }
 
@@ -1681,7 +1681,7 @@ static int p_init_lua(lua_State *L)
     return 0;
 }
 
-static bool Script_CallFunc(std::string func_name, int nresult = 0, std::string *params = NULL)
+static bool Script_CallFunc(const std::string &func_name, int nresult = 0, const std::vector<std::string> &params = {})
 {
     // Note: the results of the function will be on the Lua stack
 
@@ -1700,12 +1700,10 @@ static bool Script_CallFunc(std::string func_name, int nresult = 0, std::string 
     }
 
     int nargs = 0;
-    if (params)
+    for (const std::string& param : params)
     {
-        for (; !params->empty(); params++, nargs++)
-        {
-            lua_pushstring(LUA_ST, params->c_str());
-        }
+        lua_pushstring(LUA_ST, param.c_str());
+        nargs++;
     }
 
     int status = lua_pcall(LUA_ST, nargs, nresult, -2 - nargs);
@@ -1947,7 +1945,7 @@ void Script_Close()
 // WRAPPERS TO LUA FUNCTIONS
 //------------------------------------------------------------------------
 
-bool ob_set_config(std::string key, std::string value)
+bool ob_set_config(const std::string &key, const std::string &value)
 {
     // See the document 'doc/Config_Flow.txt' for a good
     // description of the flow of configuration values
@@ -1959,16 +1957,10 @@ bool ob_set_config(std::string key, std::string value)
         return false;
     }
 
-    std::string params[3] = {
-        key,
-        value,
-        "",
-    };
-
-    return Script_CallFunc("ob_set_config", 0, &params[0]);
+    return Script_CallFunc("ob_set_config", 0, {key, value});
 }
 
-bool ob_set_mod_option(std::string module, std::string option, std::string value)
+bool ob_set_mod_option(const std::string &module, const std::string &option, const std::string &value)
 {
     if (!has_loaded)
     {
@@ -1976,9 +1968,7 @@ bool ob_set_mod_option(std::string module, std::string option, std::string value
         return false;
     }
 
-    std::string params[4] = {module, option, value, ""};
-
-    return Script_CallFunc("ob_set_mod_option", 0, &params[0]);
+    return Script_CallFunc("ob_set_mod_option", 0, {module, option, value});
 }
 
 bool ob_read_all_config(std::vector<std::string> *lines, bool need_full)
@@ -1991,12 +1981,12 @@ bool ob_read_all_config(std::vector<std::string> *lines, bool need_full)
 
     conf_line_buffer = lines;
 
-    std::string params[2];
+    std::vector<std::string> params;
 
-    params[0] = need_full ? "need_full" : "";
-    params[1] = ""; // end of list
+    if (need_full)
+        params.push_back("need_full");
 
-    bool result = Script_CallFunc("ob_read_all_config", 0, &params[0]);
+    bool result = Script_CallFunc("ob_read_all_config", 0, params);
 
     conf_line_buffer = NULL;
 
@@ -2048,11 +2038,9 @@ std::string ob_game_format()
     return res;
 }
 
-std::string ob_get_param(std::string parameter)
+std::string ob_get_param(const std::string &parameter)
 {
-    std::string params[2] = {parameter, ""};
-
-    if (!Script_CallFunc("ob_get_param", 1, &params[0]))
+    if (!Script_CallFunc("ob_get_param", 1, {parameter}))
     {
         return "";
     }
@@ -2067,9 +2055,7 @@ std::string ob_get_param(std::string parameter)
 
 bool ob_hexen_ceiling_check(int thing_id)
 {
-    std::string params[2] = {NumToString(thing_id), ""};
-
-    if (!Script_CallFunc("ob_hexen_ceiling_check", 1, &params[0]))
+    if (!Script_CallFunc("ob_hexen_ceiling_check", 1, {NumToString(thing_id)}))
     {
         return false;
     }
@@ -2082,11 +2068,9 @@ bool ob_hexen_ceiling_check(int thing_id)
     return StringToInt(param);
 }
 
-bool ob_mod_enabled(std::string module_name)
+bool ob_mod_enabled(const std::string &module_name)
 {
-    std::string params[2] = {module_name, ""};
-
-    if (!Script_CallFunc("ob_mod_enabled", 1, &params[0]))
+    if (!Script_CallFunc("ob_mod_enabled", 1, {module_name}))
     {
         return false;
     }
@@ -2152,11 +2136,9 @@ void ob_print_reference_json()
     }
 }
 
-void ob_invoke_hook(std::string hookname)
+void ob_invoke_hook(const std::string &hookname)
 {
-    std::string params[2] = {hookname, ""};
-
-    if (!Script_CallFunc("ob_invoke_hook", 0, &params[0]))
+    if (!Script_CallFunc("ob_invoke_hook", 0, {hookname}))
     {
         ProgStatus("%s", _("Script Error"));
     }

@@ -532,6 +532,10 @@ void EvaluateFastWorker(quadtree_c *tree, seg_t **best_H, seg_t **best_V, int mi
         if (part->linedef == NULL)
             continue;
 
+        /* ignore self-ref and polyobj stuff as partition candidates */
+        if (part->linedef->is_precious)
+            continue;
+
         if (part->pdy == 0)
         {
             // horizontal seg

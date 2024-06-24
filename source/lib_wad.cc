@@ -38,7 +38,7 @@ static PHYSFS_File     *wad_R_fp;
 static raw_wad_header_t wad_R_header;
 static raw_wad_entry_t *wad_R_dir;
 
-bool WAD_OpenRead(std::string filename)
+bool WAD_OpenRead(const std::string &filename)
 {
 
     wad_R_fp = PHYSFS_openRead(filename.c_str());
@@ -198,7 +198,7 @@ static std::list<raw_wad_entry_t> wad_W_directory;
 
 static raw_wad_entry_t wad_W_lump;
 
-bool WAD_OpenWrite(std::string filename)
+bool WAD_OpenWrite(const std::string &filename)
 {
     wad_W_fp = FileOpen(filename, "wb");
 
@@ -267,11 +267,11 @@ void WAD_CloseWrite(void)
     wad_W_directory.clear();
 }
 
-void WAD_NewLump(std::string name)
+void WAD_NewLump(std::string_view name)
 {
     if (name.size() > 8)
     {
-        FatalError("WAD_NewLump: name too long: '%s'\n", name.c_str());
+        FatalError("WAD_NewLump: name too long: '%s'\n", std::string(name).c_str());
     }
 
     memset(&wad_W_lump, 0, sizeof(wad_W_lump));

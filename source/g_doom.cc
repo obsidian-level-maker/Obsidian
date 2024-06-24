@@ -345,7 +345,7 @@ bool BuildNodes(std::string filename)
 
 namespace Doom
 {
-void WriteLump(std::string name, const void *data, uint32_t len)
+void WriteLump(std::string_view name, const void *data, uint32_t len)
 {
     SYS_ASSERT(name.size() <= 8);
 
@@ -363,7 +363,7 @@ void WriteLump(std::string name, const void *data, uint32_t len)
 }
 } // namespace Doom
 
-void Doom::WriteLump(std::string name, qLump_c *lump)
+void Doom::WriteLump(std::string_view name, qLump_c *lump)
 {
     WriteLump(name, lump->GetBuffer(), lump->GetSize());
 }
@@ -429,7 +429,7 @@ static void WriteSections()
 
 } // namespace Doom
 
-void Doom::AddSectionLump(char ch, std::string name, qLump_c *lump)
+void Doom::AddSectionLump(char ch, std::string_view name, qLump_c *lump)
 {
     int k;
     switch (ch)
@@ -459,7 +459,7 @@ void Doom::AddSectionLump(char ch, std::string name, qLump_c *lump)
     sections[k]->push_back(lump);
 }
 
-bool Doom::StartWAD(std::string filename)
+bool Doom::StartWAD(const std::string &filename)
 {
     if (!WAD_OpenWrite(filename))
     {
@@ -562,7 +562,7 @@ int Doom::v094_begin_level(lua_State *L)
     return 0;
 }
 
-void Doom::EndLevel(std::string level_name)
+void Doom::EndLevel(const std::string &level_name)
 {
     // terminate header lump with trailing NUL
     if (header_lump->GetSize() > 0)
@@ -695,7 +695,7 @@ int Doom::v094_add_vertex(lua_State *L)
     return 0;
 }
 
-void Doom::AddSector(int f_h, std::string f_tex, int c_h, std::string c_tex, int light, int special, int tag)
+void Doom::AddSector(int f_h, const std::string &f_tex, int c_h, const std::string &c_tex, int light, int special, int tag)
 {
     if (!UDMF_mode)
     {
@@ -740,7 +740,7 @@ int Doom::v094_add_sector(lua_State *L)
     return 0;
 }
 
-void Doom::AddSidedef(int sector, std::string l_tex, std::string m_tex, std::string u_tex, int x_offset, int y_offset)
+void Doom::AddSidedef(int sector, const std::string &l_tex, const std::string &m_tex, const std::string &u_tex, int x_offset, int y_offset)
 {
     if (!UDMF_mode)
     {

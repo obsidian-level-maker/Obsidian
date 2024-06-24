@@ -159,7 +159,7 @@ build_result_e BuildFile(buildinfo_t *build_info)
     return BUILD_OK;
 }
 
-void VisitFile(std::string filename, buildinfo_t *build_info)
+static void VisitFile(const std::string &filename, buildinfo_t *build_info)
 {
     LogPrint("\n");
     LogPrint("Building %s\n", filename.c_str());
@@ -308,7 +308,7 @@ void CheckTypeSizes(buildinfo_t *build_info)
     assert_size(raw_vertex_t, 4);
 }
 
-int AJBSP_BuildNodes(std::string filename, buildinfo_t *build_info)
+int AJBSP_BuildNodes(const std::string &filename, buildinfo_t *build_info)
 {
     // need this early, especially for fatal errors in utility/wad code
     ajbsp::SetInfo(build_info);

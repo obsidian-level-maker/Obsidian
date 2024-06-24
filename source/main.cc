@@ -1482,7 +1482,7 @@ softrestart:;
 
     if (main_action != MAIN_SOFT_RESTART)
     {
-        VFS_InitAddons(install_dir);
+        VFS_InitAddons();
 
         if (const int load_arg = argv::Find('l', "load"); load_arg >= 0)
         {

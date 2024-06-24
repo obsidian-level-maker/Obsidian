@@ -352,7 +352,7 @@ void UI_MiniMap::DrawEntity(int x, int y, uint8_t r, uint8_t g, uint8_t b)
     RawPixel(x, y + 1, r, g, b);
 }
 
-void UI_MiniMap::GifStart(std::string filename, int delay)
+void UI_MiniMap::GifStart(std::string_view filename, int delay)
 {
     gif_writer = new GifWriter;
     gif_delay  = delay;

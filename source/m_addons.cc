@@ -103,7 +103,7 @@ bool VFS_AddArchive(std::string filename, bool options_file)
     return true; // Ok
 }
 
-void VFS_InitAddons(std::string search_dir)
+void VFS_InitAddons()
 {
     LogPrint("Initializing VFS...\n");
 
@@ -146,7 +146,7 @@ void VFS_ParseCommandLine()
     LogPrint("DONE\n\n");
 }
 
-void VFS_OptParse(std::string name)
+void VFS_OptParse(const std::string &name)
 {
     // just remember it now
     if (initial_enabled_addons.find(name) == initial_enabled_addons.end())
@@ -268,56 +268,6 @@ void VFS_ScanForAddons()
 }
 
 //----------------------------------------------------------------------
-
-//
-// this is useful to "extract" something out of virtual FS to the real
-// file system so we can use normal stdio file operations on it
-// [ especially a _library_ that uses stdio.h ]
-//
-bool VFS_CopyFile(const char *src_name, const char *dest_name)
-{
-    char buffer[1024];
-
-    PHYSFS_file *src = PHYSFS_openRead(src_name);
-    if (!src)
-    {
-        return false;
-    }
-
-    FILE *dest = FileOpen(dest_name, "wb");
-    if (!dest)
-    {
-        PHYSFS_close(src);
-        return false;
-    }
-
-    bool was_OK = true;
-
-    while (was_OK)
-    {
-        int rlen = (int)(PHYSFS_readBytes(src, buffer, sizeof(buffer)) / sizeof(buffer));
-        if (rlen < 0)
-        {
-            was_OK = false;
-        }
-
-        if (rlen <= 0)
-        {
-            break;
-        }
-
-        int wlen = fwrite(buffer, 1, rlen, dest);
-        if (wlen < rlen || ferror(dest))
-        {
-            was_OK = false;
-        }
-    }
-
-    fclose(dest);
-    PHYSFS_close(src);
-
-    return was_OK;
-}
 
 uint8_t *VFS_LoadFile(const char *filename, int *length)
 {

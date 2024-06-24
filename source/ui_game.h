@@ -53,9 +53,9 @@ class UI_Game : public Fl_Group
     void Locked(bool value);
 
     // these return false if 'button' is not valid
-    bool AddChoice(std::string button, std::string id, std::string label);
-    bool EnableChoice(std::string button, std::string id, bool enable_it);
-    bool SetButton(std::string button, std::string id);
+    bool AddChoice(const std::string &button, const std::string &id, const std::string &label);
+    bool EnableChoice(const std::string &button, const std::string &id, bool enable_it);
+    bool SetButton(const std::string &button, const std::string &id);
 
     void SetAbortButton(bool abort);
 

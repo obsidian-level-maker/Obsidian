@@ -1220,6 +1220,9 @@ void GetLinedefs()
             num_real_lines++;
 
         line->self_ref = (line->left && line->right && (line->left->sector == line->right->sector));
+
+        if (line->self_ref)
+            line->is_precious = true;
     }
 }
 
@@ -1482,6 +1485,9 @@ void ParseUDMF_Block(ajparse::lexer_c &lex, int cur_type)
             num_real_lines++;
 
         line->self_ref = (line->left && line->right && (line->left->sector == line->right->sector));
+
+        if (line->self_ref)
+            line->is_precious = true;
     }
 }
 
@@ -2817,7 +2823,7 @@ void SetInfo(buildinfo_t *info)
     cur_info = info;
 }
 
-void OpenWad(std::string filename)
+void OpenWad(const std::string &filename)
 {
     cur_wad = Wad_file::Open(filename.c_str(), 'a');
     if (cur_wad == NULL)

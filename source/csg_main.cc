@@ -203,36 +203,36 @@ extern int   q_low_light;
 
 extern void SPOT_FillPolygon(uint8_t content, const int *shape, int count);
 
-void csg_property_set_c::Add(std::string key, std::string value)
+void csg_property_set_c::Add(const std::string &key, std::string_view value)
 {
-    dict[key] = std::string(value);
+    dict[key] = value;
 }
 
-void csg_property_set_c::Remove(std::string key)
+void csg_property_set_c::Remove(const std::string &key)
 {
     dict.erase(key);
 }
 
-std::string csg_property_set_c::getStr(std::string key, std::string def_val) const
+std::string csg_property_set_c::getStr(const std::string &key, std::string_view def_val) const
 {
     std::map<std::string, std::string>::const_iterator PI = dict.find(key);
 
     if (PI == dict.end())
     {
-        return def_val;
+        return std::string(def_val);
     }
 
-    return PI->second.c_str();
+    return PI->second;
 }
 
-double csg_property_set_c::getDouble(std::string key, double def_val) const
+double csg_property_set_c::getDouble(const std::string &key, double def_val) const
 {
     std::string str = getStr(key);
 
     return !str.empty() ? StringToDouble(str) : def_val;
 }
 
-int csg_property_set_c::getInt(std::string key, int def_val) const
+int csg_property_set_c::getInt(const std::string &key, int def_val) const
 {
     std::string str = getStr(key);
 
@@ -649,7 +649,7 @@ csg_entity_c::~csg_entity_c()
 {
 }
 
-bool csg_entity_c::Match(std::string want_name) const
+bool csg_entity_c::Match(std::string_view want_name) const
 {
     return (StringCompare(id, want_name) == 0);
 }
@@ -779,7 +779,7 @@ class brush_quad_node_c
 
   private:
     bool IntersectBrush(const csg_brush_c *B, double x1, double y1, double z1, double x2, double y2, double z2,
-                        std::string mode)
+                        std::string_view mode)
     {
         if (mode[0] == 'v')
         {
@@ -833,7 +833,7 @@ class brush_quad_node_c
     }
 
   public:
-    bool TraceRay(double x1, double y1, double z1, double x2, double y2, double z2, std::string mode)
+    bool TraceRay(double x1, double y1, double z1, double x2, double y2, double z2, std::string_view mode)
     {
         for (unsigned int k = 0; k < brushes.size(); k++)
         {
@@ -1611,7 +1611,7 @@ int CSG_trace_ray(lua_State *L)
     return 1;
 }
 
-bool CSG_TraceRay(double x1, double y1, double z1, double x2, double y2, double z2, std::string mode)
+bool CSG_TraceRay(double x1, double y1, double z1, double x2, double y2, double z2, std::string_view mode)
 {
     SYS_ASSERT(brush_quad_tree);
 
@@ -1644,7 +1644,7 @@ void CSG_spot_processing(int x1, int y1, int x2, int y2, int floor_h)
 
 //------------------------------------------------------------------------
 
-csg_property_set_c *CSG_LookupTexProps(std::string name)
+csg_property_set_c *CSG_LookupTexProps(const std::string &name)
 {
     std::map<std::string, csg_property_set_c *>::iterator TPI;
 
@@ -1672,7 +1672,7 @@ static void CSG_FreeTexProps()
     all_tex_props.clear();
 }
 
-void CSG_LinkBrushToEntity(csg_brush_c *B, std::string link_key)
+void CSG_LinkBrushToEntity(csg_brush_c *B, const std::string &link_key)
 {
     for (unsigned int k = 0; k < all_entities.size(); k++)
     {

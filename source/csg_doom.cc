@@ -2268,7 +2268,7 @@ class dummy_line_info_c
     int flags;
 
   public:
-    dummy_line_info_c(std::string _tex, int _special = 0, int _tag = 0, int _flags = 0)
+    dummy_line_info_c(std::string_view _tex, int _special = 0, int _tag = 0, int _flags = 0)
         : tex(_tex), special(_special), tag(_tag), flags(_flags)
     {
     }
@@ -2311,7 +2311,7 @@ class dummy_sector_c
         return (share_count >= DUMMY_MAX_SHARE);
     }
 
-    void AddInfo(std::string &tex, int special, int tag, int flags)
+    void AddInfo(std::string_view tex, int special, int tag, int flags)
     {
         SYS_ASSERT(!isFull());
 

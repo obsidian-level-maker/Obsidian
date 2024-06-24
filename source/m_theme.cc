@@ -296,7 +296,7 @@ static bool Theme_Options_ParseLine(std::string buf)
     return true;
 }
 
-bool Theme_Options_Load(std::string filename)
+bool Theme_Options_Load(const std::string &filename)
 {
     FILE *option_fp = FileOpen(filename, "r");
 
@@ -346,7 +346,7 @@ bool Theme_Options_Load(std::string filename)
     return true;
 }
 
-bool Theme_Options_Save(std::string filename)
+bool Theme_Options_Save(const std::string &filename)
 {
     FILE *option_fp = FileOpen(filename, "w");
 

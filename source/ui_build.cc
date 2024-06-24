@@ -23,6 +23,7 @@
 #include "m_trans.h"
 #include "main.h"
 #include "sys_assert.h"
+#include "sys_macro.h"
 
 UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) : Fl_Group(X, Y, W, H, label)
 {
@@ -365,7 +366,7 @@ void UI_Build::ParseSteps(const char *names)
     }
 }
 
-int UI_Build::FindStep(std::string name)
+int UI_Build::FindStep(std::string_view name)
 {
     for (int i = 0; i < (int)step_names.size(); i++)
     {
@@ -378,12 +379,10 @@ int UI_Build::FindStep(std::string name)
     return -1; // not found
 }
 
-void UI_Build::AddStatusStep(std::string name)
+void UI_Build::AddStatusStep(const std::string &name)
 {
     // modifies the current status string to show the current step
-    std::string blankout;
-    blankout.append(200, ' ');
-    status->copy_label(blankout.c_str());
+    status->label(BLANKOUT);
     status->copy_label(StringFormat("%s : %s", status_label.c_str(), name.c_str()).c_str());
     status->redraw();
 }

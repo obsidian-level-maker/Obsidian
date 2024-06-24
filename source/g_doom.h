@@ -78,27 +78,27 @@ extern int sub_format;
 
 /***** FUNCTIONS ****************/
 
-bool StartWAD(std::string filename);
+bool StartWAD(const std::string &filename);
 bool EndWAD();
 
 void BeginLevel();
-void EndLevel(std::string level_name);
+void EndLevel(const std::string &level_name);
 
-void WriteLump(std::string name, qLump_c *lump);
+void WriteLump(std::string_view name, qLump_c *lump);
 
 // the section parameter can be:
 //   'P' : patches   //   'F' : flats
 //   'S' : sprites   //   'C' : colormaps (Boom)
 //   'T' : textures (Zdoom)
-void AddSectionLump(char section, std::string name, qLump_c *lump);
+void AddSectionLump(char section, std::string_view name, qLump_c *lump);
 
 void HeaderPrintf(const char *str, ...);
 
 void AddVertex(int x, int y);
 
-void AddSector(int f_h, std::string f_tex, int c_h, std::string c_tex, int light, int special, int tag);
+void AddSector(int f_h, const std::string &f_tex, int c_h, const std::string &c_tex, int light, int special, int tag);
 
-void AddSidedef(int sector, std::string l_tex, std::string m_tex, std::string u_tex, int x_offset, int y_offset);
+void AddSidedef(int sector, const std::string &l_tex, const std::string &m_tex, const std::string &u_tex, int x_offset, int y_offset);
 
 void AddLinedef(int vert1, int vert2, int side1, int side2, int type, int flags, int tag, const uint8_t *args);
 

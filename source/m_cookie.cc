@@ -44,7 +44,7 @@ static std::string active_module;
 
 static bool keep_seed;
 
-static void Cookie_SetValue(std::string name, std::string value)
+static void Cookie_SetValue(std::string name, const std::string &value)
 {
     if (context == cookie_context_e::Load)
     {
@@ -113,7 +113,7 @@ static void Cookie_SetValue(std::string name, std::string value)
     ob_set_config(name, value);
 }
 
-static bool Cookie_ParseLine(std::string buf)
+static bool Cookie_ParseLine(std::string &buf)
 {
     if (buf.find('=') == std::string::npos)
     {
@@ -163,7 +163,7 @@ static bool Cookie_ParseLine(std::string buf)
 
 //----------------------------------------------------------------------
 
-bool Cookie_Load(std::string filename)
+bool Cookie_Load(const std::string &filename)
 {
     context = cookie_context_e::Load;
 
@@ -226,7 +226,7 @@ bool Cookie_Load(std::string filename)
     return true;
 }
 
-bool Cookie_LoadString(std::string str, bool _keep_seed)
+bool Cookie_LoadString(const std::string &str, bool _keep_seed)
 {
     context   = cookie_context_e::Load;
     keep_seed = _keep_seed;
@@ -251,7 +251,7 @@ bool Cookie_LoadString(std::string str, bool _keep_seed)
     return true;
 }
 
-bool Cookie_Save(std::string filename)
+bool Cookie_Save(const std::string &filename)
 {
     context = cookie_context_e::Save;
     setlocale(LC_NUMERIC, "C");
@@ -487,7 +487,7 @@ class RecentFiles_c
         }
     }
 
-    bool get_name(int index, std::string buffer, bool for_menu) const
+    bool get_name(int index, std::string &buffer, bool for_menu) const
     {
         if (index >= size)
         {
@@ -531,7 +531,7 @@ void Recent_Write(FILE *fp)
     recent_configs.write_all(fp, "recent_config");
 }
 
-void Recent_AddFile(int group, std::string filename)
+void Recent_AddFile(int group, const std::string &filename)
 {
     SYS_ASSERT(0 <= group && group < RECG_NUM_GROUPS);
 
@@ -551,45 +551,6 @@ void Recent_AddFile(int group, std::string filename)
     {
         Options_Save(options_file);
     }
-}
-
-void Recent_RemoveFile(int group, std::string filename)
-{
-    SYS_ASSERT(0 <= group && group < RECG_NUM_GROUPS);
-
-    switch (group)
-    {
-    case RECG_Output:
-        recent_wads.remove(filename);
-        break;
-
-    case RECG_Config:
-        recent_configs.remove(filename);
-        break;
-    }
-
-    // push to disk now -- why wait?
-    if (!batch_mode)
-    {
-        Options_Save(options_file);
-    }
-}
-
-bool Recent_GetName(int group, int index, std::string name_buf, bool for_menu)
-{
-    SYS_ASSERT(0 <= group && group < RECG_NUM_GROUPS);
-    SYS_ASSERT(index >= 0);
-
-    switch (group)
-    {
-    case RECG_Output:
-        return recent_wads.get_name(index, name_buf, for_menu);
-
-    case RECG_Config:
-        return recent_configs.get_name(index, name_buf, for_menu);
-    }
-
-    return false;
 }
 
 //--- editor settings ---

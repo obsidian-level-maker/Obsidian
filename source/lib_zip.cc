@@ -59,7 +59,7 @@ bool ZIPF_OpenWrite(const std::string &filename)
     return true;
 }
 
-bool ZIPF_AddFile(const std::string &filename, std::string directory)
+bool ZIPF_AddFile(const std::string &filename, std::string_view directory)
 {
     if (!zip_writer)
     {
@@ -71,7 +71,7 @@ bool ZIPF_AddFile(const std::string &filename, std::string directory)
 }
 
 // Calling function is responsible for freeing *data
-bool ZIPF_AddMem(std::string name, uint8_t *data, size_t length)
+bool ZIPF_AddMem(const std::string &name, uint8_t *data, size_t length)
 {
     if (!zip_writer)
     {

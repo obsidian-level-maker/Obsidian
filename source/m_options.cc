@@ -30,6 +30,7 @@
 #include "m_lua.h"
 #include "m_trans.h"
 #include "main.h"
+#include "sys_macro.h"
 
 extern std::string BestDirectory();
 
@@ -145,7 +146,7 @@ static bool Options_ParseLine(const std::string &buf)
     return true;
 }
 
-bool Options_Load(std::string filename)
+bool Options_Load(const std::string &filename)
 {
     FILE *option_fp = FileOpen(filename, "r");
 
@@ -179,7 +180,7 @@ bool Options_Load(std::string filename)
     return true;
 }
 
-bool Options_Save(std::string filename)
+bool Options_Save(const std::string &filename)
 {
     FILE *option_fp = FileOpen(filename, "w");
 
@@ -610,9 +611,7 @@ class UI_OptionsWin : public Fl_Window
 
         default_output_path = dir_name;
         UI_OptionsWin *that = (UI_OptionsWin *)data;
-        std::string    blanker;
-        blanker.append(250, ' ');
-        that->opt_current_output_path->copy_label(blanker.c_str());
+        that->opt_current_output_path->label(BLANKOUT);
         that->opt_current_output_path->redraw_label();
         that->opt_current_output_path->copy_label(
             StringFormat("%s: %s", _("Current Path"), BestDirectory().c_str()).c_str());

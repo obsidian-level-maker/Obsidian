@@ -49,6 +49,7 @@
 #include <map>
 
 static std::map<std::string, std::string> trans_store;
+static std::map<std::string, std::string>::iterator trans_iter;
 
 // current Options setting
 std::string t_language = _("AUTO");
@@ -395,25 +396,22 @@ std::string t_language = _("AUTO");
 #endif
 #endif
 
-static std::string remove_codeset(std::string langcode)
+static std::string remove_codeset(std::string_view langcode)
 {
-    if (langcode.find('.') != std::string::npos)
-    {
-        auto p = std::find(langcode.begin(), langcode.end(), '.');
-        langcode.resize(p - langcode.begin());
-    }
-
-    return langcode;
+    size_t pos = langcode.find('.');
+    if (pos != std::string_view::npos)
+        return std::string(langcode.substr(0, pos));
+    else
+        return std::string(langcode);
 }
 
-static std::string remove_territory(std::string langcode)
+static std::string remove_territory(std::string_view langcode)
 {
-    if (langcode.find('_') != std::string::npos)
-    {
-        langcode.resize(std::find(langcode.begin(), langcode.end(), '_') - langcode.begin());
-    }
-
-    return langcode;
+    size_t pos = langcode.find('_');
+    if (pos != std::string_view::npos)
+        return std::string(langcode.substr(0, pos));
+    else
+        return std::string(langcode);
 }
 
 /* DETERMINE CURRENT LANGUAGE */
@@ -1162,11 +1160,6 @@ void Trans_SetLanguage()
         path = StringFormat("%s/language/%s.po", install_dir.c_str(), lang_plain.c_str());
     }
 
-    if (!FileExists(path))
-    {
-        FatalError("WTF: %s\n", path.c_str());
-    }
-
     FILE *fp = FileOpen(path, "rb");
     if (!fp)
     {
@@ -1222,13 +1215,11 @@ void Trans_UnInit()
 
 const char *ob_gettext(const char *s)
 {
-    std::map<std::string, std::string>::iterator IT;
+    trans_iter = trans_store.find(s);
 
-    IT = trans_store.find(s);
-
-    if (IT != trans_store.end())
+    if (trans_iter != trans_store.end())
     {
-        return IT->second.c_str();
+        return trans_iter->second.c_str();
     }
 
     return s;

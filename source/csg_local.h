@@ -158,8 +158,6 @@ class region_c
     void ComputeMidPoint();
     void ComputeBounds();
     void ClockwiseSnags(); // requires CalcMidPoint()
-
-    void DebugDump();
 };
 
 class gap_c
