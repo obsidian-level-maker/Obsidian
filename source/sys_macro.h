@@ -24,7 +24,7 @@
 #include <math.h>
 #include <stdint.h>
 
-constexpr char *BLANKOUT = "                                                                                           "
+constexpr const char *BLANKOUT = "                                                                                           "
                            "                                                                                           "
                            "                                                                    ";
 

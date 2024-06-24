@@ -28,7 +28,7 @@
 bool Cookie_Load(const std::string &filename);
 bool Cookie_Save(const std::string &filename);
 
-bool Cookie_LoadString(const std::string &str, bool _keep_seed);
+bool Cookie_LoadString(std::string_view str, bool _keep_seed);
 
 void Cookie_ParseArguments(void);
 

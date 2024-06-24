@@ -113,44 +113,56 @@ static void Cookie_SetValue(std::string name, const std::string &value)
     ob_set_config(name, value);
 }
 
-static bool Cookie_ParseLine(std::string &buf)
+static bool Cookie_ParseLine(std::string_view buf)
 {
-    if (buf.find('=') == std::string::npos)
+    if (buf.find('=') == std::string_view::npos)
     {
         // Skip blank lines, comments, etc
         return true;
     }
 
-    while (IsSpaceASCII(buf[0]))
+    while (!buf.empty() && IsSpaceASCII(buf.front()))
     {
-        buf.erase(buf.begin());
+        buf.remove_prefix(1);
     }
 
-    if (!(isalpha(buf.front()) || buf.front() == '@'))
+    if (buf.empty() || !(IsAlphaASCII(buf.front()) || buf.front() == '@'))
     {
-        LogPrint("Weird config line: [%s]\n", buf.c_str());
+        LogPrint("Weird config line: [%s]\n", std::string(buf).c_str());
         return false;
     }
 
-    std::string::size_type pos = buf.find('=');
+    std::string_view::size_type pos = buf.find('=');
 
-    while (pos > 0 && IsSpaceASCII(buf[pos - 1]))
+    // Shouldn't happen but still
+    if (pos == std::string_view::npos)
     {
-        buf.erase(buf.begin() + (pos - 1));
-        pos--;
-    }
-    while (pos + 1 < buf.size() && IsSpaceASCII(buf[pos + 1]))
-    {
-        buf.erase(buf.begin() + (pos + 1));
-    }
-    while (IsSpaceASCII(buf[buf.size() - 1]))
-    {
-        buf.erase(buf.end() - 1);
+        LogPrint("Malformed config line: [%s]\n", std::string(buf).c_str());
+        return false;
     }
 
-    std::string name  = buf.substr(0, pos);
-    std::string value = buf.substr(pos + 1);
+    std::string name = std::string(buf.substr(0, pos));
 
+    if (pos + 1 >= buf.size())
+    {
+        LogPrint("Value missing!\n");
+        return false;
+    }
+
+    std::string value = std::string(buf.substr(pos+1));
+
+    while (!name.empty() && IsSpaceASCII(name.back()))
+    {
+        name.pop_back();
+    }
+    while (!value.empty() && IsSpaceASCII(value.front()))
+    {
+        value.erase(value.begin());
+    }
+    while (!value.empty() && IsSpaceASCII(value.back()))
+    {
+        value.pop_back();
+    }
     if (name.empty() || value.empty())
     {
         LogPrint("Name or value missing!\n");
@@ -226,7 +238,7 @@ bool Cookie_Load(const std::string &filename)
     return true;
 }
 
-bool Cookie_LoadString(const std::string &str, bool _keep_seed)
+bool Cookie_LoadString(std::string_view str, bool _keep_seed)
 {
     context   = cookie_context_e::Load;
     keep_seed = _keep_seed;
@@ -235,12 +247,12 @@ bool Cookie_LoadString(const std::string &str, bool _keep_seed)
 
     LogPrint("Reading config data...\n");
 
-    std::string::size_type oldpos = 0;
-    std::string::size_type pos    = 0;
+    std::string_view::size_type oldpos = 0;
+    std::string_view::size_type pos    = 0;
     while (pos != std::string::npos)
     {
         pos = str.find('\n', oldpos);
-        if (pos != std::string::npos)
+        if (pos != std::string_view::npos)
         {
             Cookie_ParseLine(str.substr(oldpos, pos - oldpos));
             oldpos = pos + 1;

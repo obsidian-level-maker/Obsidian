@@ -3,7 +3,7 @@
 #pragma once
 
 #ifndef _WIN32
-static constexpr char *obsidian_icon[] = {
+static constexpr const char *obsidian_icon[] = {
     "64 64 928 2",
     "  	c #000000",
     ". 	c #010101",
@@ -1065,7 +1065,7 @@ static constexpr char *obsidian_icon[] = {
 #endif
 
 /* XPM */
-static constexpr char *clippy_xpm[] = {
+static constexpr const char *clippy_xpm[] = {
     "476 225 956 2",
     "  	c None",
     ". 	c #51514F",
