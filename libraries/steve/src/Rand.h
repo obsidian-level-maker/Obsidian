@@ -26,7 +26,7 @@ namespace steve {
     template <class T>
     static const T& in(const std::set<T>& s) {
       auto it(s.begin());
-      std::advance(it, next(0ull, s.size()-1));
+      std::advance(it, next(0ull, (uint64_t)s.size()-1));
       return *it;
     }
     template <class T>
