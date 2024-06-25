@@ -1,5 +1,6 @@
 #include "Config.h"
 
+#include <algorithm>
 #include <iostream>
 
 #include "Music.h"
