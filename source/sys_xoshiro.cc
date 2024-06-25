@@ -19,12 +19,16 @@
 //------------------------------------------------------------------------
 
 #include "fastPRNG.h"
+#include "Rand.h"
 
 fastPRNG::fastXS64 xoshiro;
 
 void xoshiro_Reseed(uint64_t newseed)
 {
     xoshiro.seed(newseed);
+    // proc gen MIDI uses its own RNG, but let's at least
+    // match the seeds
+    steve::Rand::reseed(newseed);
 }
 
 uint64_t xoshiro_UInt()

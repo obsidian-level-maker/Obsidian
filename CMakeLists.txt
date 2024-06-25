@@ -6,6 +6,7 @@ endif()
 add_subdirectory(libraries/libgrapheme EXCLUDE_FROM_ALL)
 add_subdirectory(libraries/miniz EXCLUDE_FROM_ALL)
 add_subdirectory(libraries/physfs EXCLUDE_FROM_ALL)
+add_subdirectory(libraries/steve EXCLUDE_FROM_ALL)
 
 project(
   obsidian
@@ -70,6 +71,7 @@ set(OBSIDIAN_SOURCE_FILES
     source/g_wolf.cc
     source/lex.yy.c
     source/lib_argv.cc
+    source/lib_midi.cc
     source/lib_tga.cc
     source/lib_util.cc
     source/lib_wad.cc
@@ -137,6 +139,7 @@ target_include_directories(obsidian SYSTEM PRIVATE libraries/libgrapheme)
 target_include_directories(obsidian SYSTEM PRIVATE libraries/minilua)
 target_include_directories(obsidian SYSTEM PRIVATE libraries/miniz)
 target_include_directories(obsidian SYSTEM PRIVATE libraries/physfs/src)
+target_include_directories(obsidian SYSTEM PRIVATE libraries/steve/src)
 
 if(UNIX)
   if(NOT CONSOLE_ONLY
@@ -164,6 +167,7 @@ if(UNIX)
                 libgrapheme
                 miniz
                 physfs-static
+                steve
                 "-framework Cocoa"
                 "-framework CoreGraphics"
                 "-framework CoreText"
@@ -171,7 +175,7 @@ if(UNIX)
       )
     else()
       target_link_libraries(
-        obsidian PRIVATE libgrapheme miniz physfs-static
+        obsidian PRIVATE libgrapheme miniz physfs-static steve
       )
     endif()
   elseif(${CMAKE_SYSTEM} MATCHES "BSD")
@@ -183,10 +187,11 @@ if(UNIX)
                 libgrapheme
                 miniz
                 physfs-static
+                steve
       )
     else()
       target_link_libraries(
-        obsidian PRIVATE libgrapheme miniz physfs-static
+        obsidian PRIVATE libgrapheme miniz physfs-static steve
       )
     endif()
   else()
@@ -200,6 +205,7 @@ if(UNIX)
                 physfs-static
                 fontconfig
                 pthread
+                steve
       )
     else()
       target_link_libraries(
@@ -208,6 +214,7 @@ if(UNIX)
                 miniz
                 physfs-static
                 pthread
+                steve
       )
     endif()
   endif()
@@ -220,10 +227,11 @@ else()
               libgrapheme
               miniz
               physfs-static
+              steve
     )
   else()
     target_link_libraries(
-      obsidian PRIVATE libgrapheme miniz physfs-static
+      obsidian PRIVATE libgrapheme miniz physfs-static steve
     )
   endif()
 endif()

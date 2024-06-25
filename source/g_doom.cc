@@ -46,8 +46,6 @@
 extern void        CSG_DOOM_Write();
 extern std::string BestDirectory();
 
-// extern void CSG_TestRegions_Doom();
-
 extern int ef_solid_type;
 extern int ef_liquid_type;
 extern int ef_thing_mode;

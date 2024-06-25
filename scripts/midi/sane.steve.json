@@ -1,0 +1,144 @@
+{
+  "parents": ["all.steve.json"],
+  "min_tempo": 80,
+  "max_tempo": 160,
+  "time_signatures": {
+    "2/2": {
+      "weight": 2
+    },
+    "2/4": {
+      "weight": 2
+    },
+    "4/4": {
+      "weight": 4
+    },
+    "7/4": {
+      "weight": 0.5
+    },
+    "9/8": {
+      "weight": 0.1
+    }
+  },
+  "creators": {
+    "Arpeggio": {
+      "max_count": 0
+    },
+    "Bass": {
+      "min_count": 1
+    },
+    "Melody": {
+      "min_count": 1,
+      "max_count": 3
+    }
+  },
+  "scales": {
+    "Major": {
+      "weight": 5
+    },
+    "Byzantine": {
+      "blacklist": true
+    },
+    "Kumoi": {
+      "blacklist": true
+    },
+    "Whole Tone": {
+      "blacklist": true
+    }
+  },
+  "chords": {
+    "Major Sixth": {
+      "blacklist": true
+    },
+    "Minor Sixth": {
+      "blacklist": true
+    }
+  },
+  "chord_changes": {
+    // Allow everything but make it less likely
+    "*": {"*": {"*": {"weight": 0.01}}},
+
+    // Major chord map
+    "Minor|Minor Seventh": { // ii/iii
+      "Minor|Minor Seventh": { // iii/vi
+        "2": {"weight": 1}, // ii -> iii
+        "5": {"weight": 1} // iii -> vi
+      },
+      "Major|Dominant Seventh": {"5": {"weight": 1}}, // ii -> V
+      "Major|Major Sixth|Major Seventh": {"1": {"weight": 1}} // iii -> IV
+    },
+    "Major|Major Sixth|Major Seventh": { // IV
+      "Major|Major Sixth|Major Seventh": {"7": {"weight": 1}}, // IV -> I
+      "Minor|Minor Seventh": {"2": {"weight": 1}}, // IV -> ii
+      "Major|Dominant Seventh": {"2": {"weight": 1}} // IV -> V
+    },
+    "Major|Dominant Seventh": { // V
+      "Major|Major Sixth|Major Seventh": {"5": {"weight": 1}}, // V -> I
+      "Minor|Minor Seventh": {
+        "9": {"weight": 1}, // V -> iii
+        "2": {"weight": 1} // V -> vi
+      }
+    }
+  },
+  "instruments": {
+    "Acoustic Bass": {
+      "voices": 1
+    },
+    "Electric Fingered Bass": {
+      "voices": 1
+    },
+    "Electric Picked Bass": {
+      "voices": 1
+    },
+    "Fretless Bass": {
+      "voices": 1
+    },
+    "Slap Bass 1": {
+      "voices": 1
+    },
+    "Slap Bass 2": {
+      "voices": 1
+    },
+    "Syn Bass 1": {
+      "voices": 1
+    },
+    "Syn Bass 2": {
+      "voices": 1
+    },
+    "Guitar Harmonics": {
+      "blacklist": true
+    },
+    "Bottle Blow": {
+      "blacklist": true
+    },
+    "Whistle": {
+      "blacklist": true
+    },
+    "Reverse Cymbal": {
+      "blacklist": true
+    },
+    "Guitar Fret Noise": {
+      "blacklist": true
+    },
+    "Breath Noise": {
+      "blacklist": true
+    },
+    "Seashore": {
+      "blacklist": true
+    },
+    "Bird Tweet": {
+      "blacklist": true
+    },
+    "Telephone Ring": {
+      "blacklist": true
+    },
+    "Helicopter": {
+      "blacklist": true
+    },
+    "Applause": {
+      "blacklist": true
+    },
+    "Gunshot": {
+      "blacklist": true
+    }
+  }
+}
