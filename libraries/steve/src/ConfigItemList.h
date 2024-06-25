@@ -5,6 +5,7 @@
 
 #include "Chord.h"
 #include "Instrument.h"
+#include "Rand.h"
 #include "Scale.h"
 
 namespace steve {

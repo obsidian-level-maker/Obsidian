@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <cassert>
+#include <cstring>
 
 #include "Chord.h"
 

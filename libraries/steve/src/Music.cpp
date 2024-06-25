@@ -41,7 +41,7 @@ Music::Music(const Config& config)
       for(NoteValue j = get_beat_value(); j >= NoteValue(0); j = NoteValue(uint32_t(j) - 1)) {
         const auto ticks = ticks_for(j);
         if((i / ticks) * ticks == i) {
-          if(Rand::next(0ul, (uint32_t(get_beat_value()) - uint32_t(j)) * 2) == 0) {
+          if(Rand::next(0u, (uint32_t(get_beat_value()) - uint32_t(j)) * 2) == 0) {
             _beats[i] = true;
             break;
           }

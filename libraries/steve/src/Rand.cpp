@@ -4,7 +4,7 @@
 
 using namespace steve;
 
-std::default_random_engine Rand::generator;
+std::mt19937_64 Rand::generator;
 static std::uniform_real_distribution<float> nf_dist(0.f, 1.f);
 static std::normal_distribution<float> nn_dist(0.5f, 0.1f);
 

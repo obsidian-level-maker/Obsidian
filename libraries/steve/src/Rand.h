@@ -10,7 +10,7 @@
 namespace steve {
   class Rand {
   public:
-    static std::default_random_engine generator;
+    static std::mt19937_64 generator;
     static float next_float();
     static float next_normal();
 
