@@ -66,7 +66,7 @@ bool ZIPF_AddFile(const std::string &filename, std::string_view directory)
         return false;
     }
     return mz_zip_writer_add_file(zip_writer,
-                                  !directory.empty() ? PathAppend(directory, filename).c_str() : filename.c_str(),
+                                  !directory.empty() ? PathAppend(directory, GetFilename(filename)).c_str() : GetFilename(filename).c_str(),
                                   filename.c_str(), NULL, 0, MZ_DEFAULT_COMPRESSION);
 }
 
