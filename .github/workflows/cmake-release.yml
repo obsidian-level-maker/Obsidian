@@ -27,7 +27,7 @@ jobs:
           strip ${{github.workspace}}\obsidian.exe
       - uses: actions/upload-artifact@v4
         with:
-          name: obsidian-mingw
+          name: obsidian-mingw-win32
           path: |
             addons
             data
