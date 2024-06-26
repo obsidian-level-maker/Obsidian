@@ -5594,7 +5594,7 @@ GROW_LIQUID_OVAL_SPLIT_SOLID_PILLAR =
     "........","~~%11/~~",
     "........","~~~11~~~",
     "xxx..xxx","xxx11xxx",
-    "xxx..xxx","xxx11xxx",
+    "xxx..xxx","xxx11xxx"
   },
 
   diagonals =
@@ -5602,8 +5602,68 @@ GROW_LIQUID_OVAL_SPLIT_SOLID_PILLAR =
          "~1","1~",
     "~1","1.",".1","1~",
     "~1","1.",".1","1~",
-         "~1","1~",
+         "~1","1~"
+  }
+},
+
+GROW_OVAL_SPLIT_NEW_AREA =
+{
+  prob = 20,
+  skip_prob = 85,
+
+  structure =
+  {
+    "xx11xx","xx11xx",
+    "xx..xx","xx11xx",
+    "x....x","x/1/%x",
+    "......","/1/%A%",
+    "......","11..AA",
+    "......","11..AA",
+    "......","%1%/A/",
+    "x....x","x%1%/x",
+    "xx..xx","xx11xx",
+    "xx..xx","xx11xx"
   },
+
+  diagonals =
+  {
+      ".1",".A","A.",
+    ".1","1.",".A","A.",
+    ".1","1.",".A","A.",
+      ".1","1.","A."
+  }
+},
+
+GROW_OVAL_SPLIT_NEW_AREA_BIG =
+{
+  prob = 25,
+  skip_prob = 80,
+
+  structure =
+  {
+    "xxx11xxx","xxx11xxx",
+    "xxx..xxx","xxx11xxx",
+    "xx....xx","xx/1/%xx",
+    "x......x","x/1/%A%x",
+    "........","/11..AA%",
+    "........","111..AAA",
+    "........","111..AAA",
+    "........","%11..AA/",
+    "x......x","x%1%/A/x",
+    "xx....xx","xx%1%/xx",
+    "xxx..xxx","xxx11xxx",
+    "xxx..xxx","xxx11xxx"
+  },
+
+  diagonals =
+  {
+      ".1",".A","A.",
+    ".1","1.",".A","A.",
+          "1.",".A",
+          "1.",".A",
+    ".1","1.",".A","A.",
+      ".1","1.","A."
+  }
 },
 
 -- MSSP's ramps and all sorts of stuff. [RAMPS]
