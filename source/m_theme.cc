@@ -276,7 +276,7 @@ static bool Theme_Options_ParseLine(std::string buf)
         buf.erase(std::find(buf.begin(), buf.end(), ' '));
     }
 
-    if (!(isalpha(buf.front()) || buf.front() == '@'))
+    if (!(IsAlphaASCII(buf.front()) || buf.front() == '@'))
     {
         LogPrint("Weird theme option line: [%s]\n", buf.c_str());
         return false;

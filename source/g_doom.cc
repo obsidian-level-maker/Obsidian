@@ -1384,7 +1384,7 @@ bool Doom::game_interface_c::Start(const char *preset)
 
     if (file_per_map)
     {
-        filename = PathAppend(home_dir, "resources.wad");
+        filename = PathAppend(home_dir, "temp/resources.wad");
     }
     else
     {

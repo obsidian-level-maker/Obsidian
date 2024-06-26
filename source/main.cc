@@ -50,8 +50,6 @@
 #include "ui_window.h"
 #endif
 
-#include "lib_midi.h" // test - Dasho
-
 /**
  * \brief Ticker time in milliseconds
  */
@@ -372,6 +370,8 @@ void Determine_WorkingPath()
 #else
     home_dir = PHYSFS_getPrefDir("Obsidian Team", "Obsidian");
 #endif
+    // ensure scratch folder exists
+    MakeDirectory(PathAppend(home_dir, "temp"));
 }
 
 std::string Resolve_DefaultOutputPath()
@@ -1929,9 +1929,6 @@ softrestart:;
                         old_pixels   = new uint8_t[map_size];
                         memcpy(old_pixels, main_win->build_box->mini_map->pixels, map_size);
                     }
-
-                    // test - Dasho
-                    steve_generate(PathAppend(install_dir, "scripts/midi/all.steve.json").c_str(), NULL);
                 }
                 else
                 {

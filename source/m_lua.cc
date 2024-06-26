@@ -24,6 +24,7 @@
 #include <algorithm>
 
 #include "ff_main.h"
+#include "lib_midi.h"
 #include "lib_util.h"
 #include "m_trans.h"
 #include "main.h"
@@ -95,7 +96,7 @@ int gui_console_print(lua_State *L)
         SYS_ASSERT(res);
 
         // strip off colorizations
-        if (res[0] == '@' && isdigit(res[1]))
+        if (res[0] == '@' && IsDigitASCII(res[1]))
         {
             res += 2;
         }
@@ -118,7 +119,7 @@ int gui_ref_print(lua_State *L)
         SYS_ASSERT(res);
 
         // strip off colorizations
-        if (res[0] == '@' && isdigit(res[1]))
+        if (res[0] == '@' && IsDigitASCII(res[1]))
         {
             res += 2;
         }
@@ -141,7 +142,7 @@ int gui_raw_log_print(lua_State *L)
         SYS_ASSERT(res);
 
         // strip off colorizations
-        if (res[0] == '@' && isdigit(res[1]))
+        if (res[0] == '@' && IsDigitASCII(res[1]))
         {
             res += 2;
         }
@@ -364,7 +365,7 @@ static bool scan_dir_process_name(const std::string &name, const std::string &pa
     {
         return true;
     }
-    else if (match[0] == '*' && match[1] == '.' && isalnum(match[2]))
+    else if (match[0] == '*' && match[1] == '.' && IsAlphanumericASCII(match[2]))
     {
         return GetExtension(name) == "." + std::string{match.begin() + 2, match.end()};
     }
@@ -1432,6 +1433,31 @@ int gui_minimap_fill_box(lua_State *L)
     return 0;
 }
 
+int generate_midi_track(lua_State *L)
+{
+    const char *midi_config = luaL_checkstring(L, 1);
+    const char *midi_file = luaL_checkstring(L, 2);
+
+    int value = steve_generate(midi_config, midi_file) ? 1 : 0;
+    lua_pushinteger(L, value);
+
+    return 1;
+}
+
+int remove_temp_file(lua_State *L)
+{
+    std::string path = PathAppend(home_dir, "temp");
+
+    const char *temp_file = luaL_checkstring(L, 1);
+
+    path = PathAppend(path, GetFilename(temp_file));
+
+    if (FileExists(path))
+        FileDelete(path);
+
+    return 0;
+}
+
 //------------------------------------------------------------------------
 
 extern int SPOT_begin(lua_State *L);
@@ -1655,6 +1681,12 @@ static const luaL_Reg gui_script_funcs[] = {
     {"v094_add_linedef", Doom::v094_add_linedef},
     {"v094_add_sidedef", Doom::v094_add_sidedef},
     {"v094_add_sector", Doom::v094_add_sector},
+
+    // MIDI generation
+    {"generate_midi_track", generate_midi_track},
+
+    // Miscellany
+    {"remove_temp_file", remove_temp_file},
 
     {NULL, NULL} // the end
 };

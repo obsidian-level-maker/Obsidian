@@ -1,5 +1,4 @@
 {
-  "parents": ["all.steve.json"],
   "min_tempo": 80,
   "max_tempo": 160,
   "time_signatures": {

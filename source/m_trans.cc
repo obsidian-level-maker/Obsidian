@@ -876,7 +876,7 @@ struct po_parse_state_t
 
         dest = dest + d_len;
 
-        while (*p && isspace(*p))
+        while (*p && IsSpaceASCII(*p))
         {
             p++;
         }
