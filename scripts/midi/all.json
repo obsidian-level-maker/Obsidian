@@ -2,13 +2,16 @@
   "min_tempo": 20,
   "max_tempo": 220,
   "time_signatures": {
-    "2/2":{}, "2/4":{}, "3/4":{}, "4/4":{}, "5/4":{}, "6/4":{}, "7/4":{}, "9/8":{}
+    "2/2":{}, "2/4":{}, "3/4":{}, "3/8": {}, "4/4":{}, "5/4":{}, "6/4":{}, "6/8":{}, "7/4":{}, "9/8":{}, "12/8": {}
   },
   "chords": {
-    "Major": {
+    "Power": {
       "suffix": "",
-      "tones": [4, 7],
-      "uppercase": true
+      "tones": [7]
+    },
+    "Major": {
+      "suffix": "maj",
+      "tones": [4, 7]
     },
     "Minor": {
       "suffix": "min",
@@ -22,63 +25,159 @@
       "suffix": "dim",
       "tones": [3, 6]
     },
-
+    "Suspended Second": {
+      "suffix": "sus2",
+      "tones": [2, 7]
+    },
+    "Suspended Fourth": {
+      "suffix": "sus4",
+      "tones": [5, 7]
+    },
+    "Major Seventh": {
+      "suffix": "maj7",
+      "tones": [4, 7, 11]
+    },
+    "Minor Seventh": {
+      "suffix": "min7",
+      "tones": [3, 7, 10]
+    },
+    "Dominant Seventh": {
+      "suffix": "dom7",
+      "tones": [4, 7, 10]
+    },
+    "Minor Major Seventh": {
+      "suffix": "min/maj7",
+      "tones": [3, 7, 11]
+    },
+    "Minor Seventh Flat Five": {
+      "suffix": "min7flat5",
+      "tones": [3, 6, 10]
+    },
+    "Diminished Seventh": {
+      "suffix": "dim7",
+      "tones": [3, 6, 11]
+    },
+    "Augmented Seventh": {
+      "suffix": "aug7",
+      "tones": [4, 8, 10]
+    },
     "Major Sixth": {
       "suffix": "maj6",
-      "tones": [4, 7, 9],
-      "uppercase": true
+      "tones": [4, 7, 9]
     },
     "Minor Sixth": {
       "suffix": "min6",
       "tones": [3, 7, 9]
     },
-
-    "Dominant Seventh": {
-      "suffix": "dom7",
-      "tones": [4, 7, 10],
-      "uppercase": true
+    "Six-Nine": {
+      "suffix": "6/9",
+      "tones": [4, 7, 9, 14]
     },
-    "Major Seventh": {
-      "suffix": "maj7",
-      "tones": [4, 7, 11],
-      "uppercase": true
+    "Minor Six-Nine": {
+      "suffix": "min6/9",
+      "tones": [3, 7, 9, 14]
     },
-    "Minor-Major Seventh": {
-      "suffix": "min/maj7",
-      "tones": [3, 7, 11]
+    "Major Add Nine": {
+      "suffix": "maj+9",
+      "tones": [4, 7, 14]
     },
-    "Minor Seventh": {
+    "Minor Add Nine": {
+      "suffix": "min+9",
+      "tones": [3, 7, 14]
+    },
+    "Major Ninth": {
+      "suffix": "maj9",
+      "tones": [4, 11, 14]
+    },
+    "Minor Ninth": {
       "suffix": "min7",
-      "tones": [3, 7, 10]
+      "tones": [3, 10, 14]
+    },
+    "Minor Major Ninth": {
+      "suffix": "min/maj9",
+      "tones": [3, 11, 14]
+    },
+    "Dominant Ninth": {
+      "suffix": "dom9",
+      "tones": [4, 10, 14]
+    },
+    "Dominant Seventh Sharp Nine": {
+      "suffix": "dom7#9",
+      "tones": [4, 10, 15]
+    },
+    "Major Eleventh": {
+      "suffix": "maj11",
+      "tones": [11, 14, 17]
+    },
+    "Minor Eleventh": {
+      "suffix": "min11",
+      "tones": [3, 10, 14, 17]
+    },
+    "Dominant Eleventh": {
+      "suffix": "dom11",
+      "tones": [10, 14, 17]
+    },
+    "Major Thirteenth": {
+      "suffix": "maj13",
+      "tones": [4, 11, 21]
+    },
+    "Minor Thirteenth": {
+      "suffix": "min13",
+      "tones": [3, 10, 21]
+    },
+    "Dominant Thirteenth": {
+      "suffix": "dom13",
+      "tones": [4, 10, 21]
     }
   },
   "scales": {
-    "Blues": {
-      "tones": [3, 5, 6, 7]
-    },
-    "Byzantine": {
-      "tones": [1, 4, 5, 7, 8, 11]
-    },
-    "Harmonic Minor": {
-      "tones": [2, 3, 5, 7, 8, 11]
-    },
-    "Kumoi": {
-      "tones": [2, 3, 7, 9]
+    "Chromatic": {
+      "tones": [1,2,3,4,5,6,7,8,9,10,11]
     },
     "Major": {
-      "tones": [2, 4, 5, 7, 9, 11]
+      "tones": [2,4,5,7,9,11]
+    },
+    "Harmonic Major": {
+      "tones": [2,4,5,7,8,11]
     },
     "Minor": {
-      "tones": [2, 3, 5, 7, 8, 10]
+      "tones": [2,3,5,7,8,10]
+    },
+    "Harmonic Minor": {
+      "tones": [2,3,5,7,8,11]
     },
     "Melodic Minor": {
-      "tones": [2, 3, 5, 7, 9, 11]
+      "tones": [2,3,5,7,9,11]
     },
     "Pentatonic Major": {
-      "tones": [2, 4, 7, 9]
+      "tones": [2,4,7,9]
+    },
+    "Pentatonic Minor": {
+      "tones": [3,5,7,10]
+    },
+    "Major Blues": {
+      "tones": [2,3,4,7,9]
+    },
+    "Minor Blues": {
+      "tones": [3,5,6,7,10]
+    },
+    "Mixolydian": {
+      "tones": [2,4,5,7,9,10]
+    },
+    "Lydian": {
+      "tones": [2,4,6,7,9,11]
+    },
+    "Dorian": {
+      "tones": [2,3,5,7,9,10]
+    },
+    "Byzantine": {
+      "tones": [1,4,5,7,8,11]
     },
     "Whole Tone": {
-      "tones": [2, 4, 6, 8, 10]
+      "tones": [2,4,6,8,10]
+    },
+    "Augmented": {
+      "tones": [3,4,7,8,11]
     }
   },
   "chord_changes": {
