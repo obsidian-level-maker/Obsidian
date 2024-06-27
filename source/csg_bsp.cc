@@ -24,12 +24,7 @@
 #include "csg_local.h"
 #include "csg_main.h"
 #include "g_doom.h" // for MLF_DontDraw
-#ifndef CONSOLE_ONLY
-#include "hdr_fltk.h"
-#endif
-#include "hdr_lua.h"
 #include "lib_util.h"
-#include "m_lua.h"
 #include "main.h"
 #include "sys_assert.h"
 #include "sys_macro.h"
@@ -113,7 +108,7 @@ snag_c::snag_c(brush_vert_c *side, double _x1, double _y1, double _x2, double _y
 {
     if (Length() < SNAG_EPSILON)
     {
-        Main::FatalError("Line loop contains zero-length line! (%1.2f %1.2f)\n", x1, y1);
+        FatalError("Line loop contains zero-length line! (%1.2f %1.2f)\n", x1, y1);
     }
 
     sides.push_back(side);
@@ -552,7 +547,7 @@ void region_c::ClockwiseSnags()
         snag_c *A = snags[i];
         snag_c *B = snags[i + 1];
 
-        if (angles[i] < angles[i + 1] - ANG_EPSILON)
+        if (angles[i] < angles[i + 1] - OBSIDIAN_ANG_EPSILON)
         {
             // swap 'em
             snags[i]     = B;
@@ -1086,7 +1081,7 @@ static void DivideOneRegion(region_c *R, partition_c *part, group_c &front, grou
     if (R->snags.size() < 3)
     {
         R->degenerate = true;
-        LogPrintf("WARNING: region degenerated (%zu snags)\n", R->snags.size());
+        LogPrint("WARNING: region degenerated (%zu snags)\n", R->snags.size());
     }
     else
     {
@@ -1096,7 +1091,7 @@ static void DivideOneRegion(region_c *R, partition_c *part, group_c &front, grou
     if (N->snags.size() < 3)
     {
         N->degenerate = true;
-        LogPrintf("WARNING: region degenerated (%zu snags)\n", N->snags.size());
+        LogPrint("WARNING: region degenerated (%zu snags)\n", N->snags.size());
     }
     else
     {
@@ -1251,7 +1246,7 @@ static void SplitGroup(group_c &group, bool reached_chunk, region_c **leaf_out, 
     {
         if (!group.ents.empty())
         {
-            DebugPrintf("SplitGroup: lost %zu entities\n", group.ents.size());
+            DebugPrint("SplitGroup: lost %zu entities\n", group.ents.size());
         }
 
         return;
@@ -1433,7 +1428,7 @@ static bool TestOverlap(std::vector<snag_c *> &list, int i, int k)
             snag_c *S = list[i];
             if (S && S->partner == B)
             {
-                DebugPrintf("TestOverlap: FOUND DANGLING PARTNER (%zu, %d)\n", i, k);
+                DebugPrint("TestOverlap: FOUND DANGLING PARTNER (%zu, %d)\n", i, k);
                 S->partner = NULL;
             }
         }
@@ -1696,11 +1691,11 @@ static void RemoveDeadRegions()
     int after = (int)all_regions.size();
     int count = before - after;
 
-    LogPrintf("Removed %d dead regions (of %d)\n", count, before);
+    LogPrint("Removed %d dead regions (of %d)\n", count, before);
 
     if (lost_ents > 0)
     {
-        LogPrintf("WARNING: %d entities in dead region\n", lost_ents);
+        LogPrint("WARNING: %d entities in dead region\n", lost_ents);
     }
 
     ///  PruneBSPTree(bsp_root);
@@ -1758,7 +1753,7 @@ void CSG_SwallowBrushes()
         }
     }
 
-    LogPrintf("Swallowed %d brushes (of %d)\n", count, total);
+    LogPrint("Swallowed %d brushes (of %d)\n", count, total);
 }
 
 static gap_c *GapForEntity(const region_c *R, csg_entity_c *E)
@@ -1812,9 +1807,9 @@ static void MarkGapsWithEntities()
             {
                 if (!csg_is_clip_hull)
                 {
-                    LogPrintf("WARNING: entity '%s' is inside solid @ "
-                              "(%1.0f,%1.0f,%1.0f)\n",
-                              E->id.c_str(), E->x, E->y, E->z);
+                    LogPrint("WARNING: entity '%s' is inside solid @ "
+                             "(%1.0f,%1.0f,%1.0f)\n",
+                             E->id.c_str(), E->x, E->y, E->z);
                 }
                 continue;
             }
@@ -1995,10 +1990,10 @@ static void RemoveUnusedGaps()
 
     if (filled == total)
     {
-        Main::FatalError("CSG: all gaps were unreachable (no entities?)\n");
+        FatalError("CSG: all gaps were unreachable (no entities?)\n");
     }
 
-    LogPrintf("Filled %d gaps (of %d total)\n", filled, total);
+    LogPrint("Filled %d gaps (of %d total)\n", filled, total);
 }
 
 struct csg_brush_bz_Compare

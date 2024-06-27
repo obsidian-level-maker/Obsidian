@@ -25,11 +25,6 @@
 
 #include <stdexcept>
 
-#ifndef CONSOLE_ONLY
-#include "hdr_fltk.h"
-#include "hdr_ui.h"
-#endif
-#include "hdr_lua.h"
 #include "lib_argv.h"
 #include "lib_util.h"
 #include "m_lua.h"
@@ -49,15 +44,15 @@ static std::string active_module;
 
 static bool keep_seed;
 
-static void Cookie_SetValue(std::string name, std::string value)
+static void Cookie_SetValue(std::string name, const std::string &value)
 {
     if (context == cookie_context_e::Load)
     {
-        DebugPrintf("CONFIG: Name: [%s] Value: [%s]\n", name.c_str(), value.c_str());
+        DebugPrint("CONFIG: Name: [%s] Value: [%s]\n", name.c_str(), value.c_str());
     }
     else if (context == cookie_context_e::Arguments)
     {
-        DebugPrintf("ARGUMENT: Name: [%s] Value: [%s]\n", name.c_str(), value.c_str());
+        DebugPrint("ARGUMENT: Name: [%s] Value: [%s]\n", name.c_str(), value.c_str());
     }
 
     // the new style module syntax
@@ -101,14 +96,14 @@ static void Cookie_SetValue(std::string name, std::string value)
                 }
                 else
                 {
-                    LogPrintf("Invalid argument. Will generate new seed.\n");
+                    LogPrint("Invalid argument. Will generate new seed.\n");
                 }
             }
             catch (std::out_of_range &e)
             {
                 (void)e;
-                LogPrintf("Resulting number would be out of range. Will generate new "
-                          "seed.\n");
+                LogPrint("Resulting number would be out of range. Will generate new "
+                         "seed.\n");
             }
         }
 
@@ -118,47 +113,59 @@ static void Cookie_SetValue(std::string name, std::string value)
     ob_set_config(name, value);
 }
 
-static bool Cookie_ParseLine(std::string buf)
+static bool Cookie_ParseLine(std::string_view buf)
 {
-    if (buf.find('=') == std::string::npos)
+    if (buf.find('=') == std::string_view::npos)
     {
         // Skip blank lines, comments, etc
         return true;
     }
 
-    while (IsSpaceASCII(buf[0]))
+    while (!buf.empty() && IsSpaceASCII(buf.front()))
     {
-        buf.erase(buf.begin());
+        buf.remove_prefix(1);
     }
 
-    if (!(isalpha(buf.front()) || buf.front() == '@'))
+    if (buf.empty() || !(IsAlphaASCII(buf.front()) || buf.front() == '@'))
     {
-        LogPrintf("Weird config line: [%s]\n", buf.c_str());
+        LogPrint("Weird config line: [%s]\n", std::string(buf).c_str());
         return false;
     }
 
-    std::string::size_type pos = buf.find('=');
+    std::string_view::size_type pos = buf.find('=');
 
-    while (pos > 0 && IsSpaceASCII(buf[pos - 1]))
+    // Shouldn't happen but still
+    if (pos == std::string_view::npos)
     {
-        buf.erase(buf.begin() + (pos - 1));
-        pos--;
-    }
-    while (pos + 1 < buf.size() && IsSpaceASCII(buf[pos + 1]))
-    {
-        buf.erase(buf.begin() + (pos + 1));
-    }
-    while (IsSpaceASCII(buf[buf.size() - 1]))
-    {
-        buf.erase(buf.end() - 1);
+        LogPrint("Malformed config line: [%s]\n", std::string(buf).c_str());
+        return false;
     }
 
-    std::string name  = buf.substr(0, pos);
-    std::string value = buf.substr(pos + 1);
+    std::string name = std::string(buf.substr(0, pos));
 
+    if (pos + 1 >= buf.size())
+    {
+        LogPrint("Value missing!\n");
+        return false;
+    }
+
+    std::string value = std::string(buf.substr(pos+1));
+
+    while (!name.empty() && IsSpaceASCII(name.back()))
+    {
+        name.pop_back();
+    }
+    while (!value.empty() && IsSpaceASCII(value.front()))
+    {
+        value.erase(value.begin());
+    }
+    while (!value.empty() && IsSpaceASCII(value.back()))
+    {
+        value.pop_back();
+    }
     if (name.empty() || value.empty())
     {
-        LogPrintf("Name or value missing!\n");
+        LogPrint("Name or value missing!\n");
         return false;
     }
 
@@ -168,7 +175,7 @@ static bool Cookie_ParseLine(std::string buf)
 
 //----------------------------------------------------------------------
 
-bool Cookie_Load(std::string filename)
+bool Cookie_Load(const std::string &filename)
 {
     context = cookie_context_e::Load;
 
@@ -187,21 +194,22 @@ bool Cookie_Load(std::string filename)
 
     if (main_action != MAIN_SOFT_RESTART)
     {
-        LogPrintf("Loading config file: %s\n", filename.c_str());
+        LogPrint("Loading config file: %s\n", filename.c_str());
     }
 
     int error_count = 0;
 
     std::string buffer;
-    int c = EOF;
+    int         c = EOF;
     for (;;)
     {
         buffer.clear();
         while ((c = fgetc(cookie_fp)) != EOF)
         {
-            buffer.push_back(c);
-            if (c == '\n')
+            if (c == '\n' || c == '\r')
                 break;
+            else
+                buffer.push_back(c);
         }
 
         if (!Cookie_ParseLine(buffer))
@@ -219,43 +227,43 @@ bool Cookie_Load(std::string filename)
     {
         if (error_count > 0)
         {
-            LogPrintf("DONE (found %d parse errors)\n\n", error_count);
+            LogPrint("DONE (found %d parse errors)\n\n", error_count);
         }
         else
         {
-            LogPrintf("DONE.\n\n");
+            LogPrint("DONE.\n\n");
         }
     }
     setlocale(LC_NUMERIC, numeric_locale.c_str());
     return true;
 }
 
-bool Cookie_LoadString(std::string str, bool _keep_seed)
+bool Cookie_LoadString(std::string_view str, bool _keep_seed)
 {
     context   = cookie_context_e::Load;
     keep_seed = _keep_seed;
 
     active_module.clear();
 
-    LogPrintf("Reading config data...\n");
+    LogPrint("Reading config data...\n");
 
-    std::string::size_type oldpos = 0;
-    std::string::size_type pos    = 0;
+    std::string_view::size_type oldpos = 0;
+    std::string_view::size_type pos    = 0;
     while (pos != std::string::npos)
     {
         pos = str.find('\n', oldpos);
-        if (pos != std::string::npos)
+        if (pos != std::string_view::npos)
         {
             Cookie_ParseLine(str.substr(oldpos, pos - oldpos));
             oldpos = pos + 1;
         }
     }
 
-    LogPrintf("DONE.\n\n");
+    LogPrint("DONE.\n\n");
     return true;
 }
 
-bool Cookie_Save(std::string filename)
+bool Cookie_Save(const std::string &filename)
 {
     context = cookie_context_e::Save;
     setlocale(LC_NUMERIC, "C");
@@ -264,13 +272,13 @@ bool Cookie_Save(std::string filename)
 
     if (!cookie_fp)
     {
-        LogPrintf("Error: unable to create file: %s\n(%s)\n\n", filename.c_str(), strerror(errno));
+        LogPrint("Error: unable to create file: %s\n(%s)\n\n", filename.c_str(), strerror(errno));
         return false;
     }
 
     if (main_action == MAIN_HARD_RESTART || main_action == MAIN_QUIT)
     {
-        LogPrintf("Saving config file...\n");
+        LogPrint("Saving config file...\n");
     }
 
     // header...
@@ -291,7 +299,7 @@ bool Cookie_Save(std::string filename)
 
     if (main_action == MAIN_HARD_RESTART || main_action == MAIN_QUIT)
     {
-        LogPrintf("DONE.\n\n");
+        LogPrint("DONE.\n\n");
     }
 
     fclose(cookie_fp);
@@ -326,7 +334,8 @@ void Cookie_ParseArguments(void)
         }
 
         // support an isolated "=", like in: FOO = 3
-        if (i + 2 < argv::list.size() && StringCompare(argv::list[i + 1].c_str(), "=") == 0 && argv::list[i + 2][0] != '-')
+        if (i + 2 < argv::list.size() && StringCompare(argv::list[i + 1].c_str(), "=") == 0 &&
+            argv::list[i + 2][0] != '-')
         {
             Cookie_SetValue(arg, argv::list[i + 2]);
             i += 2;
@@ -355,7 +364,7 @@ void Cookie_ParseArguments(void)
 
         if (name[0] == 0 || value[0] == 0)
         {
-            Main::FatalError("Bad setting on command line: '%s'\n", arg.c_str());
+            FatalError("Bad setting on command line: '%s'\n", arg.c_str());
         }
 
         Cookie_SetValue(name.c_str(), value);
@@ -490,7 +499,7 @@ class RecentFiles_c
         }
     }
 
-    bool get_name(int index, std::string buffer, bool for_menu) const
+    bool get_name(int index, std::string &buffer, bool for_menu) const
     {
         if (index >= size)
         {
@@ -534,7 +543,7 @@ void Recent_Write(FILE *fp)
     recent_configs.write_all(fp, "recent_config");
 }
 
-void Recent_AddFile(int group, std::string filename)
+void Recent_AddFile(int group, const std::string &filename)
 {
     SYS_ASSERT(0 <= group && group < RECG_NUM_GROUPS);
 
@@ -554,45 +563,6 @@ void Recent_AddFile(int group, std::string filename)
     {
         Options_Save(options_file);
     }
-}
-
-void Recent_RemoveFile(int group, std::string filename)
-{
-    SYS_ASSERT(0 <= group && group < RECG_NUM_GROUPS);
-
-    switch (group)
-    {
-    case RECG_Output:
-        recent_wads.remove(filename);
-        break;
-
-    case RECG_Config:
-        recent_configs.remove(filename);
-        break;
-    }
-
-    // push to disk now -- why wait?
-    if (!batch_mode)
-    {
-        Options_Save(options_file);
-    }
-}
-
-bool Recent_GetName(int group, int index, std::string name_buf, bool for_menu)
-{
-    SYS_ASSERT(0 <= group && group < RECG_NUM_GROUPS);
-    SYS_ASSERT(index >= 0);
-
-    switch (group)
-    {
-    case RECG_Output:
-        return recent_wads.get_name(index, name_buf, for_menu);
-
-    case RECG_Config:
-        return recent_configs.get_name(index, name_buf, for_menu);
-    }
-
-    return false;
 }
 
 //--- editor settings ---

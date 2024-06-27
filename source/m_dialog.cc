@@ -19,14 +19,15 @@
 //
 //----------------------------------------------------------------------
 
+#include <FL/Fl_Multi_Browser.H>
+#include <FL/Fl_Native_File_Chooser.H>
+#include <FL/fl_ask.H>
 #include <FL/fl_utf8.h>
 
 #include <limits>
 #include <stdexcept>
 #include <string>
 
-#include "hdr_fltk.h"
-#include "hdr_ui.h"
 #include "lib_util.h"
 #include "m_lua.h"
 #include "m_trans.h"
@@ -195,17 +196,17 @@ static void ParseHyperLink(char *buffer, unsigned int buf_len, const char **link
 
 void DLG_ShowError(const char *msg, ...)
 {
-    static char buffer[MSG_BUF_LEN];
+    static char buffer[OBSIDIAN_MSG_BUF_LEN];
 
     va_list arg_pt;
 
     va_start(arg_pt, msg);
-    vsnprintf(buffer, MSG_BUF_LEN - 1, msg, arg_pt);
+    vsnprintf(buffer, OBSIDIAN_MSG_BUF_LEN - 1, msg, arg_pt);
     va_end(arg_pt);
 
-    buffer[MSG_BUF_LEN - 2] = 0;
+    buffer[OBSIDIAN_MSG_BUF_LEN - 2] = 0;
 
-    LogPrintf("\n%s\n\n", buffer);
+    LogPrint("\n%s\n\n", buffer);
 
     const char *link_title = NULL;
     const char *link_url   = NULL;
@@ -278,8 +279,8 @@ std::string DLG_OutputFilename(const char *ext, const char *preset)
     switch (result)
     {
     case -1:
-        LogPrintf("%s\n", _("Error choosing output file:"));
-        LogPrintf("   %s\n", chooser.errmsg());
+        LogPrint("%s\n", _("Error choosing output file:"));
+        LogPrint("   %s\n", chooser.errmsg());
 
         DLG_ShowError(_("Unable to create the file:\n\n%s"), chooser.errmsg());
         return "";
@@ -300,7 +301,7 @@ std::string DLG_OutputFilename(const char *ext, const char *preset)
         last_directory = dir_name;
     }
 
-#ifdef WIN32
+#ifdef _WIN32
     // add extension if missing
     if (GetExtension(src_name).empty())
     {
@@ -802,19 +803,17 @@ void UI_GlossaryViewer::ReadGlossary()
     }
 
     std::string buffer;
-    int c = EOF;
+    int         c = EOF;
     for (;;)
     {
         buffer.clear();
         while ((c = fgetc(gloss_file)) != EOF)
         {
-            buffer.push_back(c);
-            if (c == '\n')
+            if (c == '\n' || c == '\r')
                 break;
+            else
+                buffer.push_back(c);
         }
-
-        // remove any newline at the end (LF or CR/LF)
-        StringRemoveCRLF(&buffer);
 
         // remove any DEL characters (mainly to workaround an FLTK bug)
         StringReplaceChar(&buffer, 0x7f, 0);

@@ -112,7 +112,6 @@ int StringPrefixCompare(std::string_view A, std::string_view B);
 int StringCaseCompare(std::string_view A, std::string_view B);
 int StringPrefixCaseCompare(std::string_view A, std::string_view B);
 
-void StringRemoveCRLF(std::string *str);
 void StringReplaceChar(std::string *str, char old_ch, char new_ch);
 
 std::string StringFormat(std::string_view fmt, ...);
@@ -134,7 +133,6 @@ uint32_t TimeGetMillies();
 void *UtilCalloc(int size);
 void *UtilRealloc(void *old, int size);
 void  UtilFree(void *data);
-
 
 /* math utilities */
 

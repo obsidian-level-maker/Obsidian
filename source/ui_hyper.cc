@@ -25,8 +25,8 @@
 //
 //------------------------------------------------------------------------
 
-#include "hdr_fltk.h"
-#include "hdr_ui.h"
+#include <FL/filename.H>
+
 #include "lib_util.h"
 #include "main.h"
 
@@ -155,7 +155,7 @@ void UI_HyperLink::callback_Link(Fl_Widget *w, void *data)
 
     if (!fl_open_uri(link->url.c_str()))
     {
-        LogPrintf("\nOpen URL failed: %s\n\n", link->url.c_str());
+        LogPrint("\nOpen URL failed: %s\n\n", link->url.c_str());
     }
 }
 
@@ -199,7 +199,7 @@ void UI_ModHyperLink::callback_Link(Fl_Widget *w, void *data)
 
     if (!fl_open_uri(link->url.c_str()))
     {
-        LogPrintf("\nOpen URL failed: %s\n\n", link->url.c_str());
+        LogPrint("\nOpen URL failed: %s\n\n", link->url.c_str());
     }
 }
 

@@ -22,8 +22,6 @@
 #include <vector>
 
 #include "gif.h"
-#include "hdr_fltk.h"
-#include "hdr_ui.h"
 #include "lib_util.h"
 #include "main.h"
 #include "sys_assert.h"
@@ -354,7 +352,7 @@ void UI_MiniMap::DrawEntity(int x, int y, uint8_t r, uint8_t g, uint8_t b)
     RawPixel(x, y + 1, r, g, b);
 }
 
-void UI_MiniMap::GifStart(std::string filename, int delay)
+void UI_MiniMap::GifStart(std::string_view filename, int delay)
 {
     gif_writer = new GifWriter;
     gif_delay  = delay;

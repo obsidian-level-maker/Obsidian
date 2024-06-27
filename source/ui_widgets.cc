@@ -19,15 +19,13 @@
 //
 //----------------------------------------------------------------
 
-#include "hdr_fltk.h"
-#include "hdr_ui.h"
 #include "lib_util.h"
 #include "m_lua.h"
 #include "m_trans.h"
 #include "main.h"
 #include "sys_assert.h"
 
-choice_data_c::choice_data_c(std::string _id, std::string _label) : enabled(false), mapped(-1), widget(NULL)
+choice_data_c::choice_data_c(std::string_view _id, std::string_view _label) : enabled(false), mapped(-1), widget(NULL)
 {
     if (!_id.empty())
     {
@@ -51,7 +49,7 @@ choice_data_c::~choice_data_c()
 
 //----------------------------------------------------------------
 
-UI_RChoiceMenu::UI_RChoiceMenu(int x, int y, int w, int h, std::string label)
+UI_RChoiceMenu::UI_RChoiceMenu(int x, int y, int w, int h, const std::string &label)
     : UI_CustomMenu(x, y, w, h, label), opt_list()
 {
     visible_focus(0);
@@ -67,7 +65,7 @@ UI_RChoiceMenu::~UI_RChoiceMenu()
     }
 }
 
-void UI_RChoiceMenu::AddChoice(std::string id, std::string label)
+void UI_RChoiceMenu::AddChoice(const std::string &id, const std::string &label)
 {
     choice_data_c *opt = FindID(id);
 
@@ -85,13 +83,10 @@ void UI_RChoiceMenu::AddChoice(std::string id, std::string label)
         opt = new choice_data_c(id, label);
 
         opt_list.push_back(opt);
-
-        // no need to call Recreate() here since new pairs are always
-        // hidden (enabled == false).
     }
 }
 
-bool UI_RChoiceMenu::EnableChoice(std::string id, bool enable_it)
+bool UI_RChoiceMenu::EnableChoice(const std::string &id, bool enable_it)
 {
     SYS_ASSERT(!id.empty());
 
@@ -125,7 +120,7 @@ std::string UI_RChoiceMenu::GetLabel() const
     return P ? P->label : "";
 }
 
-bool UI_RChoiceMenu::ChangeTo(std::string id)
+bool UI_RChoiceMenu::ChangeTo(const std::string &id)
 {
     SYS_ASSERT(!id.empty());
 
@@ -183,7 +178,7 @@ void UI_RChoiceMenu::Recreate()
     value(0);
 }
 
-choice_data_c *UI_RChoiceMenu::FindID(std::string id) const
+choice_data_c *UI_RChoiceMenu::FindID(std::string_view id) const
 {
     for (unsigned int j = 0; j < opt_list.size(); j++)
     {
@@ -346,7 +341,7 @@ UI_RButton::~UI_RButton()
 
 //----------------------------------------------------------------
 
-UI_CustomCheckBox::UI_CustomCheckBox(int x, int y, int w, int h, std::string label)
+UI_CustomCheckBox::UI_CustomCheckBox(int x, int y, int w, int h, const std::string &label)
     : Fl_Check_Button(x, y, w, h, label.empty() ? "" : label.c_str())
 {
     visible_focus(0);
@@ -883,7 +878,7 @@ void UI_ManualEntry::draw()
 
 //----------------------------------------------------------------
 
-UI_CustomMenu::UI_CustomMenu(int x, int y, int w, int h, std::string label)
+UI_CustomMenu::UI_CustomMenu(int x, int y, int w, int h, const std::string &label)
     : Fl_Choice(x, y, w, h, label.empty() ? "" : label.c_str())
 {
     visible_focus(0);

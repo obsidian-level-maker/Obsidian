@@ -19,10 +19,10 @@
 //
 //----------------------------------------------------------------------
 
-#include "hdr_lua.h"
 #include "lib_argv.h"
 #include "lib_util.h"
 #include "main.h"
+#include "minilua.h"
 #include "sys_assert.h"
 #include "sys_macro.h"
 
@@ -117,7 +117,7 @@ void SPOT_FreeGrid()
 
 void SPOT_DumpGrid(const char *info)
 {
-    DebugPrintf("%s: (%d %d) .. (%d %d)\n", info, grid_min_x, grid_min_y, grid_max_x, grid_max_y);
+    DebugPrint("%s: (%d %d) .. (%d %d)\n", info, grid_min_x, grid_min_y, grid_max_x, grid_max_y);
 
     const int MAX_WIDTH = 256;
 
@@ -163,10 +163,10 @@ void SPOT_DumpGrid(const char *info)
 
         buffer[width] = 0;
 
-        DebugPrintf(" % 3d %s\n", y, buffer);
+        DebugPrint(" % 3d %s\n", y, buffer);
     }
 
-    DebugPrintf("\n");
+    DebugPrint("\n");
 }
 
 class grid_point_c
@@ -224,7 +224,7 @@ static void test_item_spot(int x, int y, std::vector<grid_point_c> &spots)
     int real_x = grid_min_x + (x + 0) * GRID_SIZE;
     int real_y = grid_min_y + (y + 0) * GRID_SIZE;
 
-    DebugPrintf("Item spot ---> [%d %d] real: (%d %d)\n", x, y, real_x, real_y);
+    DebugPrint("Item spot ---> [%d %d] real: (%d %d)\n", x, y, real_x, real_y);
 
     spots.push_back(grid_point_c(real_x, real_y));
 
@@ -559,7 +559,7 @@ void SPOT_MonsterSpots(std::vector<grid_point_c> &spots, int want)
             spots.push_back(grid_point_c(real_x1, real_y1));
             spots.push_back(grid_point_c(real_x2, real_y2));
 
-            DebugPrintf("Monster spot ---> [%d %d] size [%d %d]\n", x1, y1, x2 - x1 + 1, y2 - y1 + 1);
+            DebugPrint("Monster spot ---> [%d %d] size [%d %d]\n", x1, y1, x2 - x1 + 1, y2 - y1 + 1);
         }
         else
         {

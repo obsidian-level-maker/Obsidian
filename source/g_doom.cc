@@ -26,10 +26,7 @@
 #include <bitset>
 #include <string>
 
-#ifndef CONSOLE_ONLY
-#include "hdr_fltk.h"
-#endif
-
+#include "bsp.h"
 #include "lib_util.h"
 #include "lib_wad.h"
 #include "lib_zip.h"
@@ -37,20 +34,17 @@
 #include "m_lua.h"
 #include "m_trans.h"
 #include "main.h"
+#include "raw_def.h"
 #include "sys_assert.h"
 #include "sys_endian.h"
 #include "sys_macro.h"
 #include "sys_xoshiro.h"
-
-#include "bsp.h"
 
 // SLUMP for Vanilla Doom
 #include "slump.h"
 
 extern void        CSG_DOOM_Write();
 extern std::string BestDirectory();
-
-// extern void CSG_TestRegions_Doom();
 
 extern int ef_solid_type;
 extern int ef_liquid_type;
@@ -123,68 +117,6 @@ static constexpr uint8_t empty_korax_behavior[128] = {
     0xFC, 0x00, 0x00, 0x00, 0x14, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFD, 0x00, 0x00, 0x00, 0x18, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0xFE, 0x00, 0x00, 0x00, 0x1C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x00,
     0x00, 0x00, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-
-// AJBSP Build Info Class
-class obbuildinfo_t : public buildinfo_t
-{
-  public:
-    void Print(int level, const char *fmt, ...)
-    {
-        if (level > verbosity)
-            return;
-
-        va_list arg_ptr;
-
-        static char buffer[MSG_BUF_LEN];
-
-        va_start(arg_ptr, fmt);
-        vsnprintf(buffer, MSG_BUF_LEN - 1, fmt, arg_ptr);
-        va_end(arg_ptr);
-
-        buffer[MSG_BUF_LEN - 1] = 0;
-
-        LogPrintf("%s\n", buffer);
-    }
-
-    void Debug(const char *fmt, ...)
-    {
-        static char buffer[MSG_BUF_LEN];
-
-        va_list args;
-
-        va_start(args, fmt);
-        vsnprintf(buffer, sizeof(buffer), fmt, args);
-        va_end(args);
-
-        DebugPrintf("%s\n", buffer);
-    }
-
-    //
-    //  show an error message and terminate the program
-    //
-    void FatalError(const char *fmt, ...)
-    {
-        va_list arg_ptr;
-
-        static char buffer[MSG_BUF_LEN];
-
-        va_start(arg_ptr, fmt);
-        vsnprintf(buffer, MSG_BUF_LEN - 1, fmt, arg_ptr);
-        va_end(arg_ptr);
-
-        buffer[MSG_BUF_LEN - 1] = 0;
-
-        ajbsp::CloseWad();
-
-        Main::FatalError("'%s'\n", buffer);
-    }
-
-    // Update status bar with nodebuilding progress
-    void ProgressUpdate(int current, int total)
-    {
-        Doom::Send_Prog_Nodes(current, total);
-    }
-};
 
 qLump_c::qLump_c() : buffer(), crlf(false)
 {
@@ -279,30 +211,30 @@ void qLump_c::RawPrintf(const char *str)
 
 void qLump_c::Printf(const char *str, ...)
 {
-    static char msg_buf[MSG_BUF_LEN];
+    static char msg_buf[OBSIDIAN_MSG_BUF_LEN];
 
     va_list args;
 
     va_start(args, str);
-    vsnprintf(msg_buf, MSG_BUF_LEN - 1, str, args);
+    vsnprintf(msg_buf, OBSIDIAN_MSG_BUF_LEN - 1, str, args);
     va_end(args);
 
-    msg_buf[MSG_BUF_LEN - 2] = 0;
+    msg_buf[OBSIDIAN_MSG_BUF_LEN - 2] = 0;
 
     RawPrintf(msg_buf);
 }
 
 void qLump_c::KeyPair(const char *key, const char *val, ...)
 {
-    static char v_buffer[MSG_BUF_LEN];
+    static char v_buffer[OBSIDIAN_MSG_BUF_LEN];
 
     va_list args;
 
     va_start(args, val);
-    vsnprintf(v_buffer, MSG_BUF_LEN - 1, val, args);
+    vsnprintf(v_buffer, OBSIDIAN_MSG_BUF_LEN - 1, val, args);
     va_end(args);
 
-    v_buffer[MSG_BUF_LEN - 2] = 0;
+    v_buffer[OBSIDIAN_MSG_BUF_LEN - 2] = 0;
 
     RawPrintf("\"");
     RawPrintf(key);
@@ -367,7 +299,7 @@ void Send_Prog_Nodes(int progress, int num_maps)
 
 bool BuildNodes(std::string filename)
 {
-    LogPrintf("\n");
+    LogPrint("\n");
 
     if (!build_nodes)
     {
@@ -375,33 +307,31 @@ bool BuildNodes(std::string filename)
     }
 
     // Prep AJBSP parameters
-    obbuildinfo_t *build_info = new obbuildinfo_t;
-    build_info->fast          = true;
+    buildinfo_t build_info;
+    build_info.fast = true;
     if (StringCompare(current_port, "limit_enforcing") == 0 || StringCompare(current_port, "boom") == 0)
     {
-        build_info->gl_nodes    = false;
-        build_info->force_v5    = false;
-        build_info->force_xnod  = false;
-        build_info->do_blockmap = true;
-        build_info->do_reject   = true;
+        build_info.gl_nodes    = false;
+        build_info.force_v5    = false;
+        build_info.force_xnod  = false;
+        build_info.do_blockmap = true;
+        build_info.do_reject   = true;
     }
     else
     { // ZDoom
-        build_info->gl_nodes       = true;
-        build_info->do_reject      = false;
-        build_info->do_blockmap    = false;
-        build_info->force_xnod     = true;
-        build_info->force_compress = true;
+        build_info.gl_nodes       = true;
+        build_info.do_reject      = false;
+        build_info.do_blockmap    = false;
+        build_info.force_xnod     = true;
+        build_info.force_compress = true;
     }
 
-    if (AJBSP_BuildNodes(filename, build_info) != 0)
+    if (AJBSP_BuildNodes(filename, &build_info) != 0)
     {
-        Main::ProgStatus(_("AJBSP Error!"));
-        delete build_info;
+        ProgStatus("%s", _("AJBSP Error!"));
         return false;
     }
 
-    delete build_info;
     return true;
 }
 
@@ -413,7 +343,7 @@ bool BuildNodes(std::string filename)
 
 namespace Doom
 {
-void WriteLump(std::string name, const void *data, uint32_t len)
+void WriteLump(std::string_view name, const void *data, uint32_t len)
 {
     SYS_ASSERT(name.size() <= 8);
 
@@ -431,7 +361,7 @@ void WriteLump(std::string name, const void *data, uint32_t len)
 }
 } // namespace Doom
 
-void Doom::WriteLump(std::string name, qLump_c *lump)
+void Doom::WriteLump(std::string_view name, qLump_c *lump)
 {
     WriteLump(name, lump->GetBuffer(), lump->GetSize());
 }
@@ -497,7 +427,7 @@ static void WriteSections()
 
 } // namespace Doom
 
-void Doom::AddSectionLump(char ch, std::string name, qLump_c *lump)
+void Doom::AddSectionLump(char ch, std::string_view name, qLump_c *lump)
 {
     int k;
     switch (ch)
@@ -519,7 +449,7 @@ void Doom::AddSectionLump(char ch, std::string name, qLump_c *lump)
         break;
 
     default:
-        Main::FatalError("DM_AddSectionLump: bad section '%c'\n", ch);
+        FatalError("DM_AddSectionLump: bad section '%c'\n", ch);
     }
 
     lump->name = name;
@@ -527,7 +457,7 @@ void Doom::AddSectionLump(char ch, std::string name, qLump_c *lump)
     sections[k]->push_back(lump);
 }
 
-bool Doom::StartWAD(std::string filename)
+bool Doom::StartWAD(const std::string &filename)
 {
     if (!WAD_OpenWrite(filename))
     {
@@ -630,7 +560,7 @@ int Doom::v094_begin_level(lua_State *L)
     return 0;
 }
 
-void Doom::EndLevel(std::string level_name)
+void Doom::EndLevel(const std::string &level_name)
 {
     // terminate header lump with trailing NUL
     if (header_lump->GetSize() > 0)
@@ -695,7 +625,7 @@ void Doom::EndLevel(std::string level_name)
             ZIPF_CloseWrite();
             FileDelete(game_object->ZIP_Filename());
             FileDelete(game_object->Filename());
-            Main::FatalError(_("Error writing map WAD to %s\n"), game_object->ZIP_Filename().c_str());
+            FatalError(_("Error writing map WAD to %s\n"), game_object->ZIP_Filename().c_str());
         }
         else
         {
@@ -716,15 +646,15 @@ int Doom::v094_end_level(lua_State *L)
 
 void Doom::HeaderPrintf(const char *str, ...)
 {
-    static char message_buf[MSG_BUF_LEN];
+    static char message_buf[OBSIDIAN_MSG_BUF_LEN];
 
     va_list args;
 
     va_start(args, str);
-    vsnprintf(message_buf, MSG_BUF_LEN, str, args);
+    vsnprintf(message_buf, OBSIDIAN_MSG_BUF_LEN, str, args);
     va_end(args);
 
-    message_buf[MSG_BUF_LEN - 1] = 0;
+    message_buf[OBSIDIAN_MSG_BUF_LEN - 1] = 0;
 
     header_lump->Append(message_buf, strlen(message_buf));
 }
@@ -763,21 +693,21 @@ int Doom::v094_add_vertex(lua_State *L)
     return 0;
 }
 
-void Doom::AddSector(int f_h, std::string f_tex, int c_h, std::string c_tex, int light, int special, int tag)
+void Doom::AddSector(int f_h, const std::string &f_tex, int c_h, const std::string &c_tex, int light, int special, int tag)
 {
     if (!UDMF_mode)
     {
         raw_sector_t sec;
 
-        sec.floor_h = LE_S16(f_h);
-        sec.ceil_h  = LE_S16(c_h);
+        sec.floorh = LE_S16(f_h);
+        sec.ceilh  = LE_S16(c_h);
 
         memcpy(sec.floor_tex, f_tex.data(), 8);
         memcpy(sec.ceil_tex, c_tex.data(), 8);
 
-        sec.light   = LE_U16(light);
-        sec.special = LE_U16(special);
-        sec.tag     = LE_S16(tag);
+        sec.light = LE_U16(light);
+        sec.type  = LE_U16(special);
+        sec.tag   = LE_S16(tag);
         sector_lump->Append(&sec, sizeof(sec));
     }
     else
@@ -808,7 +738,7 @@ int Doom::v094_add_sector(lua_State *L)
     return 0;
 }
 
-void Doom::AddSidedef(int sector, std::string l_tex, std::string m_tex, std::string u_tex, int x_offset, int y_offset)
+void Doom::AddSidedef(int sector, const std::string &l_tex, const std::string &m_tex, const std::string &u_tex, int x_offset, int y_offset)
 {
     if (!UDMF_mode)
     {
@@ -861,8 +791,8 @@ void Doom::AddLinedef(int vert1, int vert2, int side1, int side2, int type, int 
             line.start = LE_U16(vert1);
             line.end   = LE_U16(vert2);
 
-            line.sidedef1 = side1 < 0 ? 0xFFFF : LE_U16(side1);
-            line.sidedef2 = side2 < 0 ? 0xFFFF : LE_U16(side2);
+            line.right = side1 < 0 ? 0xFFFF : LE_U16(side1);
+            line.left  = side2 < 0 ? 0xFFFF : LE_U16(side2);
 
             line.type  = LE_U16(type);
             line.flags = LE_U16(flags);
@@ -936,11 +866,11 @@ void Doom::AddLinedef(int vert1, int vert2, int side1, int side2, int type, int 
             line.start = LE_U16(vert1);
             line.end   = LE_U16(vert2);
 
-            line.sidedef1 = side1 < 0 ? 0xffff : LE_U16(side1);
-            line.sidedef2 = side2 < 0 ? 0xffff : LE_U16(side2);
+            line.right = side1 < 0 ? 0xffff : LE_U16(side1);
+            line.left  = side2 < 0 ? 0xffff : LE_U16(side2);
 
-            line.special = type; // 8 bits
-            line.flags   = LE_U16(flags);
+            line.type  = type; // 8 bits
+            line.flags = LE_U16(flags);
 
             // tag value is UNUSED
 
@@ -1444,7 +1374,7 @@ bool Doom::game_interface_c::Start(const char *preset)
 
     if (filename.empty())
     {
-        Main::ProgStatus(_("Cancelled"));
+        ProgStatus("%s", _("Cancelled"));
         return false;
     }
 
@@ -1454,7 +1384,7 @@ bool Doom::game_interface_c::Start(const char *preset)
 
     if (file_per_map)
     {
-        filename = PathAppend(home_dir, "resources.wad");
+        filename = PathAppend(home_dir, "temp/resources.wad");
     }
     else
     {
@@ -1493,14 +1423,14 @@ bool Doom::game_interface_c::Start(const char *preset)
         }
         if (!ZIPF_OpenWrite(zip_filename))
         {
-            Main::ProgStatus(_("Error (create PK3/ZIP)"), zip_filename.c_str());
+            ProgStatus("%s", _("Error (create PK3/ZIP)"), zip_filename.c_str());
             return false;
         }
     }
 
     if (!StartWAD(filename))
     {
-        Main::ProgStatus(_("Error (create file)"));
+        ProgStatus("%s", _("Error (create file)"));
         return false;
     }
 
@@ -1580,8 +1510,8 @@ bool Doom::game_interface_c::Finish(bool build_ok)
         {
             if (!ZIPF_AddFile(filename, ""))
             {
-                LogPrintf("Adding WAD to PK3 failed! Retaining original "
-                          "WAD.\n");
+                LogPrint("Adding WAD to PK3 failed! Retaining original "
+                         "WAD.\n");
                 ZIPF_CloseWrite();
                 FileDelete(zip_filename);
             }
@@ -1589,7 +1519,7 @@ bool Doom::game_interface_c::Finish(bool build_ok)
             {
                 if (!ZIPF_CloseWrite())
                 {
-                    LogPrintf("Corrupt PK3! Retaining original WAD.\n");
+                    LogPrint("Corrupt PK3! Retaining original WAD.\n");
                     FileDelete(zip_filename);
                 }
                 else
@@ -1642,7 +1572,7 @@ void Doom::game_interface_c::Property(std::string key, std::string value)
         }
         else
         {
-            LogPrintf("WARNING: unknown DOOM sub_format '%s'\n", value.c_str());
+            LogPrint("WARNING: unknown DOOM sub_format '%s'\n", value.c_str());
         }
     }
     else if (StringCompare(key, "offset_map") == 0)
@@ -1663,7 +1593,7 @@ void Doom::game_interface_c::Property(std::string key, std::string value)
     }
     else
     {
-        LogPrintf("WARNING: unknown DOOM property: %s=%s\n", key.c_str(), value.c_str());
+        LogPrint("WARNING: unknown DOOM property: %s=%s\n", key.c_str(), value.c_str());
     }
 }
 
@@ -1681,7 +1611,7 @@ void Doom::game_interface_c::EndLevel()
 {
     if (level_name.empty())
     {
-        Main::FatalError("Script problem: did not set level name!\n");
+        FatalError("Script problem: did not set level name!\n");
     }
 
 #ifndef CONSOLE_ONLY

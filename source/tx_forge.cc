@@ -144,7 +144,7 @@ static void fourn(float data[], int nn[], int ndim, int isign)
         while (ifp1 < ip2)
         {
             ifp2  = ifp1 << 1;
-            theta = isign * (M_PI * 2) / (ifp2 / ip1);
+            theta = isign * (OBSIDIAN_PI * 2) / (ifp2 / ip1);
             wtemp = sin(0.5 * theta);
             wpr   = -2.0 * wtemp * wtemp;
             wpi   = sin(theta);
@@ -206,7 +206,7 @@ static double rand_gauss(void)
 
 static double rand_phase(void)
 {
-    return 2 * M_PI * xoshiro_Double();
+    return 2 * OBSIDIAN_PI * xoshiro_Double();
 }
 
 /*  SPECTRALSYNTH  --  Spectrally  synthesized  fractal  motion in two
@@ -336,7 +336,7 @@ void TX_SpectralSynth(unsigned long long seed, float *buf, int width, double fra
     {
         if (test & 1)
         {
-            Main::FatalError("TX_SpectralSynth: width '%d' is not a power of two\n", width);
+            FatalError("TX_SpectralSynth: width '%d' is not a power of two\n", width);
         }
     }
 
@@ -362,7 +362,7 @@ void TX_TestSynth(unsigned long long seed)
 
     TX_SpectralSynth(seed, buf, 128);
 
-    LogPrintf("P6\n128 128 255\n");
+    LogPrint("P6\n128 128 255\n");
 
     for (int y = 0; y < 128; y++)
     {
@@ -372,7 +372,7 @@ void TX_TestSynth(unsigned long long seed)
 
             int ity = (int)(1 + f * 253);
 
-            LogPrintf("ITY: %d\n", ity);
+            LogPrint("ITY: %d\n", ity);
         }
     }
 

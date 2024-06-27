@@ -22,8 +22,10 @@
 #include <string.h>
 
 #include "bsp_wad.h"
+#include "g_doom.h"
 #include "lib_util.h"
 #include "raw_def.h"
+#include "sys_debug.h"
 
 bool opt_backup  = false;
 bool opt_help    = false;
@@ -90,14 +92,11 @@ bool CheckMapInMaplist(int lev_idx)
 
 build_result_e BuildFile(buildinfo_t *build_info)
 {
-    build_info->total_warnings     = 0;
-    build_info->total_minor_issues = 0;
-
     int num_levels = ajbsp::LevelsInWad();
 
     if (num_levels == 0)
     {
-        build_info->Print(0, "  No levels in wad\n");
+        LogPrint("  No levels in wad\n");
         total_empty_files += 1;
         return BUILD_OK;
     }
@@ -115,10 +114,7 @@ build_result_e BuildFile(buildinfo_t *build_info)
 
         visited += 1;
 
-        build_info->ProgressUpdate(visited, num_levels);
-
-        if (n > 0 && build_info->verbosity >= 2)
-            build_info->Print(0, "\n");
+        Doom::Send_Prog_Nodes(visited, num_levels);
 
         res = ajbsp::BuildLevel(n);
 
@@ -143,40 +139,30 @@ build_result_e BuildFile(buildinfo_t *build_info)
 
     if (visited == 0)
     {
-        build_info->Print(0, "  No matching levels\n");
+        LogPrint("  No matching levels\n");
         total_empty_files += 1;
         return BUILD_OK;
     }
 
-    build_info->Print(0, "\n");
+    LogPrint("\n");
 
     total_failed_maps += failures;
 
     if (failures > 0)
     {
-        build_info->Print(0, "  Failed maps: %d (out of %d)\n", failures, visited);
+        LogPrint("  Failed maps: %d (out of %d)\n", failures, visited);
 
         // allow building other files
         total_failed_files += 1;
     }
 
-    if (true)
-    {
-        build_info->Print(0, "  Serious warnings: %d\n", build_info->total_warnings);
-    }
-
-    if (build_info->verbosity >= 1)
-    {
-        build_info->Print(0, "  Minor issues: %d\n", build_info->total_minor_issues);
-    }
-
     return BUILD_OK;
 }
 
-void VisitFile(std::string filename, buildinfo_t *build_info)
+static void VisitFile(const std::string &filename, buildinfo_t *build_info)
 {
-    build_info->Print(0, "\n");
-    build_info->Print(0, "Building %s\n", filename.c_str());
+    LogPrint("\n");
+    LogPrint("Building %s\n", filename.c_str());
 
     // this will fatal error if it fails
     ajbsp::OpenWad(filename);
@@ -186,7 +172,7 @@ void VisitFile(std::string filename, buildinfo_t *build_info)
     ajbsp::CloseWad();
 
     if (res == BUILD_Cancelled)
-        build_info->FatalError("CANCELLED\n");
+        FatalError("CANCELLED\n");
 }
 
 // ----- user information -----------------------------
@@ -239,22 +225,22 @@ void ParseMapRange(char *tok, buildinfo_t *build_info)
     }
 
     if (!ValidateMapName(low))
-        build_info->FatalError("illegal map name: '%s'\n", low);
+        FatalError("illegal map name: '%s'\n", low);
 
     if (!ValidateMapName(high))
-        build_info->FatalError("illegal map name: '%s'\n", high);
+        FatalError("illegal map name: '%s'\n", high);
 
     if (strlen(low) < strlen(high))
-        build_info->FatalError("bad map range (%s shorter than %s)\n", low, high);
+        FatalError("bad map range (%s shorter than %s)\n", low, high);
 
     if (strlen(low) > strlen(high))
-        build_info->FatalError("bad map range (%s longer than %s)\n", low, high);
+        FatalError("bad map range (%s longer than %s)\n", low, high);
 
     if (low[0] != high[0])
-        build_info->FatalError("bad map range (%s and %s start with different letters)\n", low, high);
+        FatalError("bad map range (%s and %s start with different letters)\n", low, high);
 
     if (StringCompare(low, high) > 0)
-        build_info->FatalError("bad map range (wrong order, %s > %s)\n", low, high);
+        FatalError("bad map range (wrong order, %s > %s)\n", low, high);
 
     // Ok
 
@@ -277,7 +263,7 @@ void ParseMapList(const char *from_arg, buildinfo_t *build_info)
     while (*arg)
     {
         if (*arg == ',')
-            build_info->FatalError("bad map list (empty element)\n");
+            FatalError("bad map list (empty element)\n");
 
         // find next comma
         char *tok = arg;
@@ -303,7 +289,7 @@ void ParseMapList(const char *from_arg, buildinfo_t *build_info)
     do                                                                                                                 \
     {                                                                                                                  \
         if (sizeof(type) != size)                                                                                      \
-            build_info->FatalError("sizeof " #type " is %d (should be " #size ")\n", (int)sizeof(type));               \
+            FatalError("sizeof " #type " is %d (should be " #size ")\n", (int)sizeof(type));                           \
     } while (0)
 
 void CheckTypeSizes(buildinfo_t *build_info)
@@ -322,7 +308,7 @@ void CheckTypeSizes(buildinfo_t *build_info)
     assert_size(raw_vertex_t, 4);
 }
 
-int AJBSP_BuildNodes(std::string filename, buildinfo_t *build_info)
+int AJBSP_BuildNodes(const std::string &filename, buildinfo_t *build_info)
 {
     // need this early, especially for fatal errors in utility/wad code
     ajbsp::SetInfo(build_info);
@@ -332,7 +318,7 @@ int AJBSP_BuildNodes(std::string filename, buildinfo_t *build_info)
 
     if (filename.empty())
     {
-        build_info->FatalError("no files to process\n");
+        FatalError("no files to process\n");
         return 0;
     }
 
@@ -340,39 +326,38 @@ int AJBSP_BuildNodes(std::string filename, buildinfo_t *build_info)
 
     // validate file before processing it
     if (!FileExists(filename))
-        build_info->FatalError("no such file: %s\n", filename.c_str());
+        FatalError("no such file: %s\n", filename.c_str());
 
     VisitFile(filename, build_info);
 
-    build_info->Print(0, "\n");
+    LogPrint("\n");
 
     if (total_failed_files > 0)
     {
-        build_info->Print(0, "FAILURES occurred on %d map%s in %d file%s.\n", total_failed_maps,
-                          total_failed_maps == 1 ? "" : "s", total_failed_files, total_failed_files == 1 ? "" : "s");
+        LogPrint("FAILURES occurred on %d map%s in %d file%s.\n", total_failed_maps, total_failed_maps == 1 ? "" : "s",
+                 total_failed_files, total_failed_files == 1 ? "" : "s");
 
-        if (build_info->verbosity == 0)
-            build_info->Print(0, "Rerun with --verbose to see more details.\n");
+        LogPrint("Rerun with --verbose to see more details.\n");
 
         return 2;
     }
     else if (total_built_maps == 0)
     {
-        build_info->Print(0, "NOTHING was built!\n");
+        LogPrint("NOTHING was built!\n");
 
         return 1;
     }
     else if (total_empty_files == 0)
     {
-        build_info->Print(0, "Ok, built all files.\n");
+        LogPrint("Ok, built all files.\n");
     }
     else
     {
         int built = 1 - total_empty_files;
         int empty = total_empty_files;
 
-        build_info->Print(0, "Ok, built %d file%s, %d file%s empty.\n", built, (built == 1 ? "" : "s"), empty,
-                          (empty == 1 ? " was" : "s were"));
+        LogPrint("Ok, built %d file%s, %d file%s empty.\n", built, (built == 1 ? "" : "s"), empty,
+                 (empty == 1 ? " was" : "s were"));
     }
 
     // that's all folks!

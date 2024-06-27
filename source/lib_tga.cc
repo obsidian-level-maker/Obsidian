@@ -117,7 +117,7 @@ tga_image_c *TGA_LoadImage(const char *path)
     if (targa_header.image_type != TGA_INDEXED && targa_header.image_type != TGA_INDEXED_RLE &&
         targa_header.image_type != TGA_RGB && targa_header.image_type != TGA_RGB_RLE)
     {
-        Main::FatalError("Bad tga file: type {} is not supported\n", targa_header.image_type);
+        FatalError("Bad tga file: type {} is not supported\n", targa_header.image_type);
     }
 
     int width  = targa_header.width;
@@ -125,7 +125,7 @@ tga_image_c *TGA_LoadImage(const char *path)
 
     if (width == 0 || height == 0)
     {
-        Main::FatalError("Bad tga file: width or height is zero\n");
+        FatalError("Bad tga file: width or height is zero\n");
     }
 
     tga_image_c *img = new tga_image_c(width, height);
@@ -144,17 +144,17 @@ tga_image_c *TGA_LoadImage(const char *path)
     {
         if (targa_header.colormap_type != 1)
         {
-            Main::FatalError("Bad tga file: colormap type != 1\n");
+            FatalError("Bad tga file: colormap type != 1\n");
         }
 
         if (targa_header.colormap_length > 256)
         {
-            Main::FatalError("Bad tga file: too many colors (over 256)\n");
+            FatalError("Bad tga file: too many colors (over 256)\n");
         }
 
         if (targa_header.pixel_bits != 8 || targa_header.colormap_bits < 24)
         {
-            Main::FatalError("Bad tga file: unsupported colormap size\n");
+            FatalError("Bad tga file: unsupported colormap size\n");
         }
 
         memset(palette, 255, sizeof(palette));
@@ -187,7 +187,7 @@ tga_image_c *TGA_LoadImage(const char *path)
     {
         if (targa_header.pixel_bits != 24 && targa_header.pixel_bits != 32)
         {
-            Main::FatalError("Bad tga file: only 24 or 32 bit images supported\n");
+            FatalError("Bad tga file: only 24 or 32 bit images supported\n");
         }
 
         for (int y = height - 1; y >= 0; y--)
@@ -223,7 +223,7 @@ tga_image_c *TGA_LoadImage(const char *path)
     {
         if (targa_header.pixel_bits != 24 && targa_header.pixel_bits != 32)
         {
-            Main::FatalError("Bad tga file: only 24 or 32 bit images supported\n");
+            FatalError("Bad tga file: only 24 or 32 bit images supported\n");
         }
 
         uint8_t r = 0, g = 0, b = 0, a = 0;

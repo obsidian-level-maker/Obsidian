@@ -20,8 +20,8 @@
 //----------------------------------------------------------------------
 
 #ifndef CONSOLE_ONLY
-#include "hdr_fltk.h"
-#include "hdr_ui.h"
+#include <FL/Fl_Native_File_Chooser.H>
+#include <FL/fl_ask.H>
 #endif
 #include "lib_argv.h"
 #include "lib_util.h"
@@ -30,6 +30,7 @@
 #include "m_lua.h"
 #include "m_trans.h"
 #include "main.h"
+#include "sys_macro.h"
 
 extern std::string BestDirectory();
 
@@ -145,7 +146,7 @@ static bool Options_ParseLine(const std::string &buf)
     return true;
 }
 
-bool Options_Load(std::string filename)
+bool Options_Load(const std::string &filename)
 {
     FILE *option_fp = FileOpen(filename, "r");
 
@@ -156,15 +157,16 @@ bool Options_Load(std::string filename)
     }
 
     std::string buffer;
-    int c = EOF;
+    int         c = EOF;
     for (;;)
     {
         buffer.clear();
         while ((c = fgetc(option_fp)) != EOF)
         {
-            buffer.push_back(c);
-            if (c == '\n')
+            if (c == '\n' || c == '\r')
                 break;
+            else
+                buffer.push_back(c);
         }
 
         Options_ParseLine(buffer);
@@ -178,19 +180,19 @@ bool Options_Load(std::string filename)
     return true;
 }
 
-bool Options_Save(std::string filename)
+bool Options_Save(const std::string &filename)
 {
     FILE *option_fp = FileOpen(filename, "w");
 
     if (!option_fp)
     {
-        LogPrintf("Error: unable to create file: %s\n(%s)\n\n", filename.c_str(), strerror(errno));
+        LogPrint("Error: unable to create file: %s\n(%s)\n\n", filename.c_str(), strerror(errno));
         return false;
     }
 
     if (main_action != MAIN_SOFT_RESTART)
     {
-        LogPrintf("Saving options file...\n");
+        LogPrint("Saving options file...\n");
     }
 
     fprintf(option_fp, "-- OPTIONS FILE : OBSIDIAN %s \"%s\"\n", OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str());
@@ -227,7 +229,7 @@ bool Options_Save(std::string filename)
 
     if (main_action != MAIN_SOFT_RESTART)
     {
-        LogPrintf("DONE.\n\n");
+        LogPrint("DONE.\n\n");
     }
 
     return true;
@@ -587,8 +589,8 @@ class UI_OptionsWin : public Fl_Window
         switch (result)
         {
         case -1:
-            LogPrintf("%s\n", _("Error choosing directory:"));
-            LogPrintf("   %s\n", chooser.errmsg());
+            LogPrint("%s\n", _("Error choosing directory:"));
+            LogPrint("   %s\n", chooser.errmsg());
 
             return;
 
@@ -603,15 +605,13 @@ class UI_OptionsWin : public Fl_Window
 
         if (dir_name.empty())
         {
-            LogPrintf("%s\n", _("Empty default directory provided???"));
+            LogPrint("%s\n", _("Empty default directory provided???"));
             return;
         }
 
         default_output_path = dir_name;
         UI_OptionsWin *that = (UI_OptionsWin *)data;
-        std::string    blanker;
-        blanker.append(250, ' ');
-        that->opt_current_output_path->copy_label(blanker.c_str());
+        that->opt_current_output_path->label(BLANKOUT);
         that->opt_current_output_path->redraw_label();
         that->opt_current_output_path->copy_label(
             StringFormat("%s: %s", _("Current Path"), BestDirectory().c_str()).c_str());

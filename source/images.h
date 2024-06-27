@@ -2,8 +2,8 @@
 
 #pragma once
 
-#ifndef WIN32
-static const char *obsidian_icon[] = {
+#ifndef _WIN32
+static constexpr const char *obsidian_icon[] = {
     "64 64 928 2",
     "  	c #000000",
     ". 	c #010101",
@@ -1065,7 +1065,7 @@ static const char *obsidian_icon[] = {
 #endif
 
 /* XPM */
-static const char *clippy_xpm[] = {
+static constexpr const char *clippy_xpm[] = {
     "476 225 956 2",
     "  	c None",
     ". 	c #51514F",
@@ -4164,7 +4164,7 @@ typedef struct
 //
 //------------------------------------------------------------------------
 
-const uint8_t image_data_BOLT[64 * 64] = {
+constexpr uint8_t image_data_BOLT[64 * 64] = {
     70,  70,  70,  70,  68,  68,  68,  68,  68,  68,  68,  52,  63,  68,  68,  70,  68,  68,  68,  68,  68,  68,  70,
     70,  79,  79,  79,  79,  85,  93,  100, 108, 108, 108, 121, 121, 121, 121, 121, 121, 121, 114, 108, 108, 108, 93,
     93,  93,  93,  93,  93,  93,  85,  79,  79,  79,  79,  79,  79,  70,  70,  70,  79,  79,  70,  70,  70,  70,  70,
@@ -4345,7 +4345,7 @@ const uint8_t image_data_BOLT[64 * 64] = {
     108, 100, 100, 100, 100, 93,  85,  85,  85,  85,  85,  79,  79,  79,  79,  79,  79,  79,  79,  79,  79,  70,  70,
     70,  68};
 
-const logo_image_t logo_BOLT = {"BOLT", 64, 64, image_data_BOLT};
+constexpr logo_image_t logo_BOLT = {"BOLT", 64, 64, image_data_BOLT};
 
 //------------------------------------------------------------------------
 //  LOGO Data : "CARVE" image
@@ -4370,7 +4370,7 @@ const logo_image_t logo_BOLT = {"BOLT", 64, 64, image_data_BOLT};
 
 // Same as the RELIEF image for now
 
-const uint8_t image_data_CARVE[64 * 64] = {
+constexpr uint8_t image_data_CARVE[64 * 64] = {
     17,  20,  20,  20,  20,  20,  20,  20,  21,  20,  17,  17,  17,  17,  17,  20,  20,  20,  20,  17,  17,  17,  17,
     17,  17,  20,  20,  20,  17,  17,  17,  21,  20,  20,  20,  20,  20,  24,  17,  17,  20,  17,  17,  20,  17,  31,
     20,  17,  31,  20,  20,  20,  20,  20,  20,  20,  20,  20,  20,  20,  20,  20,  20,  20,  20,  20,  20,  20,  20,
@@ -4551,7 +4551,7 @@ const uint8_t image_data_CARVE[64 * 64] = {
     31,  17,  17,  17,  20,  20,  20,  20,  20,  20,  20,  17,  20,  20,  20,  20,  20,  20,  17,  17,  20,  20,  20,
     20,  20};
 
-const logo_image_t logo_CARVE = {"CARVE", 64, 64, image_data_CARVE};
+constexpr logo_image_t logo_CARVE = {"CARVE", 64, 64, image_data_CARVE};
 
 //------------------------------------------------------------------------
 //  FONT Data : "CWILV"
@@ -4573,7 +4573,7 @@ const logo_image_t logo_CARVE = {"CARVE", 64, 64, image_data_CARVE};
 //
 //------------------------------------------------------------------------
 
-const uint8_t image_data_CWILV[99 * 64] = {
+constexpr uint8_t image_data_CWILV[99 * 64] = {
     0,   0,   0,   0,   1,   1,   0,   0,   0,   0,   0,   0,   1,   1,   1,   0,   0,   0,   0,   0,   0,   1,   1,
     0,   0,   0,   0,   0,   0,   0,   1,   1,   1,   0,   0,   0,   0,   0,   0,   0,   0,   1,   1,   0,   0,   0,
     0,   0,   1,   1,   1,   1,   1,   0,   0,   0,   0,   0,   1,   1,   0,   0,   0,   0,   1,   1,   1,   1,   1,
@@ -4851,7 +4851,7 @@ const uint8_t image_data_CWILV[99 * 64] = {
     0,   1,   1,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   1,   1,   0,
     1,   1,   7,   28,  21,  4,   0,   0,   0,   0,   0};
 
-const logo_image_t font_CWILV = {"CWILV", 99, 64, image_data_CWILV};
+constexpr logo_image_t font_CWILV = {"CWILV", 99, 64, image_data_CWILV};
 
 //------------------------------------------------------------------------
 //  LOGO Data : "PILL" image
@@ -4874,7 +4874,7 @@ const logo_image_t font_CWILV = {"CWILV", 99, 64, image_data_CWILV};
 //
 //------------------------------------------------------------------------
 
-const uint8_t image_data_PILL[128 * 32] = {
+constexpr uint8_t image_data_PILL[128 * 32] = {
     17,  9,   9,   9,   17,  17,  17,  17,  12,  12,  12,  12,  12,  12,  12,  12,  12,  20,  12,  12,  20,  20,  14,
     14,  14,  17,  22,  22,  17,  17,  20,  20,  20,  20,  20,  20,  52,  20,  20,  22,  22,  52,  52,  52,  52,  52,
     22,  20,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,  52,
@@ -5055,7 +5055,7 @@ const uint8_t image_data_PILL[128 * 32] = {
     20,  20,  17,  17,  17,  17,  20,  20,  20,  20,  20,  12,  12,  12,  12,  12,  20,  12,  12,  12,  12,  5,   5,
     9,   9};
 
-const logo_image_t logo_PILL = {"PILL", 128, 32, image_data_PILL};
+constexpr logo_image_t logo_PILL = {"PILL", 128, 32, image_data_PILL};
 
 //------------------------------------------------------------------------
 //  LOGO Data : "RELIEF" image
@@ -5078,7 +5078,7 @@ const logo_image_t logo_PILL = {"PILL", 128, 32, image_data_PILL};
 //
 //------------------------------------------------------------------------
 
-const uint8_t image_data_RELIEF[64 * 64] = {
+constexpr uint8_t image_data_RELIEF[64 * 64] = {
     17,  20,  20,  20,  20,  20,  20,  20,  21,  20,  17,  17,  17,  17,  17,  20,  20,  20,  20,  17,  17,  17,  17,
     17,  17,  20,  20,  20,  17,  17,  17,  21,  20,  20,  20,  20,  20,  24,  17,  17,  20,  17,  17,  20,  17,  31,
     20,  17,  31,  20,  20,  20,  20,  20,  20,  20,  20,  20,  20,  20,  20,  20,  20,  20,  20,  20,  20,  20,  20,
@@ -5259,4 +5259,4 @@ const uint8_t image_data_RELIEF[64 * 64] = {
     31,  17,  17,  17,  20,  20,  20,  20,  20,  20,  20,  17,  20,  20,  20,  20,  20,  20,  17,  17,  20,  20,  20,
     20,  20};
 
-const logo_image_t logo_RELIEF = {"RELIEF", 64, 64, image_data_RELIEF};
+constexpr logo_image_t logo_RELIEF = {"RELIEF", 64, 64, image_data_RELIEF};

@@ -21,10 +21,6 @@
 
 #include "m_addons.h"
 
-#ifndef CONSOLE_ONLY
-#include "hdr_fltk.h"
-#include "hdr_ui.h"
-#endif
 #include "lib_argv.h"
 #include "lib_util.h"
 #include "m_cookie.h"
@@ -46,12 +42,12 @@ void VFS_AddFolder(std::string name)
 
     if (!PHYSFS_mount(path.c_str(), mount.c_str(), 0))
     {
-        Main::FatalError("Failed to mount '%s' folder in PhysFS:\n%s\n", name.c_str(),
-                         PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+        FatalError("Failed to mount '%s' folder in PhysFS:\n%s\n", name.c_str(),
+                   PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         return; /* NOT REACHED */
     }
 
-    DebugPrintf("mounted folder '%s'\n", name.c_str());
+    DebugPrint("mounted folder '%s'\n", name.c_str());
 }
 
 // install and home directories if different
@@ -61,19 +57,19 @@ void VFS_AddBothFolders(std::string name)
     std::string mount = StringFormat("/%s", name.c_str());
     if (!PHYSFS_mount(path.c_str(), mount.c_str(), 0))
     {
-        Main::FatalError("Failed to mount '%s' folder in PhysFS:\n%s\n", name.c_str(),
-                         PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+        FatalError("Failed to mount '%s' folder in PhysFS:\n%s\n", name.c_str(),
+                   PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         return;                                   /* NOT REACHED */
     }
     path = PathAppend(home_dir, name);
     PHYSFS_mount(path.c_str(), mount.c_str(), 0); // this one can fail if not present, that's fine
 
-    DebugPrintf("mounted folder '%s'\n", name.c_str());
+    DebugPrint("mounted folder '%s'\n", name.c_str());
 }
 
 bool VFS_AddArchive(std::string filename, bool options_file)
 {
-    LogPrintf("  using: %s\n", filename.c_str());
+    LogPrint("  using: %s\n", filename.c_str());
 
     // when handling "bare" filenames from the command line (i.e. ones
     // containing no paths or drive spec) and the file does not exist in
@@ -92,13 +88,13 @@ bool VFS_AddArchive(std::string filename, bool options_file)
     {
         if (options_file)
         {
-            LogPrintf("Failed to mount '%s' archive in PhysFS:\n%s\n", filename.c_str(),
-                      PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+            LogPrint("Failed to mount '%s' archive in PhysFS:\n%s\n", filename.c_str(),
+                     PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         }
         else
         {
-            Main::FatalError("Failed to mount '%s' archive in PhysFS:\n%s\n", filename.c_str(),
-                             PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+            FatalError("Failed to mount '%s' archive in PhysFS:\n%s\n", filename.c_str(),
+                       PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         }
 
         return false;
@@ -107,9 +103,9 @@ bool VFS_AddArchive(std::string filename, bool options_file)
     return true; // Ok
 }
 
-void VFS_InitAddons(std::string search_dir)
+void VFS_InitAddons()
 {
-    LogPrintf("Initializing VFS...\n");
+    LogPrint("Initializing VFS...\n");
 
     VFS_AddFolder("scripts");
     VFS_AddFolder("games");
@@ -119,8 +115,9 @@ void VFS_InitAddons(std::string search_dir)
     VFS_AddFolder("ports");
     VFS_AddBothFolders("presets");
     VFS_AddBothFolders("addons");
+    VFS_AddBothFolders("temp");
 
-    LogPrintf("DONE.\n\n");
+    LogPrint("DONE.\n\n");
 }
 
 void VFS_ParseCommandLine()
@@ -135,7 +132,7 @@ void VFS_ParseCommandLine()
 
     arg++;
 
-    LogPrintf("Command-line addons....\n");
+    LogPrint("Command-line addons....\n");
 
     for (; arg < argv::list.size() && !argv::IsOption(arg); arg++, count++)
     {
@@ -144,13 +141,13 @@ void VFS_ParseCommandLine()
 
     if (!count)
     {
-        Main::FatalError("Missing filename for --addon option\n");
+        FatalError("Missing filename for --addon option\n");
     }
 
-    LogPrintf("DONE\n\n");
+    LogPrint("DONE\n\n");
 }
 
-void VFS_OptParse(std::string name)
+void VFS_OptParse(const std::string &name)
 {
     // just remember it now
     if (initial_enabled_addons.find(name) == initial_enabled_addons.end())
@@ -178,7 +175,7 @@ void VFS_OptWrite(FILE *fp)
 
 void VFS_ScanForPresets()
 {
-    LogPrintf("Scanning for presets....\n");
+    LogPrint("Scanning for presets....\n");
 
     all_presets.clear();
 
@@ -187,7 +184,7 @@ void VFS_ScanForPresets()
     // seems this only happens on out-of-memory error
     if (!got_names)
     {
-        LogPrintf("DONE (none found)\n");
+        LogPrint("DONE (none found)\n");
     }
 
     char **p;
@@ -204,19 +201,19 @@ void VFS_ScanForPresets()
 
     if (all_presets.size() == 0)
     {
-        LogPrintf("DONE (none found)\n");
+        LogPrint("DONE (none found)\n");
     }
     else
     {
-        LogPrintf("DONE\n");
+        LogPrint("DONE\n");
     }
 
-    LogPrintf("\n");
+    LogPrint("\n");
 }
 
 void VFS_ScanForAddons()
 {
-    LogPrintf("Scanning for addons....\n");
+    LogPrint("Scanning for addons....\n");
 
     all_addons.clear();
 
@@ -225,7 +222,7 @@ void VFS_ScanForAddons()
     // seems this only happens on out-of-memory error
     if (!got_names)
     {
-        LogPrintf("DONE (none found)\n");
+        LogPrint("DONE (none found)\n");
     }
 
     char **p;
@@ -245,7 +242,7 @@ void VFS_ScanForAddons()
                 info.enabled = true;
             }
 
-            LogPrintf("  found: %s%s\n", info.name.c_str(), info.enabled ? " (Enabled)" : " (Disabled)");
+            LogPrint("  found: %s%s\n", info.name.c_str(), info.enabled ? " (Enabled)" : " (Disabled)");
 
             all_addons.push_back(info);
 
@@ -261,67 +258,17 @@ void VFS_ScanForAddons()
 
     if (all_addons.size() == 0)
     {
-        LogPrintf("DONE (none found)\n");
+        LogPrint("DONE (none found)\n");
     }
     else
     {
-        LogPrintf("DONE\n");
+        LogPrint("DONE\n");
     }
 
-    LogPrintf("\n");
+    LogPrint("\n");
 }
 
 //----------------------------------------------------------------------
-
-//
-// this is useful to "extract" something out of virtual FS to the real
-// file system so we can use normal stdio file operations on it
-// [ especially a _library_ that uses stdio.h ]
-//
-bool VFS_CopyFile(const char *src_name, const char *dest_name)
-{
-    char buffer[1024];
-
-    PHYSFS_file *src = PHYSFS_openRead(src_name);
-    if (!src)
-    {
-        return false;
-    }
-
-    FILE *dest = FileOpen(dest_name, "wb");
-    if (!dest)
-    {
-        PHYSFS_close(src);
-        return false;
-    }
-
-    bool was_OK = true;
-
-    while (was_OK)
-    {
-        int rlen = (int)(PHYSFS_readBytes(src, buffer, sizeof(buffer)) / sizeof(buffer));
-        if (rlen < 0)
-        {
-            was_OK = false;
-        }
-
-        if (rlen <= 0)
-        {
-            break;
-        }
-
-        int wlen = fwrite(buffer, 1, rlen, dest);
-        if (wlen < rlen || ferror(dest))
-        {
-            was_OK = false;
-        }
-    }
-
-    fclose(dest);
-    PHYSFS_close(src);
-
-    return was_OK;
-}
 
 uint8_t *VFS_LoadFile(const char *filename, int *length)
 {

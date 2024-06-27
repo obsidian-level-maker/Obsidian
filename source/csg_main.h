@@ -69,17 +69,15 @@ class csg_property_set_c
     {
     }
 
-    void Add(std::string key, std::string value);
-    void Remove(std::string key);
+    void Add(const std::string &key, std::string_view value);
+    void Remove(const std::string &key);
 
-    std::string getStr(std::string key, std::string def_val = "") const;
+    std::string getStr(const std::string &key, std::string_view def_val = "") const;
 
-    double getDouble(std::string key, double def_val = 0) const;
-    int    getInt(std::string key, int def_val = 0) const;
+    double getDouble(const std::string &key, double def_val = 0) const;
+    int    getInt(const std::string &key, int def_val = 0) const;
 
     void getHexenArgs(uint8_t *arg5) const;
-
-    void DebugDump();
 
   public:
     typedef std::map<std::string, std::string>::iterator iterator;
@@ -252,7 +250,7 @@ class csg_entity_c
     csg_entity_c();
     ~csg_entity_c();
 
-    bool Match(std::string want_name) const;
+    bool Match(std::string_view want_name) const;
 };
 
 /***** VARIABLES ****************/
@@ -268,13 +266,13 @@ extern std::string dummy_plane_tex;
 
 void CSG_Main_Free();
 
-bool CSG_TraceRay(double x1, double y1, double z1, double x2, double y2, double z2, std::string mode);
+bool CSG_TraceRay(double x1, double y1, double z1, double x2, double y2, double z2, std::string_view mode);
 
 int CSG_BrushContents(double x, double y, double z, double *liquid_depth = NULL);
 
-csg_property_set_c *CSG_LookupTexProps(std::string name);
+csg_property_set_c *CSG_LookupTexProps(const std::string &name);
 
-void CSG_LinkBrushToEntity(csg_brush_c *B, std::string link_key);
+void CSG_LinkBrushToEntity(csg_brush_c *B, const std::string &link_key);
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

@@ -19,8 +19,8 @@
 //
 //------------------------------------------------------------------------
 
-#include "hdr_fltk.h"
-#include "hdr_ui.h"
+#include <FL/Fl_Native_File_Chooser.H>
+
 #include "lib_util.h"
 #include "m_cookie.h"
 #include "m_lua.h"
@@ -423,8 +423,8 @@ class UI_Manage_Config : public Fl_Double_Window
         switch (chooser.show())
         {
         case -1:
-            LogPrintf("%s\n", _("Error choosing save file:"));
-            LogPrintf("   %s\n", chooser.errmsg());
+            LogPrint("%s\n", _("Error choosing save file:"));
+            LogPrint("   %s\n", chooser.errmsg());
 
             DLG_ShowError(_("Unable to save the file:\n\n%s"), chooser.errmsg());
             return NULL;
@@ -489,8 +489,8 @@ class UI_Manage_Config : public Fl_Double_Window
         switch (chooser.show())
         {
         case -1:
-            LogPrintf("%s\n", _("Error choosing load file:"));
-            LogPrintf("   %s\n", chooser.errmsg());
+            LogPrint("%s\n", _("Error choosing load file:"));
+            LogPrint("   %s\n", chooser.errmsg());
 
             DLG_ShowError(_("Unable to load the file:\n\n%s"), chooser.errmsg());
             return "";

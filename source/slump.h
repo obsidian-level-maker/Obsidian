@@ -37,7 +37,7 @@
 #include <string>
 #include <vector>
 
-bool slump_main(std::string filename);
+bool slump_main(const std::string &filename);
 
 /* Slump 0.003.02 */
 #define SOURCE_VERSION    (0)
@@ -941,7 +941,7 @@ typedef struct s_config
 /* Lots and lots and lots of functions */
 /* And this isn't even all of 'em! */
 
-config    *get_config(std::string filename);
+config    *get_config(const std::string &filename);
 void       NewLevel(level *l, haa *init_haa, config *c);
 void       DumpLevel(dumphandle dh, config *c, level *l, int episode, int mission, int map);
 void       FreeLevel(level *l);

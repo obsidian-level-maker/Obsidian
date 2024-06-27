@@ -22,11 +22,8 @@
 #ifndef _WIN32
 #include <unistd.h>
 #endif
-
-#include "hdr_fltk.h"
-#include "hdr_ui.h"
-#include "main.h"
 #include "m_trans.h"
+#include "main.h"
 
 #if (FL_MAJOR_VERSION != 1 || FL_MINOR_VERSION < 3)
 #error "Require FLTK version 1.3.0 or later"

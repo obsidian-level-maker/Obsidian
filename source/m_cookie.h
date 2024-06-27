@@ -25,20 +25,20 @@
 
 #include <string>
 
-bool Cookie_Load(std::string filename);
-bool Cookie_Save(std::string filename);
+bool Cookie_Load(const std::string &filename);
+bool Cookie_Save(const std::string &filename);
 
-bool Cookie_LoadString(std::string str, bool _keep_seed);
+bool Cookie_LoadString(std::string_view str, bool _keep_seed);
 
 void Cookie_ParseArguments(void);
 
 /* option stuff */
 
 void Parse_Option(const std::string &name, const std::string &value);
-bool Options_Load(std::string filename);
-bool Options_Save(std::string filename);
-bool Theme_Options_Load(std::string filename);
-bool Theme_Options_Save(std::string filename);
+bool Options_Load(const std::string &filename);
+bool Options_Save(const std::string &filename);
+bool Theme_Options_Load(const std::string &filename);
+bool Theme_Options_Save(const std::string &filename);
 
 /* recent file stuff */
 
@@ -54,9 +54,7 @@ typedef enum
 
 } recent_group_e;
 
-void Recent_AddFile(int group, std::string filename);
-void Recent_RemoveFile(int group, std::string filename);
-bool Recent_GetName(int group, int index, std::string name_buf, bool for_menu = false);
+void Recent_AddFile(int group, const std::string &filename);
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

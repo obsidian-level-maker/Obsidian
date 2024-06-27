@@ -19,13 +19,11 @@
 //
 //------------------------------------------------------------------------
 
+#include <FL/fl_ask.H>
 #include <locale.h>
 
 #include <stdexcept>
 
-#include "hdr_fltk.h"
-#include "hdr_lua.h"
-#include "hdr_ui.h"
 #include "lib_util.h"
 #include "m_lua.h"
 #include "m_trans.h"
@@ -34,7 +32,7 @@
 #include "sys_macro.h"
 #include "sys_xoshiro.h"
 
-UI_Module::UI_Module(int X, int Y, int W, int H, std::string id, std::string label, std::string tip, int red, int green,
+UI_Module::UI_Module(int X, int Y, int W, int H, const std::string &id, const std::string &label, const std::string &tip, int red, int green,
                      int blue, bool suboptions)
     : Fl_Group(X, Y, W, H), choice_map(), cur_opt_y(0)
 {
@@ -98,7 +96,7 @@ bool UI_Module::Is_UI() const
     return (!StringCompare(id_name.substr(0, 3), "ui_"));
 }
 
-void UI_Module::AddHeader(std::string opt, std::string label, int gap)
+void UI_Module::AddHeader(const std::string &opt, const std::string &label, int gap)
 {
     int nw = this->parent()->w();
 
@@ -128,7 +126,7 @@ void UI_Module::AddHeader(std::string opt, std::string label, int gap)
     choice_map_header[opt] = rhead;
 }
 
-void UI_Module::AddUrl(std::string opt, std::string label, std::string url, int gap)
+void UI_Module::AddUrl(const std::string &opt, const std::string &label, const std::string &url, int gap)
 {
     int nw = this->parent()->w();
 
@@ -158,8 +156,8 @@ void UI_Module::AddUrl(std::string opt, std::string label, std::string url, int 
     choice_map_url[opt] = rurl;
 }
 
-void UI_Module::AddOption(std::string opt, std::string label, std::string tip, std::string longtip, int gap,
-                          std::string randomize_group, std::string default_value)
+void UI_Module::AddOption(const std::string &opt, const std::string &label, const std::string &tip, std::string &longtip, int gap,
+                          const std::string &randomize_group, const std::string &default_value)
 {
     int nw = this->parent()->w();
     //    int nh = kf_h(30);
@@ -223,9 +221,9 @@ void UI_Module::AddOption(std::string opt, std::string label, std::string tip, s
     choice_map[opt] = rch;
 }
 
-void UI_Module::AddSliderOption(std::string opt, std::string label, std::string tip, std::string longtip, int gap,
-                                double min, double max, double inc, std::string units, std::string presets,
-                                std::string nan, std::string randomize_group, std::string default_value)
+void UI_Module::AddSliderOption(const std::string &opt, std::string &label, const std::string &tip, std::string &longtip, int gap,
+                                double min, double max, double inc, const std::string &units, const std::string &presets,
+                                const std::string &nan, const std::string &randomize_group, const std::string &default_value)
 {
     int nw = this->parent()->w();
     //    int nh = kf_h(30);
@@ -382,7 +380,7 @@ void UI_Module::AddSliderOption(std::string opt, std::string label, std::string 
             oldpos = pos + 1;
         }
     }
-    
+
     setlocale(LC_NUMERIC, numeric_locale.c_str());
 
     rsl->cb_data           = new opt_change_callback_data_t;
@@ -410,8 +408,8 @@ void UI_Module::AddSliderOption(std::string opt, std::string label, std::string 
     choice_map_slider[opt] = rsl;
 }
 
-void UI_Module::AddButtonOption(std::string opt, std::string label, std::string tip, std::string longtip, int gap,
-                                std::string randomize_group, std::string default_value)
+void UI_Module::AddButtonOption(const std::string &opt, const std::string &label, const std::string &tip, std::string &longtip, int gap,
+                                const std::string &randomize_group, const std::string &default_value)
 {
     int nw = this->parent()->w();
     //    int nh = kf_h(30);
@@ -597,7 +595,7 @@ void UI_Module::randomize_Values(std::vector<std::string> selected_randomize_gro
                     M->nan_options->do_callback();
                 }
                 M->mod_slider->value(M->mod_slider->round(
-                    xoshiro.xoshiro256p_Range<double>(M->mod_slider->minimum(), M->mod_slider->maximum())));
+                    xoshiro_Between(M->mod_slider->minimum(), M->mod_slider->maximum())));
                 M->mod_slider->do_callback();
                 break;
             }
@@ -612,7 +610,7 @@ void UI_Module::randomize_Values(std::vector<std::string> selected_randomize_gro
         {
             if (StringCompare(group, M->randomize_group) == 0)
             {
-                if (xoshiro.xoshiro256p_UNI<float>() < 0.5)
+                if (xoshiro_Float() < 0.5)
                 {
                     M->mod_check->value(0);
                 }
@@ -627,14 +625,14 @@ void UI_Module::randomize_Values(std::vector<std::string> selected_randomize_gro
     }
 }
 
-void UI_Module::AddOptionChoice(std::string option, std::string id, std::string label)
+void UI_Module::AddOptionChoice(const std::string &option, const std::string &id, const std::string &label)
 {
     UI_RChoice *rch = FindOpt(option);
 
     if (!rch)
     {
-        LogPrintf("Warning: module '%s' lacks option '%s' (for choice '%s')\n", id_name.c_str(), option.c_str(),
-                  id.c_str());
+        LogPrint("Warning: module '%s' lacks option '%s' (for choice '%s')\n", id_name.c_str(), option.c_str(),
+                 id.c_str());
         return;
     }
 
@@ -642,7 +640,7 @@ void UI_Module::AddOptionChoice(std::string option, std::string id, std::string 
     rch->mod_menu->EnableChoice(id, 1);
 }
 
-bool UI_Module::SetOption(std::string option, std::string value)
+bool UI_Module::SetOption(const std::string &option, const std::string &value)
 {
     UI_RChoice *rch = FindOpt(option);
 
@@ -656,7 +654,7 @@ bool UI_Module::SetOption(std::string option, std::string value)
     return true;
 }
 
-bool UI_Module::SetSliderOption(std::string option, std::string value)
+bool UI_Module::SetSliderOption(const std::string &option, const std::string &value)
 {
     UI_RSlide *rsl = FindSliderOpt(option);
 
@@ -702,7 +700,7 @@ bool UI_Module::SetSliderOption(std::string option, std::string value)
     return true;
 }
 
-bool UI_Module::SetButtonOption(std::string option, int value)
+bool UI_Module::SetButtonOption(const std::string &option, int value)
 {
     UI_RButton *rbt = FindButtonOpt(option);
 
@@ -715,7 +713,7 @@ bool UI_Module::SetButtonOption(std::string option, int value)
     return true;
 }
 
-UI_RChoice *UI_Module::FindOpt(std::string option)
+UI_RChoice *UI_Module::FindOpt(const std::string &option)
 {
     if (choice_map.find(option) == choice_map.end())
     {
@@ -725,7 +723,7 @@ UI_RChoice *UI_Module::FindOpt(std::string option)
     return choice_map[option];
 }
 
-UI_RSlide *UI_Module::FindSliderOpt(std::string option)
+UI_RSlide *UI_Module::FindSliderOpt(const std::string &option)
 {
     if (choice_map_slider.find(option) == choice_map_slider.end())
     {
@@ -735,7 +733,7 @@ UI_RSlide *UI_Module::FindSliderOpt(std::string option)
     return choice_map_slider[option];
 }
 
-UI_RButton *UI_Module::FindButtonOpt(std::string option)
+UI_RButton *UI_Module::FindButtonOpt(const std::string &option)
 {
     if (choice_map_button.find(option) == choice_map_button.end())
     {
@@ -745,7 +743,7 @@ UI_RButton *UI_Module::FindButtonOpt(std::string option)
     return choice_map_button[option];
 }
 
-UI_RHeader *UI_Module::FindHeaderOpt(std::string option)
+UI_RHeader *UI_Module::FindHeaderOpt(const std::string &option)
 {
     if (choice_map_header.find(option) == choice_map_header.end())
     {
@@ -755,7 +753,7 @@ UI_RHeader *UI_Module::FindHeaderOpt(std::string option)
     return choice_map_header[option];
 }
 
-UI_RLink *UI_Module::FindUrlOpt(std::string option)
+UI_RLink *UI_Module::FindUrlOpt(const std::string &option)
 {
     if (choice_map_url.find(option) == choice_map_url.end())
     {
@@ -840,10 +838,9 @@ void UI_Module::callback_PresetCheck(Fl_Widget *w, void *data)
 
     std::string new_label;
 
-    current_slider->unit_label->copy_label(new_label.append(50, ' ').c_str()); // To prevent visual errors with
-                                                                               // labels of different lengths
-    // Check against the preset_choices map
+    current_slider->unit_label->label(BLANKOUT);
 
+    // Check against the preset_choices map
     if (current_slider->preset_choices.count(value) == 1)
     {
         new_label = current_slider->preset_choices[value];
@@ -1049,8 +1046,7 @@ void UI_Module::callback_NanOptions(Fl_Widget *w, void *data)
     if (temp_value > 0)
     {
         std::string new_label;
-        current_slider->unit_label->copy_label(new_label.append(50, ' ').c_str()); // To prevent visual errors with
-                                                                                   // labels of different lengths
+        current_slider->unit_label->label(BLANKOUT);
         new_label = nan_options->text(temp_value);
         current_slider->unit_label->copy_label(new_label.c_str());
         current_slider->prev_button->deactivate();
@@ -1070,7 +1066,7 @@ void UI_Module::callback_NanOptions(Fl_Widget *w, void *data)
 
 //----------------------------------------------------------------
 
-UI_CustomMods::UI_CustomMods(int X, int Y, int W, int H, std::string label) : Fl_Group(X, Y, W, H)
+UI_CustomMods::UI_CustomMods(int X, int Y, int W, int H, const std::string &label) : Fl_Group(X, Y, W, H)
 {
 
     box(FL_FLAT_BOX);
@@ -1122,7 +1118,7 @@ typedef struct
     UI_CustomMods *parent;
 } mod_enable_callback_data_t;
 
-void UI_CustomMods::AddModule(std::string id, std::string label, std::string tip, int red, int green, int blue,
+void UI_CustomMods::AddModule(const std::string &id, const std::string &label, const std::string &tip, int red, int green, int blue,
                               bool suboptions)
 {
     UI_Module *M = new UI_Module(mx, my, mw - 4, kf_h(34), id, label, tip, red, green, blue, suboptions);
@@ -1141,7 +1137,7 @@ void UI_CustomMods::AddModule(std::string id, std::string label, std::string tip
     PositionAll();
 }
 
-bool UI_CustomMods::AddHeader(std::string module, std::string option, std::string label, int gap)
+bool UI_CustomMods::AddHeader(const std::string &module, const std::string &option, const std::string &label, int gap)
 {
     UI_Module *M = FindID(module);
 
@@ -1157,7 +1153,7 @@ bool UI_CustomMods::AddHeader(std::string module, std::string option, std::strin
     return true;
 }
 
-bool UI_CustomMods::AddUrl(std::string module, std::string option, std::string label, std::string url, int gap)
+bool UI_CustomMods::AddUrl(const std::string &module, const std::string &option, const std::string &label, const std::string &url, int gap)
 {
     UI_Module *M = FindID(module);
 
@@ -1173,8 +1169,8 @@ bool UI_CustomMods::AddUrl(std::string module, std::string option, std::string l
     return true;
 }
 
-bool UI_CustomMods::AddOption(std::string module, std::string option, std::string label, std::string tip,
-                              std::string longtip, int gap, std::string randomize_group, std::string default_value)
+bool UI_CustomMods::AddOption(const std::string &module, const std::string &option, const std::string &label, const std::string &tip,
+                              std::string &longtip, int gap, const std::string &randomize_group, const std::string &default_value)
 {
     UI_Module *M = FindID(module);
 
@@ -1190,10 +1186,10 @@ bool UI_CustomMods::AddOption(std::string module, std::string option, std::strin
     return true;
 }
 
-bool UI_CustomMods::AddSliderOption(std::string module, std::string option, std::string label, std::string tip,
-                                    std::string longtip, int gap, double min, double max, double inc, std::string units,
-                                    std::string presets, std::string nan, std::string randomize_group,
-                                    std::string default_value)
+bool UI_CustomMods::AddSliderOption(const std::string &module, const std::string &option, std::string &label, const std::string &tip,
+                                    std::string &longtip, int gap, double min, double max, double inc, const std::string &units,
+                                    const std::string &presets, const std::string &nan, const std::string &randomize_group,
+                                    const std::string &default_value)
 {
     UI_Module *M = FindID(module);
 
@@ -1210,9 +1206,9 @@ bool UI_CustomMods::AddSliderOption(std::string module, std::string option, std:
     return true;
 }
 
-bool UI_CustomMods::AddButtonOption(std::string module, std::string option, std::string label, std::string tip,
-                                    std::string longtip, int gap, std::string randomize_group,
-                                    std::string default_value)
+bool UI_CustomMods::AddButtonOption(const std::string &module, const std::string &option, const std::string &label, const std::string &tip,
+                                    std::string &longtip, int gap, const std::string &randomize_group,
+                                    const std::string &default_value)
 {
     UI_Module *M = FindID(module);
 
@@ -1228,7 +1224,7 @@ bool UI_CustomMods::AddButtonOption(std::string module, std::string option, std:
     return true;
 }
 
-bool UI_CustomMods::AddOptionChoice(std::string module, std::string option, std::string id, std::string label)
+bool UI_CustomMods::AddOptionChoice(const std::string &module, const std::string &option, const std::string &id, const std::string &label)
 {
     UI_Module *M = FindID(module);
 
@@ -1242,7 +1238,7 @@ bool UI_CustomMods::AddOptionChoice(std::string module, std::string option, std:
     return true;
 }
 
-bool UI_CustomMods::ShowModule(std::string id, bool new_shown)
+bool UI_CustomMods::ShowModule(const std::string &id, bool new_shown)
 {
     SYS_ASSERT(!id.empty());
 
@@ -1274,7 +1270,7 @@ bool UI_CustomMods::ShowModule(std::string id, bool new_shown)
     return true;
 }
 
-bool UI_CustomMods::SetOption(std::string module, std::string option, std::string value)
+bool UI_CustomMods::SetOption(const std::string &module, const std::string &option, const std::string &value)
 {
     UI_Module *M = FindID(module);
 
@@ -1286,7 +1282,7 @@ bool UI_CustomMods::SetOption(std::string module, std::string option, std::strin
     return M->SetOption(option, value);
 }
 
-bool UI_CustomMods::SetSliderOption(std::string module, std::string option, std::string value)
+bool UI_CustomMods::SetSliderOption(const std::string &module, const std::string &option, const std::string &value)
 {
     UI_Module *M = FindID(module);
 
@@ -1298,7 +1294,7 @@ bool UI_CustomMods::SetSliderOption(std::string module, std::string option, std:
     return M->SetSliderOption(option, value);
 }
 
-bool UI_CustomMods::SetButtonOption(std::string module, std::string option, int value)
+bool UI_CustomMods::SetButtonOption(const std::string &module, const std::string &option, int value)
 {
     UI_Module *M = FindID(module);
 
@@ -1310,7 +1306,7 @@ bool UI_CustomMods::SetButtonOption(std::string module, std::string option, int 
     return M->SetButtonOption(option, value);
 }
 
-bool UI_CustomMods::EnableMod(std::string id, bool enable)
+bool UI_CustomMods::EnableMod(const std::string &id, bool enable)
 {
     SYS_ASSERT(!id.empty());
 
@@ -1779,7 +1775,7 @@ void UI_CustomMods::callback_ModEnable(Fl_Widget *w, void *data)
     ob_set_mod_option(M->id_name, "self", M->mod_button->value() ? "true" : "false");
 }
 
-UI_Module *UI_CustomMods::FindID(std::string id) const
+UI_Module *UI_CustomMods::FindID(const std::string &id) const
 {
     for (int j = 0; j < mod_pack->children(); j++)
     {

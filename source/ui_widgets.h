@@ -63,7 +63,7 @@ class choice_data_c
     Fl_Check_Button *widget;
 
   public:
-    choice_data_c(std::string _id, std::string _label);
+    choice_data_c(std::string_view _id, std::string_view _label);
     ~choice_data_c();
 };
 
@@ -152,7 +152,7 @@ class UI_CustomMenu : public Fl_Choice
 {
   private:
   public:
-    UI_CustomMenu(int x, int y, int w, int h, std::string label = "");
+    UI_CustomMenu(int x, int y, int w, int h, const std::string &label = "");
     virtual ~UI_CustomMenu();
 
   private:
@@ -165,19 +165,19 @@ class UI_RChoiceMenu : public UI_CustomMenu
     std::vector<choice_data_c *> opt_list;
 
   public:
-    UI_RChoiceMenu(int x, int y, int w, int h, std::string label = "");
+    UI_RChoiceMenu(int x, int y, int w, int h, const std::string &label = "");
     virtual ~UI_RChoiceMenu();
 
   public:
     // add a new choice to the list.  If a choice with the same 'id'
     // already exists, it is just replaced instead.
     // The choice will begin disabled (shown == false).
-    void AddChoice(std::string id, std::string label);
+    void AddChoice(const std::string &id, const std::string &label);
 
     // finds the option with the given ID, and update its 'enabled'
     // value.  Returns true if successful, or false if no such
     // option exists.  Any change will call Recreate().
-    bool EnableChoice(std::string id, bool enable_it);
+    bool EnableChoice(const std::string &id, bool enable_it);
 
     // get the id string for the currently shown value.
     // Returns the string "none" if there are no choices.
@@ -185,11 +185,11 @@ class UI_RChoiceMenu : public UI_CustomMenu
 
     // change the currently shown value via the new 'id'.
     // If does not exist, returns false and nothing was changed.
-    bool ChangeTo(std::string id);
+    bool ChangeTo(const std::string &id);
 
     std::string GetLabel() const;
 
-    choice_data_c *FindID(std::string id) const;
+    choice_data_c *FindID(std::string_view id) const;
 
   private:
     choice_data_c *FindMapped() const;
@@ -200,8 +200,6 @@ class UI_RChoiceMenu : public UI_CustomMenu
     // value with the same label, and failing that: select the
     // first entry.
     void Recreate();
-
-    //    const char *GetLabel() const;  // ????
 
     void GotoPrevious();
     void GotoNext();
@@ -344,7 +342,7 @@ class UI_CustomCheckBox : public Fl_Check_Button
 {
   private:
   public:
-    UI_CustomCheckBox(int x, int y, int w, int h, std::string label = "");
+    UI_CustomCheckBox(int x, int y, int w, int h, const std::string &label = "");
     virtual ~UI_CustomCheckBox();
 
   private:

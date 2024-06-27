@@ -47,19 +47,12 @@ class buildinfo_t
 
     bool force_v5;
     bool force_xnod;
-    bool force_compress; // NOTE: only supported when HAVE_ZLIB is defined
+    bool force_compress;
 
     // the GUI can set this to tell the node builder to stop
     bool cancelled;
 
     int split_cost;
-
-    // this affects how some messages are shown
-    int verbosity;
-
-    // from here on, various bits of internal state
-    int total_warnings;
-    int total_minor_issues;
 
   public:
     buildinfo_t()
@@ -73,21 +66,13 @@ class buildinfo_t
 
           cancelled(false),
 
-          split_cost(SPLIT_COST_DEFAULT), verbosity(0),
-
-          total_warnings(0), total_minor_issues(0)
+          split_cost(SPLIT_COST_DEFAULT)
     {
     }
 
     ~buildinfo_t()
     {
     }
-
-  public:
-    virtual void Print(int level, const char *msg, ...) = 0;
-    virtual void Debug(const char *msg, ...)            = 0;
-    virtual void FatalError(const char *fmt, ...)       = 0;
-    virtual void ProgressUpdate(int current, int total) = 0;
 };
 
 typedef enum
@@ -102,7 +87,7 @@ typedef enum
     BUILD_LumpOverflow
 } build_result_e;
 
-int AJBSP_BuildNodes(std::string filename, buildinfo_t *build_info);
+int AJBSP_BuildNodes(const std::string &filename, buildinfo_t *build_info);
 
 namespace ajbsp
 {
@@ -112,7 +97,7 @@ void SetInfo(buildinfo_t *info);
 
 // attempt to open a wad.  on failure, the FatalError method in the
 // buildinfo_t interface is called.
-void OpenWad(std::string filename);
+void OpenWad(const std::string &filename);
 
 // close a previously opened wad.
 void CloseWad();

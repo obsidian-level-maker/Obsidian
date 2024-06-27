@@ -26,9 +26,6 @@
 #include <string>
 #include <unordered_map>
 
-void Appl_FatalError(const char *str, ...);
-void Appl_Printf(const char *str, ...);
-
 namespace ajpoly
 {
 
@@ -303,8 +300,6 @@ bool OpenMap(const char *map_name);
 // free all data associated with a map.
 // can be safely called without any opened map
 void CloseMap();
-
-void FreeMap();
 
 // attempt to polygonize each sector in the map.
 // when 'require_border' is true, map must be bounded by a linedef

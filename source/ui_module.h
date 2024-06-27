@@ -60,31 +60,31 @@ class UI_Module : public Fl_Group
     int cur_opt_y;
 
   public:
-    UI_Module(int X, int Y, int W, int H, std::string id, std::string label, std::string tip, int red, int green,
+    UI_Module(int X, int Y, int W, int H, const std::string &id, const std::string &label, const std::string &tip, int red, int green,
               int blue, bool suboptions);
     virtual ~UI_Module();
 
-    void AddOption(std::string option, std::string label, std::string tip, std::string longtip, int gap,
-                   std::string randomize_group, std::string default_value);
+    void AddOption(const std::string &option, const std::string &label, const std::string &tip, std::string &longtip, int gap,
+                   const std::string &randomize_group, const std::string &default_value);
 
-    void AddHeader(std::string option, std::string label, int gap);
+    void AddHeader(const std::string &option, const std::string &label, int gap);
 
-    void AddUrl(std::string option, std::string label, std::string url, int gap);
+    void AddUrl(const std::string &option, const std::string &label, const std::string &url, int gap);
 
-    void AddSliderOption(std::string option, std::string label, std::string tip, std::string longtip, int gap,
-                         double min, double max, double inc, std::string units, std::string presets, std::string nan,
-                         std::string randomize_group, std::string default_value);
+    void AddSliderOption(const std::string &option, std::string &label, const std::string &tip, std::string &longtip, int gap,
+                         double min, double max, double inc, const std::string &units, const std::string &presets, const std::string &nan,
+                         const std::string &randomize_group, const std::string &default_value);
 
-    void AddButtonOption(std::string opt, std::string label, std::string tip, std::string longtip, int gap,
-                         std::string randomize_group, std::string default_value);
+    void AddButtonOption(const std::string &opt, const std::string &label, const std::string &tip, std::string &longtip, int gap,
+                         const std::string &randomize_group, const std::string &default_value);
 
-    void AddOptionChoice(std::string option, std::string id, std::string label);
+    void AddOptionChoice(const std::string &option, const std::string &id, const std::string &label);
 
-    bool SetOption(std::string option, std::string value);
+    bool SetOption(const std::string &option, const std::string &value);
 
-    bool SetSliderOption(std::string option, std::string value);
+    bool SetSliderOption(const std::string &option, const std::string &value);
 
-    bool SetButtonOption(std::string option, int value);
+    bool SetButtonOption(const std::string &option, int value);
 
     bool Is_UI() const;
 
@@ -95,15 +95,15 @@ class UI_Module : public Fl_Group
 
     void randomize_Values(std::vector<std::string> selected_randomize_groups);
 
-    UI_RChoice *FindOpt(std::string opt);       // const;
+    UI_RChoice *FindOpt(const std::string &opt);       // const;
 
-    UI_RSlide *FindSliderOpt(std::string opt);  // const;
+    UI_RSlide *FindSliderOpt(const std::string &opt);  // const;
 
-    UI_RButton *FindButtonOpt(std::string opt); // const;
+    UI_RButton *FindButtonOpt(const std::string &opt); // const;
 
-    UI_RHeader *FindHeaderOpt(std::string opt); // const;
+    UI_RHeader *FindHeaderOpt(const std::string &opt); // const;
 
-    UI_RLink *FindUrlOpt(std::string opt);      // const;
+    UI_RLink *FindUrlOpt(const std::string &opt);      // const;
 
   protected:
   private:
@@ -139,43 +139,43 @@ class UI_CustomMods : public Fl_Group
     int total_h;
 
   public:
-    UI_CustomMods(int X, int Y, int W, int H, std::string label);
+    UI_CustomMods(int X, int Y, int W, int H, const std::string &label);
     virtual ~UI_CustomMods();
 
   public:
-    void AddModule(std::string id, std::string label, std::string tip, int red, int green, int blue, bool suboptions);
+    void AddModule(const std::string &id, const std::string &label, const std::string &tip, int red, int green, int blue, bool suboptions);
 
     // these return false if module is unknown
-    bool ShowModule(std::string id, bool new_shown);
-    bool EnableMod(std::string id, bool enable);
+    bool ShowModule(const std::string &id, bool new_shown);
+    bool EnableMod(const std::string &id, bool enable);
 
-    bool AddHeader(std::string module, std::string option, std::string label, int gap);
+    bool AddHeader(const std::string &module, const std::string &option, const std::string &label, int gap);
 
-    bool AddUrl(std::string module, std::string option, std::string label, std::string url, int gap);
+    bool AddUrl(const std::string &module, const std::string &option, const std::string &label, const std::string &url, int gap);
 
-    bool AddOption(std::string module, std::string option, std::string label, std::string tip, std::string longtip,
-                   int gap, std::string randomize_group, std::string default_value);
+    bool AddOption(const std::string &module, const std::string &option, const std::string &label, const std::string &tip, std::string &longtip,
+                   int gap, const std::string &randomize_group, const std::string &default_value);
 
-    bool AddSliderOption(std::string module, std::string option, std::string label, std::string tip,
-                         std::string longtip, int gap, double min, double max, double inc, std::string units,
-                         std::string presets, std::string nan, std::string randomize_group, std::string default_value);
+    bool AddSliderOption(const std::string &module, const std::string &option, std::string &label, const std::string &tip,
+                         std::string &longtip, int gap, double min, double max, double inc, const std::string &units,
+                         const std::string &presets, const std::string &nan, const std::string &randomize_group, const std::string &default_value);
 
-    bool AddButtonOption(std::string module, std::string option, std::string label, std::string tip,
-                         std::string longtip, int gap, std::string randomize_group, std::string default_value);
+    bool AddButtonOption(const std::string &module, const std::string &option, const std::string &label, const std::string &tip,
+                         std::string &longtip, int gap, const std::string &randomize_group, const std::string &default_value);
 
-    bool AddOptionChoice(std::string module, std::string option, std::string id, std::string label);
+    bool AddOptionChoice(const std::string &module, const std::string &option, const std::string &id, const std::string &label);
 
-    bool SetOption(std::string module, std::string option, std::string value);
+    bool SetOption(const std::string &module, const std::string &option, const std::string &value);
 
-    bool SetSliderOption(std::string module, std::string option, std::string value);
+    bool SetSliderOption(const std::string &module, const std::string &option, const std::string &value);
 
-    bool SetButtonOption(std::string module, std::string option, int value);
+    bool SetButtonOption(const std::string &module, const std::string &option, int value);
 
     void Locked(bool value);
 
     void SurpriseMe();
 
-    UI_Module *FindID(std::string id) const;
+    UI_Module *FindID(const std::string &id) const;
 
   private:
     void PositionAll(UI_Module *focus = NULL);
@@ -195,7 +195,7 @@ class UI_CustomTabs : public Fl_Tabs
     UI_CustomMods *other_mods;
     UI_CustomMods *debug_mods;
     UI_CustomMods *experimental_mods;
-    UI_CustomMods *links; // Tentative; use with a new "URL" widget option type
+    UI_CustomMods *links;
 
   private:
   public:

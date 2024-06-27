@@ -23,11 +23,6 @@
 
 #include "csg_local.h"
 #include "csg_main.h"
-#ifndef CONSOLE_ONLY
-#include "hdr_fltk.h"
-#include "hdr_ui.h"
-#endif
-#include "hdr_lua.h"
 #include "lib_argv.h"
 #include "lib_util.h"
 #include "main.h"
@@ -338,7 +333,7 @@ static void SHADE_LightWorld()
 
     if (no_light)
     {
-        LogPrintf("LIGHTING DISABLED (-nolight specified)\n");
+        LogPrint("LIGHTING DISABLED (-nolight specified)\n");
     }
 
     for (unsigned int i = 0; i < all_regions.size(); i++)
@@ -362,7 +357,7 @@ static void SHADE_LightWorld()
 
 void CSG_Shade()
 {
-    LogPrintf("Lighting level...\n");
+    LogPrint("Lighting level...\n");
 
     //    SHADE_CollectLights();
 

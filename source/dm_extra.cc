@@ -24,19 +24,15 @@
 
 #include "csg_main.h"
 #include "g_doom.h"
-#ifndef CONSOLE_ONLY
-#include "hdr_fltk.h"
-#include "hdr_ui.h"
-#endif
-#include "hdr_lua.h"
 #include "images.h"
 #include "lib_tga.h"
 #include "lib_util.h"
 #include "lib_wad.h"
 #include "lib_zip.h"
-#include "m_lua.h"
 #include "main.h"
+#include "minilua.h"
 #include "physfs.h"
+#include "raw_def.h"
 #include "sys_assert.h"
 #include "sys_endian.h"
 #include "sys_macro.h"
@@ -1216,12 +1212,12 @@ static void DoMergeSection(char ch, const char *start1, const char *start2, cons
 
     if (end < 0)
     {
-        LogPrintf("WARNING: %s found but %s is missing.\n", start1, end1);
+        LogPrint("WARNING: %s found but %s is missing.\n", start1, end1);
         return;
     }
     else if (end < start)
     {
-        LogPrintf("WARNING: %s marker found before %s!\n", end1, start1);
+        LogPrint("WARNING: %s marker found before %s!\n", end1, start1);
         return;
     }
 
@@ -1249,7 +1245,7 @@ int wad_merge_sections(lua_State *L)
 
     std::string pkg_name = luaL_checkstring(L, 1);
 
-    LogPrintf("Merging WAD sections from: %s\n", pkg_name.c_str());
+    LogPrint("Merging WAD sections from: %s\n", pkg_name.c_str());
 
     if (GetExtension(pkg_name) != ".wad")
     {

@@ -22,9 +22,11 @@
 #include "lib_argv.h"
 
 #ifdef _WIN32
+// clang-format off
 #include <windows.h>
 #include <processenv.h>
 #include <shellapi.h>
+// clang-format on
 #endif
 
 #include "lib_util.h"
@@ -140,7 +142,7 @@ void argv::Init(const int argc, const char *const *argv)
         }
 
         // support DOS-style short options
-        if (cur[0] == '/' && (isalnum(cur[1]) || cur[1] == '?') && cur[2] == '\0')
+        if (cur[0] == '/' && (IsAlphanumericASCII(cur[1]) || cur[1] == '?') && cur[2] == '\0')
         {
             list.emplace_back(std::string{"-"} + std::string{&cur[1], 1});
         }
@@ -183,7 +185,7 @@ void argv::Init(const int argc, const char *const *argv)
         }
 
         // support DOS-style short options
-        if (cur[0] == '/' && (isalnum(cur[1]) || cur[1] == '?') && cur[2] == '\0')
+        if (cur[0] == '/' && (IsAlphanumericASCII(cur[1]) || cur[1] == '?') && cur[2] == '\0')
         {
             list.emplace_back(std::string{"-"} + std::string{&cur[1], 1});
         }

@@ -27,7 +27,7 @@
 
 #include <string>
 
-bool WAD_OpenRead(std::string filename);
+bool WAD_OpenRead(const std::string &filename);
 void WAD_CloseRead();
 
 int         WAD_NumEntries();
@@ -39,10 +39,10 @@ bool WAD_ReadData(int entry, int offset, int length, void *buffer);
 
 /* WAD writing */
 
-bool WAD_OpenWrite(std::string filename);
+bool WAD_OpenWrite(const std::string &filename);
 void WAD_CloseWrite();
 
-void WAD_NewLump(std::string name);
+void WAD_NewLump(std::string_view name);
 bool WAD_AppendData(const void *data, int length);
 void WAD_FinishLump();
 

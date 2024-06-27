@@ -19,9 +19,6 @@
 //
 //----------------------------------------------------------------
 
-#include "hdr_fltk.h"
-#include "hdr_lua.h"
-#include "hdr_ui.h"
 #include "lib_util.h"
 #include "m_lua.h"
 #include "m_trans.h"
@@ -292,7 +289,7 @@ void UI_Game::Locked(bool value)
     }
 }
 
-bool UI_Game::AddChoice(std::string button, std::string id, std::string label)
+bool UI_Game::AddChoice(const std::string &button, const std::string &id, const std::string &label)
 {
     if (!StringCompare(button, "engine"))
     {
@@ -326,7 +323,7 @@ bool UI_Game::AddChoice(std::string button, std::string id, std::string label)
     return false; // unknown button
 }
 
-bool UI_Game::EnableChoice(std::string button, std::string id, bool enable_it)
+bool UI_Game::EnableChoice(const std::string &button, const std::string &id, bool enable_it)
 {
     if (!StringCompare(button, "engine"))
     {
@@ -357,7 +354,7 @@ bool UI_Game::EnableChoice(std::string button, std::string id, bool enable_it)
     return false; // unknown button
 }
 
-bool UI_Game::SetButton(std::string button, std::string id)
+bool UI_Game::SetButton(const std::string &button, const std::string &id)
 {
     if (!StringCompare(button, "engine"))
     {

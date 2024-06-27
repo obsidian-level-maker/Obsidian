@@ -5,6 +5,7 @@
 #include <string>
 
 #include "ff.h"
+#include "lib_util.h"
 
 extern "C"
 {
@@ -22,32 +23,32 @@ std::string result;
 
 void year()
 {
-    result.append(std::to_string(now.tm_year + 1900));
+    result.append(NumToString(now.tm_year + 1900));
 }
 
 void month()
 {
-    result.append(std::to_string(now.tm_mon + 1));
+    result.append(NumToString(now.tm_mon + 1));
 }
 
 void day()
 {
-    result.append(std::to_string(now.tm_mday));
+    result.append(NumToString(now.tm_mday));
 }
 
 void hour()
 {
-    result.append(std::to_string(now.tm_hour));
+    result.append(NumToString(now.tm_hour));
 }
 
 void minute()
 {
-    result.append(std::to_string(now.tm_min));
+    result.append(NumToString(now.tm_min));
 }
 
 void second()
 {
-    result.append(std::to_string(now.tm_sec));
+    result.append(NumToString(now.tm_sec));
 }
 
 void game()

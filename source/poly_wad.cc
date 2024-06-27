@@ -18,6 +18,7 @@
 
 #include "lib_util.h"
 #include "poly_local.h"
+#include "sys_debug.h"
 
 #define DEBUG_WAD 0
 
@@ -117,7 +118,7 @@ bool wad_c::ReadDirEntry()
     lump_c *lump = new lump_c(name_buf, start, length);
 
 #if DEBUG_WAD
-    Appl_Printf("Read dir... %s\n", lump->name);
+    LogPrint("Read dir... %s\n", lump->name);
 #endif
 
     lumps.push_back(lump);
@@ -145,7 +146,7 @@ bool wad_c::ReadDirectory()
     int num_entries = LE_U32(header.num_entries);
     int dir_start   = LE_U32(header.dir_start);
 
-    Appl_Printf("Reading %d dir entries at 0x%X\n", num_entries, dir_start);
+    LogPrint("Reading %d dir entries at 0x%X\n", num_entries, dir_start);
 
     PHYSFS_seek(fp, dir_start);
 
@@ -201,7 +202,7 @@ void wad_c::DetermineLevels()
         }
 
 #if DEBUG_WAD
-        Appl_Printf("Found level name: %s\n", L->name);
+        LogPrint("Found level name: %s\n", L->name);
 #endif
 
         // collect the children lumps
@@ -237,7 +238,7 @@ wad_c *wad_c::Open(const char *filename)
         return NULL;
     }
 
-    Appl_Printf("Opened WAD file : %s\n", filename);
+    LogPrint("Opened WAD file : %s\n", filename);
 
     wad_c *wad = new wad_c();
 
@@ -306,7 +307,7 @@ uint8_t *wad_c::ReadLump(const char *name, int *length, int level)
     lump_c *L = lumps[index];
 
 #if DEBUG_WAD
-    Appl_Printf("Reading lump: %s (%d bytes)\n", L->name, L->length);
+    LogPrint("Reading lump: %s (%d bytes)\n", L->name, L->length);
 #endif
 
     if (length)

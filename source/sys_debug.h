@@ -23,8 +23,8 @@
 
 #include <string>
 
-extern bool         terminal;
-extern bool         debugging;
+extern bool terminal;
+extern bool debugging;
 
 bool LogInit(const std::string &filename); // NULL for none
 void LogClose(void);
@@ -35,15 +35,17 @@ void LogEnableDebug(bool enable);
 void LogEnableTerminal(bool enable);
 
 #ifdef __GNUC__
-void              LogPrintf(const char *message, ...) __attribute__((format(printf, 1, 2)));
-void              RefPrintf(const char *message, ...) __attribute__((format(printf, 1, 2)));
-void              DebugPrintf(const char *message, ...) __attribute__((format(printf, 1, 2)));
-[[noreturn]] void ErrorPrintf(const char *message, ...) __attribute__((format(printf, 1, 2)));
+void              LogPrint(const char *message, ...) __attribute__((format(printf, 1, 2)));
+void              RefPrint(const char *message, ...) __attribute__((format(printf, 1, 2)));
+void              DebugPrint(const char *message, ...) __attribute__((format(printf, 1, 2)));
+void              ProgStatus(const char *message, ...) __attribute__((format(printf, 1, 2)));
+[[noreturn]] void FatalError(const char *message, ...) __attribute__((format(printf, 1, 2)));
 #else
-void              LogPrintf(const char *message, ...);
-void              RefPrintf(const char *message, ...);
-void              DebugPrintf(const char *message, ...);
-[[noreturn]] void ErrorPrintf(const char *message, ...);
+void              LogPrint(const char *message, ...);
+void              RefPrint(const char *message, ...);
+void              DebugPrint(const char *message, ...);
+void              ProgStatus(const char *message, ...);
+[[noreturn]] void FatalError(const char *message, ...);
 #endif
 
 using log_display_func_t = void (*)(std::string_view line, void *priv_data);

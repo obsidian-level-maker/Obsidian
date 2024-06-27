@@ -105,7 +105,8 @@ bool MakeDirectory(std::string_view dir)
 }
 bool FileExists(std::string_view name)
 {
-    if (name.empty()) return false;
+    if (name.empty())
+        return false;
     std::wstring wname = UTF8ToWString(name);
     return _waccess(wname.c_str(), 0) == 0;
 }
@@ -157,7 +158,8 @@ bool MakeDirectory(std::string_view dir)
 }
 bool FileExists(std::string_view name)
 {
-    if (name.empty()) return false;
+    if (name.empty())
+        return false;
     return access(std::string(name).c_str(), F_OK) == 0;
 }
 #endif
@@ -316,7 +318,7 @@ char *CStringNew(int length)
     char *s = (char *)calloc(length + 1, 1);
 
     if (!s)
-        Main::FatalError("Out of memory (%d bytes for string)\n", length);
+        FatalError("Out of memory (%d bytes for string)\n", length);
 
     return s;
 }
@@ -331,7 +333,7 @@ char *CStringDup(const char *original, int limit)
         char *s = strdup(original);
 
         if (!s)
-            Main::FatalError("Out of memory (copy string)\n");
+            FatalError("Out of memory (copy string)\n");
 
         return s;
     }
@@ -374,7 +376,7 @@ std::wstring UTF8ToWString(std::string_view instring)
         u32c       = 0;
         size_t res = grapheme_decode_utf8(utf8ptr + utf8pos, utf8len, &u32c);
         if (res < 0)
-            Main::FatalError("Failed to convert %s to a wide string!\n", std::string(instring).c_str());
+            FatalError("Failed to convert %s to a wide string!\n", std::string(instring).c_str());
         else
             utf8pos += res;
         if (u32c < 0x10000)
@@ -409,9 +411,9 @@ std::string WStringToUTF8(std::wstring_view instring)
             {
                 // print what was safely converted if present
                 if (!outstring.empty())
-                    Main::FatalError("Failure to convert %s from a wide string!\n", outstring.c_str());
+                    FatalError("Failure to convert %s from a wide string!\n", outstring.c_str());
                 else
-                    Main::FatalError("Wide string to UTF-8 conversion failure!\n");
+                    FatalError("Wide string to UTF-8 conversion failure!\n");
             }
         }
         else
@@ -559,21 +561,6 @@ int StringPrefixCaseCompare(std::string_view A, std::string_view B)
 
         if (AC != BC)
             return AC - BC;
-    }
-}
-
-void StringRemoveCRLF(std::string *str)
-{
-    if (!str->empty())
-    {
-        if (str->back() == '\n')
-        {
-            str->pop_back();
-        }
-        if (!str->empty() && str->back() == '\r')
-        {
-            str->pop_back();
-        }
     }
 }
 
@@ -799,7 +786,7 @@ double CalcAngle(double sx, double sy, double ex, double ey)
         return (ex > 0) ? 0.0 : 180.0;
     }
 
-    double angle = atan2(ey, ex) * 180.0 / M_PI;
+    double angle = atan2(ey, ex) * 180.0 / OBSIDIAN_PI;
 
     if (angle < 0)
     {
@@ -926,7 +913,7 @@ void *UtilCalloc(int size)
     void *ret = calloc(1, size);
 
     if (!ret)
-        Main::FatalError("Out of memory (cannot allocate %d bytes)\n", size);
+        FatalError("Out of memory (cannot allocate %d bytes)\n", size);
 
     return ret;
 }
@@ -939,7 +926,7 @@ void *UtilRealloc(void *old, int size)
     void *ret = realloc(old, size);
 
     if (!ret)
-        Main::FatalError("Out of memory (cannot reallocate %d bytes)\n", size);
+        FatalError("Out of memory (cannot reallocate %d bytes)\n", size);
 
     return ret;
 }
@@ -950,7 +937,7 @@ void *UtilRealloc(void *old, int size)
 void UtilFree(void *data)
 {
     if (data == NULL)
-        Main::FatalError("Trying to free a NULL pointer\n");
+        FatalError("Trying to free a NULL pointer\n");
 
     free(data);
 }
@@ -986,14 +973,13 @@ double ComputeAngle(double dx, double dy)
     if (dx == 0)
         return (dy > 0) ? 90.0 : 270.0;
 
-    angle = atan2((double)dy, (double)dx) * 180.0 / M_PI;
+    angle = atan2((double)dy, (double)dx) * 180.0 / OBSIDIAN_PI;
 
     if (angle < 0)
         angle += 360.0;
 
     return angle;
 }
-
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

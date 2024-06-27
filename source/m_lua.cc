@@ -19,13 +19,12 @@
 //
 //----------------------------------------------------------------------
 
+#include "m_lua.h"
+
 #include <algorithm>
 
-#ifndef CONSOLE_ONLY
-#include "hdr_fltk.h"
-#include "hdr_ui.h"
-#endif
 #include "ff_main.h"
+#include "lib_midi.h"
 #include "lib_util.h"
 #include "m_trans.h"
 #include "main.h"
@@ -35,7 +34,7 @@
 #include "sys_xoshiro.h"
 
 #define LUA_IMPL
-#include "m_lua.h"
+#include "minilua.h"
 
 static lua_State *LUA_ST;
 
@@ -68,16 +67,16 @@ int gui_format_prefix(lua_State *L)
         format = custom_prefix.c_str();
     }
 
-    const char *result = ff_main(levelcount, game, port, theme, OBSIDIAN_SHORT_VERSION, format.c_str());
+    std::string result = ff_main(levelcount, game, port, theme, OBSIDIAN_SHORT_VERSION, format.c_str());
 
-    if (!result)
+    if (result.empty())
     {
         lua_pushstring(L, "FF_ERROR_"); // Will help people notice issues
         return 1;
     }
     else
     {
-        lua_pushstring(L, result);
+        lua_pushstring(L, result.c_str());
         return 1;
     }
 
@@ -97,7 +96,7 @@ int gui_console_print(lua_State *L)
         SYS_ASSERT(res);
 
         // strip off colorizations
-        if (res[0] == '@' && isdigit(res[1]))
+        if (res[0] == '@' && IsDigitASCII(res[1]))
         {
             res += 2;
         }
@@ -120,12 +119,12 @@ int gui_ref_print(lua_State *L)
         SYS_ASSERT(res);
 
         // strip off colorizations
-        if (res[0] == '@' && isdigit(res[1]))
+        if (res[0] == '@' && IsDigitASCII(res[1]))
         {
             res += 2;
         }
 
-        RefPrintf("%s", res);
+        RefPrint("%s", res);
     }
 
     return 0;
@@ -143,12 +142,12 @@ int gui_raw_log_print(lua_State *L)
         SYS_ASSERT(res);
 
         // strip off colorizations
-        if (res[0] == '@' && isdigit(res[1]))
+        if (res[0] == '@' && IsDigitASCII(res[1]))
         {
             res += 2;
         }
 
-        LogPrintf("%s", res);
+        LogPrint("%s", res);
     }
 
     return 0;
@@ -165,7 +164,7 @@ int gui_raw_debug_print(lua_State *L)
         const char *res = luaL_checkstring(L, 1);
         SYS_ASSERT(res);
 
-        DebugPrintf("%s", res);
+        DebugPrint("%s", res);
     }
 
     return 0;
@@ -366,12 +365,12 @@ static bool scan_dir_process_name(const std::string &name, const std::string &pa
     {
         return true;
     }
-    else if (match[0] == '*' && match[1] == '.' && isalnum(match[2]))
+    else if (match[0] == '*' && match[1] == '.' && IsAlphanumericASCII(match[2]))
     {
         return GetExtension(name) == "." + std::string{match.begin() + 2, match.end()};
     }
 
-    Main::FatalError("gui.scan_directory: unsupported match expression: %s\n", match.c_str());
+    FatalError("gui.scan_directory: unsupported match expression: %s\n", match.c_str());
     return false; /* NOT REACHED */
 }
 
@@ -472,7 +471,7 @@ int gui_add_choice(lua_State *L)
     // only allowed during startup
     if (has_added_buttons)
     {
-        Main::FatalError("Script problem: gui.add_choice called late.\n");
+        FatalError("Script problem: gui.add_choice called late.\n");
     }
 
     if (!main_win->game_box->AddChoice(button, id, label))
@@ -568,7 +567,7 @@ int gui_add_module(lua_State *L)
     // only allowed during startup
     if (has_added_buttons)
     {
-        Main::FatalError("Script problem: gui.add_module called late.\n");
+        FatalError("Script problem: gui.add_module called late.\n");
     }
 
     if (StringCompare(where, "arch") == 0)
@@ -705,7 +704,7 @@ int gui_add_module_header(lua_State *L)
     // only allowed during startup
     if (has_added_buttons)
     {
-        Main::FatalError("Script problem: gui.add_module_header called late.\n");
+        FatalError("Script problem: gui.add_module_header called late.\n");
     }
 
     for (int i = 0; i < main_win->mod_tabs->children(); i++)
@@ -722,8 +721,8 @@ int gui_add_module_header(lua_State *L)
         }
     }
 
-    Main::FatalError("Script problem: gui.add_module_header_option called for "
-                     "non-existent module!\n");
+    FatalError("Script problem: gui.add_module_header_option called for "
+               "non-existent module!\n");
 #endif
     return 0;
 }
@@ -751,7 +750,7 @@ int gui_add_module_url(lua_State *L)
     // only allowed during startup
     if (has_added_buttons)
     {
-        Main::FatalError("Script problem: gui.add_module_url called late.\n");
+        FatalError("Script problem: gui.add_module_url called late.\n");
     }
 
     for (int i = 0; i < main_win->mod_tabs->children(); i++)
@@ -768,8 +767,8 @@ int gui_add_module_url(lua_State *L)
         }
     }
 
-    Main::FatalError("Script problem: gui.add_module_url called for "
-                     "non-existent module!\n");
+    FatalError("Script problem: gui.add_module_url called for "
+               "non-existent module!\n");
 #endif
     return 0;
 }
@@ -801,7 +800,7 @@ int gui_add_module_option(lua_State *L)
     // only allowed during startup
     if (has_added_buttons)
     {
-        Main::FatalError("Script problem: gui.add_module_option called late.\n");
+        FatalError("Script problem: gui.add_module_option called late.\n");
     }
 
     for (int i = 0; i < main_win->mod_tabs->children(); i++)
@@ -818,8 +817,8 @@ int gui_add_module_option(lua_State *L)
         }
     }
 
-    Main::FatalError("Script problem: gui.add_module_option called for "
-                     "non-existent module!\n");
+    FatalError("Script problem: gui.add_module_option called for "
+               "non-existent module!\n");
 #endif
     return 0;
 }
@@ -859,7 +858,7 @@ int gui_add_module_slider_option(lua_State *L)
     // only allowed during startup
     if (has_added_buttons)
     {
-        Main::FatalError("Script problem: gui.add_module_option called late.\n");
+        FatalError("Script problem: gui.add_module_option called late.\n");
     }
 
     for (int i = 0; i < main_win->mod_tabs->children(); i++)
@@ -877,8 +876,8 @@ int gui_add_module_slider_option(lua_State *L)
         }
     }
 
-    Main::FatalError("Script problem: gui.add_module_slider_option called for "
-                     "non-existent module!\n");
+    FatalError("Script problem: gui.add_module_slider_option called for "
+               "non-existent module!\n");
 #endif
     return 0;
 }
@@ -910,7 +909,7 @@ int gui_add_module_button_option(lua_State *L)
     // only allowed during startup
     if (has_added_buttons)
     {
-        Main::FatalError("Script problem: gui.add_module_option called late.\n");
+        FatalError("Script problem: gui.add_module_option called late.\n");
     }
 
     for (int i = 0; i < main_win->mod_tabs->children(); i++)
@@ -927,8 +926,8 @@ int gui_add_module_button_option(lua_State *L)
         }
     }
 
-    Main::FatalError("Script problem: gui.add_module_button_option called for "
-                     "non-existent module!\n");
+    FatalError("Script problem: gui.add_module_button_option called for "
+               "non-existent module!\n");
 #endif
     return 0;
 }
@@ -954,7 +953,7 @@ int gui_add_option_choice(lua_State *L)
     // only allowed during startup
     if (has_added_buttons)
     {
-        Main::FatalError("Script problem: gui.add_option_choice called late.\n");
+        FatalError("Script problem: gui.add_option_choice called late.\n");
     }
 
     for (int i = 0; i < main_win->mod_tabs->children(); i++)
@@ -1165,7 +1164,7 @@ int gui_at_level(lua_State *L)
     int index = luaL_checkinteger(L, 2);
     int total = luaL_checkinteger(L, 3);
 
-    Main::ProgStatus("%s %s", _("Making"), name.c_str());
+    ProgStatus("%s %s", _("Making"), name.c_str());
 #ifndef CONSOLE_ONLY
     if (main_win)
     {
@@ -1434,6 +1433,31 @@ int gui_minimap_fill_box(lua_State *L)
     return 0;
 }
 
+int generate_midi_track(lua_State *L)
+{
+    const char *midi_config = luaL_checkstring(L, 1);
+    const char *midi_file = luaL_checkstring(L, 2);
+
+    int value = steve_generate(midi_config, midi_file) ? 1 : 0;
+    lua_pushinteger(L, value);
+
+    return 1;
+}
+
+int remove_temp_file(lua_State *L)
+{
+    std::string path = PathAppend(home_dir, "temp");
+
+    const char *temp_file = luaL_checkstring(L, 1);
+
+    path = PathAppend(path, GetFilename(temp_file));
+
+    if (FileExists(path))
+        FileDelete(path);
+
+    return 0;
+}
+
 //------------------------------------------------------------------------
 
 extern int SPOT_begin(lua_State *L);
@@ -1658,6 +1682,12 @@ static const luaL_Reg gui_script_funcs[] = {
     {"v094_add_sidedef", Doom::v094_add_sidedef},
     {"v094_add_sector", Doom::v094_add_sector},
 
+    // MIDI generation
+    {"generate_midi_track", generate_midi_track},
+
+    // Miscellany
+    {"remove_temp_file", remove_temp_file},
+
     {NULL, NULL} // the end
 };
 
@@ -1683,7 +1713,7 @@ static int p_init_lua(lua_State *L)
     return 0;
 }
 
-static bool Script_CallFunc(std::string func_name, int nresult = 0, std::string *params = NULL)
+static bool Script_CallFunc(const std::string &func_name, int nresult = 0, const std::vector<std::string> &params = {})
 {
     // Note: the results of the function will be on the Lua stack
 
@@ -1691,23 +1721,21 @@ static bool Script_CallFunc(std::string func_name, int nresult = 0, std::string 
 
     if (lua_type(LUA_ST, -1) == LUA_TNIL)
     {
-        Main::FatalError("Script problem: missing function 'ob_traceback'");
+        FatalError("Script problem: missing function 'ob_traceback'");
     }
 
     lua_getglobal(LUA_ST, func_name.c_str());
 
     if (lua_type(LUA_ST, -1) == LUA_TNIL)
     {
-        Main::FatalError("Script problem: missing function '%s'", func_name.c_str());
+        FatalError("Script problem: missing function '%s'", func_name.c_str());
     }
 
     int nargs = 0;
-    if (params)
+    for (const std::string& param : params)
     {
-        for (; !params->empty(); params++, nargs++)
-        {
-            lua_pushstring(LUA_ST, params->c_str());
-        }
+        lua_pushstring(LUA_ST, param.c_str());
+        nargs++;
     }
 
     int status = lua_pcall(LUA_ST, nargs, nresult, -2 - nargs);
@@ -1728,7 +1756,7 @@ static bool Script_CallFunc(std::string func_name, int nresult = 0, std::string 
 
         if (batch_mode)
         {
-            LogPrintf("ERROR MESSAGE: %s\n", err_msg);
+            LogPrint("ERROR MESSAGE: %s\n", err_msg);
         }
 
 // this will appear in the log file too
@@ -1845,7 +1873,7 @@ void Script_Load(std::string script_name)
 
     std::string filename = PathAppend(import_dir, script_name);
 
-    DebugPrintf("  loading script: '%s'\n", filename.c_str());
+    DebugPrint("  loading script: '%s'\n", filename.c_str());
 
     int status = my_loadfile(LUA_ST, filename);
 
@@ -1858,7 +1886,7 @@ void Script_Load(std::string script_name)
     {
         const char *msg = lua_tolstring(LUA_ST, -1, NULL);
 
-        Main::FatalError("Unable to load script '%s'\n%s", filename.c_str(), msg);
+        FatalError("Unable to load script '%s'\n%s", filename.c_str(), msg);
     }
 }
 
@@ -1866,7 +1894,7 @@ void Script_Open()
 {
     if (main_action != MAIN_SOFT_RESTART)
     {
-        LogPrintf("\n--- OPENING LUA VM ---\n\n");
+        LogPrint("\n--- OPENING LUA VM ---\n\n");
     }
 
     // create Lua state
@@ -1874,13 +1902,13 @@ void Script_Open()
     LUA_ST = luaL_newstate();
     if (!LUA_ST)
     {
-        Main::FatalError("LUA Init failed: cannot create new state");
+        FatalError("LUA Init failed: cannot create new state");
     }
 
     int status = p_init_lua(LUA_ST);
     if (status != 0)
     {
-        Main::FatalError("LUA Init failed: cannot load standard libs (%d)", status);
+        FatalError("LUA Init failed: cannot load standard libs (%d)", status);
     }
 
     // load main scripts
@@ -1889,14 +1917,14 @@ void Script_Open()
 
     if (main_action != MAIN_SOFT_RESTART)
     {
-        LogPrintf("Loading initial script: init.lua\n");
+        LogPrint("Loading initial script: init.lua\n");
     }
 
     Script_Load("init.lua");
 
     if (main_action != MAIN_SOFT_RESTART)
     {
-        LogPrintf("Loading main script: obsidian.lua\n");
+        LogPrint("Loading main script: obsidian.lua\n");
     }
 
     Script_Load("obsidian.lua");
@@ -1904,7 +1932,7 @@ void Script_Open()
     has_loaded = true;
     if (main_action != MAIN_SOFT_RESTART)
     {
-        LogPrintf("DONE.\n\n");
+        LogPrint("DONE.\n\n");
     }
 
     // ob_init() will load all the game-specific scripts, engine scripts, and
@@ -1914,14 +1942,14 @@ void Script_Open()
     {
         if (!Script_CallFunc("ob_restart"))
         {
-            Main::FatalError("The ob_init script failed.\n");
+            FatalError("The ob_init script failed.\n");
         }
     }
     else
     {
         if (!Script_CallFunc("ob_init"))
         {
-            Main::FatalError("The ob_init script failed.\n");
+            FatalError("The ob_init script failed.\n");
         }
     }
 
@@ -1937,7 +1965,7 @@ void Script_Close()
 
     if (main_action != MAIN_SOFT_RESTART)
     {
-        LogPrintf("\n--- CLOSED LUA VM ---\n\n");
+        LogPrint("\n--- CLOSED LUA VM ---\n\n");
     }
 
     LUA_ST = NULL;
@@ -1949,7 +1977,7 @@ void Script_Close()
 // WRAPPERS TO LUA FUNCTIONS
 //------------------------------------------------------------------------
 
-bool ob_set_config(std::string key, std::string value)
+bool ob_set_config(const std::string &key, const std::string &value)
 {
     // See the document 'doc/Config_Flow.txt' for a good
     // description of the flow of configuration values
@@ -1957,48 +1985,40 @@ bool ob_set_config(std::string key, std::string value)
 
     if (!has_loaded)
     {
-        DebugPrintf("ob_set_config(%s) called before loaded!\n", key.c_str());
+        DebugPrint("ob_set_config(%s) called before loaded!\n", key.c_str());
         return false;
     }
 
-    std::string params[3] = {
-        key,
-        value,
-        "",
-    };
-
-    return Script_CallFunc("ob_set_config", 0, &params[0]);
+    return Script_CallFunc("ob_set_config", 0, {key, value});
 }
 
-bool ob_set_mod_option(std::string module, std::string option, std::string value)
+bool ob_set_mod_option(const std::string &module, const std::string &option, const std::string &value)
 {
     if (!has_loaded)
     {
-        DebugPrintf("ob_set_mod_option() called before loaded!\n");
+        DebugPrint("ob_set_mod_option() called before loaded!\n");
         return false;
     }
 
-    std::string params[4] = {module, option, value, ""};
-
-    return Script_CallFunc("ob_set_mod_option", 0, &params[0]);
+    return Script_CallFunc("ob_set_mod_option", 0, {module, option, value});
 }
 
 bool ob_read_all_config(std::vector<std::string> *lines, bool need_full)
 {
     if (!has_loaded)
     {
-        DebugPrintf("ob_read_all_config() called before loaded!\n");
+        DebugPrint("ob_read_all_config() called before loaded!\n");
         return false;
     }
 
     conf_line_buffer = lines;
 
-    std::string params[2];
+    std::vector<std::string> params;
 
-    params[0] = need_full ? "need_full" : "";
-    params[1] = ""; // end of list
+    if (need_full)
+        params.push_back("need_full");
 
-    bool result = Script_CallFunc("ob_read_all_config", 0, &params[0]);
+    bool result = Script_CallFunc("ob_read_all_config", 0, params);
 
     conf_line_buffer = NULL;
 
@@ -2050,11 +2070,9 @@ std::string ob_game_format()
     return res;
 }
 
-std::string ob_get_param(std::string parameter)
+std::string ob_get_param(const std::string &parameter)
 {
-    std::string params[2] = {parameter, ""};
-
-    if (!Script_CallFunc("ob_get_param", 1, &params[0]))
+    if (!Script_CallFunc("ob_get_param", 1, {parameter}))
     {
         return "";
     }
@@ -2069,9 +2087,7 @@ std::string ob_get_param(std::string parameter)
 
 bool ob_hexen_ceiling_check(int thing_id)
 {
-    std::string params[2] = {NumToString(thing_id), ""};
-
-    if (!Script_CallFunc("ob_hexen_ceiling_check", 1, &params[0]))
+    if (!Script_CallFunc("ob_hexen_ceiling_check", 1, {NumToString(thing_id)}))
     {
         return false;
     }
@@ -2084,11 +2100,9 @@ bool ob_hexen_ceiling_check(int thing_id)
     return StringToInt(param);
 }
 
-bool ob_mod_enabled(std::string module_name)
+bool ob_mod_enabled(const std::string &module_name)
 {
-    std::string params[2] = {module_name, ""};
-
-    if (!Script_CallFunc("ob_mod_enabled", 1, &params[0]))
+    if (!Script_CallFunc("ob_mod_enabled", 1, {module_name}))
     {
         return false;
     }
@@ -2154,13 +2168,11 @@ void ob_print_reference_json()
     }
 }
 
-void ob_invoke_hook(std::string hookname)
+void ob_invoke_hook(const std::string &hookname)
 {
-    std::string params[2] = {hookname, ""};
-
-    if (!Script_CallFunc("ob_invoke_hook", 0, &params[0]))
+    if (!Script_CallFunc("ob_invoke_hook", 0, {hookname}))
     {
-        Main::ProgStatus(_("Script Error"));
+        ProgStatus("%s", _("Script Error"));
     }
 }
 
@@ -2176,14 +2188,14 @@ bool ob_build_cool_shit()
                                 .c_str());
         }
 #endif
-        Main::ProgStatus(_("Script Error"));
+        ProgStatus("%s", _("Script Error"));
 #ifndef CONSOLE_ONLY
         if (main_win)
         {
             main_win->label(
                 StringFormat("%s %s \"%s\"", OBSIDIAN_TITLE.c_str(), OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str())
                     .c_str());
-#ifdef WIN32
+#ifdef _WIN32
             Main::Blinker();
 #endif
         }
@@ -2201,7 +2213,7 @@ bool ob_build_cool_shit()
         return true;
     }
 
-    Main::ProgStatus(_("Cancelled"));
+    ProgStatus("%s", _("Cancelled"));
     return false;
 }
 

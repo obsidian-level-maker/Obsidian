@@ -27,13 +27,14 @@
 
 #include "m_trans.h"
 
-#ifndef WIN32
+#ifndef _WIN32
 #include <locale.h>
+#else
+#include <windows.h>
 #endif
 
 #include <algorithm>
 
-#include "hdr_lua.h"
 #include "lib_util.h"
 #include "main.h"
 #include "sys_assert.h"
@@ -48,6 +49,7 @@
 #include <map>
 
 static std::map<std::string, std::string> trans_store;
+static std::map<std::string, std::string>::iterator trans_iter;
 
 // current Options setting
 std::string t_language = _("AUTO");
@@ -58,7 +60,7 @@ std::string t_language = _("AUTO");
 #define MAX_TRANS_STRING 65536
 
 /* Mingw headers don't have latest language and sublanguage codes. */
-#ifdef WIN32
+#ifdef _WIN32
 #ifndef LANG_AFRIKAANS
 #define LANG_AFRIKAANS 0x36
 #endif
@@ -394,32 +396,29 @@ std::string t_language = _("AUTO");
 #endif
 #endif
 
-static std::string remove_codeset(std::string langcode)
+static std::string remove_codeset(std::string_view langcode)
 {
-    if (langcode.find('.') != std::string::npos)
-    {
-        auto p = std::find(langcode.begin(), langcode.end(), '.');
-        langcode.resize(p - langcode.begin());
-    }
-
-    return langcode;
+    size_t pos = langcode.find('.');
+    if (pos != std::string_view::npos)
+        return std::string(langcode.substr(0, pos));
+    else
+        return std::string(langcode);
 }
 
-static std::string remove_territory(std::string langcode)
+static std::string remove_territory(std::string_view langcode)
 {
-    if (langcode.find('_') != std::string::npos)
-    {
-        langcode.resize(std::find(langcode.begin(), langcode.end(), '_') - langcode.begin());
-    }
-
-    return langcode;
+    size_t pos = langcode.find('_');
+    if (pos != std::string_view::npos)
+        return std::string(langcode.substr(0, pos));
+    else
+        return std::string(langcode);
 }
 
 /* DETERMINE CURRENT LANGUAGE */
 
 static std::string Trans_GetUserLanguage()
 {
-#ifdef WIN32
+#ifdef _WIN32
     /* Use native Windows API locale ID. */
     LCID lcid = GetThreadLocale();
 
@@ -877,14 +876,14 @@ struct po_parse_state_t
 
         dest = dest + d_len;
 
-        while (*p && isspace(*p))
+        while (*p && IsSpaceASCII(*p))
         {
             p++;
         }
 
         if (*p++ != '"')
         {
-            LogPrintf("WARNING: missing string on line %d\n", line_number);
+            LogPrint("WARNING: missing string on line %d\n", line_number);
             return;
         }
 
@@ -892,13 +891,13 @@ struct po_parse_state_t
         {
             if (*p == 0)
             {
-                LogPrintf("WARNING: unterminated string on line %d\n", line_number);
+                LogPrint("WARNING: unterminated string on line %d\n", line_number);
                 break;
             }
 
             if (dest >= dest_end)
             {
-                LogPrintf("WARNING: string too long on line %d\n", line_number);
+                LogPrint("WARNING: string too long on line %d\n", line_number);
                 break;
             }
 
@@ -913,7 +912,7 @@ struct po_parse_state_t
 
             if (*p == 0)
             {
-                LogPrintf("WARNING: unterminated string on line %d\n", line_number);
+                LogPrint("WARNING: unterminated string on line %d\n", line_number);
                 break;
             }
 
@@ -950,7 +949,7 @@ struct po_parse_state_t
                 break;
 
             default:
-                LogPrintf("WARNING: strange escape sequence on line %d\n", line_number);
+                LogPrint("WARNING: strange escape sequence on line %d\n", line_number);
                 break;
             }
         }
@@ -971,7 +970,7 @@ struct po_parse_state_t
         }
         else
         {
-            LogPrintf("WARNING: unexpected string on line %d\n", line_number);
+            LogPrint("WARNING: unexpected string on line %d\n", line_number);
         }
     }
 
@@ -1008,15 +1007,16 @@ void Trans_Read_PO_File(FILE *fp)
     po_state.line_number = 0;
 
     std::string buffer;
-    int c = EOF;
+    int         c = EOF;
     for (;;)
     {
         buffer.clear();
         while ((c = fgetc(fp)) != EOF)
         {
-            buffer.push_back(c);
-            if (c == '\n')
+            if (c == '\n' || c == '\r')
                 break;
+            else
+                buffer.push_back(c);
         }
 
         po_state.line_number += 1;
@@ -1060,7 +1060,7 @@ void Trans_Read_PO_File(FILE *fp)
         }
         else
         {
-            LogPrintf("WARNING: unsupported keyword on line %d\n", po_state.line_number);
+            LogPrint("WARNING: unsupported keyword on line %d\n", po_state.line_number);
         }
 
         if (feof(fp) || ferror(fp))
@@ -1074,10 +1074,10 @@ void Trans_Read_PO_File(FILE *fp)
 
 void Trans_Init()
 {
-#ifndef WIN32
+#ifndef _WIN32
     if (!setlocale(LC_ALL, ""))
     {
-        LogPrintf("WARNING : failed to initialize locale (check localdef)\n\n");
+        LogPrint("WARNING : failed to initialize locale (check localdef)\n\n");
     }
 #endif
 
@@ -1087,7 +1087,7 @@ void Trans_Init()
 
     if (!FileExists(path))
     {
-        LogPrintf("WARNING: missing language/LANGS.txt file\n");
+        LogPrint("WARNING: missing language/LANGS.txt file\n");
         return;
     }
 
@@ -1095,23 +1095,24 @@ void Trans_Init()
 
     if (!trans_fp)
     {
-        LogPrintf("WARNING: Error opening LANGS.txt!\n");
+        LogPrint("WARNING: Error opening LANGS.txt!\n");
         return;
     }
 
-    LogPrintf("Loading language list: %s\n", path.c_str());
+    LogPrint("Loading language list: %s\n", path.c_str());
 
     std::string buffer;
-    int c = EOF;
+    int         c = EOF;
     for (;;)
     {
         buffer.clear();
 
         while ((c = fgetc(trans_fp)) != EOF)
         {
-            buffer.push_back((char)c);
-            if (c == '\n')
+            if (c == '\n' || c == '\r')
                 break;
+            else
+                buffer.push_back(c);
         }
 
         Trans_ParseLangLine((char *)buffer.c_str());
@@ -1122,7 +1123,7 @@ void Trans_Init()
 
     fclose(trans_fp);
 
-    LogPrintf("DONE.\n\n");
+    LogPrint("DONE.\n\n");
 }
 
 void Trans_SetLanguage()
@@ -1135,7 +1136,7 @@ void Trans_SetLanguage()
     {
         langcode = Trans_GetUserLanguage();
 
-        LogPrintf("Detected user language: '%s'\n", langcode.c_str());
+        LogPrint("Detected user language: '%s'\n", langcode.c_str());
     }
 
     std::string lang_plain = remove_territory(langcode);
@@ -1144,7 +1145,7 @@ void Trans_SetLanguage()
 
     if (lang_plain == "UNKNOWN" || lang_plain == "en")
     {
-        LogPrintf("Using the default language (English)\n\n");
+        LogPrint("Using the default language (English)\n\n");
         selected_lang = "en";
         return;
     }
@@ -1156,28 +1157,27 @@ void Trans_SetLanguage()
     {
         // if language has a territory field (like zh_TW or en_AU) then
         // try again with the plain language code.
-
         path = StringFormat("%s/language/%s.po", install_dir.c_str(), lang_plain.c_str());
     }
 
     FILE *fp = FileOpen(path, "rb");
     if (!fp)
     {
-        LogPrintf("No translation file: language/%s.po\n", lang_plain.c_str());
-        LogPrintf("Using the default language (English)\n\n");
+        LogPrint("No translation file: language/%s.po\n", lang_plain.c_str());
+        LogPrint("Using the default language (English)\n\n");
         selected_lang = "en";
         return;
     }
 
     selected_lang = lang_plain;
 
-    LogPrintf("Loading translation: %s\n", path.c_str());
+    LogPrint("Loading translation: %s\n", path.c_str());
 
     Trans_Read_PO_File(fp);
 
     fclose(fp);
 
-    LogPrintf("DONE.\n\n");
+    LogPrint("DONE.\n\n");
 }
 
 std::string Trans_GetAvailCode(int idx)
@@ -1215,13 +1215,11 @@ void Trans_UnInit()
 
 const char *ob_gettext(const char *s)
 {
-    std::map<std::string, std::string>::iterator IT;
+    trans_iter = trans_store.find(s);
 
-    IT = trans_store.find(s);
-
-    if (IT != trans_store.end())
+    if (trans_iter != trans_store.end())
     {
-        return IT->second.c_str();
+        return trans_iter->second.c_str();
     }
 
     return s;
