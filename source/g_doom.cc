@@ -1425,7 +1425,7 @@ bool Doom::game_interface_c::Start(const char *preset)
         }
         if (!ZIPF_OpenWrite(zip_filename))
         {
-            ProgStatus("%s", _("Error (create PK3/ZIP)"), zip_filename.c_str());
+            ProgStatus("%s", _("Error (create PK3/ZIP)"));
             return false;
         }
     }

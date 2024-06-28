@@ -118,7 +118,7 @@ tga_image_c *TGA_LoadImage(const char *path)
     if (targa_header.image_type != TGA_INDEXED && targa_header.image_type != TGA_INDEXED_RLE &&
         targa_header.image_type != TGA_RGB && targa_header.image_type != TGA_RGB_RLE)
     {
-        FatalError("Bad tga file: type {} is not supported\n", targa_header.image_type);
+        FatalError("Bad tga file: type %d is not supported\n", targa_header.image_type);
     }
 
     int width  = targa_header.width;
