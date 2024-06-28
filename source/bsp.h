@@ -20,6 +20,8 @@
 
 #pragma once
 
+#include <stdint.h>
+
 #include <string>
 
 constexpr const char *AJBSP_VERSION = "1.05";
