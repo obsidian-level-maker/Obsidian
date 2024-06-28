@@ -297,9 +297,10 @@ PREFABS.Item_secret_hanging_vent_closet =
   template = "Item_secret_yard_closet1",
   map      = "MAP07",
 
+  in_porches = "never",
   jump_crouch = false,
 
-  prob  = 250,
+  prob  = 50,
 
   seed_w = 1,
   seed_h = 1,
