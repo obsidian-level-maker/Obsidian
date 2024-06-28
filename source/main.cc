@@ -39,13 +39,14 @@
 #include "m_trans.h"
 #include "physfs.h"
 #include "sys_xoshiro.h"
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
 #ifndef _WIN32
 #include <FL/Fl_File_Icon.H>
 #endif
 #include <FL/Fl_Shared_Image.H>
 #include <FL/fl_ask.H>
 #include <FL/platform.H>
+
 #include "ui_boxes.h"
 #include "ui_window.h"
 #endif
@@ -88,7 +89,7 @@ std::string              numeric_locale;
 std::vector<std::string> batch_randomize_groups;
 
 // options
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
 uchar                                    text_red       = 225;
 uchar                                    text_green     = 225;
 uchar                                    text_blue      = 225;
@@ -171,11 +172,11 @@ game_interface_c *game_object = NULL;
 
 extern bool ExtractPresetData(FILE *fp, std::string &buf);
 
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
 Fl_Pixmap *clippy;
 
 #ifdef _WIN32
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
 static FLASHWINFO *blinker;
 static int         i_load_private_font(const char *path)
 {
@@ -187,7 +188,7 @@ int v_unload_private_font(const char *path)
 }
 #endif
 #else
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
 #ifndef __APPLE__
 #include <fontconfig/fontconfig.h>
 static int i_load_private_font(const char *path)
@@ -413,7 +414,7 @@ void Determine_OptionsFile()
     options_file = PathAppend(home_dir, OPTIONS_FILENAME);
 }
 
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
 void Determine_ThemeFile()
 {
     theme_file = PathAppend(home_dir, THEME_FILENAME);
@@ -449,7 +450,7 @@ bool Main::BackupFile(const std::string &filename)
 
     return true;
 }
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
 int Main::DetermineScaling()
 {
     /* computation of the Kromulent factor */
@@ -499,7 +500,7 @@ int Main::DetermineScaling()
     return 0;
 }
 #endif
-#if !defined(CONSOLE_ONLY) && !defined(__APPLE__)
+#if !defined(OBSIDIAN_CONSOLE_ONLY) && !defined(__APPLE__)
 bool Main::LoadInternalFont(const char *fontpath, const int fontnum, const char *fontname)
 {
     /* set the extra font */
@@ -512,7 +513,7 @@ bool Main::LoadInternalFont(const char *fontpath, const int fontnum, const char 
 }
 #endif
 
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
 void Main::PopulateFontMap()
 {
     if (font_menu_items.empty())
@@ -928,7 +929,7 @@ void Main::Ticker()
 
 void Main::Shutdown(const bool error)
 {
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     if (main_win)
     {
         // on fatal error we cannot risk calling into the Lua runtime
@@ -961,7 +962,7 @@ void Main::Shutdown(const bool error)
     LogClose();
 }
 
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
 int Main_key_handler(int event)
 {
     if (event != FL_SHORTCUT)
@@ -1026,7 +1027,7 @@ void Main_SetSeed()
     xoshiro_Reseed(next_rand_seed);
     std::string seed = NumToString(next_rand_seed);
     ob_set_config("seed", seed.c_str());
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     if (!batch_mode)
     {
         main_win->build_box->seed_disp->copy_label(StringFormat("%s %s", _("Seed:"), seed.c_str()).c_str());
@@ -1047,7 +1048,7 @@ static void Module_Defaults()
 
 bool Build_Cool_Shit()
 {
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     // clear the map
     if (main_win)
     {
@@ -1080,7 +1081,7 @@ bool Build_Cool_Shit()
 
     const std::string def_filename = ob_default_filename();
 
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     // lock most widgets of user interface
     if (main_win)
     {
@@ -1129,7 +1130,7 @@ bool Build_Cool_Shit()
         was_ok = game_object->Start(def_filename.c_str());
     }
 
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     // coerce FLTK to redraw the main window
     for (int r_loop = 0; r_loop < 6; r_loop++)
     {
@@ -1156,7 +1157,7 @@ bool Build_Cool_Shit()
         string_seed.clear();
 
 #ifdef _WIN32
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
         if (main_win)
             Main::Blinker();
 #endif
@@ -1165,7 +1166,7 @@ bool Build_Cool_Shit()
     else
     {
         string_seed.clear();
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
         if (main_win)
         {
             main_win->build_box->seed_disp->copy_label(_("Seed: -"));
@@ -1176,7 +1177,7 @@ bool Build_Cool_Shit()
 #endif
     }
 
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     if (main_win)
     {
         main_win->build_box->Prog_Finish();
@@ -1188,7 +1189,7 @@ bool Build_Cool_Shit()
     if (main_action == MAIN_CANCEL)
     {
         main_action = 0;
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
         if (main_win)
         {
             main_win->label(
@@ -1294,7 +1295,7 @@ hardrestart:;
 
     if (argv::Find('?', NULL) >= 0 || argv::Find('h', "help") >= 0)
     {
-#if defined _WIN32 && !defined CONSOLE_ONLY
+#if defined _WIN32 && !defined OBSIDIAN_CONSOLE_ONLY
         if (AllocConsole())
         {
             freopen("CONOUT$", "r", stdin);
@@ -1303,7 +1304,7 @@ hardrestart:;
         }
 #endif
         ShowInfo();
-#if defined _WIN32 && !defined CONSOLE_ONLY
+#if defined _WIN32 && !defined OBSIDIAN_CONSOLE_ONLY
         printf("\nClose window when finished...");
         do
         {
@@ -1313,7 +1314,7 @@ hardrestart:;
     }
     else if (argv::Find(0, "version") >= 0)
     {
-#if defined _WIN32 && !defined CONSOLE_ONLY
+#if defined _WIN32 && !defined OBSIDIAN_CONSOLE_ONLY
         if (AllocConsole())
         {
             freopen("CONOUT$", "r", stdin);
@@ -1322,7 +1323,7 @@ hardrestart:;
         }
 #endif
         ShowVersion();
-#if defined _WIN32 && !defined CONSOLE_ONLY
+#if defined _WIN32 && !defined OBSIDIAN_CONSOLE_ONLY
         printf("\nClose window when finished...");
         do
         {
@@ -1332,7 +1333,7 @@ hardrestart:;
         exit(EXIT_SUCCESS);
     }
 
-#ifdef CONSOLE_ONLY
+#ifdef OBSIDIAN_CONSOLE_ONLY
     batch_mode = true;
 #endif
 
@@ -1347,7 +1348,7 @@ hardrestart:;
 
         batch_mode        = true;
         batch_output_file = argv::list[batch_arg + 1];
-#if defined _WIN32 && !defined CONSOLE_ONLY
+#if defined _WIN32 && !defined OBSIDIAN_CONSOLE_ONLY
         if (AllocConsole())
         {
             freopen("CONOUT$", "r", stdin);
@@ -1360,7 +1361,7 @@ hardrestart:;
     if (argv::Find('p', "printref") >= 0)
     {
         batch_mode = true;
-#if defined _WIN32 && !defined CONSOLE_ONLY
+#if defined _WIN32 && !defined OBSIDIAN_CONSOLE_ONLY
         if (AllocConsole())
         {
             freopen("CONOUT$", "r", stdin);
@@ -1399,7 +1400,7 @@ hardrestart:;
     if (argv::Find(0, "printref-json") >= 0)
     {
         batch_mode = true;
-#if defined _WIN32 && !defined CONSOLE_ONLY
+#if defined _WIN32 && !defined OBSIDIAN_CONSOLE_ONLY
         if (AllocConsole())
         {
             freopen("CONOUT$", "r", stdin);
@@ -1414,7 +1415,7 @@ hardrestart:;
     Trans_Init();
     Determine_ConfigFile();
     Determine_OptionsFile();
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     Determine_ThemeFile();
 #endif
     Determine_LoggingFile();
@@ -1444,7 +1445,7 @@ hardrestart:;
     LogPrint("********************************************************\n");
     LogPrint("\n");
 
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     LogPrint("Library versions: FLTK %d.%d.%d\n\n", FL_MAJOR_VERSION, FL_MINOR_VERSION, FL_PATCH_VERSION);
 #endif
 
@@ -1454,13 +1455,13 @@ hardrestart:;
 
     if (!batch_mode)
     {
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
         Theme_Options_Load(theme_file);
 #endif
         Trans_SetLanguage();
         OBSIDIAN_TITLE     = _("OBSIDIAN Level Maker");
         OBSIDIAN_CODE_NAME = _("Unstable");
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
         Main::SetupFLTK();
 #endif
     }
@@ -1522,7 +1523,7 @@ softrestart:;
         {
             ob_print_reference();
             RefClose();
-#if defined _WIN32 && !defined CONSOLE_ONLY
+#if defined _WIN32 && !defined OBSIDIAN_CONSOLE_ONLY
             printf("\nClose window when finished...");
 
             do
@@ -1536,7 +1537,7 @@ softrestart:;
         if (argv::Find(0, "printref-json") >= 0)
         {
             ob_print_reference_json();
-#if defined _WIN32 && !defined CONSOLE_ONLY
+#if defined _WIN32 && !defined OBSIDIAN_CONSOLE_ONLY
             printf("\nClose window when finished...");
 
             do
@@ -1593,7 +1594,7 @@ softrestart:;
                      "parameter?\n");
 
             Main::Shutdown(false);
-#if defined _WIN32 && !defined CONSOLE_ONLY
+#if defined _WIN32 && !defined OBSIDIAN_CONSOLE_ONLY
             printf("\nClose window when finished...");
             do
             {
@@ -1609,7 +1610,7 @@ softrestart:;
             LogPrint("FAILED!\n");
 
             Main::Shutdown(false);
-#if defined _WIN32 && !defined CONSOLE_ONLY
+#if defined _WIN32 && !defined OBSIDIAN_CONSOLE_ONLY
             printf("\nClose window when finished...");
             do
             {
@@ -1637,7 +1638,7 @@ softrestart:;
         VFS_ScanForPresets();
 
 // create the main window
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
         fl_register_images(); // Needed for Unix window icon and Clippy
 
         if (!clippy)
@@ -1684,7 +1685,7 @@ softrestart:;
 
     Cookie_ParseArguments();
 
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     if (main_win)
     {
         if (StringCompare(main_win->game_box->engine->GetID(), "idtech_0") == 0)
@@ -1700,7 +1701,7 @@ softrestart:;
 
     if (main_action != MAIN_SOFT_RESTART)
     {
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
         // Have to add these after reading existing settings - Dasho
         if (main_win)
         {
@@ -1842,7 +1843,7 @@ softrestart:;
 
     if (main_action != MAIN_SOFT_RESTART)
     {
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
         // draw an empty map (must be done after main window is
         // shown() because that is when FLTK finalises the colors).
         main_win->build_box->mini_map->EmptyMap();
@@ -1882,7 +1883,7 @@ softrestart:;
         // run the GUI until the user quits
         for (;;)
         {
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
             Fl::wait(0.2);
 #endif
 
@@ -1915,7 +1916,7 @@ softrestart:;
 
                 did_specify_seed = false;
 
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
                 if (result)
                 {
                     old_seed = string_seed.empty() ? NumToString(next_rand_seed) : string_seed;
@@ -1953,14 +1954,14 @@ softrestart:;
     {
         LogPrint("\nQuit......\n\n");
     }
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     Theme_Options_Save(theme_file);
 #endif
     Options_Save(options_file);
 
     if (main_action == MAIN_HARD_RESTART || main_action == MAIN_SOFT_RESTART)
     {
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
         if (main_win)
         {
             // on fatal error we cannot risk calling into the Lua runtime

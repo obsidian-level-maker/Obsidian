@@ -113,7 +113,7 @@ static int calc_thing_z(int x, int y)
         const ajpoly::polygon_c *poly = ajpoly::Polygon(p);
 
         // ignore void space
-        if (!poly->sector || poly->sector->index < 0 || poly->sector->index == VOID_SECTOR_IDX)
+        if (!poly->sector || poly->sector->index < 0 || poly->sector->index == ajpoly::VOID_SECTOR_IDX)
         {
             continue;
         }
@@ -478,7 +478,7 @@ int wadfab_get_polygon(lua_State *L)
     // result #1 : SECTOR
     int sect_id = poly->sector ? poly->sector->index : -1;
 
-    if (sect_id == VOID_SECTOR_IDX)
+    if (sect_id == ajpoly::VOID_SECTOR_IDX)
     {
         sect_id = -1;
     }

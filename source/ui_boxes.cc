@@ -454,7 +454,7 @@ void cplastic_down_box(int x, int y, int w, int h, Fl_Color c)
 // CUSTOM SHADOW BOX
 // ---------------------------------------------------------------------------------------
 
-#define BW 3
+static constexpr uint8_t BW = 3;
 
 void cshadow_frame(int x, int y, int w, int h, Fl_Color c)
 {

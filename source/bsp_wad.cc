@@ -30,7 +30,7 @@
 #include "sys_endian.h"
 #include "sys_macro.h"
 
-#define DEBUG_WAD 0
+#define AJBSP_DEBUG_WAD 0
 
 namespace ajbsp
 {
@@ -381,7 +381,7 @@ int Wad_file::FindLumpNum(const char *name)
     return -1; // not found
 }
 
-#define MAX_LUMPS_IN_A_LEVEL 21
+static constexpr uint8_t MAX_LUMPS_IN_A_LEVEL = 21;
 
 int Wad_file::LevelLookupLump(int lev_num, const char *name)
 {

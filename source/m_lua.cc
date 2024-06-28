@@ -462,7 +462,7 @@ int gui_add_choice(lua_State *L)
 
     SYS_ASSERT(!button.empty() && !id.empty() && !label.empty());
 
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     if (!main_win)
     {
         return 0;
@@ -493,7 +493,7 @@ int gui_enable_choice(lua_State *L)
 
     SYS_ASSERT(!button.empty() && !id.empty());
 
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     if (!main_win)
     {
         return 0;
@@ -516,7 +516,7 @@ int gui_set_button(lua_State *L)
 
     SYS_ASSERT(!button.empty() && !id.empty());
 
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     if (!main_win)
     {
         return 0;
@@ -534,7 +534,7 @@ int gui_set_button(lua_State *L)
 //
 int gui_check_simple_mode(lua_State *L)
 {
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     int value = (gui_simple_mode) ? 1 : 0;
     lua_pushboolean(L, value);
 #else
@@ -558,7 +558,7 @@ int gui_add_module(lua_State *L)
 
     SYS_ASSERT(!where.empty() && !id.empty() && !label.empty());
 
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     if (!main_win)
     {
         return 0;
@@ -634,7 +634,7 @@ int gui_set_module(lua_State *L)
 
     SYS_ASSERT(!module.empty());
 
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     if (!main_win)
     {
         return 0;
@@ -664,7 +664,7 @@ int gui_show_module(lua_State *L)
 
     SYS_ASSERT(!module.empty());
 
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     if (!main_win)
     {
         return 0;
@@ -695,7 +695,7 @@ int gui_add_module_header(lua_State *L)
     int gap = luaL_optinteger(L, 4, 0);
 
     SYS_ASSERT(!module.empty() && !option.empty());
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     if (!main_win)
     {
         return 0;
@@ -741,7 +741,7 @@ int gui_add_module_url(lua_State *L)
     int gap = luaL_optinteger(L, 5, 0);
 
     SYS_ASSERT(!module.empty() && !option.empty() && !url.empty());
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     if (!main_win)
     {
         return 0;
@@ -791,7 +791,7 @@ int gui_add_module_option(lua_State *L)
     std::string default_value = luaL_checkstring(L, 8);
 
     SYS_ASSERT(!module.empty() && !option.empty() && !default_value.empty());
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     if (!main_win)
     {
         return 0;
@@ -849,7 +849,7 @@ int gui_add_module_slider_option(lua_State *L)
     std::string default_value = luaL_checkstring(L, 14);
 
     SYS_ASSERT(!module.empty() && !option.empty() && !default_value.empty());
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     if (!main_win)
     {
         return 0;
@@ -900,7 +900,7 @@ int gui_add_module_button_option(lua_State *L)
     std::string default_value = luaL_checkstring(L, 8);
 
     SYS_ASSERT(!module.empty() && !option.empty() && !default_value.empty());
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     if (!main_win)
     {
         return 0;
@@ -944,7 +944,7 @@ int gui_add_option_choice(lua_State *L)
 
     SYS_ASSERT(!module.empty() && !option.empty());
 
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     if (!main_win)
     {
         return 0;
@@ -978,7 +978,7 @@ int gui_set_module_option(lua_State *L)
 
     SYS_ASSERT(!module.empty() && !option.empty() && !value.empty());
 
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     if (!main_win)
     {
         return 0;
@@ -1012,7 +1012,7 @@ int gui_set_module_slider_option(lua_State *L)
     std::string value  = luaL_optstring(L, 3, "");
 
     SYS_ASSERT(!module.empty() && !option.empty() && !value.empty());
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     if (!main_win)
     {
         return 0;
@@ -1046,7 +1046,7 @@ int gui_set_module_button_option(lua_State *L)
     int         value  = luaL_checkinteger(L, 3);
 
     SYS_ASSERT(!module.empty() && !option.empty());
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     if (!main_win)
     {
         return 0;
@@ -1079,7 +1079,7 @@ int gui_get_module_slider_value(lua_State *L)
 
     SYS_ASSERT(!module.empty() && !option.empty());
 
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     if (!main_win)
     {
         return 0;
@@ -1128,7 +1128,7 @@ int gui_get_module_button_value(lua_State *L)
 
     SYS_ASSERT(!module.empty() && !option.empty());
 
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     if (!main_win)
     {
         return 0;
@@ -1165,7 +1165,7 @@ int gui_at_level(lua_State *L)
     int total = luaL_checkinteger(L, 3);
 
     ProgStatus("%s %s", _("Making"), name.c_str());
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     if (main_win)
     {
         main_win->build_box->Prog_AtLevel(index, total);
@@ -1179,7 +1179,7 @@ int gui_at_level(lua_State *L)
 int gui_prog_step(lua_State *L)
 {
     const char *name = luaL_checkstring(L, 1);
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     if (main_win)
     {
         main_win->build_box->Prog_Step(name);
@@ -1192,7 +1192,7 @@ int gui_prog_step(lua_State *L)
 //
 int gui_ticker(lua_State * /*L*/)
 {
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     Main::Ticker();
 #endif
     return 0;
@@ -1203,7 +1203,7 @@ int gui_ticker(lua_State * /*L*/)
 int gui_abort(lua_State *L)
 {
     int value = (main_action >= MAIN_CANCEL) ? 1 : 0;
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     Main::Ticker();
 #endif
     lua_pushboolean(L, value);
@@ -1290,7 +1290,7 @@ int gui_bit_not(lua_State *L)
 
 int gui_minimap_enable(lua_State *L)
 {
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     if (main_win)
     {
         main_win->build_box->alt_disp->label("");
@@ -1301,7 +1301,7 @@ int gui_minimap_enable(lua_State *L)
 
 int gui_minimap_disable(lua_State *L)
 {
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     if (main_win)
     {
         main_win->build_box->mini_map->EmptyMap();
@@ -1321,7 +1321,7 @@ int gui_minimap_begin(lua_State *L)
     // dummy size when running in batch mode
     int map_W = 50;
     int map_H = 50;
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     if (main_win)
     {
         map_W = main_win->build_box->mini_map->GetWidth();
@@ -1338,7 +1338,7 @@ int gui_minimap_begin(lua_State *L)
 
 int gui_minimap_finish(lua_State *L)
 {
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     if (main_win)
     {
         main_win->build_box->mini_map->MapFinish();
@@ -1350,7 +1350,7 @@ int gui_minimap_finish(lua_State *L)
 int gui_minimap_gif_start(lua_State *L)
 {
     int delay = luaL_optinteger(L, 1, 10);
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     if (main_win)
     {
         main_win->build_box->mini_map->GifStart(gif_filename, delay);
@@ -1361,7 +1361,7 @@ int gui_minimap_gif_start(lua_State *L)
 
 int gui_minimap_gif_frame(lua_State *L)
 {
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     if (main_win)
     {
         main_win->build_box->mini_map->GifFrame();
@@ -1372,7 +1372,7 @@ int gui_minimap_gif_frame(lua_State *L)
 
 int gui_minimap_gif_finish(lua_State *L)
 {
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     if (main_win)
     {
         main_win->build_box->mini_map->GifFinish();
@@ -1397,7 +1397,7 @@ int gui_minimap_draw_line(lua_State *L)
 
     sscanf(color_str, "#%2x%2x%2x", &r, &g, &b);
 
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     if (main_win)
     {
         main_win->build_box->mini_map->DrawLine(x1, y1, x2, y2, (uint8_t)r, (uint8_t)g, (uint8_t)b);
@@ -1423,7 +1423,7 @@ int gui_minimap_fill_box(lua_State *L)
 
     sscanf(color_str, "#%2x%2x%2x", &r, &g, &b);
 
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     if (main_win)
     {
         main_win->build_box->mini_map->DrawBox(x1, y1, x2, y2, (uint8_t)r, (uint8_t)g, (uint8_t)b);
@@ -1436,7 +1436,7 @@ int gui_minimap_fill_box(lua_State *L)
 int generate_midi_track(lua_State *L)
 {
     const char *midi_config = luaL_checkstring(L, 1);
-    const char *midi_file = luaL_checkstring(L, 2);
+    const char *midi_file   = luaL_checkstring(L, 2);
 
     int value = steve_generate(midi_config, midi_file) ? 1 : 0;
     lua_pushinteger(L, value);
@@ -1732,7 +1732,7 @@ static bool Script_CallFunc(const std::string &func_name, int nresult = 0, const
     }
 
     int nargs = 0;
-    for (const std::string& param : params)
+    for (const std::string &param : params)
     {
         lua_pushstring(LUA_ST, param.c_str());
         nargs++;
@@ -1760,7 +1760,7 @@ static bool Script_CallFunc(const std::string &func_name, int nresult = 0, const
         }
 
 // this will appear in the log file too
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
         if (main_win)
         {
             main_win->label(StringFormat("%s %s %s \"%s\"", _("[ ERROR ]"), OBSIDIAN_TITLE.c_str(),
@@ -2180,7 +2180,7 @@ bool ob_build_cool_shit()
 {
     if (!Script_CallFunc("ob_build_cool_shit", 1))
     {
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
         if (main_win)
         {
             main_win->label(StringFormat("%s %s %s \"%s\"", _("[ ERROR ]"), OBSIDIAN_TITLE.c_str(),
@@ -2189,7 +2189,7 @@ bool ob_build_cool_shit()
         }
 #endif
         ProgStatus("%s", _("Script Error"));
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
         if (main_win)
         {
             main_win->label(

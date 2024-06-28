@@ -149,7 +149,7 @@ static bool Cookie_ParseLine(std::string_view buf)
         return false;
     }
 
-    std::string value = std::string(buf.substr(pos+1));
+    std::string value = std::string(buf.substr(pos + 1));
 
     while (!name.empty() && IsSpaceASCII(name.back()))
     {
@@ -375,7 +375,7 @@ void Cookie_ParseArguments(void)
 //   RECENT FILE HANDLING
 //----------------------------------------------------------------------
 
-#define MAX_RECENT 10
+static constexpr uint8_t MAX_RECENT = 10;
 
 class RecentFiles_c
 {

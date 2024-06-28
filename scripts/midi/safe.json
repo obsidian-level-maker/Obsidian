@@ -20,13 +20,23 @@
   },
   "creators": {
     "Arpeggio": {
+      "min_count": 0,
       "max_count": 0
     },
     "Bass": {
-      "min_count": 1
+      "min_count": 2,
+      "max_count": 3
+    },
+    "Chords": {
+      "min_count": 0,
+      "max_count": 0
+    },
+    "Drums": {
+      "min_count": 1,
+      "max_count": 1
     },
     "Melody": {
-      "min_count": 1,
+      "min_count": 2,
       "max_count": 3
     }
   },

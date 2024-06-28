@@ -27,7 +27,7 @@
 #include <string>
 #include <vector>
 
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
 #include "ui_window.h"
 #endif
 #include "lib_util.h"
@@ -54,7 +54,7 @@ constexpr const char *THEME_FILENAME   = "THEME.txt";
 constexpr const char *LOG_FILENAME     = "LOGS.txt";
 constexpr const char *REF_FILENAME     = "REFERENCE.txt";
 
-#if !defined CONSOLE_ONLY && !defined __APPLE__
+#if !defined OBSIDIAN_CONSOLE_ONLY && !defined __APPLE__
 extern int v_unload_private_font(const char *path);
 #endif
 
@@ -86,7 +86,7 @@ enum main_action_kind_e
 extern int main_action;
 
 // Misc Options
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
 extern uchar                                    text_red;
 extern uchar                                    text_green;
 extern uchar                                    text_blue;
@@ -157,7 +157,7 @@ extern std::string              last_directory;
 extern std::string              numeric_locale;
 extern std::vector<std::string> batch_randomize_groups;
 
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
 // Dialog Windows
 void DLG_ShowError(const char *msg, ...);
 
@@ -174,7 +174,7 @@ extern std::string string_seed;
 extern std::string selected_lang;
 
 // Clippy/program menu stuff
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
 extern Fl_Pixmap *clippy;
 
 void DLG_AboutText();
@@ -193,15 +193,15 @@ namespace Main
 void Shutdown(bool error);
 bool BackupFile(const std::string &filename);
 
-#if defined _WIN32 && !defined CONSOLE_ONLY
+#if defined _WIN32 && !defined OBSIDIAN_CONSOLE_ONLY
 void Blinker();
 #endif
 
-#if !defined(CONSOLE_ONLY) && !defined(__APPLE__)
+#if !defined(OBSIDIAN_CONSOLE_ONLY) && !defined(__APPLE__)
 bool LoadInternalFont(const char *fontpath, int fontnum, const char *fontname);
 #endif
 
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
 void SetupFLTK();
 int  DetermineScaling();
 void PopulateFontMap();

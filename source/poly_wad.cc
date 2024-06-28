@@ -20,7 +20,7 @@
 #include "poly_local.h"
 #include "sys_debug.h"
 
-#define DEBUG_WAD 0
+#define AJPOLY_DEBUG_WAD 0
 
 namespace ajpoly
 {
@@ -117,7 +117,7 @@ bool wad_c::ReadDirEntry()
 
     lump_c *lump = new lump_c(name_buf, start, length);
 
-#if DEBUG_WAD
+#if AJPOLY_DEBUG_WAD
     LogPrint("Read dir... %s\n", lump->name);
 #endif
 
@@ -201,7 +201,7 @@ void wad_c::DetermineLevels()
             continue;
         }
 
-#if DEBUG_WAD
+#if AJPOLY_DEBUG_WAD
         LogPrint("Found level name: %s\n", L->name);
 #endif
 
@@ -306,7 +306,7 @@ uint8_t *wad_c::ReadLump(const char *name, int *length, int level)
 
     lump_c *L = lumps[index];
 
-#if DEBUG_WAD
+#if AJPOLY_DEBUG_WAD
     LogPrint("Reading lump: %s (%d bytes)\n", L->name, L->length);
 #endif
 

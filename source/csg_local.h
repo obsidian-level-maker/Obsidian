@@ -25,7 +25,7 @@
 
 #include "csg_main.h"
 
-#define SNAG_EPSILON 0.001
+constexpr double SNAG_EPSILON = 0.001;
 
 /***** CLASSES ****************/
 

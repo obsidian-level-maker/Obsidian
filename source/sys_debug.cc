@@ -27,12 +27,12 @@
 #include "main.h"
 #include "sys_assert.h"
 
-#define DEBUG_BUF_LEN 20000
+static constexpr uint16_t DEBUG_BUF_LEN = 20000;
 
-FILE       *log_file = nullptr;
-FILE       *ref_file = nullptr;
-std::string log_filename;
-std::string ref_filename;
+static FILE *log_file = nullptr;
+static FILE *ref_file = nullptr;
+std::string  log_filename;
+std::string  ref_filename;
 
 bool debugging = false;
 bool terminal  = false;
@@ -241,7 +241,7 @@ void ProgStatus(const char *message, ...)
     // I hope nobody is printing strings longer than 4096 chars...
     SYS_ASSERT(message_buf[4095] == 0);
 
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     if (main_win)
     {
         main_win->build_box->SetStatus(message_buf);
@@ -300,12 +300,12 @@ void ProgStatus(const char *message, ...)
     if (terminal)
         printf("ERROR: %s", message_buf);
 
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     DLG_ShowError("%s", message_buf);
 #endif
 
     Main::Shutdown(true);
-#if defined _WIN32 && !defined CONSOLE_ONLY
+#if defined _WIN32 && !defined OBSIDIAN_CONSOLE_ONLY
     if (batch_mode)
     {
         printf("\nClose window when finished...");

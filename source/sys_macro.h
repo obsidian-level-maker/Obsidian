@@ -24,30 +24,31 @@
 #include <math.h>
 #include <stdint.h>
 
-constexpr const char *BLANKOUT = "                                                                                           "
-                           "                                                                                           "
-                           "                                                                    ";
+constexpr const char *BLANKOUT =
+    "                                                                                           "
+    "                                                                                           "
+    "                                                                    ";
 
 // basic constants
-#define OBSIDIAN_MSG_BUF_LEN  2000
-#define OBSIDIAN_DIST_EPSILON (1.0 / 1024.0)
-#define OBSIDIAN_ANG_EPSILON  (1.0 / 1024.0)
-#define OBSIDIAN_PI           3.14159265358979323846
+constexpr uint16_t OBSIDIAN_MSG_BUF_LEN  = 2000;
+constexpr double   OBSIDIAN_POLY_EPSILON = (1.0 / 128.0);
+constexpr double   OBSIDIAN_DIST_EPSILON = (1.0 / 1024.0);
+constexpr double   OBSIDIAN_ANG_EPSILON  = (1.0 / 1024.0);
+constexpr double   OBSIDIAN_PI           = 3.14159265358979323846;
 
 // basic math
 #define OBSIDIAN_MAX(a, b)           ((a > b) ? a : b)
 #define OBSIDIAN_MIN(a, b)           ((a < b) ? a : b)
 #define OBSIDIAN_ABS(a)              ((a < 0) ? -a : a)
 #define OBSIDIAN_CLAMP(low, x, high) ((x < low) ? low : ((x > high) ? high : x))
-// formerly I_ROUND macros
-inline int RoundToInteger(float x)
-{
-    return (int)roundf(x);
-}
-inline int RoundToInteger(double x)
-{
-    return (int)round(x);
-}
+#define OBSIDIAN_I_ROUND(x)          ((int)(((x) < 0.0f) ? ((x) - 0.5f) : ((x) + 0.5f)))
+
+// colors
+#define OBSIDIAN_MAKE_RGBA(r, g, b, a) (((r) << 24) | ((g) << 16) | ((b) << 8) | (a))
+#define OBSIDIAN_RGB_RED(col)          ((col >> 24) & 255)
+#define OBSIDIAN_RGB_GREEN(col)        ((col >> 16) & 255)
+#define OBSIDIAN_RGB_BLUE(col)         ((col >> 8) & 255)
+#define OBSIDIAN_RGB_ALPHA(col)        ((col) & 255)
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

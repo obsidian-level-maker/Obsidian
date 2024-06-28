@@ -22,15 +22,15 @@
 
 #include <string>
 
-#define AJBSP_VERSION "1.05"
+constexpr const char *AJBSP_VERSION = "1.05";
 
 //
 // Node Build Information Structure
 //
 
-#define SPLIT_COST_MIN     1
-#define SPLIT_COST_DEFAULT 11
-#define SPLIT_COST_MAX     32
+constexpr uint8_t SPLIT_COST_MIN     = 1;
+constexpr uint8_t SPLIT_COST_DEFAULT = 11;
+constexpr uint8_t SPLIT_COST_MAX     = 32;
 
 class buildinfo_t
 {

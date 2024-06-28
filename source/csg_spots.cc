@@ -26,19 +26,19 @@
 #include "sys_assert.h"
 #include "sys_macro.h"
 
-#define GRID_SIZE 20
+constexpr uint8_t GRID_SIZE = 20;
 
-#define MAX_MON_CELLS 14 /* i.e. 280 units */
+constexpr uint8_t MAX_MON_CELLS = 14; /* i.e. 280 units */
 
-#define SPOT_CLEAR    0
-#define SPOT_LOW_CEIL 1
-#define SPOT_WALL     2
-#define SPOT_LEDGE    3
+constexpr uint8_t SPOT_CLEAR    = 0;
+constexpr uint8_t SPOT_LOW_CEIL = 1;
+constexpr uint8_t SPOT_WALL     = 2;
+constexpr uint8_t SPOT_LEDGE    = 3;
 
-#define NEAR_WALL 0x08
-#define HAS_ITEM  0x10
-#define HAS_MON   0x20
-#define IS_DUD    0x40
+constexpr uint8_t NEAR_WALL = 0x08;
+constexpr uint8_t HAS_ITEM  = 0x10;
+constexpr uint8_t HAS_MON   = 0x20;
+constexpr uint8_t IS_DUD    = 0x40;
 
 static int grid_min_x, grid_min_y;
 static int grid_max_x, grid_max_y;
@@ -824,10 +824,10 @@ int SPOT_begin(lua_State *L)
 //
 int SPOT_draw_line(lua_State *L)
 {
-    int x1 = RoundToInteger(luaL_checknumber(L, 1));
-    int y1 = RoundToInteger(luaL_checknumber(L, 2));
-    int x2 = RoundToInteger(luaL_checknumber(L, 3));
-    int y2 = RoundToInteger(luaL_checknumber(L, 4));
+    int x1 = OBSIDIAN_I_ROUND(luaL_checknumber(L, 1));
+    int y1 = OBSIDIAN_I_ROUND(luaL_checknumber(L, 2));
+    int x2 = OBSIDIAN_I_ROUND(luaL_checknumber(L, 3));
+    int y2 = OBSIDIAN_I_ROUND(luaL_checknumber(L, 4));
 
     int content = luaL_checkinteger(L, 5);
 
@@ -855,8 +855,8 @@ static int polygon_coord(lua_State *L, int stack_pos, std::vector<grid_point_c> 
 
     if (!lua_isnil(L, -2))
     {
-        int x = RoundToInteger(luaL_checknumber(L, -2));
-        int y = RoundToInteger(luaL_checknumber(L, -1));
+        int x = OBSIDIAN_I_ROUND(luaL_checknumber(L, -2));
+        int y = OBSIDIAN_I_ROUND(luaL_checknumber(L, -1));
 
         points.push_back(grid_point_c(x, y));
     }

@@ -28,6 +28,7 @@
 
 #include "m_addons.h"
 #include "main.h"
+#include "sys_macro.h"
 
 tga_image_c::tga_image_c(int W, int H) : width(W), height(H), opacity(OPAC_UNKNOWN)
 {
@@ -174,7 +175,7 @@ tga_image_c *TGA_LoadImage(const char *path)
                 a = *buf_p++;
             }
 
-            palette[n] = MAKE_RGBA(r, g, b, a);
+            palette[n] = OBSIDIAN_MAKE_RGBA(r, g, b, a);
         }
     }
 
@@ -206,7 +207,7 @@ tga_image_c *TGA_LoadImage(const char *path)
                     a = *buf_p++;
                 }
 
-                *p++ = MAKE_RGBA(r, g, b, a);
+                *p++ = OBSIDIAN_MAKE_RGBA(r, g, b, a);
 
                 if (a == 0)
                 {
@@ -262,7 +263,7 @@ tga_image_c *TGA_LoadImage(const char *path)
 
                     for (int j = 0; j < packet_size; j++)
                     {
-                        *p++ = MAKE_RGBA(r, g, b, a);
+                        *p++ = OBSIDIAN_MAKE_RGBA(r, g, b, a);
 
                         x++;
 
@@ -296,7 +297,7 @@ tga_image_c *TGA_LoadImage(const char *path)
                             a = *buf_p++;
                         }
 
-                        *p++ = MAKE_RGBA(r, g, b, a);
+                        *p++ = OBSIDIAN_MAKE_RGBA(r, g, b, a);
 
                         if (a == 0)
                         {
@@ -341,7 +342,7 @@ tga_image_c *TGA_LoadImage(const char *path)
 
                 *p++ = col;
 
-                uint8_t a = RGB_ALPHA(col);
+                uint8_t a = OBSIDIAN_RGB_ALPHA(col);
 
                 if (a == 0)
                 {
@@ -371,7 +372,7 @@ tga_image_c *TGA_LoadImage(const char *path)
                 {
                     rgb_color_t col = palette[*buf_p++];
 
-                    uint8_t a = RGB_ALPHA(col);
+                    uint8_t a = OBSIDIAN_RGB_ALPHA(col);
 
                     if (a == 0)
                     {
@@ -412,7 +413,7 @@ tga_image_c *TGA_LoadImage(const char *path)
 
                         *p++ = col;
 
-                        uint8_t a = RGB_ALPHA(col);
+                        uint8_t a = OBSIDIAN_RGB_ALPHA(col);
 
                         if (a == 0)
                         {

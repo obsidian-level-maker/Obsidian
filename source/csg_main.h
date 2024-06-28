@@ -32,10 +32,10 @@ class csg_entity_c;
 class quake_plane_c;
 
 // very high (low) value for uncapped brushes
-#define EXTREME_H 32000
+constexpr uint16_t EXTREME_H = 32000;
 
 // epsilon for height comparisons
-#define Z_EPSILON 0.01
+constexpr double Z_EPSILON = 0.01;
 
 // this is used for all games.  defaults to 512.0
 extern double CHUNK_SIZE;
@@ -45,8 +45,8 @@ extern double CHUNK_SIZE;
 extern double CLUSTER_SIZE;
 
 // unset values (handy sometimes)
-#define IVAL_NONE -27777
-#define FVAL_NONE -27777.75f
+constexpr int16_t IVAL_NONE = -27777;
+constexpr float   FVAL_NONE = -27777.75f;
 
 /******* CLASSES ***************/
 

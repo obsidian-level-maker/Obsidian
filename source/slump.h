@@ -40,100 +40,93 @@
 bool slump_main(const std::string &filename);
 
 /* Slump 0.003.02 */
-#define SOURCE_VERSION    (0)
-#define SOURCE_SERIAL     (003)
-#define SOURCE_PATCHLEVEL (02)
+#define SLUMP_SOURCE_VERSION    (0)
+#define SLUMP_SOURCE_SERIAL     (003)
+#define SLUMP_SOURCE_PATCHLEVEL (02)
 
 /* Header file for things all slump files use */
-
-/* Some Microsoft-specific defines which we will probably get rid of in
- * a later release */
-#ifdef _MSC_VER
-#define strncasecmp _strnicmp
-#define strcasecmp  _stricmp
-#endif
 
 typedef unsigned char boolean;
 #define SLUMP_TRUE  (1 == 1)
 #define SLUMP_FALSE (!SLUMP_TRUE)
-#define HUGE_NUMBER (1000000)
+#define SLUMP_HUGE_NUMBER (1000000)
 
-#define LEVEL_MAX_BARS     (30)
-#define LEVEL_MAX_CRUSHERS (2)
+#define SLUMP_LEVEL_MAX_BARS     (30)
+#define SLUMP_LEVEL_MAX_CRUSHERS (2)
 
-#define TLMPSIZE(rows, columns) ((rows + 9) * columns + 8)
+#define SLUMP_TLMPSIZE(rows, columns) ((rows + 9) * columns + 8)
 
 typedef unsigned char byte;
 
-#ifdef OK_TO_USE_REAL_MONSTER_WIDTH
-#define MONSTER_WIDTH(m) (m->width)
+#ifdef SLUMP_OK_TO_USE_REAL_MONSTER_WIDTH
+#define SLUMP_MONSTER_WIDTH(m) (m->width)
 #else
-#define MONSTER_WIDTH(m) (64)
+#define SLUMP_MONSTER_WIDTH(m) (64)
 #endif
 
 /* Minimum room size on a level with teleports */
-#define TELEPORT_MINROOMSIZE 256
+#define SLUMP_TELEPORT_MINROOMSIZE 256
 /* Percentage change that a given level will have teleports */
-#define TELEPORTS_PERCENT 30
+#define SLUMP_TELEPORTS_PERCENT 30
 /* The absolute minimum allowed light in a room */
-#define ABSOLUTE_MINLIGHT 126
+#define SLUMP_ABSOLUTE_MINLIGHT 126
 
 typedef unsigned long themebits; /* Bitarray, really */
 /* So at most 32 themes in a config file */
 
 typedef unsigned int gamebits; /* Also bitarray    */
-#define DOOM0_BIT (0x01)
-#define DOOM1_BIT (0x02)
-#define DOOM2_BIT (0x04)
+#define SLUMP_DOOM0_BIT (0x01)
+#define SLUMP_DOOM1_BIT (0x02)
+#define SLUMP_DOOM2_BIT (0x04)
 /* This is "clean" doom, with no "GROSS" items */
-#define DOOMC_BIT (0x08)
+#define SLUMP_DOOMC_BIT (0x08)
 /* "Intrinsic"; i.e. no SLUMP-special textures */
-#define DOOMI_BIT   (0x10)
-#define HERETIC_BIT (0x20)
-#define CHEX_BIT    (0x40)
-#define HACX_BIT    (0x80)
-#define HARMONY_BIT (0x100)
-#define STRIFE_BIT  (0x200)
-#define REKKR_BIT   (0x400)
+#define SLUMP_DOOMI_BIT   (0x10)
+#define SLUMP_HERETIC_BIT (0x20)
+#define SLUMP_CHEX_BIT    (0x40)
+#define SLUMP_HACX_BIT    (0x80)
+#define SLUMP_HARMONY_BIT (0x100)
+#define SLUMP_STRIFE_BIT  (0x200)
+#define SLUMP_REKKR_BIT   (0x400)
 /* and that's all */
 
 typedef unsigned long propertybits; /* Another bitarray */
-#define FLOOR         (0x01)
-#define CEILING       (0x02)
-#define DOOR          (0x04)
-#define ERROR_TEXTURE (0x08)
-#define WALL          (0x10)
-#define SUPPORT       (0x20)
-#define NUKAGE        (0x40)
-#define JAMB          (0x80)
-#define RED           (0x100)
-#define BLUE          (0x200)
-#define YELLOW        (0x400)
-#define GRATING       (0x800)
-#define PLAQUE        (0x1000)
-#define HALF_PLAQUE   (0x2000)
-#define LIGHT         (0x4000)
-#define BIG           (0x8000)
-#define SWITCH        (0x10000)
-#define OUTDOOR       (0x20000)
-#define GATE          (0x40000)
-#define EXITSWITCH    (0x80000)
-#define STEP          (0x100000)
-#define LIFT_TEXTURE  (0x200000)
-#define VTILES        (0x400000)
+#define SLUMP_FLOOR         (0x01)
+#define SLUMP_CEILING       (0x02)
+#define SLUMP_DOOR          (0x04)
+#define SLUMP_ERROR_TEXTURE (0x08)
+#define SLUMP_WALL          (0x10)
+#define SLUMP_SUPPORT       (0x20)
+#define SLUMP_NUKAGE        (0x40)
+#define SLUMP_JAMB          (0x80)
+#define SLUMP_RED           (0x100)
+#define SLUMP_BLUE          (0x200)
+#define SLUMP_YELLOW        (0x400)
+#define SLUMP_GRATING       (0x800)
+#define SLUMP_PLAQUE        (0x1000)
+#define SLUMP_HALF_PLAQUE   (0x2000)
+#define SLUMP_LIGHT         (0x4000)
+#define SLUMP_BIG           (0x8000)
+#define SLUMP_SWITCH        (0x10000)
+#define SLUMP_OUTDOOR       (0x20000)
+#define SLUMP_GATE          (0x40000)
+#define SLUMP_EXITSWITCH    (0x80000)
+#define SLUMP_STEP          (0x100000)
+#define SLUMP_LIFT_TEXTURE  (0x200000)
+#define SLUMP_VTILES        (0x400000)
 /* and so on and so on; 32 may well not be enough! */
 
 /* Some thing-only bits; corresponding bits above are texture/flat-only */
-#define MONSTER  (0x01)
-#define AMMO     (0x02)
-#define HEALTH   (0x04)
-#define WEAPON   (0x08)
-#define PICKABLE (0x10)
-#define SHOOTS   (0x20)
-#define EXPLODES (0x40)
-#define FLIES    (0x80)
-#define BOSS     (0x100)
-#define SPECIAL  (0x800)
+#define SLUMP_MONSTER  (0x01)
+#define SLUMP_AMMO     (0x02)
+#define SLUMP_HEALTH   (0x04)
+#define SLUMP_WEAPON   (0x08)
+#define SLUMP_PICKABLE (0x10)
+#define SLUMP_SHOOTS   (0x20)
+#define SLUMP_EXPLODES (0x40)
+#define SLUMP_FLIES    (0x80)
+#define SLUMP_BOSS     (0x100)
+#define SLUMP_SPECIAL  (0x800)
 
 typedef struct s_theme
 {
@@ -190,31 +183,31 @@ typedef struct s_link
 } link, *plink;
 
 /* Values for link.type */
-#define BASIC_LINK 1001
-#define OPEN_LINK  1002
-#define GATE_LINK  1003
+#define SLUMP_BASIC_LINK 1001
+#define SLUMP_OPEN_LINK  1002
+#define SLUMP_GATE_LINK  1003
 
 /* Bits for link.bits */
-#define LINK_NEAR_DOOR (0x01)
-#define LINK_RECESS    (0x02)
-#define LINK_ALCOVE    (0x04)
-#define LINK_TWIN      (0x08)
-#define LINK_CORE      (0x10)
-#define LINK_LIFT      (0x20)
-#define LINK_STEPS     (0x40)
+#define SLUMP_LINK_NEAR_DOOR (0x01)
+#define SLUMP_LINK_RECESS    (0x02)
+#define SLUMP_LINK_ALCOVE    (0x04)
+#define SLUMP_LINK_TWIN      (0x08)
+#define SLUMP_LINK_CORE      (0x10)
+#define SLUMP_LINK_LIFT      (0x20)
+#define SLUMP_LINK_STEPS     (0x40)
 /* LINK_WINDOW is used only if LINK_TWIN */
-#define LINK_WINDOW      (0x80)
-#define LINK_MAX_CEILING (0x100)
-#define LINK_TRIGGERED   (0x200)
-#define LINK_LAMPS       (0x400)
-#define LINK_BARS        (0x800)
-#define LINK_LEFT        (0x1000)
-#define LINK_LOCK_CORE   (0x2000)
-#define LINK_FAR_TWINS   (0x4000)
-#define LINK_DECROOM     (0x8000)
-#define LINK_FAR_DOOR    (0x10000)
+#define SLUMP_LINK_WINDOW      (0x80)
+#define SLUMP_LINK_MAX_CEILING (0x100)
+#define SLUMP_LINK_TRIGGERED   (0x200)
+#define SLUMP_LINK_LAMPS       (0x400)
+#define SLUMP_LINK_BARS        (0x800)
+#define SLUMP_LINK_LEFT        (0x1000)
+#define SLUMP_LINK_LOCK_CORE   (0x2000)
+#define SLUMP_LINK_FAR_TWINS   (0x4000)
+#define SLUMP_LINK_DECROOM     (0x8000)
+#define SLUMP_LINK_FAR_DOOR    (0x10000)
 
-#define LINK_ANY_DOOR (LINK_NEAR_DOOR | LINK_FAR_DOOR)
+#define SLUMP_LINK_ANY_DOOR (SLUMP_LINK_NEAR_DOOR | SLUMP_LINK_FAR_DOOR)
 
 /* The kinds of things that there are */
 
@@ -224,69 +217,69 @@ typedef struct s_genus
     themebits    compatible;
     propertybits bits;
     short        thingid;
-#define ID_PLAYER1 (0x0001)
-#define ID_PLAYER2 (0x0002)
-#define ID_PLAYER3 (0x0003)
-#define ID_PLAYER4 (0x0004)
-#define ID_DM      (0x000b)
-#define ID_GATEOUT (0x000e)
+#define SLUMP_ID_PLAYER1 (0x0001)
+#define SLUMP_ID_PLAYER2 (0x0002)
+#define SLUMP_ID_PLAYER3 (0x0003)
+#define SLUMP_ID_PLAYER4 (0x0004)
+#define SLUMP_ID_DM      (0x000b)
+#define SLUMP_ID_GATEOUT (0x000e)
 /* The monsters */
-#define ID_TROOPER    (0x0bbc)
-#define ID_SERGEANT   (0x0009)
-#define ID_IMP        (0x0bb9)
-#define ID_PINK       (0x0bba)
-#define ID_SPECTRE    (0x003a)
-#define ID_COMMANDO   (0x041)
-#define ID_NAZI       (0x054)
-#define ID_SKULL      (0xbbe)
-#define ID_HEAD       (0xbbd)
-#define ID_SKEL       (0x042)
-#define ID_ARACH      (0x044)
-#define ID_MANCUB     (0x0043)
-#define ID_HELL       (0x045)
-#define ID_BARON      (0x0bbb)
-#define ID_PAIN       (0x047)
-#define ID_ARCHIE     (0x0040)
-#define ID_CYBER      (0x10)
-#define ID_SPIDERBOSS (0x07)
-#define ID_BRAIN      (0x58)
+#define SLUMP_ID_TROOPER    (0x0bbc)
+#define SLUMP_ID_SERGEANT   (0x0009)
+#define SLUMP_ID_IMP        (0x0bb9)
+#define SLUMP_ID_PINK       (0x0bba)
+#define SLUMP_ID_SPECTRE    (0x003a)
+#define SLUMP_ID_COMMANDO   (0x041)
+#define SLUMP_ID_NAZI       (0x054)
+#define SLUMP_ID_SKULL      (0xbbe)
+#define SLUMP_ID_HEAD       (0xbbd)
+#define SLUMP_ID_SKEL       (0x042)
+#define SLUMP_ID_ARACH      (0x044)
+#define SLUMP_ID_MANCUB     (0x0043)
+#define SLUMP_ID_HELL       (0x045)
+#define SLUMP_ID_BARON      (0x0bbb)
+#define SLUMP_ID_PAIN       (0x047)
+#define SLUMP_ID_ARCHIE     (0x0040)
+#define SLUMP_ID_CYBER      (0x10)
+#define SLUMP_ID_SPIDERBOSS (0x07)
+#define SLUMP_ID_BRAIN      (0x58)
 /* The Heretic monsters (No ghosts - Dasho) */
-#define ID_GARGOYLE      (0x42)
-#define ID_FIREGARGOYLE  (0x05)
-#define ID_GOLEM         (0x44)
-#define ID_NITROGOLEM    (0x2D)
-#define ID_OPHIDIAN      (0x5C)
-#define ID_SABRECLAW     (0x5A)
-#define ID_UNDEADWARRIOR (0x40)
-#define ID_DISCIPLE      (0x0F)
-#define ID_WEREDRAGON    (0x46)
-#define ID_MAULOTAUR     (0x09)
-#define ID_IRONLICH      (0x06)
-#define ID_DSPARIL       (0x07)
+#define SLUMP_ID_GARGOYLE      (0x42)
+#define SLUMP_ID_FIREGARGOYLE  (0x05)
+#define SLUMP_ID_GOLEM         (0x44)
+#define SLUMP_ID_NITROGOLEM    (0x2D)
+#define SLUMP_ID_OPHIDIAN      (0x5C)
+#define SLUMP_ID_SABRECLAW     (0x5A)
+#define SLUMP_ID_UNDEADWARRIOR (0x40)
+#define SLUMP_ID_DISCIPLE      (0x0F)
+#define SLUMP_ID_WEREDRAGON    (0x46)
+#define SLUMP_ID_MAULOTAUR     (0x09)
+#define SLUMP_ID_IRONLICH      (0x06)
+#define SLUMP_ID_DSPARIL       (0x07)
 /* The Hacx Monsters*/
-#define ID_THUG          (0x0bbc)
-#define ID_ANDROID       (0x0009)
-#define ID_BUZZER        (0x0bba)
-#define ID_STEALTHBUZZER (0x003a)
-#define ID_HACXPHAGE     (0x0043)
-#define ID_ICE           (0x0bb9)
-#define ID_DMAN          (0xbbe)
-#define ID_MAJONG7       (0x047)
-#define ID_MONSTRUCT     (0x041)
-#define ID_TERMINATRIX   (0x0bbb)
-#define ID_THORNTHING    (0x044)
-#define ID_MECHAMANIAC   (0x045)
-#define ID_ROAMINGMINE   (0x054)
+#define SLUMP_ID_THUG          (0x0bbc)
+#define SLUMP_ID_ANDROID       (0x0009)
+#define SLUMP_ID_BUZZER        (0x0bba)
+#define SLUMP_ID_STEALTHBUZZER (0x003a)
+#define SLUMP_ID_HACXPHAGE     (0x0043)
+#define SLUMP_ID_ICE           (0x0bb9)
+#define SLUMP_ID_DMAN          (0xbbe)
+#define SLUMP_ID_MAJONG7       (0x047)
+#define SLUMP_ID_MONSTRUCT     (0x041)
+#define SLUMP_ID_TERMINATRIX   (0x0bbb)
+#define SLUMP_ID_THORNTHING    (0x044)
+#define SLUMP_ID_MECHAMANIAC   (0x045)
+#define SLUMP_ID_ROAMINGMINE   (0x054)
 /* The Harmony Monsters */
-#define ID_BEASTLING     (0x0bba)
-#define ID_FOLLOWER      (0x9)
-#define ID_MUTANTSOLDIER (0x41)
-#define ID_PHAGE         (0x44)
-#define ID_PREDATOR      (0x42)
-#define ID_LANDMINE      (0xbbe)
-#define ID_AEROSOL       (0xbbd)
-#define ID_CENTAUR       (0x10)
-#define ID_ECHIDNA       (0x7)
+#define SLUMP_ID_BEASTLING     (0x0bba)
+#define SLUMP_ID_FOLLOWER      (0x9)
+#define SLUMP_ID_MUTANTSOLDIER (0x41)
+#define SLUMP_ID_PHAGE         (0x44)
+#define SLUMP_ID_PREDATOR      (0x42)
+#define SLUMP_ID_LANDMINE      (0xbbe)
+#define SLUMP_ID_AEROSOL       (0xbbd)
+#define SLUMP_ID_CENTAUR       (0x10)
+#define SLUMP_ID_ECHIDNA       (0x7)
     short           width;
     short           height;
     int             min_level;     /* Minimum level to put monster in */
@@ -299,118 +292,118 @@ typedef struct s_genus
 } genus, *pgenus;
 
 // Doom weapons/ammo
-#define ID_SHOTGUN  (0x7d1)
-#define ID_SSGUN    (0x052)
-#define ID_CHAINGUN (0x7d2)
-#define ID_CHAINSAW (0x7d5)
-#define ID_PLASMA   (0x7d4)
-#define ID_BFG      (0x7d6)
-#define ID_CLIP     (0x7d7)
-#define ID_SHELLS   (0x7d8)
-#define ID_BULBOX   (0x800)
-#define ID_SHELLBOX (0x801)
-#define ID_CELL     (0x7ff)
-#define ID_CELLPACK (0x11)
-#define ID_BACKPACK (0x08)
-#define ID_LAUNCHER (0x7d3)
-#define ID_ROCKET   (0x7da)
-#define ID_ROCKBOX  (0x7fe)
+#define SLUMP_ID_SHOTGUN  (0x7d1)
+#define SLUMP_ID_SSGUN    (0x052)
+#define SLUMP_ID_CHAINGUN (0x7d2)
+#define SLUMP_ID_CHAINSAW (0x7d5)
+#define SLUMP_ID_PLASMA   (0x7d4)
+#define SLUMP_ID_BFG      (0x7d6)
+#define SLUMP_ID_CLIP     (0x7d7)
+#define SLUMP_ID_SHELLS   (0x7d8)
+#define SLUMP_ID_BULBOX   (0x800)
+#define SLUMP_ID_SHELLBOX (0x801)
+#define SLUMP_ID_CELL     (0x7ff)
+#define SLUMP_ID_CELLPACK (0x11)
+#define SLUMP_ID_BACKPACK (0x08)
+#define SLUMP_ID_LAUNCHER (0x7d3)
+#define SLUMP_ID_ROCKET   (0x7da)
+#define SLUMP_ID_ROCKBOX  (0x7fe)
 
 // Heretic weapons/ammo
-#define ID_GAUNTLETS      (0x7D5)
-#define ID_CROSSBOW       (0x7D1)
-#define ID_DRAGONCLAW     (0x035)
-#define ID_PHOENIXROD     (0x7D3)
-#define ID_HELLSTAFF      (0x7D4)
-#define ID_FIREMACE       (0x7D2)
-#define ID_WANDCRYSTAL    (0xA)
-#define ID_CRYSTALGEODE   (0xC)
-#define ID_ETHEREALARROWS (0x12)
-#define ID_ETHEREALQUIVER (0x13)
-#define ID_CLAWORB        (0x36)
-#define ID_ENERGYORB      (0x37)
-#define ID_LESSERRUNES    (0x14)
-#define ID_GREATERRUNES   (0x15)
-#define ID_FLAMEORB       (0x16)
-#define ID_INFERNOORB     (0x17)
-#define ID_MACESPHERES    (0xD)
-#define ID_MACESPHEREPILE (0x10)
+#define SLUMP_ID_GAUNTLETS      (0x7D5)
+#define SLUMP_ID_CROSSBOW       (0x7D1)
+#define SLUMP_ID_DRAGONCLAW     (0x035)
+#define SLUMP_ID_PHOENIXROD     (0x7D3)
+#define SLUMP_ID_HELLSTAFF      (0x7D4)
+#define SLUMP_ID_FIREMACE       (0x7D2)
+#define SLUMP_ID_WANDCRYSTAL    (0xA)
+#define SLUMP_ID_CRYSTALGEODE   (0xC)
+#define SLUMP_ID_ETHEREALARROWS (0x12)
+#define SLUMP_ID_ETHEREALQUIVER (0x13)
+#define SLUMP_ID_CLAWORB        (0x36)
+#define SLUMP_ID_ENERGYORB      (0x37)
+#define SLUMP_ID_LESSERRUNES    (0x14)
+#define SLUMP_ID_GREATERRUNES   (0x15)
+#define SLUMP_ID_FLAMEORB       (0x16)
+#define SLUMP_ID_INFERNOORB     (0x17)
+#define SLUMP_ID_MACESPHERES    (0xD)
+#define SLUMP_ID_MACESPHEREPILE (0x10)
 
 // Doom health/powerups
-#define ID_STIMPACK (0x7DB)
-#define ID_MEDIKIT  (0x7dc)
-#define ID_POTION   (0x7de)
-#define ID_SOUL     (0x7dd)
-#define ID_BERSERK  (0x7e7)
-#define ID_INVIS    (0x7e8)
-#define ID_SUIT     (0x7e9)
-#define ID_MAP      (0x7ea)
+#define SLUMP_ID_STIMPACK (0x7DB)
+#define SLUMP_ID_MEDIKIT  (0x7dc)
+#define SLUMP_ID_POTION   (0x7de)
+#define SLUMP_ID_SOUL     (0x7dd)
+#define SLUMP_ID_BERSERK  (0x7e7)
+#define SLUMP_ID_INVIS    (0x7e8)
+#define SLUMP_ID_SUIT     (0x7e9)
+#define SLUMP_ID_MAP      (0x7ea)
 
 // Heretic health/powerups
-#define ID_CRYSTALVIAL         (0x51)
-#define ID_QUARTZFLASK         (0x52)
-#define ID_MYSTICURN           (0x20)
-#define ID_MAPSCROLL           (0x23)
-#define ID_CHAOSDEVICE         (0x24)
-#define ID_MORPHOVUM           (0x1E)
-#define ID_RINGOFINVINCIBILITY (0x54)
-#define ID_SHADOWSPHERE        (0x4B)
-#define ID_TIMEBOMB            (0x22)
-#define ID_TOMEOFPOWER         (0x56)
-#define ID_TORCH               (0x21)
+#define SLUMP_ID_CRYSTALVIAL         (0x51)
+#define SLUMP_ID_QUARTZFLASK         (0x52)
+#define SLUMP_ID_MYSTICURN           (0x20)
+#define SLUMP_ID_MAPSCROLL           (0x23)
+#define SLUMP_ID_CHAOSDEVICE         (0x24)
+#define SLUMP_ID_MORPHOVUM           (0x1E)
+#define SLUMP_ID_RINGOFINVINCIBILITY (0x54)
+#define SLUMP_ID_SHADOWSPHERE        (0x4B)
+#define SLUMP_ID_TIMEBOMB            (0x22)
+#define SLUMP_ID_TOMEOFPOWER         (0x56)
+#define SLUMP_ID_TORCH               (0x21)
 
 // Doom armor
-#define ID_HELMET    (0x7df)
-#define ID_BLUESUIT  (0x7e3)
-#define ID_GREENSUIT (0x7e2)
+#define SLUMP_ID_HELMET    (0x7df)
+#define SLUMP_ID_BLUESUIT  (0x7e3)
+#define SLUMP_ID_GREENSUIT (0x7e2)
 
 // Heretic armor
-#define ID_SILVERSHIELD    (0x55)
-#define ID_ENCHANTEDSHIELD (0x1F)
+#define SLUMP_ID_SILVERSHIELD    (0x55)
+#define SLUMP_ID_ENCHANTEDSHIELD (0x1F)
 
 // Doom keys
-#define ID_BLUEKEY    (0x028)
-#define ID_REDKEY     (0x026)
-#define ID_YELLOWKEY  (0x027)
-#define ID_BLUECARD   (0x0005)
-#define ID_REDCARD    (0x00d)
-#define ID_YELLOWCARD (0x006)
+#define SLUMP_ID_BLUEKEY    (0x028)
+#define SLUMP_ID_REDKEY     (0x026)
+#define SLUMP_ID_YELLOWKEY  (0x027)
+#define SLUMP_ID_BLUECARD   (0x0005)
+#define SLUMP_ID_REDCARD    (0x00d)
+#define SLUMP_ID_YELLOWCARD (0x006)
 
 // Heretic keys
-#define ID_HERETICBLUEKEY   (0x4F)
-#define ID_HERETICYELLOWKEY (0x50)
-#define ID_HERETICGREENKEY  (0x49)
+#define SLUMP_ID_HERETICBLUEKEY   (0x4F)
+#define SLUMP_ID_HERETICYELLOWKEY (0x50)
+#define SLUMP_ID_HERETICGREENKEY  (0x49)
 
 // Doom decor
-#define ID_LAMP       (0x07ec)
-#define ID_ELEC       (0x030)
-#define ID_TLAMP2     (0x055)
-#define ID_LAMP2      (0x056)
-#define ID_TALLBLUE   (0x002c)
-#define ID_SHORTBLUE  (0x037)
-#define ID_TALLGREEN  (0x02d)
-#define ID_SHORTGREEN (0x038)
-#define ID_TALLRED    (0x02e)
-#define ID_SHORTRED   (0x039)
-#define ID_CANDLE     (0x022)
-#define ID_CBRA       (0x023)
-#define ID_BARREL     (0x07f3)
-#define ID_FBARREL    (0x0046)
-#define ID_SMIT       (0x002f)
-#define ID_TREE1      (0x002b)
-#define ID_TREE2      (0x0036)
+#define SLUMP_ID_LAMP       (0x07ec)
+#define SLUMP_ID_ELEC       (0x030)
+#define SLUMP_ID_TLAMP2     (0x055)
+#define SLUMP_ID_LAMP2      (0x056)
+#define SLUMP_ID_TALLBLUE   (0x002c)
+#define SLUMP_ID_SHORTBLUE  (0x037)
+#define SLUMP_ID_TALLGREEN  (0x02d)
+#define SLUMP_ID_SHORTGREEN (0x038)
+#define SLUMP_ID_TALLRED    (0x02e)
+#define SLUMP_ID_SHORTRED   (0x039)
+#define SLUMP_ID_CANDLE     (0x022)
+#define SLUMP_ID_CBRA       (0x023)
+#define SLUMP_ID_BARREL     (0x07f3)
+#define SLUMP_ID_FBARREL    (0x0046)
+#define SLUMP_ID_SMIT       (0x002f)
+#define SLUMP_ID_TREE1      (0x002b)
+#define SLUMP_ID_TREE2      (0x0036)
 
 // Heretic decor
-#define ID_POD          (0x7F3)
-#define ID_SERPENTTORCH (0x1B)
-#define ID_FIREBRAZIER  (0x4C)
-#define ID_SMSTALAGMITE (0x25)
-#define ID_LGSTALAGMITE (0x26)
+#define SLUMP_ID_POD          (0x7F3)
+#define SLUMP_ID_SERPENTTORCH (0x1B)
+#define SLUMP_ID_FIREBRAZIER  (0x4C)
+#define SLUMP_ID_SMSTALAGMITE (0x25)
+#define SLUMP_ID_LGSTALAGMITE (0x26)
 
 // Hacx decor
-#define ID_CEILINGLAMP     (0x02c)
-#define ID_TALLCEILINGLAMP (0x02e)
-#define ID_FLOORLAMP       (0x039)
+#define SLUMP_ID_CEILINGLAMP     (0x02c)
+#define SLUMP_ID_TALLCEILINGLAMP (0x02e)
+#define SLUMP_ID_FLOORLAMP       (0x039)
 
 /* The style is the dynamic architectural knowledge and stuff. */
 /* It changes throughout the run.                              */
@@ -469,14 +462,14 @@ typedef struct s_style
     boolean slitwindows;    /* part of link? */
     boolean window_grate;   /* part of link? */
     int     window_decor;   /* part of link? */
-#define WINDOW_NORMAL  (5001)
-#define WINDOW_JAMBS   (5002)
-#define WINDOW_SUPPORT (5003)
-#define WINDOW_LIGHT   (5004)
+#define SLUMP_WINDOW_NORMAL  (5001)
+#define SLUMP_WINDOW_JAMBS   (5002)
+#define SLUMP_WINDOW_SUPPORT (5003)
+#define SLUMP_WINDOW_LIGHT   (5004)
     int lightbox_lighting;
-#define LIGHTBOX_NORMAL  (6001)
-#define LIGHTBOX_LIGHTED (6002)
-#define LIGHTBOX_DARK    (6003)
+#define SLUMP_LIGHTBOX_NORMAL  (6001)
+#define SLUMP_LIGHTBOX_LIGHTED (6002)
+#define SLUMP_LIGHTBOX_DARK    (6003)
     boolean         light_recesses;
     boolean         light_steps;
     boolean         light_edges;
@@ -598,66 +591,66 @@ struct s_linedef
 }; /* linedef and plinedef defined above; gcc chokes if we do it again! */
 
 /* Linedef flags */
-#define IMPASSIBLE     (0x01)
-#define BLOCK_MONSTERS (0x02)
-#define TWO_SIDED      (0x04)
-#define UPPER_UNPEGGED (0x08)
-#define LOWER_UNPEGGED (0x10)
-#define SECRET_LINEDEF (0x20)
-#define BLOCK_SOUND    (0x40)
-#define NOT_ON_MAP     (0x80)
-#define ALREADY_ON_MAP (0x100)
+#define SLUMP_IMPASSIBLE     (0x01)
+#define SLUMP_BLOCK_MONSTERS (0x02)
+#define SLUMP_TWO_SIDED      (0x04)
+#define SLUMP_UPPER_UNPEGGED (0x08)
+#define SLUMP_LOWER_UNPEGGED (0x10)
+#define SLUMP_SECRET_LINEDEF (0x20)
+#define SLUMP_BLOCK_SOUND    (0x40)
+#define SLUMP_NOT_ON_MAP     (0x80)
+#define SLUMP_ALREADY_ON_MAP (0x100)
 
 /* Linedef types */
-#define LINEDEF_NORMAL                   (0)
-#define LINEDEF_NORMAL_DOOR              (1)
-#define LINEDEF_NORMAL_S1_DOOR           (31)
-#define LINEDEF_BLUE_S1_DOOR             (32)
-#define LINEDEF_RED_S1_DOOR              (33)
-#define LINEDEF_YELLOW_S1_DOOR           (34)
-#define LINEDEF_S1_OPEN_DOOR             (103)
-#define LINEDEF_S1_RAISE_STAIRS          (7)
-#define LINEDEF_S1_LOWER_FLOOR           (23)
-#define LINEDEF_SCROLL                   (48)
-#define LINEDEF_TELEPORT                 (97)
-#define LINEDEF_WR_OPEN_DOOR             (86)
-#define LINEDEF_W1_OPEN_DOOR             (2)
-#define LINEDEF_GR_OPEN_DOOR             (46)
-#define LINEDEF_SR_OC_DOOR               (63)
-#define LINEDEF_WR_OC_DOOR               (90)
-#define LINEDEF_S1_END_LEVEL             (11)
-#define LINEDEF_W1_END_LEVEL             (52)
-#define LINEDEF_S1_SEC_LEVEL             (51)
-#define LINEDEF_WR_FAST_CRUSH            (77)
-#define LINEDEF_WR_LOWER_LIFT            (88)
-#define LINEDEF_SR_LOWER_LIFT            (62)
-#define LINEDEF_S1_RAISE_AND_CLEAN_FLOOR (20)
-#define LINEDEF_S1_RAISE_FLOOR           (18)
+#define SLUMP_LINEDEF_NORMAL                   (0)
+#define SLUMP_LINEDEF_NORMAL_DOOR              (1)
+#define SLUMP_LINEDEF_NORMAL_S1_DOOR           (31)
+#define SLUMP_LINEDEF_BLUE_S1_DOOR             (32)
+#define SLUMP_LINEDEF_RED_S1_DOOR              (33)
+#define SLUMP_LINEDEF_YELLOW_S1_DOOR           (34)
+#define SLUMP_LINEDEF_S1_OPEN_DOOR             (103)
+#define SLUMP_LINEDEF_S1_RAISE_STAIRS          (7)
+#define SLUMP_LINEDEF_S1_LOWER_FLOOR           (23)
+#define SLUMP_LINEDEF_SCROLL                   (48)
+#define SLUMP_LINEDEF_TELEPORT                 (97)
+#define SLUMP_LINEDEF_WR_OPEN_DOOR             (86)
+#define SLUMP_LINEDEF_W1_OPEN_DOOR             (2)
+#define SLUMP_LINEDEF_GR_OPEN_DOOR             (46)
+#define SLUMP_LINEDEF_SR_OC_DOOR               (63)
+#define SLUMP_LINEDEF_WR_OC_DOOR               (90)
+#define SLUMP_LINEDEF_S1_END_LEVEL             (11)
+#define SLUMP_LINEDEF_W1_END_LEVEL             (52)
+#define SLUMP_LINEDEF_S1_SEC_LEVEL             (51)
+#define SLUMP_LINEDEF_WR_FAST_CRUSH            (77)
+#define SLUMP_LINEDEF_WR_LOWER_LIFT            (88)
+#define SLUMP_LINEDEF_SR_LOWER_LIFT            (62)
+#define SLUMP_LINEDEF_S1_RAISE_AND_CLEAN_FLOOR (20)
+#define SLUMP_LINEDEF_S1_RAISE_FLOOR           (18)
 
 // These aren't in Heretic
-#define LINEDEF_WR_TURBO_LIFT       (120)
-#define LINEDEF_SR_TURBO_LIFT       (123)
-#define LINEDEF_S1_OPEN_DOOR_BLUE   (133)
-#define LINEDEF_S1_OPEN_DOOR_RED    (135)
-#define LINEDEF_S1_OPEN_DOOR_YELLOW (137)
-#define LINEDEF_BLAZE_DOOR          (117)
-#define LINEDEF_BLAZE_S1_DOOR       (118)
-#define LINEDEF_S1_BLAZE_O_DOOR     (112)
-#define LINEDEF_SR_BLAZE_OC_DOOR    (114)
-#define LINEDEF_W1_SEC_LEVEL        (124)
-#define LINEDEF_W1_RAISE_FLOOR      (119)
+#define SLUMP_LINEDEF_WR_TURBO_LIFT       (120)
+#define SLUMP_LINEDEF_SR_TURBO_LIFT       (123)
+#define SLUMP_LINEDEF_S1_OPEN_DOOR_BLUE   (133)
+#define SLUMP_LINEDEF_S1_OPEN_DOOR_RED    (135)
+#define SLUMP_LINEDEF_S1_OPEN_DOOR_YELLOW (137)
+#define SLUMP_LINEDEF_BLAZE_DOOR          (117)
+#define SLUMP_LINEDEF_BLAZE_S1_DOOR       (118)
+#define SLUMP_LINEDEF_S1_BLAZE_O_DOOR     (112)
+#define SLUMP_LINEDEF_SR_BLAZE_OC_DOOR    (114)
+#define SLUMP_LINEDEF_W1_SEC_LEVEL        (124)
+#define SLUMP_LINEDEF_W1_RAISE_FLOOR      (119)
 
 /* and so on and so on */
 
 /* sector specials */
-#define RANDOM_BLINK    (1)
-#define SYNC_FAST_BLINK (0x0c)
-#define SYNC_SLOW_BLINK (0x0d)
-#define GLOW_BLINK      (0x08)
-#define SECRET_SECTOR   (0x09)
-#define NUKAGE1_SPECIAL (5)
-#define DEATH_SECTOR    (0x0b) // This is a no-op for Heretic
-#define HERETIC_LAVA    (0x10) // Use this instead
+#define SLUMP_RANDOM_BLINK    (1)
+#define SLUMP_SYNC_FAST_BLINK (0x0c)
+#define SLUMP_SYNC_SLOW_BLINK (0x0d)
+#define SLUMP_GLOW_BLINK      (0x08)
+#define SLUMP_SECRET_SECTOR   (0x09)
+#define SLUMP_NUKAGE1_SPECIAL (5)
+#define SLUMP_DEATH_SECTOR    (0x0b) // This is a no-op for Heretic
+#define SLUMP_HERETIC_LAVA    (0x10) // Use this instead
 
 /* Stuff related to an open PWAD we're generating */
 
@@ -733,9 +726,9 @@ typedef struct s_one_haa
 typedef struct s_haa
 {
     one_haa haas[3];
-#define ITYTD (0)
-#define HMP   (1)
-#define UV    (2)
+#define SLUMP_ITYTD (0)
+#define SLUMP_HMP   (1)
+#define SLUMP_UV    (2)
 } haa, *phaa;
 
 typedef struct s_quest
@@ -755,12 +748,12 @@ typedef struct s_quest
 } quest, *pquest;
 
 /* Values for quest.goal */
-#define LEVEL_END_GOAL 101
-#define KEY_GOAL       102
-#define SWITCH_GOAL    103
-#define NULL_GOAL      104
-#define ARENA_GOAL     105
-#define GATE_GOAL      106
+#define SLUMP_LEVEL_END_GOAL 101
+#define SLUMP_KEY_GOAL       102
+#define SLUMP_SWITCH_GOAL    103
+#define SLUMP_NULL_GOAL      104
+#define SLUMP_ARENA_GOAL     105
+#define SLUMP_GATE_GOAL      106
 
 /* Teleport gates */
 struct s_gate
@@ -777,11 +770,11 @@ struct s_gate
 typedef struct s_arena
 {
     propertybits props;
-#define ARENA_ROOF         (0x01)
-#define ARENA_PORCH        (0x02)
-#define ARENA_LAMPS        (0x04)
-#define ARENA_ARRIVAL_HOLE (0x08)
-#define ARENA_NUKAGE       (0x10)
+#define SLUMP_ARENA_ROOF         (0x01)
+#define SLUMP_ARENA_PORCH        (0x02)
+#define SLUMP_ARENA_LAMPS        (0x04)
+#define SLUMP_ARENA_ARRIVAL_HOLE (0x08)
+#define SLUMP_ARENA_NUKAGE       (0x10)
     genus          *boss;
     int             boss_count;
     genus          *weapon;
@@ -984,7 +977,7 @@ void     maybe_push_quest(level *l, sector *s, quest *ThisQuest, config *c);
 linedef *make_parallel(level *l, linedef *ld, int depth, linedef *old);
 linedef *lefthand_box_ext(level *l, linedef *ldf1, int depth, style *ThisStyle, config *c, linedef **nld1,
                           linedef **nld2);
-#define lefthand_box(l, ldf1, depth, ThisStyle, c) (lefthand_box_ext(l, ldf1, depth, ThisStyle, c, NULL, NULL))
+#define SLUMP_lefthand_box(l, ldf1, depth, ThisStyle, c) (lefthand_box_ext(l, ldf1, depth, ThisStyle, c, NULL, NULL))
 int      facing_along(int x1, int y1, int x2, int y2);
 int      facing_right_from(int x1, int y1, int x2, int y2);
 int      facing_right_from_ld(linedef *ld);
@@ -1022,7 +1015,7 @@ void     patch_lower(linedef *ld, texture *t, config *c);
 linedef *flip_linedef(linedef *ld);
 sector  *make_box_ext(level *l, linedef *ldf1, linedef *ldf2, style *ThisStyle, config *c, linedef **nld1,
                       linedef **nld2);
-#define make_box(l, ld1, ld2, st, c) (make_box_ext(l, ld1, ld2, st, c, NULL, NULL))
+#define SLUMP_make_box(l, ld1, ld2, st, c) (make_box_ext(l, ld1, ld2, st, c, NULL, NULL))
 thing   *place_object(level *l, sector *s, config *c, short thingid, int width, int angle, int ax, int ay, int bits);
 thing   *place_object_in_region(level *l, int minx, int miny, int maxx, int maxy, config *c, short thingid, int width,
                                 int angle, int ax, int ay, int bits);
@@ -1046,12 +1039,12 @@ void     install_gate(level *l, sector *s, style *ThisStyle, haa *ThisHaa, boole
 void     frame_innersec_ex(level *l, sector *oldsector, sector *innersec, texture *tm, texture *tu, texture *tl, int x1,
                            int y1, int x2, int y2, int x3, int y3, int x4, int y4, config *c, linedef **l1, linedef **l2,
                            linedef **l3, linedef **l4);
-#define frame_innersec(l, s, i, tm, tu, tl, x1, y1, x2, y2, x3, y3, x4, y4, c)                                         \
+#define SLUMP_frame_innersec(l, s, i, tm, tu, tl, x1, y1, x2, y2, x3, y3, x4, y4, c)                                         \
     frame_innersec_ex(l, s, i, tm, tu, tl, x1, y1, x2, y2, x3, y3, x4, y4, c, NULL, NULL, NULL, NULL)
 void parallel_innersec_ex(level *l, sector *oldsector, sector *innersec, texture *tm, texture *tu, texture *tl,
                           int minx, int miny, int maxx, int maxy, config *c, linedef **l1, linedef **l2, linedef **l3,
                           linedef **l4);
-#define parallel_innersec(l, o, i, tm, tu, tl, ix, iy, ax, ay, c)                                                      \
+#define SLUMP_parallel_innersec(l, o, i, tm, tu, tl, ix, iy, ax, ay, c)                                                      \
     parallel_innersec_ex(l, o, i, tm, tu, tl, ix, iy, ax, ay, c, NULL, NULL, NULL, NULL)
 boolean install_construct(level *l, sector *oldsector, int minx, int miny, int maxx, int maxy, style *ThisStyle,
                           config *c);
@@ -1068,19 +1061,19 @@ void    secretize_config(config *c);
 boolean install_sl_exit(level *l, sector *oldsector, haa *ThisHaa, style *ThisStyle, quest *ThisQuest, boolean opens,
                         config *c);
 
-#define NONE        -1
-#define VERBOSE     0
-#define LOG         1
-#define NOTE        2
-#define WARNING     3
+#define SLUMP_NONE        -1
+#define SLUMP_VERBOSE     0
+#define SLUMP_LOG         1
+#define SLUMP_NOTE        2
+#define SLUMP_WARNING     3
 #define SLUMP_ERROR 4
 void announce(int announcetype, const char *s);
 
-#define RIGHT_TURN (90)
-#define LEFT_TURN  (270)
+#define SLUMP_RIGHT_TURN (90)
+#define SLUMP_LEFT_TURN  (270)
 void           point_from(int x1, int y1, int x2, int y2, int angle, int len, int *x3, int *y3);
 unsigned short psi_sqrt(int v);
-#define linelen(x) (unsigned short)(psi_sqrt(lengthsquared(x)))
+#define SLUMP_linelen(x) (unsigned short)(psi_sqrt(lengthsquared(x)))
 boolean no_monsters_stuck_on(level *l, linedef *ld1);
 
 flat    *random_ceiling0(config *c, style *s);

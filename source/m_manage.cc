@@ -36,7 +36,7 @@ class UI_Manage_Config;
 // The text is appended into the given text buffer.
 // Returns false if no config can be found in the file.
 //
-#define LOOKAHEAD_SIZE 1024
+static constexpr uint16_t LOOKAHEAD_SIZE = 1024;
 
 class Lookahead_Stream_c
 {
@@ -703,10 +703,10 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label) : Fl_Double_
 
     text_buf = new Fl_Text_Buffer();
 
-    int conf_w = kf_w(420);
+    int conf_w = KromulentWidth(420);
     int conf_h = H * 0.75;
-    int conf_x = W - conf_w - kf_w(10);
-    int conf_y = kf_h(30);
+    int conf_x = W - conf_w - KromulentWidth(10);
+    int conf_y = KromulentHeight(30);
 
     conf_disp = new Fl_Text_Display_NoSelect(conf_x, conf_y, conf_w, conf_h, "");
     conf_disp->align(Fl_Align(FL_ALIGN_TOP));
@@ -720,9 +720,9 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label) : Fl_Double_
 
     /* Main Buttons */
 
-    int button_x = kf_w(20);
-    int button_w = kf_w(100);
-    int button_h = kf_h(35);
+    int button_x = KromulentWidth(20);
+    int button_w = KromulentWidth(100);
+    int button_h = KromulentHeight(35);
 
     Fl_Box *o;
     Fl_Box *use_warn;
@@ -732,7 +732,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label) : Fl_Double_
         Fl_Group *g = new Fl_Group(0, 0, conf_disp->x(), conf_disp->h());
         g->resizable(NULL);
 
-        load_but = new Fl_Button(button_x, kf_h(25), button_w, button_h, _("Load WAD/TXT"));
+        load_but = new Fl_Button(button_x, KromulentHeight(25), button_w, button_h, _("Load WAD/TXT"));
         load_but->box(button_style);
         load_but->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
         load_but->visible_focus(0);
@@ -742,7 +742,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label) : Fl_Double_
         load_but->labelfont(font_style);
         load_but->labelcolor(FONT2_COLOR);
 
-        save_but = new Fl_Button(button_x, kf_h(75), button_w, button_h, _("Save"));
+        save_but = new Fl_Button(button_x, KromulentHeight(75), button_w, button_h, _("Save"));
         save_but->box(button_style);
         save_but->visible_focus(0);
         save_but->color(BUTTON_COLOR);
@@ -751,7 +751,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label) : Fl_Double_
         save_but->labelfont(font_style);
         save_but->labelcolor(FONT2_COLOR);
 
-        use_but = new Fl_Button(button_x, kf_h(125), button_w, button_h, _("Use"));
+        use_but = new Fl_Button(button_x, KromulentHeight(125), button_w, button_h, _("Use"));
         use_but->box(button_style);
         use_but->visible_focus(0);
         use_but->color(BUTTON_COLOR);
@@ -759,12 +759,13 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label) : Fl_Double_
         use_but->labelfont(font_style);
         use_but->labelcolor(FONT2_COLOR);
 
-        use_warn = new Fl_Box(0, kf_h(165), kf_w(140), kf_h(50), _("Note: This will replace\nall current settings!"));
+        use_warn = new Fl_Box(0, KromulentHeight(165), KromulentWidth(140), KromulentHeight(50),
+                              _("Note: This will replace\nall current settings!"));
         use_warn->align(Fl_Align(FL_ALIGN_TOP | FL_ALIGN_INSIDE | FL_ALIGN_CLIP));
         use_warn->labelsize(small_font_size);
         use_warn->labelfont(font_style);
 
-        defaults_but = new Fl_Button(button_x, kf_h(200), button_w, button_h, _("Reset to Default"));
+        defaults_but = new Fl_Button(button_x, KromulentHeight(200), button_w, button_h, _("Reset to Default"));
         defaults_but->box(button_style);
         defaults_but->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
         defaults_but->visible_focus(0);
@@ -773,7 +774,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label) : Fl_Double_
         defaults_but->labelfont(font_style);
         defaults_but->labelcolor(FONT2_COLOR);
         // clang-format off
-        defaults_warn = new Fl_Box(0, kf_h(240), kf_w(140), kf_h(50),
+        defaults_warn = new Fl_Box(0, KromulentHeight(240), KromulentWidth(140), KromulentHeight(50),
                                    _("Note: This will delete\nthe current CONFIG.txt\nand restart Obsidian!"));
         // clang-format on
         defaults_warn->align(Fl_Align(FL_ALIGN_TOP | FL_ALIGN_INSIDE | FL_ALIGN_CLIP));
@@ -783,7 +784,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label) : Fl_Double_
         g->end();
     }
 
-    close_but = new Fl_Button(button_x, H - kf_h(50), button_w, button_h + 5, fl_close);
+    close_but = new Fl_Button(button_x, H - KromulentHeight(50), button_w, button_h + 5, fl_close);
     close_but->box(button_style);
     close_but->visible_focus(0);
     close_but->color(BUTTON_COLOR);
@@ -796,23 +797,23 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label) : Fl_Double_
     /* Clipboard buttons */
 
     {
-        int cx = conf_x + kf_w(40);
+        int cx = conf_x + KromulentWidth(40);
 
         int base_y = conf_y + conf_h + 1;
 
         Fl_Group *g = new Fl_Group(conf_x, base_y, conf_w, H - base_y);
         g->resizable(NULL);
 
-        o = new Fl_Box(cx, base_y, W - cx - 10, kf_h(30), _(" Clipboard Operations"));
+        o = new Fl_Box(cx, base_y, W - cx - 10, KromulentHeight(30), _(" Clipboard Operations"));
         o->align(Fl_Align(FL_ALIGN_CENTER | FL_ALIGN_INSIDE));
         o->labelsize(small_font_size);
         o->labelfont(font_style);
 
-        cx += kf_w(30);
-        base_y += kf_h(30);
+        cx += KromulentWidth(30);
+        base_y += KromulentHeight(30);
 
-        button_w = kf_w(80);
-        button_h = kf_h(25);
+        button_w = KromulentWidth(80);
+        button_h = KromulentHeight(25);
 
         cut_but = new Fl_Button(cx, base_y, button_w, button_h, _("Cut"));
         cut_but->box(button_style);
@@ -824,7 +825,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label) : Fl_Double_
         cut_but->shortcut(FL_CTRL + 'x');
         cut_but->callback(callback_Cut, this);
 
-        cx += kf_w(115);
+        cx += KromulentWidth(115);
 
         copy_but = new Fl_Button(cx, base_y, button_w, button_h, _("Copy"));
         copy_but->box(button_style);
@@ -836,7 +837,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label) : Fl_Double_
         copy_but->shortcut(FL_CTRL + 'c');
         copy_but->callback(callback_Copy, this);
 
-        cx += kf_w(115);
+        cx += KromulentWidth(115);
 
         paste_but = new Fl_Button(cx, base_y, button_w, button_h, _("Paste"));
         paste_but->box(button_style);
@@ -865,8 +866,8 @@ UI_Manage_Config::~UI_Manage_Config()
 
 void DLG_ManageConfig(void)
 {
-    int manage_w = kf_w(600);
-    int manage_h = kf_h(380);
+    int manage_w = KromulentWidth(600);
+    int manage_h = KromulentHeight(380);
 
     UI_Manage_Config *config_window = new UI_Manage_Config(manage_w, manage_h, _("OBSIDIAN Config Manager"));
 

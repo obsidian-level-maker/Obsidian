@@ -180,7 +180,7 @@ static void VisitFile(const std::string &filename, buildinfo_t *build_info)
 void ShowBanner()
 {
     printf("+-----------------------------------------------+\n");
-    printf("|   AJBSP " AJBSP_VERSION "   (C) 2022 Andrew Apted, et al   |\n");
+    printf("|   AJBSP %s   (C) 2022 Andrew Apted, et al   |\n", AJBSP_VERSION);
     printf("+-----------------------------------------------+\n");
 
     fflush(stdout);
@@ -285,7 +285,7 @@ void ParseMapList(const char *from_arg, buildinfo_t *build_info)
 // sanity checks for the sizes and properties of certain types.
 // useful when porting.
 //
-#define assert_size(type, size)                                                                                        \
+#define AJBSP_ASSERT_SIZE(type, size)                                                                                  \
     do                                                                                                                 \
     {                                                                                                                  \
         if (sizeof(type) != size)                                                                                      \
@@ -294,18 +294,18 @@ void ParseMapList(const char *from_arg, buildinfo_t *build_info)
 
 void CheckTypeSizes(buildinfo_t *build_info)
 {
-    assert_size(uint8_t, 1);
-    assert_size(int8_t, 1);
-    assert_size(uint16_t, 2);
-    assert_size(int16_t, 2);
-    assert_size(uint32_t, 4);
-    assert_size(int32_t, 4);
+    AJBSP_ASSERT_SIZE(uint8_t, 1);
+    AJBSP_ASSERT_SIZE(int8_t, 1);
+    AJBSP_ASSERT_SIZE(uint16_t, 2);
+    AJBSP_ASSERT_SIZE(int16_t, 2);
+    AJBSP_ASSERT_SIZE(uint32_t, 4);
+    AJBSP_ASSERT_SIZE(int32_t, 4);
 
-    assert_size(raw_linedef_t, 14);
-    assert_size(raw_sector_s, 26);
-    assert_size(raw_sidedef_t, 30);
-    assert_size(raw_thing_t, 10);
-    assert_size(raw_vertex_t, 4);
+    AJBSP_ASSERT_SIZE(raw_linedef_t, 14);
+    AJBSP_ASSERT_SIZE(raw_sector_s, 26);
+    AJBSP_ASSERT_SIZE(raw_sidedef_t, 30);
+    AJBSP_ASSERT_SIZE(raw_thing_t, 10);
+    AJBSP_ASSERT_SIZE(raw_vertex_t, 4);
 }
 
 int AJBSP_BuildNodes(const std::string &filename, buildinfo_t *build_info)

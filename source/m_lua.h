@@ -29,8 +29,8 @@
 void Script_Open();
 void Script_Close();
 
-#define MAX_COLOR_MAPS     9 // 1 to 9 (from Lua)
-#define MAX_COLORS_PER_MAP 260
+constexpr uint8_t  MAX_COLOR_MAPS     = 9; // 1 to 9 (from Lua)
+constexpr uint16_t MAX_COLORS_PER_MAP = 260;
 
 typedef struct
 {

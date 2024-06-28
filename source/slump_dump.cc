@@ -42,7 +42,7 @@ extern int     current_level_number;
 extern int     global_verbosity; /* Oooh, a global variable! */
 extern boolean ok_to_roll;       /* Stop breaking -seed...   */
 
-#ifdef ENDIAN_BIG
+#ifdef SLUMP_ENDIAN_BIG
 unsigned int swap_32(unsigned int in)
 {
     return ((in >> 24) & 0xff) |  /* hi byte (byte 1) becomes low uint8_t */
@@ -61,7 +61,7 @@ short swap_16(short in)
 {
     return ((in >> 8) & 0xff) | ((in & 0xff) << 8);
 }
-#endif /* ENDIAN_BIG */
+#endif /* SLUMP_ENDIAN_BIG */
 
 /* Open a file ready to dump multiple levels into */
 dumphandle OpenDump(config *c)
@@ -110,10 +110,10 @@ void CloseDump(dumphandle dh)
     {
         directory_entry.offset = ie->offset;
         directory_entry.length = ie->length;
-#ifdef ENDIAN_BIG
+#ifdef SLUMP_ENDIAN_BIG
         directory_entry.offset = swap_32(directory_entry.offset);
         directory_entry.length = swap_32(directory_entry.length);
-#endif /* ENDIAN_BIG */
+#endif /* SLUMP_ENDIAN_BIG */
         memset(directory_entry.lumpname, 0, 8);
         memcpy(directory_entry.lumpname, ie->name, strlen(ie->name));
         fwrite(&directory_entry, sizeof(directory_entry), 1, dh->f);
@@ -121,17 +121,17 @@ void CloseDump(dumphandle dh)
 
     /* Go back and patch up the header */
     fseek(dh->f, 4, SEEK_SET);
-#ifdef ENDIAN_BIG
+#ifdef SLUMP_ENDIAN_BIG
     dh->lmpcount        = swap_32(dh->lmpcount);
     dh->offset_to_index = swap_32(dh->offset_to_index);
-#endif /* ENDIAN_BIG */
+#endif /* SLUMP_ENDIAN_BIG */
     fwrite(&(dh->lmpcount), sizeof(unsigned int), 1, dh->f);
     fwrite(&(dh->offset_to_index), sizeof(unsigned int), 1, dh->f);
-#ifdef ENDIAN_BIG
+#ifdef SLUMP_ENDIAN_BIG
     /* Swap back in case we use the numbers later */
     dh->lmpcount        = swap_32(dh->lmpcount);
     dh->offset_to_index = swap_32(dh->offset_to_index);
-#endif /* ENDIAN_BIG */
+#endif /* SLUMP_ENDIAN_BIG */
 
     /* and that's all! */
     fclose(dh->f);
@@ -173,7 +173,7 @@ void record_music(dumphandle dh, musheader *mh, uint8_t *buf, const char *s, con
     RegisterLmp(dh, s, lsize);
     /* It'll be a royal pain to endian swap the header, so we just don't
      * have custom music on big-endian machines */
-#ifndef ENDIAN_BIG
+#ifndef SLUMP_ENDIAN_BIG
     // Need to try to get this working - Dasho
     fwrite(mh, sizeof(musheader), 1, dh->f); // Write fixed header
     fwrite(buf, mh->patches * sizeof(short) + mh->muslength, 1, dh->f);
@@ -185,7 +185,7 @@ void make_slinfo(dumphandle dh, config *c)
 {
     static byte slinfo[100];
 
-    sprintf((char *)slinfo, "SLUMP (%d.%03d.%02d)", SOURCE_VERSION, SOURCE_SERIAL, SOURCE_PATCHLEVEL);
+    sprintf((char *)slinfo, "SLUMP (%d.%03d.%02d)", SLUMP_SOURCE_VERSION, SLUMP_SOURCE_SERIAL, SLUMP_SOURCE_PATCHLEVEL);
     RegisterLmp(dh, "SLINFO", strlen((char *)slinfo) + 1);
     fwrite(slinfo, strlen((char *)slinfo) + 1, 1, dh->f);
 
@@ -210,11 +210,12 @@ void validate_teleports(linedef *pLinedef, sector *pSector)
     }
     for (; pLinedef != NULL; pLinedef = pLinedef->next)
     {
-        if (pLinedef->type == LINEDEF_TELEPORT && pLinedef->tag > 0 && pLinedef->tag < 1024 && tags[pLinedef->tag] == 0)
+        if (pLinedef->type == SLUMP_LINEDEF_TELEPORT && pLinedef->tag > 0 && pLinedef->tag < 1024 &&
+            tags[pLinedef->tag] == 0)
         {
             printf("Warning: teleport with invalid tag; "
                    "making end of level!\n");
-            pLinedef->type = LINEDEF_W1_END_LEVEL;
+            pLinedef->type = SLUMP_LINEDEF_W1_END_LEVEL;
         }
     }
 }
@@ -355,7 +356,7 @@ void DumpLevel(dumphandle dh, config *c, level *l, int episode, int mission, int
         rawthing.angle   = pThing->angle;
         rawthing.type    = pThing->pgenus->thingid;
         rawthing.options = pThing->options;
-#ifdef ENDIAN_BIG
+#ifdef SLUMP_ENDIAN_BIG
         rawthing.x       = swap_16(rawthing.x);
         rawthing.y       = swap_16(rawthing.y);
         rawthing.angle   = swap_16(rawthing.angle);
@@ -393,7 +394,7 @@ void DumpLevel(dumphandle dh, config *c, level *l, int episode, int mission, int
         {
             rawlinedef.left = (pLinedef->left)->number;
         }
-#ifdef ENDIAN_BIG
+#ifdef SLUMP_ENDIAN_BIG
         rawlinedef.from  = swap_16(rawlinedef.from);
         rawlinedef.to    = swap_16(rawlinedef.to);
         rawlinedef.flags = swap_16(rawlinedef.flags);
@@ -421,7 +422,7 @@ void DumpLevel(dumphandle dh, config *c, level *l, int episode, int mission, int
                strlen(pSidedef->middle_texture->realname));
         pSidedef->middle_texture->used = SLUMP_TRUE;
         rawsidedef.sector              = (pSidedef->psector)->number;
-#ifdef ENDIAN_BIG
+#ifdef SLUMP_ENDIAN_BIG
         rawsidedef.x_offset = swap_16(rawsidedef.x_offset);
         rawsidedef.y_offset = swap_16(rawsidedef.y_offset);
         rawsidedef.sector   = swap_16(rawsidedef.sector);
@@ -434,7 +435,7 @@ void DumpLevel(dumphandle dh, config *c, level *l, int episode, int mission, int
     {
         rawvertex.x = pVertex->x;
         rawvertex.y = pVertex->y;
-#ifdef ENDIAN_BIG
+#ifdef SLUMP_ENDIAN_BIG
         rawvertex.x = swap_16(rawvertex.x);
         rawvertex.y = swap_16(rawvertex.y);
 #endif
@@ -453,14 +454,14 @@ void DumpLevel(dumphandle dh, config *c, level *l, int episode, int mission, int
         memset(rawsector.ceiling_flat, 0, 8);
         memcpy(rawsector.ceiling_flat, pSector->ceiling_flat->name, strlen(pSector->ceiling_flat->name));
         pSector->ceiling_flat->used = SLUMP_TRUE;
-        if (pSector->light_level < ABSOLUTE_MINLIGHT)
+        if (pSector->light_level < SLUMP_ABSOLUTE_MINLIGHT)
         { /* Rooms can be too dark */
-            pSector->light_level = ABSOLUTE_MINLIGHT;
+            pSector->light_level = SLUMP_ABSOLUTE_MINLIGHT;
         }
         rawsector.light_level = pSector->light_level;
         rawsector.special     = pSector->special;
         rawsector.tag         = pSector->tag;
-#ifdef ENDIAN_BIG
+#ifdef SLUMP_ENDIAN_BIG
         rawsector.floor_height   = swap_16(rawsector.floor_height);
         rawsector.ceiling_height = swap_16(rawsector.ceiling_height);
         rawsector.light_level    = swap_16(rawsector.light_level);
@@ -500,7 +501,7 @@ void dump_texture_lmp(dumphandle dh, texture_lmp *tl)
     tbuf = buf;
 
     /* Write in the count */
-#ifndef ENDIAN_BIG
+#ifndef SLUMP_ENDIAN_BIG
     *(int *)tbuf = texturecount;
     tbuf += sizeof(int);
 #else
@@ -512,7 +513,7 @@ void dump_texture_lmp(dumphandle dh, texture_lmp *tl)
     isize = 4 + 4 * texturecount;
     for (ct = tl->custom_texture_anchor; ct; ct = ct->next)
     {
-#ifndef ENDIAN_BIG
+#ifndef SLUMP_ENDIAN_BIG
         *(int *)tbuf = isize;
         tbuf += sizeof(int);
 #else
@@ -539,7 +540,7 @@ void dump_texture_lmp(dumphandle dh, texture_lmp *tl)
         tbuf += sizeof(short);
         *(short *)tbuf = 0;
         tbuf += sizeof(short);
-#ifndef ENDIAN_BIG
+#ifndef SLUMP_ENDIAN_BIG
         *(short *)tbuf = ct->xsize;
         tbuf += sizeof(short);
         *(short *)tbuf = ct->ysize;
@@ -556,7 +557,7 @@ void dump_texture_lmp(dumphandle dh, texture_lmp *tl)
         tbuf += sizeof(short);
         for (patchcount = 0, p = ct->patch_anchor; p; p = p->next)
             patchcount++;
-#ifndef ENDIAN_BIG
+#ifndef SLUMP_ENDIAN_BIG
         *(short *)tbuf = patchcount;
         tbuf += sizeof(short);
 #else
@@ -565,7 +566,7 @@ void dump_texture_lmp(dumphandle dh, texture_lmp *tl)
 #endif
         for (p = ct->patch_anchor; p; p = p->next)
         {
-#ifndef ENDIAN_BIG
+#ifndef SLUMP_ENDIAN_BIG
             *(short *)tbuf = p->x;
             tbuf += sizeof(short);
             *(short *)tbuf = p->y;
@@ -628,7 +629,7 @@ void record_custom_textures(dumphandle dh, config *c)
     custom_texture *ct;
 
     /* Return if TEXTURE2 not available */
-    if (c->gamemask & (DOOM0_BIT | DOOM1_BIT | DOOMI_BIT | HERETIC_BIT))
+    if (c->gamemask & (SLUMP_DOOM0_BIT | SLUMP_DOOM1_BIT | SLUMP_DOOMI_BIT | SLUMP_HERETIC_BIT))
         return;
 
     tl = new_texture_lmp("TEXTURE2");
@@ -679,8 +680,8 @@ void record_custom_textures(dumphandle dh, config *c)
     free_texture_lmp(tl);
 } /* end record_custom_textures */
 
-byte fbuf[64 * 64 + 4];          /* For use in making custom flats and patches; 64x64 */
-byte pbuf[TLMPSIZE(0x80, 0x40)]; /* Also */
+byte fbuf[64 * 64 + 4];                /* For use in making custom flats and patches; 64x64 */
+byte pbuf[SLUMP_TLMPSIZE(0x80, 0x40)]; /* Also */
 
 /* Record any custom flats that we might want to show off by using. */
 /* This is *much* simpler than textures! */
@@ -695,7 +696,7 @@ void record_custom_flats(dumphandle dh, config *c, boolean even_unused)
         if (!started)
             RegisterLmp(dh, "FF_START", 0);
         started = SLUMP_TRUE;
-        announce(VERBOSE, "SLGRASS1");
+        announce(SLUMP_VERBOSE, "SLGRASS1");
 
         basic_background2(fbuf, 0x7c, 4);
         x = roll(64);
@@ -745,7 +746,7 @@ void record_custom_flats(dumphandle dh, config *c, boolean even_unused)
         if (!started)
             RegisterLmp(dh, "FF_START", 0);
         started = SLUMP_TRUE;
-        announce(VERBOSE, "SLSPARKS");
+        announce(SLUMP_VERBOSE, "SLSPARKS");
         memset(fbuf, 0, 4096);
         for (i = 512; i; i--)
             fbuf[roll(64) + 64 * roll(64)] = 0xb0 + roll(16);
@@ -759,7 +760,7 @@ void record_custom_flats(dumphandle dh, config *c, boolean even_unused)
         if (!started)
             RegisterLmp(dh, "FF_START", 0);
         started = SLUMP_TRUE;
-        announce(VERBOSE, "SLGATE1");
+        announce(SLUMP_VERBOSE, "SLGATE1");
 
         basic_background2(fbuf, 0x9c, 4);
 
@@ -790,7 +791,7 @@ void record_custom_flats(dumphandle dh, config *c, boolean even_unused)
         if (!started)
             RegisterLmp(dh, "FF_START", 0);
         started = SLUMP_TRUE;
-        announce(VERBOSE, "SLLITE1");
+        announce(SLUMP_VERBOSE, "SLLITE1");
 
         basic_background2(fbuf, 0x94, 4);
 
@@ -830,7 +831,7 @@ void record_custom_flats(dumphandle dh, config *c, boolean even_unused)
         if (!started)
             RegisterLmp(dh, "FF_START", 0);
         started = SLUMP_TRUE;
-        announce(VERBOSE, "SLFLAT01");
+        announce(SLUMP_VERBOSE, "SLFLAT01");
 
         basic_background2(fbuf, 0x6b, 5);
         for (i = 0; i < 4096; i++)
@@ -875,12 +876,12 @@ void record_custom_patches(dumphandle dh, config *c, boolean even_unused)
 
         rows    = 0x80;
         columns = 0x40;
-        lsize   = TLMPSIZE(rows, columns);
+        lsize   = SLUMP_TLMPSIZE(rows, columns);
         if (lsize > sizeof(pbuf))
             announce(SLUMP_ERROR, "Buffer overflow in r_c_t()");
         p = pbuf;
         /* The picture header */
-#ifndef ENDIAN_BIG
+#ifndef SLUMP_ENDIAN_BIG
         *(short *)p = columns;
         p += sizeof(short); /* Width */
         *(short *)p = rows;
@@ -904,7 +905,7 @@ void record_custom_patches(dumphandle dh, config *c, boolean even_unused)
         {
             int z;
             z = 8 + 4 * (columns) + i * (rows + 5);
-#ifndef ENDIAN_BIG
+#ifndef SLUMP_ENDIAN_BIG
             *(int *)p = z;
             p += sizeof(int);
 #else
@@ -952,12 +953,12 @@ void record_custom_patches(dumphandle dh, config *c, boolean even_unused)
 
         rows    = 0x80;
         columns = 0x40;
-        lsize   = TLMPSIZE(rows, columns);
+        lsize   = SLUMP_TLMPSIZE(rows, columns);
         if (lsize > sizeof(pbuf))
             announce(SLUMP_ERROR, "Buffer overflow in r_c_t()");
         p = pbuf;
         /* The picture header */
-#ifndef ENDIAN_BIG
+#ifndef SLUMP_ENDIAN_BIG
         *(short *)p = columns;
         p += sizeof(short); /* Width */
         *(short *)p = rows;
@@ -981,7 +982,7 @@ void record_custom_patches(dumphandle dh, config *c, boolean even_unused)
         {
             int z;
             z = 8 + 4 * (columns) + i * (rows + 5);
-#ifndef ENDIAN_BIG
+#ifndef SLUMP_ENDIAN_BIG
             *(int *)p = z;
             p += sizeof(int);
 #else
@@ -1038,12 +1039,12 @@ void record_custom_patches(dumphandle dh, config *c, boolean even_unused)
         /* Then the actual patch */
         rows    = 0x80;
         columns = 0x40;
-        lsize   = TLMPSIZE(rows, columns);
+        lsize   = SLUMP_TLMPSIZE(rows, columns);
         if (lsize > sizeof(pbuf))
             announce(SLUMP_ERROR, "Buffer overflow in r_c_t()");
         p = pbuf;
         /* The picture header */
-#ifndef ENDIAN_BIG
+#ifndef SLUMP_ENDIAN_BIG
         *(short *)p = columns;
         p += sizeof(short); /* Width */
         *(short *)p = rows;
@@ -1067,7 +1068,7 @@ void record_custom_patches(dumphandle dh, config *c, boolean even_unused)
         {
             int z;
             z = 8 + 4 * (columns) + i * (rows + 5);
-#ifndef ENDIAN_BIG
+#ifndef SLUMP_ENDIAN_BIG
             *(int *)p = z;
             p += sizeof(int);
 #else
@@ -1117,13 +1118,13 @@ void make_music(dumphandle dh, config *c)
     uint8_t  *musbuf;
 
     /* Definitely a stub! */
-    if (c->gamemask & DOOM1_BIT)
+    if (c->gamemask & SLUMP_DOOM1_BIT)
     {
         musbuf = one_piece(&mh);
         record_music(dh, &mh, musbuf, "D_INTROA", c);
         free(musbuf);
     }
-    if (c->gamemask & DOOM2_BIT)
+    if (c->gamemask & SLUMP_DOOM2_BIT)
     {
         musbuf = one_piece(&mh);
         record_music(dh, &mh, musbuf, "D_DM2TTL", c);
