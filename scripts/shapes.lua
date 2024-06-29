@@ -4896,8 +4896,8 @@ GROW_LIQUID_POOL_WIDE_COLONNADED_TRIPLE =
 
   diagonals =
   {
-    "1A","1A","A1","1A",
-    "1A","1A","A1","1A"
+    "A1","1A","A1","1A",
+    "A1","1A","A1","1A"
   }
 },
 
