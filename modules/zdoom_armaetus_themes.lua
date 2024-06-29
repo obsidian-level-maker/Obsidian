@@ -5109,9 +5109,7 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
       SD_HCCW9 = 25,
       SD_HCCWA = 25,
       SD_HCCWB = 25,
-      SD_HCCWC = 25,
-      SD_HCCWD = 25,
-      SD_HCCWE = 25
+      SD_HCCWC = 25
     },
 
     floors =
@@ -7690,9 +7688,7 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
       SD_HCCW9 = 25,
       SD_HCCWA = 25,
       SD_HCCWB = 25,
-      SD_HCCWC = 25,
-      SD_HCCWD = 25,
-      SD_HCCWE = 25
+      SD_HCCWC = 25
     },
 
     floors =
