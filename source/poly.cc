@@ -19,7 +19,9 @@
 #include <stddef.h>
 
 #include "lib_util.h"
-#include "poly_local.h"
+#include "poly.h"
+#include "poly_map.h"
+#include "poly_util.h"
 #include "sys_debug.h"
 #include "sys_macro.h"
 

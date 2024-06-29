@@ -24,6 +24,9 @@
 
 #include <string>
 
+namespace ajbsp
+{
+
 constexpr const char *AJBSP_VERSION = "1.05";
 
 //
@@ -89,10 +92,7 @@ typedef enum
     BUILD_LumpOverflow
 } build_result_e;
 
-int AJBSP_BuildNodes(const std::string &filename, buildinfo_t *build_info);
-
-namespace ajbsp
-{
+int BuildNodes(const std::string &filename, buildinfo_t *build_info);
 
 // set the build information.  must be done before anything else.
 void SetInfo(buildinfo_t *info);

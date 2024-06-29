@@ -40,6 +40,9 @@
 
 extern const char *ob_gettext(const char *s);
 
+namespace slump
+{
+
 // Shim functions to replace old SLUMP RNG
 int roll(int n)
 {
@@ -893,6 +896,11 @@ unsigned short psi_sqrt(int v)
     SLUMP_PSISTEP(0);
 
     return (unsigned short)r;
+}
+
+unsigned short SLUMP_linelen(linedef *ld)
+{
+    return psi_sqrt(lengthsquared(ld));
 }
 
 /* Find a flat with the given name, creating one if */
@@ -1993,8 +2001,7 @@ int construct_family_for(config *c, style *s)
 {
     construct *cs;
     int        tmask = 0x01 << s->theme_number;
-#define SLUMP_MAX_COMPATIBLE_FAMILIES (5)
-    int     compats[SLUMP_MAX_COMPATIBLE_FAMILIES];
+    int     compats[5];
     int     compat_count = 0;
     boolean already;
     int     i;
@@ -2366,7 +2373,7 @@ void gate_populate(level *l, sector *s, haa *haa, boolean first, config *c)
         { /* A monster */
             m = timely_monster(haa, c, &levels, rollpercent(l->p_biggest_monsters), 1);
             if (m && levels)
-                if (NULL != place_object_in_region(l, minx, miny, tlx, maxy, c, m->thingid, SLUMP_MONSTER_WIDTH(m), -1,
+                if (NULL != place_object_in_region(l, minx, miny, tlx, maxy, c, m->thingid, 64, -1,
                                                    s->entry_x, s->entry_y, levels))
                     update_haa_for_monster(haa, m, levels, 1, c);
         }
@@ -2381,7 +2388,7 @@ void gate_populate(level *l, sector *s, haa *haa, boolean first, config *c)
         { /* A monster */
             m = timely_monster(haa, c, &levels, rollpercent(l->p_biggest_monsters), 1);
             if (m && levels)
-                if (NULL != place_object_in_region(l, thx, miny, maxx, maxy, c, m->thingid, SLUMP_MONSTER_WIDTH(m), -1,
+                if (NULL != place_object_in_region(l, thx, miny, maxx, maxy, c, m->thingid, 64, -1,
                                                    s->entry_x, s->entry_y, levels))
                     update_haa_for_monster(haa, m, levels, 1, c);
         }
@@ -2398,7 +2405,7 @@ void gate_populate(level *l, sector *s, haa *haa, boolean first, config *c)
         { /* A monster */
             m = timely_monster(haa, c, &levels, rollpercent(l->p_biggest_monsters), 1);
             if (m && levels)
-                if (NULL != place_object_in_region(l, minx, miny, maxx, tly, c, m->thingid, SLUMP_MONSTER_WIDTH(m), -1,
+                if (NULL != place_object_in_region(l, minx, miny, maxx, tly, c, m->thingid, 64, -1,
                                                    s->entry_x, s->entry_y, levels))
                     update_haa_for_monster(haa, m, levels, 1, c);
         }
@@ -2413,7 +2420,7 @@ void gate_populate(level *l, sector *s, haa *haa, boolean first, config *c)
         { /* A monster */
             m = timely_monster(haa, c, &levels, rollpercent(l->p_biggest_monsters), 1);
             if (m && levels)
-                if (NULL != place_object_in_region(l, minx, thy, maxx, maxy, c, m->thingid, SLUMP_MONSTER_WIDTH(m), -1,
+                if (NULL != place_object_in_region(l, minx, thy, maxx, maxy, c, m->thingid, 64, -1,
                                                    s->entry_x, s->entry_y, levels))
                     update_haa_for_monster(haa, m, levels, 1, c);
         }
@@ -3274,7 +3281,7 @@ boolean no_monsters_stuck_on(level *l, linedef *ld)
         if (m->pgenus->bits & SLUMP_FLIES)
             continue; /* Fliers can escape */
         dist = abs(point_from_linedef(l, m->x, m->y, ld));
-        if (dist <= (SLUMP_MONSTER_WIDTH(m) / 2))
+        if (dist <= (64 / 2))
         {
 #ifdef SLUMP_ALLOW_STUCK_MONSTERS_IN_BATHS
             announce(SLUMP_LOG, "Bath Bug!");
@@ -6174,7 +6181,7 @@ void e_bl_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
             /* Try to place it */
             if (!rollpercent(l->p_rational_facing))
                 mangle = 90 * roll(4);
-            if (NULL != place_object_in_region(l, mminx, mminy, mmaxx, mmaxy, c, m->thingid, SLUMP_MONSTER_WIDTH(m),
+            if (NULL != place_object_in_region(l, mminx, mminy, mmaxx, mmaxy, c, m->thingid, 64,
                                                mangle, 0, 0, levels))
             {
 
@@ -9591,7 +9598,7 @@ void place_monsters(level *l, sector *s, config *c, haa *haa)
         announce(SLUMP_NONE, "Trying to place a monster");
 
         /* Try to place it */
-        rc = (NULL != place_object(l, s, c, m->thingid, SLUMP_MONSTER_WIDTH(m), -1, s->entry_x, s->entry_y, levels));
+        rc = (NULL != place_object(l, s, c, m->thingid, 64, -1, s->entry_x, s->entry_y, levels));
         if (!rc)
         {
             announce(SLUMP_NONE, "Placement failed");
@@ -12514,8 +12521,8 @@ void righthand_monster(level *l, int xa, int ya, int xb, int yb, haa *haa, confi
     /* Figure out where we want it */
     x1 = (xa + xb) / 2;
     y1 = (ya + yb) / 2;
-    point_from(xa, ya, x1, y1, SLUMP_RIGHT_TURN, 1 + SLUMP_MONSTER_WIDTH(m) / 2, &x, &y);
-    if (!room_at(l, m, x, y, SLUMP_MONSTER_WIDTH(m), c))
+    point_from(xa, ya, x1, y1, SLUMP_RIGHT_TURN, 1 + 64 / 2, &x, &y);
+    if (!room_at(l, m, x, y, 64, c))
         return;
     /* Fill in other details */
     angle = facing_right_from(xa, ya, xb, yb); /* Correct? */
@@ -15588,6 +15595,8 @@ void NewLevel(level *l, haa *ThisHaa, config *c)
         if (l->first_room)
             l->first_room->special = SLUMP_SECRET_SECTOR;
 }
+
+} // namespace slump
 
 /****** the end of SLUMP.C ********* please come again *********/
 

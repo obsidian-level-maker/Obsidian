@@ -16,7 +16,8 @@
 //
 //------------------------------------------------------------------------
 
-#include "poly_local.h"
+#include <stdarg.h>
+#include <stdio.h>
 
 namespace ajpoly
 {

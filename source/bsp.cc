@@ -27,6 +27,9 @@
 #include "raw_def.h"
 #include "sys_debug.h"
 
+namespace ajbsp
+{
+
 bool opt_backup  = false;
 bool opt_help    = false;
 bool opt_version = false;
@@ -308,7 +311,7 @@ void CheckTypeSizes(buildinfo_t *build_info)
     AJBSP_ASSERT_SIZE(raw_vertex_t, 4);
 }
 
-int AJBSP_BuildNodes(const std::string &filename, buildinfo_t *build_info)
+int BuildNodes(const std::string &filename, buildinfo_t *build_info)
 {
     // need this early, especially for fatal errors in utility/wad code
     ajbsp::SetInfo(build_info);
@@ -363,6 +366,8 @@ int AJBSP_BuildNodes(const std::string &filename, buildinfo_t *build_info)
     // that's all folks!
     return 0;
 }
+
+} // namespace ajbsp
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

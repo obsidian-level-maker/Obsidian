@@ -36,6 +36,9 @@
 #include "lib_util.h"
 #include "slump.h"
 
+namespace slump
+{
+
 /* Global variables */
 
 extern int     current_level_number;
@@ -1162,3 +1165,5 @@ void make_secret_level(dumphandle dh, haa *oldhaa, config *c)
         DumpLevel(dh, SecConfig, &SecLevel, SecConfig->episode, SecConfig->mission, SecConfig->map);
     }
 }
+
+} // namespace slump

@@ -307,7 +307,7 @@ bool BuildNodes(std::string filename)
     }
 
     // Prep AJBSP parameters
-    buildinfo_t build_info;
+    ajbsp::buildinfo_t build_info;
     build_info.fast = true;
     if (StringCompare(current_port, "limit_enforcing") == 0 || StringCompare(current_port, "boom") == 0)
     {
@@ -326,7 +326,7 @@ bool BuildNodes(std::string filename)
         build_info.force_compress = true;
     }
 
-    if (AJBSP_BuildNodes(filename, &build_info) != 0)
+    if (ajbsp::BuildNodes(filename, &build_info) != 0)
     {
         ProgStatus("%s", _("AJBSP Error!"));
         return false;
@@ -1480,7 +1480,7 @@ bool Doom::game_interface_c::Finish(bool build_ok)
     }
     else
     {
-        build_ok = slump_main(filename);
+        build_ok = slump::BuildLevels(filename);
     }
 
     if (UDMF_mode)

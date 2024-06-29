@@ -18,7 +18,11 @@
 
 #include "lib_parse.h"
 #include "main.h"
-#include "poly_local.h"
+#include "poly_map.h"
+#include "poly_util.h"
+#include "poly_wad.h"
+#include "raw_def.h"
+#include "sys_endian.h"
 #include "sys_macro.h"
 
 #define AJPOLY_DEBUG_LOAD 0

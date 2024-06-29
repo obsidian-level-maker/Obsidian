@@ -21,7 +21,13 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <string>
 #include <vector>
+
+#include "physfs.h"
+
+namespace ajpoly
+{
 
 // directory entry
 
@@ -106,6 +112,8 @@ class wad_c
 };
 
 extern wad_c *the_wad;
+
+} // namespace ajpoly
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

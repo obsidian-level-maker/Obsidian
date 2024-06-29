@@ -21,8 +21,10 @@
 
 #pragma once
 
+#include <stdint.h>
+
 // this layout is compatible with Fl_Color (except for alpha)
-typedef unsigned int rgb_color_t;
+typedef uint32_t rgb_color_t;
 
 typedef enum
 {

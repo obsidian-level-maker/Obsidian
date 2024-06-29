@@ -18,10 +18,15 @@
 
 #pragma once
 
+namespace ajpoly
+{
+
 /* ----- FUNCTIONS ---------------------------------- */
 
 // set message for certain errors
 void SetErrorMsg(const char *str, ...);
+
+} // namespace ajpoly
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

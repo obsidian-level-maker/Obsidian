@@ -38,6 +38,9 @@
 
 #include "slump.h"
 
+namespace slump
+{
+
 // Global variables
 int     current_level_number = 0;
 int     global_verbosity     = 0;           /* Oooh, a global variable! */
@@ -63,7 +66,7 @@ void machioize(config *c, float amount)
     }
 }
 
-bool slump_main(const std::string &filename)
+bool BuildLevels(const std::string &filename)
 {
 
     /* A stubby but functional main() */
@@ -152,3 +155,5 @@ bool slump_main(const std::string &filename)
     printf("\nDone: wrote %s.\n", ThisConfig->outfile);
     return true;
 }
+
+} // namespace slump

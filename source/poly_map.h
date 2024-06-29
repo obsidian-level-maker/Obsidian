@@ -20,6 +20,9 @@
 
 #include "poly.h"
 
+namespace ajpoly
+{
+
 /* ----- OBJECTS --------------------------------- */
 
 // a wall_tip is where a wall meets a vertex
@@ -37,8 +40,8 @@ class wall_tip_c
     // sectors on each side of wall.  Left is the side of increasing
     // angles, right is the side of decreasing angles.  Either can be
     // NULL for one sided walls.
-    ajpoly::sector_c *left;
-    ajpoly::sector_c *right;
+    sector_c *left;
+    sector_c *right;
 };
 
 /* ----- VARIABLES --------------------------------- */
@@ -48,26 +51,28 @@ extern int limit_x1, limit_y1;
 extern int limit_x2, limit_y2;
 
 // a special sector used to represent the void (empty space)
-extern ajpoly::sector_c *void_sector;
+extern sector_c *void_sector;
 
 /* ----- FUNCTIONS --------------------------------- */
 
-ajpoly::vertex_c  *NewVertex();
-ajpoly::linedef_c *NewLinedef();
-ajpoly::sidedef_c *NewSidedef();
-ajpoly::sector_c  *NewSector();
-ajpoly::thing_c   *NewThing();
+vertex_c  *NewVertex();
+linedef_c *NewLinedef();
+sidedef_c *NewSidedef();
+sector_c  *NewSector();
+thing_c   *NewThing();
 
-ajpoly::vertex_c  *NewSplit();
-ajpoly::edge_c    *NewEdge();
-ajpoly::polygon_c *NewPolygon();
+vertex_c  *NewSplit();
+edge_c    *NewEdge();
+polygon_c *NewPolygon();
 wall_tip_c        *NewWallTip();
 
 // return a new vertex (with correct wall_tip info) for the split that
 // happens along the given edge at the given location.
-ajpoly::vertex_c *NewVertexFromSplit(ajpoly::edge_c *E, double x, double y);
+vertex_c *NewVertexFromSplit(edge_c *E, double x, double y);
 
 bool VerifyOuterLines();
+
+} // namespace ajpoly
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab
