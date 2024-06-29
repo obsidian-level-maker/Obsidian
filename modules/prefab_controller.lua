@@ -148,21 +148,20 @@ function PREFAB_CONTROL.fine_tune_filters()
   }
   local new_themes_multipliers =
   {
-    any_copperRust = 2,
+    any_copperRust = 1.25,
 
-    tech_silver_grate = 1.25,
     tech_bumblebee = 2,
-    tech_aww2 = 2,
-    tech_iStuff = 2,
+    tech_aww2 = 1.5,
+    tech_iStuff = 1.5,
     tech_beigetownTech = 3,
     --
 
-    urban_computerCatacombs = 1.25,
-    urban_iStuff = 2,
+    urban_computerCatacombs = 1.75,
+    urban_iStuff = 1.5,
     urban_beigetownTech = 3,
     --
 
-    hell_computerCatacombs = 1.25
+    hell_computerCatacombs = 1.75
   }
   local themes =
   {
