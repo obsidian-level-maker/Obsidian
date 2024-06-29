@@ -255,7 +255,7 @@ std::string DLG_OutputFilename(const char *ext, const char *preset)
 
     chooser.filter(kind_buf.c_str());
 
-    auto best_dir = BestDirectory();
+    std::string best_dir = SanitizePath(BestDirectory());
 
     if (preset)
     {
@@ -633,7 +633,7 @@ tryagain:;
 
     if (!last_directory.empty())
     {
-        chooser.directory(last_directory.c_str());
+        chooser.directory(SanitizePath(last_directory).c_str());
     }
 
     switch (chooser.show())

@@ -58,7 +58,7 @@ std::string Theme_OutputFilename()
     chooser.filter("Text files\t*.txt");
 
     std::string theme_dir = PathAppend(install_dir, "theme");
-    chooser.directory(theme_dir.c_str());
+    chooser.directory(SanitizePath(theme_dir).c_str());
 
     FL_NORMAL_SIZE = old_font_h;
 
@@ -102,7 +102,7 @@ std::string Theme_AskLoadFilename()
     chooser.filter("Text files\t*.txt");
 
     std::string theme_dir = PathAppend(install_dir, "theme");
-    chooser.directory(theme_dir.c_str());
+    chooser.directory(SanitizePath(theme_dir).c_str());
 
     int result = chooser.show();
 

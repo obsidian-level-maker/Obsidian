@@ -580,7 +580,7 @@ class UI_OptionsWin : public Fl_Window
 
         chooser.title(_("Select default save directory"));
         chooser.type(Fl_Native_File_Chooser::BROWSE_DIRECTORY);
-        chooser.directory(BestDirectory().c_str());
+        chooser.directory(SanitizePath(BestDirectory()).c_str());
 
         int result = chooser.show();
 

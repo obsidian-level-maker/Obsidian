@@ -34,6 +34,7 @@ std::string GetExtension(std::string_view path);
 std::string PathAppend(std::string_view parent, std::string_view child);
 bool        IsPathAbsolute(std::string_view path);
 void        ReplaceExtension(std::string &path, std::string_view ext);
+std::string SanitizePath(std::string_view path);
 
 std::string CurrentDirectoryGet();
 bool        MakeDirectory(std::string_view dir);

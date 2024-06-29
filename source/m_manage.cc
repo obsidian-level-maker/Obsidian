@@ -413,11 +413,11 @@ class UI_Manage_Config : public Fl_Double_Window
 
         if (!last_directory.empty())
         {
-            chooser.directory(last_directory.c_str());
+            chooser.directory(SanitizePath(last_directory).c_str());
         }
         else
         {
-            chooser.directory(install_dir.c_str());
+            chooser.directory(SanitizePath(install_dir).c_str());
         }
 
         switch (chooser.show())
@@ -479,11 +479,11 @@ class UI_Manage_Config : public Fl_Double_Window
 
         if (!last_directory.empty())
         {
-            chooser.directory(last_directory.c_str());
+            chooser.directory(SanitizePath(last_directory).c_str());
         }
         else
         {
-            chooser.directory(install_dir.c_str());
+            chooser.directory(SanitizePath(install_dir).c_str());
         }
 
         switch (chooser.show())
