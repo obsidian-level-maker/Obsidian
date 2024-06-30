@@ -56,10 +56,6 @@ constexpr size_t TICKER_TIME = 50;
 
 std::filesystem::path home_dir;
 std::filesystem::path install_dir;
-#ifdef WIN32
-std::filesystem::path physfs_dir;
-#endif
-
 std::filesystem::path config_file;
 std::filesystem::path options_file;
 std::filesystem::path theme_file;
@@ -334,63 +330,13 @@ char32_t *ucs4_path(const char *path) {
 }
 #endif
 
-void Determine_WorkingPath(const char *argv0) {
-    // firstly find the "Working directory" : that's the place where
-    // the CONFIG.txt and LOGS.txt files are, as well the temp files.
-
-    if (const int home_arg = argv::Find(0, "home"); home_arg >= 0) {
-        if (home_arg + 1 >= argv::list.size() || argv::IsOption(home_arg + 1)) {
-            fmt::print(stderr, "OBSIDIAN ERROR: missing path for --home\n");
-            exit(EXIT_FAILURE);
-        }
-
-        home_dir = argv::list[home_arg + 1];
-        return;
-    }
-
-#ifdef WIN32
-    home_dir = ucs4_path(argv0);
-    home_dir.remove_filename();
-    physfs_dir = argv0;
-    physfs_dir.remove_filename();
+void Determine_WorkingPath()
+{
+#ifdef _WIN32
+    home_dir = std::filesystem::u8path(PHYSFS_getBaseDir());
 #else
-    const char *xdg_config_home = std::getenv("XDG_CONFIG_HOME");
-    if (xdg_config_home == nullptr) {
-        xdg_config_home = std::getenv("HOME");
-        if (xdg_config_home == nullptr) {
-            home_dir = ".";
-        } else {
-            home_dir = xdg_config_home;
-            home_dir /= ".config";
-        }
-    } else {
-        home_dir = xdg_config_home;
-    }
-    home_dir /= "obsidian";
-    if (!home_dir.is_absolute()) {
-        home_dir = std::getenv("HOME");
-        home_dir /= ".config/obsidian";
-
-        if (!home_dir.is_absolute()) {
-            Main::FatalError("Unable to find $HOME directory!\n");
-        }
-    }
-// FLTK is going to want a ~/.config directory as well I think - Dasho
-#ifdef __OpenBSD__
-    std::filesystem::path config_checker = std::getenv("HOME");
-    config_checker /= ".config";
-    if (!std::filesystem::exists(config_checker)) {
-        std::filesystem::create_directory(config_checker);
-    }
+    home_dir = PHYSFS_getPrefDir("Obsidian Team", "Obsidian");
 #endif
-    // try to create it (doesn't matter if it already exists)
-    if (!std::filesystem::exists(home_dir)) {
-        std::filesystem::create_directory(home_dir);
-    }
-#endif
-    if (home_dir.empty()) {
-        home_dir = ".";
-    }
 }
 
 std::filesystem::path Resolve_DefaultOutputPath() {
@@ -417,48 +363,9 @@ static bool Verify_InstallDir(const std::filesystem::path &path) {
     return exists(filename);
 }
 
-void Determine_InstallDir(const char *argv0) {
-    // secondly find the "Install directory", and store the
-    // result in the global variable 'install_dir'.  This is
-    // where all the LUA scripts and other data files are.
-
-    if (const int inst_arg = argv::Find(0, "install"); inst_arg >= 0) {
-        if (inst_arg + 1 >= argv::list.size() || argv::IsOption(inst_arg + 1)) {
-            fmt::print(stderr, "OBSIDIAN ERROR: missing path for --install\n");
-            exit(EXIT_FAILURE);
-        }
-
-        install_dir = argv::list[inst_arg + 1];
-
-        if (Verify_InstallDir(install_dir)) {
-            return;
-        }
-
-        Main::FatalError("Bad install directory specified!\n");
-    }
-
-    // if run from current directory, look there
-    if (argv0[0] == '.' && Verify_InstallDir(".")) {
-        install_dir = ".";
-        return;
-    }
-
-#ifdef WIN32
-    install_dir = home_dir;
-#else
-    if (Verify_InstallDir(CMAKE_INSTALL_PREFIX "/share/obsidian")) {
-        return;
-    }
-
-    // Last resort
-    if (Verify_InstallDir(std::filesystem::current_path().c_str())) {
-        install_dir = std::filesystem::current_path();
-    }
-#endif
-
-    if (install_dir.empty()) {
-        Main::FatalError("Unable to find Obsidian's install directory!\n");
-    }
+void Determine_InstallDir()
+{
+    install_dir = std::filesystem::u8path(PHYSFS_getBaseDir());
 }
 
 void Determine_ConfigFile() {
@@ -1367,9 +1274,14 @@ int main(int argc, char **argv) {
     argv::short_flags.emplace('u');
 
     // parse the flags
-    argv::Init(argc - 1, argv + 1);
+    argv::Init(argc, argv);
 
 hardrestart:;
+
+    if (!PHYSFS_init(argv::list[0].c_str())) {
+        Main::FatalError("Failed to init PhysFS:\n{}\n",
+                         PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+    }
 
     if (argv::Find('?', NULL) >= 0 || argv::Find('h', "help") >= 0) {
 #if defined WIN32 && !defined CONSOLE_ONLY
@@ -1476,8 +1388,8 @@ hardrestart:;
 #endif
     }
 
-    Determine_WorkingPath(argv[0]);
-    Determine_InstallDir(argv[0]);
+    Determine_WorkingPath();
+    Determine_InstallDir();
 
     Determine_ConfigFile();
     Determine_OptionsFile();
@@ -1564,7 +1476,7 @@ softrestart:;
     //    TX_TestSynth(next_rand_seed); - Fractal testing stuff
 
     if (main_action != MAIN_SOFT_RESTART) {
-        VFS_InitAddons(argv[0]);
+        VFS_InitAddons();
 
         if (const int load_arg = argv::Find('l', "load"); load_arg >= 0) {
             if (load_arg + 1 >= argv::list.size() ||

@@ -58,6 +58,7 @@ constexpr const char *LOG_FILENAME = "LOGS.txt";
 constexpr const char *REF_FILENAME = "REFERENCE.txt";
 
 #ifdef _WIN32
+char32_t *ucs4_path(const char *path);
 #ifndef CONSOLE_ONLY
 HEDLEY_ALWAYS_INLINE
 int i_load_private_font(const char *path) {
@@ -88,11 +89,6 @@ int v_unload_private_font(const char *path) {
 
 extern std::filesystem::path home_dir;
 extern std::filesystem::path install_dir;
-#ifdef WIN32
-char32_t *ucs4_path(const char *path);
-extern std::filesystem::path physfs_dir;
-#endif
-
 extern std::filesystem::path config_file;
 extern std::filesystem::path options_file;
 extern std::filesystem::path theme_file;

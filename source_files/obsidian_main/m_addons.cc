@@ -42,11 +42,7 @@ std::map<std::filesystem::path, int> initial_enabled_addons;
 std::vector<addon_info_t> all_addons;
 
 void VFS_AddFolder(std::string name) {
-#ifdef _WIN32
-    std::filesystem::path path = physfs_dir;
-#else
     std::filesystem::path path = install_dir;
-#endif
     path /= name;
     std::string mount = fmt::format("/{}", name);
 
@@ -94,13 +90,8 @@ bool VFS_AddArchive(std::filesystem::path filename, bool options_file) {
     return true;  // Ok
 }
 
-void VFS_InitAddons(const char *argv0) {
+void VFS_InitAddons() {
     LogPrintf("Initializing VFS...\n");
-
-    if (!PHYSFS_init(argv0)) {
-        Main::FatalError("Failed to init PhysFS:\n{}\n",
-                         PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
-    }
 
     VFS_AddFolder("scripts");
     VFS_AddFolder("games");
