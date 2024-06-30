@@ -3102,6 +3102,41 @@ brightmap texture S_W2WALE
   map SW2WLEBR
 }
 
+brightmap texture SD_HCCW1
+{
+  map SDBRHCW1
+}
+
+brightmap texture SD_HCCW2
+{
+  map SDBRHCW2
+}
+  
+brightmap texture SD_HCCW3
+{
+  map SDBRHCW3
+}
+  
+brightmap texture SD_HCCW7
+{
+  map SDBRHCW7
+}
+  
+brightmap texture SD_HCCW8
+{
+  map SDBRHCW8
+}
+
+brightmap texture SD_HCCW9
+{
+  map SDBRHCW9
+}
+
+brightmap texture SD_HCCWC
+{
+  map SDBRHCWC
+}
+
 ]]
 
 -- aliases - when you're too lazy to write down wall and flat names in every
