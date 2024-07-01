@@ -8838,7 +8838,7 @@ GROW_MAZE_SIDE_BUMP =
   diagonals =
   {
     "1.",
-    ".1"
+    "1."
   }
 },
 
@@ -8865,7 +8865,7 @@ GROW_MAZE_SIDE_BUMP_CAGE =
   diagonals =
   {
     "1.",
-    ".1"
+    "1."
   }
 },
 
