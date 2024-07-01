@@ -2123,11 +2123,14 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
 
     floors =
     {
-      SD_TWDW1 = 30,
-      SD_TWDW2 = 30,
-      SD_TWDW3 = 30,
-      SD_TWDW4 = 30,
-      SD_TWDW5 = 30, -- deliberate use of this material for floors
+      SD_TWDF1 = 30,
+      SD_TWDF2 = 30,
+      SD_TWDF3 = 30,
+      SD_TWDF4 = 30,
+      SD_TWDF5 = 30,
+      SD_TWDF6 = 30,
+      SD_TWDF7 = 30,
+      SD_TWDF8 = 30,
 
       FLAT1 = 5,
       FLAT20 = 2,
@@ -2180,11 +2183,14 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
 
     ceilings =
     {
-      SD_TWDW1 = 30,
-      SD_TWDW2 = 30,
-      SD_TWDW3 = 30,
-      SD_TWDW4 = 30,
-      SD_TWDW5 = 30, -- deliberate use of this material for floors
+      SD_TWDF1 = 30,
+      SD_TWDF2 = 30,
+      SD_TWDF3 = 30,
+      SD_TWDF4 = 30,
+      SD_TWDF5 = 30,
+      SD_TWDF6 = 30,
+      SD_TWDF7 = 30,
+      SD_TWDF8 = 30,
 
       FLAT1 = 5,
       FLAT20 = 2,
@@ -6697,12 +6703,14 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
 
     floors =
     {
-      SD_TWDW1 = 30,
-      SD_TWDW2 = 30,
-      SD_TWDW3 = 30,
-      SD_TWDW4 = 30,
-      SD_TWDW5 = 30, -- deliberate use of this material for floors
-      SD_TWDW6 = 30,
+      SD_TWDF1 = 30,
+      SD_TWDF2 = 30,
+      SD_TWDF3 = 30,
+      SD_TWDF4 = 30,
+      SD_TWDF5 = 30,
+      SD_TWDF6 = 30,
+      SD_TWDF7 = 30,
+      SD_TWDF8 = 30,
 
       FLAT1 = 5,
       FLAT20 = 2,
@@ -6755,12 +6763,14 @@ OBS_RESOURCE_PACK_ROOM_THEMES =
 
     ceilings =
     {
-      SD_TWDW1 = 30,
-      SD_TWDW2 = 30,
-      SD_TWDW3 = 30,
-      SD_TWDW4 = 30,
-      SD_TWDW5 = 30, -- deliberate use of this material for floors
-      SD_TWDW6 = 30,
+      SD_TWDF1 = 30,
+      SD_TWDF2 = 30,
+      SD_TWDF3 = 30,
+      SD_TWDF4 = 30,
+      SD_TWDF5 = 30,
+      SD_TWDF6 = 30,
+      SD_TWDF7 = 30,
+      SD_TWDF8 = 30,
 
       FLAT1 = 5,
       FLAT20 = 2,

@@ -1720,6 +1720,9 @@ OBS_RESOURCE_PACK_MATERIALS = {
   SD_TWDF3 = { t="SD_TWDW3", f="SD_TWDF3"},
   SD_TWDF4 = { t="SD_TWDW6", f="SD_TWDF4"},
   SD_TWDF5 = { t="SD_TWDW5", f="SD_TWDF5"},
+  SD_TWDF6 = { t="SD_TWDW6", f="SD_TWDF1"},
+  SD_TWDF7 = { t="SD_TWDW7", f="SD_TWDF3"},
+  SD_TWDF8 = { t="SD_TWDW8", f="SD_TWDF5"},
   -- lights
   SD_TWDL1 = { t="SD_TWDL1", f="SD_TWDF6"},
   SD_TWDL2 = { t="SD_TWDL2", f="SD_TWDF5"},
