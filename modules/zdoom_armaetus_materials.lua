@@ -1720,6 +1720,9 @@ OBS_RESOURCE_PACK_MATERIALS = {
   SD_TWDF3 = { t="SD_TWDW3", f="SD_TWDF3"},
   SD_TWDF4 = { t="SD_TWDW6", f="SD_TWDF4"},
   SD_TWDF5 = { t="SD_TWDW5", f="SD_TWDF5"},
+  SD_TWDF6 = { t="SD_TWDW6", f="SD_TWDF1"},
+  SD_TWDF7 = { t="SD_TWDW7", f="SD_TWDF3"},
+  SD_TWDF8 = { t="SD_TWDW8", f="SD_TWDF5"},
   -- lights
   SD_TWDL1 = { t="SD_TWDL1", f="SD_TWDF6"},
   SD_TWDL2 = { t="SD_TWDL2", f="SD_TWDF5"},
@@ -2003,17 +2006,15 @@ OBS_RESOURCE_PACK_MATERIALS = {
   SD_HCCWA = { t="SD_HCCWA", f="SD_HCCF4"},
   SD_HCCWB = { t="SD_HCCWB", f="SD_HCCF6"},
   SD_HCCWC = { t="SD_HCCWC", f="SD_HCCF8"},
-  SD_HCCWD = { t="SD_HCCWD", f="SD_HCCF3"},
-  SD_HCCWE = { t="SD_HCCWE", f="SD_HCCF5"},
   -- flats
   SD_HCCF1 = { t="SD_HCCW1", f="SD_HCCF1"},
-  SD_HCCF2 = { t="SD_HCCW3", f="SD_HCCF2"},
-  SD_HCCF3 = { t="SD_HCCW5", f="SD_HCCF3"},
-  SD_HCCF4 = { t="SD_HCCW7", f="SD_HCCF4"},
-  SD_HCCF5 = { t="SD_HCCW9", f="SD_HCCF5"},
-  SD_HCCF6 = { t="SD_HCCWB", f="SD_HCCF6"},
-  SD_HCCF7 = { t="SD_HCCWD", f="SD_HCCF7"},
-  SD_HCCF8 = { t="SD_HCCWE", f="SD_HCCF8"},
+  SD_HCCF2 = { t="SD_HCCW2", f="SD_HCCF2"},
+  SD_HCCF3 = { t="SD_HCCW3", f="SD_HCCF3"},
+  SD_HCCF4 = { t="SD_HCCW5", f="SD_HCCF4"},
+  SD_HCCF5 = { t="SD_HCCW7", f="SD_HCCF5"},
+  SD_HCCF6 = { t="SD_HCCW9", f="SD_HCCF6"},
+  SD_HCCF7 = { t="SD_HCCWA", f="SD_HCCF7"},
+  SD_HCCF8 = { t="SD_HCCWC", f="SD_HCCF8"},
 
   --
   TOFFBOX1 = {t="TOFFBOX1", f="FLAT23"},
@@ -3102,6 +3103,41 @@ brightmap texture SD_TSGWB
 brightmap texture S_W2WALE
 {
   map SW2WLEBR
+}
+
+brightmap texture SD_HCCW1
+{
+  map SDBRHCW1
+}
+
+brightmap texture SD_HCCW2
+{
+  map SDBRHCW2
+}
+  
+brightmap texture SD_HCCW3
+{
+  map SDBRHCW3
+}
+  
+brightmap texture SD_HCCW7
+{
+  map SDBRHCW7
+}
+  
+brightmap texture SD_HCCW8
+{
+  map SDBRHCW8
+}
+
+brightmap texture SD_HCCW9
+{
+  map SDBRHCW9
+}
+
+brightmap texture SD_HCCWC
+{
+  map SDBRHCWC
 }
 
 ]]

@@ -64,7 +64,7 @@ PREFABS.Joiner_gtd_universal_funnel =
   over = 16,
 
   x_fit = { 120,137 },
-  y_fit = { 24,28 , 132,140 },
+  y_fit = { 20,28 , 132,140 },
 
   can_flip = true,
 }

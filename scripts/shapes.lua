@@ -4896,8 +4896,8 @@ GROW_LIQUID_POOL_WIDE_COLONNADED_TRIPLE =
 
   diagonals =
   {
-    "1A","1A","A1","1A",
-    "1A","1A","A1","1A"
+    "A1","1A","A1","1A",
+    "A1","1A","A1","1A"
   }
 },
 
@@ -5627,10 +5627,10 @@ GROW_OVAL_SPLIT_NEW_AREA =
 
   diagonals =
   {
-      ".1",".A","A.",
+      ".1","1A","A.",
     ".1","1.",".A","A.",
     ".1","1.",".A","A.",
-      ".1","1.","A."
+      ".1","1A","A."
   }
 },
 
@@ -5657,12 +5657,12 @@ GROW_OVAL_SPLIT_NEW_AREA_BIG =
 
   diagonals =
   {
-      ".1",".A","A.",
+      ".1","1A","A.",
     ".1","1.",".A","A.",
           "1.",".A",
           "1.",".A",
     ".1","1.",".A","A.",
-      ".1","1.","A."
+      ".1","1A","A."
   }
 },
 
@@ -8838,7 +8838,7 @@ GROW_MAZE_SIDE_BUMP =
   diagonals =
   {
     "1.",
-    ".1"
+    "1."
   }
 },
 
@@ -8865,7 +8865,7 @@ GROW_MAZE_SIDE_BUMP_CAGE =
   diagonals =
   {
     "1.",
-    ".1"
+    "1."
   }
 },
 
