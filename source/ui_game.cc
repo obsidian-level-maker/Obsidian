@@ -24,8 +24,6 @@
 #include "m_trans.h"
 #include "main.h"
 
-#define ABORT_COLOR fl_color_cube(3, 1, 1)
-
 //
 // Constructor
 //
@@ -34,24 +32,25 @@ UI_Game::UI_Game(int X, int Y, int W, int H) : Fl_Group(X, Y, W, H)
     box(box_style);
 
     int button_w = W * 0.35;
-    int button_h = kf_h(30);
-    int button_x = X + kf_w(25);
+    int button_h = KromulentHeight(30);
+    int button_x = X + KromulentWidth(25);
 
-    int y_step = kf_h(30);
+    int y_step = KromulentHeight(30);
 
     int cx = X + W * 0.29;
-    int cy = Y + kf_h(4);
+    int cy = Y + KromulentHeight(4);
 
-    heading = new Fl_Box(FL_NO_BOX, X + kf_w(8), cy, W - kf_w(12), kf_h(24), _("Game Settings"));
+    heading = new Fl_Box(FL_NO_BOX, X + KromulentWidth(8), cy, W - KromulentWidth(12), KromulentHeight(24),
+                         _("Game Settings"));
     heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
     heading->labeltype(FL_NORMAL_LABEL);
     heading->labelfont(font_style | FL_BOLD);
     heading->labelsize(header_font_size);
 
-    cy = Y + kf_h(32);
+    cy = Y + KromulentHeight(32);
 
     int cw = W * 0.50;
-    int ch = kf_h(22);
+    int ch = KromulentHeight(22);
 
     engine = new UI_RChoiceMenu(cx, cy, cw, ch, "");
     engine->copy_label(_("Engine: "));
@@ -390,7 +389,7 @@ void UI_Game::SetAbortButton(bool abort)
     if (abort)
     {
         quit->label(_("Cancel"));
-        quit->labelcolor(ABORT_COLOR);
+        quit->labelcolor(fl_color_cube(3, 1, 1));
         quit->labelfont(font_style | FL_BOLD);
 
         quit->callback(stop_callback, this);

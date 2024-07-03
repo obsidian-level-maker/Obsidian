@@ -289,7 +289,7 @@ namespace Doom
 
 void Send_Prog_Nodes(int progress, int num_maps)
 {
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     if (main_win)
     {
         main_win->build_box->Prog_Nodes(progress, num_maps);
@@ -307,7 +307,7 @@ bool BuildNodes(std::string filename)
     }
 
     // Prep AJBSP parameters
-    buildinfo_t build_info;
+    ajbsp::buildinfo_t build_info;
     build_info.fast = true;
     if (StringCompare(current_port, "limit_enforcing") == 0 || StringCompare(current_port, "boom") == 0)
     {
@@ -326,7 +326,7 @@ bool BuildNodes(std::string filename)
         build_info.force_compress = true;
     }
 
-    if (AJBSP_BuildNodes(filename, &build_info) != 0)
+    if (ajbsp::BuildNodes(filename, &build_info) != 0)
     {
         ProgStatus("%s", _("AJBSP Error!"));
         return false;
@@ -461,7 +461,7 @@ bool Doom::StartWAD(const std::string &filename)
 {
     if (!WAD_OpenWrite(filename))
     {
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
         DLG_ShowError(_("Unable to create wad file:\n\n%s"), strerror(errno));
 #else
         printf("%s\n\n%s\n", _("Unable to create wad file:"), strerror(errno));
@@ -693,7 +693,8 @@ int Doom::v094_add_vertex(lua_State *L)
     return 0;
 }
 
-void Doom::AddSector(int f_h, const std::string &f_tex, int c_h, const std::string &c_tex, int light, int special, int tag)
+void Doom::AddSector(int f_h, const std::string &f_tex, int c_h, const std::string &c_tex, int light, int special,
+                     int tag)
 {
     if (!UDMF_mode)
     {
@@ -738,7 +739,8 @@ int Doom::v094_add_sector(lua_State *L)
     return 0;
 }
 
-void Doom::AddSidedef(int sector, const std::string &l_tex, const std::string &m_tex, const std::string &u_tex, int x_offset, int y_offset)
+void Doom::AddSidedef(int sector, const std::string &l_tex, const std::string &m_tex, const std::string &u_tex,
+                      int x_offset, int y_offset)
 {
     if (!UDMF_mode)
     {
@@ -1357,7 +1359,7 @@ bool Doom::game_interface_c::Start(const char *preset)
     }
     else
     {
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
         if (compress_output)
         {
             std::string zip_preset = preset;
@@ -1402,7 +1404,7 @@ bool Doom::game_interface_c::Start(const char *preset)
     {
         map_format  = FORMAT_BINARY;
         build_nodes = true;
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
         if (main_win)
         {
             main_win->build_box->Prog_Init(0, "");
@@ -1423,7 +1425,7 @@ bool Doom::game_interface_c::Start(const char *preset)
         }
         if (!ZIPF_OpenWrite(zip_filename))
         {
-            ProgStatus("%s", _("Error (create PK3/ZIP)"), zip_filename.c_str());
+            ProgStatus("%s", _("Error (create PK3/ZIP)"));
             return false;
         }
     }
@@ -1434,10 +1436,10 @@ bool Doom::game_interface_c::Start(const char *preset)
         return false;
     }
 
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     if (main_win)
     {
-        main_win->build_box->Prog_Init(20, N_("CSG"));
+        main_win->build_box->Prog_Init(20, _("CSG"));
     }
 #endif
 
@@ -1478,7 +1480,7 @@ bool Doom::game_interface_c::Finish(bool build_ok)
     }
     else
     {
-        build_ok = slump_main(filename);
+        build_ok = slump::BuildLevels(filename);
     }
 
     if (UDMF_mode)
@@ -1548,7 +1550,7 @@ void Doom::game_interface_c::Property(std::string key, std::string value)
     if (StringCompare(key, "level_name") == 0)
     {
         level_name = value.c_str();
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     }
     else if (StringCompare(key, "description") == 0 && main_win)
     {
@@ -1614,7 +1616,7 @@ void Doom::game_interface_c::EndLevel()
         FatalError("Script problem: did not set level name!\n");
     }
 
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     if (main_win)
     {
         main_win->build_box->Prog_Step("CSG");

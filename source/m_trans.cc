@@ -33,6 +33,8 @@
 #include <windows.h>
 #endif
 
+#include <stdint.h>
+
 #include <algorithm>
 
 #include "lib_util.h"
@@ -48,7 +50,7 @@
 //
 #include <map>
 
-static std::map<std::string, std::string> trans_store;
+static std::map<std::string, std::string>           trans_store;
 static std::map<std::string, std::string>::iterator trans_iter;
 
 // current Options setting
@@ -57,7 +59,7 @@ std::string t_language = _("AUTO");
 //----------------------------------------------------------------------
 
 // largest string we can load
-#define MAX_TRANS_STRING 65536
+static constexpr int MAX_TRANS_STRING = 65536;
 
 /* Mingw headers don't have latest language and sublanguage codes. */
 #ifdef _WIN32

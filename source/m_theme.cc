@@ -58,7 +58,7 @@ std::string Theme_OutputFilename()
     chooser.filter("Text files\t*.txt");
 
     std::string theme_dir = PathAppend(install_dir, "theme");
-    chooser.directory(theme_dir.c_str());
+    chooser.directory(SanitizePath(theme_dir).c_str());
 
     FL_NORMAL_SIZE = old_font_h;
 
@@ -102,7 +102,7 @@ std::string Theme_AskLoadFilename()
     chooser.filter("Text files\t*.txt");
 
     std::string theme_dir = PathAppend(install_dir, "theme");
-    chooser.directory(theme_dir.c_str());
+    chooser.directory(SanitizePath(theme_dir).c_str());
 
     int result = chooser.show();
 
@@ -1700,17 +1700,17 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label) : Fl_Window(W, H, labe
 
     box(FL_FLAT_BOX);
 
-    int y_step = kf_h(9);
-    int pad    = kf_w(6);
+    int y_step = KromulentHeight(9);
+    int pad    = KromulentWidth(6);
 
-    int cx = x() + kf_w(24);
+    int cx = x() + KromulentWidth(24);
     int cy = y() + (y_step * 2);
 
-    int listwidth = kf_w(160); // [McM]: Some font names was shown truncated.
+    int listwidth = KromulentWidth(160); // [McM]: Some font names was shown truncated.
 
     Fl_Box *heading;
 
-    opt_window_scaling = new UI_CustomMenu(cx + W * .38, cy, listwidth, kf_h(24), "");
+    opt_window_scaling = new UI_CustomMenu(cx + W * .38, cy, listwidth, KromulentHeight(24), "");
     opt_window_scaling->copy_label(_("Window Scaling: "));
     opt_window_scaling->align(FL_ALIGN_LEFT);
     opt_window_scaling->add(_("AUTO|Tiny|Small|Medium|Large|Huge"));
@@ -1723,7 +1723,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label) : Fl_Window(W, H, labe
 
     cy += opt_window_scaling->h() + y_step;
 
-    opt_font_scaling = new Fl_Simple_Counter(cx + W * .38, cy, listwidth, kf_h(24), "");
+    opt_font_scaling = new Fl_Simple_Counter(cx + W * .38, cy, listwidth, KromulentHeight(24), "");
     opt_font_scaling->copy_label(_("Font Size: "));
     opt_font_scaling->align(FL_ALIGN_LEFT);
     opt_font_scaling->step(2);
@@ -1739,7 +1739,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label) : Fl_Window(W, H, labe
 
     cy += opt_font_scaling->h() + y_step;
 
-    opt_font_theme = new UI_CustomMenu(cx + W * .38, cy, listwidth, kf_h(24), "");
+    opt_font_theme = new UI_CustomMenu(cx + W * .38, cy, listwidth, KromulentHeight(24), "");
     opt_font_theme->copy_label(_("Font: "));
     opt_font_theme->align(FL_ALIGN_LEFT);
     opt_font_theme->callback(callback_FontTheme, this);
@@ -1753,7 +1753,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label) : Fl_Window(W, H, labe
 
     cy += opt_font_theme->h() + y_step;
 
-    opt_widget_theme = new UI_CustomMenu(cx + W * .38, cy, listwidth, kf_h(24), "");
+    opt_widget_theme = new UI_CustomMenu(cx + W * .38, cy, listwidth, KromulentHeight(24), "");
     opt_widget_theme->copy_label(_("Widget Theme: "));
     opt_widget_theme->align(FL_ALIGN_LEFT);
     opt_widget_theme->add(_("Default|Gleam|Win95|Plastic|Oxy"));
@@ -1766,7 +1766,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label) : Fl_Window(W, H, labe
 
     cy += opt_widget_theme->h() + y_step;
 
-    opt_box_theme = new UI_CustomMenu(cx + W * .38, cy, listwidth, kf_h(24), "");
+    opt_box_theme = new UI_CustomMenu(cx + W * .38, cy, listwidth, KromulentHeight(24), "");
     opt_box_theme->copy_label(_("Box Theme: "));
     opt_box_theme->align(FL_ALIGN_LEFT);
     opt_box_theme->add(_("Default|Shadow|Embossed|Engraved|Inverted|Raised"));
@@ -1779,7 +1779,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label) : Fl_Window(W, H, labe
 
     cy += opt_box_theme->h() + y_step;
 
-    opt_button_theme = new UI_CustomMenu(cx + W * .38, cy, listwidth, kf_h(24), "");
+    opt_button_theme = new UI_CustomMenu(cx + W * .38, cy, listwidth, KromulentHeight(24), "");
     opt_button_theme->copy_label(_("Button Theme: "));
     opt_button_theme->align(FL_ALIGN_LEFT);
     opt_button_theme->add(_("Default|Raised|Engraved|Embossed|Flat"));
@@ -1792,7 +1792,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label) : Fl_Window(W, H, labe
 
     cy += opt_button_theme->h() + y_step;
 
-    opt_color_scheme = new UI_CustomMenu(cx + W * .38, cy, listwidth, kf_h(24), "");
+    opt_color_scheme = new UI_CustomMenu(cx + W * .38, cy, listwidth, KromulentHeight(24), "");
     opt_color_scheme->copy_label(_("Color Scheme: "));
     opt_color_scheme->align(FL_ALIGN_LEFT);
     opt_color_scheme->add(_("Default|Custom"));
@@ -1805,7 +1805,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label) : Fl_Window(W, H, labe
 
     cy += opt_color_scheme->h() + y_step;
 
-    opt_text_color = new Fl_Button(cx + W * .05, cy, W * .15, kf_h(24), _("Panel Font"));
+    opt_text_color = new Fl_Button(cx + W * .05, cy, W * .15, KromulentHeight(24), _("Panel Font"));
     opt_text_color->visible_focus(0);
     opt_text_color->box(FL_BORDER_BOX);
     opt_text_color->color(fl_rgb_color(text_red, text_green, text_blue));
@@ -1813,8 +1813,8 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label) : Fl_Window(W, H, labe
     opt_text_color->callback(callback_TextColor, this);
     opt_text_color->labelfont(font_style);
 
-    opt_text2_color =
-        new Fl_Button(cx + W * .05 + opt_text_color->w() + (5 * pad), cy, W * .15, kf_h(24), _("Button Font"));
+    opt_text2_color = new Fl_Button(cx + W * .05 + opt_text_color->w() + (5 * pad), cy, W * .15, KromulentHeight(24),
+                                    _("Button Font"));
     opt_text2_color->visible_focus(0);
     opt_text2_color->box(FL_BORDER_BOX);
     opt_text2_color->color(fl_rgb_color(text2_red, text2_green, text2_blue));
@@ -1822,8 +1822,8 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label) : Fl_Window(W, H, labe
     opt_text2_color->callback(callback_Text2Color, this);
     opt_text2_color->labelfont(font_style);
 
-    opt_bg_color =
-        new Fl_Button(cx + W * .05 + (opt_text_color->w() + (5 * pad)) * 2, cy, W * .15, kf_h(24), _("Panels"));
+    opt_bg_color = new Fl_Button(cx + W * .05 + (opt_text_color->w() + (5 * pad)) * 2, cy, W * .15, KromulentHeight(24),
+                                 _("Panels"));
     opt_bg_color->visible_focus(0);
     opt_bg_color->box(FL_BORDER_BOX);
     opt_bg_color->color(fl_rgb_color(bg_red, bg_green, bg_blue));
@@ -1831,8 +1831,8 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label) : Fl_Window(W, H, labe
     opt_bg_color->callback(callback_BgColor, this);
     opt_bg_color->labelfont(font_style);
 
-    opt_bg2_color =
-        new Fl_Button(cx + W * .05 + (opt_text_color->w() + (5 * pad)) * 3, cy, W * .15, kf_h(24), _("Highlights"));
+    opt_bg2_color = new Fl_Button(cx + W * .05 + (opt_text_color->w() + (5 * pad)) * 3, cy, W * .15,
+                                  KromulentHeight(24), _("Highlights"));
     opt_bg2_color->visible_focus(0);
     opt_bg2_color->box(FL_BORDER_BOX);
     opt_bg2_color->color(fl_rgb_color(bg2_red, bg2_green, bg2_blue));
@@ -1842,7 +1842,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label) : Fl_Window(W, H, labe
 
     cy += opt_text_color->h() + y_step * 3;
 
-    opt_button_color = new Fl_Button(cx + W * .05, cy, W * .15, kf_h(24), _("Buttons"));
+    opt_button_color = new Fl_Button(cx + W * .05, cy, W * .15, KromulentHeight(24), _("Buttons"));
     opt_button_color->visible_focus(0);
     opt_button_color->box(FL_BORDER_BOX);
     opt_button_color->color(fl_rgb_color(button_red, button_green, button_blue));
@@ -1851,7 +1851,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label) : Fl_Window(W, H, labe
     opt_button_color->labelfont(font_style);
 
     opt_gradient_color =
-        new Fl_Button(cx + W * .05 + opt_text_color->w() + (5 * pad), cy, W * .15, kf_h(24), _("Gradient"));
+        new Fl_Button(cx + W * .05 + opt_text_color->w() + (5 * pad), cy, W * .15, KromulentHeight(24), _("Gradient"));
     opt_gradient_color->visible_focus(0);
     opt_gradient_color->box(FL_BORDER_BOX);
     opt_gradient_color->color(fl_rgb_color(gradient_red, gradient_green, gradient_blue));
@@ -1859,8 +1859,8 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label) : Fl_Window(W, H, labe
     opt_gradient_color->callback(callback_GradientColor, this);
     opt_gradient_color->labelfont(font_style);
 
-    opt_border_color =
-        new Fl_Button(cx + W * .05 + (opt_text_color->w() + (5 * pad)) * 2, cy, W * .15, kf_h(24), _("Borders"));
+    opt_border_color = new Fl_Button(cx + W * .05 + (opt_text_color->w() + (5 * pad)) * 2, cy, W * .15,
+                                     KromulentHeight(24), _("Borders"));
     opt_border_color->visible_focus(0);
     opt_border_color->box(FL_BORDER_BOX);
     opt_border_color->color(fl_rgb_color(border_red, border_green, border_blue));
@@ -1868,8 +1868,8 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label) : Fl_Window(W, H, labe
     opt_border_color->callback(callback_BorderColor, this);
     opt_border_color->labelfont(font_style);
 
-    opt_gap_color =
-        new Fl_Button(cx + W * .05 + (opt_text_color->w() + (5 * pad)) * 3, cy, W * .15, kf_h(24), _("Gaps"));
+    opt_gap_color = new Fl_Button(cx + W * .05 + (opt_text_color->w() + (5 * pad)) * 3, cy, W * .15,
+                                  KromulentHeight(24), _("Gaps"));
     opt_gap_color->visible_focus(0);
     opt_gap_color->box(FL_BORDER_BOX);
     opt_gap_color->color(fl_rgb_color(gap_red, gap_green, gap_blue));
@@ -1879,7 +1879,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label) : Fl_Window(W, H, labe
 
     cy += opt_text_color->h() + y_step * 3;
 
-    load_defaults = new Fl_Button(cx + W * .05, cy, W * .25, kf_h(24), _("Load Defaults"));
+    load_defaults = new Fl_Button(cx + W * .05, cy, W * .25, KromulentHeight(24), _("Load Defaults"));
     load_defaults->visible_focus(0);
     load_defaults->box(button_style);
     load_defaults->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
@@ -1888,7 +1888,8 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label) : Fl_Window(W, H, labe
     load_defaults->labelfont(font_style);
     load_defaults->labelcolor(FONT2_COLOR);
 
-    load_theme = new Fl_Button(cx + W * .05 + (load_defaults->w() + pad), cy, W * .25, kf_h(24), _("Load Theme"));
+    load_theme =
+        new Fl_Button(cx + W * .05 + (load_defaults->w() + pad), cy, W * .25, KromulentHeight(24), _("Load Theme"));
     load_theme->visible_focus(0);
     load_theme->box(button_style);
     load_theme->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
@@ -1898,7 +1899,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label) : Fl_Window(W, H, labe
     load_theme->labelcolor(FONT2_COLOR);
 
     save_theme = new Fl_Button(cx + W * .05 + (load_defaults->w() + pad) + (load_theme->w() + pad), cy, W * .25,
-                               kf_h(24), _("Save Theme"));
+                               KromulentHeight(24), _("Save Theme"));
     save_theme->visible_focus(0);
     save_theme->box(button_style);
     save_theme->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
@@ -1909,11 +1910,11 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label) : Fl_Window(W, H, labe
 
     //----------------
 
-    int dh = kf_h(60);
+    int dh = KromulentHeight(60);
 
-    int bw = kf_w(60);
-    int bh = kf_h(30);
-    int bx = W - kf_w(40) - bw;
+    int bw = KromulentWidth(60);
+    int bh = KromulentHeight(30);
+    int bx = W - KromulentWidth(40) - bw;
     int by = H - dh / 2 - bh / 2;
 
     Fl_Group *darkish = new Fl_Group(0, H - dh, W, dh);
@@ -1932,8 +1933,8 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label) : Fl_Window(W, H, labe
     darkish->end();
 
     // restart needed warning
-    heading = new Fl_Box(FL_NO_BOX, x() + pad - kf_w(5), H - dh - kf_h(3), W - pad * 2, kf_h(16),
-                         _("Note: Most settings will only affect tabs after a restart."));
+    heading = new Fl_Box(FL_NO_BOX, x() + pad - KromulentWidth(5), H - dh - KromulentHeight(3), W - pad * 2,
+                         KromulentHeight(16), _("Note: Most settings will only affect tabs after a restart."));
     heading->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
     heading->labelsize(small_font_size);
     heading->labelfont(font_style);
@@ -1971,8 +1972,8 @@ int UI_ThemeWin::handle(int event)
 
 void DLG_ThemeEditor(void)
 {
-    int theme_w = kf_w(500);
-    int theme_h = kf_h(450);
+    int theme_w = KromulentWidth(500);
+    int theme_h = KromulentHeight(450);
 
     UI_ThemeWin *theme_window = new UI_ThemeWin(theme_w, theme_h, _("OBSIDIAN Theme Options"));
 

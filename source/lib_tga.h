@@ -21,15 +21,10 @@
 
 #pragma once
 
+#include <stdint.h>
+
 // this layout is compatible with Fl_Color (except for alpha)
-typedef unsigned int rgb_color_t;
-
-#define MAKE_RGBA(r, g, b, a) (((r) << 24) | ((g) << 16) | ((b) << 8) | (a))
-
-#define RGB_RED(col)   ((col >> 24) & 255)
-#define RGB_GREEN(col) ((col >> 16) & 255)
-#define RGB_BLUE(col)  ((col >> 8) & 255)
-#define RGB_ALPHA(col) ((col) & 255)
+typedef uint32_t rgb_color_t;
 
 typedef enum
 {

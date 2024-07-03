@@ -38,6 +38,9 @@
 
 #include "slump.h"
 
+namespace slump
+{
+
 // Global variables
 int     current_level_number = 0;
 int     global_verbosity     = 0;           /* Oooh, a global variable! */
@@ -52,7 +55,7 @@ void machioize(config *c, float amount)
     int    a;
     for (m = c->genus_anchor; m; m = m->next)
     {
-        if (!(m->bits & MONSTER))
+        if (!(m->bits & SLUMP_MONSTER))
             continue;
         for (a = 0; a <= 2; a++)
         {
@@ -63,7 +66,7 @@ void machioize(config *c, float amount)
     }
 }
 
-bool slump_main(const std::string &filename)
+bool BuildLevels(const std::string &filename)
 {
 
     /* A stubby but functional main() */
@@ -77,7 +80,7 @@ bool slump_main(const std::string &filename)
 
     printf("SLUMP version %d.%03d.%02d -- by Sam Trenholme, http://www.samiam.org\n"
            "based on SLIGE by Dave Chess, dmchess@aol.com\n\n",
-           SOURCE_VERSION, SOURCE_SERIAL, SOURCE_PATCHLEVEL);
+           SLUMP_SOURCE_VERSION, SLUMP_SOURCE_SERIAL, SLUMP_SOURCE_PATCHLEVEL);
 
     ThisConfig = get_config(filename);
     if (ThisConfig == NULL)
@@ -142,7 +145,7 @@ bool slump_main(const std::string &filename)
         }
         FreeLevel(&ThisLevel);
     }
-    if (!(ThisConfig->gamemask & (DOOMI_BIT | HERETIC_BIT)))
+    if (!(ThisConfig->gamemask & (SLUMP_DOOMI_BIT | SLUMP_HERETIC_BIT)))
     {
         record_custom_textures(dh, ThisConfig);
         record_custom_flats(dh, ThisConfig, SLUMP_FALSE);
@@ -152,3 +155,5 @@ bool slump_main(const std::string &filename)
     printf("\nDone: wrote %s.\n", ThisConfig->outfile);
     return true;
 }
+
+} // namespace slump

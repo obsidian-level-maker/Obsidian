@@ -33,11 +33,11 @@
 #include "sys_endian.h"
 #include "sys_macro.h"
 
-#define DEBUG_BLOCKMAP 0
-#define DEBUG_REJECT   0
+#define AJBSP_DEBUG_BLOCKMAP 0
+#define AJBSP_DEBUG_REJECT   0
 
-#define DEBUG_LOAD 0
-#define DEBUG_BSP  0
+#define AJBSP_DEBUG_LOAD 0
+#define AJBSP_DEBUG_BSP  0
 
 namespace ajbsp
 {
@@ -60,9 +60,9 @@ static uint16_t *block_dups;
 static int block_compression;
 static int block_overflowed;
 
-#define BLOCK_LIMIT 16000
+static constexpr uint16_t BLOCK_LIMIT = 16000;
 
-#define DUMMY_DUP 0xFFFF
+static constexpr uint16_t DUMMY_DUP = 0xFFFF;
 
 void GetBlockmapBounds(int *x, int *y, int *w, int *h)
 {
@@ -147,12 +147,12 @@ int CheckLinedefInsideBox(int xmin, int ymin, int xmax, int ymax, int x1, int y1
 
 /* ----- create blockmap ------------------------------------ */
 
-#define BK_NUM   0
-#define BK_MAX   1
-#define BK_XOR   2
-#define BK_FIRST 3
+static constexpr uint8_t BK_NUM   = 0;
+static constexpr uint8_t BK_MAX   = 1;
+static constexpr uint8_t BK_XOR   = 2;
+static constexpr uint8_t BK_FIRST = 3;
 
-#define BK_QUANTUM 32
+static constexpr uint8_t BK_QUANTUM = 32;
 
 static void BlockAdd(int blk_num, int line_index)
 {
@@ -266,7 +266,7 @@ static void CreateBlockmap(void)
 {
     block_lines = (uint16_t **)UtilCalloc(block_count * sizeof(uint16_t *));
 
-    for (int i = 0; i < num_linedefs; i++)
+    for (int i = 0; i < (int)lev_linedefs.size(); i++)
     {
         const linedef_t *L = lev_linedefs[i];
 
@@ -504,7 +504,7 @@ static void FindBlockmapLimits(bbox_t *bbox)
     bbox->minx = bbox->miny = SHRT_MAX;
     bbox->maxx = bbox->maxy = SHRT_MIN;
 
-    for (int i = 0; i < num_linedefs; i++)
+    for (int i = 0; i < (int)lev_linedefs.size(); i++)
     {
         const linedef_t *L = lev_linedefs[i];
 
@@ -535,10 +535,10 @@ static void FindBlockmapLimits(bbox_t *bbox)
         }
     }
 
-    if (num_linedefs > 0)
+    if ((int)lev_linedefs.size() > 0)
     {
-        block_mid_x = RoundToInteger(mid_x / (double)num_linedefs);
-        block_mid_y = RoundToInteger(mid_y / (double)num_linedefs);
+        block_mid_x = OBSIDIAN_I_ROUND(mid_x / (double)(int)lev_linedefs.size());
+        block_mid_y = OBSIDIAN_I_ROUND(mid_y / (double)(int)lev_linedefs.size());
     }
 
 #if DEBUG_BLOCKMAP
@@ -566,7 +566,7 @@ void InitBlockmap()
 
 void PutBlockmap()
 {
-    if (!cur_info->do_blockmap || num_linedefs == 0)
+    if (!cur_info->do_blockmap || (int)lev_linedefs.size() == 0)
     {
         // just create an empty blockmap lump
         CreateLevelLump("BLOCKMAP")->Finish();
@@ -617,12 +617,12 @@ static int      rej_total_size; // in bytes
 //
 static void Reject_Init()
 {
-    rej_total_size = (num_sectors * num_sectors + 7) / 8;
+    rej_total_size = ((int)lev_sectors.size() * (int)lev_sectors.size() + 7) / 8;
 
     rej_matrix = new uint8_t[rej_total_size];
     memset(rej_matrix, 0, rej_total_size);
 
-    for (int i = 0; i < num_sectors; i++)
+    for (int i = 0; i < (int)lev_sectors.size(); i++)
     {
         sector_t *sec = lev_sectors[i];
 
@@ -644,7 +644,7 @@ static void Reject_Free()
 //
 static void Reject_GroupSectors()
 {
-    for (int i = 0; i < num_linedefs; i++)
+    for (int i = 0; i < (int)lev_linedefs.size(); i++)
     {
         const linedef_t *line = lev_linedefs[i];
 
@@ -698,7 +698,7 @@ static void Reject_DebugGroups()
 {
     // Note: this routine is destructive to the group numbers
 
-    for (int i = 0; i < num_sectors; i++)
+    for (int i = 0; i < (int)lev_sectors.size(); i++)
     {
         sector_t *sec = lev_sectors[i];
         sector_t *tmp;
@@ -725,7 +725,7 @@ static void Reject_DebugGroups()
 
 static void Reject_ProcessSectors()
 {
-    for (int view = 0; view < num_sectors; view++)
+    for (int view = 0; view < (int)lev_sectors.size(); view++)
     {
         for (int target = 0; target < view; target++)
         {
@@ -737,8 +737,8 @@ static void Reject_ProcessSectors()
 
             // for symmetry, do both sides at same time
 
-            int p1 = view * num_sectors + target;
-            int p2 = target * num_sectors + view;
+            int p1 = view * (int)lev_sectors.size() + target;
+            int p2 = target * (int)lev_sectors.size() + view;
 
             rej_matrix[p1 >> 3] |= (1 << (p1 & 7));
             rej_matrix[p2 >> 3] |= (1 << (p2 & 7));
@@ -761,7 +761,7 @@ static void Reject_WriteLump()
 //
 void PutReject()
 {
-    if (!cur_info->do_reject || num_sectors == 0)
+    if (!cur_info->do_reject || (int)lev_sectors.size() == 0)
     {
         // just create an empty reject lump
         CreateLevelLump("REJECT")->Finish();
@@ -967,7 +967,7 @@ void FreeWallTips()
 
 static vertex_t *SafeLookupVertex(int num)
 {
-    if (num >= num_vertices)
+    if (num >= (int)lev_vertices.size())
         FatalError("illegal vertex number #%d\n", num);
 
     return lev_vertices[num];
@@ -978,7 +978,7 @@ static sector_t *SafeLookupSector(uint16_t num)
     if (num == 0xFFFF)
         return NULL;
 
-    if (num >= num_sectors)
+    if (num >= (int)lev_sectors.size())
         FatalError("illegal sector number #%d\n", (int)num);
 
     return lev_sectors[num];
@@ -990,7 +990,7 @@ static inline sidedef_t *SafeLookupSidedef(uint16_t num)
         return NULL;
 
     // silently ignore illegal sidedef numbers
-    if (num >= (unsigned int)num_sidedefs)
+    if (num >= (unsigned int)(int)lev_sidedefs.size())
         return NULL;
 
     return lev_sidedefs[num];
@@ -1028,7 +1028,7 @@ void GetVertices()
         vert->y = (double)LE_S16(raw.y);
     }
 
-    num_old_vert = num_vertices;
+    num_old_vert = (int)lev_vertices.size();
 }
 
 void GetSectors()
@@ -1315,11 +1315,11 @@ static inline int VanillaSegAngle(const seg_t *seg)
 
 /* ----- UDMF reading routines ------------------------- */
 
-#define UDMF_THING   1
-#define UDMF_VERTEX  2
-#define UDMF_SECTOR  3
-#define UDMF_SIDEDEF 4
-#define UDMF_LINEDEF 5
+static constexpr uint8_t UDMF_THING   = 1;
+static constexpr uint8_t UDMF_VERTEX  = 2;
+static constexpr uint8_t UDMF_SECTOR  = 3;
+static constexpr uint8_t UDMF_SIDEDEF = 4;
+static constexpr uint8_t UDMF_LINEDEF = 5;
 
 void ParseThingField(thing_t *thing, const std::string &key, ajparse::token_kind_e kind, const std::string &value)
 {
@@ -1353,7 +1353,7 @@ void ParseSidedefField(sidedef_t *side, const std::string &key, ajparse::token_k
     {
         int num = ajparse::LEX_Int(value);
 
-        if (num < 0 || num >= num_sectors)
+        if (num < 0 || num >= (int)lev_sectors.size())
             FatalError("illegal sector number #%d\n", (int)num);
 
         side->sector = lev_sectors[num];
@@ -1378,7 +1378,7 @@ void ParseLinedefField(linedef_t *line, const std::string &key, ajparse::token_k
     {
         int num = ajparse::LEX_Int(value);
 
-        if (num < 0 || num >= (int)num_sidedefs)
+        if (num < 0 || num >= (int)(int)lev_sidedefs.size())
             line->right = NULL;
         else
             line->right = lev_sidedefs[num];
@@ -1388,7 +1388,7 @@ void ParseLinedefField(linedef_t *line, const std::string &key, ajparse::token_k
     {
         int num = ajparse::LEX_Int(value);
 
-        if (num < 0 || num >= (int)num_sidedefs)
+        if (num < 0 || num >= (int)(int)lev_sidedefs.size())
             line->left = NULL;
         else
             line->left = lev_sidedefs[num];
@@ -1594,7 +1594,7 @@ void ParseUDMF()
     ParseUDMF_Pass(data, 2);
     ParseUDMF_Pass(data, 3);
 
-    num_old_vert = num_vertices;
+    num_old_vert = (int)lev_vertices.size();
 }
 
 /* ----- writing routines ------------------------------ */
@@ -1614,11 +1614,11 @@ void PutVertices(const char *name, int do_gl)
     int count, i;
 
     // this size is worst-case scenario
-    int size = num_vertices * (int)sizeof(raw_vertex_t);
+    int size = (int)lev_vertices.size() * (int)sizeof(raw_vertex_t);
 
     Lump_c *lump = CreateLevelLump(name, size);
 
-    for (i = 0, count = 0; i < num_vertices; i++)
+    for (i = 0, count = 0; i < (int)lev_vertices.size(); i++)
     {
         raw_vertex_t raw;
 
@@ -1629,8 +1629,8 @@ void PutVertices(const char *name, int do_gl)
             continue;
         }
 
-        raw.x = LE_S16(RoundToInteger(vert->x));
-        raw.y = LE_S16(RoundToInteger(vert->y));
+        raw.x = LE_S16(OBSIDIAN_I_ROUND(vert->x));
+        raw.y = LE_S16(OBSIDIAN_I_ROUND(vert->y));
 
         lump->Write(&raw, sizeof(raw));
 
@@ -1654,7 +1654,7 @@ void PutGLVertices(int do_v5)
     int count, i;
 
     // this size is worst-case scenario
-    int size = 4 + num_vertices * (int)sizeof(raw_v2_vertex_t);
+    int size = 4 + (int)lev_vertices.size() * (int)sizeof(raw_v2_vertex_t);
 
     Lump_c *lump = CreateLevelLump("GL_VERT", size);
 
@@ -1663,7 +1663,7 @@ void PutGLVertices(int do_v5)
     else
         lump->Write(lev_v2_magic, 4);
 
-    for (i = 0, count = 0; i < num_vertices; i++)
+    for (i = 0, count = 0; i < (int)lev_vertices.size(); i++)
     {
         raw_v2_vertex_t raw;
 
@@ -1672,8 +1672,8 @@ void PutGLVertices(int do_v5)
         if (!vert->is_new)
             continue;
 
-        raw.x = LE_S32(RoundToInteger(vert->x * 65536.0));
-        raw.y = LE_S32(RoundToInteger(vert->y * 65536.0));
+        raw.x = LE_S32(OBSIDIAN_I_ROUND(vert->x * 65536.0));
+        raw.y = LE_S32(OBSIDIAN_I_ROUND(vert->y * 65536.0));
 
         lump->Write(&raw, sizeof(raw));
 
@@ -1713,11 +1713,11 @@ static inline uint32_t VertexIndex_XNOD(const vertex_t *v)
 void PutSegs()
 {
     // this size is worst-case scenario
-    int size = num_segs * (int)sizeof(raw_seg_t);
+    int size = (int)lev_segs.size() * (int)sizeof(raw_seg_t);
 
     Lump_c *lump = CreateLevelLump("SEGS", size);
 
-    for (int i = 0; i < num_segs; i++)
+    for (int i = 0; i < (int)lev_segs.size(); i++)
     {
         raw_seg_t raw;
 
@@ -1742,7 +1742,7 @@ void PutSegs()
 
     lump->Finish();
 
-    if (num_segs > 65534)
+    if ((int)lev_segs.size() > 65534)
     {
         LogPrint("Number of segs has overflowed.\n");
         MarkOverflow(LIMIT_SEGS);
@@ -1752,14 +1752,14 @@ void PutSegs()
 void PutGLSegs_V2()
 {
     // should not happen (we should have upgraded to V5)
-    SYS_ASSERT(num_segs <= 65534);
+    SYS_ASSERT((int)lev_segs.size() <= 65534);
 
     // this size is worst-case scenario
-    int size = num_segs * (int)sizeof(raw_gl_seg_t);
+    int size = (int)lev_segs.size() * (int)sizeof(raw_gl_seg_t);
 
     Lump_c *lump = CreateLevelLump("GL_SEGS", size);
 
-    for (int i = 0; i < num_segs; i++)
+    for (int i = 0; i < (int)lev_segs.size(); i++)
     {
         raw_gl_seg_t raw;
 
@@ -1795,11 +1795,11 @@ void PutGLSegs_V2()
 void PutGLSegs_V5()
 {
     // this size is worst-case scenario
-    int size = num_segs * (int)sizeof(raw_v5_seg_t);
+    int size = (int)lev_segs.size() * (int)sizeof(raw_v5_seg_t);
 
     Lump_c *lump = CreateLevelLump("GL_SEGS", size);
 
-    for (int i = 0; i < num_segs; i++)
+    for (int i = 0; i < (int)lev_segs.size(); i++)
     {
         raw_v5_seg_t raw;
 
@@ -1834,11 +1834,11 @@ void PutGLSegs_V5()
 
 void PutSubsecs(const char *name, int do_gl)
 {
-    int size = num_subsecs * (int)sizeof(raw_subsec_t);
+    int size = (int)lev_subsecs.size() * (int)sizeof(raw_subsec_t);
 
     Lump_c *lump = CreateLevelLump(name, size);
 
-    for (int i = 0; i < num_subsecs; i++)
+    for (int i = 0; i < (int)lev_subsecs.size(); i++)
     {
         raw_subsec_t raw;
 
@@ -1854,7 +1854,7 @@ void PutSubsecs(const char *name, int do_gl)
 #endif
     }
 
-    if (num_subsecs > 32767)
+    if ((int)lev_subsecs.size() > 32767)
     {
         LogPrint("Number of %s has overflowed.\n", do_gl ? "GL subsectors" : "subsectors");
         MarkOverflow(do_gl ? LIMIT_GL_SSECT : LIMIT_SSECTORS);
@@ -1865,11 +1865,11 @@ void PutSubsecs(const char *name, int do_gl)
 
 void PutGLSubsecs_V5()
 {
-    int size = num_subsecs * (int)sizeof(raw_v5_subsec_t);
+    int size = (int)lev_subsecs.size() * (int)sizeof(raw_v5_subsec_t);
 
     Lump_c *lump = CreateLevelLump("GL_SSECT", size);
 
-    for (int i = 0; i < num_subsecs; i++)
+    for (int i = 0; i < (int)lev_subsecs.size(); i++)
     {
         raw_v5_subsec_t raw;
 
@@ -1903,10 +1903,10 @@ static void PutOneNode(node_t *node, Lump_c *lump)
     raw_node_t raw;
 
     // note that x/y/dx/dy are always integral in non-UDMF maps
-    raw.x  = LE_S16(RoundToInteger(node->x));
-    raw.y  = LE_S16(RoundToInteger(node->y));
-    raw.dx = LE_S16(RoundToInteger(node->dx));
-    raw.dy = LE_S16(RoundToInteger(node->dy));
+    raw.x  = LE_S16(OBSIDIAN_I_ROUND(node->x));
+    raw.y  = LE_S16(OBSIDIAN_I_ROUND(node->y));
+    raw.dx = LE_S16(OBSIDIAN_I_ROUND(node->dx));
+    raw.dy = LE_S16(OBSIDIAN_I_ROUND(node->dy));
 
     raw.b1.minx = LE_S16(node->r.bounds.minx);
     raw.b1.miny = LE_S16(node->r.bounds.miny);
@@ -1954,10 +1954,10 @@ static void PutOneNode_V5(node_t *node, Lump_c *lump)
 
     raw_v5_node_t raw;
 
-    raw.x  = LE_S16(RoundToInteger(node->x));
-    raw.y  = LE_S16(RoundToInteger(node->y));
-    raw.dx = LE_S16(RoundToInteger(node->dx));
-    raw.dy = LE_S16(RoundToInteger(node->dy));
+    raw.x  = LE_S16(OBSIDIAN_I_ROUND(node->x));
+    raw.y  = LE_S16(OBSIDIAN_I_ROUND(node->y));
+    raw.dx = LE_S16(OBSIDIAN_I_ROUND(node->dx));
+    raw.dy = LE_S16(OBSIDIAN_I_ROUND(node->dy));
 
     raw.b1.minx = LE_S16(node->r.bounds.minx);
     raw.b1.miny = LE_S16(node->r.bounds.miny);
@@ -1998,7 +1998,7 @@ void PutNodes(const char *name, int do_v5, node_t *root)
     int struct_size = do_v5 ? (int)sizeof(raw_v5_node_t) : (int)sizeof(raw_node_t);
 
     // this can be bigger than the actual size, but never smaller
-    int max_size = (num_nodes + 1) * struct_size;
+    int max_size = ((int)lev_nodes.size() + 1) * struct_size;
 
     Lump_c *lump = CreateLevelLump(name, max_size);
 
@@ -2014,8 +2014,8 @@ void PutNodes(const char *name, int do_v5, node_t *root)
 
     lump->Finish();
 
-    if (node_cur_index != num_nodes)
-        FatalError("PutNodes miscounted (%d != %d)\n", node_cur_index, num_nodes);
+    if (node_cur_index != (int)lev_nodes.size())
+        FatalError("PutNodes miscounted (%d != %d)\n", node_cur_index, (int)lev_nodes.size());
 
     if (!do_v5 && node_cur_index > 32767)
     {
@@ -2030,21 +2030,21 @@ void CheckLimits()
     // for sectors, but there may be source ports or tools treating 0xFFFF
     // as a special value, so we are extra cautious here (and in some of
     // the other checks below, like the vertex counts).
-    if (num_sectors > 65535)
+    if ((int)lev_sectors.size() > 65535)
     {
         LogPrint("Map has too many sectors.\n");
         MarkOverflow(LIMIT_SECTORS);
     }
 
     // the sidedef 0xFFFF is reserved to mean "no side" in DOOM map format
-    if (num_sidedefs > 65535)
+    if ((int)lev_sidedefs.size() > 65535)
     {
         LogPrint("Map has too many sidedefs.\n");
         MarkOverflow(LIMIT_SIDEDEFS);
     }
 
     // the linedef 0xFFFF is reserved for minisegs in GL nodes
-    if (num_linedefs > 65535)
+    if ((int)lev_linedefs.size() > 65535)
     {
         LogPrint("Map has too many linedefs.\n");
         MarkOverflow(LIMIT_LINEDEFS);
@@ -2052,7 +2052,8 @@ void CheckLimits()
 
     if (cur_info->gl_nodes && !cur_info->force_v5)
     {
-        if (num_old_vert > 32767 || num_new_vert > 32767 || num_segs > 65535 || num_nodes > 32767)
+        if (num_old_vert > 32767 || num_new_vert > 32767 || (int)lev_segs.size() > 65535 ||
+            (int)lev_nodes.size() > 32767)
         {
             LogPrint("Forcing V5 of GL-Nodes due to overflows.\n");
             lev_force_v5 = true;
@@ -2061,7 +2062,8 @@ void CheckLimits()
 
     if (!cur_info->force_xnod)
     {
-        if (num_old_vert > 32767 || num_new_vert > 32767 || num_segs > 32767 || num_nodes > 32767)
+        if (num_old_vert > 32767 || num_new_vert > 32767 || (int)lev_segs.size() > 32767 ||
+            (int)lev_nodes.size() > 32767)
         {
             LogPrint("Forcing XNOD format nodes due to overflows.\n");
             lev_force_xnod = true;
@@ -2080,7 +2082,7 @@ struct Compare_seg_pred
 void SortSegs()
 {
     // do a sanity check
-    for (int i = 0; i < num_segs; i++)
+    for (int i = 0; i < (int)lev_segs.size(); i++)
         if (lev_segs[i]->index < 0)
             FatalError("Seg %p never reached a subsector!\n", i);
 
@@ -2112,7 +2114,7 @@ void PutZVertices()
     ZLibAppendLump(&orgverts, 4);
     ZLibAppendLump(&newverts, 4);
 
-    for (i = 0, count = 0; i < num_vertices; i++)
+    for (i = 0, count = 0; i < (int)lev_vertices.size(); i++)
     {
         raw_v2_vertex_t raw;
 
@@ -2121,8 +2123,8 @@ void PutZVertices()
         if (!vert->is_new)
             continue;
 
-        raw.x = LE_S32(RoundToInteger(vert->x * 65536.0));
-        raw.y = LE_S32(RoundToInteger(vert->y * 65536.0));
+        raw.x = LE_S32(OBSIDIAN_I_ROUND(vert->x * 65536.0));
+        raw.y = LE_S32(OBSIDIAN_I_ROUND(vert->y * 65536.0));
 
         ZLibAppendLump(&raw, sizeof(raw));
 
@@ -2135,12 +2137,12 @@ void PutZVertices()
 
 void PutZSubsecs()
 {
-    uint32_t raw_num = LE_U32(num_subsecs);
+    uint32_t raw_num = LE_U32((int)lev_subsecs.size());
     ZLibAppendLump(&raw_num, 4);
 
     int cur_seg_index = 0;
 
-    for (int i = 0; i < num_subsecs; i++)
+    for (int i = 0; i < (int)lev_subsecs.size(); i++)
     {
         const subsec_t *sub = lev_subsecs[i];
 
@@ -2161,16 +2163,16 @@ void PutZSubsecs()
             FatalError("PutZSubsecs: miscounted segs in sub %d (%d != %d)\n", i, count, sub->seg_count);
     }
 
-    if (cur_seg_index != num_segs)
-        FatalError("PutZSubsecs miscounted segs (%d != %d)\n", cur_seg_index, num_segs);
+    if (cur_seg_index != (int)lev_segs.size())
+        FatalError("PutZSubsecs miscounted segs (%d != %d)\n", cur_seg_index, (int)lev_segs.size());
 }
 
 void PutZSegs()
 {
-    uint32_t raw_num = LE_U32(num_segs);
+    uint32_t raw_num = LE_U32((int)lev_segs.size());
     ZLibAppendLump(&raw_num, 4);
 
-    for (int i = 0; i < num_segs; i++)
+    for (int i = 0; i < (int)lev_segs.size(); i++)
     {
         const seg_t *seg = lev_segs[i];
 
@@ -2192,10 +2194,10 @@ void PutZSegs()
 
 void PutXGL3Segs()
 {
-    uint32_t raw_num = LE_U32(num_segs);
+    uint32_t raw_num = LE_U32((int)lev_segs.size());
     ZLibAppendLump(&raw_num, 4);
 
-    for (int i = 0; i < num_segs; i++)
+    for (int i = 0; i < (int)lev_segs.size(); i++)
     {
         const seg_t *seg = lev_segs[i];
 
@@ -2232,10 +2234,10 @@ static void PutOneZNode(node_t *node, bool do_xgl3)
 
     if (do_xgl3)
     {
-        uint32_t x  = LE_S32(RoundToInteger(node->x * 65536.0));
-        uint32_t y  = LE_S32(RoundToInteger(node->y * 65536.0));
-        uint32_t dx = LE_S32(RoundToInteger(node->dx * 65536.0));
-        uint32_t dy = LE_S32(RoundToInteger(node->dy * 65536.0));
+        uint32_t x  = LE_S32(OBSIDIAN_I_ROUND(node->x * 65536.0));
+        uint32_t y  = LE_S32(OBSIDIAN_I_ROUND(node->y * 65536.0));
+        uint32_t dx = LE_S32(OBSIDIAN_I_ROUND(node->dx * 65536.0));
+        uint32_t dy = LE_S32(OBSIDIAN_I_ROUND(node->dy * 65536.0));
 
         ZLibAppendLump(&x, 4);
         ZLibAppendLump(&y, 4);
@@ -2244,10 +2246,10 @@ static void PutOneZNode(node_t *node, bool do_xgl3)
     }
     else
     {
-        raw.x  = LE_S16(RoundToInteger(node->x));
-        raw.y  = LE_S16(RoundToInteger(node->y));
-        raw.dx = LE_S16(RoundToInteger(node->dx));
-        raw.dy = LE_S16(RoundToInteger(node->dy));
+        raw.x  = LE_S16(OBSIDIAN_I_ROUND(node->x));
+        raw.y  = LE_S16(OBSIDIAN_I_ROUND(node->y));
+        raw.dx = LE_S16(OBSIDIAN_I_ROUND(node->dx));
+        raw.dy = LE_S16(OBSIDIAN_I_ROUND(node->dy));
 
         ZLibAppendLump(&raw.x, 2);
         ZLibAppendLump(&raw.y, 2);
@@ -2295,7 +2297,7 @@ static void PutOneZNode(node_t *node, bool do_xgl3)
 
 void PutZNodes(node_t *root, bool do_xgl3)
 {
-    uint32_t raw_num = LE_U32(num_nodes);
+    uint32_t raw_num = LE_U32((int)lev_nodes.size());
     ZLibAppendLump(&raw_num, 4);
 
     node_cur_index = 0;
@@ -2303,8 +2305,8 @@ void PutZNodes(node_t *root, bool do_xgl3)
     if (root)
         PutOneZNode(root, do_xgl3);
 
-    if (node_cur_index != num_nodes)
-        FatalError("PutZNodes miscounted (%d != %d)\n", node_cur_index, num_nodes);
+    if (node_cur_index != (int)lev_nodes.size())
+        FatalError("PutZNodes miscounted (%d != %d)\n", node_cur_index, (int)lev_nodes.size());
 }
 
 static int CalcZDoomNodesSize()
@@ -2315,10 +2317,10 @@ static int CalcZDoomNodesSize()
 
     int size = 32; // header + a bit extra
 
-    size += 8 + num_vertices * 8;
-    size += 4 + num_subsecs * 4;
-    size += 4 + num_segs * 11;
-    size += 4 + num_nodes * sizeof(raw_v5_node_t);
+    size += 8 + (int)lev_vertices.size() * 8;
+    size += 4 + (int)lev_subsecs.size() * 4;
+    size += 4 + (int)lev_segs.size() * 11;
+    size += 4 + (int)lev_nodes.size() * sizeof(raw_v5_node_t);
 
     if (cur_info->force_compress)
     {
@@ -2420,8 +2422,8 @@ void LoadLevel()
         PruneVerticesAtEnd();
     }
 
-    LogPrint("    Loaded %d vertices, %d sectors, %d sides, %d lines, %d things\n", num_vertices, num_sectors,
-             num_sidedefs, num_linedefs, num_things);
+    LogPrint("    Loaded %d vertices, %d sectors, %d sides, %d lines, %d things\n", (int)lev_vertices.size(),
+             (int)lev_sectors.size(), (int)lev_sidedefs.size(), (int)lev_linedefs.size(), (int)lev_things.size());
 
     DetectOverlappingVertices();
     DetectOverlappingLines();
@@ -2468,7 +2470,7 @@ void UpdateGLMarker(Lump_c *marker)
         marker->Printf("LEVEL=%s\n", lev_current_name);
     }
 
-    marker->Printf("BUILDER=%s\n", "AJBSP " AJBSP_VERSION);
+    marker->Printf("BUILDER=AJBSP %s\n", AJBSP_VERSION);
 
     marker->Finish();
 }
@@ -2922,8 +2924,8 @@ build_result_e BuildLevel(int lev_idx)
 
     if (ret == BUILD_OK)
     {
-        LogPrint("    Built %d NODES, %d SSECTORS, %d SEGS, %d VERTEXES\n", num_nodes, num_subsecs, num_segs,
-                 num_old_vert + num_new_vert);
+        LogPrint("    Built %d NODES, %d SSECTORS, %d SEGS, %d VERTEXES\n", (int)lev_nodes.size(),
+                 (int)lev_subsecs.size(), (int)lev_segs.size(), num_old_vert + num_new_vert);
 
         if (root_node != NULL)
         {

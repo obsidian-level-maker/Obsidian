@@ -23,7 +23,7 @@
 
 // -------- the macros --------
 
-#ifdef NDEBUG
+#ifdef SYS_NDEBUG
 #define SYS_ASSERT(cond) ((void)0)
 
 #elif defined(__GNUC__)
@@ -37,7 +37,7 @@
 
 #endif // NDEBUG
 
-#ifdef NDEBUG
+#ifdef SYS_NDEBUG
 #define SYS_ASSERT_MSG(cond, arglist) ((void)0)
 #else
 #define SYS_ASSERT_MSG(cond, arglist) ((cond) ? (void)0 : AssertFail arglist)

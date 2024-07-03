@@ -34,12 +34,12 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) : Fl_Group(X, 
 
     status_label = "0";
 
-    int pad = kf_w(12);
+    int pad = KromulentWidth(12);
 
     int mini_w = W * .80;
     int mini_h = mini_w;
 
-    int cy = Y + kf_h(6);
+    int cy = Y + KromulentHeight(6);
 
     /* --- Status Area --- */
 
@@ -67,16 +67,16 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label) : Fl_Group(X, 
     alt_disp->labelsize(header_font_size);
     alt_disp->labelfont(font_style);
 
-    cy += mini_map->h() + kf_h(4);
+    cy += mini_map->h() + KromulentHeight(4);
 
-    status = new Fl_Box(FL_FLAT_BOX, X + pad, cy, W - pad * 2, kf_h(26), _("Ready to go!"));
+    status = new Fl_Box(FL_FLAT_BOX, X + pad, cy, W - pad * 2, KromulentHeight(26), _("Ready to go!"));
     status->box(FL_NO_BOX);
     status->align(FL_ALIGN_INSIDE | FL_ALIGN_LEFT);
     status->labelfont(font_style);
 
-    cy += status->h() + kf_h(4);
+    cy += status->h() + KromulentHeight(4);
 
-    progress = new Fl_Progress(X + pad, cy, W - pad * 2, kf_h(26));
+    progress = new Fl_Progress(X + pad, cy, W - pad * 2, KromulentHeight(26));
     progress->align(FL_ALIGN_INSIDE);
     progress->box(FL_FLAT_BOX);
     progress->color(GAP_COLOR, GAP_COLOR);
@@ -241,7 +241,7 @@ void UI_Build::Prog_AtLevel(int index, int total)
     level_index = index;
     level_total = total;
 
-    Prog_Step(N_("Plan"));
+    Prog_Step(_("Plan"));
 }
 
 void UI_Build::Prog_Step(const char *step_name)

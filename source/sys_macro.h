@@ -24,29 +24,88 @@
 #include <math.h>
 #include <stdint.h>
 
-constexpr const char *BLANKOUT = "                                                                                           "
-                           "                                                                                           "
-                           "                                                                    ";
+constexpr const char *BLANKOUT =
+    "                                                                                           "
+    "                                                                                           "
+    "                                                                    ";
 
 // basic constants
-#define OBSIDIAN_MSG_BUF_LEN  2000
-#define OBSIDIAN_DIST_EPSILON (1.0 / 1024.0)
-#define OBSIDIAN_ANG_EPSILON  (1.0 / 1024.0)
-#define OBSIDIAN_PI           3.14159265358979323846
+constexpr uint16_t OBSIDIAN_MSG_BUF_LEN  = 2000;
+constexpr double   OBSIDIAN_POLY_EPSILON = (1.0 / 128.0);
+constexpr double   OBSIDIAN_DIST_EPSILON = (1.0 / 1024.0);
+constexpr double   OBSIDIAN_ANG_EPSILON  = (1.0 / 1024.0);
+constexpr double   OBSIDIAN_PI           = 3.14159265358979323846;
 
 // basic math
-#define OBSIDIAN_MAX(a, b)           ((a > b) ? a : b)
-#define OBSIDIAN_MIN(a, b)           ((a < b) ? a : b)
-#define OBSIDIAN_ABS(a)              ((a < 0) ? -a : a)
-#define OBSIDIAN_CLAMP(low, x, high) ((x < low) ? low : ((x > high) ? high : x))
-// formerly I_ROUND macros
-inline int RoundToInteger(float x)
-{
-    return (int)roundf(x);
+template <typename A, typename B,
+          typename = std::enable_if_t<std::is_convertible_v<B, A>>>
+constexpr A OBSIDIAN_MAX(A a, B b) {
+    if (a > b) {
+        return a;
+    }
+    return (A)b;
 }
-inline int RoundToInteger(double x)
+
+template <typename A, typename B,
+          typename = std::enable_if_t<std::is_convertible_v<B, A>>>
+constexpr A OBSIDIAN_MIN(A a, B b) {
+    if (a < b) {
+        return a;
+    }
+    return (A)b;
+}
+
+template <typename T>
+constexpr T OBSIDIAN_ABS(T a) {
+    if (a < 0) {
+        return -a;
+    }
+    return a;
+}
+
+template <typename T>
+constexpr int OBSIDIAN_I_ROUND(T x) {
+    if (x < 0) {
+        return x - 0.5;
+    }
+    return x + 0.5;
+}
+
+template <typename T, typename L, typename U,
+          typename = std::enable_if_t<std::conjunction_v<
+              std::is_convertible<L, T>, std::is_convertible<U, T>>>>
+constexpr T OBSIDIAN_CLAMP(L low, T x, U high) {
+    if (x < low) {
+        return (T)low;
+    }
+    if (x > high) {
+        return (T)high;
+    }
+    return x;
+}
+
+// colors
+inline uint32_t OBSIDIAN_MAKE_RGBA(int r, int g, int b, int a)
 {
-    return (int)round(x);
+    return (((r) << 24) | ((g) << 16) | ((b) << 8) | (a));
+}
+
+// these return wider on purpose as some functions will multiply/add/etc beyond 255
+inline uint32_t OBSIDIAN_RGB_RED(uint32_t col)
+{
+    return ((col >> 24) & 255);
+}
+inline uint32_t OBSIDIAN_RGB_GREEN(uint32_t col)
+{
+    return ((col >> 16) & 255);
+}
+inline uint32_t OBSIDIAN_RGB_BLUE(uint32_t col)
+{
+    return ((col >> 8) & 255);
+}
+inline uint32_t OBSIDIAN_RGB_ALPHA(uint32_t col)
+{
+    return ((col) & 255);
 }
 
 //--- editor settings ---

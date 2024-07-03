@@ -18,7 +18,7 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
 #include <FL/Fl_Native_File_Chooser.H>
 #endif
 #include "lib_util.h"
@@ -28,11 +28,11 @@
 #include "minilua.h"
 #include "sys_assert.h"
 
-#define TEMP_GAMEFILE "GAMEMAPS.TMP"
-#define TEMP_MAPTEMP  "MAPTEMP.TMP"
-#define TEMP_HEADFILE "MAPHEAD.TMP"
+static constexpr const char *TEMP_GAMEFILE = "GAMEMAPS.TMP";
+static constexpr const char *TEMP_MAPTEMP  = "MAPTEMP.TMP";
+static constexpr const char *TEMP_HEADFILE = "MAPHEAD.TMP";
 
-#define RLEW_TAG 0xABCD
+static constexpr uint16_t RLEW_TAG = 0xABCD;
 
 static uint8_t no_tile = 48;
 static uint8_t no_obj  = 0;
@@ -52,7 +52,7 @@ static uint16_t *thing_plane;
 
 static std::string level_name;
 
-#define PL_START 2
+static constexpr uint8_t PL_START = 2;
 
 std::string        wolf_output_dir;
 extern std::string BestDirectory();
@@ -410,7 +410,7 @@ bool wolf_game_interface_c::Start(const char *ext)
     }
     else
     {
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
         int old_font_h = FL_NORMAL_SIZE;
         FL_NORMAL_SIZE = 14 + KF;
 
@@ -418,7 +418,7 @@ bool wolf_game_interface_c::Start(const char *ext)
 
         chooser.title(_("Select output directory"));
 
-        chooser.directory(BestDirectory().c_str());
+        chooser.directory(SanitizePath(BestDirectory()).c_str());
 
         chooser.type(Fl_Native_File_Chooser::BROWSE_DIRECTORY);
 
@@ -496,7 +496,7 @@ bool wolf_game_interface_c::Start(const char *ext)
 
     solid_plane = new uint16_t[64 * 64 + 8]; // extra space for compressor
     thing_plane = new uint16_t[64 * 64 + 8];
-#ifndef CONSOLE_ONLY
+#ifndef OBSIDIAN_CONSOLE_ONLY
     if (main_win)
     {
         main_win->build_box->Prog_Init(0, "");

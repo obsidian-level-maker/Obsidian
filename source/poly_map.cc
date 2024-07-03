@@ -18,10 +18,14 @@
 
 #include "lib_parse.h"
 #include "main.h"
-#include "poly_local.h"
+#include "poly_map.h"
+#include "poly_util.h"
+#include "poly_wad.h"
+#include "raw_def.h"
+#include "sys_endian.h"
 #include "sys_macro.h"
 
-#define DEBUG_LOAD 0
+#define AJPOLY_DEBUG_LOAD 0
 
 namespace ajpoly
 {
@@ -53,8 +57,8 @@ int num_polygons;
 int num_wall_tips;
 
 // EDGE line specials for 3D floors
-#define SOLID_EXTRA_FLOOR  400
-#define LIQUID_EXTRA_FLOOR 405
+static constexpr uint16_t SOLID_EXTRA_FLOOR  = 400;
+static constexpr uint16_t LIQUID_EXTRA_FLOOR = 405;
 
 /* ----- UDMF reading routines ------------------------- */
 
@@ -89,11 +93,11 @@ static inline sidedef_c *SafeLookupSidedef(uint16_t num)
     return all_sidedefs[num];
 }
 
-#define UDMF_THING   1
-#define UDMF_VERTEX  2
-#define UDMF_SECTOR  3
-#define UDMF_SIDEDEF 4
-#define UDMF_LINEDEF 5
+static constexpr uint8_t UDMF_THING   = 1;
+static constexpr uint8_t UDMF_VERTEX  = 2;
+static constexpr uint8_t UDMF_SECTOR  = 3;
+static constexpr uint8_t UDMF_SIDEDEF = 4;
+static constexpr uint8_t UDMF_LINEDEF = 5;
 
 void ParseThingField(thing_c *thing, const std::string &key, ajparse::token_kind_e kind, const std::string &value)
 {
@@ -758,7 +762,7 @@ bool LoadVertices()
 
     int count = length / sizeof(raw_vertex_t);
 
-#if DEBUG_LOAD
+#if AJPOLY_DEBUG_LOAD
     LogPrint("LoadVertices: num = %d\n", count);
 #endif
 
@@ -789,7 +793,7 @@ bool LoadSectors()
 
     int count = length / sizeof(raw_sector_t);
 
-#if DEBUG_LOAD
+#if AJPOLY_DEBUG_LOAD
     LogPrint("LoadSectors: num = %d\n", count);
 #endif
 
@@ -832,7 +836,7 @@ bool LoadThings()
 
     int count = length / sizeof(raw_thing_t);
 
-#if DEBUG_LOAD
+#if AJPOLY_DEBUG_LOAD
     LogPrint("LoadThings: num = %d\n", count);
 #endif
 
@@ -867,7 +871,7 @@ bool LoadThingsHexen()
 
     int count = length / sizeof(raw_hexen_thing_t);
 
-#if DEBUG_LOAD
+#if AJPOLY_DEBUG_LOAD
     LogPrint("LoadThingsHexen: num = %d\n", count);
 #endif
 
@@ -909,7 +913,7 @@ bool LoadSidedefs()
 
     int count = length / sizeof(raw_sidedef_t);
 
-#if DEBUG_LOAD
+#if AJPOLY_DEBUG_LOAD
     LogPrint("LoadSidedefs: num = %d\n", count);
 #endif
 
@@ -952,7 +956,7 @@ bool LoadLinedefs()
 
     int count = length / sizeof(raw_linedef_t);
 
-#if DEBUG_LOAD
+#if AJPOLY_DEBUG_LOAD
     LogPrint("LoadLinedefs: num = %d\n", count);
 #endif
 
@@ -972,7 +976,7 @@ bool LoadLinedefs()
         end->ref_count++;
 
         /* check for zero-length line */
-        if ((fabs(start->x - end->x) < OBSIDIAN_DIST_EPSILON) && (fabs(start->y - end->y) < OBSIDIAN_DIST_EPSILON))
+        if ((fabs(start->x - end->x) < OBSIDIAN_POLY_EPSILON) && (fabs(start->y - end->y) < OBSIDIAN_POLY_EPSILON))
         {
             FatalError("Linedef #%d has zero length.\n", i);
         }
@@ -1002,7 +1006,7 @@ bool LoadLinedefsHexen()
 
     int count = length / sizeof(raw_hexen_linedef_t);
 
-#if DEBUG_LOAD
+#if AJPOLY_DEBUG_LOAD
     LogPrint("LoadLinedefsHexen: num = %d\n", count);
 #endif
 
@@ -1022,7 +1026,7 @@ bool LoadLinedefsHexen()
         end->ref_count++;
 
         /* check for zero-length line */
-        if ((fabs(start->x - end->x) < OBSIDIAN_DIST_EPSILON) && (fabs(start->y - end->y) < OBSIDIAN_DIST_EPSILON))
+        if ((fabs(start->x - end->x) < OBSIDIAN_POLY_EPSILON) && (fabs(start->y - end->y) < OBSIDIAN_POLY_EPSILON))
         {
             FatalError("Linedef #%d has zero length.\n", i);
         }
@@ -1599,7 +1603,7 @@ bool CalculateWallTips()
         }
     }
 
-#if DEBUG_LOAD
+#if AJPOLY_DEBUG_LOAD
     for (i = 0; i < num_vertices; i++)
     {
         vertex_c   *vert = Vertex(i);

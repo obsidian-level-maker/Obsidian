@@ -36,8 +36,7 @@ void Trans_UnInit();
 std::string Trans_GetAvailCode(int idx);
 std::string Trans_GetAvailLanguage(int idx);
 
-#define _(s)  ob_gettext(s)
-#define N_(s) (s)
+#define _(s) ob_gettext(s)
 
 const char *ob_gettext(const char *s);
 

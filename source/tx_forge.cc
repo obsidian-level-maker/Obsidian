@@ -40,14 +40,14 @@
 #include "sys_macro.h"
 #include "sys_xoshiro.h"
 
-/* Definitions used to address real and imaginary parts in a two-dimensional
+/* Definitions used to address FORGE_REAL and imaginary parts in a two-dimensional
    array of complex numbers as stored by fourn(). */
 
 static float *mesh_a;
 static int    meshsize;
 
-#define Real(x, y) mesh_a[1 + (((x) * meshsize) + (y)) * 2]
-#define Imag(x, y) mesh_a[2 + (((x) * meshsize) + (y)) * 2]
+#define FORGE_REAL(x, y) mesh_a[1 + (((x) * meshsize) + (y)) * 2]
+#define FORGE_IMAG(x, y) mesh_a[2 + (((x) * meshsize) + (y)) * 2]
 
 static void create_mesh(int width)
 {
@@ -99,7 +99,7 @@ static void fourn(float data[], int nn[], int ndim, int isign)
     float  tempi, tempr;
     double theta, wi, wpi, wpr, wr, wtemp;
 
-#define FN_SWAP(a, b)                                                                                                  \
+#define FORGE_FN_SWAP(a, b)                                                                                            \
     tempr = (a);                                                                                                       \
     (a)   = (b);                                                                                                       \
     (b)   = tempr
@@ -127,8 +127,8 @@ static void fourn(float data[], int nn[], int ndim, int isign)
                     for (i3 = i1; i3 <= ip3; i3 += ip2)
                     {
                         i3rev = i2rev + i3 - i2;
-                        FN_SWAP(data[i3], data[i3rev]);
-                        FN_SWAP(data[i3 + 1], data[i3rev + 1]);
+                        FORGE_FN_SWAP(data[i3], data[i3rev]);
+                        FORGE_FN_SWAP(data[i3 + 1], data[i3rev + 1]);
                     }
                 }
             }
@@ -174,12 +174,12 @@ static void fourn(float data[], int nn[], int ndim, int isign)
         nprev *= n;
     }
 }
-#undef FN_SWAP
+#undef FORGE_FN_SWAP
 
 /*  INITGAUSS  --  Initialize random number generators.  As given in
                    Peitgen & Saupe, page 77.
 */
-#define NRAND 4                     /* Gauss() sample count */
+static constexpr uint8_t NRAND = 4; /* Gauss() sample count */
 
 static double gauss_add, gauss_mul; /* Gaussian random parameters */
 
@@ -240,16 +240,16 @@ static void spectral_synth(int n, double h)
             int i0 = (i == 0) ? 0 : n - i;
             int j0 = (j == 0) ? 0 : n - j;
 
-            Real(i, j)   = rcos;
-            Imag(i, j)   = rsin;
-            Real(i0, j0) = rcos;
-            Imag(i0, j0) = -rsin;
+            FORGE_REAL(i, j)   = rcos;
+            FORGE_IMAG(i, j)   = rsin;
+            FORGE_REAL(i0, j0) = rcos;
+            FORGE_IMAG(i0, j0) = -rsin;
         }
     }
 
-    Imag(n / 2, 0)     = 0;
-    Imag(0, n / 2)     = 0;
-    Imag(n / 2, n / 2) = 0;
+    FORGE_IMAG(n / 2, 0)     = 0;
+    FORGE_IMAG(0, n / 2)     = 0;
+    FORGE_IMAG(n / 2, n / 2) = 0;
 
     for (i = 1; i <= n / 2 - 1; i++)
     {
@@ -261,10 +261,10 @@ static void spectral_synth(int n, double h)
             double rcos = rad * cos(phase);
             double rsin = rad * sin(phase);
 
-            Real(i, n - j) = rcos;
-            Imag(i, n - j) = rsin;
-            Real(n - i, j) = rcos;
-            Imag(n - i, j) = -rsin;
+            FORGE_REAL(i, n - j) = rcos;
+            FORGE_IMAG(i, n - j) = rsin;
+            FORGE_REAL(n - i, j) = rcos;
+            FORGE_IMAG(n - i, j) = -rsin;
         }
     }
 
@@ -288,7 +288,7 @@ static void copy_and_scale(float *buf)
     {
         for (j = 0; j < meshsize; j++)
         {
-            double r = Real(i, j);
+            double r = FORGE_REAL(i, j);
 
             rmin = OBSIDIAN_MIN(rmin, r);
             rmax = OBSIDIAN_MAX(rmax, r);
@@ -308,7 +308,7 @@ static void copy_and_scale(float *buf)
     {
         for (j = 0; j < meshsize; j++)
         {
-            *buf++ = (Real(i, j) - rmin) / range;
+            *buf++ = (FORGE_REAL(i, j) - rmin) / range;
         }
     }
 }

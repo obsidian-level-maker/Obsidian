@@ -44,45 +44,37 @@ static void dialog_close_CB(Fl_Widget *w, void *data)
     dialog_result = 1;
 }
 
-#define BTN_W kf_w(100)
-#define BTN_H kf_h(30)
-
-#define ICON_W kf_w(40)
-#define ICON_H ICON_W
-
-#define FONT_SIZE (18 + KF * 2)
-
 static void DialogShowAndRun(const char *message, const char *title, const char *link_title, const char *link_url)
 {
     dialog_result = 0;
 
     // determine required size
-    int mesg_W = kf_w(480); // NOTE: fl_measure will wrap to this!
+    int mesg_W = KromulentWidth(480); // NOTE: fl_measure will wrap to this!
     int mesg_H = 0;
 
-    fl_font(FL_HELVETICA, FONT_SIZE);
+    fl_font(FL_HELVETICA, (18 + KF * 2));
     fl_measure(message, mesg_W, mesg_H);
 
-    if (mesg_W < kf_w(200))
+    if (mesg_W < KromulentWidth(200))
     {
-        mesg_W = kf_w(200);
+        mesg_W = KromulentWidth(200);
     }
 
-    if (mesg_H < ICON_H)
+    if (mesg_H < KromulentWidth(40))
     {
-        mesg_H = ICON_H;
+        mesg_H = KromulentWidth(40);
     }
 
     // add a little wiggle room
-    mesg_W += kf_w(16);
-    mesg_H += kf_h(8);
+    mesg_W += KromulentWidth(16);
+    mesg_H += KromulentHeight(8);
 
-    int total_W = ICON_W + mesg_W + kf_w(30);
-    int total_H = mesg_H + BTN_H + kf_h(30);
+    int total_W = KromulentWidth(40) + mesg_W + KromulentWidth(30);
+    int total_H = mesg_H + KromulentHeight(30) + KromulentHeight(30);
 
     if (link_title)
     {
-        total_H += FONT_SIZE + kf_h(10);
+        total_H += (18 + KF * 2) + KromulentHeight(10);
     }
 
     // create window...
@@ -93,7 +85,7 @@ static void DialogShowAndRun(const char *message, const char *title, const char 
     dialog->callback((Fl_Callback *)dialog_close_CB);
 
     // create the error icon...
-    Fl_Box *icon = new Fl_Box(kf_w(10), kf_h(15), ICON_W, ICON_H, "!");
+    Fl_Box *icon = new Fl_Box(KromulentWidth(10), KromulentHeight(15), KromulentWidth(40), KromulentWidth(40), "!");
 
     icon->box(FL_OVAL_BOX);
     icon->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
@@ -105,11 +97,11 @@ static void DialogShowAndRun(const char *message, const char *title, const char 
     dialog->add(icon);
 
     // create the message area...
-    Fl_Box *box = new Fl_Box(ICON_W + kf_w(20), kf_h(10), mesg_W, mesg_H, message);
+    Fl_Box *box = new Fl_Box(KromulentWidth(40) + KromulentWidth(20), KromulentHeight(10), mesg_W, mesg_H, message);
 
     box->align(FL_ALIGN_LEFT | FL_ALIGN_TOP | FL_ALIGN_INSIDE | FL_ALIGN_WRAP);
     box->labelfont(font_style);
-    box->labelsize(FONT_SIZE);
+    box->labelsize((18 + KF * 2));
 
     dialog->add(box);
 
@@ -118,21 +110,23 @@ static void DialogShowAndRun(const char *message, const char *title, const char 
     {
         SYS_ASSERT(link_url);
 
-        UI_HyperLink *link = new UI_HyperLink(ICON_W + kf_w(20), kf_h(10) + mesg_H, mesg_W, 24, link_title, link_url);
+        UI_HyperLink *link = new UI_HyperLink(KromulentWidth(40) + KromulentWidth(20), KromulentHeight(10) + mesg_H,
+                                              mesg_W, 24, link_title, link_url);
         link->align(FL_ALIGN_INSIDE | FL_ALIGN_LEFT);
         link->labelfont(font_style);
-        link->labelsize(FONT_SIZE);
+        link->labelsize((18 + KF * 2));
 
         dialog->add(link);
     }
 
     // create button...
-    Fl_Button *button = new Fl_Button(total_W - BTN_W - kf_w(20), total_H - BTN_H - kf_h(12), BTN_W, BTN_H, fl_close);
+    Fl_Button *button = new Fl_Button(total_W - KromulentWidth(100) - KromulentWidth(20),
+                                      total_H - KromulentHeight(30) - KromulentHeight(12), KromulentWidth(100),
+                                      KromulentHeight(30), fl_close);
 
     button->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
     button->callback((Fl_Callback *)dialog_close_CB);
     button->labelfont(font_style);
-    //  button->labelsize(FONT_SIZE - 2);
 
     dialog->add(button);
 
@@ -261,7 +255,7 @@ std::string DLG_OutputFilename(const char *ext, const char *preset)
 
     chooser.filter(kind_buf.c_str());
 
-    auto best_dir = BestDirectory();
+    std::string best_dir = SanitizePath(BestDirectory());
 
     if (preset)
     {
@@ -427,7 +421,7 @@ UI_LogViewer::UI_LogViewer(int W, int H, const char *l) : Fl_Double_Window(W, H,
 
     callback(quit_callback, this);
 
-    int ey = h() - kf_h(65);
+    int ey = h() - KromulentHeight(65);
 
     browser = new Fl_Multi_Browser(0, 0, w(), ey);
     browser->color(WINDOW_BG);
@@ -446,16 +440,16 @@ UI_LogViewer::UI_LogViewer(int W, int H, const char *l) : Fl_Double_Window(W, H,
 
     resizable(browser);
 
-    int button_w = kf_w(80);
-    int button_h = kf_h(35);
+    int button_w = KromulentWidth(80);
+    int button_h = KromulentHeight(35);
 
-    int button_y = ey + (kf_h(65) - button_h) / 2;
+    int button_y = ey + (KromulentHeight(65) - button_h) / 2;
 
     {
         Fl_Group *o = new Fl_Group(0, ey, w(), h() - ey);
         o->box(FL_FLAT_BOX);
 
-        int bx  = w() - button_w - kf_w(25);
+        int bx  = w() - button_w - KromulentWidth(25);
         int bx2 = bx;
         {
             Fl_Button *but = new Fl_Button(bx, button_y, button_w, button_h, fl_close);
@@ -467,7 +461,7 @@ UI_LogViewer::UI_LogViewer(int W, int H, const char *l) : Fl_Double_Window(W, H,
             but->callback(quit_callback, this);
         }
 
-        bx = kf_w(25);
+        bx = KromulentWidth(25);
         {
             Fl_Button *but = new Fl_Button(bx, button_y, button_w, button_h, _("Save"));
             but->box(button_style);
@@ -478,7 +472,7 @@ UI_LogViewer::UI_LogViewer(int W, int H, const char *l) : Fl_Double_Window(W, H,
             but->labelfont(font_style);
         }
 
-        bx += kf_w(140);
+        bx += KromulentWidth(140);
         {
             copy_but = new Fl_Button(bx, button_y, button_w, button_h, _("Copy"));
             copy_but->box(button_style);
@@ -639,7 +633,7 @@ tryagain:;
 
     if (!last_directory.empty())
     {
-        chooser.directory(last_directory.c_str());
+        chooser.directory(SanitizePath(last_directory).c_str());
     }
 
     switch (chooser.show())
@@ -735,7 +729,7 @@ UI_GlossaryViewer::UI_GlossaryViewer(int W, int H, const char *l) : Fl_Double_Wi
 
     callback(quit_callback, this);
 
-    int ey = h() - kf_h(65);
+    int ey = h() - KromulentHeight(65);
 
     browser = new Fl_Browser(0, 0, w(), ey);
     browser->color(WINDOW_BG);
@@ -748,16 +742,16 @@ UI_GlossaryViewer::UI_GlossaryViewer(int W, int H, const char *l) : Fl_Double_Wi
 
     resizable(browser);
 
-    int button_w = kf_w(80);
-    int button_h = kf_h(35);
+    int button_w = KromulentWidth(80);
+    int button_h = KromulentHeight(35);
 
-    int button_y = ey + (kf_h(65) - button_h) / 2;
+    int button_y = ey + (KromulentHeight(65) - button_h) / 2;
 
     {
         Fl_Group *o = new Fl_Group(0, ey, w(), h() - ey);
         o->box(FL_FLAT_BOX);
 
-        int bx  = w() - button_w - kf_w(25);
+        int bx  = w() - button_w - KromulentWidth(25);
         int bx2 = bx;
         {
             Fl_Button *but = new Fl_Button(bx, button_y, button_w, button_h, fl_close);
@@ -839,8 +833,8 @@ void UI_GlossaryViewer::quit_callback(Fl_Widget *w, void *data)
 
 void DLG_ViewLogs(void)
 {
-    int log_w = kf_w(560);
-    int log_h = kf_h(380);
+    int log_w = KromulentWidth(560);
+    int log_h = KromulentHeight(380);
 
     UI_LogViewer *log_viewer = new UI_LogViewer(log_w, log_h, _("OBSIDIAN Log Viewer"));
 
@@ -860,8 +854,8 @@ void DLG_ViewLogs(void)
 
 void DLG_ViewGlossary(void)
 {
-    int gloss_w = kf_w(640);
-    int gloss_h = kf_h(480);
+    int gloss_w = KromulentWidth(640);
+    int gloss_h = KromulentHeight(480);
 
     UI_GlossaryViewer *gloss_viewer = new UI_GlossaryViewer(gloss_w, gloss_h, _("OBSIDIAN Glossary Viewer"));
 

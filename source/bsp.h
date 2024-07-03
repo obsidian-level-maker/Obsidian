@@ -20,17 +20,22 @@
 
 #pragma once
 
+#include <stdint.h>
+
 #include <string>
 
-#define AJBSP_VERSION "1.05"
+namespace ajbsp
+{
+
+constexpr const char *AJBSP_VERSION = "1.05";
 
 //
 // Node Build Information Structure
 //
 
-#define SPLIT_COST_MIN     1
-#define SPLIT_COST_DEFAULT 11
-#define SPLIT_COST_MAX     32
+constexpr uint8_t SPLIT_COST_MIN     = 1;
+constexpr uint8_t SPLIT_COST_DEFAULT = 11;
+constexpr uint8_t SPLIT_COST_MAX     = 32;
 
 class buildinfo_t
 {
@@ -87,10 +92,7 @@ typedef enum
     BUILD_LumpOverflow
 } build_result_e;
 
-int AJBSP_BuildNodes(const std::string &filename, buildinfo_t *build_info);
-
-namespace ajbsp
-{
+int BuildNodes(const std::string &filename, buildinfo_t *build_info);
 
 // set the build information.  must be done before anything else.
 void SetInfo(buildinfo_t *info);

@@ -161,8 +161,8 @@ void snag_c::CalcAlongs()
     a1 /= SNAG_EPSILON;
     a2 /= SNAG_EPSILON;
 
-    q_along1 = RoundToInteger(a1);
-    q_along2 = RoundToInteger(a2);
+    q_along1 = OBSIDIAN_I_ROUND(a1);
+    q_along2 = OBSIDIAN_I_ROUND(a2);
 }
 
 bool snag_c::SameSides() const
@@ -723,8 +723,8 @@ bsp_node_c *bsp_root;
 
 static void QuantizeVert(const brush_vert_c *V, int *qx, int *qy)
 {
-    *qx = RoundToInteger(V->x / QUANTIZE_GRID);
-    *qy = RoundToInteger(V->y / QUANTIZE_GRID);
+    *qx = OBSIDIAN_I_ROUND(V->x / QUANTIZE_GRID);
+    *qy = OBSIDIAN_I_ROUND(V->y / QUANTIZE_GRID);
 }
 
 static bool OnSameLine(double x1, double y1, double x2, double y2, const snag_c *S, double DIST)
@@ -2232,7 +2232,7 @@ void CSG_BSP_Free()
 //   TESTING GOODIES
 //------------------------------------------------------------------------
 
-#ifdef DEBUG_CSG_BSP
+#ifdef CSG_DEBUG_BSP
 
 #include "g_doom.h"
 
@@ -2246,8 +2246,8 @@ static int TestVertex(snag_c *S, int which)
     double x = which ? S->x2 : S->x1;
     double y = which ? S->y2 : S->y1;
 
-    int ix = RoundToInteger(x + RX * 0);
-    int iy = RoundToInteger(y + RY * 0);
+    int ix = OBSIDIAN_I_ROUND(x + RX * 0);
+    int iy = OBSIDIAN_I_ROUND(y + RY * 0);
 
     int id = (iy << 16) + ix;
 
@@ -2309,7 +2309,7 @@ void CSG_TestRegions_Doom()
         {
             csg_entity_c *E = R->entities[k];
 
-            DM_AddThing(RoundToInteger(E->x), RoundToInteger(E->y), 0, 11, sec_id, 7, 0, 0, NULL);
+            DM_AddThing(OBSIDIAN_I_ROUND(E->x), OBSIDIAN_I_ROUND(E->y), 0, 11, sec_id, 7, 0, 0, NULL);
         }
 
         for (k = 0; k < R->snags.size(); k++)

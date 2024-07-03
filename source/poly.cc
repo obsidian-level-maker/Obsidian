@@ -19,11 +19,13 @@
 #include <stddef.h>
 
 #include "lib_util.h"
-#include "poly_local.h"
+#include "poly.h"
+#include "poly_map.h"
+#include "poly_util.h"
 #include "sys_debug.h"
 #include "sys_macro.h"
 
-#define DEBUG_POLY 0
+#define AJPOLY_DEBUG_POLY 0
 
 namespace ajpoly
 {
@@ -99,7 +101,7 @@ void InsertEdge(edge_c **list_ptr, edge_c *E)
     (*list_ptr) = E;
 }
 
-#if DEBUG_POLY
+#if AJPOLY_DEBUG_POLY
 void DumpEdges(edge_c *edge_list)
 {
     for (edge_c *cur = edge_list; cur; cur = cur->next)
@@ -154,7 +156,7 @@ void edge_c::CopyInfo(const edge_c *other)
 
 edge_c *SplitEdge(edge_c *old_edge, double x, double y)
 {
-#if DEBUG_POLY
+#if AJPOLY_DEBUG_POLY
     LogPrint("Splitting Edge #%d (line #%d) at (%1.1f,%1.1f)\n", old_edge->index,
              old_edge->linedef ? old_edge->linedef->index : -1, x, y);
 #endif
@@ -171,7 +173,7 @@ edge_c *SplitEdge(edge_c *old_edge, double x, double y)
     new_edge->start = vert;
     new_edge->Recompute();
 
-#if DEBUG_POLY
+#if AJPOLY_DEBUG_POLY
     LogPrint("Splitting Vertex is %04X at (%1.1f,%1.1f)\n", vert->index, vert->x, vert->y);
 #endif
 
@@ -179,7 +181,7 @@ edge_c *SplitEdge(edge_c *old_edge, double x, double y)
 
     if (old_edge->partner)
     {
-#if DEBUG_POLY
+#if AJPOLY_DEBUG_POLY
         LogPrint("Splitting partner #%d\n", old_edge->partner->index);
 #endif
 
@@ -302,24 +304,6 @@ int EvalPartition(edge_c *part, edge_c *edge_list)
 
     double qnty;
 
-#define ADD_LEFT()                                                                                                     \
-    do                                                                                                                 \
-    {                                                                                                                  \
-        if (check->linedef)                                                                                            \
-            real_left += 1;                                                                                            \
-        else                                                                                                           \
-            mini_left += 1;                                                                                            \
-    } while (0)
-
-#define ADD_RIGHT()                                                                                                    \
-    do                                                                                                                 \
-    {                                                                                                                  \
-        if (check->linedef)                                                                                            \
-            real_right += 1;                                                                                           \
-        else                                                                                                           \
-            mini_right += 1;                                                                                           \
-    } while (0)
-
     /* check partition against all the edges */
 
     for (edge_c *check = edge_list; check; check = check->next)
@@ -336,19 +320,25 @@ int EvalPartition(edge_c *part, edge_c *edge_list)
         double fa = fabs(a);
         double fb = fabs(b);
 
-        int a_side = (fa <= OBSIDIAN_DIST_EPSILON) ? 0 : (a < 0) ? -1 : +1;
-        int b_side = (fb <= OBSIDIAN_DIST_EPSILON) ? 0 : (b < 0) ? -1 : +1;
+        int a_side = (fa <= OBSIDIAN_POLY_EPSILON) ? 0 : (a < 0) ? -1 : +1;
+        int b_side = (fb <= OBSIDIAN_POLY_EPSILON) ? 0 : (b < 0) ? -1 : +1;
 
         // check for being on the same line
         if (a_side == 0 && b_side == 0)
         {
             if (check->pdx * part->pdx + check->pdy * part->pdy < 0)
             {
-                ADD_LEFT();
+                if (check->linedef)
+                    real_left += 1;
+                else
+                    mini_left += 1;
             }
             else
             {
-                ADD_RIGHT();
+                if (check->linedef)
+                    real_right += 1;
+                else
+                    mini_right += 1;
             }
 
             continue;
@@ -379,14 +369,20 @@ int EvalPartition(edge_c *part, edge_c *edge_list)
         // check for right side
         if (a_side >= 0 && b_side >= 0)
         {
-            ADD_RIGHT();
+            if (check->linedef)
+                real_right += 1;
+            else
+                mini_right += 1;
             continue;
         }
 
         // check for left side
         if (a_side <= 0 && b_side <= 0)
         {
-            ADD_LEFT();
+            if (check->linedef)
+                real_left += 1;
+            else
+                mini_left += 1;
             continue;
         }
 
@@ -401,7 +397,7 @@ int EvalPartition(edge_c *part, edge_c *edge_list)
     // make sure there is at least one linedef on each side
     if (real_left == 0 || real_right == 0)
     {
-#if DEBUG_POLY
+#if AJPOLY_DEBUG_POLY
         LogPrint("Eval : No linedefs on %s%sside\n", real_left ? "" : "left ", real_right ? "" : "right ");
 #endif
 
@@ -419,7 +415,7 @@ int EvalPartition(edge_c *part, edge_c *edge_list)
         cost += 60;
     }
 
-#if DEBUG_POLY
+#if AJPOLY_DEBUG_POLY
     LogPrint("Eval %p: splits=%d near_miss=%d left=%d+%d right=%d+%d "
              "cost=%d.%02d\n",
              part, splits, near_miss, real_left, mini_left, real_right, mini_right, cost / 100, cost % 100);
@@ -441,8 +437,8 @@ void DivideAnEdge(edge_c *cur, edge_c *part, edge_c **left_list, edge_c **right_
         a = b = 0;
     }
 
-    int a_side = (fabs(a) <= OBSIDIAN_DIST_EPSILON) ? 0 : (a < 0) ? -1 : +1;
-    int b_side = (fabs(b) <= OBSIDIAN_DIST_EPSILON) ? 0 : (b < 0) ? -1 : +1;
+    int a_side = (fabs(a) <= OBSIDIAN_POLY_EPSILON) ? 0 : (a < 0) ? -1 : +1;
+    int b_side = (fabs(b) <= OBSIDIAN_POLY_EPSILON) ? 0 : (b < 0) ? -1 : +1;
 
     // check for being on the same line
     if (a_side == 0 && b_side == 0)
@@ -526,7 +522,7 @@ edge_c *ChoosePartition(edge_c *edge_list, int depth)
 
     int best_cost = 1 << 30;
 
-#if DEBUG_POLY
+#if AJPOLY_DEBUG_POLY
     LogPrint("ChoosePartition: BEGUN (depth %d)\n", depth);
 #endif
 
@@ -540,7 +536,7 @@ edge_c *ChoosePartition(edge_c *edge_list, int depth)
 
         int cost = EvalPartition(part, edge_list);
 
-#if DEBUG_POLY
+#if AJPOLY_DEBUG_POLY
         LogPrint("ChoosePartition: EDGE #%d -> cost:%d  | sector:%d  (%1.1f %1.1f) "
                  "-> (%1.1f %1.1f)\n",
                  part->index, cost, part->sector->index, part->start->x, part->start->y, part->end->x, part->end->y);
@@ -556,7 +552,7 @@ edge_c *ChoosePartition(edge_c *edge_list, int depth)
         best_cost = cost;
     }
 
-#if DEBUG_POLY
+#if AJPOLY_DEBUG_POLY
     if (!best)
     {
         LogPrint("ChoosePartition: NO BEST FOUND\n");
@@ -594,7 +590,7 @@ void EdgesAlongPartition(edge_c *part, edge_c **left_list, edge_c **right_list, 
         return;
     }
 
-#if DEBUG_POLY
+#if AJPOLY_DEBUG_POLY
     LogPrint("CUT LIST:\n");
     LogPrint("PARTITION: (%1.1f %1.1f) += (%1.1f %1.1f)\n", part->psx, part->psy, part->pdx, part->pdy);
 
@@ -628,7 +624,7 @@ void EdgesAlongPartition(edge_c *part, edge_c **left_list, edge_c **right_list, 
 
         // merge the two intersections into one
 
-#if DEBUG_POLY
+#if AJPOLY_DEBUG_POLY
         LogPrint("Merging cut (%1.0f,%1.0f) [%d/%d] with %p (%1.0f,%1.0f) [%d/%d]\n", cur->vertex->x, cur->vertex->y,
                  cur->before, cur->after, next->vertex, next->vertex->x, next->vertex->y, next->before, next->after);
 #endif
@@ -643,7 +639,7 @@ void EdgesAlongPartition(edge_c *part, edge_c **left_list, edge_c **right_list, 
             cur->after = next->after;
         }
 
-#if DEBUG_POLY
+#if AJPOLY_DEBUG_POLY
         LogPrint("---> merged (%1.0f,%1.0f) [%d/%d]\n", cur->vertex->x, cur->vertex->y, cur->before, cur->after);
 #endif
 
@@ -704,7 +700,7 @@ void EdgesAlongPartition(edge_c *part, edge_c **left_list, edge_c **right_list, 
         InsertEdge(right_list, edge);
         InsertEdge(left_list, buddy);
 
-#if DEBUG_POLY
+#if AJPOLY_DEBUG_POLY
         LogPrint("EdgesAlongPartition: %p RIGHT  sector %d  (%1.1f %1.1f) -> (%1.1f "
                  "%1.1f)\n",
                  edge, edge->sector ? edge->sector->index : -1, edge->start->x, edge->start->y, edge->end->x,
@@ -790,7 +786,7 @@ void polygon_c::ClockwiseOrder()
     int i;
     int total = 0;
 
-#if DEBUG_POLY
+#if AJPOLY_DEBUG_POLY
     LogPrint("Polygon: Clockwising #%d (sector #%d)\n", index, sector->index);
 #endif
 
@@ -890,7 +886,7 @@ polygon_c *CreatePolygon(edge_c *edge_list)
 
     poly->CalcMiddle();
 
-#if DEBUG_POLY
+#if AJPOLY_DEBUG_POLY
     LogPrint("Created Polygon #%d @ (%1.1f %1.1f)\n", poly->index, poly->mid_x, poly->mid_y);
     DumpEdges(edge_list);
 #endif
@@ -900,7 +896,7 @@ polygon_c *CreatePolygon(edge_c *edge_list)
 
 bool RecursiveDivideEdges(edge_c *edge_list, int depth)
 {
-#if DEBUG_POLY
+#if AJPOLY_DEBUG_POLY
     LogPrint("Build: BEGUN @ %d\n", depth);
 
     DumpEdges(edge_list);
@@ -912,14 +908,14 @@ bool RecursiveDivideEdges(edge_c *edge_list, int depth)
 
     if (!part)
     {
-#if DEBUG_POLY
+#if AJPOLY_DEBUG_POLY
         LogPrint("Build: CONVEX\n");
 #endif
         CreatePolygon(edge_list);
         return true; // OK
     }
 
-#if DEBUG_POLY
+#if AJPOLY_DEBUG_POLY
     LogPrint("Build: PARTITION %p (%1.0f,%1.0f) -> (%1.0f,%1.0f)\n", part, part->start->x, part->start->y, part->end->x,
              part->end->y);
 #endif
@@ -946,7 +942,7 @@ bool RecursiveDivideEdges(edge_c *edge_list, int depth)
 
     EdgesAlongPartition(part, &lefts, &rights, cut_list);
 
-#if DEBUG_POLY
+#if AJPOLY_DEBUG_POLY
     LogPrint("Build: Going LEFT\n");
 #endif
 
@@ -955,7 +951,7 @@ bool RecursiveDivideEdges(edge_c *edge_list, int depth)
         return false;
     }
 
-#if DEBUG_POLY
+#if AJPOLY_DEBUG_POLY
     LogPrint("Build: Going RIGHT\n");
 #endif
 
@@ -964,7 +960,7 @@ bool RecursiveDivideEdges(edge_c *edge_list, int depth)
         return false;
     }
 
-#if DEBUG_POLY
+#if AJPOLY_DEBUG_POLY
     LogPrint("Build: DONE\n");
 #endif
 
@@ -998,7 +994,7 @@ bool ProcessSectors()
             continue;
         }
 
-#if DEBUG_POLY
+#if AJPOLY_DEBUG_POLY
         LogPrint("-------------------------------\n");
         LogPrint("Processing Sector #%d\n", i);
         LogPrint("-------------------------------\n");

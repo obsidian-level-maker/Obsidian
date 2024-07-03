@@ -40,6 +40,9 @@
 
 extern const char *ob_gettext(const char *s);
 
+namespace slump
+{
+
 // Shim functions to replace old SLUMP RNG
 int roll(int n)
 {
@@ -147,17 +150,17 @@ short new_key(level *l)
         if ((!l->used_red) && rollpercent(33))
         { // still using the 'red' check for green key here
             l->used_red = SLUMP_TRUE;
-            return ID_HERETICGREENKEY;
+            return SLUMP_ID_HERETICGREENKEY;
         }
         else if ((!l->used_blue) && rollpercent(50))
         {
             l->used_blue = SLUMP_TRUE;
-            return ID_HERETICBLUEKEY;
+            return SLUMP_ID_HERETICBLUEKEY;
         }
         else if ((!l->used_yellow))
         {
             l->used_yellow = SLUMP_TRUE;
-            return ID_HERETICYELLOWKEY;
+            return SLUMP_ID_HERETICYELLOWKEY;
         }
         else
             return 0;
@@ -167,17 +170,17 @@ short new_key(level *l)
         if ((!l->used_red) && rollpercent(33))
         {
             l->used_red = SLUMP_TRUE;
-            return (l->skullkeys) ? ID_REDKEY : ID_REDCARD;
+            return (l->skullkeys) ? SLUMP_ID_REDKEY : SLUMP_ID_REDCARD;
         }
         else if ((!l->used_blue) && rollpercent(50))
         {
             l->used_blue = SLUMP_TRUE;
-            return (l->skullkeys) ? ID_BLUEKEY : ID_BLUECARD;
+            return (l->skullkeys) ? SLUMP_ID_BLUEKEY : SLUMP_ID_BLUECARD;
         }
         else if ((!l->used_yellow))
         {
             l->used_yellow = SLUMP_TRUE;
-            return (l->skullkeys) ? ID_YELLOWKEY : ID_YELLOWCARD;
+            return (l->skullkeys) ? SLUMP_ID_YELLOWKEY : SLUMP_ID_YELLOWCARD;
         }
         else
             return 0;
@@ -256,7 +259,7 @@ linedef *new_linedef(level *l, vertex *from, vertex *to)
     answer->from           = from;
     answer->to             = to;
     answer->flags          = 0;
-    answer->type           = LINEDEF_NORMAL;
+    answer->type           = SLUMP_LINEDEF_NORMAL;
     answer->tag            = 0;
     answer->left           = NULL;
     answer->right          = NULL;
@@ -274,7 +277,7 @@ sector *new_sector(level *l, short fh, short ch, flat *ft, flat *ct)
     sector *answer;
 
     if ((ft == NULL) || (ct == NULL))
-        announce(WARNING, "Null flat in new_sector.");
+        announce(SLUMP_WARNING, "Null flat in new_sector.");
     answer                 = (sector *)malloc(sizeof(*answer));
     answer->floor_height   = fh;
     answer->ceiling_height = ch;
@@ -334,16 +337,16 @@ thing *new_thing(level *l, int x, int y, short angle, short type, short options,
 {
     thing *answer;
 
-    if (type == ID_ELEC)
-        announce(VERBOSE, "Tech column");
-    if (type == ID_CBRA)
-        announce(VERBOSE, "Candelabra");
-    if (type == ID_LAMP2)
-        announce(VERBOSE, "Lamp2");
-    if (type == ID_TLAMP2)
-        announce(VERBOSE, "Tlamp2");
-    if (type == ID_LAMP)
-        announce(VERBOSE, "Lamp");
+    if (type == SLUMP_ID_ELEC)
+        announce(SLUMP_VERBOSE, "Tech column");
+    if (type == SLUMP_ID_CBRA)
+        announce(SLUMP_VERBOSE, "Candelabra");
+    if (type == SLUMP_ID_LAMP2)
+        announce(SLUMP_VERBOSE, "Lamp2");
+    if (type == SLUMP_ID_TLAMP2)
+        announce(SLUMP_VERBOSE, "Tlamp2");
+    if (type == SLUMP_ID_LAMP)
+        announce(SLUMP_VERBOSE, "Lamp");
     answer          = (thing *)malloc(sizeof(*answer));
     answer->x       = (short)x;
     answer->y       = (short)y;
@@ -363,7 +366,7 @@ arena *new_arena(level *l, config *c)
 
     answer->boss_count = 1; /* Default */
 
-    if (c->gamemask & HERETIC_BIT)
+    if (c->gamemask & SLUMP_HERETIC_BIT)
     {
         if (c->mission == 8)
         { /* Do episode-ends canonically */
@@ -413,7 +416,7 @@ arena *new_arena(level *l, config *c)
         else if (c->map == 7)
         {
             bossno = 3;
-#ifdef USING_SPAWNER
+#ifdef SLUMP_USING_SPAWNER
         }
         else if (c->map == 30)
         { /* Including the end of DooM II, eventually */
@@ -436,176 +439,176 @@ arena *new_arena(level *l, config *c)
     switch (bossno)
     {
     case 0: /* Baron Brothers */
-        if (c->gamemask & HERETIC_BIT)
+        if (c->gamemask & SLUMP_HERETIC_BIT)
         {
-            answer->boss       = find_genus(c, ID_IRONLICH);
+            answer->boss       = find_genus(c, SLUMP_ID_IRONLICH);
             answer->boss_count = 3;
             if (rollpercent(75))
             {
-                answer->weapon = find_genus(c, ID_PHOENIXROD);
-                answer->ammo   = find_genus(c, ID_INFERNOORB);
+                answer->weapon = find_genus(c, SLUMP_ID_PHOENIXROD);
+                answer->ammo   = find_genus(c, SLUMP_ID_INFERNOORB);
             }
             else
             {
-                answer->weapon = find_genus(c, ID_DRAGONCLAW);
-                answer->ammo   = find_genus(c, ID_ENERGYORB);
+                answer->weapon = find_genus(c, SLUMP_ID_DRAGONCLAW);
+                answer->ammo   = find_genus(c, SLUMP_ID_ENERGYORB);
             }
         }
         else
         {
-            answer->boss       = find_genus(c, ID_BARON);
+            answer->boss       = find_genus(c, SLUMP_ID_BARON);
             answer->boss_count = 2;
             if (rollpercent(75))
             {
-                answer->weapon = find_genus(c, ID_LAUNCHER);
-                answer->ammo   = find_genus(c, ID_ROCKBOX);
+                answer->weapon = find_genus(c, SLUMP_ID_LAUNCHER);
+                answer->ammo   = find_genus(c, SLUMP_ID_ROCKBOX);
             }
             else
             {
-                answer->weapon = find_genus(c, ID_CHAINGUN);
-                answer->ammo   = find_genus(c, ID_BULBOX);
+                answer->weapon = find_genus(c, SLUMP_ID_CHAINGUN);
+                answer->ammo   = find_genus(c, SLUMP_ID_BULBOX);
             }
         }
         break;
     case 1: /* Cybie */
-        if (c->gamemask & HERETIC_BIT)
+        if (c->gamemask & SLUMP_HERETIC_BIT)
         {
-            answer->boss = find_genus(c, ID_MAULOTAUR);
+            answer->boss = find_genus(c, SLUMP_ID_MAULOTAUR);
             if (rollpercent(75))
             {
-                answer->weapon = find_genus(c, ID_PHOENIXROD);
-                answer->ammo   = find_genus(c, ID_INFERNOORB);
+                answer->weapon = find_genus(c, SLUMP_ID_PHOENIXROD);
+                answer->ammo   = find_genus(c, SLUMP_ID_INFERNOORB);
             }
             else
             {
-                answer->weapon = find_genus(c, ID_FIREMACE);
-                answer->ammo   = find_genus(c, ID_MACESPHEREPILE);
+                answer->weapon = find_genus(c, SLUMP_ID_FIREMACE);
+                answer->ammo   = find_genus(c, SLUMP_ID_MACESPHEREPILE);
             }
         }
         else
         {
-            answer->boss = find_genus(c, ID_CYBER);
+            answer->boss = find_genus(c, SLUMP_ID_CYBER);
             if (rollpercent(75))
             {
-                answer->weapon = find_genus(c, ID_LAUNCHER);
-                answer->ammo   = find_genus(c, ID_ROCKBOX);
+                answer->weapon = find_genus(c, SLUMP_ID_LAUNCHER);
+                answer->ammo   = find_genus(c, SLUMP_ID_ROCKBOX);
             }
             else
             {
-                answer->weapon = find_genus(c, ID_BFG);
-                answer->ammo   = find_genus(c, ID_CELLPACK);
+                answer->weapon = find_genus(c, SLUMP_ID_BFG);
+                answer->ammo   = find_genus(c, SLUMP_ID_CELLPACK);
             }
         }
         break;
     case 2: /* Spiderboss */
-        if (c->gamemask & HERETIC_BIT)
+        if (c->gamemask & SLUMP_HERETIC_BIT)
         {
-            answer->boss = find_genus(c, ID_DSPARIL);
+            answer->boss = find_genus(c, SLUMP_ID_DSPARIL);
             if (rollpercent(75))
             {
-                answer->weapon = find_genus(c, ID_FIREMACE);
-                answer->ammo   = find_genus(c, ID_MACESPHEREPILE);
+                answer->weapon = find_genus(c, SLUMP_ID_FIREMACE);
+                answer->ammo   = find_genus(c, SLUMP_ID_MACESPHEREPILE);
             }
             else
             {
-                answer->weapon = find_genus(c, ID_PHOENIXROD);
-                answer->ammo   = find_genus(c, ID_INFERNOORB);
+                answer->weapon = find_genus(c, SLUMP_ID_PHOENIXROD);
+                answer->ammo   = find_genus(c, SLUMP_ID_INFERNOORB);
             }
         }
         else
         {
-            answer->boss = find_genus(c, ID_SPIDERBOSS);
+            answer->boss = find_genus(c, SLUMP_ID_SPIDERBOSS);
             if (rollpercent(75))
             {
-                answer->weapon = find_genus(c, ID_BFG);
-                answer->ammo   = find_genus(c, ID_CELLPACK);
+                answer->weapon = find_genus(c, SLUMP_ID_BFG);
+                answer->ammo   = find_genus(c, SLUMP_ID_CELLPACK);
             }
             else
             {
-                answer->weapon = find_genus(c, ID_LAUNCHER);
-                answer->ammo   = find_genus(c, ID_ROCKBOX);
+                answer->weapon = find_genus(c, SLUMP_ID_LAUNCHER);
+                answer->ammo   = find_genus(c, SLUMP_ID_ROCKBOX);
             }
         }
         break;
     case 3: /* Two mancubi (for MAP07, random) */
-        if (c->gamemask & HERETIC_BIT)
+        if (c->gamemask & SLUMP_HERETIC_BIT)
         {
-            answer->boss       = find_genus(c, ID_IRONLICH);
+            answer->boss       = find_genus(c, SLUMP_ID_IRONLICH);
             answer->boss_count = 2;
             if (rollpercent(75))
             {
-                answer->weapon = find_genus(c, ID_PHOENIXROD);
-                answer->ammo   = find_genus(c, ID_INFERNOORB);
+                answer->weapon = find_genus(c, SLUMP_ID_PHOENIXROD);
+                answer->ammo   = find_genus(c, SLUMP_ID_INFERNOORB);
             }
             else
             {
-                answer->weapon = find_genus(c, ID_HELLSTAFF);
-                answer->ammo   = find_genus(c, ID_GREATERRUNES);
+                answer->weapon = find_genus(c, SLUMP_ID_HELLSTAFF);
+                answer->ammo   = find_genus(c, SLUMP_ID_GREATERRUNES);
             }
         }
         else
         {
-            answer->boss       = find_genus(c, ID_MANCUB);
+            answer->boss       = find_genus(c, SLUMP_ID_MANCUB);
             answer->boss_count = 2;
             if (rollpercent(75))
             {
-                answer->weapon = find_genus(c, ID_LAUNCHER);
-                answer->ammo   = find_genus(c, ID_ROCKBOX);
+                answer->weapon = find_genus(c, SLUMP_ID_LAUNCHER);
+                answer->ammo   = find_genus(c, SLUMP_ID_ROCKBOX);
             }
             else
             {
-                answer->weapon = find_genus(c, ID_PLASMA);
-                answer->ammo   = find_genus(c, ID_CELLPACK);
+                answer->weapon = find_genus(c, SLUMP_ID_PLASMA);
+                answer->ammo   = find_genus(c, SLUMP_ID_CELLPACK);
             }
         }
         break;
     case 4: /* Two pains */
-        if (c->gamemask & HERETIC_BIT)
+        if (c->gamemask & SLUMP_HERETIC_BIT)
         {
-            answer->boss       = find_genus(c, ID_WEREDRAGON);
+            answer->boss       = find_genus(c, SLUMP_ID_WEREDRAGON);
             answer->boss_count = 4;
             if (rollpercent(50))
             {
-                answer->weapon = find_genus(c, ID_DRAGONCLAW);
-                answer->ammo   = find_genus(c, ID_ENERGYORB);
+                answer->weapon = find_genus(c, SLUMP_ID_DRAGONCLAW);
+                answer->ammo   = find_genus(c, SLUMP_ID_ENERGYORB);
             }
             else
             {
-                answer->weapon = find_genus(c, ID_HELLSTAFF);
-                answer->ammo   = find_genus(c, ID_GREATERRUNES);
+                answer->weapon = find_genus(c, SLUMP_ID_HELLSTAFF);
+                answer->ammo   = find_genus(c, SLUMP_ID_GREATERRUNES);
             }
         }
         else
         {
-            answer->boss       = find_genus(c, ID_PAIN);
+            answer->boss       = find_genus(c, SLUMP_ID_PAIN);
             answer->boss_count = 2;
             if (rollpercent(50))
             {
-                answer->weapon = find_genus(c, ID_CHAINGUN);
-                answer->ammo   = find_genus(c, ID_BULBOX);
+                answer->weapon = find_genus(c, SLUMP_ID_CHAINGUN);
+                answer->ammo   = find_genus(c, SLUMP_ID_BULBOX);
             }
             else
             {
-                answer->weapon = find_genus(c, ID_PLASMA);
-                answer->ammo   = find_genus(c, ID_CELLPACK);
+                answer->weapon = find_genus(c, SLUMP_ID_PLASMA);
+                answer->ammo   = find_genus(c, SLUMP_ID_CELLPACK);
             }
         }
         break;
     case 5:
     case 6:
-        if (c->gamemask & HERETIC_BIT)
+        if (c->gamemask & SLUMP_HERETIC_BIT)
         {
-            answer->boss       = find_genus(c, ID_MAULOTAUR);
+            answer->boss       = find_genus(c, SLUMP_ID_MAULOTAUR);
             answer->boss_count = 1;
             if (rollpercent(75))
             {
-                answer->weapon = find_genus(c, ID_PHOENIXROD);
-                answer->ammo   = find_genus(c, ID_INFERNOORB);
+                answer->weapon = find_genus(c, SLUMP_ID_PHOENIXROD);
+                answer->ammo   = find_genus(c, SLUMP_ID_INFERNOORB);
             }
             else
             {
-                answer->weapon = find_genus(c, ID_HELLSTAFF);
-                answer->ammo   = find_genus(c, ID_GREATERRUNES);
+                answer->weapon = find_genus(c, SLUMP_ID_HELLSTAFF);
+                answer->ammo   = find_genus(c, SLUMP_ID_GREATERRUNES);
             }
         }
         else
@@ -613,30 +616,30 @@ arena *new_arena(level *l, config *c)
             switch (roll(2))
             {
             case 0:
-                answer->boss = find_genus(c, ID_ARCHIE);
+                answer->boss = find_genus(c, SLUMP_ID_ARCHIE);
                 break;
             default:
-                answer->boss = find_genus(c, ID_ARACH);
+                answer->boss = find_genus(c, SLUMP_ID_ARACH);
                 break;
             }
             answer->boss_count = 2;
             if (rollpercent(75))
             {
-                answer->weapon = find_genus(c, ID_LAUNCHER);
-                answer->ammo   = find_genus(c, ID_ROCKBOX);
+                answer->weapon = find_genus(c, SLUMP_ID_LAUNCHER);
+                answer->ammo   = find_genus(c, SLUMP_ID_ROCKBOX);
             }
             else
             {
-                answer->weapon = find_genus(c, ID_PLASMA);
-                answer->ammo   = find_genus(c, ID_CELLPACK);
+                answer->weapon = find_genus(c, SLUMP_ID_PLASMA);
+                answer->ammo   = find_genus(c, SLUMP_ID_CELLPACK);
             }
         }
         break;
     case 666:
         /* Just what are we going to do here? */
-        /*      answer->boss = find_genus(c,ID_BRAIN); */
-        answer->weapon = find_genus(c, ID_LAUNCHER);
-        answer->ammo   = find_genus(c, ID_ROCKBOX);
+        /*      answer->boss = find_genus(c,SLUMP_ID_BRAIN); */
+        answer->weapon = find_genus(c, SLUMP_ID_LAUNCHER);
+        answer->ammo   = find_genus(c, SLUMP_ID_ROCKBOX);
         break;
     default:
         announce(SLUMP_ERROR, "Arena missing a boss?");
@@ -644,25 +647,25 @@ arena *new_arena(level *l, config *c)
 
     answer->props = 0;
     if (rollpercent(20))
-        answer->props |= ARENA_ROOF;
+        answer->props |= SLUMP_ARENA_ROOF;
     if (rollpercent(20))
-        answer->props |= ARENA_PORCH;
+        answer->props |= SLUMP_ARENA_PORCH;
     if (rollpercent(20))
-        answer->props |= ARENA_LAMPS;
+        answer->props |= SLUMP_ARENA_LAMPS;
     if (rollpercent(20))
-        answer->props |= ARENA_ARRIVAL_HOLE;
+        answer->props |= SLUMP_ARENA_ARRIVAL_HOLE;
     if (rollpercent(10 + l->p_force_nukage))
-        answer->props |= ARENA_NUKAGE;
+        answer->props |= SLUMP_ARENA_NUKAGE;
 
-    if (answer->props & ARENA_ROOF)
+    if (answer->props & SLUMP_ARENA_ROOF)
     {
-        answer->floor = random_flat0(FLOOR, c, NULL); /* These NULLs OK? */
-        answer->walls = random_texture0(WALL, c, NULL);
+        answer->floor = random_flat0(SLUMP_FLOOR, c, NULL); /* These NULLs OK? */
+        answer->walls = random_texture0(SLUMP_WALL, c, NULL);
     }
     else
     {
-        answer->floor = random_flat0(OUTDOOR, c, NULL);
-        answer->walls = random_texture0(OUTDOOR, c, NULL);
+        answer->floor = random_flat0(SLUMP_OUTDOOR, c, NULL);
+        answer->walls = random_texture0(SLUMP_OUTDOOR, c, NULL);
     }
     answer->placed_health = SLUMP_FALSE;
     answer->placed_armor  = SLUMP_FALSE;
@@ -716,10 +719,10 @@ quest *starting_quest(level *l, config *c)
     quest *answer;
 
     answer           = (quest *)malloc(sizeof(*answer));
-    answer->goal     = LEVEL_END_GOAL;
+    answer->goal     = SLUMP_LEVEL_END_GOAL;
     answer->room     = NULL; /* won't be used, because this is always stack bottom */
     answer->tag      = 0;    /* not a linedef goal */
-    answer->type     = LINEDEF_S1_END_LEVEL;
+    answer->type     = SLUMP_LINEDEF_S1_END_LEVEL;
     answer->count    = 0;    /* no rooms yet! */
     answer->minrooms = c->minrooms;
     answer->auxtag   = 0;
@@ -738,7 +741,7 @@ haa *starting_haa(void)
 
     answer = (haa *)malloc(sizeof(*answer));
 
-    for (i = ITYTD; i <= UV; i++)
+    for (i = SLUMP_ITYTD; i <= SLUMP_UV; i++)
     {
         answer->haas[i].health           = (float)100;
         answer->haas[i].ammo             = (float)500;
@@ -851,7 +854,7 @@ unsigned short psi_sqrt(int v)
 {
     int t = 1L << 30, r = 0, s;
 
-#define PSISTEP(k)                                                                                                     \
+#define SLUMP_PSISTEP(k)                                                                                               \
     s = t + r;                                                                                                         \
     r >>= 1;                                                                                                           \
     if (s <= v)                                                                                                        \
@@ -860,39 +863,44 @@ unsigned short psi_sqrt(int v)
         r |= t;                                                                                                        \
     }
 
-    PSISTEP(15);
+    SLUMP_PSISTEP(15);
     t >>= 2;
-    PSISTEP(14);
+    SLUMP_PSISTEP(14);
     t >>= 2;
-    PSISTEP(13);
+    SLUMP_PSISTEP(13);
     t >>= 2;
-    PSISTEP(12);
+    SLUMP_PSISTEP(12);
     t >>= 2;
-    PSISTEP(11);
+    SLUMP_PSISTEP(11);
     t >>= 2;
-    PSISTEP(10);
+    SLUMP_PSISTEP(10);
     t >>= 2;
-    PSISTEP(9);
+    SLUMP_PSISTEP(9);
     t >>= 2;
-    PSISTEP(8);
+    SLUMP_PSISTEP(8);
     t >>= 2;
-    PSISTEP(7);
+    SLUMP_PSISTEP(7);
     t >>= 2;
-    PSISTEP(6);
+    SLUMP_PSISTEP(6);
     t >>= 2;
-    PSISTEP(5);
+    SLUMP_PSISTEP(5);
     t >>= 2;
-    PSISTEP(4);
+    SLUMP_PSISTEP(4);
     t >>= 2;
-    PSISTEP(3);
+    SLUMP_PSISTEP(3);
     t >>= 2;
-    PSISTEP(2);
+    SLUMP_PSISTEP(2);
     t >>= 2;
-    PSISTEP(1);
+    SLUMP_PSISTEP(1);
     t >>= 2;
-    PSISTEP(0);
+    SLUMP_PSISTEP(0);
 
     return (unsigned short)r;
+}
+
+unsigned short SLUMP_linelen(linedef *ld)
+{
+    return psi_sqrt(lengthsquared(ld));
 }
 
 /* Find a flat with the given name, creating one if */
@@ -915,8 +923,9 @@ flat *new_flat(config *c, const char *name)
     answer = (flat *)malloc(sizeof(*answer));
     memset(answer->name, 0, 9);
     memcpy(answer->name, name, strlen(name));
-    answer->gamemask = DOOM0_BIT | DOOM1_BIT | DOOM2_BIT | DOOMC_BIT | DOOMI_BIT | HERETIC_BIT | CHEX_BIT | HACX_BIT |
-                       HARMONY_BIT | STRIFE_BIT | REKKR_BIT;
+    answer->gamemask = SLUMP_DOOM0_BIT | SLUMP_DOOM1_BIT | SLUMP_DOOM2_BIT | SLUMP_DOOMC_BIT | SLUMP_DOOMI_BIT |
+                       SLUMP_HERETIC_BIT | SLUMP_CHEX_BIT | SLUMP_HACX_BIT | SLUMP_HARMONY_BIT | SLUMP_STRIFE_BIT |
+                       SLUMP_REKKR_BIT;
     answer->compatible = 0;
     answer->props      = 0;
     answer->used       = SLUMP_FALSE;
@@ -990,8 +999,8 @@ genus *new_monster(config *c, int thingid)
     int    i;
 
     answer = new_genus(c, thingid);
-    answer->bits |= MONSTER;
-    answer->bits &= ~PICKABLE;                 /* Can't pick up a monster! */
+    answer->bits |= SLUMP_MONSTER;
+    answer->bits &= ~SLUMP_PICKABLE;           /* Can't pick up a monster! */
     for (i = 0; i < 3; i++)
     {
         answer->ammo_to_kill[i] = (float)1000; /* Any reason to have defaults? */
@@ -1009,15 +1018,16 @@ genus *new_genus(config *c, int thingid)
 
     answer = (genus *)malloc(sizeof(*answer));
     /* Default mask */
-    answer->gamemask = DOOM0_BIT | DOOM1_BIT | DOOM2_BIT | DOOMC_BIT | DOOMI_BIT | HERETIC_BIT | CHEX_BIT | HACX_BIT |
-                       HARMONY_BIT | STRIFE_BIT | REKKR_BIT;
+    answer->gamemask = SLUMP_DOOM0_BIT | SLUMP_DOOM1_BIT | SLUMP_DOOM2_BIT | SLUMP_DOOMC_BIT | SLUMP_DOOMI_BIT |
+                       SLUMP_HERETIC_BIT | SLUMP_CHEX_BIT | SLUMP_HACX_BIT | SLUMP_HARMONY_BIT | SLUMP_STRIFE_BIT |
+                       SLUMP_REKKR_BIT;
     answer->compatible = ~(unsigned int)0; /* Assume all themes OK */
     answer->thingid    = thingid;
     answer->width      = 65;               /* Sort of sensible default */
     answer->height     = 56;               /* Just "not tall" */
     answer->marked     = 0;
     answer->next       = c->genus_anchor;
-    answer->bits       = PICKABLE;         /* A plausible default? */
+    answer->bits       = SLUMP_PICKABLE;   /* A plausible default? */
     c->genus_anchor    = answer;
     return answer;
 }
@@ -1071,8 +1081,9 @@ texture *new_texture(config *c, const char *name)
     memset(answer->name, 0, 9);
     memcpy(answer->name, name, strlen(name));
     answer->realname = answer->name;
-    answer->gamemask = DOOM0_BIT | DOOM1_BIT | DOOM2_BIT | DOOMC_BIT | DOOMI_BIT | HERETIC_BIT | CHEX_BIT | HACX_BIT |
-                       HARMONY_BIT | STRIFE_BIT | REKKR_BIT;
+    answer->gamemask = SLUMP_DOOM0_BIT | SLUMP_DOOM1_BIT | SLUMP_DOOM2_BIT | SLUMP_DOOMC_BIT | SLUMP_DOOMI_BIT |
+                       SLUMP_HERETIC_BIT | SLUMP_CHEX_BIT | SLUMP_HACX_BIT | SLUMP_HARMONY_BIT | SLUMP_STRIFE_BIT |
+                       SLUMP_REKKR_BIT;
     answer->compatible     = 0;
     answer->core           = 0;
     answer->props          = 0;   /* Filled in later */
@@ -1104,7 +1115,7 @@ linedef *split_linedef(level *l, linedef *ld, int len, config *c)
        affect the output of these functions otherwise.  The original
        code looked like this:
 
-       ratio = (double)len / (double)linelen(ld);
+       ratio = (double)len / (double)SLUMP_linelen(ld);
        dx = (int)(ratio * (double)(ld->to->x - ld->from->x));
        dy = (int)(ratio * (double)(ld->to->y - ld->from->y));
 
@@ -1113,7 +1124,7 @@ linedef *split_linedef(level *l, linedef *ld, int len, config *c)
        the same seed and flags generate the same levels, I had to change
        this code to not be affected by optimization.  - Sam */
     q1 = (double)len;
-    q2 = (double)linelen(ld);
+    q2 = (double)SLUMP_linelen(ld);
     if (q2 > 0)
     {
         ratio = q1 / q2;
@@ -1177,7 +1188,7 @@ linedef *split_linedef(level *l, linedef *ld, int len, config *c)
 /* Put in any upper textures required */
 void patch_upper(linedef *ld, texture *t, config *c)
 {
-#ifdef TOLERATE_SLUMP_ERRORS
+#ifdef SLUMP_TOLERATE_SLUMP_ERRORS
     if (ld->left == NULL)
         return;
 #endif
@@ -1186,7 +1197,7 @@ void patch_upper(linedef *ld, texture *t, config *c)
         if ((ld->right->upper_texture == NULL) || (ld->right->upper_texture->name[0] == '-'))
         {
             ld->right->upper_texture = t;
-            ld->flags |= UPPER_UNPEGGED; /* Seems a good default */
+            ld->flags |= SLUMP_UPPER_UNPEGGED; /* Seems a good default */
         }
     }
     if (ld->left->psector->ceiling_height > ld->right->psector->ceiling_height)
@@ -1194,7 +1205,7 @@ void patch_upper(linedef *ld, texture *t, config *c)
         if ((ld->left->upper_texture == NULL) || (ld->left->upper_texture->name[0] == '-'))
         {
             ld->left->upper_texture = t;
-            ld->flags |= UPPER_UNPEGGED; /* Seems a good default */
+            ld->flags |= SLUMP_UPPER_UNPEGGED; /* Seems a good default */
         }
     }
 }
@@ -1202,7 +1213,7 @@ void patch_upper(linedef *ld, texture *t, config *c)
 /* Put in any lower textures required */
 void patch_lower(linedef *ld, texture *t, config *c)
 {
-#ifdef TOLERATE_SLUMP_ERRORS
+#ifdef SLUMP_TOLERATE_SLUMP_ERRORS
     if (ld->left == NULL)
         return;
 #endif
@@ -1211,7 +1222,7 @@ void patch_lower(linedef *ld, texture *t, config *c)
         if ((ld->right->lower_texture == NULL) || (ld->right->lower_texture->name[0] == '-'))
         {
             ld->right->lower_texture = t;
-            ld->flags |= LOWER_UNPEGGED; /* Seems a good default */
+            ld->flags |= SLUMP_LOWER_UNPEGGED; /* Seems a good default */
         }
     }
     if (ld->left->psector->floor_height < ld->right->psector->floor_height)
@@ -1219,7 +1230,7 @@ void patch_lower(linedef *ld, texture *t, config *c)
         if ((ld->left->lower_texture == NULL) || (ld->left->lower_texture->name[0] == '-'))
         {
             ld->left->lower_texture = t;
-            ld->flags |= LOWER_UNPEGGED; /* Seems a good default */
+            ld->flags |= SLUMP_LOWER_UNPEGGED; /* Seems a good default */
         }
     }
 }
@@ -1276,7 +1287,8 @@ void secretize_config(config *c)
     if (rollpercent(25))
         c->force_biggest = SLUMP_TRUE; /* stub */
     c->big_monsters = SLUMP_TRUE;
-    if (!(c->gamemask & CHEX_BIT || c->gamemask & HARMONY_BIT || c->gamemask & STRIFE_BIT || c->gamemask & HACX_BIT))
+    if (!(c->gamemask & SLUMP_CHEX_BIT || c->gamemask & SLUMP_HARMONY_BIT || c->gamemask & SLUMP_STRIFE_BIT ||
+          c->gamemask & SLUMP_HACX_BIT))
     {
         c->secret_themes = SLUMP_TRUE;
     }
@@ -1293,24 +1305,25 @@ void secretize_config(config *c)
         {
             c->major_nukage   = SLUMP_TRUE;
             something_special = SLUMP_TRUE;
-            announce(VERBOSE, "Nukage everywhere");
+            announce(SLUMP_VERBOSE, "Nukage everywhere");
         }
 
         /* Sometimes some DooM II nazis */
-        if (rollpercent(80) && !(c->gamemask & (DOOM0_BIT | DOOM1_BIT | HERETIC_BIT | CHEX_BIT | HACX_BIT |
-                                                HARMONY_BIT | STRIFE_BIT | REKKR_BIT)))
+        if (rollpercent(80) &&
+            !(c->gamemask & (SLUMP_DOOM0_BIT | SLUMP_DOOM1_BIT | SLUMP_HERETIC_BIT | SLUMP_CHEX_BIT | SLUMP_HACX_BIT |
+                             SLUMP_HARMONY_BIT | SLUMP_STRIFE_BIT | SLUMP_REKKR_BIT)))
         {
-            c->forbidden_monster_bits &= ~SPECIAL;
+            c->forbidden_monster_bits &= ~SLUMP_SPECIAL;
             something_special = SLUMP_TRUE;
             if (rollpercent(50))
             {
-                c->required_monster_bits |= SPECIAL;
-                c->required_monster_bits &= ~BIG;
-                announce(VERBOSE, "All nazis");
+                c->required_monster_bits |= SLUMP_SPECIAL;
+                c->required_monster_bits &= ~SLUMP_BIG;
+                announce(SLUMP_VERBOSE, "All nazis");
             }
             else
             {
-                announce(VERBOSE, "Some nazis");
+                announce(SLUMP_VERBOSE, "Some nazis");
             }
         }
 
@@ -1319,17 +1332,17 @@ void secretize_config(config *c)
         {
             if (rollpercent(50))
             {
-                c->required_monster_bits |= BIG;
-                c->required_monster_bits &= ~SPECIAL;
+                c->required_monster_bits |= SLUMP_BIG;
+                c->required_monster_bits &= ~SLUMP_SPECIAL;
                 c->big_monsters = SLUMP_TRUE;
-                announce(VERBOSE, "All big monsters");
+                announce(SLUMP_VERBOSE, "All big monsters");
                 something_special = SLUMP_TRUE;
             }
             else
             {
                 /* Put in a favorite monster here! */
                 /* and set something_special */
-                announce(VERBOSE, "Someday a favorite monster");
+                announce(SLUMP_VERBOSE, "Someday a favorite monster");
             }
         }
 
@@ -1376,7 +1389,7 @@ config *get_config(const std::string &filename)
     answer->major_nukage = StringToInt(nukage) ? SLUMP_TRUE : SLUMP_FALSE;
     if (ob_mod_enabled("slump_all_nazis"))
     {
-        answer->required_monster_bits  = SPECIAL;
+        answer->required_monster_bits  = SLUMP_SPECIAL;
         answer->forbidden_monster_bits = 0;
     }
     else
@@ -1385,22 +1398,22 @@ config *get_config(const std::string &filename)
         if (StringCompare(monvariety, "normal") == 0)
         {
             answer->required_monster_bits  = 0;
-            answer->forbidden_monster_bits = SPECIAL;
+            answer->forbidden_monster_bits = SLUMP_SPECIAL;
         }
         else if (StringCompare(monvariety, "shooters") == 0)
         {
-            answer->required_monster_bits  = SHOOTS;
-            answer->forbidden_monster_bits = SPECIAL;
+            answer->required_monster_bits  = SLUMP_SHOOTS;
+            answer->forbidden_monster_bits = SLUMP_SPECIAL;
         }
         else if (StringCompare(monvariety, "noflyzone") == 0)
         {
             answer->required_monster_bits  = 0;
-            answer->forbidden_monster_bits = FLIES + SPECIAL;
+            answer->forbidden_monster_bits = SLUMP_FLIES + SLUMP_SPECIAL;
         }
         else
         { // Fallback
             answer->required_monster_bits  = 0;
-            answer->forbidden_monster_bits = SPECIAL;
+            answer->forbidden_monster_bits = SLUMP_SPECIAL;
         }
     }
     std::string levelsize = ob_get_param("float_minrooms_slump");
@@ -1417,56 +1430,56 @@ config *get_config(const std::string &filename)
     std::string current_game = ob_get_param("game");
     if (StringCompare(current_game, "doom1") == 0 || StringCompare(current_game, "ultdoom") == 0)
     {
-        answer->gamemask = (DOOM1_BIT | DOOMI_BIT);
+        answer->gamemask = (SLUMP_DOOM1_BIT | SLUMP_DOOMI_BIT);
         answer->map      = 0;
         answer->episode  = 1;
         answer->mission  = 1;
     }
     else if (StringCompare(current_game, "chex1") == 0)
     {
-        answer->gamemask = (DOOM1_BIT | DOOMI_BIT | DOOMC_BIT | CHEX_BIT);
+        answer->gamemask = (SLUMP_DOOM1_BIT | SLUMP_DOOMI_BIT | SLUMP_DOOMC_BIT | SLUMP_CHEX_BIT);
         answer->map      = 0;
         answer->episode  = 1;
         answer->mission  = 1;
     }
     else if (StringCompare(current_game, "rekkr") == 0)
     {
-        answer->gamemask = (DOOM1_BIT | DOOMI_BIT | DOOMC_BIT | REKKR_BIT);
+        answer->gamemask = (SLUMP_DOOM1_BIT | SLUMP_DOOMI_BIT | SLUMP_DOOMC_BIT | SLUMP_REKKR_BIT);
         answer->map      = 0;
         answer->episode  = 1;
         answer->mission  = 1;
     }
     else if (StringCompare(current_game, "heretic") == 0)
     {
-        answer->gamemask = HERETIC_BIT;
+        answer->gamemask = SLUMP_HERETIC_BIT;
         answer->map      = 0;
         answer->episode  = 1;
         answer->mission  = 1;
     }
     else if (StringCompare(current_game, "hacx") == 0)
     {
-        answer->gamemask = (DOOM2_BIT | DOOMI_BIT | HACX_BIT);
+        answer->gamemask = (SLUMP_DOOM2_BIT | SLUMP_DOOMI_BIT | SLUMP_HACX_BIT);
         answer->map      = 1;
         answer->episode  = 0;
         answer->mission  = 0;
     }
     else if (StringCompare(current_game, "harmony") == 0)
     {
-        answer->gamemask = (DOOM2_BIT | DOOMI_BIT | HARMONY_BIT);
+        answer->gamemask = (SLUMP_DOOM2_BIT | SLUMP_DOOMI_BIT | SLUMP_HARMONY_BIT);
         answer->map      = 1;
         answer->episode  = 0;
         answer->mission  = 0;
     }
     else if (StringCompare(current_game, "strife") == 0)
     {
-        answer->gamemask = (DOOM2_BIT | DOOMI_BIT | STRIFE_BIT);
+        answer->gamemask = (SLUMP_DOOM2_BIT | SLUMP_DOOMI_BIT | SLUMP_STRIFE_BIT);
         answer->map      = 2;
         answer->episode  = 0;
         answer->mission  = 0;
     }
     else
     { // Doom 2 / Final Doom
-        answer->gamemask = (DOOM2_BIT | DOOMI_BIT);
+        answer->gamemask = (SLUMP_DOOM2_BIT | SLUMP_DOOMI_BIT);
         answer->map      = 1;
         answer->episode  = 0;
         answer->mission  = 0;
@@ -1571,7 +1584,7 @@ config *get_config(const std::string &filename)
     answer->norm_vary     = 25;
     if (rollpercent(15))
     { /* Some older settings */
-        announce(VERBOSE, "Old themeing");
+        announce(SLUMP_VERBOSE, "Old themeing");
         answer->rad_newtheme  = 12;
         answer->norm_newtheme = 4;
         answer->rad_vary      = 60;
@@ -1579,7 +1592,7 @@ config *get_config(const std::string &filename)
     }
     if (rollpercent(15))
     { /* Sometimes never change themes! */
-        announce(VERBOSE, "One theme");
+        announce(SLUMP_VERBOSE, "One theme");
         answer->rad_newtheme  = 0;
         answer->norm_newtheme = 0;
         answer->rad_vary      = 100; /* But change other stuff more */
@@ -1597,7 +1610,7 @@ config *get_config(const std::string &filename)
     {
         char s[80];
         sprintf(s, "Homogenization %d.", answer->homogenize_monsters);
-        announce(VERBOSE, s);
+        announce(SLUMP_VERBOSE, s);
     }
     answer->weapons_are_special = SLUMP_FALSE;
     answer->recess_switches     = rollpercent(95);
@@ -1643,14 +1656,14 @@ config *get_config(const std::string &filename)
     /* And figure some resultants */
     for (m = answer->genus_anchor; m; m = m->next)
     { /* Apply macho factors */
-        if (!(m->bits & MONSTER))
+        if (!(m->bits & SLUMP_MONSTER))
             continue;
-        m->ammo_to_kill[HMP] *= answer->machoh;
-        m->damage[HMP] *= answer->machoh;
-        m->altdamage[HMP] *= answer->machoh;
-        m->ammo_to_kill[UV] *= answer->machou;
-        m->damage[UV] *= answer->machou;
-        m->altdamage[UV] *= answer->machou;
+        m->ammo_to_kill[SLUMP_HMP] *= answer->machoh;
+        m->damage[SLUMP_HMP] *= answer->machoh;
+        m->altdamage[SLUMP_HMP] *= answer->machoh;
+        m->ammo_to_kill[SLUMP_UV] *= answer->machou;
+        m->damage[SLUMP_UV] *= answer->machou;
+        m->altdamage[SLUMP_UV] *= answer->machou;
     }
 
     if (answer->force_secret)
@@ -1670,7 +1683,7 @@ config *get_config(const std::string &filename)
 vertex *make_watermark_path(level *l, vertex *v1, vertex *v2, sidedef *rsd, sidedef *lsd)
 {
     linedef *ld = new_linedef(l, v1, v2);
-    ld->flags   = TWO_SIDED;
+    ld->flags   = SLUMP_TWO_SIDED;
     ld->left    = lsd;
     ld->right   = rsd;
     return v2;
@@ -1794,14 +1807,14 @@ int random_theme(config *c)
     else
     {
         answer = roll(c->themecount);
-#ifdef THEME_INVERTER_HACK
+#ifdef SLUMP_THEME_INVERTER_HACK
         answer = (answer == 2) ? answer : 1 - answer; /* Just an experiment */
 #endif
     }
     {
         char s[80];
         sprintf(s, "Theme %d.", answer);
-        announce(VERBOSE, s);
+        announce(SLUMP_VERBOSE, s);
     }
     return answer;
 }
@@ -1813,16 +1826,16 @@ short random_doortype(level *l, config *c, style *s)
 {
     short answer;
 
-    answer = LINEDEF_NORMAL_DOOR;
+    answer = SLUMP_LINEDEF_NORMAL_DOOR;
     if (rollpercent(l->p_s1_door))
-        answer = LINEDEF_NORMAL_S1_DOOR;
-    if (!((DOOM0_BIT | HERETIC_BIT) & c->gamemask) && rollpercent(20))
+        answer = SLUMP_LINEDEF_NORMAL_S1_DOOR;
+    if (!((SLUMP_DOOM0_BIT | SLUMP_HERETIC_BIT) & c->gamemask) && rollpercent(20))
     {
-        if (answer == LINEDEF_NORMAL_DOOR)
-            answer = LINEDEF_BLAZE_DOOR;
-        if (answer == LINEDEF_NORMAL_S1_DOOR)
-            answer = LINEDEF_BLAZE_S1_DOOR;
-        announce(VERBOSE, "Blaze door type");
+        if (answer == SLUMP_LINEDEF_NORMAL_DOOR)
+            answer = SLUMP_LINEDEF_BLAZE_DOOR;
+        if (answer == SLUMP_LINEDEF_NORMAL_S1_DOOR)
+            answer = SLUMP_LINEDEF_BLAZE_S1_DOOR;
+        announce(SLUMP_VERBOSE, "Blaze door type");
     }
     return answer;
 }
@@ -1831,9 +1844,9 @@ short random_slifttype(config *c, style *s)
 {
     short answer;
 
-    answer = LINEDEF_SR_LOWER_LIFT;
-    if (!((DOOM0_BIT | HERETIC_BIT) & c->gamemask) && rollpercent(20))
-        answer = LINEDEF_SR_TURBO_LIFT;
+    answer = SLUMP_LINEDEF_SR_LOWER_LIFT;
+    if (!((SLUMP_DOOM0_BIT | SLUMP_HERETIC_BIT) & c->gamemask) && rollpercent(20))
+        answer = SLUMP_LINEDEF_SR_TURBO_LIFT;
     return answer;
 }
 
@@ -1869,13 +1882,13 @@ int random_windowdecor(config *c, style *s)
     {
     case 0:
     case 1:
-        return WINDOW_NORMAL;
+        return SLUMP_WINDOW_NORMAL;
     case 2:
-        return WINDOW_JAMBS;
+        return SLUMP_WINDOW_JAMBS;
     case 3:
-        return WINDOW_SUPPORT;
+        return SLUMP_WINDOW_SUPPORT;
     default:
-        return WINDOW_LIGHT;
+        return SLUMP_WINDOW_LIGHT;
     }
 }
 
@@ -1884,12 +1897,12 @@ int random_lightboxlighting(config *c, style *s)
     switch (roll(4))
     {
     case 0:
-        return LIGHTBOX_NORMAL;
+        return SLUMP_LIGHTBOX_NORMAL;
     case 1:
     case 2:
-        return LIGHTBOX_LIGHTED;
+        return SLUMP_LIGHTBOX_LIGHTED;
     default:
-        return LIGHTBOX_DARK;
+        return SLUMP_LIGHTBOX_DARK;
     }
 }
 
@@ -1899,48 +1912,48 @@ genus *random_plant(config *c, style *s)
     genus *answer;
     int    tcount;
 
-    if (c->gamemask & HERETIC_BIT)
+    if (c->gamemask & SLUMP_HERETIC_BIT)
     {
         tcount = 2;
         switch (roll(tcount))
         {
         case 0:
-            answer = find_genus(c, ID_SMSTALAGMITE);
-            answer->bits &= ~PICKABLE;
+            answer = find_genus(c, SLUMP_ID_SMSTALAGMITE);
+            answer->bits &= ~SLUMP_PICKABLE;
             answer->width = 33;
             break;
         case 1:
         default:
-            answer = find_genus(c, ID_LGSTALAGMITE);
-            answer->bits &= ~PICKABLE;
+            answer = find_genus(c, SLUMP_ID_LGSTALAGMITE);
+            answer->bits &= ~SLUMP_PICKABLE;
             answer->width = 33;
             break;
         }
     }
     else
     {
-        tcount = (c->gamemask & DOOM1_BIT) ? 3 : 4;
+        tcount = (c->gamemask & SLUMP_DOOM1_BIT) ? 3 : 4;
         switch (roll(tcount))
         {
         case 0:
-            answer = find_genus(c, ID_SMIT);
-            answer->bits &= ~PICKABLE;
+            answer = find_genus(c, SLUMP_ID_SMIT);
+            answer->bits &= ~SLUMP_PICKABLE;
             answer->width = 33;
             break;
         case 1:
-            answer = find_genus(c, ID_TREE1);
-            answer->bits &= ~PICKABLE;
+            answer = find_genus(c, SLUMP_ID_TREE1);
+            answer->bits &= ~SLUMP_PICKABLE;
             answer->width = 33;
             break;
         case 2:
-            answer = find_genus(c, ID_TREE2);
-            answer->bits &= ~PICKABLE;
+            answer = find_genus(c, SLUMP_ID_TREE2);
+            answer->bits &= ~SLUMP_PICKABLE;
             answer->width = 65;
             break;
         case 3:
         default:
-            answer = find_genus(c, ID_FBARREL);
-            answer->bits &= ~PICKABLE;
+            answer = find_genus(c, SLUMP_ID_FBARREL);
+            answer->bits &= ~SLUMP_PICKABLE;
             answer->width = 33;
             break;
         }
@@ -1952,34 +1965,34 @@ genus *random_plant(config *c, style *s)
 /* compatible with the theme. */
 genus *random_barrel(config *c, style *s)
 {
-    return random_thing0(EXPLODES, c, s, 0, 10000);
+    return random_thing0(SLUMP_EXPLODES, c, s, 0, 10000);
 }
 
 /* A lamp or similar decoration, tall or short */
 genus *random_lamp0(config *c, style *s)
 {
-    if (c->gamemask & CHEX_BIT)
+    if (c->gamemask & SLUMP_CHEX_BIT)
     {
-        return find_genus(c, ID_LAMP);
+        return find_genus(c, SLUMP_ID_LAMP);
     }
 
     genus *answer;
 
-    answer = random_thing0(LIGHT, c, s, 70, 10000);
+    answer = random_thing0(SLUMP_LIGHT, c, s, 70, 10000);
     if (answer == NULL)
-        answer = random_thing0(LIGHT, c, s, 0, 10000);
+        answer = random_thing0(SLUMP_LIGHT, c, s, 0, 10000);
     return answer;
 }
 
 /* A lamp or similar decoration, no taller than a player */
 genus *random_shortlamp0(config *c, style *s)
 {
-    if (c->gamemask & CHEX_BIT)
+    if (c->gamemask & SLUMP_CHEX_BIT)
     {
-        return find_genus(c, ID_LAMP);
+        return find_genus(c, SLUMP_ID_LAMP);
     }
 
-    return random_thing0(LIGHT, c, s, 0, 56);
+    return random_thing0(SLUMP_LIGHT, c, s, 0, 56);
 }
 
 /* Return the number of a random construct family that contains at */
@@ -1988,8 +2001,7 @@ int construct_family_for(config *c, style *s)
 {
     construct *cs;
     int        tmask = 0x01 << s->theme_number;
-#define MAX_COMPATIBLE_FAMILIES (5)
-    int     compats[MAX_COMPATIBLE_FAMILIES];
+    int     compats[5];
     int     compat_count = 0;
     boolean already;
     int     i;
@@ -2010,8 +2022,8 @@ int construct_family_for(config *c, style *s)
 
     if (compat_count == 0)
     {
-#ifdef REQUIRE_CONSTRUCTS_IN_ALL_THEMES
-        announce(WARNING, "No compatible constructs for theme.");
+#ifdef SLUMP_REQUIRE_CONSTRUCTS_IN_ALL_THEMES
+        announce(SLUMP_WARNING, "No compatible constructs for theme.");
 #endif
         return -1; /* Whatever */
     }
@@ -2295,7 +2307,7 @@ style *copy_style(level *l, style *old, int themenumber, int vary, config *c)
     if (!rollpercent(vary))
         answer->auxspecial = old->auxspecial;
     else
-        answer->auxspecial = rollpercent(80) ? 0 : RANDOM_BLINK;
+        answer->auxspecial = rollpercent(80) ? 0 : SLUMP_RANDOM_BLINK;
     if (!rollpercent(vary))
         answer->doortype = old->doortype;
     else
@@ -2361,7 +2373,7 @@ void gate_populate(level *l, sector *s, haa *haa, boolean first, config *c)
         { /* A monster */
             m = timely_monster(haa, c, &levels, rollpercent(l->p_biggest_monsters), 1);
             if (m && levels)
-                if (NULL != place_object_in_region(l, minx, miny, tlx, maxy, c, m->thingid, MONSTER_WIDTH(m), -1,
+                if (NULL != place_object_in_region(l, minx, miny, tlx, maxy, c, m->thingid, 64, -1,
                                                    s->entry_x, s->entry_y, levels))
                     update_haa_for_monster(haa, m, levels, 1, c);
         }
@@ -2376,7 +2388,7 @@ void gate_populate(level *l, sector *s, haa *haa, boolean first, config *c)
         { /* A monster */
             m = timely_monster(haa, c, &levels, rollpercent(l->p_biggest_monsters), 1);
             if (m && levels)
-                if (NULL != place_object_in_region(l, thx, miny, maxx, maxy, c, m->thingid, MONSTER_WIDTH(m), -1,
+                if (NULL != place_object_in_region(l, thx, miny, maxx, maxy, c, m->thingid, 64, -1,
                                                    s->entry_x, s->entry_y, levels))
                     update_haa_for_monster(haa, m, levels, 1, c);
         }
@@ -2393,7 +2405,7 @@ void gate_populate(level *l, sector *s, haa *haa, boolean first, config *c)
         { /* A monster */
             m = timely_monster(haa, c, &levels, rollpercent(l->p_biggest_monsters), 1);
             if (m && levels)
-                if (NULL != place_object_in_region(l, minx, miny, maxx, tly, c, m->thingid, MONSTER_WIDTH(m), -1,
+                if (NULL != place_object_in_region(l, minx, miny, maxx, tly, c, m->thingid, 64, -1,
                                                    s->entry_x, s->entry_y, levels))
                     update_haa_for_monster(haa, m, levels, 1, c);
         }
@@ -2408,7 +2420,7 @@ void gate_populate(level *l, sector *s, haa *haa, boolean first, config *c)
         { /* A monster */
             m = timely_monster(haa, c, &levels, rollpercent(l->p_biggest_monsters), 1);
             if (m && levels)
-                if (NULL != place_object_in_region(l, minx, thy, maxx, maxy, c, m->thingid, MONSTER_WIDTH(m), -1,
+                if (NULL != place_object_in_region(l, minx, thy, maxx, maxy, c, m->thingid, 64, -1,
                                                    s->entry_x, s->entry_y, levels))
                     update_haa_for_monster(haa, m, levels, 1, c);
         }
@@ -2441,23 +2453,23 @@ void populate(level *l, sector *s, config *c, haa *haa, boolean first_room)
 /* to do special end-stuff, like arenas.                */
 boolean enough_quest(level *l, sector *s, quest *ThisQuest, config *c)
 {
-    if (!(c->gamemask & CHEX_BIT))
+    if (!(c->gamemask & SLUMP_CHEX_BIT))
     {
         /* Perhaps an arena? */
-        if ((ThisQuest->goal == LEVEL_END_GOAL) && (s != l->first_room) && (!c->do_dm) &&
+        if ((ThisQuest->goal == SLUMP_LEVEL_END_GOAL) && (s != l->first_room) && (!c->do_dm) &&
             ((l->sl_tag != 0) || !need_secret_level(c)) && ((l->sl_tag == 0) || l->sl_done) &&
             (ThisQuest->count >= (ThisQuest->minrooms - 5)))
         {
             if ((c->mission == 8) || (c->map == 30) || ((c->map == 7) && (c->last_mission)) ||
                 (c->last_mission && (c->force_arena || rollpercent(3 * c->levelcount))))
             {
-                ThisQuest->goal = ARENA_GOAL;
+                ThisQuest->goal = SLUMP_ARENA_GOAL;
                 return 1;
             }
         }
     }
     /* Don't stop a GATE_QUEST at an already-gate room */
-    if (ThisQuest->goal == GATE_GOAL)
+    if (ThisQuest->goal == SLUMP_GATE_GOAL)
         if (s->pgate)
             return 0;
     /* Otherwise the ordinary check. */
@@ -2486,16 +2498,16 @@ thing *place_required_small_pickable(level *l, sector *s, config *c)
     if (l->heretic_level)
     { // Don't really know what to put here
         if (rollpercent(50))
-            tid = ID_WANDCRYSTAL;
+            tid = SLUMP_ID_WANDCRYSTAL;
         else
-            tid = ID_ETHEREALARROWS;
+            tid = SLUMP_ID_ETHEREALARROWS;
     }
     else
     {
         if (rollpercent(50))
-            tid = ID_POTION;
+            tid = SLUMP_ID_POTION;
         else
-            tid = ID_HELMET; /* More choices? */
+            tid = SLUMP_ID_HELMET; /* More choices? */
     }
 
     return place_required_pickable(l, s, c, tid);
@@ -2555,7 +2567,7 @@ void global_align_forward(level *l, linedef *ld)
         if (ld2->from == v)
             if (common_texture(ld->right, ld2->right))
             {
-                newoff = ld->right->x_offset + linelen(ld);
+                newoff = ld->right->x_offset + SLUMP_linelen(ld);
                 newoff = newoff % 256;
                 if (newoff < 0)
                     newoff += 256;
@@ -2586,7 +2598,7 @@ void global_align_backward(level *l, linedef *ld)
         if (ld2->to == v)
             if (common_texture(ld->right, ld2->right))
             {
-                newoff = ld->right->x_offset - linelen(ld2);
+                newoff = ld->right->x_offset - SLUMP_linelen(ld2);
                 newoff = newoff % 256;
                 if (newoff < 0)
                     newoff += 256;
@@ -2622,10 +2634,10 @@ void global_align_group_backbone_forward(level *l, linedef *ld)
     if (NULL != (ldnext = ld->group_next))
     {
         if (ld->to != ldnext->from)
-            announce(LOG, "Yow forward!");
+            announce(SLUMP_LOG, "Yow forward!");
         if (common_texture(ld->right, ldnext->right))
         {
-            newoff = ld->right->x_offset + linelen(ld);
+            newoff = ld->right->x_offset + SLUMP_linelen(ld);
             newoff = newoff % 256;
             if (newoff < 0)
                 newoff += 256;
@@ -2637,7 +2649,7 @@ void global_align_group_backbone_forward(level *l, linedef *ld)
             }
             else
             {
-                announce(LOG, "Found a locked linedef in g_a_g_b_f?");
+                announce(SLUMP_LOG, "Found a locked linedef in g_a_g_b_f?");
                 if (ldnext->right->x_offset != newoff)
                     ldnext->f_misaligned = 1;
             }
@@ -2671,10 +2683,10 @@ void global_align_group_backbone_backward(level *l, linedef *ld)
     if (NULL != (ldprev = ld->group_previous))
     {
         if (ld->from != ldprev->to)
-            announce(LOG, "Yow backward!");
+            announce(SLUMP_LOG, "Yow backward!");
         if (common_texture(ld->right, ldprev->right))
         {
-            newoff = ld->right->x_offset - linelen(ldprev);
+            newoff = ld->right->x_offset - SLUMP_linelen(ldprev);
             newoff = newoff % 256;
             if (newoff < 0)
                 newoff += 256;
@@ -2686,7 +2698,7 @@ void global_align_group_backbone_backward(level *l, linedef *ld)
             }
             else
             {
-                announce(LOG, "Found a locked linedef in g_a_g_b_b?");
+                announce(SLUMP_LOG, "Found a locked linedef in g_a_g_b_b?");
                 if (ldprev->right->x_offset != newoff)
                     ldprev->b_misaligned = 1;
             }
@@ -2703,9 +2715,9 @@ void global_align_textures(level *l, config *c)
     linedef *ld1, *ld2;
     int      newoff;
 
-    announce(LOG, "Globally aligning...");
+    announce(SLUMP_LOG, "Globally aligning...");
 
-#define DONT_MARK_MISALIGNS
+#define SLUMP_DONT_MARK_MISALIGNS 0
 
     for (ld1 = l->linedef_anchor; ld1; ld1 = ld1->next)
     {
@@ -2732,14 +2744,14 @@ void global_align_textures(level *l, config *c)
     /* This actually looks pretty terrible!  Think about it more */
     if (l->support_misaligns)
     {
-        announce(LOG, "Prettying up misalignments...");
+        announce(SLUMP_LOG, "Prettying up misalignments...");
         for (ld1 = l->linedef_anchor; ld1; ld1 = ld1->next)
         {
             if (ld1->right)
                 if (ld1->right->psector->pstyle)
                     if (ld1->b_misaligned)
                     {
-                        newoff = linelen(ld1);
+                        newoff = SLUMP_linelen(ld1);
                         if (newoff > 8)
                             split_linedef(l, ld1, 8, c);
                         if (ld1->right->upper_texture->name[0] != '-')
@@ -2751,7 +2763,7 @@ void global_align_textures(level *l, config *c)
                     }
             if (ld1->f_misaligned)
             {
-                newoff = linelen(ld1);
+                newoff = SLUMP_linelen(ld1);
                 if (newoff > 8)
                     ld2 = split_linedef(l, ld1, newoff - 8, c);
                 else
@@ -2766,14 +2778,14 @@ void global_align_textures(level *l, config *c)
         } /* end for ld1 */
     } /* end if supporting */
 
-#ifdef MARK_MISALIGNS
+#ifdef SLUMP_MARK_MISALIGNS
     /* And finally for debugging mark the places we know still didn't align */
     for (ld1 = l->linedef_anchor; ld1; ld1 = ld1->next)
     {
         if (ld1->right)
             if (ld1->b_misaligned)
             {
-                newoff = linelen(ld1);
+                newoff = SLUMP_linelen(ld1);
                 if (newoff > 8)
                     split_linedef(l, ld1, 8, c);
                 if (ld1->right->upper_texture->name[0] != '-')
@@ -2785,7 +2797,7 @@ void global_align_textures(level *l, config *c)
             }
         if (ld1->f_misaligned)
         {
-            newoff = linelen(ld1);
+            newoff = SLUMP_linelen(ld1);
             if (newoff > 8)
                 ld2 = split_linedef(l, ld1, newoff - 8, c);
             else
@@ -2810,7 +2822,7 @@ void global_fixups(level *l)
 
     for (ld = l->linedef_anchor; ld; ld = ld->next)
         if (ld->left == NULL)
-            ld->flags |= IMPASSIBLE;
+            ld->flags |= SLUMP_IMPASSIBLE;
 }
 
 /* This just paints all one-sided boundary sidddefs of the sector */
@@ -2846,7 +2858,7 @@ linedef *make_parallel(level *l, linedef *ld, int depth, linedef *old)
     vertex *v1, *v2;
     int     x, y;
 
-    point_from(ld->from->x, ld->from->y, ld->to->x, ld->to->y, LEFT_TURN, depth, &x, &y);
+    point_from(ld->from->x, ld->from->y, ld->to->x, ld->to->y, SLUMP_LEFT_TURN, depth, &x, &y);
     if (old)
     {
         old->to->x = x; /* Assumes no one else is using */
@@ -2899,7 +2911,7 @@ sector *make_box_ext(level *l, linedef *ldf1, linedef *ldf2, style *ThisStyle, c
         answer->light_level         = oldsec->light_level; /* default */
         answer->special             = oldsec->special;     /* or zero? */
         ldf1->right->middle_texture = c->null_texture;
-        ldf1->flags |= TWO_SIDED;
+        ldf1->flags |= SLUMP_TWO_SIDED;
     }
     ldf1->left                  = new_sidedef(l, answer, c);
     ldf2->right                 = new_sidedef(l, answer, c);
@@ -2940,8 +2952,8 @@ void find_rec(level *l, sector *s, int *minx, int *miny, int *maxx, int *maxy)
     if (!s->findrec_data_valid)
     {
         int lx, ly, hx, hy;
-        lx = ly = HUGE_NUMBER;
-        hx = hy = 0 - HUGE_NUMBER;
+        lx = ly = SLUMP_HUGE_NUMBER;
+        hx = hy = 0 - SLUMP_HUGE_NUMBER;
         for (ld = l->linedef_anchor; ld; ld = ld->next)
         {
             if (ld->right)
@@ -2985,16 +2997,17 @@ void dump_link(linedef *ldf1, linedef *ldf2, link *ThisLink, const char *s1)
         sprintf(s, "%s Link between (%d,%d)-(%d,%d) and (%d,%d)-(%d,%d).", s1, ldf1->from->x, ldf1->from->y,
                 ldf1->to->x, ldf1->to->y, ldf2->from->x, ldf2->from->y, ldf2->to->x, ldf2->to->y);
     }
-    announce(VERBOSE, s);
-    announce(VERBOSE, "T W R ND FD C A S L M  h1  w1  w2  d1  d2  d3   fd  sc ");
+    announce(SLUMP_VERBOSE, s);
+    announce(SLUMP_VERBOSE, "T W R ND FD C A S L M  h1  w1  w2  d1  d2  d3   fd  sc ");
     sprintf(s, "%1d %1d %1d  %1d  %1d %1d %1d %1d %1d %03d %03d %03d %03d %03d %03d %04d %03d %03d",
-            (ThisLink->bits & LINK_TWIN) != 0, (ThisLink->bits & LINK_WINDOW) != 0, (ThisLink->bits & LINK_RECESS) != 0,
-            (ThisLink->bits & LINK_NEAR_DOOR) != 0, (ThisLink->bits & LINK_FAR_DOOR) != 0,
-            (ThisLink->bits & LINK_CORE) != 0, (ThisLink->bits & LINK_ALCOVE) != 0, (ThisLink->bits & LINK_STEPS) != 0,
-            (ThisLink->bits & LINK_LIFT) != 0, (ThisLink->bits & LINK_MAX_CEILING) != 0, ThisLink->height1,
+            (ThisLink->bits & SLUMP_LINK_TWIN) != 0, (ThisLink->bits & SLUMP_LINK_WINDOW) != 0,
+            (ThisLink->bits & SLUMP_LINK_RECESS) != 0, (ThisLink->bits & SLUMP_LINK_NEAR_DOOR) != 0,
+            (ThisLink->bits & SLUMP_LINK_FAR_DOOR) != 0, (ThisLink->bits & SLUMP_LINK_CORE) != 0,
+            (ThisLink->bits & SLUMP_LINK_ALCOVE) != 0, (ThisLink->bits & SLUMP_LINK_STEPS) != 0,
+            (ThisLink->bits & SLUMP_LINK_LIFT) != 0, (ThisLink->bits & SLUMP_LINK_MAX_CEILING) != 0, ThisLink->height1,
             ThisLink->width1, ThisLink->width2, ThisLink->depth1, ThisLink->depth2, ThisLink->depth3,
             ThisLink->floordelta, ThisLink->stepcount);
-    announce(VERBOSE, s);
+    announce(SLUMP_VERBOSE, s);
 }
 
 /* Push a new (defaulty) quest onto the given stack */
@@ -3004,7 +3017,7 @@ quest *push_quest(quest *old)
 
     answer = (quest *)malloc(sizeof(*answer));
 
-    answer->goal     = NULL_GOAL;
+    answer->goal     = SLUMP_NULL_GOAL;
     answer->tag      = 0;
     answer->type     = 0;
     answer->count    = 0;
@@ -3151,12 +3164,12 @@ boolean empty_rectangle(level *l, int x1, int y1, int x2, int y2, int x3, int y3
 
 /* Given a linedef and a point, return the distance from the */
 /* linedef to the point, positive if the point is on the right */
-/* side, negative if to the left.  May return HUGE_NUMBER if */
+/* side, negative if to the left.  May return SLUMP_HUGE_NUMBER if */
 /* the point is not in either axis-shadow of the linedef, and */
 /* may assume that the linedef is basically axis-parallel. */
 int point_from_linedef(level *l, int x, int y, linedef *ld)
 {
-    int answer = HUGE_NUMBER;
+    int answer = SLUMP_HUGE_NUMBER;
     int candidate;
     int parity = 1;
 
@@ -3263,15 +3276,15 @@ boolean no_monsters_stuck_on(level *l, linedef *ld)
 
     for (m = l->thing_anchor; m; m = m->next)
     {
-        if (!(m->pgenus->bits & MONSTER))
+        if (!(m->pgenus->bits & SLUMP_MONSTER))
             continue; /* Only monsters */
-        if (m->pgenus->bits & FLIES)
+        if (m->pgenus->bits & SLUMP_FLIES)
             continue; /* Fliers can escape */
         dist = abs(point_from_linedef(l, m->x, m->y, ld));
-        if (dist <= (MONSTER_WIDTH(m) / 2))
+        if (dist <= (64 / 2))
         {
-#ifdef ALLOW_STUCK_MONSTERS_IN_BATHS
-            announce(LOG, "Bath Bug!");
+#ifdef SLUMP_ALLOW_STUCK_MONSTERS_IN_BATHS
+            announce(SLUMP_LOG, "Bath Bug!");
             return SLUMP_TRUE;
 #endif
             return SLUMP_FALSE;
@@ -3294,12 +3307,12 @@ sector *point_sector(level *l, int x, int y, int *dist, boolean *danger)
 
     if (danger != NULL)
         *danger = SLUMP_FALSE;
-    closest = HUGE_NUMBER;
+    closest = SLUMP_HUGE_NUMBER;
     for (ld = l->linedef_anchor; ld; ld = ld->next)
     {
         thisdist = point_from_linedef(l, x, y, ld);
         if (abs(thisdist) < 49)
-            if (ld->type != LINEDEF_NORMAL)
+            if (ld->type != SLUMP_LINEDEF_NORMAL)
                 if (danger != NULL)
                     *danger = SLUMP_TRUE;
         if (abs(thisdist) < closest)
@@ -3562,11 +3575,11 @@ void basic_background3(uint8_t *fbuf, byte bottom, int range)
 /* Should there be a secret level after the current level? */
 boolean need_secret_level(config *c)
 {
-    if (c->gamemask & (CHEX_BIT | HACX_BIT | HARMONY_BIT | STRIFE_BIT))
+    if (c->gamemask & (SLUMP_CHEX_BIT | SLUMP_HACX_BIT | SLUMP_HARMONY_BIT | SLUMP_STRIFE_BIT))
         return SLUMP_FALSE;
     if (c->do_seclevels == SLUMP_FALSE)
         return SLUMP_FALSE;
-    if (c->gamemask & HERETIC_BIT)
+    if (c->gamemask & SLUMP_HERETIC_BIT)
     {
         switch (c->episode)
         {
@@ -3614,25 +3627,25 @@ boolean link_fitsq(link *ThisLink, quest *ThisQuest)
     if (ThisQuest == NULL)
         return SLUMP_TRUE; /* Nothing to fit */
 
-    if (ThisQuest->goal == GATE_GOAL)
+    if (ThisQuest->goal == SLUMP_GATE_GOAL)
     {
-        if (ThisLink->type == OPEN_LINK)
+        if (ThisLink->type == SLUMP_OPEN_LINK)
             return SLUMP_TRUE; /* Easy */
         return SLUMP_FALSE;    /* else punt */
     }
 
     /* Keys and switches require doors */
-    if ((ThisQuest->goal == KEY_GOAL) || (ThisQuest->goal == SWITCH_GOAL))
+    if ((ThisQuest->goal == SLUMP_KEY_GOAL) || (ThisQuest->goal == SLUMP_SWITCH_GOAL))
     {
-        if (!(ThisLink->bits & LINK_NEAR_DOOR))
+        if (!(ThisLink->bits & SLUMP_LINK_NEAR_DOOR))
             return SLUMP_FALSE;
-        if (!(ThisLink->type == BASIC_LINK))
+        if (!(ThisLink->type == SLUMP_BASIC_LINK))
             return SLUMP_FALSE;
     }
     /* Actually because of nukage locks, SWITCH_GOALs don't require */
     /* doors.  Do something about that here. */
-    /* For that matter, there are kinds of OPEN_LINK and GATE_LINK */
-    /* that can fit a SWITCH_GOAL, also.  So fix that, too. */
+    /* For that matter, there are kinds of SLUMP_OPEN_LINK and SLUMP_GATE_LINK */
+    /* that can fit a SLUMP_SWITCH_GOAL, also.  So fix that, too. */
     return SLUMP_TRUE;
 }
 
@@ -3641,25 +3654,25 @@ boolean link_fitsh(linedef *ldf, link *ThisLink, config *c)
 {
     int available, required;
 
-    available = linelen(ldf);
+    available = SLUMP_linelen(ldf);
     required  = ThisLink->width1;
 
     switch (ThisLink->type)
     {
-    case BASIC_LINK:
+    case SLUMP_BASIC_LINK:
         if (required == 0)
             required = 64; /* Minimum to pass, eh? */
-        if ((ThisLink->bits) & LINK_TWIN)
+        if ((ThisLink->bits) & SLUMP_LINK_TWIN)
             available = (available / 2) - 16;
-        if ((ThisLink->bits) & LINK_ALCOVE)
+        if ((ThisLink->bits) & SLUMP_LINK_ALCOVE)
             required = required * 2 + ThisLink->depth3;
         break;
-    case OPEN_LINK:
+    case SLUMP_OPEN_LINK:
         if (required == 0)
             required = 33;
         required += 66;
         break;
-    case GATE_LINK:
+    case SLUMP_GATE_LINK:
         /* No gate-links outgoing from a gate room, eh? */
         if (ldf->right->psector->pgate)
         {
@@ -3667,7 +3680,7 @@ boolean link_fitsh(linedef *ldf, link *ThisLink, config *c)
         }
         return SLUMP_TRUE;
     default:
-        announce(WARNING, "Funny type in link_fitsh");
+        announce(SLUMP_WARNING, "Funny type in link_fitsh");
         return SLUMP_FALSE;
     }
 
@@ -3688,7 +3701,7 @@ void barify(level *l, linedef *ldf1, linedef *ldf2, quest *ThisQuest, int barwid
     texture *t1;
     short    type1;
 
-    if (linelen(ldf1) <= 32)
+    if (SLUMP_linelen(ldf1) <= 32)
         return; /* Already impassable */
     /* Get a handle on the sectors involved */
     oldsector = ldf1->left->psector;
@@ -3697,9 +3710,9 @@ void barify(level *l, linedef *ldf1, linedef *ldf2, quest *ThisQuest, int barwid
         newsector                 = clone_sector(l, oldsector);
         newsector->ceiling_height = newsector->floor_height; /* close it! */
         if (ThisQuest)
-            if (ThisQuest->goal == SWITCH_GOAL)
+            if (ThisQuest->goal == SLUMP_SWITCH_GOAL)
                 newsector->tag = ThisQuest->tag;
-        announce(VERBOSE, "Multiple");
+        announce(SLUMP_VERBOSE, "Multiple");
     }
     /* Then recurse to get the side bars, if needed */
     ld1a = centerpart(l, ldf1, &ld1b, barwidth, ThisStyle, c);
@@ -3711,30 +3724,30 @@ void barify(level *l, linedef *ldf1, linedef *ldf2, quest *ThisQuest, int barwid
     ldedge2 = new_linedef(l, ld1a->to, ld2a->from);
     /* Fix up existing sidedefs */
     ld1a->left->psector = newsector;
-    ld1a->flags &= ~UPPER_UNPEGGED;
+    ld1a->flags &= ~SLUMP_UPPER_UNPEGGED;
     ld1a->right->x_offset = 0;
     ld2a->left->psector   = newsector;
-    ld2a->flags &= ~UPPER_UNPEGGED;
+    ld2a->flags &= ~SLUMP_UPPER_UNPEGGED;
     ld2a->right->x_offset = 0;
     /* And make some new ones */
     ldedge1->left  = new_sidedef(l, newsector, c);
     ldedge1->right = new_sidedef(l, oldsector, c);
-    ldedge1->flags |= TWO_SIDED;
+    ldedge1->flags |= SLUMP_TWO_SIDED;
     ldedge2->left  = new_sidedef(l, newsector, c);
     ldedge2->right = new_sidedef(l, oldsector, c);
-    ldedge2->flags |= TWO_SIDED;
+    ldedge2->flags |= SLUMP_TWO_SIDED;
     /* Decide on a texture for the bar faces */
     t1 = ThisStyle->support0; /* Or wall0? */
     if (ThisQuest)
-        if (ThisQuest->goal == KEY_GOAL)
+        if (ThisQuest->goal == SLUMP_KEY_GOAL)
             t1 = texture_for_key(ThisQuest->type, ThisStyle, c);
     /* and the opening linedef type */
     type1 = ThisStyle->doortype;
     if (ThisQuest)
-        if (ThisQuest->goal == KEY_GOAL)
+        if (ThisQuest->goal == SLUMP_KEY_GOAL)
             type1 = type_for_key(ThisQuest->type);
-        else if (ThisQuest->goal == SWITCH_GOAL)
-            type1 = (c->do_dm) ? LINEDEF_NORMAL_S1_DOOR : LINEDEF_NORMAL;
+        else if (ThisQuest->goal == SLUMP_SWITCH_GOAL)
+            type1 = (c->do_dm) ? SLUMP_LINEDEF_NORMAL_S1_DOOR : SLUMP_LINEDEF_NORMAL;
     /* Now fill in all the textures and stuff */
     ld1a->type                     = type1;
     ld2a->type                     = type1;
@@ -3762,7 +3775,7 @@ boolean slitify(level *l, linedef *ldf1, linedef *ldf2, int slitwidth, sector *n
     linedef *ld1a, *ld2a, *ldedge1, *ldedge2;
     sector  *nearsector, *farsector;
     short    newch, newch2, newfh, newfh2;
-    int      len = linelen(ldf1);
+    int      len = SLUMP_linelen(ldf1);
 
     /* Get a handle on the sectors involved */
     nearsector = ldf1->right->psector;
@@ -3816,9 +3829,9 @@ boolean slitify(level *l, linedef *ldf1, linedef *ldf2, int slitwidth, sector *n
         ldedge2 = new_linedef(l, ld1a->from, ld2a->to);
         /* Fix up existing sidedefs */
         ld1a->right->middle_texture = c->null_texture; /* Or grating? */
-        ld1a->flags |= TWO_SIDED;
+        ld1a->flags |= SLUMP_TWO_SIDED;
         ld2a->right->middle_texture = c->null_texture; /* Or grating? */
-        ld2a->flags |= TWO_SIDED;
+        ld2a->flags |= SLUMP_TWO_SIDED;
         /* and make new ones */
         ldedge1->right                 = new_sidedef(l, newsector, c);
         ldedge1->right->middle_texture = ldf1->right->middle_texture;
@@ -3833,7 +3846,7 @@ boolean slitify(level *l, linedef *ldf1, linedef *ldf2, int slitwidth, sector *n
         ld2a->left->middle_texture = c->null_texture;
         patch_upper(ld2a, ldf2->right->psector->pstyle->wall0, c);
         patch_lower(ld2a, ldf2->right->psector->pstyle->support0, c);
-        announce(VERBOSE, "Slit");
+        announce(SLUMP_VERBOSE, "Slit");
     }
 
     return SLUMP_TRUE;
@@ -3853,12 +3866,12 @@ void stairify(level *l, linedef *ldf1, linedef *ldf2, linedef *lde1, linedef *ld
     sector  *s, *nearsec;
     int      len, stepdepth, i;
     int      minstepcount, maxstepcount, stepcount, stepheight;
-    boolean  need_lock = (ThisQuest != NULL) && (ThisQuest->goal == SWITCH_GOAL);
+    boolean  need_lock = (ThisQuest != NULL) && (ThisQuest->goal == SLUMP_SWITCH_GOAL);
     texture *front     = ThisStyle->kickplate;
     boolean  do_edges  = SLUMP_FALSE;
 
     nearsec = ldf1->right->psector;
-    len     = linelen(lde1);
+    len     = SLUMP_linelen(lde1);
 
     /* Need at least enough steps to get up, 24 at a time */
     minstepcount = (farheight - nearheight) / 24;
@@ -3880,7 +3893,7 @@ void stairify(level *l, linedef *ldf1, linedef *ldf2, linedef *lde1, linedef *ld
         announce(SLUMP_ERROR, "Step too high to climb!");
     if (need_lock)
     {
-        announce(LOG, "Locked stairs");
+        announce(SLUMP_LOG, "Locked stairs");
         stepheight = 8;
         stepcount  = (farheight - nearheight) / stepheight;
         stepdepth  = len / stepcount;
@@ -3890,9 +3903,9 @@ void stairify(level *l, linedef *ldf1, linedef *ldf2, linedef *lde1, linedef *ld
         char s[100];
         sprintf(s, "%d steps from [%d-%d], each %d deep and %d high.\n", stepcount, minstepcount, maxstepcount,
                 stepdepth, stepheight);
-        announce(VERBOSE, s);
+        announce(SLUMP_VERBOSE, s);
         sprintf(s, "Total: %d deep, %d high.\n", len, farheight - nearheight);
-        announce(VERBOSE, s);
+        announce(SLUMP_VERBOSE, s);
     }
 
     if (ThisStyle->stepfront)
@@ -3905,20 +3918,20 @@ void stairify(level *l, linedef *ldf1, linedef *ldf2, linedef *lde1, linedef *ld
         {
             front = ThisStyle->walllight;
         }
-        else if (ThisStyle->light_edges && (linelen(ldf1) >= (64 * l->hugeness)) && (stepheight > 7))
+        else if (ThisStyle->light_edges && (SLUMP_linelen(ldf1) >= (64 * l->hugeness)) && (stepheight > 7))
         {
             do_edges = SLUMP_TRUE;
-            announce(VERBOSE, "Step-edge lights");
+            announce(SLUMP_VERBOSE, "Step-edge lights");
         }
     }
 
     if (need_lock)
     {
-        ThisQuest->type = LINEDEF_S1_RAISE_STAIRS;
+        ThisQuest->type = SLUMP_LINEDEF_S1_RAISE_STAIRS;
     }
 
     ldf1->right->lower_texture = front;
-    ldf1->flags &= ~LOWER_UNPEGGED;
+    ldf1->flags &= ~SLUMP_LOWER_UNPEGGED;
 
     for (i = 0; i < (stepcount - 1); i++)
     { /* Minus one, since one's already made */
@@ -3936,7 +3949,7 @@ void stairify(level *l, linedef *ldf1, linedef *ldf2, linedef *lde1, linedef *ld
         ldf1->left->psector = s;
         if (do_edges)
         {
-            ldl                       = split_linedef(l, ldf1, linelen(ldf1) - 16 * l->hugeness, c);
+            ldl                       = split_linedef(l, ldf1, SLUMP_linelen(ldf1) - 16 * l->hugeness, c);
             ldl->right->lower_texture = ThisStyle->walllight;
             split_linedef(l, ldf1, 16 * l->hugeness, c);
             ldf1->right->lower_texture = ThisStyle->walllight;
@@ -3946,11 +3959,11 @@ void stairify(level *l, linedef *ldf1, linedef *ldf2, linedef *lde1, linedef *ld
         ldf1                       = new_linedef(l, ldn1->from, ldn2->to);
         ldf1->right                = new_sidedef(l, s, c);
         ldf1->right->lower_texture = front;
-        ldf1->flags &= ~LOWER_UNPEGGED;
+        ldf1->flags &= ~SLUMP_LOWER_UNPEGGED;
         ldf1->right->middle_texture = c->null_texture;
         ldf1->left                  = new_sidedef(l, s, c); /* s is wrong; fixed above/below */
         ldf1->left->middle_texture  = c->null_texture;
-        ldf1->flags |= TWO_SIDED;
+        ldf1->flags |= SLUMP_TWO_SIDED;
         if (need_lock)
             s->floor_height = nearsec->floor_height;
         if (!need_lock)
@@ -3962,10 +3975,10 @@ void stairify(level *l, linedef *ldf1, linedef *ldf2, linedef *lde1, linedef *ld
     }
     ldf1->left->psector = ldf2->left->psector;
     patch_lower(ldf1, front, c);
-    ldf1->flags &= ~LOWER_UNPEGGED;
+    ldf1->flags &= ~SLUMP_LOWER_UNPEGGED;
     if (do_edges)
     {
-        ldl                       = split_linedef(l, ldf1, linelen(ldf1) - 16 * l->hugeness, c);
+        ldl                       = split_linedef(l, ldf1, SLUMP_linelen(ldf1) - 16 * l->hugeness, c);
         ldl->right->lower_texture = ThisStyle->walllight;
         split_linedef(l, ldf1, 16 * l->hugeness, c);
         ldf1->right->lower_texture = ThisStyle->walllight;
@@ -3997,10 +4010,10 @@ void doorify(sector *s, linedef *ldf1, linedef *ldf2, style *ThisStyle, style *N
             ldf1->right->upper_texture = ThisStyle->twdoorface;
         else
             ldf1->right->upper_texture = ThisStyle->widedoorface;
-        if (lensq < (128 * 128))                               /* "128" is wrong */
-            ldf1->right->x_offset = (128 - linelen(ldf1)) / 2; /* All of these */
+        if (lensq < (128 * 128))                                     /* "128" is wrong */
+            ldf1->right->x_offset = (128 - SLUMP_linelen(ldf1)) / 2; /* All of these */
         else
-            ldf1->right->x_offset = 128 - (linelen(ldf1) % 128) / 2;
+            ldf1->right->x_offset = 128 - (SLUMP_linelen(ldf1) % 128) / 2;
         /* Avoid TFE! */
         if (ldf1->right->upper_texture->height < 128)
             if (ldf1->right->psector->ceiling_height - ldf1->right->psector->floor_height >
@@ -4013,10 +4026,10 @@ void doorify(sector *s, linedef *ldf1, linedef *ldf2, style *ThisStyle, style *N
             ldf1->right->upper_texture = ThisStyle->tndoorface;
         else
             ldf1->right->upper_texture = ThisStyle->narrowdoorface;
-        if (lensq < (64 * 64))                                /* Also "64" */
-            ldf1->right->x_offset = (64 - linelen(ldf1)) / 2; /* All of these */
+        if (lensq < (64 * 64))                                      /* Also "64" */
+            ldf1->right->x_offset = (64 - SLUMP_linelen(ldf1)) / 2; /* All of these */
         else
-            ldf1->right->x_offset = 64 - (linelen(ldf1) % 64) / 2;
+            ldf1->right->x_offset = 64 - (SLUMP_linelen(ldf1) % 64) / 2;
         /* Avoid TFE! */
         if (ldf1->right->upper_texture->height < 128)
             if (ldf1->right->psector->ceiling_height - ldf1->right->psector->floor_height >
@@ -4033,9 +4046,9 @@ void doorify(sector *s, linedef *ldf1, linedef *ldf2, style *ThisStyle, style *N
         else
             ldf2->right->upper_texture = NewStyle->widedoorface;
         if (lensq < (128 * 128))
-            ldf2->right->x_offset = (128 - linelen(ldf2)) / 2;
+            ldf2->right->x_offset = (128 - SLUMP_linelen(ldf2)) / 2;
         else
-            ldf2->right->x_offset = 128 - (linelen(ldf2) % 128) / 2;
+            ldf2->right->x_offset = 128 - (SLUMP_linelen(ldf2) % 128) / 2;
         /* Avoid TFE! */
         if (ldf2->right->upper_texture->height < 128)
             if (ldf2->right->psector->ceiling_height - ldf2->right->psector->floor_height >
@@ -4049,30 +4062,30 @@ void doorify(sector *s, linedef *ldf1, linedef *ldf2, style *ThisStyle, style *N
         else
             ldf2->right->upper_texture = NewStyle->narrowdoorface;
         if (lensq < (64 * 64))
-            ldf2->right->x_offset = (64 - linelen(ldf2)) / 2;
+            ldf2->right->x_offset = (64 - SLUMP_linelen(ldf2)) / 2;
         else
-            ldf2->right->x_offset = 64 - (linelen(ldf2) % 64) / 2;
+            ldf2->right->x_offset = 64 - (SLUMP_linelen(ldf2) % 64) / 2;
         /* Avoid TFE! */
         if (ldf2->right->upper_texture->height < 128)
             if (ldf2->right->psector->ceiling_height - ldf2->right->psector->floor_height >
                 ldf2->right->upper_texture->height)
                 ldf2->right->upper_texture = NewStyle->tndoorface;
     }
-#ifdef SOMETIMES_UNPEG_DOORFACES
+#ifdef SLUMP_SOMETIMES_UNPEG_DOORFACES
     if (!ThisStyle->secret_doors) /* Doors secret-flavor? */
 #endif
     {
-        ldf1->flags &= ~UPPER_UNPEGGED;
-        ldf2->flags &= ~UPPER_UNPEGGED;
+        ldf1->flags &= ~SLUMP_UPPER_UNPEGGED;
+        ldf2->flags &= ~SLUMP_UPPER_UNPEGGED;
     }
     if (ThisStyle->soundproof_doors)
     {
-        ldf1->flags |= BLOCK_SOUND;
-        ldf2->flags |= BLOCK_SOUND;
+        ldf1->flags |= SLUMP_BLOCK_SOUND;
+        ldf2->flags |= SLUMP_BLOCK_SOUND;
     }
     /* And in any case avoid stoop silliness */
-    ldf1->flags &= ~LOWER_UNPEGGED;
-    ldf2->flags &= ~LOWER_UNPEGGED;
+    ldf1->flags &= ~SLUMP_LOWER_UNPEGGED;
+    ldf2->flags &= ~SLUMP_LOWER_UNPEGGED;
 
 } /* end doorify */
 
@@ -4085,7 +4098,7 @@ boolean make_window_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink
     texture *t1, *t2;
     int      len;
 
-    announce(VERBOSE, "Making a window");
+    announce(SLUMP_VERBOSE, "Making a window");
 
     nearsec = ldf1->right->psector;
     farsec  = ldf2->right->psector;
@@ -4105,10 +4118,10 @@ boolean make_window_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink
 
     /* Put a little border on it.  Very simple version for now. */
     ldf1 = split_linedef(l, ldf1, ThisStyle->windowborder, c);
-    len  = linelen(ldf1);
+    len  = SLUMP_linelen(ldf1);
     split_linedef(l, ldf1, len - ThisStyle->windowborder, c);
     ldf2 = split_linedef(l, ldf2, ThisStyle->windowborder, c);
-    len  = linelen(ldf2);
+    len  = SLUMP_linelen(ldf2);
     split_linedef(l, ldf2, len - ThisStyle->windowborder, c);
 
     flip_linedef(ldf2); /* parallelize, for make_box */
@@ -4123,21 +4136,21 @@ boolean make_window_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink
     /* Various possibilities for window decor */
     switch (ThisStyle->window_decor)
     {
-    case WINDOW_JAMBS:
+    case SLUMP_WINDOW_JAMBS:
         ldnew1->right->middle_texture = ThisStyle->doorjamb;
         ldnew2->right->middle_texture = ThisStyle->doorjamb;
         break;
-    case WINDOW_SUPPORT:
+    case SLUMP_WINDOW_SUPPORT:
         ldnew1->right->middle_texture = ThisStyle->support0;
         ldnew2->right->middle_texture = ThisStyle->support0;
         break;
-    case WINDOW_LIGHT:
+    case SLUMP_WINDOW_LIGHT:
         make_lighted(l, newsec, c);
         if (ThisStyle->walllight)
         {
             ldnew1->right->middle_texture = ThisStyle->walllight;
             ldnew2->right->middle_texture = ThisStyle->walllight;
-            announce(VERBOSE, "Lit window");
+            announce(SLUMP_VERBOSE, "Lit window");
         }
         else
         {
@@ -4153,22 +4166,22 @@ boolean make_window_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink
     {
         ldf1->right->middle_texture = ThisStyle->grating;
         /* Unpeg, to keep the texture from floating away, eh? */
-        ldf1->flags |= LOWER_UNPEGGED;
-        ldf1->flags |= TWO_SIDED | IMPASSIBLE;
-#ifdef OLD_FUNNY_WINDOWGRATES
+        ldf1->flags |= SLUMP_LOWER_UNPEGGED;
+        ldf1->flags |= SLUMP_TWO_SIDED | SLUMP_IMPASSIBLE;
+#ifdef SLUMP_OLD_FUNNY_WINDOWGRATES
         ldf2->right->middle_texture = NewStyle->grating;
-        ldf2->flags |= LOWER_UNPEGGED;
-        ldf2->flags |= TWO_SIDED | IMPASSIBLE;
+        ldf2->flags |= SLUMP_LOWER_UNPEGGED;
+        ldf2->flags |= SLUMP_TWO_SIDED | SLUMP_IMPASSIBLE;
 #else
         ldf1->left->middle_texture = ThisStyle->grating;
-        ldf2->flags |= TWO_SIDED;
+        ldf2->flags |= SLUMP_TWO_SIDED;
 #endif
-        announce(VERBOSE, "Window grate");
+        announce(SLUMP_VERBOSE, "Window grate");
     }
     else
     {
-        ldf1->flags |= TWO_SIDED | IMPASSIBLE;
-        ldf2->flags |= TWO_SIDED | IMPASSIBLE;
+        ldf1->flags |= SLUMP_TWO_SIDED | SLUMP_IMPASSIBLE;
+        ldf2->flags |= SLUMP_TWO_SIDED | SLUMP_IMPASSIBLE;
     }
 
     ldf1->left->y_offset = ldf1->right->y_offset = ldf2->left->y_offset = ldf2->right->y_offset = 0;
@@ -4224,10 +4237,10 @@ boolean make_window(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, styl
         if (farsec->ceiling_height > newch)
             newch = farsec->ceiling_height;
         newch += 16 + 8 * roll(10);
-        newsec                     = new_sector(l, newfh, newch, random_flat0(OUTDOOR, c, NULL), nearsec->ceiling_flat);
-        newsec->pstyle             = copy_style(l, nearsec->pstyle, nearsec->pstyle->theme_number, 0, c);
+        newsec         = new_sector(l, newfh, newch, random_flat0(SLUMP_OUTDOOR, c, NULL), nearsec->ceiling_flat);
+        newsec->pstyle = copy_style(l, nearsec->pstyle, nearsec->pstyle->theme_number, 0, c);
         newsec->pstyle->roomlight0 = l->outside_light_level;
-        /* Do we want to make the walls OUTDOOR here? */
+        /* Do we want to make the walls SLUMP_OUTDOOR here? */
         ld1n->right = new_sidedef(l, newsec, c);
         ld2n->right = new_sidedef(l, newsec, c);
         lde1->right = new_sidedef(l, newsec, c);
@@ -4241,10 +4254,10 @@ boolean make_window(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, styl
         if (rollpercent(l->p_force_nukage))
         {
             newsec->floor_flat = newsec->pstyle->nukage1;
-            newsec->special    = NUKAGE1_SPECIAL;
+            newsec->special    = SLUMP_NUKAGE1_SPECIAL;
         }
         if (rc1 || rc2)
-            announce(LOG, "Window airshaft");
+            announce(SLUMP_LOG, "Window airshaft");
         return rc1 || rc2;
     }
     else
@@ -4269,10 +4282,10 @@ boolean make_decroom(level *l, linedef *ldf1, linedef *ldf2, config *c)
     /* Put a little border on it.  Very simple version for now. */
     /* Don't really need at all if recesses etc, eh? */
     ldf1 = split_linedef(l, ldf1, ThisStyle->windowborder, c);
-    len  = linelen(ldf1);
+    len  = SLUMP_linelen(ldf1);
     split_linedef(l, ldf1, len - ThisStyle->windowborder, c);
     ldf2 = split_linedef(l, ldf2, ThisStyle->windowborder, c);
-    len  = linelen(ldf2);
+    len  = SLUMP_linelen(ldf2);
     split_linedef(l, ldf2, len - ThisStyle->windowborder, c);
 
     flip_linedef(ldf2); /* parallelize, for make_box */
@@ -4286,12 +4299,12 @@ boolean make_decroom(level *l, linedef *ldf1, linedef *ldf2, config *c)
     if (rollpercent(10) || rollpercent(l->p_force_nukage))
     {
         newsec->floor_flat = ThisStyle->nukage1;
-        newsec->special    = NUKAGE1_SPECIAL; /* Not that you can get in there! */
-        announce(LOG, "Intertwin nukage");
+        newsec->special    = SLUMP_NUKAGE1_SPECIAL; /* Not that you can get in there! */
+        announce(SLUMP_LOG, "Intertwin nukage");
     }
     else
     {
-        newsec->floor_flat = random_flat0(OUTDOOR, c, NULL);
+        newsec->floor_flat = random_flat0(SLUMP_OUTDOOR, c, NULL);
     }
     newsec->pstyle = ThisStyle;
 
@@ -4301,11 +4314,11 @@ boolean make_decroom(level *l, linedef *ldf1, linedef *ldf2, config *c)
     ldf2->right->middle_texture                       = ThisStyle->grating;
     ldf2->left->middle_texture                        = ThisStyle->grating;
     /* Unpeg, to keep the texture from floating away, eh? */
-    ldf1->flags |= LOWER_UNPEGGED;
-    ldf2->flags |= LOWER_UNPEGGED;
+    ldf1->flags |= SLUMP_LOWER_UNPEGGED;
+    ldf2->flags |= SLUMP_LOWER_UNPEGGED;
 
-    ldf1->flags |= TWO_SIDED | IMPASSIBLE;
-    ldf2->flags |= TWO_SIDED | IMPASSIBLE;
+    ldf1->flags |= SLUMP_TWO_SIDED | SLUMP_IMPASSIBLE;
+    ldf2->flags |= SLUMP_TWO_SIDED | SLUMP_IMPASSIBLE;
     ldf1->left->y_offset = ldf1->right->y_offset = ldf2->left->y_offset = ldf2->right->y_offset = 0;
 
     patch_upper(ldf1, t1, c);
@@ -4313,7 +4326,7 @@ boolean make_decroom(level *l, linedef *ldf1, linedef *ldf2, config *c)
     patch_lower(ldf1, t1, c);
     patch_lower(ldf2, t1, c);
 
-    len = linelen(ldnew1);
+    len = SLUMP_linelen(ldnew1);
     if (len > 31)
     { /* Inset a bit */
         linedef *lt1, *lt2;
@@ -4367,20 +4380,20 @@ texture *texture_for_key(short key, style *s, config *c)
 {
     switch (key)
     {
-    case ID_BLUEKEY:
-    case ID_BLUECARD:
-    case ID_HERETICBLUEKEY:
+    case SLUMP_ID_BLUEKEY:
+    case SLUMP_ID_BLUECARD:
+    case SLUMP_ID_HERETICBLUEKEY:
         return s->blueface;
-    case ID_REDKEY:
-    case ID_REDCARD:
-    case ID_HERETICGREENKEY:
+    case SLUMP_ID_REDKEY:
+    case SLUMP_ID_REDCARD:
+    case SLUMP_ID_HERETICGREENKEY:
         return s->redface;
-    case ID_YELLOWKEY:
-    case ID_YELLOWCARD:
-    case ID_HERETICYELLOWKEY:
+    case SLUMP_ID_YELLOWKEY:
+    case SLUMP_ID_YELLOWCARD:
+    case SLUMP_ID_HERETICYELLOWKEY:
         return s->yellowface;
     }
-    announce(WARNING, "Unknown key in texture_for_key()");
+    announce(SLUMP_WARNING, "Unknown key in texture_for_key()");
     return c->error_texture;
 }
 
@@ -4390,16 +4403,16 @@ texture *texture_for_bits(propertybits pb, style *s, config *c)
 
     switch (pb)
     {
-    case BLUE:
+    case SLUMP_BLUE:
         answer = s->blueface;
         break;
-    case RED:
+    case SLUMP_RED:
         answer = s->redface;
         break;
-    case YELLOW:
+    case SLUMP_YELLOW:
         answer = s->yellowface;
         break;
-    case LIGHT:
+    case SLUMP_LIGHT:
         answer = s->walllight;
         break;
     }
@@ -4412,21 +4425,21 @@ short type_for_key(short key)
 {
     switch (key)
     {
-    case ID_BLUEKEY:
-    case ID_BLUECARD:
-    case ID_HERETICBLUEKEY:
-        return LINEDEF_BLUE_S1_DOOR;
-    case ID_REDKEY:
-    case ID_REDCARD:
-    case ID_HERETICGREENKEY:
-        return LINEDEF_RED_S1_DOOR;
-    case ID_YELLOWKEY:
-    case ID_YELLOWCARD:
-    case ID_HERETICYELLOWKEY:
-        return LINEDEF_YELLOW_S1_DOOR;
+    case SLUMP_ID_BLUEKEY:
+    case SLUMP_ID_BLUECARD:
+    case SLUMP_ID_HERETICBLUEKEY:
+        return SLUMP_LINEDEF_BLUE_S1_DOOR;
+    case SLUMP_ID_REDKEY:
+    case SLUMP_ID_REDCARD:
+    case SLUMP_ID_HERETICGREENKEY:
+        return SLUMP_LINEDEF_RED_S1_DOOR;
+    case SLUMP_ID_YELLOWKEY:
+    case SLUMP_ID_YELLOWCARD:
+    case SLUMP_ID_HERETICYELLOWKEY:
+        return SLUMP_LINEDEF_YELLOW_S1_DOOR;
     }
-    announce(WARNING, "Unknown key in type_for_key()");
-    return LINEDEF_NORMAL_S1_DOOR;
+    announce(SLUMP_WARNING, "Unknown key in type_for_key()");
+    return SLUMP_LINEDEF_NORMAL_S1_DOOR;
 }
 
 /* Mark the given door of the given level to look like it's locked */
@@ -4438,7 +4451,7 @@ void mark_door_for_key(level *l, linedef *ldf1, short key, style *ThisStyle, con
 
     if (ThisStyle->gaudy_locks)
     {
-        announce(VERBOSE, "Gaudy door");
+        announce(SLUMP_VERBOSE, "Gaudy door");
         ldf1->right->upper_texture = texture_for_key(key, ThisStyle, c);
     }
     else
@@ -4446,7 +4459,7 @@ void mark_door_for_key(level *l, linedef *ldf1, short key, style *ThisStyle, con
         t1                         = texture_for_key(key, ThisStyle, c);
         ldf2                       = split_linedef(l, ldf1, 16, c); /* '16' is wrong, but not bad */
         ldf1->right->upper_texture = t1;
-        ldf2                       = split_linedef(l, ldf2, linelen(ldf2) - 16, c);
+        ldf2                       = split_linedef(l, ldf2, SLUMP_linelen(ldf2) - 16, c);
         ldf2->right->upper_texture = t1;
     }
 }
@@ -4460,7 +4473,7 @@ void mark_door_for_lock(level *l, linedef *ldf1, style *ThisStyle, config *c)
             (ldf1->right->psector->ceiling_height - ldf1->right->psector->floor_height))
             return;
     ldf1->right->upper_texture = ThisStyle->lockdoorface;
-    announce(VERBOSE, "Specially marked door");
+    announce(SLUMP_VERBOSE, "Specially marked door");
 }
 
 /* Given a linedef type, return the equivalent linedef type, */
@@ -4469,20 +4482,20 @@ short locked_linedef_for(short type, short key, config *c)
 {
     switch (type)
     {
-    case LINEDEF_S1_OPEN_DOOR:
-        if ((DOOM0_BIT | HERETIC_BIT) & c->gamemask)
+    case SLUMP_LINEDEF_S1_OPEN_DOOR:
+        if ((SLUMP_DOOM0_BIT | SLUMP_HERETIC_BIT) & c->gamemask)
             return 0; /* Not in ancient DooMs (or Heretic) */
         switch (key)
         {
-        case ID_BLUEKEY:
-        case ID_BLUECARD:
-            return LINEDEF_S1_OPEN_DOOR_BLUE;
-        case ID_REDKEY:
-        case ID_REDCARD:
-            return LINEDEF_S1_OPEN_DOOR_RED;
-        case ID_YELLOWKEY:
-        case ID_YELLOWCARD:
-            return LINEDEF_S1_OPEN_DOOR_YELLOW;
+        case SLUMP_ID_BLUEKEY:
+        case SLUMP_ID_BLUECARD:
+            return SLUMP_LINEDEF_S1_OPEN_DOOR_BLUE;
+        case SLUMP_ID_REDKEY:
+        case SLUMP_ID_REDCARD:
+            return SLUMP_LINEDEF_S1_OPEN_DOOR_RED;
+        case SLUMP_ID_YELLOWKEY:
+        case SLUMP_ID_YELLOWCARD:
+            return SLUMP_LINEDEF_S1_OPEN_DOOR_YELLOW;
         default:
             announce(SLUMP_ERROR, "Unknown key in l_l_f");
             return 0;
@@ -4500,7 +4513,7 @@ void make_lighted(level *l, sector *s, config *c)
         if (s->light_level < l->lit_light_level)
             s->light_level = l->lit_light_level;
     if (rollpercent(10))
-        s->special = RANDOM_BLINK;
+        s->special = SLUMP_RANDOM_BLINK;
 }
 
 /* Make a nice box with a thing to the left of the linedef */
@@ -4511,15 +4524,15 @@ linedef *lightbox(level *l, linedef *ld, genus *g, style *ThisStyle, config *c)
     int      x, y;
     sector  *oldsec, *newsec;
 
-    len = linelen(ld);
+    len = SLUMP_linelen(ld);
     if (len < 48)
         return NULL; /* All these "48"s should vary, eh? */ /* Hugeness? */
     if (!empty_left_side(l, ld, 48))
         return NULL;
-    announce(VERBOSE, "lightbox");
+    announce(SLUMP_VERBOSE, "lightbox");
     if (len > 48)
         ld = centerpart(l, ld, NULL, 48, ThisStyle, c);
-    ldb                        = lefthand_box(l, ld, 48, ThisStyle, c); /* This one too */
+    ldb                        = SLUMP_lefthand_box(l, ld, 48, ThisStyle, c); /* This one too */
     ldb->right->middle_texture = ThisStyle->wall0;
     oldsec                     = ld->right->psector;
     newsec                     = ldb->right->psector;
@@ -4528,13 +4541,13 @@ linedef *lightbox(level *l, linedef *ld, genus *g, style *ThisStyle, config *c)
     if (newsec->ceiling_height - newsec->floor_height < 64)
         newsec->floor_height = newsec->ceiling_height - 64;
     patch_lower(ld, ThisStyle->wall0, c);
-    point_from(ld->from->x, ld->from->y, ld->to->x, ld->to->y, LEFT_TURN, 24, &x, &y);
-    point_from(ld->to->x, ld->to->y, x, y, LEFT_TURN, 24, &x, &y);
+    point_from(ld->from->x, ld->from->y, ld->to->x, ld->to->y, SLUMP_LEFT_TURN, 24, &x, &y);
+    point_from(ld->to->x, ld->to->y, x, y, SLUMP_LEFT_TURN, 24, &x, &y);
     if (g->height > (newsec->ceiling_height - newsec->floor_height))
         g = ThisStyle->shortlamp0;
     new_thing(l, x, y, 0, g->thingid, 7, c);
-    if (g->bits & EXPLODES)
-        announce(VERBOSE, "Barrelbox");
+    if (g->bits & SLUMP_EXPLODES)
+        announce(SLUMP_VERBOSE, "Barrelbox");
     return ld;
 }
 
@@ -4546,14 +4559,14 @@ void lightbar(level *l, linedef *ld, propertybits pb, style *ThisStyle, config *
     linedef *ldb, *lde1, *lde2;
     sector  *oldsec, *newsec;
 
-    len = linelen(ld);
+    len = SLUMP_linelen(ld);
     if (len < 16)
         return;
     wid = 12 + roll(len - 17);
     dep = 8 + 4 * roll(5);
     if (!empty_left_side(l, ld, dep))
         return;
-    announce(VERBOSE, "lightbar");
+    announce(SLUMP_VERBOSE, "lightbar");
     if (len > wid)
         ld = centerpart(l, ld, NULL, wid, ThisStyle, c);
     ldb                        = lefthand_box_ext(l, ld, dep, ThisStyle, c, &lde1, &lde2);
@@ -4562,8 +4575,8 @@ void lightbar(level *l, linedef *ld, propertybits pb, style *ThisStyle, config *
     {
         texture *t = lde1->right->middle_texture;
         if (t != ThisStyle->wall0)
-            if (!(t->props & LIGHT))
-                announce(LOG, "Colorbar");
+            if (!(t->props & SLUMP_LIGHT))
+                announce(SLUMP_LOG, "Colorbar");
     }
     oldsec          = ld->right->psector;
     newsec          = ldb->right->psector;
@@ -4581,7 +4594,7 @@ linedef *centerpart(level *l, linedef *ld, linedef **ld2, int width, style *This
     int      len, border;
     linedef *answer, *answer2;
 
-    len    = linelen(ld);
+    len    = SLUMP_linelen(ld);
     border = (len - width) / 2;
     border += (len - (width + 2 * border)); /* Fix roundoff errors */
     if (border <= 0)
@@ -4623,7 +4636,7 @@ linedef *borderize(level *l, linedef *ld, int width, boolean fancy, style *ThisS
     if (ld != ld2)
         if (fancy)
             if (ThisStyle->lightboxes)
-                if ((linelen(ld) >= 64))
+                if ((SLUMP_linelen(ld) >= 64))
                 {
                     short  box_light_level = nearsec->light_level;
                     short  box_special     = 0;
@@ -4635,15 +4648,15 @@ linedef *borderize(level *l, linedef *ld, int width, boolean fancy, style *ThisS
                         if (g == NULL)
                             g = ThisStyle->lamp0;
                     }
-                    if (g->bits & LIGHT)
+                    if (g->bits & SLUMP_LIGHT)
                     {
-                        if (ThisStyle->lightbox_lighting == LIGHTBOX_LIGHTED)
+                        if (ThisStyle->lightbox_lighting == SLUMP_LIGHTBOX_LIGHTED)
                             if (box_light_level < l->lit_light_level)
                                 box_light_level = l->lit_light_level;
-                        if (ThisStyle->lightbox_lighting == LIGHTBOX_DARK)
+                        if (ThisStyle->lightbox_lighting == SLUMP_LIGHTBOX_DARK)
                             box_light_level = c->minlight;
                         if (rollpercent(20))
-                            box_special = RANDOM_BLINK; /* 20? */
+                            box_special = SLUMP_RANDOM_BLINK; /* 20? */
                     }
                     ldt = lightbox(l, ld, g, ThisStyle, c);
                     /* Maybe do the cool keybox thing! */
@@ -4654,13 +4667,13 @@ linedef *borderize(level *l, linedef *ld, int width, boolean fancy, style *ThisS
                         lsec->ceiling_height = lsec->floor_height + 32;
                         patch_upper(ldt, nearsec->pstyle->wall0, c);
                         patch_lower(ldt, nearsec->pstyle->wall0, c);
-                        ldt->flags |= IMPASSIBLE;
-                        lsec->special = GLOW_BLINK;
+                        ldt->flags |= SLUMP_IMPASSIBLE;
+                        lsec->special = SLUMP_GLOW_BLINK;
                         if (lsec->light_level < l->lit_light_level)
                             lsec->light_level = l->lit_light_level;
                         if (painted_door)
                             *painted_door = SLUMP_TRUE;
-                        announce(LOG, "Keybox");
+                        announce(SLUMP_LOG, "Keybox");
                     }
                     else if (ldt)
                     {
@@ -4675,13 +4688,13 @@ linedef *borderize(level *l, linedef *ld, int width, boolean fancy, style *ThisS
                         lsec->ceiling_height = lsec->floor_height + 32;
                         patch_upper(ldt, nearsec->pstyle->wall0, c);
                         patch_lower(ldt, nearsec->pstyle->wall0, c);
-                        ldt->flags |= IMPASSIBLE;
-                        lsec->special = GLOW_BLINK;
+                        ldt->flags |= SLUMP_IMPASSIBLE;
+                        lsec->special = SLUMP_GLOW_BLINK;
                         if (lsec->light_level < l->lit_light_level)
                             lsec->light_level = l->lit_light_level;
                         if (painted_door)
                             *painted_door = SLUMP_TRUE;
-                        announce(LOG, "Keybox");
+                        announce(SLUMP_LOG, "Keybox");
                     }
                     else if (ldt)
                     {
@@ -4689,9 +4702,9 @@ linedef *borderize(level *l, linedef *ld, int width, boolean fancy, style *ThisS
                         ldt->left->psector->special     = box_special;
                     }
 
-#ifdef LIGHTBAR_STUFF
+#ifdef SLUMP_LIGHTBAR_STUFF
                 }
-                else if (linelen(ld) > 16)
+                else if (SLUMP_linelen(ld) > 16)
                 {
                     /* These actually look very silly; don't use! */
                     lightbar(l, ld, pb, ThisStyle, c);
@@ -4716,7 +4729,7 @@ void try_falling_core(level *l, linedef *ld1, linedef *ld2, haa *haa, config *c)
 
     oldsec = ld1->right->psector;
     depth  = l->hugeness * (1 + 16 * (4 + roll(6)));
-    len    = linelen(ld1) - (16 * l->hugeness);
+    len    = SLUMP_linelen(ld1) - (16 * l->hugeness);
     ld1    = split_linedef(l, ld1, 8 * l->hugeness, c);
     split_linedef(l, ld1, len, c);
     room1 = empty_left_side(l, ld1, depth);
@@ -4733,13 +4746,13 @@ void try_falling_core(level *l, linedef *ld1, linedef *ld2, haa *haa, config *c)
         downspec = 0;
         break;
     case 3:
-        downspec = RANDOM_BLINK;
+        downspec = SLUMP_RANDOM_BLINK;
         break;
     case 4:
-        downspec = SYNC_FAST_BLINK;
+        downspec = SLUMP_SYNC_FAST_BLINK;
         break;
     case 5:
-        downspec = SYNC_SLOW_BLINK;
+        downspec = SLUMP_SYNC_SLOW_BLINK;
         break;
     default:
         downspec = 0;
@@ -4753,8 +4766,8 @@ void try_falling_core(level *l, linedef *ld1, linedef *ld2, haa *haa, config *c)
     ldn1->left->middle_texture  = c->null_texture;
     ldn1->right->middle_texture = c->null_texture;
     ldn1->right->lower_texture = ldn2->right->lower_texture = coresec->pstyle->support0;
-    ldn1->flags |= TWO_SIDED;
-    ldn2->flags |= TWO_SIDED;
+    ldn1->flags |= SLUMP_TWO_SIDED;
+    ldn2->flags |= SLUMP_TWO_SIDED;
     ld1->right->psector = coresec;
     ld2->right->psector = coresec;
     if (room1)
@@ -4765,11 +4778,11 @@ void try_falling_core(level *l, linedef *ld1, linedef *ld2, haa *haa, config *c)
         downsec1                   = ld1->left->psector;
         ld1->right->middle_texture = c->null_texture;
         ld1->left->middle_texture  = c->null_texture;
-        ld1->flags |= TWO_SIDED | SECRET_LINEDEF;
+        ld1->flags |= SLUMP_TWO_SIDED | SLUMP_SECRET_LINEDEF;
         ldn1->tag                    = coresec->tag;
-        ldn1->type                   = LINEDEF_SR_LOWER_LIFT;
+        ldn1->type                   = SLUMP_LINEDEF_SR_LOWER_LIFT;
         ldn2->tag                    = coresec->tag;
-        ldn2->type                   = LINEDEF_SR_LOWER_LIFT;
+        ldn2->type                   = SLUMP_LINEDEF_SR_LOWER_LIFT;
         ldfar->right->middle_texture = ldn1->right->middle_texture = ldn2->right->middle_texture =
             ld1->left->lower_texture                               = coresec->pstyle->support0;
         downsec1->floor_height                                     = coresec->floor_height - 128;
@@ -4785,11 +4798,11 @@ void try_falling_core(level *l, linedef *ld1, linedef *ld2, haa *haa, config *c)
         downsec2                   = ld2->left->psector;
         ld2->right->middle_texture = c->null_texture;
         ld2->left->middle_texture  = c->null_texture;
-        ld2->flags |= TWO_SIDED | SECRET_LINEDEF;
+        ld2->flags |= SLUMP_TWO_SIDED | SLUMP_SECRET_LINEDEF;
         ldn1->tag                    = coresec->tag;
-        ldn1->type                   = LINEDEF_SR_LOWER_LIFT;
+        ldn1->type                   = SLUMP_LINEDEF_SR_LOWER_LIFT;
         ldn2->tag                    = coresec->tag;
-        ldn2->type                   = LINEDEF_SR_LOWER_LIFT;
+        ldn2->type                   = SLUMP_LINEDEF_SR_LOWER_LIFT;
         ldfar->right->middle_texture = ldn1->right->middle_texture = ldn2->right->middle_texture =
             ld2->left->lower_texture                               = coresec->pstyle->support0;
         downsec2->floor_height                                     = coresec->floor_height - 128;
@@ -4813,14 +4826,14 @@ void try_falling_core(level *l, linedef *ld1, linedef *ld2, haa *haa, config *c)
     ldn1       = new_linedef(l, ld1->to, ld2->to);
     ldn1->left = ldn1->right   = new_sidedef(l, coresec, c);
     ldn1->left->middle_texture = c->null_texture;
-    ldn1->flags |= TWO_SIDED;
-    if (!(c->gamemask & (DOOM0_BIT | HERETIC_BIT)))
+    ldn1->flags |= SLUMP_TWO_SIDED;
+    if (!(c->gamemask & (SLUMP_DOOM0_BIT | SLUMP_HERETIC_BIT)))
     {
-        ldn1->type = LINEDEF_WR_TURBO_LIFT;
+        ldn1->type = SLUMP_LINEDEF_WR_TURBO_LIFT;
     }
     else
     {
-        ldn1->type = LINEDEF_WR_LOWER_LIFT;
+        ldn1->type = SLUMP_LINEDEF_WR_LOWER_LIFT;
     }
     ldn1->tag = coresec->tag;
 
@@ -4839,7 +4852,7 @@ void try_falling_core(level *l, linedef *ld1, linedef *ld2, haa *haa, config *c)
     }
 
     /* and that's all */
-    announce(VERBOSE, "Falling core");
+    announce(SLUMP_VERBOSE, "Falling core");
 }
 
 /* Implement the given link between the given linedefs. */
@@ -4849,13 +4862,13 @@ void establish_link(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, ques
 {
     switch (ThisLink->type)
     {
-    case BASIC_LINK:
+    case SLUMP_BASIC_LINK:
         establish_basic_link(l, ldf1, ldf2, ThisLink, ThisQuest, ThisStyle, NewStyle, haa, c);
         break;
-    case OPEN_LINK:
+    case SLUMP_OPEN_LINK:
         establish_open_link(l, ldf1, ldf2, ThisLink, ThisQuest, ThisStyle, NewStyle, haa, c);
         break;
-    case GATE_LINK: {
+    case SLUMP_GATE_LINK: {
         short tag1, tag2;
         tag1                        = new_tag(l);
         tag2                        = new_tag(l);
@@ -4865,11 +4878,11 @@ void establish_link(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, ques
         {
             if (rollpercent(50))
             {
-                ThisQuest->type = LINEDEF_S1_OPEN_DOOR;
+                ThisQuest->type = SLUMP_LINEDEF_S1_OPEN_DOOR;
             }
             else
             {
-                ThisQuest->type = LINEDEF_S1_LOWER_FLOOR;
+                ThisQuest->type = SLUMP_LINEDEF_S1_LOWER_FLOOR;
             }
             ThisQuest->tag                         = tag1;
             ldf1->right->psector->pgate->gate_lock = ThisQuest->type;
@@ -4891,7 +4904,7 @@ void establish_open_link(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink,
     sector *nearsec, *farsec;
     boolean need_lock;
 
-    need_lock = (ThisQuest) && ((ThisQuest->goal == SWITCH_GOAL) || (ThisQuest->goal == GATE_GOAL));
+    need_lock = (ThisQuest) && ((ThisQuest->goal == SLUMP_SWITCH_GOAL) || (ThisQuest->goal == SLUMP_GATE_GOAL));
 
     nearsec = ldf1->right->psector;
     farsec  = ldf2->right->psector;
@@ -4909,7 +4922,7 @@ void establish_open_link(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink,
         if (newfloor - nearsec->floor_height > 128)
             newfloor = nearsec->floor_height + 128;
         /* Limit step steepness */
-        if (ThisLink->bits & LINK_STEPS)
+        if (ThisLink->bits & SLUMP_LINK_STEPS)
             if (newfloor - nearsec->floor_height > ThisLink->depth1)
                 newfloor = nearsec->floor_height + ThisLink->depth1;
         /* OK, now set far sector, and do it */
@@ -4925,7 +4938,7 @@ void establish_open_link(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink,
         if (nearsec->floor_height - newfloor > 128)
             newfloor = nearsec->floor_height - 128;
         /* Limit step steepness */
-        if (ThisLink->bits & LINK_STEPS)
+        if (ThisLink->bits & SLUMP_LINK_STEPS)
             if (nearsec->floor_height - newfloor > ThisLink->depth1)
                 newfloor = nearsec->floor_height - ThisLink->depth1;
         farsec->floor_height   = newfloor;
@@ -4948,15 +4961,15 @@ void e_ol_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
     boolean  high_sides = SLUMP_FALSE;
     boolean  sidesteps  = SLUMP_FALSE;
 
-    if (ThisLink->bits & LINK_LIFT)
-        announce(VERBOSE, "Open lift");
+    if (ThisLink->bits & SLUMP_LINK_LIFT)
+        announce(SLUMP_VERBOSE, "Open lift");
 
-    if ((!(ThisLink->bits & LINK_LIFT)) && (!(ThisLink->bits & LINK_STEPS)))
-        announce(WARNING, "Non-lift non-stair open link; oops!");
+    if ((!(ThisLink->bits & SLUMP_LINK_LIFT)) && (!(ThisLink->bits & SLUMP_LINK_STEPS)))
+        announce(SLUMP_WARNING, "Non-lift non-stair open link; oops!");
 
     if (rollpercent(l->p_force_nukage) || rollpercent(10))
         nukage = SLUMP_TRUE;
-    if ((ThisLink->bits & LINK_STEPS) && (ThisLink->bits & LINK_ALCOVE))
+    if ((ThisLink->bits & SLUMP_LINK_STEPS) && (ThisLink->bits & SLUMP_LINK_ALCOVE))
         nukage = SLUMP_FALSE;
 
     nearsec = ldf1->right->psector;
@@ -4964,7 +4977,7 @@ void e_ol_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
 
     /* If a teleporter-goal, just make a simple air-connection. */
     /* Would(n't) this be more simply expressed as a BASIC link? */
-    if (ThisQuest && (ThisQuest->goal == GATE_GOAL) && l->use_gates)
+    if (ThisQuest && (ThisQuest->goal == SLUMP_GATE_GOAL) && l->use_gates)
     {
         midsec                      = clone_sector(l, farsec);
         midsec->floor_height        = nearsec->floor_height;
@@ -4973,14 +4986,14 @@ void e_ol_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
         ldf1->left                  = new_sidedef(l, midsec, c);
         ldf1->left->middle_texture  = c->null_texture;
         ldf1->left->upper_texture   = farsec->pstyle->wall0;
-        ldf1->flags |= TWO_SIDED | UPPER_UNPEGGED;
+        ldf1->flags |= SLUMP_TWO_SIDED | SLUMP_UPPER_UNPEGGED;
         patch_upper(ldf1, ThisStyle->wall0, c);
         patch_lower(ldf1, ThisStyle->support0, c);
         ldf2->right->middle_texture = c->null_texture;
         ldf2->left                  = new_sidedef(l, midsec, c);
         ldf2->left->middle_texture  = c->null_texture;
         ldf2->left->lower_texture   = farsec->pstyle->wall0;
-        ldf2->flags |= TWO_SIDED;
+        ldf2->flags |= SLUMP_TWO_SIDED;
         patch_upper(ldf2, NewStyle->wall0, c);
         patch_lower(ldf2, NewStyle->support0, c);
         lde1                        = new_linedef(l, ldf1->from, ldf2->to);
@@ -4993,7 +5006,7 @@ void e_ol_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
         {
             ldf1->left->lower_texture = ThisStyle->support0;
             midsec->floor_flat        = ThisStyle->nukage1;
-            midsec->special           = NUKAGE1_SPECIAL;
+            midsec->special           = SLUMP_NUKAGE1_SPECIAL;
             if (midsec->light_level < 160)
                 midsec->light_level = 160; /* visible */
             midsec->floor_height -= 8;
@@ -5009,22 +5022,22 @@ void e_ol_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
             ThisQuest->tag2             = new_tag(l);
             ldf2->right->middle_texture = ThisStyle->grating;
             ldf2->left->middle_texture  = ThisStyle->grating;
-            ldf2->flags |= IMPASSIBLE | LOWER_UNPEGGED; /* Lower the grating, eh? */
+            ldf2->flags |= SLUMP_IMPASSIBLE | SLUMP_LOWER_UNPEGGED; /* Lower the grating, eh? */
         }
         farsec->pgate = new_gate(l, ThisQuest->tag, ThisQuest->tag2, 0, SLUMP_TRUE, c);
-        announce(LOG, "OL Gate quest");
+        announce(SLUMP_LOG, "OL Gate quest");
         return; /* and that's it */
     }
 
     /* Otherwise it's (even) more complicated */
 
     /* Figure how wide */
-    len = linelen(ldf1);
+    len = SLUMP_linelen(ldf1);
     if (len < 100)
-        announce(WARNING, "Open link on a too-narrow linedef!");
+        announce(SLUMP_WARNING, "Open link on a too-narrow linedef!");
     midwidth = ThisLink->width1;
     if (midwidth == 0)
-        midwidth = linelen(ldf1) / 3;
+        midwidth = SLUMP_linelen(ldf1) / 3;
     if (midwidth < 64)
         midwidth = 64;
     if (((len - midwidth) / 2) < 33)
@@ -5033,7 +5046,7 @@ void e_ol_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
         midwidth = 33;
 
     /* Decide if doing the sideways-step thing */
-    if ((ThisLink->bits & LINK_STEPS) && (ThisLink->bits & LINK_ALCOVE) &&
+    if ((ThisLink->bits & SLUMP_LINK_STEPS) && (ThisLink->bits & SLUMP_LINK_ALCOVE) &&
         (midwidth >= (farsec->floor_height - nearsec->floor_height)))
     {
         sidesteps = SLUMP_TRUE;
@@ -5069,9 +5082,9 @@ void e_ol_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
         }
     }
 
-    ldf1->flags |= TWO_SIDED;
+    ldf1->flags |= SLUMP_TWO_SIDED;
     ldf1->right->middle_texture = c->null_texture;
-    ldf2->flags |= TWO_SIDED;
+    ldf2->flags |= SLUMP_TWO_SIDED;
     ldf2->right->middle_texture = c->null_texture;
 
     ldf1a = ldf1;
@@ -5082,7 +5095,7 @@ void e_ol_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
     ldf2a = split_linedef(l, ldf2, midwidth, c);
 
     midsec = clone_sector(l, farsec);
-    if (ThisLink->bits & LINK_LIFT)
+    if (ThisLink->bits & SLUMP_LINK_LIFT)
     {
         midsec->tag = new_tag(l);
         ldf1->type  = NewStyle->slifttype;
@@ -5091,26 +5104,26 @@ void e_ol_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
 
     ldf1->left                 = new_sidedef(l, midsec, c);
     ldf1->left->middle_texture = c->null_texture;
-    if (nukage && (ThisLink->bits & LINK_LIFT))
+    if (nukage && (ThisLink->bits & SLUMP_LINK_LIFT))
         ldf1->left->lower_texture = ThisStyle->support0;
     ldf2->left                 = new_sidedef(l, midsec, c);
     ldf2->left->middle_texture = c->null_texture;
-    if (ThisLink->bits & LINK_LIFT)
+    if (ThisLink->bits & SLUMP_LINK_LIFT)
     {
         ldf2->left->lower_texture = NewStyle->support0;
-        ldf2->flags |= LOWER_UNPEGGED;
+        ldf2->flags |= SLUMP_LOWER_UNPEGGED;
     }
     patch_upper(ldf1, ThisStyle->wall0, c);
     patch_lower(ldf1, ThisStyle->support0, c);
-    if ((ThisLink->bits & LINK_LIFT) && (ThisStyle->liftface) &&
+    if ((ThisLink->bits & SLUMP_LINK_LIFT) && (ThisStyle->liftface) &&
         (farsec->floor_height - nearsec->floor_height <= ThisStyle->liftface->height) &&
         (midwidth == ThisStyle->liftface->width))
     {
         ldf1->right->lower_texture = ThisStyle->liftface;
         ldf1->right->x_offset      = 0;
-        announce(VERBOSE, "Lift texture");
+        announce(SLUMP_VERBOSE, "Lift texture");
     }
-    ldf1->flags &= ~LOWER_UNPEGGED;
+    ldf1->flags &= ~SLUMP_LOWER_UNPEGGED;
     patch_upper(ldf2, NewStyle->wall0, c);
     patch_lower(ldf2, NewStyle->wall0, c);
 
@@ -5122,7 +5135,7 @@ void e_ol_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
     sideseca->ceiling_flat      = midsec->ceiling_flat;
     lde1->right->middle_texture = NewStyle->wall0;
     lde2->left                  = new_sidedef(l, midsec, c);
-    lde2->flags |= TWO_SIDED;
+    lde2->flags |= SLUMP_TWO_SIDED;
     lde2->left->middle_texture  = c->null_texture;
     lde2->left->lower_texture   = NewStyle->support0;
     lde2->right->lower_texture  = NewStyle->wall0;
@@ -5135,21 +5148,21 @@ void e_ol_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
     patch_lower(ldf2a, NewStyle->wall0, c);
     if (nukage)
     {
-        announce(VERBOSE, "Open nukage");
+        announce(SLUMP_VERBOSE, "Open nukage");
         sideseca->floor_height -= 8;
         sideseca->floor_flat = ThisStyle->nukage1;
-        sideseca->special    = NUKAGE1_SPECIAL;
+        sideseca->special    = SLUMP_NUKAGE1_SPECIAL;
         patch_lower(ldf1a, ThisStyle->support0, c);
         patch_lower(ldf2a, ThisStyle->support0, c);
         nearsec->marked = farsec->marked = SLUMP_TRUE;
         if (c->gunk_channels && empty_left_side(l, lde1, 32))
         {
-            lefthand_box(l, lde1, 32, ThisStyle, c)->right->middle_texture = ThisStyle->support0;
-            lde1->left->psector->ceiling_height                            = lde1->left->psector->floor_height + 8;
-            lde1->left->psector->light_level                               = lde1->right->psector->light_level - 20;
-            lde1->left->psector->floor_flat                                = ThisStyle->nukage1;
+            SLUMP_lefthand_box(l, lde1, 32, ThisStyle, c)->right->middle_texture = ThisStyle->support0;
+            lde1->left->psector->ceiling_height = lde1->left->psector->floor_height + 8;
+            lde1->left->psector->light_level    = lde1->right->psector->light_level - 20;
+            lde1->left->psector->floor_flat     = ThisStyle->nukage1;
             patch_upper(lde1, NewStyle->wall0, c);
-            announce(VERBOSE, "Channel");
+            announce(SLUMP_VERBOSE, "Channel");
         }
         nearsec->marked = farsec->marked = SLUMP_FALSE;
     }
@@ -5162,7 +5175,7 @@ void e_ol_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
     sidesecb->ceiling_flat      = midsec->ceiling_flat;
     lde2->right->middle_texture = NewStyle->wall0;
     lde1->left                  = new_sidedef(l, midsec, c);
-    lde1->flags |= TWO_SIDED;
+    lde1->flags |= SLUMP_TWO_SIDED;
     lde1->left->middle_texture  = c->null_texture;
     lde1->left->lower_texture   = NewStyle->support0;
     lde1->right->lower_texture  = NewStyle->wall0;
@@ -5176,18 +5189,18 @@ void e_ol_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
     {
         sidesecb->floor_height -= 8;
         sidesecb->floor_flat = ThisStyle->nukage1;
-        sidesecb->special    = NUKAGE1_SPECIAL;
+        sidesecb->special    = SLUMP_NUKAGE1_SPECIAL;
         patch_lower(ldf1b, ThisStyle->support0, c);
         patch_lower(ldf2b, ThisStyle->support0, c);
         nearsec->marked = farsec->marked = SLUMP_TRUE;
         if (c->gunk_channels && empty_left_side(l, lde2, 32))
         {
-            lefthand_box(l, lde2, 32, ThisStyle, c)->right->middle_texture = ThisStyle->support0;
-            lde2->left->psector->ceiling_height                            = lde2->left->psector->floor_height + 8;
-            lde2->left->psector->light_level                               = lde2->right->psector->light_level - 20;
-            lde2->left->psector->floor_flat                                = ThisStyle->nukage1;
+            SLUMP_lefthand_box(l, lde2, 32, ThisStyle, c)->right->middle_texture = ThisStyle->support0;
+            lde2->left->psector->ceiling_height = lde2->left->psector->floor_height + 8;
+            lde2->left->psector->light_level    = lde2->right->psector->light_level - 20;
+            lde2->left->psector->floor_flat     = ThisStyle->nukage1;
             patch_upper(lde2, NewStyle->wall0, c);
-            announce(VERBOSE, "Channel");
+            announce(SLUMP_VERBOSE, "Channel");
         }
         nearsec->marked = farsec->marked = SLUMP_FALSE;
     }
@@ -5196,9 +5209,9 @@ void e_ol_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
     midsec->light_level = sideseca->light_level = sidesecb->light_level = ThisStyle->roomlight0;
 
     /* Make center into stairs if we need them */
-    if ((ThisLink->bits & LINK_STEPS) && !sidesteps)
+    if ((ThisLink->bits & SLUMP_LINK_STEPS) && !sidesteps)
     {
-        announce(VERBOSE, "Open stairs");
+        announce(SLUMP_VERBOSE, "Open stairs");
         /* Maybe stick on some lights */
         if (rollpercent(50))
         { /* 50 should vary? */
@@ -5207,7 +5220,7 @@ void e_ol_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
                 g = ThisStyle->shortlamp0;
             if ((high_sides && ((len - midwidth) / 2 >= 2 * g->width)) || ((len - midwidth) / 2 >= g->width + 69))
             {
-                announce(VERBOSE, "and lights");
+                announce(SLUMP_VERBOSE, "and lights");
                 new_thing(l, (ldf1a->to->x + ldf1a->from->x + ldf2a->to->x + ldf2a->from->x) / 4,
                           (ldf1a->to->y + ldf1a->from->y + ldf2a->to->y + ldf2a->from->y) / 4, 0, g->thingid, 7, c);
                 new_thing(l, (ldf1b->to->x + ldf1b->from->x + ldf2b->to->x + ldf2b->from->x) / 4,
@@ -5226,10 +5239,10 @@ void e_ol_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
         /* Change a few details */
         lde1->right->y_offset     = 0;
         lde1->left->lower_texture = NewStyle->wall0;
-        lde1->flags |= LOWER_UNPEGGED;
+        lde1->flags |= SLUMP_LOWER_UNPEGGED;
         ldes->right->y_offset     = 0;
         ldes->left->lower_texture = NewStyle->wall0;
-        ldes->flags |= LOWER_UNPEGGED;
+        ldes->flags |= SLUMP_LOWER_UNPEGGED;
         if (ThisStyle->light_steps && ThisStyle->walllight)
         {
             ldf1->right->lower_texture = ThisStyle->walllight;
@@ -5244,15 +5257,15 @@ void e_ol_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
     }
 
     /* Or make the center into *sideways* stairs */
-    if ((ThisLink->bits & LINK_STEPS) && sidesteps)
+    if ((ThisLink->bits & SLUMP_LINK_STEPS) && sidesteps)
     {
-        announce(NONE, "Open side-stairs");
+        announce(SLUMP_NONE, "Open side-stairs");
         ldf1->right->lower_texture = ThisStyle->wall0;
         ldf2->left->lower_texture  = NewStyle->wall0;
         ldf1->right->y_offset      = 0;
         ldf1->left->lower_texture  = NewStyle->wall0;
-        ldf1->flags |= LOWER_UNPEGGED;
-        if (ThisLink->bits & LINK_LEFT)
+        ldf1->flags |= SLUMP_LOWER_UNPEGGED;
+        if (ThisLink->bits & SLUMP_LINK_LEFT)
         {
             if (ThisStyle->light_steps && ThisStyle->walllight)
             {
@@ -5284,10 +5297,10 @@ void e_ol_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
         }
         ldf2->right->y_offset     = 0;
         ldf2->left->lower_texture = NewStyle->wall0;
-        ldf2->flags |= LOWER_UNPEGGED;
+        ldf2->flags |= SLUMP_LOWER_UNPEGGED;
         patch_lower(ldf1a, ThisStyle->wall0, c);
         patch_lower(ldf1b, ThisStyle->wall0, c);
-        if (ThisLink->bits & LINK_LEFT)
+        if (ThisLink->bits & SLUMP_LINK_LEFT)
         {
             stairify(l, ldes, lde1, ldf2, ldf1, nearsec->floor_height, farsec->floor_height, ThisQuest, ThisStyle, c);
         }
@@ -5298,9 +5311,9 @@ void e_ol_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
     }
 
     /* Bells and whistles! */
-    if ((farsec->floor_height - sideseca->floor_height == 128) && (linelen(ldf2a) >= 128))
+    if ((farsec->floor_height - sideseca->floor_height == 128) && (SLUMP_linelen(ldf2a) >= 128))
     {
-        if (linelen(ldf2a) > 128)
+        if (SLUMP_linelen(ldf2a) > 128)
         {
             ldf2a = centerpart(l, ldf2a, NULL, 128, ThisStyle, c);
             ldf2b = centerpart(l, ldf2b, NULL, 128, ThisStyle, c);
@@ -5308,12 +5321,12 @@ void e_ol_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
         ldf2a->left->lower_texture = ThisStyle->plaque;
         ldf2a->left->x_offset      = 0;
         ldf2a->left->y_offset      = 0;
-        ldf2a->flags &= ~LOWER_UNPEGGED;
+        ldf2a->flags &= ~SLUMP_LOWER_UNPEGGED;
         ldf2b->left->lower_texture = ThisStyle->plaque;
         ldf2b->left->x_offset      = 0;
         ldf2b->left->y_offset      = 0;
-        ldf2b->flags &= ~LOWER_UNPEGGED;
-        announce(VERBOSE, "Open-link plaques");
+        ldf2b->flags &= ~SLUMP_LOWER_UNPEGGED;
+        announce(SLUMP_VERBOSE, "Open-link plaques");
     }
 
     /* and so on */
@@ -5353,54 +5366,55 @@ void e_bl_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
     boolean      trigger_door = SLUMP_FALSE;
     boolean      painted_door = SLUMP_FALSE;
     int          mminx, mminy, mmaxx, mmaxy, mangle;
-    propertybits effective_left = ThisLink->bits & LINK_LEFT;
-    propertybits litecol        = LIGHT;
+    propertybits effective_left = ThisLink->bits & SLUMP_LINK_LEFT;
+    propertybits litecol        = SLUMP_LIGHT;
 
-    if ((ThisLink->bits & LINK_CORE) && (ThisLink->bits & LINK_ANY_DOOR))
-        announce(VERBOSE, "Core and door(s)");
+    if ((ThisLink->bits & SLUMP_LINK_CORE) && (ThisLink->bits & SLUMP_LINK_ANY_DOOR))
+        announce(SLUMP_VERBOSE, "Core and door(s)");
 
-    if ((ThisQuest) && (ThisQuest->goal == KEY_GOAL))
+    if ((ThisQuest) && (ThisQuest->goal == SLUMP_KEY_GOAL))
     {
         switch (ThisQuest->type)
         {
-        case ID_BLUEKEY:
-        case ID_BLUECARD:
-        case ID_HERETICBLUEKEY:
-            litecol = BLUE;
+        case SLUMP_ID_BLUEKEY:
+        case SLUMP_ID_BLUECARD:
+        case SLUMP_ID_HERETICBLUEKEY:
+            litecol = SLUMP_BLUE;
             break;
-        case ID_REDKEY:
-        case ID_REDCARD:
-        case ID_HERETICGREENKEY:
-            litecol = RED;
+        case SLUMP_ID_REDKEY:
+        case SLUMP_ID_REDCARD:
+        case SLUMP_ID_HERETICGREENKEY:
+            litecol = SLUMP_RED;
             break;
-        case ID_YELLOWKEY:
-        case ID_YELLOWCARD:
-        case ID_HERETICYELLOWKEY:
-            litecol = YELLOW;
+        case SLUMP_ID_YELLOWKEY:
+        case SLUMP_ID_YELLOWCARD:
+        case SLUMP_ID_HERETICYELLOWKEY:
+            litecol = SLUMP_YELLOW;
             break;
         }
     }
     else
     {
-        litecol = LIGHT;
+        litecol = SLUMP_LIGHT;
     }
 
-    /* The type of a SWITCH_GOAL isn't set until the link's established */
+    /* The type of a SLUMP_SWITCH_GOAL isn't set until the link's established */
     if (ThisQuest)
-        if (ThisQuest->goal == SWITCH_GOAL)
-            if (ThisLink->bits & LINK_LOCK_CORE)
+        if (ThisQuest->goal == SLUMP_SWITCH_GOAL)
+            if (ThisLink->bits & SLUMP_LINK_LOCK_CORE)
             {
-                ThisQuest->type = LINEDEF_S1_RAISE_AND_CLEAN_FLOOR;
+                ThisQuest->type = SLUMP_LINEDEF_S1_RAISE_AND_CLEAN_FLOOR;
             }
             else
             {
-                ThisQuest->type = LINEDEF_S1_OPEN_DOOR;
+                ThisQuest->type = SLUMP_LINEDEF_S1_OPEN_DOOR;
             }
 
     dump_link(ldf1, ldf2, ThisLink, "Establishing");
 
-    if ((ThisLink->bits & LINK_ALCOVE) && (ThisLink->bits & LINK_TWIN) && (ThisLink->bits & LINK_ANY_DOOR))
-        announce(VERBOSE, "Twin door alcoves!");
+    if ((ThisLink->bits & SLUMP_LINK_ALCOVE) && (ThisLink->bits & SLUMP_LINK_TWIN) &&
+        (ThisLink->bits & SLUMP_LINK_ANY_DOOR))
+        announce(SLUMP_VERBOSE, "Twin door alcoves!");
 
     nearsec = ldf1->right->psector;
     farsec  = ldf2->right->psector;
@@ -5410,38 +5424,38 @@ void e_bl_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
     farsec->ceiling_height = farsec->floor_height + NewStyle->wallheight0;
 
     /* Make sure we don't overdo the bar thing and crash the engine... */
-    if (l->barcount > LEVEL_MAX_BARS)
-        ThisLink->bits &= ~LINK_BARS;
+    if (l->barcount > SLUMP_LEVEL_MAX_BARS)
+        ThisLink->bits &= ~SLUMP_LINK_BARS;
 
     /* See if we need to force the floordelta toward zero to avoid */
     /* impassable doorways. */
-    if (ThisLink->bits & LINK_STEPS)
+    if (ThisLink->bits & SLUMP_LINK_STEPS)
     {
         int need;
         /* The clearance we need is 56 plus the step height times */
         /* the number of steps our 64ish-wide shadow is on at once */
         need = 64 + (1 + (64 / (ThisLink->depth3 / (ThisLink->stepcount)))) *
                         abs(ThisLink->floordelta / (ThisLink->stepcount - 1));
-        if (ThisLink->bits & LINK_ANY_DOOR)
+        if (ThisLink->bits & SLUMP_LINK_ANY_DOOR)
             need += 8; /* Doors don't open all the way */
         if ((farsec->ceiling_height - farsec->floor_height < need) ||
             (nearsec->ceiling_height - nearsec->floor_height < need))
         {
             /* There's probably something less drastic we can do here... */
             ThisLink->floordelta = 0;
-            ThisLink->bits &= ~LINK_STEPS;
+            ThisLink->bits &= ~SLUMP_LINK_STEPS;
             farsec->floor_height   = nearsec->floor_height + ThisLink->floordelta;
             farsec->ceiling_height = farsec->floor_height + NewStyle->wallheight0;
         }
     }
 
     /* If we need to twin, split and recurse, or do the window thing */
-    if ((flipstate == 0) && (ThisLink->bits & LINK_TWIN))
+    if ((flipstate == 0) && (ThisLink->bits & SLUMP_LINK_TWIN))
     {
-        len    = linelen(ldf1) / 2;
+        len    = SLUMP_linelen(ldf1) / 2;
         ldnew1 = split_linedef(l, ldf1, len, c);
         ldnew2 = split_linedef(l, ldf2, len, c);
-        if (!(ThisLink->bits & LINK_WINDOW))
+        if (!(ThisLink->bits & SLUMP_LINK_WINDOW))
         {                                                                                     /* make twin links */
             e_bl_inner(l, ldf1, ldnew2, ThisLink, ThisQuest, ThisStyle, NewStyle, 1, haa, c); /* Lefthand one */
             e_bl_inner(l, ldnew1, ldf2, ThisLink, ThisQuest, ThisStyle, NewStyle, 2, haa, c); /* Righthand one */
@@ -5465,37 +5479,37 @@ void e_bl_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
 
     /* If this isn't supposed to be passable at all, just winowify. */
     /* Another fun thing would be to make the door, but bar it. */
-    if (ThisQuest && (ThisQuest->goal == GATE_GOAL) && l->use_gates)
+    if (ThisQuest && (ThisQuest->goal == SLUMP_GATE_GOAL) && l->use_gates)
     {
         make_window(l, ldf1, ldf2, ThisLink, ThisStyle, NewStyle, c);
         /* Now arrange for the gate and stuff */
         ThisQuest->tag  = new_tag(l);
         ThisQuest->tag2 = new_tag(l);
         farsec->pgate   = new_gate(l, ThisQuest->tag, ThisQuest->tag2, 0, SLUMP_TRUE, c);
-        announce(LOG, "BL Gate quest");
+        announce(SLUMP_LOG, "BL Gate quest");
         return; /* and that's it */
     }
 
-    /* Figure out maxtop, for MAX_CEILING */
+    /* Figure out maxtop, for MAX_SLUMP_CEILING */
     maxtop = nearsec->floor_height + ThisLink->height1;
     if (ThisLink->floordelta > 0)
         maxtop += ThisLink->floordelta;
 
     /* If not the whole wall, center it, or do alcove things, or etc */
-    len = linelen(ldf1); /* Really assumes lens are == */
+    len = SLUMP_linelen(ldf1); /* Really assumes lens are == */
     if (ThisLink->width1 > len)
     {
-        announce(WARNING, "Link-width > linedef size!  Reducing...");
+        announce(SLUMP_WARNING, "Link-width > linedef size!  Reducing...");
         ThisLink->width1 = len;
     }
     if ((ThisLink->width1 != 0) && (ThisLink->width1 < len))
     {
-        if (ThisLink->bits & LINK_ALCOVE)
+        if (ThisLink->bits & SLUMP_LINK_ALCOVE)
         {
             border = (len - (ThisLink->width1 * 2 + ThisLink->depth3)) / 2;
             if (border < 0)
             { /* This should never happen */
-                announce(WARNING, "A-link width too big!  Reducing...");
+                announce(SLUMP_WARNING, "A-link width too big!  Reducing...");
                 ThisLink->width1 = (len - ThisLink->depth3) / 2;
                 border           = 0;
                 /* May not actually help enough... */
@@ -5503,8 +5517,8 @@ void e_bl_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
             }
             if ((border != 0) && (flipstate == 2) && rollpercent(50))
             {
-                effective_left ^= LINK_LEFT;
-                announce(VERBOSE, "Flipping twinned alcove");
+                effective_left ^= SLUMP_LINK_LEFT;
+                announce(SLUMP_VERBOSE, "Flipping twinned alcove");
             }
             if (effective_left)
             {
@@ -5525,20 +5539,20 @@ void e_bl_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
                     split_linedef(l, ldf2, ThisLink->width1, c);
             }
         }
-        else if ((flipstate == 1) && (ThisLink->bits & LINK_FAR_TWINS))
+        else if ((flipstate == 1) && (ThisLink->bits & SLUMP_LINK_FAR_TWINS))
         {
             split_linedef(l, ldf1, ThisLink->width1, c);
             ldf2 = split_linedef(l, ldf2, len - ThisLink->width1, c);
-            announce(NONE, "Far twins");
+            announce(SLUMP_NONE, "Far twins");
         }
-        else if ((flipstate == 2) && (ThisLink->bits & LINK_FAR_TWINS))
+        else if ((flipstate == 2) && (ThisLink->bits & SLUMP_LINK_FAR_TWINS))
         {
             split_linedef(l, ldf2, ThisLink->width1, c);
             ldf1 = split_linedef(l, ldf1, len - ThisLink->width1, c);
         }
         else
         { /* No alcove or farness; simple centered borders */
-            if (ThisQuest && ThisQuest->goal == KEY_GOAL && l->skullkeys)
+            if (ThisQuest && ThisQuest->goal == SLUMP_KEY_GOAL && l->skullkeys)
             {
                 ldf1 = borderize(l, ldf1, ThisLink->width1, SLUMP_TRUE, ThisStyle, litecol,
                                  find_genus(c, ThisQuest->type), &painted_door, c);
@@ -5553,8 +5567,8 @@ void e_bl_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
     }
     else
     {
-        if (ThisLink->bits & LINK_ALCOVE)
-            announce(WARNING, "ALCOVE with width zero, or width == linelen");
+        if (ThisLink->bits & SLUMP_LINK_ALCOVE)
+            announce(SLUMP_WARNING, "ALCOVE with width zero, or width == linelen");
         /* yikes! */
     }
 
@@ -5566,67 +5580,68 @@ void e_bl_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
     /* Get any tags we need for triggered links, and put them on */
     /* the linedefs we're currently working on.                  */
     /* Trigger alcoved lifts.                                    */
-    if ((ThisLink->bits & LINK_LIFT) && (ThisLink->bits & LINK_ALCOVE) && (!(ThisLink->bits & LINK_ANY_DOOR)) &&
-        (ThisLink->bits & LINK_TRIGGERED))
+    if ((ThisLink->bits & SLUMP_LINK_LIFT) && (ThisLink->bits & SLUMP_LINK_ALCOVE) &&
+        (!(ThisLink->bits & SLUMP_LINK_ANY_DOOR)) && (ThisLink->bits & SLUMP_LINK_TRIGGERED))
     {
         trigger_lift = SLUMP_TRUE;
-        announce(VERBOSE, "Walking lift");
+        announce(SLUMP_VERBOSE, "Walking lift");
         tag1 = new_tag(l);
         if (ThisLink->floordelta > 0)
         {
             ldf1->tag  = tag1;
-            ldf1->type = LINEDEF_WR_LOWER_LIFT;
+            ldf1->type = SLUMP_LINEDEF_WR_LOWER_LIFT;
         }
         else
         {
             ldf2->tag  = tag1;
-            ldf2->type = LINEDEF_WR_LOWER_LIFT;
+            ldf2->type = SLUMP_LINEDEF_WR_LOWER_LIFT;
         }
     }
     /* Trigger deeply-recessed liftless doors also */
-    if (((ThisQuest == NULL) || ((ThisQuest->goal != SWITCH_GOAL) && (ThisQuest->goal != KEY_GOAL))) &&
-        (ThisLink->bits & LINK_ANY_DOOR) && (!(ThisLink->bits & LINK_BARS)) && (ThisLink->bits & LINK_RECESS) &&
-        (ThisLink->depth2 > 16) && (ThisLink->bits & LINK_TRIGGERED))
+    if (((ThisQuest == NULL) || ((ThisQuest->goal != SLUMP_SWITCH_GOAL) && (ThisQuest->goal != SLUMP_KEY_GOAL))) &&
+        (ThisLink->bits & SLUMP_LINK_ANY_DOOR) && (!(ThisLink->bits & SLUMP_LINK_BARS)) &&
+        (ThisLink->bits & SLUMP_LINK_RECESS) && (ThisLink->depth2 > 16) && (ThisLink->bits & SLUMP_LINK_TRIGGERED))
     {
         trigger_door = SLUMP_TRUE;
         tag1         = new_tag(l);
         /* Don't always need both of these, but couldn't hurt... */
         ldf1->tag  = tag1;
-        ldf1->type = LINEDEF_WR_OC_DOOR; /* Or WR_OPEN_DOOR? */
+        ldf1->type = SLUMP_LINEDEF_WR_OC_DOOR; /* Or WR_OPEN_DOOR? */
         ldf2->tag  = tag1;
-        ldf2->type = LINEDEF_WR_OC_DOOR; /* Or WR_OPEN_DOOR? */
+        ldf2->type = SLUMP_LINEDEF_WR_OC_DOOR; /* Or WR_OPEN_DOOR? */
     }
     /* and deeply-recessed lifts */
-    if (((ThisQuest == NULL) || ((ThisQuest->goal != SWITCH_GOAL) && (ThisQuest->goal != KEY_GOAL))) &&
-        (ThisLink->bits & LINK_LIFT) && (ThisLink->bits & LINK_RECESS) && (!(ThisLink->bits & LINK_ALCOVE)) &&
-        (!(ThisLink->bits & LINK_ANY_DOOR)) && (ThisLink->depth2 > 16) && (ThisLink->bits & LINK_TRIGGERED))
+    if (((ThisQuest == NULL) || ((ThisQuest->goal != SLUMP_SWITCH_GOAL) && (ThisQuest->goal != SLUMP_KEY_GOAL))) &&
+        (ThisLink->bits & SLUMP_LINK_LIFT) && (ThisLink->bits & SLUMP_LINK_RECESS) &&
+        (!(ThisLink->bits & SLUMP_LINK_ALCOVE)) && (!(ThisLink->bits & SLUMP_LINK_ANY_DOOR)) &&
+        (ThisLink->depth2 > 16) && (ThisLink->bits & SLUMP_LINK_TRIGGERED))
     {
         trigger_lift = SLUMP_TRUE;
         tag1         = new_tag(l);
         if (ThisLink->floordelta > 0)
         {
             ldf1->tag  = tag1;
-            ldf1->type = LINEDEF_WR_LOWER_LIFT;
+            ldf1->type = SLUMP_LINEDEF_WR_LOWER_LIFT;
         }
         else
         {
             ldf2->tag  = tag1;
-            ldf2->type = LINEDEF_WR_LOWER_LIFT;
+            ldf2->type = SLUMP_LINEDEF_WR_LOWER_LIFT;
         }
     }
 
     /* Remember these for later */
     t1  = ldf1->right->middle_texture;
     t2  = NewStyle->wall0;
-    len = linelen(ldf1); /* Really assumes lens are == */
+    len = SLUMP_linelen(ldf1); /* Really assumes lens are == */
 
     /* If recessed, make recess sectors and stuff */
-    if (ThisLink->bits & LINK_RECESS)
+    if (ThisLink->bits & SLUMP_LINK_RECESS)
     {
         ldnew1 = lefthand_box_ext(l, ldf1, ThisLink->depth2, ThisStyle, c, &ldedge1, &ldedge2);
         /* The near recess copies the near room */
         ldnew1->right->psector->floor_height = ldf1->right->psector->floor_height;
-        if (ThisLink->bits & LINK_MAX_CEILING)
+        if (ThisLink->bits & SLUMP_LINK_MAX_CEILING)
         {
             ldnew1->right->psector->ceiling_height = maxtop;
         }
@@ -5638,37 +5653,38 @@ void e_bl_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
             if (c->clights)
             { /* Too often? */
                 ldnew1->right->psector->ceiling_flat = nearsec->pstyle->ceilinglight;
-                announce(VERBOSE, "rcl");
+                announce(SLUMP_VERBOSE, "rcl");
             }
         /* Paint key-color, or adjust y-offsets, for recess edges */
-        if ((ThisQuest) && (ThisStyle->paint_recesses) && (!painted_door) && (ThisQuest->goal == KEY_GOAL) &&
+        if ((ThisQuest) && (ThisStyle->paint_recesses) && (!painted_door) && (ThisQuest->goal == SLUMP_KEY_GOAL) &&
             (ThisLink->depth2 >= (texture_for_key(ThisQuest->type, ThisStyle, c)->width)))
         {
             ldedge1->right->middle_texture = ldedge2->right->middle_texture =
                 texture_for_key(ThisQuest->type, ThisStyle, c);
             if (l->scrolling_keylights)
             {
-                ldedge1->type = LINEDEF_SCROLL;
-                ldedge2->type = LINEDEF_SCROLL;
+                ldedge1->type = SLUMP_LINEDEF_SCROLL;
+                ldedge2->type = SLUMP_LINEDEF_SCROLL;
             }
             /* Make sure the paint is visible! */
             if (ldedge1->right->psector->light_level < l->lit_light_level)
                 ldedge1->right->psector->light_level = l->lit_light_level;
-            announce(VERBOSE, "painted recess");
+            announce(SLUMP_VERBOSE, "painted recess");
             if (rollpercent(75))
             {
                 painted_door = SLUMP_TRUE;
             }
             else
             {
-                announce(VERBOSE, "Extra-painted recess"); /* Paint the door, too */
-                ldedge1->flags |= LOWER_UNPEGGED;          /* and make it all line up */
-                ldedge2->flags |= LOWER_UNPEGGED;
+                announce(SLUMP_VERBOSE, "Extra-painted recess"); /* Paint the door, too */
+                ldedge1->flags |= SLUMP_LOWER_UNPEGGED;          /* and make it all line up */
+                ldedge2->flags |= SLUMP_LOWER_UNPEGGED;
             }
         }
-        else if ((ThisLink->bits & LINK_NEAR_DOOR) && (ThisStyle->light_recesses) && (ThisStyle->walllight != NULL))
+        else if ((ThisLink->bits & SLUMP_LINK_NEAR_DOOR) && (ThisStyle->light_recesses) &&
+                 (ThisStyle->walllight != NULL))
         {
-            announce(VERBOSE, "Lit recess");
+            announce(SLUMP_VERBOSE, "Lit recess");
             ldedge1->right->middle_texture = ldedge2->right->middle_texture = ThisStyle->walllight;
             make_lighted(l, ldedge1->right->psector, c);
         }
@@ -5681,7 +5697,7 @@ void e_bl_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
         /* and the far the far */
         ldnew2 = lefthand_box_ext(l, ldf2, ThisLink->depth2, NewStyle, c, &ldedge1, &ldedge2);
         ldnew2->right->psector->floor_height = farsec->floor_height;
-        if (ThisLink->bits & LINK_MAX_CEILING)
+        if (ThisLink->bits & SLUMP_LINK_MAX_CEILING)
         {
             ldnew2->right->psector->ceiling_height = maxtop;
         }
@@ -5694,11 +5710,11 @@ void e_bl_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
             if (c->clights)
             { /* Too often? */
                 ldnew2->right->psector->ceiling_flat = farsec->pstyle->ceilinglight;
-                announce(VERBOSE, "rcl");
+                announce(SLUMP_VERBOSE, "rcl");
             }
-        if ((ThisLink->bits & LINK_FAR_DOOR) && (NewStyle->light_recesses) && (NewStyle->walllight != NULL))
+        if ((ThisLink->bits & SLUMP_LINK_FAR_DOOR) && (NewStyle->light_recesses) && (NewStyle->walllight != NULL))
         {
-            announce(VERBOSE, "Lit recess");
+            announce(SLUMP_VERBOSE, "Lit recess");
             ldedge1->right->middle_texture = ldedge2->right->middle_texture = NewStyle->walllight;
             make_lighted(l, ldedge1->right->psector, c);
         }
@@ -5714,27 +5730,27 @@ void e_bl_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
     }
 
     /* If no core or alcoves, make the one arch/door sector */
-    if (!(ThisLink->bits & (LINK_CORE | LINK_ALCOVE)))
+    if (!(ThisLink->bits & (SLUMP_LINK_CORE | SLUMP_LINK_ALCOVE)))
     {
         flip_linedef(ldf2);
         newsec = make_box_ext(l, ldf1, ldf2, ThisStyle, c, &ldnew1, &ldnew2);
         flip_linedef(ldf2);
         ldnew2->right->y_offset = ldnew1->right->y_offset =
             (nearsec->ceiling_height - nearsec->floor_height) - ThisLink->height1;
-        if ((ThisLink->bits & (LINK_ANY_DOOR)) || c->doorless_jambs)
+        if ((ThisLink->bits & (SLUMP_LINK_ANY_DOOR)) || c->doorless_jambs)
         {
             ldnew1->right->middle_texture = ThisStyle->doorjamb;
             ldnew2->right->middle_texture = ThisStyle->doorjamb;
         }
 
         newsec->floor_height = nearsec->floor_height;
-        if (ThisLink->bits & LINK_MAX_CEILING)
+        if (ThisLink->bits & SLUMP_LINK_MAX_CEILING)
         {
             newsec->ceiling_height = maxtop;
         }
         else
         {
-#ifdef STRANGE_THINGS
+#ifdef SLUMP_STRANGE_THINGS
             newsec->ceiling_height = nearsec->ceiling_height;
 #else
             newsec->ceiling_height = newsec->floor_height + ThisLink->height1;
@@ -5749,40 +5765,40 @@ void e_bl_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
         patch_lower(ldf1, ThisStyle->kickplate, c); /* or stepfronts? */
         patch_lower(ldf2, NewStyle->kickplate, c);
 
-        ldf1->flags |= TWO_SIDED;
-        ldf2->flags |= TWO_SIDED;
+        ldf1->flags |= SLUMP_TWO_SIDED;
+        ldf2->flags |= SLUMP_TWO_SIDED;
     }
 
     /* If no core, and a door, doorify the middle sector (s) */
-    if ((!(ThisLink->bits & (LINK_CORE | LINK_ALCOVE))) && (ThisLink->bits & LINK_ANY_DOOR))
+    if ((!(ThisLink->bits & (SLUMP_LINK_CORE | SLUMP_LINK_ALCOVE))) && (ThisLink->bits & SLUMP_LINK_ANY_DOOR))
     {
-        if (!(ThisLink->bits & LINK_BARS))
+        if (!(ThisLink->bits & SLUMP_LINK_BARS))
         {
             doorify(newsec, ldf1, ldf2, ThisStyle, NewStyle, c);
             if (trigger_door)
             {
-                ldf1->type  = LINEDEF_NORMAL;
-                ldf2->type  = (c->do_dm) ? LINEDEF_NORMAL_S1_DOOR : LINEDEF_NORMAL;
+                ldf1->type  = SLUMP_LINEDEF_NORMAL;
+                ldf2->type  = (c->do_dm) ? SLUMP_LINEDEF_NORMAL_S1_DOOR : SLUMP_LINEDEF_NORMAL;
                 newsec->tag = tag1;
             }
             if (!ThisStyle->moving_jambs)
             {
-                ldnew1->flags |= LOWER_UNPEGGED;
-                ldnew2->flags |= LOWER_UNPEGGED;
+                ldnew1->flags |= SLUMP_LOWER_UNPEGGED;
+                ldnew2->flags |= SLUMP_LOWER_UNPEGGED;
             }
             if (ThisQuest)
             {
-                if (ThisQuest->goal == KEY_GOAL)
+                if (ThisQuest->goal == SLUMP_KEY_GOAL)
                 {
                     ldf1->type = type_for_key(ThisQuest->type);
                     if (!painted_door)
                         mark_door_for_key(l, ldf1, ThisQuest->type, ThisStyle, c);
                     ldf2->type = type_for_key(ThisQuest->type); /* Prevent monsters! */
                 }
-                else if (ThisQuest->goal == SWITCH_GOAL && !(ThisLink->bits & LINK_LOCK_CORE))
+                else if (ThisQuest->goal == SLUMP_SWITCH_GOAL && !(ThisLink->bits & SLUMP_LINK_LOCK_CORE))
                 {
-                    ldf1->type  = LINEDEF_NORMAL;
-                    ldf2->type  = (c->do_dm) ? LINEDEF_NORMAL_S1_DOOR : LINEDEF_NORMAL;
+                    ldf1->type  = SLUMP_LINEDEF_NORMAL;
+                    ldf2->type  = (c->do_dm) ? SLUMP_LINEDEF_NORMAL_S1_DOOR : SLUMP_LINEDEF_NORMAL;
                     newsec->tag = ThisQuest->tag;
                     mark_door_for_lock(l, ldf1, ThisStyle, c);
                 } /* end else if tag goal */
@@ -5790,8 +5806,8 @@ void e_bl_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
         }
         else
         {
-            announce(VERBOSE, "Barred door");
-            if (ThisLink->bits & LINK_LOCK_CORE)
+            announce(SLUMP_VERBOSE, "Barred door");
+            if (ThisLink->bits & SLUMP_LINK_LOCK_CORE)
                 barify(l, ldf1, ldf2, NULL, 16 * l->hugeness, NULL, ThisStyle, c);
             else
                 barify(l, ldf1, ldf2, ThisQuest, 16 * l->hugeness, NULL, ThisStyle, c);
@@ -5799,31 +5815,31 @@ void e_bl_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
     }
 
     /* If a core, and door(s), need to make the door sector(s) */
-    if (((ThisLink->bits & LINK_CORE)) && (ThisLink->bits & LINK_ANY_DOOR))
+    if (((ThisLink->bits & SLUMP_LINK_CORE)) && (ThisLink->bits & SLUMP_LINK_ANY_DOOR))
     {
-        if (ThisLink->bits & LINK_NEAR_DOOR)
+        if (ThisLink->bits & SLUMP_LINK_NEAR_DOOR)
         {
             ldnew1 = lefthand_box_ext(l, ldf1, ThisLink->depth1, ThisStyle, c, &ldedge1, &ldedge2);
             ldedge1->right->middle_texture = ThisStyle->doorjamb;
             ldedge2->right->middle_texture = ThisStyle->doorjamb;
             if (!ThisStyle->moving_jambs)
             {
-                ldedge1->flags |= LOWER_UNPEGGED;
-                ldedge2->flags |= LOWER_UNPEGGED;
+                ldedge1->flags |= SLUMP_LOWER_UNPEGGED;
+                ldedge2->flags |= SLUMP_LOWER_UNPEGGED;
             }
             /* Does the y offset of the doorjambs actually matter? */
             ldedge2->right->y_offset = ldedge1->right->y_offset =
                 (nearsec->ceiling_height - nearsec->floor_height) - ThisLink->height1;
         }
-        if (ThisLink->bits & LINK_FAR_DOOR)
+        if (ThisLink->bits & SLUMP_LINK_FAR_DOOR)
         {
             ldnew2 = lefthand_box_ext(l, ldf2, ThisLink->depth1, NewStyle, c, &ldedge1, &ldedge2);
             ldedge1->right->middle_texture = NewStyle->doorjamb;
             ldedge2->right->middle_texture = NewStyle->doorjamb;
             if (!NewStyle->moving_jambs)
             {
-                ldedge1->flags |= LOWER_UNPEGGED;
-                ldedge2->flags |= LOWER_UNPEGGED;
+                ldedge1->flags |= SLUMP_LOWER_UNPEGGED;
+                ldedge2->flags |= SLUMP_LOWER_UNPEGGED;
             }
             ldedge2->right->y_offset = ldedge1->right->y_offset =
                 (farsec->ceiling_height - farsec->floor_height) - ThisLink->height1;
@@ -5834,13 +5850,13 @@ void e_bl_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
         /* for the rest of the alg to work.  So record fixup info */
         /* for later. */
         need_to_doorify = SLUMP_TRUE; /* Need to flip when done */
-        if (ThisLink->bits & LINK_NEAR_DOOR)
+        if (ThisLink->bits & SLUMP_LINK_NEAR_DOOR)
         {
             ldflip1a = ldf1;
             ldflip1b = ldnew1;
             sflip1   = ldf1->left->psector;
         }
-        if (ThisLink->bits & LINK_FAR_DOOR)
+        if (ThisLink->bits & SLUMP_LINK_FAR_DOOR)
         {
             ldflip2a = ldf2;
             ldflip2b = ldnew2;
@@ -5849,17 +5865,17 @@ void e_bl_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
             sflip2->light_level = NewStyle->doorlight0;
         }
         /* Now we're working on the far sides of the (future) door(s) */
-        if (ThisLink->bits & LINK_NEAR_DOOR)
+        if (ThisLink->bits & SLUMP_LINK_NEAR_DOOR)
             ldf1 = ldnew1;
-        if (ThisLink->bits & LINK_FAR_DOOR)
+        if (ThisLink->bits & SLUMP_LINK_FAR_DOOR)
             ldf2 = ldnew2;
     }
 
     /* If alcoves, make them now, and take new linedefs */
-    if (ThisLink->bits & LINK_ALCOVE)
+    if (ThisLink->bits & SLUMP_LINK_ALCOVE)
     {
         linedef *ldedgeopen, *ldedgeclosed;
-        announce(VERBOSE, "Making alcoves");
+        announce(SLUMP_VERBOSE, "Making alcoves");
         ldnew1 = lefthand_box_ext(l, ldf1, ThisLink->width2, ThisStyle, c, &ldedge1, &ldedge2);
         if (effective_left)
         {
@@ -5874,9 +5890,9 @@ void e_bl_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
         /* The near alcove copies the near room */
         ldnew1->right->middle_texture     = ldedgeopen->right->middle_texture;
         ldedgeopen->right->middle_texture = c->null_texture;
-        ldedgeopen->flags |= TWO_SIDED;
+        ldedgeopen->flags |= SLUMP_TWO_SIDED;
         ldnew1->right->psector->floor_height = ldf1->right->psector->floor_height;
-        if (ThisLink->bits & LINK_MAX_CEILING)
+        if (ThisLink->bits & SLUMP_LINK_MAX_CEILING)
         {
             ldnew1->right->psector->ceiling_height = maxtop;
         }
@@ -5902,9 +5918,9 @@ void e_bl_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
         /* and the far the far */
         ldnew2->right->middle_texture     = ldedgeopen->right->middle_texture;
         ldedgeopen->right->middle_texture = c->null_texture;
-        ldedgeopen->flags |= TWO_SIDED;
+        ldedgeopen->flags |= SLUMP_TWO_SIDED;
         ldnew2->right->psector->floor_height = farsec->floor_height;
-        if (ThisLink->bits & LINK_MAX_CEILING)
+        if (ThisLink->bits & SLUMP_LINK_MAX_CEILING)
         {
             ldnew2->right->psector->ceiling_height = maxtop;
         }
@@ -5954,7 +5970,7 @@ void e_bl_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
     mangle = facing_right_from_ld(ldf1);
 
     /* If the core is stairs, put in all but the last */
-    if (ThisLink->bits & LINK_STEPS)
+    if (ThisLink->bits & SLUMP_LINK_STEPS)
     {
         int      i, depth, stepdelta, x, y;
         texture *front     = ThisStyle->kickplate;
@@ -5963,10 +5979,10 @@ void e_bl_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
         if (g->height > ThisLink->height1)
             g = ThisStyle->shortlamp0;
         depth = ThisLink->depth3 / (ThisLink->stepcount + 1);
-        if ((ThisLink->bits & LINK_LAMPS) && (g->width <= depth) && (g->width * 2 + 64 <= len))
+        if ((ThisLink->bits & SLUMP_LINK_LAMPS) && (g->width <= depth) && (g->width * 2 + 64 <= len))
         {
             add_lamps = SLUMP_TRUE;
-            announce(VERBOSE, "stair lamps");
+            announce(SLUMP_VERBOSE, "stair lamps");
         }
         stepdelta = ThisLink->floordelta / ThisLink->stepcount;
         if (ThisStyle->light_steps && ThisStyle->walllight)
@@ -5983,17 +5999,17 @@ void e_bl_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
             ldnew1 = lefthand_box_ext(l, ldf1, depth, ThisStyle, c, &ldedge1, &ldedge2);
             if ((add_lamps) && (i & 0x01))
             {
-                point_from(ldedge1->from->x, ldedge1->from->y, ldedge1->to->x, ldedge1->to->y, RIGHT_TURN, g->width / 2,
-                           &x, &y);
-                point_from(ldedge1->to->x, ldedge1->to->y, x, y, RIGHT_TURN, depth / 2, &x, &y);
+                point_from(ldedge1->from->x, ldedge1->from->y, ldedge1->to->x, ldedge1->to->y, SLUMP_RIGHT_TURN,
+                           g->width / 2, &x, &y);
+                point_from(ldedge1->to->x, ldedge1->to->y, x, y, SLUMP_RIGHT_TURN, depth / 2, &x, &y);
                 new_thing(l, x, y, 0, g->thingid, 7, c);
-                point_from(ldedge2->from->x, ldedge2->from->y, ldedge2->to->x, ldedge2->to->y, RIGHT_TURN, g->width / 2,
-                           &x, &y);
-                point_from(ldedge2->to->x, ldedge2->to->y, x, y, RIGHT_TURN, depth / 2, &x, &y);
+                point_from(ldedge2->from->x, ldedge2->from->y, ldedge2->to->x, ldedge2->to->y, SLUMP_RIGHT_TURN,
+                           g->width / 2, &x, &y);
+                point_from(ldedge2->to->x, ldedge2->to->y, x, y, SLUMP_RIGHT_TURN, depth / 2, &x, &y);
                 new_thing(l, x, y, 0, g->thingid, 7, c);
             }
             ldnew1->right->psector->floor_height = ldf1->right->psector->floor_height + stepdelta;
-            if (ThisLink->bits & LINK_MAX_CEILING)
+            if (ThisLink->bits & SLUMP_LINK_MAX_CEILING)
                 ldnew1->right->psector->ceiling_height = maxtop;
             else
                 ldnew1->right->psector->ceiling_height = ldnew1->right->psector->floor_height + ThisLink->height1;
@@ -6002,45 +6018,45 @@ void e_bl_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
                 nearsec->ceiling_height - ldedge1->right->psector->ceiling_height;
             patch_upper(ldf1, t1, c);
             patch_lower(ldf1, front, c);
-            ldf1->flags &= ~LOWER_UNPEGGED;
+            ldf1->flags &= ~SLUMP_LOWER_UNPEGGED;
             ldf1 = ldnew1;
         } /* end for each step */
         /* The core-making step will do the top (bottom) (far) step */
     } /* end if each steps */
 
     /* If a core, need to make it */
-    if (ThisLink->bits & LINK_CORE)
+    if (ThisLink->bits & SLUMP_LINK_CORE)
     {
         flip_linedef(ldf2);
         newsec = make_box_ext(l, ldf1, ldf2, ThisStyle, c, &ldedge1, &ldedge2);
         flip_linedef(ldf2);
-        if (ThisLink->bits & LINK_MAX_CEILING)
+        if (ThisLink->bits & SLUMP_LINK_MAX_CEILING)
             newsec->ceiling_height = maxtop;
         if (newsec->ceiling_height - ldf1->right->psector->floor_height < 64)
             newsec->ceiling_height = ldf1->right->psector->floor_height + 64;
         if (newsec->ceiling_height - ldf2->right->psector->floor_height < 64)
             newsec->ceiling_height = ldf2->right->psector->floor_height + 64;
         ldedge2->right->y_offset = ldedge1->right->y_offset = nearsec->ceiling_height - newsec->ceiling_height;
-        if ((ThisQuest != NULL) && (ThisLink->bits & LINK_LOCK_CORE))
+        if ((ThisQuest != NULL) && (ThisLink->bits & SLUMP_LINK_LOCK_CORE))
         {
             newsec->floor_flat = ThisStyle->nukage1;
-            newsec->special    = NUKAGE1_SPECIAL;
+            newsec->special    = SLUMP_NUKAGE1_SPECIAL;
             newsec->tag        = ThisQuest->tag;
             newsec->floor_height -= 24 - roll(ThisLink->floordelta);
             if (newsec->light_level < 160)
                 newsec->light_level = 160;              /* Visible */
             patch_lower(ldf1, ThisStyle->kickplate, c); /* Or stepfront? */
             if (rollpercent(50))
-                ldf2->flags |= BLOCK_MONSTERS;          /* Can't decide! */
-            haa->haas[ITYTD].health -= 10;
-            haa->haas[HMP].health -= 5;
-            announce(VERBOSE, "Nukage lock");
+                ldf2->flags |= SLUMP_BLOCK_MONSTERS;    /* Can't decide! */
+            haa->haas[SLUMP_ITYTD].health -= 10;
+            haa->haas[SLUMP_HMP].health -= 5;
+            announce(SLUMP_VERBOSE, "Nukage lock");
         }
-        else if (rollpercent(l->p_force_nukage) && !(ThisLink->bits & LINK_LIFT) && !(ThisLink->bits & LINK_STEPS) &&
-                 (ThisLink->depth3 >= 64) && (ThisLink->depth3 <= 196))
+        else if (rollpercent(l->p_force_nukage) && !(ThisLink->bits & SLUMP_LINK_LIFT) &&
+                 !(ThisLink->bits & SLUMP_LINK_STEPS) && (ThisLink->depth3 >= 64) && (ThisLink->depth3 <= 196))
         {
             newsec->floor_flat = ThisStyle->nukage1;
-            newsec->special    = NUKAGE1_SPECIAL;
+            newsec->special    = SLUMP_NUKAGE1_SPECIAL;
             if (ThisLink->floordelta < 0)
             {
                 newsec->floor_height += ThisLink->floordelta; /* Fixed +- bug here */
@@ -6053,16 +6069,16 @@ void e_bl_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
             if (newsec->light_level < 160)
                 newsec->light_level = 160; /* Visible */
             patch_lower(ldf1, ThisStyle->kickplate, c);
-            haa->haas[ITYTD].health -= 10;
-            haa->haas[HMP].health -= 5;
-            announce(VERBOSE, "Nukage link");
+            haa->haas[SLUMP_ITYTD].health -= 10;
+            haa->haas[SLUMP_HMP].health -= 5;
+            announce(SLUMP_VERBOSE, "Nukage link");
         }
-        else if ((rollpercent(l->p_falling_core)) && (linelen(ldedge1) >= (120 * l->hugeness)) &&
-                 (!(ThisLink->bits & LINK_LIFT)) && (flipstate == 0))
+        else if ((rollpercent(l->p_falling_core)) && (SLUMP_linelen(ldedge1) >= (120 * l->hugeness)) &&
+                 (!(ThisLink->bits & SLUMP_LINK_LIFT)) && (flipstate == 0))
         { /* Maybe a fun trap */
             try_falling_core(l, ldedge1, ldedge2, haa, c);
         }
-        ldf2->flags |= TWO_SIDED;
+        ldf2->flags |= SLUMP_TWO_SIDED;
         patch_upper(ldf1, t1, c);
 
         /* This is where the level-change actually happens, eh? */
@@ -6073,8 +6089,8 @@ void e_bl_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
         /* core, so that the second pass can make a decorative room. */
         if (flipstate == 1)
         {
-            if ((!(ThisLink->bits & (LINK_LIFT | LINK_ALCOVE))) && (ThisLink->bits & LINK_DECROOM) &&
-                (linelen(ldedge2) > 63))
+            if ((!(ThisLink->bits & (SLUMP_LINK_LIFT | SLUMP_LINK_ALCOVE))) && (ThisLink->bits & SLUMP_LINK_DECROOM) &&
+                (SLUMP_linelen(ldedge2) > 63))
             {
                 ThisLink->cld = ldedge2;
             }
@@ -6089,19 +6105,19 @@ void e_bl_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
             if (rollpercent(10))
             {
                 if (make_window(l, ldedge1, ThisLink->cld, ThisLink, ThisStyle, NewStyle, c))
-                    announce(LOG, "Intertwin window");
+                    announce(SLUMP_LOG, "Intertwin window");
             }
             else
             {
                 if (make_decroom(l, ldedge1, ThisLink->cld, c))
-                    announce(LOG, "Intertwin decroom");
+                    announce(SLUMP_LOG, "Intertwin decroom");
             }
         }
 
     } /* end if a core */
 
     /* If the core is a lift, make that happen */
-    if (ThisLink->bits & LINK_LIFT)
+    if (ThisLink->bits & SLUMP_LINK_LIFT)
     {
         if (trigger_lift)
             newsec->tag = tag1;
@@ -6114,19 +6130,19 @@ void e_bl_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
         if (nearsec->floor_height > farsec->floor_height)
         {
             newsec->floor_height      = nearsec->floor_height;
-            ldf1->type                = LINEDEF_WR_LOWER_LIFT;
+            ldf1->type                = SLUMP_LINEDEF_WR_LOWER_LIFT;
             ldf1->left->lower_texture = ThisStyle->support0; /* yes? */
             if (!trigger_lift)
                 ldf2->type = NewStyle->slifttype;
             patch_lower(ldf2, NewStyle->support0, c);
             if ((NewStyle->liftface) && (nearsec->floor_height - farsec->floor_height <= NewStyle->liftface->height) &&
-                (linelen(ldf2) == NewStyle->liftface->width))
+                (SLUMP_linelen(ldf2) == NewStyle->liftface->width))
             {
                 ldf2->right->lower_texture = NewStyle->liftface;
                 ldf2->right->x_offset      = 0;
-                announce(VERBOSE, "Lift texture");
+                announce(SLUMP_VERBOSE, "Lift texture");
             }
-            ldf2->flags &= ~LOWER_UNPEGGED; /* Lift-falling must be visible! */
+            ldf2->flags &= ~SLUMP_LOWER_UNPEGGED; /* Lift-falling must be visible! */
         }
         else
         {
@@ -6136,14 +6152,14 @@ void e_bl_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
             patch_lower(ldf1, ThisStyle->support0, c);
             if ((ThisStyle->liftface) &&
                 (farsec->floor_height - nearsec->floor_height <= ThisStyle->liftface->height) &&
-                (linelen(ldf1) == ThisStyle->liftface->width))
+                (SLUMP_linelen(ldf1) == ThisStyle->liftface->width))
             {
                 ldf1->right->lower_texture = ThisStyle->liftface;
                 ldf1->right->x_offset      = 0;
-                announce(VERBOSE, "Lift texture");
+                announce(SLUMP_VERBOSE, "Lift texture");
             }
-            ldf1->flags &= ~LOWER_UNPEGGED;                 /* Lift-falling must be visible! */
-            ldf2->type                = LINEDEF_WR_LOWER_LIFT;
+            ldf1->flags &= ~SLUMP_LOWER_UNPEGGED;           /* Lift-falling must be visible! */
+            ldf2->type                = SLUMP_LINEDEF_WR_LOWER_LIFT;
             ldf2->left->lower_texture = NewStyle->support0; /* right? */
         } /* end else lift that way */
         newsec->ceiling_height = newsec->floor_height + ThisLink->height1;
@@ -6154,7 +6170,7 @@ void e_bl_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
     } /* end if doing a lift */
 
     /* Maybe put a monster in the link */
-    if ((haa != NULL) && (ThisLink->bits & LINK_CORE) && (rollpercent(40)))
+    if ((haa != NULL) && (ThisLink->bits & SLUMP_LINK_CORE) && (rollpercent(40)))
     {
         int    levels;
         genus *m = timely_monster(haa, c, &levels, rollpercent(l->p_biggest_monsters), 0);
@@ -6165,25 +6181,25 @@ void e_bl_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
             /* Try to place it */
             if (!rollpercent(l->p_rational_facing))
                 mangle = 90 * roll(4);
-            if (NULL != place_object_in_region(l, mminx, mminy, mmaxx, mmaxy, c, m->thingid, MONSTER_WIDTH(m), mangle,
-                                               0, 0, levels))
+            if (NULL != place_object_in_region(l, mminx, mminy, mmaxx, mmaxy, c, m->thingid, 64,
+                                               mangle, 0, 0, levels))
             {
 
-                if (m->thingid == ID_SKULL)
-                    announce(NONE, "Skull");
-                if (m->thingid == ID_HEAD)
-                    announce(VERBOSE, "HEAD");
-                if (m->thingid == ID_SKEL)
-                    announce(VERBOSE, "SKEL");
-                if (m->thingid == ID_HELL)
-                    announce(VERBOSE, "KNIGHT");
-                if (m->thingid == ID_ARCHIE)
-                    announce(VERBOSE, "VILE");
+                if (m->thingid == SLUMP_ID_SKULL)
+                    announce(SLUMP_NONE, "Skull");
+                if (m->thingid == SLUMP_ID_HEAD)
+                    announce(SLUMP_VERBOSE, "HEAD");
+                if (m->thingid == SLUMP_ID_SKEL)
+                    announce(SLUMP_VERBOSE, "SKEL");
+                if (m->thingid == SLUMP_ID_HELL)
+                    announce(SLUMP_VERBOSE, "KNIGHT");
+                if (m->thingid == SLUMP_ID_ARCHIE)
+                    announce(SLUMP_VERBOSE, "VILE");
 
                 update_haa_for_monster(haa, m, levels, 0, c);
                 haa_unpend(haa);
 
-                announce(VERBOSE, "Link guard");
+                announce(SLUMP_VERBOSE, "Link guard");
             } /* end if placed it */
         } /* end if timely one */
     } /* end if a monster */
@@ -6191,42 +6207,42 @@ void e_bl_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
     /* Finally, if we have unmade doors, make 'em */
     if (need_to_doorify)
     {
-        if (ThisLink->bits & LINK_NEAR_DOOR)
+        if (ThisLink->bits & SLUMP_LINK_NEAR_DOOR)
         {
             flip_linedef(ldflip1b);
             doorify(sflip1, ldflip1a, ldflip1b, ThisStyle, ThisStyle, c);
             if (trigger_door)
             {
-                ldflip1a->type = LINEDEF_NORMAL;
-                ldflip1b->type = LINEDEF_NORMAL_DOOR; /* S1 door would break! */
+                ldflip1a->type = SLUMP_LINEDEF_NORMAL;
+                ldflip1b->type = SLUMP_LINEDEF_NORMAL_DOOR; /* S1 door would break! */
                 sflip1->tag    = tag1;
             }
             if (ThisQuest)
             {
-                if (ThisQuest->goal == KEY_GOAL)
+                if (ThisQuest->goal == SLUMP_KEY_GOAL)
                 {
                     ldflip1a->type = type_for_key(ThisQuest->type);
                     if (!painted_door)
                         mark_door_for_key(l, ldflip1a, ThisQuest->type, ThisStyle, c);
                     ldflip1b->type = type_for_key(ThisQuest->type); /* Prevent monsters! */
                 }
-                else if ((ThisQuest->goal == SWITCH_GOAL) && !(ThisLink->bits & LINK_LOCK_CORE))
+                else if ((ThisQuest->goal == SLUMP_SWITCH_GOAL) && !(ThisLink->bits & SLUMP_LINK_LOCK_CORE))
                 {
-                    ldflip1a->type = LINEDEF_NORMAL;
-                    ldflip1b->type = (c->do_dm) ? LINEDEF_NORMAL_S1_DOOR : LINEDEF_NORMAL;
+                    ldflip1a->type = SLUMP_LINEDEF_NORMAL;
+                    ldflip1b->type = (c->do_dm) ? SLUMP_LINEDEF_NORMAL_S1_DOOR : SLUMP_LINEDEF_NORMAL;
                     sflip1->tag    = ThisQuest->tag;
                     mark_door_for_lock(l, ldflip1a, ThisStyle, c);
                 } /* end else if tag goal */
             } /* end else if ThisQuest */
         }
-        if (ThisLink->bits & LINK_FAR_DOOR)
+        if (ThisLink->bits & SLUMP_LINK_FAR_DOOR)
         {
             flip_linedef(ldflip2b);
             doorify(sflip2, ldflip2a, ldflip2b, NewStyle, NewStyle, c);
             if (trigger_door)
             {
-                ldflip2a->type = LINEDEF_NORMAL;
-                ldflip2b->type = LINEDEF_NORMAL_DOOR; /* S1 door would break! */
+                ldflip2a->type = SLUMP_LINEDEF_NORMAL;
+                ldflip2b->type = SLUMP_LINEDEF_NORMAL_DOOR; /* S1 door would break! */
                 sflip2->tag    = tag1;
             }
         }
@@ -6246,9 +6262,9 @@ linedef *starting_linedef(level *l, style *ThisStyle, config *c)
     first_room_size = l->hugeness * 64 * (2 + roll(9));
     /* We don't want rooms to be too small if we can have teleports on the
        level - SET */
-    if (l->use_gates && first_room_size < TELEPORT_MINROOMSIZE)
+    if (l->use_gates && first_room_size < SLUMP_TELEPORT_MINROOMSIZE)
     {
-        first_room_size = TELEPORT_MINROOMSIZE;
+        first_room_size = SLUMP_TELEPORT_MINROOMSIZE;
     }
     v1 = new_vertex(l, 0, 0); /* Might as well */
     /* Should consult the style/config? */
@@ -6288,7 +6304,7 @@ void point_from(int x1, int y1, int x2, int y2, int angle, int len, int *x3, int
             newdy = 1;
         }
     }
-    if (angle == LEFT_TURN)
+    if (angle == SLUMP_LEFT_TURN)
     {
         newdx = 0 - newdx;
         newdy = 0 - newdy;
@@ -6303,21 +6319,21 @@ void announce(int announcelevel, const char *s)
 {
     switch (announcelevel)
     {
-    case NONE:
+    case SLUMP_NONE:
         return;
-    case VERBOSE:
+    case SLUMP_VERBOSE:
         if (global_verbosity == 0)
             return; /** fallthrough **/
-    case LOG:
+    case SLUMP_LOG:
         break;
-    case NOTE:
+    case SLUMP_NOTE:
         printf("NOTE: ");
         break;
-    case WARNING:
+    case SLUMP_WARNING:
         printf("WARNING: ");
         break;
     case SLUMP_ERROR:
-        printf("SLUMP_ERROR: ");
+        printf("ERROR: ");
         break;
     default:
         printf("HEY: ");
@@ -6341,9 +6357,9 @@ linedef *install_switch(level *l, linedef *ld, boolean recess, boolean fancy, sh
     if (fancy)
     {
         ThisStyle->lightboxes = SLUMP_TRUE;
-        announce(VERBOSE, "fancy switch");
+        announce(SLUMP_VERBOSE, "fancy switch");
     }
-    ld = borderize(l, ld, 64, SLUMP_TRUE, ThisStyle, LIGHT, NULL, NULL, c);
+    ld = borderize(l, ld, 64, SLUMP_TRUE, ThisStyle, SLUMP_LIGHT, NULL, NULL, c);
     if (xld)
         *xld = ld;
     ThisStyle->lightboxes = SLUMP_FALSE;
@@ -6368,7 +6384,7 @@ linedef *install_switch(level *l, linedef *ld, boolean recess, boolean fancy, sh
         }
         else if ((ThisStyle->light_recesses) && (ThisStyle->walllight != NULL))
         {
-            announce(VERBOSE, "Lit switch");
+            announce(SLUMP_VERBOSE, "Lit switch");
             ldedge2->right->middle_texture = ldedge1->right->middle_texture = ThisStyle->walllight;
             make_lighted(l, ld2->right->psector, c);
         }
@@ -6383,7 +6399,7 @@ linedef *install_switch(level *l, linedef *ld, boolean recess, boolean fancy, sh
     ld->right->middle_texture = ThisStyle->switch0;
     ld->right->x_offset       = 0;
     ld->right->y_offset       = ThisStyle->switch0->y_bias;
-    ld->flags |= LOWER_UNPEGGED;
+    ld->flags |= SLUMP_LOWER_UNPEGGED;
     return ld;
 }
 
@@ -6396,7 +6412,7 @@ boolean maybe_add_dm_start(level *l, sector *s, config *c, boolean force)
         return SLUMP_FALSE;
     if (s->has_dm && !force)
         return SLUMP_FALSE;
-    if (place_object(l, s, c, ID_DM, 34, -1, s->entry_x, s->entry_y, 7))
+    if (place_object(l, s, c, SLUMP_ID_DM, 34, -1, s->entry_x, s->entry_y, 7))
     {
         s->has_dm = SLUMP_TRUE;
         l->dm_count++;
@@ -6404,12 +6420,12 @@ boolean maybe_add_dm_start(level *l, sector *s, config *c, boolean force)
         {
             if (l->heretic_level)
             {
-                if (place_object(l, s, c, ID_CROSSBOW, 24, 0, 0, 0, 0x17))
+                if (place_object(l, s, c, SLUMP_ID_CROSSBOW, 24, 0, 0, 0, 0x17))
                     s->has_dm_weapon = SLUMP_TRUE;
             }
             else
             {
-                if (place_object(l, s, c, ID_SHOTGUN, 24, 0, 0, 0, 0x17))
+                if (place_object(l, s, c, SLUMP_ID_SHOTGUN, 24, 0, 0, 0, 0x17))
                     s->has_dm_weapon = SLUMP_TRUE;
             }
         }
@@ -6430,13 +6446,13 @@ void close_quest_final(level *l, sector *s, quest *q, haa *haa, config *c)
 
     if (t && (q->auxtag) && (q->surprise))
     {
-        trigger_box(l, t, s, q->auxtag, LINEDEF_WR_OPEN_DOOR, c);
+        trigger_box(l, t, s, q->auxtag, SLUMP_LINEDEF_WR_OPEN_DOOR, c);
         populate_linedef(l, q->surprise, haa, c, SLUMP_FALSE);
     }
 
     /* If we've put in the SL exit, but not yet the thing that */
     /* opens it, do one last try at that. */
-    if ((q->goal == LEVEL_END_GOAL) && (l->sl_open_ok))
+    if ((q->goal == SLUMP_LEVEL_END_GOAL) && (l->sl_open_ok))
     {
         t = place_required_small_pickable(l, s, c);
         if (t)
@@ -6444,13 +6460,13 @@ void close_quest_final(level *l, sector *s, quest *q, haa *haa, config *c)
             trigger_box(l, t, s, l->sl_tag, l->sl_type, c);
             l->sl_done    = SLUMP_TRUE;
             l->sl_open_ok = SLUMP_FALSE;
-            announce(VERBOSE, "Did sl triggerbox");
+            announce(SLUMP_VERBOSE, "Did sl triggerbox");
         }
     }
 
     /* On the other hand, if we haven't even put in the SL exit yet, */
     /* we're really desparate! */
-    if (need_secret_level(c) && !l->sl_done && !l->sl_tag && q->goal == LEVEL_END_GOAL)
+    if (need_secret_level(c) && !l->sl_done && !l->sl_tag && q->goal == SLUMP_LEVEL_END_GOAL)
     {
         int      i;
         linedef *ldf;
@@ -6463,8 +6479,8 @@ void close_quest_final(level *l, sector *s, quest *q, haa *haa, config *c)
                 ldf->right->middle_texture = ldf->right->middle_texture->subtle;
             else
                 ldf->right->middle_texture = s->pstyle->support0;
-            ldf->type = LINEDEF_S1_SEC_LEVEL;
-            announce(LOG, "Last-ditch SL exit!");
+            ldf->type = SLUMP_LINEDEF_S1_SEC_LEVEL;
+            announce(SLUMP_LOG, "Last-ditch SL exit!");
             l->sl_done = SLUMP_TRUE;
         }
     }
@@ -6484,7 +6500,7 @@ short death_room(level *l, linedef *ld, style *ThisStyle, config *c)
     ldnew = make_linkto(l, ld, gatelink, ThisStyle, c, NULL);
     if (ldnew == NULL)
         return 0;
-    for (; linelen(ldnew) < 320;)
+    for (; SLUMP_linelen(ldnew) < 320;)
     {
         ldnew->to->x = ldnew->from->x + 2 * (ldnew->to->x - ldnew->from->x);
         ldnew->to->y = ldnew->from->y + 2 * (ldnew->to->y - ldnew->from->y);
@@ -6495,29 +6511,29 @@ short death_room(level *l, linedef *ld, style *ThisStyle, config *c)
     newsector->tag = new_tag(l);
     if (l->heretic_level)
     {
-        newsector->special = HERETIC_LAVA;
+        newsector->special = SLUMP_HERETIC_LAVA;
     }
     else
     {
-        newsector->special = DEATH_SECTOR;
+        newsector->special = SLUMP_DEATH_SECTOR;
     }
     newsector->light_level = 80;
 
     find_rec(l, newsector, &minx, &miny, &maxx, &maxy);
-    new_thing(l, (minx + maxx) / 2, (miny + maxy) / 2, (short)(90 * roll(4)), ID_GATEOUT, 7, c);
+    new_thing(l, (minx + maxx) / 2, (miny + maxy) / 2, (short)(90 * roll(4)), SLUMP_ID_GATEOUT, 7, c);
 
     /* Worry about having *too many* sergeants? */
     for (x = minx + 22; x <= maxx - 22; x += 44)
     {
         if (l->heretic_level)
         {
-            new_thing(l, x, miny + 22, 90, ID_UNDEADWARRIOR, 7, c);
-            new_thing(l, x, maxy - 22, 270, ID_UNDEADWARRIOR, 7, c);
+            new_thing(l, x, miny + 22, 90, SLUMP_ID_UNDEADWARRIOR, 7, c);
+            new_thing(l, x, maxy - 22, 270, SLUMP_ID_UNDEADWARRIOR, 7, c);
         }
         else
         {
-            new_thing(l, x, miny + 22, 90, ID_SERGEANT, 7, c);
-            new_thing(l, x, maxy - 22, 270, ID_SERGEANT, 7, c);
+            new_thing(l, x, miny + 22, 90, SLUMP_ID_SERGEANT, 7, c);
+            new_thing(l, x, maxy - 22, 270, SLUMP_ID_SERGEANT, 7, c);
         }
     }
 
@@ -6550,7 +6566,7 @@ void prepare_arena_gate(level *l, sector *s, arena *a, haa *haa, config *c)
 /* and stuff for the arena. */
 void install_arena(level *l, arena *a, sector *s, haa *haa, config *c)
 {
-    int      maxx = 0 - HUGE_NUMBER;
+    int      maxx = 0 - SLUMP_HUGE_NUMBER;
     vertex  *v, *v1, *v2, *v3, *v4;
     vertex  *vt1, *vt2;
     int      upness, acrossness, border, i, n;
@@ -6571,7 +6587,7 @@ void install_arena(level *l, arena *a, sector *s, haa *haa, config *c)
     maxx += 256;
     upness     = 750 + roll(501);
     acrossness = 3 * upness;
-    if (a->props & ARENA_PORCH)
+    if (a->props & SLUMP_ARENA_PORCH)
     {
         border = 72 + 32 * roll(11);
     }
@@ -6586,7 +6602,7 @@ void install_arena(level *l, arena *a, sector *s, haa *haa, config *c)
     a->maxy = upness / 2;
 
     /* Make the outer walls */
-    if (a->props & ARENA_PORCH)
+    if (a->props & SLUMP_ARENA_PORCH)
     {
         /* Flat with promenade */
         newsec->ceiling_flat = newsec->pstyle->ceiling0;
@@ -6611,7 +6627,7 @@ void install_arena(level *l, arena *a, sector *s, haa *haa, config *c)
         ld->right                 = new_sidedef(l, newsec, c);
         ld->right->middle_texture = a->walls;
 
-        if (a->props & ARENA_LAMPS)
+        if (a->props & SLUMP_ARENA_LAMPS)
         {
             lamp = newsec->pstyle->lamp0;
             if (lamp->height >= ch)
@@ -6693,7 +6709,7 @@ void install_arena(level *l, arena *a, sector *s, haa *haa, config *c)
     newsec              = new_sector(l, 0, ch, a->floor, c->sky_flat);
     newsec->light_level = a->outersec->light_level;
     newsec->pstyle      = s->pstyle;
-    if (a->props & ARENA_ROOF)
+    if (a->props & SLUMP_ARENA_ROOF)
     {
         newsec->ceiling_flat      = newsec->pstyle->ceiling0;
         a->outersec->ceiling_flat = newsec->pstyle->ceiling0;
@@ -6705,27 +6721,27 @@ void install_arena(level *l, arena *a, sector *s, haa *haa, config *c)
     }
 
     /* Some sector adjustments... */
-    if (rollpercent(30) && (a->props & ARENA_PORCH))
+    if (rollpercent(30) && (a->props & SLUMP_ARENA_PORCH))
     {
         flat *light_flat;
-        a->outersec->special = RANDOM_BLINK;
+        a->outersec->special = SLUMP_RANDOM_BLINK;
         a->outersec->light_level += 20;
         if (a->outersec->light_level > l->bright_light_level)
             a->outersec->light_level = l->bright_light_level;
-        light_flat = random_flat0(CEILING | LIGHT, c, NULL);
+        light_flat = random_flat0(SLUMP_CEILING | SLUMP_LIGHT, c, NULL);
         if (light_flat)
             a->outersec->ceiling_flat = light_flat;
     }
 
-    if (a->props & ARENA_NUKAGE)
+    if (a->props & SLUMP_ARENA_NUKAGE)
     {
         a->outersec->floor_height -= 8;
-        if (a->props & ARENA_PORCH)
+        if (a->props & SLUMP_ARENA_PORCH)
             a->outersec->ceiling_height -= 8;
         a->outersec->floor_flat = a->outersec->pstyle->nukage1;
-        a->outersec->special    = NUKAGE1_SPECIAL;
+        a->outersec->special    = SLUMP_NUKAGE1_SPECIAL;
     }
-    else if ((a->props & ARENA_PORCH) && rollpercent(50))
+    else if ((a->props & SLUMP_ARENA_PORCH) && rollpercent(50))
     {
         short d = 8 + 8 * roll(3);
         a->outersec->floor_height += d;
@@ -6740,7 +6756,7 @@ void install_arena(level *l, arena *a, sector *s, haa *haa, config *c)
     v4 = new_vertex(l, a->maxx, a->miny);
 
     ld = new_linedef(l, v1, v2);
-    ld->flags |= TWO_SIDED;
+    ld->flags |= SLUMP_TWO_SIDED;
     ld->right                 = new_sidedef(l, newsec, c);
     ld->right->middle_texture = c->null_texture;
     ld->left                  = new_sidedef(l, a->outersec, c);
@@ -6749,7 +6765,7 @@ void install_arena(level *l, arena *a, sector *s, haa *haa, config *c)
     patch_lower(ld, a->walls, c);
 
     ld = new_linedef(l, v2, v3);
-    ld->flags |= TWO_SIDED;
+    ld->flags |= SLUMP_TWO_SIDED;
     ld->right                 = new_sidedef(l, newsec, c);
     ld->right->middle_texture = c->null_texture;
     ld->left                  = new_sidedef(l, a->outersec, c);
@@ -6758,7 +6774,7 @@ void install_arena(level *l, arena *a, sector *s, haa *haa, config *c)
     patch_lower(ld, a->walls, c);
 
     ld = new_linedef(l, v3, v4);
-    ld->flags |= TWO_SIDED;
+    ld->flags |= SLUMP_TWO_SIDED;
     ld->right                 = new_sidedef(l, newsec, c);
     ld->right->middle_texture = c->null_texture;
     ld->left                  = new_sidedef(l, a->outersec, c);
@@ -6767,7 +6783,7 @@ void install_arena(level *l, arena *a, sector *s, haa *haa, config *c)
     patch_lower(ld, a->walls, c);
 
     ld = new_linedef(l, v4, v1);
-    ld->flags |= TWO_SIDED;
+    ld->flags |= SLUMP_TWO_SIDED;
     ld->right                 = new_sidedef(l, newsec, c);
     ld->right->middle_texture = c->null_texture;
     ld->left                  = new_sidedef(l, a->outersec, c);
@@ -6775,7 +6791,7 @@ void install_arena(level *l, arena *a, sector *s, haa *haa, config *c)
     patch_upper(ld, a->walls, c);
     patch_lower(ld, a->walls, c);
 
-    if ((a->props & ARENA_LAMPS) && (!(a->props & ARENA_PORCH)))
+    if ((a->props & SLUMP_ARENA_LAMPS) && (!(a->props & SLUMP_ARENA_PORCH)))
     {
         lamp = newsec->pstyle->lamp0;
         if (lamp->height >= ch)
@@ -6806,13 +6822,13 @@ void arena_arrival(level *l, arena *a, haa *haa, config *c)
     cy   = (a->miny + a->maxy) / 2;
 
     /* a simple version */
-    new_thing(l, cx, cy, (short)(90 * roll(4)), ID_GATEOUT, 7, c);
+    new_thing(l, cx, cy, (short)(90 * roll(4)), SLUMP_ID_GATEOUT, 7, c);
     a->innersec->tag     = a->fromtag;
     a->innersec->entry_x = cx;
     a->innersec->entry_y = cy;
 
     /* except for this */
-    if (a->props & ARENA_ARRIVAL_HOLE)
+    if (a->props & SLUMP_ARENA_ARRIVAL_HOLE)
     {
         linedef *ld1, *ld2, *ld3, *ld4;
         newsec = clone_sector(l, a->innersec);
@@ -6827,13 +6843,13 @@ void arena_arrival(level *l, arena *a, haa *haa, config *c)
         flip_linedef(ld2);
         flip_linedef(ld3);
         flip_linedef(ld4);
-        ld1->type = LINEDEF_S1_RAISE_FLOOR;
+        ld1->type = SLUMP_LINEDEF_S1_RAISE_FLOOR;
         ld1->tag  = newsec->tag;
-        ld2->type = LINEDEF_S1_RAISE_FLOOR;
+        ld2->type = SLUMP_LINEDEF_S1_RAISE_FLOOR;
         ld2->tag  = newsec->tag;
-        ld3->type = LINEDEF_S1_RAISE_FLOOR;
+        ld3->type = SLUMP_LINEDEF_S1_RAISE_FLOOR;
         ld3->tag  = newsec->tag;
-        ld4->type = LINEDEF_S1_RAISE_FLOOR;
+        ld4->type = SLUMP_LINEDEF_S1_RAISE_FLOOR;
         ld4->tag  = newsec->tag;
     }
 
@@ -6841,7 +6857,7 @@ void arena_arrival(level *l, arena *a, haa *haa, config *c)
     if (!place_object_in_region(l, minx, a->miny, maxx, a->maxy, c, a->weapon->thingid, 24, 0, 0, 0, 7))
         if (!place_object_in_region(l, minx, a->miny, maxx, a->maxy, c, a->weapon->thingid, 1, 0, 0, 0, 7))
             announce(SLUMP_ERROR, "No room for important weapon!");
-    place_object_in_region(l, minx, a->miny, maxx, a->maxy, c, ID_SOUL, 24, 0, 0, 0, 1);
+    place_object_in_region(l, minx, a->miny, maxx, a->maxy, c, SLUMP_ID_SOUL, 24, 0, 0, 0, 1);
     ammo_value(a->weapon->thingid, haa, &f0, &f1, &f2);
     na0 = (a->boss_count * a->boss->ammo_to_kill[0]) - (float)f0;
     na1 = (a->boss_count * a->boss->ammo_to_kill[1]) - (float)f1;
@@ -6862,15 +6878,15 @@ void arena_arrival(level *l, arena *a, haa *haa, config *c)
         if (na2 <= 0)
             mask &= ~0x04;
     }
-    if (a->props & ARENA_NUKAGE)
+    if (a->props & SLUMP_ARENA_NUKAGE)
     { /* Little stub health */
         if (l->heretic_level)
         {
-            place_object_in_region(l, minx, a->miny, maxx, a->maxy, c, ID_QUARTZFLASK, 16, 0, 0, 0, 7);
+            place_object_in_region(l, minx, a->miny, maxx, a->maxy, c, SLUMP_ID_QUARTZFLASK, 16, 0, 0, 0, 7);
         }
         else
         {
-            place_object_in_region(l, minx, a->miny, maxx, a->maxy, c, ID_MEDIKIT, 16, 0, 0, 0, 7);
+            place_object_in_region(l, minx, a->miny, maxx, a->maxy, c, SLUMP_ID_MEDIKIT, 16, 0, 0, 0, 7);
         }
     }
 }
@@ -6907,7 +6923,7 @@ void arena_decor(level *l, arena *a, haa *haa, config *c)
     newsec->floor_height = (short)(a->innersec->floor_height + zmult * 128);
     cx                   = (a->minx + a->maxx) / 2 - 64 * xmult;
     cy                   = (a->miny + a->maxy) / 2 - 64 * ymult;
-    if ((a->innersec->pstyle->plaque->props & VTILES) || (zmult == 1))
+    if ((a->innersec->pstyle->plaque->props & SLUMP_VTILES) || (zmult == 1))
     {
         tm = a->innersec->pstyle->plaque;
     }
@@ -6917,11 +6933,11 @@ void arena_decor(level *l, arena *a, haa *haa, config *c)
     }
     parallel_innersec_ex(l, a->innersec, newsec, c->null_texture, a->innersec->pstyle->wall0, tm, cx, cy,
                          cx + 128 * xmult, cy + 128 * ymult, c, &ld1, &ld2, &ld3, &ld4);
-    ld1->flags &= ~LOWER_UNPEGGED;
-    ld2->flags &= ~LOWER_UNPEGGED;
-    ld3->flags &= ~LOWER_UNPEGGED;
-    ld4->flags &= ~LOWER_UNPEGGED;
-    if ((a->props & ARENA_LAMPS) && rollpercent(50))
+    ld1->flags &= ~SLUMP_LOWER_UNPEGGED;
+    ld2->flags &= ~SLUMP_LOWER_UNPEGGED;
+    ld3->flags &= ~SLUMP_LOWER_UNPEGGED;
+    ld4->flags &= ~SLUMP_LOWER_UNPEGGED;
+    if ((a->props & SLUMP_ARENA_LAMPS) && rollpercent(50))
     {
         genus *lamp;
         lamp = a->innersec->pstyle->lamp0;
@@ -6959,7 +6975,7 @@ void arena_boss(level *l, arena *a, haa *haa, config *c)
     if (a->boss_count > 1) /* Only 1 and 2 supported! */
         new_thing(l, cx, cy - (a->boss->width + 8), facing, a->boss->thingid, 7, c);
 
-    if (c->gamemask & HERETIC_BIT)
+    if (c->gamemask & SLUMP_HERETIC_BIT)
     {
         if (c->mission == 8)
         {
@@ -6974,18 +6990,18 @@ void arena_boss(level *l, arena *a, haa *haa, config *c)
                                              random_gate(c, a->innersec->pstyle), a->innersec->ceiling_flat);
             newsec->pstyle      = a->innersec->pstyle;
             newsec->light_level = 250;
-            newsec->special     = GLOW_BLINK;
+            newsec->special     = SLUMP_GLOW_BLINK;
             newsec->tag         = 666;
             parallel_innersec_ex(l, a->innersec, newsec, NULL, NULL, a->innersec->pstyle->wall0, cx, cy, cx + 64,
                                  cy + 64, c, &ld1, &ld2, &ld3, &ld4);
-            ld1->type = LINEDEF_W1_END_LEVEL;
-            ld1->flags &= ~LOWER_UNPEGGED;
-            ld2->type = LINEDEF_W1_END_LEVEL;
-            ld2->flags &= ~LOWER_UNPEGGED;
-            ld3->type = LINEDEF_W1_END_LEVEL;
-            ld3->flags &= ~LOWER_UNPEGGED;
-            ld4->type = LINEDEF_W1_END_LEVEL;
-            ld4->flags &= ~LOWER_UNPEGGED;
+            ld1->type = SLUMP_LINEDEF_W1_END_LEVEL;
+            ld1->flags &= ~SLUMP_LOWER_UNPEGGED;
+            ld2->type = SLUMP_LINEDEF_W1_END_LEVEL;
+            ld2->flags &= ~SLUMP_LOWER_UNPEGGED;
+            ld3->type = SLUMP_LINEDEF_W1_END_LEVEL;
+            ld3->flags &= ~SLUMP_LOWER_UNPEGGED;
+            ld4->type = SLUMP_LINEDEF_W1_END_LEVEL;
+            ld4->flags &= ~SLUMP_LOWER_UNPEGGED;
         }
     }
     else
@@ -7007,18 +7023,18 @@ void arena_boss(level *l, arena *a, haa *haa, config *c)
                                              random_gate(c, a->innersec->pstyle), a->innersec->ceiling_flat);
             newsec->pstyle      = a->innersec->pstyle;
             newsec->light_level = 250;
-            newsec->special     = GLOW_BLINK;
+            newsec->special     = SLUMP_GLOW_BLINK;
             newsec->tag         = 666;
             parallel_innersec_ex(l, a->innersec, newsec, NULL, NULL, a->innersec->pstyle->wall0, cx, cy, cx + 64,
                                  cy + 64, c, &ld1, &ld2, &ld3, &ld4);
-            ld1->type = LINEDEF_W1_END_LEVEL;
-            ld1->flags &= ~LOWER_UNPEGGED;
-            ld2->type = LINEDEF_W1_END_LEVEL;
-            ld2->flags &= ~LOWER_UNPEGGED;
-            ld3->type = LINEDEF_W1_END_LEVEL;
-            ld3->flags &= ~LOWER_UNPEGGED;
-            ld4->type = LINEDEF_W1_END_LEVEL;
-            ld4->flags &= ~LOWER_UNPEGGED;
+            ld1->type = SLUMP_LINEDEF_W1_END_LEVEL;
+            ld1->flags &= ~SLUMP_LOWER_UNPEGGED;
+            ld2->type = SLUMP_LINEDEF_W1_END_LEVEL;
+            ld2->flags &= ~SLUMP_LOWER_UNPEGGED;
+            ld3->type = SLUMP_LINEDEF_W1_END_LEVEL;
+            ld3->flags &= ~SLUMP_LOWER_UNPEGGED;
+            ld4->type = SLUMP_LINEDEF_W1_END_LEVEL;
+            ld4->flags &= ~SLUMP_LOWER_UNPEGGED;
         }
         if ((c->episode == 1) && (c->mission == 8))
         {
@@ -7036,22 +7052,22 @@ void arena_boss(level *l, arena *a, haa *haa, config *c)
                                             random_gate(c, a->innersec->pstyle), a->innersec->ceiling_flat);
                 newsec->pstyle = a->innersec->pstyle;
                 newsec->light_level = 250;
-                newsec->special     = GLOW_BLINK;
+                newsec->special     = SLUMP_GLOW_BLINK;
                 newsec->tag         = 666;
                 parallel_innersec_ex(l, a->innersec, newsec, NULL, NULL, a->innersec->pstyle->wall0, cx, cy, cx + 64,
                                      cy + 64, c, &ld1, &ld2, &ld3, &ld4);
-                ld1->type = LINEDEF_TELEPORT;
+                ld1->type = SLUMP_LINEDEF_TELEPORT;
                 ld1->tag  = tag;
-                ld1->flags &= ~LOWER_UNPEGGED;
-                ld2->type = LINEDEF_TELEPORT;
+                ld1->flags &= ~SLUMP_LOWER_UNPEGGED;
+                ld2->type = SLUMP_LINEDEF_TELEPORT;
                 ld2->tag  = tag;
-                ld2->flags &= ~LOWER_UNPEGGED;
-                ld3->type = LINEDEF_TELEPORT;
+                ld2->flags &= ~SLUMP_LOWER_UNPEGGED;
+                ld3->type = SLUMP_LINEDEF_TELEPORT;
                 ld3->tag  = tag;
-                ld3->flags &= ~LOWER_UNPEGGED;
-                ld4->type = LINEDEF_TELEPORT;
+                ld3->flags &= ~SLUMP_LOWER_UNPEGGED;
+                ld4->type = SLUMP_LINEDEF_TELEPORT;
                 ld4->tag  = tag;
-                ld4->flags &= ~LOWER_UNPEGGED;
+                ld4->flags &= ~SLUMP_LOWER_UNPEGGED;
             }
         }
     }
@@ -7070,8 +7086,8 @@ void arena_boss(level *l, arena *a, haa *haa, config *c)
         a->outersec->marked = 1;
         ld                  = install_switch(l, ld, SLUMP_TRUE, SLUMP_FALSE, 0, a->innersec->pstyle, c, NULL);
         a->outersec->marked = 0;
-        ld->type            = LINEDEF_S1_END_LEVEL;
-        tm                  = random_texture0(EXITSWITCH, c, a->innersec->pstyle);
+        ld->type            = SLUMP_LINEDEF_S1_END_LEVEL;
+        tm                  = random_texture0(SLUMP_EXITSWITCH, c, a->innersec->pstyle);
         if (tm)
         {
             ld->right->middle_texture = tm;
@@ -7083,7 +7099,7 @@ void arena_boss(level *l, arena *a, haa *haa, config *c)
 }
 
 /* Gate out to a big place to fight bosses. */
-/* NOTE: this renders the haa invalid at the moment, and so can only */
+/* SLUMP_NOTE: this renders the haa invalid at the moment, and so can only */
 /* be used in an Episode 8, or the end of a PWAD. */
 void arena_gate(level *l, sector *s, haa *haa, config *c)
 {
@@ -7107,7 +7123,7 @@ void arena_gate(level *l, sector *s, haa *haa, config *c)
     arena_boss(l, ThisArena, haa, c);
 
     /* and we're done */
-    announce(VERBOSE, "Arena");
+    announce(SLUMP_VERBOSE, "Arena");
     return;
 }
 
@@ -7121,10 +7137,10 @@ boolean rising_room(level *l, sector *s, config *c, haa *haa, quest *ThisQuest)
     boolean  did_trigger = SLUMP_FALSE;
     linedef *ld1, *ld2, *ld3, *ld4;
     thing   *t;
-    short    tid = rollpercent(50) ? ID_POTION : ID_HELMET;
+    short    tid = rollpercent(50) ? SLUMP_ID_POTION : SLUMP_ID_HELMET;
     if (l->heretic_level)
     {
-        tid = rollpercent(50) ? ID_WANDCRYSTAL : ID_ETHEREALARROWS;
+        tid = rollpercent(50) ? SLUMP_ID_WANDCRYSTAL : SLUMP_ID_ETHEREALARROWS;
     }
 
     if (s->pgate)
@@ -7166,42 +7182,42 @@ boolean rising_room(level *l, sector *s, config *c, haa *haa, quest *ThisQuest)
     flip_linedef(ld3);
     flip_linedef(ld4);
 
-    if (ThisQuest->goal == KEY_GOAL)
+    if (ThisQuest->goal == SLUMP_KEY_GOAL)
     {
         t                 = new_thing(l, (minx + maxx) / 2, (miny + maxy) / 2, 0, ThisQuest->type, 7, c);
         ThisQuest->pthing = t; /* For later */
         if (ThisQuest->auxtag == 0)
-            if (!(c->gamemask & (DOOM0_BIT | HERETIC_BIT)))
+            if (!(c->gamemask & (SLUMP_DOOM0_BIT | SLUMP_HERETIC_BIT)))
                 if (rollpercent(80))
                 {
                     did_trigger = SLUMP_TRUE;
-                    trigger_box(l, t, newsec, newsec->tag, LINEDEF_W1_RAISE_FLOOR, c);
-                    announce(VERBOSE, "Zlooty");
+                    trigger_box(l, t, newsec, newsec->tag, SLUMP_LINEDEF_W1_RAISE_FLOOR, c);
+                    announce(SLUMP_VERBOSE, "Zlooty");
                 }
     }
 
-    if (ThisQuest->goal == NULL_GOAL)
+    if (ThisQuest->goal == SLUMP_NULL_GOAL)
     {
         ThisQuest->pthing = place_required_small_pickable(l, newsec, c);
         if (ThisQuest->auxtag == 0)
-            if (!(c->gamemask & (DOOM0_BIT | HERETIC_BIT)))
+            if (!(c->gamemask & (SLUMP_DOOM0_BIT | SLUMP_HERETIC_BIT)))
                 if (rollpercent(50))
                 {
                     t           = new_thing(l, (minx + maxx) / 2, (miny + maxy) / 2, 0, tid, 7, c);
                     did_trigger = SLUMP_TRUE;
-                    trigger_box(l, t, newsec, newsec->tag, LINEDEF_W1_RAISE_FLOOR, c);
+                    trigger_box(l, t, newsec, newsec->tag, SLUMP_LINEDEF_W1_RAISE_FLOOR, c);
                 }
     }
 
     if (!did_trigger)
     {
-        ld1->type = LINEDEF_S1_RAISE_FLOOR;
+        ld1->type = SLUMP_LINEDEF_S1_RAISE_FLOOR;
         ld1->tag  = newsec->tag;
-        ld2->type = LINEDEF_S1_RAISE_FLOOR;
+        ld2->type = SLUMP_LINEDEF_S1_RAISE_FLOOR;
         ld2->tag  = newsec->tag;
-        ld3->type = LINEDEF_S1_RAISE_FLOOR;
+        ld3->type = SLUMP_LINEDEF_S1_RAISE_FLOOR;
         ld3->tag  = newsec->tag;
-        ld4->type = LINEDEF_S1_RAISE_FLOOR;
+        ld4->type = SLUMP_LINEDEF_S1_RAISE_FLOOR;
         ld4->tag  = newsec->tag;
     }
 
@@ -7221,10 +7237,10 @@ boolean rising_room(level *l, sector *s, config *c, haa *haa, quest *ThisQuest)
     if (rollpercent(20))
     {
         newsec->floor_flat = c->water_flat; /* Eli's idea */
-        announce(VERBOSE, "Water");
+        announce(SLUMP_VERBOSE, "Water");
     }
 
-    announce(VERBOSE, "Rising room");
+    announce(SLUMP_VERBOSE, "Rising room");
 
     return SLUMP_TRUE;
 }
@@ -7242,7 +7258,7 @@ void close_quest(level *l, sector *s, quest *q, haa *haa, config *c)
 
     switch (q->goal)
     {
-    case SWITCH_GOAL:
+    case SLUMP_SWITCH_GOAL:
         /* Could decide to use a walkthrough linedef or whatever */
         /* instead of a switch for a tag goal.                   */
         i  = mark_decent_boundary_linedefs(l, s, 64);
@@ -7262,7 +7278,7 @@ void close_quest(level *l, sector *s, quest *q, haa *haa, config *c)
         t         = place_required_small_pickable(l, s, c);
         q->pthing = t; /* For later */
         break;
-    case LEVEL_END_GOAL:
+    case SLUMP_LEVEL_END_GOAL:
         /* Just alter some non-tiny boundary linedef to be a switch, */
         /* and try to make it obvious via some light stuff.  Or,     */
         /* sometimes, do the floor-hole thing, or a gate, or...      */
@@ -7284,7 +7300,7 @@ void close_quest(level *l, sector *s, quest *q, haa *haa, config *c)
             { /* Try a fun thing! */
                 if (e1m8_gate(l, ld, s, haa, c))
                 {
-                    announce(VERBOSE, "e1m8 finale");
+                    announce(SLUMP_VERBOSE, "e1m8 finale");
                     break;
                 }
             }
@@ -7292,15 +7308,15 @@ void close_quest(level *l, sector *s, quest *q, haa *haa, config *c)
             {     /* Try a floor-hole */
                 if (empty_left_side(l, ld, 128))
                 { /* 128?  Hugeness? */
-                    if (linelen(ld) > 192)
+                    if (SLUMP_linelen(ld) > 192)
                         split_linedef(l, ld, 128, c);
-                    lefthand_box(l, ld, 128, s->pstyle, c)->right->middle_texture = s->pstyle->wall0;
-                    ld->type                                                      = LINEDEF_W1_END_LEVEL;
+                    SLUMP_lefthand_box(l, ld, 128, s->pstyle, c)->right->middle_texture = s->pstyle->wall0;
+                    ld->type                                                            = SLUMP_LINEDEF_W1_END_LEVEL;
                     if (ld->left->psector->light_level < 160)
                         ld->left->psector->light_level = 160;
                     ld->left->psector->floor_flat = c->sky_flat;
                     ld->left->psector->floor_height -= 16;
-                    announce(VERBOSE, "Hole ends level");
+                    announce(SLUMP_VERBOSE, "Hole ends level");
                     done = SLUMP_TRUE;
                 }
             }
@@ -7313,7 +7329,7 @@ void close_quest(level *l, sector *s, quest *q, haa *haa, config *c)
                 s->middle_enhanced = SLUMP_TRUE;
                 if (s->light_level > 130)
                     s->light_level = 130;                 /* To see "EXIT" */
-                announce(VERBOSE, "Gate ends level");
+                announce(SLUMP_VERBOSE, "Gate ends level");
                 done = SLUMP_TRUE;
             }
             /* Switch with recess, sometimes fancied-up */
@@ -7322,17 +7338,17 @@ void close_quest(level *l, sector *s, quest *q, haa *haa, config *c)
                 ld                          = install_switch(l, ld, SLUMP_TRUE, rollpercent(10), 0, s->pstyle, c, NULL);
                 ld->type                    = q->type;
                 ld->tag                     = q->tag; /* Will be zero, actually */
-                ld->right->psector->special = GLOW_BLINK;
+                ld->right->psector->special = SLUMP_GLOW_BLINK;
                 if (s->light_level > 190)
                     s->light_level = 190;             /* So the glow shows */
                 ld->right->psector->light_level = 255;
                 done                            = SLUMP_TRUE;
-                tm                              = random_texture0(EXITSWITCH, c, s->pstyle);
+                tm                              = random_texture0(SLUMP_EXITSWITCH, c, s->pstyle);
                 if (tm)
                 {
                     ld->right->middle_texture = tm;
                     ld->right->y_offset       = tm->y_bias;
-                    announce(VERBOSE, "Custom exit switch");
+                    announce(SLUMP_VERBOSE, "Custom exit switch");
                 }
             }
             if (need_secret_level(c) && !l->sl_done && !l->sl_tag)
@@ -7342,15 +7358,15 @@ void close_quest(level *l, sector *s, quest *q, haa *haa, config *c)
             }
         }
         break;
-    case ARENA_GOAL:
+    case SLUMP_ARENA_GOAL:
         /* A teleporter to a big arena in which to fight bosses */
         arena_gate(l, s, haa, c);
         break;
-    case GATE_GOAL:
+    case SLUMP_GATE_GOAL:
         /* A teleporter to, and perhaps from, the goal room. */
         s->pgate = new_gate(l, q->tag2, q->tag, 0, SLUMP_FALSE, c);
         break;
-    case KEY_GOAL:
+    case SLUMP_KEY_GOAL:
         if (rollpercent(l->p_rising_room))
         {
             done = rising_room(l, s, c, haa, q);
@@ -7361,7 +7377,7 @@ void close_quest(level *l, sector *s, quest *q, haa *haa, config *c)
             q->pthing = t; /* For later */
         }
         break;
-    case NULL_GOAL:
+    case SLUMP_NULL_GOAL:
         if (rollpercent(2 * l->p_rising_room))
         {
             done = rising_room(l, s, c, haa, q);
@@ -7390,7 +7406,7 @@ void maybe_push_quest(level *l, sector *s, quest *q, config *c)
 
     if (!rollpercent(c->p_pushquest))
         return;          /* Do we want to? */
-    if (q->goal != SWITCH_GOAL)
+    if (q->goal != SLUMP_SWITCH_GOAL)
         return;          /* Do we know how? */
 
     newkey = new_key(l); /* Get an unused key */
@@ -7415,12 +7431,12 @@ void maybe_push_quest(level *l, sector *s, quest *q, config *c)
     ld->tag  = q->tag;
 
     /* Now modify the quest */
-    q->goal = KEY_GOAL;
+    q->goal = SLUMP_KEY_GOAL;
     q->type = newkey;
     q->tag  = 0;
 
     /* and we're done... */
-    announce(LOG, "Quest push");
+    announce(SLUMP_LOG, "Quest push");
     return;
 }
 
@@ -7435,45 +7451,45 @@ linedef *make_linkto(level *l, linedef *ld, link *ThisLink, style *ThisStyle, co
 
     switch (ThisLink->type)
     {
-    case BASIC_LINK:
+    case SLUMP_BASIC_LINK:
         depth = 0;
         /* Account for any recesses */
-        if (ThisLink->bits & LINK_RECESS)
+        if (ThisLink->bits & SLUMP_LINK_RECESS)
             depth += 2 * ThisLink->depth2;
         /* Account for single door/arch, if any */
-        if (!(ThisLink->bits & (LINK_CORE | LINK_ALCOVE)))
+        if (!(ThisLink->bits & (SLUMP_LINK_CORE | SLUMP_LINK_ALCOVE)))
             depth += ThisLink->depth1;
         /* Account for double doors around the core, if any */
-        if (((ThisLink->bits & LINK_CORE)) && (ThisLink->bits & LINK_NEAR_DOOR))
+        if (((ThisLink->bits & SLUMP_LINK_CORE)) && (ThisLink->bits & SLUMP_LINK_NEAR_DOOR))
             depth += ThisLink->depth1;
-        if (((ThisLink->bits & LINK_CORE)) && (ThisLink->bits & LINK_FAR_DOOR))
+        if (((ThisLink->bits & SLUMP_LINK_CORE)) && (ThisLink->bits & SLUMP_LINK_FAR_DOOR))
             depth += ThisLink->depth1;
         /* Alcove width */
-        if (ThisLink->bits & LINK_ALCOVE)
+        if (ThisLink->bits & SLUMP_LINK_ALCOVE)
         {
             depth += ThisLink->width2;
         }
         else
         { /* Straight-through core */
-            if (ThisLink->bits & LINK_CORE)
+            if (ThisLink->bits & SLUMP_LINK_CORE)
                 depth += ThisLink->depth3;
         }
         break;
-    case OPEN_LINK:
+    case SLUMP_OPEN_LINK:
         depth = ThisLink->depth1;
         break;
-    case GATE_LINK: {
+    case SLUMP_GATE_LINK: {
         linedef *ldnew;
         vertex  *v, *v1;
         int      newsize;
-        int      minx = HUGE_NUMBER;
+        int      minx = SLUMP_HUGE_NUMBER;
         for (v = l->vertex_anchor; v; v = v->next)
             if (v->x < minx)
                 minx = v->x;
         minx -= 64;
         if (ld)
         {
-            newsize = linelen(ld);
+            newsize = SLUMP_linelen(ld);
         }
         else
         {
@@ -7511,7 +7527,7 @@ boolean link_fitsv(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink)
 {
     boolean answer;
 
-    if (ThisLink->type == GATE_LINK)
+    if (ThisLink->type == SLUMP_GATE_LINK)
         return SLUMP_TRUE; /* These don't care */
 
     ldf1->from->marked = SLUMP_TRUE;
@@ -7586,7 +7602,7 @@ sector *generate_room_outline(level *l, linedef *ld, style *ThisStyle, boolean t
     int      x1, y1, x2, y2, len1, len2;
 
     /* Very simple squarish rooms */
-    len1 = linelen(ld);
+    len1 = SLUMP_linelen(ld);
     if (roll(2))
     {
         len2 = len1;
@@ -7605,9 +7621,9 @@ sector *generate_room_outline(level *l, linedef *ld, style *ThisStyle, boolean t
     }
 
     /* We need to make rooms bigger on levels with teleports - SET */
-    if (l->use_gates && len2 < TELEPORT_MINROOMSIZE)
+    if (l->use_gates && len2 < SLUMP_TELEPORT_MINROOMSIZE)
     {
-        len2 = TELEPORT_MINROOMSIZE;
+        len2 = SLUMP_TELEPORT_MINROOMSIZE;
     }
 
     /* Bigify.  */
@@ -7618,8 +7634,8 @@ sector *generate_room_outline(level *l, linedef *ld, style *ThisStyle, boolean t
 
     for (;;)
     {                      /* Until we find one that fits */
-        point_from(ld->from->x, ld->from->y, ld->to->x, ld->to->y, RIGHT_TURN, len2, &x1, &y1);
-        point_from(ld->to->x, ld->to->y, x1, y1, RIGHT_TURN, len1, &x2, &y2);
+        point_from(ld->from->x, ld->from->y, ld->to->x, ld->to->y, SLUMP_RIGHT_TURN, len2, &x1, &y1);
+        point_from(ld->to->x, ld->to->y, x1, y1, SLUMP_RIGHT_TURN, len1, &x2, &y2);
         ld->from->marked = 1;
         ld->to->marked   = 1;
         if (empty_rectangle(l, ld->from->x, ld->from->y, ld->to->x, ld->to->y, x1, y1, x2, y2))
@@ -7629,7 +7645,7 @@ sector *generate_room_outline(level *l, linedef *ld, style *ThisStyle, boolean t
         len2 -= 32; /* If failed, try again with smaller room */
         if (len2 < (l->hugeness * 64))
         {
-            announce(VERBOSE, "No possible rectangle fits in the space.");
+            announce(SLUMP_VERBOSE, "No possible rectangle fits in the space.");
             ld->to->marked   = 0;
             ld->from->marked = 0;
             return NULL;
@@ -7644,7 +7660,7 @@ sector *generate_room_outline(level *l, linedef *ld, style *ThisStyle, boolean t
         char s[200];
         sprintf(s, "New room, corners (%d %d) (%d %d) (%d %d) (%d %d).", ld->from->x, ld->from->y, ld->to->x, ld->to->y,
                 x1, y1, x2, y2);
-        announce(VERBOSE, s);
+        announce(SLUMP_VERBOSE, s);
     }
 
     answer              = new_sector(l, 0, ThisStyle->wallheight0, ThisStyle->floor0, ThisStyle->ceiling0);
@@ -7658,25 +7674,25 @@ sector *generate_room_outline(level *l, linedef *ld, style *ThisStyle, boolean t
     newld->right = new_sidedef(l, answer, c);
     /* If the wall is long, sometimes split it, for more outlinks */
     /* Should use styles here and stuff too (and config)          */
-    if (linelen(newld) > (l->hugeness * 256))
+    if (SLUMP_linelen(newld) > (l->hugeness * 256))
         if (rollpercent(25))
-            split_linedef(l, newld, linelen(newld) / 2, c);
+            split_linedef(l, newld, SLUMP_linelen(newld) / 2, c);
 
     v1           = v2;
     v2           = new_vertex(l, x2, y2);
     newld        = new_linedef(l, v1, v2);
     newld->right = new_sidedef(l, answer, c);
-    if (linelen(newld) > (l->hugeness * 256))
+    if (SLUMP_linelen(newld) > (l->hugeness * 256))
         if (rollpercent(25))
-            split_linedef(l, newld, linelen(newld) / 2, c);
+            split_linedef(l, newld, SLUMP_linelen(newld) / 2, c);
 
     v1           = v2;
     v2           = ld->from;
     newld        = new_linedef(l, v1, v2);
     newld->right = new_sidedef(l, answer, c);
-    if (linelen(newld) > (l->hugeness * 256))
+    if (SLUMP_linelen(newld) > (l->hugeness * 256))
         if (rollpercent(25))
-            split_linedef(l, newld, linelen(newld) / 2, c);
+            split_linedef(l, newld, SLUMP_linelen(newld) / 2, c);
 
     return answer;
 }
@@ -7690,19 +7706,19 @@ link *random_link(level *l, linedef *ld, style *ThisStyle, quest *ThisQuest, con
     boolean open_ok = SLUMP_TRUE;
 
     if (ld)
-        if (linelen(ld) < 100)
+        if (SLUMP_linelen(ld) < 100)
             open_ok = SLUMP_FALSE;
     if (ThisQuest)
-        if (ThisQuest->goal == KEY_GOAL)
+        if (ThisQuest->goal == SLUMP_KEY_GOAL)
             open_ok = SLUMP_FALSE;
 
     if (l->use_gates)
         if (ThisQuest)
             if (rollpercent(20)) /* Should vary */
-                if (ThisQuest->goal == SWITCH_GOAL)
+                if (ThisQuest->goal == SLUMP_SWITCH_GOAL)
                     if (!(ld->right->psector->pgate))
                         if (ld->right->psector != l->first_room)
-                            if (linelen(ld) > 1000)
+                            if (SLUMP_linelen(ld) > 1000)
                                 if (ok_to_block_mid_tile(l, ld->right->psector))
                                     if (!(c->do_dm))
                                         return gate_link(l, c); /* Already in link_anchor */
@@ -7732,23 +7748,23 @@ link *random_open_link(level *l, linedef *ld, style *ThisStyle, quest *ThisQuest
     link *answer = (link *)malloc(sizeof(*answer));
 
     answer->bits = 0;
-    answer->type = OPEN_LINK;
+    answer->type = SLUMP_OPEN_LINK;
 
     if ((ThisQuest == NULL) && rollpercent(40))
     { /* 40 should vary */
-        answer->bits |= LINK_LIFT;
+        answer->bits |= SLUMP_LINK_LIFT;
     }
     else
     {
-        answer->bits |= LINK_STEPS;
+        answer->bits |= SLUMP_LINK_STEPS;
         if (rollpercent(30))
-            answer->bits |= LINK_ALCOVE; /* sidesteps */
+            answer->bits |= SLUMP_LINK_ALCOVE; /* sidesteps */
         if (rollpercent(50))
-            answer->bits |= LINK_LEFT;
+            answer->bits |= SLUMP_LINK_LEFT;
     }
 
     if (ld)
-        len = linelen(ld);
+        len = SLUMP_linelen(ld);
 
     /* Primary width; need more variety! */
     dieroll = roll(100);
@@ -7772,11 +7788,11 @@ link *random_open_link(level *l, linedef *ld, style *ThisStyle, quest *ThisQuest
     /* We must have a minimum room size for levels which can have teleports
        - SET */
 
-    if (l->use_gates && answer->width1 < TELEPORT_MINROOMSIZE)
+    if (l->use_gates && answer->width1 < SLUMP_TELEPORT_MINROOMSIZE)
     {
-        if (len > TELEPORT_MINROOMSIZE)
+        if (len > SLUMP_TELEPORT_MINROOMSIZE)
         {
-            answer->width1 = TELEPORT_MINROOMSIZE;
+            answer->width1 = SLUMP_TELEPORT_MINROOMSIZE;
         }
         else
         {
@@ -7785,16 +7801,16 @@ link *random_open_link(level *l, linedef *ld, style *ThisStyle, quest *ThisQuest
     }
 
     /* Primary depth */
-    if (answer->bits & LINK_LIFT)
+    if (answer->bits & SLUMP_LINK_LIFT)
     {
         answer->depth1 = l->hugeness * 32 * (1 + roll(5));
     }
     else
     {
-        if ((answer->bits & LINK_ALCOVE) && rollpercent(50))
+        if ((answer->bits & SLUMP_LINK_ALCOVE) && rollpercent(50))
         {
             answer->depth1 = l->hugeness * 32 * (1 + roll(4));
-            announce(VERBOSE, "Narrow side-steps?");
+            announce(SLUMP_VERBOSE, "Narrow side-steps?");
         }
         else
         {
@@ -7823,21 +7839,21 @@ link *random_basic_link(level *l, linedef *ld, style *ThisStyle, quest *ThisQues
     boolean nukage_core_trap = SLUMP_FALSE;
 
     if (ld)
-        len = linelen(ld);
+        len = SLUMP_linelen(ld);
 
     answer = (link *)malloc(sizeof(*answer));
 
     /* Should use style and config more here and there */
 
-    answer->type = BASIC_LINK;
+    answer->type = SLUMP_BASIC_LINK;
     answer->bits = 0;
 
     if (ThisQuest)
     {
-        if (ThisQuest->goal == KEY_GOAL)
+        if (ThisQuest->goal == SLUMP_KEY_GOAL)
             need_door = SLUMP_TRUE;
         /* So far the only tags we know of are door-opens and nukage traps */
-        if (ThisQuest->goal == SWITCH_GOAL)
+        if (ThisQuest->goal == SLUMP_SWITCH_GOAL)
             if (rollpercent(30) || rollpercent(l->p_force_nukage)) /* Huh? */
                 need_door = SLUMP_TRUE;
             else
@@ -7901,11 +7917,11 @@ link *random_basic_link(level *l, linedef *ld, style *ThisStyle, quest *ThisQues
     /* We must have a minimum room size for levels which can have teleports
        - SET */
 
-    if (l->use_gates && answer->width1 < TELEPORT_MINROOMSIZE)
+    if (l->use_gates && answer->width1 < SLUMP_TELEPORT_MINROOMSIZE)
     {
-        if (len > TELEPORT_MINROOMSIZE)
+        if (len > SLUMP_TELEPORT_MINROOMSIZE)
         {
-            answer->width1 = TELEPORT_MINROOMSIZE;
+            answer->width1 = SLUMP_TELEPORT_MINROOMSIZE;
         }
         else
         {
@@ -7960,7 +7976,7 @@ link *random_basic_link(level *l, linedef *ld, style *ThisStyle, quest *ThisQues
         dieroll = roll(100);
         if (dieroll < 20)
         { /* Nice recessed door */
-            answer->bits = LINK_ANY_DOOR | LINK_RECESS;
+            answer->bits = SLUMP_LINK_ANY_DOOR | SLUMP_LINK_RECESS;
         }
         else if (dieroll < 65)
         { /* Nice arch */
@@ -7968,7 +7984,7 @@ link *random_basic_link(level *l, linedef *ld, style *ThisStyle, quest *ThisQues
         }
         else
         { /* Simple stairs */
-            answer->bits = LINK_CORE | LINK_STEPS;
+            answer->bits = SLUMP_LINK_CORE | SLUMP_LINK_STEPS;
             answer->depth3 *= 3;
             answer->floordelta = answer->stepcount * (2 + roll(20));
         }
@@ -7977,52 +7993,52 @@ link *random_basic_link(level *l, linedef *ld, style *ThisStyle, quest *ThisQues
     { /* Make something up */
         answer->bits = 0;
         if (roll(2))
-            answer->bits |= LINK_RECESS;
+            answer->bits |= SLUMP_LINK_RECESS;
         if (rollpercent(40))
         {
             if (rollpercent(40) || c->both_doors)
             {
-                answer->bits |= LINK_ANY_DOOR;
+                answer->bits |= SLUMP_LINK_ANY_DOOR;
             }
             else if (rollpercent(30))
             {
-                answer->bits |= LINK_NEAR_DOOR;
+                answer->bits |= SLUMP_LINK_NEAR_DOOR;
             }
             else
             {
-                answer->bits |= LINK_FAR_DOOR;
+                answer->bits |= SLUMP_LINK_FAR_DOOR;
             }
         }
         if (rollpercent(10))
-            answer->bits |= LINK_BARS;
+            answer->bits |= SLUMP_LINK_BARS;
         if (answer->width1 != 0) /* Twinning a full-wall link is ugly */
             if ((!ld) || ((len / 2 - 16) > answer->width1))
                 if (rollpercent(30))
                 {
-                    answer->bits |= LINK_TWIN;
+                    answer->bits |= SLUMP_LINK_TWIN;
                     if (rollpercent(60))
-                        answer->bits |= LINK_WINDOW;
+                        answer->bits |= SLUMP_LINK_WINDOW;
                 }
         if (rollpercent(30))
-            answer->bits |= LINK_ALCOVE;
+            answer->bits |= SLUMP_LINK_ALCOVE;
         if ((ld) && ((len / 2 - 16) < answer->width1))
-            answer->bits &= ~LINK_ALCOVE;
-        if ((ld) && ((len / 4 - 32) < answer->width1) && (answer->bits & LINK_TWIN))
-            answer->bits &= ~LINK_ALCOVE;
+            answer->bits &= ~SLUMP_LINK_ALCOVE;
+        if ((ld) && ((len / 4 - 32) < answer->width1) && (answer->bits & SLUMP_LINK_TWIN))
+            answer->bits &= ~SLUMP_LINK_ALCOVE;
         if (rollpercent(40))
         {
-            answer->bits |= LINK_CORE;
+            answer->bits |= SLUMP_LINK_CORE;
             if (rollpercent(40))
             {
-                answer->bits |= LINK_STEPS;
+                answer->bits |= SLUMP_LINK_STEPS;
                 answer->depth3 *= 3;
                 answer->floordelta = answer->stepcount * (2 + roll(20));
             }
             else if (l->lift_rho && !need_door)
             {
-                answer->bits |= LINK_LIFT;
-                if (!(answer->bits & LINK_ALCOVE))
-                    answer->bits &= ~LINK_ANY_DOOR;         /* not currently compatible */
+                answer->bits |= SLUMP_LINK_LIFT;
+                if (!(answer->bits & SLUMP_LINK_ALCOVE))
+                    answer->bits &= ~SLUMP_LINK_ANY_DOOR;   /* not currently compatible */
                 if (rollpercent(50))
                 {
                     answer->floordelta = 32 + 8 * roll(51); /* Potentially big */
@@ -8037,17 +8053,17 @@ link *random_basic_link(level *l, linedef *ld, style *ThisStyle, quest *ThisQues
         }
     }
     if (l->no_doors)
-        answer->bits &= ~LINK_ANY_DOOR;
+        answer->bits &= ~SLUMP_LINK_ANY_DOOR;
 
     /* Make sure we have a door if we need one (to lock, etc) */
     if (need_door)
-        answer->bits |= LINK_NEAR_DOOR;
+        answer->bits |= SLUMP_LINK_NEAR_DOOR;
 
     /* Fewer unrecessed and/or really high doors */
-    if (answer->bits | LINK_ANY_DOOR)
+    if (answer->bits | SLUMP_LINK_ANY_DOOR)
     {
         if (rollpercent(75))
-            answer->bits |= LINK_RECESS;
+            answer->bits |= SLUMP_LINK_RECESS;
         if (rollpercent(75))
             if (answer->height1 > 72)
                 answer->height1 = 72; /* Hugeness? */
@@ -8059,39 +8075,39 @@ link *random_basic_link(level *l, linedef *ld, style *ThisStyle, quest *ThisQues
 
     /* More random fun stuff */
     if (rollpercent(l->p_stair_lamps))
-        answer->bits |= LINK_LAMPS;
+        answer->bits |= SLUMP_LINK_LAMPS;
     if (rollpercent(50))
-        answer->bits |= LINK_MAX_CEILING;
+        answer->bits |= SLUMP_LINK_MAX_CEILING;
     if (rollpercent(50))
-        answer->bits |= LINK_LEFT;
+        answer->bits |= SLUMP_LINK_LEFT;
     if (rollpercent(75))
-        answer->bits |= LINK_FAR_TWINS;
+        answer->bits |= SLUMP_LINK_FAR_TWINS;
     if (rollpercent(75))
-        answer->bits |= LINK_TRIGGERED;
+        answer->bits |= SLUMP_LINK_TRIGGERED;
     if (rollpercent(l->p_force_sky) || rollpercent(l->p_force_sky) || rollpercent(50))
-        answer->bits |= LINK_DECROOM; /* 50? */
+        answer->bits |= SLUMP_LINK_DECROOM; /* 50? */
 
     /* If nukage_core_trap, override much of the above! */
     if (nukage_core_trap)
     {
         /* A relatively simple core */
-        answer->bits &= ~(LINK_STEPS | LINK_ALCOVE | LINK_TWIN | LINK_LIFT);
-        answer->bits |= LINK_CORE;
+        answer->bits &= ~(SLUMP_LINK_STEPS | SLUMP_LINK_ALCOVE | SLUMP_LINK_TWIN | SLUMP_LINK_LIFT);
+        answer->bits |= SLUMP_LINK_CORE;
         /* At least 128 long */
         if (answer->depth3 < 128)
             answer->depth3 = 128;
         /* And going up a bit */
         answer->floordelta = 4 + roll(18);
-        answer->bits |= LINK_LOCK_CORE;
+        answer->bits |= SLUMP_LINK_LOCK_CORE;
     }
 
     /* If a gate quest, override much of the above also.  All we want */
     /* is a recessed archway-thing, walkable, etc, to make_window() on */
-    if ((ThisQuest) && (ThisQuest->goal == GATE_GOAL))
+    if ((ThisQuest) && (ThisQuest->goal == SLUMP_GATE_GOAL))
     {
-        answer->bits &= ~(LINK_STEPS | LINK_ALCOVE | LINK_LIFT | LINK_CORE);
-        answer->bits &= ~(LINK_ANY_DOOR | LINK_TRIGGERED);
-        answer->bits |= LINK_RECESS;
+        answer->bits &= ~(SLUMP_LINK_STEPS | SLUMP_LINK_ALCOVE | SLUMP_LINK_LIFT | SLUMP_LINK_CORE);
+        answer->bits &= ~(SLUMP_LINK_ANY_DOOR | SLUMP_LINK_TRIGGERED);
+        answer->bits |= SLUMP_LINK_RECESS;
         if (rollpercent(50))
         {
             answer->floordelta = 0;
@@ -8104,25 +8120,25 @@ link *random_basic_link(level *l, linedef *ld, style *ThisStyle, quest *ThisQues
 
     /* Alcoves require either a door or a recess, and a non-whole width, */
     /* and for now at least a tiny core.                                 */
-    if (answer->bits & LINK_ALCOVE)
+    if (answer->bits & SLUMP_LINK_ALCOVE)
     {
-        if (LINK_ANY_DOOR != (answer->bits & LINK_ANY_DOOR))
+        if (SLUMP_LINK_ANY_DOOR != (answer->bits & SLUMP_LINK_ANY_DOOR))
         {
-            answer->bits |= LINK_RECESS;
+            answer->bits |= SLUMP_LINK_RECESS;
             if (answer->depth2 < (8 * l->hugeness))
                 answer->depth2 = 8 * l->hugeness;
         }
         if (answer->width1 == 0)
             answer->width1 = 64 * l->hugeness;
-        if (!(answer->bits & LINK_CORE))
+        if (!(answer->bits & SLUMP_LINK_CORE))
         {
-            answer->bits |= LINK_CORE;
+            answer->bits |= SLUMP_LINK_CORE;
             answer->depth3 = 4 * l->hugeness;
         }
     }
 
     /* Some final sanity checks on stair-sector heights and stuff */
-    if (answer->bits & LINK_STEPS)
+    if (answer->bits & SLUMP_LINK_STEPS)
     {
         int need;
         /* The clearance we need is 56 plus the step height times */
@@ -8130,12 +8146,12 @@ link *random_basic_link(level *l, linedef *ld, style *ThisStyle, quest *ThisQues
         /* (plus eight more in case of doors).  Roughly! */
         need = 64 +
                (1 + (64 / (answer->depth3 / (answer->stepcount)))) * abs(answer->floordelta / (answer->stepcount - 1));
-        if (answer->bits & LINK_ANY_DOOR)
+        if (answer->bits & SLUMP_LINK_ANY_DOOR)
             need += 8; /* Doors don't open all the way */
         if (answer->height1 < need)
             answer->height1 = need;
     }
-    else if (!(answer->bits & LINK_LIFT))
+    else if (!(answer->bits & SLUMP_LINK_LIFT))
     {
         if (answer->height1 + answer->floordelta < 64)
             answer->height1 = 64 - answer->floordelta;
@@ -8151,31 +8167,31 @@ link *random_basic_link(level *l, linedef *ld, style *ThisStyle, quest *ThisQues
     if (ld)
     {
         if (len < 144)
-            answer->bits &= ~(LINK_TWIN | LINK_ALCOVE);
+            answer->bits &= ~(SLUMP_LINK_TWIN | SLUMP_LINK_ALCOVE);
         if (len < (2 * answer->width1))
-            answer->bits &= ~(LINK_TWIN | LINK_ALCOVE);
-        if (answer->bits & LINK_ALCOVE)
+            answer->bits &= ~(SLUMP_LINK_TWIN | SLUMP_LINK_ALCOVE);
+        if (answer->bits & SLUMP_LINK_ALCOVE)
             if (!link_fitsh(ld, answer, c)) /* Try the Official Checker! */
-                answer->bits &= ~LINK_ALCOVE;
+                answer->bits &= ~SLUMP_LINK_ALCOVE;
     }
 
     if (answer->width1 == 0)
-        answer->bits &= ~LINK_ALCOVE;
+        answer->bits &= ~SLUMP_LINK_ALCOVE;
 
-    if ((answer->bits & LINK_LIFT) && (!(answer->bits & LINK_ALCOVE)))
-        answer->bits &= ~LINK_ANY_DOOR; /* not currently compatible */
+    if ((answer->bits & SLUMP_LINK_LIFT) && (!(answer->bits & SLUMP_LINK_ALCOVE)))
+        answer->bits &= ~SLUMP_LINK_ANY_DOOR; /* not currently compatible */
 
     /* Only make a window if not too much floordelta */
     if (answer->floordelta + 16 > ThisStyle->sillheight + ThisStyle->windowheight)
-        answer->bits &= ~LINK_WINDOW;
+        answer->bits &= ~SLUMP_LINK_WINDOW;
     /* We don't know a ceiling-delta, so guess here */
     if ((56 + answer->floordelta) < (ThisStyle->sillheight))
-        answer->bits &= ~LINK_WINDOW;
+        answer->bits &= ~SLUMP_LINK_WINDOW;
 
     /* If two doors are too close together, they won't work. */
     /* Could just turn off NEAR or FAR, eh? */
-    if ((answer->bits & LINK_ANY_DOOR) && (answer->bits & LINK_CORE) && !(answer->bits & LINK_ALCOVE) &&
-        (answer->depth3 < 24))
+    if ((answer->bits & SLUMP_LINK_ANY_DOOR) && (answer->bits & SLUMP_LINK_CORE) &&
+        !(answer->bits & SLUMP_LINK_ALCOVE) && (answer->depth3 < 24))
         answer->depth3 = 24;
 
     return answer;
@@ -8191,7 +8207,7 @@ void make_lightstrip(level *l, linedef *ld, style *ThisStyle, int ll, int depth,
 
     /* should do an empty_area check here */
     t     = ld->right->middle_texture;
-    ldnew = lefthand_box(l, ld, 4, ThisStyle, c);
+    ldnew = SLUMP_lefthand_box(l, ld, 4, ThisStyle, c);
     /* Have to shorten ldnew a bit here, for tapered edges, to */
     /* avoid colliding with orthogonal doors and stuff, if we're */
     /* not gonna do a full area check.  Use rather silly shortening */
@@ -8218,7 +8234,7 @@ void make_lightstrip(level *l, linedef *ld, style *ThisStyle, int ll, int depth,
     ldnew->right->middle_texture = ThisStyle->walllight;
     /* Sometimes use bottom of lights. */
     if (!ThisStyle->peg_lightstrips)
-        ldnew->flags |= LOWER_UNPEGGED;
+        ldnew->flags |= SLUMP_LOWER_UNPEGGED;
     s                 = ldnew->right->psector;
     s->light_level    = ll;
     s->special        = spec;
@@ -8236,7 +8252,7 @@ boolean empty_left_side(level *l, linedef *ld, int sdepth)
     int     newx1, newy1, newx2, newy2;
     boolean rc;
 
-    point_from(ld->from->x, ld->from->y, ld->to->x, ld->to->y, LEFT_TURN, sdepth, &newx1, &newy1);
+    point_from(ld->from->x, ld->from->y, ld->to->x, ld->to->y, SLUMP_LEFT_TURN, sdepth, &newx1, &newy1);
     newx2            = newx1 - ld->to->x + ld->from->x;
     newy2            = newy1 - ld->to->y + ld->from->y;
     ld->from->marked = 1;
@@ -8267,27 +8283,28 @@ void swell_linedef(level *l, linedef *ld, style *ThisStyle, config *c, int sno, 
         return; /* oh, well! */
 
     sprintf(logstring, "Swelling (%d,%d)-(%d,%d)...\n", ld->from->x, ld->from->y, ld->to->x, ld->to->y);
-    announce(VERBOSE, logstring);
+    announce(SLUMP_VERBOSE, logstring);
 
     /* Now split the linedef, and jiggle the result(s) */
-    len    = linelen(ld) / sno;
+    len    = SLUMP_linelen(ld) / sno;
     ldnew1 = split_linedef(l, ld, len, c);
     if (sno == 3)
         ldnew2 = split_linedef(l, ldnew1, len, c);
-    point_from(ld->from->x, ld->from->y, ld->to->x, ld->to->y, LEFT_TURN, sdepth, &newx1, &newy1);
+    point_from(ld->from->x, ld->from->y, ld->to->x, ld->to->y, SLUMP_LEFT_TURN, sdepth, &newx1, &newy1);
     if (sno == 3)
-        point_from(ldnew1->from->x, ldnew1->from->y, ldnew1->to->x, ldnew1->to->y, LEFT_TURN, sdepth, &newx2, &newy2);
+        point_from(ldnew1->from->x, ldnew1->from->y, ldnew1->to->x, ldnew1->to->y, SLUMP_LEFT_TURN, sdepth, &newx2,
+                   &newy2);
     ld->to->x = newx1;
     ld->to->y = newy1;
     sprintf(logstring, "Swol to (%d,%d)-(%d,%d)...\n", ld->from->x, ld->from->y, ld->to->x, ld->to->y);
-    announce(VERBOSE, logstring);
+    announce(SLUMP_VERBOSE, logstring);
     if (sno == 3)
     {
         ldnew1->to->x = newx2;
         ldnew1->to->y = newy2;
         sprintf(logstring, "    and (%d,%d)-(%d,%d)...\n", ldnew1->from->x, ldnew1->from->y, ldnew1->to->x,
                 ldnew1->to->y);
-        announce(VERBOSE, logstring);
+        announce(SLUMP_VERBOSE, logstring);
     }
 
 } /* end swell_linedef */
@@ -8314,10 +8331,10 @@ boolean room_at(level *l, genus *g, int x, int y, int width, config *c)
         if (infinity_norm(t->x, t->y, x, y) < width)
             return SLUMP_FALSE;
     /* If it's not pickable, make sure not stuck-together */
-    if (!(g->bits & PICKABLE))
+    if (!(g->bits & SLUMP_PICKABLE))
         for (t = l->thing_anchor; t; t = t->next)
         {
-            if (t->pgenus->bits & PICKABLE)
+            if (t->pgenus->bits & SLUMP_PICKABLE)
                 continue;
             /* This is overly conservative; the real check should */
             /* be against g->width/2 + t->pgenus->width/2, eh?     */
@@ -8368,12 +8385,12 @@ thing *place_object_in_region(level *l, int minx, int miny, int maxx, int maxy, 
     {
         char s[200];
         sprintf(s, "place_object trying to place a %04x.", thingid);
-        announce(NONE, s);
+        announce(SLUMP_NONE, s);
     }
 
     g = find_genus(c, thingid);
 
-    if (!(g->bits & PICKABLE))
+    if (!(g->bits & SLUMP_PICKABLE))
     {
         if (maxx - minx < g->width)
             return NULL;
@@ -8438,14 +8455,14 @@ thing *place_object_in_region(level *l, int minx, int miny, int maxx, int maxy, 
             {
                 char s[200];
                 sprintf(s, "place_object placed it at (%d,%d).", x, y);
-                announce(NONE, s);
+                announce(SLUMP_NONE, s);
             }
             return answer;
         }
         deck[n].tried = SLUMP_TRUE;
     } /* end for ten probes */
 
-    announce(NONE, "place_object failed");
+    announce(SLUMP_NONE, "place_object failed");
     return NULL;
 }
 
@@ -8472,7 +8489,7 @@ void place_barrels(level *l, sector *s, config *c, haa *haa)
         if (NULL == place_object(l, s, c, g->thingid, g->width, 0, 0, 0, (short)7))
             return;
 
-        announce(VERBOSE, "Barrel");
+        announce(SLUMP_VERBOSE, "Barrel");
 
     } /* end forever */
 
@@ -8497,7 +8514,7 @@ void place_plants(level *l, int allow, sector *s, config *c)
             if (NULL == place_object(l, s, c, g->thingid, g->width, 0, 0, 0, (short)7))
                 return;
 
-        announce(VERBOSE, "Plant");
+        announce(SLUMP_VERBOSE, "Plant");
 
     } /* end forever */
 
@@ -8526,15 +8543,15 @@ int timely_armor(haa *haa, int *rlevels, config *c)
     /* Should be less primitive? */
     if (rollpercent(50))
     {
-        armortype = (c->gamemask & HERETIC_BIT) ? 0 : ID_HELMET;
+        armortype = (c->gamemask & SLUMP_HERETIC_BIT) ? 0 : SLUMP_ID_HELMET;
     }
     else if (rollpercent(70))
     {
-        armortype = (c->gamemask & HERETIC_BIT) ? ID_SILVERSHIELD : ID_GREENSUIT;
+        armortype = (c->gamemask & SLUMP_HERETIC_BIT) ? SLUMP_ID_SILVERSHIELD : SLUMP_ID_GREENSUIT;
     }
     else
     {
-        armortype = (c->gamemask & HERETIC_BIT) ? ID_ENCHANTEDSHIELD : ID_BLUESUIT;
+        armortype = (c->gamemask & SLUMP_HERETIC_BIT) ? SLUMP_ID_ENCHANTEDSHIELD : SLUMP_ID_BLUESUIT;
     }
 
     return armortype;
@@ -8548,57 +8565,57 @@ void update_haa_for_armor(haa *haa, int levels, short armortype)
 
     switch (armortype)
     {
-    case ID_HELMET:
+    case SLUMP_ID_HELMET:
         if (levels & 0x01)
-            haa->haas[ITYTD].armor++;
+            haa->haas[SLUMP_ITYTD].armor++;
         if (levels & 0x02)
-            haa->haas[HMP].armor++;
+            haa->haas[SLUMP_HMP].armor++;
         if (levels & 0x04)
-            haa->haas[UV].armor++;
+            haa->haas[SLUMP_UV].armor++;
         break;
-    case ID_GREENSUIT:
-    case ID_SILVERSHIELD:
+    case SLUMP_ID_GREENSUIT:
+    case SLUMP_ID_SILVERSHIELD:
         if (levels & 0x01)
         {
-            haa->haas[ITYTD].armor += 20;
-            if (haa->haas[ITYTD].armor < 100)
-                haa->haas[ITYTD].armor = (float)100;
-        }
-        if (levels & 0x02)
-        {
-            haa->haas[HMP].armor += 30;
-            if (haa->haas[HMP].armor < 100)
-                haa->haas[HMP].armor = (float)100;
-        }
-        if (levels & 0x04)
-        {
-            haa->haas[UV].armor += 50;
-            if (haa->haas[UV].armor < 100)
-                haa->haas[UV].armor = (float)100;
-        }
-        break;
-    case ID_BLUESUIT:
-    case ID_ENCHANTEDSHIELD:
-        if (levels & 0x01)
-        {
-            haa->haas[ITYTD].armor += 40;
-            if (haa->haas[ITYTD].armor < 200)
-                haa->haas[ITYTD].armor = (float)200;
+            haa->haas[SLUMP_ITYTD].armor += 20;
+            if (haa->haas[SLUMP_ITYTD].armor < 100)
+                haa->haas[SLUMP_ITYTD].armor = (float)100;
         }
         if (levels & 0x02)
         {
-            haa->haas[HMP].armor += 60;
-            if (haa->haas[HMP].armor < 200)
-                haa->haas[HMP].armor = (float)200;
+            haa->haas[SLUMP_HMP].armor += 30;
+            if (haa->haas[SLUMP_HMP].armor < 100)
+                haa->haas[SLUMP_HMP].armor = (float)100;
         }
         if (levels & 0x04)
         {
-            haa->haas[UV].armor += 100;
-            if (haa->haas[UV].armor < 200)
-                haa->haas[UV].armor = (float)200;
+            haa->haas[SLUMP_UV].armor += 50;
+            if (haa->haas[SLUMP_UV].armor < 100)
+                haa->haas[SLUMP_UV].armor = (float)100;
         }
         break;
-    case 0: // This is for Heretic as it has no ID_HELMET equivalent
+    case SLUMP_ID_BLUESUIT:
+    case SLUMP_ID_ENCHANTEDSHIELD:
+        if (levels & 0x01)
+        {
+            haa->haas[SLUMP_ITYTD].armor += 40;
+            if (haa->haas[SLUMP_ITYTD].armor < 200)
+                haa->haas[SLUMP_ITYTD].armor = (float)200;
+        }
+        if (levels & 0x02)
+        {
+            haa->haas[SLUMP_HMP].armor += 60;
+            if (haa->haas[SLUMP_HMP].armor < 200)
+                haa->haas[SLUMP_HMP].armor = (float)200;
+        }
+        if (levels & 0x04)
+        {
+            haa->haas[SLUMP_UV].armor += 100;
+            if (haa->haas[SLUMP_UV].armor < 200)
+                haa->haas[SLUMP_UV].armor = (float)200;
+        }
+        break;
+    case 0: // This is for Heretic as it has no SLUMP_ID_HELMET equivalent
         break;
     default:
         announce(SLUMP_ERROR, "Odd armortype in u_h_f_armor");
@@ -8616,14 +8633,14 @@ void place_armor(level *l, sector *s, config *c, haa *haa)
 
     for (;;)
     {
-        announce(NONE, "place_armor looking for needy levels");
+        announce(SLUMP_NONE, "place_armor looking for needy levels");
         armortype = timely_armor(haa, &levels, c);
         if (levels == 0)
             return; /* Done if none */
-        announce(NONE, "place_armor found some needy levels");
+        announce(SLUMP_NONE, "place_armor found some needy levels");
         if (NULL == place_object(l, s, c, (short)armortype, 48, 0, 0, 0, (short)levels))
             return;
-        announce(NONE, "place_armor placed some armor");
+        announce(SLUMP_NONE, "place_armor placed some armor");
         update_haa_for_armor(haa, levels, (short)armortype);
         if (rollpercent(25))
             return; /* Reasonable? */
@@ -8673,23 +8690,24 @@ int timely_ammo(haa *haa, int *rlevels, config *c)
 
     if ((!c->weapons_are_special) && (need_shotgun))
     {
-        if ((!(c->gamemask & (DOOM0_BIT | DOOM1_BIT | HERETIC_BIT | HARMONY_BIT))) && rollpercent(30))
+        if ((!(c->gamemask & (SLUMP_DOOM0_BIT | SLUMP_DOOM1_BIT | SLUMP_HERETIC_BIT | SLUMP_HARMONY_BIT))) &&
+            rollpercent(30))
         {
-            ammotype = ID_SSGUN;
+            ammotype = SLUMP_ID_SSGUN;
         }
-        else if (c->gamemask & HERETIC_BIT)
+        else if (c->gamemask & SLUMP_HERETIC_BIT)
         {
-            ammotype = ID_CROSSBOW;
+            ammotype = SLUMP_ID_CROSSBOW;
         }
         else
         {
-            ammotype = ID_SHOTGUN;
+            ammotype = SLUMP_ID_SHOTGUN;
         }
     }
     else if ((!c->weapons_are_special) && rollpercent(15))
     {
         int weapcount;
-        if (c->gamemask & HERETIC_BIT)
+        if (c->gamemask & SLUMP_HERETIC_BIT)
         {
             weapcount = 5;
             switch (roll(weapcount))
@@ -8697,37 +8715,37 @@ int timely_ammo(haa *haa, int *rlevels, config *c)
             case 0:
                 if (c->big_weapons)
                 {
-                    ammotype = ID_HELLSTAFF;
+                    ammotype = SLUMP_ID_HELLSTAFF;
                 }
                 else
                 {
-                    ammotype = ID_CROSSBOW;
+                    ammotype = SLUMP_ID_CROSSBOW;
                 }
                 break;
             case 1:
-                ammotype = ID_CROSSBOW;
+                ammotype = SLUMP_ID_CROSSBOW;
                 break;
             case 2:
-                ammotype = ID_DRAGONCLAW;
+                ammotype = SLUMP_ID_DRAGONCLAW;
                 break;
             case 3:
                 if (c->big_weapons)
                 {
-                    ammotype = ID_PHOENIXROD;
+                    ammotype = SLUMP_ID_PHOENIXROD;
                 }
                 else
                 {
-                    ammotype = ID_CROSSBOW;
+                    ammotype = SLUMP_ID_CROSSBOW;
                 }
                 break;
             case 4:
-                ammotype = ID_FIREMACE;
+                ammotype = SLUMP_ID_FIREMACE;
                 break;
             }
         }
         else
         {
-            if (c->gamemask & (DOOM0_BIT | DOOM1_BIT | HARMONY_BIT))
+            if (c->gamemask & (SLUMP_DOOM0_BIT | SLUMP_DOOM1_BIT | SLUMP_HARMONY_BIT))
                 weapcount = 4;
             else
                 weapcount = 5;
@@ -8736,31 +8754,31 @@ int timely_ammo(haa *haa, int *rlevels, config *c)
             case 0:
                 if (c->big_weapons)
                 {
-                    ammotype = ID_PLASMA;
+                    ammotype = SLUMP_ID_PLASMA;
                 }
                 else
                 {
-                    ammotype = ID_SHOTGUN;
+                    ammotype = SLUMP_ID_SHOTGUN;
                 }
                 break;
             case 1:
-                ammotype = ID_SHOTGUN;
+                ammotype = SLUMP_ID_SHOTGUN;
                 break;
             case 2:
-                ammotype = ID_CHAINGUN;
+                ammotype = SLUMP_ID_CHAINGUN;
                 break;
             case 3:
                 if (c->big_weapons)
                 {
-                    ammotype = ID_LAUNCHER;
+                    ammotype = SLUMP_ID_LAUNCHER;
                 }
                 else
                 {
-                    ammotype = ID_SHOTGUN;
+                    ammotype = SLUMP_ID_SHOTGUN;
                 }
                 break;
             case 4:
-                ammotype = ID_SSGUN;
+                ammotype = SLUMP_ID_SSGUN;
                 break;
             }
         }
@@ -8768,43 +8786,43 @@ int timely_ammo(haa *haa, int *rlevels, config *c)
     }
     else if (rollpercent(10))
     {
-        ammotype = (c->gamemask & HERETIC_BIT) ? ID_WANDCRYSTAL : ID_CLIP;
+        ammotype = (c->gamemask & SLUMP_HERETIC_BIT) ? SLUMP_ID_WANDCRYSTAL : SLUMP_ID_CLIP;
     }
     else if (haa->haas[0].can_use_cells && rollpercent(10))
     {
-        ammotype = (c->gamemask & HERETIC_BIT) ? ID_LESSERRUNES : ID_CELL;
+        ammotype = (c->gamemask & SLUMP_HERETIC_BIT) ? SLUMP_ID_LESSERRUNES : SLUMP_ID_CELL;
     }
     else if (haa->haas[0].can_use_cells && rollpercent(15))
     {
-        ammotype = (c->gamemask & HERETIC_BIT) ? ID_GREATERRUNES : ID_CELLPACK;
+        ammotype = (c->gamemask & SLUMP_HERETIC_BIT) ? SLUMP_ID_GREATERRUNES : SLUMP_ID_CELLPACK;
     }
     else if (haa->haas[0].can_use_rockets && rollpercent(12))
     {
-        ammotype = (c->gamemask & HERETIC_BIT) ? ID_FLAMEORB : ID_ROCKET;
+        ammotype = (c->gamemask & SLUMP_HERETIC_BIT) ? SLUMP_ID_FLAMEORB : SLUMP_ID_ROCKET;
     }
     else if (haa->haas[0].can_use_rockets && rollpercent(15))
     {
-        ammotype = (c->gamemask & HERETIC_BIT) ? ID_INFERNOORB : ID_ROCKBOX;
+        ammotype = (c->gamemask & SLUMP_HERETIC_BIT) ? SLUMP_ID_INFERNOORB : SLUMP_ID_ROCKBOX;
     }
     else if (rollpercent(10))
     {
-        ammotype = (c->gamemask & HERETIC_BIT) ? ID_CRYSTALGEODE : ID_BULBOX;
+        ammotype = (c->gamemask & SLUMP_HERETIC_BIT) ? SLUMP_ID_CRYSTALGEODE : SLUMP_ID_BULBOX;
     }
     else if (rollpercent(60))
     {
-        ammotype = (c->gamemask & HERETIC_BIT) ? ID_ETHEREALARROWS : ID_SHELLS;
+        ammotype = (c->gamemask & SLUMP_HERETIC_BIT) ? SLUMP_ID_ETHEREALARROWS : SLUMP_ID_SHELLS;
     }
     else
     {
-        ammotype = (c->gamemask & HERETIC_BIT) ? ID_ETHEREALQUIVER : ID_SHELLBOX;
+        ammotype = (c->gamemask & SLUMP_HERETIC_BIT) ? SLUMP_ID_ETHEREALQUIVER : SLUMP_ID_SHELLBOX;
     }
 
-    if ((ammotype == (c->gamemask & HERETIC_BIT) ? ID_HELLSTAFF : ID_PLASMA) && (need_plasgun))
+    if ((ammotype == (c->gamemask & SLUMP_HERETIC_BIT) ? SLUMP_ID_HELLSTAFF : SLUMP_ID_PLASMA) && (need_plasgun))
     {
         levels |= 0x07; /* All, if any */
     }
 
-    if ((ammotype == (c->gamemask & HERETIC_BIT) ? ID_PHOENIXROD : ID_LAUNCHER) && (need_launcher))
+    if ((ammotype == (c->gamemask & SLUMP_HERETIC_BIT) ? SLUMP_ID_PHOENIXROD : SLUMP_ID_LAUNCHER) && (need_launcher))
     {
         levels |= 0x07; /* All, if any */
     }
@@ -8823,83 +8841,83 @@ void ammo_value(short ammotype, haa *haa, int *f0, int *f1, int *f2)
     /* These numbers should just be stored in the config, in the genus */
     switch (ammotype)
     {
-    case ID_SSGUN:
-    case ID_SHOTGUN:
+    case SLUMP_ID_SSGUN:
+    case SLUMP_ID_SHOTGUN:
         answer       = 560;
         special_case = SLUMP_TRUE;
         break;
-    case ID_SHELLS:
+    case SLUMP_ID_SHELLS:
         answer       = 280;
         special_case = SLUMP_TRUE;
         break;
-    case ID_SHELLBOX:
+    case SLUMP_ID_SHELLBOX:
         answer       = 1400;
         special_case = SLUMP_TRUE;
         break;
-    case ID_PLASMA:
+    case SLUMP_ID_PLASMA:
         answer = 880;
         break;
-    case ID_BFG:
+    case SLUMP_ID_BFG:
         answer = 880;
         break; /* but a BFG is better, eh? */
-    case ID_CHAINGUN:
+    case SLUMP_ID_CHAINGUN:
         answer = 200;
         break;
-    case ID_LAUNCHER:
+    case SLUMP_ID_LAUNCHER:
         answer = 200;
         break;
-    case ID_CLIP:
+    case SLUMP_ID_CLIP:
         answer = 100;
         break;
-    case ID_BULBOX:
+    case SLUMP_ID_BULBOX:
         answer = 500;
         break;
-    case ID_CELL:
+    case SLUMP_ID_CELL:
         answer = 440;
         break;
-    case ID_CELLPACK:
+    case SLUMP_ID_CELLPACK:
         answer = 2200;
         break;
-    case ID_ROCKET:
+    case SLUMP_ID_ROCKET:
         answer = 100;
         break;
-    case ID_ROCKBOX:
+    case SLUMP_ID_ROCKBOX:
         answer = 500;
         break;
-    case ID_WANDCRYSTAL:
+    case SLUMP_ID_WANDCRYSTAL:
         answer = 100;
         break;
-    case ID_CRYSTALGEODE:
+    case SLUMP_ID_CRYSTALGEODE:
         answer = 500;
         break;
-    case ID_ETHEREALARROWS:
+    case SLUMP_ID_ETHEREALARROWS:
         answer = 225;
         break;
-    case ID_ETHEREALQUIVER:
+    case SLUMP_ID_ETHEREALQUIVER:
         answer = 900;
         break;
-    case ID_CLAWORB:
+    case SLUMP_ID_CLAWORB:
         answer = 180;
         break;
-    case ID_ENERGYORB:
+    case SLUMP_ID_ENERGYORB:
         answer = 450;
         break;
-    case ID_LESSERRUNES:
+    case SLUMP_ID_LESSERRUNES:
         answer = 280;
         break;
-    case ID_GREATERRUNES:
+    case SLUMP_ID_GREATERRUNES:
         answer = 1400;
         break;
-    case ID_FLAMEORB:
+    case SLUMP_ID_FLAMEORB:
         answer = 90;
         break;
-    case ID_INFERNOORB:
+    case SLUMP_ID_INFERNOORB:
         answer = 900;
         break;
-    case ID_MACESPHERES:
+    case SLUMP_ID_MACESPHERES:
         answer = 180;
         break;
-    case ID_MACESPHEREPILE:
+    case SLUMP_ID_MACESPHEREPILE:
         answer = 900;
         break;
     default:
@@ -8909,11 +8927,11 @@ void ammo_value(short ammotype, haa *haa, int *f0, int *f1, int *f2)
     *f0 = *f1 = *f2 = answer;
     if (special_case)
     { /* Sort of a hack!  Make more general? */
-        if ((ammotype == ID_SSGUN) || (haa->haas[0].has_ssgun))
+        if ((ammotype == SLUMP_ID_SSGUN) || (haa->haas[0].has_ssgun))
             *f0 = (int)((double)answer * 10.0 / 7.0);
-        if ((ammotype == ID_SSGUN) || (haa->haas[1].has_ssgun))
+        if ((ammotype == SLUMP_ID_SSGUN) || (haa->haas[1].has_ssgun))
             *f1 = (int)((double)answer * 10.0 / 7.0);
-        if ((ammotype == ID_SSGUN) || (haa->haas[2].has_ssgun))
+        if ((ammotype == SLUMP_ID_SSGUN) || (haa->haas[2].has_ssgun))
             *f2 = (int)((double)answer * 10.0 / 7.0);
     }
     return;
@@ -8927,55 +8945,55 @@ void update_haa_for_ammo(haa *haa, int levels, short ammotype)
     ammo_value(ammotype, haa, &a0, &a1, &a2);
 
     if (levels & 0x01)
-        haa->haas[ITYTD].ammo += a0;
+        haa->haas[SLUMP_ITYTD].ammo += a0;
     if (levels & 0x02)
-        haa->haas[HMP].ammo += a1;
+        haa->haas[SLUMP_HMP].ammo += a1;
     if (levels & 0x04)
-        haa->haas[UV].ammo += a2;
-    if ((ammotype == ID_SHOTGUN) || (ammotype == ID_SSGUN))
+        haa->haas[SLUMP_UV].ammo += a2;
+    if ((ammotype == SLUMP_ID_SHOTGUN) || (ammotype == SLUMP_ID_SSGUN))
     {
         if (levels & 0x01)
-            haa->haas[ITYTD].can_use_shells = 1;
+            haa->haas[SLUMP_ITYTD].can_use_shells = 1;
         if (levels & 0x02)
-            haa->haas[HMP].can_use_shells = 1;
+            haa->haas[SLUMP_HMP].can_use_shells = 1;
         if (levels & 0x04)
-            haa->haas[UV].can_use_shells = 1;
+            haa->haas[SLUMP_UV].can_use_shells = 1;
     }
-    if (ammotype == ID_CHAINGUN)
+    if (ammotype == SLUMP_ID_CHAINGUN)
     {
         if (levels & 0x01)
-            haa->haas[ITYTD].has_chaingun = 1;
+            haa->haas[SLUMP_ITYTD].has_chaingun = 1;
         if (levels & 0x02)
-            haa->haas[HMP].has_chaingun = 1;
+            haa->haas[SLUMP_HMP].has_chaingun = 1;
         if (levels & 0x04)
-            haa->haas[UV].has_chaingun = 1;
+            haa->haas[SLUMP_UV].has_chaingun = 1;
     }
-    if (ammotype == ID_PLASMA)
+    if (ammotype == SLUMP_ID_PLASMA)
     {
         if (levels & 0x01)
-            haa->haas[ITYTD].can_use_cells = 1;
+            haa->haas[SLUMP_ITYTD].can_use_cells = 1;
         if (levels & 0x02)
-            haa->haas[HMP].can_use_cells = 1;
+            haa->haas[SLUMP_HMP].can_use_cells = 1;
         if (levels & 0x04)
-            haa->haas[UV].can_use_cells = 1;
+            haa->haas[SLUMP_UV].can_use_cells = 1;
     }
-    if (ammotype == ID_LAUNCHER)
+    if (ammotype == SLUMP_ID_LAUNCHER)
     {
         if (levels & 0x01)
-            haa->haas[ITYTD].can_use_rockets = 1;
+            haa->haas[SLUMP_ITYTD].can_use_rockets = 1;
         if (levels & 0x02)
-            haa->haas[HMP].can_use_rockets = 1;
+            haa->haas[SLUMP_HMP].can_use_rockets = 1;
         if (levels & 0x04)
-            haa->haas[UV].can_use_rockets = 1;
+            haa->haas[SLUMP_UV].can_use_rockets = 1;
     }
-    if (ammotype == ID_SSGUN)
+    if (ammotype == SLUMP_ID_SSGUN)
     {
         if (levels & 0x01)
-            haa->haas[ITYTD].has_ssgun = 1;
+            haa->haas[SLUMP_ITYTD].has_ssgun = 1;
         if (levels & 0x02)
-            haa->haas[HMP].has_ssgun = 1;
+            haa->haas[SLUMP_HMP].has_ssgun = 1;
         if (levels & 0x04)
-            haa->haas[UV].has_ssgun = 1;
+            haa->haas[SLUMP_UV].has_ssgun = 1;
     }
 }
 
@@ -8984,14 +9002,14 @@ boolean is_weapon(short thingid)
 {
     switch (thingid)
     {
-    case ID_SHOTGUN:
-    case ID_SSGUN:
-    case ID_CHAINGUN:
-    case ID_CHAINSAW:
-    case ID_PLASMA:
-    case ID_BFG:
-    case ID_LAUNCHER:
-    case ID_DRAGONCLAW:
+    case SLUMP_ID_SHOTGUN:
+    case SLUMP_ID_SSGUN:
+    case SLUMP_ID_CHAINGUN:
+    case SLUMP_ID_CHAINSAW:
+    case SLUMP_ID_PLASMA:
+    case SLUMP_ID_BFG:
+    case SLUMP_ID_LAUNCHER:
+    case SLUMP_ID_DRAGONCLAW:
         return SLUMP_TRUE;
     default:
         return SLUMP_FALSE;
@@ -9009,16 +9027,16 @@ void place_ammo(level *l, sector *s, config *c, haa *haa)
 
     for (;;)
     {
-        announce(NONE, "place_ammo looking for needy levels");
+        announce(SLUMP_NONE, "place_ammo looking for needy levels");
         ammotype = timely_ammo(haa, &levels, c);
         if (levels == 0)
             return; /* Done if none */
-        announce(NONE, "place_ammo found some needy levels");
+        announce(SLUMP_NONE, "place_ammo found some needy levels");
         /* The 48 is just to avoid bunching-up and wall-illusions, */
         /* as well as the grab-through-wall effect. */
         if (NULL == place_object(l, s, c, ammotype, 48, 0, 0, 0, levels))
             return;
-        announce(NONE, "place_ammo placed some ammo");
+        announce(SLUMP_NONE, "place_ammo placed some ammo");
         if (levels == 7)
             if (is_weapon(ammotype))
                 s->has_dm_weapon = SLUMP_TRUE;
@@ -9033,77 +9051,77 @@ void update_haa_for_health(haa *haa, int levels, short healthtype)
 {
     int amount;
 
-    if (healthtype == ID_TOMEOFPOWER)
+    if (healthtype == SLUMP_ID_TOMEOFPOWER)
     {
-        announce(VERBOSE, "Put in a tome of power!");
+        announce(SLUMP_VERBOSE, "Put in a tome of power!");
         if (levels & 0x01)
         {
-            haa->haas[ITYTD].has_berserk = SLUMP_TRUE;
+            haa->haas[SLUMP_ITYTD].has_berserk = SLUMP_TRUE;
         }
         if (levels & 0x02)
         {
-            haa->haas[HMP].has_berserk = SLUMP_TRUE;
+            haa->haas[SLUMP_HMP].has_berserk = SLUMP_TRUE;
         }
         if (levels & 0x04)
         {
-            haa->haas[UV].has_berserk = SLUMP_TRUE;
+            haa->haas[SLUMP_UV].has_berserk = SLUMP_TRUE;
         }
     }
-    else if (healthtype == ID_BERSERK)
+    else if (healthtype == SLUMP_ID_BERSERK)
     {
-        announce(VERBOSE, "Put in a berserk pack!");
+        announce(SLUMP_VERBOSE, "Put in a berserk pack!");
         if (levels & 0x01)
         {
-            if (haa->haas[ITYTD].health < 100)
-                haa->haas[ITYTD].health = (float)100;
-            haa->haas[ITYTD].has_berserk = SLUMP_TRUE;
+            if (haa->haas[SLUMP_ITYTD].health < 100)
+                haa->haas[SLUMP_ITYTD].health = (float)100;
+            haa->haas[SLUMP_ITYTD].has_berserk = SLUMP_TRUE;
         }
         if (levels & 0x02)
         {
-            if (haa->haas[HMP].health < 100)
-                haa->haas[HMP].health = (float)100;
-            haa->haas[HMP].has_berserk = SLUMP_TRUE;
+            if (haa->haas[SLUMP_HMP].health < 100)
+                haa->haas[SLUMP_HMP].health = (float)100;
+            haa->haas[SLUMP_HMP].has_berserk = SLUMP_TRUE;
         }
         if (levels & 0x04)
         {
-            if (haa->haas[UV].health < 100)
-                haa->haas[UV].health = (float)100;
-            haa->haas[UV].has_berserk = SLUMP_TRUE;
+            if (haa->haas[SLUMP_UV].health < 100)
+                haa->haas[SLUMP_UV].health = (float)100;
+            haa->haas[SLUMP_UV].has_berserk = SLUMP_TRUE;
         }
     }
     else
     {
         switch (healthtype)
         {
-        case ID_STIMPACK:
-        case ID_CRYSTALVIAL:
+        case SLUMP_ID_STIMPACK:
+        case SLUMP_ID_CRYSTALVIAL:
             amount = 10;
             break;
-        case ID_MEDIKIT:
-        case ID_QUARTZFLASK:
+        case SLUMP_ID_MEDIKIT:
+        case SLUMP_ID_QUARTZFLASK:
             amount = 25;
             break;
-        case ID_POTION:
+        case SLUMP_ID_POTION:
             amount = 1;
             break;
-        case ID_SOUL:
-        case ID_MYSTICURN:
+        case SLUMP_ID_SOUL:
+        case SLUMP_ID_MYSTICURN:
             amount = 100;
             break;
-        case 0:              // Heretic - No equivalent to ID_POTION
-        case ID_WANDCRYSTAL: // Heretic - Sometimes placed where an ID_POTION would occur
+        case 0:                    // Heretic - No equivalent to SLUMP_ID_POTION
+        case SLUMP_ID_WANDCRYSTAL: // Heretic - Sometimes placed where an SLUMP_ID_POTION would occur
             amount = 0;
             break;
         default:
-            announce(WARNING, "Odd healthtype in u_h_f_h");
+            announce(SLUMP_WARNING, "Odd healthtype in u_h_f_h");
             amount = 0;
         }
         if (levels & 0x01)
-            haa->haas[ITYTD].health += amount;
+            haa->haas[SLUMP_ITYTD].health += amount;
         if (levels & 0x02)
-            haa->haas[HMP].health += amount;
+            haa->haas[SLUMP_HMP].health += amount;
         if (levels & 0x04)
-            haa->haas[UV].health += amount;
+            haa->haas[SLUMP_UV].health += amount;
     }
 }
 
@@ -9122,53 +9140,53 @@ short timely_health(haa *haa, int *levels, config *c)
         (*levels) >>= 1;
         if (haa->haas[i].health < c->usualhealth[i])
             (*levels) |= 0x04;
-        if (haa->haas[i].has_berserk == SLUMP_FALSE && !(c->gamemask & CHEX_BIT))
+        if (haa->haas[i].has_berserk == SLUMP_FALSE && !(c->gamemask & SLUMP_CHEX_BIT))
             berserk_ok = SLUMP_TRUE;
     }
 
     if ((*levels) == 0)
         return 0;
 
-    if (c->gamemask & HERETIC_BIT)
+    if (c->gamemask & SLUMP_HERETIC_BIT)
     {
         if (rollpercent(50))
         {
-            healthtype = ID_CRYSTALVIAL;
+            healthtype = SLUMP_ID_CRYSTALVIAL;
         }
         else if (rollpercent(50))
         {
-            healthtype = ID_QUARTZFLASK;
+            healthtype = SLUMP_ID_QUARTZFLASK;
         }
         else if (berserk_ok && rollpercent(50))
         {
-            healthtype = ID_TOMEOFPOWER;
+            healthtype = SLUMP_ID_TOMEOFPOWER;
         }
         else
         {
-            healthtype = ID_MYSTICURN;
+            healthtype = SLUMP_ID_MYSTICURN;
         }
     }
     else
     {
         if (rollpercent(50))
         {
-            healthtype = ID_STIMPACK;
+            healthtype = SLUMP_ID_STIMPACK;
         }
         else if (rollpercent(50))
         {
-            healthtype = ID_MEDIKIT;
+            healthtype = SLUMP_ID_MEDIKIT;
         }
         else if (rollpercent(90))
         {
-            healthtype = ID_POTION;
+            healthtype = SLUMP_ID_POTION;
         }
         else if (berserk_ok && rollpercent(50))
         {
-            healthtype = ID_BERSERK;
+            healthtype = SLUMP_ID_BERSERK;
         }
         else
         {
-            healthtype = ID_SOUL;
+            healthtype = SLUMP_ID_SOUL;
         }
     }
     return healthtype;
@@ -9303,18 +9321,18 @@ genus *proper_monster(float health, float ammo, int bits, haa *haa, int mno, pro
     {
         char s[200];
         sprintf(s, "proper_monster looking for %f health, %f ammo, levels %d", health, ammo, bits);
-        announce(NONE, s);
+        announce(SLUMP_NONE, s);
     }
 
-    require |= MONSTER; /* Duh! */
+    require |= SLUMP_MONSTER; /* Duh! */
     /* This is disabled; with min_level, we just start having boss creatures
      * show up in later levels */
-    forbid |= BOSS; /* No wandering bosses */
+    forbid |= SLUMP_BOSS; /* No wandering bosses */
     /* (Wandering bosses would be nice for the later levels.  Alas, the
      * bosses are too big to really fit where SLUMP wants to put them,
      * so we have to do without them */
     /* With min_level, we just have big monsters show up in later levels */
-    /* if (!c->big_monsters) forbid |= BIG; */
+    /* if (!c->big_monsters) forbid |= SLUMP_BIG; */
 
     /* Mark eligible monsters, and find wimpiest and biggest just in case */
     count = 0;
@@ -9333,7 +9351,8 @@ genus *proper_monster(float health, float ammo, int bits, haa *haa, int mno, pro
         /* Levels above 15 are more likely to have big meanies */
         if (current_level_number > 15 && current_level_number <= 30)
         {
-            if (rollpercent((6 * (current_level_number - 15))) && (m->bits & BOSS) == 0 && (m->bits & BIG) == 0)
+            if (rollpercent((6 * (current_level_number - 15))) && (m->bits & SLUMP_BOSS) == 0 &&
+                (m->bits & SLUMP_BIG) == 0)
             {
                 continue;
             }
@@ -9341,13 +9360,13 @@ genus *proper_monster(float health, float ammo, int bits, haa *haa, int mno, pro
             /* Disabled: Too buggy */
             /* if(current_level_number > 25 &&
                     rollpercent((13 * (current_level_number - 25))) &&
-                    m->thingid != ID_ARACH) {
+                    m->thingid != SLUMP_ID_ARACH) {
                 continue;
                     } */
         }
         if (m->min_level > current_level_number)
             continue; /* Progression */
-#ifdef IMPOSSIBLE_MONSTERS_IN_CONFIG
+#ifdef SLUMP_IMPOSSIBLE_MONSTERS_IN_CONFIG
         if ((m->gamemask & c->gamemask) != c->gamemask)
             continue;
 #endif
@@ -9437,7 +9456,7 @@ void haa_unpend(haa *haa)
 {
     int i;
 
-    for (i = ITYTD; i <= UV; i++)
+    for (i = SLUMP_ITYTD; i <= SLUMP_UV; i++)
     {
         if (haa->haas[i].shells_pending)
         {
@@ -9486,27 +9505,27 @@ void update_haa_for_monster(haa *haa, genus *m, int levels, int mno, config *c)
             haa->haas[i].armor -= damage / 2;
         }
         if (haa->haas[i].health < 0)
-            announce(VERBOSE, "Health estimate negative?");
+            announce(SLUMP_VERBOSE, "Health estimate negative?");
         damage = m->ammo_to_kill[i];
         /* Takes more ammo, if no good weapons */
         if (!(haa->haas[i].can_use_shells || haa->haas[i].can_use_cells))
             damage *= 2;
         /* But less ammo if we can saw it or punch it! */
-        if (haa->haas[i].has_chainsaw && !(m->bits & (FLIES | SHOOTS)))
+        if (haa->haas[i].has_chainsaw && !(m->bits & (SLUMP_FLIES | SLUMP_SHOOTS)))
         {
             damage /= 2;
         }
-        else if (haa->haas[i].has_berserk && !(m->bits & (FLIES | SHOOTS)))
+        else if (haa->haas[i].has_berserk && !(m->bits & (SLUMP_FLIES | SLUMP_SHOOTS)))
         {
             damage *= (float)0.80;
         }
         haa->haas[i].ammo -= damage;
         haa->haas[i].ammo += m->ammo_provides; /* Should be in stage two? */
         if (haa->haas[i].ammo < 0)
-            announce(VERBOSE, "Ammo estimate negative?");
-        if (m->thingid == ID_SERGEANT)
+            announce(SLUMP_VERBOSE, "Ammo estimate negative?");
+        if (m->thingid == SLUMP_ID_SERGEANT)
             haa->haas[i].shells_pending = SLUMP_TRUE;
-        if (m->thingid == ID_COMMANDO)
+        if (m->thingid == SLUMP_ID_COMMANDO)
             haa->haas[i].chaingun_pending = SLUMP_TRUE;
 
     } /* end for levels adjusting haa */
@@ -9531,10 +9550,10 @@ genus *timely_monster_ex(haa *haa, config *c, int *levels, boolean biggest, int 
 
     /* Find how big a monster we can tolerate */
     if (!haa_monster_data(haa, c, &monster_size_health, &monster_size_ammo, levels))
-        return NULL;                         /* Not enough excess health in any level */
+        return NULL;                               /* Not enough excess health in any level */
 
-    if (c->required_monster_bits == SPECIAL) // Just return a Nazi
-        return find_monster(c, ID_NAZI);
+    if (c->required_monster_bits == SLUMP_SPECIAL) // Just return a Nazi
+        return find_monster(c, SLUMP_ID_NAZI);
     else
         return proper_monster(monster_size_health, monster_size_ammo, *levels, haa, mno, c->required_monster_bits + req,
                               c->forbidden_monster_bits, biggest, c);
@@ -9576,26 +9595,26 @@ void place_monsters(level *l, sector *s, config *c, haa *haa)
         if (rollpercent(15))
             levels |= 0x08; /* deaf */
 
-        announce(NONE, "Trying to place a monster");
+        announce(SLUMP_NONE, "Trying to place a monster");
 
         /* Try to place it */
-        rc = (NULL != place_object(l, s, c, m->thingid, MONSTER_WIDTH(m), -1, s->entry_x, s->entry_y, levels));
+        rc = (NULL != place_object(l, s, c, m->thingid, 64, -1, s->entry_x, s->entry_y, levels));
         if (!rc)
         {
-            announce(NONE, "Placement failed");
+            announce(SLUMP_NONE, "Placement failed");
             goto done_monsters; /* Might as well give up entirely */
         }
 
-        if (m->thingid == ID_SKULL)
-            announce(NONE, "Skull");
-        if (m->thingid == ID_HEAD)
-            announce(VERBOSE, "HEAD");
-        if (m->thingid == ID_SKEL)
-            announce(VERBOSE, "SKEL");
-        if (m->thingid == ID_HELL)
-            announce(VERBOSE, "KNIGHT");
-        if (m->thingid == ID_ARCHIE)
-            announce(VERBOSE, "VILE");
+        if (m->thingid == SLUMP_ID_SKULL)
+            announce(SLUMP_NONE, "Skull");
+        if (m->thingid == SLUMP_ID_HEAD)
+            announce(SLUMP_VERBOSE, "HEAD");
+        if (m->thingid == SLUMP_ID_SKEL)
+            announce(SLUMP_VERBOSE, "SKEL");
+        if (m->thingid == SLUMP_ID_HELL)
+            announce(SLUMP_VERBOSE, "KNIGHT");
+        if (m->thingid == SLUMP_ID_ARCHIE)
+            announce(SLUMP_VERBOSE, "VILE");
 
         update_haa_for_monster(haa, m, levels, mno, c);
 
@@ -9603,7 +9622,7 @@ void place_monsters(level *l, sector *s, config *c, haa *haa)
 
 done_monsters:
 
-    /* NOTE: tempting as it is, we don't do this *within* the */
+    /* SLUMP_NOTE: tempting as it is, we don't do this *within* the */
     /* loop, because the model is that the player doesn't pick */
     /* up the objects in the room (including dropped weapons) */
     /* until after everything is dead.  So we don't use the */
@@ -9625,7 +9644,7 @@ boolean isAdequate(level *l, linedef *ld, style *ThisStyle, config *c)
     /* Assume all 1S longish linedefs are OK; very dangerous! */
     if (ld->left)
         return 0;
-    if (ld->flags & TWO_SIDED)
+    if (ld->flags & SLUMP_TWO_SIDED)
         return 0;
     if (lengthsquared(ld) >= (128 * 128))
     { /* Why 128? */
@@ -9701,8 +9720,9 @@ construct *new_construct(config *c)
     construct *answer = (construct *)malloc(sizeof(*answer));
 
     answer->height   = 64;
-    answer->gamemask = DOOM1_BIT | DOOM0_BIT | DOOM2_BIT | DOOMI_BIT | DOOMC_BIT | HERETIC_BIT | CHEX_BIT | HACX_BIT |
-                       HARMONY_BIT | STRIFE_BIT | REKKR_BIT;
+    answer->gamemask = SLUMP_DOOM1_BIT | SLUMP_DOOM0_BIT | SLUMP_DOOM2_BIT | SLUMP_DOOMI_BIT | SLUMP_DOOMC_BIT |
+                       SLUMP_HERETIC_BIT | SLUMP_CHEX_BIT | SLUMP_HACX_BIT | SLUMP_HARMONY_BIT | SLUMP_STRIFE_BIT |
+                       SLUMP_REKKR_BIT;
     answer->compatible          = 0;
     answer->texture_cell_anchor = NULL;
     answer->flat_cell_anchor    = NULL;
@@ -9738,9 +9758,9 @@ texture_cell *add_texture_cell(construct *cn, char *name, boolean primary, short
     return answer;
 }
 
-#ifdef CONFIG_DUMP
+#ifdef SLUMP_CONFIG_DUMP
 
-#ifndef CONFIG_DUMP_VERBOSE_NOT
+#ifndef SLUMP_CONFIG_DUMP_VERBOSE_NOT
 
 void dump_foo_themebits(themebits yes, themebits no, char *tag, config *c)
 {
@@ -9760,41 +9780,41 @@ void dump_foo_texture(texture *t, config *c)
     printf("Texture %s ", t->name);
     if ((t->width != 256) || (t->height != 128))
         printf("size %d %d ", t->width, t->height);
-    if (t->props & WALL)
+    if (t->props & SLUMP_WALL)
         printf("wall ");
-    if (t->props & SWITCH)
+    if (t->props & SLUMP_SWITCH)
         printf("isswitch ");
-    if (t->props & LIFT_TEXTURE)
+    if (t->props & SLUMP_LIFT_TEXTURE)
         printf("lift ");
-    if (t->props & SUPPORT)
+    if (t->props & SLUMP_SUPPORT)
         printf("support ");
-    if (t->props & JAMB)
+    if (t->props & SLUMP_JAMB)
         printf("jamb ");
-    if (t->props & STEP)
+    if (t->props & SLUMP_STEP)
         printf("step ");
-    if (t->props & GRATING)
+    if (t->props & SLUMP_GRATING)
         printf("grating ");
-    if (t->props & PLAQUE)
+    if (t->props & SLUMP_PLAQUE)
         printf("plaque ");
-    if (t->props & VTILES)
+    if (t->props & SLUMP_VTILES)
         printf("vtiles ");
-    if (t->props & HALF_PLAQUE)
+    if (t->props & SLUMP_HALF_PLAQUE)
         printf("half_plaque ");
-    if (t->props & LIGHT)
+    if (t->props & SLUMP_LIGHT)
         printf("light ");
-    if (t->props & EXITSWITCH)
+    if (t->props & SLUMP_EXITSWITCH)
         printf("exitswitch ");
-    if (t->props & DOOR)
+    if (t->props & SLUMP_DOOR)
         printf("door ");
-    if (t->props & GATE)
+    if (t->props & SLUMP_GATE)
         printf("locked ");
-    if (t->props & OUTDOOR)
+    if (t->props & SLUMP_OUTDOOR)
         printf("outside ");
-    if (t->props & RED)
+    if (t->props & SLUMP_RED)
         printf("red ");
-    if (t->props & BLUE)
+    if (t->props & SLUMP_BLUE)
         printf("blue ");
-    if (t->props & YELLOW)
+    if (t->props & SLUMP_YELLOW)
         printf("yellow ");
     if (t == c->error_texture)
         printf("error ");
@@ -9812,15 +9832,15 @@ void dump_foo_texture(texture *t, config *c)
         printf("ybias %d ", t->y_bias);
     if (5 != t->y_hint)
         printf("yhint %d ", t->y_hint);
-    if (!(t->gamemask & DOOM0_BIT))
+    if (!(t->gamemask & SLUMP_DOOM0_BIT))
         printf("noDoom0 ");
-    if (!(t->gamemask & DOOM1_BIT))
+    if (!(t->gamemask & SLUMP_DOOM1_BIT))
         printf("noDoom1 ");
-    if (!(t->gamemask & DOOM2_BIT))
+    if (!(t->gamemask & SLUMP_DOOM2_BIT))
         printf("noDoom2 ");
-    if (!(t->gamemask & DOOMI_BIT))
+    if (!(t->gamemask & SLUMP_DOOMI_BIT))
         printf("custom ");
-    if (!(t->gamemask & DOOMC_BIT))
+    if (!(t->gamemask & SLUMP_DOOMC_BIT))
         printf("gross ");
     printf("\n");
 }
@@ -9829,34 +9849,34 @@ void dump_foo_flat(flat *f, config *c)
 {
     printf("Flat %s ", f->name);
 
-    if (f->props & FLOOR)
+    if (f->props & SLUMP_FLOOR)
         printf("floor ");
-    if (f->props & CEILING)
+    if (f->props & SLUMP_CEILING)
         printf("ceiling ");
-    if (f->props & LIGHT)
+    if (f->props & SLUMP_LIGHT)
         printf("light ");
-    if (f->props & NUKAGE)
+    if (f->props & SLUMP_NUKAGE)
         printf("nukage ");
-    if (f->props & OUTDOOR)
+    if (f->props & SLUMP_OUTDOOR)
         printf("outside ");
-    if (f->props & GATE)
+    if (f->props & SLUMP_GATE)
         printf("gate ");
-    if (f->props & RED)
+    if (f->props & SLUMP_RED)
         printf("red ");
     if (f == c->sky_flat)
         printf("sky ");
     if (f == c->water_flat)
         printf("water ");
     dump_foo_themebits(f->compatible, 0, "comp", c);
-    if (!(f->gamemask & DOOM0_BIT))
+    if (!(f->gamemask & SLUMP_DOOM0_BIT))
         printf("noDoom0 ");
-    if (!(f->gamemask & DOOM1_BIT))
+    if (!(f->gamemask & SLUMP_DOOM1_BIT))
         printf("noDoom1 ");
-    if (!(f->gamemask & DOOM2_BIT))
+    if (!(f->gamemask & SLUMP_DOOM2_BIT))
         printf("noDoom2 ");
-    if (!(f->gamemask & DOOMI_BIT))
+    if (!(f->gamemask & SLUMP_DOOMI_BIT))
         printf("custom ");
-    if (!(f->gamemask & DOOMC_BIT))
+    if (!(f->gamemask & SLUMP_DOOMC_BIT))
         printf("gross ");
     printf("\n");
 }
@@ -9879,15 +9899,15 @@ void dump_foo_construct(construct *x, config *c)
     printf("Construct family %d height %d ", x->family, x->height);
 
     dump_foo_themebits(x->compatible, 0, "comp", c);
-    if (!(x->gamemask & DOOM0_BIT))
+    if (!(x->gamemask & SLUMP_DOOM0_BIT))
         printf("noDoom0 ");
-    if (!(x->gamemask & DOOM1_BIT))
+    if (!(x->gamemask & SLUMP_DOOM1_BIT))
         printf("noDoom1 ");
-    if (!(x->gamemask & DOOM2_BIT))
+    if (!(x->gamemask & SLUMP_DOOM2_BIT))
         printf("noDoom2 ");
-    if (!(x->gamemask & DOOMI_BIT))
+    if (!(x->gamemask & SLUMP_DOOMI_BIT))
         printf("custom ");
-    if (!(x->gamemask & DOOMC_BIT))
+    if (!(x->gamemask & SLUMP_DOOMC_BIT))
         printf("gross ");
     printf("\n");
     printf("  ");
@@ -9914,41 +9934,41 @@ void dump_foo_texture(texture *t, config *c)
     printf("t %s ", t->name);
     if ((t->width != 256) || (t->height != 128))
         printf("z %d %d ", t->width, t->height);
-    if (t->props & WALL)
+    if (t->props & SLUMP_WALL)
         printf("w ");
-    if (t->props & SWITCH)
+    if (t->props & SLUMP_SWITCH)
         printf("i ");
-    if (t->props & LIFT_TEXTURE)
+    if (t->props & SLUMP_LIFT_TEXTURE)
         printf("F ");
-    if (t->props & SUPPORT)
+    if (t->props & SLUMP_SUPPORT)
         printf("I ");
-    if (t->props & JAMB)
+    if (t->props & SLUMP_JAMB)
         printf("j ");
-    if (t->props & STEP)
+    if (t->props & SLUMP_STEP)
         printf("e ");
-    if (t->props & GRATING)
+    if (t->props & SLUMP_GRATING)
         printf("g ");
-    if (t->props & PLAQUE)
+    if (t->props & SLUMP_PLAQUE)
         printf("p ");
-    if (t->props & VTILES)
+    if (t->props & SLUMP_VTILES)
         printf("v ");
-    if (t->props & HALF_PLAQUE)
+    if (t->props & SLUMP_HALF_PLAQUE)
         printf("H ");
-    if (t->props & LIGHT)
+    if (t->props & SLUMP_LIGHT)
         printf("l ");
-    if (t->props & EXITSWITCH)
+    if (t->props & SLUMP_EXITSWITCH)
         printf("E ");
-    if (t->props & DOOR)
+    if (t->props & SLUMP_DOOR)
         printf("d ");
-    if (t->props & GATE)
+    if (t->props & SLUMP_GATE)
         printf("L ");
-    if (t->props & OUTDOOR)
+    if (t->props & SLUMP_OUTDOOR)
         printf("o ");
-    if (t->props & RED)
+    if (t->props & SLUMP_RED)
         printf("r ");
-    if (t->props & BLUE)
+    if (t->props & SLUMP_BLUE)
         printf("b ");
-    if (t->props & YELLOW)
+    if (t->props & SLUMP_YELLOW)
         printf("y ");
     if (t == c->error_texture)
         printf("! ");
@@ -9966,15 +9986,15 @@ void dump_foo_texture(texture *t, config *c)
         printf("Y %d ", t->y_bias);
     if (5 != t->y_hint)
         printf("@ %d ", t->y_hint);
-    if (!(t->gamemask & DOOM0_BIT))
+    if (!(t->gamemask & SLUMP_DOOM0_BIT))
         printf("0 ");
-    if (!(t->gamemask & DOOM1_BIT))
+    if (!(t->gamemask & SLUMP_DOOM1_BIT))
         printf("1 ");
-    if (!(t->gamemask & DOOM2_BIT))
+    if (!(t->gamemask & SLUMP_DOOM2_BIT))
         printf("2 ");
-    if (!(t->gamemask & DOOMI_BIT))
+    if (!(t->gamemask & SLUMP_DOOMI_BIT))
         printf("u ");
-    if (!(t->gamemask & DOOMC_BIT))
+    if (!(t->gamemask & SLUMP_DOOMC_BIT))
         printf("Q ");
     printf("\n");
 }
@@ -9983,34 +10003,34 @@ void dump_foo_flat(flat *f, config *c)
 {
     printf("f %s ", f->name);
 
-    if (f->props & FLOOR)
+    if (f->props & SLUMP_FLOOR)
         printf("D ");
-    if (f->props & CEILING)
+    if (f->props & SLUMP_CEILING)
         printf("U ");
-    if (f->props & LIGHT)
+    if (f->props & SLUMP_LIGHT)
         printf("l ");
-    if (f->props & NUKAGE)
+    if (f->props & SLUMP_NUKAGE)
         printf("n ");
-    if (f->props & OUTDOOR)
+    if (f->props & SLUMP_OUTDOOR)
         printf("o ");
-    if (f->props & GATE)
+    if (f->props & SLUMP_GATE)
         printf("G ");
-    if (f->props & RED)
+    if (f->props & SLUMP_RED)
         printf("r ");
     if (f == c->sky_flat)
         printf("K ");
     if (f == c->water_flat)
         printf("W ");
     dump_foo_themebits(f->compatible, 0, "c", c);
-    if (!(f->gamemask & DOOM0_BIT))
+    if (!(f->gamemask & SLUMP_DOOM0_BIT))
         printf("0 ");
-    if (!(f->gamemask & DOOM1_BIT))
+    if (!(f->gamemask & SLUMP_DOOM1_BIT))
         printf("1 ");
-    if (!(f->gamemask & DOOM2_BIT))
+    if (!(f->gamemask & SLUMP_DOOM2_BIT))
         printf("2 ");
-    if (!(f->gamemask & DOOMI_BIT))
+    if (!(f->gamemask & SLUMP_DOOMI_BIT))
         printf("u ");
-    if (!(f->gamemask & DOOMC_BIT))
+    if (!(f->gamemask & SLUMP_DOOMC_BIT))
         printf("G ");
     printf("\n");
 }
@@ -10031,15 +10051,15 @@ void dump_foo_construct(construct *x, config *c)
     printf("x m %d h %d ", x->family, x->height);
 
     dump_foo_themebits(x->compatible, 0, "c", c);
-    if (!(x->gamemask & DOOM0_BIT))
+    if (!(x->gamemask & SLUMP_DOOM0_BIT))
         printf("0 ");
-    if (!(x->gamemask & DOOM1_BIT))
+    if (!(x->gamemask & SLUMP_DOOM1_BIT))
         printf("1 ");
-    if (!(x->gamemask & DOOM2_BIT))
+    if (!(x->gamemask & SLUMP_DOOM2_BIT))
         printf("2 ");
-    if (!(x->gamemask & DOOMI_BIT))
+    if (!(x->gamemask & SLUMP_DOOMI_BIT))
         printf("u ");
-    if (!(x->gamemask & DOOMC_BIT))
+    if (!(x->gamemask & SLUMP_DOOMC_BIT))
         printf("G ");
     printf("\n");
     for (fc = x->flat_cell_anchor; fc; fc = fc->next)
@@ -10085,116 +10105,116 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     genus *m;
 
     /* get these obstacles registered as non-pickables */
-    if (c->gamemask & HACX_BIT)
+    if (c->gamemask & SLUMP_HACX_BIT)
     {
         // Hacx decor
-        m = find_genus(c, ID_BARREL);
-        m->bits &= ~PICKABLE;
-        m->bits |= EXPLODES;
+        m = find_genus(c, SLUMP_ID_BARREL);
+        m->bits &= ~SLUMP_PICKABLE;
+        m->bits |= SLUMP_EXPLODES;
         m->width    = 33;
-        m->gamemask = HACX_BIT;
-        m           = find_genus(c, ID_CEILINGLAMP);
-        m->bits &= ~PICKABLE;
-        m->bits |= LIGHT;
+        m->gamemask = SLUMP_HACX_BIT;
+        m           = find_genus(c, SLUMP_ID_CEILINGLAMP);
+        m->bits &= ~SLUMP_PICKABLE;
+        m->bits |= SLUMP_LIGHT;
         m->width    = 33;
         m->height   = 32;
-        m->gamemask = HACX_BIT;
-        m           = find_genus(c, ID_TALLCEILINGLAMP);
-        m->bits &= ~PICKABLE;
-        m->bits |= LIGHT;
+        m->gamemask = SLUMP_HACX_BIT;
+        m           = find_genus(c, SLUMP_ID_TALLCEILINGLAMP);
+        m->bits &= ~SLUMP_PICKABLE;
+        m->bits |= SLUMP_LIGHT;
         m->width    = 33;
         m->height   = 64;
-        m->gamemask = HACX_BIT;
-        m           = find_genus(c, ID_FLOORLAMP);
-        m->bits &= ~PICKABLE;
-        m->bits |= LIGHT;
+        m->gamemask = SLUMP_HACX_BIT;
+        m           = find_genus(c, SLUMP_ID_FLOORLAMP);
+        m->bits &= ~SLUMP_PICKABLE;
+        m->bits |= SLUMP_LIGHT;
         m->width    = 33;
         m->height   = 128;
-        m->gamemask = HACX_BIT;
+        m->gamemask = SLUMP_HACX_BIT;
 
         // Hacx ammo (pretty much the same as Doom ammo)
-        m = find_genus(c, ID_ROCKBOX);
-        m->bits |= AMMO;
+        m = find_genus(c, SLUMP_ID_ROCKBOX);
+        m->bits |= SLUMP_AMMO;
         m->ammo_provides = (float)500;
-        m                = find_genus(c, ID_BULBOX);
-        m->bits |= AMMO;
+        m                = find_genus(c, SLUMP_ID_BULBOX);
+        m->bits |= SLUMP_AMMO;
         m->ammo_provides = (float)500;
-        m                = find_genus(c, ID_CELLPACK);
-        m->bits |= AMMO;
+        m                = find_genus(c, SLUMP_ID_CELLPACK);
+        m->bits |= SLUMP_AMMO;
         m->ammo_provides = (float)2000; /* Hoo-hoo!  Same for BFG as plasgun? */
     }
-    else if (!(c->gamemask & HERETIC_BIT))
+    else if (!(c->gamemask & SLUMP_HERETIC_BIT))
     {
-        m = find_genus(c, ID_LAMP);
-        m->bits &= ~PICKABLE;
-        m->bits |= LIGHT;
+        m = find_genus(c, SLUMP_ID_LAMP);
+        m->bits &= ~SLUMP_PICKABLE;
+        m->bits |= SLUMP_LIGHT;
         m->width = 33;
-        if (!(c->gamemask & CHEX_BIT))
+        if (!(c->gamemask & SLUMP_CHEX_BIT))
         {
-            m = find_genus(c, ID_ELEC);
-            m->bits &= ~PICKABLE;
-            m->bits |= LIGHT;
+            m = find_genus(c, SLUMP_ID_ELEC);
+            m->bits &= ~SLUMP_PICKABLE;
+            m->bits |= SLUMP_LIGHT;
             m->width  = 33;
             m->height = 127; /* About */
         }
-        m = find_genus(c, ID_LAMP2);
-        m->bits &= ~PICKABLE;
-        m->bits |= LIGHT;
+        m = find_genus(c, SLUMP_ID_LAMP2);
+        m->bits &= ~SLUMP_PICKABLE;
+        m->bits |= SLUMP_LIGHT;
         m->width    = 33;
-        m->gamemask = DOOM2_BIT | DOOMC_BIT | DOOMI_BIT;
-        m           = find_genus(c, ID_TLAMP2);
-        m->bits &= ~PICKABLE;
-        m->bits |= LIGHT;
+        m->gamemask = SLUMP_DOOM2_BIT | SLUMP_DOOMC_BIT | SLUMP_DOOMI_BIT;
+        m           = find_genus(c, SLUMP_ID_TLAMP2);
+        m->bits &= ~SLUMP_PICKABLE;
+        m->bits |= SLUMP_LIGHT;
         m->width    = 33;
         m->height   = 72; /* Very roughly */
-        m->gamemask = DOOM2_BIT | DOOMC_BIT | DOOMI_BIT;
-        if (!(c->gamemask & CHEX_BIT))
+        m->gamemask = SLUMP_DOOM2_BIT | SLUMP_DOOMC_BIT | SLUMP_DOOMI_BIT;
+        if (!(c->gamemask & SLUMP_CHEX_BIT))
         {
-            m = find_genus(c, ID_SHORTRED);
-            m->bits &= ~PICKABLE;
-            m->bits |= LIGHT;
+            m = find_genus(c, SLUMP_ID_SHORTRED);
+            m->bits &= ~SLUMP_PICKABLE;
+            m->bits |= SLUMP_LIGHT;
             m->width = 33;
-            m        = find_genus(c, ID_SHORTBLUE);
-            m->bits &= ~PICKABLE;
-            m->bits |= LIGHT;
+            m        = find_genus(c, SLUMP_ID_SHORTBLUE);
+            m->bits &= ~SLUMP_PICKABLE;
+            m->bits |= SLUMP_LIGHT;
             m->width = 33;
-            m        = find_genus(c, ID_SHORTGREEN);
-            m->bits &= ~PICKABLE;
-            m->bits |= LIGHT;
+            m        = find_genus(c, SLUMP_ID_SHORTGREEN);
+            m->bits &= ~SLUMP_PICKABLE;
+            m->bits |= SLUMP_LIGHT;
             m->width = 33;
-            m        = find_genus(c, ID_TALLRED);
-            m->bits &= ~PICKABLE;
-            m->bits |= LIGHT;
+            m        = find_genus(c, SLUMP_ID_TALLRED);
+            m->bits &= ~SLUMP_PICKABLE;
+            m->bits |= SLUMP_LIGHT;
             m->width  = 33;
             m->height = 127; /* sure */
-            m         = find_genus(c, ID_TALLBLUE);
-            m->bits &= ~PICKABLE;
-            m->bits |= LIGHT;
+            m         = find_genus(c, SLUMP_ID_TALLBLUE);
+            m->bits &= ~SLUMP_PICKABLE;
+            m->bits |= SLUMP_LIGHT;
             m->width  = 33;
             m->height = 127; /* sure */
-            m         = find_genus(c, ID_TALLGREEN);
-            m->bits &= ~PICKABLE;
-            m->bits |= LIGHT;
+            m         = find_genus(c, SLUMP_ID_TALLGREEN);
+            m->bits &= ~SLUMP_PICKABLE;
+            m->bits |= SLUMP_LIGHT;
             m->width  = 33;
             m->height = 127; /* sure */
-            m         = find_genus(c, ID_CBRA);
-            m->bits &= ~PICKABLE;
-            m->bits |= LIGHT;
+            m         = find_genus(c, SLUMP_ID_CBRA);
+            m->bits &= ~SLUMP_PICKABLE;
+            m->bits |= SLUMP_LIGHT;
             m->width    = 33;
             m->height   = 72; /* about */
-            m           = find_genus(c, ID_FBARREL);
-            m->gamemask = DOOM2_BIT | DOOMC_BIT | DOOMI_BIT;
-            m->bits &= ~PICKABLE;
-            m->bits |= LIGHT;
+            m           = find_genus(c, SLUMP_ID_FBARREL);
+            m->gamemask = SLUMP_DOOM2_BIT | SLUMP_DOOMC_BIT | SLUMP_DOOMI_BIT;
+            m->bits &= ~SLUMP_PICKABLE;
+            m->bits |= SLUMP_LIGHT;
             m->width = 33;
-            m        = find_genus(c, ID_BARREL);
-            m->bits &= ~PICKABLE;
-            m->bits |= EXPLODES;
+            m        = find_genus(c, SLUMP_ID_BARREL);
+            m->bits &= ~SLUMP_PICKABLE;
+            m->bits |= SLUMP_EXPLODES;
             m->width = 33;
             /* pretend the candle is pickable; really just "not blocking" */
-            m = find_genus(c, ID_CANDLE);
-            m->bits |= PICKABLE;
-            m->bits |= LIGHT;
+            m = find_genus(c, SLUMP_ID_CANDLE);
+            m->bits |= SLUMP_PICKABLE;
+            m->bits |= SLUMP_LIGHT;
             m->width = 16;
         }
 
@@ -10202,69 +10222,69 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
         /* at least the ones that we need for arenas! */
 
         // Doom ammo
-        m = find_genus(c, ID_ROCKBOX);
-        m->bits |= AMMO;
+        m = find_genus(c, SLUMP_ID_ROCKBOX);
+        m->bits |= SLUMP_AMMO;
         m->ammo_provides = (float)500;
-        m                = find_genus(c, ID_BULBOX);
-        m->bits |= AMMO;
+        m                = find_genus(c, SLUMP_ID_BULBOX);
+        m->bits |= SLUMP_AMMO;
         m->ammo_provides = (float)500;
-        m                = find_genus(c, ID_CELLPACK);
-        m->bits |= AMMO;
+        m                = find_genus(c, SLUMP_ID_CELLPACK);
+        m->bits |= SLUMP_AMMO;
         m->ammo_provides = (float)2000; /* Hoo-hoo!  Same for BFG as plasgun? */
     }
-    else if (c->gamemask & HERETIC_BIT)
+    else if (c->gamemask & SLUMP_HERETIC_BIT)
     {
         // Heretic decor
-        m = find_genus(c, ID_POD);
-        m->bits &= ~PICKABLE;
-        m->bits |= EXPLODES;
+        m = find_genus(c, SLUMP_ID_POD);
+        m->bits &= ~SLUMP_PICKABLE;
+        m->bits |= SLUMP_EXPLODES;
         m->width    = 33;
-        m->gamemask = HERETIC_BIT;
-        m           = find_genus(c, ID_SERPENTTORCH);
-        m->bits &= ~PICKABLE;
-        m->bits |= LIGHT;
+        m->gamemask = SLUMP_HERETIC_BIT;
+        m           = find_genus(c, SLUMP_ID_SERPENTTORCH);
+        m->bits &= ~SLUMP_PICKABLE;
+        m->bits |= SLUMP_LIGHT;
         m->width    = 33;
-        m->gamemask = HERETIC_BIT;
-        m           = find_genus(c, ID_FIREBRAZIER);
-        m->bits &= ~PICKABLE;
-        m->bits |= LIGHT;
+        m->gamemask = SLUMP_HERETIC_BIT;
+        m           = find_genus(c, SLUMP_ID_FIREBRAZIER);
+        m->bits &= ~SLUMP_PICKABLE;
+        m->bits |= SLUMP_LIGHT;
         m->width    = 33;
-        m->gamemask = HERETIC_BIT;
+        m->gamemask = SLUMP_HERETIC_BIT;
 
         // Heretic ammo (just the big ones?)
-        m = find_genus(c, ID_CRYSTALGEODE);
-        m->bits |= AMMO;
+        m = find_genus(c, SLUMP_ID_CRYSTALGEODE);
+        m->bits |= SLUMP_AMMO;
         m->ammo_provides = (float)500;
-        m                = find_genus(c, ID_ETHEREALQUIVER);
-        m->bits |= AMMO;
+        m                = find_genus(c, SLUMP_ID_ETHEREALQUIVER);
+        m->bits |= SLUMP_AMMO;
         m->ammo_provides = (float)500;
-        m                = find_genus(c, ID_ENERGYORB);
-        m->bits |= AMMO;
+        m                = find_genus(c, SLUMP_ID_ENERGYORB);
+        m->bits |= SLUMP_AMMO;
         m->ammo_provides = (float)500;
-        m                = find_genus(c, ID_GREATERRUNES);
-        m->bits |= AMMO;
+        m                = find_genus(c, SLUMP_ID_GREATERRUNES);
+        m->bits |= SLUMP_AMMO;
         m->ammo_provides = (float)500;
-        m                = find_genus(c, ID_INFERNOORB);
-        m->bits |= AMMO;
+        m                = find_genus(c, SLUMP_ID_INFERNOORB);
+        m->bits |= SLUMP_AMMO;
         m->ammo_provides = (float)500;
-        m                = find_genus(c, ID_MACESPHEREPILE);
-        m->bits |= AMMO;
+        m                = find_genus(c, SLUMP_ID_MACESPHEREPILE);
+        m->bits |= SLUMP_AMMO;
         m->ammo_provides = (float)500;
     }
 
     /* violence and mayhem */
-    c->usualammo[ITYTD]   = 5000;
-    c->usualammo[HMP]     = 3500; /* or 3k? */
-    c->usualammo[UV]      = 3500; /* or 2k? or 3k? */
-    c->usualarmor[ITYTD]  = 100;
-    c->usualarmor[HMP]    = 50;
-    c->usualarmor[UV]     = 30;   /* or 20 */
-    c->usualhealth[ITYTD] = 80;
-    c->usualhealth[HMP]   = 65;
-    c->usualhealth[UV]    = 55;
-    c->minhealth[ITYTD]   = 50;
-    c->minhealth[HMP]     = 35;
-    c->minhealth[UV]      = 20;
+    c->usualammo[SLUMP_ITYTD]   = 5000;
+    c->usualammo[SLUMP_HMP]     = 3500; /* or 3k? */
+    c->usualammo[SLUMP_UV]      = 3500; /* or 2k? or 3k? */
+    c->usualarmor[SLUMP_ITYTD]  = 100;
+    c->usualarmor[SLUMP_HMP]    = 50;
+    c->usualarmor[SLUMP_UV]     = 30;   /* or 20 */
+    c->usualhealth[SLUMP_ITYTD] = 80;
+    c->usualhealth[SLUMP_HMP]   = 65;
+    c->usualhealth[SLUMP_UV]    = 55;
+    c->minhealth[SLUMP_ITYTD]   = 50;
+    c->minhealth[SLUMP_HMP]     = 35;
+    c->minhealth[SLUMP_UV]      = 20;
     /* We have a level progression:
      * 1) Trooper (non-shooting zombie)
      * 1) Imp (cobra-like think in FreeDoom)
@@ -10276,270 +10296,271 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
      * 11) Head
      */
     /* Description of monsters */
-    if (!(c->gamemask & (HERETIC_BIT | HARMONY_BIT | HACX_BIT)))
+    if (!(c->gamemask & (SLUMP_HERETIC_BIT | SLUMP_HARMONY_BIT | SLUMP_HACX_BIT)))
     {
-        m                      = find_monster(c, ID_TROOPER);
-        m->width               = 42;
-        m->ammo_provides       = (float)100;
-        m->ammo_to_kill[ITYTD] = (float)55;
-        m->ammo_to_kill[HMP]   = (float)35;
-        m->ammo_to_kill[UV]    = (float)30;
-        m->damage[ITYTD]       = (float)15;
-        m->damage[HMP]         = (float)3;
-        m->damage[UV]          = (float)1;
-        m->altdamage[ITYTD]    = (float)10;
-        m->altdamage[HMP]      = (float)1;
-        m->altdamage[UV]       = (float)1;
-        m->bits |= SHOOTS;
+        m                            = find_monster(c, SLUMP_ID_TROOPER);
+        m->width                     = 42;
+        m->ammo_provides             = (float)100;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)55;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)35;
+        m->ammo_to_kill[SLUMP_UV]    = (float)30;
+        m->damage[SLUMP_ITYTD]       = (float)15;
+        m->damage[SLUMP_HMP]         = (float)3;
+        m->damage[SLUMP_UV]          = (float)1;
+        m->altdamage[SLUMP_ITYTD]    = (float)10;
+        m->altdamage[SLUMP_HMP]      = (float)1;
+        m->altdamage[SLUMP_UV]       = (float)1;
+        m->bits |= SLUMP_SHOOTS;
         m->min_level = 1;
         /* Tropper with gun */
-        m                      = find_monster(c, ID_SERGEANT);
-        m->width               = 42;
-        m->ammo_provides       = (float)280;
-        m->ammo_to_kill[ITYTD] = (float)80;
-        m->ammo_to_kill[HMP]   = (float)50;
-        m->ammo_to_kill[UV]    = (float)40;
-        m->damage[ITYTD]       = (float)25;
-        m->damage[HMP]         = (float)6;
-        m->damage[UV]          = (float)2;
-        m->altdamage[ITYTD]    = (float)20;
-        m->altdamage[HMP]      = (float)2;
-        m->altdamage[UV]       = (float)1;
-        m->bits |= SHOOTS;
+        m                            = find_monster(c, SLUMP_ID_SERGEANT);
+        m->width                     = 42;
+        m->ammo_provides             = (float)280;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)80;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)50;
+        m->ammo_to_kill[SLUMP_UV]    = (float)40;
+        m->damage[SLUMP_ITYTD]       = (float)25;
+        m->damage[SLUMP_HMP]         = (float)6;
+        m->damage[SLUMP_UV]          = (float)2;
+        m->altdamage[SLUMP_ITYTD]    = (float)20;
+        m->altdamage[SLUMP_HMP]      = (float)2;
+        m->altdamage[SLUMP_UV]       = (float)1;
+        m->bits |= SLUMP_SHOOTS;
         m->min_level = 2;
         /* Imp */
-        m                      = find_monster(c, ID_IMP);
-        m->width               = 42;
-        m->ammo_provides       = (float)0;
-        m->ammo_to_kill[ITYTD] = (float)160;
-        m->ammo_to_kill[HMP]   = (float)95;
-        m->ammo_to_kill[UV]    = (float)80;
-        m->damage[ITYTD]       = (float)20;
-        m->damage[HMP]         = (float)6;
-        m->damage[UV]          = (float)3;
-        m->altdamage[ITYTD]    = (float)20;
-        m->altdamage[HMP]      = (float)5;
-        m->altdamage[UV]       = (float)2;
-        m->bits |= SHOOTS;
+        m                            = find_monster(c, SLUMP_ID_IMP);
+        m->width                     = 42;
+        m->ammo_provides             = (float)0;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)160;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)95;
+        m->ammo_to_kill[SLUMP_UV]    = (float)80;
+        m->damage[SLUMP_ITYTD]       = (float)20;
+        m->damage[SLUMP_HMP]         = (float)6;
+        m->damage[SLUMP_UV]          = (float)3;
+        m->altdamage[SLUMP_ITYTD]    = (float)20;
+        m->altdamage[SLUMP_HMP]      = (float)5;
+        m->altdamage[SLUMP_UV]       = (float)2;
+        m->bits |= SLUMP_SHOOTS;
         m->min_level = 1;
         /* Pinky */
-        m                      = find_monster(c, ID_PINK);
-        m->width               = 62;
-        m->ammo_provides       = (float)0;
-        m->ammo_to_kill[ITYTD] = (float)385;
-        m->ammo_to_kill[HMP]   = (float)236;
-        m->ammo_to_kill[UV]    = (float)195;
-        m->damage[ITYTD]       = (float)25;
-        m->damage[HMP]         = (float)10;
-        m->damage[UV]          = (float)8;
-        m->altdamage[ITYTD]    = (float)20;
-        m->altdamage[HMP]      = (float)8;
-        m->altdamage[UV]       = (float)4;
-        m->min_level           = 3;
-        if (!(c->gamemask & (CHEX_BIT)))
+        m                            = find_monster(c, SLUMP_ID_PINK);
+        m->width                     = 62;
+        m->ammo_provides             = (float)0;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)385;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)236;
+        m->ammo_to_kill[SLUMP_UV]    = (float)195;
+        m->damage[SLUMP_ITYTD]       = (float)25;
+        m->damage[SLUMP_HMP]         = (float)10;
+        m->damage[SLUMP_UV]          = (float)8;
+        m->altdamage[SLUMP_ITYTD]    = (float)20;
+        m->altdamage[SLUMP_HMP]      = (float)8;
+        m->altdamage[SLUMP_UV]       = (float)4;
+        m->min_level                 = 3;
+        if (!(c->gamemask & (SLUMP_CHEX_BIT)))
         {
             /* Invisible pinky */
-            m                      = find_monster(c, ID_SPECTRE);
-            m->width               = 62;
-            m->ammo_provides       = (float)0;
-            m->ammo_to_kill[ITYTD] = (float)410;
-            m->ammo_to_kill[HMP]   = (float)260;
-            m->ammo_to_kill[UV]    = (float)220;
-            m->damage[ITYTD]       = (float)25;
-            m->damage[HMP]         = (float)10;
-            m->damage[UV]          = (float)8;
-            m->altdamage[ITYTD]    = (float)25;
-            m->altdamage[HMP]      = (float)8;
-            m->altdamage[UV]       = (float)6;
-            m->min_level           = 7;
+            m                            = find_monster(c, SLUMP_ID_SPECTRE);
+            m->width                     = 62;
+            m->ammo_provides             = (float)0;
+            m->ammo_to_kill[SLUMP_ITYTD] = (float)410;
+            m->ammo_to_kill[SLUMP_HMP]   = (float)260;
+            m->ammo_to_kill[SLUMP_UV]    = (float)220;
+            m->damage[SLUMP_ITYTD]       = (float)25;
+            m->damage[SLUMP_HMP]         = (float)10;
+            m->damage[SLUMP_UV]          = (float)8;
+            m->altdamage[SLUMP_ITYTD]    = (float)25;
+            m->altdamage[SLUMP_HMP]      = (float)8;
+            m->altdamage[SLUMP_UV]       = (float)6;
+            m->min_level                 = 7;
             /* Floating head */
-            m        = find_monster(c, ID_SKULL);
+            m        = find_monster(c, SLUMP_ID_SKULL);
             m->width = 34;
-            m->bits |= BIG; /* Well, sort of! */
-            m->ammo_provides       = (float)0;
-            m->ammo_to_kill[ITYTD] = (float)260;
-            m->ammo_to_kill[HMP]   = (float)165;
-            m->ammo_to_kill[UV]    = (float)130;
-            m->damage[ITYTD]       = (float)22;
-            m->damage[HMP]         = (float)8;
-            m->damage[UV]          = (float)5;
-            m->altdamage[ITYTD]    = (float)18;
-            m->altdamage[HMP]      = (float)5;
-            m->altdamage[UV]       = (float)2;
-            m->bits |= FLIES;
+            m->bits |= SLUMP_BIG; /* Well, sort of! */
+            m->ammo_provides             = (float)0;
+            m->ammo_to_kill[SLUMP_ITYTD] = (float)260;
+            m->ammo_to_kill[SLUMP_HMP]   = (float)165;
+            m->ammo_to_kill[SLUMP_UV]    = (float)130;
+            m->damage[SLUMP_ITYTD]       = (float)22;
+            m->damage[SLUMP_HMP]         = (float)8;
+            m->damage[SLUMP_UV]          = (float)5;
+            m->altdamage[SLUMP_ITYTD]    = (float)18;
+            m->altdamage[SLUMP_HMP]      = (float)5;
+            m->altdamage[SLUMP_UV]       = (float)2;
+            m->bits |= SLUMP_FLIES;
             m->min_level = 6;
             /* Spider thing (I think) */
-            m        = find_monster(c, ID_HEAD);
+            m        = find_monster(c, SLUMP_ID_HEAD);
             m->width = 63; /* Or 62 or maybe 64 */
-            m->bits |= BIG;
-            m->ammo_provides       = (float)0;
-            m->ammo_to_kill[ITYTD] = (float)1050;
-            m->ammo_to_kill[HMP]   = (float)630;
-            m->ammo_to_kill[UV]    = (float)590;
-            m->damage[ITYTD]       = (float)60;
-            m->damage[HMP]         = (float)35;
-            m->damage[UV]          = (float)18;
-            m->altdamage[ITYTD]    = (float)50;
-            m->altdamage[HMP]      = (float)20;
-            m->altdamage[UV]       = (float)10;
-            m->bits |= SHOOTS;
-            m->bits |= FLIES;
+            m->bits |= SLUMP_BIG;
+            m->ammo_provides             = (float)0;
+            m->ammo_to_kill[SLUMP_ITYTD] = (float)1050;
+            m->ammo_to_kill[SLUMP_HMP]   = (float)630;
+            m->ammo_to_kill[SLUMP_UV]    = (float)590;
+            m->damage[SLUMP_ITYTD]       = (float)60;
+            m->damage[SLUMP_HMP]         = (float)35;
+            m->damage[SLUMP_UV]          = (float)18;
+            m->altdamage[SLUMP_ITYTD]    = (float)50;
+            m->altdamage[SLUMP_HMP]      = (float)20;
+            m->altdamage[SLUMP_UV]       = (float)10;
+            m->bits |= SLUMP_SHOOTS;
+            m->bits |= SLUMP_FLIES;
             m->min_level = 11;
         }
         /* Baron of Hell */
-        m         = find_monster(c, ID_BARON);
-        m->width  = 50;                       /* Roughly */
+        m         = find_monster(c, SLUMP_ID_BARON);
+        m->width  = 50;                             /* Roughly */
         m->height = 64;
-        m->bits |= BIG | BOSS;                /* Not placed randomly */
-        m->ammo_provides       = (float)0;
-        m->ammo_to_kill[ITYTD] = (float)1900; /* Numbers are all guesses; fix */
-        m->ammo_to_kill[HMP]   = (float)1600;
-        m->ammo_to_kill[UV]    = (float)1500;
-        m->damage[ITYTD]       = (float)80;
-        m->damage[HMP]         = (float)40;
-        m->damage[UV]          = (float)25;
-        m->altdamage[ITYTD]    = (float)70;
-        m->altdamage[HMP]      = (float)25;
-        m->altdamage[UV]       = (float)18;
-        m->bits |= SHOOTS;
+        m->bits |= SLUMP_BIG | SLUMP_BOSS;          /* Not placed randomly */
+        m->ammo_provides             = (float)0;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)1900; /* Numbers are all guesses; fix */
+        m->ammo_to_kill[SLUMP_HMP]   = (float)1600;
+        m->ammo_to_kill[SLUMP_UV]    = (float)1500;
+        m->damage[SLUMP_ITYTD]       = (float)80;
+        m->damage[SLUMP_HMP]         = (float)40;
+        m->damage[SLUMP_UV]          = (float)25;
+        m->altdamage[SLUMP_ITYTD]    = (float)70;
+        m->altdamage[SLUMP_HMP]      = (float)25;
+        m->altdamage[SLUMP_UV]       = (float)18;
+        m->bits |= SLUMP_SHOOTS;
         m->min_level = 12;
 
         /* Other bosses; need to fill in data! */
-        if (!(c->gamemask & (CHEX_BIT)))
+        if (!(c->gamemask & (SLUMP_CHEX_BIT)))
         {
-            m         = find_monster(c, ID_CYBER);
+            m         = find_monster(c, SLUMP_ID_CYBER);
             m->width  = 84;
             m->height = 110;
-            m->bits |= BIG | BOSS;
-            m->ammo_provides       = (float)0;
-            m->ammo_to_kill[ITYTD] = (float)8000; /* Numbers are all guesses; fix */
-            m->ammo_to_kill[HMP]   = (float)6500;
-            m->ammo_to_kill[UV]    = (float)6200;
-            m                      = find_monster(c, ID_SPIDERBOSS);
-            m->width               = 260;
-            m->height              = 100;
-            m->bits |= BIG | BOSS;
-            m->ammo_provides       = (float)0;
-            m->ammo_to_kill[ITYTD] = (float)6000; /* Numbers are all guesses; fix */
-            m->ammo_to_kill[HMP]   = (float)5000;
-            m->ammo_to_kill[UV]    = (float)4500;
-            m->min_level           = 17;
+            m->bits |= SLUMP_BIG | SLUMP_BOSS;
+            m->ammo_provides             = (float)0;
+            m->ammo_to_kill[SLUMP_ITYTD] = (float)8000; /* Numbers are all guesses; fix */
+            m->ammo_to_kill[SLUMP_HMP]   = (float)6500;
+            m->ammo_to_kill[SLUMP_UV]    = (float)6200;
+            m                            = find_monster(c, SLUMP_ID_SPIDERBOSS);
+            m->width                     = 260;
+            m->height                    = 100;
+            m->bits |= SLUMP_BIG | SLUMP_BOSS;
+            m->ammo_provides             = (float)0;
+            m->ammo_to_kill[SLUMP_ITYTD] = (float)6000; /* Numbers are all guesses; fix */
+            m->ammo_to_kill[SLUMP_HMP]   = (float)5000;
+            m->ammo_to_kill[SLUMP_UV]    = (float)4500;
+            m->min_level                 = 17;
         }
     }
 
     /* DOOM2 monsters */
-    if (!(c->gamemask & (DOOM0_BIT | DOOM1_BIT | HERETIC_BIT | CHEX_BIT | HACX_BIT | HARMONY_BIT)))
+    if (!(c->gamemask & (SLUMP_DOOM0_BIT | SLUMP_DOOM1_BIT | SLUMP_HERETIC_BIT | SLUMP_CHEX_BIT | SLUMP_HACX_BIT |
+                         SLUMP_HARMONY_BIT)))
     {
-        m                      = find_monster(c, ID_NAZI);
-        m->gamemask            = DOOM2_BIT;
-        m->width               = 42;
-        m->ammo_to_kill[ITYTD] = (float)117;
-        m->ammo_to_kill[HMP]   = (float)78;
-        m->ammo_to_kill[UV]    = (float)65;
-        m->damage[ITYTD]       = (float)40;
-        m->damage[HMP]         = (float)14;
-        m->damage[UV]          = (float)7;
-        m->altdamage[ITYTD]    = (float)27;
-        m->altdamage[HMP]      = (float)10;
-        m->altdamage[UV]       = (float)4;
-        m->bits |= SHOOTS | SPECIAL;
-        m->min_level           = 1;
-        m                      = find_monster(c, ID_COMMANDO);
-        m->gamemask            = DOOM2_BIT;
-        m->width               = 42;
-        m->ammo_provides       = (float)100;
-        m->ammo_to_kill[ITYTD] = (float)155;
-        m->ammo_to_kill[HMP]   = (float)106;
-        m->ammo_to_kill[UV]    = (float)90;
-        m->damage[ITYTD]       = (float)60;
-        m->damage[HMP]         = (float)25;
-        m->damage[UV]          = (float)15;
-        m->altdamage[ITYTD]    = (float)40;
-        m->altdamage[HMP]      = (float)20;
-        m->altdamage[UV]       = (float)10;
-        m->bits |= SHOOTS;
+        m                            = find_monster(c, SLUMP_ID_NAZI);
+        m->gamemask                  = SLUMP_DOOM2_BIT;
+        m->width                     = 42;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)117;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)78;
+        m->ammo_to_kill[SLUMP_UV]    = (float)65;
+        m->damage[SLUMP_ITYTD]       = (float)40;
+        m->damage[SLUMP_HMP]         = (float)14;
+        m->damage[SLUMP_UV]          = (float)7;
+        m->altdamage[SLUMP_ITYTD]    = (float)27;
+        m->altdamage[SLUMP_HMP]      = (float)10;
+        m->altdamage[SLUMP_UV]       = (float)4;
+        m->bits |= SLUMP_SHOOTS | SLUMP_SPECIAL;
+        m->min_level                 = 1;
+        m                            = find_monster(c, SLUMP_ID_COMMANDO);
+        m->gamemask                  = SLUMP_DOOM2_BIT;
+        m->width                     = 42;
+        m->ammo_provides             = (float)100;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)155;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)106;
+        m->ammo_to_kill[SLUMP_UV]    = (float)90;
+        m->damage[SLUMP_ITYTD]       = (float)60;
+        m->damage[SLUMP_HMP]         = (float)25;
+        m->damage[SLUMP_UV]          = (float)15;
+        m->altdamage[SLUMP_ITYTD]    = (float)40;
+        m->altdamage[SLUMP_HMP]      = (float)20;
+        m->altdamage[SLUMP_UV]       = (float)10;
+        m->bits |= SLUMP_SHOOTS;
         m->min_level = 5;
-        m            = find_monster(c, ID_SKEL);
-        m->gamemask  = DOOM2_BIT;
+        m            = find_monster(c, SLUMP_ID_SKEL);
+        m->gamemask  = SLUMP_DOOM2_BIT;
         m->width     = 42;
-        m->bits |= BIG;
-        m->ammo_provides       = (float)0;
-        m->ammo_to_kill[ITYTD] = (float)800;
-        m->ammo_to_kill[HMP]   = (float)500;
-        m->ammo_to_kill[UV]    = (float)400;
-        m->damage[ITYTD]       = (float)125;
-        m->damage[HMP]         = (float)70;
-        m->damage[UV]          = (float)40;
-        m->altdamage[ITYTD]    = (float)100;
-        m->altdamage[HMP]      = (float)40;
-        m->altdamage[UV]       = (float)25;
-        m->bits |= SHOOTS;
+        m->bits |= SLUMP_BIG;
+        m->ammo_provides             = (float)0;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)800;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)500;
+        m->ammo_to_kill[SLUMP_UV]    = (float)400;
+        m->damage[SLUMP_ITYTD]       = (float)125;
+        m->damage[SLUMP_HMP]         = (float)70;
+        m->damage[SLUMP_UV]          = (float)40;
+        m->altdamage[SLUMP_ITYTD]    = (float)100;
+        m->altdamage[SLUMP_HMP]      = (float)40;
+        m->altdamage[SLUMP_UV]       = (float)25;
+        m->bits |= SLUMP_SHOOTS;
         m->min_level = 7;
-        m            = find_monster(c, ID_HELL);
-        m->gamemask  = DOOM2_BIT;
+        m            = find_monster(c, SLUMP_ID_HELL);
+        m->gamemask  = SLUMP_DOOM2_BIT;
         m->width     = 50;
-        m->bits |= BIG;
-        m->ammo_provides       = (float)0;
-        m->ammo_to_kill[ITYTD] = (float)1400;
-        m->ammo_to_kill[HMP]   = (float)850;
-        m->ammo_to_kill[UV]    = (float)666;
-        m->damage[ITYTD]       = (float)140;
-        m->damage[HMP]         = (float)80;
-        m->damage[UV]          = (float)50;
-        m->altdamage[ITYTD]    = (float)120;
-        m->altdamage[HMP]      = (float)50;
-        m->altdamage[UV]       = (float)35;
-        m->bits |= SHOOTS;
+        m->bits |= SLUMP_BIG;
+        m->ammo_provides             = (float)0;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)1400;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)850;
+        m->ammo_to_kill[SLUMP_UV]    = (float)666;
+        m->damage[SLUMP_ITYTD]       = (float)140;
+        m->damage[SLUMP_HMP]         = (float)80;
+        m->damage[SLUMP_UV]          = (float)50;
+        m->altdamage[SLUMP_ITYTD]    = (float)120;
+        m->altdamage[SLUMP_HMP]      = (float)50;
+        m->altdamage[SLUMP_UV]       = (float)35;
+        m->bits |= SLUMP_SHOOTS;
         m->min_level = 11;
 
         /* DOOM2 bosses and underbosses; need to fill in data! */
-        m           = find_monster(c, ID_MANCUB);
-        m->gamemask = DOOM2_BIT;
+        m           = find_monster(c, SLUMP_ID_MANCUB);
+        m->gamemask = SLUMP_DOOM2_BIT;
         m->width    = 100;
         m->height   = 64;
-        m->bits |= BIG | BOSS;
-        m->ammo_provides       = (float)0;
-        m->ammo_to_kill[ITYTD] = (float)100; /* Numbers are all guesses; fix */
-        m->ammo_to_kill[HMP]   = (float)50;
-        m->ammo_to_kill[UV]    = (float)40;
-        m->min_level           = 19;
-        m                      = find_monster(c, ID_ARCHIE);
-        m->gamemask            = DOOM2_BIT;
-        m->width               = 42;
-        m->height              = 56;
-        m->bits |= BIG | BOSS;
-        m->ammo_provides       = (float)0;
-        m->ammo_to_kill[ITYTD] = (float)1300; /* Numbers are all guesses; fix */
-        m->ammo_to_kill[HMP]   = (float)1100;
-        m->ammo_to_kill[UV]    = (float)1000;
-        m->min_level           = 17;
-        m                      = find_monster(c, ID_PAIN);
-        m->gamemask            = DOOM2_BIT;
-        m->width               = 63;
-        m->bits |= BIG | BOSS;
-        m->ammo_provides       = (float)0;
-        m->ammo_to_kill[ITYTD] = (float)1900; /* Numbers are all guesses; fix */
-        m->ammo_to_kill[HMP]   = (float)1600;
-        m->ammo_to_kill[UV]    = (float)1500;
-        m                      = find_monster(c, ID_ARACH);
-        m->gamemask            = DOOM2_BIT;
-        m->width               = 130;
-        m->bits |= BIG | BOSS;
-        m->ammo_provides       = (float)0;
-        m->ammo_to_kill[ITYTD] = (float)100; /* Numbers are all guesses; fix */
-        m->ammo_to_kill[HMP]   = (float)50;
-        m->ammo_to_kill[UV]    = (float)30;
-        m->min_level           = 23;
+        m->bits |= SLUMP_BIG | SLUMP_BOSS;
+        m->ammo_provides             = (float)0;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)100; /* Numbers are all guesses; fix */
+        m->ammo_to_kill[SLUMP_HMP]   = (float)50;
+        m->ammo_to_kill[SLUMP_UV]    = (float)40;
+        m->min_level                 = 19;
+        m                            = find_monster(c, SLUMP_ID_ARCHIE);
+        m->gamemask                  = SLUMP_DOOM2_BIT;
+        m->width                     = 42;
+        m->height                    = 56;
+        m->bits |= SLUMP_BIG | SLUMP_BOSS;
+        m->ammo_provides             = (float)0;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)1300; /* Numbers are all guesses; fix */
+        m->ammo_to_kill[SLUMP_HMP]   = (float)1100;
+        m->ammo_to_kill[SLUMP_UV]    = (float)1000;
+        m->min_level                 = 17;
+        m                            = find_monster(c, SLUMP_ID_PAIN);
+        m->gamemask                  = SLUMP_DOOM2_BIT;
+        m->width                     = 63;
+        m->bits |= SLUMP_BIG | SLUMP_BOSS;
+        m->ammo_provides             = (float)0;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)1900; /* Numbers are all guesses; fix */
+        m->ammo_to_kill[SLUMP_HMP]   = (float)1600;
+        m->ammo_to_kill[SLUMP_UV]    = (float)1500;
+        m                            = find_monster(c, SLUMP_ID_ARACH);
+        m->gamemask                  = SLUMP_DOOM2_BIT;
+        m->width                     = 130;
+        m->bits |= SLUMP_BIG | SLUMP_BOSS;
+        m->ammo_provides             = (float)0;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)100; /* Numbers are all guesses; fix */
+        m->ammo_to_kill[SLUMP_HMP]   = (float)50;
+        m->ammo_to_kill[SLUMP_UV]    = (float)30;
+        m->min_level                 = 23;
     }
 
     /* this should be the rough range of where the new monsters are:
     m->width = radius * 2 + 2
-    m->ammo_to_kill[ITYTD] = 2.5 x health
-    m->ammo_to_kill[HMP] = 1.5 x health
-    m->ammo_to_kill[UV] = 1.3 x health
-    m->damage[ITYTD] = max damage value for attack
-    m->damage[HMP] = 1/2 max damage
-    m->damage[UV] = 1/4 max damage
+    m->ammo_to_kill[SLUMP_ITYTD] = 2.5 x health
+    m->ammo_to_kill[SLUMP_HMP] = 1.5 x health
+    m->ammo_to_kill[SLUMP_UV] = 1.3 x health
+    m->damage[SLUMP_ITYTD] = max damage value for attack
+    m->damage[SLUMP_HMP] = 1/2 max damage
+    m->damage[SLUMP_UV] = 1/4 max damage
     m->altdamage (all cases) = 2/3 of above values
     m->ammo_provides = ammo dropped * avg damage for weapon/ammo
     m->bits = appropriate per-monster values
@@ -10547,519 +10568,519 @@ boolean hardwired_nonswitch_nontheme_config(config *c)
     */
 
     /* Heretic monsters */
-    if (c->gamemask & (HERETIC_BIT))
+    if (c->gamemask & (SLUMP_HERETIC_BIT))
     {
-        m                      = find_monster(c, ID_GARGOYLE);
-        m->gamemask            = HERETIC_BIT;
-        m->width               = 34;
-        m->ammo_to_kill[ITYTD] = (float)100;
-        m->ammo_to_kill[HMP]   = (float)60;
-        m->ammo_to_kill[UV]    = (float)50;
-        m->damage[ITYTD]       = (float)12;
-        m->damage[HMP]         = (float)6;
-        m->damage[UV]          = (float)3;
-        m->altdamage[ITYTD]    = (float)8;
-        m->altdamage[HMP]      = (float)4;
-        m->altdamage[UV]       = (float)2;
-        m->bits |= FLIES;
-        m->min_level           = 10;
-        m                      = find_monster(c, ID_FIREGARGOYLE);
-        m->gamemask            = HERETIC_BIT;
-        m->width               = 34;
-        m->ammo_to_kill[ITYTD] = (float)200;
-        m->ammo_to_kill[HMP]   = (float)120;
-        m->ammo_to_kill[UV]    = (float)100;
-        m->damage[ITYTD]       = (float)12;
-        m->damage[HMP]         = (float)6;
-        m->damage[UV]          = (float)3;
-        m->altdamage[ITYTD]    = (float)8;
-        m->altdamage[HMP]      = (float)4;
-        m->altdamage[UV]       = (float)2;
-        m->bits |= FLIES;
-        m->bits |= SHOOTS;
-        m->min_level           = 12;
-        m                      = find_monster(c, ID_GOLEM);
-        m->gamemask            = HERETIC_BIT;
-        m->width               = 46;
-        m->ammo_to_kill[ITYTD] = (float)200;
-        m->ammo_to_kill[HMP]   = (float)120;
-        m->ammo_to_kill[UV]    = (float)100;
-        m->ammo_provides       = (float)10;
-        m->damage[ITYTD]       = (float)16;
-        m->damage[HMP]         = (float)8;
-        m->damage[UV]          = (float)4;
-        m->altdamage[ITYTD]    = (float)12;
-        m->altdamage[HMP]      = (float)6;
-        m->altdamage[UV]       = (float)3;
-        m->min_level           = 10;
-        m                      = find_monster(c, ID_NITROGOLEM);
-        m->gamemask            = HERETIC_BIT;
-        m->width               = 46;
-        m->ammo_to_kill[ITYTD] = (float)250;
-        m->ammo_to_kill[HMP]   = (float)150;
-        m->ammo_to_kill[UV]    = (float)130;
-        m->damage[ITYTD]       = (float)32;
-        m->damage[HMP]         = (float)16;
-        m->damage[UV]          = (float)8;
-        m->altdamage[ITYTD]    = (float)20;
-        m->altdamage[HMP]      = (float)10;
-        m->altdamage[UV]       = (float)6;
-        m->bits |= SHOOTS;
-        m->min_level           = 13;
-        m                      = find_monster(c, ID_OPHIDIAN);
-        m->gamemask            = HERETIC_BIT;
-        m->width               = 46;
-        m->ammo_to_kill[ITYTD] = (float)700;
-        m->ammo_to_kill[HMP]   = (float)420;
-        m->ammo_to_kill[UV]    = (float)360;
-        m->ammo_provides       = (float)90;
-        m->damage[ITYTD]       = (float)24;
-        m->damage[HMP]         = (float)12;
-        m->damage[UV]          = (float)6;
-        m->altdamage[ITYTD]    = (float)16;
-        m->altdamage[HMP]      = (float)8;
-        m->altdamage[UV]       = (float)4;
-        m->bits |= SHOOTS;
-        m->min_level           = 28;
-        m                      = find_monster(c, ID_SABRECLAW);
-        m->gamemask            = HERETIC_BIT;
-        m->width               = 42;
-        m->ammo_to_kill[ITYTD] = (float)375;
-        m->ammo_to_kill[HMP]   = (float)225;
-        m->ammo_to_kill[UV]    = (float)195;
-        m->ammo_provides       = (float)14;
-        m->damage[ITYTD]       = (float)9;
-        m->damage[HMP]         = (float)5;
-        m->damage[UV]          = (float)3;
-        m->altdamage[ITYTD]    = (float)8;
-        m->altdamage[HMP]      = (float)4;
-        m->altdamage[UV]       = (float)2;
-        m->min_level           = 20;
-        m                      = find_monster(c, ID_UNDEADWARRIOR);
-        m->gamemask            = HERETIC_BIT;
-        m->width               = 50;
-        m->ammo_to_kill[ITYTD] = (float)500;
-        m->ammo_to_kill[HMP]   = (float)300;
-        m->ammo_to_kill[UV]    = (float)275;
-        m->damage[ITYTD]       = (float)16;
-        m->damage[HMP]         = (float)8;
-        m->damage[UV]          = (float)4;
-        m->altdamage[ITYTD]    = (float)10;
-        m->altdamage[HMP]      = (float)6;
-        m->altdamage[UV]       = (float)3;
-        m->min_level           = 10;
-        m->bits |= SHOOTS;
-        m                      = find_monster(c, ID_DISCIPLE);
-        m->gamemask            = HERETIC_BIT;
-        m->width               = 34;
-        m->ammo_to_kill[ITYTD] = (float)450;
-        m->ammo_to_kill[HMP]   = (float)270;
-        m->ammo_to_kill[UV]    = (float)240;
-        m->ammo_provides       = (float)18;
-        m->damage[ITYTD]       = (float)24;
-        m->damage[HMP]         = (float)12;
-        m->damage[UV]          = (float)6;
-        m->altdamage[ITYTD]    = (float)16;
-        m->altdamage[HMP]      = (float)8;
-        m->altdamage[UV]       = (float)4;
-        m->min_level           = 13;
-        m->bits |= SHOOTS;
-        m                      = find_monster(c, ID_WEREDRAGON);
-        m->gamemask            = HERETIC_BIT;
-        m->width               = 66;
-        m->ammo_to_kill[ITYTD] = (float)550;
-        m->ammo_to_kill[HMP]   = (float)330;
-        m->ammo_to_kill[UV]    = (float)290;
-        m->ammo_provides       = (float)45;
-        m->damage[ITYTD]       = (float)32;
-        m->damage[HMP]         = (float)16;
-        m->damage[UV]          = (float)8;
-        m->altdamage[ITYTD]    = (float)20;
-        m->altdamage[HMP]      = (float)12;
-        m->altdamage[UV]       = (float)6;
-        m->min_level           = 19;
-        m->bits |= SHOOTS;
-        m                      = find_monster(c, ID_MAULOTAUR);
-        m->gamemask            = HERETIC_BIT;
-        m->width               = 58;
-        m->ammo_to_kill[ITYTD] = (float)7500;
-        m->ammo_to_kill[HMP]   = (float)4500;
-        m->ammo_to_kill[UV]    = (float)4000;
-        m->ammo_provides       = (float)90;
-        m->damage[ITYTD]       = (float)56;
-        m->damage[HMP]         = (float)28;
-        m->damage[UV]          = (float)14;
-        m->altdamage[ITYTD]    = (float)38;
-        m->altdamage[HMP]      = (float)18;
-        m->altdamage[UV]       = (float)10;
-        m->min_level           = 27;
-        m->bits |= SHOOTS;
-        m->bits |= BOSS;
-        m->bits |= BIG;
-        m                      = find_monster(c, ID_IRONLICH);
-        m->gamemask            = HERETIC_BIT;
-        m->width               = 82;
-        m->ammo_to_kill[ITYTD] = (float)1750;
-        m->ammo_to_kill[HMP]   = (float)1050;
-        m->ammo_to_kill[UV]    = (float)925;
-        m->ammo_provides       = (float)18;
-        m->damage[ITYTD]       = (float)48;
-        m->damage[HMP]         = (float)24;
-        m->damage[UV]          = (float)12;
-        m->altdamage[ITYTD]    = (float)32;
-        m->altdamage[HMP]      = (float)16;
-        m->altdamage[UV]       = (float)8;
-        m->min_level           = 17;
-        m->bits |= SHOOTS;
-        m->bits |= BOSS;
-        m->bits |= BIG;
-        m                      = find_monster(c, ID_DSPARIL);
-        m->gamemask            = HERETIC_BIT;
-        m->width               = 58;
-        m->ammo_to_kill[ITYTD] = (float)13500;
-        m->ammo_to_kill[HMP]   = (float)8000;
-        m->ammo_to_kill[UV]    = (float)6500;
-        m->damage[ITYTD]       = (float)80;
-        m->damage[HMP]         = (float)40;
-        m->damage[UV]          = (float)20;
-        m->altdamage[ITYTD]    = (float)60;
-        m->altdamage[HMP]      = (float)30;
-        m->altdamage[UV]       = (float)15;
-        m->min_level           = 35;
-        m->bits |= SHOOTS;
-        m->bits |= BOSS;
-        m->bits |= BIG;
+        m                            = find_monster(c, SLUMP_ID_GARGOYLE);
+        m->gamemask                  = SLUMP_HERETIC_BIT;
+        m->width                     = 34;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)100;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)60;
+        m->ammo_to_kill[SLUMP_UV]    = (float)50;
+        m->damage[SLUMP_ITYTD]       = (float)12;
+        m->damage[SLUMP_HMP]         = (float)6;
+        m->damage[SLUMP_UV]          = (float)3;
+        m->altdamage[SLUMP_ITYTD]    = (float)8;
+        m->altdamage[SLUMP_HMP]      = (float)4;
+        m->altdamage[SLUMP_UV]       = (float)2;
+        m->bits |= SLUMP_FLIES;
+        m->min_level                 = 10;
+        m                            = find_monster(c, SLUMP_ID_FIREGARGOYLE);
+        m->gamemask                  = SLUMP_HERETIC_BIT;
+        m->width                     = 34;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)200;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)120;
+        m->ammo_to_kill[SLUMP_UV]    = (float)100;
+        m->damage[SLUMP_ITYTD]       = (float)12;
+        m->damage[SLUMP_HMP]         = (float)6;
+        m->damage[SLUMP_UV]          = (float)3;
+        m->altdamage[SLUMP_ITYTD]    = (float)8;
+        m->altdamage[SLUMP_HMP]      = (float)4;
+        m->altdamage[SLUMP_UV]       = (float)2;
+        m->bits |= SLUMP_FLIES;
+        m->bits |= SLUMP_SHOOTS;
+        m->min_level                 = 12;
+        m                            = find_monster(c, SLUMP_ID_GOLEM);
+        m->gamemask                  = SLUMP_HERETIC_BIT;
+        m->width                     = 46;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)200;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)120;
+        m->ammo_to_kill[SLUMP_UV]    = (float)100;
+        m->ammo_provides             = (float)10;
+        m->damage[SLUMP_ITYTD]       = (float)16;
+        m->damage[SLUMP_HMP]         = (float)8;
+        m->damage[SLUMP_UV]          = (float)4;
+        m->altdamage[SLUMP_ITYTD]    = (float)12;
+        m->altdamage[SLUMP_HMP]      = (float)6;
+        m->altdamage[SLUMP_UV]       = (float)3;
+        m->min_level                 = 10;
+        m                            = find_monster(c, SLUMP_ID_NITROGOLEM);
+        m->gamemask                  = SLUMP_HERETIC_BIT;
+        m->width                     = 46;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)250;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)150;
+        m->ammo_to_kill[SLUMP_UV]    = (float)130;
+        m->damage[SLUMP_ITYTD]       = (float)32;
+        m->damage[SLUMP_HMP]         = (float)16;
+        m->damage[SLUMP_UV]          = (float)8;
+        m->altdamage[SLUMP_ITYTD]    = (float)20;
+        m->altdamage[SLUMP_HMP]      = (float)10;
+        m->altdamage[SLUMP_UV]       = (float)6;
+        m->bits |= SLUMP_SHOOTS;
+        m->min_level                 = 13;
+        m                            = find_monster(c, SLUMP_ID_OPHIDIAN);
+        m->gamemask                  = SLUMP_HERETIC_BIT;
+        m->width                     = 46;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)700;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)420;
+        m->ammo_to_kill[SLUMP_UV]    = (float)360;
+        m->ammo_provides             = (float)90;
+        m->damage[SLUMP_ITYTD]       = (float)24;
+        m->damage[SLUMP_HMP]         = (float)12;
+        m->damage[SLUMP_UV]          = (float)6;
+        m->altdamage[SLUMP_ITYTD]    = (float)16;
+        m->altdamage[SLUMP_HMP]      = (float)8;
+        m->altdamage[SLUMP_UV]       = (float)4;
+        m->bits |= SLUMP_SHOOTS;
+        m->min_level                 = 28;
+        m                            = find_monster(c, SLUMP_ID_SABRECLAW);
+        m->gamemask                  = SLUMP_HERETIC_BIT;
+        m->width                     = 42;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)375;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)225;
+        m->ammo_to_kill[SLUMP_UV]    = (float)195;
+        m->ammo_provides             = (float)14;
+        m->damage[SLUMP_ITYTD]       = (float)9;
+        m->damage[SLUMP_HMP]         = (float)5;
+        m->damage[SLUMP_UV]          = (float)3;
+        m->altdamage[SLUMP_ITYTD]    = (float)8;
+        m->altdamage[SLUMP_HMP]      = (float)4;
+        m->altdamage[SLUMP_UV]       = (float)2;
+        m->min_level                 = 20;
+        m                            = find_monster(c, SLUMP_ID_UNDEADWARRIOR);
+        m->gamemask                  = SLUMP_HERETIC_BIT;
+        m->width                     = 50;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)500;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)300;
+        m->ammo_to_kill[SLUMP_UV]    = (float)275;
+        m->damage[SLUMP_ITYTD]       = (float)16;
+        m->damage[SLUMP_HMP]         = (float)8;
+        m->damage[SLUMP_UV]          = (float)4;
+        m->altdamage[SLUMP_ITYTD]    = (float)10;
+        m->altdamage[SLUMP_HMP]      = (float)6;
+        m->altdamage[SLUMP_UV]       = (float)3;
+        m->min_level                 = 10;
+        m->bits |= SLUMP_SHOOTS;
+        m                            = find_monster(c, SLUMP_ID_DISCIPLE);
+        m->gamemask                  = SLUMP_HERETIC_BIT;
+        m->width                     = 34;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)450;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)270;
+        m->ammo_to_kill[SLUMP_UV]    = (float)240;
+        m->ammo_provides             = (float)18;
+        m->damage[SLUMP_ITYTD]       = (float)24;
+        m->damage[SLUMP_HMP]         = (float)12;
+        m->damage[SLUMP_UV]          = (float)6;
+        m->altdamage[SLUMP_ITYTD]    = (float)16;
+        m->altdamage[SLUMP_HMP]      = (float)8;
+        m->altdamage[SLUMP_UV]       = (float)4;
+        m->min_level                 = 13;
+        m->bits |= SLUMP_SHOOTS;
+        m                            = find_monster(c, SLUMP_ID_WEREDRAGON);
+        m->gamemask                  = SLUMP_HERETIC_BIT;
+        m->width                     = 66;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)550;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)330;
+        m->ammo_to_kill[SLUMP_UV]    = (float)290;
+        m->ammo_provides             = (float)45;
+        m->damage[SLUMP_ITYTD]       = (float)32;
+        m->damage[SLUMP_HMP]         = (float)16;
+        m->damage[SLUMP_UV]          = (float)8;
+        m->altdamage[SLUMP_ITYTD]    = (float)20;
+        m->altdamage[SLUMP_HMP]      = (float)12;
+        m->altdamage[SLUMP_UV]       = (float)6;
+        m->min_level                 = 19;
+        m->bits |= SLUMP_SHOOTS;
+        m                            = find_monster(c, SLUMP_ID_MAULOTAUR);
+        m->gamemask                  = SLUMP_HERETIC_BIT;
+        m->width                     = 58;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)7500;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)4500;
+        m->ammo_to_kill[SLUMP_UV]    = (float)4000;
+        m->ammo_provides             = (float)90;
+        m->damage[SLUMP_ITYTD]       = (float)56;
+        m->damage[SLUMP_HMP]         = (float)28;
+        m->damage[SLUMP_UV]          = (float)14;
+        m->altdamage[SLUMP_ITYTD]    = (float)38;
+        m->altdamage[SLUMP_HMP]      = (float)18;
+        m->altdamage[SLUMP_UV]       = (float)10;
+        m->min_level                 = 27;
+        m->bits |= SLUMP_SHOOTS;
+        m->bits |= SLUMP_BOSS;
+        m->bits |= SLUMP_BIG;
+        m                            = find_monster(c, SLUMP_ID_IRONLICH);
+        m->gamemask                  = SLUMP_HERETIC_BIT;
+        m->width                     = 82;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)1750;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)1050;
+        m->ammo_to_kill[SLUMP_UV]    = (float)925;
+        m->ammo_provides             = (float)18;
+        m->damage[SLUMP_ITYTD]       = (float)48;
+        m->damage[SLUMP_HMP]         = (float)24;
+        m->damage[SLUMP_UV]          = (float)12;
+        m->altdamage[SLUMP_ITYTD]    = (float)32;
+        m->altdamage[SLUMP_HMP]      = (float)16;
+        m->altdamage[SLUMP_UV]       = (float)8;
+        m->min_level                 = 17;
+        m->bits |= SLUMP_SHOOTS;
+        m->bits |= SLUMP_BOSS;
+        m->bits |= SLUMP_BIG;
+        m                            = find_monster(c, SLUMP_ID_DSPARIL);
+        m->gamemask                  = SLUMP_HERETIC_BIT;
+        m->width                     = 58;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)13500;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)8000;
+        m->ammo_to_kill[SLUMP_UV]    = (float)6500;
+        m->damage[SLUMP_ITYTD]       = (float)80;
+        m->damage[SLUMP_HMP]         = (float)40;
+        m->damage[SLUMP_UV]          = (float)20;
+        m->altdamage[SLUMP_ITYTD]    = (float)60;
+        m->altdamage[SLUMP_HMP]      = (float)30;
+        m->altdamage[SLUMP_UV]       = (float)15;
+        m->min_level                 = 35;
+        m->bits |= SLUMP_SHOOTS;
+        m->bits |= SLUMP_BOSS;
+        m->bits |= SLUMP_BIG;
     }
 
     /* Hacx monsters */
-    if (c->gamemask & (HACX_BIT))
+    if (c->gamemask & (SLUMP_HACX_BIT))
     {
-        m                      = find_monster(c, ID_THUG);
-        m->gamemask            = HACX_BIT;
-        m->width               = 44;
-        m->height              = 72;
-        m->ammo_provides       = (float)100;
-        m->ammo_to_kill[ITYTD] = (float)160;
-        m->ammo_to_kill[HMP]   = (float)95;
-        m->ammo_to_kill[UV]    = (float)80;
-        m->damage[ITYTD]       = (float)15;
-        m->damage[HMP]         = (float)3;
-        m->damage[UV]          = (float)1;
-        m->altdamage[ITYTD]    = (float)10;
-        m->altdamage[HMP]      = (float)1;
-        m->altdamage[UV]       = (float)1;
-        m->bits |= SHOOTS;
-        m->min_level           = 1;
-        m                      = find_monster(c, ID_ANDROID);
-        m->gamemask            = HACX_BIT;
-        m->width               = 44;
-        m->height              = 70;
-        m->ammo_provides       = (float)280;
-        m->ammo_to_kill[ITYTD] = (float)200;
-        m->ammo_to_kill[HMP]   = (float)120;
-        m->ammo_to_kill[UV]    = (float)100;
-        m->damage[ITYTD]       = (float)25;
-        m->damage[HMP]         = (float)6;
-        m->damage[UV]          = (float)2;
-        m->altdamage[ITYTD]    = (float)20;
-        m->altdamage[HMP]      = (float)2;
-        m->altdamage[UV]       = (float)1;
-        m->bits |= SHOOTS;
-        m->min_level           = 1;
-        m                      = find_monster(c, ID_BUZZER);
-        m->gamemask            = HACX_BIT;
-        m->width               = 52;
-        m->height              = 68;
-        m->ammo_provides       = (float)0;
-        m->ammo_to_kill[ITYTD] = (float)440;
-        m->ammo_to_kill[HMP]   = (float)265;
-        m->ammo_to_kill[UV]    = (float)230;
-        m->damage[ITYTD]       = (float)75;
-        m->damage[HMP]         = (float)35;
-        m->damage[UV]          = (float)15;
-        m->altdamage[ITYTD]    = (float)60;
-        m->altdamage[HMP]      = (float)25;
-        m->altdamage[UV]       = (float)10;
-        m->bits |= FLIES;
-        m->min_level           = 1;
-        m                      = find_monster(c, ID_STEALTHBUZZER);
-        m->gamemask            = HACX_BIT;
-        m->width               = 52;
-        m->height              = 68;
-        m->ammo_provides       = (float)0;
-        m->ammo_to_kill[ITYTD] = (float)440;
-        m->ammo_to_kill[HMP]   = (float)265;
-        m->ammo_to_kill[UV]    = (float)230;
-        m->damage[ITYTD]       = (float)75;
-        m->damage[HMP]         = (float)35;
-        m->damage[UV]          = (float)15;
-        m->altdamage[ITYTD]    = (float)60;
-        m->altdamage[HMP]      = (float)25;
-        m->altdamage[UV]       = (float)10;
-        m->bits |= FLIES;
-        m->min_level           = 1;
-        m                      = find_monster(c, ID_HACXPHAGE);
-        m->gamemask            = HACX_BIT;
-        m->width               = 52;
-        m->height              = 96;
-        m->ammo_provides       = (float)0;
-        m->ammo_to_kill[ITYTD] = (float)375;
-        m->ammo_to_kill[HMP]   = (float)225;
-        m->ammo_to_kill[UV]    = (float)200;
-        m->damage[ITYTD]       = (float)32;
-        m->damage[HMP]         = (float)16;
-        m->damage[UV]          = (float)8;
-        m->altdamage[ITYTD]    = (float)20;
-        m->altdamage[HMP]      = (float)10;
-        m->altdamage[UV]       = (float)6;
-        m->bits |= SHOOTS;
-        m->min_level           = 2;
-        m                      = find_monster(c, ID_ICE);
-        m->gamemask            = HACX_BIT;
-        m->width               = 66;
-        m->height              = 55;
-        m->ammo_provides       = (float)0;
-        m->ammo_to_kill[ITYTD] = (float)560;
-        m->ammo_to_kill[HMP]   = (float)340;
-        m->ammo_to_kill[UV]    = (float)300;
-        m->damage[ITYTD]       = (float)22;
-        m->damage[HMP]         = (float)8;
-        m->damage[UV]          = (float)5;
-        m->altdamage[ITYTD]    = (float)18;
-        m->altdamage[HMP]      = (float)5;
-        m->altdamage[UV]       = (float)2;
-        m->bits |= FLIES;
-        m->min_level           = 5;
-        m                      = find_monster(c, ID_DMAN);
-        m->gamemask            = HACX_BIT;
-        m->width               = 98;
-        m->height              = 77;
-        m->ammo_provides       = (float)0;
-        m->ammo_to_kill[ITYTD] = (float)625;
-        m->ammo_to_kill[HMP]   = (float)375;
-        m->ammo_to_kill[UV]    = (float)325;
-        m->damage[ITYTD]       = (float)22;
-        m->damage[HMP]         = (float)8;
-        m->damage[UV]          = (float)5;
-        m->altdamage[ITYTD]    = (float)18;
-        m->altdamage[HMP]      = (float)5;
-        m->altdamage[UV]       = (float)2;
-        m->bits |= FLIES | BIG;
-        m->min_level           = 5;
-        m                      = find_monster(c, ID_MAJONG7);
-        m->gamemask            = HACX_BIT;
-        m->width               = 64;
-        m->height              = 56;
-        m->ammo_provides       = (float)0;
-        m->ammo_to_kill[ITYTD] = (float)1500;
-        m->ammo_to_kill[HMP]   = (float)600;
-        m->ammo_to_kill[UV]    = (float)520;
-        m->min_level           = 2;
-        m->bits |= SHOOTS;
-        m                      = find_monster(c, ID_MONSTRUCT);
-        m->gamemask            = HACX_BIT;
-        m->width               = 72;
-        m->height              = 87;
-        m->ammo_provides       = (float)0;
-        m->ammo_to_kill[ITYTD] = (float)1500;
-        m->ammo_to_kill[HMP]   = (float)600;
-        m->ammo_to_kill[UV]    = (float)520;
-        m->ammo_provides       = (float)100;
-        m->damage[ITYTD]       = (float)100;
-        m->damage[HMP]         = (float)50;
-        m->damage[UV]          = (float)25;
-        m->altdamage[ITYTD]    = (float)80;
-        m->altdamage[HMP]      = (float)40;
-        m->altdamage[UV]       = (float)15;
-        m->min_level           = 2;
-        m->bits |= SHOOTS | BIG;
-        m                      = find_monster(c, ID_TERMINATRIX);
-        m->gamemask            = HACX_BIT;
-        m->width               = 50;
-        m->height              = 96;
-        m->ammo_provides       = (float)0;
-        m->ammo_to_kill[ITYTD] = (float)2000;
-        m->ammo_to_kill[HMP]   = (float)1200;
-        m->ammo_to_kill[UV]    = (float)1040;
-        m->damage[ITYTD]       = (float)90;
-        m->damage[HMP]         = (float)45;
-        m->damage[UV]          = (float)20;
-        m->altdamage[ITYTD]    = (float)75;
-        m->altdamage[HMP]      = (float)35;
-        m->altdamage[UV]       = (float)13;
-        m->min_level           = 9;
-        m->bits |= SHOOTS | BOSS;
-        m                      = find_monster(c, ID_THORNTHING);
-        m->gamemask            = HACX_BIT;
-        m->width               = 130;
-        m->height              = 96;
-        m->ammo_provides       = (float)0;
-        m->ammo_to_kill[ITYTD] = (float)1500;
-        m->ammo_to_kill[HMP]   = (float)900;
-        m->ammo_to_kill[UV]    = (float)780;
-        m->damage[ITYTD]       = (float)125;
-        m->damage[HMP]         = (float)70;
-        m->damage[UV]          = (float)40;
-        m->altdamage[ITYTD]    = (float)100;
-        m->altdamage[HMP]      = (float)40;
-        m->altdamage[UV]       = (float)25;
-        m->min_level           = 9;
-        m->bits |= SHOOTS | BOSS | BIG;
-        m                      = find_monster(c, ID_MECHAMANIAC);
-        m->gamemask            = HACX_BIT;
-        m->width               = 50;
-        m->height              = 96;
-        m->ammo_provides       = (float)0;
-        m->ammo_to_kill[ITYTD] = (float)2000;
-        m->ammo_to_kill[HMP]   = (float)1200;
-        m->ammo_to_kill[UV]    = (float)1040;
-        m->damage[ITYTD]       = (float)150;
-        m->damage[HMP]         = (float)90;
-        m->damage[UV]          = (float)50;
-        m->altdamage[ITYTD]    = (float)120;
-        m->altdamage[HMP]      = (float)80;
-        m->altdamage[UV]       = (float)40;
-        m->min_level           = 9;
-        m->bits |= SHOOTS | BOSS;
-        m                      = find_monster(c, ID_ROAMINGMINE);
-        m->gamemask            = HACX_BIT;
-        m->width               = 18;
-        m->height              = 32;
-        m->ammo_provides       = (float)0;
-        m->ammo_to_kill[ITYTD] = (float)125;
-        m->ammo_to_kill[HMP]   = (float)75;
-        m->ammo_to_kill[UV]    = (float)65;
-        m->damage[ITYTD]       = (float)100;
-        m->damage[HMP]         = (float)50;
-        m->damage[UV]          = (float)15;
-        m->altdamage[ITYTD]    = (float)80;
-        m->altdamage[HMP]      = (float)40;
-        m->altdamage[UV]       = (float)10;
-        m->min_level           = 16;
-        m->bits |= FLIES;
+        m                            = find_monster(c, SLUMP_ID_THUG);
+        m->gamemask                  = SLUMP_HACX_BIT;
+        m->width                     = 44;
+        m->height                    = 72;
+        m->ammo_provides             = (float)100;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)160;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)95;
+        m->ammo_to_kill[SLUMP_UV]    = (float)80;
+        m->damage[SLUMP_ITYTD]       = (float)15;
+        m->damage[SLUMP_HMP]         = (float)3;
+        m->damage[SLUMP_UV]          = (float)1;
+        m->altdamage[SLUMP_ITYTD]    = (float)10;
+        m->altdamage[SLUMP_HMP]      = (float)1;
+        m->altdamage[SLUMP_UV]       = (float)1;
+        m->bits |= SLUMP_SHOOTS;
+        m->min_level                 = 1;
+        m                            = find_monster(c, SLUMP_ID_ANDROID);
+        m->gamemask                  = SLUMP_HACX_BIT;
+        m->width                     = 44;
+        m->height                    = 70;
+        m->ammo_provides             = (float)280;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)200;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)120;
+        m->ammo_to_kill[SLUMP_UV]    = (float)100;
+        m->damage[SLUMP_ITYTD]       = (float)25;
+        m->damage[SLUMP_HMP]         = (float)6;
+        m->damage[SLUMP_UV]          = (float)2;
+        m->altdamage[SLUMP_ITYTD]    = (float)20;
+        m->altdamage[SLUMP_HMP]      = (float)2;
+        m->altdamage[SLUMP_UV]       = (float)1;
+        m->bits |= SLUMP_SHOOTS;
+        m->min_level                 = 1;
+        m                            = find_monster(c, SLUMP_ID_BUZZER);
+        m->gamemask                  = SLUMP_HACX_BIT;
+        m->width                     = 52;
+        m->height                    = 68;
+        m->ammo_provides             = (float)0;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)440;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)265;
+        m->ammo_to_kill[SLUMP_UV]    = (float)230;
+        m->damage[SLUMP_ITYTD]       = (float)75;
+        m->damage[SLUMP_HMP]         = (float)35;
+        m->damage[SLUMP_UV]          = (float)15;
+        m->altdamage[SLUMP_ITYTD]    = (float)60;
+        m->altdamage[SLUMP_HMP]      = (float)25;
+        m->altdamage[SLUMP_UV]       = (float)10;
+        m->bits |= SLUMP_FLIES;
+        m->min_level                 = 1;
+        m                            = find_monster(c, SLUMP_ID_STEALTHBUZZER);
+        m->gamemask                  = SLUMP_HACX_BIT;
+        m->width                     = 52;
+        m->height                    = 68;
+        m->ammo_provides             = (float)0;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)440;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)265;
+        m->ammo_to_kill[SLUMP_UV]    = (float)230;
+        m->damage[SLUMP_ITYTD]       = (float)75;
+        m->damage[SLUMP_HMP]         = (float)35;
+        m->damage[SLUMP_UV]          = (float)15;
+        m->altdamage[SLUMP_ITYTD]    = (float)60;
+        m->altdamage[SLUMP_HMP]      = (float)25;
+        m->altdamage[SLUMP_UV]       = (float)10;
+        m->bits |= SLUMP_FLIES;
+        m->min_level                 = 1;
+        m                            = find_monster(c, SLUMP_ID_HACXPHAGE);
+        m->gamemask                  = SLUMP_HACX_BIT;
+        m->width                     = 52;
+        m->height                    = 96;
+        m->ammo_provides             = (float)0;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)375;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)225;
+        m->ammo_to_kill[SLUMP_UV]    = (float)200;
+        m->damage[SLUMP_ITYTD]       = (float)32;
+        m->damage[SLUMP_HMP]         = (float)16;
+        m->damage[SLUMP_UV]          = (float)8;
+        m->altdamage[SLUMP_ITYTD]    = (float)20;
+        m->altdamage[SLUMP_HMP]      = (float)10;
+        m->altdamage[SLUMP_UV]       = (float)6;
+        m->bits |= SLUMP_SHOOTS;
+        m->min_level                 = 2;
+        m                            = find_monster(c, SLUMP_ID_ICE);
+        m->gamemask                  = SLUMP_HACX_BIT;
+        m->width                     = 66;
+        m->height                    = 55;
+        m->ammo_provides             = (float)0;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)560;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)340;
+        m->ammo_to_kill[SLUMP_UV]    = (float)300;
+        m->damage[SLUMP_ITYTD]       = (float)22;
+        m->damage[SLUMP_HMP]         = (float)8;
+        m->damage[SLUMP_UV]          = (float)5;
+        m->altdamage[SLUMP_ITYTD]    = (float)18;
+        m->altdamage[SLUMP_HMP]      = (float)5;
+        m->altdamage[SLUMP_UV]       = (float)2;
+        m->bits |= SLUMP_FLIES;
+        m->min_level                 = 5;
+        m                            = find_monster(c, SLUMP_ID_DMAN);
+        m->gamemask                  = SLUMP_HACX_BIT;
+        m->width                     = 98;
+        m->height                    = 77;
+        m->ammo_provides             = (float)0;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)625;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)375;
+        m->ammo_to_kill[SLUMP_UV]    = (float)325;
+        m->damage[SLUMP_ITYTD]       = (float)22;
+        m->damage[SLUMP_HMP]         = (float)8;
+        m->damage[SLUMP_UV]          = (float)5;
+        m->altdamage[SLUMP_ITYTD]    = (float)18;
+        m->altdamage[SLUMP_HMP]      = (float)5;
+        m->altdamage[SLUMP_UV]       = (float)2;
+        m->bits |= SLUMP_FLIES | SLUMP_BIG;
+        m->min_level                 = 5;
+        m                            = find_monster(c, SLUMP_ID_MAJONG7);
+        m->gamemask                  = SLUMP_HACX_BIT;
+        m->width                     = 64;
+        m->height                    = 56;
+        m->ammo_provides             = (float)0;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)1500;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)600;
+        m->ammo_to_kill[SLUMP_UV]    = (float)520;
+        m->min_level                 = 2;
+        m->bits |= SLUMP_SHOOTS;
+        m                            = find_monster(c, SLUMP_ID_MONSTRUCT);
+        m->gamemask                  = SLUMP_HACX_BIT;
+        m->width                     = 72;
+        m->height                    = 87;
+        m->ammo_provides             = (float)0;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)1500;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)600;
+        m->ammo_to_kill[SLUMP_UV]    = (float)520;
+        m->ammo_provides             = (float)100;
+        m->damage[SLUMP_ITYTD]       = (float)100;
+        m->damage[SLUMP_HMP]         = (float)50;
+        m->damage[SLUMP_UV]          = (float)25;
+        m->altdamage[SLUMP_ITYTD]    = (float)80;
+        m->altdamage[SLUMP_HMP]      = (float)40;
+        m->altdamage[SLUMP_UV]       = (float)15;
+        m->min_level                 = 2;
+        m->bits |= SLUMP_SHOOTS | SLUMP_BIG;
+        m                            = find_monster(c, SLUMP_ID_TERMINATRIX);
+        m->gamemask                  = SLUMP_HACX_BIT;
+        m->width                     = 50;
+        m->height                    = 96;
+        m->ammo_provides             = (float)0;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)2000;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)1200;
+        m->ammo_to_kill[SLUMP_UV]    = (float)1040;
+        m->damage[SLUMP_ITYTD]       = (float)90;
+        m->damage[SLUMP_HMP]         = (float)45;
+        m->damage[SLUMP_UV]          = (float)20;
+        m->altdamage[SLUMP_ITYTD]    = (float)75;
+        m->altdamage[SLUMP_HMP]      = (float)35;
+        m->altdamage[SLUMP_UV]       = (float)13;
+        m->min_level                 = 9;
+        m->bits |= SLUMP_SHOOTS | SLUMP_BOSS;
+        m                            = find_monster(c, SLUMP_ID_THORNTHING);
+        m->gamemask                  = SLUMP_HACX_BIT;
+        m->width                     = 130;
+        m->height                    = 96;
+        m->ammo_provides             = (float)0;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)1500;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)900;
+        m->ammo_to_kill[SLUMP_UV]    = (float)780;
+        m->damage[SLUMP_ITYTD]       = (float)125;
+        m->damage[SLUMP_HMP]         = (float)70;
+        m->damage[SLUMP_UV]          = (float)40;
+        m->altdamage[SLUMP_ITYTD]    = (float)100;
+        m->altdamage[SLUMP_HMP]      = (float)40;
+        m->altdamage[SLUMP_UV]       = (float)25;
+        m->min_level                 = 9;
+        m->bits |= SLUMP_SHOOTS | SLUMP_BOSS | SLUMP_BIG;
+        m                            = find_monster(c, SLUMP_ID_MECHAMANIAC);
+        m->gamemask                  = SLUMP_HACX_BIT;
+        m->width                     = 50;
+        m->height                    = 96;
+        m->ammo_provides             = (float)0;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)2000;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)1200;
+        m->ammo_to_kill[SLUMP_UV]    = (float)1040;
+        m->damage[SLUMP_ITYTD]       = (float)150;
+        m->damage[SLUMP_HMP]         = (float)90;
+        m->damage[SLUMP_UV]          = (float)50;
+        m->altdamage[SLUMP_ITYTD]    = (float)120;
+        m->altdamage[SLUMP_HMP]      = (float)80;
+        m->altdamage[SLUMP_UV]       = (float)40;
+        m->min_level                 = 9;
+        m->bits |= SLUMP_SHOOTS | SLUMP_BOSS;
+        m                            = find_monster(c, SLUMP_ID_ROAMINGMINE);
+        m->gamemask                  = SLUMP_HACX_BIT;
+        m->width                     = 18;
+        m->height                    = 32;
+        m->ammo_provides             = (float)0;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)125;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)75;
+        m->ammo_to_kill[SLUMP_UV]    = (float)65;
+        m->damage[SLUMP_ITYTD]       = (float)100;
+        m->damage[SLUMP_HMP]         = (float)50;
+        m->damage[SLUMP_UV]          = (float)15;
+        m->altdamage[SLUMP_ITYTD]    = (float)80;
+        m->altdamage[SLUMP_HMP]      = (float)40;
+        m->altdamage[SLUMP_UV]       = (float)10;
+        m->min_level                 = 16;
+        m->bits |= SLUMP_FLIES;
     }
 
     /* Harmony monsters */
-    if (c->gamemask & (HARMONY_BIT))
+    if (c->gamemask & (SLUMP_HARMONY_BIT))
     {
-        m                      = find_monster(c, ID_BEASTLING);
-        m->gamemask            = HARMONY_BIT;
-        m->width               = 62;
-        m->ammo_provides       = (float)0;
-        m->ammo_to_kill[ITYTD] = (float)385;
-        m->ammo_to_kill[HMP]   = (float)236;
-        m->ammo_to_kill[UV]    = (float)195;
-        m->damage[ITYTD]       = (float)60;
-        m->damage[HMP]         = (float)30;
-        m->damage[UV]          = (float)15;
-        m->altdamage[ITYTD]    = (float)40;
-        m->altdamage[HMP]      = (float)20;
-        m->altdamage[UV]       = (float)10;
-        m->min_level           = 1;
-        m                      = find_monster(c, ID_FOLLOWER);
-        m->gamemask            = HARMONY_BIT;
-        m->width               = 42;
-        m->ammo_provides       = (float)280;
-        m->ammo_to_kill[ITYTD] = (float)80;
-        m->ammo_to_kill[HMP]   = (float)50;
-        m->ammo_to_kill[UV]    = (float)40;
-        m->damage[ITYTD]       = (float)25;
-        m->damage[HMP]         = (float)6;
-        m->damage[UV]          = (float)2;
-        m->altdamage[ITYTD]    = (float)20;
-        m->altdamage[HMP]      = (float)2;
-        m->altdamage[UV]       = (float)1;
-        m->bits |= SHOOTS;
-        m->min_level           = 1;
-        m                      = find_monster(c, ID_MUTANTSOLDIER);
-        m->gamemask            = HARMONY_BIT;
-        m->width               = 42;
-        m->ammo_provides       = (float)100;
-        m->ammo_to_kill[ITYTD] = (float)155;
-        m->ammo_to_kill[HMP]   = (float)106;
-        m->ammo_to_kill[UV]    = (float)90;
-        m->damage[ITYTD]       = (float)60;
-        m->damage[HMP]         = (float)25;
-        m->damage[UV]          = (float)15;
-        m->altdamage[ITYTD]    = (float)40;
-        m->altdamage[HMP]      = (float)20;
-        m->altdamage[UV]       = (float)10;
-        m->bits |= SHOOTS;
+        m                            = find_monster(c, SLUMP_ID_BEASTLING);
+        m->gamemask                  = SLUMP_HARMONY_BIT;
+        m->width                     = 62;
+        m->ammo_provides             = (float)0;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)385;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)236;
+        m->ammo_to_kill[SLUMP_UV]    = (float)195;
+        m->damage[SLUMP_ITYTD]       = (float)60;
+        m->damage[SLUMP_HMP]         = (float)30;
+        m->damage[SLUMP_UV]          = (float)15;
+        m->altdamage[SLUMP_ITYTD]    = (float)40;
+        m->altdamage[SLUMP_HMP]      = (float)20;
+        m->altdamage[SLUMP_UV]       = (float)10;
+        m->min_level                 = 1;
+        m                            = find_monster(c, SLUMP_ID_FOLLOWER);
+        m->gamemask                  = SLUMP_HARMONY_BIT;
+        m->width                     = 42;
+        m->ammo_provides             = (float)280;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)80;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)50;
+        m->ammo_to_kill[SLUMP_UV]    = (float)40;
+        m->damage[SLUMP_ITYTD]       = (float)25;
+        m->damage[SLUMP_HMP]         = (float)6;
+        m->damage[SLUMP_UV]          = (float)2;
+        m->altdamage[SLUMP_ITYTD]    = (float)20;
+        m->altdamage[SLUMP_HMP]      = (float)2;
+        m->altdamage[SLUMP_UV]       = (float)1;
+        m->bits |= SLUMP_SHOOTS;
+        m->min_level                 = 1;
+        m                            = find_monster(c, SLUMP_ID_MUTANTSOLDIER);
+        m->gamemask                  = SLUMP_HARMONY_BIT;
+        m->width                     = 42;
+        m->ammo_provides             = (float)100;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)155;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)106;
+        m->ammo_to_kill[SLUMP_UV]    = (float)90;
+        m->damage[SLUMP_ITYTD]       = (float)60;
+        m->damage[SLUMP_HMP]         = (float)25;
+        m->damage[SLUMP_UV]          = (float)15;
+        m->altdamage[SLUMP_ITYTD]    = (float)40;
+        m->altdamage[SLUMP_HMP]      = (float)20;
+        m->altdamage[SLUMP_UV]       = (float)10;
+        m->bits |= SLUMP_SHOOTS;
         m->min_level = 5;
-        m            = find_monster(c, ID_PHAGE);
-        m->gamemask  = HARMONY_BIT;
+        m            = find_monster(c, SLUMP_ID_PHAGE);
+        m->gamemask  = SLUMP_HARMONY_BIT;
         m->width     = 98;
-        m->bits |= BIG | BOSS;
-        m->ammo_provides       = (float)0;
-        m->ammo_to_kill[ITYTD] = (float)100; /* Numbers are all guesses; fix */
-        m->ammo_to_kill[HMP]   = (float)50;
-        m->ammo_to_kill[UV]    = (float)30;
-        m->min_level           = 23;
-        m                      = find_monster(c, ID_PREDATOR);
-        m->gamemask            = HARMONY_BIT;
-        m->width               = 42;
-        m->bits |= BIG;
-        m->ammo_provides       = (float)0;
-        m->ammo_to_kill[ITYTD] = (float)800;
-        m->ammo_to_kill[HMP]   = (float)500;
-        m->ammo_to_kill[UV]    = (float)400;
-        m->damage[ITYTD]       = (float)125;
-        m->damage[HMP]         = (float)70;
-        m->damage[UV]          = (float)40;
-        m->altdamage[ITYTD]    = (float)100;
-        m->altdamage[HMP]      = (float)40;
-        m->altdamage[UV]       = (float)25;
-        m->bits |= SHOOTS;
-        m->min_level           = 7;
-        m                      = find_monster(c, ID_LANDMINE);
-        m->gamemask            = HARMONY_BIT;
-        m->width               = 34;
-        m->ammo_provides       = (float)0;
-        m->ammo_to_kill[ITYTD] = (float)260;
-        m->ammo_to_kill[HMP]   = (float)165;
-        m->ammo_to_kill[UV]    = (float)130;
-        m->damage[ITYTD]       = (float)22;
-        m->damage[HMP]         = (float)8;
-        m->damage[UV]          = (float)5;
-        m->altdamage[ITYTD]    = (float)18;
-        m->altdamage[HMP]      = (float)5;
-        m->altdamage[UV]       = (float)2;
-        m->min_level           = 6;
-        m                      = find_monster(c, ID_AEROSOL);
-        m->gamemask            = HARMONY_BIT;
-        m->width               = 64;
-        m->bits |= BIG;
-        m->ammo_provides       = (float)0;
-        m->ammo_to_kill[ITYTD] = (float)1050;
-        m->ammo_to_kill[HMP]   = (float)630;
-        m->ammo_to_kill[UV]    = (float)590;
-        m->damage[ITYTD]       = (float)60;
-        m->damage[HMP]         = (float)35;
-        m->damage[UV]          = (float)18;
-        m->altdamage[ITYTD]    = (float)50;
-        m->altdamage[HMP]      = (float)20;
-        m->altdamage[UV]       = (float)10;
-        m->bits |= SHOOTS;
-        m->bits |= FLIES;
+        m->bits |= SLUMP_BIG | SLUMP_BOSS;
+        m->ammo_provides             = (float)0;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)100; /* Numbers are all guesses; fix */
+        m->ammo_to_kill[SLUMP_HMP]   = (float)50;
+        m->ammo_to_kill[SLUMP_UV]    = (float)30;
+        m->min_level                 = 23;
+        m                            = find_monster(c, SLUMP_ID_PREDATOR);
+        m->gamemask                  = SLUMP_HARMONY_BIT;
+        m->width                     = 42;
+        m->bits |= SLUMP_BIG;
+        m->ammo_provides             = (float)0;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)800;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)500;
+        m->ammo_to_kill[SLUMP_UV]    = (float)400;
+        m->damage[SLUMP_ITYTD]       = (float)125;
+        m->damage[SLUMP_HMP]         = (float)70;
+        m->damage[SLUMP_UV]          = (float)40;
+        m->altdamage[SLUMP_ITYTD]    = (float)100;
+        m->altdamage[SLUMP_HMP]      = (float)40;
+        m->altdamage[SLUMP_UV]       = (float)25;
+        m->bits |= SLUMP_SHOOTS;
+        m->min_level                 = 7;
+        m                            = find_monster(c, SLUMP_ID_LANDMINE);
+        m->gamemask                  = SLUMP_HARMONY_BIT;
+        m->width                     = 34;
+        m->ammo_provides             = (float)0;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)260;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)165;
+        m->ammo_to_kill[SLUMP_UV]    = (float)130;
+        m->damage[SLUMP_ITYTD]       = (float)22;
+        m->damage[SLUMP_HMP]         = (float)8;
+        m->damage[SLUMP_UV]          = (float)5;
+        m->altdamage[SLUMP_ITYTD]    = (float)18;
+        m->altdamage[SLUMP_HMP]      = (float)5;
+        m->altdamage[SLUMP_UV]       = (float)2;
+        m->min_level                 = 6;
+        m                            = find_monster(c, SLUMP_ID_AEROSOL);
+        m->gamemask                  = SLUMP_HARMONY_BIT;
+        m->width                     = 64;
+        m->bits |= SLUMP_BIG;
+        m->ammo_provides             = (float)0;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)1050;
+        m->ammo_to_kill[SLUMP_HMP]   = (float)630;
+        m->ammo_to_kill[SLUMP_UV]    = (float)590;
+        m->damage[SLUMP_ITYTD]       = (float)60;
+        m->damage[SLUMP_HMP]         = (float)35;
+        m->damage[SLUMP_UV]          = (float)18;
+        m->altdamage[SLUMP_ITYTD]    = (float)50;
+        m->altdamage[SLUMP_HMP]      = (float)20;
+        m->altdamage[SLUMP_UV]       = (float)10;
+        m->bits |= SLUMP_SHOOTS;
+        m->bits |= SLUMP_FLIES;
         m->min_level = 11;
-        m            = find_monster(c, ID_CENTAUR);
-        m->gamemask  = HARMONY_BIT;
+        m            = find_monster(c, SLUMP_ID_CENTAUR);
+        m->gamemask  = SLUMP_HARMONY_BIT;
         m->width     = 84;
         m->height    = 110;
-        m->bits |= BIG | BOSS;
-        m->ammo_provides       = (float)0;
-        m->ammo_to_kill[ITYTD] = (float)8000; /* Numbers are all guesses; fix */
-        m->ammo_to_kill[HMP]   = (float)6500;
-        m->ammo_to_kill[UV]    = (float)6200;
-        m                      = find_monster(c, ID_ECHIDNA);
-        m->width               = 260;
-        m->height              = 100;
-        m->bits |= BIG | BOSS;
-        m->ammo_provides       = (float)0;
-        m->ammo_to_kill[ITYTD] = (float)6000; /* Numbers are all guesses; fix */
-        m->ammo_to_kill[HMP]   = (float)5000;
-        m->ammo_to_kill[UV]    = (float)4500;
-        m->min_level           = 17;
+        m->bits |= SLUMP_BIG | SLUMP_BOSS;
+        m->ammo_provides             = (float)0;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)8000; /* Numbers are all guesses; fix */
+        m->ammo_to_kill[SLUMP_HMP]   = (float)6500;
+        m->ammo_to_kill[SLUMP_UV]    = (float)6200;
+        m                            = find_monster(c, SLUMP_ID_ECHIDNA);
+        m->width                     = 260;
+        m->height                    = 100;
+        m->bits |= SLUMP_BIG | SLUMP_BOSS;
+        m->ammo_provides             = (float)0;
+        m->ammo_to_kill[SLUMP_ITYTD] = (float)6000; /* Numbers are all guesses; fix */
+        m->ammo_to_kill[SLUMP_HMP]   = (float)5000;
+        m->ammo_to_kill[SLUMP_UV]    = (float)4500;
+        m->min_level                 = 17;
     }
 
     return SLUMP_TRUE;
@@ -11076,49 +11097,49 @@ propertybits absorb_propertybit(char **r)
     p = *r;
 
     if ((!StringCaseCompare(p, "wall")) || (!StringCompare(p, "w")))
-        return WALL;
+        return SLUMP_WALL;
     if ((!StringCaseCompare(p, "isswitch")) || (!StringCompare(p, "i")))
-        return SWITCH;
+        return SLUMP_SWITCH;
     if ((!StringCaseCompare(p, "lift")) || (!StringCompare(p, "F")))
-        return LIFT_TEXTURE;
+        return SLUMP_LIFT_TEXTURE;
     if ((!StringCaseCompare(p, "support")) || (!StringCompare(p, "I")))
-        return SUPPORT;
+        return SLUMP_SUPPORT;
     if ((!StringCaseCompare(p, "jamb")) || (!StringCompare(p, "j")))
-        return JAMB;
+        return SLUMP_JAMB;
     if ((!StringCaseCompare(p, "step")) || (!StringCompare(p, "e")))
-        return STEP;
+        return SLUMP_STEP;
     if ((!StringCaseCompare(p, "grating")) || (!StringCompare(p, "g")))
-        return GRATING;
+        return SLUMP_GRATING;
     if ((!StringCaseCompare(p, "plaque")) || (!StringCompare(p, "p")))
-        return PLAQUE;
+        return SLUMP_PLAQUE;
     if ((!StringCaseCompare(p, "vtiles")) || (!StringCompare(p, "v")))
-        return VTILES;
+        return SLUMP_VTILES;
     if ((!StringCaseCompare(p, "half_plaque")) || (!StringCompare(p, "H")))
-        return HALF_PLAQUE;
+        return SLUMP_HALF_PLAQUE;
     if ((!StringCaseCompare(p, "light")) || (!StringCompare(p, "l")))
-        return LIGHT;
+        return SLUMP_LIGHT;
     if ((!StringCaseCompare(p, "exitswitch")) || (!StringCompare(p, "E")))
-        return EXITSWITCH;
+        return SLUMP_EXITSWITCH;
     if ((!StringCaseCompare(p, "door")) || (!StringCompare(p, "d")))
-        return DOOR;
+        return SLUMP_DOOR;
     if ((!StringCaseCompare(p, "locked")) || (!StringCompare(p, "L")))
-        return GATE;
+        return SLUMP_GATE;
     if ((!StringCaseCompare(p, "outside")) || (!StringCompare(p, "o")))
-        return OUTDOOR;
+        return SLUMP_OUTDOOR;
     if ((!StringCaseCompare(p, "red")) || (!StringCompare(p, "r")))
-        return RED;
+        return SLUMP_RED;
     if ((!StringCaseCompare(p, "blue")) || (!StringCompare(p, "b")))
-        return BLUE;
+        return SLUMP_BLUE;
     if ((!StringCaseCompare(p, "yellow")) || (!StringCompare(p, "y")))
-        return YELLOW;
+        return SLUMP_YELLOW;
     if ((!StringCaseCompare(p, "floor")) || (!StringCompare(p, "D")))
-        return FLOOR;
+        return SLUMP_FLOOR;
     if ((!StringCaseCompare(p, "ceiling")) || (!StringCompare(p, "U")))
-        return CEILING;
+        return SLUMP_CEILING;
     if ((!StringCaseCompare(p, "nukage")) || (!StringCompare(p, "n")))
-        return NUKAGE;
+        return SLUMP_NUKAGE;
     if ((!StringCaseCompare(p, "gate")) || (!StringCompare(p, "G")))
-        return GATE;
+        return SLUMP_GATE;
 
     return 0;
 }
@@ -11134,17 +11155,17 @@ gamebits absorb_gamebit(char **r)
     p = *r;
 
     if ((!StringCaseCompare(p, "nodoom0")) || (!StringCompare(p, "0")))
-        return DOOM0_BIT;
+        return SLUMP_DOOM0_BIT;
     if ((!StringCaseCompare(p, "nodoom1")) || (!StringCompare(p, "1")))
-        return DOOM1_BIT;
+        return SLUMP_DOOM1_BIT;
     if ((!StringCaseCompare(p, "nodoom2")) || (!StringCompare(p, "2")))
-        return DOOM2_BIT;
+        return SLUMP_DOOM2_BIT;
     if ((!StringCaseCompare(p, "gross")) || (!StringCompare(p, "Q")))
-        return DOOMC_BIT;
+        return SLUMP_DOOMC_BIT;
     if ((!StringCaseCompare(p, "custom")) || (!StringCompare(p, "u")))
-        return DOOMI_BIT;
+        return SLUMP_DOOMI_BIT;
     if ((!StringCaseCompare(p, "heretic")) || (!StringCompare(p, "R")))
-        return HERETIC_BIT; // "R" for Raven, since "H" is already used
+        return SLUMP_HERETIC_BIT; // "R" for Raven, since "H" is already used
 
     return 0;
 }
@@ -11583,7 +11604,7 @@ genus *random_thing0(propertybits pmask, config *c, style *s, int minh, int maxh
     }
     if (tcount == 0)
     {
-        announce(NONE, "No compatible things for theme"); /* This is OK */
+        announce(SLUMP_NONE, "No compatible things for theme"); /* This is OK */
         return NULL;
     }
     tcount = 1 + roll(tcount);
@@ -11625,7 +11646,7 @@ flat *random_flat0(propertybits pmask, config *c, style *s)
     }
     if (fcount == 0)
     {
-        announce(NONE, "No compatible flats for theme"); /* This is OK */
+        announce(SLUMP_NONE, "No compatible flats for theme"); /* This is OK */
         return NULL;
     }
     fcount = 1 + roll(fcount);
@@ -11644,27 +11665,27 @@ flat *random_flat0(propertybits pmask, config *c, style *s)
 
 flat *random_floor0(config *c, style *s)
 {
-    return random_flat0(FLOOR, c, s);
+    return random_flat0(SLUMP_FLOOR, c, s);
 }
 
 flat *random_gate(config *c, style *s)
 {
-    return random_flat0(GATE, c, s);
+    return random_flat0(SLUMP_GATE, c, s);
 }
 
 flat *random_ceiling0(config *c, style *s)
 {
-    return random_flat0(CEILING, c, s);
+    return random_flat0(SLUMP_CEILING, c, s);
 }
 
 flat *random_ceilinglight(config *c, style *s)
 {
-    return random_flat0(CEILING + LIGHT, c, s);
+    return random_flat0(SLUMP_CEILING + SLUMP_LIGHT, c, s);
 }
 
 flat *random_nukage1(config *c, style *s)
 {
-    return random_flat0(NUKAGE, c, s);
+    return random_flat0(SLUMP_NUKAGE, c, s);
 }
 
 flat *random_doorceiling(config *c, style *s)
@@ -11715,7 +11736,7 @@ texture *random_texture0(propertybits pmask, config *c, style *s)
     }
     if (tcount == 0)
     {
-        announce(NONE, "No compatible textures for theme"); /* It's OK! */
+        announce(SLUMP_NONE, "No compatible textures for theme"); /* It's OK! */
         return NULL;
     }
     tcount = 1 + roll(tcount);
@@ -11734,7 +11755,7 @@ texture *random_texture0(propertybits pmask, config *c, style *s)
 
 texture *random_support0(config *c, style *s)
 {
-    return random_texture0(SUPPORT, c, s);
+    return random_texture0(SLUMP_SUPPORT, c, s);
 }
 
 texture *random_wall0(config *c, style *s)
@@ -11749,7 +11770,7 @@ texture *random_wall0(config *c, style *s)
         tcount = 0;
         for (answer = c->texture_anchor; answer; answer = answer->next)
         {
-            if (!(answer->props & WALL))
+            if (!(answer->props & SLUMP_WALL))
                 continue;
             if (!(answer->core & tmask))
                 continue;
@@ -11759,13 +11780,14 @@ texture *random_wall0(config *c, style *s)
         }
         if (tcount == 0)
         {
-            announce(WARNING, "No core wall textures for theme");
+            announce(SLUMP_WARNING, "No core wall textures for theme");
             return c->error_texture;
         }
         tcount = 1 + roll(tcount);
         for (answer = c->texture_anchor; answer; answer = answer->next)
         {
-            if ((answer->props & WALL) && (answer->core & tmask) && ((answer->gamemask & c->gamemask) == c->gamemask))
+            if ((answer->props & SLUMP_WALL) && (answer->core & tmask) &&
+                ((answer->gamemask & c->gamemask) == c->gamemask))
             {
                 tcount--;
                 if (tcount == 0)
@@ -11775,7 +11797,7 @@ texture *random_wall0(config *c, style *s)
     }
     else
     { /* Use any compatible wall texture */
-        return random_texture0(WALL, c, s);
+        return random_texture0(SLUMP_WALL, c, s);
     }
 
     return NULL;
@@ -11795,7 +11817,7 @@ texture *random_stepfront(config *c, style *s)
     if (!rollpercent(c->p_use_steps))
         answer = random_kickplate(c, s);
     else
-        answer = random_texture0(STEP, c, s);
+        answer = random_texture0(SLUMP_STEP, c, s);
     if (answer == NULL)
         answer = random_kickplate(c, s);
     return answer;
@@ -11809,38 +11831,38 @@ texture *switch0_for(config *c, style *s)
     }
     else
     {
-        return random_texture0(SWITCH, c, s);
+        return random_texture0(SLUMP_SWITCH, c, s);
     }
 }
 
 texture *random_doorjamb(config *c, style *s)
 {
-    return random_texture0(JAMB, c, s);
+    return random_texture0(SLUMP_JAMB, c, s);
 }
 
 texture *random_redface(config *c, style *s)
 {
-    return random_texture0(RED, c, s);
+    return random_texture0(SLUMP_RED, c, s);
 }
 
 texture *random_blueface(config *c, style *s)
 {
-    return random_texture0(BLUE, c, s);
+    return random_texture0(SLUMP_BLUE, c, s);
 }
 
 texture *random_yellowface(config *c, style *s)
 {
-    return random_texture0(YELLOW, c, s);
+    return random_texture0(SLUMP_YELLOW, c, s);
 }
 
 texture *random_walllight(config *c, style *s)
 {
-    return random_texture0(LIGHT, c, s);
+    return random_texture0(SLUMP_LIGHT, c, s);
 }
 
 texture *random_liftface(config *c, style *s)
 {
-    return random_texture0(LIFT_TEXTURE, c, s);
+    return random_texture0(SLUMP_LIFT_TEXTURE, c, s);
 }
 
 /* should consult the lists in the config like the others do */
@@ -11864,9 +11886,9 @@ texture *random_widedoorface_ex(config *c, style *s, boolean needhigh)
     tcount = 0;
     for (answer = c->texture_anchor; answer; answer = answer->next)
     {
-        if (!(answer->props & DOOR))
+        if (!(answer->props & SLUMP_DOOR))
             continue;
-        if (answer->props & GATE)
+        if (answer->props & SLUMP_GATE)
             continue;
         if ((answer->width) < 128)
             continue;
@@ -11886,7 +11908,7 @@ texture *random_widedoorface_ex(config *c, style *s, boolean needhigh)
     tcount = 1 + roll(tcount);
     for (answer = c->texture_anchor; answer; answer = answer->next)
     {
-        if ((answer->props & DOOR) && (!(answer->props & GATE)) && (answer->width >= 128) &&
+        if ((answer->props & SLUMP_DOOR) && (!(answer->props & SLUMP_GATE)) && (answer->width >= 128) &&
             (!(needhigh && (answer->height < 128))) && (answer->compatible & tmask) &&
             ((answer->gamemask & c->gamemask) == c->gamemask))
         {
@@ -11918,9 +11940,9 @@ texture *random_narrowdoorface_ex(config *c, style *s, boolean needhigh)
     tcount = 0;
     for (answer = c->texture_anchor; answer; answer = answer->next)
     {
-        if (!(answer->props & DOOR))
+        if (!(answer->props & SLUMP_DOOR))
             continue;
-        if (answer->props & GATE)
+        if (answer->props & SLUMP_GATE)
             continue;
         if ((answer->width) >= 128)
             continue;
@@ -11940,7 +11962,7 @@ texture *random_narrowdoorface_ex(config *c, style *s, boolean needhigh)
     tcount = 1 + roll(tcount);
     for (answer = c->texture_anchor; answer; answer = answer->next)
     {
-        if ((answer->props & DOOR) && (!(answer->props & GATE)) && (answer->width < 128) &&
+        if ((answer->props & SLUMP_DOOR) && (!(answer->props & SLUMP_GATE)) && (answer->width < 128) &&
             (!(needhigh && (answer->height < 128))) && (answer->compatible & tmask) &&
             ((answer->gamemask & c->gamemask) == c->gamemask))
         {
@@ -11986,9 +12008,9 @@ texture *random_lockdoorface(config *c, style *s)
     tcount = 0;
     for (answer = c->texture_anchor; answer; answer = answer->next)
     {
-        if (!(answer->props & DOOR))
+        if (!(answer->props & SLUMP_DOOR))
             continue;
-        if (!(answer->props & GATE))
+        if (!(answer->props & SLUMP_GATE))
             continue;
         if (!(answer->compatible & tmask))
             continue;
@@ -11998,13 +12020,13 @@ texture *random_lockdoorface(config *c, style *s)
     }
     if (tcount == 0)
     {
-        announce(NONE, "No locked doorfaces for theme"); /* That's OK */
+        announce(SLUMP_NONE, "No locked doorfaces for theme"); /* That's OK */
         return NULL;
     }
     tcount = 1 + roll(tcount);
     for (answer = c->texture_anchor; answer; answer = answer->next)
     {
-        if ((answer->props & DOOR) && (answer->props & GATE) && (answer->compatible & tmask) &&
+        if ((answer->props & SLUMP_DOOR) && (answer->props & SLUMP_GATE) && (answer->compatible & tmask) &&
             ((answer->gamemask & c->gamemask) == c->gamemask))
         {
             tcount--;
@@ -12017,12 +12039,12 @@ texture *random_lockdoorface(config *c, style *s)
 
 texture *random_grating(config *c, style *s)
 {
-    return random_texture0(GRATING, c, s);
+    return random_texture0(SLUMP_GRATING, c, s);
 }
 
 texture *random_plaque(config *c, style *s)
 {
-    return random_texture0(PLAQUE, c, s);
+    return random_texture0(SLUMP_PLAQUE, c, s);
 }
 
 /* Return the angle (east is zero, north is ninety) of a thing */
@@ -12084,7 +12106,7 @@ void frame_innersec_ex(level *l, sector *oldsector, sector *innersec, texture *t
     short    newflags;
 
     if (innersec)
-        newflags = TWO_SIDED;
+        newflags = SLUMP_TWO_SIDED;
     else
         newflags = 0;
     if (!tm)
@@ -12161,7 +12183,7 @@ void frame_innersec_ex(level *l, sector *oldsector, sector *innersec, texture *t
 
 } /* frame_innersec_ex() */
 
-/* The common axis-parallel case of frame_innersec.  If the four pointers */
+/* The common axis-parallel case of SLUMP_frame_innersec.  If the four pointers */
 /* are given, the first and third will be y-parallel, the second and */
 /* fourth x-parallel. */
 void parallel_innersec_ex(level *l, sector *oldsector, sector *innersec, texture *tm, texture *tu, texture *tl,
@@ -12258,19 +12280,19 @@ boolean ceiling_effect(level *l, sector *oldsector, style *ThisStyle, haa *haa, 
                     new_thing(l, minx - 8, maxy + 8, 0, thing_id, 7, c);
                     new_thing(l, maxx + 8, miny - 8, 0, thing_id, 7, c);
                     new_thing(l, maxx + 8, maxy + 8, 0, thing_id, 7, c);
-                    announce(VERBOSE, "edgelights");
+                    announce(SLUMP_VERBOSE, "edgelights");
                 }
                 if (center_light && room_at(l, g, minx + (maxx - minx) / 2, miny + (maxy - miny) / 2, g->width, c))
                 {
                     new_thing(l, minx + (maxx - minx) / 2, miny + (maxy - miny) / 2, 0, thing_id, 7, c);
-                    announce(VERBOSE, "centerlight");
+                    announce(SLUMP_VERBOSE, "centerlight");
                 }
             } /* end if big enough square for lights */
 
     {
         char s[200];
         sprintf(s, "Ceiling effect between (%d,%d) and (%d,%d).", minx, miny, maxx, maxy);
-        announce(VERBOSE, s);
+        announce(SLUMP_VERBOSE, s);
     }
 
     /* Make the sector itself */
@@ -12308,7 +12330,7 @@ boolean ceiling_effect(level *l, sector *oldsector, style *ThisStyle, haa *haa, 
                     if (rollpercent(90))
                         innersec->ceiling_flat = oldsector->ceiling_flat;
                 }
-                announce(VERBOSE, "Indirect lighting");
+                announce(SLUMP_VERBOSE, "Indirect lighting");
             }
 
     /* If no light-level decision made yet, make one */
@@ -12326,16 +12348,16 @@ boolean ceiling_effect(level *l, sector *oldsector, style *ThisStyle, haa *haa, 
             switch (roll(4))
             {
             case 0:
-                innersec->special = RANDOM_BLINK;
+                innersec->special = SLUMP_RANDOM_BLINK;
                 break;
             case 1:
-                innersec->special = SYNC_FAST_BLINK;
+                innersec->special = SLUMP_SYNC_FAST_BLINK;
                 break;
             case 2:
-                innersec->special = SYNC_SLOW_BLINK;
+                innersec->special = SLUMP_SYNC_SLOW_BLINK;
                 break;
             case 3:
-                innersec->special = GLOW_BLINK;
+                innersec->special = SLUMP_GLOW_BLINK;
                 break;
             }
     } /* end if light effects */
@@ -12362,11 +12384,11 @@ boolean ceiling_effect(level *l, sector *oldsector, style *ThisStyle, haa *haa, 
         if (deltah < 0)
             if (force_nukage || rollpercent(30))
             {
-                announce(VERBOSE, "Nukage");
+                announce(SLUMP_VERBOSE, "Nukage");
                 innersec->floor_flat = ThisStyle->nukage1;
-                innersec->special    = NUKAGE1_SPECIAL;
-                haa->haas[ITYTD].health -= 10;
-                haa->haas[HMP].health -= 5;
+                innersec->special    = SLUMP_NUKAGE1_SPECIAL;
+                haa->haas[SLUMP_ITYTD].health -= 10;
+                haa->haas[SLUMP_HMP].health -= 5;
             }
     }
     else
@@ -12379,22 +12401,22 @@ boolean ceiling_effect(level *l, sector *oldsector, style *ThisStyle, haa *haa, 
     {
         int xsize = ((maxx - minx) - beamsize) / 2;
         int ysize = ((maxy - miny) - beamsize) / 2;
-        parallel_innersec(l, oldsector, innersec, NULL, upt, oldsector->pstyle->wall0, minx, miny, minx + xsize,
-                          miny + ysize, c);
-        parallel_innersec(l, oldsector, innersec, NULL, upt, oldsector->pstyle->wall0, minx, maxy - ysize, minx + xsize,
-                          maxy, c);
-        parallel_innersec(l, oldsector, innersec, NULL, upt, oldsector->pstyle->wall0, maxx - xsize, miny, maxx,
-                          miny + ysize, c);
-        parallel_innersec(l, oldsector, innersec, NULL, upt, oldsector->pstyle->wall0, maxx - xsize, maxy - ysize, maxx,
-                          maxy, c);
+        SLUMP_parallel_innersec(l, oldsector, innersec, NULL, upt, oldsector->pstyle->wall0, minx, miny, minx + xsize,
+                                miny + ysize, c);
+        SLUMP_parallel_innersec(l, oldsector, innersec, NULL, upt, oldsector->pstyle->wall0, minx, maxy - ysize,
+                                minx + xsize, maxy, c);
+        SLUMP_parallel_innersec(l, oldsector, innersec, NULL, upt, oldsector->pstyle->wall0, maxx - xsize, miny, maxx,
+                                miny + ysize, c);
+        SLUMP_parallel_innersec(l, oldsector, innersec, NULL, upt, oldsector->pstyle->wall0, maxx - xsize, maxy - ysize,
+                                maxx, maxy, c);
     }
     else if ((maxx - minx > 128) && (maxy - miny > 128) && ((maxx - minx) <= (2 * (maxy - miny))) &&
              ((maxy - miny) <= (2 * (maxx - minx))) && rollpercent(10))
     {
         /* A diamond!  Is this safe?  Not axis-parallel! */
-        announce(LOG, "Diamond");
-        frame_innersec(l, oldsector, innersec, NULL, upt, oldsector->pstyle->wall0, (minx + maxx) / 2, miny, minx,
-                       (miny + maxy) / 2, (minx + maxx) / 2, maxy, maxx, (miny + maxy) / 2, c);
+        announce(SLUMP_LOG, "Diamond");
+        SLUMP_frame_innersec(l, oldsector, innersec, NULL, upt, oldsector->pstyle->wall0, (minx + maxx) / 2, miny, minx,
+                             (miny + maxy) / 2, (minx + maxx) / 2, maxy, maxx, (miny + maxy) / 2, c);
     }
     else
     {
@@ -12428,7 +12450,7 @@ boolean ceiling_effect(level *l, sector *oldsector, style *ThisStyle, haa *haa, 
                 ldnew                 = new_linedef(l, ld4new->from, ld2new->to);
                 ldnew->left           = new_sidedef(l, innersec, c);
                 ldnew->right          = new_sidedef(l, newsec, c);
-                ldnew->flags |= TWO_SIDED;
+                ldnew->flags |= SLUMP_TWO_SIDED;
                 ldnew->right->middle_texture = c->null_texture;
                 ldnew->left->middle_texture  = c->null_texture;
                 patch_lower(ldnew, newsec->pstyle->wall0, c);
@@ -12441,10 +12463,10 @@ boolean ceiling_effect(level *l, sector *oldsector, style *ThisStyle, haa *haa, 
                 if (rollpercent(75))
                 {
                     innersec->floor_flat = c->water_flat;
-                    announce(LOG, "Water pool");
+                    announce(SLUMP_LOG, "Water pool");
                 }
             if (fancied)
-                announce(LOG, "Bath");
+                announce(SLUMP_LOG, "Bath");
         }
         /* Sometimes more layers!  How dangerous is this? */
         if (rollpercent(20) && (!fancied) && /* Generalize "20" */
@@ -12468,12 +12490,13 @@ boolean ceiling_effect(level *l, sector *oldsector, style *ThisStyle, haa *haa, 
                 inner2          = clone_sector(l, innersec);
                 inner2->special = innersec->special;
                 inner2->floor_height += deltah;
-                announce(VERBOSE, "Sunk");
+                announce(SLUMP_VERBOSE, "Sunk");
                 minx += 32; /* Generalize "32"s */
                 maxx -= 32;
                 miny += 32;
                 maxy -= 32;
-                parallel_innersec(l, innersec, inner2, NULL, upt, oldsector->pstyle->wall0, minx, miny, maxx, maxy, c);
+                SLUMP_parallel_innersec(l, innersec, inner2, NULL, upt, oldsector->pstyle->wall0, minx, miny, maxx,
+                                        maxy, c);
                 innersec = inner2;
             }
         }
@@ -12498,8 +12521,8 @@ void righthand_monster(level *l, int xa, int ya, int xb, int yb, haa *haa, confi
     /* Figure out where we want it */
     x1 = (xa + xb) / 2;
     y1 = (ya + yb) / 2;
-    point_from(xa, ya, x1, y1, RIGHT_TURN, 1 + MONSTER_WIDTH(m) / 2, &x, &y);
-    if (!room_at(l, m, x, y, MONSTER_WIDTH(m), c))
+    point_from(xa, ya, x1, y1, SLUMP_RIGHT_TURN, 1 + 64 / 2, &x, &y);
+    if (!room_at(l, m, x, y, 64, c))
         return;
     /* Fill in other details */
     angle = facing_right_from(xa, ya, xb, yb); /* Correct? */
@@ -12561,7 +12584,7 @@ void do_pillar(level *l, sector *oldsector, style *ThisStyle, haa *haa, config *
     for (t = l->thing_anchor; t; t = t->next)
         if ((t->x >= minx) && (t->x <= maxx) && (t->y >= miny) && (t->y <= maxy))
         {
-            announce(VERBOSE, "Too many things for a pillar");
+            announce(SLUMP_VERBOSE, "Too many things for a pillar");
             return;
         }
     /* None!  A miracle.  Define the space. */
@@ -12582,9 +12605,9 @@ void do_pillar(level *l, sector *oldsector, style *ThisStyle, haa *haa, config *
     }
     else
     {
-        parallel_innersec(l, oldsector, NULL, t1, NULL, NULL, minx, miny, maxx, maxy, c);
+        SLUMP_parallel_innersec(l, oldsector, NULL, t1, NULL, NULL, minx, miny, maxx, maxy, c);
     }
-    announce(VERBOSE, "Made a pillar");
+    announce(SLUMP_VERBOSE, "Made a pillar");
 
     /* Consider putting some monsters around it */
     righthand_monster(l, minx, maxy, minx, miny, haa, c);
@@ -12758,7 +12781,7 @@ boolean install_construct(level *l, sector *oldsector, int minx, int miny, int m
     }
     if (tcp == NULL)
     { /* Impossible! */
-        announce(WARNING, "Some impossible error in construct-construction.");
+        announce(SLUMP_WARNING, "Some impossible error in construct-construction.");
         return SLUMP_FALSE;
     }
 
@@ -12836,17 +12859,17 @@ boolean install_construct(level *l, sector *oldsector, int minx, int miny, int m
         ld2->right->lower_texture  = tc2->ptexture;
         ld3->right->lower_texture  = tc3->ptexture;
         ld4->right->lower_texture  = tc4->ptexture;
-        ld1->flags &= ~LOWER_UNPEGGED;
-        ld2->flags &= ~LOWER_UNPEGGED;
-        ld3->flags &= ~LOWER_UNPEGGED;
-        ld4->flags &= ~LOWER_UNPEGGED;
+        ld1->flags &= ~SLUMP_LOWER_UNPEGGED;
+        ld2->flags &= ~SLUMP_LOWER_UNPEGGED;
+        ld3->flags &= ~SLUMP_LOWER_UNPEGGED;
+        ld4->flags &= ~SLUMP_LOWER_UNPEGGED;
     }
     ld1->right->y_offset = rollpercent(50) ? tc1->y_offset1 : tc1->y_offset2;
     ld2->right->y_offset = rollpercent(50) ? tc2->y_offset1 : tc2->y_offset2;
     ld3->right->y_offset = rollpercent(50) ? tc3->y_offset1 : tc3->y_offset2;
     ld4->right->y_offset = rollpercent(50) ? tc4->y_offset1 : tc4->y_offset2;
 
-    announce(VERBOSE, "Construct");
+    announce(SLUMP_VERBOSE, "Construct");
     return SLUMP_TRUE;
 
 } /* end install_construct */
@@ -12956,19 +12979,19 @@ boolean do_new_pillar(level *l, sector *oldsector, sector *innersec, texture *t1
             miny = miny + ((maxy - miny) - 128) / 2;
             maxy = miny + 128;
             t1   = ThisStyle->plaque;
-            announce(VERBOSE, "Plaque-pillar");
+            announce(SLUMP_VERBOSE, "Plaque-pillar");
         }
         if (innersec)
         {
-            announce(VERBOSE, "Inner pillar");
+            announce(SLUMP_VERBOSE, "Inner pillar");
             tm = NULL;
         }
         else
         {
             tm = t1;
         }
-        parallel_innersec(l, oldsector, innersec, tm, t1, t1, minx, miny, maxx, maxy, c);
-        announce(VERBOSE, "New pillar");
+        SLUMP_parallel_innersec(l, oldsector, innersec, tm, t1, t1, minx, miny, maxx, maxy, c);
+        announce(SLUMP_VERBOSE, "New pillar");
     }
     /* Consider putting some monsters around it */
     if (rollpercent(50))
@@ -13064,7 +13087,7 @@ void do_new_pillars(level *l, sector *oldsector, style *ThisStyle, haa *haa, con
 
 /* Put some appropriate monster(s) and bonus(es) along the right */
 /* side of the given linedef.  Adjust the haa (haa adjustment */
-/* assumes that ITYTD doesn't find the bonuses, and HMP only */
+/* assumes that SLUMP_ITYTD doesn't find the bonuses, and SLUMP_HMP only */
 /* finds them half the time, if <secret> is true).            */
 void populate_linedef(level *l, linedef *ldnew2, haa *haa, config *c, boolean secret)
 {
@@ -13075,9 +13098,9 @@ void populate_linedef(level *l, linedef *ldnew2, haa *haa, config *c, boolean se
     int    levels, farness, plen;
     short  angle;
 
-    point_from(ldnew2->from->x, ldnew2->from->y, ldnew2->to->x, ldnew2->to->y, RIGHT_TURN, 32, &x1,
+    point_from(ldnew2->from->x, ldnew2->from->y, ldnew2->to->x, ldnew2->to->y, SLUMP_RIGHT_TURN, 32, &x1,
                &y1); /* "32" should be improved */
-    plen = linelen(ldnew2);
+    plen = SLUMP_linelen(ldnew2);
     switch (roll(4))
     {
     case 1:
@@ -13093,12 +13116,12 @@ void populate_linedef(level *l, linedef *ldnew2, haa *haa, config *c, boolean se
         farness = 32;
         break;
     }
-    point_from(ldnew2->to->x, ldnew2->to->y, x1, y1, RIGHT_TURN, farness, &x, &y);
+    point_from(ldnew2->to->x, ldnew2->to->y, x1, y1, SLUMP_RIGHT_TURN, farness, &x, &y);
     /* pick a prize; stubby */
-    bonustype = ID_POTION; /* Just in case! */
+    bonustype = SLUMP_ID_POTION; /* Just in case! */
     if (l->heretic_level)
     {
-        bonustype = ID_WANDCRYSTAL;
+        bonustype = SLUMP_ID_WANDCRYSTAL;
     }
     if (rollpercent(50))
     { /* Health or whatever */
@@ -13107,33 +13130,33 @@ void populate_linedef(level *l, linedef *ldnew2, haa *haa, config *c, boolean se
             switch (roll(4))
             {
             case 0:
-                bonustype   = ID_QUARTZFLASK;
+                bonustype   = SLUMP_ID_QUARTZFLASK;
                 bonusamount = 25;
                 break;
             case 1:
-                bonustype   = ID_QUARTZFLASK;
+                bonustype   = SLUMP_ID_QUARTZFLASK;
                 bonusamount = 25;
                 break;
             case 2:
-                bonustype   = ID_CRYSTALVIAL;
+                bonustype   = SLUMP_ID_CRYSTALVIAL;
                 bonusamount = 10;
                 break;
             case 3:
                 if ((SLUMP_FALSE == l->seen_map) && rollpercent(30))
                 {
-                    bonustype   = ID_MAPSCROLL;
+                    bonustype   = SLUMP_ID_MAPSCROLL;
                     bonusamount = 0;
                     l->seen_map = SLUMP_TRUE;
-                    announce(VERBOSE, "Area map");
+                    announce(SLUMP_VERBOSE, "Area map");
                 }
                 else
                 {
-                    bonustype   = ID_SHADOWSPHERE;
+                    bonustype   = SLUMP_ID_SHADOWSPHERE;
                     bonusamount = 10; /* Also guess */
                 }
                 break;
             default:
-                bonustype   = ID_WANDCRYSTAL;
+                bonustype   = SLUMP_ID_WANDCRYSTAL;
                 bonusamount = 0; /* Impossible */
             }
         }
@@ -13142,52 +13165,52 @@ void populate_linedef(level *l, linedef *ldnew2, haa *haa, config *c, boolean se
             switch (roll(4))
             {
             case 0:
-                bonustype   = ID_MEDIKIT;
+                bonustype   = SLUMP_ID_MEDIKIT;
                 bonusamount = 25;
                 break;
             case 1:
-                bonustype   = ID_MEDIKIT;
+                bonustype   = SLUMP_ID_MEDIKIT;
                 bonusamount = 25;
                 break;
             case 2:
-                bonustype   = ID_STIMPACK;
+                bonustype   = SLUMP_ID_STIMPACK;
                 bonusamount = 10;
                 break;
             case 3:
                 if ((SLUMP_FALSE == l->seen_suit) && (rollpercent(l->p_force_nukage)))
                 {
-                    bonustype    = ID_SUIT;
+                    bonustype    = SLUMP_ID_SUIT;
                     bonusamount  = 10; /* Guess */
                     l->seen_suit = SLUMP_TRUE;
                 }
                 else if ((SLUMP_FALSE == l->seen_map) && rollpercent(30))
                 {
-                    bonustype   = ID_MAP;
+                    bonustype   = SLUMP_ID_MAP;
                     bonusamount = 0;
                     l->seen_map = SLUMP_TRUE;
-                    announce(VERBOSE, "Area map");
+                    announce(SLUMP_VERBOSE, "Area map");
                 }
                 else
                 {
-                    if (c->gamemask & CHEX_BIT)
+                    if (c->gamemask & SLUMP_CHEX_BIT)
                     {
-                        bonustype   = ID_STIMPACK;
+                        bonustype   = SLUMP_ID_STIMPACK;
                         bonusamount = 10;
                     }
                     else
                     {
-                        bonustype   = ID_INVIS;
+                        bonustype   = SLUMP_ID_INVIS;
                         bonusamount = 10; /* Also guess */
                     }
                 }
                 break;
             default:
-                bonustype   = ID_POTION;
+                bonustype   = SLUMP_ID_POTION;
                 bonusamount = 1; /* Impossible */
             }
         }
-        /* We assume ITYTD didn't find the closet! */
-        haa->haas[1].health += bonusamount / 2; /* and HMP might not have */
+        /* We assume SLUMP_ITYTD didn't find the closet! */
+        haa->haas[1].health += bonusamount / 2; /* and SLUMP_HMP might not have */
         haa->haas[2].health += bonusamount;
         if (!secret)
         {                                       /* Unless it's not a secret */
@@ -13201,23 +13224,23 @@ void populate_linedef(level *l, linedef *ldnew2, haa *haa, config *c, boolean se
         {
             if ((haa->haas[0].can_use_cells) && (rollpercent(20)))
             {
-                bonustype   = ID_HELLSTAFF;
+                bonustype   = SLUMP_ID_HELLSTAFF;
                 bonusamount = 1400; /* yow! */
             }
             else if ((haa->haas[0].can_use_rockets) && (rollpercent(20)))
             {
-                bonustype   = ID_INFERNOORB;
+                bonustype   = SLUMP_ID_INFERNOORB;
                 bonusamount = 900;
             }
             else if ((!(haa->haas[2].has_chainsaw)) && (rollpercent(20)))
             {
-                bonustype                 = ID_GAUNTLETS;
+                bonustype                 = SLUMP_ID_GAUNTLETS;
                 bonusamount               = 0;
                 haa->haas[2].has_chainsaw = SLUMP_TRUE;
             }
             else if (rollpercent(2))
             {
-                bonustype                 = ID_GAUNTLETS;
+                bonustype                 = SLUMP_ID_GAUNTLETS;
                 bonusamount               = 0;
                 haa->haas[2].has_chainsaw = SLUMP_TRUE;
             }
@@ -13225,20 +13248,20 @@ void populate_linedef(level *l, linedef *ldnew2, haa *haa, config *c, boolean se
                 switch (roll(3))
                 { // knickknacks
                 case 1:
-                    bonustype   = ID_MAPSCROLL;
+                    bonustype   = SLUMP_ID_MAPSCROLL;
                     bonusamount = 0;
                     break;
                 case 2:
-                    bonustype   = ID_TIMEBOMB;
+                    bonustype   = SLUMP_ID_TIMEBOMB;
                     bonusamount = 0;
                     break;
                 default:
-                    bonustype   = ID_TORCH;
+                    bonustype   = SLUMP_ID_TORCH;
                     bonusamount = 0;
                     break;
                 } /* end switch */
-            /* We assume ITYTD didn't find the closet! */
-            haa->haas[1].ammo += bonusamount / 2; /* And HMP only prolly did */
+            /* We assume SLUMP_ITYTD didn't find the closet! */
+            haa->haas[1].ammo += bonusamount / 2; /* And SLUMP_HMP only prolly did */
             haa->haas[2].ammo += bonusamount;
             if (!secret)
             {                                     /* Unless it's not a secret */
@@ -13246,7 +13269,7 @@ void populate_linedef(level *l, linedef *ldnew2, haa *haa, config *c, boolean se
                 haa->haas[1].ammo += bonusamount / 2;
             }
             /* Account for chainsaws; primitive */
-            if (bonustype == ID_GAUNTLETS)
+            if (bonustype == SLUMP_ID_GAUNTLETS)
             {
                 haa->haas[1].has_chainsaw = SLUMP_TRUE; /* OK? */
                 haa->haas[2].has_chainsaw = SLUMP_TRUE;
@@ -13256,23 +13279,23 @@ void populate_linedef(level *l, linedef *ldnew2, haa *haa, config *c, boolean se
         {
             if ((haa->haas[0].can_use_cells) && (rollpercent(20)))
             {
-                bonustype   = ID_CELLPACK;
+                bonustype   = SLUMP_ID_CELLPACK;
                 bonusamount = 2000; /* yow! */
             }
             else if ((haa->haas[0].can_use_rockets) && (rollpercent(20)))
             {
-                bonustype   = ID_ROCKBOX;
+                bonustype   = SLUMP_ID_ROCKBOX;
                 bonusamount = 500;
             }
             else if ((!(haa->haas[2].has_chainsaw)) && (rollpercent(20)))
             {
-                bonustype                 = ID_CHAINSAW;
+                bonustype                 = SLUMP_ID_CHAINSAW;
                 bonusamount               = 0;
                 haa->haas[2].has_chainsaw = SLUMP_TRUE;
             }
             else if (rollpercent(2))
             {
-                bonustype                 = ID_CHAINSAW;
+                bonustype                 = SLUMP_ID_CHAINSAW;
                 bonusamount               = 0;
                 haa->haas[2].has_chainsaw = SLUMP_TRUE;
             }
@@ -13280,11 +13303,11 @@ void populate_linedef(level *l, linedef *ldnew2, haa *haa, config *c, boolean se
                 switch (roll(3))
                 {
                 case 1:
-                    bonustype   = ID_SHELLBOX;
+                    bonustype   = SLUMP_ID_SHELLBOX;
                     bonusamount = 1400;
                     break;
                 case 2:
-                    bonustype   = ID_BACKPACK;
+                    bonustype   = SLUMP_ID_BACKPACK;
                     bonusamount = 380;
                     if (haa->haas[1].can_use_rockets)
                         bonusamount += 100;
@@ -13294,12 +13317,12 @@ void populate_linedef(level *l, linedef *ldnew2, haa *haa, config *c, boolean se
                     haa->haas[2].has_backpack = SLUMP_TRUE;
                     break;
                 default:
-                    bonustype   = ID_BULBOX;
+                    bonustype   = SLUMP_ID_BULBOX;
                     bonusamount = 500;
                     break;
                 } /* end switch */
-            /* We assume ITYTD didn't find the closet! */
-            haa->haas[1].ammo += bonusamount / 2; /* And HMP only prolly did */
+            /* We assume SLUMP_ITYTD didn't find the closet! */
+            haa->haas[1].ammo += bonusamount / 2; /* And SLUMP_HMP only prolly did */
             haa->haas[2].ammo += bonusamount;
             if (!secret)
             {                                     /* Unless it's not a secret */
@@ -13307,7 +13330,7 @@ void populate_linedef(level *l, linedef *ldnew2, haa *haa, config *c, boolean se
                 haa->haas[1].ammo += bonusamount / 2;
             }
             /* Account for chainsaws; primitive */
-            if (bonustype == ID_CHAINSAW)
+            if (bonustype == SLUMP_ID_CHAINSAW)
             {
                 haa->haas[1].has_chainsaw = SLUMP_TRUE; /* OK? */
                 haa->haas[2].has_chainsaw = SLUMP_TRUE;
@@ -13319,7 +13342,7 @@ void populate_linedef(level *l, linedef *ldnew2, haa *haa, config *c, boolean se
     if (((!secret) || c->secret_monsters) && (rollpercent(90)))
     {
         farness = 32; /* mwidth here */
-        point_from(ldnew2->to->x, ldnew2->to->y, x1, y1, RIGHT_TURN, farness, &x, &y);
+        point_from(ldnew2->to->x, ldnew2->to->y, x1, y1, SLUMP_RIGHT_TURN, farness, &x, &y);
         for (;;)
         {
             m = timely_monster(haa, c, &levels, rollpercent(l->p_biggest_monsters), 0);
@@ -13337,7 +13360,7 @@ void populate_linedef(level *l, linedef *ldnew2, haa *haa, config *c, boolean se
             farness += 64; /* Should be mwidths stuff here */
             if (farness + 32 > plen)
                 break;
-            point_from(ldnew2->to->x, ldnew2->to->y, x1, y1, RIGHT_TURN, farness, &x, &y);
+            point_from(ldnew2->to->x, ldnew2->to->y, x1, y1, SLUMP_RIGHT_TURN, farness, &x, &y);
         } /* end forever while monsters and space */
         haa_unpend(haa);
     } /* end roll for having a monster */
@@ -13363,13 +13386,13 @@ linedef *secret_closet(level *l, linedef *ld, style *ThisStyle, int h, haa *haa,
     if (!empty_left_side(l, ld, 72))
         return NULL; /* Room? */
 
-    doortype = LINEDEF_NORMAL_DOOR;
-    if (!((DOOM0_BIT | HERETIC_BIT) & c->gamemask) && rollpercent(80))
-        doortype = LINEDEF_BLAZE_DOOR;
+    doortype = SLUMP_LINEDEF_NORMAL_DOOR;
+    if (!((SLUMP_DOOM0_BIT | SLUMP_HERETIC_BIT) & c->gamemask) && rollpercent(80))
+        doortype = SLUMP_LINEDEF_BLAZE_DOOR;
 
     /* Modify the outermost linedef to be doory */
     ld->right->upper_texture = ld->right->middle_texture; /* Door face */
-    ld->flags |= SECRET_LINEDEF;
+    ld->flags |= SLUMP_SECRET_LINEDEF;
     if (tag == -1)
         ld->type = doortype;
     /* Correct? */
@@ -13378,8 +13401,8 @@ linedef *secret_closet(level *l, linedef *ld, style *ThisStyle, int h, haa *haa,
     ldnew = lefthand_box_ext(l, ld, 8, ThisStyle, c, &ldedge1, &ldedge2);
     if (tag != -1)
         ldnew->right->psector->tag = tag;
-    ldedge1->flags |= LOWER_UNPEGGED;
-    ldedge2->flags |= LOWER_UNPEGGED;
+    ldedge1->flags |= SLUMP_LOWER_UNPEGGED;
+    ldedge2->flags |= SLUMP_LOWER_UNPEGGED;
     ldedge1->right->y_offset = ldedge2->right->y_offset = ch - ldedge1->right->psector->floor_height;
     /* Make the closet sector -- "64" should be variable */
     ldnew2 = lefthand_box_ext(l, ldnew, 64, ThisStyle, c, &ldedge1, &ldedge2);
@@ -13391,20 +13414,20 @@ linedef *secret_closet(level *l, linedef *ld, style *ThisStyle, int h, haa *haa,
     s = ldnew->right->psector;
     flip_linedef(ldnew);
     if (secret)
-        s->special = SECRET_SECTOR;
+        s->special = SLUMP_SECRET_SECTOR;
     if (inside_sr)
     {
         ldnew->type = doortype; /* reopenable */
     }
     else
     {
-        ldnew->type = LINEDEF_NORMAL_S1_DOOR; /* Triggered doors never close */
+        ldnew->type = SLUMP_LINEDEF_NORMAL_S1_DOOR; /* Triggered doors never close */
     }
     s->ceiling_height           = s->floor_height;
     s->light_level              = ThisStyle->doorlight0;
     ldnew->right->upper_texture = ThisStyle->support0;
-    ld->flags |= BLOCK_SOUND; /* Always? */
-    ldnew->flags |= BLOCK_SOUND;
+    ld->flags |= SLUMP_BLOCK_SOUND; /* Always? */
+    ldnew->flags |= SLUMP_BLOCK_SOUND;
     /* and polish up the closet */
     ldnew2->right->middle_texture = ThisStyle->wall0;
     s                             = ldnew2->right->psector;
@@ -13414,7 +13437,7 @@ linedef *secret_closet(level *l, linedef *ld, style *ThisStyle, int h, haa *haa,
         if (c->clights)
         {
             s->ceiling_flat = s->pstyle->ceilinglight;
-            announce(VERBOSE, "ccl");
+            announce(SLUMP_VERBOSE, "ccl");
             make_lighted(l, s, c);
         }
 
@@ -13425,10 +13448,10 @@ linedef *secret_closet(level *l, linedef *ld, style *ThisStyle, int h, haa *haa,
         s->floor_height -= 8;
         patch_lower(ldnew, ldnew->right->upper_texture, c);
         s->floor_flat = ThisStyle->nukage1;
-        s->special    = NUKAGE1_SPECIAL;
+        s->special    = SLUMP_NUKAGE1_SPECIAL;
     }
 
-    if (s->special == SECRET_SECTOR)
+    if (s->special == SLUMP_SECRET_SECTOR)
         l->secret_count++;
 
     if (haa)
@@ -13456,18 +13479,18 @@ void trigger_box(level *l, thing *t, sector *oldsector, short tag, short type, c
     else
     {
         /* This shouldn't ever happen anymore, but just in case... */
-        announce(WARNING, "point_sector returned NULL in trigger_box");
+        announce(SLUMP_WARNING, "point_sector returned NULL in trigger_box");
     }
     if (dist > 24)
         dist = 24;
     if (dist < 4)
     {
-        announce(LOG, "Tiny triggerbox");
+        announce(SLUMP_LOG, "Tiny triggerbox");
         dist = 4;
     }
     else if (dist < 24)
     {
-        announce(LOG, "Small triggerbox");
+        announce(SLUMP_LOG, "Small triggerbox");
     }
 
     v1           = new_vertex(l, t->x - dist, t->y - dist);
@@ -13479,7 +13502,7 @@ void trigger_box(level *l, thing *t, sector *oldsector, short tag, short type, c
     ldnew->left  = new_sidedef(l, oldsector, c);
     ldnew->tag   = tag;
     ldnew->type  = type;
-    ldnew->flags |= TWO_SIDED;
+    ldnew->flags |= SLUMP_TWO_SIDED;
     ldnew->right->middle_texture = c->null_texture;
     ldnew->left->middle_texture  = c->null_texture;
     ldnew                        = new_linedef(l, v2, v3);
@@ -13487,7 +13510,7 @@ void trigger_box(level *l, thing *t, sector *oldsector, short tag, short type, c
     ldnew->left                  = new_sidedef(l, oldsector, c);
     ldnew->tag                   = tag;
     ldnew->type                  = type;
-    ldnew->flags |= TWO_SIDED;
+    ldnew->flags |= SLUMP_TWO_SIDED;
     ldnew->right->middle_texture = c->null_texture;
     ldnew->left->middle_texture  = c->null_texture;
     ldnew                        = new_linedef(l, v3, v4);
@@ -13495,7 +13518,7 @@ void trigger_box(level *l, thing *t, sector *oldsector, short tag, short type, c
     ldnew->left                  = new_sidedef(l, oldsector, c);
     ldnew->tag                   = tag;
     ldnew->type                  = type;
-    ldnew->flags |= TWO_SIDED;
+    ldnew->flags |= SLUMP_TWO_SIDED;
     ldnew->right->middle_texture = c->null_texture;
     ldnew->left->middle_texture  = c->null_texture;
     ldnew                        = new_linedef(l, v4, v1);
@@ -13503,7 +13526,7 @@ void trigger_box(level *l, thing *t, sector *oldsector, short tag, short type, c
     ldnew->left                  = new_sidedef(l, oldsector, c);
     ldnew->tag                   = tag;
     ldnew->type                  = type;
-    ldnew->flags |= TWO_SIDED;
+    ldnew->flags |= SLUMP_TWO_SIDED;
     ldnew->right->middle_texture = c->null_texture;
     ldnew->left->middle_texture  = c->null_texture;
 }
@@ -13514,7 +13537,7 @@ link *random_patio_link(level *l, linedef *ld, style *ThisStyle, config *c)
 {
     link *answer = (link *)malloc(sizeof(*answer));
 
-    answer->type       = BASIC_LINK;
+    answer->type       = SLUMP_BASIC_LINK;
     answer->bits       = 0;
     answer->floordelta = 0;
     if (rollpercent(50))
@@ -13531,7 +13554,7 @@ link *random_patio_link(level *l, linedef *ld, style *ThisStyle, config *c)
     }
     else
     {
-        answer->width1 = 64 + roll(linelen(ld) - 79);
+        answer->width1 = 64 + roll(SLUMP_linelen(ld) - 79);
     }
     if (rollpercent(50))
     {
@@ -13558,15 +13581,15 @@ link *random_patio_link(level *l, linedef *ld, style *ThisStyle, config *c)
         answer->depth3 = (8 + 4 * roll(15)) * l->hugeness;
     }
     if (rollpercent(50))
-        answer->bits |= LINK_RECESS;
+        answer->bits |= SLUMP_LINK_RECESS;
     if (rollpercent(20))
-        answer->bits |= LINK_CORE;
+        answer->bits |= SLUMP_LINK_CORE;
     if (rollpercent(5))
-        answer->bits |= LINK_BARS;
+        answer->bits |= SLUMP_LINK_BARS;
     if (rollpercent(20))
     { /* Single door */
-        answer->bits |= LINK_RECESS | LINK_ANY_DOOR;
-        answer->bits &= ~LINK_CORE;
+        answer->bits |= SLUMP_LINK_RECESS | SLUMP_LINK_ANY_DOOR;
+        answer->bits &= ~SLUMP_LINK_CORE;
     }
     return answer;
 }
@@ -13596,7 +13619,7 @@ void make_extroom(level *l, sector *oldsector, haa *haa, style *ThisStyle, confi
         newldf   = make_linkto(l, ld, ThisLink, ThisStyle, c, NULL);
         if (newldf == NULL)
             return; /* Shouldn't happen */
-        depth = linelen(ld);
+        depth = SLUMP_linelen(ld);
         if ((depth <= 512) && rollpercent(25))
             depth *= 2;
         flip_linedef(newldf); /* Just so we can use the lefthand functions */
@@ -13618,7 +13641,7 @@ void make_extroom(level *l, sector *oldsector, haa *haa, style *ThisStyle, confi
         ldfar->right->middle_texture = newldf->right->middle_texture = t1;
         if (outtex)
             ldfar->right->middle_texture = lde1->right->middle_texture = lde2->right->middle_texture =
-                random_texture0(OUTDOOR, c, NULL);
+                random_texture0(SLUMP_OUTDOOR, c, NULL);
         losec               = newldf->right->psector;
         losec->floor_height = oldsector->floor_height;
         losec->floor_flat   = oldsector->floor_flat;
@@ -13633,20 +13656,20 @@ void make_extroom(level *l, sector *oldsector, haa *haa, style *ThisStyle, confi
         /* And now the little triangle thing to look good */
         x = (newldf->to->x + newldf->from->x) / 2;
         y = (newldf->to->y + newldf->from->y) / 2;
-        point_from(newldf->from->x, newldf->from->y, x, y, RIGHT_TURN, 32, &x, &y);
+        point_from(newldf->from->x, newldf->from->y, x, y, SLUMP_RIGHT_TURN, 32, &x, &y);
         v                          = new_vertex(l, x, y);
         ldt                        = new_linedef(l, newldf->to, v);
         ldt->right                 = new_sidedef(l, hisec, c);
         ldt->right->middle_texture = c->null_texture;
         ldt->left                  = new_sidedef(l, losec, c);
         ldt->left->middle_texture  = c->null_texture;
-        ldt->flags |= TWO_SIDED | NOT_ON_MAP;
+        ldt->flags |= SLUMP_TWO_SIDED | SLUMP_NOT_ON_MAP;
         ldt                        = new_linedef(l, v, newldf->from);
         ldt->right                 = new_sidedef(l, hisec, c);
         ldt->right->middle_texture = c->null_texture;
         ldt->left                  = new_sidedef(l, losec, c);
         ldt->left->middle_texture  = c->null_texture;
-        ldt->flags |= TWO_SIDED | NOT_ON_MAP;
+        ldt->flags |= SLUMP_TWO_SIDED | SLUMP_NOT_ON_MAP;
         /* Adjust stuff */
         hisec->ceiling_height = oldsector->ceiling_height + cthick;
         if (hisec->ceiling_height < losec->ceiling_height)
@@ -13666,11 +13689,11 @@ void make_extroom(level *l, sector *oldsector, haa *haa, style *ThisStyle, confi
                     if (ldt->right->psector == hisec)
                         patch_upper(ldt, t1, c);
         if (outtex)
-            hisec->floor_flat = losec->floor_flat = random_flat0(OUTDOOR, c, NULL);
+            hisec->floor_flat = losec->floor_flat = random_flat0(SLUMP_OUTDOOR, c, NULL);
         /* Now populate it and stuff */
         populate(l, losec, c, haa, SLUMP_FALSE);
         place_plants(l, 128, losec, c); /* 128? */
-        announce(VERBOSE, "Patio");
+        announce(SLUMP_VERBOSE, "Patio");
     }
 
 } /* end make_extroom */
@@ -13690,7 +13713,7 @@ void make_extwindow(level *l, sector *oldsector, style *ThisStyle, config *c)
     if (ld != NULL)
     {
         t1    = ld->right->middle_texture;
-        ldlen = linelen(ld);
+        ldlen = SLUMP_linelen(ld);
         wlen  = 32 + roll(ldlen - 31);
         if (wlen > ldlen)
             wlen = ldlen;
@@ -13720,7 +13743,7 @@ void make_extwindow(level *l, sector *oldsector, style *ThisStyle, config *c)
                 ldnew->right->psector->ceiling_height = oldsector->ceiling_height;
             if ((ThisStyle->window_grate) && rollpercent(50))
             {
-                announce(VERBOSE, "Grated extwindow");
+                announce(SLUMP_VERBOSE, "Grated extwindow");
                 ld->right->middle_texture = ThisStyle->grating;
                 if (ldnew->right->psector->ceiling_height - ldnew->right->psector->floor_height < 128)
                 {
@@ -13735,11 +13758,11 @@ void make_extwindow(level *l, sector *oldsector, style *ThisStyle, config *c)
             e1->right->y_offset = e2->right->y_offset = yoff;
             ldnew->right->psector->floor_height       = wheight - 4;
             ldnew->right->psector->ceiling_flat       = c->sky_flat;
-            ldnew                                     = lefthand_box(l, ldnew, 8, ThisStyle, c);
+            ldnew                                     = SLUMP_lefthand_box(l, ldnew, 8, ThisStyle, c);
             ldnew->right->psector->floor_height       = wheight - 16;
             ldnew->right->psector->ceiling_height     = wheight - 8;
             ldnew->right->psector->ceiling_flat       = c->sky_flat;
-            announce(VERBOSE, "Outside Window");
+            announce(SLUMP_VERBOSE, "Outside Window");
         } /* end if enough room */
     } /* end if found a linedef */
 }
@@ -13805,19 +13828,19 @@ boolean grid_room(level *l, sector *oldsector, haa *haa, style *ThisStyle, quest
     }
     if ((ThisStyle->walllight != NULL) && rollpercent(3))
     {
-        announce(LOG, "Gridlight");
+        announce(SLUMP_LOG, "Gridlight");
         t                      = ThisStyle->walllight;
         oldsector->light_level = 240; /* Or so */
         switch (roll(3))
         {
         case 0:
-            oldsector->special = RANDOM_BLINK;
+            oldsector->special = SLUMP_RANDOM_BLINK;
             break;
         case 1:
-            oldsector->special = SYNC_FAST_BLINK;
+            oldsector->special = SLUMP_SYNC_FAST_BLINK;
             break;
         default:
-            oldsector->special = SYNC_SLOW_BLINK;
+            oldsector->special = SLUMP_SYNC_SLOW_BLINK;
             break;
         }
     }
@@ -13841,35 +13864,35 @@ boolean grid_room(level *l, sector *oldsector, haa *haa, style *ThisStyle, quest
                 if (tx == t)
                     tx = ThisStyle->wall0;
                 newsec->tag     = new_tag(l);
-                newsec->special = SECRET_SECTOR;
+                newsec->special = SLUMP_SECRET_SECTOR;
                 parallel_innersec_ex(l, oldsector, newsec, NULL, ThisStyle->wall0, t, x1, y1, x1 + xwidth, y1 + ywidth,
                                      c, &ld1, &ld2, &ld3, &ld4);
-                ld2->flags |= SECRET_LINEDEF;
-                ld3->flags |= SECRET_LINEDEF;
-                ld4->flags |= SECRET_LINEDEF;
-                ld1->flags &= ~(LOWER_UNPEGGED | UPPER_UNPEGGED); /* Ought to */
-                ld2->flags &= ~(LOWER_UNPEGGED | UPPER_UNPEGGED); /* re-y-align, */
-                ld3->flags &= ~(LOWER_UNPEGGED | UPPER_UNPEGGED); /* also, */
-                ld4->flags &= ~(LOWER_UNPEGGED | UPPER_UNPEGGED); /* eh? */
+                ld2->flags |= SLUMP_SECRET_LINEDEF;
+                ld3->flags |= SLUMP_SECRET_LINEDEF;
+                ld4->flags |= SLUMP_SECRET_LINEDEF;
+                ld1->flags &= ~(SLUMP_LOWER_UNPEGGED | SLUMP_UPPER_UNPEGGED); /* Ought to */
+                ld2->flags &= ~(SLUMP_LOWER_UNPEGGED | SLUMP_UPPER_UNPEGGED); /* re-y-align, */
+                ld3->flags &= ~(SLUMP_LOWER_UNPEGGED | SLUMP_UPPER_UNPEGGED); /* also, */
+                ld4->flags &= ~(SLUMP_LOWER_UNPEGGED | SLUMP_UPPER_UNPEGGED); /* eh? */
                 if (rollpercent(50))
                 {
                     ld1->right->lower_texture = tx;
-                    ld1->flags |= SECRET_LINEDEF;
+                    ld1->flags |= SLUMP_SECRET_LINEDEF;
                 }
                 ld1->tag  = newsec->tag;
                 ld1->type = ThisStyle->slifttype;
                 flip_linedef(ld3);
                 ld3->tag  = newsec->tag;
                 ld3->type = ThisStyle->slifttype;
-                ld3->flags &= ~UPPER_UNPEGGED;
-                if (linelen(ld3) > 64)
+                ld3->flags &= ~SLUMP_UPPER_UNPEGGED;
+                if (SLUMP_linelen(ld3) > 64)
                     split_linedef(l, ld3, 64, c);
                 ld3->right->upper_texture = ThisStyle->switch0;
                 ld3->right->x_offset      = 0;
                 ld3->right->y_offset += ThisStyle->switch0->y_bias;
                 sx = x1 + xwidth / 2;
                 sy = y1 + ywidth / 2;
-                announce(VERBOSE, "Secret grid-pillar");
+                announce(SLUMP_VERBOSE, "Secret grid-pillar");
                 continue;
             }
             if (rollpercent(c->p_grid_gaps))
@@ -13878,10 +13901,10 @@ boolean grid_room(level *l, sector *oldsector, haa *haa, style *ThisStyle, quest
             {
                 trying_constructs = install_construct(l, oldsector, x1, y1, x1 + xwidth, y1 + ywidth, ThisStyle, c);
                 if (trying_constructs)
-                    announce(VERBOSE, "Grid construct");
+                    announce(SLUMP_VERBOSE, "Grid construct");
             }
             if (!trying_constructs)
-                parallel_innersec(l, oldsector, NULL, t, NULL, NULL, x1, y1, x1 + xwidth, y1 + ywidth, c);
+                SLUMP_parallel_innersec(l, oldsector, NULL, t, NULL, NULL, x1, y1, x1 + xwidth, y1 + ywidth, c);
             /* Pretty primitive; monster-width assumptions etc. */
             if (xi && rollpercent(50))
             {
@@ -13936,7 +13959,7 @@ boolean grid_room(level *l, sector *oldsector, haa *haa, style *ThisStyle, quest
         haa_unpend(haa);
     }
 
-    announce(VERBOSE, "Grid room");
+    announce(SLUMP_VERBOSE, "Grid room");
     return SLUMP_TRUE;
 }
 
@@ -13977,25 +14000,25 @@ void install_gate(level *l, sector *s, style *ThisStyle, haa *ThisHaa, boolean f
             outersec->floor_flat = s->pstyle->nukage1;
             if (outersec->light_level < 160)
                 outersec->light_level = 160;
-            outersec->special = NUKAGE1_SPECIAL;
+            outersec->special = SLUMP_NUKAGE1_SPECIAL;
             rise += 8;
-            parallel_innersec(l, s, outersec, NULL, s->pstyle->wall0, s->pstyle->support0, minx + leeway, miny + leeway,
-                              maxx - leeway, maxy - leeway, c);
+            SLUMP_parallel_innersec(l, s, outersec, NULL, s->pstyle->wall0, s->pstyle->support0, minx + leeway,
+                                    miny + leeway, maxx - leeway, maxy - leeway, c);
             if (s->pgate->is_entry)
             {
-                announce(VERBOSE, "Nukage arrival");
+                announce(SLUMP_VERBOSE, "Nukage arrival");
             }
             else
             {
-                announce(VERBOSE, "Nukage gate");
+                announce(SLUMP_VERBOSE, "Nukage gate");
             }
-            ThisHaa->haas[ITYTD].health -= 10;
-            ThisHaa->haas[HMP].health -= 5;
+            ThisHaa->haas[SLUMP_ITYTD].health -= 10;
+            ThisHaa->haas[SLUMP_HMP].health -= 5;
             if (s->pgate->is_entry)
             {
-                ThisHaa->haas[ITYTD].health -= 10;
-                ThisHaa->haas[HMP].health -= 5;
-                ThisHaa->haas[UV].health -= 5;
+                ThisHaa->haas[SLUMP_ITYTD].health -= 10;
+                ThisHaa->haas[SLUMP_HMP].health -= 5;
+                ThisHaa->haas[SLUMP_UV].health -= 5;
             }
         }
     }
@@ -14007,15 +14030,15 @@ void install_gate(level *l, sector *s, style *ThisStyle, haa *ThisHaa, boolean f
         if ((innersec->ceiling_flat != c->sky_flat) && ThisStyle->ceilinglight)
         {
             innersec->ceiling_flat = ThisStyle->ceilinglight;
-            announce(VERBOSE, "gcl");
+            announce(SLUMP_VERBOSE, "gcl");
         }
-        innersec->light_level = 240;        /* Should vary by style or level */
-        innersec->special     = GLOW_BLINK; /* Also */
+        innersec->light_level = 240;              /* Should vary by style or level */
+        innersec->special     = SLUMP_GLOW_BLINK; /* Also */
     }
     if (s->pgate->in_tag)
     {
         innersec->tag = s->pgate->in_tag;
-        new_thing(l, (lowx + hix) / 2, (lowy + hiy) / 2, (short)(90 * roll(4)), ID_GATEOUT, 7, c);
+        new_thing(l, (lowx + hix) / 2, (lowy + hiy) / 2, (short)(90 * roll(4)), SLUMP_ID_GATEOUT, 7, c);
         if (s->pgate->is_entry)
         {
             s->entry_x = lowx + 32;
@@ -14027,14 +14050,14 @@ void install_gate(level *l, sector *s, style *ThisStyle, haa *ThisHaa, boolean f
     {
         switch (s->pgate->gate_lock)
         {
-        case LINEDEF_S1_OPEN_DOOR:
+        case SLUMP_LINEDEF_S1_OPEN_DOOR:
             innersec->ceiling_height = innersec->floor_height + 32;
-            announce(LOG, "Uplocked gate");
+            announce(SLUMP_LOG, "Uplocked gate");
             break;
-        case LINEDEF_S1_LOWER_FLOOR:
+        case SLUMP_LINEDEF_S1_LOWER_FLOOR:
             innersec->floor_height += 32;
             rise += 32;
-            announce(LOG, "Downlocked gate");
+            announce(SLUMP_LOG, "Downlocked gate");
             break;
         default:
             announce(SLUMP_ERROR, "Odd lock-type in install_gate");
@@ -14062,34 +14085,34 @@ void install_gate(level *l, sector *s, style *ThisStyle, haa *ThisHaa, boolean f
     if (c->monsters_can_teleport)
         tag_mask = 0;
     else
-        tag_mask = BLOCK_MONSTERS;
+        tag_mask = SLUMP_BLOCK_MONSTERS;
     if (c->monsters_can_teleport)
-        announce(VERBOSE, "Possible teleporting monsters");
+        announce(SLUMP_VERBOSE, "Possible teleporting monsters");
     if (s->pgate->out_tag)
     {
-        ld1->type = LINEDEF_TELEPORT;
+        ld1->type = SLUMP_LINEDEF_TELEPORT;
         ld1->flags |= tag_mask; /* Always? */
         ld1->tag  = s->pgate->out_tag;
-        ld2->type = LINEDEF_TELEPORT;
+        ld2->type = SLUMP_LINEDEF_TELEPORT;
         ld2->flags |= tag_mask; /* Always? */
         ld2->tag  = s->pgate->out_tag;
-        ld3->type = LINEDEF_TELEPORT;
+        ld3->type = SLUMP_LINEDEF_TELEPORT;
         ld3->flags |= tag_mask; /* Always? */
         ld3->tag  = s->pgate->out_tag;
-        ld4->type = LINEDEF_TELEPORT;
+        ld4->type = SLUMP_LINEDEF_TELEPORT;
         ld4->flags |= tag_mask; /* Always? */
         ld4->tag = s->pgate->out_tag;
     }
     else if (0 == s->pgate->in_tag)
     { /* Must be a level-end gate */
         exit_style = SLUMP_TRUE;
-        ld1->type  = LINEDEF_W1_END_LEVEL;
+        ld1->type  = SLUMP_LINEDEF_W1_END_LEVEL;
         ld1->flags |= tag_mask;
-        ld2->type = LINEDEF_W1_END_LEVEL;
+        ld2->type = SLUMP_LINEDEF_W1_END_LEVEL;
         ld2->flags |= tag_mask;
-        ld3->type = LINEDEF_W1_END_LEVEL;
+        ld3->type = SLUMP_LINEDEF_W1_END_LEVEL;
         ld3->flags |= tag_mask;
-        ld4->type = LINEDEF_W1_END_LEVEL;
+        ld4->type = SLUMP_LINEDEF_W1_END_LEVEL;
         ld4->flags |= tag_mask;
     } /* Otherwise an in-only gate */
     if (exit_style)
@@ -14109,7 +14132,7 @@ void install_gate(level *l, sector *s, style *ThisStyle, haa *ThisHaa, boolean f
         innersec->ceiling_flat = gateflat;
     }
     if (s->pgate->out_tag || exit_gate)
-        if (innersec->ceiling_flat->props & LIGHT)
+        if (innersec->ceiling_flat->props & SLUMP_LIGHT)
             if (innersec->ceiling_height - innersec->floor_height >= 96)
                 if (!s->pgate->gate_lock)
                 {
@@ -14117,10 +14140,10 @@ void install_gate(level *l, sector *s, style *ThisStyle, haa *ThisHaa, boolean f
                     ld1->right->upper_texture = ld2->right->upper_texture = ld3->right->upper_texture =
                         ld4->right->upper_texture                         = ThisStyle->support0;
                 }
-    ld1->flags &= ~LOWER_UNPEGGED;
-    ld2->flags &= ~LOWER_UNPEGGED;
-    ld3->flags &= ~LOWER_UNPEGGED;
-    ld4->flags &= ~LOWER_UNPEGGED;
+    ld1->flags &= ~SLUMP_LOWER_UNPEGGED;
+    ld2->flags &= ~SLUMP_LOWER_UNPEGGED;
+    ld3->flags &= ~SLUMP_LOWER_UNPEGGED;
+    ld4->flags &= ~SLUMP_LOWER_UNPEGGED;
 
 } /* end install_gate */
 
@@ -14150,31 +14173,31 @@ boolean install_sl_exit(level *l, sector *oldsector, haa *ThisHaa, style *ThisSt
     ld2 = install_switch(l, ld, SLUMP_TRUE, SLUMP_FALSE, 0, ThisStyle, c, &ld3);
     if (ld == ld2)
     { /* Didn't recess after all?? */
-        announce(WARNING, "Silly switch left sitting around?");
+        announce(SLUMP_WARNING, "Silly switch left sitting around?");
         /* Try to fix it */
         ld->right->middle_texture = ThisStyle->wall0;
-        ld->type                  = LINEDEF_NORMAL;
+        ld->type                  = SLUMP_LINEDEF_NORMAL;
         return SLUMP_FALSE;
     }
     tag                    = new_tag(l);
-    ld2->type              = LINEDEF_S1_SEC_LEVEL;
+    ld2->type              = SLUMP_LINEDEF_S1_SEC_LEVEL;
     newsec                 = ld2->right->psector;
-    newsec->special        = GLOW_BLINK;
+    newsec->special        = SLUMP_GLOW_BLINK;
     newsec->light_level    = 255;
     newsec->ceiling_height = newsec->floor_height;
     l->sl_tag              = tag;
     if (opens)
     {
-        ld3->type = LINEDEF_NORMAL_S1_DOOR;
-        announce(VERBOSE, "Openable sl exit");
+        ld3->type = SLUMP_LINEDEF_NORMAL_S1_DOOR;
+        announce(SLUMP_VERBOSE, "Openable sl exit");
         l->sl_done = SLUMP_TRUE;
     }
     else
     {
         newsec->tag = tag;
-        l->sl_type  = LINEDEF_W1_OPEN_DOOR; /* Or S1, eh?  So... */
-        ld->flags |= SECRET_LINEDEF;
-        if (ThisQuest->goal == LEVEL_END_GOAL)
+        l->sl_type  = SLUMP_LINEDEF_W1_OPEN_DOOR; /* Or S1, eh?  So... */
+        ld->flags |= SLUMP_SECRET_LINEDEF;
+        if (ThisQuest->goal == SLUMP_LEVEL_END_GOAL)
         {
             l->sl_open_ok = SLUMP_TRUE;
         }
@@ -14184,7 +14207,7 @@ boolean install_sl_exit(level *l, sector *oldsector, haa *ThisHaa, style *ThisSt
             l->sl_open_start = ThisQuest->room;
         }
         l->sl_exit_sector = oldsector;
-        announce(VERBOSE, "Installed sl exit");
+        announce(SLUMP_VERBOSE, "Installed sl exit");
     }
     return SLUMP_TRUE;
 }
@@ -14199,7 +14222,7 @@ void try_sl_triggerbox(level *l, sector *oldsector, config *c)
 
     for (t = l->thing_anchor; t; t = t->next)
     {
-        if (!(t->pgenus->bits & PICKABLE))
+        if (!(t->pgenus->bits & SLUMP_PICKABLE))
             continue;
         if (oldsector != point_sector(l, t->x, t->y, &border, &danger))
             continue;
@@ -14216,7 +14239,7 @@ void try_sl_triggerbox(level *l, sector *oldsector, config *c)
         trigger_box(l, t, oldsector, l->sl_tag, l->sl_type, c);
         l->sl_done    = SLUMP_TRUE;
         l->sl_open_ok = SLUMP_FALSE;
-        announce(VERBOSE, "Did sl triggerbox");
+        announce(SLUMP_VERBOSE, "Did sl triggerbox");
     } /* if found a good thing */
 }
 
@@ -14227,7 +14250,7 @@ void enhance_room(level *l, sector *oldsector, haa *ThisHaa, style *ThisStyle, q
     boolean done_room = SLUMP_FALSE;
     boolean did_dm    = SLUMP_FALSE;
 
-    if ((ThisQuest) && (ThisQuest->goal != NULL_GOAL) && (need_secret_level(c)) && (l->sl_tag == 0) &&
+    if ((ThisQuest) && (ThisQuest->goal != SLUMP_NULL_GOAL) && (need_secret_level(c)) && (l->sl_tag == 0) &&
         (rollpercent(20) || (ThisQuest->count + 4 > ThisQuest->minrooms)))
     {
         install_sl_exit(l, oldsector, ThisHaa, ThisStyle, ThisQuest, SLUMP_FALSE, c);
@@ -14235,7 +14258,7 @@ void enhance_room(level *l, sector *oldsector, haa *ThisHaa, style *ThisStyle, q
 
     if ((first) && (oldsector->pgate))
     {
-        announce(WARNING, "Gate and watermark do not mix!");
+        announce(SLUMP_WARNING, "Gate and watermark do not mix!");
     }
 
     if ((!done_room) && oldsector->middle_enhanced)
@@ -14303,7 +14326,7 @@ void embellish_room(level *l, sector *oldsector, haa *haa, style *ThisStyle, que
 
     if (rollpercent(10))
         if (oldsector->special == 0)
-            oldsector->special = RANDOM_BLINK;
+            oldsector->special = SLUMP_RANDOM_BLINK;
 
     if (first)
     { /* Watermark */
@@ -14359,12 +14382,12 @@ void embellish_room(level *l, sector *oldsector, haa *haa, style *ThisStyle, que
                 {
                     t1   = ld->right->middle_texture;
                     clen = ThisStyle->closet_width;
-#ifndef WIDE_SKIES_OK
+#ifndef SLUMP_WIDE_SKIES_OK
                     if (sky_thing)
                         if (clen > 72)
                             clen = 72; /* Wide skyc's look lame */
 #endif
-                    ldlen = linelen(ld);
+                    ldlen = SLUMP_linelen(ld);
                     if (clen > ldlen)
                         clen = ldlen;
                     border = (ldlen - clen) / 2;
@@ -14396,7 +14419,7 @@ void embellish_room(level *l, sector *oldsector, haa *haa, style *ThisStyle, que
                         if (sky_thing)
                         {
                             int minx, miny, maxx, maxy;
-                            announce(VERBOSE, "Sky closet");
+                            announce(SLUMP_VERBOSE, "Sky closet");
                             innersec = clone_sector(l, outersec);
                             innersec->ceiling_height += 16; /* 8?  16? */
                             find_rec(l, outersec, &minx, &miny, &maxx, &maxy);
@@ -14404,8 +14427,8 @@ void embellish_room(level *l, sector *oldsector, haa *haa, style *ThisStyle, que
                             miny += 8;
                             maxx -= 8;
                             maxy -= 8;
-                            parallel_innersec(l, outersec, innersec, NULL, outersec->pstyle->wall0,
-                                              outersec->pstyle->wall0, minx, miny, maxx, maxy, c);
+                            SLUMP_parallel_innersec(l, outersec, innersec, NULL, outersec->pstyle->wall0,
+                                                    outersec->pstyle->wall0, minx, miny, maxx, maxy, c);
                             innersec->ceiling_flat = c->sky_flat;
                             innersec->light_level  = l->outside_light_level;
                             if (outersec->light_level < l->bright_light_level)
@@ -14423,39 +14446,39 @@ void embellish_room(level *l, sector *oldsector, haa *haa, style *ThisStyle, que
                             {
                                 outersec->floor_height -= 8;
                                 outersec->floor_flat = ThisStyle->nukage1;
-                                outersec->special    = NUKAGE1_SPECIAL;
+                                outersec->special    = SLUMP_NUKAGE1_SPECIAL;
                                 if (outersec->light_level < 120)
                                     outersec->light_level = 120;
                                 patch_lower(ld, ThisStyle->support0, c);
-                                announce(VERBOSE, "Nukage ambush");
+                                announce(SLUMP_VERBOSE, "Nukage ambush");
                             } /* end nukage */
                             if (rollpercent(2) /* "2"?  Crush! */
                                 && (outersec->ceiling_height - outersec->floor_height <= 72) &&
-                                (l->crushercount < LEVEL_MAX_CRUSHERS))
+                                (l->crushercount < SLUMP_LEVEL_MAX_CRUSHERS))
                             {
                                 l->crushercount++;
-                                ld->type                 = LINEDEF_WR_FAST_CRUSH;
+                                ld->type                 = SLUMP_LINEDEF_WR_FAST_CRUSH;
                                 ld->tag                  = new_tag(l);
                                 ld->right->upper_texture = ThisStyle->wall0;
-                                ld->flags &= ~UPPER_UNPEGGED;
+                                ld->flags &= ~SLUMP_UPPER_UNPEGGED;
                                 ld->right->y_offset -= outersec->ceiling_height - oldsector->ceiling_height;
-                                ldnew->flags |= LOWER_UNPEGGED;
-                                ldedge1->flags |= LOWER_UNPEGGED;
-                                ldedge2->flags |= LOWER_UNPEGGED;
+                                ldnew->flags |= SLUMP_LOWER_UNPEGGED;
+                                ldedge1->flags |= SLUMP_LOWER_UNPEGGED;
+                                ldedge2->flags |= SLUMP_LOWER_UNPEGGED;
                                 ldnew->right->y_offset += outersec->ceiling_height - outersec->floor_height;
                                 ldedge1->right->y_offset += outersec->ceiling_height - outersec->floor_height;
                                 ldedge2->right->y_offset += outersec->ceiling_height - outersec->floor_height;
                                 outersec->tag          = ld->tag;
-                                outersec->ceiling_flat = random_flat0(RED, c, NULL);
+                                outersec->ceiling_flat = random_flat0(SLUMP_RED, c, NULL);
                                 if (outersec->light_level > 120)
                                     outersec->light_level = 120;
                                 crushing = SLUMP_TRUE;
-                                announce(VERBOSE, "Crush ambush");
+                                announce(SLUMP_VERBOSE, "Crush ambush");
                             } /* end if crushing */
                             if (oldsector->light_level - outersec->light_level >= 16)
                             {
                                 linedef *ldnew2;
-                                announce(VERBOSE, "shadow");
+                                announce(SLUMP_VERBOSE, "shadow");
                                 innersec              = clone_sector(l, outersec);
                                 innersec->tag         = outersec->tag;
                                 innersec->pstyle      = oldsector->pstyle; /* Why? */
@@ -14468,11 +14491,11 @@ void embellish_room(level *l, sector *oldsector, haa *haa, style *ThisStyle, que
                                 }
                                 else
                                 {
-                                    ldedge2 = split_linedef(l, ldedge2, linelen(ldedge2) - (16 + roll(20)), c);
+                                    ldedge2 = split_linedef(l, ldedge2, SLUMP_linelen(ldedge2) - (16 + roll(20)), c);
                                     ldedge2->right->psector = innersec;
                                     ldnew2                  = new_linedef(l, ld->from, ldedge2->from);
                                 }
-                                ldnew2->flags |= TWO_SIDED | NOT_ON_MAP;
+                                ldnew2->flags |= SLUMP_TWO_SIDED | SLUMP_NOT_ON_MAP;
                                 ldnew2->right                 = new_sidedef(l, innersec, c);
                                 ldnew2->right->middle_texture = c->null_texture;
                                 ldnew2->left                  = new_sidedef(l, outersec, c);
@@ -14482,27 +14505,27 @@ void embellish_room(level *l, sector *oldsector, haa *haa, style *ThisStyle, que
                             else if ((outersec->pstyle->ceilinglight) && (c->clights))
                             {
                                 outersec->ceiling_flat = outersec->pstyle->ceilinglight;
-                                announce(VERBOSE, "acl");
+                                announce(SLUMP_VERBOSE, "acl");
                             }
                         } /* end general lighting effects */
                         /* Put something in the closet */
-                        point_from(ldnew->from->x, ldnew->from->y, ldnew->to->x, ldnew->to->y, RIGHT_TURN, 32, &x1,
-                                   &y1);
-                        point_from(ldnew->to->x, ldnew->to->y, x1, y1, RIGHT_TURN, 32, &x1, &y1);
+                        point_from(ldnew->from->x, ldnew->from->y, ldnew->to->x, ldnew->to->y, SLUMP_RIGHT_TURN, 32,
+                                   &x1, &y1);
+                        point_from(ldnew->to->x, ldnew->to->y, x1, y1, SLUMP_RIGHT_TURN, 32, &x1, &y1);
                         /* Eek, a monster! */
                         m = timely_monster(haa, c, &levels, rollpercent(l->p_biggest_monsters), 1);
                         /* Should check for monster width here!! */
                         if (!m)
                         {
-                            new_thing(l, x1, y1, 0, ID_POTION, 7, c); /* Punt.  Stub. */
+                            new_thing(l, x1, y1, 0, SLUMP_ID_POTION, 7, c); /* Punt.  Stub. */
                         }
                         else
                         {
                             angle = facing_right_from_ld(ldnew);
                             new_thing(l, x1, y1, angle, m->thingid, (short)(levels | 0x08), c); /* Deaf */
                             if (rollpercent(50))
-                                if (m->bits & SHOOTS)
-                                    ld->flags |= BLOCK_MONSTERS;
+                                if (m->bits & SLUMP_SHOOTS)
+                                    ld->flags |= SLUMP_BLOCK_MONSTERS;
                             update_haa_for_monster(haa, m, levels, 0, c); /* zero?  one? */
                         } /* end there was a monster */
                         /* Maybe some small bonus also */
@@ -14515,13 +14538,13 @@ void embellish_room(level *l, sector *oldsector, haa *haa, style *ThisStyle, que
                                     switch (roll(3))
                                     {
                                     case 0:
-                                        bonustype = ID_QUARTZFLASK;
+                                        bonustype = SLUMP_ID_QUARTZFLASK;
                                         break;
                                     case 1:
-                                        bonustype = ID_CRYSTALVIAL;
+                                        bonustype = SLUMP_ID_CRYSTALVIAL;
                                         break;
                                     default:
-                                        bonustype = ID_WANDCRYSTAL;
+                                        bonustype = SLUMP_ID_WANDCRYSTAL;
                                         break;
                                     }
                                 }
@@ -14530,13 +14553,13 @@ void embellish_room(level *l, sector *oldsector, haa *haa, style *ThisStyle, que
                                     switch (roll(3))
                                     {
                                     case 0:
-                                        bonustype = ID_MEDIKIT;
+                                        bonustype = SLUMP_ID_MEDIKIT;
                                         break;
                                     case 1:
-                                        bonustype = ID_STIMPACK;
+                                        bonustype = SLUMP_ID_STIMPACK;
                                         break;
                                     default:
-                                        bonustype = ID_POTION;
+                                        bonustype = SLUMP_ID_POTION;
                                         break;
                                     }
                                 }
@@ -14548,7 +14571,7 @@ void embellish_room(level *l, sector *oldsector, haa *haa, style *ThisStyle, que
                                 {
                                     if ((!(haa->haas[2].has_chainsaw)) && (rollpercent(5)))
                                     {
-                                        bonustype                 = ID_GAUNTLETS;
+                                        bonustype                 = SLUMP_ID_GAUNTLETS;
                                         haa->haas[0].has_chainsaw = SLUMP_TRUE;
                                         haa->haas[1].has_chainsaw = SLUMP_TRUE;
                                         haa->haas[2].has_chainsaw = SLUMP_TRUE;
@@ -14558,10 +14581,10 @@ void embellish_room(level *l, sector *oldsector, haa *haa, style *ThisStyle, que
                                         switch (roll(2))
                                         { /* What about a cell? / a rocket */
                                         case 0:
-                                            bonustype = ID_WANDCRYSTAL;
+                                            bonustype = SLUMP_ID_WANDCRYSTAL;
                                             break;
                                         default:
-                                            bonustype = ID_ETHEREALARROWS;
+                                            bonustype = SLUMP_ID_ETHEREALARROWS;
                                             break;
                                         } /* end switch */
                                         update_haa_for_ammo(haa, 7, bonustype);
@@ -14571,7 +14594,7 @@ void embellish_room(level *l, sector *oldsector, haa *haa, style *ThisStyle, que
                                 {
                                     if ((!(haa->haas[2].has_chainsaw)) && (rollpercent(5)))
                                     {
-                                        bonustype                 = ID_CHAINSAW;
+                                        bonustype                 = SLUMP_ID_CHAINSAW;
                                         haa->haas[0].has_chainsaw = SLUMP_TRUE;
                                         haa->haas[1].has_chainsaw = SLUMP_TRUE;
                                         haa->haas[2].has_chainsaw = SLUMP_TRUE;
@@ -14581,10 +14604,10 @@ void embellish_room(level *l, sector *oldsector, haa *haa, style *ThisStyle, que
                                         switch (roll(2))
                                         { /* What about a cell? / a rocket */
                                         case 0:
-                                            bonustype = ID_CLIP;
+                                            bonustype = SLUMP_ID_CLIP;
                                             break;
                                         default:
-                                            bonustype = ID_SHELLS;
+                                            bonustype = SLUMP_ID_SHELLS;
                                             break;
                                         } /* end switch */
                                         update_haa_for_ammo(haa, 7, bonustype);
@@ -14609,7 +14632,7 @@ void embellish_room(level *l, sector *oldsector, haa *haa, style *ThisStyle, que
         linedef *ldnew, *ldedge1, *ldedge2;
         texture *t1, *tplaque;
         pheight = ThisStyle->plaque->height;
-        if (ThisStyle->plaque->props & HALF_PLAQUE)
+        if (ThisStyle->plaque->props & SLUMP_HALF_PLAQUE)
             if (rollpercent(80))
                 pheight = pheight / 2;
         pup     = ((oldsector->ceiling_height - oldsector->floor_height) - pheight) / 2;
@@ -14625,30 +14648,30 @@ void embellish_room(level *l, sector *oldsector, haa *haa, style *ThisStyle, que
                 if (ld != NULL)
                 {
                     t1    = ld->right->middle_texture;
-                    ldlen = linelen(ld);
+                    ldlen = SLUMP_linelen(ld);
                     /* Use borderize(SLUMP_TRUE), to get possible lightboxes etc */
                     if (rollpercent(5))
                     {
                         ThisStyle->lightboxes = SLUMP_TRUE;
                         ThisStyle->auxheight  = pup; /* "pheight" here is a nice bug! */
-                        announce(VERBOSE, "fancy plaque");
+                        announce(SLUMP_VERBOSE, "fancy plaque");
                     }
-                    ld                    = borderize(l, ld, 128, SLUMP_TRUE, ThisStyle, LIGHT, NULL, NULL, c);
+                    ld                    = borderize(l, ld, 128, SLUMP_TRUE, ThisStyle, SLUMP_LIGHT, NULL, NULL, c);
                     ThisStyle->lightboxes = SLUMP_FALSE; /* Neaten up */
                     depth                 = 4 + roll(5) + roll(5);
                     if (empty_left_side(l, ld, depth))
                     {
-                        announce(VERBOSE, "Putting in a plaque");
+                        announce(SLUMP_VERBOSE, "Putting in a plaque");
                         ldnew                        = lefthand_box_ext(l, ld, depth, ThisStyle, c, &ldedge1, &ldedge2);
                         ldnew->right->middle_texture = tplaque;
                         if (tplaque != ThisStyle->plaque)
-                            announce(VERBOSE, "Multiplaque");
+                            announce(SLUMP_VERBOSE, "Multiplaque");
                         ldnew->right->psector->floor_height   = oldsector->floor_height + pup;
                         ldnew->right->psector->ceiling_height = ldnew->right->psector->floor_height + pheight;
                         /* Maybe light the recesses */
                         if ((ThisStyle->light_recesses) && (ThisStyle->walllight != NULL))
                         {
-                            announce(VERBOSE, "Lit plaque");
+                            announce(SLUMP_VERBOSE, "Lit plaque");
                             ldedge2->right->middle_texture = ldedge1->right->middle_texture = ThisStyle->walllight;
                         }
                         else
@@ -14668,16 +14691,16 @@ void embellish_room(level *l, sector *oldsector, haa *haa, style *ThisStyle, que
                                 switch (roll(4))
                                 {
                                 case 0:
-                                    ldnew->right->psector->special = RANDOM_BLINK;
+                                    ldnew->right->psector->special = SLUMP_RANDOM_BLINK;
                                     break;
                                 case 1:
-                                    ldnew->right->psector->special = SYNC_FAST_BLINK;
+                                    ldnew->right->psector->special = SLUMP_SYNC_FAST_BLINK;
                                     break;
                                 case 2:
-                                    ldnew->right->psector->special = SYNC_SLOW_BLINK;
+                                    ldnew->right->psector->special = SLUMP_SYNC_SLOW_BLINK;
                                     break;
                                 case 3:
-                                    ldnew->right->psector->special = GLOW_BLINK;
+                                    ldnew->right->psector->special = SLUMP_GLOW_BLINK;
                                     break;
                                 } /* end switch */
                         } /* end if doing lights */
@@ -14690,15 +14713,15 @@ void embellish_room(level *l, sector *oldsector, haa *haa, style *ThisStyle, que
                                 if (NULL != secret_closet(l, ldnew, ThisStyle, 0, haa, c, SLUMP_TRUE, sync_tag,
                                                           oldsector->ceiling_height, SLUMP_TRUE))
                                 {
-                                    announce(VERBOSE, "Plaque closet");
+                                    announce(SLUMP_VERBOSE, "Plaque closet");
                                     if (sync_doors)
                                     {
                                         ldnew->tag  = sync_tag;
-                                        ldnew->type = LINEDEF_SR_OC_DOOR;
-                                        if (!(c->gamemask & (DOOM0_BIT | HERETIC_BIT)))
-                                            ldnew->type = LINEDEF_SR_BLAZE_OC_DOOR;
+                                        ldnew->type = SLUMP_LINEDEF_SR_OC_DOOR;
+                                        if (!(c->gamemask & (SLUMP_DOOM0_BIT | SLUMP_HERETIC_BIT)))
+                                            ldnew->type = SLUMP_LINEDEF_SR_BLAZE_OC_DOOR;
                                         if (sync_count++)
-                                            announce(VERBOSE, "Synced doors");
+                                            announce(SLUMP_VERBOSE, "Synced doors");
                                     }
                                 }
                             } /* end if secret closet */
@@ -14710,7 +14733,7 @@ void embellish_room(level *l, sector *oldsector, haa *haa, style *ThisStyle, que
                     break;
                 tplaque = random_plaque(c, ThisStyle);
                 if ((tplaque->height != pheight) &&
-                    ((!(tplaque->props & HALF_PLAQUE)) || (tplaque->height != 2 * pheight)))
+                    ((!(tplaque->props & SLUMP_HALF_PLAQUE)) || (tplaque->height != 2 * pheight)))
                 {
                     tplaque = ThisStyle->plaque;
                 }
@@ -14751,7 +14774,7 @@ void embellish_room(level *l, sector *oldsector, haa *haa, style *ThisStyle, que
             ld = NULL; /* Give up */
         if (ld != NULL)
         {
-            ldlen = linelen(ld);
+            ldlen = SLUMP_linelen(ld);
             plen  = ldlen - 64;
             if (rollpercent(50))
                 if (plen > 64)
@@ -14767,7 +14790,7 @@ void embellish_room(level *l, sector *oldsector, haa *haa, style *ThisStyle, que
             goal_trigger = SLUMP_FALSE;
             if (empty_left_side(l, ld, 72))
             { /* "72" is from secret_closet() */
-                if (((ThisQuest->goal == KEY_GOAL) || (ThisQuest->goal == NULL_GOAL)) && (!switch_closet) &&
+                if (((ThisQuest->goal == SLUMP_KEY_GOAL) || (ThisQuest->goal == SLUMP_NULL_GOAL)) && (!switch_closet) &&
                     (ThisQuest->auxtag == 0) && (ThisQuest->surprise == NULL))
                 {
                     /* Goal-triggered, if we can */
@@ -14785,7 +14808,7 @@ void embellish_room(level *l, sector *oldsector, haa *haa, style *ThisStyle, que
                     boolean danger;
                     for (t = l->thing_anchor; t; t = t->next)
                     {
-                        if (!(t->pgenus->bits & PICKABLE))
+                        if (!(t->pgenus->bits & SLUMP_PICKABLE))
                             continue;
                         /* Old bug: &border in next line was NULL */
                         if (oldsector != point_sector(l, t->x, t->y, &border, &danger))
@@ -14801,7 +14824,7 @@ void embellish_room(level *l, sector *oldsector, haa *haa, style *ThisStyle, que
                     if (t)
                     {
                         tag = new_tag(l);
-                        trigger_box(l, t, oldsector, tag, LINEDEF_WR_OPEN_DOOR, c);
+                        trigger_box(l, t, oldsector, tag, SLUMP_LINEDEF_WR_OPEN_DOOR, c);
                     } /* if found a good thing */
                 } /* if triggered closet */
                 pheight = 72 + roll(1 + (oldsector->ceiling_height - oldsector->floor_height) - 72);
@@ -14814,15 +14837,15 @@ void embellish_room(level *l, sector *oldsector, haa *haa, style *ThisStyle, que
                     {
                         switch_ld      = install_switch(l, switch_ld, SLUMP_TRUE, SLUMP_FALSE, 0, ThisStyle, c, NULL);
                         switch_ld->tag = switch_tag;
-                        if ((DOOM0_BIT | HERETIC_BIT) & c->gamemask)
-                            switch_ld->type = LINEDEF_S1_OPEN_DOOR;
+                        if ((SLUMP_DOOM0_BIT | SLUMP_HERETIC_BIT) & c->gamemask)
+                            switch_ld->type = SLUMP_LINEDEF_S1_OPEN_DOOR;
                         else
-                            switch_ld->type = LINEDEF_S1_BLAZE_O_DOOR;
-                        announce(VERBOSE, "Switch closet");
+                            switch_ld->type = SLUMP_LINEDEF_S1_BLAZE_O_DOOR;
+                        announce(SLUMP_VERBOSE, "Switch closet");
                     }
                     ld->right->y_offset =
                         (oldsector->ceiling_height - oldsector->floor_height) - 128; /* 128 should be tex-height */
-                    ld->flags |= SECRET_LINEDEF;
+                    ld->flags |= SLUMP_SECRET_LINEDEF;
                     if (tag == -1)
                     {                                                                /* Need a subtle hint here */
                         boolean hinted = SLUMP_FALSE;
@@ -14833,8 +14856,8 @@ void embellish_room(level *l, sector *oldsector, haa *haa, style *ThisStyle, que
                             int    x = (ld->from->x + ld->to->x) / 2;
                             int    y = (ld->from->y + ld->to->y) / 2;
                             if ((g == NULL) || rollpercent(50))
-                                g = find_genus(c, ID_CANDLE);
-                            point_from(ld->from->x, ld->from->y, x, y, RIGHT_TURN, g->width / 2, &x, &y);
+                                g = find_genus(c, SLUMP_ID_CANDLE);
+                            point_from(ld->from->x, ld->from->y, x, y, SLUMP_RIGHT_TURN, g->width / 2, &x, &y);
                             if (room_at(l, g, x, y, g->width / 2, c))
                             {
                                 hinted = SLUMP_TRUE;
@@ -14856,24 +14879,24 @@ void embellish_room(level *l, sector *oldsector, haa *haa, style *ThisStyle, que
                         {
                             /* Subtly different texture */
                             ld->right->upper_texture = ld->right->upper_texture->subtle;
-                            announce(VERBOSE, "subtle");
+                            announce(SLUMP_VERBOSE, "subtle");
                             hinted = SLUMP_TRUE;
                         }
                         if (!hinted)
                         {
                             /* Make it just show on the automap (always possible) */
-                            ld->flags &= ~SECRET_LINEDEF;
-                            announce(VERBOSE, "Map hint");
+                            ld->flags &= ~SLUMP_SECRET_LINEDEF;
+                            announce(SLUMP_VERBOSE, "Map hint");
                             hinted = SLUMP_TRUE;
                         }
                     }
                     if (goal_trigger)
                     {
                         ThisQuest->surprise = ldc;
-                        announce(VERBOSE, "Goal-trigger");
+                        announce(SLUMP_VERBOSE, "Goal-trigger");
                     }
                     else if (tag != -1)
-                        announce(VERBOSE, "Trigger");
+                        announce(SLUMP_VERBOSE, "Trigger");
                 }
                 else if (goal_trigger)
                 {
@@ -14895,7 +14918,7 @@ void embellish_room(level *l, sector *oldsector, haa *haa, style *ThisStyle, que
     {
         /* Lightstrips on the walls */
         int ll, sdepth, spec, fh, ch;
-        announce(VERBOSE, "Doing the lightstrip thing.");
+        announce(SLUMP_VERBOSE, "Doing the lightstrip thing.");
         sdepth = 4 + 4 * roll(2);
         ll     = oldsector->light_level;
         if (ll < l->lit_light_level)
@@ -14905,16 +14928,16 @@ void embellish_room(level *l, sector *oldsector, haa *haa, style *ThisStyle, que
             switch (roll(4))
             {
             case 0:
-                spec = RANDOM_BLINK;
+                spec = SLUMP_RANDOM_BLINK;
                 break;
             case 1:
-                spec = SYNC_FAST_BLINK;
+                spec = SLUMP_SYNC_FAST_BLINK;
                 break;
             case 2:
-                spec = SYNC_SLOW_BLINK;
+                spec = SLUMP_SYNC_SLOW_BLINK;
                 break;
             default:
-                spec = GLOW_BLINK;
+                spec = SLUMP_GLOW_BLINK;
                 break;
             }
         else
@@ -14935,10 +14958,10 @@ void embellish_room(level *l, sector *oldsector, haa *haa, style *ThisStyle, que
     else if (rollpercent(20))
     {
         /* swell some boundaries; don't do if lightstripped! */
-        /* NOTE: produces some non-square lines!   Terrible bugs! */
+        /* SLUMP_NOTE: produces some non-square lines!   Terrible bugs! */
         /* But not as bad if you populate() first! */
         int sno, sdepth;
-        announce(VERBOSE, "Swelling the room boundaries");
+        announce(SLUMP_VERBOSE, "Swelling the room boundaries");
         sno    = 1 + roll(2);
         sdepth = 4 + 4 * roll(4);
         for (ld = l->linedef_anchor; ld; ld = ld->next)
@@ -14961,7 +14984,7 @@ link *gate_link(level *l, config *c)
     link *answer = (link *)malloc(sizeof(*answer));
 
     answer->bits   = 0;
-    answer->type   = GATE_LINK;
+    answer->type   = SLUMP_GATE_LINK;
     answer->next   = l->link_anchor;
     l->link_anchor = answer;
     return answer;
@@ -14980,7 +15003,7 @@ linedef *make_next_room(level *l, sector *oldsector, boolean radical, config *c,
     sector  *newsector;
     style   *ThisStyle, *NewStyle;
 
-#ifdef DEBUG_QUEST_STACK
+#ifdef SLUMP_DEBUG_QUEST_STACK
     {
         quest *q = ThisQuest;
         for (; q; q = q->next)
@@ -15020,22 +15043,22 @@ linedef *make_next_room(level *l, sector *oldsector, boolean radical, config *c,
                 *ldf = random_marked_linedef(l, i);
                 unmark_linedefs(l);
                 *ThisLink = gate_link(l, c);
-                announce(VERBOSE, "Gate link");
+                announce(SLUMP_VERBOSE, "Gate link");
             }
             if (!link_fitsh(*ldf, *ThisLink, c)) /* Fix if doesn't fit */
                 *ThisLink = random_link(l, *ldf, ThisStyle, ThisQuest, c);
             if (!link_fitsh(*ldf, *ThisLink, c))
-                announce(WARNING, "random_link() returned too wide!!");
+                announce(SLUMP_WARNING, "random_link() returned too wide!!");
             newldf = make_linkto(l, *ldf, *ThisLink, NewStyle, c, newldf);
             if (!link_fitsv(l, *ldf, newldf, *ThisLink))
             {
-                announce(VERBOSE, "Retrying because link didn't fit...");
+                announce(SLUMP_VERBOSE, "Retrying because link didn't fit...");
                 continue;
             }
             newsector = generate_room_outline(l, newldf, NewStyle, try_reduction, c);
             if (newsector)
                 break;
-            announce(VERBOSE, "Retrying because new room didn't fit...");
+            announce(SLUMP_VERBOSE, "Retrying because new room didn't fit...");
         } /* end until one works */
         if (newsector)
             break;
@@ -15068,13 +15091,13 @@ void place_start_things(level *l, sector *s, config *c)
     find_rec(l, s, &minx, &miny, &maxx, &maxy);
 
     /* Let's make sure they always have a single-barrel shotgun */
-    if (c->gamemask == HERETIC_BIT)
+    if (c->gamemask == SLUMP_HERETIC_BIT)
     {
-        new_thing(l, (minx + maxx) / 2, (miny + maxy) / 2, 90, ID_CROSSBOW, 7, c);
+        new_thing(l, (minx + maxx) / 2, (miny + maxy) / 2, 90, SLUMP_ID_CROSSBOW, 7, c);
     }
     else
     {
-        new_thing(l, (minx + maxx) / 2, (miny + maxy) / 2, 90, ID_SHOTGUN, 7, c);
+        new_thing(l, (minx + maxx) / 2, (miny + maxy) / 2, 90, SLUMP_ID_SHOTGUN, 7, c);
     }
 
     /* Now the start positions */
@@ -15082,30 +15105,30 @@ void place_start_things(level *l, sector *s, config *c)
         angle = 0;
     else
         angle = 90 * roll(4);
-    new_thing(l, minx + 32, miny + 32, angle, ID_PLAYER1, 7, c); /* 1-player start */
+    new_thing(l, minx + 32, miny + 32, angle, SLUMP_ID_PLAYER1, 7, c); /* 1-player start */
     /* In the first room, *lie* about where the player comes in */
     s->entry_x = maxx - 32;
     s->entry_y = maxy - 32;
     if ((maxx - minx < 128) || (maxy - miny < 128))
     {
-        announce(WARNING, "Not enough room for co-op start positions");
+        announce(SLUMP_WARNING, "Not enough room for co-op start positions");
         return;
     }
     if (rational_angles)
         angle = 0;
     else
         angle = 90 * roll(4);
-    new_thing(l, minx + 32, maxy - 32, angle, ID_PLAYER2, 7, c); /* 2-player start */
+    new_thing(l, minx + 32, maxy - 32, angle, SLUMP_ID_PLAYER2, 7, c); /* 2-player start */
     if (rational_angles)
         angle = 180;
     else
         angle = 90 * roll(4);
-    new_thing(l, maxx - 32, miny + 32, angle, ID_PLAYER3, 7, c); /* 3-player start */
+    new_thing(l, maxx - 32, miny + 32, angle, SLUMP_ID_PLAYER3, 7, c); /* 3-player start */
     if (rational_angles)
         angle = 180;
     else
         angle = 90 * roll(4);
-    new_thing(l, maxx - 32, maxy - 32, angle, ID_PLAYER4, 7, c); /* 4-player start */
+    new_thing(l, maxx - 32, maxy - 32, angle, SLUMP_ID_PLAYER4, 7, c); /* 4-player start */
 }
 
 /* Set all the fields of the given level to empty things */
@@ -15163,14 +15186,14 @@ void empty_level(level *l, config *c)
     if (rollpercent(5))
         l->p_force_sky = 20 + roll(60);
     if (l->p_force_sky > 30)
-        announce(LOG, "Sunrooms");
+        announce(SLUMP_LOG, "Sunrooms");
     l->p_force_nukage = 0;
     if (rollpercent(8))
         l->p_force_nukage = 20 + roll(60);
     if (c->major_nukage)
         l->p_force_nukage = 85;
     if (l->p_force_nukage > 30)
-        announce(LOG, "Nukage city!!");
+        announce(SLUMP_LOG, "Nukage city!!");
     l->p_deep_baths = 20;
     if (rollpercent(50))
         l->p_deep_baths += l->p_force_nukage;
@@ -15229,7 +15252,7 @@ void empty_level(level *l, config *c)
     {
         char s[80];
         sprintf(s, "p_rational_facing %d.", l->p_rational_facing);
-        announce(VERBOSE, s);
+        announce(SLUMP_VERBOSE, s);
     }
     l->p_biggest_monsters = 0;
     if (rollpercent(5) && (c->big_monsters))
@@ -15237,7 +15260,7 @@ void empty_level(level *l, config *c)
     if (c->force_biggest)
         l->p_biggest_monsters = 100;
     if (l->p_biggest_monsters == 100)
-        announce(LOG, "Biggest monsters");
+        announce(SLUMP_LOG, "Biggest monsters");
     l->p_open_link = 15;
     if (rollpercent(15))
         l->p_open_link = 0;
@@ -15249,7 +15272,7 @@ void empty_level(level *l, config *c)
     if (rollpercent(5))
         l->p_s1_door = 100;
     if (l->p_s1_door > 95)
-        announce(VERBOSE, "Doors stick");
+        announce(SLUMP_VERBOSE, "Doors stick");
     l->p_special_room = 2 + roll(5);
     if (rollpercent(5))
         l->p_special_room = 0;
@@ -15259,11 +15282,11 @@ void empty_level(level *l, config *c)
     l->dm_count     = 0;
     l->dm_rho       = 10;
     l->first_room   = NULL;
-    if ((c->gamemask & HERETIC_BIT) || (c->gamemask & CHEX_BIT))
+    if ((c->gamemask & SLUMP_HERETIC_BIT) || (c->gamemask & SLUMP_CHEX_BIT))
     {
         l->skullkeys = SLUMP_FALSE;
     }
-    else if (c->gamemask & HACX_BIT)
+    else if (c->gamemask & SLUMP_HACX_BIT)
     {
         l->skullkeys = rollpercent(100);
     }
@@ -15271,7 +15294,7 @@ void empty_level(level *l, config *c)
     {
         l->skullkeys = rollpercent(50);
     }
-    l->use_gates   = rollpercent(TELEPORTS_PERCENT);
+    l->use_gates   = rollpercent(SLUMP_TELEPORTS_PERCENT);
     l->raise_gates = rollpercent(60);
     l->no_doors = l->all_wide_links = SLUMP_FALSE;
     if (rollpercent(15))
@@ -15292,26 +15315,26 @@ void empty_level(level *l, config *c)
             break;
         }
     if (l->all_wide_links)
-        announce(VERBOSE, "All wide links");
+        announce(SLUMP_VERBOSE, "All wide links");
     if (l->no_doors)
-        announce(VERBOSE, "No doors");
+        announce(SLUMP_VERBOSE, "No doors");
     l->hugeness = 1;
     if (rollpercent(c->do_dm ? 30 : 8))
     {
         l->hugeness = 2;
-        announce(LOG, "Extra hugeness");
+        announce(SLUMP_LOG, "Extra hugeness");
     }
     l->outside_light_level = 240;
     if (rollpercent(20))
     {
         l->outside_light_level = c->minlight + 5;
-        announce(VERBOSE, "Night");
+        announce(SLUMP_VERBOSE, "Night");
     }
     l->bright_light_level = 220;
     if (rollpercent(20))
     {
         l->bright_light_level = c->minlight + roll((221 - c->minlight) / 2);
-        announce(VERBOSE, "Dim");
+        announce(SLUMP_VERBOSE, "Dim");
     }
     l->lit_light_level = 220; /* Always? */
     dieroll            = roll(100);
@@ -15343,7 +15366,7 @@ void NewLevel(level *l, haa *ThisHaa, config *c)
 
     current_level_number = c->map + (9 * c->episode) + c->mission;
 
-    if (c->gamemask & HERETIC_BIT)
+    if (c->gamemask & SLUMP_HERETIC_BIT)
         l->heretic_level = SLUMP_TRUE;
     else
         l->heretic_level = SLUMP_FALSE;
@@ -15382,7 +15405,7 @@ void NewLevel(level *l, haa *ThisHaa, config *c)
                 done_quest = 1;
                 if (ThisQuest->next == NULL)
                 {
-                    announce(LOG, "Self-collision; may be fewer rooms than expected.");
+                    announce(SLUMP_LOG, "Self-collision; may be fewer rooms than expected.");
                 }
                 else
                 {
@@ -15436,43 +15459,43 @@ void NewLevel(level *l, haa *ThisHaa, config *c)
             ThisQuest = push_quest(ThisQuest);
             if ((keys_used>=l->maxkeys)||
            (rollpercent(15))/*||
-           (ThisQuest->next->goal==NULL_GOAL)*/)
+           (ThisQuest->next->goal==SLUMP_NULL_GOAL)*/)
             {
                 if (rollpercent(50) && l->use_gates)
                 {
-                    ThisQuest->goal = GATE_GOAL;
+                    ThisQuest->goal = SLUMP_GATE_GOAL;
                 }
                 else
                 {
-                    ThisQuest->goal = NULL_GOAL;
+                    ThisQuest->goal = SLUMP_NULL_GOAL;
                 }
             }
             else if (rollpercent(50) && l->use_gates)
             {
-                ThisQuest->goal = GATE_GOAL;
+                ThisQuest->goal = SLUMP_GATE_GOAL;
                 /* Everything else decided later */
             }
             else if (rollpercent(60) && (0 != (newkey = new_key(l))))
             {
-                ThisQuest->goal = KEY_GOAL;
+                ThisQuest->goal = SLUMP_KEY_GOAL;
                 ThisQuest->type = newkey;
             }
             else
             {
-                ThisQuest->goal = SWITCH_GOAL;
+                ThisQuest->goal = SLUMP_SWITCH_GOAL;
                 ThisQuest->tag  = new_tag(l);
-                announce(LOG, "switch quest");
+                announce(SLUMP_LOG, "switch quest");
             }
-            radical = (ThisQuest->goal != NULL_GOAL);
+            radical = (ThisQuest->goal != SLUMP_NULL_GOAL);
             lld1    = make_next_room(l, oldsector, radical, c, &lld2, &ForkLink, ThisQuest);
             if (lld1)
             {
-                announce(VERBOSE, "Fork");
+                announce(SLUMP_VERBOSE, "Fork");
                 if (forks)
-                    announce(LOG, "Multifork");
+                    announce(SLUMP_LOG, "Multifork");
                 establish_link(l, lld2, lld1, ForkLink, ThisQuest, ThisStyle, lld1->right->psector->pstyle, ThisHaa, c);
                 ThisQuest->room = lld1->right->psector;
-                if (ThisQuest->goal == NULL_GOAL)
+                if (ThisQuest->goal == SLUMP_NULL_GOAL)
                 {
                     ThisQuest->minrooms = 1 + roll(4);
                     nullforks++;
@@ -15484,9 +15507,9 @@ void NewLevel(level *l, haa *ThisHaa, config *c)
                 ThisQuest->next->minrooms -= ThisQuest->minrooms;
                 if (ThisQuest->next->minrooms < 1)
                     ThisQuest->next->minrooms = 1;
-                if (ThisQuest->goal == KEY_GOAL)
+                if (ThisQuest->goal == SLUMP_KEY_GOAL)
                 {
-                    announce(LOG, "Key thing");
+                    announce(SLUMP_LOG, "Key thing");
                     keys_used++;
                 }
             }
@@ -15525,7 +15548,7 @@ void NewLevel(level *l, haa *ThisHaa, config *c)
 
     /* Hack to avoid ammo-starvation in megawads due to leftbehinds */
     /* Also turn off berserk effect */
-    for (i = ITYTD; i <= UV; i++)
+    for (i = SLUMP_ITYTD; i <= SLUMP_UV; i++)
     {
         ThisHaa->haas[i].ammo *= (float)0.75; /* awful! */
         ThisHaa->haas[i].has_berserk = SLUMP_FALSE;
@@ -15548,7 +15571,7 @@ void NewLevel(level *l, haa *ThisHaa, config *c)
 
     /* Warn if we failed to do a secret level */
     if (need_secret_level(c) && !l->sl_done)
-        announce(WARNING, "Secret level(s) may be unreachable; durn!");
+        announce(SLUMP_WARNING, "Secret level(s) may be unreachable; durn!");
 
     /* Add emergency deathmatch starts, if -dm and needed, announce count */
     if (c->do_dm)
@@ -15564,14 +15587,16 @@ void NewLevel(level *l, haa *ThisHaa, config *c)
             break;
         }
         sprintf(s, "%d deathmatch starts.", l->dm_count);
-        announce(LOG, s);
+        announce(SLUMP_LOG, s);
     }
 
     /* and finally, always have at least one "secret", for the 100% */
     if (l->secret_count == 0)
         if (l->first_room)
-            l->first_room->special = SECRET_SECTOR;
+            l->first_room->special = SLUMP_SECRET_SECTOR;
 }
+
+} // namespace slump
 
 /****** the end of SLUMP.C ********* please come again *********/
 

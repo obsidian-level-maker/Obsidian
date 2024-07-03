@@ -514,8 +514,13 @@ end
 
 
 function ScriptMan_assemble_decorate_lump()
+
   if PARAM.bool_dynamic_lights == 1 then -- TODO: Move these to respective modules.
     SCRIPTS.decorate = ScriptMan_combine_script(SCRIPTS.decorate, GAME.RESOURCES.DYNAMIC_LIGHT_DECORATE)
+  end
+
+  if PARAM.custom_trees == "decorate" then
+    SCRIPTS.decorate = ScriptMan_combine_script(SCRIPTS.decorate, OBS_RESOURCE_PACK_EPIC_TEXTURES.TEMPLATES.DEC_TREES)
   end
 
   if SCRIPTS.decorate then
@@ -525,6 +530,7 @@ function ScriptMan_assemble_decorate_lump()
       add_script_lump("DECORATE", SCRIPTS.decorate)
     end
   end
+
 end
 
 

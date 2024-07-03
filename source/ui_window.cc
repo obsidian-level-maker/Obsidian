@@ -29,8 +29,8 @@
 #error "Require FLTK version 1.3.0 or later"
 #endif
 
-#define BASE_WINDOW_W 816
-#define BASE_WINDOW_H 512
+static constexpr uint16_t BASE_WINDOW_W = 816;
+static constexpr uint16_t BASE_WINDOW_H = 512;
 
 UI_MainWin *main_win;
 
@@ -78,13 +78,13 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title) : Fl_Double_Window(W, H,
 
     color(GAP_COLOR, SELECTION);
 
-    int LEFT_W = kf_w(232);
-    int MOD_W  = (W - LEFT_W) / 2 - kf_h(4);
+    int LEFT_W = KromulentWidth(232);
+    int MOD_W  = (W - LEFT_W) / 2 - KromulentHeight(4);
 
-    int TOP_H = kf_h(240);
-    int BOT_H = H - TOP_H - kf_h(4);
+    int TOP_H = KromulentHeight(240);
+    int BOT_H = H - TOP_H - KromulentHeight(4);
 
-    menu_bar = new Fl_Menu_Bar(0, 0, W, kf_h(20));
+    menu_bar = new Fl_Menu_Bar(0, 0, W, KromulentHeight(20));
     menu_bar->box(box_style);
     menu_bar->textfont(font_style);
     menu_bar->textsize(font_scaling * .90);
@@ -101,14 +101,14 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title) : Fl_Double_Window(W, H,
     menu_bar->selection_color(SELECTION);
     menu_bar->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP | FL_ALIGN_LEFT);
 
-    sizing_group = new Fl_Group(0, kf_h(22), W, H - kf_h(20));
+    sizing_group = new Fl_Group(0, KromulentHeight(22), W, H - KromulentHeight(20));
     sizing_group->box(FL_NO_BOX);
 
-    game_box = new UI_Game(0, kf_h(22), LEFT_W, TOP_H - kf_h(22));
+    game_box = new UI_Game(0, KromulentHeight(22), LEFT_W, TOP_H - KromulentHeight(22));
 
-    build_box = new UI_Build(0, TOP_H + kf_h(4), LEFT_W, BOT_H);
+    build_box = new UI_Build(0, TOP_H + KromulentHeight(4), LEFT_W, BOT_H);
 
-    mod_tabs = new UI_CustomTabs(LEFT_W + kf_h(4), kf_h(22), MOD_W * 2, H - kf_h(22));
+    mod_tabs = new UI_CustomTabs(LEFT_W + KromulentHeight(4), KromulentHeight(22), MOD_W * 2, H - KromulentHeight(22));
 
     clippy = new UI_Clippy();
 
@@ -130,8 +130,8 @@ UI_MainWin::~UI_MainWin()
 
 void UI_MainWin::CalcWindowSize(int *W, int *H)
 {
-    *W = kf_w(BASE_WINDOW_W);
-    *H = kf_h(BASE_WINDOW_H);
+    *W = KromulentWidth(BASE_WINDOW_W);
+    *H = KromulentHeight(BASE_WINDOW_H);
 
     // tweak for "Tiny" setting
     if (KF < 0)

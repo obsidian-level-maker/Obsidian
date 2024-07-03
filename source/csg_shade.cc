@@ -71,7 +71,7 @@ Lighting Model
 
 */
 
-#define DEFAULT_AMBIENT_LEVEL 144
+constexpr uint8_t DEFAULT_AMBIENT_LEVEL = 144;
 
 static int current_region_group;
 

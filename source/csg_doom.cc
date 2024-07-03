@@ -47,28 +47,28 @@ static int map_bound_y1, map_bound_y2;
 static int dummy_pos_x;
 static int dummy_pos_y;
 
-#define SEC_FLOOR_SPECIAL (1 << 1)
-#define SEC_CEIL_SPECIAL  (1 << 2)
+constexpr uint8_t SEC_FLOOR_SPECIAL = (1 << 1);
+constexpr uint8_t SEC_CEIL_SPECIAL  = (1 << 2);
 
 double light_dist_factor = 800.0;
 
-#define COLINEAR_THRESHHOLD 0.01
+constexpr double COLINEAR_THRESHHOLD = 0.01;
 
-#define MTF_ALL_SKILLS (MTF_Easy | MTF_Medium | MTF_Hard)
+constexpr int MTF_ALL_SKILLS = (MTF_Easy | MTF_Medium | MTF_Hard);
 
-#define MTF_HEXEN_CLASSES (32 + 64 + 128)
-#define MTF_HEXEN_MODES   (256 + 512 + 1024)
+constexpr int MTF_HEXEN_CLASSES = (32 + 64 + 128);
+constexpr int MTF_HEXEN_MODES   = (256 + 512 + 1024);
 
-#define MTF_EDGE_EXFLOOR_SHIFT 10
+constexpr uint8_t MTF_EDGE_EXFLOOR_SHIFT = 10;
 
 // fake linedef special for lower-unpegging
-#define LIN_FAKE_UNPEGGED 991
+constexpr uint16_t LIN_FAKE_UNPEGGED = 991;
 
 // fake sector special to merge sector with lowest neighbor floor
-#define SEC_GRAB_NB_FLOOR 993
+constexpr uint16_t SEC_GRAB_NB_FLOOR = 993;
 
 // fake sector special for teleporting monster closets
-#define SEC_DEPOT_PEER 988
+constexpr uint16_t SEC_DEPOT_PEER = 988;
 
 class extrafloor_c
 {
@@ -614,8 +614,8 @@ class linedef_c
         sidedef_c *B_front = B->front;
         sidedef_c *B_back  = B->back;
 
-        int A_len = RoundToInteger(length);
-        int B_len = RoundToInteger(B->length);
+        int A_len = OBSIDIAN_I_ROUND(length);
+        int B_len = OBSIDIAN_I_ROUND(B->length);
 
         if (!CanMergeSides(front, B_front))
         {
@@ -916,8 +916,8 @@ static void MakeSector(region_c *R)
     double f_delta = f_face->getDouble("delta_z");
     double c_delta = c_face->getDouble("delta_z");
 
-    S->f_h = RoundToInteger(B->t.z + f_delta);
-    S->c_h = RoundToInteger(T->b.z + c_delta);
+    S->f_h = OBSIDIAN_I_ROUND(B->t.z + f_delta);
+    S->c_h = OBSIDIAN_I_ROUND(T->b.z + c_delta);
 
     // when delta-ing up the floor, limit it to the ceiling
     // (this can be important in outdoor rooms)
@@ -1171,7 +1171,7 @@ static int NaturalXOffset(Doom::linedef_c *L, int side)
         along = AlongDist(0, 0, L->end->x, L->end->y, L->start->x, L->start->y);
     }
 
-    return RoundToInteger(-along);
+    return OBSIDIAN_I_ROUND(-along);
 }
 
 static int CalcXOffset(snag_c *S, brush_vert_c *V, int ox)
@@ -1293,7 +1293,7 @@ static sidedef_c *MakeSidedef(linedef_c *L, sector_c *sec, sector_c *back, snag_
                 // adjust Y-offset for higher floor than expected
                 int sec_max_z = OBSIDIAN_MAX(sec->f_h, back->f_h);
 
-                r_oy += RoundToInteger(rail->parent->b.z) - sec_max_z;
+                r_oy += OBSIDIAN_I_ROUND(rail->parent->b.z) - sec_max_z;
             }
         }
 
@@ -1584,11 +1584,11 @@ static void MakeLine(region_c *R, snag_c *S)
     }
 
     // skip snags which would become zero length linedefs
-    int x1 = RoundToInteger(S->x1);
-    int y1 = RoundToInteger(S->y1);
+    int x1 = OBSIDIAN_I_ROUND(S->x1);
+    int y1 = OBSIDIAN_I_ROUND(S->y1);
 
-    int x2 = RoundToInteger(S->x2);
-    int y2 = RoundToInteger(S->y2);
+    int x2 = OBSIDIAN_I_ROUND(S->x2);
+    int y2 = OBSIDIAN_I_ROUND(S->y2);
 
     if (x1 == x2 && y1 == y2)
     {
@@ -1896,14 +1896,14 @@ static void AlignTextures()
 
             while (P->sim_prev && P->sim_prev->front->x_offset == IVAL_NONE)
             {
-                P->sim_prev->front->x_offset = P->front->x_offset - RoundToInteger(P->sim_prev->length);
+                P->sim_prev->front->x_offset = P->front->x_offset - OBSIDIAN_I_ROUND(P->sim_prev->length);
                 P                            = P->sim_prev;
                 prev_count++;
             }
 
             while (N->sim_next && N->sim_next->front->x_offset == IVAL_NONE)
             {
-                N->sim_next->front->x_offset = N->front->x_offset + RoundToInteger(N->length);
+                N->sim_next->front->x_offset = N->front->x_offset + OBSIDIAN_I_ROUND(N->length);
                 N                            = N->sim_next;
                 next_count++;
             }
@@ -2256,7 +2256,7 @@ static void RoundCorners()
 //  DUMMY SECTORS
 //------------------------------------------------------------------------
 
-#define DUMMY_MAX_SHARE 8
+constexpr uint8_t DUMMY_MAX_SHARE = 8;
 
 class dummy_line_info_c
 {
@@ -2534,8 +2534,8 @@ static void SolidExtraFloor(sector_c *sec, gap_c *gap1, gap_c *gap2)
         }
     }
 
-    EF->top_h    = RoundToInteger(gap2->bottom->t.z);
-    EF->bottom_h = RoundToInteger(gap1->top->b.z);
+    EF->top_h    = OBSIDIAN_I_ROUND(gap2->bottom->t.z);
+    EF->bottom_h = OBSIDIAN_I_ROUND(gap1->top->b.z);
 
     EF->top    = gap2->bottom->t.face.getStr("tex", dummy_plane_tex);
     EF->bottom = gap1->top->b.face.getStr("tex", dummy_plane_tex);
@@ -2565,11 +2565,11 @@ static void LiquidExtraFloor(sector_c *sec, csg_brush_c *liquid)
     if (EF->line_special == 301) // Legacy style
     {
         EF->bottom_h = sec->f_h;
-        EF->top_h    = RoundToInteger(liquid->t.z);
+        EF->top_h    = OBSIDIAN_I_ROUND(liquid->t.z);
     }
     else                                   // EDGE style
     {
-        EF->bottom_h = RoundToInteger(liquid->t.z);
+        EF->bottom_h = OBSIDIAN_I_ROUND(liquid->t.z);
         EF->top_h    = EF->bottom_h + 128; // not significant
     }
 
@@ -3019,9 +3019,9 @@ static void WriteThing(sector_c *S, csg_entity_c *E)
         return;
     }
 
-    int x = RoundToInteger(E->x);
-    int y = RoundToInteger(E->y);
-    int z = RoundToInteger(E->z);
+    int x = OBSIDIAN_I_ROUND(E->x);
+    int y = OBSIDIAN_I_ROUND(E->y);
+    int z = OBSIDIAN_I_ROUND(E->z);
 
     int h = z - S->f_h;
 

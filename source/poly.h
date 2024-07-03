@@ -61,7 +61,7 @@ class vertex_c
 };
 
 // this bit in the index value differentiates normal vertices from split ones
-#define SPLIT_VERTEX (1 << 24)
+constexpr int SPLIT_VERTEX = (1 << 24);
 
 class sector_c
 {
@@ -102,7 +102,7 @@ class sector_c
     linedef_c *getExtraFloor(int index);
 };
 
-#define VOID_SECTOR_IDX 0xFFFF
+constexpr uint16_t VOID_SECTOR_IDX = 0xFFFF;
 
 class sidedef_c
 {

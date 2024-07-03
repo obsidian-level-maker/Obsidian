@@ -235,6 +235,19 @@ std::string PathAppend(std::string_view parent, std::string_view child)
     return new_path;
 }
 
+std::string SanitizePath(std::string_view path)
+{
+    std::string sani_path;
+    for (const char ch : path)
+    {
+        if (ch == '\\')
+            sani_path.push_back('/');
+        else
+            sani_path.push_back(ch);
+    }
+    return sani_path;
+}
+
 std::string GetDirectory(std::string_view path)
 {
     SYS_ASSERT(!path.empty());

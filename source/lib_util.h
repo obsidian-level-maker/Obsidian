@@ -34,6 +34,7 @@ std::string GetExtension(std::string_view path);
 std::string PathAppend(std::string_view parent, std::string_view child);
 bool        IsPathAbsolute(std::string_view path);
 void        ReplaceExtension(std::string &path, std::string_view ext);
+std::string SanitizePath(std::string_view path);
 
 std::string CurrentDirectoryGet();
 bool        MakeDirectory(std::string_view dir);
@@ -139,8 +140,6 @@ void  UtilFree(void *data);
 uint32_t IntHash(uint32_t key);
 uint32_t StringHash(const std::string &str);
 uint64_t StringHash64(const std::string &str);
-
-#define ALIGN_LEN(x) (((x) + 3) & ~3)
 
 double PerpDist(double x, double y, double x1, double y1, double x2, double y2);
 double AlongDist(double x, double y, double x1, double y1, double x2, double y2);

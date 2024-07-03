@@ -26,12 +26,12 @@
 #include "sys_debug.h"
 #include "sys_macro.h"
 
-#define DEBUG_SPLIT   0
-#define DEBUG_CUTLIST 0
+#define AJBSP_DEBUG_SPLIT   0
+#define AJBSP_DEBUG_CUTLIST 0
 
-#define DEBUG_BUILDER 0
-#define DEBUG_SORTER  0
-#define DEBUG_SUBSEC  0
+#define AJBSP_DEBUG_BUILDER 0
+#define AJBSP_DEBUG_SORTER  0
+#define AJBSP_DEBUG_SUBSEC  0
 
 //
 // To be able to divide the nodes down, this routine must decide which
@@ -54,9 +54,9 @@
 namespace ajbsp
 {
 
-#define PRECIOUS_MULTIPLY 100
+static constexpr uint8_t PRECIOUS_MULTIPLY = 100;
 
-#define SEG_FAST_THRESHHOLD 200
+static constexpr uint8_t SEG_FAST_THRESHHOLD = 200;
 
 class eval_info_t
 {
@@ -1176,7 +1176,7 @@ seg_t *CreateSegs()
 {
     seg_t *list = NULL;
 
-    for (int i = 0; i < num_linedefs; i++)
+    for (int i = 0; i < (int)lev_linedefs.size(); i++)
     {
         linedef_t *line = lev_linedefs[i];
 
@@ -1446,7 +1446,7 @@ subsec_t *CreateSubsec(quadtree_c *tree)
     subsec_t *sub = NewSubsec();
 
     // compute subsector's index
-    sub->index = num_subsecs - 1;
+    sub->index = (int)lev_subsecs.size() - 1;
 
     // copy segs into subsector
     sub->seg_list = NULL;
@@ -1580,7 +1580,7 @@ void ClockwiseBspTree()
 {
     int cur_seg_index = 0;
 
-    for (int i = 0; i < num_subsecs; i++)
+    for (int i = 0; i < (int)lev_subsecs.size(); i++)
     {
         subsec_t *sub = lev_subsecs[i];
 
@@ -1646,7 +1646,7 @@ void NormaliseBspTree()
 
     int cur_seg_index = 0;
 
-    for (int i = 0; i < num_subsecs; i++)
+    for (int i = 0; i < (int)lev_subsecs.size(); i++)
     {
         subsec_t *sub = lev_subsecs[i];
 
@@ -1657,7 +1657,7 @@ void NormaliseBspTree()
 
 void RoundOffVertices()
 {
-    for (int i = 0; i < num_vertices; i++)
+    for (int i = 0; i < (int)lev_vertices.size(); i++)
     {
         vertex_t *vert = lev_vertices[i];
 
@@ -1691,8 +1691,8 @@ void subsec_t::RoundOff()
     for (seg = seg_list; seg; seg = seg->next)
     {
         // is the seg degenerate ?
-        if (RoundToInteger(seg->start->x) == RoundToInteger(seg->end->x) &&
-            RoundToInteger(seg->start->y) == RoundToInteger(seg->end->y))
+        if (OBSIDIAN_I_ROUND(seg->start->x) == OBSIDIAN_I_ROUND(seg->end->x) &&
+            OBSIDIAN_I_ROUND(seg->start->y) == OBSIDIAN_I_ROUND(seg->end->y))
         {
             seg->is_degenerate = true;
 
@@ -1727,9 +1727,9 @@ void subsec_t::RoundOff()
         last_real_degen->end = NewVertexDegenerate(last_real_degen->start, last_real_degen->end);
 
 #if DEBUG_SUBSEC
-        DebugPrint("Degenerate after:  (%d,%d) -> (%d,%d)\n", RoundToInteger(last_real_degen->start->x),
-                   RoundToInteger(last_real_degen->start->y), RoundToInteger(last_real_degen->end->x),
-                   RoundToInteger(last_real_degen->end->y));
+        DebugPrint("Degenerate after:  (%d,%d) -> (%d,%d)\n", OBSIDIAN_I_ROUND(last_real_degen->start->x),
+                   OBSIDIAN_I_ROUND(last_real_degen->start->y), OBSIDIAN_I_ROUND(last_real_degen->end->x),
+                   OBSIDIAN_I_ROUND(last_real_degen->end->y));
 #endif
 
         last_real_degen->is_degenerate = false;
@@ -1778,7 +1778,7 @@ void RoundOffBspTree()
 
     RoundOffVertices();
 
-    for (int i = 0; i < num_subsecs; i++)
+    for (int i = 0; i < (int)lev_subsecs.size(); i++)
     {
         subsec_t *sub = lev_subsecs[i];
 

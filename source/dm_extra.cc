@@ -44,9 +44,7 @@ static int      sky_W;
 static int      sky_H;
 static int      sky_final_W;
 
-#define MAX_POST_LEN 200
-
-#define CUR_PIXEL(py) (pixels[((py) % H) * W])
+constexpr uint8_t MAX_POST_LEN = 200;
 
 static void AddPost(qLump_c *lump, int y, int len, const uint8_t *pixels, int W, int H)
 {
@@ -58,17 +56,17 @@ static void AddPost(qLump_c *lump, int y, int len, const uint8_t *pixels, int W,
     uint8_t  buffer[512];
     uint8_t *dest = buffer;
 
-    *dest++ = y;            // Y-OFFSET
-    *dest++ = len;          // # PIXELS
+    *dest++ = y;                     // Y-OFFSET
+    *dest++ = len;                   // # PIXELS
 
-    *dest++ = CUR_PIXEL(y); // TOP-PADDING
+    *dest++ = pixels[((y) % H) * W]; // TOP-PADDING
 
     for (; len > 0; len--, y++)
     {
-        *dest++ = CUR_PIXEL(y);
+        *dest++ = pixels[((y) % H) * W];
     }
 
-    *dest++ = CUR_PIXEL(y - 1); // BOTTOM-PADDING
+    *dest++ = pixels[((y - 1) % H) * W]; // BOTTOM-PADDING
 
     lump->Append(buffer, dest - buffer);
 }
@@ -97,7 +95,7 @@ qLump_c *CreatePatch(int new_W, int new_H, int ofs_X, int ofs_Y, const uint8_t *
 
         for (y = 0; y < new_H;)
         {
-            if (trans_p >= 0 && CUR_PIXEL(y) == trans_p)
+            if (trans_p >= 0 && pixels[((y) % H) * W] == trans_p)
             {
                 y++;
                 continue;
@@ -105,7 +103,7 @@ qLump_c *CreatePatch(int new_W, int new_H, int ofs_X, int ofs_Y, const uint8_t *
 
             int len = 1;
 
-            while ((y + len) < new_H && len < MAX_POST_LEN && !(trans_p >= 0 && CUR_PIXEL(y + len) == trans_p))
+            while ((y + len) < new_H && len < MAX_POST_LEN && !(trans_p >= 0 && pixels[((y + len) % H) * W] == trans_p))
             {
                 len++;
             }
@@ -141,8 +139,6 @@ qLump_c *CreatePatch(int new_W, int new_H, int ofs_X, int ofs_Y, const uint8_t *
 
     return lump;
 }
-
-#undef CUR_PIXEL
 
 qLump_c *CreateFlat(int new_W, int new_H, const uint8_t *pixels, int W, int H)
 {
@@ -1035,7 +1031,7 @@ static qLump_c *DoLoadLump(int src_entry)
     return lump;
 }
 
-#define NUM_LEVEL_LUMPS 12
+constexpr uint8_t NUM_LEVEL_LUMPS = 12;
 
 static const char *level_lumps[NUM_LEVEL_LUMPS] = {
     "THINGS",   "LINEDEFS", "SIDEDEFS", "VERTEXES", "SEGS", "SSECTORS", "NODES", "SECTORS", "REJECT", "BLOCKMAP",
@@ -1408,7 +1404,7 @@ static rgb_color_t Grab_Color(lua_State *L, int stack_idx)
             luaL_error(L, "bad color string");
         }
 
-        return MAKE_RGBA(r, g, b, 255);
+        return OBSIDIAN_MAKE_RGBA(r, g, b, 255);
     }
 
     if (lua_istable(L, stack_idx))
@@ -1435,18 +1431,18 @@ static rgb_color_t Grab_Color(lua_State *L, int stack_idx)
 
         lua_pop(L, 3);
 
-        return MAKE_RGBA(r, g, b, 255);
+        return OBSIDIAN_MAKE_RGBA(r, g, b, 255);
     }
 
     luaL_error(L, "bad color value (not a string or table)");
-    return MAKE_RGBA(0, 0, 0, 255); /* NOT REACHED */
+    return OBSIDIAN_MAKE_RGBA(0, 0, 0, 255); /* NOT REACHED */
 }
 
 static uint8_t PaletteLookup(rgb_color_t col, const rgb_color_t *palette)
 {
-    int r = RGB_RED(col);
-    int g = RGB_GREEN(col);
-    int b = RGB_BLUE(col);
+    int r = OBSIDIAN_RGB_RED(col);
+    int g = OBSIDIAN_RGB_GREEN(col);
+    int b = OBSIDIAN_RGB_BLUE(col);
 
     int best      = 0;
     int best_dist = (1 << 30);
@@ -1454,9 +1450,9 @@ static uint8_t PaletteLookup(rgb_color_t col, const rgb_color_t *palette)
     // ignore the very last color
     for (int c = 0; c < 255; c++)
     {
-        int dr = r - RGB_RED(palette[c]);
-        int dg = g - RGB_GREEN(palette[c]);
-        int db = b - RGB_BLUE(palette[c]);
+        int dr = r - OBSIDIAN_RGB_RED(palette[c]);
+        int dg = g - OBSIDIAN_RGB_GREEN(palette[c]);
+        int db = b - OBSIDIAN_RGB_BLUE(palette[c]);
 
         int dist = dr * dr + dg * dg + db * db;
 
@@ -1528,7 +1524,7 @@ static struct
 
         for (int i = 0; i < 4; i++)
         {
-            color[i] = MAKE_RGBA(0, 0, 0, 255);
+            color[i] = OBSIDIAN_MAKE_RGBA(0, 0, 0, 255);
         }
 
         box_w = 1;
@@ -1647,9 +1643,9 @@ static int TitleAveragePixel(int x, int y)
         {
             const rgb_color_t c = title_pix[(y + ky) * title_W3 + (x + kx)];
 
-            r += RGB_RED(c);
-            g += RGB_GREEN(c);
-            b += RGB_BLUE(c);
+            r += OBSIDIAN_RGB_RED(c);
+            g += OBSIDIAN_RGB_GREEN(c);
+            b += OBSIDIAN_RGB_BLUE(c);
         }
     }
 
@@ -1657,7 +1653,7 @@ static int TitleAveragePixel(int x, int y)
     g = g / 9;
     b = b / 9;
 
-    return MAKE_RGBA(r, g, b, 255);
+    return OBSIDIAN_MAKE_RGBA(r, g, b, 255);
 }
 
 static qLump_c *TitleCreateTGA()
@@ -1694,9 +1690,9 @@ static qLump_c *TitleCreateTGA()
         {
             rgb_color_t col = TitleAveragePixel(x, y);
 
-            lump->AddByte(RGB_BLUE(col));
-            lump->AddByte(RGB_GREEN(col));
-            lump->AddByte(RGB_RED(col));
+            lump->AddByte(OBSIDIAN_RGB_BLUE(col));
+            lump->AddByte(OBSIDIAN_RGB_GREEN(col));
+            lump->AddByte(OBSIDIAN_RGB_RED(col));
         }
     }
 
@@ -1825,7 +1821,7 @@ int title_set_palette(lua_State *L)
 
         lua_pop(L, 3);
 
-        title_palette[c] = MAKE_RGBA(r, g, b, 255);
+        title_palette[c] = OBSIDIAN_MAKE_RGBA(r, g, b, 255);
     }
 
     return 0;
@@ -1968,15 +1964,15 @@ static inline rgb_color_t CalcAlphaBlend(rgb_color_t C1, rgb_color_t C2, int alp
         return C1;
     }
 
-    int r = RGB_RED(C1) * (256 - alpha) + RGB_RED(C2) * alpha;
-    int g = RGB_GREEN(C1) * (256 - alpha) + RGB_GREEN(C2) * alpha;
-    int b = RGB_BLUE(C1) * (256 - alpha) + RGB_BLUE(C2) * alpha;
+    int r = OBSIDIAN_RGB_RED(C1) * (256 - alpha) + OBSIDIAN_RGB_RED(C2) * alpha;
+    int g = OBSIDIAN_RGB_GREEN(C1) * (256 - alpha) + OBSIDIAN_RGB_GREEN(C2) * alpha;
+    int b = OBSIDIAN_RGB_BLUE(C1) * (256 - alpha) + OBSIDIAN_RGB_BLUE(C2) * alpha;
 
     r >>= 8;
     g >>= 8;
     b >>= 8;
 
-    return MAKE_RGBA(r, g, b, 255);
+    return OBSIDIAN_MAKE_RGBA(r, g, b, 255);
 }
 
 static inline rgb_color_t CalcGradient(float along)
@@ -2011,50 +2007,50 @@ static inline rgb_color_t CalcGradient(float along)
         along = pow(along, 0.75);
     }
 
-    int r = RGB_RED(col1) * (1 - along) + RGB_RED(col2) * along;
-    int g = RGB_GREEN(col1) * (1 - along) + RGB_GREEN(col2) * along;
-    int b = RGB_BLUE(col1) * (1 - along) + RGB_BLUE(col2) * along;
+    int r = OBSIDIAN_RGB_RED(col1) * (1 - along) + OBSIDIAN_RGB_RED(col2) * along;
+    int g = OBSIDIAN_RGB_GREEN(col1) * (1 - along) + OBSIDIAN_RGB_GREEN(col2) * along;
+    int b = OBSIDIAN_RGB_BLUE(col1) * (1 - along) + OBSIDIAN_RGB_BLUE(col2) * along;
 
-    return MAKE_RGBA(r, g, b, 255);
+    return OBSIDIAN_MAKE_RGBA(r, g, b, 255);
 }
 
 static inline rgb_color_t CalcAdditive(rgb_color_t C1, rgb_color_t C2)
 {
-    int r = RGB_RED(C1) + RGB_RED(C2);
-    int g = RGB_GREEN(C1) + RGB_GREEN(C2);
-    int b = RGB_BLUE(C1) + RGB_BLUE(C2);
+    int r = OBSIDIAN_RGB_RED(C1) + OBSIDIAN_RGB_RED(C2);
+    int g = OBSIDIAN_RGB_GREEN(C1) + OBSIDIAN_RGB_GREEN(C2);
+    int b = OBSIDIAN_RGB_BLUE(C1) + OBSIDIAN_RGB_BLUE(C2);
 
     r = OBSIDIAN_MIN(r, 255);
     g = OBSIDIAN_MIN(g, 255);
     b = OBSIDIAN_MIN(b, 255);
 
-    return MAKE_RGBA(r, g, b, 255);
+    return OBSIDIAN_MAKE_RGBA(r, g, b, 255);
 }
 
 static inline rgb_color_t CalcSubtract(rgb_color_t C1, rgb_color_t C2)
 {
-    int r = RGB_RED(C1) - RGB_RED(C2);
-    int g = RGB_GREEN(C1) - RGB_GREEN(C2);
-    int b = RGB_BLUE(C1) - RGB_BLUE(C2);
+    int r = OBSIDIAN_RGB_RED(C1) - OBSIDIAN_RGB_RED(C2);
+    int g = OBSIDIAN_RGB_GREEN(C1) - OBSIDIAN_RGB_GREEN(C2);
+    int b = OBSIDIAN_RGB_BLUE(C1) - OBSIDIAN_RGB_BLUE(C2);
 
     r = OBSIDIAN_MAX(r, 0);
     g = OBSIDIAN_MAX(g, 0);
     b = OBSIDIAN_MAX(b, 0);
 
-    return MAKE_RGBA(r, g, b, 255);
+    return OBSIDIAN_MAKE_RGBA(r, g, b, 255);
 }
 
 static inline rgb_color_t CalcMultiply(rgb_color_t C1, rgb_color_t C2)
 {
-    int r = RGB_RED(C1) * (RGB_RED(C2) + 1);
-    int g = RGB_GREEN(C1) * (RGB_GREEN(C2) + 1);
-    int b = RGB_BLUE(C1) * (RGB_BLUE(C2) + 1);
+    int r = OBSIDIAN_RGB_RED(C1) * (OBSIDIAN_RGB_RED(C2) + 1);
+    int g = OBSIDIAN_RGB_GREEN(C1) * (OBSIDIAN_RGB_GREEN(C2) + 1);
+    int b = OBSIDIAN_RGB_BLUE(C1) * (OBSIDIAN_RGB_BLUE(C2) + 1);
 
     r = r >> 8;
     g = g >> 8;
     b = b >> 8;
 
-    return MAKE_RGBA(r, g, b, 255);
+    return OBSIDIAN_MAKE_RGBA(r, g, b, 255);
 }
 
 static inline rgb_color_t CalcPixel(int x, int y)
@@ -2081,7 +2077,7 @@ static inline rgb_color_t CalcPixel(int x, int y)
     case REND_Textured:
         if (!title_last_tga)
         {
-            return MAKE_RGBA(0, 255, 255, 255);
+            return OBSIDIAN_MAKE_RGBA(0, 255, 255, 255);
         }
 
         px = (x / 3) % title_last_tga->width;
@@ -2434,7 +2430,7 @@ static void TDraw_Image(int x, int y, tga_image_c *img)
 
             rgb_color_t pix = img->pixels[dy * img->width + dx];
 
-            int alpha = RGB_ALPHA(pix);
+            int alpha = OBSIDIAN_RGB_ALPHA(pix);
             if (alpha == 0)
             {
                 continue;
@@ -2586,24 +2582,24 @@ int title_draw_clouds(lua_State *L)
 
             if (src < 1.0)
             {
-                r = RGB_RED(hue2) * src + RGB_RED(hue1) * (1.0 - src);
-                g = RGB_GREEN(hue2) * src + RGB_GREEN(hue1) * (1.0 - src);
-                b = RGB_BLUE(hue2) * src + RGB_BLUE(hue1) * (1.0 - src);
+                r = OBSIDIAN_RGB_RED(hue2) * src + OBSIDIAN_RGB_RED(hue1) * (1.0 - src);
+                g = OBSIDIAN_RGB_GREEN(hue2) * src + OBSIDIAN_RGB_GREEN(hue1) * (1.0 - src);
+                b = OBSIDIAN_RGB_BLUE(hue2) * src + OBSIDIAN_RGB_BLUE(hue1) * (1.0 - src);
             }
             else
             {
                 src = src - 1.0;
 
-                r = RGB_RED(hue3) * src + RGB_RED(hue2) * (1.0 - src);
-                g = RGB_GREEN(hue3) * src + RGB_GREEN(hue2) * (1.0 - src);
-                b = RGB_BLUE(hue3) * src + RGB_BLUE(hue2) * (1.0 - src);
+                r = OBSIDIAN_RGB_RED(hue3) * src + OBSIDIAN_RGB_RED(hue2) * (1.0 - src);
+                g = OBSIDIAN_RGB_GREEN(hue3) * src + OBSIDIAN_RGB_GREEN(hue2) * (1.0 - src);
+                b = OBSIDIAN_RGB_BLUE(hue3) * src + OBSIDIAN_RGB_BLUE(hue2) * (1.0 - src);
             }
 
             int r2 = OBSIDIAN_CLAMP(0, r, 255);
             int g2 = OBSIDIAN_CLAMP(0, g, 255);
             int b2 = OBSIDIAN_CLAMP(0, b, 255);
 
-            rgb_color_t col = MAKE_RGBA(r2, g2, b2, 255);
+            rgb_color_t col = OBSIDIAN_MAKE_RGBA(r2, g2, b2, 255);
 
             for (int dy = 0; dy < 3; dy++)
             {
@@ -2726,15 +2722,15 @@ for (int kx = 0   ; kx < W ; kx++)
         ity = OBSIDIAN_CLAMP(0, ity, 255);
 
         if ((int)(K * 32) & 3)
-            col = MAKE_RGBA(0  , 0  , ity, 255);
+            col = OBSIDIAN_MAKE_RGBA(0  , 0  , ity, 255);
         else
-            col = MAKE_RGBA(0  ,ity ,   0, 255);
+            col = OBSIDIAN_MAKE_RGBA(0  ,ity ,   0, 255);
 #else
         // moon colors
         int ity = 80 + (nx + nx + nx) * 60;
         ity = OBSIDIAN_CLAMP(0, ity, 255);
 
-        col = MAKE_RGBA(ity, ity, ity, 255);
+        col = OBSIDIAN_MAKE_RGBA(ity, ity, ity, 255);
 #endif
 
         title_pix[y * title_W3 + x] = col;

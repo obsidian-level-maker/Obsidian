@@ -30,7 +30,7 @@
 #include "sys_assert.h"
 #include "sys_macro.h"
 
-#define EPSILON 0.001
+constexpr double EPSILON = 0.001;
 
 double CLUSTER_SIZE = 128.0;
 
@@ -191,9 +191,9 @@ std::string dummy_plane_tex;
 double CHUNK_SIZE = 512.0;
 
 // csg_spots.cc
-#define SPOT_LOW_CEIL 1
-#define SPOT_WALL     2
-#define SPOT_LEDGE    3
+constexpr uint8_t SPOT_LOW_CEIL = 1;
+constexpr uint8_t SPOT_WALL     = 2;
+constexpr uint8_t SPOT_LEDGE    = 3;
 
 int spot_low_h  = 72;
 int spot_high_h = 128;
@@ -236,7 +236,7 @@ int csg_property_set_c::getInt(const std::string &key, int def_val) const
 {
     std::string str = getStr(key);
 
-    return !str.empty() ? RoundToInteger(StringToDouble(str)) : def_val;
+    return !str.empty() ? OBSIDIAN_I_ROUND(StringToDouble(str)) : def_val;
 }
 
 void csg_property_set_c::getHexenArgs(uint8_t *arg5) const
@@ -656,7 +656,7 @@ bool csg_entity_c::Match(std::string_view want_name) const
 
 //------------------------------------------------------------------------
 
-#define QUAD_NODE_SIZE 320
+constexpr uint16_t QUAD_NODE_SIZE = 320;
 
 class brush_quad_node_c
 {
@@ -881,8 +881,8 @@ class brush_quad_node_c
         double t_delta = B->t.face.getDouble("delta_z", 0);
         double b_delta = B->b.face.getDouble("delta_z", 0);
 
-        int t_z = RoundToInteger(B->t.z + t_delta);
-        int b_z = RoundToInteger(B->b.z + b_delta);
+        int t_z = OBSIDIAN_I_ROUND(B->t.z + t_delta);
+        int b_z = OBSIDIAN_I_ROUND(B->b.z + b_delta);
 
         // skip brushes underneath the floor (or the floor itself)
         if (t_z < floor_h + 1)
@@ -920,8 +920,8 @@ class brush_quad_node_c
 
             // rounding to integer here, I don't think it is any problem,
             // as the spot polygon-drawing code is fairly robust.
-            shape.push_back(RoundToInteger(V->x));
-            shape.push_back(RoundToInteger(V->y));
+            shape.push_back(OBSIDIAN_I_ROUND(V->x));
+            shape.push_back(OBSIDIAN_I_ROUND(V->y));
         }
 
         SPOT_FillPolygon(content, &shape[0], num_vert);

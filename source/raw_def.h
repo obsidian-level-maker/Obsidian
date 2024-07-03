@@ -20,8 +20,8 @@
 
 /* ----- The wad structures ---------------------- */
 
-#define WAD_TEX_NAME  8
-#define WAD_FLAT_NAME 8
+constexpr uint8_t WAD_TEX_NAME  = 8;
+constexpr uint8_t WAD_FLAT_NAME = 8;
 
 // wad header
 #pragma pack(push, 1)
@@ -469,11 +469,6 @@ typedef enum
     MLF_ZDoom_BlockEverything = 0x8000,
 } zdoom_lineflag_e;
 
-#define BOOM_GENLINE_FIRST 0x2f80
-#define BOOM_GENLINE_LAST  0x7fff
-
-#define is_genline(tp) ((tp) >= BOOM_GENLINE_FIRST && (tp) <= BOOM_GENLINE_LAST)
-
 typedef enum
 {
     SPAC_Cross   = 0, // when line is crossed (W1 / WR)
@@ -500,8 +495,6 @@ typedef enum
     BoomSF_QuietPlane = 0x0800
 } boom_sectorflag_e;
 
-#define MSF_BoomFlags 0x0FE0
-
 //
 // Thing attributes.
 //
@@ -522,9 +515,6 @@ typedef enum
     MTF_Reserved = 256,
 } thing_option_e;
 
-#define MTF_EXFLOOR_MASK  0x3C00
-#define MTF_EXFLOOR_SHIFT 10
-
 typedef enum
 {
     MTF_Hexen_Dormant = 16,
@@ -541,18 +531,18 @@ typedef enum
 //
 // Polyobject stuff
 //
-#define HEXTYPE_POLY_START    1
-#define HEXTYPE_POLY_EXPLICIT 5
+constexpr uint8_t HEXTYPE_POLY_START    = 1;
+constexpr uint8_t HEXTYPE_POLY_EXPLICIT = 5;
 
 // -JL- Hexen polyobj thing types
-#define PO_ANCHOR_TYPE     3000
-#define PO_SPAWN_TYPE      3001
-#define PO_SPAWNCRUSH_TYPE 3002
+constexpr uint16_t PO_ANCHOR_TYPE     = 3000;
+constexpr uint16_t PO_SPAWN_TYPE      = 3001;
+constexpr uint16_t PO_SPAWNCRUSH_TYPE = 3002;
 
 // -JL- ZDoom polyobj thing types
-#define ZDOOM_PO_ANCHOR_TYPE     9300
-#define ZDOOM_PO_SPAWN_TYPE      9301
-#define ZDOOM_PO_SPAWNCRUSH_TYPE 9302
+constexpr uint16_t ZDOOM_PO_ANCHOR_TYPE     = 9300;
+constexpr uint16_t ZDOOM_PO_SPAWN_TYPE      = 9301;
+constexpr uint16_t ZDOOM_PO_SPAWNCRUSH_TYPE = 9302;
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

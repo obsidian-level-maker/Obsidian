@@ -298,7 +298,7 @@ void WAD_FinishLump(void)
     const int len = ftell(wad_W_fp) - wad_W_lump.pos;
 
     // pad lumps to a multiple of four bytes
-    int padding = ALIGN_LEN(len) - len;
+    int padding = (((len) + 3) & ~3) - len;
 
     if (padding > 0)
     {

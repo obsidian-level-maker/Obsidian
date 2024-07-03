@@ -17,12 +17,11 @@ bool steve_generate(const char *config_file, const char *out_file) {
 
   steve::ConfigJson config;
 
-// all.json must be read in regardless; load additional config afterwards if selected
-  PHYSFS_File *config_fp = PHYSFS_openRead("scripts/midi/all.json");
+  PHYSFS_File *config_fp = PHYSFS_openRead(config_file);
 
   if (!config_fp)
   {
-    LogPrint("Unable to open MIDI generator config scripts/midi/all.json!\n");
+    LogPrint("Unable to open MIDI generator config %s!\n", config_file);
     return false;
   }
 
@@ -33,41 +32,15 @@ bool steve_generate(const char *config_file, const char *out_file) {
   {
     PHYSFS_close(config_fp);
     delete[] buf;
-    LogPrint("Unable to read MIDI generator config scripts/midi/all.json!!\n");
+    LogPrint("Unable to read MIDI generator config %s!\n", config_file);
     return false;
   }
 
   PHYSFS_close(config_fp);
 
   config.parse_buffer((const char *)buf, len);
+
   delete[] buf;
-
-  if (GetFilename(config_file) != "all.json")
-  {
-    config_fp = PHYSFS_openRead(config_file);
-    if (!config_fp)
-    {
-      LogPrint("Unable to open MIDI generator config %s!\n", config_file);
-      return false;
-    }
-
-    len = PHYSFS_fileLength(config_fp);
-    buf = new uint8_t[len];
-
-    if (PHYSFS_readBytes(config_fp, buf, len) != len)
-    {
-      PHYSFS_close(config_fp);
-      delete[] buf;
-      LogPrint("Unable to read MIDI generator config %s!\n", config_file);
-      return false;
-    }
-
-    PHYSFS_close(config_fp);
-
-    config.parse_buffer((const char *)buf, len);
-
-    delete[] buf;
-  }
   
   config.compute_cache();
 

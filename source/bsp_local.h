@@ -20,6 +20,8 @@
 
 #pragma once
 
+#include <stdint.h>
+
 #include <vector>
 
 #include "bsp.h"
@@ -283,7 +285,7 @@ class seg_t
 
 // a seg with this index is removed by SortSegs().
 // it must be a very high value.
-#define SEG_IS_GARBAGE (1 << 29)
+constexpr int SEG_IS_GARBAGE = (1 << 29);
 
 class subsec_t
 {
@@ -412,17 +414,6 @@ extern std::vector<subsec_t *>  lev_subsecs;
 extern std::vector<node_t *>    lev_nodes;
 extern std::vector<walltip_t *> lev_walltips;
 
-#define num_vertices ((int)lev_vertices.size())
-#define num_linedefs ((int)lev_linedefs.size())
-#define num_sidedefs ((int)lev_sidedefs.size())
-#define num_sectors  ((int)lev_sectors.size())
-#define num_things   ((int)lev_things.size())
-
-#define num_segs     ((int)lev_segs.size())
-#define num_subsecs  ((int)lev_subsecs.size())
-#define num_nodes    ((int)lev_nodes.size())
-#define num_walltips ((int)lev_walltips.size())
-
 extern int num_old_vert;
 extern int num_new_vert;
 
@@ -450,19 +441,19 @@ void ZLibAppendLump(const void *data, int length);
 void ZLibFinishLump(void);
 
 /* limit flags, to show what went wrong */
-#define LIMIT_VERTEXES 0x000001
-#define LIMIT_SECTORS  0x000002
-#define LIMIT_SIDEDEFS 0x000004
-#define LIMIT_LINEDEFS 0x000008
+constexpr uint8_t LIMIT_VERTEXES = 0x000001;
+constexpr uint8_t LIMIT_SECTORS  = 0x000002;
+constexpr uint8_t LIMIT_SIDEDEFS = 0x000004;
+constexpr uint8_t LIMIT_LINEDEFS = 0x000008;
 
-#define LIMIT_SEGS     0x000010
-#define LIMIT_SSECTORS 0x000020
-#define LIMIT_NODES    0x000040
+constexpr uint8_t LIMIT_SEGS     = 0x000010;
+constexpr uint8_t LIMIT_SSECTORS = 0x000020;
+constexpr uint8_t LIMIT_NODES    = 0x000040;
 
-#define LIMIT_GL_VERT  0x000100
-#define LIMIT_GL_SEGS  0x000200
-#define LIMIT_GL_SSECT 0x000400
-#define LIMIT_GL_NODES 0x000800
+constexpr uint16_t LIMIT_GL_VERT  = 0x000100;
+constexpr uint16_t LIMIT_GL_SEGS  = 0x000200;
+constexpr uint16_t LIMIT_GL_SSECT = 0x000400;
+constexpr uint16_t LIMIT_GL_NODES = 0x000800;
 
 //------------------------------------------------------------------------
 // ANALYZE : Analyzing level structures
@@ -492,7 +483,7 @@ vertex_t *NewVertexDegenerate(vertex_t *start, vertex_t *end);
 // SEG : Choose the best Seg to use for a node line.
 //------------------------------------------------------------------------
 
-#define IFFY_LEN 4.0
+constexpr double IFFY_LEN = 4.0;
 
 inline void ListAddSeg(seg_t **list_ptr, seg_t *seg)
 {

@@ -3,7 +3,7 @@ MIDI_CONFIG = {}
 MIDI_CONFIG.CHOICES =
 {
   "safe",  _("Safe Defaults"),
-  "all",   _("Relaxed (May Sound Weird)")
+  "relaxed",   _("Relaxed (May Sound Weird)")
 }
 
 function MIDI_CONFIG.setup(self)

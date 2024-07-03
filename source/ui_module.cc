@@ -32,8 +32,8 @@
 #include "sys_macro.h"
 #include "sys_xoshiro.h"
 
-UI_Module::UI_Module(int X, int Y, int W, int H, const std::string &id, const std::string &label, const std::string &tip, int red, int green,
-                     int blue, bool suboptions)
+UI_Module::UI_Module(int X, int Y, int W, int H, const std::string &id, const std::string &label,
+                     const std::string &tip, int red, int green, int blue, bool suboptions)
     : Fl_Group(X, Y, W, H), choice_map(), cur_opt_y(0)
 {
     box(box_style);
@@ -45,7 +45,8 @@ UI_Module::UI_Module(int X, int Y, int W, int H, const std::string &id, const st
         color(fl_rgb_color(red, green, blue));
     }
 
-    mod_button = new UI_CustomCheckBox(X + kf_w(6), Y + kf_h(5), W - kf_w(12), kf_h(24));
+    mod_button = new UI_CustomCheckBox(X + KromulentWidth(6), Y + KromulentHeight(5), W - KromulentWidth(12),
+                                       KromulentHeight(24));
     mod_button->box(FL_NO_BOX);
     if (suboptions)
     {
@@ -63,7 +64,8 @@ UI_Module::UI_Module(int X, int Y, int W, int H, const std::string &id, const st
 
     if (!Is_UI())
     {
-        heading = new Fl_Box(FL_NO_BOX, X + kf_w(tx), Y + kf_h(4), W - kf_w(tx + 4), kf_h(24), "");
+        heading = new Fl_Box(FL_NO_BOX, X + KromulentWidth(tx), Y + KromulentHeight(4), W - KromulentWidth(tx + 4),
+                             KromulentHeight(24), "");
         heading->copy_label(label.c_str());
         heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
         heading->labelfont(font_style | FL_BOLD);
@@ -78,7 +80,7 @@ UI_Module::UI_Module(int X, int Y, int W, int H, const std::string &id, const st
         }
     }
 
-    cur_opt_y += Is_UI() ? kf_h(8) : kf_h(32);
+    cur_opt_y += Is_UI() ? KromulentHeight(8) : KromulentHeight(32);
 
     end();
 
@@ -100,12 +102,12 @@ void UI_Module::AddHeader(const std::string &opt, const std::string &label, int 
 {
     int nw = this->parent()->w();
 
-    int nx = x() + kf_w(6);
-    int ny = y() + cur_opt_y - kf_h(15);
+    int nx = x() + KromulentWidth(6);
+    int ny = y() + cur_opt_y - KromulentHeight(15);
 
-    UI_RHeader *rhead = new UI_RHeader(nx, ny + kf_h(15), nw * .95, kf_h(24));
+    UI_RHeader *rhead = new UI_RHeader(nx, ny + KromulentHeight(15), nw * .95, KromulentHeight(24));
 
-    rhead->mod_label = new Fl_Box(rhead->x(), rhead->y(), rhead->w() * .95, kf_h(24), "");
+    rhead->mod_label = new Fl_Box(rhead->x(), rhead->y(), rhead->w() * .95, KromulentHeight(24), "");
     rhead->mod_label->copy_label(label.c_str());
     rhead->mod_label->align((FL_ALIGN_CENTER | FL_ALIGN_INSIDE | FL_ALIGN_CLIP));
     rhead->mod_label->labelfont(font_style + 1);
@@ -118,7 +120,7 @@ void UI_Module::AddHeader(const std::string &opt, const std::string &label, int 
 
     add(rhead);
 
-    cur_opt_y += (gap ? kf_h(36) : kf_h(26));
+    cur_opt_y += (gap ? KromulentHeight(36) : KromulentHeight(26));
 
     resize(x(), y(), w(), CalcHeight());
     redraw();
@@ -130,12 +132,12 @@ void UI_Module::AddUrl(const std::string &opt, const std::string &label, const s
 {
     int nw = this->parent()->w();
 
-    int nx = x() + kf_w(6);
-    int ny = y() + cur_opt_y - kf_h(15);
+    int nx = x() + KromulentWidth(6);
+    int ny = y() + cur_opt_y - KromulentHeight(15);
 
-    UI_RLink *rurl = new UI_RLink(nx, ny + kf_h(15), nw * .95, kf_h(24));
+    UI_RLink *rurl = new UI_RLink(nx, ny + KromulentHeight(15), nw * .95, KromulentHeight(24));
 
-    rurl->mod_link = new UI_ModHyperLink(rurl->x(), rurl->y(), rurl->w() * .95, kf_h(24), "", url.c_str());
+    rurl->mod_link = new UI_ModHyperLink(rurl->x(), rurl->y(), rurl->w() * .95, KromulentHeight(24), "", url.c_str());
     rurl->mod_link->copy_label(label.c_str());
     rurl->mod_link->align((FL_ALIGN_CENTER | FL_ALIGN_INSIDE | FL_ALIGN_CLIP));
     rurl->mod_link->labelfont(font_style + 1);
@@ -148,7 +150,7 @@ void UI_Module::AddUrl(const std::string &opt, const std::string &label, const s
 
     add(rurl);
 
-    cur_opt_y += (gap ? kf_h(36) : kf_h(26));
+    cur_opt_y += (gap ? KromulentHeight(36) : KromulentHeight(26));
 
     resize(x(), y(), w(), CalcHeight());
     redraw();
@@ -156,38 +158,39 @@ void UI_Module::AddUrl(const std::string &opt, const std::string &label, const s
     choice_map_url[opt] = rurl;
 }
 
-void UI_Module::AddOption(const std::string &opt, const std::string &label, const std::string &tip, std::string &longtip, int gap,
-                          const std::string &randomize_group, const std::string &default_value)
+void UI_Module::AddOption(const std::string &opt, const std::string &label, const std::string &tip,
+                          std::string &longtip, int gap, const std::string &randomize_group,
+                          const std::string &default_value)
 {
     int nw = this->parent()->w();
-    //    int nh = kf_h(30);
+    //    int nh = KromulentHeight(30);
 
-    int nx = x() + kf_w(6);
-    int ny = y() + cur_opt_y - kf_h(15);
+    int nx = x() + KromulentWidth(6);
+    int ny = y() + cur_opt_y - KromulentHeight(15);
 
     if (longtip.empty())
     {
         longtip = tip;
     }
 
-    UI_RChoice *rch = new UI_RChoice(nx, ny + kf_h(15), nw * .95, kf_h(24));
+    UI_RChoice *rch = new UI_RChoice(nx, ny + KromulentHeight(15), nw * .95, KromulentHeight(24));
 
-    rch->mod_label = new Fl_Box(rch->x(), rch->y(), rch->w() * .40, kf_h(24), "");
+    rch->mod_label = new Fl_Box(rch->x(), rch->y(), rch->w() * .40, KromulentHeight(24), "");
     rch->mod_label->copy_label(StringFormat("%s: ", label.c_str()).c_str());
     rch->mod_label->align(FL_ALIGN_RIGHT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
     rch->mod_label->labelfont(font_style);
     rch->mod_label->copy_tooltip(tip.c_str());
 
-    rch->mod_menu = new UI_RChoiceMenu(rch->x() + (rch->w() * .40), rch->y(), rch->w() * .50, kf_h(24));
+    rch->mod_menu = new UI_RChoiceMenu(rch->x() + (rch->w() * .40), rch->y(), rch->w() * .50, KromulentHeight(24));
     rch->mod_menu->textcolor(FONT2_COLOR);
     rch->mod_menu->selection_color(SELECTION);
 
-    rch->mod_reset = new UI_ResetOption(rch->x() + (rch->w() * .90), rch->y(), rch->w() * .075, kf_h(24));
+    rch->mod_reset = new UI_ResetOption(rch->x() + (rch->w() * .90), rch->y(), rch->w() * .075, KromulentHeight(24));
     rch->mod_reset->box(FL_NO_BOX);
     rch->mod_reset->labelcolor(FONT_COLOR);
     rch->mod_reset->visible_focus(0);
 
-    rch->mod_help = new UI_HelpLink(rch->x() + (rch->w() * .95), rch->y(), rch->w() * .075, kf_h(24));
+    rch->mod_help = new UI_HelpLink(rch->x() + (rch->w() * .95), rch->y(), rch->w() * .075, KromulentHeight(24));
     rch->mod_help->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
     rch->mod_help->labelfont(font_style);
     rch->mod_help->labelcolor(FONT_COLOR);
@@ -213,7 +216,7 @@ void UI_Module::AddOption(const std::string &opt, const std::string &label, cons
 
     add(rch);
 
-    cur_opt_y += (gap ? kf_h(36) : kf_h(26));
+    cur_opt_y += (gap ? KromulentHeight(36) : KromulentHeight(26));
 
     resize(x(), y(), w(), CalcHeight());
     redraw();
@@ -221,15 +224,16 @@ void UI_Module::AddOption(const std::string &opt, const std::string &label, cons
     choice_map[opt] = rch;
 }
 
-void UI_Module::AddSliderOption(const std::string &opt, std::string &label, const std::string &tip, std::string &longtip, int gap,
-                                double min, double max, double inc, const std::string &units, const std::string &presets,
-                                const std::string &nan, const std::string &randomize_group, const std::string &default_value)
+void UI_Module::AddSliderOption(const std::string &opt, std::string &label, const std::string &tip,
+                                std::string &longtip, int gap, double min, double max, double inc,
+                                const std::string &units, const std::string &presets, const std::string &nan,
+                                const std::string &randomize_group, const std::string &default_value)
 {
     int nw = this->parent()->w();
-    //    int nh = kf_h(30);
+    //    int nh = KromulentHeight(30);
 
-    int nx = x() + kf_w(6);
-    int ny = y() + cur_opt_y - kf_h(15);
+    int nx = x() + KromulentWidth(6);
+    int ny = y() + cur_opt_y - KromulentHeight(15);
 
     if (longtip.empty())
     {
@@ -238,7 +242,7 @@ void UI_Module::AddSliderOption(const std::string &opt, std::string &label, cons
 
     label = StringFormat("%s: ", label.c_str());
 
-    UI_RSlide *rsl = new UI_RSlide(nx, ny + kf_h(15), nw * .95, kf_h(24));
+    UI_RSlide *rsl = new UI_RSlide(nx, ny + KromulentHeight(15), nw * .95, KromulentHeight(24));
 
     // Populate the nan_options vector
     std::string::size_type oldpos = 0;
@@ -257,13 +261,14 @@ void UI_Module::AddSliderOption(const std::string &opt, std::string &label, cons
         }
     }
 
-    rsl->mod_label = new Fl_Box(rsl->x(), rsl->y(), rsl->w() * .40, kf_h(24), "");
+    rsl->mod_label = new Fl_Box(rsl->x(), rsl->y(), rsl->w() * .40, KromulentHeight(24), "");
     rsl->mod_label->copy_label(label.c_str());
     rsl->mod_label->align(FL_ALIGN_RIGHT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
     rsl->mod_label->labelfont(font_style);
     rsl->mod_label->copy_tooltip(tip.c_str());
 
-    rsl->prev_button = new UI_CustomArrowButton(rsl->x() + (rsl->w() * .40), rsl->y(), rsl->w() * .05, kf_h(24));
+    rsl->prev_button =
+        new UI_CustomArrowButton(rsl->x() + (rsl->w() * .40), rsl->y(), rsl->w() * .05, KromulentHeight(24));
     rsl->prev_button->copy_label("@<");
     rsl->prev_button->visible_focus(0);
     rsl->prev_button->box(button_style);
@@ -274,7 +279,7 @@ void UI_Module::AddSliderOption(const std::string &opt, std::string &label, cons
     rsl->prev_button->callback(callback_SliderPrevious, NULL);
 
     rsl->mod_slider = new UI_CustomSlider(rsl->x() + (rsl->w() * .45), rsl->y(),
-                                          rsl->w() * (rsl->nan_choices.size() > 0 ? .30 : .35), kf_h(24));
+                                          rsl->w() * (rsl->nan_choices.size() > 0 ? .30 : .35), KromulentHeight(24));
     rsl->mod_slider->box(button_style);
     rsl->mod_slider->visible_focus(0);
     rsl->mod_slider->color(BUTTON_COLOR);
@@ -285,13 +290,13 @@ void UI_Module::AddSliderOption(const std::string &opt, std::string &label, cons
     rsl->mod_slider->callback(callback_PresetCheck, NULL);
 
     rsl->unit_label = new Fl_Box(rsl->x() + (rsl->w() * .45), rsl->y(),
-                                 rsl->w() * (rsl->nan_choices.size() > 0 ? .30 : .35), kf_h(24), "");
+                                 rsl->w() * (rsl->nan_choices.size() > 0 ? .30 : .35), KromulentHeight(24), "");
     rsl->unit_label->align(FL_ALIGN_CENTER | FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
     rsl->unit_label->labelfont(font_style);
     rsl->unit_label->labelcolor(FONT2_COLOR);
 
     rsl->next_button = new UI_CustomArrowButton(rsl->x() + rsl->w() * (rsl->nan_choices.size() > 0 ? .75 : .80),
-                                                rsl->y(), rsl->w() * .05, kf_h(24));
+                                                rsl->y(), rsl->w() * .05, KromulentHeight(24));
     rsl->next_button->copy_label("@>");
     rsl->next_button->box(button_style);
     rsl->next_button->color(BUTTON_COLOR);
@@ -303,7 +308,8 @@ void UI_Module::AddSliderOption(const std::string &opt, std::string &label, cons
 
     if (rsl->nan_choices.size() > 0)
     {
-        rsl->nan_options = new UI_CustomMenuButton(rsl->x() + (rsl->w() * .80), rsl->y(), rsl->w() * .075, kf_h(24));
+        rsl->nan_options =
+            new UI_CustomMenuButton(rsl->x() + (rsl->w() * .80), rsl->y(), rsl->w() * .075, KromulentHeight(24));
         rsl->nan_options->box(FL_FLAT_BOX);
         rsl->nan_options->color(this->color());
         rsl->nan_options->selection_color(SELECTION);
@@ -315,18 +321,18 @@ void UI_Module::AddSliderOption(const std::string &opt, std::string &label, cons
         rsl->nan_options->callback(callback_NanOptions, NULL);
     }
 
-    rsl->mod_entry = new UI_ManualEntry(rsl->x() + (rsl->w() * .85), rsl->y(), rsl->w() * .075, kf_h(24));
+    rsl->mod_entry = new UI_ManualEntry(rsl->x() + (rsl->w() * .85), rsl->y(), rsl->w() * .075, KromulentHeight(24));
     rsl->mod_entry->box(FL_NO_BOX);
     rsl->mod_entry->labelcolor(FONT_COLOR);
     rsl->mod_entry->visible_focus(0);
     rsl->mod_entry->callback(callback_ManualEntry, NULL);
 
-    rsl->mod_reset = new UI_ResetOption(rsl->x() + (rsl->w() * .90), rsl->y(), rsl->w() * .075, kf_h(24));
+    rsl->mod_reset = new UI_ResetOption(rsl->x() + (rsl->w() * .90), rsl->y(), rsl->w() * .075, KromulentHeight(24));
     rsl->mod_reset->box(FL_NO_BOX);
     rsl->mod_reset->labelcolor(FONT_COLOR);
     rsl->mod_reset->visible_focus(0);
 
-    rsl->mod_help = new UI_HelpLink(rsl->x() + (rsl->w() * .95), rsl->y(), rsl->w() * .075, kf_h(24));
+    rsl->mod_help = new UI_HelpLink(rsl->x() + (rsl->w() * .95), rsl->y(), rsl->w() * .075, KromulentHeight(24));
     rsl->mod_help->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
     rsl->mod_help->labelfont(font_style);
     rsl->mod_help->labelcolor(FONT_COLOR);
@@ -400,7 +406,7 @@ void UI_Module::AddSliderOption(const std::string &opt, std::string &label, cons
 
     add(rsl);
 
-    cur_opt_y += (gap ? kf_h(36) : kf_h(26));
+    cur_opt_y += (gap ? KromulentHeight(36) : KromulentHeight(26));
 
     resize(x(), y(), w(), CalcHeight());
     redraw();
@@ -408,37 +414,39 @@ void UI_Module::AddSliderOption(const std::string &opt, std::string &label, cons
     choice_map_slider[opt] = rsl;
 }
 
-void UI_Module::AddButtonOption(const std::string &opt, const std::string &label, const std::string &tip, std::string &longtip, int gap,
-                                const std::string &randomize_group, const std::string &default_value)
+void UI_Module::AddButtonOption(const std::string &opt, const std::string &label, const std::string &tip,
+                                std::string &longtip, int gap, const std::string &randomize_group,
+                                const std::string &default_value)
 {
     int nw = this->parent()->w();
-    //    int nh = kf_h(30);
+    //    int nh = KromulentHeight(30);
 
-    int nx = x() + kf_w(6);
-    int ny = y() + cur_opt_y - kf_h(15);
+    int nx = x() + KromulentWidth(6);
+    int ny = y() + cur_opt_y - KromulentHeight(15);
 
     if (longtip.empty())
     {
         longtip = tip;
     }
 
-    UI_RButton *rbt = new UI_RButton(nx, ny + kf_h(15), nw * .95, kf_h(24));
+    UI_RButton *rbt = new UI_RButton(nx, ny + KromulentHeight(15), nw * .95, KromulentHeight(24));
 
-    rbt->mod_label = new Fl_Box(rbt->x(), rbt->y(), rbt->w() * .40, kf_h(24), "");
+    rbt->mod_label = new Fl_Box(rbt->x(), rbt->y(), rbt->w() * .40, KromulentHeight(24), "");
     rbt->mod_label->copy_label(StringFormat("%s: ", label.c_str()).c_str());
     rbt->mod_label->align(FL_ALIGN_RIGHT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
     rbt->mod_label->labelfont(font_style);
     rbt->mod_label->copy_tooltip(tip.c_str());
 
-    rbt->mod_check = new UI_CustomCheckBox(rbt->x() + (rbt->w() * .40), rbt->y(), rbt->w() * .10, kf_h(24), "");
+    rbt->mod_check =
+        new UI_CustomCheckBox(rbt->x() + (rbt->w() * .40), rbt->y(), rbt->w() * .10, KromulentHeight(24), "");
     rbt->mod_check->selection_color(SELECTION);
 
-    rbt->mod_reset = new UI_ResetOption(rbt->x() + (rbt->w() * .90), rbt->y(), rbt->w() * .075, kf_h(24));
+    rbt->mod_reset = new UI_ResetOption(rbt->x() + (rbt->w() * .90), rbt->y(), rbt->w() * .075, KromulentHeight(24));
     rbt->mod_reset->box(FL_NO_BOX);
     rbt->mod_reset->labelcolor(FONT_COLOR);
     rbt->mod_reset->visible_focus(0);
 
-    rbt->mod_help = new UI_HelpLink(rbt->x() + (rbt->w() * .95), rbt->y(), rbt->w() * .075, kf_h(24));
+    rbt->mod_help = new UI_HelpLink(rbt->x() + (rbt->w() * .95), rbt->y(), rbt->w() * .075, KromulentHeight(24));
     rbt->mod_help->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
     rbt->mod_help->labelfont(font_style);
     rbt->mod_help->labelcolor(FONT_COLOR);
@@ -463,7 +471,7 @@ void UI_Module::AddButtonOption(const std::string &opt, const std::string &label
 
     add(rbt);
 
-    cur_opt_y += (gap ? kf_h(36) : kf_h(26));
+    cur_opt_y += (gap ? KromulentHeight(36) : KromulentHeight(26));
 
     resize(x(), y(), w(), CalcHeight());
     redraw();
@@ -475,11 +483,11 @@ int UI_Module::CalcHeight() const
 {
     if (mod_button->value())
     {
-        return cur_opt_y + kf_h(6);
+        return cur_opt_y + KromulentHeight(6);
     }
     else
     {
-        return kf_h(34);
+        return KromulentHeight(34);
     }
 }
 
@@ -594,8 +602,8 @@ void UI_Module::randomize_Values(std::vector<std::string> selected_randomize_gro
                     M->nan_options->value(0);
                     M->nan_options->do_callback();
                 }
-                M->mod_slider->value(M->mod_slider->round(
-                    xoshiro_Between(M->mod_slider->minimum(), M->mod_slider->maximum())));
+                M->mod_slider->value(
+                    M->mod_slider->round(xoshiro_Between(M->mod_slider->minimum(), M->mod_slider->maximum())));
                 M->mod_slider->do_callback();
                 break;
             }
@@ -1118,10 +1126,10 @@ typedef struct
     UI_CustomMods *parent;
 } mod_enable_callback_data_t;
 
-void UI_CustomMods::AddModule(const std::string &id, const std::string &label, const std::string &tip, int red, int green, int blue,
-                              bool suboptions)
+void UI_CustomMods::AddModule(const std::string &id, const std::string &label, const std::string &tip, int red,
+                              int green, int blue, bool suboptions)
 {
-    UI_Module *M = new UI_Module(mx, my, mw - 4, kf_h(34), id, label, tip, red, green, blue, suboptions);
+    UI_Module *M = new UI_Module(mx, my, mw - 4, KromulentHeight(34), id, label, tip, red, green, blue, suboptions);
 
     mod_enable_callback_data_t *cb_data = new mod_enable_callback_data_t;
     cb_data->mod                        = M;
@@ -1153,7 +1161,8 @@ bool UI_CustomMods::AddHeader(const std::string &module, const std::string &opti
     return true;
 }
 
-bool UI_CustomMods::AddUrl(const std::string &module, const std::string &option, const std::string &label, const std::string &url, int gap)
+bool UI_CustomMods::AddUrl(const std::string &module, const std::string &option, const std::string &label,
+                           const std::string &url, int gap)
 {
     UI_Module *M = FindID(module);
 
@@ -1169,8 +1178,9 @@ bool UI_CustomMods::AddUrl(const std::string &module, const std::string &option,
     return true;
 }
 
-bool UI_CustomMods::AddOption(const std::string &module, const std::string &option, const std::string &label, const std::string &tip,
-                              std::string &longtip, int gap, const std::string &randomize_group, const std::string &default_value)
+bool UI_CustomMods::AddOption(const std::string &module, const std::string &option, const std::string &label,
+                              const std::string &tip, std::string &longtip, int gap, const std::string &randomize_group,
+                              const std::string &default_value)
 {
     UI_Module *M = FindID(module);
 
@@ -1186,9 +1196,10 @@ bool UI_CustomMods::AddOption(const std::string &module, const std::string &opti
     return true;
 }
 
-bool UI_CustomMods::AddSliderOption(const std::string &module, const std::string &option, std::string &label, const std::string &tip,
-                                    std::string &longtip, int gap, double min, double max, double inc, const std::string &units,
-                                    const std::string &presets, const std::string &nan, const std::string &randomize_group,
+bool UI_CustomMods::AddSliderOption(const std::string &module, const std::string &option, std::string &label,
+                                    const std::string &tip, std::string &longtip, int gap, double min, double max,
+                                    double inc, const std::string &units, const std::string &presets,
+                                    const std::string &nan, const std::string &randomize_group,
                                     const std::string &default_value)
 {
     UI_Module *M = FindID(module);
@@ -1206,9 +1217,9 @@ bool UI_CustomMods::AddSliderOption(const std::string &module, const std::string
     return true;
 }
 
-bool UI_CustomMods::AddButtonOption(const std::string &module, const std::string &option, const std::string &label, const std::string &tip,
-                                    std::string &longtip, int gap, const std::string &randomize_group,
-                                    const std::string &default_value)
+bool UI_CustomMods::AddButtonOption(const std::string &module, const std::string &option, const std::string &label,
+                                    const std::string &tip, std::string &longtip, int gap,
+                                    const std::string &randomize_group, const std::string &default_value)
 {
     UI_Module *M = FindID(module);
 
@@ -1224,7 +1235,8 @@ bool UI_CustomMods::AddButtonOption(const std::string &module, const std::string
     return true;
 }
 
-bool UI_CustomMods::AddOptionChoice(const std::string &module, const std::string &option, const std::string &id, const std::string &label)
+bool UI_CustomMods::AddOptionChoice(const std::string &module, const std::string &option, const std::string &id,
+                                    const std::string &label)
 {
     UI_Module *M = FindID(module);
 
@@ -1849,25 +1861,25 @@ UI_CustomTabs::UI_CustomTabs(int X, int Y, int W, int H) : Fl_Tabs(X, Y, W, H)
 
     visible_focus(0);
 
-    arch_mods = new UI_CustomMods(X, Y + kf_h(22), W, H - kf_h(22), _("Architecture"));
+    arch_mods = new UI_CustomMods(X, Y + KromulentHeight(22), W, H - KromulentHeight(22), _("Architecture"));
     arch_mods->color(BUTTON_COLOR, BUTTON_COLOR);
     arch_mods->end();
-    combat_mods = new UI_CustomMods(X, Y + kf_h(22), W, H - kf_h(22), _("Combat"));
+    combat_mods = new UI_CustomMods(X, Y + KromulentHeight(22), W, H - KromulentHeight(22), _("Combat"));
     combat_mods->color(BUTTON_COLOR, BUTTON_COLOR);
     combat_mods->end();
-    pickup_mods = new UI_CustomMods(X, Y + kf_h(22), W, H - kf_h(22), _("Pickups"));
+    pickup_mods = new UI_CustomMods(X, Y + KromulentHeight(22), W, H - KromulentHeight(22), _("Pickups"));
     pickup_mods->color(BUTTON_COLOR, BUTTON_COLOR);
     pickup_mods->end();
-    other_mods = new UI_CustomMods(X, Y + kf_h(22), W, H - kf_h(22), _("Other"));
+    other_mods = new UI_CustomMods(X, Y + KromulentHeight(22), W, H - KromulentHeight(22), _("Other"));
     other_mods->color(BUTTON_COLOR, BUTTON_COLOR);
     other_mods->end();
-    debug_mods = new UI_CustomMods(X, Y + kf_h(22), W, H - kf_h(22), _("Debug"));
+    debug_mods = new UI_CustomMods(X, Y + KromulentHeight(22), W, H - KromulentHeight(22), _("Debug"));
     debug_mods->color(BUTTON_COLOR, BUTTON_COLOR);
     debug_mods->end();
-    experimental_mods = new UI_CustomMods(X, Y + kf_h(22), W, H - kf_h(22), _("Experimental"));
+    experimental_mods = new UI_CustomMods(X, Y + KromulentHeight(22), W, H - KromulentHeight(22), _("Experimental"));
     experimental_mods->color(BUTTON_COLOR, BUTTON_COLOR);
     experimental_mods->end();
-    links = new UI_CustomMods(X, Y + kf_h(22), W, H - kf_h(22), _("Links"));
+    links = new UI_CustomMods(X, Y + KromulentHeight(22), W, H - KromulentHeight(22), _("Links"));
     links->color(BUTTON_COLOR, BUTTON_COLOR);
     links->end();
 

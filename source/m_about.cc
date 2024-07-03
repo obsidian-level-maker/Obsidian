@@ -92,9 +92,9 @@ UI_About::UI_About(int W, int H, const char *label) : Fl_Window(W, H, label), wa
 
     callback(callback_Quit, this);
 
-    int cy = kf_h(6);
+    int cy = KromulentHeight(6);
 
-    Fl_Box *box = new Fl_Box(0, cy, W, kf_h(50), "");
+    Fl_Box *box = new Fl_Box(0, cy, W, KromulentHeight(50), "");
     box->copy_label(StringFormat("%s %s\n\"%s\" Build %s", OBSIDIAN_TITLE.c_str(), OBSIDIAN_SHORT_VERSION,
                                  OBSIDIAN_CODE_NAME.c_str(), OBSIDIAN_VERSION)
                         .c_str());
@@ -102,10 +102,10 @@ UI_About::UI_About(int W, int H, const char *label) : Fl_Window(W, H, label), wa
     box->labelsize(FL_NORMAL_SIZE * 5 / 3);
     box->labelfont(font_style);
 
-    cy += box->h() + kf_h(6);
+    cy += box->h() + KromulentHeight(6);
 
     // the very informative text
-    int pad = kf_w(22);
+    int pad = KromulentWidth(22);
 
     int text_h = H * 0.55;
     // clang-format off
@@ -119,17 +119,17 @@ UI_About::UI_About(int W, int H, const char *label) : Fl_Window(W, H, label), wa
     box->labelfont(font_style);
     box->labelcolor(FONT2_COLOR);
 
-    cy += box->h() + kf_h(10);
+    cy += box->h() + KromulentHeight(10);
 
     // website address
-    pad = kf_w(8);
+    pad = KromulentWidth(8);
 
-    UI_HyperLink *link = new UI_HyperLink(pad, cy, W - pad * 2, kf_h(30), URL, URL);
+    UI_HyperLink *link = new UI_HyperLink(pad, cy, W - pad * 2, KromulentHeight(30), URL, URL);
     link->align(FL_ALIGN_CENTER);
     link->labelsize(FL_NORMAL_SIZE);
     link->labelfont(font_style);
 
-    cy += link->h() + kf_h(16);
+    cy += link->h() + KromulentHeight(16);
 
     SYS_ASSERT(cy < H);
 
@@ -137,8 +137,8 @@ UI_About::UI_About(int W, int H, const char *label) : Fl_Window(W, H, label), wa
     Fl_Group *darkish = new Fl_Group(0, cy, W, H - cy);
     darkish->box(FL_FLAT_BOX);
     {
-        int bw = kf_w(60);
-        int bh = kf_h(30);
+        int bw = KromulentWidth(60);
+        int bh = KromulentHeight(30);
         int by = H - (H - cy + bh) / 2;
 
         Fl_Button *button = new Fl_Button(W - bw * 2, by, bw, bh, fl_ok);
@@ -156,8 +156,8 @@ UI_About::UI_About(int W, int H, const char *label) : Fl_Window(W, H, label), wa
 
 void DLG_AboutText(void)
 {
-    int about_w = kf_w(400);
-    int about_h = kf_h(400) + KF * 20;
+    int about_w = KromulentWidth(400);
+    int about_h = KromulentHeight(400) + KF * 20;
 
     UI_About *about_window = new UI_About(about_w, about_h, _("About OBSIDIAN"));
 

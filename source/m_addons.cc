@@ -35,23 +35,8 @@ std::vector<addon_info_t> all_addons;
 
 std::vector<std::string> all_presets;
 
+// Will check install, then home directory (if different)
 void VFS_AddFolder(std::string name)
-{
-    std::string path  = PathAppend(install_dir, name);
-    std::string mount = StringFormat("/%s", name.c_str());
-
-    if (!PHYSFS_mount(path.c_str(), mount.c_str(), 0))
-    {
-        FatalError("Failed to mount '%s' folder in PhysFS:\n%s\n", name.c_str(),
-                   PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
-        return; /* NOT REACHED */
-    }
-
-    DebugPrint("mounted folder '%s'\n", name.c_str());
-}
-
-// install and home directories if different
-void VFS_AddBothFolders(std::string name)
 {
     std::string path  = PathAppend(install_dir, name);
     std::string mount = StringFormat("/%s", name.c_str());
@@ -61,8 +46,11 @@ void VFS_AddBothFolders(std::string name)
                    PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         return;                                   /* NOT REACHED */
     }
-    path = PathAppend(home_dir, name);
-    PHYSFS_mount(path.c_str(), mount.c_str(), 0); // this one can fail if not present, that's fine
+    if (install_dir != home_dir)
+    {
+        path = PathAppend(home_dir, name);
+        PHYSFS_mount(path.c_str(), mount.c_str(), 0); // this one can fail if not present, that's fine
+    }
 
     DebugPrint("mounted folder '%s'\n", name.c_str());
 }
@@ -113,9 +101,9 @@ void VFS_InitAddons()
     VFS_AddFolder("modules");
     VFS_AddFolder("data");
     VFS_AddFolder("ports");
-    VFS_AddBothFolders("presets");
-    VFS_AddBothFolders("addons");
-    VFS_AddBothFolders("temp");
+    VFS_AddFolder("presets");
+    VFS_AddFolder("addons");
+    VFS_AddFolder("temp");
 
     LogPrint("DONE.\n\n");
 }
@@ -229,7 +217,15 @@ void VFS_ScanForAddons()
 
     for (p = got_names; *p; p++)
     {
-        if (GetExtension(*p) == ".oaf")
+        PHYSFS_Stat statter;
+
+        if (PHYSFS_stat(PathAppend("/addons", *p).c_str(), &statter) == 0)
+        {
+            LogPrint("Could not stat %s: %s\n", *p, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+            continue;
+        }
+
+        if (statter.filetype == PHYSFS_FILETYPE_DIRECTORY || (statter.filetype == PHYSFS_FILETYPE_REGULAR && GetExtension(*p) == ".oaf"))
         {
             addon_info_t info;
 

@@ -29,10 +29,10 @@
 #include "sys_debug.h"
 #include "sys_macro.h"
 
-#define DEBUG_WALLTIPS  0
-#define DEBUG_POLYOBJ   0
-#define DEBUG_WINDOW_FX 0
-#define DEBUG_OVERLAPS  0
+#define AJBSP_DEBUG_WALLTIPS  0
+#define AJBSP_DEBUG_POLYOBJ   0
+#define AJBSP_DEBUG_WINDOW_FX 0
+#define AJBSP_DEBUG_OVERLAPS  0
 
 namespace ajbsp
 {
@@ -41,7 +41,7 @@ namespace ajbsp
 // ANALYZE : Analyzing level structures
 //------------------------------------------------------------------------
 
-#define POLY_BOX_SZ 10
+static constexpr uint8_t POLY_BOX_SZ = 10;
 
 /* ----- polyobj handling ----------------------------- */
 
@@ -62,7 +62,7 @@ void MarkPolyobjSector(sector_t *sector)
     // the sector from being split.
     sector->has_polyobj = true;
 
-    for (int i = 0; i < num_linedefs; i++)
+    for (int i = 0; i < (int)lev_linedefs.size(); i++)
     {
         linedef_t *L = lev_linedefs[i];
 
@@ -91,7 +91,7 @@ void MarkPolyobjPoint(double x, double y)
     int bmaxx = (int)(x + POLY_BOX_SZ);
     int bmaxy = (int)(y + POLY_BOX_SZ);
 
-    for (i = 0; i < num_linedefs; i++)
+    for (i = 0; i < (int)lev_linedefs.size(); i++)
     {
         const linedef_t *L = lev_linedefs[i];
 
@@ -121,7 +121,7 @@ void MarkPolyobjPoint(double x, double y)
     //       If the point is sitting directly on a (two-sided) line,
     //       then we mark the sectors on both sides.
 
-    for (i = 0; i < num_linedefs; i++)
+    for (i = 0; i < (int)lev_linedefs.size(); i++)
     {
         const linedef_t *L = lev_linedefs[i];
 
@@ -216,7 +216,7 @@ void DetectPolyobjSectors(bool is_udmf)
     //       things in UDMF maps.
 
     // -JL- First go through all lines to see if level contains any polyobjs
-    for (i = 0; i < num_linedefs; i++)
+    for (i = 0; i < (int)lev_linedefs.size(); i++)
     {
         linedef_t *L = lev_linedefs[i];
 
@@ -224,7 +224,7 @@ void DetectPolyobjSectors(bool is_udmf)
             break;
     }
 
-    if (i == num_linedefs)
+    if (i == (int)lev_linedefs.size())
     {
         // -JL- No polyobjs in this level
         return;
@@ -236,7 +236,7 @@ void DetectPolyobjSectors(bool is_udmf)
     if (is_udmf)
         hexen_style = false;
 
-    for (i = 0; i < num_things; i++)
+    for (i = 0; i < (int)lev_things.size(); i++)
     {
         thing_t *T = lev_things[i];
 
@@ -252,7 +252,7 @@ void DetectPolyobjSectors(bool is_udmf)
     DebugPrint("Using %s style polyobj things\n", hexen_style ? "HEXEN" : "ZDOOM");
 #endif
 
-    for (i = 0; i < num_things; i++)
+    for (i = 0; i < (int)lev_things.size(); i++)
     {
         thing_t *T = lev_things[i];
 
@@ -301,7 +301,7 @@ struct Compare_vertex_X_pred
 
 void DetectOverlappingVertices(void)
 {
-    if (num_vertices < 2)
+    if ((int)lev_vertices.size() < 2)
         return;
 
     // copy the vertex pointers
@@ -312,11 +312,11 @@ void DetectOverlappingVertices(void)
     std::sort(array.begin(), array.end(), Compare_vertex_X_pred());
 
     // now mark them off
-    for (int i = 0; i < num_vertices - 1; i++)
+    for (int i = 0; i < (int)lev_vertices.size() - 1; i++)
     {
         vertex_t *A = array[i];
 
-        for (int k = i + 1; k < num_vertices; k++)
+        for (int k = i + 1; k < (int)lev_vertices.size(); k++)
         {
             vertex_t *B = array[k];
 
@@ -339,7 +339,7 @@ void DetectOverlappingVertices(void)
     // DOES NOT affect the on-disk linedefs.
     // this is mainly to help the miniseg creation code.
 
-    for (int i = 0; i < num_linedefs; i++)
+    for (int i = 0; i < (int)lev_linedefs.size(); i++)
     {
         linedef_t *L = lev_linedefs[i];
 
@@ -357,12 +357,12 @@ void DetectOverlappingVertices(void)
 
 void PruneVerticesAtEnd(void)
 {
-    int old_num = num_vertices;
+    int old_num = (int)lev_vertices.size();
 
     // scan all vertices.
     // only remove from the end, so stop when hit a used one.
 
-    for (int i = num_vertices - 1; i >= 0; i--)
+    for (int i = (int)lev_vertices.size() - 1; i >= 0; i--)
     {
         vertex_t *V = lev_vertices[i];
 
@@ -374,14 +374,14 @@ void PruneVerticesAtEnd(void)
         lev_vertices.pop_back();
     }
 
-    int unused = old_num - num_vertices;
+    int unused = old_num - (int)lev_vertices.size();
 
     if (unused > 0)
     {
         LogPrint("    Pruned %d unused vertices at end\n", unused);
     }
 
-    num_old_vert = num_vertices;
+    num_old_vert = (int)lev_vertices.size();
 }
 
 struct Compare_line_MinX_pred
@@ -405,11 +405,11 @@ void DetectOverlappingLines(void)
 
     int count = 0;
 
-    for (int i = 0; i < num_linedefs - 1; i++)
+    for (int i = 0; i < (int)lev_linedefs.size() - 1; i++)
     {
         linedef_t *A = array[i];
 
-        for (int k = i + 1; k < num_linedefs; k++)
+        for (int k = i + 1; k < (int)lev_linedefs.size(); k++)
         {
             linedef_t *B = array[k];
 
@@ -484,7 +484,7 @@ void vertex_t::AddWallTip(double dx, double dy, bool open_left, bool open_right)
 
 void CalculateWallTips()
 {
-    for (int i = 0; i < num_linedefs; i++)
+    for (int i = 0; i < (int)lev_linedefs.size(); i++)
     {
         const linedef_t *L = lev_linedefs[i];
 
@@ -507,7 +507,7 @@ void CalculateWallTips()
     }
 
 #if DEBUG_WALLTIPS
-    for (int k = 0; k < num_vertices; k++)
+    for (int k = 0; k < (int)lev_vertices.size(); k++)
     {
         vertex_t *V = lev_vertices[k];
 
@@ -585,7 +585,8 @@ vertex_t *NewVertexDegenerate(vertex_t *start, vertex_t *end)
     dx /= dlen;
     dy /= dlen;
 
-    while (RoundToInteger(vert->x) == RoundToInteger(start->x) && RoundToInteger(vert->y) == RoundToInteger(start->y))
+    while (OBSIDIAN_I_ROUND(vert->x) == OBSIDIAN_I_ROUND(start->x) &&
+           OBSIDIAN_I_ROUND(vert->y) == OBSIDIAN_I_ROUND(start->y))
     {
         vert->x += dx;
         vert->y += dy;
