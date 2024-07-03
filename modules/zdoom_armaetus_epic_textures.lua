@@ -26,6 +26,8 @@ gui.import("zdoom_armaetus_doom1_themes.lua")
 
 gui.import("zdoom_armaetus_epic_texturex_lump.lua")
 
+gui.import("zdoom_orp_generative_resources.lua")
+
 -- Rename to OBSIDIAN_TEXTURES? I am not the only author putting the
 -- texture pack together, includes MSSP and Craneo as well.
 OBS_RESOURCE_PACK_EPIC_TEXTURES = { }
@@ -1027,6 +1029,12 @@ function OBS_RESOURCE_PACK_EPIC_TEXTURES.put_new_materials()
     GAME.THEMES.hell.wide_halls = OBS_RESOURCE_PACK_HELL_WIDE_HALLS
     GAME.THEMES.flesh.wide_halls = OBS_RESOURCE_PACK_HELL_WIDE_HALLS
   end
+
+  if PARAM.bool_include_generative_AI_textures == 1 then
+    GAME.MATERIALS = table.deep_merge(GAME.MATERIALS, OBS_RESOURCE_PACK_GENAI_MATERIALS, 2)
+    GAME.ROOM_THEMES = table.deep_merge(GAME.ROOM_THEMES, OBS_RESOURCE_PACK_GENAI_ROOM_THEMES, 2)
+    GAME.THEMES = table.deep_merge(GAME.THEMES, OBS_RESOURCE_PACK_GENAI_THEMES, 2)
+  end
 end
 
 function OBS_RESOURCE_PACK_EPIC_TEXTURES.put_the_texture_wad_in()
@@ -1118,7 +1126,6 @@ function OBS_RESOURCE_PACK_EPIC_TEXTURES.put_the_texture_wad_in()
     gui.wad_merge_sections(wad_file)
   end
 
-  -- TO-DO: Create UI switch for this
   if PARAM.bool_include_custom_actors == 1 then
     SCRIPTS.decorate = ScriptMan_combine_script(SCRIPTS.decorate, ORP_ENTITIES.DECORATE)
     wad_file = "games/doom/data/blood_pack.wad"
@@ -1197,6 +1204,17 @@ OB_MODULES["armaetus_epic_textures"] =
       default = 1,
       tooltip = _("Allows the trimming down of resulting WAD by not merging the custom texture WAD.\n\nThis will require you to extract and load up the WAD manually in your preferred sourceport installation.\n\nThis is the preferrable option for multiplayer situations and server owners and have each client obtain a copy of the texture pack instead.\n"),
       priority=1
+
+
+    },
+    {
+      name = "bool_include_generative_AI_textures",
+      label = _("AI Textures"),
+      valuator = "button",
+      default = 1,
+      tooltip = _("Whether to include textures fully or partially created through generative AI software."),
+      priority = 0,
+      gap = 1,
     },
 
 
@@ -1206,7 +1224,7 @@ OB_MODULES["armaetus_epic_textures"] =
       valuator = "button",
       default = 1,
       tooltip = _("Allows merging Obsidian Textures brightmaps into the WAD. Does not include brightmaps for base resources from any of the games."),
-      priority = 0
+      priority = -1
     },
 
 
@@ -1216,9 +1234,9 @@ OB_MODULES["armaetus_epic_textures"] =
       valuator = "button",
       default = 1,
       tooltip = _("Merges some custom sprites and replacers for various decorations."),
-      priority = 0
+      priority = -2
     },
-
+  
 
     {
       name = "bool_no_env_theme_for_hell",
@@ -1226,7 +1244,7 @@ OB_MODULES["armaetus_epic_textures"] =
       valuator = "button",
       default = 0,
       tooltip = _("Renders hell theme maps to never use snow or desert environment themes regardless of theme assignment."),
-      priority=-1
+      priority= -3
     }
   }
 }
