@@ -102,7 +102,7 @@ void steve::add_note(Notes &notes, uint8_t channel, uint8_t tone, size_t start, 
     Note note;
     note.channel  = channel;
     note.tone     = tone;
-    note.velocity = clamp(velocity + Rand::next_velocity_jitter(), 0, 127);
+    note.velocity = clamp(velocity + Rand::next_velocity_jitter(), 0, 96);
     note.duration = length;
     notes.insert(make_pair(start, note));
 }

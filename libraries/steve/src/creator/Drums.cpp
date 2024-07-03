@@ -31,10 +31,11 @@ Notes Drums::get(size_t, size_t size) const
     uint32_t layers(Rand::next(2, 5));
     for (uint32_t i(0); i < layers; i++)
     {
-        uint8_t   tone(Rand::next(35, 59));
-        NoteValue period_value = Rand::next(NoteValue::eighth, max_period);
+        //uint8_t   tone(Rand::next(35, 59));
+        uint8_t   tone(Rand::next(35, 36));
+        NoteValue period_value = (max_period <= NoteValue::half) ? max_period : Rand::next(NoteValue::half, max_period);
         uintptr_t period       = ticks_for(period_value);
-        uintptr_t offset       = ticks_for(Rand::next(NoteValue::eighth, period_value));
+        uintptr_t offset       = ticks_for((period_value <= NoteValue::half) ? period_value : Rand::next(NoteValue::half, period_value));
         if (i == 0 || Rand::next(0, 3) > 0)
         {
             offset = 0;
@@ -44,7 +45,7 @@ Notes Drums::get(size_t, size_t size) const
         {
             if (_music->is_beat(j))
             {
-                add_note(notes, _channel, tone, j, 1, 100);
+                add_note(notes, _channel, tone, j, 1, 64);
             }
         }
     }
