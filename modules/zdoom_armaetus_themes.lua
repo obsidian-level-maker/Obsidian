@@ -5954,7 +5954,7 @@ OBS_RESOURCE_PACK_THEMES =
       gtd_wall_candles = 50,
       --
       gtd_wall_lit_h_window_tall_collite_blue = 10,
-      gtd_wall_lit_h_window_tall_collite_orange = 10,\
+      gtd_wall_lit_h_window_tall_collite_orange = 10
     },
 
     window_groups =
