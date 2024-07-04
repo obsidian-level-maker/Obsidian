@@ -4372,7 +4372,11 @@ OBS_RESOURCE_PACK_GENAI_THEMES =
       gtd_tekwoodlite_1 = 25,
       gtd_tekwoodlite_2 = 25,
       gtd_tekwoodlite_3 = 25,
-      gtd_tekwoodlite_pillar = 25
+      gtd_tekwoodlite_pillar = 25,
+      --
+      gtd_wall_tech_gothic_inset_gargoyle = 20,
+      gtd_wall_tech_gothic_inset_engine = 20,
+      gtd_wall_tech_gothic_inset_red_lite = 20,
     }
   },
 
@@ -4414,7 +4418,11 @@ OBS_RESOURCE_PACK_GENAI_THEMES =
       gtd_tekwoodlite_1 = 25,
       gtd_tekwoodlite_2 = 25,
       gtd_tekwoodlite_3 = 25,
-      gtd_tekwoodlite_pillar = 25
+      gtd_tekwoodlite_pillar = 25,
+      --
+      gtd_wall_tech_gothic_inset_gargoyle = 9,
+      gtd_wall_tech_gothic_inset_engine = 9,
+      gtd_wall_tech_gothic_inset_red_lite = 9
     }    
   },
 
@@ -4443,6 +4451,13 @@ OBS_RESOURCE_PACK_GENAI_THEMES =
       SDMHAZW2 = 20,
       SDMHAZW3 = 20,
       SDMHAZW4 = 20
+    },
+
+    wall_groups =
+    {
+      gtd_wall_tech_gothic_inset_gargoyle = 20,
+      gtd_wall_tech_gothic_inset_engine = 20,
+      gtd_wall_tech_gothic_inset_red_lite = 20
     }
   }
 }

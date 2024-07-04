@@ -5039,10 +5039,6 @@ OBS_RESOURCE_PACK_THEMES =
       --
       gtd_power_plant_red_set = 40,
       --
-      gtd_wall_tech_gothic_inset_gargoyle = 20,
-      gtd_wall_tech_gothic_inset_engine = 20,
-      gtd_wall_tech_gothic_inset_red_lite = 20,
-      --
       gtd_bathwater = 30,
       gtd_mscottpaper = 30
     },
@@ -5511,11 +5507,6 @@ OBS_RESOURCE_PACK_THEMES =
       --
       gtd_power_plant_red_set = 20,
       --
-      gtd_wall_tech_gothic_inset_gargoyle = 9,
-      gtd_wall_tech_gothic_inset_engine = 9,
-      gtd_wall_tech_gothic_inset_red_lite = 9,
-      --
-      --
       gtd_bathwater = 30,
       gtd_mscottpaper = 30,
       --
@@ -5963,11 +5954,7 @@ OBS_RESOURCE_PACK_THEMES =
       gtd_wall_candles = 50,
       --
       gtd_wall_lit_h_window_tall_collite_blue = 10,
-      gtd_wall_lit_h_window_tall_collite_orange = 10,
-      --
-      gtd_wall_tech_gothic_inset_gargoyle = 20,
-      gtd_wall_tech_gothic_inset_engine = 20,
-      gtd_wall_tech_gothic_inset_red_lite = 20
+      gtd_wall_lit_h_window_tall_collite_orange = 10,\
     },
 
     window_groups =
