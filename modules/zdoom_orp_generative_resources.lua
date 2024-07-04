@@ -4420,7 +4420,7 @@ OBS_RESOURCE_PACK_GENAI_THEMES =
 
   hell =
   {
-    {
+    facades = {
       SDM_HAW1 = 20,
       SDM_HAW2 = 20,
       SDM_HAW3 = 20,

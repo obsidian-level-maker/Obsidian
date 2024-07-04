@@ -659,7 +659,7 @@ function OBS_RESOURCE_PACK_EPIC_TEXTURES.setup(self)
 
   PARAM.obsidian_resource_pack_active = true
   module_param_up(self)
-  OBS_RESOURCE_PACK_EPIC_TEXTURES.put_new_materials()  
+  OBS_RESOURCE_PACK_EPIC_TEXTURES.put_new_materials()
 
 end
 
