@@ -164,6 +164,14 @@ OBS_RESOURCE_PACK_GENAI_MATERIALS =
   SD_TWDW4 = { t="SD_TWDW4", f="SD_TWDF4"},
   SD_TWDW5 = { t="SD_TWDW5", f="SD_TWDF5"},
   SD_TWDW6 = { t="SD_TWDW6", f="SD_TWDF1"},
+  SD_TWDW7 = { t="SD_TWDW7", f="SD_TWDF2"},
+  SD_TWDW8 = { t="SD_TWDW8", f="SD_TWDF3"},
+  SD_TWDW9 = { t="SD_TWDW9", f="SD_TWDF4"},
+  SD_TWDWA = { t="SD_TWDWA", f="SD_TWDF5"},
+  SD_TWDWB = { t="SD_TWDWB", f="SD_TWDF1"},
+  SD_TWDWC = { t="SD_TWDWC", f="SD_TWDF3"},
+  SD_TWDWD = { t="SD_TWDWD", f="SD_TWDF4"},
+  SD_TWDWE = { t="SD_TWDWE", f="SD_TWDF5"},
   -- flats
   SD_TWDF1 = { t="SD_TWDW1", f="SD_TWDF1"},
   SD_TWDF2 = { t="SD_TWDW2", f="SD_TWDF2"},
@@ -1098,7 +1106,16 @@ OBS_RESOURCE_PACK_GENAI_ROOM_THEMES =
       SD_TWDW2 = 5,
       SD_TWDW3 = 5,
       SD_TWDW4 = 5,
-      SD_TWDW5 = 5
+      SD_TWDW5 = 5,
+      SD_TWDW6 = 5,
+      SD_TWDW7 = 5,
+      SD_TWDW8 = 5,
+      SD_TWDW9 = 5,
+      SD_TWDWA = 5,
+      SD_TWDWB = 5,
+      SD_TWDWC = 5,
+      SD_TWDWD = 5,
+      SD_TWDWE = 5
     },
 
     floors =
@@ -3249,7 +3266,15 @@ OBS_RESOURCE_PACK_GENAI_ROOM_THEMES =
       SD_TWDW3 = 5,
       SD_TWDW4 = 5,
       SD_TWDW5 = 5,
-      SD_TWDW6 = 5
+      SD_TWDW6 = 5,
+      SD_TWDW7 = 5,
+      SD_TWDW8 = 5,
+      SD_TWDW9 = 5,
+      SD_TWDWA = 5,
+      SD_TWDWB = 5,
+      SD_TWDWC = 5,
+      SD_TWDWD = 5,
+      SD_TWDWE = 5
     },
 
     floors =
@@ -4322,12 +4347,20 @@ OBS_RESOURCE_PACK_GENAI_THEMES =
       SDSLDWLB = 15,
       SDSLDWLC = 15,
 
-      SD_TWDW1 = 20,
-      SD_TWDW2 = 20,
-      SD_TWDW3 = 20,
-      SD_TWDW4 = 20,
-      SD_TWDW5 = 20,
-      SD_TWDW6 = 20,
+      SD_TWDW1 = 12,
+      SD_TWDW2 = 12,
+      SD_TWDW3 = 12,
+      SD_TWDW4 = 12,
+      SD_TWDW5 = 12,
+      SD_TWDW6 = 12,
+      SD_TWDW7 = 12,
+      SD_TWDW8 = 12,
+      SD_TWDW9 = 12,
+      SD_TWDWA = 12,
+      SD_TWDWB = 12,
+      SD_TWDWC = 12,
+      SD_TWDWD = 12,
+      SD_TWDWE = 12,
 
       SD_TWLW1 = 20,
       SD_TWLW2 = 20,
@@ -4393,12 +4426,20 @@ OBS_RESOURCE_PACK_GENAI_THEMES =
       SDOM_WLD = 18,
       SDOM_WLE = 18,
 
-      SD_TWDW1 = 12,
-      SD_TWDW2 = 12,
-      SD_TWDW3 = 12,
-      SD_TWDW4 = 12,
-      SD_TWDW5 = 12,
-      SD_TWDW6 = 12
+      SD_TWDW1 = 8,
+      SD_TWDW2 = 8,
+      SD_TWDW3 = 8,
+      SD_TWDW4 = 8,
+      SD_TWDW5 = 8,
+      SD_TWDW6 = 8,
+      SD_TWDW7 = 8,
+      SD_TWDW8 = 8,
+      SD_TWDW9 = 8,
+      SD_TWDWA = 8,
+      SD_TWDWB = 8,
+      SD_TWDWC = 8,
+      SD_TWDWD = 8,
+      SD_TWDWE = 8
     },
 
     fences =
