@@ -2658,6 +2658,21 @@ brightmap texture SD_TWDW9
 {
   map OBRTWTW9
 }
+
+brightmap texture SDMSRCP1
+{
+  map OBRMRCP1
+}
+
+brightmap texture SDMSRCP2
+{
+  map OBRMRCP2
+}
+
+brightmap texture SDMSRCP3
+{
+  map OBRMRCP3
+}
 ]]
 
 -- aliases - when you're too lazy to write down wall and flat names in every
