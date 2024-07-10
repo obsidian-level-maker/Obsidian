@@ -2499,11 +2499,6 @@ brightmap texture SDOM_WL2
   map SDMWL2BR
 }
 
-brightmap texture SD_GTHF1
-{
-  map SDMWL2BR
-}
-
 brightmap texture SD_GTHW1
 {
   map SDGHW1BR
@@ -2623,7 +2618,12 @@ brightmap texture SD_HCCW4
 {
   map SDBRHCW4
 }
-  
+
+brightmap texture SD_HCCW6
+{
+  map SDBRHCW6
+}
+
 brightmap texture SD_HCCW7
 {
   map SDBRHCW7
@@ -2637,11 +2637,6 @@ brightmap texture SD_HCCW8
 brightmap texture SD_HCCW9
 {
   map SDBRHCW9
-}
-
-brightmap texture SD_HCCWC
-{
-  map SDBRHCWC
 }
 
 brightmap texture SD_TWDW3
