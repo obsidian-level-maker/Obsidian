@@ -151,14 +151,13 @@ function PREFAB_CONTROL.fine_tune_filters()
     any_copperRust = 1.25,
 
     tech_iStuff = 1.125,
-    tech_beigetownTech = 1.5,
-    tech_wood_lab = 2.5,
+    tech_wood_lab = 2.25,
+    tech_bunker = 2.5,
     --
 
     urban_computerCatacombs = 1.125,
-    urban_iStuff = 1.25,
-    urban_beigetownTech = 1.5,
-    urban_wood_lab = 2.5,
+    urban_wood_lab = 2.25,
+    urban_bunker = 2.5,
     --
 
     hell_computerCatacombs = 1.5

@@ -2639,6 +2639,11 @@ brightmap texture SD_HCCW9
   map SDBRHCW9
 }
 
+brightmap texture SD_HCCWC
+{
+  map SDBRHCWC
+}
+
 brightmap texture SD_TWDW3
 {
   map OBRTWTW3
@@ -2667,6 +2672,31 @@ brightmap texture SDMSRCP2
 brightmap texture SDMSRCP3
 {
   map OBRMRCP3
+}
+
+brightmap texture SDTBNKW7
+{
+  map SDTBKBR7
+}
+
+brightmap texture SDTBNKWA
+{
+  map SDTBKBRA
+}
+
+brightmap texture SDTBNKWB
+{
+  map SDTBKBRB
+}
+
+brightmap texture SDTBNKWC
+{
+  map SDTBKBRC
+}
+
+brightmap texture SDTBNKWE
+{
+  map SDTBKBRE
 }
 ]]
 

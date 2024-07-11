@@ -529,6 +529,22 @@ OBS_RESOURCE_PACK_GENAI_MATERIALS =
   SDIPHFT5 = {t="SDIPHWL5", f="SDIPHFT5"},
   SDIPHFT6 = {t="SDIPHWL6", f="SDIPHFT6"},
   SDIPHFT7 = {t="SDIPHWL7", f="SDIPHFT7"},
+
+  -- bunker theme
+  SDTBNKW1 = {t="SDTBNKW1", f="FLAT18"},
+  SDTBNKW2 = {t="SDTBNKW2", f="FLAT19"},
+  SDTBNKW3 = {t="SDTBNKW3", f="FLOOR0_3"},
+  SDTBNKW4 = {t="SDTBNKW4", f="FLOOR0_6"},
+  SDTBNKW5 = {t="SDTBNKW5", f="SLIME14"},
+  SDTBNKW6 = {t="SDTBNKW6", f="GRATE1"},
+  SDTBNKW7 = {t="SDTBNKW7", f="GRATE2"},
+  SDTBNKW8 = {t="SDTBNKW8", f="GRATE3"},
+  SDTBNKW9 = {t="SDTBNKW9", f="GRATE4"},
+  SDTBNKWA = {t="SDTBNKWA", f="GRATE5"},
+  SDTBNKWB = {t="SDTBNKWB", f="GRATE7"},
+  SDTBNKWC = {t="SDTBNKWC", f="GRATE8"},
+  SDTBNKWD = {t="SDTBNKWD", f="TILES4"},
+  SDTBNKWE = {t="SDTBNKWE", f="TILES6"}
 }
 
 OBS_RESOURCE_PACK_GENAI_ROOM_THEMES =
@@ -1742,10 +1758,10 @@ OBS_RESOURCE_PACK_GENAI_ROOM_THEMES =
     }
   },
 
-  tech_iStuff = --60
+  tech_iStuff = --30
   {
     env = "building",
-    prob = 60,
+    prob = 30,
 
     is_generative = true,
 
@@ -1809,6 +1825,120 @@ OBS_RESOURCE_PACK_GENAI_ROOM_THEMES =
       FLAT3 = 4,
       FLOOR0_5 = 4,
       SLIME14 = 3
+    }
+  },
+
+  tech_bunker = --60
+  {
+    env = "building",
+    prob = 60,
+  
+    walls =
+    {
+      SDTBNKW1 = 5,
+      SDTBNKW2 = 5,
+      SDTBNKW3 = 5,
+      SDTBNKW4 = 5,
+      SDTBNKW5 = 5,
+      SDTBNKW6 = 5,
+      SDTBNKW7 = 5,
+      SDTBNKW8 = 5,
+      SDTBNKW9 = 5,
+      SDTBNKWA = 5,
+      SDTBNKWB = 5,
+      SDTBNKWC = 5,
+      SDTBNKWD = 5,
+      SDTBNKWE = 5
+    },
+
+    floors =
+    {
+      FLAT1 = 5,
+      FLAT3 = 5,
+      FLOOR0_3 = 5,
+      FLOOR0_5 = 5,
+      FLOOR4_8 = 5,
+      SLIME14 = 5,
+
+      DARKF03 = 8,
+      DARKM01 = 8,
+      G09 = 8,
+      G10 = 8,
+      G15 = 8,
+      GMET03 = 6,
+      GMET04 = 6,
+      GRATE1 = 12,
+      GRATE2 = 12,
+      GRATE3 = 12,
+      GRATE4 = 12,
+      GRATE5 = 12,
+      GRATE6 = 12,
+      GRATE7 = 12,
+      GRATE8 = 12,
+      QFLAT09 = 12,
+
+      TILES4 = 12,
+      TILES6 = 12,
+
+      OBTSVBF1 = 10,
+      OBTSVBF2 = 10,
+      OBTSVBF3 = 10,
+  
+      SDOM_FG1 = 10,
+      SDOM_FG2 = 10,
+      SDOM_FT1 = 10,
+      SDOM_FT2 = 10,
+      SDOM_FT3 = 10,
+      SDOM_FT4 = 10,
+      SDOM_FT5 = 10,
+      SDOM_FT8 = 10,
+      SDOM_FT9 = 10,
+      SDOM_FTA = 10
+    },
+
+    ceilings =
+    {
+      FLAT1 = 5,
+      FLAT3 = 5,
+      FLOOR0_3 = 5,
+      FLOOR0_5 = 5,
+      FLOOR4_8 = 5,
+      SLIME14 = 5,
+
+      DARKF03 = 8,
+      DARKM01 = 8,
+      G09 = 8,
+      G10 = 8,
+      G15 = 8,
+      GMET03 = 6,
+      GMET04 = 6,
+      GRATE1 = 12,
+      GRATE2 = 12,
+      GRATE3 = 12,
+      GRATE4 = 12,
+      GRATE5 = 12,
+      GRATE6 = 12,
+      GRATE7 = 12,
+      GRATE8 = 12,
+      QFLAT09 = 12,
+
+      TILES4 = 12,
+      TILES6 = 12,
+
+      OBTSVBF1 = 10,
+      OBTSVBF2 = 10,
+      OBTSVBF3 = 10,
+  
+      SDOM_FG1 = 10,
+      SDOM_FG2 = 10,
+      SDOM_FT1 = 10,
+      SDOM_FT2 = 10,
+      SDOM_FT3 = 10,
+      SDOM_FT4 = 10,
+      SDOM_FT5 = 10,
+      SDOM_FT8 = 10,
+      SDOM_FT9 = 10,
+      SDOM_FTA = 10
     }
   },
 
@@ -4078,9 +4208,9 @@ OBS_RESOURCE_PACK_GENAI_ROOM_THEMES =
     }
   },
 
-  urban_computerCatacombs = --15
+  urban_computerCatacombs = --10
   {
-    prob = 15,
+    prob = 10,
     env = "building",
 
     is_generative = true,
@@ -4161,10 +4291,10 @@ OBS_RESOURCE_PACK_GENAI_ROOM_THEMES =
     }
   },
 
-  urban_iStuff = --30
+  urban_iStuff = --20
   {
     env = "building",
-    prob = 30,
+    prob = 20,
 
     is_generative = true,
 
@@ -4309,6 +4439,119 @@ OBS_RESOURCE_PACK_GENAI_ROOM_THEMES =
     }
   },
 
+  urban_bunker = --40
+  {
+    env = "building",
+    prob = 40,
+  
+    walls =
+    {
+      SDTBNKW1 = 5,
+      SDTBNKW2 = 5,
+      SDTBNKW3 = 5,
+      SDTBNKW4 = 5,
+      SDTBNKW5 = 5,
+      SDTBNKW6 = 5,
+      SDTBNKW7 = 5,
+      SDTBNKW8 = 5,
+      SDTBNKW9 = 5,
+      SDTBNKWA = 5,
+      SDTBNKWB = 5,
+      SDTBNKWC = 5,
+      SDTBNKWD = 5,
+      SDTBNKWE = 5
+    },
+
+    floors =
+    {
+      FLAT1 = 5,
+      FLAT3 = 5,
+      FLOOR0_3 = 5,
+      FLOOR0_5 = 5,
+      FLOOR4_8 = 5,
+      SLIME14 = 5,
+
+      DARKF03 = 8,
+      DARKM01 = 8,
+      G09 = 8,
+      G10 = 8,
+      G15 = 8,
+      GMET03 = 6,
+      GMET04 = 6,
+      GRATE1 = 12,
+      GRATE2 = 12,
+      GRATE3 = 12,
+      GRATE4 = 12,
+      GRATE5 = 12,
+      GRATE6 = 12,
+      GRATE7 = 12,
+      GRATE8 = 12,
+      QFLAT09 = 12,
+
+      TILES4 = 12,
+      TILES6 = 12,
+
+      OBTSVBF1 = 10,
+      OBTSVBF2 = 10,
+      OBTSVBF3 = 10,
+  
+      SDOM_FG1 = 10,
+      SDOM_FG2 = 10,
+      SDOM_FT1 = 10,
+      SDOM_FT2 = 10,
+      SDOM_FT3 = 10,
+      SDOM_FT4 = 10,
+      SDOM_FT5 = 10,
+      SDOM_FT8 = 10,
+      SDOM_FT9 = 10,
+      SDOM_FTA = 10
+    },
+
+    ceilings =
+    {
+      FLAT1 = 5,
+      FLAT3 = 5,
+      FLOOR0_3 = 5,
+      FLOOR0_5 = 5,
+      FLOOR4_8 = 5,
+      SLIME14 = 5,
+
+      DARKF03 = 8,
+      DARKM01 = 8,
+      G09 = 8,
+      G10 = 8,
+      G15 = 8,
+      GMET03 = 6,
+      GMET04 = 6,
+      GRATE1 = 12,
+      GRATE2 = 12,
+      GRATE3 = 12,
+      GRATE4 = 12,
+      GRATE5 = 12,
+      GRATE6 = 12,
+      GRATE7 = 12,
+      GRATE8 = 12,
+      QFLAT09 = 12,
+
+      TILES4 = 12,
+      TILES6 = 12,
+
+      OBTSVBF1 = 10,
+      OBTSVBF2 = 10,
+      OBTSVBF3 = 10,
+  
+      SDOM_FG1 = 10,
+      SDOM_FG2 = 10,
+      SDOM_FT1 = 10,
+      SDOM_FT2 = 10,
+      SDOM_FT3 = 10,
+      SDOM_FT4 = 10,
+      SDOM_FT5 = 10,
+      SDOM_FT8 = 10,
+      SDOM_FT9 = 10,
+      SDOM_FTA = 10
+    }
+  },
 
 -- END OF THEMES TABLES
 }
@@ -4408,6 +4651,21 @@ OBS_RESOURCE_PACK_GENAI_THEMES =
       S_W2WALC = 20,
       S_W2WALD = 20,
       S_W2WALE = 20,
+
+      SDTBNKW1 = 15,
+      SDTBNKW2 = 15,
+      SDTBNKW3 = 15,
+      SDTBNKW4 = 15,
+      SDTBNKW5 = 15,
+      SDTBNKW6 = 15,
+      SDTBNKW7 = 15,
+      SDTBNKW8 = 15,
+      SDTBNKW9 = 15,
+      SDTBNKWA = 15,
+      SDTBNKWB = 15,
+      SDTBNKWC = 15,
+      SDTBNKWD = 15,
+      SDTBNKWE = 15
     },
 
     wall_groups =
@@ -4449,7 +4707,22 @@ OBS_RESOURCE_PACK_GENAI_THEMES =
       SD_TWDWB = 8,
       SD_TWDWC = 8,
       SD_TWDWD = 8,
-      SD_TWDWE = 8
+      SD_TWDWE = 8,
+
+      SDTBNKW1 = 6,
+      SDTBNKW2 = 6,
+      SDTBNKW3 = 6,
+      SDTBNKW4 = 6,
+      SDTBNKW5 = 6,
+      SDTBNKW6 = 6,
+      SDTBNKW7 = 6,
+      SDTBNKW8 = 6,
+      SDTBNKW9 = 6,
+      SDTBNKWA = 6,
+      SDTBNKWB = 6,
+      SDTBNKWC = 6,
+      SDTBNKWD = 6,
+      SDTBNKWE = 6
     },
 
     fences =
