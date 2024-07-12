@@ -130,7 +130,7 @@ OBS_RESOURCE_PACK_GENAI_MATERIALS =
   SDMCTRF1 = { t="SDM_CTR1", f="SDMCTRF1"},
 
   -- MSSP-GOTH-TECH --
-  SD_GTHW1 = { t="SD_GTHW1", f=""},
+  SD_GTHW1 = { t="SD_GTHW1", f="SD_GTHF1"},
   SD_GTHW2 = { t="SD_GTHW2", f="SD_GTHF2"},
   SD_GTHW3 = { t="SD_GTHW3", f="SD_GTHF3"},
   SD_GTHW4 = { t="SD_GTHW4", f="SD_GTHF4"},
@@ -145,12 +145,12 @@ OBS_RESOURCE_PACK_GENAI_MATERIALS =
   -- flats
   SD_GTHF1 = { t="SD_GTHW1", f="SD_GTHF1"},
   SD_GTHF2 = { t="SD_GTHW2", f="SD_GTHF2"},
-  SD_GTHF3 = { t="SD_GTHW3", f="SD_GTHF4"},
-  SD_GTHF4 = { t="SD_GTHW4", f="SD_GTHF5"},
-  SD_GTHF5 = { t="SD_GTHW5", f="SD_GTHF7"},
-  SD_GTHF6 = { t="SD_GTHW6", f="SD_GTHF9"},
-  SD_GTHF7 = { t="SD_GTHW7", f="SD_GTHFA"},
-  SD_GTHF8 = { t="SD_GTHW8", f="SD_GTHFC"},
+  SD_GTHF3 = { t="SD_GTHW4", f="SD_GTHF3"},
+  SD_GTHF4 = { t="SD_GTHW5", f="SD_GTHF4"},
+  SD_GTHF5 = { t="SD_GTHW7", f="SD_GTHF5"},
+  SD_GTHF6 = { t="SD_GTHW8", f="SD_GTHF6"},
+  SD_GTHF7 = { t="SD_GTHWB", f="SD_GTHF7"},
+  SD_GTHF8 = { t="SD_GTHWC", f="SD_GTHF8"},
   -- switches
   SDGTHSW1 = { t="SDGTHSW1", f="SD_GTHF1"}, 
   -- light pillars, 64px
