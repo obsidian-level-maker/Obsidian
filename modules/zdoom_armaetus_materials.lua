@@ -2698,6 +2698,26 @@ brightmap texture SDTBNKWE
 {
   map SDTBKBRE
 }
+
+brightmap texture SD_TSGF3
+{
+  map SDTSFBR3
+}
+
+brightmap texture SD_TSGF7
+{
+  map SDTSFBR7
+}
+
+brightmap texture SD_TSGF9
+{
+  map SDTSFBR9
+}
+
+brightmap texture SD_TSGFA
+{
+  map SDTSFBRA
+}
 ]]
 
 -- aliases - when you're too lazy to write down wall and flat names in every
