@@ -1495,35 +1495,6 @@ OBS_RESOURCE_PACK_MATERIALS = {
   -- MSSP Stuff --
   ------------------
 
-  -- all --
-  -- copper rust
-  SD_CURW1 = {t="SD_CURW1", f="SD_CURF1"},
-  SD_CURW2 = {t="SD_CURW2", f="SD_CURF2"},
-  SD_CURW3 = {t="SD_CURW3", f="SD_CURF3"},
-  SD_CURW4 = {t="SD_CURW4", f="SD_CURF4"},
-  SD_CURW5 = {t="SD_CURW5", f="SD_CURF5"},
-  SD_CURW6 = {t="SD_CURW6", f="SD_CURF6"},
-  SD_CURW7 = {t="SD_CURW7", f="SD_CURF7"},
-  SD_CURW8 = {t="SD_CURW8", f="SD_CURF8"},
-  SD_CURW9 = {t="SD_CURW9", f="SD_CURF9"},
-  SD_CURWA = {t="SD_CURWA", f="SD_CURFA"},
-  SD_CURWB = {t="SD_CURWB", f="SD_CURFB"},
-  SD_CURWC = {t="SD_CURWC", f="SD_CURFC"},
-  SD_CURWD = {t="SD_CURWD", f="SD_CURF1"},
-  -- flats
-  SD_CURF1 = {t="SD_CURW1", f="SD_CURF1"},
-  SD_CURF2 = {t="SD_CURW2", f="SD_CURF2"},
-  SD_CURF3 = {t="SD_CURW3", f="SD_CURF3"},
-  SD_CURF4 = {t="SD_CURW4", f="SD_CURF4"},
-  SD_CURF5 = {t="SD_CURW5", f="SD_CURF5"},
-  SD_CURF6 = {t="SD_CURW6", f="SD_CURF6"},
-  SD_CURF7 = {t="SD_CURW7", f="SD_CURF7"},
-  SD_CURF8 = {t="SD_CURW8", f="SD_CURF8"},
-  SD_CURF9 = {t="SD_CURW9", f="SD_CURF9"},
-  SD_CURFA = {t="SD_CURWA", f="SD_CURFA"},
-  SD_CURFB = {t="SD_CURWB", f="SD_CURFB"},
-  SD_CURFC = {t="SD_CURWC", f="SD_CURFC"},
-
   -- MSSP-TECH --
   -- silver walls (256px)
   OBTBSLV1 = { t="OBTBSLV1", f="GRATE1"},
@@ -1597,478 +1568,6 @@ OBS_RESOURCE_PACK_MATERIALS = {
   OBTSBF1R = { t="HELLCMT1", f="OBTSBF1R"}, -- red
   OBTSBF2R = { t="HELLCMT2", f="OBTSBF2R"},
   OBTSBF3R = { t="REDMARB1", f="OBTSBF3R"},
-
-  -- STABLE DIFFUSION, NEUROGEN --
-  -- techy grey walls
-  SDOM_WL1 = { t="SDOM_WL1", f="SDOM_FT1"},
-  SDOM_WL2 = { t="SDOM_WL2", f="SDOM_FT2"},
-  SDOM_WL3 = { t="SDOM_WL3", f="SDOM_FT3"},
-  SDOM_WL4 = { t="SDOM_WL4", f="SDOM_FT4"},
-  SDOM_WL5 = { t="SDOM_WL5", f="SDOM_FT5"},
-  SDOM_WL6 = { t="SDOM_WL6", f="SDOM_FT6"},
-  SDOM_WL7 = { t="SDOM_WL7", f="SDOM_FT7"},
-  SDOM_WL8 = { t="SDOM_WL8", f="SDOM_FT8"},
-  SDOM_WL9 = { t="SDOM_WL9", f="SDOM_FT9"},
-  SDOM_WLA = { t="SDOM_WLA", f="SDOM_FTA"},
-  SDOM_WLB = { t="SDOM_WLB", f="SDOM_FT1"},
-  SDOM_WLC = { t="SDOM_WLC", f="SDOM_FT2"},
-  SDOM_WLD = { t="SDOM_WLD", f="SDOM_FT3"},
-  SDOM_WLE = { t="SDOM_WLE", f="SDOM_FT4"},
-  -- green
-  SDOM_WG1 = { t="SDOM_WG1", f="SDOM_FG1"},
-  SDOM_WG2 = { t="SDOM_WG2", f="SDOM_FG2"},
-  SDOM_WG3 = { t="SDOM_WG3", f="SDOM_FT1"},
-  SDOM_WG4 = { t="SDOM_WG4", f="SDOM_FT2"},
-  SDOM_WG5 = { t="SDOM_WG5", f="SDOM_FT3"},
-  SDOM_WG6 = { t="SDOM_WG6", f="SDOM_FT4"},
-  SDOM_WG7 = { t="SDOM_WG7", f="SDOM_FG1"},
-  SDOM_WG8 = { t="SDOM_WG8", f="SDOM_FG2"},
-  -- dark green
-  SDSLDWL1 = { t="SDSLDWL1", f="SDSLDFT1"},
-  SDSLDWL2 = { t="SDSLDWL2", f="SDSLDFT2"},
-  SDSLDWL3 = { t="SDSLDWL3", f="SDSLDFT3"},
-  SDSLDWL4 = { t="SDSLDWL4", f="SDSLDFT4"},
-  SDSLDWL5 = { t="SDSLDWL5", f="SDSLDFT5"},
-  SDSLDWL6 = { t="SDSLDWL6", f="SDSLDFT6"},
-  SDSLDWL7 = { t="SDSLDWL7", f="SDSLDFT7"},
-  SDSLDWL8 = { t="SDSLDWL8", f="SDSLDFT8"},
-  SDSLDWL9 = { t="SDSLDWL9", f="SDSLDFT9"},
-  SDSLDWLA = { t="SDSLDWLA", f="SDSLDFT1"},
-  SDSLDWLB = { t="SDSLDWLB", f="SDSLDFT4"},
-  SDSLDWLC = { t="SDSLDWLC", f="SDSLDFT7"},
-  -- flats: dark green
-  SDSLDFT1 = { t="SDSLDWL1", f="SDSLDFT1"},
-  SDSLDFT2 = { t="SDSLDWL2", f="SDSLDFT2"},
-  SDSLDFT3 = { t="SDSLDWL3", f="SDSLDFT3"},
-  SDSLDFT4 = { t="SDSLDWL4", f="SDSLDFT4"},
-  SDSLDFT5 = { t="SDSLDWL5", f="SDSLDFT5"},
-  SDSLDFT6 = { t="SDSLDWL6", f="SDSLDFT6"},
-  SDSLDFT7 = { t="SDSLDWL7", f="SDSLDFT7"},
-  SDSLDFT8 = { t="SDSLDWL8", f="SDSLDFT8"},
-  SDSLDFT9 = { t="SDSLDWL9", f="SDSLDFT9"},
-  SDSLDFTA = { t="SDSLDWLA", f="SDSLDFTA"},
-  SDSLDFTB = { t="SDSLDWLB", f="SDSLDFTB"},
-  SDSLDFTC = { t="SDSLDWLC", f="SDSLDFTC"},
-  SDSLDFTD = { t="SDSLDWL4", f="SDSLDFTD"},
-  SDSLDFTE = { t="SDSLDWL9", f="SDSLDFTE"},
-
-  -- computers 256px
-  SDMSRCP1 = { t="SDMSRCP1", f="SDOM_FT1"},
-  SDMSRCP2 = { t="SDMSRCP1", f="SDOM_FT4"},
-  SDMSRCP3 = { t="SDMSRCP1", f="SDOM_FT6"},
-  -- flats
-  SDOM_FT1 = { t="SDOM_WL1", f="SDOM_FT1"},
-  SDOM_FT2 = { t="SDOM_WL2", f="SDOM_FT2"},
-  SDOM_FT3 = { t="SDOM_WL3", f="SDOM_FT3"},
-  SDOM_FT4 = { t="SDOM_WL4", f="SDOM_FT4"},
-  SDOM_FT5 = { t="SDOM_WL3", f="SDOM_FT5"},
-  SDOM_FT6 = { t="SDOM_WL2", f="SDOM_FT6"},
-  SDOM_FT7 = { t="SDOM_WL1", f="SDOM_FT7"},
-  SDOM_FT8 = { t="SDOM_WL4", f="SDOM_FT8"},
-  SDOM_FT9 = { t="SDOM_WL2", f="SDOM_FT9"},
-  SDOM_FTA = { t="SDOM_WL3", f="SDOM_FTA"},
-  -- flats: green
-  SDOM_FG1 = { t="SDOM_WG1", f="SDOM_FG1"},
-  SDOM_FG2 = { t="SDOM_WG2", f="SDOM_FG2"},
-
-  -- shipping containers with optional meme
-  SDM_CTR1 = { t="SDM_CTR1", f="SDMCTRF1"},
-  SDM_CTR2 = { t="SDM_CTR2", f="SDMCTRF1"},
-  SDM_CTR3 = { t="SDM_CTR3", f="SDMCTRF1"},
-  SDM_CTR4 = { t="SDM_CTR4", f="SDMCTRF1"},
-  SDM_CTR5 = { t="SDM_CTR5", f="SDMCTRF1"},
-  SDMCTRF1 = { t="SDM_CTR1", f="SDMCTRF1"},
-
-  -- MSSP-GOTH-TECH --
-  SD_GTHW1 = { t="SD_GTHW1", f="SD_GTHF1"},
-  SD_GTHW2 = { t="SD_GTHW2", f="SD_GTHF2"},
-  SD_GTHW3 = { t="SD_GTHW3", f="SD_GTHF3"},
-  SD_GTHW4 = { t="SD_GTHW4", f="SD_GTHF4"},
-  SD_GTHW5 = { t="SD_GTHW5", f="SD_GTHF5"},
-  SD_GTHW6 = { t="SD_GTHW6", f="SD_GTHF6"},
-  SD_GTHW7 = { t="SD_GTHW7", f="SDOM_FT1"},
-  SD_GTHW8 = { t="SD_GTHW8", f="SDOM_FT3"},
-  SD_GTHW9 = { t="SD_GTHW9", f="SD_GTHF4"},
-  SD_GTHWA = { t="SD_GTHWA", f="SD_GTHF5"},
-  SD_GTHWB = { t="SD_GTHWB", f="SDOM_FT9"},
-  SD_GTHWC = { t="SD_GTHWC", f="SDOM_FTA"},
-  -- flats
-  SD_GTHF1 = { t="SD_GTHW1", f="SD_GTHF1"},
-  SD_GTHF2 = { t="SD_GTHW2", f="SD_GTHF2"},
-  SD_GTHF3 = { t="SD_GTHW3", f="SD_GTHF3"},
-  SD_GTHF4 = { t="SD_GTHW4", f="SD_GTHF4"},
-  SD_GTHF5 = { t="SD_GTHW5", f="SD_GTHF5"},
-  SD_GTHF6 = { t="SD_GTHW6", f="SD_GTHF6"},
-  -- switches
-  SDGTHSW1 = { t="SDGTHSW1", f="SD_GTHF1"}, 
-  -- light pillars, 64px
-  SD_GTLW1 = { t="SD_GTLW1", f="SD_GTHF1"},
-  SD_GTLW2 = { t="SD_GTLW2", f="SD_GTHF2"},
-  SD_GTLW3 = { t="SD_GTLW3", f="SD_GTHF3"},
-  SD_GTLW4 = { t="SD_GTLW4", f="SD_GTHF4"},
-
-  -- tech wood
-  SD_TWDW1 = { t="SD_TWDW1", f="SD_TWDF1"},
-  SD_TWDW2 = { t="SD_TWDW2", f="SD_TWDF2"},
-  SD_TWDW3 = { t="SD_TWDW3", f="SD_TWDF3"},
-  SD_TWDW4 = { t="SD_TWDW4", f="SD_TWDF4"},
-  SD_TWDW5 = { t="SD_TWDW5", f="SD_TWDF5"},
-  SD_TWDW6 = { t="SD_TWDW6", f="SD_TWDF1"},
-  -- flats
-  SD_TWDF1 = { t="SD_TWDW1", f="SD_TWDF1"},
-  SD_TWDF2 = { t="SD_TWDW2", f="SD_TWDF2"},
-  SD_TWDF3 = { t="SD_TWDW3", f="SD_TWDF3"},
-  SD_TWDF4 = { t="SD_TWDW6", f="SD_TWDF4"},
-  SD_TWDF5 = { t="SD_TWDW5", f="SD_TWDF5"},
-  SD_TWDF6 = { t="SD_TWDW6", f="SD_TWDF1"},
-  SD_TWDF7 = { t="SD_TWDW7", f="SD_TWDF3"},
-  SD_TWDF8 = { t="SD_TWDW8", f="SD_TWDF5"},
-  -- lights
-  SD_TWDL1 = { t="SD_TWDL1", f="SD_TWDF6"},
-  SD_TWDL2 = { t="SD_TWDL2", f="SD_TWDF5"},
-  SD_TWDL3 = { t="SD_TWDL3", f="SD_TWDF4"},
-
-  -- lab wood
-  SD_TWLW1 = { t="SD_TWLW1", f="SD_TWLF1"},
-  SD_TWLW2 = { t="SD_TWLW2", f="SD_TWLF2"},
-  SD_TWLW3 = { t="SD_TWLW3", f="SD_TWLF3"},
-  SD_TWLW4 = { t="SD_TWLW4", f="SD_TWLF4"},
-  SD_TWLW5 = { t="SD_TWLW5", f="SD_TWLF5"},
-  SD_TWLW6 = { t="SD_TWLW6", f="SD_TWLF6"},
-  SD_TWLW7 = { t="SD_TWLW7", f="SD_TWLF7"},
-  SD_TWLW8 = { t="SD_TWLW8", f="SD_TWLF8"},
-  SD_TWLW9 = { t="SD_TWLW9", f="SD_TWLF9"},
-  SD_TWLWA = { t="SD_TWLWA", f="SD_TWLFA"},
-  SD_TWLWB = { t="SD_TWLWB", f="SD_TWLF1"},
-  SD_TWLWC = { t="SD_TWLWC", f="SD_TWLF4"},
-  SD_TWLWD = { t="SD_TWLWD", f="SD_TWLF7"},
-  -- flats
-  SD_TWLF1 = { t="SD_TWLW1", f="SD_TWLF1"},
-  SD_TWLF2 = { t="SD_TWLW3", f="SD_TWLF2"},
-  SD_TWLF3 = { t="SD_TWLW5", f="SD_TWLF3"},
-  SD_TWLF4 = { t="SD_TWLW7", f="SD_TWLF4"},
-  SD_TWLF5 = { t="SD_TWLW9", f="SD_TWLF5"},
-  SD_TWLF6 = { t="SD_TWLWA", f="SD_TWLF6"},
-  SD_TWLF7 = { t="SD_TWLWB", f="SD_TWLF7"},
-  SD_TWLF8 = { t="SD_TWLWC", f="SD_TWLF8"},
-  SD_TWLF9 = { t="SD_TWLWD", f="SD_TWLF9"},
-  SD_TWLFA = { t="SD_TWLW2", f="SD_TWLFA"},
-
-  -- silver grate
-  SD_TSGW1 = { t="SD_TSGW1", f="SD_TSGF1"},
-  SD_TSGW2 = { t="SD_TSGW2", f="SD_TSGF2"},
-  SD_TSGW3 = { t="SD_TSGW3", f="SD_TSGF3"},
-  SD_TSGW4 = { t="SD_TSGW4", f="SD_TSGF4"},
-  SD_TSGW5 = { t="SD_TSGW5", f="SD_TSGF5"},
-  SD_TSGW6 = { t="SD_TSGW6", f="SD_TSGF6"},
-  SD_TSGW7 = { t="SD_TSGW7", f="SD_TSGF7"},
-  SD_TSGW8 = { t="SD_TSGW8", f="SD_TSGF8"},
-  SD_TSGW9 = { t="SD_TSGW9", f="SD_TSGF9"},
-  SD_TSGWA = { t="SD_TSGWA", f="SD_TSGFA"},
-  SD_TSGWB = { t="SD_TSGWB", f="SD_TSGFB"},
-  SD_TSGWC = { t="SD_TSGWC", f="SD_TSGFC"},
-  SD_TSGWD = { t="SD_TSGWD", f="SD_TSGF6"},
-  -- flats
-  SD_TSGF1 = { t="SD_TSGW1", f="SD_TSGF1"},
-  SD_TSGF2 = { t="SD_TSGW2", f="SD_TSGF2"},
-  SD_TSGF3 = { t="SD_TSGW3", f="SD_TSGF3"},
-  SD_TSGF4 = { t="SD_TSGW4", f="SD_TSGF4"},
-  SD_TSGF5 = { t="SD_TSGW5", f="SD_TSGF5"},
-  SD_TSGF6 = { t="SD_TSGW6", f="SD_TSGF6"},
-  SD_TSGF7 = { t="SD_TSGW7", f="SD_TSGF7"},
-  SD_TSGF8 = { t="SD_TSGW8", f="SD_TSGF8"},
-  SD_TSGF9 = { t="SD_TSGW9", f="SD_TSGF9"},
-  SD_TSGFA = { t="SD_TSGWA", f="SD_TSGFA"},
-  SD_TSGFB = { t="SD_TSGWB", f="SD_TSGFB"},
-  SD_TSGFC = { t="SD_TSGWC", f="SD_TSGFC"},
-
-  -- bumblebee tech
-  SD_TBBW1 = { t="SD_TBBW1", f="SD_TSGFC"},
-  SD_TBBW2 = { t="SD_TBBW2", f="SD_TSGFB"},
-  SD_TBBW3 = { t="SD_TBBW3", f="SD_TSGFA"},
-  SD_TBBW4 = { t="SD_TBBW4", f="SD_TSGF9"},
-  SD_TBBW5 = { t="SD_TBBW5", f="SD_TSGF8"},
-  SD_TBBW6 = { t="SD_TBBW6", f="SD_TSGF7"},
-  SD_TBBW7 = { t="SD_TBBW7", f="SD_TSGF6"},
-  SD_TBBW8 = { t="SD_TBBW8", f="SD_TSGF5"},
-  SD_TBBW9 = { t="SD_TBBW9", f="SD_TSGF4"},
-  SD_TBBWA = { t="SD_TBBWA", f="SD_TSGF3"},
-  SD_TBBWB = { t="SD_TBBWB", f="SD_TSGF2"},
-  SD_TBBWC = { t="SD_TBBWC", f="SD_TSGF1"},
-  -- floors
-  SD_TBBF1 = { t="SD_TBBW1", f="SD_TBBF1"},
-  SD_TBBF2 = { t="SD_TBBW2", f="SD_TBBF2"},
-  SD_TBBF3 = { t="SD_TBBW3", f="SD_TBBF3"},
-  SD_TBBF4 = { t="SD_TBBW4", f="SD_TBBF4"},
-  SD_TBBF5 = { t="SD_TBBW5", f="SD_TBBF5"},
-  SD_TBBF6 = { t="SD_TBBW6", f="SD_TBBF6"},
-  SD_TBBF7 = { t="SD_TBBW7", f="SD_TBBF7"},
-  SD_TBBF8 = { t="SD_TBBW8", f="SD_TBBF8"},
-  SD_TBBF9 = { t="SD_TBBW9", f="SD_TBBF9"},
-  SD_TBBFA = { t="SD_TBBWA", f="SD_TBBFA"},
-  SD_TBBFB = { t="SD_TBBWB", f="SD_TBBFB"},
-  SD_TBBFC = { t="SD_TBBWC", f="SD_TBBFC"},
-  SD_TBBFD = { t="SD_TBBW6", f="SD_TBBFD"},
-
-  -- bumblebee beige
-  -- walls
-  SDBGTWL1 = { t="SDBGTWL1", f="SDBGTFT1"},
-  SDBGTWL2 = { t="SDBGTWL2", f="SDBGTFT2"},
-  SDBGTWL3 = { t="SDBGTWL3", f="SDBGTFT3"},
-  SDBGTWL4 = { t="SDBGTWL4", f="SDBGTFT4"},
-  SDBGTWL5 = { t="SDBGTWL5", f="SDBGTFT5"},
-  SDBGTWL6 = { t="SDBGTWL6", f="SDBGTFT6"},
-  SDBGTWL7 = { t="SDBGTWL7", f="SDBGTFT7"},
-  SDBGTWL8 = { t="SDBGTWL8", f="SDBGTFT8"},
-  SDBGTWL9 = { t="SDBGTWL9", f="SDBGTFT1"},
-  SDBGTWLA = { t="SDBGTWLA", f="SDBGTFT2"},
-  SDBGTWLB = { t="SDBGTWLB", f="SDBGTFT3"},
-  SDBGTWLC = { t="SDBGTWLC", f="SDBGTFT4"},
-  SDBGTWLD = { t="SDBGTWLD", f="SDBGTFT5"},
-  SDBGTWLE = { t="SDBGTWLE", f="SDBGTFT6"},
-  SDBGTWLF = { t="SDBGTWLF", f="SDBGTFT8"},
-  -- floors
-  SDBGTFT1 = { t="SDBGTWL1", f="SDBGTFT1"},
-  SDBGTFT2 = { t="SDBGTWL3", f="SDBGTFT2"},
-  SDBGTFT3 = { t="SDBGTWL5", f="SDBGTFT3"},
-  SDBGTFT4 = { t="SDBGTWL7", f="SDBGTFT4"},
-  SDBGTFT5 = { t="SDBGTWL9", f="SDBGTFT5"},
-  SDBGTFT6 = { t="SDBGTWLB", f="SDBGTFT6"},
-  SDBGTFT7 = { t="SDBGTWLD", f="SDBGTFT7"},
-  SDBGTFT8 = { t="SDBGTWLF", f="SDBGTFT8"},
-
-  -- MSSP-URBAN --
-  -- New Yorker art deco
-  SD_UADW1 = { t="SD_UADW1", f="SD_UADF1"},
-  SD_UADW2 = { t="SD_UADW2", f="SD_UADF2"},
-  SD_UADW3 = { t="SD_UADW3", f="SD_UADF3"},
-  SD_UADW4 = { t="SD_UADW4", f="SD_UADF4"},
-  SD_UADW5 = { t="SD_UADW5", f="SD_UADF5"},
-  SD_UADW6 = { t="SD_UADW6", f="SD_UADF6"},
-  SD_UADW7 = { t="SD_UADW7", f="SD_UADF7"},
-  SD_UADW8 = { t="SD_UADW8", f="SD_UADF8"},
-  SD_UADW9 = { t="SD_UADW9", f="SD_UADF1"},
-  SD_UADWA = { t="SD_UADWA", f="SD_UADF2"},
-  SD_UADWB = { t="SD_UADWB", f="SD_UADF3"},
-  SD_UADWC = { t="SD_UADWC", f="SD_UADF5"},
-  SD_UADWD = { t="SD_UADWD", f="SD_UADF6"},
-  SD_UADWE = { t="SD_UADWE", f="SD_UADF8"},
-  -- flats
-  SD_UADF1 = { t="SD_UADW1", f="SD_UADF1"},
-  SD_UADF2 = { t="SD_UADW3", f="SD_UADF2"},
-  SD_UADF3 = { t="SD_UADW5", f="SD_UADF3"},
-  SD_UADF4 = { t="SD_UADW7", f="SD_UADF4"},
-  SD_UADF5 = { t="SD_UADW9", f="SD_UADF5"},
-  SD_UADF6 = { t="SD_UADWB", f="SD_UADF6"},
-  SD_UADF7 = { t="SD_UADWD", f="SD_UADF7"},
-  SD_UADF8 = { t="SD_UADWE", f="SD_UADF8"},
-
-  -- MSSP-GOTH --
-  -- green-ish gothic metal walls with skulls (128px)
-  G7_GOGN1 = { t="G7_GOGN1", f="G7_GOGF1"},
-  G7_GOGN2 = { t="G7_GOGN2", f="G7_GOGF1"},
-  G7_GOGN3 = { t="G7_GOGN3", f="G7_GOGF1"},
-  -- grey brick, occasional gold trims
-  SDM_HAW1 = { t="SDM_HAW1", f="SDM_HGF1"},
-  SDM_HAW2 = { t="SDM_HAW2", f="SDM_HGF2"},
-  SDM_HAW3 = { t="SDM_HAW3", f="SDM_HGF3"},
-  SDM_HAW4 = { t="SDM_HAW4", f="SDM_HGF1"},
-  SDM_HAW5 = { t="SDM_HAW5", f="SDM_HGF2"},
-  SDM_HAW6 = { t="SDM_HAW6", f="SDM_HGF3"},
-  SDM_HAW7 = { t="SDM_HAW7", f="SDM_HGF1"},
-  SDM_HAW8 = { t="SDM_HAW8", f="SDM_HGF2"},
-  -- flats
-  SDM_HGF1 = { t="SDM_HAW5", f="SDM_HGF1"},
-  SDM_HGF2 = { t="SDM_HAW6", f="SDM_HGF2"},
-  SDM_HGF3 = { t="SDM_HAW7", f="SDM_HGF3"},
-  G7_GOGF1 = { t="G7_GOGN2", f="G7_GOGF1"}, -- TO BE REPLACED DO NOT USE
-
-  -- copper steampunk hell (?!)
-  SD_HCSW1 = { t="SD_HCSW1" , f="SD_HCSF1"},
-  SD_HCSW2 = { t="SD_HCSW2" , f="SD_HCSF2"},
-  SD_HCSW3 = { t="SD_HCSW3" , f="SD_HCSF3"},
-  SD_HCSW4 = { t="SD_HCSW4" , f="SD_HCSF4"},
-  SD_HCSW5 = { t="SD_HCSW5" , f="SD_HCSF5"},
-  SD_HCSW6 = { t="SD_HCSW6" , f="SD_HCSF6"},
-  -- flats
-  SD_HCSF1 = { t="SD_HCSW1", f="SD_HCSF1"},
-  SD_HCSF2 = { t="SD_HCSW3", f="SD_HCSF2"},
-  SD_HCSF3 = { t="SD_HCSW4", f="SD_HCSF3"},
-  SD_HCSF4 = { t="SD_HCSW1", f="SD_HCSF4"},
-  SD_HCSF5 = { t="SD_HCSW3", f="SD_HCSF5"},
-  SD_HCSF6 = { t="SD_HCSW4", f="SD_HCSF6"},
-
-  -- aztec demonic
-  SDMHAZW1 = { t="SDMHAZW1", f="SDMHAZF1"},
-  SDMHAZW2 = { t="SDMHAZW2", f="SDMHAZF2"},
-  SDMHAZW3 = { t="SDMHAZW3", f="SDMHAZF3"},
-  SDMHAZW4 = { t="SDMHAZW4", f="SDMHAZF4"},
-  SDMHAZW5 = { t="SDMHAZW5", f="SDMHAZF5"},
-  SDMHAZW6 = { t="SDMHAZW6", f="SDMHAZF6"},
-  SDMHAZW7 = { t="SDMHAZW7", f="SDMHAZF4"},
-  -- flats
-  SDMHAZF1 = { t="SDMHAZW1", f="SDMHAZF1"},
-  SDMHAZF2 = { t="SDMHAZW2", f="SDMHAZF2"},
-  SDMHAZF3 = { t="SDMHAZW3", f="SDMHAZF3"},
-  SDMHAZF4 = { t="SDMHAZW4", f="SDMHAZF4"},
-  SDMHAZF5 = { t="SDMHAZW1", f="SDMHAZF5"},
-  SDMHAZF6 = { t="SDMHAZW4", f="SDMHAZF6"},
-
-  -- babylonian demonic
-  SDPBBWL1 = { t="SDPBBWL1", f="SDMHAZF1"},
-  SDPBBWL2 = { t="SDPBBWL2", f="SDMHAZF2"},
-  SDPBBWL3 = { t="SDPBBWL3", f="SDMHAZF3"},
-  SDPBBWL4 = { t="SDPBBWL4", f="SDMHAZF4"},
-  SDPBBWL5 = { t="SDPBBWL5", f="SDMHAZF5"},
-  SDPBBWL6 = { t="SDPBBWL6", f="SDMHAZF6"},
-  SDPBBWL7 = { t="SDPBBWL7", f="SDMHAZF6"},
-  SDPBBWL8 = { t="SDPBBWL8", f="SDMHAZF5"},
-  SDPBBWL9 = { t="SDPBBWL9", f="SDMHAZF4"},
-  SDPBBWLA = { t="SDPBBWLA", f="SDMHAZF3"},
-  SDPBBWLB = { t="SDPBBWLB", f="SDMHAZF2"},
-  SDPBBWLC = { t="SDPBBWLC", f="SDMHAZF1"},
-  -- flats
-  SDPBBFT1 = { t="SDPBBWL1", f="SDPBBFT1"},
-  SDPBBFT2 = { t="SDPBBWL2", f="SDPBBFT2"},
-  SDPBBFT3 = { t="SDPBBWL3", f="SDPBBFT3"},
-  SDPBBFT4 = { t="SDPBBWL5", f="SDPBBFT4"},
-  SDPBBFT5 = { t="SDPBBWL6", f="SDPBBFT5"},
-  SDPBBFT6 = { t="SDPBBWL7", f="SDPBBFT6"},
-
-  -- urban hell mansion
-  SD_UHMW1 = { t="SD_UHMW1", f="SD_UHMF1"},
-  SD_UHMW2 = { t="SD_UHMW2", f="SD_UHMF2"},
-  SD_UHMW3 = { t="SD_UHMW3", f="SD_UHMF3"},
-  SD_UHMW4 = { t="SD_UHMW4", f="SD_UHMF4"},
-  SD_UHMW5 = { t="SD_UHMW5", f="SD_UHMF5"},
-  SD_UHMW6 = { t="SD_UHMW6", f="SD_UHMF6"},
-  SD_UHMW7 = { t="SD_UHMW7", f="SD_UHMC1"},
-  SD_UHMW8 = { t="SD_UHMW8", f="SD_UHMC2"},
-  SD_UHMW9 = { t="SD_UHMW9", f="SD_UHMC3"},
-  SD_UHMWA = { t="SD_UHMWA", f="SD_UHMC4"},
-  SD_UHMWB = { t="SD_UHMWB", f="SD_UHMC6"},
-  SD_UHMWC = { t="SD_UHMWC", f="SD_UHMC8"},
-  -- flats
-  SD_UHMF1 = { t="SD_UHMW1", f="SD_UHMF1"},
-  SD_UHMF2 = { t="SD_UHMW2", f="SD_UHMF2"},
-  SD_UHMF3 = { t="SD_UHMW3", f="SD_UHMF3"},
-  SD_UHMF4 = { t="SD_UHMW4", f="SD_UHMF4"},
-  SD_UHMF5 = { t="SD_UHMW6", f="SD_UHMF5"},
-  SD_UHMF6 = { t="SD_UHMW8", f="SD_UHMF6"},
-  SD_UHMF7 = { t="SD_UHMWA", f="SD_UHMF7"},
-  SD_UHMF8 = { t="SD_UHMWC", f="SD_UHMF8"},
-  -- ceilings
-  SD_UHMC1 = { t="SD_UHMW1", f="SD_UHMC1"},
-  SD_UHMC2 = { t="SD_UHMW3", f="SD_UHMC2"},
-  SD_UHMC3 = { t="SD_UHMW7", f="SD_UHMC3"},
-  SD_UHMC4 = { t="SD_UHMW8", f="SD_UHMC4"},
-  SD_UHMC5 = { t="SD_UHMW9", f="SD_UHMC5"},
-  SD_UHMC6 = { t="SD_UHMWA", f="SD_UHMC6"},
-  SD_UHMC7 = { t="SD_UHMWB", f="SD_UHMC7"},
-  SD_UHMC8 = { t="SD_UHMWC", f="SD_UHMC8"},
-
-  -- Kievan Rus medieval
-  SD_HRFW1 = { t="SD_HRFW1", f="SD_HRFF1"},
-  SD_HRFW2 = { t="SD_HRFW2", f="SD_HRFF2"},
-  SD_HRFW3 = { t="SD_HRFW3", f="SD_HRFF3"},
-  SD_HRFW4 = { t="SD_HRFW4", f="SD_HRFF4"},
-  SD_HRFW5 = { t="SD_HRFW5", f="SD_HRFF5"},
-  SD_HRFW6 = { t="SD_HRFW6", f="SD_HRFF6"},
-  SD_HRFW7 = { t="SD_HRFW7", f="SD_HRFF7"},
-  SD_HRFW8 = { t="SD_HRFW8", f="SD_HRFF8"},
-  SD_HRFW9 = { t="SD_HRFW9", f="SD_HRFF1"},
-  SD_HRFWA = { t="SD_HRFWA", f="SD_HRFF3"},
-  SD_HRFWB = { t="SD_HRFWB", f="SD_HRFF5"},
-  SD_HRFWC = { t="SD_HRFWC", f="SD_HRFF6"},
-  SD_HRFWD = { t="SD_HRFWD", f="SD_HRFF7"},
-  SD_HRFWE = { t="SD_HRFWE", f="SD_HRFF8"},
-  -- flats
-  SD_HRFF1 = { t="SD_HRFW1", f="SD_HRFF1"},
-  SD_HRFF2 = { t="SD_HRFW3", f="SD_HRFF2"},
-  SD_HRFF3 = { t="SD_HRFW5", f="SD_HRFF3"},
-  SD_HRFF4 = { t="SD_HRFW7", f="SD_HRFF4"},
-  SD_HRFF5 = { t="SD_HRFW9", f="SD_HRFF5"},
-  SD_HRFF6 = { t="SD_HRFWA", f="SD_HRFF6"},
-  SD_HRFF7 = { t="SD_HRFWC", f="SD_HRFF7"},
-  SD_HRFF8 = { t="SD_HRFWE", f="SD_HRFF8"},
-
-  -- computer catacombs (lolwhat?)
-  -- walls
-  SD_HCCW1 = { t="SD_HCCW1", f="SD_HCCF1"},
-  SD_HCCW2 = { t="SD_HCCW2", f="SD_HCCF2"},
-  SD_HCCW3 = { t="SD_HCCW3", f="SD_HCCF3"},
-  SD_HCCW4 = { t="SD_HCCW4", f="SD_HCCF4"},
-  SD_HCCW5 = { t="SD_HCCW5", f="SD_HCCF5"},
-  SD_HCCW6 = { t="SD_HCCW6", f="SD_HCCF6"},
-  SD_HCCW7 = { t="SD_HCCW7", f="SD_HCCF7"},
-  SD_HCCW8 = { t="SD_HCCW8", f="SD_HCCF8"},
-  SD_HCCW9 = { t="SD_HCCW9", f="SD_HCCF2"},
-  SD_HCCWA = { t="SD_HCCWA", f="SD_HCCF4"},
-  SD_HCCWB = { t="SD_HCCWB", f="SD_HCCF6"},
-  SD_HCCWC = { t="SD_HCCWC", f="SD_HCCF8"},
-  -- flats
-  SD_HCCF1 = { t="SD_HCCW1", f="SD_HCCF1"},
-  SD_HCCF2 = { t="SD_HCCW2", f="SD_HCCF2"},
-  SD_HCCF3 = { t="SD_HCCW3", f="SD_HCCF3"},
-  SD_HCCF4 = { t="SD_HCCW5", f="SD_HCCF4"},
-  SD_HCCF5 = { t="SD_HCCW7", f="SD_HCCF5"},
-  SD_HCCF6 = { t="SD_HCCW9", f="SD_HCCF6"},
-  SD_HCCF7 = { t="SD_HCCWA", f="SD_HCCF7"},
-  SD_HCCF8 = { t="SD_HCCWC", f="SD_HCCF8"},
-
-  --
-  TOFFBOX1 = {t="TOFFBOX1", f="FLAT23"},
-  TOFFBOX2 = {t="TOFFBOX2", f="FLAT23"},
-  TOFFPSW1 = {t="TOFFPSW1", f="FLAT5_5"},
-  TOFFPSW2 = {t="TOFFPSW2", f="FLAT5_5"},
-
-  -- aww2 tech
-  -- walls
-  S_W2WAL1 = {t="S_W2WAL1", f="S_W2WFR1"},
-  S_W2WAL2 = {t="S_W2WAL2", f="S_W2WFR2"},
-  S_W2WAL3 = {t="S_W2WAL3", f="S_W2WFR3"},
-  S_W2WAL4 = {t="S_W2WAL4", f="S_W2WFR4"},
-  S_W2WAL5 = {t="S_W2WAL5", f="S_W2WFR5"},
-  S_W2WAL6 = {t="S_W2WAL6", f="S_W2WFR6"},
-  S_W2WAL7 = {t="S_W2WAL7", f="S_W2WFR7"},
-  S_W2WAL8 = {t="S_W2WAL8", f="S_W2WFR8"},
-  S_W2WAL9 = {t="S_W2WAL9", f="S_W2WFR1"},
-  S_W2WALA = {t="S_W2WALA", f="S_W2WFR2"},
-  S_W2WALB = {t="S_W2WALB", f="S_W2WFR3"},
-  S_W2WALC = {t="S_W2WALC", f="S_W2WFR5"},
-  S_W2WALD = {t="S_W2WALD", f="S_W2WFR6"},
-  S_W2WALE = {t="S_W2WALE", f="S_W2WFR8"},
-  -- flats
-  S_W2WFR1 = {t="S_W2WAL1", f="S_W2WFR1"},
-  S_W2WFR2 = {t="S_W2WAL3", f="S_W2WFR1"},
-  S_W2WFR3 = {t="S_W2WAL5", f="S_W2WFR1"},
-  S_W2WFR4 = {t="S_W2WAL7", f="S_W2WFR1"},
-  S_W2WFR5 = {t="S_W2WAL9", f="S_W2WFR1"},
-  S_W2WFR6 = {t="S_W2WALA", f="S_W2WFR1"},
-  S_W2WFR7 = {t="S_W2WALC", f="S_W2WFR1"},
-  S_W2WFR8 = {t="S_W2WALE", f="S_W2WFR1"},
-
-  -- iStuff theme
-  -- walls
-  SDIPHWL1 = {t="SDIPHWL1", f="SDIPHFT1"},
-  SDIPHWL2 = {t="SDIPHWL2", f="SDIPHFT1"},
-  SDIPHWL3 = {t="SDIPHWL3", f="SDIPHFT2"},
-  SDIPHWL4 = {t="SDIPHWL4", f="SDIPHFT2"},
-  SDIPHWL5 = {t="SDIPHWL5", f="SDIPHFT3"},
-  SDIPHWL6 = {t="SDIPHWL6", f="SDIPHFT4"},
-  SDIPHWL7 = {t="SDIPHWL7", f="SDIPHFT4"},
-  SDIPHWL8 = {t="SDIPHWL8", f="SDIPHFT5"},
-  SDIPHWL9 = {t="SDIPHWL9", f="SDIPHFT6"},
-  SDIPHWLA = {t="SDIPHWLA", f="SDIPHFT6"},
-  SDIPHWLB = {t="SDIPHWLB", f="SDIPHFT7"},
-  -- flats
-  SDIPHFT1 = {t="SDIPHWL1", f="SDIPHFT1"},
-  SDIPHFT2 = {t="SDIPHWL2", f="SDIPHFT2"},
-  SDIPHFT3 = {t="SDIPHWL3", f="SDIPHFT3"},
-  SDIPHFT4 = {t="SDIPHWL4", f="SDIPHFT4"},
-  SDIPHFT5 = {t="SDIPHWL5", f="SDIPHFT5"},
-  SDIPHFT6 = {t="SDIPHWL6", f="SDIPHFT6"},
-  SDIPHFT7 = {t="SDIPHWL7", f="SDIPHFT7"},
 
   -- 256-wide doors
   G8_SVDR3 = { t="G8_SVDR3", f="FLAT23"},
@@ -3000,11 +2499,6 @@ brightmap texture SDOM_WL2
   map SDMWL2BR
 }
 
-brightmap texture SD_GTHF1
-{
-  map SDMWL2BR
-}
-
 brightmap texture SD_GTHW1
 {
   map SDGHW1BR
@@ -3119,7 +2613,17 @@ brightmap texture SD_HCCW3
 {
   map SDBRHCW3
 }
-  
+
+brightmap texture SD_HCCW4
+{
+  map SDBRHCW4
+}
+
+brightmap texture SD_HCCW6
+{
+  map SDBRHCW6
+}
+
 brightmap texture SD_HCCW7
 {
   map SDBRHCW7
@@ -3140,6 +2644,80 @@ brightmap texture SD_HCCWC
   map SDBRHCWC
 }
 
+brightmap texture SD_TWDW3
+{
+  map OBRTWTW3
+}
+
+brightmap texture SD_TWDW8
+{
+  map OBRTWTW8
+}
+
+brightmap texture SD_TWDW9
+{
+  map OBRTWTW9
+}
+
+brightmap texture SDMSRCP1
+{
+  map OBRMRCP1
+}
+
+brightmap texture SDMSRCP2
+{
+  map OBRMRCP2
+}
+
+brightmap texture SDMSRCP3
+{
+  map OBRMRCP3
+}
+
+brightmap texture SDTBNKW7
+{
+  map SDTBKBR7
+}
+
+brightmap texture SDTBNKWA
+{
+  map SDTBKBRA
+}
+
+brightmap texture SDTBNKWB
+{
+  map SDTBKBRB
+}
+
+brightmap texture SDTBNKWC
+{
+  map SDTBKBRC
+}
+
+brightmap texture SDTBNKWE
+{
+  map SDTBKBRE
+}
+
+brightmap texture SD_TSGF3
+{
+  map SDTSFBR3
+}
+
+brightmap texture SD_TSGF7
+{
+  map SDTSFBR7
+}
+
+brightmap texture SD_TSGF9
+{
+  map SDTSFBR9
+}
+
+brightmap texture SD_TSGFA
+{
+  map SDTSFBRA
+}
 ]]
 
 -- aliases - when you're too lazy to write down wall and flat names in every

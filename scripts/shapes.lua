@@ -14052,8 +14052,8 @@ GROW_SKULL_P1_STEEPNESS_HALF =
 
 GROW_DIAGONAL_STALK =
 {
-  prob = 75,
-  skip_prob = 50,
+  prob = 10,
+  skip_prob = 80,
 
   structure =
   {
@@ -14062,7 +14062,8 @@ GROW_DIAGONAL_STALK =
     "xx.....x","xx/111/x",
     "x.....xx","x/111/xx",
     ".....xxx","/1111xxx",
-    "11111xxx","11111xxx",
+    ".....xxx","11111xxx",
+    "xxx11xxx","xxx11xxx"
   },
 
   diagonals =
@@ -14076,8 +14077,8 @@ GROW_DIAGONAL_STALK =
 
 GROW_DIAGONAL_STALK_LIQUID =
 {
-  prob = 50,
-  skip_prob = 50,
+  prob = 15,
+  skip_prob = 75,
 
   structure =
   {
@@ -14086,7 +14087,8 @@ GROW_DIAGONAL_STALK_LIQUID =
     "x.......","x//111//",
     ".......x","//111//x",
     "......xx","/1111/xx",
-    "11111xxx","11111xxx",
+    ".....xxx","11111xxx",
+    "xxx11xxx","xxx11xxx"
   },
 
   diagonals =
@@ -14100,7 +14102,7 @@ GROW_DIAGONAL_STALK_LIQUID =
 
 GROW_DIAGONAL_STALK_LIQUID_STAIRS =
 {
-  prob = 15,
+  prob = 10,
   skip_prob = 75,
 
   structure =
@@ -14111,7 +14113,8 @@ GROW_DIAGONAL_STALK_LIQUID_STAIRS =
     "x......x","x~~^^~~x",
     ".......x","//111~/x",
     "......xx","/1111/xx",
-    "11111xxx","11111xxx",
+    ".....xxx","11111xxx",
+    "xxx11xxx","xxx11xxx"
   },
 
   diagonals =
@@ -14120,6 +14123,110 @@ GROW_DIAGONAL_STALK_LIQUID_STAIRS =
     ".~"     ,"A~","~.",
     ".~","~1",     "~.",
          "~1","~.",
+  },
+},
+
+GROW_DIAGONAL_STALK_FUNNEL =
+{
+  prob = 10,
+  skip_prob = 75,
+
+  structure =
+  {
+    "........","11111111",
+    "........","%111111/",
+    "x......x","x%1111/x",
+    "xx....xx","xx1111xx",
+    "x......x","x/1111%x",
+    "........","/111111%",
+    "........","11111111",
+    "11xxxxxx","11xxxxxx"
+  },
+
+  diagonals =
+  {
+    ".1","1.",
+    ".1","1.",
+    ".1","1.",
+    ".1","1."
+  },
+},
+
+GROW_DIAGONAL_STALK_FUNNEL_NEW_AREA =
+{
+  prob = 9,
+  skip_prob = 75,
+
+  structure =
+  {
+    "........","AAAAAAAA",
+    "........","%AAAAAA/",
+    "x......x","x%AAAA/x",
+    "xx....xx","xx1111xx",
+    "x......x","x/1111%x",
+    "........","/111111%",
+    "........","11111111",
+    "11xxxxxx","11xxxxxx"
+  },
+
+  diagonals =
+  {
+    ".A","A.",
+    ".A","A.",
+    ".1","1.",
+    ".1","1."
+  },
+},
+
+GROW_DIAGONAL_STALK_FUNNEL_STAIRS =
+{
+  prob = 9,
+  skip_prob = 75,
+
+  structure =
+  {
+    "........","AAAAAAAA",
+    "........","%AAAAAA/",
+    "x......x","x%AAAA/x",
+    "xx....xx","xx^^^^xx",
+    "x......x","x/1111%x",
+    "........","/111111%",
+    "........","11111111",
+    "11xxxxxx","11xxxxxx"
+  },
+
+  diagonals =
+  {
+    ".A","A.",
+    ".A","A.",
+    ".1","1.",
+    ".1","1."
+  },
+},
+
+GROW_DIAGONAL_STALK_FUNNEL_STAIRS_LIQUID =
+{
+  prob = 9,
+  skip_prob = 75,
+
+  structure =
+  {
+    "........","AAAAAAAA",
+    "........","%AAAAAA/",
+    "........","~%AAAA/~",
+    "........","~~^^^^~~",
+    "........","~/1111%~",
+    "........","/111111%",
+    "........","11111111",
+    "11xxxxxx","11xxxxxx"
+  },
+
+  diagonals =
+  {
+    "~A","A~",
+    "~A","A~",
+    "~1","1~",
+    "~1","1~"
   },
 },
 

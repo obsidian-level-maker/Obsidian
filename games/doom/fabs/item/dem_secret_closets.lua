@@ -321,6 +321,8 @@ PREFABS.Pic_dem_lakeN1_secretcloset =
 {
   template  = "Pic_dem_waterfallN1_secretcloset",
   map    = "MAP21",
+
+  jump_crouch = true
 }
 
 ---- Jumpy natural closet fabs ----
