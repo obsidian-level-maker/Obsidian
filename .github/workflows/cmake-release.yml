@@ -11,7 +11,7 @@ env:
   RETENTION_DAYS: 30
 
 jobs:
-  build-mingw-win32:
+  build-win32:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
@@ -27,7 +27,7 @@ jobs:
           strip ${{github.workspace}}\obsidian.exe
       - uses: actions/upload-artifact@v4
         with:
-          name: obsidian-mingw-win32
+          name: obsidian-win32
           path: |
             addons
             data
@@ -42,17 +42,23 @@ jobs:
             tools
             obsidian.exe
           retention-days: ${{env.RETENTION_DAYS}}
-  build-msvc-win64:
+  build-win64:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Configure CMake MSVC 64-bit
-        run: mkdir build && cd build && cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
-      - name: Build MSVC 64-bit
-        run: cmake --build build --config ${{env.BUILD_TYPE}}
+      - name: Download w64devkit
+        run: invoke-webrequest https://github.com/skeeto/w64devkit/releases/download/v1.23.0/w64devkit-1.23.0.zip -outfile ${{github.workspace}}\w64devkit.zip
+      - name: Extract w64devkit
+        run: expand-archive -path ${{github.workspace}}\w64devkit.zip -destinationpath ${{github.workspace}}
+      - name: Set environment variables and build
+        run: |
+          $env:Path = "${{github.workspace}}\w64devkit\bin;" + $env:Path
+          cmake -B build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_CXX_FLAGS="-isystem ${{github.workspace}}\w64devkit\include" -DCMAKE_C_FLAGS="-isystem ${{github.workspace}}\w64devkit\include" -G "MinGW Makefiles"
+          cmake --build build --config ${{env.BUILD_TYPE}}
+          strip ${{github.workspace}}\obsidian.exe
       - uses: actions/upload-artifact@v4
         with:
-          name: obsidian-msvc-win64
+          name: obsidian-win64
           path: |
             addons
             data
@@ -66,4 +72,4 @@ jobs:
             theme
             tools
             obsidian.exe
-          retention-days: ${{env.RETENTION_DAYS}} 
+          retention-days: ${{env.RETENTION_DAYS}}
