@@ -88,12 +88,6 @@ void Parse_Option(const std::string &name, const std::string &value)
     else if (StringCompare(name, "random_string_seeds") == 0)
     {
         random_string_seeds = StringToInt(value) ? true : false;
-#ifndef OBSIDIAN_CONSOLE_ONLY
-    }
-    else if (StringCompare(name, "gui_simple_mode") == 0)
-    {
-        gui_simple_mode = StringToInt(value) ? true : false;
-#endif
     }
     else if (StringCompare(name, "password_mode") == 0)
     {
@@ -212,9 +206,6 @@ bool Options_Save(const std::string &filename)
     fprintf(option_fp, "randomize_pickups = %d\n", (randomize_pickups ? 1 : 0));
     fprintf(option_fp, "randomize_misc = %d\n", (randomize_misc ? 1 : 0));
     fprintf(option_fp, "random_string_seeds = %d\n", (random_string_seeds ? 1 : 0));
-#ifndef OBSIDIAN_CONSOLE_ONLY
-    fprintf(option_fp, "gui_simple_mode = %d\n", (gui_simple_mode ? 1 : 0));
-#endif
     fprintf(option_fp, "password_mode = %d\n", (password_mode ? 1 : 0));
     fprintf(option_fp, "mature_word_lists = %d\n", (mature_word_lists ? 1 : 0));
     fprintf(option_fp, "filename_prefix = %d\n", filename_prefix);
@@ -251,8 +242,6 @@ class UI_OptionsWin : public Fl_Window
     Fl_Button   *opt_default_output_path;
     Fl_Box      *opt_current_output_path;
 
-    UI_CustomCheckBox *opt_simple_mode;
-    UI_HelpLink       *simple_mode_help;
     UI_CustomCheckBox *opt_random_string_seeds;
     UI_HelpLink       *random_string_seeds_help;
     UI_CustomCheckBox *opt_password_mode;
@@ -344,38 +333,6 @@ class UI_OptionsWin : public Fl_Window
         main_action = MAIN_HARD_RESTART;
 
         that->want_quit = true;
-    }
-
-    static void callback_Simple_Mode(Fl_Widget *w, void *data)
-    {
-        UI_OptionsWin *that = (UI_OptionsWin *)data;
-
-        gui_simple_mode = that->opt_simple_mode->value() ? true : false;
-
-        // clang-format off
-        fl_alert("%s", _("Toggling Simple Mode requires a restart.\nObsidian will now restart."));
-        // clang-format on
-
-        main_action = MAIN_HARD_RESTART;
-
-        that->want_quit = true;
-    }
-
-    static void callback_SimpleModeHelp(Fl_Widget *w, void *data)
-    {
-        fl_cursor(FL_CURSOR_DEFAULT);
-        Fl_Window       *win  = new Fl_Window(640, 480, _("Simple Mode"));
-        Fl_Text_Buffer  *buff = new Fl_Text_Buffer();
-        Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
-        disp->buffer(buff);
-        disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
-        win->resizable(*disp);
-        win->hotspot(0, 0, 0);
-        win->set_modal();
-        win->show();
-        // clang-format off
-        buff->text(_("In Simple Mode, generation options that are more nuanced or granular are hidden in order to provide an easier experience for the user."));
-        // clang-format on
     }
 
     static void callback_Random_String_Seeds(Fl_Widget *w, void *data)
@@ -707,21 +664,6 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) : Fl_Window(W, H, 
     // clang-format on
 
     cy += opt_current_output_path->h() + y_step;
-
-    opt_simple_mode = new UI_CustomCheckBox(cx + W * .38, cy, listwidth, KromulentHeight(24), "");
-    opt_simple_mode->copy_label(_(" Simple Mode"));
-    opt_simple_mode->value(gui_simple_mode ? 1 : 0);
-    opt_simple_mode->callback(callback_Simple_Mode, this);
-    opt_simple_mode->labelfont(font_style);
-    opt_simple_mode->selection_color(SELECTION);
-    opt_simple_mode->down_box(button_style);
-
-    simple_mode_help =
-        new UI_HelpLink(cx + W * .38 + this->opt_filename_prefix->w(), cy, W * 0.10, KromulentHeight(24));
-    simple_mode_help->labelfont(font_style);
-    simple_mode_help->callback(callback_SimpleModeHelp, this);
-
-    cy += opt_simple_mode->h() + y_step * .5;
 
     opt_random_string_seeds = new UI_CustomCheckBox(cx + W * .38, cy, listwidth, KromulentHeight(24), "");
     opt_random_string_seeds->copy_label(_(" Random String Seeds"));

@@ -530,19 +530,6 @@ int gui_set_button(lua_State *L)
     return 0;
 }
 
-// LUA: check_simple_mode
-//
-int gui_check_simple_mode(lua_State *L)
-{
-#ifndef OBSIDIAN_CONSOLE_ONLY
-    int value = (gui_simple_mode) ? 1 : 0;
-    lua_pushboolean(L, value);
-#else
-    lua_pushboolean(L, 0);
-#endif
-    return 1;
-}
-
 // LUA: add_module(where, id, label, tooltip)
 //
 int gui_add_module(lua_State *L)
@@ -1552,8 +1539,6 @@ static const luaL_Reg gui_script_funcs[] = {
     {"add_choice", gui_add_choice},
     {"enable_choice", gui_enable_choice},
     {"set_button", gui_set_button},
-
-    {"check_simple_mode", gui_check_simple_mode},
 
     {"add_module", gui_add_module},
     {"show_module", gui_show_module},

@@ -264,7 +264,7 @@ OB_MODULES["prefab_control"] =
       valuator = "button",
       default = 0,
       tooltip=_("For Co-operative games, sometimes have players start in different rooms"),
-      complex_mode = true
+      
     },
     {
       name = "bool_foreshadowing_exit",
@@ -273,7 +273,7 @@ OB_MODULES["prefab_control"] =
       default = 1,
       tooltip = _("Gets exit room theme to follow the theme of the next level, if different."),
       gap=1,
-      complex_mode = true
+      
     },
 
     {
@@ -284,7 +284,7 @@ OB_MODULES["prefab_control"] =
       tooltip = _("Reduces the amount of complex architecture in a map based on its size. Default is on in binary map format, off in UDMF map format."),
       priority = 150,
       gap = 1,
-      complex_mode = true
+      
     },
 
     {
@@ -318,7 +318,7 @@ OB_MODULES["prefab_control"] =
       priority = 99,
       gap = 1,
       randomize_group="architecture",
-      complex_mode = true
+      
     },
 
     --
@@ -336,7 +336,7 @@ OB_MODULES["prefab_control"] =
       tooltip = _("Determines the maximum number of distinct indoor room themes used per level. Default is 1."),
       priority = 100,
       randomize_group="architecture",
-      complex_mode = true
+      
     },
 
     {
@@ -347,7 +347,7 @@ OB_MODULES["prefab_control"] =
       priority = 48,
       tooltip = _("Attempt to use unique room themes for each generated level, unless the pool of available themes is exhausted."),
       randomize_group="architecture",
-      complex_mode = true
+      
     },
 
     {
@@ -362,7 +362,7 @@ OB_MODULES["prefab_control"] =
       tooltip = _("Determines the maximum number of distinct indoor wall groups used per level. Default is 2."),
       priority = 50,
       randomize_group="architecture",
-      complex_mode = true
+      
     },
 
     {
@@ -374,7 +374,7 @@ OB_MODULES["prefab_control"] =
       tooltip = _("Attempt to use unique indoor wall groups for each generated level, unless the pool of available groups is exhausted."),
       gap = 1,
       randomize_group="architecture",
-      complex_mode = true
+      
     },
     --
 
@@ -387,7 +387,7 @@ OB_MODULES["prefab_control"] =
       priority = 48,
       tooltip = _("Attempt to use matched start and exit fabs for a level (if a matched set is possible)."),
       randomize_group="architecture",
-      complex_mode = true
+      
     },
 
 
@@ -520,7 +520,7 @@ OB_MODULES["prefab_control"] =
       tooltip = _("Greatly increase probability for recent added content for testing purposes. " .. 
       "Changes in content is expected and some assets will be gradually removed from this option's effects."),
       priority = 4,
-      complex_mode = true
+      
     },
 
 
@@ -532,7 +532,7 @@ OB_MODULES["prefab_control"] =
       tooltip = _("Ensures that prefabs selected match their intended Theme."),
       priority = 1,
       randomize_group="architecture",
-      complex_mode = true
+      
     }
   }
 }
