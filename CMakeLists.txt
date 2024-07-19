@@ -132,6 +132,7 @@ target_include_directories(obsidian SYSTEM PRIVATE libraries/steve/src)
 if(NOT CONSOLE_ONLY)
   target_include_directories(obsidian SYSTEM PRIVATE libraries/sokol)
   target_include_directories(obsidian SYSTEM PRIVATE libraries/imgui)
+  target_include_directories(obsidian SYSTEM PRIVATE libraries/stb)
 endif()
 
 if(UNIX)
