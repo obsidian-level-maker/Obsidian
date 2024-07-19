@@ -1,8 +1,5 @@
 cmake_minimum_required(VERSION 3.12..3.20)
 
-if(NOT CONSOLE_ONLY)
-  add_subdirectory(libraries/fltk EXCLUDE_FROM_ALL)
-endif()
 add_subdirectory(libraries/miniz EXCLUDE_FROM_ALL)
 add_subdirectory(libraries/physfs EXCLUDE_FROM_ALL)
 add_subdirectory(libraries/steve EXCLUDE_FROM_ALL)
@@ -127,17 +124,15 @@ add_executable(
 )
 
 target_include_directories(obsidian SYSTEM PRIVATE libraries/fastPRNG)
-if(NOT CONSOLE_ONLY)
-  target_include_directories(obsidian SYSTEM PRIVATE libraries/fltk)
-  target_include_directories(
-    obsidian SYSTEM PRIVATE "${PROJECT_BINARY_DIR}/libraries/fltk"
-  ) # Hack for FLTK 1.4 (for now)
-endif()
 target_include_directories(obsidian SYSTEM PRIVATE libraries/gif-h)
 target_include_directories(obsidian SYSTEM PRIVATE libraries/minilua)
 target_include_directories(obsidian SYSTEM PRIVATE libraries/miniz)
 target_include_directories(obsidian SYSTEM PRIVATE libraries/physfs/src)
 target_include_directories(obsidian SYSTEM PRIVATE libraries/steve/src)
+if(NOT CONSOLE_ONLY)
+  target_include_directories(obsidian SYSTEM PRIVATE libraries/sokol)
+  target_include_directories(obsidian SYSTEM PRIVATE libraries/imgui)
+endif()
 
 if(UNIX)
   if(NOT CONSOLE_ONLY
@@ -160,71 +155,36 @@ if(UNIX)
     if(NOT CONSOLE_ONLY)
       target_link_libraries(
         obsidian
-        PRIVATE fltk
-                fltk_images
-                miniz
-                physfs-static
-                steve
-                "-framework Cocoa"
+        PRIVATE "-framework Cocoa"
                 "-framework CoreGraphics"
                 "-framework CoreText"
                 "-framework QuartzCore"
       )
-    else()
-      target_link_libraries(
-        obsidian PRIVATE miniz physfs-static steve
-      )
     endif()
-  elseif(${CMAKE_SYSTEM} MATCHES "BSD")
-    if(NOT CONSOLE_ONLY)
-      target_link_libraries(
-        obsidian
-        PRIVATE fltk
-                fltk_images
-                miniz
-                physfs-static
-                steve
-      )
-    else()
-      target_link_libraries(
-        obsidian PRIVATE miniz physfs-static steve
-      )
-    endif()
-  else()
-    if(NOT CONSOLE_ONLY)
-      target_link_libraries(
-        obsidian
-        PRIVATE fltk
-                fltk_images
-                miniz
-                physfs-static
-                fontconfig
-                pthread
-                steve
-      )
-    else()
-      target_link_libraries(
-        obsidian
-        PRIVATE miniz
-                physfs-static
-                pthread
-                steve
-      )
-    endif()
-  endif()
-else()
-  if(NOT CONSOLE_ONLY)
-    target_link_libraries(
-      obsidian
-      PRIVATE fltk
-              fltk_images
-              miniz
-              physfs-static
-              steve
-    )
-  else()
     target_link_libraries(
       obsidian PRIVATE miniz physfs-static steve
     )
+  elseif(${CMAKE_SYSTEM} MATCHES "BSD")
+    target_link_libraries(
+      obsidian PRIVATE miniz physfs-static steve
+    )
+  else()
+    if(NOT CONSOLE_ONLY)
+      target_link_libraries(
+        obsidian
+        PRIVATE fontconfig
+      )
+    endif()
+    target_link_libraries(
+      obsidian
+      PRIVATE miniz
+              physfs-static
+              pthread
+              steve
+    )
   endif()
+else()
+  target_link_libraries(
+    obsidian PRIVATE miniz physfs-static steve
+  )
 endif()
