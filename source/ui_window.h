@@ -60,7 +60,7 @@ class UI_MainWin : public Fl_Double_Window
     UI_Clippy *clippy;
 
   public:
-             UI_MainWin(int W, int H, const char *title);
+    UI_MainWin(int W, int H, const char *title);
     virtual ~UI_MainWin();
 
     static void MenuBar();
