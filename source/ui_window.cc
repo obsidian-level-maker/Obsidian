@@ -129,14 +129,6 @@ void UI_MainWin::MenuBar()
 {
     if (auto _bar = UI::MainMenuBar())
     {
-        // menu_bar = new Fl_Menu_Bar(0, 0, W, KromulentHeight(20));
-        // menu_bar->box(box_style);
-        // menu_bar->textfont(font_style);
-        // menu_bar->textsize(font_scaling * .90);
-        // menu_bar->labelfont(font_style);
-        // menu_bar->labelsize(font_scaling * .90);
-        // menu_bar->selection_color(SELECTION);
-        // menu_bar->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP | FL_ALIGN_LEFT);
         ImGuiIO     &io = ImGui::GetIO();
         ImFontConfig conf;
         conf.SizePixels = font_scaling * .90;
