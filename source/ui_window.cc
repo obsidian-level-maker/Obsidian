@@ -131,8 +131,8 @@ void UI_MainWin::MenuBar()
     {
         ImGuiIO     &io = ImGui::GetIO();
         ImFontConfig conf;
-        conf.SizePixels = font_scaling * .90;
-        UI::PushFont(io.Fonts->AddFontDefault(&conf));
+        conf.SizePixels     = font_scaling * .90;
+        auto          _font = UI::PushFont(io.Fonts->AddFontDefault(&conf));
         UI::PushStyle style;
         style.Color(ImGuiCol_HeaderHovered, SELECTION);
         style.Color(ImGuiCol_Border, box_style);
