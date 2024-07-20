@@ -24,6 +24,8 @@
 #include <math.h>
 #include <stdint.h>
 
+#include <type_traits>
+
 constexpr const char *BLANKOUT =
     "                                                                                           "
     "                                                                                           "
@@ -37,48 +39,54 @@ constexpr double   OBSIDIAN_ANG_EPSILON  = (1.0 / 1024.0);
 constexpr double   OBSIDIAN_PI           = 3.14159265358979323846;
 
 // basic math
-template <typename A, typename B,
-          typename = std::enable_if_t<std::is_convertible_v<B, A>>>
-constexpr A OBSIDIAN_MAX(A a, B b) {
-    if (a > b) {
+template <typename A, typename B, typename = std::enable_if_t<std::is_convertible_v<B, A>>>
+constexpr A OBSIDIAN_MAX(A a, B b)
+{
+    if (a > b)
+    {
         return a;
     }
     return (A)b;
 }
 
-template <typename A, typename B,
-          typename = std::enable_if_t<std::is_convertible_v<B, A>>>
-constexpr A OBSIDIAN_MIN(A a, B b) {
-    if (a < b) {
+template <typename A, typename B, typename = std::enable_if_t<std::is_convertible_v<B, A>>>
+constexpr A OBSIDIAN_MIN(A a, B b)
+{
+    if (a < b)
+    {
         return a;
     }
     return (A)b;
 }
 
-template <typename T>
-constexpr T OBSIDIAN_ABS(T a) {
-    if (a < 0) {
+template <typename T> constexpr T OBSIDIAN_ABS(T a)
+{
+    if (a < 0)
+    {
         return -a;
     }
     return a;
 }
 
-template <typename T>
-constexpr int OBSIDIAN_I_ROUND(T x) {
-    if (x < 0) {
+template <typename T> constexpr int OBSIDIAN_I_ROUND(T x)
+{
+    if (x < 0)
+    {
         return x - 0.5;
     }
     return x + 0.5;
 }
 
 template <typename T, typename L, typename U,
-          typename = std::enable_if_t<std::conjunction_v<
-              std::is_convertible<L, T>, std::is_convertible<U, T>>>>
-constexpr T OBSIDIAN_CLAMP(L low, T x, U high) {
-    if (x < low) {
+          typename = std::enable_if_t<std::conjunction_v<std::is_convertible<L, T>, std::is_convertible<U, T>>>>
+constexpr T OBSIDIAN_CLAMP(L low, T x, U high)
+{
+    if (x < low)
+    {
         return (T)low;
     }
-    if (x > high) {
+    if (x > high)
+    {
         return (T)high;
     }
     return x;

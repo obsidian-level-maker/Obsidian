@@ -19,10 +19,6 @@
 //
 //----------------------------------------------------------------------
 
-#include <FL/Fl_Color_Chooser.H>
-#include <FL/Fl_Native_File_Chooser.H>
-#include <FL/Fl_Simple_Counter.H>
-
 #include <algorithm>
 
 #include "lib_argv.h"

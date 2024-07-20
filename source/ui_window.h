@@ -21,8 +21,6 @@
 
 #pragma once
 
-#include <FL/Fl_Menu_Bar.H>
-
 #include "ui_build.h"
 #include "ui_game.h"
 #include "ui_module.h"
@@ -33,12 +31,12 @@ extern int KF; // Kromulent Factor : -1 .. 3
 
 inline int KromulentWidth(int w)
 {
-  return ((w) + KF * (w) / (KF >= 0 ? 4 : 8));
+    return ((w) + KF * (w) / (KF >= 0 ? 4 : 8));
 }
 
 inline int KromulentHeight(int h)
 {
-  return ((h) + KF * (h) / (KF >= 0 ? 5 : 10));
+    return ((h) + KF * (h) / (KF >= 0 ? 5 : 10));
 }
 
 extern int small_font_size;
@@ -62,8 +60,10 @@ class UI_MainWin : public Fl_Double_Window
     UI_Clippy *clippy;
 
   public:
-    UI_MainWin(int W, int H, const char *title);
+             UI_MainWin(int W, int H, const char *title);
     virtual ~UI_MainWin();
+
+    static void MenuBar();
 
     static void CalcWindowSize(int *W, int *H);
 

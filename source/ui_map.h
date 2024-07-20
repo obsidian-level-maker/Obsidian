@@ -23,9 +23,6 @@
 
 #include <stdint.h>
 
-#include "FL/Fl_Box.H"
-#include "FL/Fl_Image.H"
-
 class UI_MiniMap : public Fl_Box
 {
   private:

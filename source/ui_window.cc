@@ -24,10 +24,7 @@
 #endif
 #include "m_trans.h"
 #include "main.h"
-
-#if (FL_MAJOR_VERSION != 1 || FL_MINOR_VERSION < 3)
-#error "Require FLTK version 1.3.0 or later"
-#endif
+#include "ui_imgui.h"
 
 static constexpr uint16_t BASE_WINDOW_W = 816;
 static constexpr uint16_t BASE_WINDOW_H = 512;
@@ -44,7 +41,7 @@ static void main_win_close_CB(Fl_Widget *w, void *data)
     main_action = MAIN_QUIT;
 }
 
-static void main_win_surprise_go_CB(Fl_Widget *w, void *data)
+static void main_win_surprise_go_CB()
 {
     for (int i = 0; i < main_win->mod_tabs->children(); i++)
     {
@@ -126,6 +123,72 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title) : Fl_Double_Window(W, H,
 //
 UI_MainWin::~UI_MainWin()
 {
+}
+
+void UI_MainWin::MenuBar()
+{
+    if (auto _bar = UI::MainMenuBar())
+    {
+        // menu_bar = new Fl_Menu_Bar(0, 0, W, KromulentHeight(20));
+        // menu_bar->box(box_style);
+        // menu_bar->textfont(font_style);
+        // menu_bar->textsize(font_scaling * .90);
+        // menu_bar->labelfont(font_style);
+        // menu_bar->labelsize(font_scaling * .90);
+        // menu_bar->selection_color(SELECTION);
+        // menu_bar->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP | FL_ALIGN_LEFT);
+        ImGuiIO     &io = ImGui::GetIO();
+        ImFontConfig conf;
+        conf.SizePixels = font_scaling * .90;
+        UI::PushFont(io.Fonts->AddFontDefault(&conf));
+        UI::PushStyle style;
+        style.Color(ImGuiCol_HeaderHovered, SELECTION);
+        style.Color(ImGuiCol_Border, box_style);
+        style.Var(ImGuiStyleVar_FramePadding, ImVec2(0.0, KromulentHeight(20) - conf.SizePixels));
+        // left-align
+        style.Var(ImGuiStyleVar_ButtonTextAlign, {0.0f, 0.5f});
+        if (auto _menu = UI::Menu(_("File")))
+        {
+            if (ImGui::MenuItem(_("Options")))
+            {
+                DLG_OptionsEditor();
+            }
+            if (ImGui::MenuItem(_("Theme")))
+            {
+                DLG_ThemeEditor();
+            }
+            if (ImGui::MenuItem(_("Set Seed")))
+            {
+                DLG_EditSeed();
+            }
+            if (ImGui::MenuItem(_("Config Manager")))
+            {
+                DLG_ManageConfig();
+            }
+        }
+        if (auto _menu = UI::Menu(_("Help")))
+        {
+            if (ImGui::MenuItem(_("About")))
+            {
+                DLG_AboutText();
+            }
+            if (ImGui::MenuItem(_("View Logs")))
+            {
+                DLG_ViewLogs();
+            }
+            if (ImGui::MenuItem(_("Glossary")))
+            {
+                DLG_ViewGlossary();
+            }
+        }
+        if (auto _menu = UI::Menu(_("Surprise Me")))
+        {
+            if (ImGui::MenuItem(_("Go")))
+            {
+                main_win_surprise_go_CB();
+            }
+        }
+    }
 }
 
 void UI_MainWin::CalcWindowSize(int *W, int *H)

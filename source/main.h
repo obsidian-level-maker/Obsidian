@@ -28,8 +28,11 @@
 #include <vector>
 
 #ifndef OBSIDIAN_CONSOLE_ONLY
+#include "imgui.h"
+#include "sokol_gfx.h"
 #include "ui_window.h"
 #endif
+
 #include "lib_util.h"
 #include "sys_debug.h"
 
@@ -114,14 +117,14 @@ extern uchar                                    gap_blue;
 extern Fl_Boxtype                               box_style;
 extern Fl_Boxtype                               button_style;
 extern Fl_Font                                  font_style;
-extern Fl_Color                                 FONT_COLOR;
-extern Fl_Color                                 FONT2_COLOR;
-extern Fl_Color                                 WINDOW_BG;
-extern Fl_Color                                 SELECTION;
-extern Fl_Color                                 GAP_COLOR;
-extern Fl_Color                                 GRADIENT_COLOR;
-extern Fl_Color                                 BUTTON_COLOR;
-extern Fl_Color                                 BORDER_COLOR;
+extern ImVec4                                   FONT_COLOR;
+extern ImVec4                                   FONT2_COLOR;
+extern ImVec4                                   WINDOW_BG;
+extern ImVec4                                   SELECTION;
+extern ImVec4                                   GAP_COLOR;
+extern ImVec4                                   GRADIENT_COLOR;
+extern ImVec4                                   BUTTON_COLOR;
+extern ImVec4                                   BORDER_COLOR;
 extern int                                      color_scheme;
 extern int                                      font_theme;
 extern int                                      box_theme;
@@ -174,7 +177,7 @@ extern std::string selected_lang;
 
 // Clippy/program menu stuff
 #ifndef OBSIDIAN_CONSOLE_ONLY
-extern Fl_Pixmap *clippy;
+extern sg_image clippy;
 
 void DLG_AboutText();
 void DLG_OptionsEditor();

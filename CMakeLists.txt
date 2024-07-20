@@ -10,6 +10,9 @@ project(
   VERSION 0.1.0
 )
 
+set(USE_FREETYPE ON CACHE BOOL "Use FreeType library (if available) for ImGui glyph rendering")
+add_subdirectory(libraries/imgui EXCLUDE_FROM_ALL)
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
@@ -131,7 +134,7 @@ target_include_directories(obsidian SYSTEM PRIVATE libraries/physfs/src)
 target_include_directories(obsidian SYSTEM PRIVATE libraries/steve/src)
 if(NOT CONSOLE_ONLY)
   target_include_directories(obsidian SYSTEM PRIVATE libraries/sokol)
-  target_include_directories(obsidian SYSTEM PRIVATE libraries/imgui)
+  target_link_libraries(obsidian PRIVATE imgui)
   target_include_directories(obsidian SYSTEM PRIVATE libraries/stb)
 endif()
 

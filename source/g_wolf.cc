@@ -19,7 +19,7 @@
 //------------------------------------------------------------------------
 
 #ifndef OBSIDIAN_CONSOLE_ONLY
-#include <FL/Fl_Native_File_Chooser.H>
+// TODO needed?
 #endif
 #include "lib_util.h"
 #include "m_lua.h"
