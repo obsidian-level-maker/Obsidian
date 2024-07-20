@@ -10,8 +10,14 @@ project(
   VERSION 0.1.0
 )
 
+# Project-level options
+set(CONSOLE_ONLY OFF CACHE BOOL "Disable all GUI features")
 set(USE_FREETYPE ON CACHE BOOL "Use FreeType library (if available) for ImGui glyph rendering")
-add_subdirectory(libraries/imgui EXCLUDE_FROM_ALL)
+
+if(NOT CONSOLE_ONLY)
+  add_subdirectory(libraries/imgui EXCLUDE_FROM_ALL)
+  add_subdirectory(libraries/SDL2 EXCLUDE_FROM_ALL)
+endif()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -34,16 +40,9 @@ if(MSVC)
   math(EXPR COMPILE_CORES "${LOGICAL_CORES} - 1")
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MD /MP${COMPILE_CORES}")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MD /EHa /MP${COMPILE_CORES}")
-  if(NOT CONSOLE_ONLY)
-    set(CMAKE_EXE_LINKER_FLAGS "/SUBSYSTEM:WINDOWS")
-  endif()
 endif()
 if(MSYS OR MINGW)
-  if(NOT CONSOLE_ONLY)
-    set(CMAKE_EXE_LINKER_FLAGS "-static -mwindows")
-  else()
-    set(CMAKE_EXE_LINKER_FLAGS "-static")
-  endif()
+  set(CMAKE_EXE_LINKER_FLAGS "-static")
 endif()
 if(APPLE OR ${CMAKE_SYSTEM} MATCHES "BSD")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -I /usr/local/include")
@@ -121,8 +120,11 @@ if (WIN32)
   )
 endif()
 
+if(NOT CONSOLE_ONLY)
+  set(WIN32_FLAG "WIN32")
+endif()
 add_executable(
-  obsidian
+  obsidian ${WIN32_FLAG}
   ${OBSIDIAN_SOURCE_FILES}
 )
 
@@ -133,8 +135,14 @@ target_include_directories(obsidian SYSTEM PRIVATE libraries/miniz)
 target_include_directories(obsidian SYSTEM PRIVATE libraries/physfs/src)
 target_include_directories(obsidian SYSTEM PRIVATE libraries/steve/src)
 if(NOT CONSOLE_ONLY)
+  target_compile_definitions(obsidian PRIVATE NOMINMAX)
   target_include_directories(obsidian SYSTEM PRIVATE libraries/sokol)
   target_link_libraries(obsidian PRIVATE imgui)
+  target_link_libraries(obsidian PRIVATE SDL2::SDL2-static)
+  if(WIN32_CONSOLE)
+    # use main() instead of WinMain() on Windows
+    target_compile_definitions(obsidian PRIVATE SDL_MAIN_HANDLED)
+  endif()
   target_include_directories(obsidian SYSTEM PRIVATE libraries/stb)
 endif()
 

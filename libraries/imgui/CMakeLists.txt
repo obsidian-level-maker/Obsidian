@@ -16,6 +16,11 @@ add_library(
 target_include_directories(
     imgui SYSTEM PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}"
 )
+if(NOT CONSOLE_ONLY)
+    target_sources(
+       imgui PRIVATE imgui_impl_sdlrenderer2.cpp
+    )
+endif()
 if(USE_FREETYPE)
     find_package(Freetype)
     if (Freetype_FOUND)

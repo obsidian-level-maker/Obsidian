@@ -40,26 +40,12 @@
 #include "physfs.h"
 #include "sys_xoshiro.h"
 #ifndef OBSIDIAN_CONSOLE_ONLY
-#define SOKOL_IMPL
-#if defined(_WIN32)
-#define SOKOL_D3D11
-#elif defined(__EMSCRIPTEN__)
-#define SOKOL_GLES3
-#elif defined(__APPLE__)
-#define SOKOL_METAL
-#else
-#define SOKOL_GLCORE33
-#endif
 #include "imgui.h"
 // header-order-preserving comment
 #include "imfilebrowser.h"
-#include "sokol_app.h"
-#include "sokol_gfx.h"
-#include "sokol_glue.h"
-#include "sokol_log.h"
-#define SOKOL_IMGUI_IMPL
-#include "sokol_imgui.h"
+#include "imgui_impl_sdlrenderer2.h"
 #define STB_IMAGE_IMPLEMENTATION
+#include "SDL.h"
 #include "stb_image.h"
 #include "ui_boxes.h"
 #include "ui_window.h"
@@ -148,10 +134,12 @@ int                                      window_scaling = 0;
 int                                      font_scaling   = 18;
 int                                      num_fonts      = 0;
 std::vector<std::pair<std::string, int>> font_menu_items;
-static int                               old_x = 0;
-static int                               old_y = 0;
-static int                               old_w = 0;
-static int                               old_h = 0;
+SDL_Window                              *sdl_window   = nullptr;
+SDL_Renderer                            *sdl_renderer = nullptr;
+static int                               old_x        = 0;
+static int                               old_y        = 0;
+static int                               old_w        = 0;
+static int                               old_h        = 0;
 static std::string                       old_seed;
 static std::string                       old_name;
 static uint8_t                          *old_pixels;
@@ -181,7 +169,7 @@ std::string string_seed;
 
 std::string selected_lang = "en"; // Have a default just in case the translation stuff borks
 
-game_interface_c *game_object = NULL;
+game_interface_c *game_object = nullptr;
 
 extern bool ExtractPresetData(FILE *fp, std::string &buf);
 
@@ -1285,794 +1273,6 @@ skiprest:;
 
 /* ----- main program ----------------------------- */
 
-#if !defined(OBSIDIAN_CONSOLE_ONLY)
-namespace
-{
-
-void OnSoftRestart()
-{
-    Main_CalcNewSeed();
-
-    std::string load_file;
-
-    //    TX_TestSynth(next_rand_seed); - Fractal testing stuff
-
-    if (main_action != MAIN_SOFT_RESTART)
-    {
-        VFS_InitAddons();
-
-        if (const int load_arg = argv::Find('l', "load"); load_arg >= 0)
-        {
-            if (load_arg + 1 >= argv::list.size() || argv::IsOption(load_arg + 1))
-            {
-                FatalError("OBSIDIAN ERROR: missing filename for --load\n");
-                exit(EXIT_FAILURE);
-            }
-
-            load_file = argv::list[load_arg + 1];
-        }
-    }
-
-    if (batch_mode)
-    {
-        VFS_ParseCommandLine();
-
-        Script_Open();
-
-        // inform Lua code about batch mode (the value doesn't matter)
-        ob_set_config("batch", "yes");
-
-        if (mature_word_lists)
-        {
-            ob_set_config("mature_words", "yes");
-        }
-        else
-        {
-            ob_set_config("mature_words", "no");
-        }
-
-        Module_Defaults();
-
-        if (argv::Find('p', "printref") >= 0)
-        {
-            ob_print_reference();
-            RefClose();
-#if defined _WIN32
-            printf("\nClose window when finished...");
-
-            do
-            {
-            } while (true);
-#endif
-            Main::Shutdown(false);
-            return 0;
-        }
-
-        if (argv::Find(0, "printref-json") >= 0)
-        {
-            ob_print_reference_json();
-#if defined _WIN32 && !defined OBSIDIAN_CONSOLE_ONLY
-            printf("\nClose window when finished...");
-
-            do
-            {
-            } while (true);
-#endif
-            Main::Shutdown(false);
-            return 0;
-        }
-
-        if (!load_file.empty())
-        {
-            if (!Cookie_Load(load_file))
-            {
-                FatalError(_("No such config file: %s\n"), load_file.c_str());
-            }
-        }
-        else
-        {
-            if (!FileExists(config_file))
-            {
-                Cookie_Save(config_file);
-            }
-            if (!Cookie_Load(config_file))
-            {
-                FatalError(_("No such config file: %s\n"), config_file.c_str());
-            }
-        }
-
-        Cookie_ParseArguments();
-
-        if (argv::Find('u', "update") >= 0)
-        {
-            switch (update_kv.section)
-            {
-            case 'c':
-                ob_set_config(update_kv.key, update_kv.value);
-                break;
-            case 'o':
-                Parse_Option(update_kv.key, update_kv.value);
-                break;
-            }
-            Options_Save(options_file);
-            Cookie_Save(config_file);
-            Main::Shutdown(false);
-            return 0;
-        }
-
-        if (batch_output_file.empty())
-        {
-            FatalError("\nNo output filename given! Did you forget the --batch "
-                       "parameter?\n");
-            LogPrint("\nNo output filename given! Did you forget the --batch "
-                     "parameter?\n");
-
-            Main::Shutdown(false);
-#if defined _WIN32 && !defined OBSIDIAN_CONSOLE_ONLY
-            printf("\nClose window when finished...");
-            do
-            {
-            } while (true);
-#endif
-            return EXIT_FAILURE;
-        }
-
-        Main_SetSeed();
-        if (!Build_Cool_Shit())
-        {
-            FatalError("FAILED!\n");
-            LogPrint("FAILED!\n");
-
-            Main::Shutdown(false);
-#if defined _WIN32 && !defined OBSIDIAN_CONSOLE_ONLY
-            printf("\nClose window when finished...");
-            do
-            {
-            } while (true);
-#endif
-            return EXIT_FAILURE;
-        }
-        Main::Shutdown(false);
-        return 0;
-    }
-
-    /* ---- normal GUI mode ---- */
-
-    std::string main_title =
-        StringFormat("%s %s \"%s\"", OBSIDIAN_TITLE.c_str(), OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str());
-
-    if (main_action != MAIN_SOFT_RESTART)
-    {
-        // this not only finds PK3 files, but also activates the ones specified
-        // in OPTIONS.txt
-        VFS_ScanForAddons();
-
-        VFS_ParseCommandLine();
-
-        VFS_ScanForPresets();
-
-// create the main window
-#ifndef OBSIDIAN_CONSOLE_ONLY
-        if (clippy.id == 0)
-        {
-            int           width;
-            int           height;
-            stbi_uc      *data = stbi_load_from_memory(clippy_png, sizeof(clippy_png), &width, &height, nullptr, 4);
-            sg_image_desc desc = {};
-            desc.width         = width;
-            desc.height        = height;
-            desc.data          = {{{data, static_cast<size_t>(width * height * 4)}}};
-            clippy             = sg_make_image(desc);
-            stbi_image_free(data);
-        }
-
-        int main_w, main_h;
-        UI_MainWin::CalcWindowSize(&main_w, &main_h);
-
-        main_win = new UI_MainWin(main_w, main_h, main_title.c_str());
-#endif
-    }
-
-    Script_Open();
-
-    ob_set_config("locale", selected_lang.c_str());
-
-    if (mature_word_lists)
-    {
-        ob_set_config("mature_words", "yes");
-    }
-    else
-    {
-        ob_set_config("mature_words", "no");
-    }
-
-    // enable certain modules by default
-    Module_Defaults();
-
-    // load config after creating window (will set widget values)
-    if (!Cookie_Load(config_file))
-    {
-        LogPrint("Missing config file -- using defaults.\n\n");
-    }
-
-    if (!load_file.empty())
-    {
-        if (!Cookie_Load(load_file))
-        {
-            FatalError(_("No such config file: %s\n"), load_file.c_str());
-        }
-    }
-
-    Cookie_ParseArguments();
-
-#ifndef OBSIDIAN_CONSOLE_ONLY
-    if (main_win)
-    {
-        if (StringCompare(main_win->game_box->engine->GetID(), "idtech_0") == 0)
-        {
-            main_win->game_box->theme->deactivate();
-        }
-        else
-        {
-            main_win->game_box->theme->activate();
-        }
-    }
-#endif
-
-    if (main_action != MAIN_SOFT_RESTART)
-    {
-#ifndef OBSIDIAN_CONSOLE_ONLY
-        // Have to add these after reading existing settings - Dasho
-        if (main_win)
-        {
-            main_win->menu_bar->add(_("Surprise Me/Preserve Old Config"), nullptr, main_win_surprise_config_CB, nullptr,
-                                    FL_MENU_TOGGLE | (preserve_old_config ? FL_MENU_VALUE : 0));
-            main_win->menu_bar->add(_("Surprise Me/Randomize Architecture"), nullptr, main_win_architecture_config_CB,
-                                    nullptr, FL_MENU_TOGGLE | (randomize_architecture ? FL_MENU_VALUE : 0));
-            main_win->menu_bar->add(_("Surprise Me/Randomize Combat"), nullptr, main_win_monsters_config_CB, nullptr,
-                                    FL_MENU_TOGGLE | (randomize_monsters ? FL_MENU_VALUE : 0));
-            main_win->menu_bar->add(_("Surprise Me/Randomize Pickups"), nullptr, main_win_pickups_config_CB, nullptr,
-                                    FL_MENU_TOGGLE | (randomize_pickups ? FL_MENU_VALUE : 0));
-            main_win->menu_bar->add(_("Surprise Me/Randomize Other"), nullptr, main_win_misc_config_CB, nullptr,
-                                    FL_MENU_TOGGLE | (randomize_misc ? FL_MENU_VALUE : 0));
-            if (all_addons.size() == 0)
-            {
-                main_win->menu_bar->add(_("Addons/No folders or *.oaf files"), nullptr, nullptr, nullptr,
-                                        FL_MENU_INACTIVE);
-                main_win->menu_bar->add(_("Addons/found in the \\/addons directory!"), nullptr, nullptr, nullptr,
-                                        FL_MENU_INACTIVE);
-            }
-            else
-            {
-                main_win->menu_bar->add(_("Addons/Restart and Apply Changes"), nullptr, main_win_apply_addon_CB,
-                                        nullptr, 0);
-                for (int i = 0; i < all_addons.size(); i++)
-                {
-                    std::string addon_entry = _("Addons/");
-                    addon_entry.append(all_addons[i].name);
-                    main_win->menu_bar->add(addon_entry.c_str(), nullptr, main_win_addon_CB, (void *)&all_addons[i],
-                                            FL_MENU_TOGGLE | (all_addons[i].enabled ? FL_MENU_VALUE : 0));
-                }
-            }
-            if (all_presets.size() == 0)
-            {
-                main_win->menu_bar->add(_("Presets/No *.txt preset files"), nullptr, nullptr, nullptr,
-                                        FL_MENU_INACTIVE);
-                main_win->menu_bar->add(_("Presets/found in the \\/presets directory!"), nullptr, nullptr, nullptr,
-                                        FL_MENU_INACTIVE);
-            }
-            else
-            {
-                main_win->menu_bar->add(_("Presets/Note: Selecting a Preset will immediately apply it!"), nullptr,
-                                        nullptr, nullptr, FL_MENU_INACTIVE);
-                for (int i = 0; i < all_presets.size(); i++)
-                {
-                    std::string preset_entry = _("Presets/");
-                    preset_entry.append(GetStem(all_presets[i]));
-                    main_win->menu_bar->add(preset_entry.c_str(), nullptr, main_win_preset_CB, (void *)&all_presets[i],
-                                            0);
-                }
-            }
-            main_win->menu_bar->add(_("Summon Clippy"), nullptr, main_win_clippy_CB);
-        }
-
-#ifdef _WIN32
-        main_win->icon((const void *)LoadIcon(fl_display, MAKEINTRESOURCE(1)));
-#else
-#ifdef UNIX
-        Fl_Pixmap    program_icon(obsidian_icon);
-        Fl_RGB_Image rgb_icon(&program_icon, FL_BLACK);
-        UI_MainWin::default_icon(&rgb_icon);
-#endif
-#endif
-
-        // show window (pass some dummy arguments)
-        {
-            char *fake_argv[2];
-            fake_argv[0] = strdup("Obsidian.exe");
-            fake_argv[1] = NULL;
-            main_win->show(1 /* argc */, fake_argv);
-            if (old_w > 0 && old_h > 0)
-            {
-                main_win->resize(old_x, old_y, old_w, old_h);
-            }
-        }
-
-#ifdef _WIN32 // Populate structure for taskbar/window flash. Must be done after
-              // main_win->show() function - Dasho
-        if (!blinker)
-        {
-            blinker            = new FLASHWINFO;
-            blinker->cbSize    = sizeof(FLASHWINFO);
-            blinker->hwnd      = fl_xid(main_win);
-            blinker->dwFlags   = FLASHW_ALL | FLASHW_TIMERNOFG;
-            blinker->dwTimeout = 0;
-            blinker->uCount    = 0;
-        }
-        else
-        {
-            blinker->hwnd = fl_xid(main_win);
-            if (!old_seed.empty() && !old_name.empty())
-                Main::Blinker();
-        }
-#endif
-
-        // kill the stupid bright background of the "plastic" scheme
-        if (widget_theme == 3)
-        {
-            delete Fl::scheme_bg_;
-            Fl::scheme_bg_ = NULL;
-
-            main_win->image(NULL);
-        }
-
-        Fl::add_handler(Main_key_handler);
-#endif
-    }
-
-    switch (filename_prefix)
-    {
-    case 0:
-        ob_set_config("filename_prefix", "datetime");
-        break;
-    case 1:
-        ob_set_config("filename_prefix", "numlevels");
-        break;
-    case 2:
-        ob_set_config("filename_prefix", "game");
-        break;
-    case 3:
-        ob_set_config("filename_prefix", "port");
-        break;
-    case 4:
-        ob_set_config("filename_prefix", "theme");
-        break;
-    case 5:
-        ob_set_config("filename_prefix", "version");
-        break;
-    case 6:
-        ob_set_config("filename_prefix", "custom");
-        break;
-    case 7:
-        ob_set_config("filename_prefix", "none");
-        break;
-    default:
-        ob_set_config("filename_prefix", "datetime");
-        break;
-    }
-
-    if (main_action != MAIN_SOFT_RESTART)
-    {
-#ifndef OBSIDIAN_CONSOLE_ONLY
-        // draw an empty map (must be done after main window is
-        // shown() because that is when FLTK finalises the colors).
-        main_win->build_box->mini_map->EmptyMap();
-
-        if (!old_seed.empty())
-        {
-            main_win->build_box->seed_disp->copy_label(StringFormat("%s %s", _("Seed:"), old_seed.c_str()).c_str());
-            old_seed.clear();
-        }
-
-        if (!old_name.empty())
-        {
-            main_win->build_box->name_disp->copy_label(old_name.c_str());
-            old_name.clear();
-        }
-
-        if (old_pixels)
-        {
-            if (main_win->build_box->mini_map->pixels)
-            {
-                delete[] main_win->build_box->mini_map->pixels;
-            }
-            int map_size = main_win->build_box->mini_map->map_W * main_win->build_box->mini_map->map_H * 3;
-            main_win->build_box->mini_map->pixels = new uint8_t[map_size];
-            memcpy(main_win->build_box->mini_map->pixels, old_pixels, map_size);
-            delete[] old_pixels;
-            old_pixels = NULL;
-            main_win->build_box->mini_map->MapFinish();
-        }
-#endif
-    }
-
-    main_action = MAIN_NONE;
-
-    try
-    {
-        // run the GUI until the user quits
-        for (;;)
-        {
-#ifndef OBSIDIAN_CONSOLE_ONLY
-            Fl::wait(0.2);
-#endif
-
-            if (main_action == MAIN_QUIT || main_action == MAIN_HARD_RESTART || main_action == MAIN_SOFT_RESTART)
-            {
-                break;
-            }
-
-            if (main_action == MAIN_BUILD)
-            {
-
-                main_action = 0;
-
-                Main_SetSeed();
-
-                // save config in case everything blows up
-                if (did_randomize)
-                {
-                    if (!preserve_old_config)
-                    {
-                        Cookie_Save(config_file);
-                    }
-                }
-                else
-                {
-                    Cookie_Save(config_file);
-                }
-
-                bool result = Build_Cool_Shit();
-
-                did_specify_seed = false;
-
-#ifndef OBSIDIAN_CONSOLE_ONLY
-                if (result)
-                {
-                    old_seed = string_seed.empty() ? NumToString(next_rand_seed) : string_seed;
-                    if (main_win->build_box->name_disp->label())
-                    {
-                        old_name = main_win->build_box->name_disp->label();
-                    }
-                    if (main_win->build_box->mini_map->pixels)
-                    {
-                        int map_size = main_win->build_box->mini_map->map_W * main_win->build_box->mini_map->map_H * 3;
-                        old_pixels   = new uint8_t[map_size];
-                        memcpy(old_pixels, main_win->build_box->mini_map->pixels, map_size);
-                    }
-                }
-                else
-                {
-                    old_seed.clear();
-                    old_name.clear();
-                }
-                main_win->build_box->alt_disp->label("");
-#endif
-                // regardless of success or fail, compute a new seed
-                Main_CalcNewSeed();
-
-                main_action = MAIN_SOFT_RESTART;
-            }
-        }
-    }
-    catch (std::exception &e)
-    {
-        FatalError(_("An exception occurred: \n%s"), e.what());
-    }
-
-    if (main_action != MAIN_SOFT_RESTART)
-    {
-        LogPrint("\nQuit......\n\n");
-    }
-#ifndef OBSIDIAN_CONSOLE_ONLY
-    Theme_Options_Save(theme_file);
-#endif
-    Options_Save(options_file);
-
-    if (main_action == MAIN_HARD_RESTART || main_action == MAIN_SOFT_RESTART)
-    {
-#ifndef OBSIDIAN_CONSOLE_ONLY
-        if (main_win)
-        {
-            // on fatal error we cannot risk calling into the Lua runtime
-            // (it's state may be compromised by a script error).
-            if (!config_file.empty() && !preserve_old_config)
-            {
-                if (did_randomize)
-                {
-                    if (!preserve_old_config)
-                    {
-                        Cookie_Save(config_file);
-                    }
-                }
-                else
-                {
-                    Cookie_Save(config_file);
-                }
-            }
-            if (main_action == MAIN_HARD_RESTART)
-            {
-                old_x = main_win->x();
-                old_y = main_win->y();
-                old_w = main_win->w();
-                old_h = main_win->h();
-                delete main_win;
-                main_win = nullptr;
-            }
-        }
-#endif
-        Script_Close();
-        if (main_action == MAIN_SOFT_RESTART)
-        {
-            goto softrestart;
-        }
-        if (main_action == MAIN_HARD_RESTART)
-        {
-            LogClose();
-            PHYSFS_deinit();
-            goto hardrestart;
-        }
-    }
-
-    Main::Shutdown(false);
-
-    return 0;
-}
-
-void OnHardRestart()
-{
-    if (!PHYSFS_init(argv::list[0].c_str()))
-    {
-        FatalError("Failed to init PhysFS:\n%s\n", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
-    }
-
-#ifdef OBSIDIAN_CONSOLE_ONLY
-    batch_mode = true;
-#endif
-
-    int batch_arg = argv::Find('b', "batch");
-    if (batch_arg >= 0)
-    {
-        if (batch_arg + 1 >= argv::list.size() || argv::IsOption(batch_arg + 1))
-        {
-            FatalError("OBSIDIAN ERROR: missing filename for --batch\n");
-            exit(EXIT_FAILURE);
-        }
-
-        batch_mode        = true;
-        batch_output_file = argv::list[batch_arg + 1];
-#if defined _WIN32 && !defined OBSIDIAN_CONSOLE_ONLY
-        if (AllocConsole())
-        {
-            freopen("CONOUT$", "r", stdin);
-            freopen("CONOUT$", "w", stdout);
-            freopen("CONOUT$", "w", stderr);
-        }
-#endif
-    }
-
-    if (argv::Find('p', "printref") >= 0)
-    {
-        batch_mode = true;
-#if defined _WIN32 && !defined OBSIDIAN_CONSOLE_ONLY
-        if (AllocConsole())
-        {
-            freopen("CONOUT$", "r", stdin);
-            freopen("CONOUT$", "w", stdout);
-            freopen("CONOUT$", "w", stderr);
-        }
-#endif
-    }
-
-    if (int update_arg = argv::Find('u', "update"); update_arg >= 0)
-    {
-        batch_mode = true;
-        if (update_arg + 3 >= argv::list.size() || argv::IsOption(update_arg + 1) || argv::IsOption(update_arg + 2) ||
-            argv::IsOption(update_arg + 3))
-        {
-            FatalError("OBSIDIAN ERROR: missing one or more args for --update "
-                       "<section> <key> <value>\n");
-            exit(EXIT_FAILURE);
-        }
-        if (argv::list[update_arg + 1].length() > 1)
-        {
-            FatalError("OBSIDIAN ERROR: section name must be one character\n");
-            exit(EXIT_FAILURE);
-        }
-        char section = argv::list[update_arg + 1][0];
-        if (section != 'c' && section != 'o')
-        {
-            FatalError("OBSIDIAN ERROR: section name must be 'c' or 'o'\n");
-            exit(EXIT_FAILURE);
-        }
-        update_kv.section = section;
-        update_kv.key     = argv::list[update_arg + 2];
-        update_kv.value   = argv::list[update_arg + 3];
-    }
-
-    if (argv::Find(0, "printref-json") >= 0)
-    {
-        batch_mode = true;
-#if defined _WIN32 && !defined OBSIDIAN_CONSOLE_ONLY
-        if (AllocConsole())
-        {
-            freopen("CONOUT$", "r", stdin);
-            freopen("CONOUT$", "w", stdout);
-            freopen("CONOUT$", "w", stderr);
-        }
-#endif
-    }
-
-    Determine_WorkingPath();
-    Determine_InstallDir();
-    Trans_Init();
-    Determine_ConfigFile();
-    Determine_OptionsFile();
-#ifndef OBSIDIAN_CONSOLE_ONLY
-    Determine_ThemeFile();
-#endif
-    Determine_LoggingFile();
-    Determine_ReferenceFile();
-
-    Options_Load(options_file);
-
-    Options_ParseArguments();
-
-    LogInit(logging_file);
-
-    if (argv::Find('p', "printref") >= 0)
-    {
-        RefInit(reference_file);
-    }
-
-    // accept -t and --terminal for backwards compatibility
-    if (argv::Find('v', "verbose") >= 0 || argv::Find('t', "terminal") >= 0)
-    {
-        LogEnableTerminal(true);
-    }
-
-    LogPrint("\n");
-    LogPrint("********************************************************\n");
-    LogPrint("** %s %s \"%s\" **\n", OBSIDIAN_TITLE.c_str(), OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str());
-    LogPrint("** Build %s **\n", OBSIDIAN_VERSION);
-    LogPrint("********************************************************\n");
-    LogPrint("\n");
-
-#ifndef OBSIDIAN_CONSOLE_ONLY
-    LogPrint("Library versions: FLTK %d.%d.%d\n\n", FL_MAJOR_VERSION, FL_MINOR_VERSION, FL_PATCH_VERSION);
-#endif
-
-    LogPrint("home_dir: %s\n", home_dir.c_str());
-    LogPrint("install_dir: %s\n", install_dir.c_str());
-    LogPrint("config_file: %s\n\n", config_file.c_str());
-
-    if (!batch_mode)
-    {
-#ifndef OBSIDIAN_CONSOLE_ONLY
-        Theme_Options_Load(theme_file);
-#endif
-        Trans_SetLanguage();
-        OBSIDIAN_TITLE     = _("OBSIDIAN Level Maker");
-        OBSIDIAN_CODE_NAME = _("Unstable");
-#ifndef OBSIDIAN_CONSOLE_ONLY
-        Main::SetupFLTK();
-#endif
-    }
-
-    if (argv::Find('d', "debug") >= 0)
-    {
-        debug_messages = true;
-    }
-    // Grab current numeric locale
-    numeric_locale = setlocale(LC_NUMERIC, NULL);
-
-    LogEnableDebug(debug_messages);
-
-    OnSoftRestart();
-}
-
-void Init()
-{
-    sg_desc desc     = {};
-    desc.environment = sglue_environment();
-    desc.logger.func = slog_func;
-    sg_setup(desc);
-
-    simgui_desc_t simgui_desc = {};
-    simgui_desc.logger.func   = slog_func;
-    simgui_setup(simgui_desc);
-
-    if (argv::Find('?', nullptr) >= 0 || argv::Find('h', "help") >= 0)
-    {
-#if defined _WIN32 && !defined OBSIDIAN_CONSOLE_ONLY
-        if (AllocConsole())
-        {
-            freopen("CONOUT$", "r", stdin);
-            freopen("CONOUT$", "w", stdout);
-            freopen("CONOUT$", "w", stderr);
-        }
-#endif
-        ShowInfo();
-#if defined _WIN32 && !defined OBSIDIAN_CONSOLE_ONLY
-        printf("\nClose window when finished...");
-        do
-        {
-        } while (true);
-#endif
-        exit(EXIT_SUCCESS);
-    }
-    else if (argv::Find(0, "version") >= 0)
-    {
-#if defined _WIN32 && !defined OBSIDIAN_CONSOLE_ONLY
-        if (AllocConsole())
-        {
-            freopen("CONOUT$", "r", stdin);
-            freopen("CONOUT$", "w", stdout);
-            freopen("CONOUT$", "w", stderr);
-        }
-#endif
-        ShowVersion();
-#if defined _WIN32 && !defined OBSIDIAN_CONSOLE_ONLY
-        printf("\nClose window when finished...");
-        do
-        {
-        } while (true);
-
-#endif
-        exit(EXIT_SUCCESS);
-    }
-
-    OnHardRestart();
-}
-
-sg_pass_action pass_action = {};
-
-void Frame()
-{
-    int width  = sapp_width();
-    int height = sapp_height();
-    simgui_new_frame({width, height, sapp_frame_duration(), sapp_dpi_scale()});
-
-    sg_pass pass   = {};
-    pass.action    = pass_action;
-    pass.swapchain = sglue_swapchain();
-    sg_begin_pass(pass);
-    simgui_render();
-    sg_end_pass();
-    sg_commit();
-}
-
-} // namespace
-
-sapp_desc sokol_main(int argc, char **argv)
-{
-    // initialise argument parser (skipping program name)
-
-    // these flags take at least one argument
-    argv::short_flags.emplace('b');
-    argv::short_flags.emplace('a');
-    argv::short_flags.emplace('l');
-    argv::short_flags.emplace('u');
-
-    // parse the flags
-    argv::Init(argc, argv);
-
-    sapp_desc desc = {};
-    desc.init_cb   = Init;
-    desc.frame_cb  = Frame;
-    return desc;
-}
-#else
 int main(int argc, char **argv)
 {
     // initialise argument parser (skipping program name)
@@ -2246,7 +1446,33 @@ hardrestart:;
     LogPrint("\n");
 
 #ifndef OBSIDIAN_CONSOLE_ONLY
-    LogPrint("Library versions: FLTK %d.%d.%d\n\n", FL_MAJOR_VERSION, FL_MINOR_VERSION, FL_PATCH_VERSION);
+    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+    {
+        FatalError("Failed to init SDL:\n%s\n", SDL_GetError());
+    }
+    LogPrint("Library versions: SDL %d.%d.%d\n\n", SDL_MAJOR_VERSION, SDL_MINOR_VERSION, SDL_PATCHLEVEL);
+    int w_width, w_height;
+    UI_MainWin::CalcWindowSize(&w_width, &w_height);
+    if (sdl_window = SDL_CreateWindow(OBSIDIAN_TITLE.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, w_width,
+                                      w_height, SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
+        sdl_window == nullptr)
+    {
+        FatalError("Failed to create window:\n%s\n", SDL_GetError());
+    }
+    if (sdl_renderer = SDL_CreateRenderer(sdl_window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_TARGETTEXTURE);
+        sdl_renderer == nullptr)
+    {
+        FatalError("Failed to create renderer:\n%s\n", SDL_GetError());
+    }
+    // adjust for DPI
+    // https://wiki.libsdl.org/SDL2/SDL_GetDisplayDPI#remarks
+    int logical_width;
+    SDL_GetWindowSize(sdl_window, &logical_width, nullptr);
+    int physical_width;
+    SDL_GetRendererOutputSize(sdl_renderer, &physical_width, nullptr);
+    double dpi_scale = static_cast<double>(physical_width) / logical_width;
+    SDL_SetWindowSize(sdl_window, w_width / dpi_scale, w_height / dpi_scale);
+    ImGui_ImplSDLRenderer2_Init(sdl_renderer);
 #endif
 
     LogPrint("home_dir: %s\n", home_dir.c_str());
@@ -2439,18 +1665,15 @@ softrestart:;
 
 // create the main window
 #ifndef OBSIDIAN_CONSOLE_ONLY
-        fl_register_images(); // Needed for Unix window icon and Clippy
-
         if (!clippy)
         {
-            stbi_uc *data = stbi_load_from_memory(clippy_png, sizeof(clippy_png), nullptr, nullptr, nullptr, 4);
-            clippy        = new Fl_Pixmap(clippy_xpm);
+            int      clippy_w, clippy_h;
+            stbi_uc *data = stbi_load_from_memory(clippy_png, sizeof(clippy_png), &clippy_w, &clippy_h, nullptr, 4);
+            clippy =
+                SDL_CreateTexture(sdl_renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STATIC, clippy_w, clippy_h);
+            SDL_UpdateTexture(clippy, nullptr, data, clippy_w * 4);
+            stbi_image_free(data);
         }
-
-        int main_w, main_h;
-        UI_MainWin::CalcWindowSize(&main_w, &main_h);
-
-        main_win = new UI_MainWin(main_w, main_h, main_title.c_str());
 #endif
     }
 
@@ -2557,15 +1780,11 @@ softrestart:;
             main_win->menu_bar->add(_("Summon Clippy"), nullptr, main_win_clippy_CB);
         }
 
-#ifdef _WIN32
-        main_win->icon((const void *)LoadIcon(fl_display, MAKEINTRESOURCE(1)));
-#else
-#ifdef UNIX
-        Fl_Pixmap    program_icon(obsidian_icon);
-        Fl_RGB_Image rgb_icon(&program_icon, FL_BLACK);
-        UI_MainWin::default_icon(&rgb_icon);
-#endif
-#endif
+        int      icon_w, icon_h;
+        stbi_uc *icon_data = stbi_load_from_memory(obsidian_png, sizeof(obsidian_png), &icon_w, &icon_h, nullptr, 4);
+        SDL_Surface *icon =
+            SDL_CreateRGBSurfaceWithFormatFrom(icon_data, icon_w, icon_h, 24, icon_w * 3, SDL_PIXELFORMAT_RGB888);
+        SDL_SetWindowIcon(sdl_window, icon);
 
         // show window (pass some dummy arguments)
         {
@@ -2809,7 +2028,6 @@ softrestart:;
 
     return 0;
 }
-#endif // !OBSIDIAN_CONSOLE_ONLY
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

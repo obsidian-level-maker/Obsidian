@@ -23,18 +23,19 @@
 
 #include <stdint.h>
 
-class UI_MiniMap : public Fl_Box
+class UI_MiniMap
 {
   private:
-    Fl_RGB_Image *cur_image;
+    SDL_Texture *cur_image;
 
   public:
+    int x, y, w, h;
     int map_W, map_H;
 
     uint8_t *pixels;
 
   public:
-    UI_MiniMap(int x, int y, int w, int h, const char *label = NULL);
+    UI_MiniMap(int x, int y, int w, int h, const char *label = nullptr);
     virtual ~UI_MiniMap();
 
   public:

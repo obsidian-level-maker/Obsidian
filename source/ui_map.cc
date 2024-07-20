@@ -32,17 +32,16 @@ static GifWriter *gif_writer;
 int               gif_delay;
 
 UI_MiniMap::UI_MiniMap(int x, int y, int w, int h, const char *label)
-    : Fl_Box(x, y, w, h, label), pixels(NULL), cur_image(NULL)
+    : cur_image(SDL_CreateTexture(sdl_renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, w, h)), x(x), y(y),
+      w(w), h(h), pixels(nullptr)
 {
-    box(FL_NO_BOX);
 }
 
 UI_MiniMap::~UI_MiniMap()
 {
     if (cur_image)
     {
-        image(NULL);
-        delete cur_image;
+        SDL_DestroyTexture(cur_image);
     }
 
     if (pixels)
@@ -59,8 +58,8 @@ void UI_MiniMap::EmptyMap()
 
 void UI_MiniMap::MapBegin()
 {
-    map_W = w();
-    map_H = h();
+    map_W = w;
+    map_H = h;
 
     if (pixels)
     {
@@ -100,16 +99,7 @@ void UI_MiniMap::MapFinish()
 {
     SYS_ASSERT(pixels);
 
-    if (cur_image)
-    {
-        image(NULL);
-        delete cur_image;
-    }
-
-    cur_image = new Fl_RGB_Image(pixels, map_W, map_H);
-
-    image(cur_image);
-    redraw();
+    SDL_UpdateTexture(cur_image, nullptr, pixels, map_W * 3);
 }
 
 void UI_MiniMap::DrawPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b)

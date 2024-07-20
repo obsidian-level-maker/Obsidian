@@ -28,8 +28,8 @@
 #include <vector>
 
 #ifndef OBSIDIAN_CONSOLE_ONLY
+#include "SDL.h"
 #include "imgui.h"
-#include "sokol_gfx.h"
 #include "ui_window.h"
 #endif
 
@@ -134,6 +134,8 @@ extern int                                      window_scaling;
 extern int                                      font_scaling;
 extern int                                      num_fonts;
 extern std::vector<std::pair<std::string, int>> font_menu_items;
+extern SDL_Window                              *sdl_window;
+extern SDL_Renderer                            *sdl_renderer;
 #endif
 extern int         filename_prefix;
 extern std::string custom_prefix;
@@ -177,7 +179,7 @@ extern std::string selected_lang;
 
 // Clippy/program menu stuff
 #ifndef OBSIDIAN_CONSOLE_ONLY
-extern sg_image clippy;
+extern SDL_Texture *clippy;
 
 void DLG_AboutText();
 void DLG_OptionsEditor();

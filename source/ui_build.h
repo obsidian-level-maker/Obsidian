@@ -26,7 +26,7 @@
 
 #include "ui_map.h"
 
-class UI_Build : public Fl_Group
+class UI_Build
 {
   public:
     UI_MiniMap  *mini_map;
