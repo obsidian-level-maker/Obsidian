@@ -20,13 +20,16 @@ if(NOT CONSOLE_ONLY)
     target_sources(
        imgui PRIVATE imgui_impl_sdlrenderer2.cpp
     )
+    target_link_libraries(
+        imgui PUBLIC SDL2::SDL2-static
+    )
 endif()
 if(USE_FREETYPE)
     find_package(Freetype)
     if (Freetype_FOUND)
         message(STATUS "Using FreeType for font shaping.")
         target_sources(
-            imgui PRIVATE imgui_freetype.cpp
+            imgui PRIVATE misc/freetype/imgui_freetype.cpp
         )
         target_compile_definitions(
             imgui PUBLIC IMGUI_ENABLE_FREETYPE
