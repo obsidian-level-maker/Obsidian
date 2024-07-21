@@ -25,8 +25,8 @@ void xoshiro_Reseed(uint64_t newseed);
 uint64_t xoshiro_UInt();
 
 // These return in the range of 0.0f-1.0f/0.0-1.0
-float xoshiro_Float();
+float  xoshiro_Float();
 double xoshiro_Double();
 
-int xoshiro_Between(int low, int high);
+int    xoshiro_Between(int low, int high);
 double xoshiro_Between(double low, double high);

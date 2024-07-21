@@ -61,10 +61,10 @@ sidedef_c *NewSidedef();
 sector_c  *NewSector();
 thing_c   *NewThing();
 
-vertex_c  *NewSplit();
-edge_c    *NewEdge();
-polygon_c *NewPolygon();
-wall_tip_c        *NewWallTip();
+vertex_c   *NewSplit();
+edge_c     *NewEdge();
+polygon_c  *NewPolygon();
+wall_tip_c *NewWallTip();
 
 // return a new vertex (with correct wall_tip info) for the split that
 // happens along the given edge at the given location.

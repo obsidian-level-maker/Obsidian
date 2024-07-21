@@ -2001,10 +2001,10 @@ int construct_family_for(config *c, style *s)
 {
     construct *cs;
     int        tmask = 0x01 << s->theme_number;
-    int     compats[5];
-    int     compat_count = 0;
-    boolean already;
-    int     i;
+    int        compats[5];
+    int        compat_count = 0;
+    boolean    already;
+    int        i;
 
     for (cs = c->construct_anchor; cs; cs = cs->next)
     {
@@ -2373,8 +2373,8 @@ void gate_populate(level *l, sector *s, haa *haa, boolean first, config *c)
         { /* A monster */
             m = timely_monster(haa, c, &levels, rollpercent(l->p_biggest_monsters), 1);
             if (m && levels)
-                if (NULL != place_object_in_region(l, minx, miny, tlx, maxy, c, m->thingid, 64, -1,
-                                                   s->entry_x, s->entry_y, levels))
+                if (NULL != place_object_in_region(l, minx, miny, tlx, maxy, c, m->thingid, 64, -1, s->entry_x,
+                                                   s->entry_y, levels))
                     update_haa_for_monster(haa, m, levels, 1, c);
         }
         else
@@ -2388,8 +2388,8 @@ void gate_populate(level *l, sector *s, haa *haa, boolean first, config *c)
         { /* A monster */
             m = timely_monster(haa, c, &levels, rollpercent(l->p_biggest_monsters), 1);
             if (m && levels)
-                if (NULL != place_object_in_region(l, thx, miny, maxx, maxy, c, m->thingid, 64, -1,
-                                                   s->entry_x, s->entry_y, levels))
+                if (NULL != place_object_in_region(l, thx, miny, maxx, maxy, c, m->thingid, 64, -1, s->entry_x,
+                                                   s->entry_y, levels))
                     update_haa_for_monster(haa, m, levels, 1, c);
         }
         else
@@ -2405,8 +2405,8 @@ void gate_populate(level *l, sector *s, haa *haa, boolean first, config *c)
         { /* A monster */
             m = timely_monster(haa, c, &levels, rollpercent(l->p_biggest_monsters), 1);
             if (m && levels)
-                if (NULL != place_object_in_region(l, minx, miny, maxx, tly, c, m->thingid, 64, -1,
-                                                   s->entry_x, s->entry_y, levels))
+                if (NULL != place_object_in_region(l, minx, miny, maxx, tly, c, m->thingid, 64, -1, s->entry_x,
+                                                   s->entry_y, levels))
                     update_haa_for_monster(haa, m, levels, 1, c);
         }
         else
@@ -2420,8 +2420,8 @@ void gate_populate(level *l, sector *s, haa *haa, boolean first, config *c)
         { /* A monster */
             m = timely_monster(haa, c, &levels, rollpercent(l->p_biggest_monsters), 1);
             if (m && levels)
-                if (NULL != place_object_in_region(l, minx, thy, maxx, maxy, c, m->thingid, 64, -1,
-                                                   s->entry_x, s->entry_y, levels))
+                if (NULL != place_object_in_region(l, minx, thy, maxx, maxy, c, m->thingid, 64, -1, s->entry_x,
+                                                   s->entry_y, levels))
                     update_haa_for_monster(haa, m, levels, 1, c);
         }
         else
@@ -6181,8 +6181,7 @@ void e_bl_inner(level *l, linedef *ldf1, linedef *ldf2, link *ThisLink, quest *T
             /* Try to place it */
             if (!rollpercent(l->p_rational_facing))
                 mangle = 90 * roll(4);
-            if (NULL != place_object_in_region(l, mminx, mminy, mmaxx, mmaxy, c, m->thingid, 64,
-                                               mangle, 0, 0, levels))
+            if (NULL != place_object_in_region(l, mminx, mminy, mmaxx, mmaxy, c, m->thingid, 64, mangle, 0, 0, levels))
             {
 
                 if (m->thingid == SLUMP_ID_SKULL)

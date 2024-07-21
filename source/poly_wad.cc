@@ -16,9 +16,10 @@
 //
 //------------------------------------------------------------------------
 
+#include "poly_wad.h"
+
 #include "lib_util.h"
 #include "poly.h"
-#include "poly_wad.h"
 #include "poly_util.h"
 #include "raw_def.h"
 #include "sys_debug.h"

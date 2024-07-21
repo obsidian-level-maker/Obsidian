@@ -18,8 +18,8 @@
 //
 //------------------------------------------------------------------------
 
-#include "fastPRNG.h"
 #include "Rand.h"
+#include "fastPRNG.h"
 
 fastPRNG::fastXS64 xoshiro;
 

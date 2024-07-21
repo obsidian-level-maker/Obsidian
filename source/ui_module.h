@@ -60,23 +60,24 @@ class UI_Module : public Fl_Group
     int cur_opt_y;
 
   public:
-    UI_Module(int X, int Y, int W, int H, const std::string &id, const std::string &label, const std::string &tip, int red, int green,
-              int blue, bool suboptions);
+    UI_Module(int X, int Y, int W, int H, const std::string &id, const std::string &label, const std::string &tip,
+              int red, int green, int blue, bool suboptions);
     virtual ~UI_Module();
 
-    void AddOption(const std::string &option, const std::string &label, const std::string &tip, std::string &longtip, int gap,
-                   const std::string &randomize_group, const std::string &default_value);
+    void AddOption(const std::string &option, const std::string &label, const std::string &tip, std::string &longtip,
+                   int gap, const std::string &randomize_group, const std::string &default_value);
 
     void AddHeader(const std::string &option, const std::string &label, int gap);
 
     void AddUrl(const std::string &option, const std::string &label, const std::string &url, int gap);
 
-    void AddSliderOption(const std::string &option, std::string &label, const std::string &tip, std::string &longtip, int gap,
-                         double min, double max, double inc, const std::string &units, const std::string &presets, const std::string &nan,
-                         const std::string &randomize_group, const std::string &default_value);
+    void AddSliderOption(const std::string &option, std::string &label, const std::string &tip, std::string &longtip,
+                         int gap, double min, double max, double inc, const std::string &units,
+                         const std::string &presets, const std::string &nan, const std::string &randomize_group,
+                         const std::string &default_value);
 
-    void AddButtonOption(const std::string &opt, const std::string &label, const std::string &tip, std::string &longtip, int gap,
-                         const std::string &randomize_group, const std::string &default_value);
+    void AddButtonOption(const std::string &opt, const std::string &label, const std::string &tip, std::string &longtip,
+                         int gap, const std::string &randomize_group, const std::string &default_value);
 
     void AddOptionChoice(const std::string &option, const std::string &id, const std::string &label);
 
@@ -143,7 +144,8 @@ class UI_CustomMods : public Fl_Group
     virtual ~UI_CustomMods();
 
   public:
-    void AddModule(const std::string &id, const std::string &label, const std::string &tip, int red, int green, int blue, bool suboptions);
+    void AddModule(const std::string &id, const std::string &label, const std::string &tip, int red, int green,
+                   int blue, bool suboptions);
 
     // these return false if module is unknown
     bool ShowModule(const std::string &id, bool new_shown);
@@ -151,19 +153,24 @@ class UI_CustomMods : public Fl_Group
 
     bool AddHeader(const std::string &module, const std::string &option, const std::string &label, int gap);
 
-    bool AddUrl(const std::string &module, const std::string &option, const std::string &label, const std::string &url, int gap);
+    bool AddUrl(const std::string &module, const std::string &option, const std::string &label, const std::string &url,
+                int gap);
 
-    bool AddOption(const std::string &module, const std::string &option, const std::string &label, const std::string &tip, std::string &longtip,
-                   int gap, const std::string &randomize_group, const std::string &default_value);
+    bool AddOption(const std::string &module, const std::string &option, const std::string &label,
+                   const std::string &tip, std::string &longtip, int gap, const std::string &randomize_group,
+                   const std::string &default_value);
 
-    bool AddSliderOption(const std::string &module, const std::string &option, std::string &label, const std::string &tip,
-                         std::string &longtip, int gap, double min, double max, double inc, const std::string &units,
-                         const std::string &presets, const std::string &nan, const std::string &randomize_group, const std::string &default_value);
+    bool AddSliderOption(const std::string &module, const std::string &option, std::string &label,
+                         const std::string &tip, std::string &longtip, int gap, double min, double max, double inc,
+                         const std::string &units, const std::string &presets, const std::string &nan,
+                         const std::string &randomize_group, const std::string &default_value);
 
-    bool AddButtonOption(const std::string &module, const std::string &option, const std::string &label, const std::string &tip,
-                         std::string &longtip, int gap, const std::string &randomize_group, const std::string &default_value);
+    bool AddButtonOption(const std::string &module, const std::string &option, const std::string &label,
+                         const std::string &tip, std::string &longtip, int gap, const std::string &randomize_group,
+                         const std::string &default_value);
 
-    bool AddOptionChoice(const std::string &module, const std::string &option, const std::string &id, const std::string &label);
+    bool AddOptionChoice(const std::string &module, const std::string &option, const std::string &id,
+                         const std::string &label);
 
     bool SetOption(const std::string &module, const std::string &option, const std::string &value);
 

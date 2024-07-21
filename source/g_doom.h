@@ -98,7 +98,8 @@ void AddVertex(int x, int y);
 
 void AddSector(int f_h, const std::string &f_tex, int c_h, const std::string &c_tex, int light, int special, int tag);
 
-void AddSidedef(int sector, const std::string &l_tex, const std::string &m_tex, const std::string &u_tex, int x_offset, int y_offset);
+void AddSidedef(int sector, const std::string &l_tex, const std::string &m_tex, const std::string &u_tex, int x_offset,
+                int y_offset);
 
 void AddLinedef(int vert1, int vert2, int side1, int side2, int type, int flags, int tag, const uint8_t *args);
 

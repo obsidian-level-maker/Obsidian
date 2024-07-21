@@ -16,10 +16,11 @@
 //
 //------------------------------------------------------------------------
 
+#include "poly.h"
+
 #include <stddef.h>
 
 #include "lib_util.h"
-#include "poly.h"
 #include "poly_map.h"
 #include "poly_util.h"
 #include "sys_debug.h"

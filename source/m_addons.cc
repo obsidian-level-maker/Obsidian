@@ -44,7 +44,7 @@ void VFS_AddFolder(std::string name)
     {
         FatalError("Failed to mount '%s' folder in PhysFS:\n%s\n", name.c_str(),
                    PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
-        return;                                   /* NOT REACHED */
+        return; /* NOT REACHED */
     }
     if (install_dir != home_dir)
     {
@@ -225,7 +225,8 @@ void VFS_ScanForAddons()
             continue;
         }
 
-        if (statter.filetype == PHYSFS_FILETYPE_DIRECTORY || (statter.filetype == PHYSFS_FILETYPE_REGULAR && GetExtension(*p) == ".oaf"))
+        if (statter.filetype == PHYSFS_FILETYPE_DIRECTORY ||
+            (statter.filetype == PHYSFS_FILETYPE_REGULAR && GetExtension(*p) == ".oaf"))
         {
             addon_info_t info;
 
