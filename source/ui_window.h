@@ -42,14 +42,10 @@ inline int KromulentHeight(int h)
 extern int small_font_size;
 extern int header_font_size;
 
-class UI_MainWin : public Fl_Double_Window
+class UI_MainWin
 {
   public:
     // main child widgets
-
-    Fl_Menu_Bar *menu_bar;
-
-    Fl_Group *sizing_group;
 
     UI_Game *game_box;
 
@@ -60,7 +56,7 @@ class UI_MainWin : public Fl_Double_Window
     UI_Clippy *clippy;
 
   public:
-    UI_MainWin(int W, int H, const char *title);
+             UI_MainWin(int W, int H, const char *title);
     virtual ~UI_MainWin();
 
     static void MenuBar();
@@ -69,17 +65,7 @@ class UI_MainWin : public Fl_Double_Window
 
     void Locked(bool value);
 
-  private:
-    int handle(int event);
-
-  private:
-    static void menu_do_about(Fl_Widget *w, void *data);
-    static void menu_do_view_logs(Fl_Widget *w, void *data);
-    static void menu_do_glossary(Fl_Widget *w, void *data);
-    static void menu_do_options(Fl_Widget *w, void *data);
-    static void menu_do_theme(Fl_Widget *w, void *data);
-    static void menu_do_edit_seed(Fl_Widget *w, void *data);
-    static void menu_do_manage_config(Fl_Widget *w, void *data);
+    int handle(SDL_Event event);
 };
 
 extern UI_MainWin *main_win;

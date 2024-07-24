@@ -36,7 +36,7 @@ int KF = 0;
 int small_font_size;
 int header_font_size;
 
-static void main_win_close_CB(Fl_Widget *w, void *data)
+static void main_win_close_CB()
 {
     main_action = MAIN_QUIT;
 }
@@ -51,17 +51,24 @@ static void main_win_surprise_go_CB()
     did_randomize = true;
 }
 
-int UI_MainWin::handle(int event)
+int UI_MainWin::handle(SDL_Event event)
 {
-    if (Fl::event_key() == FL_Escape)
+    switch (event.type)
     {
-        if (clippy->shown())
+    case SDL_QUIT:
+        return 1;
+    case SDL_KEYDOWN:
+        if (event.key.keysym.sym == SDLK_ESCAPE)
         {
-            clippy->hide();
-            return 1;
+            if (clippy->shown())
+            {
+                clippy->hide();
+                return 1;
+            }
         }
+    default:
+        return 0;
     }
-    return Fl_Window::handle(event);
 }
 
 //
@@ -215,41 +222,6 @@ void UI_MainWin::Locked(bool value)
         UI_CustomMods *tab = (UI_CustomMods *)main_win->mod_tabs->child(i);
         tab->Locked(value);
     }
-}
-
-void UI_MainWin::menu_do_about(Fl_Widget *w, void *data)
-{
-    DLG_AboutText();
-}
-
-void UI_MainWin::menu_do_view_logs(Fl_Widget *w, void *data)
-{
-    DLG_ViewLogs();
-}
-
-void UI_MainWin::menu_do_glossary(Fl_Widget *w, void *data)
-{
-    DLG_ViewGlossary();
-}
-
-void UI_MainWin::menu_do_options(Fl_Widget *w, void *data)
-{
-    DLG_OptionsEditor();
-}
-
-void UI_MainWin::menu_do_theme(Fl_Widget *w, void *data)
-{
-    DLG_ThemeEditor();
-}
-
-void UI_MainWin::menu_do_edit_seed(Fl_Widget *w, void *data)
-{
-    DLG_EditSeed();
-}
-
-void UI_MainWin::menu_do_manage_config(Fl_Widget *w, void *data)
-{
-    DLG_ManageConfig();
 }
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab
