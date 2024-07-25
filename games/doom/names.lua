@@ -141,11 +141,6 @@ DOOM.NAMES =
         ["Deep into the Lua"]=10,
         ["Facing the Script Error"]=10,
 
-        -- Foreign equalivents..
-        ["A La Caza"]=10, -- "On the Hunt" in Spanish
-        ["Siniestro"]=10, -- "Sinister" in Spanish
-        ["Umgang mit dem Skriptfehler"]=10, -- "Facing the Script Error" in German
-
         -- Doom 2..
         ["Entrance"]=10,
         ["The Monster Closet Stalks"]=10,
@@ -382,10 +377,6 @@ DOOM.NAMES =
         ["You're Not Here"]=10, -- Silent Hill
         ["You're Not Here, Right?"]=10,
 
-        -- Foreign shit for the luls
-        ["Chaos und Verachtung"]=10, -- "Chaos and Contempt"
-        ["No se puede inventar esta mierda"]=10, -- "You Can't Make This Shit Up" in Spanish
-
         -- End of 2021 additions
         ["Angles of Hell"]=10,
         ["Among Predaceous Cliffs"]=10,
@@ -580,6 +571,91 @@ DOOM.NAMES =
         ["Virtus Tenebris"]=10,
         ["Winds of Insanity"]=10,
 
+        -------------------
+        --2024 Name stuff--
+        -------------------
+        ["A Timeless Void"]=10,
+        ["Acid Haze"]=10,
+        ["All-Consuming Fire"]=10,
+        ["Archiac"]=10,
+        ["Ashes of the Damned"]=10,
+        ["Below the Adversary"]=10,
+        ["Beneath the Fading Sun"]=10,
+        ["Beyond the Perception"]=10,
+        ["Bleeding Icon"]=10,
+        ["Blind Hatred"]=10,
+        ["Bloodcleansing"]=10,
+        ["Broken Prey"]=10,
+        ["Ceremonial Storm"]=10,
+        ["Cold Bleak Destruction"]=10,
+        ["Corrosive Revelation"]=10,
+        ["Death Arcana"]=10,
+        ["Deathmoor"]=10,
+        ["Dedication"]=10,
+        ["Discordant Dirge"]=10,
+        ["Dismal Monotony"]=10,
+        ["Dread Reaver"]=10,
+        ["Enforcers of the Vile"]=10,
+        ["Epitome of Decadence"]=10,
+        ["Everblack"]=10,
+        ["Everyday Slaughter"]=10,
+        ["Everything in Silence"]=10,
+        ["Fall, Rot"]=10,
+        ["Firetale"]=10,
+        ["Follow Faust"]=10,
+        ["Fog"]=10,
+        ["Forged with Hate"]=10,
+        ["Funeral Storm"]=10,
+        ["Grim Reality"]=10,
+        ["Guide Yourself"]=10,
+        ["Host of Nightmares"]=10,
+        ["Icipher"]=10,
+        ["Illusion of Innocence"]=10,
+        ["Judgement of Will"]=10,
+        ["Knives"]=10,
+        ["Law of Retaliation"]=10,
+        ["Malicious Instinct"]=10,
+        ["Merciless Tide"]=10,
+        ["Monolithic Decay"]=10,
+        ["Mortal Vexation"]=10,
+        ["Mutual Animosity"]=10,
+        ["Myrmidon"]=10,
+        ["Nightfall"]=10,
+        ["Nightmare Spiral"]=10,
+        ["Nihilistic Manifestations"]=10,
+        ["Ocean of Wounds"]=10,
+        ["Of Self-Mutilation"]=10,
+        ["Outnumbering the Day"]=10,
+        ["Outrage to Fools"]=10,
+        ["Outstrider"]=10,
+        ["Override of Overture"]=10,
+        ["Perpetual Disharmony"]=10,
+        ["Perplexity of Truths"]=10,
+        ["Poisonous Apathy"]=10,
+        ["Quest for Heritage"]=10,
+        ["Race to Extinction"]=10,
+        ["Razor Jack"]=10,
+        ["Rekindling the Flame"]=10,
+        ["Ropedragger"]=10,
+        ["Scythewinder"]=10,
+        ["Severed by Your Own"]=10,
+        ["Sorrowfiller"]=10,
+        ["Spiritual Euphoria"]=10,
+        ["Structures of Death"]=10,
+        ["The Truth Beyond"]=10,
+        ["To Make You Suffer"]=10,
+        ["Tools of Mutual Harm"]=10,
+        ["Tragedy of the Faithful"]=10,
+        ["Trendkiller"]=10,
+        ["Unconscious Minds"]=10,
+        ["Unnatural Selection"]=10,
+        ["Veil of Obliteration"]=10,
+        ["Violence is Gold"]=10,
+        ["Whatever Whenever Forever"]=10,
+        ["Without Words"]=10,
+        ["World Inferno"]=10,
+
+
         -- Marijuana related parody song names from death metal band Cannibis Corpse.
         -- Their songs and album names are based off of other metal bands, Cannibal Corpse,
         -- Bolt Thrower, Morbid Angel, etc. Made uncommon because of the silliness of the
@@ -603,74 +679,6 @@ DOOM.NAMES =
         ["Where the Kind Lives"]=3 -- end marker
 
       },
-
-      -- end COMMON names
-
-      v =
-      {
-        ["Curse of the"]=10,
-
-        -- these from flyingdeath
-        ["Enter the"]=10,
-        ["Welcome to the"]=10,
-        ["Escape the"]=10,
-        ["Flight from the"]=5,
-        ["Journey to the"]=10,
-        ["Assault on the"]=15,
-        ["Death Awaits in the"]=5,
-        ["Hell in the"]=5,
-
-        -- these by Reisal
-        ["Fear the"]=10,
-        ["Beware the"]=10,
-        ["Bane of the"]=10,
-        ["Scourge of the"]=10,
-        ["Ordeal of the"]=10,
-        ["Calamity in the"]=10,
-        ["Misdeed by the"]=10,
-        ["Dread the"]=10,
-        ["Shun the"]=10,
-        ["Plague of the"]=10,
-        ["Pain from the"]=10,
-        ["Death in the"]=10,
-        ["Chaos in the"]=10,
-
-        ["Adventure to the"]=10,
-        ["A Jaunt to the"]=10,
-
-        -- these by MSSP
-        ["Battle for the"]=15,
-        ["Battle through the"]=10,
-        ["Into the"]=10,
-        ["Operation"]=10,
-        ["Mission"]=7,
-        ["Objective:"]=7,
-        ["Counterattack in the"]=7,
-        ["Ambush in the"]=7,
-        ["Get to da"]=3, -- CHOPPAH!!!
-        ["War of the"]=10,
-        ["Return to"]=10,
-        ["Return to the"]=10,
-
-        ["Raze the"]=8,
-
-        -- these by Frozsoul
-        ["Revenge of the"]=10,
-
-        -- command-like prefixes, some by Dante
-        ["Attack the"]=10,
-        ["Destroy the"]=10,
-        --["Shut Down the"]=15,
-        --["Patrol the"]=15,
-        ["Secure the"]=10
-        --["Clear this"]=5,
-        --["Defend this"]=10,
-
-        -- ^^^ Some of these sound pretty decent
-        -- so I enabled them. Things like shutting down
-        -- patrolling, defending, etc. are too explicit.
-        -- MSSP
-      }
     },
 
     divisors =
@@ -684,10 +692,9 @@ DOOM.NAMES =
       e = 3,    -- evil being: Satan (etc)
 
       t = 1,    -- article: The XX
-      v = 20,   -- phrase before a noun: Curse of the XX
       r = 40,
 
-      s = 1000  -- single complete names
+      s = 1200  -- single complete names
     }
   },
   -- end of 'COMMON' theme
@@ -699,34 +706,23 @@ DOOM.NAMES =
   {
     patterns =
     {
-      ["%a %n"]    = 65,
-      ["%b %n"]    = 65,
+      ["%a %n"]    = 75,
+      ["%b %n"]    = 75,
       ["%a %b %n"] = 33,
 
       ["%t %a %n"]    = 17,
       ["%t %b %n"]    = 17,
       ["%t %a %b %n"] = 5,
 
-      --["%a %n %x"]    = 17,
-      --["%b %n %x"]    = 17,
-      --["%a %b %n %x"] = 5,
-
-      ["%v %n"]    = 24,
-      ["%v %a %n"] = 24,
-      ["%v %b %n"] = 24,
+      ["%e"] = 10, -- Seems to fit, why not?
 
       -- numericals
       ["%a %n NOUNSERIAL"] = 26,
       ["%b %n NOUNSERIAL"] = 26,
       ["%a %b %n NOUNSERIAL"] = 18,
 
---[[
-      ["%r the %n"] = 12,
-      ["%r the %a %n"] = 12,
-      ["%r the %b %n"] = 12,
---]]
 
-      ["%s"] = 25
+      ["%s"] = 30
     },
 
     lexicon =
@@ -985,10 +981,8 @@ DOOM.NAMES =
         Traps=10, RMG=10,
       },
 
-      -- TODO: Please help add more to this section!! -A, Jul 16th, 2021
-
       -- Used for IWAD Mode module. Altered version of the 'a' lexicon so some level names
-      -- make more sense.
+      -- make more sense. Also works for TECH.
       e =
       {
 
@@ -1489,13 +1483,9 @@ DOOM.NAMES =
       -- %n = Places
       -- %h = Explicit description (e.g. I am Satan, "Arena of <Satan>")
       -- %o = Implicit description (e.g. I am Satanic, "Arena of <the Satanic>")
-      -- %v = Prefixed phrase (as per COMMON table e.g. "<Scoruge of the> Arena)
 
-      ["%a %n"] = 60,
+      ["%a %n"] = 80,
       ["%t %a %n"] = 20,
-
-      --["%a %n %x"] = 20,
-      --["%t %a %n %x"] = 8,
 
       ["%n of %h"] = 26,
       ["%a %n of %h"] = 10,
@@ -1506,16 +1496,8 @@ DOOM.NAMES =
       ["%e's %n of %h"] = 6,
       ["%e's %n of the %o"] = 6,
 
-      ["%v %n"]    = 25,
-      ["%v %a %n"] = 25,
+      ["%s"] = 120,
 
-      ["%s"] = 100,
-
-      ["Killing for %e"] = 3,
-      ["Killing in %e's name"] = 3,
-      ["Dying for %e"] = 3,
-      ["Dying in %e's name"] = 3,
-      ["Unworthy for %e"] = 3,
       ["%e's Bitch"] = 2,
     },
 
@@ -1680,14 +1662,18 @@ DOOM.NAMES =
 
       a =
       {
+        -- These make no real sense, having a small map with a large
+        -- size would show how silly this can be. Commented out but
+        -- not removed, for now. -R, 7/22/24
+        
         -- size
-        Monumental=5, Colossal=10, Sprawling=5, Massive=5,
-        Small=3, Endless=10, Gigantic=5, Mighty=5, Enormous=5,
-        Giant=3, Great=3, Elephantine=3, Grand=3, Gargantuan=5,
-        Imposing=5, Monstrous=5, Prodigious=3, Maximum=5,
+        --Monumental=5, Colossal=10, Sprawling=5, Massive=5,
+        --Small=3, Endless=10, Gigantic=5, Mighty=5, Enormous=5,
+        --Giant=3, Great=3, Elephantine=3, Grand=3, Gargantuan=5,
+        --Imposing=5, Monstrous=5, Prodigious=3, Maximum=5,
 
         -- generic scales?
-        Raw=2, Sheer=10,
+        --Raw=2, Sheer=10,
 
         -- location
         Underground=10, Subterranean=5,
@@ -1753,7 +1739,7 @@ DOOM.NAMES =
         Dreaded=15, Nightmare=5, Dolor=5,
 
         -- authority
-        Sovereign=7, Triumph=2,
+        --Sovereign=7, Triumph=2,
 
         -- danger/fatalism
         Brutal=20, Grisly=15, Tortuous=10,
@@ -2391,7 +2377,7 @@ DOOM.NAMES =
         ["Towers in the Fog"]=10,
         ["Weaving of the Artery"]=10,
 
-        -- 2021 naming conventions from Armaerus
+        -- 2021 naming conventions from Reisal
         ["Abstractus Diabolis"]=10,
         ["Agonizer Mortus"]=10,
         ["Ash in the Eyes"]=10,
@@ -2471,24 +2457,6 @@ DOOM.NAMES =
         ["Shattered Suffering"]=10,
         ["Terminal Hellocity"]=10,
         ["Where Filth Resides"]=10,
-
-        -- Foreign named things!
-        -- I used DeepL for nearly all of these instead of Google Translate..
-        -- Please provide corrections if any of these are off/incorrect!
-        ["An Eine Wand Genagelt"]=10, -- "Nailed to a Wall" in German
-        ["Dreck, Pilze und Blut"]=10, -- "Filth, Fungi and Blood" in German
-        ["Donde Vagan los Muertos"]=10, -- "Where the Dead Roam/Wander" in Spanish
-        ["Facteur de Dissolution 666"]=10, -- "Dissolution Factor 666" in French
-        ["Feuerspiegel"]=10, -- "Fire Mirror" in German
-        ["Grzech I Ofiara"]=10, -- "Sin and Sacrifice" in Polish
-        ["L'Empire Des Inferna"]=10, -- "The Empire of Hell" in French
-        ["La Presa del Demone"]=10, -- "The Grasp of the Demon" in Italian
-        ["Las Ostrzy"]=10, -- "Forest of Blades" in Polish
-        ["Lasst uns Sterben!"]=10, -- "Let's Die!" / "Let us Die!" in German
-        ["Lixo Humano"]=10, -- "Human Trash/Waste/Garbage" in Brazilian Portuguese
-        ["Luurankopuutarha"]=10, -- "Skeleton Garden" in Finnish
-        ["Menschliche Reste"]=10, -- "Human Remains" in German
-        ["Puhdas Helvetti"]=10, -- "Pure Hell" in Finnish
 
         -- MSSP names:
         ["Belshazzar's Feast"]=10,
@@ -2585,7 +2553,6 @@ DOOM.NAMES =
         ["Echos of Macabrae"]=10,
         ["Enduring Winter Madness"]=10,
         ["Epoch of Self-Denial"]=10,
-        ["Everyday Slaughter"]=10,
         ["Evoke the Excess"]=10,
         ["Faceless Unknown"]=10,
         ["Flesh Bloody Flesh"]=10,
@@ -2663,10 +2630,9 @@ DOOM.NAMES =
       -- %n = Places
       -- %h = Explicit description (e.g. I am Satan, "Arena of <Satan>")
       -- %o = Implicit description (e.g. I am Satanic, "Arena of <the Satanic>")
-      -- %v = Prefixed phrase (as per COMMON table e.g. "<Scourge of the> Arena)
       -- %r = Road suffix (St., Street, Road, Rd., etc.)
 
-         ["%a %n"] = 60,
+         ["%a %n"] = 80,
       ["%t %a %n"] = 15,
       ["%t NOUNGENANGLICAN %n"] = 20,
       ["%t NOUNGENEXOTIC %n"] = 7,
@@ -2679,15 +2645,7 @@ DOOM.NAMES =
       ["%t %n of the %o"] = 8,
       ["%a %n of the %o"] = 6,
 
-      ["%v %n"]    = 25,
-      ["%v %a %n"] = 25,
-
-      --["%a %n %x"] = 20,
-      --["%n of the %o %x"] = 3,
-      --["%v %n %x"] = 5,
-      --["%v %a %n %x"] = 5,
-
-      ["%s"] = 50,
+      ["%s"] = 70,
 
       -- Types of roads, useful when Streets Mode
       -- kicks in.
@@ -4272,9 +4230,7 @@ DOOM.NAMES =
         Emirate = 3,
         Empire = 5,
         ["Free State"] = 3,
-        --Kingdom = 7,
         Principality = 3,
-        --Hegemony = 10,
 
         -- medieval
         Citadel = 15,
@@ -4301,7 +4257,6 @@ DOOM.NAMES =
         Dimension = 20,
         Domain = 10,
         Plane = 10,
-        Planet = 5,
         Realm = 10,
         World = 10,
         Territory = 5,
@@ -4977,33 +4932,16 @@ DOOM.NAMES =
       ["Not enough %d"] = 7,
       ["%d Revealed"] = 5,
 
-      ["The %e Cometh"] = 5,
-      ["The %e will Rise"] = 5,
-      ["The %e must Die"] = 5,
-      ["Fight the %e"] = 5,
-      ["Age of the %e"] = 5,
-      ["Back to the %a %p"] = 5,
-
       -- MSSP adds grammar rules
 
-      ["Assault on the %a %p"] = 8, -- Assault on the Descriptive Place
-      ["Destroy the %a %p"] = 8, -- Destroy the Descriptive Place
-      ["Attack of the %a %e"] = 8, -- Attack of the Descriptive Entity
-      ["Return of the %e"] = 8, -- Return of the Entity
       ["A WAD full of %d"] = 5, -- A WAD Full of Abstract Objects
-      ["Return of the %e"] = 8,-- Return of the Entity
       ["Some very %a %p"] = 8, -- Some very Descriptive Place
       ["Zone of %d"] = 8, -- Zone of Abstract Object
       ["The %e WAD"] = 5, -- The Entity WAD
-      ["Showdown with the %e"] = 7,
       ["They are %a"] = 7,
       ["Call of %d"] = 8,
-      ["The %e and the %e"] = 10,
-      ["The %e VS the %e"] = 7,
       ["The %d Within"] = 5,
       ["%a and %a"] = 8,
-      ["Escape from the %a %e"] = 10,
-      ["The %e The %e and The %d"] = 8,
 
       ["%c did this"] = 3,
       ["The %a %p of %c"] = 3,
@@ -5021,16 +4959,12 @@ DOOM.NAMES =
       ["Doom: %d on Earth"] = 10,
       ["Doomguy VS the %e"] = 10, -- Doomguy VS the [Entity]
       ["Doomguy and the %e"] = 10, -- Doomguy and the [Entity]
-      ["Vacation in the %d %p"] = 10,  -- Vacation in the [Description] [Place]
       ["Evil Unleashed: %a %d"] = 10,
       ["%c's %d"] = 4, -- [Name]'s Abstract Object
       ["%c's %a %p"] = 4, -- [Name]'s [Adjective] [Place]
       ["%c's %p"] = 4, -- [Name]'s [Place]
-      ["Dirty Deeds for the %e"] = 7, -- Dirty Deeds for the [Entity]
-      ["The %e Attacks the %d %p"] = 7, -- The [Entity] Attacks the [Adjective] [Place]
       ["Is %c %a?"] = 2, -- Is [Name] Adjective?
       ["%c Is NOT %a!"] = 2,
-      ["%c's Playhouse"] = 3, -- [Name]'s Playhouse
       ["%c's Warzone"] = 3, -- [Name]'s Warzone
       ["%d: the %a %p"] = 7,
       ["Death: %a %p"] = 7,
@@ -5044,7 +4978,6 @@ DOOM.NAMES =
       ["Is %c By The %a %p?"] = 3,
       ["%a Death and %d"] = 5,
       ["This WAD has %d"] = 5, -- This WAD has Abstract Objects
-      ["%c's %a WAD"] = 3, -- [Name]'s [Adjective] WAD
       ["%c's WAD"] = 3,
       ["%c's Fun Zone"] = 3,
       ["Did %c Do This?"] = 3,
@@ -5072,7 +5005,6 @@ DOOM.NAMES =
       ["%a Witchcraft"] = 3,
       ["%a Hellcraft"] = 3,
       ["%d! Oh My Oh My"] = 3,
-      ["%c and Doomguy in the Same Room"] = 3,
       ["Is %c %a?"]=3
     },
 
