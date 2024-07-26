@@ -10,9 +10,6 @@ Bass::Bass(Music *music) : Creator(music)
 void Bass::init()
 {
     Creator::init();
-
-    _min_tone = 36;
-    _max_tone = _min_tone + 12;
 }
 Notes Bass::get(size_t start, size_t size) const
 {
@@ -34,5 +31,5 @@ Notes Bass::get(size_t start, size_t size) const
 }
 bool Bass::is_valid_instrument(const Instrument &instrument) const
 {
-    return instrument.midi_id >= 33 && instrument.midi_id <= 40;
+    return instrument.midi_id >= 32 && instrument.midi_id <= 39;
 }
