@@ -3249,8 +3249,8 @@ GROW_COLONNADE_TINY =
 
 GROW_COLONNADE_PARTHENON =
 {
-  prob = 10,
-  skip_prob = 50,
+  prob = 7,
+  skip_prob = 80,
 
   structure =
   {
@@ -3265,8 +3265,8 @@ GROW_COLONNADE_PARTHENON =
 
 GROW_COLONNADE_PARTHENON_3P =
 {
-  prob = 10,
-  skip_prob = 50,
+  prob = 7,
+  skip_prob = 75,
 
   structure =
   {
@@ -6651,6 +6651,57 @@ GROW_CAUSEWAY_SINGLE_WATERBOUND =
   },
 },
 
+GROW_CAUSEWAY_SINGLE_CORNER_PILLAR =
+{
+  prob = 15,
+  skip_prob = 75,
+
+  structure =
+  {
+    "........1","%11111111",
+    "........1","111111111",
+    "........x","11/#v~~~x",
+    "........x","11#/AAAAx",
+    "........x","11>AAAAAx",
+    "........x","11~AAAAAx",
+    "........x","11~AAAAAx",
+    "........x","11~AAAAAx"
+  },
+
+  diagonals =
+  {
+    "1.",
+    "1.",
+    ".A"
+  }
+},
+
+GROW_CAUSEWAY_SINGLE_THICC_CORNER_PILLAR =
+{
+  prob = 15,
+  skip_prob = 80,
+
+  structure =
+  {
+    ".........1","%111111111",
+    ".........1","1111111111",
+    ".........x","11/##v~~~x",
+    ".........x","11###v~~~x",
+    ".........x","11##/AAAAx",
+    ".........x","11>>AAAAAx",
+    ".........x","11~~AAAAAx",
+    ".........x","11~~AAAAAx",
+    ".........x","11~~AAAAAx"
+  },
+
+  diagonals =
+  {
+    "1.",
+    "1.",
+    ".A"
+  }
+},
+
 GROW_CAUSEWAY_SINGLE_WATERBOUND_OFF_RAMP =
 {
   prob = 30,
@@ -6975,6 +7026,43 @@ GROW_CAUSEWAY_TIP =
     "xxx....xx","xxxAAAAxx",
     "xxx....xx","xxxAAAAxx",
   },
+},
+
+GROW_CAUSEWAY_KNIFE =
+{
+  prob = 10,
+  skip_prob = 75,
+
+  structure = 
+  {
+    "..xx","/%xx",
+    "...x","AA%x",
+    "....","AA1%",
+    "....","AA%1",
+    "....","AA/1",
+    "....","AA%1",
+    "....","AA/1",
+    "....","AA%1",
+    "....","AA/1",
+    "..xx","11xx",
+    "..xx","11xx",
+    "..xx","11xx",
+    "..xx","11xx",
+    "11xx","11xx"
+  },
+
+  diagonals =
+  {
+    ".A","A.",
+    "1.",
+    "1.",
+    "A1",
+    "A1",
+    "A1",
+    "A1",
+    "A1",
+    "A1"
+  }
 },
 
 GROW_GATED_RAMP =
