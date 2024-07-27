@@ -165,7 +165,7 @@ OB_MODULES["ui_mons"] =
       tooltip = _("Rate at which monster strength increases as you progress through levels."),
       gap = 1,
       randomize_group="monsters",
-      complex_mode = true
+      
     },
 
     {
@@ -174,7 +174,7 @@ OB_MODULES["ui_mons"] =
       valuator = "button",
       default = 1,
       tooltip=_("Ensure every map can be completed with only the default weapon (ignore weapons obtained from earlier maps)"),
-      complex_mode = true
+      
     },
     {
       name="bool_quiet_start",
@@ -188,7 +188,7 @@ OB_MODULES["ui_mons"] =
       label=_("Monster Variety"),
       choices=STYLE_CHOICES,
       tooltip= _("Affects how many different monster types can appear in each room.\nSetting this to NONE will make each level use a single monster type"),
-      complex_mode = true
+      
     },
     {
       name="mon_variety_jumpstart",
@@ -226,7 +226,7 @@ OB_MODULES["ui_mons"] =
       default="default",
       tooltip=_("This option selects between using only teleport or closet traps. DEFAULT means both are used."),
       randomize_group="monsters",
-      complex_mode = true
+      
     },
     {
       name="trap_qty",
@@ -236,7 +236,7 @@ OB_MODULES["ui_mons"] =
       tooltip=_("Changes the quantity of ambushing monsters from traps."),
       gap = 1,
       randomize_group="monsters",
-      complex_mode = true
+      
     },
 
     { name="cages",
@@ -251,7 +251,7 @@ OB_MODULES["ui_mons"] =
       tooltip=_("Changes the quantity of monsters in cages."),
       gap=1,
       randomize_group="monsters",
-      complex_mode = true
+      
     },
 
     {
@@ -268,7 +268,7 @@ OB_MODULES["ui_mons"] =
       valuator = "button",
       default = 0,
       tooltip=_("Decides whether monster drops (i.e. magazines from zombiemen) influence map pickup spawns or not.\n\nYes - Ignore extra ammunition and weapons dropped by monsters when calculating pickups.\nNo (DEFAULT) - Removes extra pickups from the map based on items dropped by monsters (i.e. less shells on the ground if shotgunners carry them)."),
-      complex_mode = true
+      
     },
 
   },

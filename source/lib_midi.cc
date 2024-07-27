@@ -1,4 +1,5 @@
 #include <fstream>
+#include <sstream>
 
 #include "ConfigJson.h"
 #include "Music.h"
@@ -47,7 +48,12 @@ bool steve_generate(const char *config_file, const char *out_file) {
   steve::Music music(config);
   std::ofstream fs(PathAppend(home_dir, out_file), std::ofstream::binary);
   music.write_mid(fs);
+  std::string music_debug;
+  std::ostringstream ss(music_debug);
+  music.write_txt(ss);
+  ss.flush();
+  LogPrint("MIDI Statistics for %s:\n", out_file);
+  LogPrint("%s\n", ss.str().c_str());
 
   return true;
-
 }

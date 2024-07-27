@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 3.12..3.20)
 if(NOT CONSOLE_ONLY)
   add_subdirectory(libraries/fltk EXCLUDE_FROM_ALL)
 endif()
-add_subdirectory(libraries/libgrapheme EXCLUDE_FROM_ALL)
 add_subdirectory(libraries/miniz EXCLUDE_FROM_ALL)
 add_subdirectory(libraries/physfs EXCLUDE_FROM_ALL)
 add_subdirectory(libraries/steve EXCLUDE_FROM_ALL)
@@ -33,8 +32,8 @@ if(MSVC)
   # get the number of logical cores for parallel build
   cmake_host_system_information(RESULT LOGICAL_CORES QUERY NUMBER_OF_LOGICAL_CORES)
   math(EXPR COMPILE_CORES "${LOGICAL_CORES} - 1")
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP${COMPILE_CORES}")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHa /MP${COMPILE_CORES}")
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MD /MP${COMPILE_CORES}")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MD /EHa /MP${COMPILE_CORES}")
   if(NOT CONSOLE_ONLY)
     set(CMAKE_EXE_LINKER_FLAGS "/SUBSYSTEM:WINDOWS")
   endif()
@@ -135,7 +134,6 @@ if(NOT CONSOLE_ONLY)
   ) # Hack for FLTK 1.4 (for now)
 endif()
 target_include_directories(obsidian SYSTEM PRIVATE libraries/gif-h)
-target_include_directories(obsidian SYSTEM PRIVATE libraries/libgrapheme)
 target_include_directories(obsidian SYSTEM PRIVATE libraries/minilua)
 target_include_directories(obsidian SYSTEM PRIVATE libraries/miniz)
 target_include_directories(obsidian SYSTEM PRIVATE libraries/physfs/src)
@@ -164,7 +162,6 @@ if(UNIX)
         obsidian
         PRIVATE fltk
                 fltk_images
-                libgrapheme
                 miniz
                 physfs-static
                 steve
@@ -175,7 +172,7 @@ if(UNIX)
       )
     else()
       target_link_libraries(
-        obsidian PRIVATE libgrapheme miniz physfs-static steve
+        obsidian PRIVATE miniz physfs-static steve
       )
     endif()
   elseif(${CMAKE_SYSTEM} MATCHES "BSD")
@@ -184,14 +181,13 @@ if(UNIX)
         obsidian
         PRIVATE fltk
                 fltk_images
-                libgrapheme
                 miniz
                 physfs-static
                 steve
       )
     else()
       target_link_libraries(
-        obsidian PRIVATE libgrapheme miniz physfs-static steve
+        obsidian PRIVATE miniz physfs-static steve
       )
     endif()
   else()
@@ -200,7 +196,6 @@ if(UNIX)
         obsidian
         PRIVATE fltk
                 fltk_images
-                libgrapheme
                 miniz
                 physfs-static
                 fontconfig
@@ -210,8 +205,7 @@ if(UNIX)
     else()
       target_link_libraries(
         obsidian
-        PRIVATE libgrapheme
-                miniz
+        PRIVATE miniz
                 physfs-static
                 pthread
                 steve
@@ -224,14 +218,13 @@ else()
       obsidian
       PRIVATE fltk
               fltk_images
-              libgrapheme
               miniz
               physfs-static
               steve
     )
   else()
     target_link_libraries(
-      obsidian PRIVATE libgrapheme miniz physfs-static steve
+      obsidian PRIVATE miniz physfs-static steve
     )
   endif()
 endif()
