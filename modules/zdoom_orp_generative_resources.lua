@@ -107,8 +107,8 @@ OBS_RESOURCE_PACK_GENAI_MATERIALS =
 
   -- computers 256px
   SDMSRCP1 = { t="SDMSRCP1", f="SDOM_FT1"},
-  SDMSRCP2 = { t="SDMSRCP1", f="SDOM_FT4"},
-  SDMSRCP3 = { t="SDMSRCP1", f="SDOM_FT6"},
+  SDMSRCP2 = { t="SDMSRCP2", f="SDOM_FT4"},
+  SDMSRCP3 = { t="SDMSRCP3", f="SDOM_FT6"},
   -- flats
   SDOM_FT1 = { t="SDOM_WL1", f="SDOM_FT1"},
   SDOM_FT2 = { t="SDOM_WL2", f="SDOM_FT2"},
@@ -1832,8 +1832,7 @@ OBS_RESOURCE_PACK_GENAI_ROOM_THEMES =
       SDTBNKWA = 5,
       SDTBNKWB = 5,
       SDTBNKWC = 5,
-      SDTBNKWD = 5,
-      SDTBNKWE = 5
+      SDTBNKWD = 5
     },
 
     floors =
@@ -1961,25 +1960,15 @@ OBS_RESOURCE_PACK_GENAI_ROOM_THEMES =
       SD_TSGF4 = 15,
       SD_TSGF5 = 15,
       SD_TSGF6 = 15,
-      SD_TSGF7 = 15,
-      SD_TSGF8 = 15,
       SD_TSGF9 = 15,
       SD_TSGFA = 15,
       SD_TSGFB = 15,
       SD_TSGFC = 15,
 
-      SD_TBBF1 = 15,
-      SD_TBBF2 = 15,
-      SD_TBBF3 = 15,
       SD_TBBF4 = 15,
       SD_TBBF5 = 15,
-      SD_TBBF6 = 15,
       SD_TBBF7 = 15,
-      SD_TBBF8 = 15,
-      SD_TBBF9 = 15,
       SD_TBBFA = 15,
-      SD_TBBFB = 15,
-      SD_TBBFC = 15,
       SD_TBBFD = 15,
 
       --
@@ -3118,6 +3107,7 @@ OBS_RESOURCE_PACK_GENAI_ROOM_THEMES =
       SDMHAZF6 = 15
     },
   },
+
 -- START OF URBAN THEMES
   urban_greenFloorsGreyWalls = --40
   {
@@ -3859,30 +3849,6 @@ OBS_RESOURCE_PACK_GENAI_ROOM_THEMES =
     }
   },
 
-  urban_Outdoors_generic = --50
-  {
-    env  = "outdoor",
-    prob = 50,
-    is_generative = true,
-
-    floors =
-    {
-      SDOM_FT1 = 7,
-      SDOM_FT2 = 7,
-      SDOM_FT3 = 7,
-      SDOM_FT4 = 7,
-      SDOM_FT5 = 7,
-      SDOM_FT6 = 7,
-      SDOM_FT7 = 7,
-      SDOM_FT8 = 7,
-      SDOM_FT9 = 7,
-      SDOM_FTA = 7,
-
-      SDOM_FG1 = 10,
-      SDOM_FG2 = 10
-    }
-  },
-
   urban_whiteWallsDarkFloors = --30
   {
     env = "building",
@@ -4391,8 +4357,7 @@ OBS_RESOURCE_PACK_GENAI_ROOM_THEMES =
       SDTBNKWA = 5,
       SDTBNKWB = 5,
       SDTBNKWC = 5,
-      SDTBNKWD = 5,
-      SDTBNKWE = 5
+      SDTBNKWD = 5
     },
 
     floors =
@@ -4486,6 +4451,35 @@ OBS_RESOURCE_PACK_GENAI_ROOM_THEMES =
     }
   },
 
+  urban_Outdoors_generic = --50
+  {
+    env  = "outdoor",
+    prob = 50,
+
+    floors =
+    {
+      S_W2WFR1 = 7,
+      S_W2WFR2 = 7,
+      S_W2WFR3 = 7,
+      S_W2WFR4 = 7,
+      S_W2WFR5 = 7,
+      S_W2WFR6 = 7,
+      S_W2WFR7 = 7,
+      S_W2WFR8 = 7,
+
+      SDOM_FT1 = 7,
+      SDOM_FT2 = 7,
+      SDOM_FT3 = 7,
+      SDOM_FT4 = 7,
+      SDOM_FT5 = 7,
+      SDOM_FT6 = 7,
+      SDOM_FT9 = 7,
+      SDOM_FTA = 7,
+
+      SDOM_FG1 = 10,
+      SDOM_FG2 = 10
+    }
+  },
 -- END OF THEMES TABLES
 }
 
@@ -4597,8 +4591,7 @@ OBS_RESOURCE_PACK_GENAI_THEMES =
       SDTBNKWA = 15,
       SDTBNKWB = 15,
       SDTBNKWC = 15,
-      SDTBNKWD = 15,
-      SDTBNKWE = 15
+      SDTBNKWD = 15
     },
 
     wall_groups =
@@ -4611,6 +4604,9 @@ OBS_RESOURCE_PACK_GENAI_THEMES =
       gtd_wall_tech_gothic_inset_gargoyle = 20,
       gtd_wall_tech_gothic_inset_engine = 20,
       gtd_wall_tech_gothic_inset_red_lite = 20,
+      --
+      gtd_AI_goth_comp_yellow_stained_glass = 50,
+      gtd_AI_boiler_room = 50
     }
   },
 
@@ -4654,8 +4650,7 @@ OBS_RESOURCE_PACK_GENAI_THEMES =
       SDTBNKWA = 6,
       SDTBNKWB = 6,
       SDTBNKWC = 6,
-      SDTBNKWD = 6,
-      SDTBNKWE = 6
+      SDTBNKWD = 6
     },
 
     fences =
@@ -4679,7 +4674,9 @@ OBS_RESOURCE_PACK_GENAI_THEMES =
       --
       gtd_wall_tech_gothic_inset_gargoyle = 9,
       gtd_wall_tech_gothic_inset_engine = 9,
-      gtd_wall_tech_gothic_inset_red_lite = 9
+      gtd_wall_tech_gothic_inset_red_lite = 9,
+      --
+      gtd_AI_boiler_room = 50
     }    
   },
 
@@ -4714,7 +4711,9 @@ OBS_RESOURCE_PACK_GENAI_THEMES =
     {
       gtd_wall_tech_gothic_inset_gargoyle = 20,
       gtd_wall_tech_gothic_inset_engine = 20,
-      gtd_wall_tech_gothic_inset_red_lite = 20
+      gtd_wall_tech_gothic_inset_red_lite = 20,
+      --
+      gtd_AI_goth_comp_yellow_stained_glass = 50
     }
   }
 }

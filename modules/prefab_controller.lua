@@ -142,9 +142,8 @@ function PREFAB_CONTROL.fine_tune_filters()
   }
   local new_fab_groups_multipliers =
   {
-    gtd_mscottpaper = 1.25,
-    --
-    gtd_pools = 1.25
+    gtd_AI_goth_comp_yellow_stained_glass = 1.5,
+    gtd_AI_boiler_room = 1.5
   }
   local new_themes_multipliers =
   {
