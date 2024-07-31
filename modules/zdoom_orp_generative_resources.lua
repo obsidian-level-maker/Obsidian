@@ -1826,7 +1826,6 @@ OBS_RESOURCE_PACK_GENAI_ROOM_THEMES =
       SDTBNKW4 = 5,
       SDTBNKW5 = 5,
       SDTBNKW6 = 5,
-      SDTBNKW7 = 5,
       SDTBNKW8 = 5,
       SDTBNKW9 = 5,
       SDTBNKWA = 5,
@@ -4351,7 +4350,6 @@ OBS_RESOURCE_PACK_GENAI_ROOM_THEMES =
       SDTBNKW4 = 5,
       SDTBNKW5 = 5,
       SDTBNKW6 = 5,
-      SDTBNKW7 = 5,
       SDTBNKW8 = 5,
       SDTBNKW9 = 5,
       SDTBNKWA = 5,
@@ -4585,7 +4583,6 @@ OBS_RESOURCE_PACK_GENAI_THEMES =
       SDTBNKW4 = 15,
       SDTBNKW5 = 15,
       SDTBNKW6 = 15,
-      SDTBNKW7 = 15,
       SDTBNKW8 = 15,
       SDTBNKW9 = 15,
       SDTBNKWA = 15,
@@ -4605,8 +4602,10 @@ OBS_RESOURCE_PACK_GENAI_THEMES =
       gtd_wall_tech_gothic_inset_engine = 20,
       gtd_wall_tech_gothic_inset_red_lite = 20,
       --
-      gtd_AI_goth_comp_yellow_stained_glass = 50,
-      gtd_AI_boiler_room = 50
+      gtd_AI_goth_comp_yellow_stained_glass = 35,
+      --
+      gtd_AI_boiler_room = 35,
+      gtd_AI_boiler_control_unit = 35
     }
   },
 
@@ -4644,7 +4643,6 @@ OBS_RESOURCE_PACK_GENAI_THEMES =
       SDTBNKW4 = 6,
       SDTBNKW5 = 6,
       SDTBNKW6 = 6,
-      SDTBNKW7 = 6,
       SDTBNKW8 = 6,
       SDTBNKW9 = 6,
       SDTBNKWA = 6,
@@ -4676,7 +4674,8 @@ OBS_RESOURCE_PACK_GENAI_THEMES =
       gtd_wall_tech_gothic_inset_engine = 9,
       gtd_wall_tech_gothic_inset_red_lite = 9,
       --
-      gtd_AI_boiler_room = 50
+      gtd_AI_boiler_room = 35,
+      gtd_AI_boiler_control_unit = 35
     }    
   },
 
