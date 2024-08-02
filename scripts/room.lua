@@ -2235,22 +2235,22 @@ function Room_choose_size(LEVEL, R, not_big)
   elseif R.is_big then
     R. size_limit = sum * rand.range( 2,2.7 )
     R.floor_limit = math.round(R.floor_limit * rand.key_by_probs(
-                                      {
-                                        [1]=1,
-                                        [1.5]=2,
-                                        [2]=3,
-                                        [2.5]=4,
-                                        [3]=2,
-                                        [4]=2,
-                                        [5]=1,
-                                        [6]=1,
-                                        [8]=1,
-                                        [10]=1,
-                                        [14]=1,
-                                        [18]=1,
-                                      }
-                                    )
-                                )
+        {
+          [1]=1,
+          [1.5]=2,
+          [2]=3,
+          [2.5]=4,
+          [3]=2,
+          [4]=2,
+          [5]=1,
+          [6]=1,
+          [8]=1,
+          [10]=1,
+          [14]=1,
+          [18]=1,
+        }
+      )
+    )
 
     --Trying a different formula for is_big rooms
                     --[[rand.key_by_probs(
@@ -2316,8 +2316,9 @@ function Room_choose_size(LEVEL, R, not_big)
   elseif not LEVEL.is_procedural_gotcha then
 
     if R.is_start then
-      R.size_limit = int(R.size_limit / 3)
+      R.size_limit = int(R.size_limit / 2)
       R.floor_limit = int(R.floor_limit / 2)
+      R.size_limit = math.clamp(rand.pick({8,16,24,32}),R.size_limit,EXTREME_H)
     end
 
   end
