@@ -7065,6 +7065,43 @@ GROW_CAUSEWAY_KNIFE =
   }
 },
 
+GROW_CAUSEWAY_KNIFE_SERRATED =
+{
+  prob = 10,
+  skip_prob = 80,
+
+  structure = 
+  {
+    "..xxx","/%xxx",
+    "...xx","AA%xx",
+    "....x","AA1%x",
+    ".....","AA%1%",
+    ".....","AA/1/",
+    ".....","AA%1%",
+    ".....","AA/1/",
+    ".....","AA%1%",
+    ".....","AA/1/",
+    "..xxx","11xxx",
+    "..xxx","11xxx",
+    "..xxx","11xxx",
+    "..xxx","11xxx",
+    "11xxx","11xxx"
+  },
+
+  diagonals =
+  {
+    ".A","A.",
+    "1.",
+    "1.",
+    "A1","1.",
+    "A1","1.",
+    "A1","1.",
+    "A1","1.",
+    "A1","1.",
+    "A1","1."
+  }
+},
+
 GROW_GATED_RAMP =
 {
   prob = 20,
