@@ -477,6 +477,23 @@ OBS_RESOURCE_PACK_GENAI_MATERIALS =
   SD_HCCF7 = { t="SD_HCCWA", f="SD_HCCF7"},
   SD_HCCF8 = { t="SD_HCCWC", f="SD_HCCF8"},
 
+  -- cable/socket catacombs (lolwhat?2)
+  -- walls
+  SDHCCBW1 = { t="SDHCCBW1", f="S_W2WFR1"},
+  SDHCCBW2 = { t="SDHCCBW2", f="S_W2WFR2"},
+  SDHCCBW3 = { t="SDHCCBW3", f="S_W2WFR3"},
+  SDHCCBW4 = { t="SDHCCBW4", f="S_W2WFR4"},
+  SDHCCBW5 = { t="SDHCCBW5", f="S_W2WFR5"},
+  SDHCCBW6 = { t="SDHCCBW6", f="S_W2WFR6"},
+  SDHCCBW7 = { t="SDHCCBW7", f="S_W2WFR7"},
+  SDHCCBW8 = { t="SDHCCBW8", f="S_W2WFR8"},
+  SDHCCBW9 = { t="SDHCCBW9", f="S_W2WFR1"},
+  SDHCCBWA = { t="SDHCCBWA", f="S_W2WFR2"},
+  SDHCCBWB = { t="SDHCCBWB", f="S_W2WFR3"},
+  SDHCCBWC = { t="SDHCCBWC", f="S_W2WFR5"},
+  SDHCCBWD = { t="SDHCCBWD", f="S_W2WFR6"},
+  SDHCCBWE = { t="SDHCCBWE", f="S_W2WFR8"},
+
   --
   TOFFBOX1 = {t="TOFFBOX1", f="FLAT23"},
   TOFFBOX2 = {t="TOFFBOX2", f="FLAT23"},
@@ -1925,6 +1942,114 @@ OBS_RESOURCE_PACK_GENAI_ROOM_THEMES =
     }
   },
 
+  tech_cableSocketCatacombs = --10
+  {
+    prob = 10,
+    env = "building",
+
+    theme_override = "deimos",
+
+    walls =
+    {
+      SDHCCBW1 = 5,
+      SDHCCBW2 = 5,
+      SDHCCBW3 = 5,
+      SDHCCBW4 = 5,
+      SDHCCBW5 = 5,
+      SDHCCBW6 = 5,
+      SDHCCBW7 = 5,
+      SDHCCBW8 = 5,
+      SDHCCBW9 = 5,
+      SDHCCBWA = 5,
+      SDHCCBWB = 5,
+      SDHCCBWC = 5,
+      SDHCCBWD = 5,
+      SDHCCBWE = 5
+    },
+
+    floors =
+    {
+      OBTSVBF1 = 10,
+      OBTSVBF2 = 10,
+      OBTSVBF3 = 10,
+      S_WDWFR1 = 10,
+      S_WDWFR2 = 10,
+      S_WDWFR3 = 10,
+      S_WDWFR4 = 10,
+      S_WDWFR5 = 10,
+      S_WDWFR6 = 10,
+      S_WDWFR7 = 10,
+      S_WDWFR8 = 10,
+      SD_GTHF1 = 10,
+      SD_GTHF2 = 10,
+      SD_HCCF5 = 10,
+      SD_UHMF3 = 7,
+      SD_UHMF4 = 7,
+
+      DARKF01 = 6,
+      DARKF02 = 6,
+      DARKF03 = 6,
+      G06 = 6,
+      G07 = 6,
+      G08 = 6,
+      G15 = 6,
+      G19 = 6,
+      GRATE2 = 6,
+      GRATE3 = 6,
+      GSTN02 = 6,
+      MEM01 = 5,
+      QFLAT06 = 5,
+      QFLAT09 = 5,
+      
+      FLAT3 = 5,
+      FLOOR0_3 = 5,
+      FLOOR0_5 = 5,
+      MFLR8_1 = 5,
+      SLIME14 = 5
+    },
+
+    ceilings =
+    {
+      OBTSVBF1 = 10,
+      OBTSVBF2 = 10,
+      OBTSVBF3 = 10,
+      S_WDWFR1 = 10,
+      S_WDWFR2 = 10,
+      S_WDWFR3 = 10,
+      S_WDWFR4 = 10,
+      S_WDWFR5 = 10,
+      S_WDWFR6 = 10,
+      S_WDWFR7 = 10,
+      S_WDWFR8 = 10,
+      SD_GTHF1 = 10,
+      SD_GTHF2 = 10,
+      SD_HCCF5 = 10,
+      SD_UHMF3 = 7,
+      SD_UHMF4 = 7,
+
+      DARKF01 = 6,
+      DARKF02 = 6,
+      DARKF03 = 6,
+      G06 = 6,
+      G07 = 6,
+      G08 = 6,
+      G15 = 6,
+      G19 = 6,
+      GRATE2 = 6,
+      GRATE3 = 6,
+      GSTN02 = 6,
+      MEM01 = 5,
+      QFLAT06 = 5,
+      QFLAT09 = 5,
+      
+      FLAT3 = 5,
+      FLOOR0_3 = 5,
+      FLOOR0_5 = 5,
+      MFLR8_1 = 5,
+      SLIME14 = 5
+    }
+  },
+
   tech_Outdoors_generic = --50
   {
     env  = "outdoor",
@@ -3084,6 +3209,114 @@ OBS_RESOURCE_PACK_GENAI_ROOM_THEMES =
       SDM_HGF1 = 8,
       SDM_HGF2 = 8,
       SDM_HGF3 = 8,
+    }
+  },
+
+  hell_cableSocketCatacombs = --50
+  {
+    prob = 50,
+    env = "building",
+
+    theme_override = "deimos",
+
+    walls =
+    {
+      SDHCCBW1 = 5,
+      SDHCCBW2 = 5,
+      SDHCCBW3 = 5,
+      SDHCCBW4 = 5,
+      SDHCCBW5 = 5,
+      SDHCCBW6 = 5,
+      SDHCCBW7 = 5,
+      SDHCCBW8 = 5,
+      SDHCCBW9 = 5,
+      SDHCCBWA = 5,
+      SDHCCBWB = 5,
+      SDHCCBWC = 5,
+      SDHCCBWD = 5,
+      SDHCCBWE = 5
+    },
+
+    floors =
+    {
+      OBTSVBF1 = 10,
+      OBTSVBF2 = 10,
+      OBTSVBF3 = 10,
+      S_WDWFR1 = 10,
+      S_WDWFR2 = 10,
+      S_WDWFR3 = 10,
+      S_WDWFR4 = 10,
+      S_WDWFR5 = 10,
+      S_WDWFR6 = 10,
+      S_WDWFR7 = 10,
+      S_WDWFR8 = 10,
+      SD_GTHF1 = 10,
+      SD_GTHF2 = 10,
+      SD_HCCF5 = 10,
+      SD_UHMF3 = 7,
+      SD_UHMF4 = 7,
+
+      DARKF01 = 6,
+      DARKF02 = 6,
+      DARKF03 = 6,
+      G06 = 6,
+      G07 = 6,
+      G08 = 6,
+      G15 = 6,
+      G19 = 6,
+      GRATE2 = 6,
+      GRATE3 = 6,
+      GSTN02 = 6,
+      MEM01 = 5,
+      QFLAT06 = 5,
+      QFLAT09 = 5,
+      
+      FLAT3 = 5,
+      FLOOR0_3 = 5,
+      FLOOR0_5 = 5,
+      MFLR8_1 = 5,
+      SLIME14 = 5
+    },
+
+    ceilings =
+    {
+      OBTSVBF1 = 10,
+      OBTSVBF2 = 10,
+      OBTSVBF3 = 10,
+      S_WDWFR1 = 10,
+      S_WDWFR2 = 10,
+      S_WDWFR3 = 10,
+      S_WDWFR4 = 10,
+      S_WDWFR5 = 10,
+      S_WDWFR6 = 10,
+      S_WDWFR7 = 10,
+      S_WDWFR8 = 10,
+      SD_GTHF1 = 10,
+      SD_GTHF2 = 10,
+      SD_HCCF5 = 10,
+      SD_UHMF3 = 7,
+      SD_UHMF4 = 7,
+
+      DARKF01 = 6,
+      DARKF02 = 6,
+      DARKF03 = 6,
+      G06 = 6,
+      G07 = 6,
+      G08 = 6,
+      G15 = 6,
+      G19 = 6,
+      GRATE2 = 6,
+      GRATE3 = 6,
+      GSTN02 = 6,
+      MEM01 = 5,
+      QFLAT06 = 5,
+      QFLAT09 = 5,
+      
+      FLAT3 = 5,
+      FLOOR0_3 = 5,
+      FLOOR0_5 = 5,
+      MFLR8_1 = 5,
+      SLIME14 = 5
     }
   },
 

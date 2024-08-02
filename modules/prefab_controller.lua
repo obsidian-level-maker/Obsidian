@@ -150,9 +150,9 @@ function PREFAB_CONTROL.fine_tune_filters()
   {
     any_copperRust = 1.25,
 
-    tech_iStuff = 1.125,
-    tech_wood_lab = 2.25,
-    tech_bunker = 2.5,
+    tech_wood_lab = 1.5,
+    tech_bunker = 2,
+    tech_cableSocketCatacombs = 2.5,
     --
 
     urban_computerCatacombs = 1.125,
@@ -160,7 +160,7 @@ function PREFAB_CONTROL.fine_tune_filters()
     urban_bunker = 2.5,
     --
 
-    hell_computerCatacombs = 1.5
+    hell_cableSocketCatacombs = 2
   }
   local themes =
   {

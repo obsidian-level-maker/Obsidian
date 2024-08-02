@@ -2718,6 +2718,56 @@ brightmap texture SD_TSGFA
 {
   map SDTSFBRA
 }
+
+brightmap texture SDHCCBW1
+{
+  map SDHCCBR1
+}
+
+brightmap texture SDHCCBW2
+{
+  map SDHCCBR2
+}
+
+brightmap texture SDHCCBW3
+{
+  map SDHCCBR3
+}
+
+brightmap texture SDHCCBW4
+{
+  map SDHCCBR4
+}
+
+brightmap texture SDHCCBW5
+{
+  map SDHCCBR5
+}
+
+brightmap texture SDHCCBW8
+{
+  map SDHCCBR8
+}
+
+brightmap texture SDHCCBW9
+{
+  map SDHCCBR9
+}
+
+brightmap texture SDHCCBWA
+{
+  map SDHCCBRA
+}
+
+brightmap texture SDHCCBWB
+{
+  map SDHCCBRB
+}
+
+brightmap texture SDHCCBWC
+{
+  map SDHCCBRC
+}
 ]]
 
 -- aliases - when you're too lazy to write down wall and flat names in every
