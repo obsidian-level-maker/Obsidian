@@ -112,3 +112,14 @@ PREFABS.Wall_AI_boiler_control_unit =
 
   z_fit = {71,73}
 }
+
+PREFABS.Wall_AI_boiler_control_box =
+{
+  template = "Wall_AI_boiler_control_unit",
+  map    = "MAP21",
+
+  prob   = 10,
+  group  = "gtd_AI_boiler_control_unit",
+
+  z_fit = {71,73}
+}
