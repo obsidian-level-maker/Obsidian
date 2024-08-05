@@ -2183,6 +2183,28 @@ brightmap texture COMPSD8
 {
   map OBRCPSD1
 }
+
+brightmap texture CONSOLEA
+{
+  map CONSOLBR
+}
+brightmap texture CONSOLEB
+{
+  map CONSOLBR
+}
+brightmap texture CONSOLEC
+{
+  map CONSOLBR
+}
+brightmap texture CONSOLED
+{
+  map CONSOLBR
+}
+brightmap texture CONSOLEE
+{
+  map CONSOLBR
+}
+
 //
 brightmap texture NOISE2A
 {

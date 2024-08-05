@@ -27,12 +27,14 @@ PREFABS.Decor_AI_goth_comp_yellow_computer =
 
 --
 
+--
+
 PREFABS.Decor_AI_boiler_machine_A =
 {
   template = "Decor_AI_goth_comp_yellow_computer_2x",
-  map    = "MAP10",
+  map    = "MAP20",
 
-  group = "gtd_AI_boiler_room",
+  group = "gtd_AI_boiler_control_unit",
 
   height = 128,
   size = 72
@@ -41,9 +43,9 @@ PREFABS.Decor_AI_boiler_machine_A =
 PREFABS.Decor_AI_boiler_machine_B =
 {
   template = "Decor_AI_goth_comp_yellow_computer_2x",
-  map    = "MAP11",
+  map    = "MAP21",
 
-  group = "gtd_AI_boiler_room",
+  group = "gtd_AI_boiler_control_unit",
 
   height = 128,
   size = 76
