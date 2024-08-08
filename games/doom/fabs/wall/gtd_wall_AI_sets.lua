@@ -123,3 +123,26 @@ PREFABS.Wall_AI_boiler_control_box =
 
   z_fit = {71,73}
 }
+
+--
+
+PREFABS.Wall_AI_corpse_inset_variable =
+{
+  template = "Wall_AI_goth_comp_yellow_stained_glass_1",
+  map    = "MAP30",
+
+  group = "gtd_AI_corpse_inset",
+
+  height = 128,
+
+  z_fit = "top",
+  bound_z2 = 128,
+
+  tex_SDPBBWLA =
+  {
+    SDPBBWL8 = 1,
+    SDPBBWL9 = 1,
+    SDPBBWLA = 4,
+    SDPBBWLB = 4,
+  }
+}
