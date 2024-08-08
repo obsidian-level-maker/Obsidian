@@ -620,21 +620,33 @@ function ZDOOM_SPECIALS.do_special_stuff()
     end
 
     -- resolve proper episodic sky texture assignments
-    if PARAM.sky_generator_active then
-      if map_num <= 11 then
-        sky_tex = "RSKY1"
-      elseif map_num > 11 and map_num <= 20 then
-        sky_tex = "RSKY2"
-      elseif map_num > 20 then
-        sky_tex = "RSKY3"
+    if OB_CONFIG.game == "doom2" or OB_CONFIG.game == "tnt" or OB_CONFIG.game == "plutonia" then
+      if PARAM.sky_generator_active then
+        if map_num <= 11 then
+          sky_tex = "RSKY1"
+        elseif map_num > 11 and map_num <= 20 then
+          sky_tex = "RSKY2"
+        elseif map_num > 20 then
+          sky_tex = "RSKY3"
+        end
+      else
+        if map_num <= 11 then
+          sky_tex = "Sky1"
+        elseif map_num > 11 and map_num <= 20 then
+          sky_tex = "Sky2"
+        elseif map_num > 20 then
+          sky_tex = "Sky3"
+        end
       end
-    else
-      if map_num <= 11 then
-        sky_tex = "Sky1"
-      elseif map_num > 11 and map_num <= 20 then
-        sky_tex = "Sky2"
-      elseif map_num > 20 then
-        sky_tex = "Sky3"
+    elseif OB_CONFIG.game == "doom1" or OB_CONFIG.game == "ultdoom" then
+      if map_num <= 9 then
+        sky_tex = "SKY1"
+      elseif map_num <= 18 then
+        sky_tex = "SKY2"
+      elseif map_num <= 27 then
+        sky_tex = "SKY3"
+      else
+        sky_tex = "SKY4"
       end
     end
 
@@ -1089,18 +1101,65 @@ function ZDOOM_SPECIALS.do_special_stuff()
     if PARAM.fog_generator == "per_sky_gen" then
       if not PARAM.episode_sky_color then
         gui.printf("WARNING: User set fog color to be set by Sky Generator " ..
-        "but Sky Generator is turned off! Behavior will now be Random instead.\n")
-        info.fog_color = pick_random_fog_color()
-        goto continue
+        "but Sky Generator is turned off! Fog color will now match vanilla skies.\n")
+        if OB_CONFIG.game == "doom2" or OB_CONFIG.game == "tnt" or OB_CONFIG.game == "plutonia" then
+          if OB_CONFIG.game == "tnt" then
+            if i <= 11 then
+              info.fog_color = "93 7b 63"
+            elseif i > 11 and i <= 20 then
+              info.fog_color = "00 00 00"
+            elseif i > 20 then
+              info.fog_color = "bf 00 00"
+            end
+          elseif OB_CONFIG.game == "plutonia" then
+            if i <= 11 then
+              info.fog_color = "e7 e7 ff"
+            elseif i > 11 and i <= 20 then
+              info.fog_color = "a7 00 00"
+            elseif i > 20 then
+              info.fog_color = "67 00 00"
+            end
+          else
+            if i <= 11 then
+              info.fog_color = "67 53 3f"
+            elseif i > 11 and i <= 20 then
+              info.fog_color = "4b 4b 4b"
+            elseif i > 20 then
+              info.fog_color = "bf 00 00"
+            end
+          end
+        elseif OB_CONFIG.game == "doom1" or OB_CONFIG.game == "ultdoom" then 
+          if i <= 9 then
+            info.fog_color = "c7 c7 c7"
+          elseif i <= 18 then
+            info.fog_color = "7f 00 00"
+          elseif i <= 27 then
+            info.fog_color = "e3 00 00"
+          else
+            info.fog_color = "d7 5f 0b"
+          end
+        end
+      else
+        if OB_CONFIG.game == "doom2" or OB_CONFIG.game == "tnt" or OB_CONFIG.game == "plutonia" then
+          if i <= 11 then
+            info.fog_color = pick_sky_color_from_skygen_map(1)
+          elseif i > 11 and i <= 20 then
+            info.fog_color = pick_sky_color_from_skygen_map(2)
+          elseif i > 20 then
+            info.fog_color = pick_sky_color_from_skygen_map(3)
+          end
+        elseif OB_CONFIG.game == "doom1" or OB_CONFIG.game == "ultdoom" then 
+          if i <= 9 then
+            info.fog_color = pick_sky_color_from_skygen_map(1)
+          elseif i <= 18 then
+            info.fog_color = pick_sky_color_from_skygen_map(2)
+          elseif i <= 27 then
+            info.fog_color = pick_sky_color_from_skygen_map(3)
+          else
+            info.fog_color = pick_sky_color_from_skygen_map(4)
+          end
+        end
       end
-      if i <= 11 then
-        info.fog_color = pick_sky_color_from_skygen_map(1)
-      elseif i > 11 and i <= 20 then
-        info.fog_color = pick_sky_color_from_skygen_map(2)
-      elseif i > 20 then
-        info.fog_color = pick_sky_color_from_skygen_map(3)
-      end
-      ::continue::
     elseif PARAM.fog_generator == "random" then
       info.fog_color = pick_random_fog_color()
     elseif PARAM.fog_generator == "natural" then
