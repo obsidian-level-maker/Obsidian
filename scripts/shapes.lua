@@ -7102,6 +7102,43 @@ GROW_CAUSEWAY_KNIFE_SERRATED =
   }
 },
 
+GROW_CAUSEWAY_KNIFE_SERRATED_LIQUID =
+{
+  prob = 7,
+  skip_prob = 80,
+
+  structure = 
+  {
+    "..xxxxx","/%xxxxx",
+    "...xxxx","AA%xxxx",
+    "....xxx","AA1%xxx",
+    ".......","AA%1%~%",
+    ".......","AA/1/~/",
+    ".......","AA%1%~%",
+    ".......","AA/1/~/",
+    ".......","AA%1%~%",
+    ".......","AA/1/~/",
+    "..xxxxx","11xxxxx",
+    "..xxxxx","11xxxxx",
+    "..xxxxx","11xxxxx",
+    "..xxxxx","11xxxxx",
+    "11xxxxx","11xxxxx"
+  },
+
+  diagonals =
+  {
+    ".A","A.",
+    "1.",
+    "1.",
+    "A1","1~","~.",
+    "A1","1~","~.",
+    "A1","1~","~.",
+    "A1","1~","~.",
+    "A1","1~","~.",
+    "A1","1~","~."
+  }
+},
+
 GROW_GATED_RAMP =
 {
   prob = 20,
