@@ -666,7 +666,6 @@ end
 
 function OBS_RESOURCE_PACK_EPIC_TEXTURES.synthesize_procedural_themes()
   local function pick_element(lev_theme, texture_type)
-    gui.printf(lev_theme .." ".. texture_type .. "\n" )
     local t, RT = {}
     local result
     RT = table.copy(GAME.ROOM_THEMES)
