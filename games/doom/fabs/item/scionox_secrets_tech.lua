@@ -122,7 +122,7 @@ PREFABS.Item_wallmachines_secret_5 =
   file   = "item/scionox_secrets_tech.wad",
   map    = "MAP06",
 
-  prob   = 7,
+  prob   = 4,
   skip_prob = 50,
 
   port = "!zdoom",

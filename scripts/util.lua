@@ -442,6 +442,32 @@ function table.tostr(t, depth, prefix)
   return result
 end
 
+function table.alt_print_table(t, max_depth, indent)
+  local indent = indent or 0
+  local max_depth = max_depth or 0
+  local prefix = string.rep("  ", indent)
+
+  if not t then error("Table doesn't exist!") end
+  --if type(t) == "table" and table.size(t) then error ("Table has no elements!") end
+  if type(t) ~= "table" then error("Not a table!") end
+
+  for key, value in pairs(t) do
+    if type(value) == "table" then
+      if indent > max_depth then
+        gui.printf(prefix .. tostring(key) .. ":")
+        gui.printf(" {" .. table.size(value) .. " items}\n")
+      else
+        gui.printf(prefix .. tostring(key) .. ":\n")
+        table.alt_print_table(value, max_depth, indent + 1)
+      end
+    else
+      gui.printf(prefix .. tostring(key) .. ": " .. tostring(value) .. "\n")
+    end
+  end
+
+  return
+end
+
 function table.list_str(t)
   if not t then return "NIL" end
   if #t < 1 then return "{}" end

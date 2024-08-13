@@ -300,7 +300,7 @@ PREFABS.Item_secret_hanging_vent_closet =
   in_porches = "never",
   jump_crouch = false,
 
-  prob  = 50,
+  prob  = 20,
 
   seed_w = 1,
   seed_h = 1,
