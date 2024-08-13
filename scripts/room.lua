@@ -2318,7 +2318,7 @@ function Room_choose_size(LEVEL, R, not_big)
     if R.is_start then
       R.size_limit = int(R.size_limit / 2)
       R.floor_limit = int(R.floor_limit / 2)
-      R.size_limit = math.clamp(rand.pick({8,16,24,32}),R.size_limit,EXTREME_H)
+      R.size_limit = math.clamp(rand.pick({4,8,12,16}),R.size_limit,EXTREME_H)
     end
 
   end
