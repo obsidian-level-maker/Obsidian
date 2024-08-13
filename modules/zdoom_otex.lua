@@ -180,7 +180,7 @@ OB_MODULES["otex_proc_module"] =
 
   name = "otex_proc_module",
 
-  label = _("OTEX Resource Pack"),
+  label = _("OTEX Resource Pack [PRE-ALPHA]"),
 
   where = "other",
   priority = 75,
@@ -195,5 +195,8 @@ OB_MODULES["otex_proc_module"] =
     get_levels_after_themes = OTEX_PROC_MODULE.get_levels_after_themes
   },
 
-  tooltip = _("If enabled, generates room themes using OTEX based on a resource table."),
+  tooltip = _("If enabled, generates room themes using OTEX based on a resource table. ".. 
+  "OTEX must be manually loaded in the sourceport. " ..
+  "Includes textures and flats only, no patches.\n\n" ..
+  "Currently does not make any kind of sensibly curated room themes."),
 }
