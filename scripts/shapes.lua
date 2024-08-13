@@ -12305,6 +12305,34 @@ GROW_3x_C_LIQUID =
   },
 },
 
+GROW_3x_C_CENT =
+{
+  prob = 15,
+  skip_prob = 80,
+
+  structure =
+  {
+    "xxxx11xx","xxxx11xx",
+    "x......x","x/1111%x",
+    "x......x","x111111x",
+    "x..xx..x","x11xx11x",
+    "x..xxxxx","x11xxxxx",
+    "........","AAAAAAAA",
+    "x..xxxxx","x11xxxxx",
+    "........","AAAAAAAA",
+    "x..xxxxx","x11xxxxx",
+    "x..xx..x","x11xx11x",
+    "x......x","x111111x",
+    "x......x","x%1111/x"
+  },
+
+  diagonals =
+  {
+    ".1","1.",
+    ".1","1.",
+  },
+},
+
 GROW_3x_D =
 {
   prob = 40,
@@ -13520,6 +13548,34 @@ GROW_3x_S_STAIRS_LIQUID =
     ".A",
     "1.",
     ".A",
+    "1.",
+  },
+},
+
+GROW_3x_S_DOLLAR =
+{
+  prob = 40,
+  skip_prob = 75,
+
+  structure =
+  {
+    "xxxx.x.xxx","xxxxAxAxxx",
+    "x.........","x/11A1A111",
+    "x.........","x111A1A111",
+    "x..x.x.xxx","x11xAxAxxx",
+    "x.........","x111A1A11%",
+    "x.........","x%11A1A111",
+    "xxxx.x.x..","xxxxAxAx11",
+    "1.........","1111A1A111",
+    "1.........","1111A1A11/",
+    "xxxx.x.xxx","xxxxAxAxxx"
+  },
+
+  diagonals =
+  {
+    ".1",
+    "1.",
+    ".1",
     "1.",
   },
 },
