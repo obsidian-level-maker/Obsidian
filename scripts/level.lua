@@ -149,7 +149,7 @@ function Level_determine_map_size(LEV)
   -- now. -Reisal, July 9th, 2019,
   
   local ob_size = PARAM.float_size
-    
+
   local W, H
 
   if LEV.custom_size then
@@ -173,7 +173,9 @@ function Level_determine_map_size(LEV)
   if OB_CONFIG.length == "single" then
     if ob_size == gui.gettext("Episodic") or 
     ob_size == gui.gettext("Progressive") then
-      ob_size = 36
+      ob_size = (PARAM.float_level_lower_bound
+      + PARAM.float_level_upper_bound) / 2
+      or 36
     end
   end
 
@@ -194,7 +196,7 @@ function Level_determine_map_size(LEV)
         result_skew = 1.20
       end
     end
-    
+
     ob_size = math.clamp(low, int(rand.irange(low, high) * result_skew), high)
   end
 
