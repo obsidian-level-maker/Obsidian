@@ -14786,6 +14786,62 @@ GROW_SHARP_LIQUID =
     "1A","A1"
   }
 },
+
+GROW_ARROW =
+{
+  prob = 15,
+  prob = 75,
+
+  structure =
+  {
+    "xx/%xx","xx..xx",
+    "x/11%x","x....x",
+    "/1111%","......",
+    "xx11xx","xx..xx",
+    "xx11xx","xx..xx",
+    "xx11xx","xx..xx",
+    "xx11xx","xx..xx",
+    "xx11xx","xx11xx"
+  },
+
+  diagonals =
+  {
+    ".1","1.",
+    ".1","1.",
+    ".1","1."
+  }
+},
+
+GROW_ARROW_DOUBLE =
+{
+  prob = 20,
+  prob = 80,
+
+  structure =
+  {
+    "xx/%xx","xx..xx",
+    "x/11%x","x....x",
+    "/1111%","......",
+    "xx11xx","xx..xx",
+    "1111xx","1...xx",
+    "1111xx","1...xx",
+    "xx11xx","xx..xx",
+    "%1111/","......",
+    "x%11/x","x....x",
+    "xx%/xx","xx..xx"
+  },
+
+  diagonals =
+  {
+    ".1","1.",
+    ".1","1.",
+    ".1","1.",
+    ".1","1.",
+    ".1","1.",
+    ".1","1."
+  }
+},
+
 -- MSSP's huge-arse rooms. [HUGE]
 
 GROW_EXTRUSION_CORNER_4x4 =
