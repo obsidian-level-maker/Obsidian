@@ -4060,7 +4060,8 @@ function Grower_grow_room(SEEDS, LEVEL, R)
     end
   end
 
-  if LEVEL.has_linear_start and #LEVEL.rooms == 4 then
+  if (LEVEL.has_linear_start and #LEVEL.rooms == 4) or
+  (LEVEL.is_procedural_gotcha and #LEVEL.rooms > 2) then
     for _,R2 in pairs(LEVEL.rooms) do
       if #R2.conns == 1 and R2.grow_parent.is_start then
         if R.prelim_conn_num == 1 then

@@ -1228,10 +1228,23 @@ function Fab_load_wad(def)
       C2.u1 = convert_offset(side.x_offset)
       C2.v1 = convert_offset(side.y_offset)
     end
-    
+
+    if not C2.u1 then
+      C2.align = "world"
+    else
+      C2.align = "prealigned"
+    end
+
     if side and side.sidedef_index then
       C2.sidedef_index = side.sidedef_index
     end
+  
+    --[[if side then
+      table.alt_print_table(side)
+      gui.printf("--\n")
+    end
+    table.alt_print_table(C2)
+    gui.printf("\n")]]
 
     return C2
   end
@@ -1357,6 +1370,12 @@ function Fab_load_wad(def)
     elseif side and line then
       C2.u1 = convert_offset(side.x_offset)
       C2.v1 = convert_offset(side.y_offset)
+    end
+
+    if not C2.u1 then
+      C2.align = "world"
+    else
+      C2.align = "prealigned"
     end
 
     if side and side.sidedef_index then
@@ -1707,18 +1726,11 @@ function Fab_load_wad(def)
       local z2 = S2.floor_h
 
       if S1.special == WADFAB_DELTA_12 then 
-        if (def.delta) then
-          z1 = z1 - def.delta
-        else
-          z1 = z1 - 12 
-        end
+        z1 = z1 - (def.delta or 12)
       end
+      
       if S2.special == WADFAB_DELTA_12 then 
-        if (def.delta) then
-          z2 = z2 - def.delta
-        else
-          z2 = z2 - 12 
-        end
+        z2 = z2 - (def.delta or 12)
       end
 
       z = math.max(z1, z2)
@@ -1749,23 +1761,10 @@ function Fab_load_wad(def)
 
       local props = { tex = tex }
 
-      if not def.forced_offsets then
-        props.u1 = convert_offset(side.x_offset)
-        props.v1 = convert_offset(side.y_offset)
-      else
-        if def.forced_offsets[side.sidedef_index] then
-          if def.forced_offsets[side.sidedef_index].x then
-            props.u1 = def.forced_offsets[side.sidedef_index].x
-          else
-            props.u1 = convert_offset(side.x_offset)
-          end
-          if def.forced_offsets[side.sidedef_index].y then
-            props.v1 = def.forced_offsets[side.sidedef_index].y
-          else
-            props.v1 = convert_offset(side.y_offset)
-          end
-        end
-      end
+      -- add forced offsets as per def declarations
+      local offsets = def.forced_offsets and def.forced_offsets[side.sidedef_index] or {}
+      props.u1 = offsets.x or convert_offset(side.x_offset)
+      props.v1 = offsets.y or convert_offset(side.y_offset)
 
       local B = brushlib.rail_brush(x1,y1, x2,y2, z, props)
 
@@ -2275,14 +2274,11 @@ function Fab_replacements(LEVEL, fab)
 
   local function forced_offset_check(C)
     if C.sidedef_index and fab.fields["forced_offsets"] then
-        if fab.fields["forced_offsets"][C.sidedef_index] then
-          if fab.fields["forced_offsets"][C.sidedef_index].x then
-            C.u1 = fab.fields["forced_offsets"][C.sidedef_index].x
-          end
-          if fab.fields["forced_offsets"][C.sidedef_index].y then
-            C.v1 = fab.fields["forced_offsets"][C.sidedef_index].y
-          end
-        end
+      local offset = fab.fields["forced_offsets"][C.sidedef_index]
+      if offset then
+        if offset.x then C.u1 = offset.x end
+        if offset.y then C.v1 = offset.y end
+      end
     end
   end
 

@@ -2183,6 +2183,28 @@ brightmap texture COMPSD8
 {
   map OBRCPSD1
 }
+
+brightmap texture CONSOLEA
+{
+  map CONSOLBR
+}
+brightmap texture CONSOLEB
+{
+  map CONSOLBR
+}
+brightmap texture CONSOLEC
+{
+  map CONSOLBR
+}
+brightmap texture CONSOLED
+{
+  map CONSOLBR
+}
+brightmap texture CONSOLEE
+{
+  map CONSOLBR
+}
+
 //
 brightmap texture NOISE2A
 {
@@ -2717,6 +2739,56 @@ brightmap texture SD_TSGF9
 brightmap texture SD_TSGFA
 {
   map SDTSFBRA
+}
+
+brightmap texture SDHCCBW1
+{
+  map SDHCCBR1
+}
+
+brightmap texture SDHCCBW2
+{
+  map SDHCCBR2
+}
+
+brightmap texture SDHCCBW3
+{
+  map SDHCCBR3
+}
+
+brightmap texture SDHCCBW4
+{
+  map SDHCCBR4
+}
+
+brightmap texture SDHCCBW5
+{
+  map SDHCCBR5
+}
+
+brightmap texture SDHCCBW8
+{
+  map SDHCCBR8
+}
+
+brightmap texture SDHCCBW9
+{
+  map SDHCCBR9
+}
+
+brightmap texture SDHCCBWA
+{
+  map SDHCCBRA
+}
+
+brightmap texture SDHCCBWB
+{
+  map SDHCCBRB
+}
+
+brightmap texture SDHCCBWC
+{
+  map SDHCCBRC
 }
 ]]
 

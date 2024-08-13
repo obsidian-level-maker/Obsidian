@@ -3249,8 +3249,8 @@ GROW_COLONNADE_TINY =
 
 GROW_COLONNADE_PARTHENON =
 {
-  prob = 10,
-  skip_prob = 50,
+  prob = 7,
+  skip_prob = 80,
 
   structure =
   {
@@ -3265,8 +3265,8 @@ GROW_COLONNADE_PARTHENON =
 
 GROW_COLONNADE_PARTHENON_3P =
 {
-  prob = 10,
-  skip_prob = 50,
+  prob = 7,
+  skip_prob = 75,
 
   structure =
   {
@@ -6651,6 +6651,57 @@ GROW_CAUSEWAY_SINGLE_WATERBOUND =
   },
 },
 
+GROW_CAUSEWAY_SINGLE_CORNER_PILLAR =
+{
+  prob = 15,
+  skip_prob = 75,
+
+  structure =
+  {
+    "........1","%11111111",
+    "........1","111111111",
+    "........x","11/#v~~~x",
+    "........x","11#/AAAAx",
+    "........x","11>AAAAAx",
+    "........x","11~AAAAAx",
+    "........x","11~AAAAAx",
+    "........x","11~AAAAAx"
+  },
+
+  diagonals =
+  {
+    "1.",
+    "1.",
+    ".A"
+  }
+},
+
+GROW_CAUSEWAY_SINGLE_THICC_CORNER_PILLAR =
+{
+  prob = 15,
+  skip_prob = 80,
+
+  structure =
+  {
+    ".........1","%111111111",
+    ".........1","1111111111",
+    ".........x","11/##v~~~x",
+    ".........x","11###v~~~x",
+    ".........x","11##/AAAAx",
+    ".........x","11>>AAAAAx",
+    ".........x","11~~AAAAAx",
+    ".........x","11~~AAAAAx",
+    ".........x","11~~AAAAAx"
+  },
+
+  diagonals =
+  {
+    "1.",
+    "1.",
+    ".A"
+  }
+},
+
 GROW_CAUSEWAY_SINGLE_WATERBOUND_OFF_RAMP =
 {
   prob = 30,
@@ -6975,6 +7026,117 @@ GROW_CAUSEWAY_TIP =
     "xxx....xx","xxxAAAAxx",
     "xxx....xx","xxxAAAAxx",
   },
+},
+
+GROW_CAUSEWAY_KNIFE =
+{
+  prob = 10,
+  skip_prob = 75,
+
+  structure = 
+  {
+    "..xx","/%xx",
+    "...x","AA%x",
+    "....","AA1%",
+    "....","AA%1",
+    "....","AA/1",
+    "....","AA%1",
+    "....","AA/1",
+    "....","AA%1",
+    "....","AA/1",
+    "..xx","11xx",
+    "..xx","11xx",
+    "..xx","11xx",
+    "..xx","11xx",
+    "11xx","11xx"
+  },
+
+  diagonals =
+  {
+    ".A","A.",
+    "1.",
+    "1.",
+    "A1",
+    "A1",
+    "A1",
+    "A1",
+    "A1",
+    "A1"
+  }
+},
+
+GROW_CAUSEWAY_KNIFE_SERRATED =
+{
+  prob = 10,
+  skip_prob = 80,
+
+  structure = 
+  {
+    "..xxx","/%xxx",
+    "...xx","AA%xx",
+    "....x","AA1%x",
+    ".....","AA%1%",
+    ".....","AA/1/",
+    ".....","AA%1%",
+    ".....","AA/1/",
+    ".....","AA%1%",
+    ".....","AA/1/",
+    "..xxx","11xxx",
+    "..xxx","11xxx",
+    "..xxx","11xxx",
+    "..xxx","11xxx",
+    "11xxx","11xxx"
+  },
+
+  diagonals =
+  {
+    ".A","A.",
+    "1.",
+    "1.",
+    "A1","1.",
+    "A1","1.",
+    "A1","1.",
+    "A1","1.",
+    "A1","1.",
+    "A1","1."
+  }
+},
+
+GROW_CAUSEWAY_KNIFE_SERRATED_LIQUID =
+{
+  prob = 7,
+  skip_prob = 80,
+
+  structure = 
+  {
+    "..xxxxx","/%xxxxx",
+    "...xxxx","AA%xxxx",
+    "....xxx","AA1%xxx",
+    ".......","AA%1%~%",
+    ".......","AA/1/~/",
+    ".......","AA%1%~%",
+    ".......","AA/1/~/",
+    ".......","AA%1%~%",
+    ".......","AA/1/~/",
+    "..xxxxx","11xxxxx",
+    "..xxxxx","11xxxxx",
+    "..xxxxx","11xxxxx",
+    "..xxxxx","11xxxxx",
+    "11xxxxx","11xxxxx"
+  },
+
+  diagonals =
+  {
+    ".A","A.",
+    "1.",
+    "1.",
+    "A1","1~","~.",
+    "A1","1~","~.",
+    "A1","1~","~.",
+    "A1","1~","~.",
+    "A1","1~","~.",
+    "A1","1~","~."
+  }
 },
 
 GROW_GATED_RAMP =
@@ -12143,6 +12305,34 @@ GROW_3x_C_LIQUID =
   },
 },
 
+GROW_3x_C_CENT =
+{
+  prob = 15,
+  skip_prob = 80,
+
+  structure =
+  {
+    "xxxx11xx","xxxx11xx",
+    "x......x","x/1111%x",
+    "x......x","x111111x",
+    "x..xx..x","x11xx11x",
+    "x..xxxxx","x11xxxxx",
+    "........","AAAAAAAA",
+    "x..xxxxx","x11xxxxx",
+    "........","AAAAAAAA",
+    "x..xxxxx","x11xxxxx",
+    "x..xx..x","x11xx11x",
+    "x......x","x111111x",
+    "x......x","x%1111/x"
+  },
+
+  diagonals =
+  {
+    ".1","1.",
+    ".1","1.",
+  },
+},
+
 GROW_3x_D =
 {
   prob = 40,
@@ -13362,6 +13552,34 @@ GROW_3x_S_STAIRS_LIQUID =
   },
 },
 
+GROW_3x_S_DOLLAR =
+{
+  prob = 40,
+  skip_prob = 75,
+
+  structure =
+  {
+    "xxxx.x.xxx","xxxxAxAxxx",
+    "x.........","x/11A1A111",
+    "x.........","x111A1A111",
+    "x..x.x.xxx","x11xAxAxxx",
+    "x.........","x111A1A11%",
+    "x.........","x%11A1A111",
+    "xxxx.x.x..","xxxxAxAx11",
+    "1.........","1111A1A111",
+    "1.........","1111A1A11/",
+    "xxxx.x.xxx","xxxxAxAxxx"
+  },
+
+  diagonals =
+  {
+    ".1",
+    "1.",
+    ".1",
+    "1.",
+  },
+},
+
 GROW_3x_T =
 {
   prob = 40,
@@ -14568,6 +14786,62 @@ GROW_SHARP_LIQUID =
     "1A","A1"
   }
 },
+
+GROW_ARROW =
+{
+  prob = 15,
+  prob = 75,
+
+  structure =
+  {
+    "xx/%xx","xx..xx",
+    "x/11%x","x....x",
+    "/1111%","......",
+    "xx11xx","xx..xx",
+    "xx11xx","xx..xx",
+    "xx11xx","xx..xx",
+    "xx11xx","xx..xx",
+    "xx11xx","xx11xx"
+  },
+
+  diagonals =
+  {
+    ".1","1.",
+    ".1","1.",
+    ".1","1."
+  }
+},
+
+GROW_ARROW_DOUBLE =
+{
+  prob = 20,
+  prob = 80,
+
+  structure =
+  {
+    "xx/%xx","xx..xx",
+    "x/11%x","x....x",
+    "/1111%","......",
+    "xx11xx","xx..xx",
+    "1111xx","1...xx",
+    "1111xx","1...xx",
+    "xx11xx","xx..xx",
+    "%1111/","......",
+    "x%11/x","x....x",
+    "xx%/xx","xx..xx"
+  },
+
+  diagonals =
+  {
+    ".1","1.",
+    ".1","1.",
+    ".1","1.",
+    ".1","1.",
+    ".1","1.",
+    ".1","1."
+  }
+},
+
 -- MSSP's huge-arse rooms. [HUGE]
 
 GROW_EXTRUSION_CORNER_4x4 =

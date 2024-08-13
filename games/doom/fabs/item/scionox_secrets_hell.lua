@@ -25,6 +25,9 @@ PREFABS.Item_hell_alcove_window_secret =
 {
   template = "Item_hell_alcove_tomb_secret",
   map = "MAP02",
+
+  prob = 150,
   port = "zdoom",
-  seed_w = 3,
+
+  seed_w = 3
 }

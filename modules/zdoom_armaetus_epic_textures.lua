@@ -660,10 +660,77 @@ function OBS_RESOURCE_PACK_EPIC_TEXTURES.setup(self)
   PARAM.obsidian_resource_pack_active = true
   module_param_up(self)
   OBS_RESOURCE_PACK_EPIC_TEXTURES.put_new_materials()
-
+  OBS_RESOURCE_PACK_EPIC_TEXTURES.synthesize_procedural_themes()
 end
 
+
+function OBS_RESOURCE_PACK_EPIC_TEXTURES.synthesize_procedural_themes()
+  local function pick_element(lev_theme, texture_type)
+    local t, RT = {}
+    local result
+    RT = table.copy(GAME.ROOM_THEMES)
+    table.name_up(RT)
+
+    -- collect all viable room themes
+    for _,RX in pairs(RT) do
+      if string.match(RX.name, lev_theme .. "_") and
+      RX.env == "building" then
+        table.insert(t, RX.name)
+      end
+    end
+
+    -- pick one theme
+    local room_theme_pick = rand.pick(t)
+
+    -- pick one texture from a group in theme
+    result = rand.key_by_probs(RT[room_theme_pick][texture_type])
+    return result
+  end
+
+  local function create_theme(lev_theme, name)
+    local theme = lev_theme
+    local t = {}
+    t.floors = {} 
+    t.walls = {}
+    t.ceilings = {}
+
+    if theme == "any" then
+      name = "any_" .. name
+      theme = rand.pick({"tech","urban","hell"})
+    else
+      name = theme .. "_" .. name
+    end
+
+    t.env = "building"
+    t.prob = rand.pick({20,30,40,50,60})
+
+    t.floors[pick_element(theme, "floors")] = 5
+    t.floors[pick_element(theme, "floors")] = 5
+    t.walls[pick_element(theme, "walls")] = 5
+    t.ceilings[pick_element(theme, "ceilings")] = 5
+    t.ceilings[pick_element(theme, "ceilings")] = 5
+
+    t.name = name
+
+    GAME.ROOM_THEMES[t.name] = t
+  end
+
+  local function synthesize_themes(y)    
+    for x = 1, y do
+      create_theme("tech", "synth_room_theme_" .. x)
+      create_theme("urban", "synth_room_theme_" .. x)
+      create_theme("hell", "synth_room_theme_" .. x)
+      create_theme("any", "synth_room_theme_" .. x)
+    end
+  end
+
+  synthesize_themes(5)
+end
+
+
 function OBS_RESOURCE_PACK_EPIC_TEXTURES.get_levels_after_themes()
+
+
   OBS_RESOURCE_PACK_EPIC_TEXTURES.decide_environment_themes()
 
   table.deep_merge(GAME.ENTITIES, ORP_ENTITIES.ENTITIES)
@@ -1010,18 +1077,23 @@ function OBS_RESOURCE_PACK_EPIC_TEXTURES.put_new_materials()
       OBS_RESOURCE_PACK_DOOM1_ROOM_THEMES, 2)
 
     -- NATURALS
-    OBS_RESOURCE_PACK_EPIC_TEXTURES.table_insert(OBS_RESOURCE_PACK_DOOM1_TECH_NATURALS,
-      GAME.ROOM_THEMES.tech_Outdoors.naturals)
-    OBS_RESOURCE_PACK_EPIC_TEXTURES.table_insert(OBS_RESOURCE_PACK_DOOM1_DEIMOS_NATURALS,
-      GAME.ROOM_THEMES.deimos_Outdoors.naturals)
-    OBS_RESOURCE_PACK_EPIC_TEXTURES.table_insert(OBS_RESOURCE_PACK_DOOM1_HELL_NATURALS,
-      GAME.ROOM_THEMES.hell_Outdoors.naturals)
-    OBS_RESOURCE_PACK_EPIC_TEXTURES.table_insert(OBS_RESOURCE_PACK_DOOM1_FLESH_NATURALS,
-      GAME.ROOM_THEMES.flesh_Outdoors.naturals)
+    OBS_RESOURCE_PACK_EPIC_TEXTURES.table_insert(
+      GAME.ROOM_THEMES.tech_Outdoors.naturals,
+      OBS_RESOURCE_PACK_DOOM1_TECH_NATURALS)
+    OBS_RESOURCE_PACK_EPIC_TEXTURES.table_insert(
+      GAME.ROOM_THEMES.deimos_Outdoors.naturals,
+      OBS_RESOURCE_PACK_DOOM1_DEIMOS_NATURALS)
+    OBS_RESOURCE_PACK_EPIC_TEXTURES.table_insert(
+      GAME.ROOM_THEMES.hell_Outdoors.naturals,
+      OBS_RESOURCE_PACK_DOOM1_HELL_NATURALS)
+    OBS_RESOURCE_PACK_EPIC_TEXTURES.table_insert(
+      GAME.ROOM_THEMES.flesh_Outdoors.naturals,
+      OBS_RESOURCE_PACK_DOOM1_FLESH_NATURALS)
 
     -- SINKS
-    OBS_RESOURCE_PACK_EPIC_TEXTURES.table_insert(OBS_RESOURCE_PACK_DOOM1_SINK_DEFS,
-      GAME.SINKS)
+    OBS_RESOURCE_PACK_EPIC_TEXTURES.table_insert(
+      GAME.SINKS,
+      OBS_RESOURCE_PACK_DOOM1_SINK_DEFS)
 
     -- inserts for hallways
     GAME.THEMES.tech.wide_halls = OBS_RESOURCE_PACK_TECH_WIDE_HALLS
