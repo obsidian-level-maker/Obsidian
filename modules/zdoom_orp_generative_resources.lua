@@ -1846,8 +1846,6 @@ OBS_RESOURCE_PACK_GENAI_ROOM_THEMES =
       SDTBNKW8 = 5,
       SDTBNKW9 = 5,
       SDTBNKWA = 5,
-      SDTBNKWB = 5,
-      SDTBNKWC = 5,
       SDTBNKWD = 5
     },
 
@@ -4586,8 +4584,6 @@ OBS_RESOURCE_PACK_GENAI_ROOM_THEMES =
       SDTBNKW8 = 5,
       SDTBNKW9 = 5,
       SDTBNKWA = 5,
-      SDTBNKWB = 5,
-      SDTBNKWC = 5,
       SDTBNKWD = 5
     },
 
@@ -4819,8 +4815,6 @@ OBS_RESOURCE_PACK_GENAI_THEMES =
       SDTBNKW8 = 15,
       SDTBNKW9 = 15,
       SDTBNKWA = 15,
-      SDTBNKWB = 15,
-      SDTBNKWC = 15,
       SDTBNKWD = 15
     },
 
@@ -4881,7 +4875,6 @@ OBS_RESOURCE_PACK_GENAI_THEMES =
       SDTBNKW8 = 6,
       SDTBNKW9 = 6,
       SDTBNKWA = 6,
-      SDTBNKWB = 6,
       SDTBNKWC = 6,
       SDTBNKWD = 6
     },
