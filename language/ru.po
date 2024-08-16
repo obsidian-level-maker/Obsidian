@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Obsidian Level Maker\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-05-09 23:41+1000\n"
-"PO-Revision-Date: 2024-06-07 23:56+0300\n"
+"PO-Revision-Date: 2024-08-02 15:13+0300\n"
 "Last-Translator: Morthimer McMare\n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -809,11 +809,11 @@ msgstr "Chaingunner. Управление количеством пулемёт�
 
 #: modules/ctl_doom.lua:119
 msgid "SS Nazi"
-msgstr "Нацисты"
+msgstr "Нацист"
 
 #: modules/ctl_doom.lua:126
 msgid "Control the amount of SS troops."
-msgstr "SS Nazi. Управление количеством нацистов Wolfenstein SS."
+msgstr "SS Nazi. Управление количеством нацистов Wolfenstein SS с секретных уровней Doom 2."
 
 #: modules/ctl_doom.lua:133
 msgid "Imp"
@@ -1195,7 +1195,7 @@ msgstr "Предупреждать"
 
 #: modules/debugger.lua:25
 msgid "Abort"
-msgstr "Прерывать"
+msgstr "Прерывать генерацию"
 
 #: modules/debugger.lua:31
 msgid "Filename"
@@ -1387,7 +1387,7 @@ msgstr ""
 "\n"
 "Предупреждать: продолжать, но написать названия префаба и пропущенной текстуры в файл лога.\n"
 "\n"
-"Прерывать: аварийно завершить генерацию с сообщением о префабе и текстуре, а также, как и в прошлом пункте, записать информацию в файл лога."
+"Прерывать генерацию: завершить генерацию с аварийным сообщением о префабе и текстуре, а также, как и в прошлом пункте, записать информацию в файл лога."
 
 #: modules/debugger.lua:234
 msgid "Check For Non-Vanilla Materials"
@@ -2436,7 +2436,7 @@ msgstr "Разбить на микроэпизоды (?)"
 
 #: modules/heretic/theme_control_heretic.lua:99
 msgid "[Exp] Heretic Theme Control"
-msgstr "[Эксп.] Управление темами Heretic"
+msgstr "[Экспериментальное] Управление темами Heretic"
 
 #: modules/heretic/theme_control_heretic.lua:114
 msgid "Episode 1"
@@ -2963,10 +2963,8 @@ msgid "Sets chance of levels being generated using Oblige v2"
 msgstr "Устанавливает шанс создания уровня с помощью набора правил Oblige v2."
 
 #: modules/historical_versions.lua:60
-msgid ""
-"Gives levels a chance of being generated using an internal version of Oblige version 2.x. NOTE: Not all module settings will affect levels generated in this manner."
-msgstr ""
-"Позволяет генерацию уровней с использованием внутренней версии Oblige v2.x. Примечание: далеко не все остальные настройки влияют на созданные таким образом уровни."
+msgid "Gives levels a chance of being generated using an internal version of Oblige version 2.x. NOTE: Not all module settings will affect levels generated in this manner."
+msgstr "Позволяет генерацию уровней с использованием внутренней версии Oblige v2.x. Примечание: далеко не все остальные настройки влияют на созданные таким образом уровни."
 
 #: modules/historical_versions.lua:67
 msgid "Oblige v2 Deathmatch Mode"
@@ -4798,7 +4796,7 @@ msgstr "Египет (TNT)"
 
 #: modules/theme_control.lua:127
 msgid "[Exp] Doom 2 Theme Control"
-msgstr "[Эксп.] Управление темами Doom 2"
+msgstr "[Экспериментальное] Управление темами Doom 2"
 
 #: modules/theme_control.lua:170
 msgid "Flesh"
@@ -4806,7 +4804,7 @@ msgstr "Thy Flesh Consumed (эп. 4)"
 
 #: modules/theme_control.lua:181
 msgid "[Exp] Doom 1 Theme Control"
-msgstr "[Эксп.] Управление темами Doom 1"
+msgstr "[Экспериментальное] Управление темами Doom 1"
 
 #: modules/ui_arch.lua:25
 msgid "Enable"
@@ -5320,7 +5318,7 @@ msgstr "Стиль ловушек"
 
 #: modules/ui_mons.lua:224
 msgid "This option selects between using only teleport or closet traps. DEFAULT means both are used."
-msgstr "Эта опция позволяет выбрать соотношение использования телепорт-ловушек и открывающихся ловушек. По умолчанию используются оба вида."
+msgstr "Эта опция позволяет выбрать соотношение использования телепорт-ловушек и открывающихся ловушек. По умолчанию используются оба вида, примерно 50%/50%."
 
 #: modules/ui_mons.lua:229
 msgid "Trap Monsters"
@@ -5368,6 +5366,7 @@ msgstr ""
 "Влияют ли вещи, выпадающие с монстров (например, магазины из зомби-рядовых) на появление обычных предметов на карте.\n"
 "\n"
 "Да: игнорировать выпадающие из монстров боеприпасы и оружие при расчёте количества предметов.\n"
+"\n"
 "Нет (по умолчанию): уменьшать количество предметов на карте, которые также могут выпасть из монстров. К примеру, если на уровне есть зомби-сержанты, картечи будет генерироваться меньше."
 
 #: modules/ui_mons.lua:306
@@ -6249,7 +6248,7 @@ msgstr "От переводчиков"
 
 #: source_files/obsidian_main/m_lua.cc:996
 msgid "Making"
-msgstr ""
+msgstr ">>>"
 
 #: source_files/obsidian_main/m_lua.cc:1123
 msgid "Using"
@@ -6257,11 +6256,11 @@ msgstr ""
 
 #: source_files/obsidian_main/m_lua.cc:1124
 msgid "Preview Not Available"
-msgstr ""
+msgstr "Превью недоступно"
 
 #: source_files/obsidian_main/m_lua.cc:1526
 msgid "[ ERROR ]"
-msgstr ""
+msgstr "[ ОШИБКА ]"
 
 #: source_files/obsidian_main/m_lua.cc:1530
 msgid "Script Error: "
@@ -7218,7 +7217,6 @@ msgstr ""
 "- Harmony Compat. Переиздание Harmony для движков вне семейства *ZDoom. Должен запускаться как PWAD вместе с IWAD Doom 2/Freedoom 2. Поддерживается только SLUMP;\n"
 "- Strife. Поддерживается только SLUMP."
 
-
 #: source_files/obsidian_main/ui_game.cc:238
 msgid ""
 "Available Ports:\n"
@@ -7366,7 +7364,9 @@ msgstr "Вот он. Действительно Линейный Режим."
 
 #: modules/alt_shape_grammars.lua:75
 msgid "It's like that movie Cube, but with .5 less dimensions (if you're a contrarian)."
-msgstr "Примерно как в фильме \"Куб\", но с уменьшенным на 0.5 числом измерений.\n\n"
+msgstr ""
+"Примерно как в фильме \"Куб\", но с уменьшенным на 0.5 числом измерений.\n"
+"\n"
 "С данным набором правил комнаты будут квадратными, со случайно вырезанной частью в одном из углов или на одной из стен. Размеры комнат практически одинаковы."
 
 #: modules/alt_shape_grammars.lua:82
@@ -7402,272 +7402,92 @@ msgstr "Множитель здоровья босса"
 
 #: modules/procedural_gotcha_edge.lua:184
 msgid "DDF Generated Boss Options"
-msgstr ""
+msgstr "Настройки генерации боссов"
 
 #: modules/gzdoom_marine_closet.lua:1537
 msgid "Friendly Marine Closets"
 msgstr "Комнаты дружественных ИИ-морпехов"
 
-#~ msgid ""
-#~ "\n"
-#~ "Warning: The game that you have selected is in an experimental state. WADs may not build successfully and certain gameplay features may not be implemented yet! To ignore this warning and continue generation for these games, check the \"Experimental Games\" checkbox located in the Debug Control Module.\n"
-#~ "\n"
-#~ "This message will change should development scope expand."
-#~ msgstr ""
-#~ "\n"
-#~ "Внимание: выбранная Вами игра пока поддерживается в экспериментальном режиме. В префабах для неё и выходном сборнике уровней могут присутствовать критические ошибки, а некоторые функции игрового процесса, вероятнее всего, ещё даже не были реализованы. Чтобы проигнорировать предупреждение и продолжить генерацию для, установите флажок \"Экспериментальные игры\", расположенный в отладочных настройках.\n"
-#~ "\n"
-#~ "Это сообщение будет меняться по ходу разработки."
+#: source/m_options.cc:135
+msgid "Name or value missing!"
+msgstr "Name or value missing!"
 
-#~ msgid ""
-#~ "\n"
-#~ "Warning: Limit-Removing uses a very basic set of prefabs, and should only be used if your source port isn't compatible with any other choice!\n"
-#~ "Click the help link next to the Engine setting for an explanation of the other choices. To disable this warning, check the \"Suppress NoLimit Warning\" checkbox located in the Debug Control Module."
-#~ msgstr ""
-#~ "\n"
-#~ "Предупреждение: Limit-Removing использует базовый набор префабов. Его следует использовать только в том случае, если Ваш порт не совместим ни с каким другим пунктом меню.\n"
-#~ "\n"
-#~ "Чтобы узнать об альтернативах, можно нажать на знак справки рядом с настройкой \"Движок\". Чтобы отключить это предупреждение, установите флажок «Подавить предупреждение об отсутствии ограничений», расположенный в отладочных настройках."
+#: source/m_options.cc:149
+msgid "Missing Options file -- using defaults."
+msgstr "Missing Options file -- using defaults."
 
-#~ msgid "PrBoom Compat"
-#~ msgstr "Совместимый с PrBoom"
+#: source/m_options.cc:565
+msgid "Empty default directory provided???"
+msgstr "Empty default directory provided???"
 
-#~ msgid "Eternity (Experimental)"
-#~ msgstr "Eternity (экспериментальный)"
+#: source/g_wolf.cc:448
+msgid "Empty directory provided???"
+msgstr "Empty directory provided???"
 
-#~ msgid "Vanilla DOOM"
-#~ msgstr "Ванильный Doom"
+#: source/m_lua.cc:2138
+msgid "ob_print_reference: Error creating REFERENCE.txt!"
+msgstr "ob_print_reference: Error creating REFERENCE.txt!"
 
-#~ msgid "ZDoom Family"
-#~ msgstr "Семейство ZDoom-портов"
+#: source/m_lua.cc:2142
+msgid "A copy of this output can be found at"
+msgstr "Весь этот вывод также может быть найден в"
 
-#~ msgid "Strife (Exp)"
-#~ msgstr "Strife (экспериментальный)"
+#: source/m_lua.cc:2151
+msgid "ob_print_reference_json: Error printing json reference!"
+msgstr "ob_print_reference_json: Error printing json reference!"
 
-#~ msgid "Oblige v5"
-#~ msgstr "Oblige v5"
+#: source/g_doom.cc:467
+msgid "Unable to create wad file:"
+msgstr "Не удалось создать WAD-файл:"
 
-#~ msgid "Sets chance of levels using the Oblige v5 shape grammar."
-#~ msgstr "Устанавливает шанс создания уровня с помощью набора правил Oblige v5."
+#: source/m_dialog.cc:276
+msgid "Error choosing output file:"
+msgstr "Ошибка при выборе выходного файла:"
 
-#~ msgid "Name Generator"
-#~ msgstr "Генератор имён"
+#: source/m_dialog.cc:356
+msgid "Invalid argument. Will process as string."
+msgstr "Неверный аргумент; ввод расценивается как строка."
 
-#~ msgid ""
-#~ "Prints a demonstration sample of 32 names per category.\n"
-#~ "Level Names = TECH, GOTHIC, URBAN, and BOSS level names\n"
-#~ "Title Names = TITLE, SUB_TITLE, and EPISODE names\n"
-#~ msgstr ""
-#~ "Выводит демонстрационный пример 32 названий на каждую категорию.\n"
-#~ "Названия уровней: TECH, GOTHIC, URBAN, BOSS;\n"
-#~ "Названия заголовков: TITLE, SUB_TITLE, EPISODE."
+#: source/m_dialog.cc:362
+msgid "Resulting number would be out of range. Will process as string."
+msgstr "Итоговое число выйдет за доступные пределы; ввод расценивается как строка."
 
-#~ msgid "Print ZDoom Strings"
-#~ msgstr "Выводить строки ZDoom"
+#: source/m_manage.cc:426
+msgid "Error choosing save file:"
+msgstr ""
 
-#~ msgid "Displays the story generator and custom quit message strings added by the ZDoom Special Addons: Story Generator."
-#~ msgstr "Сохраняет информацию генератора историй и новые сообщения выхода, добавляемые аддоном \"ZDoom Special Addons: Story Generator\"."
+#: source/m_manage.cc:492
+msgid "Error choosing load file:"
+msgstr ""
 
-#~ msgid "Build Level"
-#~ msgstr "Создать лишь эту карту"
+#: modules/midi_generation.lua:5
+msgid "Safe Defaults"
+msgstr "По умолчанию"
 
-#~ msgid "Allows the skipping of level construction along the WAD for debugging purposes."
-#~ msgstr "Позволяет оставить генерацию только одного выбранного номера уровня (для отладочных целей)."
+#: modules/midi_generation.lua:6
+msgid "Relaxed (May Sound Weird)"
+msgstr "Спокойные (может звучать странно)"
 
-#~ msgid "Suppress NoLimit Warning"
-#~ msgstr "Разрешить Limit-Removing"
+#: modules/midi_generation.lua:32
+msgid "MIDI Generation"
+msgstr "Генерация MIDI"
 
-#~ msgid "Suppress warning dialog when using Limit-Removing with the Doom family of games."
-#~ msgstr "Подавляет диалоговое окно предупреждения об использовании движка Limit-Removing для игр семейства Doom."
+#: modules/midi_generation.lua:39
+msgid "Procedurally generate replacement MIDI tracks"
+msgstr "Процедурная генерация MIDI-треков."
 
-#~ msgid "This warning only applies to the Doom series of games, as other supported games may only have Limit-Removing as a feasible choice."
-#~ msgstr "Предупреждение будет относиться только к серии игр Doom, так как в других предлагаемых играх даже наиболее старый формат уже поддерживал Limit-Removing."
+#: modules/midi_generation.lua:51
+msgid "Generator Config"
+msgstr "Конфигурация генератора"
 
-#~ msgid "Enables building of levels for experimental games."
-#~ msgstr "Позволяет создавать уровни для игр, с которыми пока не была проведена детальная отладка."
+#: modules/midi_generation.lua:54
+msgid "Choose which procedural MIDI config to use"
+msgstr "Какая конфигурация будет использоваться при генерации MIDI."
 
-#~ msgid "Attach DEBUG Info"
-#~ msgstr "Встраивать DEBUG-информацию"
+#: modules/zdoom_armaetus_epic_textures.lua:1212
+msgid "AI Textures"
+msgstr "Текстуры посредством нейросетей"
 
-#~ msgid "Attaches certain debug info into an OBLOGS text lump in the generated WAD."
-#~ msgstr "Добавляет некоторую определённую информацию в lump \"OBLOGS\" в генерируемый WAD."
-
-#~ msgid "Generates dynamic point lights on ceiling light prefabs."
-#~ msgstr "Генерирует динамический свет на префабах потолочного освещения."
-
-#~ msgid "Gives levels a chance of being generated using an internal version of Oblige version 2.x. NOTE: Not all module settings will affect levels generated in this manner."
-#~ msgstr "Даёт шанс каждому конкретному уровню быть сгенерированным с использованием логики генератора карт Oblige v2.x. Обратите внимание, что далеко не все остальные параметры смогут повлиять на уровни, созданные подобным образом."
-
-#~ msgid "Oblige v2 Grammar"
-#~ msgstr "Правила Oblige v2"
-
-#~ msgid "Sets chance of levels using the Oblige v2 shape grammar."
-#~ msgstr "Устанавливает шанс того, что уровень будет сгенерирован с использованием правил Oblige v2."
-
-#~ msgid "Gives levels a chance of being generated using the Oblige v2 shape grammar. With this grammar, rooms are always square-shaped, even in parks or caves, with the occasional chunk taken out of one of the corners or sides. Hallways are limited to the dedicated v2 hallway set. Room sizes are very consistent."
-#~ msgstr "Устанавливает шанс того, что уровень будет сгенерирован с использованием правил Oblige v2.x. С ними комнаты всегда имеют прямые углы, в том числе в парках и пещерах; изредка попадается геометрия, срезанная с одного из углов или одной из сторон. Виды коридоров сильно ограничены. Размеры комнат практически не отличаются."
-
-#~ msgid "Oblige v5 Grammar"
-#~ msgstr "Правила Oblige v5"
-
-#~ msgid "Gives levels a chance of being generated using the Oblige v5 shape grammar. With this grammar, indoor rooms are usually square or diamond-shaped. Parks are larger than the indoor areas, but still more or less rectangular in nature. Caves retain their organic layouts. Hallways and joiners are still used as normal. Room sizes are fairly consistent."
-#~ msgstr "Устанавливает шанс того, что каждый конкретный уроветь будет сгенерирован с использованием правил Oblige v5.x. При этом внутренние помещения обычно будут иметь форму квадрата или параллелограмма; парки, несмотря на свой превосходящий внутренние помещения размер, также будут в основном прямоугольными, однако пещеры сохранят свою особую планировку. Коридоры и соединительные области будут использоваться как обычно. Размеры комнат довольно стабильны."
-
-#~ msgid ""
-#~ "Pick which information type to place into Hellscape Navigator markers.\n"
-#~ "\n"
-#~ "Quest Info - (DEFAULT) Places traversal progress per room and key quest info into the markers.\n"
-#~ "Debug Info - Prints verbose information about shape grammar growth status per room and prefabs. Reveals secret prefabs - which is obviously cheating."
-#~ msgstr ""
-#~ "Какой тип информации выводить для модификации \"Hellscape Navigator\".\n"
-#~ "\n"
-#~ "По умолчанию: стандартные метки, передают название каждой комнаты.\n"
-#~ "\n"
-#~ "Отладка: подробная информация о том, каким образом Obsidian строил уровень. При обычном прохождении имеет полное право считаться читерством, так как раскрывает в том числе и местонахождение секретов."
-
-#~ msgid "Single Room Themes"
-#~ msgstr "Одна тема на все комнаты"
-
-#~ msgid "Determines the odds at which a level would use a universal, single room theme for all indoors (buildings). Default is 50%."
-#~ msgstr "Определяет вероятность того, что все внутренние помещения будут иметь одну и ту же тему (вне зависимости от расстояния между ними). По умолчанию — 50%."
-
-#~ msgid "Limited Wall Groups"
-#~ msgstr "Лимит группировки стен"
-
-#~ msgid "Determines the odds at which a level would use fewer wall group choices but at greater quantites for more consistent visuals. Default is 50%."
-#~ msgstr "Определяет вероятность того, что группы стен на уровне будут менее разнообразными, однако визуально более согласованными. По умолчанию — 50%."
-
-#~ msgid "Reduces the amount of complex architecture in a map based on its size. Default is on."
-#~ msgstr "Уменьшает количество сложной архитектуры на карте в зависимости от её размера."
-
-#~ msgid "Boss Difficulty"
-#~ msgstr "Сложность босса"
-
-#~ msgid "Increases or reduces chances of boss being based off more powerful monster and getting more powerful traits."
-#~ msgstr "Увеличивает или уменьшает шанс того, что босс будет основан на базе сильного монстра, получив при этом особые способности."
-
-#~ msgid "Mostly"
-#~ msgstr "Преимущественно"
-
-#~ msgid "ZDoom 3D Skybox"
-#~ msgstr "3D-скайбокс ZDoom"
-
-#~ msgid "This is highly recommended when Bottomless Vistas are enabled in combination with a ZDoom Family engine."
-#~ msgstr "Для лучшего опыта использования 3D-скайбоксов рекомендуется включить опцию \"Виды ниже линии горизонта\"."
-
-#~ msgid "Build REJECT"
-#~ msgstr "Генерировать REJECT"
-
-#~ msgid "Choose to build a proper REJECT lump."
-#~ msgstr "Создавать ли полноценный lump REJECT."
-
-#~ msgid ""
-#~ "If this option is not selected, a blank REJECT lump with the proper size will be inserted into the map instead.\n"
-#~ "\n"
-#~ "This is to prevent errors with some engines that are expecting a \"full\" REJECT lump to be present."
-#~ msgstr "Если опция отключена, то в карту будет включён пустой lump REJECT необходимого размера. Некоторые игровые движки требуют присутствия в карте \"заполненного\" REJECT."
-
-#~ msgid "Binary"
-#~ msgstr "Двоичный"
-
-#~ msgid "UDMF"
-#~ msgstr "UDMF"
-
-#~ msgid "Map Format"
-#~ msgstr "Формат карты"
-
-#~ msgid ""
-#~ "Choose between UDMF and binary map format.\n"
-#~ "\n"
-#~ "Be advised that UDMF format can result in very large WAD files due to the size of its TEXTMAP lumps."
-#~ msgstr ""
-#~ "Выбор между двоичным (исходным) форматом карт и форматом UDMF.\n"
-#~ "\n"
-#~ "Имейте в виду, что использование UDMF может привести к невероятно крупным файлам *.WAD из-за размера lump TEXTMAP."
-
-#~ msgid "Choose to either build nodes or allow the engine itself to do so upon loading the map."
-#~ msgstr "Поедсоздавать ли lump NODES с помощью OBSIDIAN."
-
-#~ msgid ""
-#~ "ZDoom is capable of building its own nodes in either Binary or UDMF.\n"
-#~ "\n"
-#~ "Obsidian uses the same internal nodebuilder as ZDoom, so maps should be compatible either way."
-#~ msgstr "ZDoom может создавать свои собственные nodes и для бинарного формата, и для UDMF. Obsidian использует тот же nodebuilder, что и ZDoom."
-
-#~ msgid "SLUMP Architecture"
-#~ msgstr "Архитектура SLUMP"
-
-#~ msgid "Minimum number of rooms per level."
-#~ msgstr "Минимальное количество комнат на уровень."
-
-#~ msgid "SLUMP Monsters"
-#~ msgstr "Управление монстрами: SLUMP"
-
-#~ msgid "Limit Removing"
-#~ msgstr "Limit Removing"
-
-#~ msgid ""
-#~ "Attempts to mimic various architectural features seen in the Doom IWAD maps. Only Doom 2 is supported right now while Doom is in the works but not implemented yet.\n"
-#~ "NOTE: This will override settings in other parts of the program such as Level Size, Room Size, etc!"
-#~ msgstr ""
-#~ "OBSIDIAN будет пытаться создавать уровни, подобные тем, что представлены в выбранном IWAD.\n"
-#~ "ПРИМЕЧАНИЕ: Эта опция переопределит абсолютное большинство остальных настроек уровней, монстров и предметов."
-
-#~ msgid "ZDBSP Error!"
-#~ msgstr "Ошибка ZDBSP!"
-
-#~ msgid "No such config file: {}\n"
-#~ msgstr "Нет такого файла конфигурации: {}\n"
-
-#~ msgid ""
-#~ "Sorry, an internal error occurred:\n"
-#~ "{}"
-#~ msgstr ""
-#~ "Внутренняя ошибка:\n"
-#~ "{}"
-
-#~ msgid ""
-#~ "An exception occurred: \n"
-#~ "{}"
-#~ msgstr ""
-#~ "Исключение: \n"
-#~ "{}"
-
-#~ msgid "Script Error: %s"
-#~ msgstr "Ошибка скрипта: %s"
-
-#~ msgid "Compress Output: "
-#~ msgstr "Тип сжатия: "
-
-#~ msgid "OFF|ZIP|PK3"
-#~ msgstr "Без сжатия|ZIP|PK3"
-
-#~ msgid ""
-#~ "Obsidian has migrated from Lua to LuaJIT. One side effect of this is that even with a fixed seed, subsequent runs with the same configuration will not guarantee the same result.\n"
-#~ "\n"
-#~ "Restarting the Lua VM between builds will improve the odds of being able to repeat the results of a prior seed/setting combination, with the downside of visibly restarting the program every time a map is generated (even unsuccessfully).\n"
-#~ "\n"
-#~ "If you have no particular need to recreate the results of prior runs, this option can be safely left off."
-#~ msgstr ""
-#~ "OBSIDIAN перешёл с Lua на LuaJIT. Одним из последствий этого является то, что результаты генерации без перезахода в программу, даже при одинаковом ключе генерации, будут различаться.\n"
-#~ "\n"
-#~ "Эта опция позволяет перезагружать виртуальную машину LUA перед каждой новой сборкой, что практически всегда позволит получать одинаковые результаты на одном ключе генерации.\n"
-#~ "\n"
-#~ "Если Вам не требуется получать идентичные результаты — к примеру, для отладочных целей — настройку можно спокойно оставлять нетронутой."
-
-#~ msgid "Note: some options require a restart."
-#~ msgstr "Примечание: некоторые параметры требуют перезапуска."
-
-#~ msgid ""
-#~ "Windows scaling changes require a restart.\n"
-#~ "OBSIDIAN will now restart."
-#~ msgstr ""
-#~ "Для того, чтобы изменение масштаба окон вступило в силу,\n"
-#~ "OBSIDIAN необходимо перезапуститься."
-
-#~ msgid ""
-#~ "Switching pane modes requires a restart.\n"
-#~ "OBSIDIAN will now restart."
-#~ msgstr ""
-#~ "Для того, чтобы изменение режима панели вступило в силу,\n"
-#~ "OBSIDIAN необходимо перезапуститься."
+#: modules/zdoom_armaetus_epic_textures.lua:1215
+msgid "Whether to include textures fully or partially created through generative AI software."
+msgstr "Добавляет текстуры, частично или полностью созданные с помощью генеративных нейронных сетей."
