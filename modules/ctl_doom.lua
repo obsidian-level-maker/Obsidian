@@ -326,6 +326,226 @@ OB_MODULES["doom_mon_control"] =
   },
 }
 
+CTL_DOOM.ID24_MONSTERS = 
+{
+  id24_ghoul =
+  {
+    id = 3007,
+    r = 16,
+    h = 40,
+    level = 1,
+    prob = 140,
+    health = 50,
+    damage = 3,
+    attack = "missile",
+    density = 1.0,
+    room_size = "any"
+  },
+  id24_banshee =
+  {
+    id = 3008,
+    r = 20,
+    h = 56,
+    level = 1,
+    prob = 140,
+    health = 100,
+    damage = 128,
+    attack = "melee",
+    density = 1.0,
+    room_size = "any"
+  },
+  id24_mindweaver =
+  {
+    id = 3009,
+    r = 64,
+    h = 64,
+    level = 1,
+    prob = 140,
+    health = 500,
+    damage = 5.5,
+    attack = "hitscan",
+    density = 1.0,
+    room_size = "any"
+  },
+  id24_shocktrooper =
+  {
+    id = 3010,
+    r = 20,
+    h = 56,
+    level = 1,
+    prob = 140,
+    health = 100,
+    damage = 10.7,
+    attack = "missile",
+    density = 1.0,
+    room_size = "any"
+  },
+  id24_vassago =
+  {
+    id = 3011,
+    r = 24,
+    h = 64,
+    level = 1,
+    prob = 140,
+    boss_type = "minor",
+    boss_prob = 50,
+    health = 1000,
+    damage = 25,
+    attack = "missile",
+    density = 1.0,
+    room_size = "any"
+  },
+  id24_tyrant =
+  {
+    id = 3012,
+    r = 40,
+    h = 110,
+    level = 1,
+    prob = 140,
+    boss_type = "minor",
+    boss_prob = 50,
+    health = 1000,
+    damage = 125,
+    attack = "missile",
+    density = 1.0,
+    room_size = "any"
+  },
+}
+
+function CTL_DOOM.id24_monster_setup(self)
+
+  module_param_up(self)
+
+  table.merge_missing(GAME.MONSTERS, CTL_DOOM.ID24_MONSTERS)
+
+  for _,opt in pairs(self.options) do
+
+    local M = GAME.MONSTERS[string.sub(opt.name, 7)]
+
+    if M and PARAM[opt.name] ~= gui.gettext("Default") then
+      M.prob    = PARAM[opt.name] * 100
+      M.density = M.prob * .006 + .1
+
+      -- allow Spectres to be controlled individually
+      M.replaces = nil
+
+      -- loosen some of the normal restrictions
+      M.skip_prob = nil
+      M.crazy_prob = nil
+
+      if M.prob > 40 then
+        M.level = 1
+        M.weap_min_damage = nil
+      end
+
+      if M.prob > 200 then
+        M.boss_type = nil
+      end
+    end
+  end
+
+end
+
+OB_MODULES["doom_mon_control_id24"] =
+{
+
+  name = "doom_mon_control_id24",
+
+  label = _("ID24 Monster Control"),
+
+  game = "doomish",
+  engine = "idtech_1",
+  port = "!limit_enforcing",
+  port2 = "!edge",
+  where = "experimental",
+
+  hooks =
+  {
+    setup = CTL_DOOM.id24_monster_setup
+  },
+
+  options =
+  {
+     {
+      name = "float_id24_ghoul",
+      label = _("Ghoul"),
+      valuator = "slider",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = _("Default"),
+      nan = _("Default"),
+      tooltip = _("Control the amount of Ghouls."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
+      randomize_group="monsters",
+     },
+     {
+      name = "float_id24_banshee",
+      label = _("Banshee"),
+      valuator = "slider",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = _("Default"),
+      nan = _("Default"),
+      tooltip = _("Control the amount of Banshees."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
+      randomize_group="monsters",
+     },
+     {
+      name = "float_id24_mindweaver",
+      label = _("Mindweaver"),
+      valuator = "slider",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = _("Default"),
+      nan = _("Default"),
+      tooltip = _("Control the amount of Mindweavers."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
+      randomize_group="monsters",
+     },
+     {
+      name = "float_id24_shocktrooper",
+      label = _("Shocktrooper"),
+      valuator = "slider",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = _("Default"),
+      nan = _("Default"),
+      tooltip = _("Control the amount of Shocktroopers."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
+      randomize_group="monsters",
+     },
+     {
+      name = "float_id24_vassago",
+      label = _("Vassago"),
+      valuator = "slider",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = _("Default"),
+      nan = _("Default"),
+      tooltip = _("Control the amount of Vassago."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
+      randomize_group="monsters",
+     },
+     {
+      name = "float_id24_tyrant",
+      label = _("Tyrant"),
+      valuator = "slider",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = _("Default"),
+      nan = _("Default"),
+      tooltip = _("Control the amount of Tyrants."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
+      randomize_group="monsters",
+     },
+  },
+}
 
 ----------------------------------------------------------------
 
