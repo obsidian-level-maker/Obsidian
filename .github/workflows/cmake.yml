@@ -7,6 +7,35 @@ on:
     branches: [ obsidian ]
 
 jobs:
+  build-win64:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download w64devkit
+        run: invoke-webrequest https://github.com/skeeto/w64devkit/releases/download/v1.23.0/w64devkit-1.23.0.zip -outfile ${{github.workspace}}\w64devkit.zip
+      - name: Extract w64devkit
+        run: expand-archive -path ${{github.workspace}}\w64devkit.zip -destinationpath ${{github.workspace}}
+      - name: Set environment variables and build
+        run: |
+          $env:Path = "${{github.workspace}}\w64devkit\bin;" + $env:Path
+          cmake -B build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_CXX_FLAGS="-isystem ${{github.workspace}}\w64devkit\include" -DCMAKE_C_FLAGS="-isystem ${{github.workspace}}\w64devkit\include" -G "MinGW Makefiles"
+          cmake --build build --config ${{env.BUILD_TYPE}}
+          strip ${{github.workspace}}\obsidian.exe
+      - uses: actions/upload-artifact@v4
+        with:
+          name: obsidian-win64
+          path: |
+            addons
+            data
+            engines
+            games
+            language
+            modules
+            ports
+            scripts
+            theme
+            tools
+            obsidian.exe
   build-linux:
     # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
     # You can convert this to a matrix build if you need cross-platform coverage.
@@ -14,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     
     - name: Install dependencies
       run: |
@@ -34,9 +63,9 @@ jobs:
       run: cmake --install build/dist
     
     - name: Upload artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: linux-x64
+        name: obsidian-linux-x64
         path: install
   build-macos:
     # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
@@ -45,7 +74,7 @@ jobs:
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
@@ -60,7 +89,7 @@ jobs:
       run: cmake --install build/dist
     
     - name: Upload artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: obsidian-macos
         path: install
