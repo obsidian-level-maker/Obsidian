@@ -665,6 +665,10 @@ end
 
 
 function OBS_RESOURCE_PACK_EPIC_TEXTURES.synthesize_procedural_themes()
+  if PARAM.bool_orp_room_theme_synthesizer == false then
+    return
+  end
+
   local function pick_element(lev_theme, texture_type)
     local t, RT = {}
     local result
@@ -702,7 +706,7 @@ function OBS_RESOURCE_PACK_EPIC_TEXTURES.synthesize_procedural_themes()
     end
 
     t.env = "building"
-    t.prob = rand.pick({20,30,40,50,60})
+    t.prob = rand.pick({20,30,40,50,60}) * PARAM.orp_room_theme_synth_mult
 
     t.floors[pick_element(theme, "floors")] = 5
     t.floors[pick_element(theme, "floors")] = 5
@@ -1316,7 +1320,29 @@ OB_MODULES["armaetus_epic_textures"] =
       valuator = "button",
       default = 0,
       tooltip = _("Renders hell theme maps to never use snow or desert environment themes regardless of theme assignment."),
-      priority= -3
+      priority= -3,
+      gap = 1
+    },
+
+    {
+      name = "bool_orp_room_theme_synthesizer",
+      label = _("Room Theme Synthesizer [Experimental]"),
+      valuator = "button",
+      default = 1,
+      priority = -4,
+      tooltip = _("Creates synthetic room themes by combining walls and flats from existing entries.")
+    },
+    {
+      name = "orp_room_theme_synth_mult",
+      label = _("Synth Room Theme Multiplier"),
+      valuator = "slider",
+      units="x",
+      min=0,
+      max=20,
+      increment = 0.1,
+      default = 1,
+      tooltip = _("Multiplier for all synthesized Resource Pack room themes."),
+      priority = -5,
     }
   }
 }

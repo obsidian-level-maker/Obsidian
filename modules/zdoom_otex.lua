@@ -90,7 +90,7 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
   end
 
   -- try to create a consistent theme
-  for i = 1, 8 do
+  for i = 1, PARAM.otex_num_themes / 2 do
     local grouping = {}
     local room_theme = {}
     while grouping and not grouping.has_all == true do
@@ -101,7 +101,7 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
     {
       name = "any_OTEX_cons_" .. i,
       env = "building",
-      prob = rand.pick({40,50,60}),
+      prob = rand.pick({40,50,60}) * PARAM.otex_rt_prob_mult
     }
     room_theme.walls = {}
     room_theme.floors = {}
@@ -131,7 +131,7 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
   end
 
   -- try a completely random theme
-  for i = 1, 8 do
+  for i = 1, PARAM.otex_num_themes / 2 do
     local RT_name = "any_OTEX_rand_" .. i
     local room_theme, tab_pick = {}
 
@@ -199,4 +199,34 @@ OB_MODULES["otex_proc_module"] =
   "OTEX must be manually loaded in the sourceport. " ..
   "Includes textures and flats only, no patches.\n\n" ..
   "Currently does not make any kind of sensibly curated room themes."),
+
+  options =
+  {
+    {
+      name="otex_num_themes",
+      label=_("Room Themes Count"),
+      valuator = "slider",
+      min = 2,
+      max = 40,
+      increment = 2,
+      default = 8,
+      tooltip = _("How many OTEX room themes to synthesize."),
+      longtip = _("Not all room themes may show up in levels as appearance " ..
+      "is reliant on use probability. Use multipler below to increase " ..
+      "or decrease further"),
+      priority = 2
+    },
+    {
+      name="otex_rt_prob_mult",
+      label=_("Probability Multiplier"),
+      valuator="slider",
+      units="x",
+      min = 0,
+      max = 20,
+      increment = 0.1,
+      default = 1,
+      tooltip = _("Multiplier for all synthesized OTEX room themes."),
+      priority = 1
+    }
+  }
 }
