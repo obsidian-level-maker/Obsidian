@@ -25,7 +25,15 @@ OTEX_ROOM_THEMES = { }
 
 OTEX_EXCLUSIONS = 
 {
+  WRNG = "textures",
+  CHAN = "all",
+  EXIT = "all",
+  FENC = "all",
+  SOLI = "all",
+  SWTC = "all",
+  FALL = "all",
 
+  TLPT = "all"
 }
 
 function OTEX_PROC_MODULE.setup(self)
@@ -40,6 +48,17 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
 
   resource_tab = table.copy(OTEX_RESOURCE_DB)
   table.name_up(resource_tab)
+
+  -- resource_tab exclusions
+  for k,v in ipairs(OTEX_EXCLUSIONS) do
+    if v == "textures" then
+      resource_tab[k].textures = nil
+    elseif v == "flats" then
+      resource_tab[k].flats = nil
+    else
+      resource_tab[k] = nil
+    end
+  end
 
   for _,resource_group in pairs(resource_tab) do
     if resource_group.has_all then
@@ -93,13 +112,14 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
   for i = 1, PARAM.otex_num_themes / 2 do
     local grouping = {}
     local room_theme = {}
+    local tab_pick, RT_name
     while grouping and not grouping.has_all == true do
       grouping = resource_tab[rand.pick(group_choices)]
     end
 
+    RT_name = "any_OTEX_cons_" .. i
     room_theme =
     {
-      name = "any_OTEX_cons_" .. i,
       env = "building",
       prob = rand.pick({40,50,60}) * PARAM.otex_rt_prob_mult
     }
@@ -107,7 +127,9 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
     room_theme.floors = {}
     room_theme.ceilings = {}
 
-    room_theme.walls[rand.pick(grouping.textures)] = 5
+    tab_pick = rand.pick(grouping.textures)
+    room_theme.walls[tab_pick] = 5
+    RT_name = RT_name .. tab_pick .. "_"
 
     if rand.odds(25) then
       grouping = resource_tab[rand.pick(group_choices)]
@@ -115,8 +137,9 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
         grouping = resource_tab[rand.pick(group_choices)]
       end
     end
-    room_theme.floors[rand.pick(grouping.flats)] = 5
-    room_theme.floors[rand.pick(grouping.flats)] = 5
+    tab_pick = rand.pick(grouping.flats)
+    room_theme.floors[tab_pick] = 5
+    RT_name = RT_name .. tab_pick .. "_"
 
     if rand.odds(25) then
       grouping = resource_tab[rand.pick(group_choices)]
@@ -124,20 +147,21 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
         grouping = resource_tab[rand.pick(group_choices)]
       end
     end
-    room_theme.ceilings[rand.pick(grouping.flats)] = 5
-    room_theme.ceilings[rand.pick(grouping.flats)] = 5
+    tab_pick = rand.pick(grouping.flats)
+    room_theme.ceilings[tab_pick] = 5
+    RT_name = RT_name .. tab_pick .. "_"
 
-    OTEX_ROOM_THEMES[room_theme.name] = room_theme
+    room_theme.name = RT_name
+    OTEX_ROOM_THEMES[RT_name] = room_theme
   end
 
   -- try a completely random theme
   for i = 1, PARAM.otex_num_themes / 2 do
-    local RT_name = "any_OTEX_rand_" .. i
+    local RT_name = "any_OTEX_" .. i
     local room_theme, tab_pick = {}
 
     room_theme =
     {
-      name = RT_name,
       env = "building",
       prob = rand.pick({40,50,60}),
     }
@@ -149,20 +173,24 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
     while not resource_tab[tab_pick].has_textures == true do
       tab_pick = rand.pick(group_choices)
     end
+    RT_name = RT_name .. tab_pick .. "_"
     room_theme.walls[rand.pick(resource_tab[tab_pick].textures)] = 5
 
     tab_pick = rand.pick(group_choices)
     while not resource_tab[tab_pick].has_flats == true do
       tab_pick = rand.pick(group_choices)
     end
+    RT_name = RT_name .. tab_pick .. "_"
     room_theme.floors[rand.pick(resource_tab[tab_pick].flats)] = 5
 
     tab_pick = rand.pick(group_choices)
     while not resource_tab[tab_pick].has_flats == true do
       tab_pick = rand.pick(group_choices)
     end
+    RT_name = RT_name .. tab_pick .. "_"
     room_theme.ceilings[rand.pick(resource_tab[tab_pick].flats)] = 5
 
+    room_theme.name = RT_name
     OTEX_ROOM_THEMES[RT_name] = room_theme
   end
 end
