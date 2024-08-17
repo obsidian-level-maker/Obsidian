@@ -2303,6 +2303,40 @@ brightmap texture GOTH21
 {
   map OBRGT21
 }
+brightmap texture GOTH04
+{
+  map GOTH04BR
+}
+brightmap texture GOTH19
+{
+  map GOTH19BR
+}
+brightmap texture GOTH20
+{
+  map GOTH20BR
+}
+brightmap texture GOTH33
+{
+  map GOTH33BR
+}
+
+// gothic lavafalls
+brightmap texture MFALL1
+{
+  map MFALLBR
+}
+brightmap texture MFALL2
+{
+  map MFALLBR
+}
+brightmap texture MFALL3
+{
+  map MFALLBR
+}
+brightmap texture MFALL4
+{
+  map MFALLBR
+}
 
 // gothic switches
 brightmap texture SW2SKUL1
