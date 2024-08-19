@@ -706,7 +706,7 @@ function OBS_RESOURCE_PACK_EPIC_TEXTURES.synthesize_procedural_themes()
     end
 
     t.env = "building"
-    t.prob = rand.pick({20,30,40,50,60}) * PARAM.orp_room_theme_synth_mult
+    t.prob = rand.pick({20,30,40,50,60}) * PARAM.float_orp_room_theme_synth_mult
 
     t.floors[pick_element(theme, "floors")] = 5
     t.floors[pick_element(theme, "floors")] = 5
@@ -1333,7 +1333,7 @@ OB_MODULES["armaetus_epic_textures"] =
       tooltip = _("Creates synthetic room themes by combining walls and flats from existing entries.")
     },
     {
-      name = "orp_room_theme_synth_mult",
+      name = "float_orp_room_theme_synth_mult",
       label = _("Synth Room Theme Multiplier"),
       valuator = "slider",
       units="x",

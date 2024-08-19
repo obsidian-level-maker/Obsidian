@@ -109,7 +109,7 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
   end
 
   -- try to create a consistent theme
-  for i = 1, PARAM.otex_num_themes / 2 do
+  for i = 1, PARAM.float_otex_num_themes / 2 do
     local grouping = {}
     local room_theme = {}
     local tab_pick, RT_name
@@ -121,7 +121,7 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
     room_theme =
     {
       env = "building",
-      prob = rand.pick({40,50,60}) * PARAM.otex_rt_prob_mult
+      prob = rand.pick({40,50,60}) * PARAM.float_otex_rt_prob_mult
     }
     room_theme.walls = {}
     room_theme.floors = {}
@@ -156,7 +156,7 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
   end
 
   -- try a completely random theme
-  for i = 1, PARAM.otex_num_themes / 2 do
+  for i = 1, PARAM.float_otex_num_themes / 2 do
     local RT_name = "any_OTEX_" .. i
     local room_theme, tab_pick = {}
 
@@ -231,7 +231,7 @@ OB_MODULES["otex_proc_module"] =
   options =
   {
     {
-      name="otex_num_themes",
+      name="float_otex_num_themes",
       label=_("Room Themes Count"),
       valuator = "slider",
       min = 2,
@@ -245,7 +245,7 @@ OB_MODULES["otex_proc_module"] =
       priority = 2
     },
     {
-      name="otex_rt_prob_mult",
+      name="float_otex_rt_prob_mult",
       label=_("Probability Multiplier"),
       valuator="slider",
       units="x",
