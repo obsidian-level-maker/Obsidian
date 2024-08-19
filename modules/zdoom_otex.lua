@@ -25,15 +25,42 @@ OTEX_ROOM_THEMES = { }
 
 OTEX_EXCLUSIONS = 
 {
+  -- animated textures
   WRNG = "textures",
   CHAN = "all",
+
+  -- textures with transparency
   EXIT = "all",
   FENC = "all",
-  SOLI = "all",
   SWTC = "all",
-  FALL = "all",
+  WARP = "all",
+  VINE = "all",
+  SOLI = "all",
 
-  TLPT = "all"
+  -- liquids
+  FALL = "all",
+  BLOD = "all",
+  GOOP = "all",
+  LAVA = "all",
+  ICYW = "all",
+  NUKE = "all",
+  SLUD = "all",
+  TAR_ = "all",
+  WATE = "all",
+
+  -- skies
+  SKY1 = "all",
+  SKY2 = "all",
+  SKY3 = "all",
+  SKY4 = "all",
+  SKY5 = "all",
+  SKY6 = "all",
+
+  -- teleporter flats
+  TLPT = "all",
+
+  -- outdoors
+  GRSS = "all"
 }
 
 function OTEX_PROC_MODULE.setup(self)
@@ -193,6 +220,29 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
     room_theme.name = RT_name
     OTEX_ROOM_THEMES[RT_name] = room_theme
   end
+
+  -- insert into outdoor facades
+  for _,T in pairs(GAME.THEMES) do
+    local tab_pick, tex_pick, pick_num = 0
+
+    tab_pick = rand.pick(group_choices)
+
+    if T.facades then
+      for i = 1, 30 do
+        while not resource_tab[tab_pick].has_textures == true do
+          tab_pick = rand.pick(group_choices)
+        end
+        pick_num = 5
+        while not T.facades[tex_pick] and pick_num > 5 do
+          tex_pick = rand.pick(resource_tab[tab_pick].textures)
+          T.facades[tex_pick] = 25
+          pick_num = pick_num + 1
+        end
+      end
+    end
+
+  end
+
 end
 
 
