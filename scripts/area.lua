@@ -2892,11 +2892,7 @@ function Area_create_rooms(LEVEL, SEEDS)
     table.add_unique(level_grammar, SHAPES.OBLIGE_745)
   end
 
-  if PARAM.float_grammar_map_01 and rand.odds(PARAM.float_grammar_map_01) then
-    table.add_unique(level_grammar, SHAPES.MAP_01)
-  end
-
-  if PARAM.float_grammar_backhalls and rand.odds(PARAM.float_grammar_backhalls) then
+  if PARAM.float_grammar_backhalls and LEVEL.is_nature == false and rand.odds(PARAM.float_grammar_backhalls) then
     table.add_unique(level_grammar, SHAPES.BACKHALLS)
   end
 
