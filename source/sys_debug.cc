@@ -27,7 +27,7 @@
 #include "main.h"
 #include "sys_assert.h"
 
-static constexpr uint16_t DEBUG_BUF_LEN = 20000;
+static constexpr uint16_t LOG_BUF_LEN = 8192;
 
 static FILE *log_file = nullptr;
 static FILE *ref_file = nullptr;
@@ -134,9 +134,9 @@ void LogPrint(const char *message, ...)
     if (!log_file && !terminal)
         return;
 
-    char message_buf[4096];
+    char message_buf[LOG_BUF_LEN];
 
-    message_buf[4095] = 0;
+    message_buf[LOG_BUF_LEN-1] = 0;
 
     // Print the message into a text string
     va_list argptr;
@@ -145,8 +145,7 @@ void LogPrint(const char *message, ...)
     vsprintf(message_buf, message, argptr);
     va_end(argptr);
 
-    // I hope nobody is printing strings longer than 4096 chars...
-    SYS_ASSERT(message_buf[4095] == 0);
+    SYS_ASSERT(message_buf[LOG_BUF_LEN-1] == 0);
 
     if (log_file)
     {
@@ -166,9 +165,9 @@ void RefPrint(const char *message, ...)
     if (!ref_file && !terminal)
         return;
 
-    char message_buf[4096];
+    char message_buf[LOG_BUF_LEN];
 
-    message_buf[4095] = 0;
+    message_buf[LOG_BUF_LEN-1] = 0;
 
     // Print the message into a text string
     va_list argptr;
@@ -177,8 +176,7 @@ void RefPrint(const char *message, ...)
     vsprintf(message_buf, message, argptr);
     va_end(argptr);
 
-    // I hope nobody is printing strings longer than 4096 chars...
-    SYS_ASSERT(message_buf[4095] == 0);
+    SYS_ASSERT(message_buf[LOG_BUF_LEN-1] == 0);
 
     if (ref_file)
     {
@@ -198,9 +196,9 @@ void DebugPrint(const char *message, ...)
     if (!debugging || (!log_file && !terminal))
         return;
 
-    char message_buf[4096];
+    char message_buf[LOG_BUF_LEN];
 
-    message_buf[4095] = 0;
+    message_buf[LOG_BUF_LEN-1] = 0;
 
     // Print the message into a text string
     va_list argptr;
@@ -209,8 +207,7 @@ void DebugPrint(const char *message, ...)
     vsprintf(message_buf, message, argptr);
     va_end(argptr);
 
-    // I hope nobody is printing strings longer than 4096 chars...
-    SYS_ASSERT(message_buf[4095] == 0);
+    SYS_ASSERT(message_buf[LOG_BUF_LEN-1] == 0);
 
     if (log_file)
     {
@@ -227,9 +224,9 @@ void DebugPrint(const char *message, ...)
 
 void ProgStatus(const char *message, ...)
 {
-    char message_buf[4096];
+    char message_buf[LOG_BUF_LEN];
 
-    message_buf[4095] = 0;
+    message_buf[LOG_BUF_LEN-1] = 0;
 
     // Print the message into a text string
     va_list argptr;
@@ -238,8 +235,7 @@ void ProgStatus(const char *message, ...)
     vsprintf(message_buf, message, argptr);
     va_end(argptr);
 
-    // I hope nobody is printing strings longer than 4096 chars...
-    SYS_ASSERT(message_buf[4095] == 0);
+    SYS_ASSERT(message_buf[LOG_BUF_LEN-1] == 0);
 
 #ifndef OBSIDIAN_CONSOLE_ONLY
     if (main_win)
@@ -277,9 +273,9 @@ void ProgStatus(const char *message, ...)
 
 [[noreturn]] void FatalError(const char *message, ...)
 {
-    char message_buf[4096];
+    char message_buf[LOG_BUF_LEN];
 
-    message_buf[4095] = 0;
+    message_buf[LOG_BUF_LEN-1] = 0;
 
     // Print the message into a text string
     va_list argptr;
@@ -288,8 +284,7 @@ void ProgStatus(const char *message, ...)
     vsprintf(message_buf, message, argptr);
     va_end(argptr);
 
-    // I hope nobody is printing strings longer than 4096 chars...
-    SYS_ASSERT(message_buf[4095] == 0);
+    SYS_ASSERT(message_buf[LOG_BUF_LEN-1] == 0);
 
     if (log_file)
     {
