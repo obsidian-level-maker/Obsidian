@@ -81,10 +81,13 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
     if v == "textures" then
       resource_tab[k].textures = {}
       resource_tab[k].has_textures = false
+      resource_tab[k].has_all = false
     elseif v == "flats" then
       resource_tab[k].flats = {}
       resource_tab[k].has_flats = false
+      resource_tab[k].has_all = false
     else
+      resource_tab[k] = {}
       resource_tab[k] = nil
     end
   end

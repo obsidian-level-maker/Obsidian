@@ -1,12 +1,13 @@
 PREFABS.Joiner_gtd_barred1 =
 {
   file   = "joiner/gtd_barred.wad",
+  map    = "MAP01",
   where  = "seeds",
   shape  = "I",
 
   key    = "barred",
 
-  prob   = 70,
+  prob   = 50,
 
   seed_w = 2,
   seed_h = 1,
@@ -19,4 +20,12 @@ PREFABS.Joiner_gtd_barred1 =
 
   tag_1  = "?door_tag",
   door_action = "S1_OpenDoor",
+}
+
+PREFABS.Joiner_gtd_barred2 =
+{
+  template = "Joiner_gtd_barred1",
+  map = "MAP02",
+
+  x_fit = {32,40 , 62,72 , 124,132 , 184,192 , 216,224}
 }
