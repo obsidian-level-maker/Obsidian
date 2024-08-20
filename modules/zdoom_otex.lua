@@ -77,11 +77,13 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
   table.name_up(resource_tab)
 
   -- resource_tab exclusions
-  for k,v in ipairs(OTEX_EXCLUSIONS) do
+  for k,v in pairs(OTEX_EXCLUSIONS) do
     if v == "textures" then
-      resource_tab[k].textures = nil
+      resource_tab[k].textures = {}
+      resource_tab[k].has_textures = false
     elseif v == "flats" then
-      resource_tab[k].flats = nil
+      resource_tab[k].flats = {}
+      resource_tab[k].has_flats = false
     else
       resource_tab[k] = nil
     end
