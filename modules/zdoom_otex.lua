@@ -59,8 +59,58 @@ OTEX_EXCLUSIONS =
   -- teleporter flats
   TLPT = "all",
 
+  LGHT = "all",
+
   -- outdoors
   GRSS = "all"
+}
+
+-- some textures that must be removed manually from the DB
+OTEX_DIRECT_REMOVALS =
+{
+  MRBL =
+  {
+    textures =
+    {
+      "OMRBLA90",
+      "OMRBLA91",
+      "OMBRLA92",
+      "OMBRLA93",
+      "OMBRLA94",
+  
+      "OMBRLC90",
+  
+      "OMBRLF29",
+      "OMBRLF38",
+      "OMBRLF90",
+  
+      "OMBRLG90",
+  
+      "OMRBLI92",
+      "OMRBLI93",
+  
+      "OMRBLJ90",
+      "OMRBLJ93",
+  
+      "OMRBLK90",
+  
+      "OMRBLO28",
+      "OMRBLO29",
+  
+      "OMBRLP90",
+      "OMBRLP91",
+  
+      "OMBRLR90",
+      "OMBRLR94"  
+    }
+  }
+}
+
+OTEX_THEME_RESTRICTIONS =
+{
+  MRBL = "hell",
+  BONE = "hell",
+  FLSH = "hell"
 }
 
 function OTEX_PROC_MODULE.setup(self)
@@ -89,6 +139,15 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
     else
       resource_tab[k] = {}
       resource_tab[k] = nil
+    end
+  end
+
+  -- direct removals
+  for theme_group,_ in pairs(OTEX_DIRECT_REMOVALS) do
+    for img_group,_ in pairs(OTEX_DIRECT_REMOVALS[theme_group]) do
+      for _,tex in pairs(OTEX_DIRECT_REMOVALS[theme_group][img_group]) do
+        table.kill_elem(resource_tab[theme_group][img_group], tex)
+      end
     end
   end
 
@@ -142,14 +201,21 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
 
   -- try to create a consistent theme
   for i = 1, PARAM.float_otex_num_themes / 2 do
-    local grouping = {}
-    local room_theme = {}
-    local tab_pick, RT_name
+    local grouping, room_theme = {}
+    local tab_pick, RT_name, RT_theme
     while grouping and not grouping.has_all == true do
       grouping = resource_tab[rand.pick(group_choices)]
     end
 
-    RT_name = "any_OTEX_cons_" .. i
+    -- quick hack fix to prevent hell themes from appearing
+    -- on tech and urban
+    RT_theme = "any"
+    if OTEX_THEME_RESTRICTIONS[grouping]
+    and OTEX_THEME_RESTRICTIONS[grouping] == "hell" then
+      RT_theme = "hell"
+    end
+
+    RT_name = RT_theme .. "_OTEX_cons_" .. i
     room_theme =
     {
       env = "building",
@@ -181,7 +247,7 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
     end
     tab_pick = rand.pick(grouping.flats)
     room_theme.ceilings[tab_pick] = 5
-    RT_name = RT_name .. tab_pick .. "_"
+    RT_name = RT_name .. tab_pick
 
     room_theme.name = RT_name
     OTEX_ROOM_THEMES[RT_name] = room_theme
@@ -227,20 +293,21 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
   end
 
   -- insert into outdoor facades
-  for _,T in pairs(GAME.THEMES) do
+  for theme,table_group in pairs(GAME.THEMES) do
     local tab_pick, tex_pick, pick_num = 0
 
-    tab_pick = rand.pick(group_choices)
-
-    if T.facades then
-      for i = 1, 30 do
-        while not resource_tab[tab_pick].has_textures == true do
+    if GAME.THEMES[theme].facades then
+      for i = 1, 50 do
+        tab_pick = rand.pick(group_choices)
+        while resource_tab[tab_pick].has_textures == false do
           tab_pick = rand.pick(group_choices)
         end
-        pick_num = 5
-        while not T.facades[tex_pick] and pick_num > 5 do
+
+        local pick_num = 0
+        tex_pick = rand.pick(resource_tab[tab_pick].textures)
+        while not GAME.THEMES[theme].facades[tex_pick] and pick_num < 5 do
           tex_pick = rand.pick(resource_tab[tab_pick].textures)
-          T.facades[tex_pick] = 25
+          GAME.THEMES[theme].facades[tex_pick] = rand.pick({15,20,25,30})
           pick_num = pick_num + 1
         end
       end
