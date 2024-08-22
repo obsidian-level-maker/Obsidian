@@ -2555,6 +2555,11 @@ brightmap texture SDOM_WL2
   map SDMWL2BR
 }
 
+brightmap texture SDOM_WL5
+{
+  map SDMWL5BR
+}
+
 brightmap texture SD_GTHW1
 {
   map SDGHW1BR
