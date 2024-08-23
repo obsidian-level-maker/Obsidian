@@ -39,6 +39,7 @@ OTEX_EXCLUSIONS =
   DOOR = "all",
   GATE = "all",
   FLAG = "all",
+  RAIL = "all",
 
   -- VFX
   FIRE = "all",
