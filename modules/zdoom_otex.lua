@@ -36,6 +36,9 @@ OTEX_EXCLUSIONS =
   WARP = "all",
   VINE = "all",
   SOLI = "all",
+  DOOR = "all",
+  GATE = "all",
+  FLAG = "all",
 
   -- VFX
   FIRE = "all",
@@ -107,14 +110,59 @@ OTEX_DIRECT_REMOVALS =
       "OMBRLR90",
       "OMBRLR94"  
     }
+  },
+
+  BRCK =
+  {
+    textures =
+    {
+      "OBRCKF11",
+      "OBRCKF12",
+      "OBRCKF13",
+      "OBRCKF14",
+      "OBRCKF21",
+      "OBRCKF22",
+      "OBRCKF23",
+      "OBRCKF24",
+
+      "OBRCKL10",
+      "OBRCKL11",
+      "OBRCKL21",
+
+      "OBRCKU03",
+      "OBRCKU04",
+      "OBRCKU05",
+      "OBRCKU06",
+
+      "OBRCKU13",
+      "OBRCKU14",
+      "OBRCKU15",
+      "OBRCKU16",
+
+      "OBRCKU23",
+      "OBRCKU24",
+      "OBRCKU25",
+      "OBRCKU26",
+
+      "OBRCKU3D",
+      "OBRCKU3E",
+      "OBRCKU3F",
+      "OBRCKU3G",
+      "OBRCKU3H",
+      "OBRCKU3I",
+
+      "OTUDRB80",
+      "OTUDRB81"
+    }
   }
 }
 
 OTEX_THEME_RESTRICTIONS =
 {
-  MRBL = "hell",
-  BONE = "hell",
-  FLSH = "hell"
+  MRBL = {"hell"},
+  BONE = {"hell"},
+  FLSH = {"hell"},
+  SOIL = {"hell","urban"}
 }
 
 function OTEX_PROC_MODULE.setup(self)
@@ -221,15 +269,15 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
     local grouping, room_theme = {}
     local tab_pick, RT_name, RT_theme
     while grouping and not grouping.has_all == true do
-      grouping = resource_tab[rand.pick(group_choices)]
+      tab_pick = rand.pick(group_choices)
+      grouping = resource_tab[tab_pick]
     end
 
     -- quick hack fix to prevent hell themes from appearing
     -- on tech and urban
     RT_theme = "any"
-    if OTEX_THEME_RESTRICTIONS[grouping]
-    and OTEX_THEME_RESTRICTIONS[grouping] == "hell" then
-      RT_theme = "hell"
+    if OTEX_THEME_RESTRICTIONS[tab_pick] then
+      RT_theme = rand.pick(OTEX_THEME_RESTRICTIONS[tab_pick])
     end
 
     RT_name = RT_theme .. "_OTEX_cons_" .. i
@@ -272,7 +320,7 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
 
   -- try a completely random theme
   for i = 1, PARAM.float_otex_num_themes * 0.25 do
-    local RT_name = "any_OTEX_" .. i
+    local RT_name = "any_OTEX_random_" .. i
     local room_theme, tab_pick = {}
     local tex_pick
 
