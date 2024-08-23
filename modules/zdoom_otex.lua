@@ -28,6 +28,7 @@ OTEX_EXCLUSIONS =
   -- animated textures
   WRNG = "textures",
   CHAN = "all",
+  COMP = "all",
 
   -- textures with transparency
   EXIT = "all",
@@ -70,7 +71,10 @@ OTEX_EXCLUSIONS =
 
   -- outdoors
   GRSS = "all",
-  ICE_ = "all"
+  ICE_ = "all",
+
+  -- just plain weird
+  CRPT = "textures"
 }
 
 -- some textures that must be removed manually from the DB
@@ -117,6 +121,15 @@ OTEX_DIRECT_REMOVALS =
   {
     textures =
     {
+      "OBRCKB10",
+      "OBRCKB11",
+      "OBRCKB12",
+      "OBRCKB13",
+      "OBRCKB20",
+      "OBRCKB21",
+      "OBRCKB22",
+      "OBRCKB23",
+
       "OBRCKF11",
       "OBRCKF12",
       "OBRCKF13",
@@ -155,6 +168,32 @@ OTEX_DIRECT_REMOVALS =
       "OTUDRB80",
       "OTUDRB81"
     }
+  },
+
+  BKMT =
+  {
+    textures =
+    {
+      "OBKMTD90",
+      "OBKMTD91",
+      "OBKMTD92",
+      "OBKMTD95",
+      "OBKMTD96",
+      "OBKMTD97"
+    }
+  },
+
+  BOOK =
+  {
+    textures =
+    {
+      "OBOOKA01",
+      "OBOOKA02",
+      "OBOOKA05",
+      "OBOOKA10",
+      "OBOOKA11",
+      "OBOOKA12"
+    }
   }
 }
 
@@ -163,7 +202,14 @@ OTEX_THEME_RESTRICTIONS =
   MRBL = {"hell"},
   BONE = {"hell"},
   FLSH = {"hell"},
-  SOIL = {"hell","urban"}
+
+  BRCK = {"hell", "urban"},
+  BOOK = {"hell", "urban"},
+  
+  SOIL = {"hell", "urban"},
+  ROCK = {"hell"},
+  SAND = {"hell"},
+  DIRT = {"hell"}
 }
 
 function OTEX_PROC_MODULE.setup(self)
@@ -192,31 +238,7 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
   resource_tab = table.copy(OTEX_RESOURCE_DB)
   table.name_up(resource_tab)
 
-  -- resource_tab exclusions
-  for k,v in pairs(OTEX_EXCLUSIONS) do
-    if v == "textures" then
-      resource_tab[k].textures = {}
-      resource_tab[k].has_textures = false
-      resource_tab[k].has_all = false
-    elseif v == "flats" then
-      resource_tab[k].flats = {}
-      resource_tab[k].has_flats = false
-      resource_tab[k].has_all = false
-    else
-      resource_tab[k] = {}
-      resource_tab[k] = nil
-    end
-  end
-
-  -- direct removals
-  for theme_group,_ in pairs(OTEX_DIRECT_REMOVALS) do
-    for img_group,_ in pairs(OTEX_DIRECT_REMOVALS[theme_group]) do
-      for _,tex in pairs(OTEX_DIRECT_REMOVALS[theme_group][img_group]) do
-        table.kill_elem(resource_tab[theme_group][img_group], tex)
-      end
-    end
-  end
-
+  -- create material mappings
   for _,resource_group in pairs(resource_tab) do
     if resource_group.has_all then
       for _,T in pairs(resource_group.textures) do
@@ -258,6 +280,30 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
     end
   end
 
+  -- resource_tab exclusions
+  for k,v in pairs(OTEX_EXCLUSIONS) do
+    if v == "textures" then
+      resource_tab[k].textures = {}
+      resource_tab[k].has_textures = false
+      resource_tab[k].has_all = false
+    elseif v == "flats" then
+      resource_tab[k].flats = {}
+      resource_tab[k].has_flats = false
+      resource_tab[k].has_all = false
+    else
+      resource_tab[k] = {}
+      resource_tab[k] = nil
+    end
+  end
+
+  -- direct removals
+  for theme_group,_ in pairs(OTEX_DIRECT_REMOVALS) do
+    for img_group,_ in pairs(OTEX_DIRECT_REMOVALS[theme_group]) do
+      for _,tex in pairs(OTEX_DIRECT_REMOVALS[theme_group][img_group]) do
+        table.kill_elem(resource_tab[theme_group][img_group], tex)
+      end
+    end
+  end
 
   -- create room themes
   local group_choices = {}
