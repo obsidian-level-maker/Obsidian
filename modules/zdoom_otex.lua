@@ -41,6 +41,7 @@ OTEX_EXCLUSIONS =
   GATE = "all",
   FLAG = "all",
   RAIL = "all",
+  LASR = "all",
 
   -- VFX
   FIRE = "all",
@@ -212,6 +213,12 @@ OTEX_THEME_RESTRICTIONS =
   DIRT = {"hell"}
 }
 
+OTEX_SPECIAL_RESOURCES =
+{
+  RAIL = {k="fence", t={"tech", "urban"}},
+  FENC = {k="fence"}
+}
+
 function OTEX_PROC_MODULE.setup(self)
   PARAM.OTEX_module_activated = true
   module_param_up(self)
@@ -327,7 +334,7 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
       RT_theme = rand.pick(OTEX_THEME_RESTRICTIONS[tab_pick])
     end
 
-    RT_name = RT_theme .. "_OTEX_cons_" .. i
+    RT_name = RT_theme .. "_OTEX_cons_" .. i .. "_"
     room_theme =
     {
       env = "building",
@@ -367,7 +374,7 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
 
   -- try a completely random theme
   for i = 1, PARAM.float_otex_num_themes * 0.25 do
-    local RT_name = "any_OTEX_random_" .. i
+    local RT_name = "any_OTEX_random_" .. i .. "_"
     local room_theme, tab_pick = {}
     local tex_pick
 
