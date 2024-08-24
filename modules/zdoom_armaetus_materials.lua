@@ -2060,6 +2060,57 @@ brightmap texture COMPCT07
   map OBRCPCT2
 }
 
+brightmap texture COMPFUZ1
+{
+  map CMPFUZBR
+}
+brightmap texture COMPFUZ2
+{
+  map CMPFUZBR
+}
+brightmap texture COMPFUZ3
+{
+  map CMPFUZBR
+}
+brightmap texture COMPFUZ4
+{
+  map CMPFUZBR
+}
+
+brightmap texture CGCANI00
+{
+  map CGANIBR
+}
+brightmap texture CGCANI01
+{
+  map CGANIBR
+}
+brightmap texture CGCANI02
+{
+  map CGANIBR
+}
+brightmap texture CGCANI03
+{
+  map CGANIBR
+}
+brightmap texture CGCANI04
+{
+  map CGANIBR
+}
+brightmap texture CGCANI05
+{
+  map CGANIBR
+}
+brightmap texture CGCANI06
+{
+  map CGANIBR
+}
+brightmap texture CGCANI07
+{
+  map CGANIBR
+}
+
+
 // silver light variations
 brightmap texture SILVER2R
 {
@@ -2168,6 +2219,10 @@ brightmap texture COMPSD3
   map OBRCPSD1
 }
 brightmap texture COMPSD4
+{
+  map OBRCPSD1
+}
+brightmap texture COMPSD5
 {
   map OBRCPSD1
 }
