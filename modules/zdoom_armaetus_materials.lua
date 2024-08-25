@@ -2715,9 +2715,9 @@ brightmap texture SD_TSGWC
   map STGSWCBR
 }
 
-brightmap texture S_W2WALE
+brightmap texture S_W2WAL4
 {
-  map SW2WLEBR
+  map SW2WBR4
 }
 
 brightmap texture SD_HCCW1
