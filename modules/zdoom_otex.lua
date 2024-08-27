@@ -195,6 +195,17 @@ OTEX_DIRECT_REMOVALS =
       "OBOOKA11",
       "OBOOKA12"
     }
+  },
+
+  VENT =
+  {
+    textures =
+    {
+      "OVENTE03",
+      "OVENTE04",
+      "OVENTE13",
+      "OVENTE14"
+    }
   }
 }
 
@@ -203,6 +214,7 @@ OTEX_THEME_RESTRICTIONS =
   MRBL = {"hell"},
   BONE = {"hell"},
   FLSH = {"hell"},
+  HELL = {"hell"},
 
   BRCK = {"hell", "urban"},
   BOOK = {"hell", "urban"},
@@ -287,6 +299,15 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
     end
   end
 
+  -- direct removals
+  for theme_group,_ in pairs(OTEX_DIRECT_REMOVALS) do
+    for img_group,_ in pairs(OTEX_DIRECT_REMOVALS[theme_group]) do
+      for _,tex in pairs(OTEX_DIRECT_REMOVALS[theme_group][img_group]) do
+        table.kill_elem(resource_tab[theme_group][img_group], tex)
+      end
+    end
+  end
+
   -- resource_tab exclusions
   for k,v in pairs(OTEX_EXCLUSIONS) do
     if v == "textures" then
@@ -300,15 +321,6 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
     else
       resource_tab[k] = {}
       resource_tab[k] = nil
-    end
-  end
-
-  -- direct removals
-  for theme_group,_ in pairs(OTEX_DIRECT_REMOVALS) do
-    for img_group,_ in pairs(OTEX_DIRECT_REMOVALS[theme_group]) do
-      for _,tex in pairs(OTEX_DIRECT_REMOVALS[theme_group][img_group]) do
-        table.kill_elem(resource_tab[theme_group][img_group], tex)
-      end
     end
   end
 
