@@ -58,6 +58,7 @@ OTEX_EXCLUSIONS =
   WATE = "all",
 
   -- skies
+  SKY0 = "all",
   SKY1 = "all",
   SKY2 = "all",
   SKY3 = "all",
@@ -308,6 +309,49 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
     end
   end
 
+  -- create pick list
+  local validity_list = {}
+  local group_pick_list = {
+    tech = {textures = {}, flats = {}},
+    urban = {textures = {}, flats = {}},
+    hell = {textures = {}, flats = {}},
+    any = {textures = {}, flats = {}}
+  }
+  local av_themes = {"hell","urban","tech","any"}
+
+
+  for group,_ in pairs(resource_tab) do
+    for _,theme in pairs(av_themes) do
+
+      -- do textures
+      if OTEX_EXCLUSIONS[group] and OTEX_EXCLUSIONS[group] == "all" then
+        -- do nothing
+      else
+        if not (OTEX_THEME_RESTRICTIONS[group] 
+        and table.has_elem(OTEX_THEME_RESTRICTIONS[group], theme)) then
+          if resource_tab[group].has_textures == true 
+          and not OTEX_EXCLUSIONS[group] then
+            group_pick_list[theme].textures[group] = 10
+          end
+          if resource_tab[group].has_flats == true
+          and not OTEX_EXCLUSIONS[group] then
+            group_pick_list[theme].flats[group] = 10
+          end
+        end
+      end
+  
+    end
+  end
+
+  local generic_floors_list = {}
+  for G,_ in pairs(resource_tab) do
+    if string.find(G, "DMD") then
+      for _,T in pairs(resource_tab[G].flats) do
+        generic_floors_list[T] = 10
+      end
+    end
+  end
+  
   -- resource_tab exclusions
   for k,v in pairs(OTEX_EXCLUSIONS) do
     if v == "textures" then
@@ -324,64 +368,49 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
     end
   end
 
-  -- create room themes
-  local group_choices = {}
-  for k,GN in pairs(resource_tab) do
-    table.insert(group_choices, k)
-  end
-
   -- try to create a consistent theme
+  local themes =
+  {
+    "tech","hell","urban","any"
+  }
   for i = 1, PARAM.float_otex_num_themes * 0.75 do
-    local grouping, room_theme = {}
-    local tab_pick, RT_name, RT_theme
-    while grouping and not grouping.has_all == true do
-      tab_pick = rand.pick(group_choices)
-      grouping = resource_tab[tab_pick]
-    end
+    for _,T in pairs(themes) do
+      local grouping, room_theme = {}
+      local tab_pick, tex_pick, RT_name
 
-    -- quick hack fix to prevent hell themes from appearing
-    -- on tech and urban
-    RT_theme = "any"
-    if OTEX_THEME_RESTRICTIONS[tab_pick] then
-      RT_theme = rand.pick(OTEX_THEME_RESTRICTIONS[tab_pick])
-    end
+      RT_name = T .. "_OTEX_cons_" .. i .. "_"
+      room_theme =
+      {
+        env = "building",
+        prob = rand.pick({40,50,60}) * PARAM.float_otex_rt_prob_mult,
+        name = RT_name
+      }
+      room_theme.walls = {}
+      room_theme.floors = {}
+      room_theme.ceilings = {}
 
-    RT_name = RT_theme .. "_OTEX_cons_" .. i .. "_"
-    room_theme =
-    {
-      env = "building",
-      prob = rand.pick({40,50,60}) * PARAM.float_otex_rt_prob_mult
-    }
-    room_theme.walls = {}
-    room_theme.floors = {}
-    room_theme.ceilings = {}
+      tab_pick = rand.key_by_probs(group_pick_list[T].textures)
+      tex_pick = rand.pick(resource_tab[tab_pick].textures)
+      room_theme.walls[tex_pick] = 5
+      RT_name = RT_name .. tex_pick .. "_"
 
-    tab_pick = rand.pick(grouping.textures)
-    room_theme.walls[tab_pick] = 5
-    RT_name = RT_name .. tab_pick .. "_"
-
-    if rand.odds(25) then
-      grouping = resource_tab[rand.pick(group_choices)]
-      while grouping and not grouping.has_all == true do
-        grouping = resource_tab[rand.pick(group_choices)]
+      if rand.odds(25) or resource_tab[tab_pick].has_flats == false then
+        tab_pick = rand.key_by_probs(group_pick_list["any"].flats)
       end
-    end
-    tab_pick = rand.pick(grouping.flats)
-    room_theme.floors[tab_pick] = 5
-    RT_name = RT_name .. tab_pick .. "_"
+      tex_pick = rand.pick(resource_tab[tab_pick].flats)
+      room_theme.floors[tex_pick] = 5
+      RT_name = RT_name .. tex_pick .. "_"
 
-    if rand.odds(25) then
-      grouping = resource_tab[rand.pick(group_choices)]
-      while grouping and not grouping.has_all == true do
-        grouping = resource_tab[rand.pick(group_choices)]
+      if rand.odds(25) or resource_tab[tab_pick].has_flats == false then
+        tab_pick = rand.key_by_probs(group_pick_list["any"].flats)
       end
-    end
-    tab_pick = rand.pick(grouping.flats)
-    room_theme.ceilings[tab_pick] = 5
-    RT_name = RT_name .. tab_pick
+      tex_pick = rand.pick(resource_tab[tab_pick].flats)
+      room_theme.ceilings[tex_pick] = 5
+      RT_name = RT_name .. tex_pick
 
-    room_theme.name = RT_name
-    OTEX_ROOM_THEMES[RT_name] = room_theme
+      room_theme.name = RT_name
+      OTEX_ROOM_THEMES[RT_name] = room_theme
+    end
   end
 
   -- try a completely random theme
@@ -399,26 +428,17 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
     room_theme.floors = {}
     room_theme.ceilings = {}
 
-    tab_pick = rand.pick(group_choices)
-    while not resource_tab[tab_pick].has_textures == true do
-      tab_pick = rand.pick(group_choices)
-    end
+    tab_pick = rand.key_by_probs(group_pick_list["any"].textures)
     tex_pick = rand.pick(resource_tab[tab_pick].textures)
     room_theme.walls[tex_pick] = 5
     RT_name = RT_name .. tex_pick .. "_"
 
-    tab_pick = rand.pick(group_choices)
-    while not resource_tab[tab_pick].has_flats == true do
-      tab_pick = rand.pick(group_choices)
-    end
+    tab_pick = rand.key_by_probs(group_pick_list["any"].flats)
     tex_pick = rand.pick(resource_tab[tab_pick].flats)
     room_theme.floors[tex_pick] = 5
     RT_name = RT_name .. tex_pick .. "_"
 
-    tab_pick = rand.pick(group_choices)
-    while not resource_tab[tab_pick].has_flats == true do
-      tab_pick = rand.pick(group_choices)
-    end
+    tab_pick = rand.key_by_probs(group_pick_list["any"].flats)
     tex_pick = rand.pick(resource_tab[tab_pick].flats)
     room_theme.ceilings[tex_pick] = 5
     RT_name = RT_name .. tex_pick
@@ -433,14 +453,9 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
 
     if GAME.THEMES[theme].facades then
       for i = 1, 50 do
-        tab_pick = rand.pick(group_choices)
-        while resource_tab[tab_pick].has_textures == false 
-        and OTEX_THEME_RESTRICTIONS[tab_pick] ~= theme do
-          tab_pick = rand.pick(group_choices)
-        end
-
         local pick_num = 0
-        tex_pick = rand.pick(resource_tab[tab_pick].textures)
+
+        tab_pick = rand.key_by_probs(group_pick_list[theme].textures)
         while not GAME.THEMES[theme].facades[tex_pick] and pick_num < 5 do
           tex_pick = rand.pick(resource_tab[tab_pick].textures)
           GAME.THEMES[theme].facades[tex_pick] = rand.pick({15,20,25,30})
