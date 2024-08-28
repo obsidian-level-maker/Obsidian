@@ -442,7 +442,7 @@ function table.tostr(t, depth, prefix)
   return result
 end
 
-function table.alt_print_table(t, max_depth, indent)
+function table.alt_print(t, max_depth, indent)
   local indent = indent or 0
   local max_depth = max_depth or 0
   local prefix = string.rep("  ", indent)
@@ -458,10 +458,10 @@ function table.alt_print_table(t, max_depth, indent)
         gui.printf(" {" .. table.size(value) .. " items}\n")
       else
         gui.printf(prefix .. tostring(key) .. ":\n")
-        table.alt_print_table(value, max_depth, indent + 1)
+        table.alt_print(value, max_depth, indent + 1)
       end
     else
-      gui.printf(prefix .. tostring(key) .. ": " .. tostring(value) .. "\n")
+      gui.printf(prefix .. tostring(key) .. " = " .. tostring(value) .. "\n")
     end
   end
 
