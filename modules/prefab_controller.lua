@@ -142,21 +142,22 @@ function PREFAB_CONTROL.fine_tune_filters()
   }
   local new_fab_groups_multipliers =
   {
-    gtd_AI_goth_comp_yellow_stained_glass = 1.12,
+    --[[gtd_AI_goth_comp_yellow_stained_glass = 1.12,
     gtd_AI_boiler_room = 1.25,
     gtd_AI_boiler_control_unit = 1.25,
-    gtd_AI_corpse_inset = 1.5
+    gtd_AI_corpse_inset = 1.5]]
   }
   local new_themes_multipliers =
   {
-    tech_wood_lab = 1.25,
-    tech_bunker = 1.5,
-    tech_cableSocketCatacombs = 2,
+    tech_cableSocketCatacombs = 1,
+    tech_bumblebee = 1.5,
+    tech_aww2 = 1.5,
+    tech_iStuff = 1.5,
     --
-    urban_wood_lab = 1.25,
-    urban_bunker = 1.5,
+    urban_beigetownTech = 1.5,
+    urban_iStuff = 1.5,
     --
-    hell_cableSocketCatacombs = 2
+    hell_cableSocketCatacombs = 1.25
   }
   local themes =
   {

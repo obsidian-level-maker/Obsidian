@@ -2889,6 +2889,37 @@ brightmap texture SDHCCBWC
 {
   map SDHCCBRC
 }
+
+// iStuff wall brightmaps
+brightmap texture SDIPHWL2
+{
+  map SDIPHBR2
+}
+
+brightmap texture SDIPHWL5
+{
+  map SDIPHBR5
+}
+
+brightmap texture SDIPHWL7
+{
+  map SDIPHBR7
+}
+
+brightmap texture SDIPHWL8
+{
+  map SDIPHBR8
+}
+
+brightmap texture SDIPHWL9
+{
+  map SDIPHBR9
+}
+
+brightmap texture SDIPHWLA
+{
+  map SDIPHBRA
+}
 ]]
 
 -- aliases - when you're too lazy to write down wall and flat names in every
