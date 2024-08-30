@@ -557,7 +557,7 @@ PREFABS.Pic_dem_windows_deco19 =
 
   port = "zdoom",
 
-  prob   = 40,
+  prob   = 0,
 
   theme  = "hell",
 
