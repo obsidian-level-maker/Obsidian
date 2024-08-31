@@ -212,7 +212,7 @@ OTEX_DIRECT_REMOVALS =
     }
   },
 
-  TECH =
+  METL =
   {
     textures =
     {
@@ -402,6 +402,15 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
     return tex
   end
 
+  local function check_elem(t, v)
+    for _,val in pairs(t) do
+      if val == v then 
+        return true
+      end
+    end
+    return false
+  end
+
   resource_tab = table.copy(OTEX_RESOURCE_DB)
   table.name_up(resource_tab)
 
@@ -415,7 +424,6 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
   }
   local av_themes = {"hell","urban","tech","any"}
 
-
   for group,_ in pairs(resource_tab) do
     for _,theme in pairs(av_themes) do
 
@@ -423,25 +431,38 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
       if OTEX_EXCLUSIONS[group] and OTEX_EXCLUSIONS[group] == "all" then
         -- do nothing
       else
-        if not (OTEX_THEME_RESTRICTIONS[group] 
-        and table.has_elem(OTEX_THEME_RESTRICTIONS[group], theme)) then
+        if OTEX_THEME_RESTRICTIONS[group] 
+        and check_elem(OTEX_THEME_RESTRICTIONS[group], theme) then
           if resource_tab[group].has_textures == true 
           and not OTEX_EXCLUSIONS[group] then
             local prob = table.size(resource_tab[group].textures)
             group_pick_list[theme].textures[group] = prob
           end
+
           if resource_tab[group].has_flats == true
           and not OTEX_EXCLUSIONS[group] then
             local prob = table.size(resource_tab[group].flats)
             group_pick_list[theme].flats[group] = prob
+          end          
+        end
+
+        if not OTEX_THEME_RESTRICTIONS[group] then
+          if resource_tab[group].has_textures == true 
+          and not OTEX_EXCLUSIONS[group] then
+            local prob = table.size(resource_tab[group].textures)
+            group_pick_list[theme].textures[group] = prob
           end
+
+          if resource_tab[group].has_flats == true
+          and not OTEX_EXCLUSIONS[group] then
+            local prob = table.size(resource_tab[group].flats)
+            group_pick_list[theme].flats[group] = prob
+          end          
         end
       end
   
     end
   end
-
-  table.alt_print(group_pick_list)
 
   -- special handling for DMD floors
   local generic_floors_list = {}
@@ -556,14 +577,14 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
       RT_name = RT_name .. tex_pick .. "_"
 
       if rand.odds(25) or resource_tab[tab_pick].has_flats == false then
-        tab_pick = rand.key_by_probs(group_pick_list["any"].flats)
+        tab_pick = rand.key_by_probs(group_pick_list[T].flats)
       end
       tex_pick = rand.pick(resource_tab[tab_pick].flats)
       room_theme.floors[tex_pick] = 5
       RT_name = RT_name .. tex_pick .. "_"
 
       if rand.odds(25) or resource_tab[tab_pick].has_flats == false then
-        tab_pick = rand.key_by_probs(group_pick_list["any"].flats)
+        tab_pick = rand.key_by_probs(group_pick_list[T].flats)
       end
       tex_pick = rand.pick(resource_tab[tab_pick].flats)
       room_theme.ceilings[tex_pick] = 5
