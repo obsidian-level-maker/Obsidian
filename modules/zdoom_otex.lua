@@ -533,7 +533,7 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
       end
     end
   end
-  
+ 
   -- resource_tab exclusions
   for k,v in pairs(OTEX_EXCLUSIONS) do
     if v == "textures" then
@@ -635,7 +635,9 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
 
     if GAME.THEMES[theme].facades then
       for i = 1, 50 do
-        local pick_num = 0
+        local pick_num
+        pick_num = 0
+        tex_pick = "none"
 
         tab_pick = rand.key_by_probs(group_pick_list[theme].textures)
         while not GAME.THEMES[theme].facades[tex_pick] and pick_num < 5 do
