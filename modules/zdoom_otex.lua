@@ -238,7 +238,8 @@ OTEX_THEME_RESTRICTIONS =
 
   BRCK = {"hell", "urban"},
   BOOK = {"hell", "urban"},
-  
+  WOOD = {"hell", "urban"},
+ 
   SOIL = {"hell", "urban"},
   ROCK = {"hell"},
   SAND = {"hell"},
