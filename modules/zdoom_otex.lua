@@ -235,6 +235,7 @@ OTEX_THEME_RESTRICTIONS =
   BONE = {"hell"},
   FLSH = {"hell"},
   HELL = {"hell"},
+  PALC = {"hell", "urban"},
 
   BRCK = {"hell", "urban"},
   BOOK = {"hell", "urban"},
@@ -267,7 +268,7 @@ OTEX_SPECIAL_RESOURCES =
     OFENCF05 = {t="OFENCF05", rail_h=128},
     OFENCF06 = {t="OFENCF06", rail_h=96},
     OFENCF07 = {t="OFENCF07", rail_h=32},
-    OFENCF08 = {t="OFENCF08", rail_h=128},
+    OFENCF08 = {t="OFENCF08", rail_h=32},
     OFENCF09 = {t="OFENCF09", rail_h=128},
     OFENCF10 = {t="OFENCF10", rail_h=96},
     OFENCF11 = {t="OFENCF11", rail_h=64},
@@ -375,6 +376,112 @@ OTEX_SPECIAL_RESOURCES =
       OBKMTD37 = 30,
       OBKMTD38 = 30,
       OBKMTD39 = 30
+    }
+  },
+
+  liquid_materials =
+  {
+    OBLODA01 = { t="OFALLB01", f="0BLODA01"},
+    OGOOPY01 = { t="OFALLG01", f="0POOPY01"},
+    OICYWA01 = { t="OFALLW11", f="0ICYWA01"},
+
+    OLAVAA01 = { t="OFALLL01", f="0LAVAA01"},
+    OLAVAA02 = { t="OFALLM01", f="0LAVAA02"},
+    OLAVAB01 = { t="OFALLL01", f="0LAVAB01"},
+    OLAVAC01 = { t="OFALLL01", f="0LAVAC01"},
+    OLAVAD01 = { t="OFALLM01", f="0LAVAD01"},
+    OLAVAE01 = { t="OFALLL11", f="0LAVAE01"},
+    OLAVAF01 = { t="OFALLL11", f="0LAVAF01"},
+
+    ONUKEA01 = { t="OFALLN01", f="0NUKEA01"},
+    OSLUDG01 = { t="OFALLS01", f="0SLUDG01"},
+    OPOOPY01 = { t="OFALLP01", f="0POOPY01"},
+    OTAR__01 = { t="OFALLT01", f="0TAR__01"},
+    OWATER01 = { t="OFALLW01", f="0WATER01"}
+  },
+
+  liquid_defs =
+  {
+    otex_blood = { mat="OBLODA01", special=0},
+    otex_goop = { mat="OGOOPY01", special=0},
+    otex_ice = { mat="OICYWA01", special=0},
+   
+    otex_lavaA1 = { mat="OLAVAA01", light_add=56, special=5, damage=10},
+    otex_lavaA2 = { mat="OLAVAA02", light_add=56, special=5, damage=10},
+    otex_lavaB1 = { mat="OLAVAB01", light_add=56, special=5, damage=10},
+    otex_lavaC1 = { mat="OLAVAC01", light_add=56, special=5, damage=10},
+    otex_lavaD1 = { mat="OLAVAD01", light_add=56, special=5, damage=10},
+    otex_lavaE1 = { mat="OLAVAE01", light_add=56, special=5, damage=10},
+    otex_lavaF1 = { mat="OLAVAF01", light_add=56, special=5, damage=10},
+  
+    otex_nukage = { mat="ONUKEA01", light_add=56, special=7, damage=5},
+   
+    otex_sludge = { mat="OSLUDG01", special=0},
+    otex_poop = { mat="OPOOPY01", special=0},
+    otex_tar = { mat="OTAR__01", special=0},
+    otex_water = { mat="OWATER01", special=0}
+  },
+
+  liquid_themes =
+  {
+    tech =
+    {
+      otex_goop = 10,
+      otex_ice = 20,
+
+      otex_lavaA1 = 3,
+      otex_lavaA2 = 3,
+      otex_lavaB1 = 3,
+      otex_lavaC1 = 3,
+      otex_lavaD1 = 3,
+      otex_lavaE1 = 3,
+      otex_lavaF1 = 3,
+
+      otex_nukage = 50,
+      otex_sludge = 30,
+      otex_poop = 10,
+      otex_tar = 40,
+      otex_water = 20
+    },
+
+    urban =
+    {
+      otex_blood = 20,
+      otex_goop = 10,
+      otex_ice = 20,
+
+      otex_lavaA1 = 2,
+      otex_lavaA2 = 2,
+      otex_lavaB1 = 2,
+      otex_lavaC1 = 2,
+      otex_lavaD1 = 2,
+      otex_lavaE1 = 2,
+      otex_lavaF1 = 2,
+
+      otex_nukage = 10,
+      otex_sludge = 20,
+      otex_poop = 50,
+      otex_tar = 40,
+      otex_water = 20
+    },
+
+    hell =
+    {
+      otex_blood = 70,
+      otex_goop = 10,
+      otex_ice = 20,
+
+      otex_lavaA1 = 12,
+      otex_lavaA2 = 12,
+      otex_lavaB1 = 12,
+      otex_lavaC1 = 12,
+      otex_lavaD1 = 12,
+      otex_lavaE1 = 12,
+      otex_lavaF1 = 12,
+
+      otex_sludge = 30,
+      otex_tar = 40,
+      otex_poop = 40
     }
   }
 }
@@ -520,7 +627,10 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
       for _,F in pairs(resource_group.flats) do
         local side_tex, group_pick
         -- hack fix to assign DMD flats a side texture rather than just a default
-        if string.find(group_name, "DMD") then
+        if string.find(group_name, "DMD") 
+        or string.find(group_name, "TL16")
+        or string.find(group_name, "TL32")
+        or string.find(group_name, "TLMX") then
           group_pick = rand.key_by_probs(group_pick_list["urban"].textures)
           side_tex = rand.pick(resource_tab[group_pick].textures)
         else
@@ -573,22 +683,28 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
       room_theme.ceilings = {}
 
       tab_pick = rand.key_by_probs(group_pick_list[T].textures)
-      tex_pick = rand.pick(resource_tab[tab_pick].textures)
-      room_theme.walls[tex_pick] = 5
+      for j = 1, 3 do
+        tex_pick = rand.pick(resource_tab[tab_pick].textures)
+        room_theme.walls[tex_pick] = 5
+      end
       RT_name = RT_name .. tex_pick .. "_"
 
       if rand.odds(25) or resource_tab[tab_pick].has_flats == false then
         tab_pick = rand.key_by_probs(group_pick_list[T].flats)
       end
-      tex_pick = rand.pick(resource_tab[tab_pick].flats)
-      room_theme.floors[tex_pick] = 5
+      for j = 1, 3 do
+        tex_pick = rand.pick(resource_tab[tab_pick].flats)
+        room_theme.floors[tex_pick] = 5
+      end
       RT_name = RT_name .. tex_pick .. "_"
 
       if rand.odds(25) or resource_tab[tab_pick].has_flats == false then
         tab_pick = rand.key_by_probs(group_pick_list[T].flats)
       end
-      tex_pick = rand.pick(resource_tab[tab_pick].flats)
-      room_theme.ceilings[tex_pick] = 5
+      for j = 1, 3 do
+        tex_pick = rand.pick(resource_tab[tab_pick].flats)
+        room_theme.ceilings[tex_pick] = 5
+      end
       RT_name = RT_name .. tex_pick
 
       room_theme.name = RT_name
@@ -658,14 +774,29 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
   end
   local scenic_fence_tab = table.copy(OTEX_SPECIAL_RESOURCES.rail_scenic_fences)
   for fence,prob in pairs(scenic_fence_tab.tech) do
-    GAME.THEMES.tech.scenic_fences[fence] = prob
-    GAME.THEMES.urban.scenic_fences[fence] = prob
+    GAME.THEMES.tech.scenic_fences[fence] = int(prob * 0.75)
+    GAME.THEMES.urban.scenic_fences[fence] = int(prob * 0.75)
   end
   for fence,prob in pairs(scenic_fence_tab.gothic) do
-    GAME.THEMES.hell.scenic_fences[fence] = prob
-    GAME.THEMES.urban.scenic_fences[fence] = prob
+    GAME.THEMES.hell.scenic_fences[fence] = int(prob * 0.75)
+    GAME.THEMES.urban.scenic_fences[fence] = int(prob * 0.75)
   end
 
+  -- create liquid attachments
+  local liquid_tab = table.copy(OTEX_SPECIAL_RESOURCES.liquid_materials)
+  for liquid_mat,_ in pairs(liquid_tab) do
+    GAME.MATERIALS[liquid_mat]={t=_.t, f=_.f}
+  end
+  local liquid_defs = table.copy(OTEX_SPECIAL_RESOURCES.liquid_defs)
+  for liquid,_ in pairs(liquid_defs) do
+    GAME.LIQUIDS[liquid]=liquid_defs[liquid]
+  end
+  local liquid_themes = table.copy(OTEX_SPECIAL_RESOURCES.liquid_themes)
+  for theme,l_tab in pairs(liquid_themes) do
+    for liquid,prob in pairs(l_tab) do
+      GAME.THEMES[theme].liquids[liquid] = prob
+    end
+  end
 end
 
 
