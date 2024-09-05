@@ -2060,6 +2060,57 @@ brightmap texture COMPCT07
   map OBRCPCT2
 }
 
+brightmap texture COMPFUZ1
+{
+  map CMPFUZBR
+}
+brightmap texture COMPFUZ2
+{
+  map CMPFUZBR
+}
+brightmap texture COMPFUZ3
+{
+  map CMPFUZBR
+}
+brightmap texture COMPFUZ4
+{
+  map CMPFUZBR
+}
+
+brightmap texture CGCANI00
+{
+  map CGANIBR
+}
+brightmap texture CGCANI01
+{
+  map CGANIBR
+}
+brightmap texture CGCANI02
+{
+  map CGANIBR
+}
+brightmap texture CGCANI03
+{
+  map CGANIBR
+}
+brightmap texture CGCANI04
+{
+  map CGANIBR
+}
+brightmap texture CGCANI05
+{
+  map CGANIBR
+}
+brightmap texture CGCANI06
+{
+  map CGANIBR
+}
+brightmap texture CGCANI07
+{
+  map CGANIBR
+}
+
+
 // silver light variations
 brightmap texture SILVER2R
 {
@@ -2168,6 +2219,10 @@ brightmap texture COMPSD3
   map OBRCPSD1
 }
 brightmap texture COMPSD4
+{
+  map OBRCPSD1
+}
+brightmap texture COMPSD5
 {
   map OBRCPSD1
 }
@@ -2555,6 +2610,11 @@ brightmap texture SDOM_WL2
   map SDMWL2BR
 }
 
+brightmap texture SDOM_WL5
+{
+  map SDMWL5BR
+}
+
 brightmap texture SD_GTHW1
 {
   map SDGHW1BR
@@ -2655,9 +2715,9 @@ brightmap texture SD_TSGWC
   map STGSWCBR
 }
 
-brightmap texture S_W2WALE
+brightmap texture S_W2WAL4
 {
-  map SW2WLEBR
+  map SW2WBR4
 }
 
 brightmap texture SD_HCCW1
@@ -2828,6 +2888,37 @@ brightmap texture SDHCCBWB
 brightmap texture SDHCCBWC
 {
   map SDHCCBRC
+}
+
+// iStuff wall brightmaps
+brightmap texture SDIPHWL2
+{
+  map SDIPHBR2
+}
+
+brightmap texture SDIPHWL5
+{
+  map SDIPHBR5
+}
+
+brightmap texture SDIPHWL7
+{
+  map SDIPHBR7
+}
+
+brightmap texture SDIPHWL8
+{
+  map SDIPHBR8
+}
+
+brightmap texture SDIPHWL9
+{
+  map SDIPHBR9
+}
+
+brightmap texture SDIPHWLA
+{
+  map SDIPHBRA
 }
 ]]
 

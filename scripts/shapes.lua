@@ -16418,6 +16418,58 @@ GROW_PLUS_SINGLE_STAIR_OPPOSITE_DOUBLE =
   }
 },
 
+GROW_FANBLADE =
+{
+  prob = 20,
+  skip_prob = 85,
+
+  structure =
+  {
+    "xxxx11xxx","xxxx11xxx",
+    "xxxx...xx","xxxx111xx",
+    "xxxx...xx","xxxx111xx",
+    "...x...xx","11%x11/xx",
+    ".........","111111111",
+    ".........","111111111",
+    "xxx..x...","xxx11x%11",
+    "xx...xxxx","xx/11xxxx",
+    "xx...xxxx","xx111xxxx",
+    "xx...xxxx","xx111xxxx"
+  },
+
+  diagonals =
+  {
+    "1.","1.",
+    ".1",".1"
+  }
+},
+
+GROW_FANBLADE_NEWAREA =
+{
+  prob = 17,
+  skip_prob = 85,
+
+  structure =
+  {
+    "xxxx11xxx","xxxx11xxx",
+    "xxxx...xx","xxxx111xx",
+    "xxxx...xx","xxxx111xx",
+    "...x...xx","AA%x11/xx",
+    ".........","AAA111AAA",
+    ".........","AAA111AAA",
+    "xxx..x...","xxxAAx%AA",
+    "xx...xxxx","xx/AAxxxx",
+    "xx...xxxx","xxAAAxxxx",
+    "xx...xxxx","xxAAAxxxx"
+  },
+
+  diagonals =
+  {
+    "A.","1.",
+    ".A",".A"
+  }
+},
+
 -- Compound grow rules with auxiliaries
 
 GROW_SPIRAL_STAIR_SMALL =

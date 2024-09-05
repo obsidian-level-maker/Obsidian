@@ -28,6 +28,7 @@ OTEX_EXCLUSIONS =
   -- animated textures
   WRNG = "textures",
   CHAN = "all",
+  COMP = "all",
 
   -- textures with transparency
   EXIT = "all",
@@ -36,6 +37,14 @@ OTEX_EXCLUSIONS =
   WARP = "all",
   VINE = "all",
   SOLI = "all",
+  DOOR = "all",
+  GATE = "all",
+  FLAG = "all",
+  RAIL = "all",
+  LASR = "all",
+
+  -- VFX
+  FIRE = "all",
 
   -- liquids
   FALL = "all",
@@ -47,8 +56,10 @@ OTEX_EXCLUSIONS =
   SLUD = "all",
   TAR_ = "all",
   WATE = "all",
+  POOP = "all", -- I am sad this has to be excluded... for now.
 
   -- skies
+  SKY0 = "all",
   SKY1 = "all",
   SKY2 = "all",
   SKY3 = "all",
@@ -62,7 +73,13 @@ OTEX_EXCLUSIONS =
   LGHT = "all",
 
   -- outdoors
-  GRSS = "all"
+  GRSS = "all",
+  ICE_ = "all",
+
+  -- just plain weird
+  CRPT = "textures",
+  TRAK = "all",
+  KEYS = "all"
 }
 
 -- some textures that must be removed manually from the DB
@@ -103,15 +120,265 @@ OTEX_DIRECT_REMOVALS =
       "OMBRLR90",
       "OMBRLR94"  
     }
+  },
+
+  BRCK =
+  {
+    textures =
+    {
+      "OBRCKB10",
+      "OBRCKB11",
+      "OBRCKB12",
+      "OBRCKB13",
+      "OBRCKB20",
+      "OBRCKB21",
+      "OBRCKB22",
+      "OBRCKB23",
+
+      "OBRCKF11",
+      "OBRCKF12",
+      "OBRCKF13",
+      "OBRCKF14",
+      "OBRCKF21",
+      "OBRCKF22",
+      "OBRCKF23",
+      "OBRCKF24",
+
+      "OBRCKL10",
+      "OBRCKL11",
+      "OBRCKL21",
+
+      "OBRCKU03",
+      "OBRCKU04",
+      "OBRCKU05",
+      "OBRCKU06",
+
+      "OBRCKU13",
+      "OBRCKU14",
+      "OBRCKU15",
+      "OBRCKU16",
+
+      "OBRCKU23",
+      "OBRCKU24",
+      "OBRCKU25",
+      "OBRCKU26",
+
+      "OBRCKU3D",
+      "OBRCKU3E",
+      "OBRCKU3F",
+      "OBRCKU3G",
+      "OBRCKU3H",
+      "OBRCKU3I",
+
+      "OTUDRB80",
+      "OTUDRB81"
+    }
+  },
+
+  BKMT =
+  {
+    textures =
+    {
+      "OBKMTD90",
+      "OBKMTD91",
+      "OBKMTD92",
+      "OBKMTD95",
+      "OBKMTD96",
+      "OBKMTD97"
+    }
+  },
+
+  BOOK =
+  {
+    textures =
+    {
+      "OBOOKA01",
+      "OBOOKA02",
+      "OBOOKA05",
+      "OBOOKA10",
+      "OBOOKA11",
+      "OBOOKA12"
+    }
+  },
+
+  VENT =
+  {
+    textures =
+    {
+      "OVENTE03",
+      "OVENTE04",
+      "OVENTE13",
+      "OVENTE14"
+    }
+  },
+
+  METL =
+  {
+    textures =
+    {
+      "OMETLC96",
+      "OMETLC97",
+      "OMETLC98",
+      "OMETLC99",
+
+      "OMETLC92",
+      "OMETLC93",
+      "OMETLC94",
+      "OMETLC95"
+    }
   }
 }
 
 OTEX_THEME_RESTRICTIONS =
 {
-  MRBL = "hell",
-  BONE = "hell",
-  FLSH = "hell"
+  MRBL = {"hell"},
+  BONE = {"hell"},
+  FLSH = {"hell"},
+  HELL = {"hell"},
+
+  BRCK = {"hell", "urban"},
+  BOOK = {"hell", "urban"},
+  WOOD = {"hell", "urban"},
+ 
+  SOIL = {"hell", "urban"},
+  ROCK = {"hell"},
+  SAND = {"hell"},
+  DIRT = {"hell"}
 }
+
+OTEX_SPECIAL_RESOURCES =
+{
+  rail_materials =
+  {
+    OFENCA01 = {t="OFENCA01", rail_h=128},
+    OFENCA02 = {t="OFENCA02", rail_h=128},
+    OFENCB01 = {t="OFENCB01", rail_h=48},
+    OFENCB02 = {t="OFENCB02", rail_h=64},
+    OFENCC01 = {t="OFENCC01", rail_h=128},
+    OFENCC64 = {t="OFENCC64", rail_h=64},
+    OFENCC96 = {t="OFENCC96", rail_h=96},
+    OFENCD01 = {t="OFENCD01", rail_h=128},
+    OFENCE01 = {t="OFENCE01", rail_h=128},
+
+    OFENCF01 = {t="OFENCF01", rail_h=128},
+    OFENCF02 = {t="OFENCF02", rail_h=64},
+    OFENCF03 = {t="OFENCF03", rail_h=128},
+    OFENCF04 = {t="OFENCF04", rail_h=64},
+    OFENCF05 = {t="OFENCF05", rail_h=128},
+    OFENCF06 = {t="OFENCF06", rail_h=96},
+    OFENCF07 = {t="OFENCF07", rail_h=32},
+    OFENCF08 = {t="OFENCF08", rail_h=128},
+    OFENCF09 = {t="OFENCF09", rail_h=128},
+    OFENCF10 = {t="OFENCF10", rail_h=96},
+    OFENCF11 = {t="OFENCF11", rail_h=64},
+    OFENCF12 = {t="OFENCF12", rail_h=32},
+    OFENCF13 = {t="OFENCF13", rail_h=64},
+    OFENCF14 = {t="OFENCF14", rail_h=64},
+
+    OFENCF20 = {t="OFENCF20", rail_h=128},
+    OFENCF21 = {t="OFENCF21", rail_h=64},
+
+    OFENCG01 = {t="OFENCG01", rail_h=128},
+    OFENCG02 = {t="OFENCG02", rail_h=64},
+    OFENCH01 = {t="OFENCH01", rail_h=128},
+    OFENCH02 = {t="OFENCH02", rail_h=128},
+  
+    OFENCJ11 = {t="OFENCJ11", rail_h=128},
+
+    OFENCK01 = {t="OFENCK01", rail_h=128},
+    OFENCL01 = {t="OFENCL01", rail_h=128},
+    OFENCL02 = {t="OFENCL02", rail_h=128},
+    OFENCM01 = {t="OFENCM01", rail_h=128},
+    OFENCM02 = {t="OFENCM02", rail_h=64},
+    OFENCM11 = {t="OFENCM11", rail_h=128},
+    OFENCM12 = {t="OFENCM12", rail_h=128},
+
+    OFENCN01 = {t="OFENCN01", rail_h=128},
+    OFENCN02 = {t="OFENCN02", rail_h=128},
+    OFENCN11 = {t="OFENCN11", rail_h=128},
+    OFENCN12 = {t="OFENCN12", rail_h=128},
+
+    ORAILA01 = {t="ORAILA01", rail_h=48},
+    ORAILA02 = {t="ORAILA02", rail_h=48},
+    ORAILA03 = {t="ORAILA03", rail_h=48},
+    ORAILB01 = {t="ORAILB01", rail_h=48},
+
+    OBKMTA92 = {t="OBKMTA92", rail_h=128},
+    OBKMTA93 = {t="OBKMTA93", rail_h=128},
+    OBKMTA94 = {t="OBKMTA94", rail_h=128},
+    OBKMTA97 = {t="OBKMTA97", rail_h=64},
+
+    OBKMTD32 = {t="OBKMTD32", rail_h=128},
+    OBKMTD33 = {t="OBKMTD33", rail_h=128},
+    OBKMTD37 = {t="OBKMTD37", rail_h=64},
+    OBKMTD38 = {t="OBKMTD38", rail_h=64},
+    OBKMTD39 = {t="OBKMTD39", rail_h=64}
+  },
+
+  rail_scenic_fences =
+  {
+    tech =
+    {
+      OFENCA01 = 20,
+      OFENCA02 = 20,
+
+      OFENCC01 = 20,
+      OFENCC64 = 20,
+      OFENCC96 = 20,
+      OFENCD01 = 20,
+      OFENCE01 = 20,
+      OFENCF01 = 20,
+      OFENCF02 = 20,
+      OFENCF03 = 20,
+      OFENCF04 = 20,
+      OFENCF05 = 20,
+      OFENCF06 = 20,
+      OFENCF07 = 20,
+      OFENCF08 = 20,
+      OFENCF09 = 20,
+      OFENCF10 = 20,
+      OFENCF11 = 20,
+      OFENCF12 = 20,
+      OFENCF13 = 20,
+      OFENCF14 = 20,
+
+      OFENCJ11 = 25,
+      OFENCL01 = 25,
+      OFENCL02 = 25,
+      OFENCM11 = 25,
+      OFENCN01 = 25,
+      OFENCN02 = 25,
+      OFENCN11 = 25,
+      OFENCN12 = 25,
+
+      ORAILA01 = 35,
+      ORAILA02 = 35,
+      ORAILA03 = 35
+    },
+
+    gothic =
+    {
+      OFENCB01 = 30,
+      OFENCB02 = 30,
+      OFENCG01 = 30,
+      OFENCG02 = 30,
+      OFENCH01 = 15,
+      OFENCH02 = 15,
+      OFENCK01 = 30,
+      OFENCM01 = 30,
+      OFENCM02 = 30,
+      OFENCM11 = 30,
+      OFENCM12 = 30,
+
+      OBKMTD32 = 30,
+      OBKMTD33 = 30,
+      OBKMTD37 = 30,
+      OBKMTD38 = 30,
+      OBKMTD39 = 30
+    }
+  }
+}
+
 
 function OTEX_PROC_MODULE.setup(self)
   PARAM.OTEX_module_activated = true
@@ -123,22 +390,89 @@ end
 function OTEX_PROC_MODULE.synthesize_procedural_themes()
   local resource_tab = {}
 
+  local function pick_unique_texture(table, tex_group, total_tries)
+    local tex
+    local tries = 0
+
+    tex = rand.pick(tex_group)
+    while not table[tex] and tries < (total_tries or 5) do
+      tex = rand.pick(tex_group)
+      tries = tries + 1
+    end
+
+    return tex
+  end
+
+  local function check_elem(t, v)
+    for _,val in pairs(t) do
+      if val == v then 
+        return true
+      end
+    end
+    return false
+  end
+
   resource_tab = table.copy(OTEX_RESOURCE_DB)
   table.name_up(resource_tab)
 
-  -- resource_tab exclusions
-  for k,v in pairs(OTEX_EXCLUSIONS) do
-    if v == "textures" then
-      resource_tab[k].textures = {}
-      resource_tab[k].has_textures = false
-      resource_tab[k].has_all = false
-    elseif v == "flats" then
-      resource_tab[k].flats = {}
-      resource_tab[k].has_flats = false
-      resource_tab[k].has_all = false
-    else
-      resource_tab[k] = {}
-      resource_tab[k] = nil
+  -- create pick list
+  local validity_list = {}
+  local group_pick_list = {
+    tech = {textures = {}, flats = {}},
+    urban = {textures = {}, flats = {}},
+    hell = {textures = {}, flats = {}},
+    any = {textures = {}, flats = {}}
+  }
+  local av_themes = {"hell","urban","tech","any"}
+
+  for group,_ in pairs(resource_tab) do
+    for _,theme in pairs(av_themes) do
+
+      -- do textures
+      if OTEX_EXCLUSIONS[group] and OTEX_EXCLUSIONS[group] == "all" then
+        -- do nothing
+      else
+        if OTEX_THEME_RESTRICTIONS[group] 
+        and check_elem(OTEX_THEME_RESTRICTIONS[group], theme) then
+          if resource_tab[group].has_textures == true 
+          and not OTEX_EXCLUSIONS[group] then
+            local prob = table.size(resource_tab[group].textures)
+            group_pick_list[theme].textures[group] = prob
+          end
+
+          if resource_tab[group].has_flats == true
+          and not OTEX_EXCLUSIONS[group] then
+            local prob = table.size(resource_tab[group].flats)
+            group_pick_list[theme].flats[group] = prob
+          end          
+        end
+
+        if not OTEX_THEME_RESTRICTIONS[group] then
+          if resource_tab[group].has_textures == true 
+          and not OTEX_EXCLUSIONS[group] then
+            local prob = table.size(resource_tab[group].textures)
+            group_pick_list[theme].textures[group] = prob
+          end
+
+          if resource_tab[group].has_flats == true
+          and not OTEX_EXCLUSIONS[group] then
+            local prob = table.size(resource_tab[group].flats)
+            group_pick_list[theme].flats[group] = prob
+          end          
+        end
+      end
+  
+    end
+  end
+
+  -- special handling for DMD floors
+  local generic_floors_list = {}
+  for G,_ in pairs(resource_tab) do
+    if string.find(G, "DMD") then
+      for _,T in pairs(resource_tab[G].flats) do
+        local prob = table.size(resource_tab[G].flats)
+        generic_floors_list[T] = prob
+      end
     end
   end
 
@@ -151,7 +485,8 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
     end
   end
 
-  for _,resource_group in pairs(resource_tab) do
+  -- create material mappings
+  for group_name,resource_group in pairs(resource_tab) do
     if resource_group.has_all then
       for _,T in pairs(resource_group.textures) do
         OTEX_MATERIALS[T]=
@@ -183,80 +518,89 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
     if resource_group.has_flats and
     not resource_group.has_textures then
       for _,F in pairs(resource_group.flats) do
+        local side_tex, group_pick
+        -- hack fix to assign DMD flats a side texture rather than just a default
+        if string.find(group_name, "DMD") then
+          group_pick = rand.key_by_probs(group_pick_list["urban"].textures)
+          side_tex = rand.pick(resource_tab[group_pick].textures)
+        else
+          side_tex = "BROWNHUG"
+        end
         OTEX_MATERIALS[F] =
         {
           f=F,
-          t="BROWNHUG"
+          t=side_tex
         }
       end
     end
   end
-
-
-  -- create room themes
-  local group_choices = {}
-  for k,GN in pairs(resource_tab) do
-    table.insert(group_choices, k)
+ 
+  -- resource_tab exclusions
+  for k,v in pairs(OTEX_EXCLUSIONS) do
+    if v == "textures" then
+      resource_tab[k].textures = {}
+      resource_tab[k].has_textures = false
+      resource_tab[k].has_all = false
+    elseif v == "flats" then
+      resource_tab[k].flats = {}
+      resource_tab[k].has_flats = false
+      resource_tab[k].has_all = false
+    else
+      resource_tab[k] = {}
+      resource_tab[k] = nil
+    end
   end
 
   -- try to create a consistent theme
-  for i = 1, PARAM.float_otex_num_themes / 2 do
-    local grouping, room_theme = {}
-    local tab_pick, RT_name, RT_theme
-    while grouping and not grouping.has_all == true do
-      grouping = resource_tab[rand.pick(group_choices)]
-    end
+  local themes =
+  {
+    "tech","hell","urban"
+  }
+  for i = 1, PARAM.float_otex_num_themes * 0.75 do
+    for _,T in pairs(themes) do
+      local grouping, room_theme = {}
+      local tab_pick, tex_pick, RT_name
 
-    -- quick hack fix to prevent hell themes from appearing
-    -- on tech and urban
-    RT_theme = "any"
-    if OTEX_THEME_RESTRICTIONS[grouping]
-    and OTEX_THEME_RESTRICTIONS[grouping] == "hell" then
-      RT_theme = "hell"
-    end
+      RT_name = T .. "_OTEX_cons_" .. i .. "_"
+      room_theme =
+      {
+        env = "building",
+        prob = rand.pick({40,50,60}) * PARAM.float_otex_rt_prob_mult,
+        name = RT_name
+      }
+      room_theme.walls = {}
+      room_theme.floors = {}
+      room_theme.ceilings = {}
 
-    RT_name = RT_theme .. "_OTEX_cons_" .. i
-    room_theme =
-    {
-      env = "building",
-      prob = rand.pick({40,50,60}) * PARAM.float_otex_rt_prob_mult
-    }
-    room_theme.walls = {}
-    room_theme.floors = {}
-    room_theme.ceilings = {}
+      tab_pick = rand.key_by_probs(group_pick_list[T].textures)
+      tex_pick = rand.pick(resource_tab[tab_pick].textures)
+      room_theme.walls[tex_pick] = 5
+      RT_name = RT_name .. tex_pick .. "_"
 
-    tab_pick = rand.pick(grouping.textures)
-    room_theme.walls[tab_pick] = 5
-    RT_name = RT_name .. tab_pick .. "_"
-
-    if rand.odds(25) then
-      grouping = resource_tab[rand.pick(group_choices)]
-      while grouping and not grouping.has_all == true do
-        grouping = resource_tab[rand.pick(group_choices)]
+      if rand.odds(25) or resource_tab[tab_pick].has_flats == false then
+        tab_pick = rand.key_by_probs(group_pick_list[T].flats)
       end
-    end
-    tab_pick = rand.pick(grouping.flats)
-    room_theme.floors[tab_pick] = 5
-    RT_name = RT_name .. tab_pick .. "_"
+      tex_pick = rand.pick(resource_tab[tab_pick].flats)
+      room_theme.floors[tex_pick] = 5
+      RT_name = RT_name .. tex_pick .. "_"
 
-    if rand.odds(25) then
-      grouping = resource_tab[rand.pick(group_choices)]
-      while grouping and not grouping.has_all == true do
-        grouping = resource_tab[rand.pick(group_choices)]
+      if rand.odds(25) or resource_tab[tab_pick].has_flats == false then
+        tab_pick = rand.key_by_probs(group_pick_list[T].flats)
       end
-    end
-    tab_pick = rand.pick(grouping.flats)
-    room_theme.ceilings[tab_pick] = 5
-    RT_name = RT_name .. tab_pick
+      tex_pick = rand.pick(resource_tab[tab_pick].flats)
+      room_theme.ceilings[tex_pick] = 5
+      RT_name = RT_name .. tex_pick
 
-    room_theme.name = RT_name
-    OTEX_ROOM_THEMES[RT_name] = room_theme
+      room_theme.name = RT_name
+      OTEX_ROOM_THEMES[RT_name] = room_theme
+    end
   end
 
   -- try a completely random theme
-  for i = 1, PARAM.float_otex_num_themes / 2 do
-    local RT_name = "any_OTEX_" .. i
+  for i = 1, PARAM.float_otex_num_themes * 0.25 do
+    local RT_name = "any_OTEX_random_" .. i .. "_"
     local room_theme, tab_pick = {}
+    local tex_pick
 
     room_theme =
     {
@@ -267,26 +611,20 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
     room_theme.floors = {}
     room_theme.ceilings = {}
 
-    tab_pick = rand.pick(group_choices)
-    while not resource_tab[tab_pick].has_textures == true do
-      tab_pick = rand.pick(group_choices)
-    end
-    RT_name = RT_name .. tab_pick .. "_"
-    room_theme.walls[rand.pick(resource_tab[tab_pick].textures)] = 5
+    tab_pick = rand.key_by_probs(group_pick_list["any"].textures)
+    tex_pick = rand.pick(resource_tab[tab_pick].textures)
+    room_theme.walls[tex_pick] = 5
+    RT_name = RT_name .. tex_pick .. "_"
 
-    tab_pick = rand.pick(group_choices)
-    while not resource_tab[tab_pick].has_flats == true do
-      tab_pick = rand.pick(group_choices)
-    end
-    RT_name = RT_name .. tab_pick .. "_"
-    room_theme.floors[rand.pick(resource_tab[tab_pick].flats)] = 5
+    tab_pick = rand.key_by_probs(group_pick_list["any"].flats)
+    tex_pick = rand.pick(resource_tab[tab_pick].flats)
+    room_theme.floors[tex_pick] = 5
+    RT_name = RT_name .. tex_pick .. "_"
 
-    tab_pick = rand.pick(group_choices)
-    while not resource_tab[tab_pick].has_flats == true do
-      tab_pick = rand.pick(group_choices)
-    end
-    RT_name = RT_name .. tab_pick .. "_"
-    room_theme.ceilings[rand.pick(resource_tab[tab_pick].flats)] = 5
+    tab_pick = rand.key_by_probs(group_pick_list["any"].flats)
+    tex_pick = rand.pick(resource_tab[tab_pick].flats)
+    room_theme.ceilings[tex_pick] = 5
+    RT_name = RT_name .. tex_pick
 
     room_theme.name = RT_name
     OTEX_ROOM_THEMES[RT_name] = room_theme
@@ -298,13 +636,11 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
 
     if GAME.THEMES[theme].facades then
       for i = 1, 50 do
-        tab_pick = rand.pick(group_choices)
-        while resource_tab[tab_pick].has_textures == false do
-          tab_pick = rand.pick(group_choices)
-        end
+        local pick_num
+        pick_num = 0
+        tex_pick = "none"
 
-        local pick_num = 0
-        tex_pick = rand.pick(resource_tab[tab_pick].textures)
+        tab_pick = rand.key_by_probs(group_pick_list[theme].textures)
         while not GAME.THEMES[theme].facades[tex_pick] and pick_num < 5 do
           tex_pick = rand.pick(resource_tab[tab_pick].textures)
           GAME.THEMES[theme].facades[tex_pick] = rand.pick({15,20,25,30})
@@ -313,6 +649,21 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
       end
     end
 
+  end
+
+  -- create scenic fences
+  local rail_tab = table.copy(OTEX_SPECIAL_RESOURCES.rail_materials)
+  for rail_mat,_ in pairs(rail_tab) do
+    GAME.MATERIALS[rail_mat]={t=_.t, rail_h=_.rail_h}
+  end
+  local scenic_fence_tab = table.copy(OTEX_SPECIAL_RESOURCES.rail_scenic_fences)
+  for fence,prob in pairs(scenic_fence_tab.tech) do
+    GAME.THEMES.tech.scenic_fences[fence] = prob
+    GAME.THEMES.urban.scenic_fences[fence] = prob
+  end
+  for fence,prob in pairs(scenic_fence_tab.gothic) do
+    GAME.THEMES.hell.scenic_fences[fence] = prob
+    GAME.THEMES.urban.scenic_fences[fence] = prob
   end
 
 end
