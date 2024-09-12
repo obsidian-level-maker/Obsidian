@@ -970,10 +970,6 @@ struct po_parse_state_t
         {
             ParseString(p, id, sizeof(id));
         }
-        else
-        {
-            LogPrint("WARNING: unexpected string on line %d\n", line_number);
-        }
     }
 
     void SetContext(const char *p)
@@ -1059,10 +1055,6 @@ void Trans_Read_PO_File(FILE *fp)
         else if (StringPrefixCompare(p, "msgstr ") == 0)
         {
             po_state.SetString(p + 7);
-        }
-        else
-        {
-            LogPrint("WARNING: unsupported keyword on line %d\n", po_state.line_number);
         }
 
         if (feof(fp) || ferror(fp))
