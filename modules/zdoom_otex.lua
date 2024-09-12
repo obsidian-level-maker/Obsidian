@@ -79,7 +79,12 @@ OTEX_EXCLUSIONS =
   -- just plain weird
   CRPT = "textures",
   TRAK = "all",
-  KEYS = "all"
+  KEYS = "all",
+  EFCT = "all",
+
+  -- too colorful
+  TECH = "textures",
+  FADE = "all"
 }
 
 -- some textures that must be removed manually from the DB
@@ -205,6 +210,8 @@ OTEX_DIRECT_REMOVALS =
   {
     textures =
     {
+      "OVENTE01",
+      "OVENTE02",
       "OVENTE03",
       "OVENTE04",
       "OVENTE13",
@@ -231,20 +238,27 @@ OTEX_DIRECT_REMOVALS =
 
 OTEX_THEME_RESTRICTIONS =
 {
-  MRBL = {"hell"},
-  BONE = {"hell"},
-  FLSH = {"hell"},
-  HELL = {"hell"},
-  PALC = {"hell", "urban"},
+  MRBL = {"tech"},
+  BONE = {"tech", "urban"},
+  FLSH = {"tech", "urban"},
+  HELL = {"tech", "urban"},
+  SKIN = {"tech"},
+  CMBD = {"tech"},
 
-  BRCK = {"hell", "urban"},
-  BOOK = {"hell", "urban"},
-  WOOD = {"hell", "urban"},
+  FNCY = {"tech"},
+  PALC = {"tech"},
+  STCC = {"tech"},
+
+  BRCK = {"tech"},
+  BOOK = {"tech"},
+  WOOD = {"tech"},
+  TUDR = {"tech"},
  
-  SOIL = {"hell", "urban"},
-  ROCK = {"hell"},
-  SAND = {"hell"},
-  DIRT = {"hell"}
+  STON = {"tech"},
+  SOIL = {"tech"},
+  ROCK = {"tech", "urban"},
+  SAND = {"tech", "urban"},
+  DIRT = {"tech", "urban"}
 }
 
 OTEX_SPECIAL_RESOURCES =
@@ -539,8 +553,24 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
       if OTEX_EXCLUSIONS[group] and OTEX_EXCLUSIONS[group] == "all" then
         -- do nothing
       else
-        if OTEX_THEME_RESTRICTIONS[group] 
-        and check_elem(OTEX_THEME_RESTRICTIONS[group], theme) then
+        if OTEX_THEME_RESTRICTIONS then
+          if OTEX_THEME_RESTRICTIONS[group] 
+          and check_elem(OTEX_THEME_RESTRICTIONS[group], theme) then
+            -- do nothing
+          else
+            if resource_tab[group].has_textures == true 
+            and not OTEX_EXCLUSIONS[group] then
+              local prob = table.size(resource_tab[group].textures)
+              group_pick_list[theme].textures[group] = prob
+            end
+
+            if resource_tab[group].has_flats == true
+            and not OTEX_EXCLUSIONS[group] then
+              local prob = table.size(resource_tab[group].flats)
+              group_pick_list[theme].flats[group] = prob
+            end          
+          end
+        else
           if resource_tab[group].has_textures == true 
           and not OTEX_EXCLUSIONS[group] then
             local prob = table.size(resource_tab[group].textures)
@@ -552,21 +582,8 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
             local prob = table.size(resource_tab[group].flats)
             group_pick_list[theme].flats[group] = prob
           end          
-        end
+      end
 
-        if not OTEX_THEME_RESTRICTIONS[group] then
-          if resource_tab[group].has_textures == true 
-          and not OTEX_EXCLUSIONS[group] then
-            local prob = table.size(resource_tab[group].textures)
-            group_pick_list[theme].textures[group] = prob
-          end
-
-          if resource_tab[group].has_flats == true
-          and not OTEX_EXCLUSIONS[group] then
-            local prob = table.size(resource_tab[group].flats)
-            group_pick_list[theme].flats[group] = prob
-          end          
-        end
       end
   
     end
@@ -628,9 +645,11 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
         local side_tex, group_pick
         -- hack fix to assign DMD flats a side texture rather than just a default
         if string.find(group_name, "DMD") 
+        or string.find(group_name, "PAVE")
         or string.find(group_name, "TL16")
         or string.find(group_name, "TL32")
-        or string.find(group_name, "TLMX") then
+        or string.find(group_name, "TLMX")
+        or string.find(group_name, "TRHX") then
           group_pick = rand.key_by_probs(group_pick_list["urban"].textures)
           side_tex = rand.pick(resource_tab[group_pick].textures)
         else
