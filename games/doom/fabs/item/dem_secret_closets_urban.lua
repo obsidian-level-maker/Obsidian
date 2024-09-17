@@ -198,7 +198,7 @@ PREFABS.Item_secret_yard_closet1 =
   deep   = 16,
   over   = -16,
 
-  prob  = 150,
+  prob  = 90,
 
   key   = "secret",
 

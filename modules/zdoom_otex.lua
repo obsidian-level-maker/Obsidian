@@ -267,7 +267,7 @@ OTEX_SPECIAL_RESOURCES =
   {
     OFENCA01 = {t="OFENCA01", rail_h=128},
     OFENCA02 = {t="OFENCA02", rail_h=128},
-    OFENCB01 = {t="OFENCB01", rail_h=48},
+    OFENCB01 = {t="OFENCB01", rail_h=56},
     OFENCB02 = {t="OFENCB02", rail_h=64},
     OFENCC01 = {t="OFENCC01", rail_h=128},
     OFENCC64 = {t="OFENCC64", rail_h=64},
@@ -295,8 +295,8 @@ OTEX_SPECIAL_RESOURCES =
 
     OFENCG01 = {t="OFENCG01", rail_h=128},
     OFENCG02 = {t="OFENCG02", rail_h=64},
-    OFENCH01 = {t="OFENCH01", rail_h=128},
-    OFENCH02 = {t="OFENCH02", rail_h=128},
+    OFENCH01 = {t="OFENCH01", rail_h=96},
+    OFENCH02 = {t="OFENCH02", rail_h=96},
   
     OFENCJ11 = {t="OFENCJ11", rail_h=128},
 
@@ -313,10 +313,10 @@ OTEX_SPECIAL_RESOURCES =
     OFENCN11 = {t="OFENCN11", rail_h=128},
     OFENCN12 = {t="OFENCN12", rail_h=128},
 
-    ORAILA01 = {t="ORAILA01", rail_h=48},
-    ORAILA02 = {t="ORAILA02", rail_h=48},
-    ORAILA03 = {t="ORAILA03", rail_h=48},
-    ORAILB01 = {t="ORAILB01", rail_h=48},
+    ORAILA01 = {t="ORAILA01", rail_h=32},
+    ORAILA02 = {t="ORAILA02", rail_h=32},
+    ORAILA03 = {t="ORAILA03", rail_h=32},
+    ORAILB01 = {t="ORAILB01", rail_h=32},
 
     OBKMTA92 = {t="OBKMTA92", rail_h=128},
     OBKMTA93 = {t="OBKMTA93", rail_h=128},
@@ -649,8 +649,10 @@ function OTEX_PROC_MODULE.synthesize_procedural_themes()
         or string.find(group_name, "TL16")
         or string.find(group_name, "TL32")
         or string.find(group_name, "TLMX")
-        or string.find(group_name, "TRHX") then
-          group_pick = rand.key_by_probs(group_pick_list["urban"].textures)
+        or string.find(group_name, "TRHX")
+        or string.find(group_name, "BSKT")
+        or string.find(group_name, "LLLL") then
+              group_pick = rand.key_by_probs(group_pick_list["urban"].textures)
           side_tex = rand.pick(resource_tab[group_pick].textures)
         else
           side_tex = "BROWNHUG"
