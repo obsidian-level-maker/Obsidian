@@ -54,7 +54,6 @@
     prebuilt    -- true if level will is prebuilt (not generated)
 
     is_procedural_gotcha -- true if this level is a special Procedural Gotcha arena
-    is_linear   -- true if this level is linear, as in no branching rooms
     is_nature   -- true if this level is entirely parks and caves
 
     has_streets -- true if this level contains Street Mode streets
@@ -2702,7 +2701,7 @@ function Level_make_level(LEV)
 
   if coverage_target == 0 then coverage_target = LEVEL.min_coverage end
 
-  if not LEVEL.is_linear and not SHAPE_GRAMMAR.ignore_coverage  then
+  if not SHAPE_GRAMMAR.ignore_coverage then
     if LEVEL.cur_coverage < coverage_target then
       res = "runt"
     end

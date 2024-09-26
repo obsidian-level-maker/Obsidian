@@ -1179,10 +1179,6 @@ function Grower_decide_extents(LEVEL)
     gui.printf("--==| Streets Mode activated! |==--\n\n")
   end
 
-  if LEVEL.is_linear then
-    gui.printf("--==| Linear mode activated! |==--\n\n")
-  end
-
   if LEVEL.is_nature then
     gui.printf("--==| Nature mode activated! Take a walk! |==--\n\n")
   end
@@ -1770,11 +1766,6 @@ function Grower_grammatical_pass(SEEDS, LEVEL, R, pass, apply_num, stop_prob,
       if not is_emergency then return 0 end
     end
 
-    -- hallways cannot be used for teleporter breaks in Linear Mode
-    if LEVEL.is_linear and is_emergency then
-      if string.match(rule.name, "hallway") then return 0 end
-    end
-
     if not ob_match_level_theme(LEVEL, rule) then return 0 end
     if not ob_match_feature(rule)     then return 0 end
 
@@ -1848,7 +1839,7 @@ function Grower_grammatical_pass(SEEDS, LEVEL, R, pass, apply_num, stop_prob,
 
     if R.is_street then return 0 end
 
-    if (LEVEL.has_linear_start or LEVEL.is_linear) then
+    if LEVEL.has_linear_start then
       if R.is_start then return 0 end 
       if not R.grow_parent and not R.is_start then
         return 0 
@@ -3729,22 +3720,6 @@ end
       break;
     end
 
-    -- Linear Mode
-    if LEVEL.is_linear then
-
-      if pass == "sprout" then
-
-        if R:prelim_conn_num(LEVEL) >= 2 then
-          break;
-        end
-
-        if R.is_start and R:prelim_conn_num(LEVEL) >= 1 then
-          break;
-        end
-
-      end
-    end
-
     if LEVEL.has_linear_start then
       if pass == "sprout" then
         if not R.is_street and R:prelim_conn_num(LEVEL) >= 1 and R.is_start then
@@ -3793,10 +3768,6 @@ function Grower_grammatical_room(SEEDS, LEVEL, R, pass, is_emergency)
 
     if R.is_street then
       apply_num = rand.irange(6,20)
-    end
-
-    if LEVEL.is_linear then
-      apply_num = 1
     end
 
   elseif pass == "decorate" then
@@ -4000,15 +3971,8 @@ function Grower_grow_room(SEEDS, LEVEL, R)
 
     if R.is_root then return false end
 
-    -- MSSP: Unless we're in linear mode, where
-    -- the map must continue growing elsewhere
-    -- or in Procedural Gotchas where the arena
-    -- is much too small.
     if LEVEL.is_procedural_gotcha then
       return R:calc_walk_vol() < 128
-    end
-    if LEVEL.is_linear then
-      return false
     end
 
     return R:calc_walk_vol() < 8
@@ -4024,7 +3988,7 @@ function Grower_grow_room(SEEDS, LEVEL, R)
   if not R.is_hallway and is_too_small(R) then
     Grower_grammatical_room(SEEDS, LEVEL, R, "grow")
 
-    if is_too_small(R) and not LEVEL.is_linear then
+    if is_too_small(R) then
       if R.grow_parent and R.grow_parent.is_start 
       and R.small_room then
         return 
@@ -4036,24 +4000,11 @@ function Grower_grow_room(SEEDS, LEVEL, R)
     end
   end
 
-  -- Linear Mode, kill mirrored sprouts of symmetric rooms
-  if LEVEL.is_linear then
-    if R.grow_parent then
-      if R.grow_parent:prelim_conn_num(LEVEL) > 2 then
-        if R.prelim_conn_num == 1 then
-          gui.debugf("Linear mode: ROOM_" .. R.id .. " culled.\n")
-          Grower_kill_room(SEEDS, LEVEL, R)
-          return
-        end
-      end
-    end
-  end
-
-  if LEVEL.is_linear or LEVEL.is_procedural_gotcha then
+  if LEVEL.is_procedural_gotcha then
     if R.grow_parent and R.grow_parent.is_start then
       if R.grow_parent:prelim_conn_num(LEVEL) > 1 then
         if R.prelim_conn_num == 1 then
-          gui.debugf("Linear mode: ROOM " .. R.id .. " culled.\n")
+          gui.debugf("Procedural Gotcha: ROOM " .. R.id .. " culled.\n")
           Grower_kill_room(SEEDS, LEVEL, R)
         end
       end
@@ -4272,12 +4223,6 @@ function Grower_begin_trunks(LEVEL, SEEDS)
     if rand.odds(many_prob) then
       max_trunks = 9
     end
-  end
-
-  -- ignore teleporter style setting for linear mode
-  -- don't you get enough teleporters already anyway?!
-  if LEVEL.is_linear then
-    max_trunks = 1
   end
 
   LEVEL.trunks = {}
@@ -4607,7 +4552,7 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
     expand_limits()
     emergency_sprouts()
 
-    if LEVEL.is_linear and not LEVEL.is_procedural_gotcha
+    if not LEVEL.is_procedural_gotcha
     and (#LEVEL.rooms < ((LEVEL.min_rooms + LEVEL.max_rooms) / 2)) then
       if emergency_linear_sprouts() == "oof" then
         emergency_teleport_break(LEVEL)

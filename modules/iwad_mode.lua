@@ -977,7 +977,6 @@ function IWAD_MODE.begin_level(self, LEVEL)
     LEVEL.size_multiplier = 0.75
     LEVEL.has_streets = true -- Its shape implies this
     LEVEL.is_nature = false
-    LEVEL.is_linear = false
     LEVEL.sky_light = 144
     LEVEL.squareishness = 55
     LEVEL.description = "The " .. rand.key_by_probs(nt.URBAN.lexicon.n)
@@ -989,7 +988,6 @@ function IWAD_MODE.begin_level(self, LEVEL)
     LEVEL.sky_light = 128
     LEVEL.has_streets = true
     LEVEL.is_nature = false
-    LEVEL.is_linear = false
     LEVEL.description = rand.key_by_probs(nt.URBAN.lexicon.a) .. " Downtown"
     LEVEL.squareishness = 60
     LEVEL.room_height_style = "tall"
@@ -1010,7 +1008,6 @@ function IWAD_MODE.begin_level(self, LEVEL)
     LEVEL.sky_light = 160
     LEVEL.has_streets = true -- Shaped enough for this
     LEVEL.is_nature = false
-    LEVEL.is_linear = false
     LEVEL.description = rand.key_by_probs(nt.URBAN.lexicon.a) .. " Industrial Zone"
     LEVEL.squareishness = 55
     LEVEL.room_height_style = "tall"
@@ -1021,7 +1018,6 @@ function IWAD_MODE.begin_level(self, LEVEL)
     LEVEL.size_consistency = "normal"
     LEVEL.has_streets = true
     LEVEL.is_nature = false
-    LEVEL.is_linear = false
     LEVEL.sky_light = 144
     LEVEL.squareishness = 30
     LEVEL.room_height_style = "normal"

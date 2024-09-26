@@ -243,21 +243,6 @@ OB_MODULES["misc"] =
     },
 
     {
-      name = "float_linear_mode",
-      label = _("Linear Mode"),
-      valuator = "slider",
-      units = _("% Chance Per Level"),
-      min = 0,
-      max = 100,
-      increment = 1,
-      default = 0,
-      tooltip = _("Creates linear levels, where rooms are connected along a linear layout from start to exit."),
-      longtip = _("Due to the nature of linear levels, you may encounter teleports even if you have teleports off. This is necessary in order for linear levels not to prematuraly terminate and therefore become stunted i.e. only have 2-5 rooms."),
-      randomize_group="architecture",
-      priority = 98
-    },
-
-    {
       name = "float_nature_mode",
       label = _("Nature Mode"),
       valuator = "slider",

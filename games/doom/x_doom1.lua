@@ -5302,12 +5302,6 @@ function ULTDOOM.get_levels()
       end
   
       if not LEV.prebuilt then
-        if PARAM.float_linear_mode then
-          if rand.odds(PARAM.float_linear_mode) then
-            LEV.is_linear = true
-          end
-        end
-  
         -- nature mode
         if PARAM.float_nature_mode then
           if rand.odds(PARAM.float_nature_mode) then
