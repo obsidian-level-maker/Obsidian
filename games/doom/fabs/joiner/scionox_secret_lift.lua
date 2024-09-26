@@ -5,7 +5,7 @@ PREFABS.Joiner_scionox_secret_lift =
   file   = "joiner/scionox_secret_lift.wad",
   map    = "MAP01",
 
-  prob   = 50,
+  prob   = 25,
   theme  = "tech",
   key    = "secret",
   style  = "steepness",
