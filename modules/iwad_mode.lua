@@ -23,7 +23,7 @@
 
 -- Possible choices for configuration:
 --
--- Size, monster quantity, lighting level, amount of outdoors, secret quantity,
+-- Size, monster quantity, lighting level, number of outdoors, secret quantity,
 -- teleporters, traps, windows, steepness, street mode, procedural gotcha,
 -- room height size, cages, sink type, liquids, barrels, keyed doors, normal doors,
 -- nearby and distant/remote switches, fences, porches, big rooms/outdoors, ambushes,
