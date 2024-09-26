@@ -870,7 +870,7 @@ function Title_make_stroke(T, x1,y1, x2,y2)
   x1, y1 = T.func(T, x1, y1)
   x2, y2 = T.func(T, x2, y2)
 
-  gui.title_draw_line(int(x1 + T.ofs_x), int(y1 + T.ofs_y), int(x2 + T.ofs_x), int(y2 + T.ofs_y))
+  gui.title_draw_line(math.round(x1 + T.ofs_x), math.round(y1 + T.ofs_y), math.round(x2 + T.ofs_x), math.round(y2 + T.ofs_y))
 end
 
 
@@ -1032,8 +1032,8 @@ function Title_centered_string(T, mx, my, text, style)
         T.ofs_y = base_ofs - i
       end
 
-      gui.title_prop("box_w", int(thick))
-      gui.title_prop("box_h", int(thick))
+      gui.title_prop("box_w", math.round(thick))
+      gui.title_prop("box_h", math.round(thick))
 
       Title_draw_string(T, text)
     end
@@ -1055,12 +1055,12 @@ function Title_centered_string(T, mx, my, text, style)
   end
 
   if style.mode == "gradient" or style.mode == "gradient3" then
-    gui.title_prop("grad_y1", int(T.y - T.fh + 1))
-    gui.title_prop("grad_y2", int(T.y - 1))
+    gui.title_prop("grad_y1", math.round(T.y - T.fh + 1))
+    gui.title_prop("grad_y2", math.round(T.y - 1))
   end
 
-  gui.title_prop("box_w", int(T.thick))
-  gui.title_prop("box_h", int(T.thick))
+  gui.title_prop("box_w", math.round(T.thick))
+  gui.title_prop("box_h", math.round(T.thick))
 
   T.ofs_x = base_ofs
   T.ofs_y = base_ofs
@@ -1110,9 +1110,9 @@ function Title_interp_color(list, ity, out)
       local A = list[pos]
       local B = list[pos+1]
 
-      out[1] = int(A[1] * (1 - ity) + B[1] * ity)
-      out[2] = int(A[2] * (1 - ity) + B[2] * ity)
-      out[3] = int(A[3] * (1 - ity) + B[3] * ity)
+      out[1] = math.round(A[1] * (1 - ity) + B[1] * ity)
+      out[2] = math.round(A[2] * (1 - ity) + B[2] * ity)
+      out[3] = math.round(A[3] * (1 - ity) + B[3] * ity)
       return
     end
 
@@ -1706,7 +1706,7 @@ function Title_gen_space_scene()
 
 
   local function draw_big_star(mx, my, r)
-    local r2 = int(r * 1.2)
+    local r2 = math.round(r * 1.2)
 
     local DD = 0.09
 
@@ -1724,7 +1724,7 @@ function Title_gen_space_scene()
 
       if ity < 50 then goto continue end
       
-      ity = int(ity)
+      ity = math.round(ity)
 
       gui.title_prop("color", { ity, ity, ity })
       gui.title_draw_rect(x, y, 1, 1)
@@ -1790,9 +1790,9 @@ function Title_gen_space_scene()
     else
       gui.title_draw_rect(mx, my, 1, 1)
 
-      col[1] = int(col[1] * 0.6)
-      col[2] = int(col[2] * 0.6)
-      col[3] = int(col[3] * 0.6)
+      col[1] = math.round(col[1] * 0.6)
+      col[2] = math.round(col[2] * 0.6)
+      col[3] = math.round(col[3] * 0.6)
 
       gui.title_prop("color", col)
 
@@ -1893,7 +1893,7 @@ function Title_gen_ray_burst()
       Title_interp_color(color_list, ity, col)
 
       gui.title_prop("color", col)
-      gui.title_draw_line(mx, my, int(x1), int(y1), col)
+      gui.title_draw_line(mx, my, math.round(x1), math.round(y1), col)
     end
     end
   end
@@ -1980,7 +1980,7 @@ function Title_gen_wall_scene()
     local ity = math.exp(-d / 50) * 255  --- 255 - (d ^ 1.5) / 2.0,
     ity = math.clamp(0, ity, 255)
     
-    ity = int(ity)
+    ity = math.round(ity)
 
     col[1] = ity
     col[2] = ity
@@ -2082,7 +2082,7 @@ function Title_gen_cave_scene()
         Title_interp_color(color_list, ity, col)
 
         gui.title_prop("color", col)
-        gui.title_draw_rect(int(x), int(y), 1, 1)
+        gui.title_draw_rect(math.round(x), math.round(y), 1, 1)
       end
       ::continue::
     end
@@ -2144,7 +2144,7 @@ function Title_gen_tunnel_scene()
     Title_interp_color(color_list, ity, col)
 
     gui.title_prop("color", col)
-    gui.title_draw_disc(int(mx - r*x_mul), int(my - r*y_mul), int(r*1.2), int(r))
+    gui.title_draw_disc(math.round(mx - r*x_mul), math.round(my - r*y_mul), math.round(r*1.2), math.round(r))
   end
 end
 
@@ -2264,7 +2264,7 @@ function Title_calc_max_thickness(fw, fh)
 
   fw = math.min(fw, fh)
 
-  fw = int(fw / 5 + 0.5)
+  fw = math.round(fw / 5 + 0.5)
 
   if fw < 1 then return 1 end
 
