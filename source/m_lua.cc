@@ -28,13 +28,11 @@
 #include "lib_util.h"
 #include "m_trans.h"
 #include "main.h"
+#include "minilua.h"
 #include "physfs.h"
 #include "sys_assert.h"
 #include "sys_debug.h"
 #include "sys_xoshiro.h"
-
-#define LUA_IMPL
-#include "minilua.h"
 
 static lua_State *LUA_ST;
 
