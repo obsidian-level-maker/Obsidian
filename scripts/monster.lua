@@ -460,7 +460,8 @@ function Monster_zone_palettes(LEVEL)
     total = total - quants[1]
 
     quants[3] = total
-    assert(total >= 0)
+
+    if total < 0 then total = 0 end
 
     return quants
   end

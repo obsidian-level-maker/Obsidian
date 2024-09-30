@@ -17,6 +17,8 @@ BSD 3-Clause License
 
 Blasphemer (HERETIC1 loading image) - Copyright (c) 2021 Contributors to the Blasphemer project
 
+Freedoom (Icon of Sin replacement graphics) - Copyright (c) 2001-2019 Contributors to the Freedoom project
+
 ===========================================================================================
 CC0 1.0 Universal License
 ===========================================================================================

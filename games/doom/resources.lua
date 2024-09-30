@@ -944,18 +944,18 @@ function DOOM.all_done()
 
   local dir = "games/doom/data/"
 
-  gui.wad_merge_sections(dir .. "doom_falls.wad")
-  gui.wad_merge_sections(dir .. "lift_flat.wad")
-  gui.wad_merge_sections(dir .. "metal_step.wad")
-  gui.wad_merge_sections(dir .. "vine_dude.wad")
+  --gui.wad_merge_sections(dir .. "doom_falls.wad")
+  --gui.wad_merge_sections(dir .. "lift_flat.wad")
+  --gui.wad_merge_sections(dir .. "metal_step.wad")
+  --gui.wad_merge_sections(dir .. "vine_dude.wad")
   gui.wad_merge_sections(dir .. "logos.wad")
   gui.wad_merge_sections(dir .. "invisible_wall.wad")
 
   if OB_CONFIG.game == "doom1" or OB_CONFIG.game == "ultdoom" then
-    gui.wad_merge_sections(dir .. "short_bars.wad")
+    --gui.wad_merge_sections(dir .. "short_bars.wad")
   end
 
-  if ob_mod_enabled("compress_output") == 1 and OB_CONFIG.port ~= "dsda" then -- DSDA (I think) needs everything in the WAD still
+  if ob_mod_enabled("compress_output") == 1 then
     gui.pk3_insert_file("data/endoom/ENDOOM.bin", "ENDOOM.bin")
   else
     gui.wad_insert_file("data/endoom/ENDOOM.bin", "ENDOOM")
