@@ -160,7 +160,6 @@ bool        password_mode          = false;
 bool        mature_word_lists      = false;
 bool        did_specify_seed       = false;
 
-std::string gif_filename = "gif_output.gif";
 std::string default_output_path;
 
 std::string string_seed;

@@ -2246,7 +2246,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
     local qty = calc_quantity() + 30
     local f   = gui.random()
 
-    local want = total * qty / 250 + f * f * 0
+    local want = total * qty / 250 + f * f
 
     if spot.use_factor then
       want = want * spot.use_factor
@@ -2263,7 +2263,9 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
       local all_skills = (i == 1)
       local loc = list[i]
 
-      place_monster(mon, spot, loc.x, loc.y, loc.z, all_skills, what)
+      if loc ~= nil then
+        place_monster(mon, spot, loc.x, loc.y, loc.z, all_skills, what)
+      end
     end
   end
 

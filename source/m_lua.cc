@@ -1334,40 +1334,6 @@ int gui_minimap_finish(lua_State *L)
     return 0;
 }
 
-int gui_minimap_gif_start(lua_State *L)
-{
-    int delay = luaL_optinteger(L, 1, 10);
-#ifndef OBSIDIAN_CONSOLE_ONLY
-    if (main_win)
-    {
-        main_win->build_box->mini_map->GifStart(gif_filename, delay);
-    }
-#endif
-    return 0;
-}
-
-int gui_minimap_gif_frame(lua_State *L)
-{
-#ifndef OBSIDIAN_CONSOLE_ONLY
-    if (main_win)
-    {
-        main_win->build_box->mini_map->GifFrame();
-    }
-#endif
-    return 0;
-}
-
-int gui_minimap_gif_finish(lua_State *L)
-{
-#ifndef OBSIDIAN_CONSOLE_ONLY
-    if (main_win)
-    {
-        main_win->build_box->mini_map->GifFinish();
-    }
-#endif
-    return 0;
-}
-
 int gui_minimap_draw_line(lua_State *L)
 {
     int x1 = luaL_checkinteger(L, 1);
@@ -1592,9 +1558,6 @@ static const luaL_Reg gui_script_funcs[] = {
     {"minimap_finish", gui_minimap_finish},
     {"minimap_draw_line", gui_minimap_draw_line},
     {"minimap_fill_box", gui_minimap_fill_box},
-    {"minimap_gif_start", gui_minimap_gif_start},
-    {"minimap_gif_frame", gui_minimap_gif_frame},
-    {"minimap_gif_finish", gui_minimap_gif_finish},
 
     // Wolf-3D functions
     {"wolf_block", WF_wolf_block},
