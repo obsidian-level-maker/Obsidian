@@ -18,12 +18,73 @@ BSD 3-Clause License
 Blasphemer (HERETIC1 loading image) - Copyright (c) 2021 Contributors to the Blasphemer project
 
 ===========================================================================================
+CC0 1.0 Universal License
+===========================================================================================
+
+"Wind Arctic Cold" sound - cobratronik via Freesound.org
+
+"Dark Cave Drone" sound - Kinoton via Freesound.org
+
+"Depths of Hell" sound - Elan Hickler via Freesound.org
+
+"Building Rooftops Ambient" sound - batman6661 via Freesound.org
+
+"ZOOM0077" sound - marjan83 via Freesound.org
+
+"Empty Office Room Tone" sound - Rich Wise via Freesound.org
+
+"Noisy Bathroom Exhaust Fan" sound - deleted_user_7146007 via Freesound.org
+
+"Vending Machines - Drinks Machine Hum" sound - portwain via Freesound.org
+
+"Indoor Nice Fish Tank Ambiance" sound - 7778 via Freesound.org
+
+"Mechanical Conveyor Belt Sound Clip" sound - Cagan Celik
+
+===========================================================================================
+CC-BY-3.0 Unported License
+===========================================================================================
+
+"Haunting Ambiance" sound - Copyright (c) 2015 OllieOllie via Freesound.org
+
+"Sci-Fi Laboratory Ambience" sound - Copyright (c) 2013 Iwan ‘qubodup’ Gabovitch
+				with sounds by wolick, swiftoid, Diboz via Freesound.org
+
+"Water Down Gutter 3" sound - Copyright (c) Mike Koenig via SoundBible.com
+
+"Liquid" sound - Copyright (c) Caroline Ford
+
+===========================================================================================
+CC-BY-NC-3.0 Unported License
+===========================================================================================
+
+"Water Drain" sound - Copyright (c) 2018 chris.t via Freesound.org
+
+===========================================================================================
 CC-BY-4.0 International License
 ===========================================================================================
 
 Oblige v5-v7 Prefab WAD files - Copyright (c) 2013-2017 Andrew Apted
 
 ObAddon and OBSIDIAN Prefab WAD files - Copyright (c) 2018-2024 The OBSIDIAN Team
+
+"Wide Stereo Outdoor Ambience" sound - Copyright (c) 2014 Kasper August Topp via Freesound.org
+
+"Machine Hum 1" sound - Copyright (c) 2011 duckduckpony via Freesound.org
+
+"Fish Tank Aquarium Water Filter Natural Sounds" - Copyright (c) 2017 DudeAwesome via Freesound.org
+
+"Spark 01" sound - Copyright (c) 2008 chipfork71 via Freesound.org
+
+"Waterfall Sound Effect HQ" - Copyright (c) 2016 Virtual Ambiance
+
+===========================================================================================
+CC-SAMPLING+-1.0 Generic License
+===========================================================================================
+
+"Background Noise" sound - Copyright Stomp via SoundBible.com
+
+"Fan Noise" sound - Copyright (c) 2020 calivintage via Freesound.org
 
 ===========================================================================================
 FLTK License
@@ -92,6 +153,8 @@ Public Domain
 ===========================================================================================
 
 ppmforge - John Walker
+
+"Rainforest Ambiance" sound - GlorySunz via SoundBible.com
 
 ===========================================================================================
 The Unlicense
