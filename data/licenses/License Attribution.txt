@@ -41,6 +41,8 @@ CC0 1.0 Universal License
 
 "Mechanical Conveyor Belt Sound Clip" sound - Cagan Celik
 
+"The Bloodletter" song (renamed to D_DM2INT.ogg) - Chad Wolfe
+
 ===========================================================================================
 CC-BY-3.0 Unported License
 ===========================================================================================
