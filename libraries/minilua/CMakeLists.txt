@@ -2,6 +2,6 @@
 # minilua
 ##########################################
 
-add_library(minilua minilua.cc)
+add_library(minilua minilua.c)
 
 target_include_directories(minilua PUBLIC ./)
