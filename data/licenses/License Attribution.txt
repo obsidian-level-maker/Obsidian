@@ -23,6 +23,8 @@ Freedoom (Icon of Sin replacement graphics) - Copyright (c) 2001-2019 Contributo
 CC0 1.0 Universal License
 ===========================================================================================
 
+Oblige v5-v7 Prefab WAD files and colocated Lua definitions - Andrew Apted
+
 "Wind Arctic Cold" sound - cobratronik via Freesound.org
 
 "Dark Cave Drone" sound - Kinoton via Freesound.org
@@ -68,9 +70,7 @@ CC-BY-NC-3.0 Unported License
 CC-BY-4.0 International License
 ===========================================================================================
 
-Oblige v5-v7 Prefab WAD files - Copyright (c) 2013-2017 Andrew Apted
-
-ObAddon and OBSIDIAN Prefab WAD files - Copyright (c) 2018-2024 The OBSIDIAN Team
+ObAddon and OBSIDIAN Prefab WAD files and colocated Lua definitions - Copyright (c) 2018-2024 The OBSIDIAN Team
 
 "Wide Stereo Outdoor Ambience" sound - Copyright (c) 2014 Kasper August Topp via Freesound.org
 
