@@ -475,7 +475,7 @@ function FAUNA_MODULE.all_done()
 
     local dir = "games/doom/data/"
     gui.wad_merge_sections(dir .. "Fly.wad")
-    gui.wad_insert_file("data/sounds/FLYBUZZ.ogg", "FLYBUZZ")
+    gui.wad_insert_file(dir .. "sounds/FLYBUZZ.ogg", "FLYBUZZ")
   end
 
   if PARAM.bool_rats == 1 then
@@ -483,11 +483,11 @@ function FAUNA_MODULE.all_done()
 
     local dir = "games/doom/data/"
     gui.wad_merge_sections(dir .. "Rats.wad")
-    gui.wad_insert_file("data/sounds/DSRAT.ogg", "DSRAT")
-    gui.wad_insert_file("data/sounds/DSRATIDL.ogg", "DSRATIDL")
-    gui.wad_insert_file("data/sounds/DSRATDI1.ogg", "DSRATDI1")
-    gui.wad_insert_file("data/sounds/DSRATDI2.ogg", "DSRATDI2")
-    gui.wad_insert_file("data/sounds/RATCRAWL.ogg", "RATCRAWL")
+    gui.wad_insert_file(dir .. "sounds/DSRAT.ogg", "DSRAT")
+    gui.wad_insert_file(dir .. "sounds/DSRATIDL.ogg", "DSRATIDL")
+    gui.wad_insert_file(dir .. "sounds/DSRATDI1.ogg", "DSRATDI1")
+    gui.wad_insert_file(dir .. "sounds/DSRATDI2.ogg", "DSRATDI2")
+    gui.wad_insert_file(dir .. "sounds/RATCRAWL.ogg", "RATCRAWL")
   end
 end
 
