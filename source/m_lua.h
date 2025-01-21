@@ -4,7 +4,7 @@
 //
 //  OBSIDIAN Level Maker
 //
-//  Copyright (C) 2021-2022 The OBSIDIAN Team
+//  Copyright (C) 2021-2025 The OBSIDIAN Team
 //  Copyright (C) 2006-2017 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
@@ -61,6 +61,13 @@ std::string ob_get_random_words();
 std::string ob_get_password();
 
 bool ob_build_cool_shit();
+
+#ifdef OBSIDIAN_ENABLE_GUI
+bool ob_gui_init_ctx(void *context);
+bool ob_gui_init_fonts(void *atlas, float font_scale);
+bool ob_gui_frame(int width, int height);
+void ob_check_file_picker();
+#endif
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

@@ -8,13 +8,12 @@
 2. Xorg:
    * package: `xorg` (`xorg-libraries` on its own doesn't seem sufficient)
 
-3. Wayland:
-   * Wayland support for FLTK 1.4 is in a state of flux; instructions and
-     dependencies can be found in the source_files/fltk/README.Wayland.txt file
+3. FLTK:
+   * package: `fltk`
 
 The C++ compiler/toolchain should already be present on a typical BSD install
 
-## Linux Dependencies (MSYS has some differences; see MSYS Cross-Compilation section below)
+## Linux Dependencies
 
 1. C++ compiler and associated tools
    * packages: `g++` `binutils`
@@ -31,8 +30,7 @@ The C++ compiler/toolchain should already be present on a typical BSD install
    * package: `libfontconfig1-dev`
    * recommended if using X11 for better fonts: `libxft-dev`
    * if using X11 and not pulled in by one of the above packages: `libx11-dev`
-   * Wayland support for FLTK 1.4 is in a state of flux; instructions and
-     dependencies can be found in the source_files/fltk/README.Wayland.txt file
+   * package: `libfltk1.3-dev` (minimum required version, later versions also acceptable)
 
 ## Linux/BSD Compilation
 
@@ -56,7 +54,7 @@ Then, Obsidian can be launched with:
 You will need the `mingw-w64` package as well (or your distro's equivalent).
 
 ```
-> cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=./Toolchain_mingw64.cmake (use Toolchain_mingw32.cmake for a 32-bit build)
+> cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=Toolchain_mingw64.cmake (use Toolchain_mingw32.cmake for a 32-bit build)
 > cmake --build build (-j# optional, with # being the number of cores you'd like to use)
 ```
 
@@ -64,24 +62,6 @@ Then, Obsidian can be launched (in Windows, or with Wine) with:
 
 ```
 > ./obsidian.exe
-```
-
-## Windows Cross-Compilation using MSYS
-
-You will need to install the following on top of the regular MSYS Mingw64 install:
-   * package: `mingw-w64-(arch)-cmake`
-
-Similar to the above directions:
-
-```
-> cmake -B build -G "MSYS Makefiles"
-> cmake --build build (-j# optional, with # being the number of cores you'd like to use)
-```
-
-Then, Obsidian can be launched (in Windows) with:
-
-```
-> obsidian.exe
 ```
 
 ## Windows Compilation using MSVC Build Tools and VSCode

@@ -4,7 +4,7 @@
 //
 //  OBSIDIAN Level Maker
 //
-//  Copyright (C) 2021-2022 The OBSIDIAN Team
+//  Copyright (C) 2021-2025 The OBSIDIAN Team
 //  Copyright (C) 2006-2017 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
@@ -23,11 +23,6 @@
 
 #include <math.h>
 #include <stdint.h>
-
-constexpr const char *BLANKOUT =
-    "                                                                                           "
-    "                                                                                           "
-    "                                                                    ";
 
 // basic constants
 constexpr uint16_t OBSIDIAN_MSG_BUF_LEN  = 2000;
