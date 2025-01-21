@@ -10382,6 +10382,56 @@ GROW_FEATURES_RECT_MOATED_PLATFORM_STAIRS =
   },
 },
 
+GROW_FEATURES_ROUND_PLATFORM_MOAT =
+{
+  prob = 10,
+  skip_prob = 80,
+
+  structure =
+  {
+    "11xxxxxx","11xxxxxx",
+    "........","11111111",
+    "........","11111111",
+    "........","11/~~%11",
+    "........","11~AA~11",
+    "........","11~AA~11",
+    "........","11%~A/11",
+    "........","11111111",
+    "........","11111111"
+  },
+
+  diagonals =
+  {
+    "1~","~1",
+    "1~","~1"
+  }
+},
+
+GROW_FEATURES_RAISED_RAISED_PLATFORM_MOAT =
+{
+  prob = 10,
+  skip_prob = 80,
+
+  structure =
+  {
+    "11xxxxxx","11xxxxxx",
+    "........","11111111",
+    "........","11111111",
+    "........","11/~~%11",
+    "........","11~AA~11",
+    "........","11~AA~11",
+    "........","11%~^/11",
+    "........","11111111",
+    "........","11111111"
+  },
+
+  diagonals =
+  {
+    "1~","~1",
+    "1~","~1"
+  }
+},
+
 GROW_ELEVATED_PILLAR_ROUND =
 {
   prob = 35,
@@ -15692,6 +15742,32 @@ GROW_JAGGED_LIQUID_STEEPNESS =
   }
 },
 
+GROW_JAGGED_LIQUID_STEEPNESS_DOUBLE =
+{
+  prob = 15,
+  skip_prob = 80,
+
+  structure =
+  {
+    "11xxxx","11xxxx",
+    "......","vv~~AA",
+    "......","AA%%AA",
+    "......","AA//AA",
+    "......","AA~AAA",
+    "......","AA%%AA",
+    "......","AA//AA",
+    "......","AA~AAA"
+  },
+
+  diagonals =
+  {
+    "A~","~A",
+    "A~","~A",
+    "A~","~A",
+    "A~","~A"
+  }
+},
+
 GROW_JAGGED_LIQUID_EXTENDED =
 {
   prob = 20,
@@ -15715,6 +15791,32 @@ GROW_JAGGED_LIQUID_EXTENDED =
     "1~",
     "1~",
     "1~"
+  }
+},
+
+GROW_JAGGED_LIQUID_EXTENDED_DOUBLE =
+{
+  prob = 15,
+  skip_prob = 80,
+
+  structure =
+  {
+    "11xxxxxx","11xxxxxx",
+    "........","11~~~~11",
+    "........","111%%111",
+    "........","111//111",
+    "........","111~~111",
+    "........","111%%111",
+    "........","111//111",
+    "........","11~~1111"
+  },
+
+  diagonals =
+  {
+    "1~","~1",
+    "1~","~1",
+    "1~","~1",
+    "1~","~1"
   }
 },
 
