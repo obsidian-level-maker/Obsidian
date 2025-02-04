@@ -320,7 +320,7 @@ PREFABS.Wall_hell_outdoor_torch_fenced = --#
 
   z_fit = { 28,32 },
 
-  tex_FENCE4 = "ZZWOLF10",
+  tex_FENCE4 = "O_INVIST",
   tex_METL02 = "METAL",
 }
 

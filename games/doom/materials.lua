@@ -384,7 +384,7 @@ DOOM.MATERIALS =
 
   O_BLACK  = { t="CEMENT5",  f="O_BLACK",  sane=1 },
 
-  O_INVIST = { t="ZZWOLF10",  f="O_INVIST", sane=1 },
+  O_INVIST = { t="O_INVIST",  f="O_INVIST", sane=1 },
 
   -- new flat, added by data/lift_flat.wad
   LIFTFLAT = { f="LIFTFLAT", t="SUPPORT2" },

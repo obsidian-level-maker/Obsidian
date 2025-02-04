@@ -491,8 +491,7 @@ function Render_edge(LEVEL, E, SEEDS)
 
     local side_props =
     {
-      tex = "ZZWOLF10", -- currently patch-replaced as an invisible wall
-      -- TO-DO: Add a generic invisible texture for all games
+      tex = "O_INVIST",
 
       blocked = 1,
     }
