@@ -186,7 +186,8 @@ PREFABS.Wall_hell_engraving_top_band =
 
   height = 96,
 
-  bound_z2 = {22,24 , 88,89},
+  z_fit = {22,24 , 88,89},
+  bound_z2 = 96,
 
   group = "gtd_wall_hell_engraving_top_band"
 }
