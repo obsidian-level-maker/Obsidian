@@ -376,15 +376,15 @@ DOOM.MATERIALS =
 
   -- other --
 
-  O_PILL   = { t="CEMENT1",  f="O_PILL",   sane=1 },
-  O_BOLT   = { t="CEMENT2",  f="O_BOLT",   sane=1 },
-  O_RELIEF = { t="CEMENT3",  f="O_RELIEF", sane=1 },
-  O_CARVE  = { t="CEMENT4",  f="O_CARVE",  sane=1 },
-  O_NEON   = { t="CEMENT6",  f="O_NEON",  sane=1 },
+  O_PILL   = { t="O_PILL",  f="O_PILL",   sane=1 }, -- CEMENT1
+  O_BOLT   = { t="O_BOLT",  f="O_BOLT",   sane=1 }, -- CEMENT2
+  O_RELIEF = { t="O_RELIEF",  f="O_RELIEF", sane=1 }, -- CEMENT3
+  O_CARVE  = { t="O_CARVE",  f="O_CARVE",  sane=1 }, -- CEMENT4
+  O_NEON   = { t="O_NEON",  f="O_NEON",  sane=1 }, -- CEMENT6
 
-  O_BLACK  = { t="CEMENT5",  f="O_BLACK",  sane=1 },
+  O_BLACK  = { t="CEMENT5",  f="O_BLACK",  sane=1 }, -- CEMENT5
 
-  O_INVIST = { t="O_INVIST",  f="O_INVIST", sane=1 },
+  O_INVIST = { t="O_INVIST",  f="O_INVIST", sane=1 }, -- ZZWOLF10
 
   -- new flat, added by data/lift_flat.wad
   LIFTFLAT = { f="LIFTFLAT", t="SUPPORT2" },
