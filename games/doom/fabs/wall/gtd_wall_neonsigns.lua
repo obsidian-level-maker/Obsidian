@@ -31,8 +31,8 @@ PREFABS.Wall_urban_neon_sign_scrolling_tall =
 
   tex_CEMENT1 =
   {
-    CEMENT2 = 5,
-    CEMENT4 = 5,
+    O_BOLT = 5,
+    O_CARVE = 5,
   },
 
   line_1 =
@@ -56,8 +56,8 @@ PREFABS.Wall_urban_neon_sign_id =
 
   tex_O_RELIEF =
   {
-    CEMENT2 = 50,
-    CEMENT4 = 50,
+    O_BOLT = 50,
+    O_CARVE = 50,
   },
 }
 
