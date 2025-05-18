@@ -131,13 +131,6 @@ PREFABS.Decor_craneo_billiards_table_grouped =
   group = "gtd_wall_arcade",
 }
 
-PREFABS.Decor_rr_tennis_table_grouped =
-{
-  template = "Decor_realrexen_tennis_table",
-
-  group = "gtd_wall_arcade",
-}
-
 PREFABS.Decor_craneo_arcade_machine_grouped =
 {
   template = "Decor_craneo_billiards_table",
