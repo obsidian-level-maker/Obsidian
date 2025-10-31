@@ -32,15 +32,11 @@ class UI_Game : public Fl_Group
   public:
     Fl_Box         *heading;
     UI_RChoiceMenu *game;
-    UI_HelpLink    *game_help;
     UI_RChoiceMenu *port;
-    UI_HelpLink    *port_help;
     UI_RChoiceMenu *theme;
     UI_RChoiceMenu *length;
-    UI_HelpLink    *length_help;
     Fl_Button      *build;
     Fl_Button      *quit;
-    Fl_Button      *surprise;
 
   private:
   public:

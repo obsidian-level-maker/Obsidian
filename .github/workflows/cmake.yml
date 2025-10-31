@@ -45,7 +45,6 @@ jobs:
           ${{github.workspace}}/presets
           ${{github.workspace}}/scripts
           ${{github.workspace}}/theme
-          ${{github.workspace}}/tools
           ${{github.workspace}}/obsidian.exe
         retention-days: ${{env.RETENTION_DAYS}}
   build-linux:
@@ -55,7 +54,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libxft-dev libfontconfig1-dev libgl-dev libfltk1.3-dev
+          sudo apt-get install -y libxft-dev libfontconfig1-dev libgl-dev
       - name: Configure CMake Ubuntu
         run: mkdir build && cd build && cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
       - name: Build Ubuntu
@@ -74,6 +73,5 @@ jobs:
             presets
             scripts
             theme
-            tools
             obsidian
           retention-days: ${{env.RETENTION_DAYS}}

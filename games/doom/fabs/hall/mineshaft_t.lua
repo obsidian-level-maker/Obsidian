@@ -18,15 +18,3 @@ PREFABS.Hallway_mineshaft_t2 =
   map = "MAP02",
 
 }
-
---- Radium jutting out ---
-
-PREFABS.Hallway_mineshaft_t3 =
-{
-  template = "Hallway_mineshaft_t1",
-  map = "MAP03",
-
-  style = "traps",
-
-  texture_pack = "armaetus",
-}

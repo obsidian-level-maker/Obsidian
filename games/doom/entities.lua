@@ -123,23 +123,7 @@ DOOM.ENTITIES =
 
   light  = { id="light", r=1, h=1, pass=true },
   secret = { id="oblige_secret", r=1, h=1, pass=true },
-  depot_ref = { id="oblige_depot", r=1, h=1, pass=true },
-
-  -- These are ZDoom only entitles --
-  -- I'm adding these so these potentially may have use in the future.
-  actor_mover = { id=9074, r=28, h=16, pass=true }, -- Class: ActorMover
-  aiming_camera = { id=9073, r=28, h=16, pass=true }, -- Class: AimingCamera
-  eternity_skybox_viewpoint = { id=9083, r=28, h=16, pass=true }, -- Class: SkyCamCompat
-  interpol_point = { id=9070, r=28, h=16, pass=true }, -- Class: InterpolationPoint
-  interpol_special = { id=9075, r=28, h=16, pass=true }, -- Class: InterpolationSpecial
-  moving_camera = { id=9072, r=28, h=16, pass=true }, -- Class: MovingCamera
-  path_follower = { id=9071, r=28, h=16, pass=true }, -- Class: PathFollower
-  patrol_spec = { id=9047, r=28, h=16, pass=true }, -- Class: PatrolSpecial
-  patrol_point = { id=9024, r=28, h=20, pass=true }, -- Class: PatrolPoint
-  security_camera = { id=9025, r=28, h=16, pass=true }, -- Class: SecurityCamera
-  decal = { id=9200, r=28, h=20, pass=true }, -- Class: Decal
-  spark_effect = { id=9026, r=28, h=20, pass=true }, -- Class: Spark. Just like the Quake spark effect! Exploitable on prefabs!
-
+  depot_ref = { id="oblige_depot", r=1, h=1, pass=true }
 }
 
 ----------------------------------------------------------------

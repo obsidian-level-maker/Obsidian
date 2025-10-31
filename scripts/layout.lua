@@ -2836,7 +2836,9 @@ function Layout_indoor_lighting(LEVEL)
 
     assert(base_light)
 
-    if OB_CONFIG.port ~= "zdoom" and OB_CONFIG.port ~= "edge" then
+-- Dasho - TODO - Use a "granular lighting" option and kill port-specific checks
+    --if OB_CONFIG.port ~= "zdoom" and OB_CONFIG.port ~= "edge" then
+    if false then
       local rounder = base_light % 16
       if rounder ~= 0 then
         if rounder > 8 then

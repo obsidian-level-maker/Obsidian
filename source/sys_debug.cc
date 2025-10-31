@@ -32,9 +32,7 @@ static constexpr uint16_t MAX_LOGBUF_SIZE = 16384;
 static char *message_buf = nullptr;
 static size_t message_buf_size = 128;
 static FILE *log_file = nullptr;
-static FILE *ref_file = nullptr;
 std::string  log_filename;
-std::string  ref_filename;
 
 bool debugging = false;
 bool terminal  = false;
@@ -58,31 +56,6 @@ bool LogInit(const std::string &filename)
     LogPrint("====== START OF OBSIDIAN LOGS ======\n\n");
 
     LogPrint("Initialized on %s", ctime(&result));
-
-    return true;
-}
-
-bool RefInit(const std::string &filename)
-{
-    if (!filename.empty())
-    {
-        ref_filename = filename;
-
-        // Clear previously generated reference if present
-        if (FileExists(ref_filename))
-        {
-            FileDelete(ref_filename);
-        }
-
-        ref_file = FileOpen(ref_filename, "w");
-
-        if (!ref_file)
-        {
-            return false;
-        }
-    }
-
-    RefPrint("====== OBSIDIAN REFERENCE for V%s BUILD %s ======\n\n", OBSIDIAN_SHORT_VERSION, OBSIDIAN_VERSION);
 
     return true;
 }
@@ -128,23 +101,6 @@ void LogClose(void)
     }
 }
 
-void RefClose(void)
-{
-    RefPrint("\n====== END OF REFERENCE ======\n\n");
-
-    fclose(ref_file);
-    ref_file = nullptr;
-
-    ref_filename.clear();
-
-    if (message_buf)
-    {
-        free(message_buf);
-        message_buf = nullptr;
-        message_buf_size = 128;
-    }
-}
-
 void LogPrint(const char *message, ...)
 {
     if (!log_file && !terminal)
@@ -174,44 +130,6 @@ void LogPrint(const char *message, ...)
     {
         fprintf(log_file, "%s", message_buf);
         fflush(log_file);
-    }
-
-    if (terminal)
-    {
-        printf("%s", message_buf);
-        fflush(stdout);
-    }
-}
-
-void RefPrint(const char *message, ...)
-{
-    if (!ref_file && !terminal)
-        return;
-
-    if (!message_buf)
-        message_buf = (char *)calloc(message_buf_size, sizeof(char));
-
-    for (;;)
-    {
-        va_list args;
-
-        va_start(args, message);
-        int out_len = vsnprintf(message_buf, message_buf_size, message, args);
-        va_end(args);
-
-        if (out_len >= 0 && out_len < message_buf_size)
-            break;
-        if (message_buf_size == MAX_LOGBUF_SIZE)
-            break;
-
-        message_buf_size *= 2;
-        message_buf = (char *)realloc(message_buf, message_buf_size * sizeof(char));
-    }
-
-    if (ref_file)
-    {
-        fprintf(ref_file, "%s", message_buf);
-        fflush(ref_file);
     }
 
     if (terminal)

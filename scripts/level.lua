@@ -1211,10 +1211,6 @@ function Episode_plan_weapons()
       quota = 2
     end
 
-    if PARAM.bool_scale_items_with_map_size and PARAM.bool_scale_items_with_map_size == 1 then
-      quota = math.min(1, math.round(quota * (1 + (LEV.map_W / 75))))
-    end    
-
     LEV.weapon_quota = quota
   end
 
@@ -1881,9 +1877,6 @@ end
 function Level_choose_themes()
   local theme_tab = {}
 
-  local do_mostly = false
-  local do_less = false
-
   local function collect_mixed_themes()
     for name,info in pairs(OB_THEMES) do
       if info.shown and info.mixed_prob then
@@ -2034,16 +2027,6 @@ function Level_choose_themes()
 
 
   local function set_an_episode(EPI, name)
-    local mixins = {}
-
-    if do_mostly then
-      decide_mixins(EPI, name, mixins, "mostly")
-    end
-
-    if do_less then
-      decide_mixins(EPI, name, mixins, "less")
-    end
-
     for _,LEV in pairs(EPI.levels) do
       set_a_theme(LEV, mixins[LEV.name] or name)
     end
@@ -2139,23 +2122,7 @@ function Level_choose_themes()
   -- need to do this first
   collect_mixed_themes()
 
-
   local theme = OB_CONFIG.theme
-
-  -- extract the part after the "mostly_" or "less_" prefix
-  local mostly_theme = string.match(theme, "mostly_(%w+)")
-
-
-  if mostly_theme then
-    do_mostly = true
-    theme = mostly_theme
-  end
-
-  if OB_CONFIG.mixin_type == "mostly" then
-    do_mostly = true
-  elseif OB_CONFIG.mixin_type == "less" then
-    do_less = true
-  end
 
   -- As Original : follow the original game
   if theme == "original" then
@@ -2339,7 +2306,9 @@ function Level_choose_darkness(LEVEL)
     LEVEL.sky_shadow = 32
   end
 
-  if OB_CONFIG.port ~= "zdoom" and OB_CONFIG.port ~= "edge" then
+-- Dasho - TODO - Use a "granular lighting" option and kill port-specific checks
+--if OB_CONFIG.port ~= "zdoom" and OB_CONFIG.port ~= "edge" then
+  if false then
     local rounder = LEVEL.sky_light % 16
     if rounder ~= 0 then
       if rounder > 8 then
@@ -2412,104 +2381,6 @@ function Level_choose_misc(LEVEL)
   rand.shuffle(LEVEL.shape_transform_possiblities)
 end
 
-
-function Level_choose_skybox(LEVEL)
-  local skyfab
-
-  local function Choose_episodic_skybox(LEVEL, force_pick)
-    if not LEVEL.episode.skybox or force_pick then
-      return PREFABS[rand.key_by_probs(THEME.skyboxes)]
-    else
-      return LEVEL.episode.skybox
-    end
-  end
-
-  local function Choose_skybox(mode)
-    if mode == "random" then
-      local reqs =
-      {
-        kind = "skybox",
-        where = "point",
-        size = 1,
-      }
-      local def = Fab_pick(LEVEL, reqs)
-      return assert(def)
-
-    elseif mode == "themed" then
-      return PREFABS[rand.key_by_probs(THEME.skyboxes)]
-
-    elseif mode == "generic" then
-      if PARAM.obsidian_resource_pack_active then
-        return PREFABS["Skybox_hellish_city_EPIC"]
-      else
-        return PREFABS["Skybox_hellish_city"]
-      end
-    end
-  end
-
-  if table.empty(THEME.skyboxes) then
-    gui.printf("WARNING! No skybox table for theme: " .. LEVEL.theme_name .. "\n")
-    return
-  end
-
-  if OB_CONFIG.zdoom_skybox == "disable" then return end
-
-  local same_skyfab = "yes"
-
-  if OB_CONFIG.zdoom_skybox == "episodic" then
-    LEVEL.episode.skybox = Choose_episodic_skybox(LEVEL)
-    skyfab = LEVEL.episode.skybox
-  else
-    LEVEL.skybox = Choose_skybox(OB_CONFIG.zdoom_skybox)
-    skyfab = LEVEL.skybox
-  end
-
-  -- check against exclusions
-  if LEVEL.outdoor_theme and LEVEL.outdoor_theme ~= "temperate"
-  and OBS_RESOURCE_PACK_SKYBOX_EXCLUSIONS then
-
-    local pick_attempts = 0
-    local ex_list = OBS_RESOURCE_PACK_SKYBOX_EXCLUSIONS[LEVEL.outdoor_theme]
-    while same_skyfab == "yes" do
-
-      if OB_CONFIG.zdoom_skybox == "episodic" then
-        if table.has_elem(ex_list, LEVEL.episode.skybox.name) then
-          same_skyfab = "yes"
-        else same_skyfab = "no" end
-      elseif OB_CONFIG.zdoom_skybox ~= "disable" then
-        if table.has_elem(ex_list, LEVEL.skybox.name) == ex then
-          same_skyfab = "yes"
-        else same_skyfab = "no" end
-      end
-
-      if same_skyfab == "yes" then
-        if OB_CONFIG.zdoom_skybox == "episodic" then
-          LEVEL.episode.skybox = Choose_episodic_skybox(LEVEL, "force_it")
-          skyfab = LEVEL.episode.skybox
-        else
-          LEVEL.skybox = Choose_skybox(OB_CONFIG.zdoom_skybox)
-          skyfab = LEVEL.skybox
-        end
-      end
-
-      pick_attempts = pick_attempts + 1
-      if pick_attempts > 10 then 
-        gui.printf(table.tostr(OBS_RESOURCE_PACK_SKYBOX_EXCLUSIONS[LEVEL.outdoor_theme]))
-        error("Skybox pick repeated too many times!!!! Global warming is real and " ..
-        "a billion pigs have been killed by swine flu!!!!") 
-      end
-
-    end
-  end
-
-  if skyfab then
-    gui.printf("Level skybox: " .. skyfab.name .. "\n")
-  else
-    gui.printf("WARNING: Could not find a proper skybox for theme '" .. LEVEL.theme_name .. "'\n")
-  end
-end
-
-
 function Level_init(LEVEL)
   LEVEL.ids = {}
 
@@ -2526,7 +2397,7 @@ function Level_init(LEVEL)
   Level_choose_darkness(LEVEL)
   Level_choose_misc(LEVEL)
 
-  Level_choose_skybox(LEVEL)
+  ob_invoke_hook_with_table("get_skybox", LEVEL)
 
   Ambient_reset()
 end
@@ -2881,7 +2752,7 @@ function Level_make_all()
 
   ob_invoke_hook("all_done")
 
-  ScriptMan_init()
+  ob_invoke_hook("assemble_scripts")
 
   return "ok"
 end

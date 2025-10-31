@@ -30,20 +30,6 @@ PREFABS.Hallway_vent_i_rise =
   can_flip = true,
 }
 
-PREFABS.Hallway_vent_i_EPIC =
-{
-  template = "Hallway_vent_i1",
-  map = "MAP03",
-
-  prob = 15,
-
-  theme = "!hell",
-
-  texture_pack = "armaetus",
-
-  sound = "Indoor_Fan",
-}
-
 PREFABS.Hallway_vent_i_lights =
 {
   template = "Hallway_vent_i1",

@@ -58,35 +58,3 @@ PREFABS.Hallway_mineshaft_i_collapse2 =
 
   can_flip = true,
 }
-
---- Radium jutting out ---
-
-PREFABS.Hallway_mineshaft_i2 =
-{
-  template = "Hallway_mineshaft_i1",
-  map = "MAP07",
-
-  style = "traps",
-
-  prob = 25,
-
-  texture_pack = "armaetus",
-
-  can_flip = true,
-
-}
-
-PREFABS.Hallway_mineshaft_i3 =
-{
-  template = "Hallway_mineshaft_i1",
-  map = "MAP08",
-
-  style = "traps",
-
-  prob = 25,
-
-  texture_pack = "armaetus",
-
-  can_flip = true,
-
-}

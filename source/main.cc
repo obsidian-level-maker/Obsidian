@@ -62,7 +62,6 @@ std::string config_file;
 std::string options_file;
 std::string theme_file;
 std::string logging_file;
-std::string reference_file;
 
 struct UpdateKv
 {
@@ -311,10 +310,6 @@ static void ShowInfo()
            "  -d --debug                Enable debugging\n"
            "  -v --verbose              Print log messages to stdout\n"
            "  -h --help                 Show this help message\n"
-           "  -p --printref             Print reference of all keys and values to "
-           "REFERENCE.txt\n"
-           "     --printref-json        Print reference of all keys and values in "
-           "JSON format\n"
            "  -u --update <section> <key> <value>\n"
            "                            Set a key in the config file\n"
            "                            (section should be 'c' or 'o')\n"
@@ -401,14 +396,6 @@ void Determine_ThemeFile()
 void Determine_LoggingFile()
 {
     logging_file = PathAppend(home_dir, LOG_FILENAME);
-}
-
-void Determine_ReferenceFile()
-{
-    if (argv::Find('p', "printref") >= 0)
-    {
-        reference_file = PathAppend(home_dir, REF_FILENAME);
-    }
 }
 
 bool Main::BackupFile(const std::string &filename)
@@ -1165,19 +1152,6 @@ hardrestart:;
 #endif
     }
 
-    if (argv::Find('p', "printref") >= 0)
-    {
-        batch_mode = true;
-#if defined _WIN32 && !defined OBSIDIAN_CONSOLE_ONLY
-        if (AllocConsole())
-        {
-            freopen("CONOUT$", "r", stdin);
-            freopen("CONOUT$", "w", stdout);
-            freopen("CONOUT$", "w", stderr);
-        }
-#endif
-    }
-
     if (int update_arg = argv::Find('u', "update"); update_arg >= 0)
     {
         batch_mode = true;
@@ -1204,19 +1178,6 @@ hardrestart:;
         update_kv.value   = argv::list[update_arg + 3];
     }
 
-    if (argv::Find(0, "printref-json") >= 0)
-    {
-        batch_mode = true;
-#if defined _WIN32 && !defined OBSIDIAN_CONSOLE_ONLY
-        if (AllocConsole())
-        {
-            freopen("CONOUT$", "r", stdin);
-            freopen("CONOUT$", "w", stdout);
-            freopen("CONOUT$", "w", stderr);
-        }
-#endif
-    }
-
     Determine_WorkingPath();
     Determine_InstallDir();
     Verify_InstallDir(install_dir);
@@ -1227,18 +1188,12 @@ hardrestart:;
     Determine_ThemeFile();
 #endif
     Determine_LoggingFile();
-    Determine_ReferenceFile();
 
     Options_Load(options_file);
 
     Options_ParseArguments();
 
     LogInit(logging_file);
-
-    if (argv::Find('p', "printref") >= 0)
-    {
-        RefInit(reference_file);
-    }
 
     // accept -t and --terminal for backwards compatibility
     if (argv::Find('v', "verbose") >= 0 || argv::Find('t', "terminal") >= 0)
@@ -1324,35 +1279,6 @@ softrestart:;
         }
 
         Module_Defaults();
-
-        if (argv::Find('p', "printref") >= 0)
-        {
-            ob_print_reference();
-            RefClose();
-#if defined _WIN32 && !defined OBSIDIAN_CONSOLE_ONLY
-            printf("\nClose window when finished...");
-
-            do
-            {
-            } while (true);
-#endif
-            Main::Shutdown(false);
-            return 0;
-        }
-
-        if (argv::Find(0, "printref-json") >= 0)
-        {
-            ob_print_reference_json();
-#if defined _WIN32 && !defined OBSIDIAN_CONSOLE_ONLY
-            printf("\nClose window when finished...");
-
-            do
-            {
-            } while (true);
-#endif
-            Main::Shutdown(false);
-            return 0;
-        }
 
         if (!load_file.empty())
         {

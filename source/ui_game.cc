@@ -59,9 +59,6 @@ UI_Game::UI_Game(int X, int Y, int W, int H) : Fl_Group(X, Y, W, H)
     game->textcolor(FONT2_COLOR);
     game->selection_color(SELECTION);
     game->callback(callback_Game, this);
-    game_help = new UI_HelpLink(cx + cw, cy, W * 0.10, ch);
-    game_help->labelfont(font_style);
-    game_help->callback(callback_GameHelp, this);
 
     cy += y_step;
 
@@ -72,9 +69,6 @@ UI_Game::UI_Game(int X, int Y, int W, int H) : Fl_Group(X, Y, W, H)
     port->textcolor(FONT2_COLOR);
     port->selection_color(SELECTION);
     port->callback(callback_Port, this);
-    port_help = new UI_HelpLink(cx + cw, cy, W * 0.10, ch);
-    port_help->labelfont(font_style);
-    port_help->callback(callback_PortHelp, this);
 
     cy += y_step;
 
@@ -85,9 +79,6 @@ UI_Game::UI_Game(int X, int Y, int W, int H) : Fl_Group(X, Y, W, H)
     length->textcolor(FONT2_COLOR);
     length->selection_color(SELECTION);
     length->callback(callback_Length, this);
-    length_help = new UI_HelpLink(cx + cw, cy, W * 0.10, ch);
-    length_help->labelfont(font_style);
-    length_help->callback(callback_LengthHelp, this);
 
     cy += y_step;
 
@@ -139,23 +130,6 @@ void UI_Game::callback_Game(Fl_Widget *w, void *data)
     ob_set_config("game", that->game->GetID());
 }
 
-void UI_Game::callback_GameHelp(Fl_Widget *w, void *data)
-{
-    fl_cursor(FL_CURSOR_DEFAULT);
-    Fl_Window       *win  = new Fl_Window(640, 480, _("Game"));
-    Fl_Text_Buffer  *buff = new Fl_Text_Buffer();
-    Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
-    disp->buffer(buff);
-    disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
-    win->resizable(*disp);
-    win->hotspot(0, 0, 0);
-    win->set_modal();
-    win->show();
-    // clang-format off
-    buff->text(_("Available Games:\n\nDoom 2\n\nDoom\n\nThe Ultimate Doom\n\nPlutonia: Part of Final Doom\n\nTNT: Evilution: Part of Final Doom\n\nHeretic"));
-    // clang-format on
-}
-
 void UI_Game::callback_Port(Fl_Widget *w, void *data)
 {
     UI_Game *that = (UI_Game *)data;
@@ -175,40 +149,6 @@ void UI_Game::callback_Theme(Fl_Widget *w, void *data)
     UI_Game *that = (UI_Game *)data;
 
     ob_set_config("theme", that->theme->GetID());
-}
-
-void UI_Game::callback_PortHelp(Fl_Widget *w, void *data)
-{
-    fl_cursor(FL_CURSOR_DEFAULT);
-    Fl_Window       *win  = new Fl_Window(640, 480, _("Port"));
-    Fl_Text_Buffer  *buff = new Fl_Text_Buffer();
-    Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
-    disp->buffer(buff);
-    disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
-    win->resizable(*disp);
-    win->hotspot(0, 0, 0);
-    win->set_modal();
-    win->show();
-    // clang-format off
-    buff->text(_("Available Ports:\n\nGZDoom: GZDoom and variants (LZDoom, QZDoom, etc)\n\nBoom-Compatible: Ports that are able to use the entire suite of Boom types and features. Most modern source ports fall into this category at a minimum.\n\nEDGE-Classic: Boom-compatible, plus UDMF support, additional specials and other advanced features."));
-    // clang-format on
-}
-
-void UI_Game::callback_LengthHelp(Fl_Widget *w, void *data)
-{
-    fl_cursor(FL_CURSOR_DEFAULT);
-    Fl_Window       *win  = new Fl_Window(640, 480, _("Length"));
-    Fl_Text_Buffer  *buff = new Fl_Text_Buffer();
-    Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
-    disp->buffer(buff);
-    disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
-    win->resizable(*disp);
-    win->hotspot(0, 0, 0);
-    win->set_modal();
-    win->show();
-    // clang-format off
-    buff->text(_("Available Game Lengths:\n\nSingle Level: One map.\n\nA Few Maps: Four maps.\n\nOne Episode: The length of an episode in the original game. For Doom 2 and other games which normally doesn't have episodes, this number is determined by Obsidian.\n\nFull Game: The length of a full game in the original program."));
-    // clang-format on
 }
 
 void UI_Game::Locked(bool value)
@@ -240,10 +180,7 @@ bool UI_Game::AddChoice(const std::string &button, const std::string &id, const 
     }
     if (!StringCompare(button, "port"))
     {
-        if (StringCompare(id, "advanced"))
-        {
-            port->AddChoice(id, label);
-        }
+        port->AddChoice(id, label);
         return true;
     }
     if (!StringCompare(button, "length"))

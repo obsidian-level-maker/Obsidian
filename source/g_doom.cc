@@ -1259,16 +1259,18 @@ bool Doom::game_interface_c::Start(const char *preset)
     }
 #endif
 
-    if (StringCompare(current_port, "zdoom") == 0 || StringCompare(current_port, "edge") == 0)
+    // Dasho - TODO - Make this an ob_config item and don't check for hardcoded port names
+
+    /*if (StringCompare(current_port, "zdoom") == 0 || StringCompare(current_port, "edge") == 0)
     {
         map_format  = FORMAT_UDMF;
         build_nodes = false;
     }
     else
-    {
+    {*/
         map_format  = FORMAT_BINARY;
         build_nodes = true;
-    }
+    //}
     if (map_format == FORMAT_UDMF)
     {
         UDMF_mode = true;

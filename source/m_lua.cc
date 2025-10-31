@@ -106,29 +106,6 @@ int gui_console_print(lua_State *L)
     return 0;
 }
 
-// LUA: ref_print(str)
-//
-int gui_ref_print(lua_State *L)
-{
-    int nargs = lua_gettop(L);
-
-    if (nargs >= 1)
-    {
-        const char *res = luaL_checkstring(L, 1);
-        SYS_ASSERT(res);
-
-        // strip off colorizations
-        if (res[0] == '@' && IsDigitASCII(res[1]))
-        {
-            res += 2;
-        }
-
-        RefPrint("%s", res);
-    }
-
-    return 0;
-}
-
 // LUA: raw_log_print(str)
 //
 int gui_raw_log_print(lua_State *L)
@@ -1458,7 +1435,6 @@ static const luaL_Reg gui_script_funcs[] = {
 
     {"format_prefix", gui_format_prefix},
     {"console_print", gui_console_print},
-    {"ref_print", gui_ref_print},
     {"raw_log_print", gui_raw_log_print},
     {"raw_debug_print", gui_raw_debug_print},
 
@@ -2032,29 +2008,6 @@ std::string ob_random_advice()
     lua_pop(LUA_ST, 1);
 
     return res;
-}
-
-void ob_print_reference()
-{
-    if (!Script_CallFunc("ob_print_reference", 1))
-    {
-        // clang-format off
-        printf("%s\n", _("ob_print_reference: Error creating REFERENCE.txt!"));
-        // clang-format on
-    }
-    // clang-format off
-    printf("\n%s %s\n", _("A copy of this output can be found at"), reference_file.c_str());
-    // clang-format on
-}
-
-void ob_print_reference_json()
-{
-    if (!Script_CallFunc("ob_print_reference_json", 1))
-    {
-        // clang-format off
-        printf("%s\n", _("ob_print_reference_json: Error printing json reference!"));
-        // clang-format on
-    }
 }
 
 void ob_invoke_hook(const std::string &hookname)

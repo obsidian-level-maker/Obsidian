@@ -28,21 +28,17 @@ extern bool debugging;
 
 bool LogInit(const std::string &filename);
 void LogClose(void);
-bool RefInit(const std::string &filename);
-void RefClose(void);
 
 void LogEnableDebug(bool enable);
 void LogEnableTerminal(bool enable);
 
 #ifdef __GNUC__
 void              LogPrint(const char *message, ...) __attribute__((format(printf, 1, 2)));
-void              RefPrint(const char *message, ...) __attribute__((format(printf, 1, 2)));
 void              DebugPrint(const char *message, ...) __attribute__((format(printf, 1, 2)));
 void              ProgStatus(const char *message, ...) __attribute__((format(printf, 1, 2)));
 [[noreturn]] void FatalError(const char *message, ...) __attribute__((format(printf, 1, 2)));
 #else
 void              LogPrint(const char *message, ...);
-void              RefPrint(const char *message, ...);
 void              DebugPrint(const char *message, ...);
 void              ProgStatus(const char *message, ...);
 [[noreturn]] void FatalError(const char *message, ...);

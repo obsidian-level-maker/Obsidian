@@ -60,21 +60,11 @@ function DEBUG_CONTROL.setup(self)
 end
 
 function DEBUG_CONTROL.get_levels()
-  if PARAM.custom_error_texture and PARAM.bool_custom_error_texture == 1 then
-    GAME.MATERIALS._ERROR.t = "ZZWOLF7"
-  end
+
 end
 
 function DEBUG_CONTROL.all_done()
-  --[[if PARAM.attach_debug_info and PARAM.bool_attach_debug_info == 1 then
-    local log_text = {}
 
-    gui.wad_add_text_lump("OBLOGS", log_text)
-  end]]
-
-  if PARAM.custom_error_texture and PARAM.bool_custom_error_texture == 1 then
-    gui.wad_merge_sections("games/doom/data/error_wall.wad")
-  end
 end
 
 ----------------------------------------------------------------
@@ -209,45 +199,6 @@ OB_MODULES["material_debugger"] =
       tooltip = _("Choose what to do when encountering a non-vanilla material"),
       longtip = _("If checked, will compare all flats/textures used against a list of vanilla materials for that IWAD, and treat non-vanilla materials as missing for the purposes of logging and throwing errors."),
       priority=102,
-    },
-
-    {
-      name = "bool_custom_error_texture",
-      label = _("Custom Error Texture"),
-      valuator = "button",
-      default = 0,
-      tooltip = _("Replaces Obsidian's default texture with a high visibility version for easier detection of broken level geometry or missing textures."),
-      priority = 101,
-    },
-  },
-}
-
-OB_MODULES["pickup_params"] =
-{
-
-  name = "pickup_params",
-
-  label = _("Pickup Options"),
-
-  where = "experimental",
-  priority = 5,
-
-  tooltip = _("Experimental options related to pickups (items, weapons, etc)"),
-
-  hooks =
-  {
-    setup = DEBUG_CONTROL.setup,
-  },
-
-  options =
-  {
-    {
-      name = "bool_scale_items_with_map_size",
-      label=_("Alternate Item Quantities"),
-      valuator = "button",
-      default = 0,
-      tooltip = _("Scales item distribution with map size"),
-      priority=105,
     },
   },
 }

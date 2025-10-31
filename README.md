@@ -5,7 +5,7 @@ https://github.com/obsidian-level-maker/Obsidian/releases
 https://discord.gg/dfqCt9v
 
 # OBSIDIAN
-by the ObAddon Community.
+by the OBSIDIAN team.
 
 ## INTRODUCTION
 
@@ -27,30 +27,6 @@ Features of OBSIDIAN include:
     
 * Heretic  
   Moderate level of support, with some advanced modules and a handful of addons available.
-  
-* Chex Quest 3: Vanilla Edition  
-  Basic level of support through the SLUMP generator only.
-  
-* HacX 1.2  
-  Basic level of support through the SLUMP generator only.
-
-* REKKR  
-  Basic level of support through the SLUMP generator only.
-
-* Harmony Compatible  
-  Basic level of support through the SLUMP generator only.
-
-* Strife  
-  Basic level of support through the SLUMP generator only.
-  
-* Wolfenstein 3D / Spear of Destiny  
-  Moderate level of support.
-  
-* Super Noah's Ark 3D  
-  Basic level of support.
-
-* Operation: Body Count  
-  Basic level of support. Less stable than Wolfenstein/Noah's Ark 3D.
 
 ## QUICK START GUIDE (Windows)
 
@@ -76,8 +52,6 @@ Russian translation file provided for the RU locale
 
 GUI Customization and Theming added
 
-Modified SLUMP level builder included for Vanilla Doom usage.
-
 AJBSP as the internal nodebuilder, replacing GLBSP.
 
 UDMF map output for compatible engines.
@@ -88,8 +62,8 @@ Migrated from custom Lua 5.1 to latest vanilla Lua.
 
 Patch by Simon-v for searching for .pk3 addons in both the install and user's home directories (https://github.com/dashodanger/Oblige/pull/1)
 
-Strings allowed for seed input (numbers with no other characters still processed as numbers).
+Strings allowed for seed input.
 
-New random number generator based on the xoshiro256 algorithm from fastPRNG (https://github.com/BrutPitt/fastPRNG).
+New 64-bit Mersenne Twister random number generator
 
 Bugfixes as discovered.

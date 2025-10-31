@@ -52,8 +52,6 @@ OB_MODULES["procedural_gotcha"] =
 
   label = _("Procedural Gotchas"),
 
-  port = "!zdoom",
-  port2 = "!edge",
   where = "combat",
   priority = 92,
 
@@ -62,7 +60,7 @@ OB_MODULES["procedural_gotcha"] =
     setup = PROCEDURAL_GOTCHA_FINE_TUNE.setup
   },
 
-  tooltip=_("This module allows you to fine tune the Procedural Gotcha experience if you have Procedural Gotchas enabled. Does not affect prebuilts. It is recommended to pick higher scales on one of the two options, but not both at once for a balanced challenge."),
+  tooltip=_("This module allows you to fine tune the Procedural Gotcha experience if you have Procedural Gotchas enabled. It is recommended to pick higher scales on one of the two options, but not both at once for a balanced challenge."),
 
   options =
   {

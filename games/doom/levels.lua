@@ -59,51 +59,7 @@ DOOM.EPISODES =
   }
 }
 
-
-DOOM.PREBUILT_LEVELS =
-{
-  MAP30 =
-  {
-    { prob=50, file="games/doom/data/boss2/icon1.wad", map="MAP30" },
-    { prob=50, file="games/doom/data/boss2/icon2.wad", map="MAP30" },
-    { prob=50, file="games/doom/data/boss2/icon3.wad", map="MAP01" },
-    { prob=50, file="games/doom/data/boss2/icon3.wad", map="MAP02" },
-    { prob=50, file="games/doom/data/boss2/icon3.wad", map="MAP03" }
-  }
-}
-
-
 --------------------------------------------------------------------
-
-function DOOM.themes_alts()
-  if OB_CONFIG.port == "zdoom" or OB_CONFIG.port == "gzdoom" then
-    local tab =
-    {
-      tech =
-      {
-        wide_halls = 
-        {
-          subway = 10
-        }
-      },
-
-      urban =
-      {
-        wide_halls =
-        {
-          subway = 50
-        },
-
-        window_groups =
-        {
-          gtd_window_dem = 40
-        }
-      }
-    }
-
-    table.deep_merge(GAME.THEMES, tab, 4)
-  end
-end
 
 function DOOM.get_levels()
   local MAP_LEN_TAB = { few=4, episode=11, game=32 }
@@ -209,77 +165,60 @@ function DOOM.get_levels()
       LEV.dist_to_end = 2
     end
 
-    -- prebuilt levels
     local pb_name = LEV.name
-
-    if PARAM.bool_prebuilt_levels == 1 then
-      LEV.prebuilt = GAME.PREBUILT_LEVELS[LEV.name]
-    end
-
-    if LEV.prebuilt then
-      LEV.name_class = LEV.prebuilt.name_class or "BOSS"
-    end
-
     -- procedural gotcha management code
+    --handling for the Final Only option
+    if PARAM.gotcha_frequency == "final" then
+      if OB_CONFIG.length == "single" then
+        if map == 1 then LEV.is_procedural_gotcha = true end
+      elseif OB_CONFIG.length == "few" then
+        if map == 4 then LEV.is_procedural_gotcha = true end
+      elseif OB_CONFIG.length == "episode" then
+        if map == 11 then LEV.is_procedural_gotcha = true end
+      elseif OB_CONFIG.length == "game" then
+        if map == 30 then LEV.is_procedural_gotcha = true end
+      end
+    end
 
-    -- Prebuilts are to exist over procedural gotchas
-    -- this means procedural gotchas will not override
-    -- Icon of Sin for example if prebuilts are still on
-    if not LEV.prebuilt then
-
-      --handling for the Final Only option
-      if PARAM.gotcha_frequency == "final" then
-        if OB_CONFIG.length == "single" then
-          if map == 1 then LEV.is_procedural_gotcha = true end
-        elseif OB_CONFIG.length == "few" then
-          if map == 4 then LEV.is_procedural_gotcha = true end
-        elseif OB_CONFIG.length == "episode" then
-          if map == 11 then LEV.is_procedural_gotcha = true end
-        elseif OB_CONFIG.length == "game" then
-          if map == 30 then LEV.is_procedural_gotcha = true end
-        end
-      end
-
-      --every 10 maps
-      if PARAM.gotcha_frequency == "epi" then
-        if map == 11 or map == 20 or map == 30 then
-          LEV.is_procedural_gotcha = true
-        end
-      end
-      if PARAM.gotcha_frequency == "2epi" then
-        if map == 5 or map == 11 or map == 16 or map == 20 or map == 25 or map == 30 then
-          LEV.is_procedural_gotcha = true
-        end
-      end
-      if PARAM.gotcha_frequency == "3epi" then
-        if map == 3 or map == 7 or map == 11 or map == 14 or map == 17 or map == 20 or map == 23 or map == 27 or map == 30 then
-          LEV.is_procedural_gotcha = true
-        end
-      end
-      if PARAM.gotcha_frequency == "4epi" then
-        if map == 3 or map == 6 or map == 9 or map == 11 or map == 14 or map == 16 or map == 18 or map == 20 or map == 23 or map == 26 or map == 28 or map == 30 then
-          LEV.is_procedural_gotcha = true
-        end
-      end
-
-      --5% of maps after map 4,
-      if PARAM.gotcha_frequency == "5p" then
-        if map > 4 and map ~= 15 and map ~= 31 then
-          if rand.odds(5) then LEV.is_procedural_gotcha = true end
-        end
-      end
-
-      -- 10% of maps after map 4,
-      if PARAM.gotcha_frequency == "10p" then
-        if map > 4 and map ~= 15 and map ~= 31 then
-          if rand.odds(10) then LEV.is_procedural_gotcha = true end
-        end
-      end
-
-      -- for masochists... or debug testing
-      if PARAM.gotcha_frequency == "all" then
+    --every 10 maps
+    if PARAM.gotcha_frequency == "epi" then
+      if map == 11 or map == 20 or map == 30 then
         LEV.is_procedural_gotcha = true
       end
+    end
+    if PARAM.gotcha_frequency == "2epi" then
+      if map == 5 or map == 11 or map == 16 or map == 20 or map == 25 or map == 30 then
+        LEV.is_procedural_gotcha = true
+      end
+    end
+    if PARAM.gotcha_frequency == "3epi" then
+      if map == 3 or map == 7 or map == 11 or map == 14 or map == 17 or map == 20 or map == 23 or map == 27 or map == 30 then
+        LEV.is_procedural_gotcha = true
+      end
+    end
+    if PARAM.gotcha_frequency == "4epi" then
+      if map == 3 or map == 6 or map == 9 or map == 11 or map == 14 or map == 16 or map == 18 or map == 20 or map == 23 or map == 26 or map == 28 or map == 30 then
+        LEV.is_procedural_gotcha = true
+      end
+    end
+
+    --5% of maps after map 4,
+    if PARAM.gotcha_frequency == "5p" then
+      if map > 4 and map ~= 15 and map ~= 31 then
+        if rand.odds(5) then LEV.is_procedural_gotcha = true end
+      end
+    end
+
+    -- 10% of maps after map 4,
+    if PARAM.gotcha_frequency == "10p" then
+      if map > 4 and map ~= 15 and map ~= 31 then
+        if rand.odds(10) then LEV.is_procedural_gotcha = true end
+      end
+    end
+
+    -- for masochists... or debug testing
+    if PARAM.gotcha_frequency == "all" then
+      LEV.is_procedural_gotcha = true
     end
 
     local special_mode = {}
@@ -296,7 +235,7 @@ function DOOM.get_levels()
       table.add_unique(special_mode, "nature")
     end
 
-    if not table.empty(special_mode) and not LEV.prebuilt then
+    if not table.empty(special_mode) then
       local selected_mode = rand.pick(special_mode)
       if selected_mode == "streets" then
         LEV.has_streets = true
@@ -324,6 +263,4 @@ function DOOM.get_levels()
       GAME.levels[#GAME.levels - 2].dist_to_end = 3
     end
   end
-
-  DOOM.themes_alts()
 end

@@ -2430,10 +2430,6 @@ function Quest_nice_items(LEVEL)
     if OB_CONFIG.items == "more"  and rand.odds(50) then quota = 2 end
     if OB_CONFIG.items == "heaps" and rand.odds(80) then quota = 2 end
 
-    if PARAM.bool_scale_items_with_map_size and PARAM.bool_scale_items_with_map_size == 1 then
-      quota = math.round(quota * (1 + (LEVEL.map_W / 75)))
-    end
-
     if quota >= 1 then
       for loop = 1, quota do
         -- add the same item into each start room
@@ -2514,10 +2510,6 @@ function Quest_nice_items(LEVEL)
     if OB_CONFIG.items == "mixed" then quota = quota * rand.pick({ 0.5, 1.0, 2.0 }) end
 
     quota = rand.int(quota)
-
-    if PARAM.bool_scale_items_with_map_size and PARAM.bool_scale_items_with_map_size == 1 then
-      quota = math.round(quota * (1 + (LEVEL.map_W / 75)))
-    end
 
     gui.printf("Other Item quota : %1.2f\n", quota)
 

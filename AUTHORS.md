@@ -244,10 +244,6 @@ Your input has been greatly appreciated!
 
 ## TITLE ARTWORK:
 
-bg/lamp1.tga  : by Lanea Zimmerman, under CC-BY 3.0 license.
-bg/block1.tga : by Keith333 (user on OGA), under CC-BY 3.0 license.
-bg/block2.tga : by Tiziana, under CC-BY 3.0 license.
-
 Several textures and sprites from the FreeDoom project.
 
 (All other title artwork is under CC0 license / public domain)
@@ -257,19 +253,13 @@ Several textures and sprites from the FreeDoom project.
 
 OBLIGE was written from scratch. It does not contain any code
 from SLIGE (by David Chess) or from any other random level
-generator. That being said, OBSIDIAN has since integrated the SLUMP
-level generator, a GPL2 fork of David Chess' SLIGE that was created
-by Sam Trenholme.
+generator.
 
 Part of the cave algorithm used in OBSIDIAN was described by Jim
 Babcock in his article: "Cellular Automata Method for Generating
 Random Cave-Like Levels".
 
-The internal font loading code is derived from a post by Ian MacArthur
-in a Google Groups thread at the following link:
-https://groups.google.com/g/fltkgeneral/c/uAdg8wOLiMk
+OBSIDIAN uses Lua 5.4.8 (https://lua.org/)
 
-OBSIDIAN uses LuaJIT 2.1.x (https://luajit.org/)
-
-OBSIDIAN uses FLTK 1.4.x (https://www.fltk.org)
+OBSIDIAN uses FLTK 1.4.4 (https://www.fltk.org)
 

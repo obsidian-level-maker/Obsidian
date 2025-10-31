@@ -53,7 +53,6 @@ constexpr const char *CONFIG_FILENAME  = "CONFIG.txt";
 constexpr const char *OPTIONS_FILENAME = "OPTIONS.txt";
 constexpr const char *THEME_FILENAME   = "THEME.txt";
 constexpr const char *LOG_FILENAME     = "LOGS.txt";
-constexpr const char *REF_FILENAME     = "REFERENCE.txt";
 
 extern std::string home_dir;
 extern std::string install_dir;
@@ -61,7 +60,6 @@ extern std::string config_file;
 extern std::string options_file;
 extern std::string theme_file;
 extern std::string logging_file;
-extern std::string reference_file;
 
 extern bool batch_mode;
 

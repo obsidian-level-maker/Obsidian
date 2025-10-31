@@ -20,31 +20,6 @@
 
 UI_ARCH = { }
 
-UI_ARCH.ZDOOM_VISTA_CHOICES =
-{
-  "enable",        _("Enable"),
-  "sky_gen_smart", _("Sky-gen Smart"),
-  "disable",       _("Disable")
-}
-
-UI_ARCH.ZDOOM_SKYBOX_CHOICES =
-{
-  "themed",   _("Per Theme"),
-  "episodic", _("Episodic"),
-  "random",   _("Random"),
-  "generic",  _("Generic"),
-  "disable",  _("Disable")
-}
-
-UI_ARCH.MIXIN_CHOICES =
-{
-
-  "none",   _("None"),
-  "mostly", _("Mostly Selected Theme"),
-  "less",   _("Mostly Other Themes"),
-}
-
-
 UI_ARCH.RAMP_FACTOR =
 {
   "0.5",  _("Very Fast Curve"),
@@ -185,32 +160,6 @@ OB_MODULES["ui_arch"] =
       
     },
 
-
-    {
-      name = "mixin_type",
-      label = _("Theme Mix-in Type"),
-      tooltip = _("Occasionally mix-in themes other than the selected one."),
-      longtip = _("This replaces the legacy \"-ish\" theme choices. By selecting Mostly Selected Theme, this means your selected theme is occasionally littered by other themes while setting it to Mostly Other Themes means the original selected theme is what's littered in instead. Default behavior is None."),
-      choices = UI_ARCH.MIXIN_CHOICES,
-      default = "none",
-      priority = 88,
-      gap = 1,
-      randomize_group="architecture",
-      
-    },
-  
-
-    {
-      name="bool_prebuilt_levels",
-      label=_("Prebuilt Levels"),
-      valuator = "button",
-      default = 1,
-      tooltip = _("Enable or disable prebuilt maps. When disabled, are replaced with generated maps instead."),
-      longtip = _("Prebuilt levels are useful when, for example, a boss encounter like the Icon of Sin is desired. This sort of level would be very difficult to generate procedurally, and thus a handmade map is used instead."),
-      priority = 81,
-      gap = 1
-    },
-
     {
       name = "float_overall_lighting_mult",
       label = _("Lighting Multiplier"),
@@ -260,28 +209,6 @@ OB_MODULES["ui_arch"] =
     { name="steepness",    
     label=_("Steepness"),  choices=STYLE_CHOICES, gap=1, priority = 73, randomize_group="architecture", 
     tooltip = _("Control the height difference of stairs, lifts, and joiners throughout levels.") 
-    },
-
-
-    {
-      name = "zdoom_vista",
-      label = _("Bottomless Vistas"),
-      choices=UI_ARCH.ZDOOM_VISTA_CHOICES,
-      default="disable",
-      tooltip = _("This feature allows for vistas that show more of the skybox below the horizon. This does not prevent skybox tiling."),
-      longtip = _("Enable - Bottomless vistas can always show. Pick this choice when using 3D Skyboxes.\n\nSky-gen Smart - Bottomless vistas appear only on episodes with no mountain backdrop based on the Sky Generator.\n\nDisable - Old Oblige behavior - no bottomless vistas."),
-      priority = 50
-    },
-
-
-    {
-      name = "zdoom_skybox",
-      label = _("3D Skyboxes"),
-      choices=UI_ARCH.ZDOOM_SKYBOX_CHOICES,
-      default="disable",
-      tooltip = _("Choose if 3D Skyboxes are rendered into levels and their style."),
-      longtip = _("This is highly recommended when Bottomless Vistas are enabled."),
-      priority = 49
     }
   },
 }

@@ -204,9 +204,6 @@ end
 
 
 function EXPORT_MAP.begin_level(self, LEVEL)
-  -- pre-built levels cannot be exported
-  if LEVEL.prebuilt then return end
-
   local filename = gui.get_save_path() .. "/" .. gui.get_filename_base() .. "-" .. LEVEL.name .. ".map"
 
   local file, error_msg = io.open(filename, "w")

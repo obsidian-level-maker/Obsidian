@@ -774,6 +774,18 @@ bool UI_Module::SetSliderOption(const std::string &option, const std::string &va
     {
         return false;
     }
+
+    // check nans first if applicable
+    for (const std::string &nan : rsl->nan_choices)
+    {
+        if (StringCaseCompare(value, nan) == 0)
+        {
+            rsl->nan_options->value(rsl->nan_options->find_index(value.c_str()));
+            rsl->nan_options->do_callback();
+            return true;
+        }
+    }
+
     double double_value = StringToDouble(value);
     if (limit_break)
     {

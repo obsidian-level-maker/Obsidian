@@ -4784,7 +4784,7 @@ function Cave_prepare_scenic_vista(LEVEL, area)
   local vista_type
   local vista_list = {}
 
-  if OB_CONFIG.zdoom_vista == "enable" then
+  --[[if OB_CONFIG.zdoom_vista == "enable" then
     vista_list =
     {
       bottomless_drop = 3,
@@ -4798,7 +4798,7 @@ function Cave_prepare_scenic_vista(LEVEL, area)
       bottomless_drop = 2,
       cliff_gradient = 8,
     }
-  end
+  end]]--
 
   vista_list.simple_fence = 3
   vista_list.watery_drop = 3

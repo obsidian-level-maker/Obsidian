@@ -8,9 +8,6 @@
 2. Xorg:
    * package: `xorg` (`xorg-libraries` on its own doesn't seem sufficient)
 
-3. FLTK:
-   * package: `fltk`
-
 The C++ compiler/toolchain should already be present on a typical BSD install
 
 ## Linux Dependencies (MSYS has some differences; see MSYS Cross-Compilation section below)
@@ -18,7 +15,7 @@ The C++ compiler/toolchain should already be present on a typical BSD install
 1. C++ compiler and associated tools
    * packages: `g++` `binutils`
    * if compiling with clang: `clang`
-   * compiler and toolchain need C++17 capabilities
+   * compiler and toolchain need C++20 capabilities
 
 2. GNU make
    * package: `make`
@@ -30,7 +27,6 @@ The C++ compiler/toolchain should already be present on a typical BSD install
    * package: `libfontconfig1-dev`
    * recommended if using X11 for better fonts: `libxft-dev`
    * if using X11 and not pulled in by one of the above packages: `libx11-dev`
-   * package: `libfltk1.3-dev` (minimum required version, later versions also acceptable)
 
 ## Linux/BSD Compilation
 

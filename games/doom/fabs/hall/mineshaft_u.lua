@@ -26,15 +26,3 @@ PREFABS.Hallway_mineshaft_u_dig =
 
   prob = 25,
 }
-
---- Radium jutting out ---
-
-PREFABS.Hallway_mineshaft_u2 =
-{
-  template = "Hallway_mineshaft_u",
-  map = "MAP04",
-
-  style = "traps",
-
-  texture_pack = "armaetus"
-}

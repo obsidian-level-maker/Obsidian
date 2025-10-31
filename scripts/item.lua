@@ -433,11 +433,6 @@ function Item_simulate_battle(LEVEL, R)
       ammo_mul = ammo_mul * factor
     end
 
-    if PARAM.bool_scale_items_with_map_size and PARAM.bool_scale_items_with_map_size == 1 then
-      heal_mul = heal_mul * (1 + (LEVEL.map_W / 75))
-      ammo_mul = ammo_mul * (1 + (LEVEL.map_W / 75))
-    end
-
     for name,qty in pairs(stats) do
       if name == "health" then
         stats[name] = qty * heal_mul
@@ -908,10 +903,6 @@ function Item_pickups_for_class(LEVEL, CL)
     -- compensation for environmental hazards
     if stat == "health" and R.hazard_health then
       bonus = bonus + R.hazard_health * HEALTH_FACTORS[OB_CONFIG.health]
-    end
-
-    if PARAM.bool_scale_items_with_map_size and PARAM.bool_scale_items_with_map_size == 1 then
-      bonus = bonus * (1 + (LEVEL.map_W / 75))
     end
 
     return bonus
