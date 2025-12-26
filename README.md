@@ -1,8 +1,5 @@
 ## THIS REPOSITORY IS CURRENTLY INACTIVE AND UNSUPPORTED
 
-# IF YOU JUST WANT THE PROGRAM
-https://github.com/obsidian-level-maker/Obsidian/releases
-
 # DISCORD SERVER FOR QUESTIONS, ADDONS, HELP, ETC
 https://discord.gg/dfqCt9v
 
