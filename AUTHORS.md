@@ -182,6 +182,9 @@ Enhas
   - lots of useful feedback
   - fixes and tweaks
 
+FrozenFOXX
+  - Docker implementation
+
 Jared Blackburn (blackjar)
   - Hexen theming
 

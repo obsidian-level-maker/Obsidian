@@ -1,0 +1,39 @@
+# Build artifacts
+build/
+install/
+*.o
+*.d
+
+# IDE / editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Git
+.git
+.gitignore
+.gitmodules
+
+# CI
+.github/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Documentation (not needed in build)
+*.md
+LICENSE
+
+# Existing compiled binaries (we build fresh in Docker)
+obsidian
+tools/qsavetex
+
+# Windows build files
+*.exe
+*.dll
+*.sln
+*.vcxproj*
+msys2/

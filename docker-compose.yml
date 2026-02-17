@@ -1,0 +1,11 @@
+services:
+  obsidian:
+    build: .
+    image: obsidian-level-maker
+    volumes:
+      # Output directory for generated WADs
+      - ./output:/wads
+      # Optional: mount a config directory with CONFIG.txt and/or OPTIONS.txt
+      # - ./my-config:/config:ro
+    # Override command to customize generation, e.g.:
+    # command: ["--batch", "/wads/my-level.wad", "--verbose"]
